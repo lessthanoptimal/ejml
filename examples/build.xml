@@ -1,0 +1,84 @@
+<project name="examples" basedir="." default="main">
+
+
+    <property name="src.dir"     value="src"/>
+    <property name="test.dir"     value="test"/>
+
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="testbuild.dir"   value="build/test"/>
+    <property name="testclasses.dir"   value="${testbuild.dir}/classes"/>
+
+    <property name="junit.dir"  value="../lib/"/>
+
+    <path id="project.classpath">
+        <fileset dir="../build/jar" includes="**/*.jar"/>
+    </path>
+
+    <path id="test.classpath">
+        <path refid="project.classpath"/>
+        <fileset dir="${junit.dir}" includes="junit*.jar"/>
+        <fileset dir="${jar.dir}" includes="**/${ant.project.name}.jar"/>
+        <dirset dir="../build/test" includes="**/classes"/>
+    </path>
+
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <!-- Capture the path as a delimited property using the refid attribute -->
+        <!--<property name="myclasspath" refid="project.classpath"/>-->
+
+        <!-- Emit the property to the ant console -->
+        <!--<echo message="Classpath = ${myclasspath}"/>-->
+
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
+    </target>
+
+    <target name="test" depends="jar">
+        <mkdir dir="${testbuild.dir}"/>
+        <mkdir dir="${testclasses.dir}"/>
+
+        <javac srcdir="${test.dir}" destdir="${testclasses.dir}">
+            <classpath>
+                <path refid="test.classpath"/>
+            </classpath>
+        </javac>
+
+        <junit printsummary="yes" showoutput="no">
+            <classpath>
+                <path refid="test.classpath"/>
+                <pathelement location="${testclasses.dir}"/>
+            </classpath>
+
+            <batchtest fork="yes">
+                <fileset dir="${test.dir}" includes="**/Test*.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="clean,jar"/>
+
+    <target name="kalman-benchmark" depends="clean-build">
+        <java classname="BenchmarkKalmanPerformance" fork="true">
+            <classpath>
+                <path refid="project.classpath"/>
+                <fileset dir="${jar.dir}" includes="**/${ant.project.name}.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>

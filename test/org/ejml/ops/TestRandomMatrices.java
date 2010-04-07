@@ -1,0 +1,286 @@
+/*
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.ejml.ops;
+
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
+import org.ejml.alg.dense.decomposition.EigenDecomposition;
+import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
+import org.ejml.alg.dense.mult.VectorVectorMult;
+import org.ejml.data.Complex64F;
+import org.ejml.data.DenseMatrix64F;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Random;
+
+import static org.junit.Assert.*;
+
+
+/**
+ * @author Peter Abeles
+ */
+public class TestRandomMatrices {
+
+    Random rand = new Random(48757);
+
+    /**
+     * Checks to see if all the vectors are orthogonal and of unit length.
+     */
+    @Test
+    public void createSpan() {
+        // test with combinations of vectors and numbers
+        for( int dimension = 3; dimension <= 5; dimension++ ) {
+            for( int numVectors = 1; numVectors <= dimension; numVectors++ ) {
+                DenseMatrix64F span[] = RandomMatrices.createSpan(dimension,numVectors,rand);
+
+                assertEquals(numVectors,span.length);
+
+                for( int i = 0; i < span.length; i++ ) {
+                    DenseMatrix64F a = span[i];
+
+                    assertEquals(1,NormOps.fastNormF(a),1e-8);
+
+                    for( int j = i+1; j < span.length; j++ ) {
+                        double dot = VectorVectorMult.innerProd(a,span[j]);
+                        assertEquals(0,dot,1e-8);
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void createOrthogonal() {
+        for( int numRows = 3; numRows <= 5; numRows++ ) {
+            for( int numCols = 1; numCols <= numRows; numCols++ ) {
+                DenseMatrix64F Q = RandomMatrices.createOrthogonal(numRows,numCols,rand);
+
+                assertTrue(CommonOps.elementSum(Q) != 0);
+                assertTrue(MatrixFeatures.isOrthogonal(Q,1e-8));
+            }
+        }
+    }
+
+    @Test
+    public void createDiagonal() {
+        DenseMatrix64F A = RandomMatrices.createDiagonal(5,1,10,rand);
+
+        assertTrue(CommonOps.elementSum(A) > 5 );
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                double v = A.get(i,j);
+
+                if( i == j ) {
+                    assertTrue(v >= 1 || v <= 10);
+                } else {
+                    assertTrue(v == 0);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void createSingularValues() {
+        // check case when sv is more than or equal to the matrix dimension
+        double sv[] = new double[]{8.2,6.2,4.1,2};
+
+        for( int numRows = 1; numRows <= 4; numRows++ ) {
+            for( int numCols = 1; numCols <= 4; numCols++ ) {
+                DenseMatrix64F A = RandomMatrices.createSingularValues(numRows,numCols,sv,rand);
+
+                SingularValueDecomposition svd = DecompositionFactory.svd();
+                assertTrue(svd.decompose(A));
+
+                int o = Math.min(numRows,numCols);
+
+                for( int i = 0; i < o; i++ ) {
+                    assertEquals(sv[i],svd.getSingularValues()[i],1e-8);
+                }
+            }
+        }
+
+        // see if it fills in zeros when it is smaller than the dimension
+        DenseMatrix64F A = RandomMatrices.createSingularValues(5,5,sv,rand);
+
+        SingularValueDecomposition svd = DecompositionFactory.svd();
+        assertTrue(svd.decompose(A));
+
+        for( int i = 0; i < sv.length; i++ ) {
+            assertEquals(sv[i],svd.getSingularValues()[i],1e-8);
+        }
+        assertEquals(0,svd.getSingularValues()[4],1e-8);
+    }
+
+    @Test
+    public void createEigenvaluesSymm() {
+        DenseMatrix64F A = RandomMatrices.createEigenvaluesSymm(5,rand,1,2,3,4,5);
+
+        // this should be symmetric
+        assertTrue(MatrixFeatures.isSymmetric(A,1e-10));
+
+        // decompose the matrix and extract its eigenvalues
+        EigenDecomposition eig = DecompositionFactory.eig();
+        assertTrue(eig.decompose(A));
+
+        double ev[] = new double[5];
+        for( int i = 0; i < 5; i++ ) {
+            Complex64F e = eig.getEigenvalue(i);
+            assertTrue(e.isReal());
+
+            ev[i] = e.real;
+        }
+
+        // need to sort the eigenvalues so that I know where they are in the array
+        Arrays.sort(ev);
+
+        // see if they are what I expected them to be
+        for( int i = 0; i < ev.length; i++ ) {
+            assertEquals(i+1.0,ev[i],1e-8);
+        }
+    }
+
+    @Test
+    public void addRandom() {
+        DenseMatrix64F A = new DenseMatrix64F(3,4);
+
+        CommonOps.set(A,-2.0);
+
+        RandomMatrices.addRandom(A,1,2,rand);
+
+        for( int i = 0; i < A.getNumElements(); i++ ) {
+            assertTrue(A.data[i] >= -1 && A.data[i] <= 0 );
+        }
+    }
+
+    @Test
+    public void createRandom() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,4,rand);
+
+        checkRandom1(A);
+    }
+
+    @Test
+    public void createRandom_min_max() {
+        DenseMatrix64F A = RandomMatrices.createRandom(30,20,-1,1,rand);
+
+        checkRandomRange(A);
+    }
+
+    @Test
+    public void setRandom() {
+        DenseMatrix64F A = new DenseMatrix64F(5,4);
+
+        RandomMatrices.setRandom(A,rand);
+
+        checkRandom1(A);
+    }
+
+    private void checkRandom1(DenseMatrix64F a) {
+        assertEquals(5, a.numRows);
+        assertEquals(4, a.numCols);
+
+        double total = 0;
+        for( int i = 0; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.numCols; j++ ) {
+                double val = a.get(i,j);
+
+                assertTrue( val >= 0);
+                assertTrue( val <= 1);
+                total += val;
+            }
+        }
+
+        assertTrue(total>0);
+    }
+
+    @Test
+    public void setRandom_min_max() {
+        DenseMatrix64F A = new DenseMatrix64F(30,20);
+        RandomMatrices.setRandom(A,-1,1,rand);
+
+        checkRandomRange(A);
+    }
+
+    private void checkRandomRange(DenseMatrix64F a) {
+        assertEquals(30, a.numRows);
+        assertEquals(20, a.numCols);
+
+        int numNeg = 0;
+        int numPos = 0;
+        for( int i = 0; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.numCols; j++ ) {
+                double val = a.get(i,j);
+
+                if( val < 0 )
+                    numNeg++;
+                else
+                    numPos++;
+
+                if( Math.abs(val) > 1 )
+                    fail("Out of range");
+            }
+        }
+
+        assertTrue(numNeg>0);
+        assertTrue(numPos>0);
+    }
+
+    @Test
+    public void createSymmPosDef() {
+        for( int i = 0; i < 10; i++ ) {
+            DenseMatrix64F A = RandomMatrices.createSymmPosDef(6+i,rand);
+
+            assertTrue(MatrixFeatures.isPositiveDefinite(A));
+        }
+    }
+
+    @Test
+    public void createSymmetric() {
+        DenseMatrix64F A = RandomMatrices.createSymmetric(10,-1,1,rand);
+
+        assertTrue(MatrixFeatures.isSymmetric(A,1e-8));
+
+        // see if it has the expected range of elements
+        double min = CommonOps.elementMin(A);
+        double max = CommonOps.elementMax(A);
+
+        assertTrue(min < 0 && min >= -1);
+        assertTrue(max > 0 && max <= 1);
+    }
+
+    @Test
+    public void createUpperTriangle() {
+        for( int hess = 0; hess < 3; hess++ ) {
+            DenseMatrix64F A = RandomMatrices.createUpperTriangle(10,hess,-1,1,rand);
+
+            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,1e-8));
+
+            // quick sanity check to make sure it could be proper
+            assertTrue(A.get(hess,0) != 0 );
+
+            // see if it has the expected range of elements
+            double min = CommonOps.elementMin(A);
+            double max = CommonOps.elementMax(A);
+
+            assertTrue(min < 0 && min >= -1);
+            assertTrue(max > 0 && max <= 1);
+        }
+    }
+}

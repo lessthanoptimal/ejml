@@ -1,0 +1,94 @@
+----- Version 0.11
+
+2010/04/07
+
+- Updated LevenbergMarquardt example.
+- Added the ability to save the old data in reshape() if the matrix grows in size.
+- Added Kronecker product
+- Added LinearSolverFactory
+- Changed constructor in DenseMatrix64F so that var-args can be used.
+- Can add random numbers to a matrix
+- Added null space to SingularOps
+- Added a function in SingularOps to rearrange the SVD such that the singular values are in descending order.
+
+----- Version 0.10.1
+
+2010/02/18
+
+- Fixed a bug with large symmetric matrices where eigen pairs would be incorrectly associated with each other.
+- Made the general eigenvalue decomposition algorithm less buggy.  It can now handle the case where
+  eigenvalues appear in a different order the second time, but doesn't solve for repeat values correctly.
+
+----- Version 0.10
+
+2010/02/16
+
+- fixed a LU pivot matrix bug
+- SVD Implicit QR algorithm (much faster than old)
+- Optimized rank1update for large matrices
+- Various refactoring and other tweaks.
+
+----- Version 0.9
+
+2010/01/29
+
+- Added the QR Algorithm for eigenvalue decomposition for Symmetric matrices.
+- improved eigenvalue unit tests exposing some problems with generic EVD
+- various refactoring
+
+----- Version 0.8
+
+2010/01/15
+
+- Usability improvements
+- Fixed matrix multiply switching rules for some of the operators
+- Added automatic switching to matrix vector multiply to some operators in CommonOps
+- More random matrices: orthonormal, orthogonal, normal span, and with specific singular values.
+- More matrix norms, including induced norms and all the p vector norms.
+- Eigenvalue decomposition for general matrices.
+- More functions in EigenOps and preexisting ones improved
+- LU now works for rectangular matrices
+- LU now generates a pivot matrix (I guess it is really PLU)
+- various refactoring
+
+----- Version 0.7
+
+2009/11/10
+
+- Created a linear solver interface.
+- QR Update.
+  * Two implementations.  One is more straight forward and the other is much faster.
+- Created a linear solver interface that allows data points to be added and removed.
+- Made decomposition and linear solver algorithms use lazy initialization.
+
+----- Version 0.6
+
+2009/10/26
+
+- Added QR Decomposition
+- Added Leibniz formula for determinants.
+  * This required a permutation algorithm to be added also.
+- Fixed various bugs
+- Improved SimpleMatrix to make it more useful
+
+
+----- Version 0.5
+
+2009/9/19
+
+- Added another type of matrix multiplication that creates a temporary column
+  * This significant improved performance in some areas
+
+----- Version 0.4
+
+2009/9/5
+
+- Added two more Cholesky decomposition algorithm; block and LDL.
+- Moved significant magic numbers in to EjmlParamters to provide a central place for configuration.
+- Various other refactorings and bug fixes.
+
+----- Version 0.3
+
+2009/8/27
+
+- This is the initial public distribution.  Has most of the final functionality.

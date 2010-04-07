@@ -1,0 +1,44 @@
+For 0.12 Release
+- push experimental code to benchmarks
+- Get all unit tests working again
+- precise norm and related
+
+
+For DenseMatrix64F
+
+- Bidiagonal
+  - Column major implementation for tall matrices.  useful for SVD
+
+- LU
+  - block
+
+- SVD
+  - make computation of U and V individually optional
+  - Use QR alg to speed up singular values on very tall matrices
+  - Divide and conquer algorithm
+
+- Eigen decomposition
+  - Make computation of eigen vectors optional
+  - Divide and conquer algorithm.
+
+- Accurate version of symmetric eigenvalue for 2 by 2
+  - SVD
+  - SymmEig
+
+- Fast Matrix Multiply
+- General analytical inverse
+- hard code 4 by 4 inverse
+- hard code cholesky decomposition for small matrices
+
+- Matrix Multiplication:
+  - Finish vector vector multiply
+  - Code generator for matrix vector ops
+  - Add matrix vector multiply
+  - Auto switch to all of above in CommonOps
+
+
+Issues:
+
+- Non-symmetric (general case algorithm) has a problem with repeat eigenvalues.  When it tries
+ to solve for them it applies the solver to a singular matrix.
+

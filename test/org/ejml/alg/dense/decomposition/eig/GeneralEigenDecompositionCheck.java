@@ -1,0 +1,447 @@
+/*
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.ejml.alg.dense.decomposition.eig;
+
+import org.ejml.alg.dense.decomposition.EigenDecomposition;
+import org.ejml.data.Complex64F;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Eigenpair;
+import org.ejml.ops.*;
+
+import java.util.Random;
+
+import static org.junit.Assert.*;
+
+
+/**
+ * @author Peter Abeles
+ */
+public abstract class GeneralEigenDecompositionCheck {
+
+    Random rand = new Random(895723);
+
+    public abstract EigenDecomposition createDecomposition();
+
+
+    public void allTests() {
+        checkRandom();
+        checkKnownReal();
+        checkKnownComplex();
+        checkRandomSymmetric();
+        checkExceptional();
+        checkIdentity();
+        checkAllZeros();
+        checkWithSomeRepeatedValuesSymm();
+        checkWithSingularSymm();
+        checkSmallValue(false);
+        checkSmallValue(true);
+        checkLargeValue(false);
+        checkLargeValue(true);
+    }
+
+    /**
+     * Create a variety of different random matrices of different sizes and sees if they pass the standard
+     * eigen decompositions tests.
+     */
+    public void checkRandom() {
+        int sizes[] = new int[]{1,2,5,10,20,50,100,200};
+
+        EigenDecomposition alg = createDecomposition();
+
+        for( int s = 2; s < sizes.length; s++ ) {
+            int N = sizes[s];
+//            System.out.println("N = "+N);
+
+            for( int i = 0; i < 2; i++ ) {
+                DenseMatrix64F A = RandomMatrices.createRandom(N,N,-1,1,rand);
+
+//                if( N != 11 || i != 14 )
+//                    continue;
+
+                assertTrue(alg.decompose(A));
+
+                performStandardTests(alg,A,-1);
+            }
+        }
+    }
+
+    /**
+     * Compare results against a simple matrix with known results where all the eigenvalues
+     * are real.  Octave was used to test the known values.
+     */
+    public void checkKnownReal() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(A));
+        performStandardTests(alg,A,-1);
+
+        testForEigenpair(alg,1.686542,0,-0.739990,-0.667630,-0.081761);
+        testForEigenpair(alg,0.079014,0,-0.658665,0.721163,-0.214673);
+        testForEigenpair(alg,0.440034,0,-0.731422,0.211711,0.648229);
+    }
+
+    /**
+     * Compare results against a simple matrix with known results where some the eigenvalues
+     * are real and some are complex.
+     */
+    public void checkKnownComplex() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.418284, 0.279875, 0.452912, -0.093748, -0.045179, 0.310949, 0.250513, -0.304077, -0.031414);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(A));
+        performStandardTests(alg,A,-1);
+
+        testForEigenpair(alg,-0.39996,0,0.87010,0.43425,-0.23314);
+        testForEigenpair(alg,-0.04746,0.02391);
+        testForEigenpair(alg,-0.04746,-0.02391);
+    }
+
+    /**
+     * Check results against symmetric matrices that are randomly generated
+     */
+    public void checkRandomSymmetric() {
+        for( int N = 1; N <= 15; N++ ) {
+            for( int i = 0; i < 20; i++ ) {
+                DenseMatrix64F A = RandomMatrices.createSymmetric(N,-1,1,rand);
+
+                EigenDecomposition alg = createDecomposition();
+
+                assertTrue(alg.decompose(A));
+
+                performStandardTests(alg,A,N);
+            }
+        }
+    }
+
+    /**
+     * For some eigenvector algorithms this is a difficult matrix that requires a special
+     * check for.  If it fails that check it will either loop forever or exit before converging.
+     */
+    public void checkExceptional() {
+        DenseMatrix64F A = new DenseMatrix64F(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(A));
+
+        performStandardTests(alg,A,1);
+    }
+
+    public void checkIdentity() {
+        DenseMatrix64F I = CommonOps.identity(4);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(I));
+
+        performStandardTests(alg,I,4);
+
+        testForEigenpair(alg,1,0,1,0,0,0);
+        testForEigenpair(alg,1,0,0,1,0,0);
+        testForEigenpair(alg,1,0,0,0,1,0);
+        testForEigenpair(alg,1,0,0,0,0,1);
+    }
+
+    public void checkAllZeros() {
+        DenseMatrix64F A = new DenseMatrix64F(5,5);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(A));
+
+        performStandardTests(alg,A,5);
+        testEigenvalues(alg,0);
+    }
+
+    public void checkWithSomeRepeatedValuesSymm() {
+        EigenDecomposition alg = createDecomposition();
+
+        checkSymmetricMatrix(alg,2,-3,-3,-3);
+        checkSymmetricMatrix(alg,1,1,1,2);
+    }
+
+    public void checkWithSingularSymm() {
+
+        EigenDecomposition alg = createDecomposition();
+
+        checkSymmetricMatrix(alg,1,0,1,2);
+    }
+
+    /**
+     * Creates a random symmetric matrix with the specified eigenvalues.  It then
+     * checks to see if it has the expected results.
+     */
+    private void checkSymmetricMatrix(EigenDecomposition alg , double ...ev ) {
+        int numRepeated[] = new int[ ev.length ];
+
+        for( int i = 0; i < ev.length ; i++ ) {
+            int num = 0;
+
+            for (double anEv : ev) {
+                if (ev[i] == anEv)
+                    num++;
+            }
+            numRepeated[i] = num;
+        }
+
+        for( int i = 0; i < 20; i++ ) {
+            DenseMatrix64F A = RandomMatrices.createEigenvaluesSymm(ev.length,rand,ev);
+
+            assertTrue(alg.decompose(A));
+
+            performStandardTests(alg,A,ev.length);
+
+            for( int j = 0; j < ev.length; j++ ) {
+                testForEigenvalue(alg,ev[j],0,numRepeated[j]);
+            }
+        }
+    }
+
+    public void checkSmallValue( boolean symmetric) {
+
+//        System.out.println("Symmetric = "+symmetric);
+        EigenDecomposition alg = createDecomposition();
+
+        for( int i = 0; i < 20; i++ ) {
+            DenseMatrix64F A = symmetric ?
+                    RandomMatrices.createSymmetric(4,-1,1,rand) :
+                    RandomMatrices.createRandom(4,4,-1,1,rand);
+
+            CommonOps.scale(1e-100,A);
+
+            assertTrue(alg.decompose(A));
+
+//        A.print("%15.13e");
+
+            performStandardTests(alg,A,-1);
+        }
+    }
+
+    public void checkLargeValue( boolean symmetric) {
+
+        EigenDecomposition alg = createDecomposition();
+
+        for( int i = 0; i < 20; i++ ) {
+            DenseMatrix64F A = symmetric ?
+                    RandomMatrices.createSymmetric(4,-1,1,rand) :
+                    RandomMatrices.createRandom(4,4,-1,1,rand);
+
+            CommonOps.scale(1e100,A);
+
+            assertTrue(alg.decompose(A));
+
+            performStandardTests(alg,A,-1);
+        }
+    }
+
+    /**
+     * If the eigenvalues are all known, real, and the same this can be used to check them.
+     */
+    public void testEigenvalues( EigenDecomposition alg , double expected ) {
+
+        for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {
+            Complex64F c = alg.getEigenvalue(i);
+
+            assertTrue(c.isReal());
+
+            assertEquals(expected,c.real,1e-8);
+        }
+    }
+
+    /**
+     * Preforms standard tests that can be performed on any decomposition without prior knowledge of
+     * what the results should be.
+     */
+    public void performStandardTests( EigenDecomposition alg , DenseMatrix64F A , int numReal )
+    {
+
+        // basic sanity tests
+        assertEquals(A.numRows,alg.getNumberOfEigenvalues());
+
+        if( numReal >= 0 ) {
+            for( int i = 0; i < A.numRows; i++ ) {
+                if( alg.getEigenvalue(i).isReal() )
+                    numReal--;
+            }
+
+            // if there are more than the expected number of real eigenvalues this will
+            // be negative
+            assertEquals(0,numReal);
+        }
+
+        testPairsConsistent(alg,A);
+        testVectorsLinearlyIndependent(alg);
+    }
+
+    /**
+     * Checks to see if an eigenvalue is complex then the eigenvector is null.  If it is real it
+     * then checks to see if the equation A*v = lambda*v holds true.
+     */
+    public void testPairsConsistent( EigenDecomposition alg , DenseMatrix64F A )
+    {
+//        System.out.println("-------------------------------------------------------------------------");
+        int N = alg.getNumberOfEigenvalues();
+
+        DenseMatrix64F tempA = new DenseMatrix64F(N,1);
+        DenseMatrix64F tempB = new DenseMatrix64F(N,1);
+        
+        for( int i = 0; i < N; i++ ) {
+            Complex64F c = alg.getEigenvalue(i);
+            DenseMatrix64F v = alg.getEigenVector(i);
+
+            if( Double.isInfinite(c.real) || Double.isNaN(c.real) ||
+                    Double.isInfinite(c.imaginary) || Double.isNaN(c.imaginary))
+                fail("Uncountable eigenvalue");
+
+            if( !c.isReal() ) {
+                assertTrue(v==null);
+            } else {
+                assertTrue(v != null );
+//                if( MatrixFeatures.hasUncountable(v)) {
+//                    throw new RuntimeException("Egads");
+//                }
+                assertFalse(MatrixFeatures.hasUncountable(v));
+
+                CommonOps.mult(A,v,tempA);
+                CommonOps.scale(c.real,v,tempB);
+
+                double max = NormOps.normPInf(A);
+                if( max == 0 ) max = 1;
+
+                double error = SpecializedOps.diffNormF(tempA,tempB)/max;
+
+                if( error > 1e-8 ) {
+                    System.out.println("Original matrix:");
+                    A.print();
+                    System.out.println("Eigenvalue = "+c.real);
+                    Eigenpair p = EigenOps.computeEigenVector(A,c.real);
+                    p.vector.print();
+                    v.print();
+
+
+                    CommonOps.mult(A,p.vector,tempA);
+                    CommonOps.scale(c.real,p.vector,tempB);
+
+                    max = NormOps.normPInf(A);
+
+                    System.out.println("error before = "+error);
+                    error = SpecializedOps.diffNormF(tempA,tempB)/max;
+                    System.out.println("error after = "+error);
+                    A.print("%f");
+                    System.out.println();
+                    fail("Error was too large");
+                }
+
+                assertTrue(error <= 1e-8);
+            }
+        }
+    }
+
+    /**
+     * Checks to see if all the real eigenvectors are linearly independent of each other.
+     */
+    public void testVectorsLinearlyIndependent( EigenDecomposition alg ) {
+        int N = alg.getNumberOfEigenvalues();
+
+        // create a matrix out of the eigenvectors
+        DenseMatrix64F A = new DenseMatrix64F(N,N);
+
+        int off = 0;
+        for( int i = 0; i < N; i++ ) {
+            DenseMatrix64F v = alg.getEigenVector(i);
+
+            // it can only handle real eigenvectors
+            if( v == null )
+                off++;
+            else {
+                for( int j = 0; j < N; j++ ) {
+                    A.set(i-off,j,v.get(j));
+                }
+            }
+        }
+
+        // see if there are any real eigenvectors
+        if( N == off )
+            return;
+
+        A.reshape(N-off,N, false);
+
+        assertTrue(MatrixFeatures.isRowsLinearIndependent(A));
+    }
+
+    /**
+     * Sees if the pair of eigenvalue and eigenvector was found in the decomposition.
+     */
+    public void testForEigenpair( EigenDecomposition alg , double valueReal ,
+                                  double valueImg , double... vector )
+    {
+        int N = alg.getNumberOfEigenvalues();
+
+        int numMatched = 0;
+        for( int i = 0; i < N; i++ ) {
+            Complex64F c = alg.getEigenvalue(i);
+
+            if( Math.abs(c.real-valueReal) < 1e-4 && Math.abs(c.imaginary-valueImg) < 1e-4) {
+
+                if( c.isReal() ) {
+                    if( vector.length > 0 ) {
+                        DenseMatrix64F e = new DenseMatrix64F(N,1, true, vector);
+                        DenseMatrix64F v = alg.getEigenVector(i);
+
+                        double error = SpecializedOps.diffNormF(e,v);
+                        CommonOps.changeSign(e);
+                        double error2 = SpecializedOps.diffNormF(e,v);
+
+
+                        if(error < 1e-3 || error2 < 1e-3)
+                            numMatched++;
+                    } else {
+                        numMatched++;
+                    }
+                } else if( !c.isReal() ) {
+                    numMatched++;
+                }
+            }
+        }
+
+        assertEquals(1,numMatched);
+    }
+
+
+    public void testForEigenvalue( EigenDecomposition alg , double valueReal ,
+                                   double valueImg , int numMatched )
+    {
+        int N = alg.getNumberOfEigenvalues();
+
+        int numFound = 0;
+        for( int i = 0; i < N; i++ ) {
+            Complex64F c = alg.getEigenvalue(i);
+
+            if( Math.abs(c.real-valueReal) < 1e-4 && Math.abs(c.imaginary-valueImg) < 1e-4) {
+                numFound++;
+            }
+        }
+
+        assertEquals(numMatched,numFound);
+    }
+}

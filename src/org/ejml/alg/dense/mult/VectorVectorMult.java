@@ -1,0 +1,244 @@
+/*
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.ejml.alg.dense.mult;
+
+import org.ejml.data.DenseMatrix64F;
+
+
+/**
+ * Operations that involve multiplication of two vectors.
+ *
+ * @author Peter Abeles
+ */
+public class VectorVectorMult {
+    // TODO write this
+    /**
+     *
+     * @param x
+     * @param y
+     * @param A
+     */
+    // TODO create a VectorOps for meer mortals to use?
+    // TODO have DenseMatrix64F flag itself as being a vector to make checks faster?
+    public static void mult( DenseMatrix64F x , DenseMatrix64F y , DenseMatrix64F A )
+    {
+       // sanity check inputs
+
+        // call the outer or inner product
+    }
+
+    /**
+     * <p>
+     * Computes the inner product of the two vectors.  In geometry this is known as the dot product.<br>
+     * <br>
+     * &sum;<sub>k=1:n</sub> x<sub>k</sub> * y<sub>k</sub><br>
+     * where x and y are vectors with n elements.
+     * </p>
+     *
+     * <p>
+     * These functions are often used inside of highly optimized code and therefor sanity checks are
+     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * </p>
+     *
+     * @param x A vector with n elements. Not modified.
+     * @param y A vector with n elements. Not modified.
+     * @return The inner product of the two vectors.
+     */
+    public static double innerProd( DenseMatrix64F x, DenseMatrix64F y )
+    {
+        int m = x.getNumElements();
+
+        double total = 0;
+        for( int i = 0; i < m; i++ ) {
+           total += x.data[i] * y.data[i];
+        }
+
+        return total;
+    }
+
+    /**
+     * <p>
+     * x<sup>T</sup>Ay
+     * </p>
+     *
+     * @param x  A vector with n elements. Not modified.
+     * @param A  A matrix with n by n elements.  Not modified.
+     * @param y  A vector with n elements. Not modified.
+     * @return  The results.
+     */
+    // TODO better name for this
+    public static double innerProdA( DenseMatrix64F x, DenseMatrix64F A , DenseMatrix64F y )
+    {
+        int n = A.numRows;
+
+        if( n != A.numCols)
+            throw new IllegalArgumentException("A must be square");
+
+        if( x.getNumElements() != n )
+            throw new IllegalArgumentException("Unexpected number of elements in x");
+        if( y.getNumElements() != n )
+            throw new IllegalArgumentException("Unexpected number of elements in y");
+
+        double result = 0;
+
+        for( int i = 0; i < n; i++ ) {
+            double total = 0;
+
+            for( int j = 0; j < n; j++ ) {
+                total += x.data[j]*A.get(j,i);
+            }
+
+            result += total*y.data[i];
+        }
+
+        return result;
+    }
+
+    /**
+     * <p>
+     * Sets A &isin; &real; <sup>m &times; n</sup> equal to an outer product multiplication of the two
+     * vectors.  This is also known as a rank-1 operation.<br>
+     * <br>
+     * A = x * y'
+     * where x &isin; &real; <sup>m</sup> and y &isin; &real; <sup>n</sup> are vectors.
+     * </p>
+     * <p>
+     * Which is equivalent to: A<sub>ij</sub> = x<sub>i</sub>*y<sub>j</sub>
+     * </p>
+     *
+     * <p>
+     * These functions are often used inside of highly optimized code and therefor sanity checks are
+     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * </p>
+     *
+     * @param x A vector with m elements. Not modified.
+     * @param y A vector with n elements. Not modified.
+     * @param A A Matrix with m by n elements. Modified.
+     */
+    public static void outerProd( DenseMatrix64F x, DenseMatrix64F y, DenseMatrix64F A ) {
+        int m = A.numRows;
+        int n = A.numCols;
+
+        int index = 0;
+        for( int i = 0; i < m; i++ ) {
+            double xdat = x.data[i];
+            for( int j = 0; j < n; j++ ) {
+                A.data[index++] = xdat*y.data[j];
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Adds to A &isin; &real; <sup>m &times; n</sup> the results of an outer product multiplication
+     * of the two vectors.  This is also known as a rank 1 update.<br>
+     * <br>
+     * A = A + &gamma; x * y<sup>T</sup>
+     * where x &isin; &real; <sup>m</sup> and y &isin; &real; <sup>n</sup> are vectors.
+     * </p>
+     * <p>
+     * Which is equivalent to: A<sub>ij</sub> = A<sub>ij</sub> + &gamma; x<sub>i</sub>*y<sub>j</sub>
+     * </p>
+     *
+     * <p>
+     * These functions are often used inside of highly optimized code and therefor sanity checks are
+     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * </p>
+     *
+     * @param gamma A multiplication factor for the outer product.
+     * @param x A vector with m elements. Not modified.
+     * @param y A vector with n elements. Not modified.
+     * @param A A Matrix with m by n elements. Modified.
+     */
+    public static void addOuterProd( double gamma , DenseMatrix64F x, DenseMatrix64F y, DenseMatrix64F A ) {
+        int m = A.numRows;
+        int n = A.numCols;
+
+        int index = 0;
+        if( gamma == 1.0 ) {
+            for( int i = 0; i < m; i++ ) {
+                double xdat = x.data[i];
+                for( int j = 0; j < n; j++ ) {
+                    A.data[index++] += xdat*y.data[j];
+                }
+            }
+        } else {
+            for( int i = 0; i < m; i++ ) {
+                double xdat = x.data[i];
+                for( int j = 0; j < n; j++ ) {
+                    A.data[index++] += gamma*xdat*y.data[j];
+                }
+            }
+        }
+    }
+
+
+    /**
+     * <p>
+     * Multiplies a householder reflection against a vector:<br>
+     * <br>
+     * y = (I + &gamma; u u<sup>T</sup>)x<br>
+     * </p>
+     * <p>
+     * The Householder reflection is used in some implementations of QR decomposition.
+     * </p>
+     * @param u A vector. Not modified.
+     * @param x a vector. Not modified.
+     * @param y Where the result are writen to.
+     */
+    public static void householder( double gamma,
+                                    DenseMatrix64F u ,
+                                    DenseMatrix64F x , DenseMatrix64F y )
+    {
+        int n = u.getNumElements();
+
+        double sum = 0;
+        for( int i = 0; i < n; i++ ) {
+            sum += u.data[i]*x.data[i];
+        }
+        for( int i = 0; i < n; i++ ) {
+            y.data[i] = x.data[i] + gamma*u.data[i]*sum;
+        }
+    }
+
+    /**
+     * <p>
+     * Performs a rank one update on matrix A using vectors u and w.  The results are stored in B.<br>
+     * <br>
+     * B = A + &gamma; u w<sup>T</sup><br>
+     * </p>
+     * <p>
+     * This is called a rank1 update because the matrix u w<sup>T</sup> has a rank of 1.
+     * </p>
+     *
+     * @param gamma A scalar.
+     * @param A A m by m matrix. Not modified.
+     * @param u A vector with m elements.  Not modified.
+     * @param w A vector with m elements.  Not modified.
+     * @param B A m by m matrix where the results are stored. Modified.
+     */
+    public static void rank1Update( double gamma,
+                                    DenseMatrix64F A ,
+                                    DenseMatrix64F u , DenseMatrix64F w ,
+                                    DenseMatrix64F B )
+    {
+        throw new RuntimeException("Not implemented yet.  is this even usfull?");
+    }
+}

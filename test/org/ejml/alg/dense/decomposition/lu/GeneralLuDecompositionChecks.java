@@ -1,0 +1,196 @@
+/*
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.ejml.alg.dense.decomposition.lu;
+
+import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
+import org.ejml.alg.dense.decomposition.LUDecomposition;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.SimpleMatrix;
+import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.RandomMatrices;
+import org.junit.Test;
+
+import java.util.Random;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+
+/**
+ * @author Peter Abeles
+ */
+public abstract class GeneralLuDecompositionChecks {
+
+    Random rand = new Random(0xff);
+
+    public abstract LUDecomposition create( int numRows , int numCols );
+
+    @Test
+    public void testExpectedSize() {
+        CheckDecompositionInterface.checkExpectedMaxSize(create(0,0));
+    }
+
+    /**
+     * Uses the decomposition returned from octave, which uses LAPACK
+     */
+    @Test
+    public void testDecomposition()
+    {
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
+
+        DenseMatrix64F octLower = new DenseMatrix64F(3,3, true, 1, 0, 0, -0.6, 1, 0, 0.3, -0.44068, 1);
+        DenseMatrix64F octUpper = new DenseMatrix64F(3,3, true, 5, 2, 3, 0, 5.9, 1.3, 0, 0, 7.67288);
+
+        LUDecomposition alg = create(3,3);
+        assertTrue(alg.decompose(A));
+
+        assertFalse(alg.isSingular());
+
+        SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
+        SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+
+        UtilTestMatrix.checkEquals(octLower,L.getMatrix(),1e-5);
+        UtilTestMatrix.checkEquals(octUpper,U.getMatrix(),1e-5);
+
+        DenseMatrix64F A_found = P.mult(L).mult(U).getMatrix();
+        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+    }
+
+    @Test
+    public void testDecomposition2()
+    {
+        for( int i = 2; i <= 20; i++ ) {
+            DenseMatrix64F A = RandomMatrices.createRandom(i,i,-1,1,rand);
+
+            LUDecomposition alg = create(i,i);
+            assertTrue(alg.decompose(A));
+
+            assertFalse(alg.isSingular());
+
+            SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
+            SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
+            SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+
+            DenseMatrix64F A_found = P.transpose().mult(L).mult(U).getMatrix();
+            assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+        }
+    }
+
+    @Test
+    public void zeroMatrix() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3);
+
+        LUDecomposition alg = create(3,3);
+
+        assertTrue(alg.decompose(A));
+        assertTrue(alg.isSingular());
+
+        DenseMatrix64F L = alg.getLower(null);
+        DenseMatrix64F U = alg.getUpper(null);
+
+        DenseMatrix64F A_found = new DenseMatrix64F(3,3);
+        CommonOps.mult(L,U,A_found);
+
+        assertFalse(MatrixFeatures.hasUncountable(A_found));
+        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+    }
+
+    @Test
+    public void testSingular(){
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 3, 2, 4, 6, 4, 4, 0);
+
+        LUDecomposition alg = create(3,3);
+        assertTrue(alg.decompose(A));
+        assertTrue(alg.isSingular());
+    }
+
+    @Test
+    public void testNearlySingular(){
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 3, 2, 4, 6.1, 4, 4, 0);
+
+        LUDecomposition alg = create(3,3);
+        assertTrue(alg.decompose(A));
+        assertFalse(alg.isSingular());
+    }
+
+    /**
+     * Checks to see how it handles getLower getUpper functions with and without
+     * a matrix being provided.
+     */
+    @Test
+    public void getLower_getUpper() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
+
+        LUDecomposition alg = create(3,3);
+
+        alg.decompose(A);
+
+        DenseMatrix64F L_provided = RandomMatrices.createRandom(3,3,rand);
+        DenseMatrix64F U_provided = RandomMatrices.createRandom(3,3,rand);
+
+        assertTrue(L_provided == alg.getLower(L_provided));
+        assertTrue(U_provided == alg.getUpper(U_provided));
+
+        DenseMatrix64F L_ret = alg.getLower(null);
+        DenseMatrix64F U_ret = alg.getUpper(null);
+
+        assertTrue(MatrixFeatures.isIdentical(L_provided,L_ret));
+        assertTrue(MatrixFeatures.isIdentical(U_provided,U_ret));
+    }
+
+    @Test
+    public void testFat() {
+        DenseMatrix64F A = new DenseMatrix64F(2,3, true, 1, 2, 3, 2, 4, 6.1);
+
+        LUDecomposition alg = create(2,3);
+
+        assertTrue(alg.decompose(A));
+//        assertFalse(alg.isSingular());
+
+        SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
+        SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+
+        DenseMatrix64F A_found = P.mult(L).mult(U).getMatrix();
+
+        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+    }
+
+    @Test
+    public void testTall() {
+        DenseMatrix64F A = new DenseMatrix64F(3,2, true, 1, 2, 3, 2, 4, 6.1);
+
+        LUDecomposition alg = create(3,2);
+
+        assertTrue(alg.decompose(A));
+//        assertFalse(alg.isSingular());
+
+        SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
+        SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+
+        DenseMatrix64F A_found = P.transpose().mult(L).mult(U).getMatrix();
+
+        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+    }
+}
