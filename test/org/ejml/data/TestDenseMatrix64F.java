@@ -19,7 +19,12 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
+
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -28,6 +33,8 @@ import static org.junit.Assert.*;
  * @author Peter Abeles
  */
 public class TestDenseMatrix64F {
+
+	Random rand = new Random(23432);
 
     @Test
     public void testGeneric() {
@@ -137,31 +144,28 @@ public class TestDenseMatrix64F {
         UtilTestMatrix.checkEquals(mat,mat2,1e-10);
     }
 
-    @Test
-    public void testSet_Array_RowMajor() {
-        double d[] = new double[]{1,2,3,4,5,6};
+	@Test
+	public void set_ColumnMajor() {
+		DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
 
-        DenseMatrix64F mat = new DenseMatrix64F(2,3);
+		DenseMatrix64F Atran = A.copy();
+		CommonOps.transpose(Atran);
+		DenseMatrix64F Afound = new DenseMatrix64F(3,5);
+		Afound.set(3,5, false, Atran.data);
 
-        mat.set(2,3,d,true);
+		assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
+	}
 
-        for( int i = 0; i < 6; i++ ) {
-            assertEquals(i+1,mat.data[i],1e-8);
-        }
-    }
+	@Test
+	public void set_RowMajor() {
+		DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
 
-    @Test
-    public void testSet_Array_ColumnMajor() {
-        double d[] = new double[]{1,3,5,2,4,6};
+		DenseMatrix64F Afound = new DenseMatrix64F(3,5);
+		Afound.set(3,5, true, A.data);
 
-        DenseMatrix64F mat = new DenseMatrix64F(2,3);
-
-        mat.set(2,3,d,false);
-
-        for( int i = 0; i < 6; i++ ) {
-            assertEquals(i+1,mat.data[i],1e-8);
-        }
-    }
+		assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
+		assertTrue(A.data != Afound.data);
+	}
 
     @Test
     public void testSetReshape_Matrix() {

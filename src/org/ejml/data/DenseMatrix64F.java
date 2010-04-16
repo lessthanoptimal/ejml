@@ -102,7 +102,7 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
         this.numRows = numRows;
         this.numCols = numCols;
 
-        set(numRows,numCols,data,rowMajor);
+        set(numRows,numCols, rowMajor, data);
     }
 
     /**
@@ -386,11 +386,11 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
      * Sets this matrix equal to the matrix encoded in the array.
      *
      * @param numRows The number of rows.
-     * @param numCols The number of columns.
-     * @param data The formatted 1D array. Not modified.
-     * @param rowMajor If the array is encoded in a row-major or a column-major format.
-     */
-    public void set( int numRows , int numCols , double data[] , boolean rowMajor )
+	 * @param numCols The number of columns.
+	 * @param rowMajor If the array is encoded in a row-major or a column-major format.
+	 * @param data The formatted 1D array. Not modified.
+	 */
+    public void set(int numRows, int numCols, boolean rowMajor, double ...data)
     {
         int length = numRows*numCols;
 
@@ -403,9 +403,9 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
             System.arraycopy(data,0,this.data,0,length);
         } else {
             int index = 0;
-            for( int i = 0; i < numCols; i++ ) {
-                for( int j = 0; j < numRows; j++ ) {
-                    this.data[index++] = data[j*numCols+i];
+            for( int i = 0; i < numRows; i++ ) {
+                for( int j = 0; j < numCols; j++ ) {
+                    this.data[index++] = data[j*numRows+i];
                 }
             }
         }
