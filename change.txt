@@ -2,7 +2,7 @@
 
 2010/XX/XX
 
-- Fixed a bug in DenseMatrix64F where it incorrectly handled column major matrices
+- Added PolynomialFit example code.
 
 ----- Version 0.11
 

@@ -46,7 +46,8 @@ import static org.ejml.ops.SpecializedOps.diffNormF;
  * @author Peter Abeles
  */
 public class LevenbergMarquardt {
-    // how much the numerical jacobian calculation perturbs the parameters by
+    // how much the numerical jacobian calculation perturbs the parameters by.
+    // In better implementation there are better ways to compute this delta.  See Numerical Recipes.
     private final static double DELTA = 1e-8;
 
     private double initialLambda;

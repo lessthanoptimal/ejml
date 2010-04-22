@@ -21,6 +21,7 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 
 
@@ -66,5 +67,13 @@ public class LinearSolverFactory {
      */
     public static LinearSolver symmetric() {
         return new LinearSolverLu(new LUDecompositionAlt());
+    }
+
+    /**
+     * Create a solver which can efficiently add and remove elements instead of recomputing
+     * everything from scratch.
+     */
+    public static AdjustableLinearSolver adjustable() {
+        return new AdjLinearSolverQr();
     }
 }
