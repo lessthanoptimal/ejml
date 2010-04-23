@@ -65,6 +65,27 @@ public class TestVectorVectorMult {
     }
 
     @Test
+    public void innerProdTranA() {
+        DenseMatrix64F A = RandomMatrices.createRandom(3,3,rand);
+        DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
+        DenseMatrix64F y = RandomMatrices.createRandom(3,1,rand);
+
+        DenseMatrix64F Atran = new DenseMatrix64F(3,3);
+        CommonOps.transpose(A,Atran);
+
+        DenseMatrix64F temp = new DenseMatrix64F(1,3);
+
+        // compute the expected result first
+        CommonOps.multTransA(x,Atran,temp);
+        double expected = VectorVectorMult.innerProd(temp,y);
+
+        double found = VectorVectorMult.innerProdTranA(x,A,y);
+
+        assertEquals(expected,found,1e-8);
+
+    }
+
+    @Test
     public void outerProd() {
         DenseMatrix64F A = new DenseMatrix64F(4,1, true, 1, 2, 3, 4);
         DenseMatrix64F B = new DenseMatrix64F(4,1, true, -1, -2, -3, -4);

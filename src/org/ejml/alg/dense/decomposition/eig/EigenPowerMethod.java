@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
@@ -194,7 +195,7 @@ public class EigenPowerMethod {
     public boolean computeShiftInvert( DenseMatrix64F A , double alpha ) {
         initPower(A);
 
-        LinearSolver solver = SpecializedOps.createSolver(A.numRows,A.numCols);
+        LinearSolver solver = LinearSolverFactory.linear();
 
         SpecializedOps.addIdentity(A,B,-alpha);
         solver.setA(B);

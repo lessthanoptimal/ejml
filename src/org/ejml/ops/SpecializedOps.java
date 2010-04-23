@@ -19,10 +19,6 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.linsol.LinearSolver;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -273,33 +269,6 @@ public class SpecializedOps {
             }
             y_sub++;
         }
-    }
-
-    /**
-     * <p>
-     * Creates a linear solver that is appropriate for a matrix of the specified size.<br>
-     * <br>
-     * Ax = b
-     * </p>
-     *
-     * @param numRows number of rows in the A matrix.
-     * @param numCols number of columns in the A matrix.
-     * @return A linear solver.
-     */
-    public static LinearSolver createSolver( int numRows , int numCols ) {
-        LinearSolver solver;
-
-        if( numRows == numCols ) {
-            LUDecompositionAlt alg = new LUDecompositionAlt();
-
-            solver = new LinearSolverLu(alg);
-        } else if( numRows > numCols ){
-            solver = new LinearSolverQrHouseCol();
-        } else {
-            throw new IllegalArgumentException("Can't solve since there is an infinite number of solutions.");
-        }
-
-        return solver;
     }
 
     /**

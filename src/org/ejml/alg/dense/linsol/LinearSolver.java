@@ -37,7 +37,8 @@ import org.ejml.data.DenseMatrix64F;
  *
  * <p>
  * A function is provided for computing the inverse of A.  This can be accomplished by using the solve function
- * also, but sometimes there are faster ways to compute the inverse.
+ * also, but sometimes there are faster ways to compute the inverse.  Solvers are also designed to be
+ * reused, which allows more efficient use of memory.
  * </p>
  *
  * @author Peter Abeles
@@ -86,7 +87,7 @@ public interface LinearSolver {
      * Computes the inverse of A matrix and writes the results to the
      * provided matrix.
      *
-     * @param A_inv Where the inverted matrix is writen to. Modified.
+     * @param A_inv Where the inverted matrix saved. Modified.
      */
     public void invert( DenseMatrix64F A_inv );
 }

@@ -25,6 +25,7 @@ import org.ejml.alg.dense.decomposition.eig.EigenPowerMethod;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
 import org.ejml.alg.dense.decomposition.eig.WatchedDoubleStepQRDecomposition;
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -99,7 +100,7 @@ public class EigenOps {
         double prevError = Double.MAX_VALUE;
         boolean hasWorked = false;
 
-        LinearSolver solver = SpecializedOps.createSolver(A.numRows,A.numCols);
+        LinearSolver solver = LinearSolverFactory.linear();
 
         double perp = 0.0001;
 

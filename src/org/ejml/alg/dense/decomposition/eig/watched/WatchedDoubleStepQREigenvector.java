@@ -22,6 +22,7 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -70,7 +71,7 @@ public class WatchedDoubleStepQREigenvector {
             eigenvectors = new DenseMatrix64F[N];
             eigenvectorTemp = new DenseMatrix64F(N,1);
 
-            solver = SpecializedOps.createSolver(N,N);
+            solver = LinearSolverFactory.linear();
         } else {
 //            UtilEjml.setnull(eigenvectors);
             eigenvectors = new DenseMatrix64F[N];

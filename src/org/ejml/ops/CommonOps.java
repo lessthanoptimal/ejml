@@ -23,6 +23,7 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.MatrixInvertSpecialized;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.UtilDeterminant;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
@@ -794,7 +795,15 @@ public class CommonOps {
      */
     public static boolean solve( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F x )
     {
-        LinearSolver solver = SpecializedOps.createSolver(a.numRows,a.numCols);
+        LinearSolver solver;
+
+        if( a.numRows == a.numCols ) {
+            solver = LinearSolverFactory.linear();
+        } else if( a.numRows > a.numCols ) {
+            solver = LinearSolverFactory.leastSquares();
+        } else {
+            throw new IllegalArgumentException("Can't solve for under determined systems since there are an infinite number of solutions.");
+        }
 
         if( !solver.setA(a) )
             return false;

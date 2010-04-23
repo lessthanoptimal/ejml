@@ -30,7 +30,6 @@ import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
  *
  * @author Peter Abeles
  */
-// TODO use this in CommonOps
 public class LinearSolverFactory {
 
     /**
