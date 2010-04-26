@@ -784,6 +784,11 @@ public class CommonOps {
      * </p>
      *
      * <p>
+     * If repeat calls to solve are being made then one should consider using {@link LinearSolverFactory}
+     * instead.
+     * </p>
+     *
+     * <p>
      * It is ok for 'b' and 'x' to be the same matrix.
      * </p>
      *
@@ -1153,6 +1158,11 @@ public class CommonOps {
      * If the algorithm could not invert the matrix then false is returned.  If it returns true
      * that just means the algorithm finished.  The results could still be bad
      * because the matrix is singular or nearly singular.
+     * </p>
+     *
+     * <p>
+     * For medium to large matrices there might be a slight performance boost to using
+     * {@link LinearSolverFactory} instead.
      * </p>
      *
      * @param mat The matrix that is to be inverted. Not modified.

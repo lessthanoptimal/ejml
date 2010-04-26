@@ -3,6 +3,8 @@
 2010/XX/XX
 
 - Added PolynomialFit example code.
+- Updated comments to reflect the addition of LinearSolvers
+- Added MatrixIterator to provide another way of accessing elements inside a matrix
 
 ----- Version 0.11
 
