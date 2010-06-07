@@ -284,8 +284,8 @@ public class WatchedDoubleStepQREigenvector {
                 implicit.performImplicitDoubleStep(x1,x2, a.real,a.imaginary);
             }
         } else {
-//            // that didn't work so try a modified order
-            if( x2-x1 >= 1 )
+            // that didn't work so try a modified order
+            if( x2-x1 >= 1 && x2 < N-1 )
                 implicit.implicitDoubleStep(x1,x2);
             else
                 implicit.performImplicitSingleStep(x1,x2,implicit.A.get(x2,x2));
