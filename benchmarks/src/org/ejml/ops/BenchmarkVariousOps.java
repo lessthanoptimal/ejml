@@ -32,7 +32,7 @@ public class BenchmarkVariousOps {
     static Random rand = new Random(0xffff);
 
     static int TRIALS_TRANSPOSE = 20000000;
-    static int TRIALS_SCALE = 20000000;
+    static int TRIALS_SCALE = 30000000;
     static int TRIALS_NORM = 10000000;
     static int TRIALS_DETERMINANT = 20000000;
 
@@ -64,12 +64,26 @@ public class BenchmarkVariousOps {
 //        return curr-prev;
 //    }
 
-    public static long scaleEml( DenseMatrix64F mat , int numTrials) {
+    public static long scale( DenseMatrix64F mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
             CommonOps.scale(10,mat);
             CommonOps.scale(0.1,mat);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
+    public static long scale2( DenseMatrix64F mat , int numTrials) {
+        DenseMatrix64F result = mat.copy();
+
+        long prev = System.currentTimeMillis();
+
+        for( int i = 0; i < numTrials; i++ ) {
+            CommonOps.scale(10,mat,result);
+            CommonOps.scale(0.1,mat,result);
         }
 
         long curr = System.currentTimeMillis();
@@ -131,8 +145,10 @@ public class BenchmarkVariousOps {
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));
-//        System.out.printf("Scale:             eml = %10d\n",
-//                scaleEml(mat,TRIALS_SCALE));
+        System.out.printf("Scale:             eml = %10d\n",
+                scale(mat,TRIALS_SCALE));
+        System.out.printf("Scale2:            eml = %10d\n",
+                scale2(mat,TRIALS_SCALE));
 //        System.out.printf("Norm:              eml = %10d\n",
 //                normEml(mat,TRIALS_NORM));
 //        System.out.printf("Determinant:       eml = %10d\n",

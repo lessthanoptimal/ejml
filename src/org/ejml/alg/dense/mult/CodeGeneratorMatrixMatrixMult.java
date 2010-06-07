@@ -124,7 +124,7 @@ public class CodeGeneratorMatrixMatrixMult {
 
         String ret =
                         "        if( "+a_numCols+" != "+b_numRows+" ) {\n" +
-                        "            throw new MatrixDimensionException(\"The 'a' and 'b' matrices do not have compatable dimensions\");\n" +
+                        "            throw new MatrixDimensionException(\"The 'a' and 'b' matrices do not have compatible dimensions\");\n" +
                         "        } else if( "+a_numRows+" != c.numRows || "+b_numCols+" != c.numCols ) {\n" +
                         "            throw new MatrixDimensionException(\"The results matrix does not have the desired dimensions\");\n" +
                         "        }\n" +
@@ -415,9 +415,9 @@ public class CodeGeneratorMatrixMatrixMult {
                         "\n" +
                         "        for( int xA = 0; xA < a.numRows; xA++ ) {\n" +
                         "            int end = aIndexStart + b.numCols;\n" +
+                        "            int indexB = 0;\n"+
                         "            for( int xB = 0; xB < b.numRows; xB++ ) {\n" +
                         "                int indexA = aIndexStart;\n" +
-                        "                int indexB = xB*b.numCols;\n" +
                         "\n" +
                         "                double total = 0;\n" +
                         "\n" +
@@ -451,9 +451,9 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        int cIndex = 0;\n" +
                         "\n" +
                         "        for( int i = 0; i < a.numCols; i++ ) {\n" +
+                        "            int indexB = 0;\n"+
                         "            for( int j = 0; j < b.numRows; j++ ) {\n" +
                         "                int indexA = i;\n" +
-                        "                int indexB = j*b.numCols;\n" +
                         "                int end = indexB + b.numCols;\n" +
                         "\n" +
                         "                double total = 0;\n" +

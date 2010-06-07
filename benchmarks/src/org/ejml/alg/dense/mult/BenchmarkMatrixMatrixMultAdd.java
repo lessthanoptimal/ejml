@@ -36,7 +36,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class BenchmarkMatrixMatrixMult {
+public class BenchmarkMatrixMatrixMultAdd {
 
     static Random rand = new Random(234234);
 
@@ -47,7 +47,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.mult(matA,matB,matResult);
+            CommonOps.multAdd(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -59,7 +59,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_small(matA,matB,matResult);
+            MatrixMatrixMult.multAdd_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -71,7 +71,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_aux(matA,matB,matResult,null);
+            MatrixMatrixMult.multAdd_aux(matA,matB,matResult,null);
         }
 
         long curr = System.currentTimeMillis();
@@ -83,14 +83,14 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_reorder(matA,matB,matResult);
+            MatrixMatrixMult.multAdd_reorder(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long multUnrolled( DenseMatrix64F matA , DenseMatrix64F matB ,
+    public static long multUrolled( DenseMatrix64F matA , DenseMatrix64F matB ,
                              DenseMatrix64F matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
@@ -98,7 +98,7 @@ public class BenchmarkMatrixMatrixMult {
             return 0;
 
         for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.mult(matA,matB,matResult);
+            UnrolledMatrixMult.multAdd(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -118,16 +118,16 @@ public class BenchmarkMatrixMatrixMult {
                 multSmall(matA,matB,matResult,numTrials),
                 multAux(matA,matB,matResult,numTrials),
                 multReorder(matA,matB,matResult,numTrials),
-                multUnrolled(matA,matB,matResult,numTrials));
+                multUrolled(matA,matB,matResult,numTrials));
 
         System.gc();
     }
 
     public static void main( String args[] ) {
-        int size[] = new int[]{2,4,10,20,50,100,200,500,1000};//,2000,4000};
+        int size[] = new int[]{2,4,10,};//20,50,100,200,500,1000};//,2000,4000};
         int count[] = new int[]{40000000,10000000,1000000,100000,10000,1000,100,8,2,1,1};
 
-        int sizeTall[] = new int[]{1,2,4,10,20,50,100,200,500,1000};
+        int sizeTall[] = new int[]{1,2,4,10,};//20,50,100,200,500,1000};
         int countTall[] = new int[]{3000,2400,1500,1000,200,200,100,50,10,5};
 
         System.out.println("******* Square:\n");

@@ -22,6 +22,7 @@ package org.ejml.alg.dense.decomposition;
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
@@ -30,7 +31,7 @@ import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose;
 
 /**
  * Selecting which specific implementation of a decomposition to use can be difficult unless one
- * has an intiment understanding of each of them works.  This class provides static functions
+ * has an intimate understanding of each of them works.  This class provides static functions
  * that can be used to create a new instance of a decomposition that should work well for almost
  * all matrices and is reasonably fast.
  *
@@ -44,7 +45,7 @@ public class DecompositionFactory {
      * </p>
      * <p>
      * Creates a new instance of a CholeskyDecomposition algorithm.  It selects the best
-     * algorithm depening on the size of the largest matrix it might decompose.
+     * algorithm depending on the size of the largest matrix it might decompose.
      * </p>
      * @param widthMax The maximum width of a matrix that can be processed.
      * @param decomposeOrig Should it decompose the matrix that is passed in or declare a new one?
@@ -62,6 +63,16 @@ public class DecompositionFactory {
 
     public static CholeskyDecomposition chol() {
         return chol(10,false,true);
+    }
+
+    /**
+     * Creates a {@link CholeskyDecompositionLDL} decomposition. Cholesky LDL is a variant of
+     * {@link CholeskyDecomposition} that avoids need to compute the square root.
+     *
+     * @return CholeskyDecompositionLDL
+     */
+    public static CholeskyDecompositionLDL cholLDL() {
+        return new CholeskyDecompositionLDL();
     }
 
     /**
@@ -97,8 +108,8 @@ public class DecompositionFactory {
 
     /**
      * Returns a new eigenvalue decomposition.  If it is known before hand if the matrix
-     * is symmetric or not then a call should be made directly to either {@link org.ejml.ops.EigenOps#decompositionGeneral()}
-     * or {@link org.ejml.ops.EigenOps#decompositionSymmetric()}.  That will avoid unnecessary checks.
+     * is symmetric or not then a call should be made directly to either {@link org.ejml.ops.EigenOps#decompositionGeneral(boolean)}
+     * or {@link org.ejml.ops.EigenOps#decompositionSymmetric(boolean)}.  That will avoid unnecessary checks.
      *
      * @return A new EigenDecomposition.
      */
@@ -107,6 +118,6 @@ public class DecompositionFactory {
     }
 
     public static EigenDecomposition eig( boolean needVectors ) {
-        return new SwitchingEigenDecomposition();
+        return new SwitchingEigenDecomposition(needVectors,1e-8);
     }
 }

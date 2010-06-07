@@ -33,7 +33,7 @@ public class BenchmarkEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        WatchedDoubleStepQRDecomposition alg = new WatchedDoubleStepQRDecomposition();
+        WatchedDoubleStepQRDecomposition alg = new WatchedDoubleStepQRDecomposition(true);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {

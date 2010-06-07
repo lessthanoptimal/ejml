@@ -31,8 +31,9 @@ public class TestSymmetricQRAlgorithmDecomposition extends GeneralEigenDecomposi
 
     @Override
     public EigenDecomposition createDecomposition() {
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition();
-        alg.setComputeVectorsWithValues(together);
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(computeVectors);
+        if( computeVectors )
+            alg.setComputeVectorsWithValues(together);
 
         return alg;
     }
@@ -40,6 +41,7 @@ public class TestSymmetricQRAlgorithmDecomposition extends GeneralEigenDecomposi
     @Test
     public void justSymmetricTests_separate() {
         together = false;
+        computeVectors = true;
 
         checkRandomSymmetric();
         checkIdentity();
@@ -48,11 +50,15 @@ public class TestSymmetricQRAlgorithmDecomposition extends GeneralEigenDecomposi
         checkWithSingularSymm();
         checkSmallValue(true);
         checkLargeValue(true);
+
+        computeVectors = false;
+        checkKnownSymmetric_JustValue();
     }
 
-@Test
+    @Test
     public void justSymmetricTests_together() {
         together = true;
+        computeVectors = true;
 
         checkRandomSymmetric();
         checkIdentity();
@@ -61,5 +67,8 @@ public class TestSymmetricQRAlgorithmDecomposition extends GeneralEigenDecomposi
         checkWithSingularSymm();
         checkSmallValue(true);
         checkLargeValue(true);
+
+        computeVectors = false;
+        checkKnownSymmetric_JustValue();
     }
 }

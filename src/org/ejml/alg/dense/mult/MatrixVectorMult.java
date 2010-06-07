@@ -31,8 +31,8 @@ import org.ejml.data.DenseMatrix64F;
  * that can be used to multiply matrices by vectors.  Strangely, even though the operations
  * count smaller, the difference between this and a regular matrix multiply is insignificant
  * for large matrices.  The smaller matrices there is about a 40% speed improvement.  In
- * practice the speed improvement for smaller matrices is not noticable unless 10s of millions
- * of matrix multiplcations are being performed.
+ * practice the speed improvement for smaller matrices is not noticeable unless 10s of millions
+ * of matrix multiplications are being performed.
  * </p>
  *
  * @author Peter Abeles
@@ -64,13 +64,14 @@ public class MatrixVectorMult {
         } else if( c.numRows != A.numRows ) {
             throw new MatrixDimensionException("C is not the expected length");
         }
+        
         if( b.numRows == 1 ) {
             if( A.numCols != b.numCols ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( b.numCols == 1 ) {
             if( A.numCols != b.numRows ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
@@ -121,11 +122,11 @@ public class MatrixVectorMult {
         }
         if( B.numRows == 1 ) {
             if( A.numCols != B.numCols ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( B.numCols == 1 ) {
             if( A.numCols != B.numRows ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
@@ -180,11 +181,11 @@ public class MatrixVectorMult {
         }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( B.numCols == 1 ) {
             if( A.numRows != B.numRows ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
@@ -225,11 +226,11 @@ public class MatrixVectorMult {
         }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( B.numCols == 1 ) {
             if( A.numRows != B.numRows ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
@@ -283,11 +284,11 @@ public class MatrixVectorMult {
         }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( B.numCols == 1 ) {
             if( A.numRows != B.numRows ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
@@ -328,11 +329,11 @@ public class MatrixVectorMult {
         }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( B.numCols == 1 ) {
             if( A.numRows != B.numRows ) {
-                throw new MatrixDimensionException("A and B are not compatable");
+                throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");

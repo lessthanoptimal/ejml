@@ -5,6 +5,8 @@
 - Added PolynomialFit example code.
 - Updated comments to reflect the addition of LinearSolvers
 - Added MatrixIterator to provide another way of accessing elements inside a matrix
+- Unrolled small matrix matrix multiplication
+- Can just compute eigenvalues.
 
 ----- Version 0.11
 

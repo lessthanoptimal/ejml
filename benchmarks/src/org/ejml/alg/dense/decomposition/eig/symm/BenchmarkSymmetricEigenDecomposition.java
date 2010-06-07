@@ -34,7 +34,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition();
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(true);
 
         alg.setComputeVectorsWithValues(true);
 
@@ -51,7 +51,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition();
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(true);
 
         alg.setComputeVectorsWithValues(false);
 

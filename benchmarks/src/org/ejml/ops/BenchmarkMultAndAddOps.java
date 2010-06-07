@@ -20,6 +20,7 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
+import org.ejml.alg.dense.mult.UnrolledMatrixMult;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -33,8 +34,21 @@ public class BenchmarkMultAndAddOps {
 
     static Random rand = new Random(234234);
 
-    static int TRIALS_MULT = 2000000;
+    static int TRIALS_MULT = 4000000;
     static int TRIALS_ADD = 100000000;
+
+    public static long mult_unrolled( DenseMatrix64F matA , DenseMatrix64F matB , int numTrials) {
+        long prev = System.currentTimeMillis();
+
+        DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numCols);
+
+        for( int i = 0; i < numTrials; i++ ) {
+            UnrolledMatrixMult.mult(matA,matB,results);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
 
     public static long mult( DenseMatrix64F matA , DenseMatrix64F matB , int numTrials) {
         long prev = System.currentTimeMillis();
@@ -262,6 +276,8 @@ public class BenchmarkMultAndAddOps {
                                          DenseMatrix64F matC , DenseMatrix64F matD ,
                                          int numTrials )
     {
+        System.out.printf("Mult Unrolled:         = %10d\n",
+                mult_unrolled(matA,matB,numTrials));
         System.out.printf("Mult:                  = %10d\n",
                 mult(matA,matB,numTrials));
         System.out.printf("Mult Alpha:            = %10d\n",
@@ -304,11 +320,12 @@ public class BenchmarkMultAndAddOps {
 
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
-        DenseMatrix64F matA = RandomMatrices.createRandom(4,4,rand);
-        DenseMatrix64F matB = RandomMatrices.createRandom(4,4,rand);
+        int N = 2;
+        DenseMatrix64F matA = RandomMatrices.createRandom(N,N,rand);
+        DenseMatrix64F matB = RandomMatrices.createRandom(N,N,rand);
         DenseMatrix64F matC,matD;
 
-        performMultTests(matA,matB,matB,matA,TRIALS_MULT);
+        performMultTests(matA,matB,matB,matA,TRIALS_MULT*10);
         performAddTests(matA,matB,matB,matA,TRIALS_ADD);
 
 

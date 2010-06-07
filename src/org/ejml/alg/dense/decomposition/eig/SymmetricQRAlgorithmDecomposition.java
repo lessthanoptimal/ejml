@@ -72,16 +72,27 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
     // the extracted eigenvectors
     private DenseMatrix64F eigenvectors[];
 
-    public SymmetricQRAlgorithmDecomposition() {
+    // should it compute eigenvectors or just eigenvalues
+    boolean computeVectors;
+
+    public SymmetricQRAlgorithmDecomposition( boolean computeVectors ) {
+
+        this.computeVectors = computeVectors;
 
         decomp = new TridiagonalSimilarDecomposition();
         helper = new SymmetricQREigen();
 
         value = new SymmetricQREigenvalue(helper);
-        vector = new SymmetricQREigenvector(helper);
+        if( computeVectors )
+            vector = new SymmetricQREigenvector(helper);
+        else
+            value.setFastEigenvalues(true);
     }
 
     public void setComputeVectorsWithValues(boolean computeVectorsWithValues) {
+        if( !computeVectors )
+            throw new IllegalArgumentException("Compute eigenvalues has been set to false");
+
         this.computeVectorsWithValues = computeVectorsWithValues;
 
         value.setFastEigenvalues(!computeVectorsWithValues);
@@ -132,10 +143,14 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         // Tell the helper to work with this matrix
         helper.init(QT);
 
-        if( computeVectorsWithValues ) {
-            return extractTogether(orig);
-        }  else {
-            return extractSeparate(orig);
+        if( computeVectors ) {
+            if( computeVectorsWithValues ) {
+                return extractTogether(orig);
+            }  else {
+                return extractSeparate(orig);
+            }
+        } else {
+            return computeEigenValues();
         }
     }
 
@@ -160,16 +175,8 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
     }
 
     private boolean extractSeparate(DenseMatrix64F orig) {
-        // make a copy of the internal tridiagonal matrix data for later use
-        diag = helper.copyDiag(diag);
-        off = helper.copyOff(off);
-
-        // extract the eigenvalues
-        if( !value.process(null) )
+        if (!computeEigenValues())
             return false;
-
-        // save a copy of them since this data structure will be recycled next
-        values = helper.copyEigenvalues(values);
 
         // ---- set up the helper to decompose the same tridiagonal matrix
         // swap arrays instead of copying them to make it slightly faster
@@ -192,6 +199,25 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         // the V matrix contains the eigenvectors.  Convert those into column vectors
         eigenvectors = CommonOps.rowsToVector(V,eigenvectors);
 
+        return true;
+    }
+
+   /**
+     * Computes eigenvalues only
+    *
+     * @return
+     */
+    private boolean computeEigenValues() {
+        // make a copy of the internal tridiagonal matrix data for later use
+        diag = helper.copyDiag(diag);
+        off = helper.copyOff(off);
+
+        // extract the eigenvalues
+        if( !value.process(null) )
+            return false;
+
+        // save a copy of them since this data structure will be recycled next
+        values = helper.copyEigenvalues(values);
         return true;
     }
 

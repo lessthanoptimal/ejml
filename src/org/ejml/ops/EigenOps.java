@@ -306,9 +306,10 @@ public class EigenOps {
      * Creates a new EigenDecomposition that will work with any matrix.
      *
      * @return EVD for any matrix.
+     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      */
-    public static EigenDecomposition decompositionGeneral() {
-        return new WatchedDoubleStepQRDecomposition();
+    public static EigenDecomposition decompositionGeneral( boolean computeVectors ) {
+        return new WatchedDoubleStepQRDecomposition(computeVectors);
     }
 
     /**
@@ -316,8 +317,9 @@ public class EigenOps {
      * will run much faster and be more accurate than the general purpose algorithm.
      *
      * @return EVD for symmetric matrices.
+     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      */
-    public static EigenDecomposition decompositionSymmetric() {
-        return new SymmetricQRAlgorithmDecomposition();
+    public static EigenDecomposition decompositionSymmetric( boolean computeVectors ) {
+        return new SymmetricQRAlgorithmDecomposition(computeVectors);
     }
 }

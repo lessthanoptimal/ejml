@@ -4,6 +4,16 @@ For 0.12 Release
 - precise norm and related
 
 
+Mult
+ - Move bound checking to CommonOps - remove it from everywhere else
+ - call unrolled operatiors
+
+Unrolled Mult
+  - auto code for tranA
+  - auto code for tranAB
+  - auto code for tranB
+  - Unit test it all
+
 For DenseMatrix64F
 
 - Bidiagonal
@@ -12,14 +22,19 @@ For DenseMatrix64F
 - LU
   - block
 
+- Iterative solver
+
 - SVD
   - make computation of U and V individually optional
   - Use QR alg to speed up singular values on very tall matrices
   - Divide and conquer algorithm
+  - An implementation that just finds zero singular values
 
 - Eigen decomposition
   - Make computation of eigen vectors optional
   - Divide and conquer algorithm.
+
+- QR with column pivoting
 
 - Accurate version of symmetric eigenvalue for 2 by 2
   - SVD

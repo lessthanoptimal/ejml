@@ -128,13 +128,18 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
         return true;
     }
 
+    /**
+     * Diagonal elements of the diagonal D matrix.
+     *
+     * @return diagonal elements of D
+     */
     public double[] getD() {
         return d;
     }
 
     /**
      * Returns L matrix from the decomposition.<br>
-     * L*L<sup>T</sup>=A
+     * L*D*L<sup>T</sup>=A
      *
      * @return A lower triangular matrix.
      */

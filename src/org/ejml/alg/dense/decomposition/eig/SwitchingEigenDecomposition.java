@@ -40,13 +40,21 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
     WatchedDoubleStepQRDecomposition generalAlg;
 
     boolean symmetric;
+    // should it compute eigenvectors or just eigenvalues?
+    boolean computeVectors;
 
-    public SwitchingEigenDecomposition( double tol ) {
+    /**
+     *
+     * @param computeVectors
+     * @param tol Tolerance for a matrix being symmetric
+     */
+    public SwitchingEigenDecomposition( boolean computeVectors , double tol ) {
+        this.computeVectors = computeVectors;
         this.tol = tol;
     }
 
     public SwitchingEigenDecomposition() {
-        this(1e-8);
+        this(true,1e-8);
     }
 
     @Override
@@ -63,6 +71,9 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
 
     @Override
     public DenseMatrix64F getEigenVector(int index) {
+        if( !computeVectors )
+            throw new IllegalArgumentException("Configured to not compute eignevectors");
+
         return symmetric ? symmetricAlg.getEigenVector(index) :
                 generalAlg.getEigenVector(index);
     }
@@ -73,9 +84,9 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
 
         if( symmetric ) {
             if( symmetricAlg == null )
-                symmetricAlg = new SymmetricQRAlgorithmDecomposition();
+                symmetricAlg = new SymmetricQRAlgorithmDecomposition(computeVectors);
         } else if( generalAlg == null ) {
-            generalAlg = new WatchedDoubleStepQRDecomposition();
+            generalAlg = new WatchedDoubleStepQRDecomposition(computeVectors);
         }
 
         return symmetric ?

@@ -113,6 +113,15 @@ public class MatrixIterator implements Iterator<Double> {
     }
 
     /**
+     * Which element in the submatrix was returned by next()
+     *
+     * @return Submatrix element's index.
+     */
+    public int getIndex() {
+        return index-1;
+    }
+
+    /**
      * True if it is iterating through the matrix by rows and false if by columns.
      * @return row major or column major
      */

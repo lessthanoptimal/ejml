@@ -29,11 +29,12 @@ import org.junit.Test;
 public class TestWatchedDoubleStepQRDecomposition extends GeneralEigenDecompositionCheck {
     @Override
     public EigenDecomposition createDecomposition() {
-        return new WatchedDoubleStepQRDecomposition();
+        return new WatchedDoubleStepQRDecomposition(computeVectors);
     }
 
     @Test
     public void allTests() {
         super.allTests();
+        super.justEigenValues();
     }
 }

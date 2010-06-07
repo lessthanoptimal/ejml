@@ -50,10 +50,15 @@ public class WatchedDoubleStepQRDecomposition implements EigenDecomposition {
 
     DenseMatrix64F H;
 
-    public WatchedDoubleStepQRDecomposition() {
+    // should it compute eigenvectors or just eigenvalues
+    boolean computeVectors;
+
+    public WatchedDoubleStepQRDecomposition( boolean computeVectors ) {
         hessenberg = new HessenbergSimilarDecomposition(10);
         algValue = new WatchedDoubleStepQREigenvalue();
         algVector = new WatchedDoubleStepQREigenvector();
+
+        this.computeVectors = computeVectors;
     }
 
     @Override
@@ -74,8 +79,11 @@ public class WatchedDoubleStepQRDecomposition implements EigenDecomposition {
 //        }
 
         algValue.getImplicitQR().createR = true;
-        return algVector.process(algValue.getImplicitQR(), H, hessenberg.getQ(null));
 
+        if( computeVectors )
+            return algVector.process(algValue.getImplicitQR(), H, hessenberg.getQ(null));
+        else
+            return true;
     }
 
     @Override
@@ -84,12 +92,12 @@ public class WatchedDoubleStepQRDecomposition implements EigenDecomposition {
 
     @Override
     public int getNumberOfEigenvalues() {
-        return algVector.getEigenvalues().length;
+        return algValue.getEigenvalues().length;
     }
 
     @Override
     public Complex64F getEigenvalue(int index) {
-        return algVector.getEigenvalues()[index];
+        return algValue.getEigenvalues()[index];
     }
 
     @Override

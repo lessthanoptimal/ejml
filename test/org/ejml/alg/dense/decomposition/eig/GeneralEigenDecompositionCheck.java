@@ -39,8 +39,11 @@ public abstract class GeneralEigenDecompositionCheck {
 
     public abstract EigenDecomposition createDecomposition();
 
+    boolean computeVectors;
 
     public void allTests() {
+        computeVectors = true;
+
         checkRandom();
         checkKnownReal();
         checkKnownComplex();
@@ -54,6 +57,16 @@ public abstract class GeneralEigenDecompositionCheck {
         checkSmallValue(true);
         checkLargeValue(false);
         checkLargeValue(true);
+    }
+
+    /**
+     * Tests for when it just computes eigenvalues
+     */
+    public void justEigenValues() {
+        computeVectors = false;
+
+        checkKnownReal_JustValue();
+        checkKnownSymmetric_JustValue();
     }
 
     /**
@@ -97,6 +110,39 @@ public abstract class GeneralEigenDecompositionCheck {
         testForEigenpair(alg,1.686542,0,-0.739990,-0.667630,-0.081761);
         testForEigenpair(alg,0.079014,0,-0.658665,0.721163,-0.214673);
         testForEigenpair(alg,0.440034,0,-0.731422,0.211711,0.648229);
+    }
+
+    /**
+     * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
+     */
+    public void checkKnownReal_JustValue() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(A));
+        performStandardTests(alg,A,-1);
+
+        testForEigenvalue(alg,1.686542,0,1);
+        testForEigenvalue(alg,0.079014,0,1);
+        testForEigenvalue(alg,0.440034,0,1);
+    }
+
+    /**
+     * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
+     */
+    public void checkKnownSymmetric_JustValue() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true,
+                0.98139,   0.78650,   0.78564,
+                0.78650,   1.03207,   0.29794,
+                0.78564,   0.29794,   0.91926);
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(alg.decompose(A));
+
+        testForEigenvalue(alg,0.00426,0,1);
+        testForEigenvalue(alg,0.67856,0,1);
+        testForEigenvalue(alg,2.24989,0,1);
     }
 
     /**
@@ -426,7 +472,6 @@ public abstract class GeneralEigenDecompositionCheck {
 
         assertEquals(1,numMatched);
     }
-
 
     public void testForEigenvalue( EigenDecomposition alg , double valueReal ,
                                    double valueImg , int numMatched )
