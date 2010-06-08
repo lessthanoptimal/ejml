@@ -102,18 +102,7 @@ public class SymmetricEigenStressTest {
                 return;
             }
 
-            DenseMatrix64F D = EigenOps.createMatrixD(decomp);
-            DenseMatrix64F V = EigenOps.createMatrixV(decomp);
-
-            CommonOps.mult(A,V,L);
-            CommonOps.mult(V,D,R);
-
-            CommonOps.sub(L,R,r);
-
-            double top = NormOps.normF(r);
-            double bottom = NormOps.normF(L);
-
-            double error = top/bottom;
+            double error = EigenOps.quality(A,decomp);
 
             if( error > 0.05 || Double.isNaN(error) || Double.isInfinite(error)) {
                 System.out.println("Large Error");

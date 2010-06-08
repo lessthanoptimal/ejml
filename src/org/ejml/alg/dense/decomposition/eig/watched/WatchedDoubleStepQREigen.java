@@ -295,7 +295,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         if( printHumps ) {
-            System.out.println("Applied first Q matrix, it should be humped now.");
+            System.out.println("Applied first Q matrix, it should be humped now. A = ");
             A.print("%12.3e");
             System.out.println("Pushing the hump off the matrix.");
         }
@@ -309,7 +309,7 @@ public class WatchedDoubleStepQREigen {
             }
 
             if( printHumps ) {
-                System.out.println("i = "+i);
+                System.out.println("i = "+i+" A = ");
                 A.print("%12.3e");
             }
         }
@@ -321,6 +321,10 @@ public class WatchedDoubleStepQREigen {
             if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                 throw new RuntimeException("Bad");
 
+        }
+        if( printHumps ) {
+            System.out.println(" A = ");
+            A.print("%12.3e");
         }
 //        A.print("%12.3e");
 
@@ -343,7 +347,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         if( printHumps ) {
-            System.out.println("Applied first Q matrix, it should be humped now.");
+            System.out.println("Applied first Q matrix, it should be humped now. A = ");
             A.print("%12.3e");
             System.out.println("Pushing the hump off the matrix.");
         }
@@ -357,7 +361,7 @@ public class WatchedDoubleStepQREigen {
             }
 
             if( printHumps ) {
-                System.out.println("i = "+i);
+                System.out.println("i = "+i+" A = ");
                 A.print("%12.3e");
             }
         }
@@ -441,7 +445,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         if( printHumps ) {
-            System.out.println("  after Q ");
+            System.out.println("  After Q.   A =");
             A.print();
         }
 

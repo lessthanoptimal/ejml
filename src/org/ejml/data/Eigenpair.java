@@ -27,7 +27,7 @@ package org.ejml.data;
  * @author Peter Abeles
  */
 public class Eigenpair {
-    double value;
+    public double value;
     public DenseMatrix64F vector;
 
     public Eigenpair( double value , DenseMatrix64F vector ) {

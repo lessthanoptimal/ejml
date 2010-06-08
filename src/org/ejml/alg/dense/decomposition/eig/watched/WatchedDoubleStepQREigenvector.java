@@ -138,7 +138,7 @@ public class WatchedDoubleStepQREigenvector {
         for( int i = 0; i < N; i++ ) {
             Complex64F c = implicit.eigenvalues[i];
 
-            if( eigenvectors[i] == null && c.isReal() && Math.abs(c.real-real)/scale < 1e-4 ) {
+            if( eigenvectors[i] == null && c.isReal() && Math.abs(c.real-real)/scale < 1e-12 ) {
                 numMatched++;
             }
         }

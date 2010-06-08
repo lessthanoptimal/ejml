@@ -31,6 +31,7 @@ public class EigenvalueSmall {
     public Complex64F value1 = new Complex64F();
     public Complex64F value2 = new Complex64F();
 
+    // if |a11-a22| >> |a12+a21| there might be a better way.  see pg371
     public void value2x2( double a11 , double a12, double a21 , double a22 )
     {
         // apply a rotators such that th a11 and a22 elements are the same
@@ -44,9 +45,9 @@ public class EigenvalueSmall {
 
             double t_hat = aa/bb;
 
-            double t = t_hat/(1+Math.sqrt(1+t_hat*t_hat));
+            double t = t_hat/(1.0+Math.sqrt(1.0+t_hat*t_hat));
 
-            c = 1.0/Math.sqrt(1+t*t);
+            c = 1.0/Math.sqrt(1.0+t*t);
             s = c*t;
         }
 
@@ -65,9 +66,8 @@ public class EigenvalueSmall {
                 c = 0;
                 s = 1;
             } else {
-                double right = b12/(b12+b21);
-                s = Math.sqrt(1.0-right);
-                c = Math.sqrt(right);
+                s = Math.sqrt(b21/(b12+b21));
+                c = Math.sqrt(b12/(b12+b21));
             }
 
 //            c2 = b12;//c*c;
@@ -103,7 +103,7 @@ public class EigenvalueSmall {
     public void value2x2_fast( double a11 , double a12, double a21 , double a22 )
     {
         double left = (a11+a22)/2.0;
-        double inside = 4*a12*a21 + (a11-a22)*(a11-a22);
+        double inside = 4.0*a12*a21 + (a11-a22)*(a11-a22);
 
         if( inside < 0 ) {
             value0.real = value1.real = left;
@@ -113,7 +113,7 @@ public class EigenvalueSmall {
             double right = Math.sqrt(inside)/2.0;
             value0.real = (left+right);
             value1.real = (left-right);
-            value0.imaginary = value1.imaginary = 0;
+            value0.imaginary = value1.imaginary = 0.0;
         }
     }
 

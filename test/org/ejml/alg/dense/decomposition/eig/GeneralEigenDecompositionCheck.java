@@ -47,6 +47,7 @@ public abstract class GeneralEigenDecompositionCheck {
         checkRandom();
         checkKnownReal();
         checkKnownComplex();
+        checkCompanionMatrix();
         checkRandomSymmetric();
         checkExceptional();
         checkIdentity();
@@ -67,6 +68,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         checkKnownReal_JustValue();
         checkKnownSymmetric_JustValue();
+        checkCompanionMatrix();
     }
 
     /**
@@ -113,6 +115,38 @@ public abstract class GeneralEigenDecompositionCheck {
     }
 
     /**
+     * Found to be a stressing case that broke a version of the general EVD algorithm.  It is a companion matrix
+     * for a polynomial used to find the zeros.
+     *
+     * Discovered by exratt@googlema*l.com
+     */
+    public void checkCompanionMatrix() {
+        double[] polynomial = {
+                5.392104631674957e7,
+                -7.717841412372049e8,
+                -1.4998803087543774e7,
+                -30110.074181432814,
+                -16.0
+        };
+
+        // build companion matrix
+        int n = polynomial.length - 1;
+        DenseMatrix64F companion = new DenseMatrix64F(n, n);
+        for (int i = 0; i < n; i++) {
+            companion.set(i, n - 1, -polynomial[i] / polynomial[n]);
+        }
+        for (int i = 1; i < n; i++) {
+            companion.set(i, i - 1, 1);
+        }
+
+        // the eigenvalues of the companion matrix matches the roots of the polynomial
+        EigenDecomposition alg = createDecomposition();
+        assertTrue(alg.decompose(companion));
+
+        performStandardTests(alg,companion,n);
+    }
+
+    /**
      * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
      */
     public void checkKnownReal_JustValue() {
@@ -121,11 +155,10 @@ public abstract class GeneralEigenDecompositionCheck {
         EigenDecomposition alg = createDecomposition();
 
         assertTrue(alg.decompose(A));
-        performStandardTests(alg,A,-1);
 
-        testForEigenvalue(alg,1.686542,0,1);
-        testForEigenvalue(alg,0.079014,0,1);
-        testForEigenvalue(alg,0.440034,0,1);
+        testForEigenvalue(alg,A,1.686542,0,1);
+        testForEigenvalue(alg,A,0.079014,0,1);
+        testForEigenvalue(alg,A,0.440034,0,1);
     }
 
     /**
@@ -140,9 +173,9 @@ public abstract class GeneralEigenDecompositionCheck {
 
         assertTrue(alg.decompose(A));
 
-        testForEigenvalue(alg,0.00426,0,1);
-        testForEigenvalue(alg,0.67856,0,1);
-        testForEigenvalue(alg,2.24989,0,1);
+        testForEigenvalue(alg,A,0.00426,0,1);
+        testForEigenvalue(alg,A,0.67856,0,1);
+        testForEigenvalue(alg,A,2.24989,0,1);
     }
 
     /**
@@ -258,7 +291,7 @@ public abstract class GeneralEigenDecompositionCheck {
             performStandardTests(alg,A,ev.length);
 
             for( int j = 0; j < ev.length; j++ ) {
-                testForEigenvalue(alg,ev[j],0,numRepeated[j]);
+                testForEigenvalue(alg,A,ev[j],0,numRepeated[j]);
             }
         }
     }
@@ -335,8 +368,12 @@ public abstract class GeneralEigenDecompositionCheck {
             assertEquals(0,numReal);
         }
 
-        testPairsConsistent(alg,A);
-        testVectorsLinearlyIndependent(alg);
+        if( computeVectors ) {
+            testPairsConsistent(alg,A);
+            testVectorsLinearlyIndependent(alg);
+        } else {
+            testEigenvalueConsistency(alg,A);
+        }
     }
 
     /**
@@ -376,7 +413,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
                 double error = SpecializedOps.diffNormF(tempA,tempB)/max;
 
-                if( error > 1e-8 ) {
+                if( error > 1e-12 ) {
                     System.out.println("Original matrix:");
                     A.print();
                     System.out.println("Eigenvalue = "+c.real);
@@ -398,7 +435,36 @@ public abstract class GeneralEigenDecompositionCheck {
                     fail("Error was too large");
                 }
 
-                assertTrue(error <= 1e-8);
+                assertTrue(error <= 1e-12);
+            }
+        }
+    }
+
+    /**
+     * Takes a real eigenvalue and computes its eigenvector.  then sees if it is similar to the adjusted
+     * eigenvalue
+     */
+    public void testEigenvalueConsistency( EigenDecomposition alg ,
+                                           DenseMatrix64F A )
+    {
+        int N = alg.getNumberOfEigenvalues();
+
+        DenseMatrix64F AV = new DenseMatrix64F(N,1);
+        DenseMatrix64F LV = new DenseMatrix64F(N,1);
+
+        for( int i = 0; i < N; i++ ) {
+            Complex64F c = alg.getEigenvalue(i);
+
+            if( c.isReal() ) {
+                Eigenpair p = EigenOps.computeEigenVector(A,c.getReal());
+
+                if( p != null ) {
+                    CommonOps.mult(A,p.vector,AV);
+                    CommonOps.scale(c.getReal(),p.vector,LV);
+                    double error = SpecializedOps.diffNormF(AV,LV);
+//                    System.out.println("error = "+error);
+                    assertTrue(error<1e-12);
+                }
             }
         }
     }
@@ -451,8 +517,8 @@ public abstract class GeneralEigenDecompositionCheck {
 
                 if( c.isReal() ) {
                     if( vector.length > 0 ) {
-                        DenseMatrix64F e = new DenseMatrix64F(N,1, true, vector);
                         DenseMatrix64F v = alg.getEigenVector(i);
+                        DenseMatrix64F e = new DenseMatrix64F(N,1, true, vector);
 
                         double error = SpecializedOps.diffNormF(e,v);
                         CommonOps.changeSign(e);
@@ -473,7 +539,9 @@ public abstract class GeneralEigenDecompositionCheck {
         assertEquals(1,numMatched);
     }
 
-    public void testForEigenvalue( EigenDecomposition alg , double valueReal ,
+    public void testForEigenvalue( EigenDecomposition alg ,
+                                   DenseMatrix64F A,
+                                   double valueReal ,
                                    double valueImg , int numMatched )
     {
         int N = alg.getNumberOfEigenvalues();

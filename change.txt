@@ -7,6 +7,8 @@
 - Added MatrixIterator to provide another way of accessing elements inside a matrix
 - Unrolled small matrix matrix multiplication
 - Can just compute eigenvalues.
+- Fixed an array index out of bounds error when computing general eigenvectors
+- Improved accuracy of general EVD when computing eigenvalues and eigenvectors
 
 ----- Version 0.11
 

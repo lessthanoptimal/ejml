@@ -30,6 +30,7 @@ import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Eigenpair;
+import org.ejml.data.SimpleMatrix;
 
 
 /**
@@ -300,6 +301,38 @@ public class EigenOps {
         }
 
         return V;
+    }
+
+    /**
+     * <p>
+     * Used to test to see how good an eigenvalue decomposition is.  The closer to zero the better.  This only
+     * tests eigenvalues that are real.
+     *  <p>
+     * <p>
+     * Quality = ||A*V - V*D|| / ||A*V||.
+     *  </p>
+     * 
+     * @param orig The original matrix.
+     * @param eig EVD of the original matrix.
+     * @return Quality.  Closer to zero the better.
+     */
+    public static double quality( DenseMatrix64F orig , EigenDecomposition eig )
+    {
+        SimpleMatrix A = SimpleMatrix.wrap(orig);
+        SimpleMatrix V = SimpleMatrix.wrap(EigenOps.createMatrixV(eig));
+        SimpleMatrix D = SimpleMatrix.wrap(EigenOps.createMatrixD(eig));
+
+        SimpleMatrix L = A.mult(V);
+        SimpleMatrix R = V.mult(D);
+
+        SimpleMatrix diff = L.minus(R);
+
+        double top = diff.normF();
+        double bottom = L.normF();
+
+        double error = top/bottom;
+
+        return error;
     }
 
     /**
