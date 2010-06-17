@@ -19,34 +19,13 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
-import org.junit.Test;
-
-import java.util.Random;
-
-import static org.junit.Assert.assertEquals;
-
 
 /**
  * @author Peter Abeles
  */
-public class TestDeterminantLeibniz {
+public class OverflowDeterminant {
 
-    /**
-     * Compares this formuation to the naive recursive formulation
-     */
-    @Test
-    public void compareToRecursive() {
-        Random rand = new Random(0xff);
-
-        for( int i = 1; i <= 5; i++ ) {
-            DenseMatrix64F A = RandomMatrices.createRandom(i,i,rand);
-
-            double expected = UtilDeterminant.detRecursive(A);
-            double found = DeterminantLeibniz.det(A);
-
-            assertEquals(expected,found,1e-8);
-        }
+    public static void main( String args[] ) {
+        
     }
 }

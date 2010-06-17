@@ -25,7 +25,8 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.alg.dense.misc.UtilDeterminant;
+import org.ejml.alg.dense.misc.NaiveDeterminant;
+import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.DenseMatrix64F;
@@ -1085,11 +1086,11 @@ public class CommonOps {
             // when it was the case statement the VM did some strange optimization
             // and made case 2 about 1/2 the speed
             if( numCol == 2 ) {
-                return UtilDeterminant.det2by2(mat.data);
+                return UnrolledDeterminantFromMinor.det2(mat);
             } else if( numCol == 3 ) {
-                return UtilDeterminant.det3by3(mat.data);
+                return UnrolledDeterminantFromMinor.det3(mat);
             } else if( numCol == 4 ) {
-                return UtilDeterminant.det4by4(mat.data);
+                return UnrolledDeterminantFromMinor.det4(mat);
             } else if( numCol == 1 ) {
                 return mat.data[0];
             } else {

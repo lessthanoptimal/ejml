@@ -20,7 +20,10 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
+
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,35 +31,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestUtilDeterminant {
+public class TestNaiveDeterminant {
 
-
-    @Test
-    public void test2x2() {
-        double[] mat = new double[]{5 ,-2 , 0.1, 91};
-
-        double val = UtilDeterminant.det2by2(mat);
-
-        assertEquals(455.20,val,1e-6);
-    }
-
-    @Test
-    public void test3x3() {
-        double[] mat = new double[]{5 ,-2 ,-4, 0.1 ,91 ,8, 1 ,-2, 10};
-
-        double val = UtilDeterminant.det3by3(mat);
-
-        assertEquals(4980.8,val,1e-6);
-    }
-
-    @Test
-    public void test4x4() {
-        double[] mat = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
-
-        double val = UtilDeterminant.det4by4(mat);
-
-        assertEquals(-27288.86,val,1e-6);
-    }
 
     @Test
     public void detRecursive() {
@@ -64,9 +40,25 @@ public class TestUtilDeterminant {
 
         DenseMatrix64F mat = new DenseMatrix64F(4,4, true, d);
 
-        double val1 = UtilDeterminant.detRecursive(mat);
-        double val2 = UtilDeterminant.det4by4(d);
+        double val = NaiveDeterminant.recursive(mat);
 
-        assertEquals(val2,val1,1e-6);
+        assertEquals(-27288.86,val,1e-6);
+    }
+
+    /**
+     * Compares this formuation to the naive recursive formulation
+     */
+    @Test
+    public void det() {
+        Random rand = new Random(0xff);
+
+        for( int i = 1; i <= 5; i++ ) {
+            DenseMatrix64F A = RandomMatrices.createRandom(i,i,rand);
+
+            double expected = NaiveDeterminant.recursive(A);
+            double found = NaiveDeterminant.leibniz(A);
+
+            assertEquals(expected,found,1e-8);
+        }
     }
 }

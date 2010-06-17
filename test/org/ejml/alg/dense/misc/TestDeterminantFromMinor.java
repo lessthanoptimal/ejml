@@ -42,7 +42,7 @@ public class TestDeterminantFromMinor {
     public void compareTo4x4() {
         double[] mat = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
 
-        double val = UtilDeterminant.det4by4(mat);
+        double val = NaiveDeterminant.recursive(new DenseMatrix64F(4,4,true,mat));
 
         DeterminantFromMinor minor = new DeterminantFromMinor(4,3);
         double minorVal = minor.compute(new DenseMatrix64F(4,4, true, mat));
@@ -74,7 +74,7 @@ public class TestDeterminantFromMinor {
         DeterminantFromMinor minor = new DeterminantFromMinor(width);
         double minorVal = minor.compute(new DenseMatrix64F(width,width, true, A.data));
 
-        double recVal = UtilDeterminant.detRecursive(new DenseMatrix64F(width,width, true, A.data));
+        double recVal = NaiveDeterminant.recursive(new DenseMatrix64F(width,width, true, A.data));
 
         assertEquals(recVal,minorVal,1e-6);
     }
@@ -125,7 +125,7 @@ public class TestDeterminantFromMinor {
         assertFalse(first==third);
 
         // make sure it has a valid result the third time
-        double recVal = UtilDeterminant.detRecursive(B);
+        double recVal = NaiveDeterminant.recursive(B);
         assertEquals(third,recVal,1e-6);
     }
 }

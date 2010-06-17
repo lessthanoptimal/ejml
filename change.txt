@@ -9,6 +9,7 @@
 - Can just compute eigenvalues.
 - Fixed an array index out of bounds error when computing general eigenvectors
 - Improved accuracy of general EVD when computing eigenvalues and eigenvectors
+  when dealing with nearly identical eigenvalues
 
 ----- Version 0.11
 

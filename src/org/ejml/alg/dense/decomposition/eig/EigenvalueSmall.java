@@ -94,11 +94,6 @@ public class EigenvalueSmall {
     /**
      * Computes the eigenvalues of a 2 by 2 matrix using a faster but more prone to errors method.  This
      * is the typical method.
-     *
-     * @param a11
-     * @param a12
-     * @param a21
-     * @param a22
      */
     public void value2x2_fast( double a11 , double a12, double a21 , double a22 )
     {

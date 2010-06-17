@@ -63,7 +63,7 @@ public class DeterminantFromMinor {
     private int open[];
     private int numOpen;
     // a minor matrix which is created at the lowest level
-    private double []tempMat;
+    private DenseMatrix64F tempMat;
 
     private boolean dirty = false;
 
@@ -83,11 +83,12 @@ public class DeterminantFromMinor {
      */
     public DeterminantFromMinor( int width , int minWidth )
     {
-        if( width < minWidth ) {
-            throw new IllegalArgumentException("It is assumed that the matrices width is more than or then minWidth");
-        } else if( minWidth > 5 || minWidth < 2 ) {
+        if( minWidth > 5 || minWidth < 2 ) {
             throw new IllegalArgumentException("No direct function for that width");
-        }  
+        }
+
+        if( width < minWidth )
+            minWidth = width;
 
         this.minWidth = minWidth;
         this.width = width;
@@ -100,7 +101,7 @@ public class DeterminantFromMinor {
 
         open = new int[ width ];
 
-        tempMat = new double[ (minWidth-1)*(minWidth-1) ];
+        tempMat = new DenseMatrix64F(minWidth-1,minWidth-1);
     }
 
     /**
@@ -154,15 +155,15 @@ public class DeterminantFromMinor {
 
                     switch( minWidth ) {
                         case 5:
-                            subresult *= UtilDeterminant.det4by4(tempMat);
+                            subresult *= UnrolledDeterminantFromMinor.det4(tempMat);
                         break;
 
                         case 4:
-                            subresult *= UtilDeterminant.det3by3(tempMat);
+                            subresult *= UnrolledDeterminantFromMinor.det3(tempMat);
                         break;
 
                         case 3:
-                            subresult *= UtilDeterminant.det2by2(tempMat);
+                            subresult *= UnrolledDeterminantFromMinor.det2(tempMat);
                         break;
                     }
 
@@ -247,7 +248,7 @@ public class DeterminantFromMinor {
             int dstIndex = i;
 
             for( int j = 0; j < w; j++ ) {
-                tempMat[dstIndex] = matData[srcIndex];
+                tempMat.data[dstIndex] = matData[srcIndex];
                 dstIndex += w;
                 srcIndex += width;
             }
