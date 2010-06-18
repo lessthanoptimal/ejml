@@ -1,12 +1,12 @@
-For 0.12 Release
-- push experimental code to benchmarks
-- Get all unit tests working again
-- precise norm and related
-
+For 0.13 Release
+- Decide if unrolled matrix multiply should be added
+- Modify original matrix for decompositions
+  * Make that the default behavior but have friendly classes make a copy by default?
+    - Easier to test?
 
 Mult
  - Move bound checking to CommonOps - remove it from everywhere else
- - call unrolled operatiors
+ - call unrolled operations
 
 Unrolled Mult
   - auto code for tranA
@@ -29,9 +29,10 @@ For DenseMatrix64F
   - Use QR alg to speed up singular values on very tall matrices
   - Divide and conquer algorithm
   - An implementation that just finds zero singular values
+  - Add option to overwrite input matrix
 
 - Eigen decomposition
-  - Make computation of eigen vectors optional
+  - Add option to overwrite input matrix
   - Divide and conquer algorithm.
 
 - QR with column pivoting
@@ -41,8 +42,6 @@ For DenseMatrix64F
   - SymmEig
 
 - Fast Matrix Multiply
-- General analytical inverse
-- hard code 4 by 4 inverse
 - hard code cholesky decomposition for small matrices
 
 - Matrix Multiplication:

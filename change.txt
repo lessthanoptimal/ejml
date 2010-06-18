@@ -1,6 +1,6 @@
 ----- Version 0.12
 
-2010/XX/XX
+2010/06/17
 
 - Added PolynomialFit example code.
 - Updated comments to reflect the addition of LinearSolvers
@@ -9,8 +9,11 @@
 - Can just compute eigenvalues.
 - Fixed an array index out of bounds error when computing general eigenvectors
 - Improved accuracy of general EVD when computing eigenvalues and eigenvectors
-  when dealing with nearly identical eigenvalues
-
+  when dealing with nearly identical eigenvalues.  Thanks to Ex'ratt for finding this and the previous problem.
+- Auto code for unrolling determinant by minor.
+- Auto code generator for unrolling inverse by minor
+- Created experimental code directory
+  
 ----- Version 0.11
 
 2010/04/07
