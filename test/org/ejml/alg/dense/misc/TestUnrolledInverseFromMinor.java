@@ -20,35 +20,48 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestUnrolledDeterminantFromMinor {
+public class TestUnrolledInverseFromMinor {
 
     Random rand = new Random(234234);
 
+    /**
+     * Compare it against LU decomposition
+     */
     @Test
-    public void testAll() {
-        for( int N = 2; N <= UnrolledDeterminantFromMinor.MAX; N++ ) {
+    public void compareToLU() {
+
+        for( int N = 2; N <= UnrolledInverseFromMinor.MAX; N++ ) {
             DenseMatrix64F A = RandomMatrices.createRandom(N,N,rand);
 
-            double unrolled = UnrolledDeterminantFromMinor.det(A);
-            LUDecompositionAlt alg = new LUDecompositionAlt();
-            assertTrue( alg.decompose(A) );
-            double expected = alg.computeDeterminant();
+            DenseMatrix64F expected = new DenseMatrix64F(N,N);
+            DenseMatrix64F found = new DenseMatrix64F(N,N);
 
-            assertEquals(expected,unrolled,1e-8);
+            // first compute inverse by LU
+            LUDecompositionAlt alg = new LUDecompositionAlt();
+            LinearSolverLu solver = new LinearSolverLu(alg);
+
+            assertTrue( solver.setA(A));
+            solver.invert(expected);
+
+            // compute the result from the algorithm being tested
+            UnrolledInverseFromMinor.inv(A,found);
+
+            assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
         }
+
     }
 }

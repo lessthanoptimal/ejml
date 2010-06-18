@@ -27,6 +27,10 @@ import java.io.PrintStream;
  * Generates unrolled matrix from minor analytical functions.  these can run much faster than LU but will only
  * work for small matrices.
  *
+ * When computing the determinants for each minor there are some repeat calculations going on.  I manually
+ * removed those by storing them in a local variable and only computing it once.  Despite reducing the FLOP count
+ * it didn't seem to noticeably improve performance in a runtime benchmark..
+ *
  * @author Peter Abeles
  */
 public class GenerateInverseFromMinor {
@@ -232,6 +236,6 @@ public class GenerateInverseFromMinor {
     public static void main( String args[] ) throws FileNotFoundException {
         GenerateInverseFromMinor gen = new GenerateInverseFromMinor();
 
-        gen.createClass(6);
+        gen.createClass(5);
     }
 }

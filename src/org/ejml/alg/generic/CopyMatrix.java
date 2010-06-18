@@ -19,8 +19,6 @@
 
 package org.ejml.alg.generic;
 
-import org.ejml.data.DenseD2Matrix64F;
-import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 
 
@@ -29,13 +27,13 @@ import org.ejml.data.Matrix64F;
  */
 public class CopyMatrix {
 
-    public static DenseD2Matrix64F convertToD2( DenseMatrix64F orig ) {
-        DenseD2Matrix64F ret = new DenseD2Matrix64F(orig.numRows,orig.numCols);
-
-        copy(orig,ret);
-
-        return ret;
-    }
+//    public static DenseD2Matrix64F convertToD2( DenseMatrix64F orig ) {
+//        DenseD2Matrix64F ret = new DenseD2Matrix64F(orig.numRows,orig.numCols);
+//
+//        copy(orig,ret);
+//
+//        return ret;
+//    }
 
     public static void copy( Matrix64F from , Matrix64F to )
     {

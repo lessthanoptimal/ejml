@@ -20,13 +20,12 @@
 package org.ejml.ops;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.MatrixInvertSpecialized;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.alg.dense.misc.NaiveDeterminant;
 import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
+import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.DenseMatrix64F;
@@ -1081,20 +1080,14 @@ public class CommonOps {
 
         if( numCol != numRow ) {
             throw new IllegalArgumentException("Must be a square matrix.");
-        } else if( numCol <= 4 ) {
+        } else if( numCol <= UnrolledDeterminantFromMinor.MAX ) {
             // slight performance boost overall by doing it this way
             // when it was the case statement the VM did some strange optimization
             // and made case 2 about 1/2 the speed
-            if( numCol == 2 ) {
-                return UnrolledDeterminantFromMinor.det2(mat);
-            } else if( numCol == 3 ) {
-                return UnrolledDeterminantFromMinor.det3(mat);
-            } else if( numCol == 4 ) {
-                return UnrolledDeterminantFromMinor.det4(mat);
-            } else if( numCol == 1 ) {
-                return mat.data[0];
+            if( numCol >= 2 ) {
+                return UnrolledDeterminantFromMinor.det(mat);
             } else {
-                 throw new RuntimeException("Egads");
+                return mat.data[0];
             }
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();
@@ -1122,15 +1115,13 @@ public class CommonOps {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DenseMatrix64F mat) {
-        if( mat.numCols <= 3 ) {
+        if( mat.numCols <= UnrolledInverseFromMinor.MAX ) {
             if( mat.numCols != mat.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
             }
 
-            if( mat.numCols == 2 ) {
-                MatrixInvertSpecialized.invert2x2(mat.data);
-            } else if( mat.numCols == 3 ) {
-                MatrixInvertSpecialized.invert3x3(mat.data);
+            if( mat.numCols >= 2 ) {
+                UnrolledInverseFromMinor.inv(mat,mat);
             } else {
                 mat.data[0] = 1.0/mat.data[0];
             }
@@ -1171,18 +1162,14 @@ public class CommonOps {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DenseMatrix64F mat, DenseMatrix64F result ) {
-        if( mat.numCols <= 3 ) {
+        if( mat.numCols <= UnrolledInverseFromMinor.MAX ) {
             if( mat.numCols != mat.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
             }
-            result.set(mat);
-
-            if( result.numCols == 2 ) {
-                MatrixInvertSpecialized.invert2x2(result.data);
-            } else if( result.numCols == 3 ) {
-                MatrixInvertSpecialized.invert3x3(result.data);
+            if( result.numCols >= 2 ) {
+                UnrolledInverseFromMinor.inv(mat,result);
             } else {
-                result.data[0] = 1.0/result.data[0];
+                result.data[0] = 1.0/mat.data[0];
             }
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();

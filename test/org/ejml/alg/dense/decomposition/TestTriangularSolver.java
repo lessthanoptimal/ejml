@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
+import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -42,7 +43,7 @@ public class TestTriangularSolver {
         DenseMatrix64F L = createRandomLowerTriangular();
 
         DenseMatrix64F L_inv = L.copy();
-        MatrixInvertSpecialized.invert3x3(L_inv.data);
+        UnrolledInverseFromMinor.inv(L_inv,L_inv);
 
         DenseMatrix64F B = RandomMatrices.createRandom(3,1,rand);
         DenseMatrix64F expected = RandomMatrices.createRandom(3,1,rand);
@@ -70,7 +71,7 @@ public class TestTriangularSolver {
         DenseMatrix64F L = createRandomLowerTriangular();
 
         DenseMatrix64F L_inv = L.copy();
-        MatrixInvertSpecialized.invert3x3(L_inv.data);
+        UnrolledInverseFromMinor.inv(L_inv,L_inv);
 
         DenseMatrix64F B = RandomMatrices.createRandom(3,4,rand);
         DenseMatrix64F expected = RandomMatrices.createRandom(3,4,rand);
@@ -94,7 +95,7 @@ public class TestTriangularSolver {
 
         CommonOps.transpose(L);
         DenseMatrix64F L_inv = L.copy();
-        MatrixInvertSpecialized.invert3x3(L_inv.data);
+        UnrolledInverseFromMinor.inv(L_inv,L_inv);
         CommonOps.mult(L_inv,B,expected);
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
@@ -110,7 +111,7 @@ public class TestTriangularSolver {
         }
 
         DenseMatrix64F U_inv = U.copy();
-        MatrixInvertSpecialized.invert3x3(U_inv.data);
+        UnrolledInverseFromMinor.inv(U_inv,U_inv);
 
         DenseMatrix64F B = RandomMatrices.createRandom(3,1,rand);
         DenseMatrix64F expected = RandomMatrices.createRandom(3,1,rand);

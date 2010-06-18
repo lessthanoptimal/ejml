@@ -121,11 +121,6 @@ public class TestNormOps {
     }
 
     @Test
-    public void preciseNormF() {
-        fail("Implement");
-    }
-
-    @Test
     public void fastNormP2() {
         // check induced matrix norm
         double found = NormOps.fastNormP2(unzeroMatrix);

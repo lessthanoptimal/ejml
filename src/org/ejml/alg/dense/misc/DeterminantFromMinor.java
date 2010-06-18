@@ -40,7 +40,6 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  *
  * @see org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt
- * @see DeterminantLeibniz
  *
  * @author Peter Abeles
  */
@@ -153,19 +152,7 @@ public class DeterminantFromMinor {
                     createMinor(mat);
                     double subresult = mat.data[level*width+levelRemoved[level]];
 
-                    switch( minWidth ) {
-                        case 5:
-                            subresult *= UnrolledDeterminantFromMinor.det4(tempMat);
-                        break;
-
-                        case 4:
-                            subresult *= UnrolledDeterminantFromMinor.det3(tempMat);
-                        break;
-
-                        case 3:
-                            subresult *= UnrolledDeterminantFromMinor.det2(tempMat);
-                        break;
-                    }
+                    subresult *= UnrolledDeterminantFromMinor.det(tempMat);
 
                     if( levelIndex % 2 == 0 ) {
                         levelResults[level] += subresult;

@@ -31,7 +31,7 @@ import org.ejml.data.DenseMatrix64F;
 public class UnrolledDeterminantFromMinor {
     
     public static final int MAX = 6;
-
+    
     public static double det( DenseMatrix64F mat ) {
         if( mat.numRows == 2 ) {
             return det2(mat);

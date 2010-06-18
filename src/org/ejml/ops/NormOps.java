@@ -206,33 +206,6 @@ public class NormOps {
     }
 
     /**
-     * If a very precise number of the f-norm is needed then this can be used.  It uses BigDecimal
-     * to compute very accurate solutions very slowly.
-     *
-     * @param A The matrix whose norm is computed.  Not modified.
-     * @return The norm's value.
-     */
-    public static BigDecimal preciseNormF( DenseMatrix64F A ) {
-
-        final double data[] = A.data;
-        int size = A.getNumElements();
-
-        BigDecimal total = new BigDecimal("0");
-        for( int i = 0; i < size; i++ ) {
-            double val = data[i];
-
-            BigDecimal square = new BigDecimal(val);
-            square = square.multiply(square);
-
-            total = total.add(square);
-        }
-
-//        total.sq
-//        return Math.sqrt(total);
-        return null;
-    }
-
-    /**
      * <p>
      * Element wise p-norm:<br>
      * <br>

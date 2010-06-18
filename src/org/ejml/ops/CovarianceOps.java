@@ -21,9 +21,9 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.MatrixInvertSpecialized;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -74,7 +74,7 @@ public class CovarianceOps {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DenseMatrix64F cov ) {
-        if( cov.numCols <= 3 ) {
+        if( cov.numCols <= 4 ) {
             if( cov.numCols != cov.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
             }
@@ -84,12 +84,8 @@ public class CovarianceOps {
                     cov.data[0] = 1.0/cov.data[0];
                     break;
 
-                case 2:
-                    MatrixInvertSpecialized.invert2x2(cov.data);
-                    break;
-
-                case 3:
-                    MatrixInvertSpecialized.invert3x3(cov.data);
+                default:
+                    UnrolledInverseFromMinor.inv(cov,cov);
                     break;
             }
         } else {
@@ -113,23 +109,18 @@ public class CovarianceOps {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DenseMatrix64F cov , DenseMatrix64F cov_inv ) {
-        if( cov.numCols <= 3 ) {
+        if( cov.numCols <= 4 ) {
             if( cov.numCols != cov.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
             }
-            cov_inv.set(cov);
 
             switch( cov.numCols ) {
                 case 1:
                     cov_inv.data[0] = 1.0/cov_inv.data[0];
                     break;
 
-                case 2:
-                    MatrixInvertSpecialized.invert2x2(cov_inv.data);
-                    break;
-
-                case 3:
-                    MatrixInvertSpecialized.invert3x3(cov_inv.data);
+                default:
+                    UnrolledInverseFromMinor.inv(cov,cov_inv);
                     break;
             }
         } else {
