@@ -1,0 +1,13 @@
+Block Matrix Multiply
+---------------------------
+- Block matrix multiplication does have fewer cache misses.
+- Converting from row major to block and multiplying causes too many cache misses.
+- Was verified empirically.
+
+Unrolled Matrix Multiplication
+---------------------------
+- Tried to unroll either a row or column in either of the inputs
+- Does result in improve performance of small square matrices
+- Does not always translate to tall or wide matrices
+  * can be much slower than other orders
+- Did not integrate into library because of added complexity

@@ -24,6 +24,10 @@ import java.io.PrintStream;
 
 
 /**
+ * Generates code for an unrolled determinant by minor.
+ *
+ * NOTE:  There are some repeat calculations of inner determinants.   Maybe it could be speed up by calculating those?
+ *
  * @author Peter Abeles
  */
 public class GenerateDeterminantFromMinor {

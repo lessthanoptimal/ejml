@@ -105,6 +105,51 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
+    public static long multUnrolledAlt10( DenseMatrix64F matA , DenseMatrix64F matB ,
+                             DenseMatrix64F matResult , int numTrials) {
+        long prev = System.currentTimeMillis();
+
+        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
+            return 0;
+
+        for( int i = 0; i < numTrials; i++ ) {
+            UnrolledMatrixMult.mult_B_10(matA,matB,matResult);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
+    public static long multUnrolledAlt15( DenseMatrix64F matA , DenseMatrix64F matB ,
+                             DenseMatrix64F matResult , int numTrials) {
+        long prev = System.currentTimeMillis();
+
+        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
+            return 0;
+
+        for( int i = 0; i < numTrials; i++ ) {
+            UnrolledMatrixMult.mult_B_15(matA,matB,matResult);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
+    public static long multUnrolledAlt20( DenseMatrix64F matA , DenseMatrix64F matB ,
+                             DenseMatrix64F matResult , int numTrials) {
+        long prev = System.currentTimeMillis();
+
+        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
+            return 0;
+
+        for( int i = 0; i < numTrials; i++ ) {
+            UnrolledMatrixMult.mult_B_20(matA,matB,matResult);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
 
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
@@ -120,46 +165,63 @@ public class BenchmarkMatrixMatrixMult {
                 multReorder(matA,matB,matResult,numTrials),
                 multUnrolled(matA,matB,matResult,numTrials));
 
+        if( numCols == 10 ) {
+            long time = multUnrolledAlt10(matA,matB,matResult,numTrials);
+
+            System.out.println("Alternative = "+time);
+        } else if( numCols == 15 ) {
+            long time = multUnrolledAlt15(matA,matB,matResult,numTrials);
+
+            System.out.println("Alternative = "+time);
+        } else if( numCols == 20 ) {
+            long time = multUnrolledAlt20(matA,matB,matResult,numTrials);
+
+            System.out.println("Alternative = "+time);
+        }
+
         System.gc();
     }
 
     public static void main( String args[] ) {
-        int size[] = new int[]{2,4,10,20,50,100,200,500,1000};//,2000,4000};
-        int count[] = new int[]{40000000,10000000,1000000,100000,10000,1000,100,8,2,1,1};
+        int size[] = new int[]{2,4,10,15,20,50,100,200,500,1000};//,2000,4000};
+        int count[] = new int[]{40000000,10000000,1000000,300000,100000,10000,1000,100,8,2,1,1};
 
         int sizeTall[] = new int[]{1,2,4,10,20,50,100,200,500,1000};
         int countTall[] = new int[]{3000,2400,1500,1000,200,200,100,50,10,5};
 
+        int N = 5;//size.length;
+
         System.out.println("******* Square:\n");
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 0; i < N; i++ ) {
             System.out.println("\nWidth = "+size[i]);
 
             performTests(size[i],size[i],size[i],count[i]);
         }
 
+        N = 5;//sizeTall.length
         System.out.println("\n******* Wide A:");
-        for( int i = 0; i < sizeTall.length; i++ ) {
+        for( int i = 0; i < N; i++ ) {
             System.out.println("\nHeight = "+sizeTall[i]);
 
             performTests(sizeTall[i],1500,100,countTall[i]);
         }
 
         System.out.println("\n******* Tall A:");
-        for( int i = 0; i < sizeTall.length; i++ ) {
+        for( int i = 0; i < N; i++ ) {
             System.out.println("\nWidth = "+sizeTall[i]);
 
             performTests(1500,sizeTall[i],100,countTall[i]);
         }
 
         System.out.println("\n******* Wide B:");
-        for( int i = 0; i < sizeTall.length; i++ ) {
+        for( int i = 0; i < N; i++ ) {
             System.out.println("\nHeight = "+sizeTall[i]);
 
             performTests(100,sizeTall[i],1500,countTall[i]);
         }
 
         System.out.println("\n******* Tall B:");
-        for( int i = 0; i < sizeTall.length; i++ ) {
+        for( int i = 0; i < N; i++ ) {
             System.out.println("\nWidth = "+sizeTall[i]);
 
             performTests(100,1500,sizeTall[i],countTall[i]);

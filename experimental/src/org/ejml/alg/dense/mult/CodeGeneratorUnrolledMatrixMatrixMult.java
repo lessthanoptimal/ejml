@@ -206,10 +206,9 @@ public class CodeGeneratorUnrolledMatrixMatrixMult {
                         "                int iterA = 0;\n" +
                         "                for( int i = 0; i < a.numRows; i++ ) {\n" +
                         "                    double val=0;\n");
-        for( int i = 0; i < num-1; i++ ) {
+        for( int i = 0; i < num; i++ ) {
             stream.print("                    val  += dataA[iterA++]*b"+i+";\n");
         }
-        stream.print("                    val  += dataA[iterA]*b"+(num-1)+";\n");
 
         stream.print("\n" +
                 "                    dataC[i*c.numCols+j] "+op+val+";\n" +

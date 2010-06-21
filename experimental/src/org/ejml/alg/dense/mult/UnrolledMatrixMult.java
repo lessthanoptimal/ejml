@@ -266,7 +266,7 @@ public class UnrolledMatrixMult {
                 int iterA = 0;
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
-                    val  += dataA[iterA]*b0;
+                    val  += dataA[iterA++]*b0;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -288,7 +288,7 @@ public class UnrolledMatrixMult {
                 int iterA = 0;
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
-                    val  += dataA[iterA]*b0;
+                    val  += dataA[iterA++]*b0;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -310,7 +310,7 @@ public class UnrolledMatrixMult {
                 int iterA = 0;
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
-                    val  += dataA[iterA]*b0;
+                    val  += dataA[iterA++]*b0;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -332,7 +332,7 @@ public class UnrolledMatrixMult {
                 int iterA = 0;
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
-                    val  += dataA[iterA]*b0;
+                    val  += dataA[iterA++]*b0;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -402,7 +402,7 @@ public class UnrolledMatrixMult {
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
                     val  += dataA[iterA++]*b0;
-                    val  += dataA[iterA]*b1;
+                    val  += dataA[iterA++]*b1;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -426,7 +426,7 @@ public class UnrolledMatrixMult {
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
                     val  += dataA[iterA++]*b0;
-                    val  += dataA[iterA]*b1;
+                    val  += dataA[iterA++]*b1;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -450,7 +450,7 @@ public class UnrolledMatrixMult {
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
                     val  += dataA[iterA++]*b0;
-                    val  += dataA[iterA]*b1;
+                    val  += dataA[iterA++]*b1;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -474,7 +474,7 @@ public class UnrolledMatrixMult {
                 for( int i = 0; i < a.numRows; i++ ) {
                     double val=0;
                     val  += dataA[iterA++]*b0;
-                    val  += dataA[iterA]*b1;
+                    val  += dataA[iterA++]*b1;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -550,7 +550,7 @@ public class UnrolledMatrixMult {
                     double val=0;
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
-                    val  += dataA[iterA]*b2;
+                    val  += dataA[iterA++]*b2;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -576,7 +576,7 @@ public class UnrolledMatrixMult {
                     double val=0;
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
-                    val  += dataA[iterA]*b2;
+                    val  += dataA[iterA++]*b2;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -602,7 +602,7 @@ public class UnrolledMatrixMult {
                     double val=0;
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
-                    val  += dataA[iterA]*b2;
+                    val  += dataA[iterA++]*b2;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -628,7 +628,7 @@ public class UnrolledMatrixMult {
                     double val=0;
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
-                    val  += dataA[iterA]*b2;
+                    val  += dataA[iterA++]*b2;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -710,7 +710,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
-                    val  += dataA[iterA]*b3;
+                    val  += dataA[iterA++]*b3;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -738,7 +738,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
-                    val  += dataA[iterA]*b3;
+                    val  += dataA[iterA++]*b3;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -766,7 +766,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
-                    val  += dataA[iterA]*b3;
+                    val  += dataA[iterA++]*b3;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -794,7 +794,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b0;
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
-                    val  += dataA[iterA]*b3;
+                    val  += dataA[iterA++]*b3;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -882,7 +882,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
-                    val  += dataA[iterA]*b4;
+                    val  += dataA[iterA++]*b4;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -912,7 +912,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
-                    val  += dataA[iterA]*b4;
+                    val  += dataA[iterA++]*b4;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -942,7 +942,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
-                    val  += dataA[iterA]*b4;
+                    val  += dataA[iterA++]*b4;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -972,7 +972,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b1;
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
-                    val  += dataA[iterA]*b4;
+                    val  += dataA[iterA++]*b4;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -1066,7 +1066,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
-                    val  += dataA[iterA]*b5;
+                    val  += dataA[iterA++]*b5;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -1098,7 +1098,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
-                    val  += dataA[iterA]*b5;
+                    val  += dataA[iterA++]*b5;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -1130,7 +1130,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
-                    val  += dataA[iterA]*b5;
+                    val  += dataA[iterA++]*b5;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -1162,7 +1162,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b2;
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
-                    val  += dataA[iterA]*b5;
+                    val  += dataA[iterA++]*b5;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -1262,7 +1262,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
-                    val  += dataA[iterA]*b6;
+                    val  += dataA[iterA++]*b6;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -1296,7 +1296,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
-                    val  += dataA[iterA]*b6;
+                    val  += dataA[iterA++]*b6;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -1330,7 +1330,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
-                    val  += dataA[iterA]*b6;
+                    val  += dataA[iterA++]*b6;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -1364,7 +1364,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b3;
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
-                    val  += dataA[iterA]*b6;
+                    val  += dataA[iterA++]*b6;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -1470,7 +1470,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
-                    val  += dataA[iterA]*b7;
+                    val  += dataA[iterA++]*b7;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -1506,7 +1506,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
-                    val  += dataA[iterA]*b7;
+                    val  += dataA[iterA++]*b7;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -1542,7 +1542,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
-                    val  += dataA[iterA]*b7;
+                    val  += dataA[iterA++]*b7;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -1578,7 +1578,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b4;
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
-                    val  += dataA[iterA]*b7;
+                    val  += dataA[iterA++]*b7;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -1690,7 +1690,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
-                    val  += dataA[iterA]*b8;
+                    val  += dataA[iterA++]*b8;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -1728,7 +1728,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
-                    val  += dataA[iterA]*b8;
+                    val  += dataA[iterA++]*b8;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -1766,7 +1766,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
-                    val  += dataA[iterA]*b8;
+                    val  += dataA[iterA++]*b8;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -1804,7 +1804,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b5;
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
-                    val  += dataA[iterA]*b8;
+                    val  += dataA[iterA++]*b8;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -1922,7 +1922,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
-                    val  += dataA[iterA]*b9;
+                    val  += dataA[iterA++]*b9;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -1962,7 +1962,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
-                    val  += dataA[iterA]*b9;
+                    val  += dataA[iterA++]*b9;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -2002,7 +2002,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
-                    val  += dataA[iterA]*b9;
+                    val  += dataA[iterA++]*b9;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -2042,7 +2042,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b6;
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
-                    val  += dataA[iterA]*b9;
+                    val  += dataA[iterA++]*b9;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -2166,7 +2166,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
-                    val  += dataA[iterA]*b10;
+                    val  += dataA[iterA++]*b10;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -2208,7 +2208,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
-                    val  += dataA[iterA]*b10;
+                    val  += dataA[iterA++]*b10;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -2250,7 +2250,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
-                    val  += dataA[iterA]*b10;
+                    val  += dataA[iterA++]*b10;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -2292,7 +2292,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b7;
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
-                    val  += dataA[iterA]*b10;
+                    val  += dataA[iterA++]*b10;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -2422,7 +2422,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
-                    val  += dataA[iterA]*b11;
+                    val  += dataA[iterA++]*b11;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -2466,7 +2466,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
-                    val  += dataA[iterA]*b11;
+                    val  += dataA[iterA++]*b11;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -2510,7 +2510,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
-                    val  += dataA[iterA]*b11;
+                    val  += dataA[iterA++]*b11;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -2554,7 +2554,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b8;
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
-                    val  += dataA[iterA]*b11;
+                    val  += dataA[iterA++]*b11;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -2690,7 +2690,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
-                    val  += dataA[iterA]*b12;
+                    val  += dataA[iterA++]*b12;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -2736,7 +2736,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
-                    val  += dataA[iterA]*b12;
+                    val  += dataA[iterA++]*b12;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -2782,7 +2782,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
-                    val  += dataA[iterA]*b12;
+                    val  += dataA[iterA++]*b12;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -2828,7 +2828,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b9;
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
-                    val  += dataA[iterA]*b12;
+                    val  += dataA[iterA++]*b12;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -2970,7 +2970,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
-                    val  += dataA[iterA]*b13;
+                    val  += dataA[iterA++]*b13;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -3018,7 +3018,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
-                    val  += dataA[iterA]*b13;
+                    val  += dataA[iterA++]*b13;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -3066,7 +3066,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
-                    val  += dataA[iterA]*b13;
+                    val  += dataA[iterA++]*b13;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -3114,7 +3114,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b10;
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
-                    val  += dataA[iterA]*b13;
+                    val  += dataA[iterA++]*b13;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -3262,7 +3262,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
-                    val  += dataA[iterA]*b14;
+                    val  += dataA[iterA++]*b14;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -3312,7 +3312,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
-                    val  += dataA[iterA]*b14;
+                    val  += dataA[iterA++]*b14;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -3362,7 +3362,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
-                    val  += dataA[iterA]*b14;
+                    val  += dataA[iterA++]*b14;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -3412,7 +3412,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b11;
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
-                    val  += dataA[iterA]*b14;
+                    val  += dataA[iterA++]*b14;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -3566,7 +3566,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
-                    val  += dataA[iterA]*b15;
+                    val  += dataA[iterA++]*b15;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -3618,7 +3618,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
-                    val  += dataA[iterA]*b15;
+                    val  += dataA[iterA++]*b15;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -3670,7 +3670,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
-                    val  += dataA[iterA]*b15;
+                    val  += dataA[iterA++]*b15;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -3722,7 +3722,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b12;
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
-                    val  += dataA[iterA]*b15;
+                    val  += dataA[iterA++]*b15;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -3882,7 +3882,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
-                    val  += dataA[iterA]*b16;
+                    val  += dataA[iterA++]*b16;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -3936,7 +3936,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
-                    val  += dataA[iterA]*b16;
+                    val  += dataA[iterA++]*b16;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -3990,7 +3990,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
-                    val  += dataA[iterA]*b16;
+                    val  += dataA[iterA++]*b16;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -4044,7 +4044,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b13;
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
-                    val  += dataA[iterA]*b16;
+                    val  += dataA[iterA++]*b16;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -4210,7 +4210,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
-                    val  += dataA[iterA]*b17;
+                    val  += dataA[iterA++]*b17;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -4266,7 +4266,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
-                    val  += dataA[iterA]*b17;
+                    val  += dataA[iterA++]*b17;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -4322,7 +4322,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
-                    val  += dataA[iterA]*b17;
+                    val  += dataA[iterA++]*b17;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -4378,7 +4378,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b14;
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
-                    val  += dataA[iterA]*b17;
+                    val  += dataA[iterA++]*b17;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -4550,7 +4550,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
-                    val  += dataA[iterA]*b18;
+                    val  += dataA[iterA++]*b18;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -4608,7 +4608,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
-                    val  += dataA[iterA]*b18;
+                    val  += dataA[iterA++]*b18;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -4666,7 +4666,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
-                    val  += dataA[iterA]*b18;
+                    val  += dataA[iterA++]*b18;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -4724,7 +4724,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b15;
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
-                    val  += dataA[iterA]*b18;
+                    val  += dataA[iterA++]*b18;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
@@ -4902,7 +4902,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
                     val  += dataA[iterA++]*b18;
-                    val  += dataA[iterA]*b19;
+                    val  += dataA[iterA++]*b19;
 
                     dataC[i*c.numCols+j] += val;
                 }
@@ -4962,7 +4962,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
                     val  += dataA[iterA++]*b18;
-                    val  += dataA[iterA]*b19;
+                    val  += dataA[iterA++]*b19;
 
                     dataC[i*c.numCols+j] = val;
                 }
@@ -5022,7 +5022,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
                     val  += dataA[iterA++]*b18;
-                    val  += dataA[iterA]*b19;
+                    val  += dataA[iterA++]*b19;
 
                     dataC[i*c.numCols+j] += alpha*val;
                 }
@@ -5082,7 +5082,7 @@ public class UnrolledMatrixMult {
                     val  += dataA[iterA++]*b16;
                     val  += dataA[iterA++]*b17;
                     val  += dataA[iterA++]*b18;
-                    val  += dataA[iterA]*b19;
+                    val  += dataA[iterA++]*b19;
 
                     dataC[i*c.numCols+j] = alpha*val;
                 }
