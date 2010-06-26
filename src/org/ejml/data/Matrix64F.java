@@ -36,16 +36,32 @@ public abstract class Matrix64F {
      */
     public int numRows;
 
+    /**
+     * Changes the number of rows and columns in a matrix and if possible does not declare new memory.  If saveValues is
+     * true and new memory needs to be declared, the value of the old internal data will be copied over into the new internal data.
+     *
+     * @param numRows The new number of rows the matrix will have.
+     * @param numCols The new number of columns the matrix will have.
+     * @param saveValues If new memory is declared should it copy the old values over?
+     */
     public abstract void reshape(int numRows, int numCols, boolean saveValues);
 
-    public abstract int getIndex( int row, int col );
-
-    public abstract double get( int index );
-
-    public abstract void set( int index , double val );
-
+    /**
+     * Returns the value of value of the specified matrix element..
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @return The specified element's value.
+     */
     public abstract double get( int row , int col );
 
+    /**
+     * Sets the value of the specified matrix element.
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @param val  The element's new value.
+     */
     public abstract void set( int row , int col , double val );
 
     /**

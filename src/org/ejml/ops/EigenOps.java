@@ -34,6 +34,8 @@ import org.ejml.data.SimpleMatrix;
 
 
 /**
+ * Additional functions related to eigenvalues and eigenvectors of a matrix.
+ *
  * @author Peter Abeles
  */
 public class EigenOps {

@@ -33,6 +33,7 @@ public abstract class GenericTestsD1Matrix64F extends GenericTestsMatrix64F {
     public void allTests() {
         super.allTests();
         testReshape();
+        testSetAndGet_1D();
     }
 
     public void testReshape() {
@@ -45,5 +46,19 @@ public abstract class GenericTestsD1Matrix64F extends GenericTestsMatrix64F {
         assertTrue(origData == mat.getData());
         assertEquals(1,mat.getNumCols());
         assertEquals(6,mat.getNumRows());
+    }
+
+    public void testSetAndGet_1D() {
+        D1Matrix64F mat = createMatrix(3,4);
+
+        int indexA = mat.getIndex(1,2);
+        int indexB = mat.getIndex(2,1);
+
+        assertTrue(indexA!=indexB);
+
+        mat.set(indexA,2.0);
+
+        assertEquals(0,mat.get(indexB),1e-6);
+        assertEquals(2,mat.get(indexA),1e-6);
     }
 }

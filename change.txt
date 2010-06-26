@@ -2,7 +2,11 @@
 
 2010/XX/XX
 
-
+- Fixed SingularOps.descendingOrder() bug.
+   * Thanks xcolwell for reporting it.
+- Fixed a bug in RandomMatrices.createOrthogonal()
+- Cleaned up Matrix64F and D1Matrix64F
+- Updated java doc for several classes
 
 ----- Version 0.12
 

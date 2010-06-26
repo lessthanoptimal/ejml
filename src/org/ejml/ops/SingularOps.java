@@ -104,7 +104,7 @@ public class SingularOps {
      * <p>
      * No sanity check is done
      * to ensure that the smallest singular value is sufficiently small.  Depending on the matrix's
-     * dimension a non-compact SVD is required.
+     * dimension a non-compact SVD might be required.
      * </p>
      *
      * @param svd A precomputed decomposition.  Not modified.

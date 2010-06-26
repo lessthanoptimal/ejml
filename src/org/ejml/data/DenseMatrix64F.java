@@ -29,20 +29,20 @@ import java.io.Serializable;
 /**
  * <p>
  * DenseMatrix64F is a dense matrix with elements that are 64-bit floats (doubles).  A matrix
- * is the fundemental data structure in linear algebra.  Unlike a sparse matrix, there is no
+ * is the fundamental data structure in linear algebra.  Unlike a sparse matrix, there is no
  * compression in a dense matrix and every element is stored in memory.  This allows for fast
  * reads and writes to the matrix.
  * </p>
  *
  * <p>
- * This class only provides basic functions for accessing and editing the elements in the matrix.
- * As a way to keep the code managable, dispite the huge number of matrix operations, the majority of
- * matrix operations have been put into separate classes.  The most common operations are contained in
+ * To keep the code manageable and the library easier to use only basic functions for accessing and editing elements
+ * are provided in this class.  The numerous operations which can be performed on DenseMatrix64F
+ * are contained in various other classes, where the most common operations can be found in
  * the {@link org.ejml.ops.CommonOps} and {@link org.ejml.ops.SpecializedOps} classes.
  * </p>
  *
  * <p>
- * The matrix is stored internally in 1D array that has a row-major format:<br>
+ * The matrix is stored internally in a row-major 1D array format:<br>
  * <br>
  * data[ y*numCols + x ] = data[y][x]<br>
  * <br>
@@ -86,9 +86,11 @@ import java.io.Serializable;
 public class DenseMatrix64F extends D1Matrix64F implements Serializable {
 
     /**
+     * <p>
      * Creates a new matrix which has the same value as the matrix encoded in the
      * provided array.  The input matrix's format can either be row-major or
-     * column-major and is translated to the native row-major fortmat.
+     * column-major and is translated to the native row-major format.
+     * </p>
      *
      * @param numRows The number of rows.
      * @param numCols The number of columns.
@@ -106,11 +108,12 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
     }
 
     /**
+     * <p>
      * Creates a matrix with the values and shape defined by the 2D array 'data'.
-     * The formatting in 'data' is the following:
-     *
+     * The formatting in 'data' is the following:<br>
+     *  <br>
      * data[ row ][ column ]
-     *
+     * </p>
      * @param data 2D array representation of the matrix. Not modified.
      */
     public DenseMatrix64F( double data[][] ) {
@@ -241,8 +244,6 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
     // todo move to commonops
     public void add( int row , int col , double value ) {
         if( col < 0 || col >= numCols || row < 0 || row >= numRows ) {
-            System.out.println();
-            System.out.println("row = "+row+" col = "+col);
             throw new IllegalArgumentException("Specified element is out of bounds");
         }
 
@@ -293,26 +294,6 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
     }
 
     /**
-     * The number of rows in the matrix.
-     *
-     * @return The number of rows.
-     */
-    @Override
-    public int getNumRows() {
-        return numRows;
-    }
-
-    /**
-     * The number of columns in the matrix.
-     *
-     * @return The number of columns.
-     */
-    @Override
-    public int getNumCols() {
-        return numCols;
-    }
-
-    /**
      * Returns the number of elements in this matrix.
      *
      * @return The number of elements.
@@ -322,16 +303,6 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
         return numRows*numCols;
     }
 
-    /**
-     * Provides access to the raw data that defines the matrix.  Note that there can be more
-     * elements in this array than the actual matrix.
-     *
-     * @return A reference to the matrix's data.
-     */
-    @Override
-    public double[] getData() {
-        return data;
-    }
 
     /**
      * <p>

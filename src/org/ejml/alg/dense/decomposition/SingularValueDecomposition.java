@@ -31,8 +31,8 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  *
  * <p>
- * The dimension of U,W,V depends if it is a compact or not.  If not compact then U  is m by m, W is  m by n, V is n by n.  If compact then let s be the number
- * of singular values, U is m by s, W is s by s, and V is n by s.
+ * The dimension of U,W,V depends if it is a compact SVD or not.  If not compact then U  is m by m, W is  m by n, V is n by n.
+ *  If compact then let s be the number of singular values, U is m by s, W is s by s, and V is n by s.
  * </p>
  *
  * <p>

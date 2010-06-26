@@ -41,4 +41,29 @@ public abstract class D1Matrix64F extends Matrix64F {
     public double[] getData() {
         return data;
     }
+
+    /**
+     * Returns the internal array index for the specified row and column.
+     *
+     * @param row Row index.
+     * @param col Column index.
+     * @return Internal array index.
+     */
+    public abstract int getIndex( int row, int col );
+
+    /**
+     * Returns the value of the matrix at the specified internal array index.
+     *
+     * @param index Internal array index.
+     * @return Value at the specified index.
+     */
+    public abstract double get( int index );
+
+    /**
+     * Sets the element's value at the specified index.
+     *
+     * @param index Index of element that is to be set.
+     * @param val The new value of the index.
+     */
+    public abstract void set( int index , double val );
 }

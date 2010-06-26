@@ -60,25 +60,6 @@ public class DenseD2Matrix64F extends Matrix64F implements Serializable {
     }
 
     @Override
-    public int getIndex(int row, int col) {
-        return row*numCols+col;
-    }
-
-    @Override
-    public double get(int index) {
-        int row = index / numCols;
-        int col = index % numCols;
-        return data[row][col];
-    }
-
-    @Override
-    public void set(int index, double val) {
-        int row = index / numCols;
-        int col = index % numCols;
-        data[row][col] = val;
-    }
-
-    @Override
     public double get(int row, int col) {
         return data[row][col];
     }

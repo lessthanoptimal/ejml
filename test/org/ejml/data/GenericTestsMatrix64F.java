@@ -20,7 +20,6 @@
 package org.ejml.data;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -33,7 +32,6 @@ public abstract class GenericTestsMatrix64F {
     public void allTests() {
         testGetNumRows();
         testGetNumCols();
-        testSetAndGet_1D();
         testSetAndGet_2D();
     }
 
@@ -47,20 +45,6 @@ public abstract class GenericTestsMatrix64F {
         Matrix64F mat = createMatrix(2,3);
 
         assertEquals(3,mat.getNumCols());
-    }
-
-    public void testSetAndGet_1D() {
-        Matrix64F mat = createMatrix(3,4);
-
-        int indexA = mat.getIndex(1,2);
-        int indexB = mat.getIndex(2,1);
-
-        assertTrue(indexA!=indexB);
-
-        mat.set(indexA,2.0);
-
-        assertEquals(0,mat.get(indexB),1e-6);
-        assertEquals(2,mat.get(indexA),1e-6);
     }
 
     public void testSetAndGet_2D() {

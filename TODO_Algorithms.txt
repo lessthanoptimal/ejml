@@ -1,18 +1,8 @@
 For 0.13 Release
-- Decide if unrolled matrix multiply should be added
 - Modify original matrix for decompositions
   * Make that the default behavior but have friendly classes make a copy by default?
     - Easier to test?
 
-Mult
- - Move bound checking to CommonOps - remove it from everywhere else
- - call unrolled operations
-
-Unrolled Mult
-  - auto code for tranA
-  - auto code for tranAB
-  - auto code for tranB
-  - Unit test it all
 
 For DenseMatrix64F
 
