@@ -72,6 +72,9 @@ public class TestRandomMatrices {
             for( int numCols = 1; numCols <= numRows; numCols++ ) {
                 DenseMatrix64F Q = RandomMatrices.createOrthogonal(numRows,numCols,rand);
 
+                assertEquals(Q.numRows,numRows);
+                assertEquals(Q.numCols,numCols);
+
                 assertTrue(CommonOps.elementSum(Q) != 0);
                 assertTrue(MatrixFeatures.isOrthogonal(Q,1e-8));
             }
@@ -79,8 +82,35 @@ public class TestRandomMatrices {
     }
 
     @Test
-    public void createDiagonal() {
+    public void createDiagonal_square() {
         DenseMatrix64F A = RandomMatrices.createDiagonal(5,1,10,rand);
+
+        assertTrue(CommonOps.elementSum(A) > 5 );
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                double v = A.get(i,j);
+
+                if( i == j ) {
+                    assertTrue(v >= 1 || v <= 10);
+                } else {
+                    assertTrue(v == 0);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void createDiagonal_general() {
+        testDiagonal(5,3);
+        testDiagonal(3,5);
+        testDiagonal(3,3);
+    }
+
+    public void testDiagonal( int numRows , int numCols ) {
+        DenseMatrix64F A = RandomMatrices.createDiagonal(numRows,numCols,1,10,rand);
+
+        assertEquals(A.getNumRows(),numRows);
+        assertEquals(A.getNumCols(),numCols);
 
         assertTrue(CommonOps.elementSum(A) > 5 );
         for( int i = 0; i < A.numRows; i++ ) {

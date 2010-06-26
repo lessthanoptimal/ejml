@@ -20,7 +20,6 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
-import org.ejml.alg.dense.mult.UnrolledMatrixMult;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -36,19 +35,6 @@ public class BenchmarkMultAndAddOps {
 
     static int TRIALS_MULT = 4000000;
     static int TRIALS_ADD = 100000000;
-
-    public static long mult_unrolled( DenseMatrix64F matA , DenseMatrix64F matB , int numTrials) {
-        long prev = System.currentTimeMillis();
-
-        DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numCols);
-
-        for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.mult(matA,matB,results);
-        }
-
-        long curr = System.currentTimeMillis();
-        return curr-prev;
-    }
 
     public static long mult( DenseMatrix64F matA , DenseMatrix64F matB , int numTrials) {
         long prev = System.currentTimeMillis();
@@ -276,8 +262,6 @@ public class BenchmarkMultAndAddOps {
                                          DenseMatrix64F matC , DenseMatrix64F matD ,
                                          int numTrials )
     {
-        System.out.printf("Mult Unrolled:         = %10d\n",
-                mult_unrolled(matA,matB,numTrials));
         System.out.printf("Mult:                  = %10d\n",
                 mult(matA,matB,numTrials));
         System.out.printf("Mult Alpha:            = %10d\n",

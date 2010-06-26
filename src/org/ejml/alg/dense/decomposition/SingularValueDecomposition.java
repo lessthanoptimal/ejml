@@ -24,29 +24,26 @@ import org.ejml.data.DenseMatrix64F;
 
 /**
  * <p>
- * This is an abstract class for singular value decomposition (SVD) algorithms.  It provides
- * common data structures and a generic interface for using the results.  Any child of this
- * class will compute the SVD of A:<br>
+ * This is an abstract class for computing the singular value decomposition (SVD) of a matrix, which is defined
+ * as:<br>
  * <div align=center> A = U * W * V <sup>T</sup> </div><br>
- * where A is m by n, and U,W,V are all n by n. U and V are orthogonal matrices.
- * W is a diagonal matrix.
- * </p>
- * 
- * <p>
- * The inverse from SVD is computed as follows:<br>
- *
- * <div align=center>
- * A<sup>-1</sup>=V*[diag(1/w<sub>j</sub>)]*U<sup>T</sup>
- * </div>
- * <br>
+ * where A is m by n, and U and V are orthogonal matrices, and  W is a diagonal matrix.
  * </p>
  *
  * <p>
- * Note that the ordering of singular values is not guaranteed, unless done so by a specific implementation.
+ * The dimension of U,W,V depends if it is a compact or not.  If not compact then U  is m by m, W is  m by n, V is n by n.  If compact then let s be the number
+ * of singular values, U is m by s, W is s by s, and V is n by s.
+ * </p>
+ *
+ * <p>
+ *  To create a new instance of SingularValueDecomposition see {@link org.ejml.alg.dense.decomposition.DecompositionFactory#svd()}
+ * and {@link org.ejml.ops.SingularOps} contains additional helpful SVD related functions.
+ * </p>
+ *
+ * <p>
+ * <b>*Note*</b> that the ordering of singular values is not guaranteed, unless done so by a specific implementation.
  * The singular values can be put into descending order while adjusting U and V using {@link org.ejml.ops.SingularOps#descendingOrder(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F) SingularOps.descendingOrder()}.
  * </p>
- *
- * @see org.ejml.alg.dense.decomposition.svd.SvdNumericalRecipes
  *
  * @author Peter Abeles
  */

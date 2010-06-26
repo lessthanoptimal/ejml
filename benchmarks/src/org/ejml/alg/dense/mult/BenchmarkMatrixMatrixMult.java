@@ -90,66 +90,6 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
-    public static long multUnrolled( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
-        long prev = System.currentTimeMillis();
-
-        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
-            return 0;
-
-        for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.mult(matA,matB,matResult);
-        }
-
-        long curr = System.currentTimeMillis();
-        return curr-prev;
-    }
-
-    public static long multUnrolledAlt10( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
-        long prev = System.currentTimeMillis();
-
-        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
-            return 0;
-
-        for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.mult_B_10(matA,matB,matResult);
-        }
-
-        long curr = System.currentTimeMillis();
-        return curr-prev;
-    }
-
-    public static long multUnrolledAlt15( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
-        long prev = System.currentTimeMillis();
-
-        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
-            return 0;
-
-        for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.mult_B_15(matA,matB,matResult);
-        }
-
-        long curr = System.currentTimeMillis();
-        return curr-prev;
-    }
-
-    public static long multUnrolledAlt20( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
-        long prev = System.currentTimeMillis();
-
-        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
-            return 0;
-
-        for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.mult_B_20(matA,matB,matResult);
-        }
-
-        long curr = System.currentTimeMillis();
-        return curr-prev;
-    }
-
 
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
@@ -158,27 +98,11 @@ public class BenchmarkMatrixMatrixMult {
         DenseMatrix64F matB = RandomMatrices.createRandom(numCols,numK,rand);
         DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
 
-        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Unrolled %7d\n",
+        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d\n",
                 mult(matA,matB,matResult,numTrials),
                 multSmall(matA,matB,matResult,numTrials),
                 multAux(matA,matB,matResult,numTrials),
-                multReorder(matA,matB,matResult,numTrials),
-                multUnrolled(matA,matB,matResult,numTrials));
-
-        if( numCols == 10 ) {
-            long time = multUnrolledAlt10(matA,matB,matResult,numTrials);
-
-            System.out.println("Alternative = "+time);
-        } else if( numCols == 15 ) {
-            long time = multUnrolledAlt15(matA,matB,matResult,numTrials);
-
-            System.out.println("Alternative = "+time);
-        } else if( numCols == 20 ) {
-            long time = multUnrolledAlt20(matA,matB,matResult,numTrials);
-
-            System.out.println("Alternative = "+time);
-        }
-
+                multReorder(matA,matB,matResult,numTrials));
         System.gc();
     }
 

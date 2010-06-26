@@ -51,7 +51,7 @@ public class SingularOps {
      */
     public static void descendingOrder( DenseMatrix64F U , DenseMatrix64F S , DenseMatrix64F V )
     {
-        int N = S.numRows;
+        int N = Math.min(S.numRows,S.numCols);
 
         for( int i = 0; i < N; i++ ) {
             double bigValue=-Double.MAX_VALUE;

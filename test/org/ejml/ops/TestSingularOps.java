@@ -41,24 +41,33 @@ public class TestSingularOps {
 
     @Test
     public void descendingOrder() {
-        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(3,4,rand));
+        // test different shapes of input matrices
+        testDescendingOrder(3, 4, false);
+        testDescendingOrder(4, 3, false);
+        testDescendingOrder(3, 4, true);
+        testDescendingOrder(4, 3, true);
+    }
 
-        SingularValueDecomposition svd = DecompositionFactory.svd();
-        assertTrue(svd.decompose(A.getMatrix()));
+    private void testDescendingOrder(int numRows, int numCols, boolean compact) {
+        SimpleMatrix U,S,V;
 
-        SimpleMatrix U = SimpleMatrix.wrap(svd.getU());
-        SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
-        SimpleMatrix V = SimpleMatrix.wrap(svd.getV());
+        int minLength = Math.min(numRows,numCols);
 
-        // force it to be out of order
-        S.set(1,1,0);
+        if( compact ) {
+            U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,minLength,rand));
+            S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(minLength,minLength,0,1,rand));
+            V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numCols,minLength,rand));
+        } else {
+            U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,numRows,rand));
+            S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(numRows,numCols,0,1,rand));
+            V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numCols,numCols,rand));
+        }
 
-        // recompute A for testing purposes
-        A=U.mult(S).mult(V.transpose());
+        // Compute A
+        SimpleMatrix A=U.mult(S).mult(V.transpose());
 
         // put into ascending order
         SingularOps.descendingOrder(U.getMatrix(),S.getMatrix(),V.getMatrix());
-
 
         // see if it changed the results
         SimpleMatrix A_found = U.mult(S).mult(V.transpose());
@@ -66,7 +75,7 @@ public class TestSingularOps {
         assertTrue(A.isIdentical(A_found,1e-8));
 
         // make sure singular values are descending
-        for( int i = 1; i < S.numRows(); i++ ) {
+        for( int i = 1; i < minLength; i++ ) {
             assertTrue(S.get(i-1,i-1) >= S.get(i,i));
         }
     }

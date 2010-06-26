@@ -90,21 +90,6 @@ public class BenchmarkMatrixMatrixMultAdd {
         return curr-prev;
     }
 
-    public static long multUrolled( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
-        long prev = System.currentTimeMillis();
-
-        if( matB.numRows > UnrolledMatrixMult.NUM_UNROLLED )
-            return 0;
-
-        for( int i = 0; i < numTrials; i++ ) {
-            UnrolledMatrixMult.multAdd(matA,matB,matResult);
-        }
-
-        long curr = System.currentTimeMillis();
-        return curr-prev;
-    }
-
 
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
@@ -113,12 +98,11 @@ public class BenchmarkMatrixMatrixMultAdd {
         DenseMatrix64F matB = RandomMatrices.createRandom(numCols,numK,rand);
         DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
 
-        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Unrolled %7d\n",
+        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d\n",
                 mult(matA,matB,matResult,numTrials),
                 multSmall(matA,matB,matResult,numTrials),
                 multAux(matA,matB,matResult,numTrials),
-                multReorder(matA,matB,matResult,numTrials),
-                multUrolled(matA,matB,matResult,numTrials));
+                multReorder(matA,matB,matResult,numTrials));
 
         System.gc();
     }

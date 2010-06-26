@@ -111,7 +111,7 @@ public class RandomMatrices {
 
         DenseMatrix64F u[] = createSpan(numRows,numCols,rand);
 
-        DenseMatrix64F ret = new DenseMatrix64F(numRows,numRows);
+        DenseMatrix64F ret = new DenseMatrix64F(numRows,numCols);
         for( int i = 0; i < numCols; i++ ) {
             SubmatrixOps.setSubMatrix(u[i],ret,0,0,0,i,numRows,1);
         }
@@ -130,10 +130,27 @@ public class RandomMatrices {
      * @return A random diagonal matrix.
      */
     public static DenseMatrix64F createDiagonal( int N , double min , double max , Random rand ) {
+        return createDiagonal(N,N,min,max,rand);
+    }
+
+    /**
+     * Creates a random matrix where all elements are zero but diagonal elements.  Diagonal elements
+     * randomly drawn from a uniform distribution from min to max, inclusive.
+     *
+     * @param numRows Number of rows in the returned matrix..
+     * @param numCols Number of columns in the returned matrix.
+     * @param min Minimum value of a diagonal element.
+     * @param max Maximum value of a diagonal element.
+     * @param rand Random number generator.
+     * @return A random diagonal matrix.
+     */
+    public static DenseMatrix64F createDiagonal( int numRows , int numCols , double min , double max , Random rand ) {
         if( max < min )
             throw new IllegalArgumentException("The max must be >= the min");
 
-        DenseMatrix64F ret = new DenseMatrix64F(N,N);
+        DenseMatrix64F ret = new DenseMatrix64F(numRows,numCols);
+
+        int N = Math.min(numRows,numCols);
 
         double r = max-min;
 
