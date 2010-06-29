@@ -7,6 +7,7 @@
 - Fixed a bug in RandomMatrices.createOrthogonal()
 - Cleaned up Matrix64F and D1Matrix64F
 - Updated java doc for several classes
+- Added SVD and EVD to SimpleMatrix
 
 ----- Version 0.12
 

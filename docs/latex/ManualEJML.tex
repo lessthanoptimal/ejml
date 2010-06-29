@@ -17,27 +17,32 @@
 \tableofcontents
 
 \begin{abstract}
-Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  It is 100\% Java with no native code required.
+Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API. EJML is free, written in 100\% Java and has been released under an LGPL license.
+
+http://code.google.com/p/efficient-java-matrix-library/
 \end{abstract}
 
+\section{IMPORANT}
+
+This document is horribly out of date but for some reason its a top result on google.  To get the latest documentation go to: 
+
+http://code.google.com/p/efficient-java-matrix-library/
 
 \section{Introduction}
-Efficient Java Matrix Library (EJML) is designed to be easy to use and yet fast computationally.  Different interfaces are provided for using the library.  This allows users to choose between easy to write code and highly optimized, but more complex code.  The library was written from scratch in Java.
+
+Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API. EJML is free, written in 100\% Java and has been released under an LGPL license.
+
+EJML has three distinct ways to interact with it. This allows a programmer to choose between simplicity and efficiency. 1) A simplified interface that allows a more object oriented way of programming. 2) Letting EJML select the best algorithm to use. 3) Directly calling specialized algorithms. In general EJML is one the fastest single threaded pure Java library. See Java Matrix Benchmark for a detailed comparison of different libraries.
 
 The following is provided:
 \begin{itemize}
-\item Basic operators (addition, multiplication, ... etc).
-\item LU decomposition.
-\item Cholesky decomposition.
-\item Gauss Jordan.
-\item Singular Value Decomposition.
+\item Basic operators (addition, multiplication, ... ).
+\item Linear Solvers (batch and incremental).
+\item Decompositions (LU, QR, Cholesky, SVD, Eigenvalue).
+\item Matrix Features (rank, symmetric, definitiveness, ... ).
+\item Random Matrices (covariance, orthogonal, symmetric, ..
 \end{itemize}
 
-These will be added in the future:
-\begin{itemize}
-\item Eigenvalue decomposition.
-\item Fast matrix matrix multiplication for large matrices.
-\end{itemize}
 
 In addition there are many specialized algorithms for specific matrix sizes and types.  
 

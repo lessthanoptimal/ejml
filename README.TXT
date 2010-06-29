@@ -40,7 +40,7 @@ http://efficient-java-matrix-library.googlecode.com/svn/javadoc/ver0.12/index.ht
 ==========================================================================
 ----- Building
 
-The easiest way to build a jar is with the provided ant script. In linux it can be built using a command line by changing into the EJML directory and typing "ant". Then you should see text like:
+The provided ant script is the easiest way to build an EJML jar. In linux it can be built using a command line by changing into the EJML directory and typing "ant". Then you should see text like:
 
 
 Buildfile: build.xml
@@ -72,7 +72,6 @@ examples/
 
 experimental/
 - Where experimental and most likely buggy code goes that is not ready to be used by most users.
-
 
 src/
 - Source code.

@@ -21,6 +21,7 @@ package org.ejml.data;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
+import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.ops.*;
@@ -159,7 +160,7 @@ public class SimpleMatrix {
 
     /**
      * <p>
-     * Returns a reference to the matrix that it uses internally.  This is usefull
+     * Returns a reference to the matrix that it uses internally.  This is useful
      * when an operation is needed that is not provided by this class.
      * </p>
      *
@@ -655,5 +656,116 @@ public class SimpleMatrix {
      */
     public boolean hasUncountable() {
         return MatrixFeatures.hasUncountable(mat);
+    }
+
+    /**
+     * Returns the Singular Value Decomposition (SVD) of this matrix.
+     * @return SVD of this matrix.
+     */
+    public SVD svd() {
+        return new SVD(mat);
+    }
+
+    /**
+     * Returns the Eigen Value Decomposition (EVD) of this matrix.
+     */
+    public EVD eig() {
+        return new EVD(mat);
+    }
+
+    /**
+     * Wrapper around SVD for SimpleMatrix
+     */
+    public static class SVD
+    {
+        SingularValueDecomposition svd;
+
+        public SVD( DenseMatrix64F A ) {
+            svd = DecompositionFactory.svd();
+            if( !svd.decompose(A))
+                throw new RuntimeException("Decomposition failed");
+        }
+
+        /**
+         * <p>
+         * Returns the orthogonal 'U' matrix.
+         * </p>
+         *
+         * @return An orthogonal m by m matrix.
+         */
+        public SimpleMatrix getU() {
+            return SimpleMatrix.wrap(svd.getU());
+        }
+
+        /**
+         * Returns a diagonal matrix with the singular values.  Order of the singular values
+         * is not guaranteed.
+         *
+         * @return Diagonal matrix with singular values along the diagonal.
+         */
+        public SimpleMatrix getW() {
+            return SimpleMatrix.wrap(svd.getW(null));
+        }
+
+        /**
+         * <p>
+         * Returns the orthogonal 'V' matrix.
+         * </p>
+         *
+         * @return An orthogonal n by n matrix.
+         */
+        public SimpleMatrix getV() {
+            return SimpleMatrix.wrap(svd.getV());
+        }
+    }
+
+    /**
+     * Wrapper around EigenDecomposition for SimpleMatrix
+     */
+    public static class EVD
+    {
+        EigenDecomposition eig;
+
+        public EVD( DenseMatrix64F A )
+        {
+            eig = DecompositionFactory.eig();
+            if( !eig.decompose(A))
+                throw new RuntimeException("Eigenvalue Decomposition failed");
+        }
+
+        /**
+         * Returns the number of eigenvalues/eigenvectors.  This is the matrix's dimension.
+         *
+         * @return number of eigenvalues/eigenvectors.
+         */
+        public int getNumberOfEigenvalues() {
+            return eig.getNumberOfEigenvalues();
+        }
+
+        /**
+         * <p>
+         * Returns the value of an individual eigenvalue.  The eigenvalue maybe a complex number.  It is
+         * a real number of the imaginary component is equal to exactly one.
+         * </p>
+         *
+         * @param index Index of the eigenvalue eigenvector pair.
+         * @return An eigenvalue.
+         */
+        public Complex64F getEigenvalue( int index ) {
+            return eig.getEigenvalue(index);
+        }
+
+        /**
+         * <p>
+         * Used to retrieve real valued eigenvectors.  If an eigenvector is associated with a complex eigenvalue
+         * then null is returned instead.
+         * </p>
+         *
+         * @param index Index of the eigenvalue eigenvector pair.
+         * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
+         */
+        public SimpleMatrix getEigenVector( int index ) {
+            return SimpleMatrix.wrap(eig.getEigenVector(index));
+        }
     }
 }

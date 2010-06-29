@@ -317,4 +317,34 @@ public class TestSimpleMatrix {
         assertTrue(a.mat!=b.mat);
         UtilTestMatrix.checkEquals(b.mat,a.mat);
     }
+
+    @Test
+    public void svd() {
+        SimpleMatrix a = SimpleMatrix.random(3,4,rand);
+
+        SimpleMatrix.SVD svd = a.svd();
+
+        SimpleMatrix U = svd.getU();
+        SimpleMatrix W = svd.getW();
+        SimpleMatrix V = svd.getV();
+
+        SimpleMatrix a_found = U.mult(W).mult(V.transpose());
+
+        UtilTestMatrix.checkEquals(a.mat,a_found.mat);
+    }
+
+    @Test
+    public void eig() {
+        SimpleMatrix a = SimpleMatrix.random(4,4,rand);
+
+        SimpleMatrix.EVD evd = a.eig();
+
+        assertEquals(4,evd.getNumberOfEigenvalues());
+
+        for( int i = 0; i < 4; i++ ) {
+            Complex64F c = evd.getEigenvalue(i);
+            assertTrue(c != null );
+            evd.getEigenVector(i);
+        }
+    }
 }
