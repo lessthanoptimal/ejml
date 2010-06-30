@@ -31,7 +31,6 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-// TODO create a transpose version
 // todo don't store householder and explicity compute U and V upon request
 public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
         // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.

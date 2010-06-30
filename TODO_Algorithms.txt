@@ -1,5 +1,4 @@
 For 0.13 Release
-- Turn on and off compute U and V in svd
 - Modify original matrix for decompositions
   * Make that the default behavior but have friendly classes make a copy by default?
     - Easier to test?
@@ -7,16 +6,15 @@ For 0.13 Release
 
 For DenseMatrix64F
 
-- Bidiagonal
-  - Column major implementation for tall matrices.  useful for SVD
-
 - LU
   - block
+
+- Least Squares Solver
+  - Improve performance
 
 - Iterative solver
 
 - SVD
-  - make computation of U and V individually optional
   - Use QR alg to speed up singular values on very tall matrices
   - Divide and conquer algorithm
   - An implementation that just finds zero singular values

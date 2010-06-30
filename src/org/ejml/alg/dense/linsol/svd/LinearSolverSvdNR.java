@@ -54,8 +54,8 @@ public class LinearSolverSvdNR extends LinearSolverAbstract {
         xx = svd._getXX();
         tmp = svd._getTmp();
         w = svd.getSingularValues();
-        u = svd.getU().data;
-        v = svd.getV().data;
+        u = svd.getU(false).data;
+        v = svd.getV(false).data;
         thresh = UtilEjml.EPS*100;
 
         return true;

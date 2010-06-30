@@ -48,6 +48,8 @@ public abstract class StandardSvdChecks {
         testDecompositionOfTrivial();
         testWide();
         testTall();
+        checkGetU();
+        checkGetV();
         testZero();
         testLargeToSmall();
         testIdentity();
@@ -137,6 +139,44 @@ public abstract class StandardSvdChecks {
     }
 
     /**
+     * Makes sure transposed flag is correctly handled.
+     */
+    public void checkGetU() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
+
+        SingularValueDecomposition alg = createSvd();
+        assertTrue(alg.decompose(A));
+
+        DenseMatrix64F U = alg.getU(false);
+        DenseMatrix64F Ut = alg.getU(true);
+
+        DenseMatrix64F found = new DenseMatrix64F(U.numCols,U.numRows);
+
+        CommonOps.transpose(U,found);
+
+        assertTrue( MatrixFeatures.isIdentical(Ut,found));
+    }
+
+    /**
+     * Makes sure transposed flag is correctly handled.
+     */
+    public void checkGetV() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
+
+        SingularValueDecomposition alg = createSvd();
+        assertTrue(alg.decompose(A));
+
+        DenseMatrix64F V = alg.getV(false);
+        DenseMatrix64F Vt = alg.getV(true);
+
+        DenseMatrix64F found = new DenseMatrix64F(V.numCols,V.numRows);
+
+        CommonOps.transpose(V,found);
+
+        assertTrue( MatrixFeatures.isIdentical(Vt,found));
+    }
+
+    /**
      * Makes sure arrays are correctly set when it first computers a larger matrix
      * then a smaller one.  When going from small to large its often forces to declare
      * new memory, this way it actually uses memory.
@@ -168,22 +208,22 @@ public abstract class StandardSvdChecks {
 
     private void checkComponents( SingularValueDecomposition svd , DenseMatrix64F expected )
     {
-        SimpleMatrix U = SimpleMatrix.wrap(svd.getU());
-        SimpleMatrix V = SimpleMatrix.wrap(svd.getV());
+        SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
+        SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
         SimpleMatrix W = SimpleMatrix.wrap(svd.getW(null));
 
         if( svd.isCompact() ) {
             assertEquals(W.numCols(),W.numRows());
             assertEquals(U.numCols(),W.numRows());
-            assertEquals(V.numCols(),W.numCols());
+            assertEquals(Vt.numRows(),W.numCols());
         } else {
             assertEquals(U.numCols(),W.numRows());
-            assertEquals(W.numCols(),V.numCols());
+            assertEquals(W.numCols(),Vt.numRows());
             assertEquals(U.numCols(),U.numRows());
-            assertEquals(V.numCols(),V.numRows());
+            assertEquals(Vt.numCols(),Vt.numRows());
         }
 
-        DenseMatrix64F found = U.mult(W).mult(V.transpose()).getMatrix();
+        DenseMatrix64F found = U.mult(W).mult(Vt).getMatrix();
 
 //        found.print();
 //        expected.print();

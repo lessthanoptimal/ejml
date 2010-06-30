@@ -93,14 +93,14 @@ public class TestSingularOps {
                 SingularValueDecomposition svd = DecompositionFactory.svd(true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
-                SimpleMatrix U = SimpleMatrix.wrap(svd.getU());
+                SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
-                SimpleMatrix V = SimpleMatrix.wrap(svd.getV());
+                SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
 
                 S.set(1,1,0);
                 svd.getSingularValues()[1] = 0;
 
-                A=U.mult(S).mult(V.transpose());
+                A=U.mult(S).mult(Vt);
 
                 // now find the null space
                 SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));

@@ -94,6 +94,7 @@ public abstract class SingularValueDecompositionBase implements SingularValueDec
      *
      * @return Singular values.
      */
+    @Override
     public double [] getSingularValues() {
         return w;
     }
@@ -105,8 +106,15 @@ public abstract class SingularValueDecompositionBase implements SingularValueDec
      *
      * @return An orthogonal n by n matrix.
      */
-    public DenseMatrix64F getU() {
-        return U;
+    @Override
+    public DenseMatrix64F getU( boolean transposed ) {
+        if( !transposed )
+            return U;
+
+        DenseMatrix64F Ut = new DenseMatrix64F(U.numCols,U.numRows);
+        CommonOps.transpose(U,Ut);
+
+        return Ut;
     }
 
     /**
@@ -116,8 +124,15 @@ public abstract class SingularValueDecompositionBase implements SingularValueDec
      *
      * @return An orthogonal n by n matrix.
      */
-    public DenseMatrix64F getV() {
-        return V;
+    @Override
+    public DenseMatrix64F getV( boolean transposed  ) {
+        if( !transposed )
+            return V;
+
+        DenseMatrix64F Vt = new DenseMatrix64F(V.numCols,V.numRows);
+        CommonOps.transpose(V,Vt);
+
+        return Vt;
     }
     /**
      * Returns a diagonal matrix with the singular values.

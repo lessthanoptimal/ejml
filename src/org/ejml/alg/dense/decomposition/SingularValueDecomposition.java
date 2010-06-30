@@ -76,19 +76,30 @@ public abstract interface SingularValueDecomposition extends DecompositionInterf
      * <p>
      * Returns the orthogonal 'U' matrix.
      * </p>
+     * <p>
+     * Internally the SVD algorithm might compute U transposed or it might not.  To avoid an
+     *  unnecessary double transpose the option is provided to select if the transpose is returned.
+     * </p>
      *
-     * @return An orthogonal n by n matrix.
+     * @param transposed If the returned U is transposed.
+     * @return An orthogonal matrix.
      */
-    public DenseMatrix64F getU();
+    public DenseMatrix64F getU( boolean transposed );
 
     /**
      * <p>
      * Returns the orthogonal 'V' matrix.
      * </p>
      *
-     * @return An orthogonal n by n matrix.
+     * <p>
+     * Internally the SVD algorithm might compute V transposed or it might not.  To avoid an
+     *  unnecessary double transpose the option is provided to select if the transpose is returned.
+     * </p>
+     *
+     * @param transposed If the returned V is transposed.
+     * @return An orthogonal matrix.
      */
-    public DenseMatrix64F getV();
+    public DenseMatrix64F getV( boolean transposed );
 
     /**
      * Returns a diagonal matrix with the singular values.  Order of the singular values

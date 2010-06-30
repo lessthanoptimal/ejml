@@ -50,8 +50,8 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
     private BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
     private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
 
-    private DenseMatrix64F U;
-    private DenseMatrix64F V;
+    private DenseMatrix64F Ut;
+    private DenseMatrix64F Vt;
 
     private double singularValues[];
     private int numSingular;
@@ -93,16 +93,28 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
     }
 
     @Override
-    public DenseMatrix64F getU() {
+    public DenseMatrix64F getU(boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
+        if( transpose )
+            return Ut;
+
+        DenseMatrix64F U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
+        CommonOps.transpose(Ut,U);
+
         return U;
     }
 
     @Override
-    public DenseMatrix64F getV() {
+    public DenseMatrix64F getV( boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
+        if( transpose )
+            return Vt;
+
+        DenseMatrix64F V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
+        CommonOps.transpose(Vt,V);
+
         return V;
     }
 
@@ -140,7 +152,7 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
         makeSingularPositive();
 
         // if transposed undo the transposition
-        undoTranpose();
+        undoTranspose();
 
         return true;
     }
@@ -148,16 +160,11 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
     /**
      * If the transpose was computed instead do some additional computations
      */
-    private void undoTranpose() {
-        if( computeU )
-            CommonOps.transpose(U);
-        if( computeV )
-            CommonOps.transpose(V);
-
+    private void undoTranspose() {
         if( transposed ) {
-            DenseMatrix64F temp = V;
-            V = U;
-            U = temp;
+            DenseMatrix64F temp = Vt;
+            Vt = Ut;
+            Ut = temp;
         }
     }
 
@@ -169,17 +176,17 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
 
         // compute U and V matrices
         if( computeU )
-            U = bidiag.getU(U,true,compact);
+            Ut = bidiag.getU(Ut,true,compact);
         if( computeV )
-            V = bidiag.getV(V,true,compact);
+            Vt = bidiag.getV(Vt,true,compact);
 
         qralg.setFastValues(false);
         if( computeU )
-            qralg.setUt(U);
+            qralg.setUt(Ut);
         else
             qralg.setUt(null);
         if( computeV )
-            qralg.setVt(V);
+            qralg.setVt(Vt);
         else
             qralg.setVt(null);
 
@@ -219,11 +226,11 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
                 if( computeU ) {
                     // compute the results of multiplying it by an element of -1 at this location in
                     // a diagonal matrix.
-                    int start = i*U.numCols;
-                    int stop = start+U.numCols;
+                    int start = i* Ut.numCols;
+                    int stop = start+ Ut.numCols;
 
                     for( int j = start; j < stop; j++ ) {
-                        U.data[j] = -U.data[j];
+                        Ut.data[j] = -Ut.data[j];
                     }
                 }
             } else {

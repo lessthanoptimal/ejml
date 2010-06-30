@@ -82,9 +82,9 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
 
             assertTrue(alg.decompose(A));
 
-            DenseMatrix64F origU = alg.getU();
+            DenseMatrix64F origU = alg.getU(false);
             double sv[] = alg.getSingularValues();
-            DenseMatrix64F origV = alg.getV();
+            DenseMatrix64F origV = alg.getV(false);
 
             for( int i = 0; i < 2; i++ ) {
                 needU = i == 0;
@@ -110,9 +110,9 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
         UtilTestMatrix.checkSameElements(1e-10,sv.length,sv,alg.getSingularValues());
 
         if( checkU ) {
-            assertTrue(MatrixFeatures.isIdentical(U,alg.getU(),1e-10));
+            assertTrue(MatrixFeatures.isIdentical(U,alg.getU(false),1e-10));
         }
         if( checkV )
-            assertTrue(MatrixFeatures.isIdentical(V,alg.getV(),1e-10));
+            assertTrue(MatrixFeatures.isIdentical(V,alg.getV(false),1e-10));
     }
 }

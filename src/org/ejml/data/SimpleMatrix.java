@@ -694,7 +694,7 @@ public class SimpleMatrix {
          * @return An orthogonal m by m matrix.
          */
         public SimpleMatrix getU() {
-            return SimpleMatrix.wrap(svd.getU());
+            return SimpleMatrix.wrap(svd.getU(false));
         }
 
         /**
@@ -715,7 +715,7 @@ public class SimpleMatrix {
          * @return An orthogonal n by n matrix.
          */
         public SimpleMatrix getV() {
-            return SimpleMatrix.wrap(svd.getV());
+            return SimpleMatrix.wrap(svd.getV(false));
         }
     }
 
