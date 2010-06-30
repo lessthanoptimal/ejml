@@ -57,4 +57,23 @@ public class UtilTestMatrix {
             assertEquals(d[i],data[i],1e-6);
         }
     }
+
+    public static void checkSameElements( double tol, int length , double a[], double b[] )
+    {
+        for( int i = 0; i < length; i++ ) {
+            checkNumFound(1,tol,a[i],b);
+        }
+    }
+
+    public static void checkNumFound( int expected , double tol , double value , double data[] )
+    {
+        int numFound = 0;
+
+        for( int i = 0; i < data.length; i++ ) {
+            if( Math.abs(data[i]-value) <= tol )
+                numFound++;
+        }
+
+        assertEquals(expected,numFound);
+    }
 }

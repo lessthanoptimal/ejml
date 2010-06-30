@@ -86,21 +86,23 @@ public class TestSingularOps {
         for( int numRows = 2; numRows < 5; numRows++ ) {
             for( int numCols = 2; numCols < 5; numCols++ ) {
 
+                // construct a matrix with a null space by decomposition a random matrix
+                // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition svd = DecompositionFactory.svd(false,true,false);
+                SingularValueDecomposition svd = DecompositionFactory.svd(true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU());
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
                 SimpleMatrix V = SimpleMatrix.wrap(svd.getV());
 
-                // Make sure it has a null space
                 S.set(1,1,0);
                 svd.getSingularValues()[1] = 0;
 
                 A=U.mult(S).mult(V.transpose());
 
+                // now find the null space
                 SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
 
                 SimpleMatrix ns = A.mult(v);

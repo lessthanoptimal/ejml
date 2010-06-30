@@ -25,6 +25,7 @@ import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.UtilTestMatrix;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -140,9 +141,7 @@ public class TestRandomMatrices {
 
                 int o = Math.min(numRows,numCols);
 
-                for( int i = 0; i < o; i++ ) {
-                    assertEquals(sv[i],svd.getSingularValues()[i],1e-8);
-                }
+                UtilTestMatrix.checkSameElements(1e-8,o,sv,svd.getSingularValues());
             }
         }
 
@@ -152,9 +151,7 @@ public class TestRandomMatrices {
         SingularValueDecomposition svd = DecompositionFactory.svd();
         assertTrue(svd.decompose(A));
 
-        for( int i = 0; i < sv.length; i++ ) {
-            assertEquals(sv[i],svd.getSingularValues()[i],1e-8);
-        }
+        UtilTestMatrix.checkSameElements(1e-8,sv.length,sv,svd.getSingularValues());
         assertEquals(0,svd.getSingularValues()[4],1e-8);
     }
 

@@ -90,11 +90,11 @@ public class DecompositionFactory {
      * @return SingularValueDecomposition
      */
     public static SingularValueDecomposition svd() {
-        return new SvdImplicitQrDecompose(true);
+        return new SvdImplicitQrDecompose(true,true,true,false);
     }
 
     public static SingularValueDecomposition svd( boolean needU , boolean needV , boolean compact ) {
-        return new SvdImplicitQrDecompose(compact);
+        return new SvdImplicitQrDecompose(compact,needU,needV,false);
     }
 
     /**

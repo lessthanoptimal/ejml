@@ -1,4 +1,5 @@
 For 0.13 Release
+- Turn on and off compute U and V in svd
 - Modify original matrix for decompositions
   * Make that the default behavior but have friendly classes make a copy by default?
     - Easier to test?

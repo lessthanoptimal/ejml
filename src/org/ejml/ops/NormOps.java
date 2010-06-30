@@ -24,8 +24,6 @@ import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.svd.SvdNumericalRecipes;
 import org.ejml.data.DenseMatrix64F;
 
-import java.math.BigDecimal;
-
 
 /**
  * <p>
@@ -147,7 +145,17 @@ public class NormOps {
 
         if( n == 0 ) return 0;
 
-        return singularValues[0]/singularValues[n-1];
+        double smallest = Double.MAX_VALUE;
+        double largest = Double.MIN_VALUE;
+
+        for( double s : singularValues ) {
+            if( s < smallest )
+                smallest = s;
+            if( s > largest )
+                largest = s;
+        }
+
+        return largest/smallest;
     }
 
     /**

@@ -8,6 +8,8 @@
 - Cleaned up Matrix64F and D1Matrix64F
 - Updated java doc for several classes
 - Added SVD and EVD to SimpleMatrix
+- SVD can now selectively compute U and V
+- SVD can computed all at once (faster?)
 
 ----- Version 0.12
 

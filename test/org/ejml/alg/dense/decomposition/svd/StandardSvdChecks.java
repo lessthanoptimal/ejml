@@ -23,6 +23,7 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
+import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -48,6 +49,7 @@ public abstract class StandardSvdChecks {
         testWide();
         testTall();
         testZero();
+        testLargeToSmall();
         testIdentity();
         testLarger();
         testLots();
@@ -64,9 +66,9 @@ public abstract class StandardSvdChecks {
         assertEquals(0, SingularOps.nullity(alg, UtilEjml.EPS));
 
         double []w = alg.getSingularValues();
-        assertEquals(9.59186,w[0],1e-5);
-        assertEquals(5.18005,w[1],1e-5);
-        assertEquals(4.55558,w[2],1e-5);
+        UtilTestMatrix.checkNumFound(1,1e-5,9.59186,w);
+        UtilTestMatrix.checkNumFound(1,1e-5,5.18005,w);
+        UtilTestMatrix.checkNumFound(1,1e-5,4.55558,w);
 
         checkComponents(alg,A);
     }
@@ -132,6 +134,25 @@ public abstract class StandardSvdChecks {
                 checkComponents(alg,A);
             }
         }
+    }
+
+    /**
+     * Makes sure arrays are correctly set when it first computers a larger matrix
+     * then a smaller one.  When going from small to large its often forces to declare
+     * new memory, this way it actually uses memory.
+     */
+    public void testLargeToSmall() {
+        SingularValueDecomposition alg = createSvd();
+
+        // first the larger one
+        DenseMatrix64F A = RandomMatrices.createRandom(10,10,-1,1,rand);
+        assertTrue(alg.decompose(A));
+        checkComponents(alg,A);
+
+        // then the smaller one
+        A = RandomMatrices.createRandom(5,5,-1,1,rand);
+        assertTrue(alg.decompose(A));
+        checkComponents(alg,A);
     }
 
     private int checkOccurrence( double check , double[]values , int numSingular ) {

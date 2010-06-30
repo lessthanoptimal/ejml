@@ -44,26 +44,44 @@ import org.ejml.ops.CommonOps;
  */
 public class SvdImplicitQrDecompose implements SingularValueDecomposition {
 
-    int numRows;
-    int numCols;
+    private int numRows;
+    private int numCols;
 
-    BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
-    SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
+    private BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
+    private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
 
-    DenseMatrix64F U;
-    DenseMatrix64F V;
+    private DenseMatrix64F U;
+    private DenseMatrix64F V;
 
-    double singularValues[];
-    int numSingular;
+    private double singularValues[];
+    private int numSingular;
 
-    boolean compact;
+    // compute a compact SVD
+    private boolean compact;
+    // What is actually computed
+    private boolean computeU;
+    private boolean computeV;
+
+    // What the user requested to be computed
+    // If the transpose is computed instead then what is actually computed is swapped
+    private boolean prefComputeU;
+    private boolean prefComputeV;
 
     // stores the results of bidiagonalization
-    double diag[];
-    double off[];
+    private double diag[];
+    private double off[];
 
-    public SvdImplicitQrDecompose( boolean compact ) {
+    // Should it compute the transpose instead
+    private boolean transposed;
+
+    // should it compute singular values, U, and V all at the same time?
+    private boolean allAtOnce;
+
+    public SvdImplicitQrDecompose(boolean compact, boolean computeU, boolean computeV, boolean allAtOnce ) {
         this.compact = compact;
+        this.prefComputeU = computeU;
+        this.prefComputeV = computeV;
+        this.allAtOnce = allAtOnce;
     }
 
     @Override
@@ -83,11 +101,15 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
 
     @Override
     public DenseMatrix64F getU() {
+        if( !prefComputeU )
+            throw new IllegalArgumentException("As requested U was not computed.");
         return U;
     }
 
     @Override
     public DenseMatrix64F getV() {
+        if( !prefComputeV )
+            throw new IllegalArgumentException("As requested V was not computed.");
         return V;
     }
 
@@ -112,21 +134,110 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-        boolean transposed = orig.numCols > orig.numRows;
-
-        numRows = orig.numRows;
-        numCols = orig.numCols;
-
-        int smallSide = Math.min(numRows,numCols);
-        if( diag == null || diag.length < smallSide ) {
-            diag = new double[ smallSide ];
-            off = new double[ smallSide -1];
-        }
+        int smallSide = setup(orig);
 
         // change the matrix to bidiagonal form
          if( !bidiag.decompose(orig,transposed) )
              return false;
 
+        if( allAtOnce ) {
+            computeEverything(smallSide);
+        } else {
+            // find the singular values
+            if (computeSingularValues(smallSide))
+                return false;
+
+            // compute the U and V matrices using the already computed
+            // singular values.  This reduces the number of computations involved on average
+            // since it converges very fast when the real singular values are used
+            if (computeUandV())
+                return false;
+        }
+
+        // make sure all the singular values or positive
+        makeSingularPositive();
+
+        // if transposed undo the transposition
+        undoTranpose();
+
+        return true;
+    }
+
+    /**
+     * If the transpose was computed instead do some additional computations
+     */
+    private void undoTranpose() {
+        if( computeU )
+            CommonOps.transpose(U);
+        if( computeV )
+            CommonOps.transpose(V);
+
+        if( transposed ) {
+            DenseMatrix64F temp = V;
+            V = U;
+            U = temp;
+        }
+    }
+
+    private boolean computeUandV() {
+        // see if anything needs to be done
+        if( !computeU && !computeV )
+            return false;
+
+        // compute U and V matrices
+        if( computeU )
+            U = bidiag.getU(U,true,compact);
+        if( computeV )
+            V = bidiag.getV(V,true,compact);
+
+        // set up the qr algorithm, reusing the previous extraction
+        qralg.setMatrix(bidiag.getUBV());
+        if( transposed )
+            qralg.initParam(numCols,numRows);
+        else
+            qralg.initParam(numRows,numCols);
+        // after swapping diag will now have the singular values that were computed before
+        diag = qralg.swapDiag(diag);
+        off = qralg.swapOff(off);
+        // set it up to compute both U and V matrices
+        qralg.setFastValues(false);
+        if( computeU )
+            qralg.setUt(U);
+        if( computeV )
+            qralg.setVt(V);
+
+        return !qralg.process(diag);
+    }
+
+    private boolean computeEverything(int smallSide) {
+        // compute singular values
+        qralg.setMatrix(bidiag.getUBV());
+
+        // copy the diagonal elements
+        // this way it doesn't need to be copied twice and will slightly speed it up
+        System.arraycopy(qralg.getDiag(),0,diag,0,smallSide);
+        System.arraycopy(qralg.getOff(),0,off,0,smallSide-1);
+
+        // compute U and V matrices
+        if( computeU )
+            U = bidiag.getU(U,true,compact);
+        if( computeV )
+            V = bidiag.getV(V,true,compact);
+
+        qralg.setFastValues(false);
+        if( computeU )
+            qralg.setUt(U);
+        else
+            qralg.setUt(null);
+        if( computeV )
+            qralg.setVt(V);
+        else
+            qralg.setVt(null);
+
+        return !qralg.process();
+    }
+
+    private boolean computeSingularValues(int smallSide) {
         // compute singular values
         qralg.setMatrix(bidiag.getUBV());
 
@@ -139,76 +250,55 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
         qralg.setUt(null);
         qralg.setVt(null);
 
-        if( !qralg.process() )
-            return false;
-
-        copySingularValues();
-
-        // compute U and V matrices
-        U = bidiag.getU(U,true,compact);
-        V = bidiag.getV(V,true,compact);
-
-        // set up the qr algorithm, reusing the previous extraction
-        qralg.setMatrix(bidiag.getUBV());
-        if( transposed )
-            qralg.initParam(numCols,numRows);
-        else
-            qralg.initParam(numRows,numCols);
-        diag = qralg.swapDiag(diag);
-        off = qralg.swapOff(off);
-        // set it up to compute both U and V matrices
-        qralg.setFastValues(false);
-        qralg.setUt(U);
-        qralg.setVt(V);
-
-        if( !qralg.process(singularValues) )
-            return false;
-
-        // make sure all the singular values or positive
-        makeSingularPositive();
-
-        CommonOps.transpose(U);
-        CommonOps.transpose(V);
-
-        if( transposed ) {
-            DenseMatrix64F temp = V;
-            V = U;
-            U = temp;
-        }
-
-        return true;
+        return !qralg.process();
     }
 
-    /**
-     * Copies singular values into a local array
-     */
-    private void copySingularValues() {
-        numSingular = qralg.getNumberOfSingularValues();
-        if( singularValues == null || singularValues.length < numSingular )
-            singularValues = new double[ numSingular ];
+    private int setup(DenseMatrix64F orig) {
+        transposed = orig.numCols > orig.numRows;
 
-        System.arraycopy(qralg.getSingularValues(),0,singularValues,0,numSingular);
+        // flag what should be computed and what should not be computed
+        if( transposed ) {
+            computeU = prefComputeV;
+            computeV = prefComputeU;
+        } else {
+            computeU = prefComputeU;
+            computeV = prefComputeV;
+        }
+
+        numRows = orig.numRows;
+        numCols = orig.numCols;
+
+        int smallSide = Math.min(numRows,numCols);
+        if( diag == null || diag.length < smallSide ) {
+            diag = new double[ smallSide ];
+            off = new double[ smallSide -1];
+        }
+        return smallSide;
     }
 
     /**
      * With the QR algorithm it is possible for the found singular values to be native.  This
      * makes them all positive by multiplying it by a diagonal matrix that has
      */
-    // TODO could make more efficient by doing this to U or V, depending which one is smaller
     private void makeSingularPositive() {
+        numSingular = qralg.getNumberOfSingularValues();
+        singularValues = qralg.getSingularValues();
+
         for( int i = 0; i < numSingular; i++ ) {
             double val = qralg.getSingularValue(i);
 
             if( val < 0 ) {
                 singularValues[i] = -val;
 
-                // compute the results of multiplying it by an element of -1 at this location in
-                // a diagonal matrix.
-                int start = i*U.numCols;
-                int stop = start+U.numCols;
+                if( computeU ) {
+                    // compute the results of multiplying it by an element of -1 at this location in
+                    // a diagonal matrix.
+                    int start = i*U.numCols;
+                    int stop = start+U.numCols;
 
-                for( int j = start; j < stop; j++ ) {
-                    U.data[j] = -U.data[j];
+                    for( int j = start; j < stop; j++ ) {
+                        U.data[j] = -U.data[j];
+                    }
                 }
             } else {
                 singularValues[i] = val;

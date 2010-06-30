@@ -20,7 +20,13 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -29,22 +35,99 @@ import org.junit.Test;
 public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
 
     boolean compact;
+    boolean needU;
+    boolean needV;
+    boolean allAtOnce;
 
     @Override
     public SingularValueDecomposition createSvd() {
-        return new SvdImplicitQrDecompose(compact);
+        return new SvdImplicitQrDecompose(compact,needU,needV,allAtOnce);
     }
 
     @Test
     public void checkCompact() {
         compact = true;
+        needU = true;
+        needV = true;
+        allAtOnce = false;
         allTests();
     }
 
     @Test
     public void checkNotCompact() {
         compact = false;
+        needU = true;
+        needV = true;
+        allAtOnce = false;
         allTests();
     }
 
+    @Test
+    public void checkAllAtOnce() {
+        compact = true;
+        needU = true;
+        needV = true;
+        allAtOnce = true;
+        allTests();
+    }
+
+    /**
+     * This SVD can be configured to compute or not compute different components
+     * Checks to see if it has the expected behavior no matter how it is configured
+     */
+    @Test
+    public void checkAllPermutations() {
+        // test matrices with different shapes.
+        // this ensure that transposed and non-transposed are handled correctly
+        checkAllPermutations(5, 5);
+        checkAllPermutations(7, 5);
+        checkAllPermutations(5, 7);
+    }
+
+    private void checkAllPermutations(int numRows, int numCols) {
+        for( int l = 0; l < 2; l++ ) {
+            boolean allAtOnce = l == 0;
+            for( int k = 0; k < 2; k++ ) {
+                compact = k == 0;
+
+                SingularValueDecomposition alg = new SvdImplicitQrDecompose(compact,true,true,allAtOnce);
+
+                DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+
+                assertTrue(alg.decompose(A));
+
+                DenseMatrix64F origU = alg.getU();
+                double sv[] = alg.getSingularValues();
+                DenseMatrix64F origV = alg.getV();
+
+                for( int i = 0; i < 2; i++ ) {
+                    needU = i == 0;
+                    for( int j = 0; j < 2; j++ ) {
+                        needV = j==0;
+
+                        testPartial(A,origU,sv,origV,needU,needV,allAtOnce);
+                    }
+                }
+            }
+        }
+    }
+
+    public void testPartial( DenseMatrix64F A ,
+                             DenseMatrix64F U ,
+                             double sv[] ,
+                             DenseMatrix64F V ,
+                             boolean checkU , boolean checkV , boolean allAtOnce )
+    {
+        SingularValueDecomposition alg = new SvdImplicitQrDecompose(compact,checkU,checkV,allAtOnce);
+
+        assertTrue(alg.decompose(A));
+
+        UtilTestMatrix.checkSameElements(1e-10,sv.length,sv,alg.getSingularValues());
+
+        if( checkU ) {
+            assertTrue(MatrixFeatures.isIdentical(U,alg.getU(),1e-10));
+        }
+        if( checkV )
+            assertTrue(MatrixFeatures.isIdentical(V,alg.getV(),1e-10));
+    }
 }

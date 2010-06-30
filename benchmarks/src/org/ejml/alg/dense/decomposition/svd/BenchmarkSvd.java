@@ -50,7 +50,10 @@ public class BenchmarkSvd {
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
         if( numTrials <= 0 ) return;
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true),mat,numTrials));
+        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true,false),mat,numTrials));
+        System.out.println("qr all at once   = "+ evaluate(new SvdImplicitQrDecompose(true,true,true,true),mat,numTrials));
+        System.out.println("qr no U          = "+ evaluate(new SvdImplicitQrDecompose(true,false,true,false),mat,numTrials));
+        System.out.println("qr no U and V    = "+ evaluate(new SvdImplicitQrDecompose(true,false,false,false),mat,numTrials));
         System.out.println("alt              = "+ evaluate(new SvdNumericalRecipes(),mat,numTrials));
     }
 
