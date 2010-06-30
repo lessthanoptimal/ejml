@@ -28,6 +28,13 @@ import org.ejml.ops.CommonOps;
 
 /**
  * <p>
+ * This is the first QR SVD alg implemented in EJML.  It computes singular values and then
+ * computes uses those singular values to compute U and V.  For EVD the same technique produces
+ * faster results.  However here it seems that it produces slower results in benchmarks.  Just
+ * to be save the old code is stored here.
+ * </p>
+ *
+ * <p>
  * Computes the Singular value decomposition of a matrix using the implicit QR algorithm
  * for singular value decomposition.  It works by first by transforming the matrix
  * to a bidiagonal A=U*B*V<sup>T</sup> form, then it implicitly computing the eigenvalues of the B<sup>T</sup>B matrix,
@@ -42,7 +49,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class SvdImplicitQrDecompose implements SingularValueDecomposition {
+public class SvdImplicitQrDecompose_Separate implements SingularValueDecomposition {
 
     private int numRows;
     private int numCols;
@@ -67,14 +74,21 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
     private boolean prefComputeU;
     private boolean prefComputeV;
 
+    // stores the results of bidiagonalization
+    private double diag[];
+    private double off[];
+
     // Should it compute the transpose instead
     private boolean transposed;
 
+    // should it compute singular values, U, and V all at the same time?
+    private boolean allAtOnce;
 
-    public SvdImplicitQrDecompose(boolean compact, boolean computeU, boolean computeV) {
+    public SvdImplicitQrDecompose_Separate(boolean compact, boolean computeU, boolean computeV, boolean allAtOnce ) {
         this.compact = compact;
         this.prefComputeU = computeU;
         this.prefComputeV = computeV;
+        this.allAtOnce = allAtOnce;
     }
 
     @Override
@@ -127,14 +141,25 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-         setup(orig);
+        int smallSide = setup(orig);
 
         // change the matrix to bidiagonal form
          if( !bidiag.decompose(orig,transposed) )
              return false;
 
-        if( computeUWV() )
-            return false;
+        if( allAtOnce ) {
+            computeEverything(smallSide);
+        } else {
+            // find the singular values
+            if (computeSingularValues(smallSide))
+                return false;
+
+            // compute the U and V matrices using the already computed
+            // singular values.  This reduces the number of computations involved on average
+            // since it converges very fast when the real singular values are used
+            if (computeUandV())
+                return false;
+        }
 
         // make sure all the singular values or positive
         makeSingularPositive();
@@ -161,11 +186,44 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
         }
     }
 
-    /**
-     * Decomposes the bidiagonal matrix using the QR algorithm
-     */
-    private boolean computeUWV() {
+    private boolean computeUandV() {
+        // see if anything needs to be done
+        if( !computeU && !computeV )
+            return false;
+
+        // compute U and V matrices
+        if( computeU )
+            U = bidiag.getU(U,true,compact);
+        if( computeV )
+            V = bidiag.getV(V,true,compact);
+
+        // set up the qr algorithm, reusing the previous extraction
         qralg.setMatrix(bidiag.getUBV());
+        if( transposed )
+            qralg.initParam(numCols,numRows);
+        else
+            qralg.initParam(numRows,numCols);
+        // after swapping diag will now have the singular values that were computed before
+        diag = qralg.swapDiag(diag);
+        off = qralg.swapOff(off);
+        // set it up to compute both U and V matrices
+        qralg.setFastValues(false);
+        if( computeU )
+            qralg.setUt(U);
+        if( computeV )
+            qralg.setVt(V);
+
+        return !qralg.process(diag);
+    }
+
+    private boolean computeEverything(int smallSide) {
+        // compute singular values
+        qralg.setMatrix(bidiag.getUBV());
+
+        // copy the diagonal elements
+        // this way it doesn't need to be copied twice and will slightly speed it up
+        System.arraycopy(qralg.getDiag(),0,diag,0,smallSide);
+        System.arraycopy(qralg.getOff(),0,off,0,smallSide-1);
 
         // compute U and V matrices
         if( computeU )
@@ -186,7 +244,23 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
         return !qralg.process();
     }
 
-    private void setup(DenseMatrix64F orig) {
+    private boolean computeSingularValues(int smallSide) {
+        // compute singular values
+        qralg.setMatrix(bidiag.getUBV());
+
+        // copy the diagonal elements
+        // this way it doesn't need to be copied twice and will slightly speed it up
+        System.arraycopy(qralg.getDiag(),0,diag,0,smallSide);
+        System.arraycopy(qralg.getOff(),0,off,0,smallSide-1);
+
+        qralg.setFastValues(true);
+        qralg.setUt(null);
+        qralg.setVt(null);
+
+        return !qralg.process();
+    }
+
+    private int setup(DenseMatrix64F orig) {
         transposed = orig.numCols > orig.numRows;
 
         // flag what should be computed and what should not be computed
@@ -200,6 +274,13 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
 
         numRows = orig.numRows;
         numCols = orig.numCols;
+
+        int smallSide = Math.min(numRows,numCols);
+        if( diag == null || diag.length < smallSide ) {
+            diag = new double[ smallSide ];
+            off = new double[ smallSide -1];
+        }
+        return smallSide;
     }
 
     /**

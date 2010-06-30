@@ -9,7 +9,7 @@
 - Updated java doc for several classes
 - Added SVD and EVD to SimpleMatrix
 - SVD can now selectively compute U and V
-- SVD can computed all at once (faster?)
+- SVD is computed all at once.  About twice as fast now.  Not sure why earlier benchmarks didn't show this.
 
 ----- Version 0.12
 
