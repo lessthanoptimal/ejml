@@ -20,7 +20,6 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.LUDecomposition;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
@@ -123,7 +122,7 @@ public class MatrixFeatures {
         if( !isSquare(A))
            return false;
 
-        EigenDecomposition eig = DecompositionFactory.eig(false);
+        EigenDecomposition eig = DecompositionOps.eig(false);
         eig.decompose(A);
 
         for( int i = 0; i < A.numRows; i++ ) {
@@ -365,7 +364,7 @@ public class MatrixFeatures {
     public static boolean isRowsLinearIndependent( DenseMatrix64F A )
     {
         // LU decomposition
-        LUDecomposition lu = DecompositionFactory.lu();
+        LUDecomposition lu = DecompositionOps.lu();
         if( !lu.decompose(A))
             throw new RuntimeException("Decompositon failed?");
 
@@ -514,7 +513,7 @@ public class MatrixFeatures {
      * @return The matrix's rank.
      */
     public static int rank( DenseMatrix64F A , double threshold ) {
-        SingularValueDecomposition svd = DecompositionFactory.svd();
+        SingularValueDecomposition svd = DecompositionOps.svd();
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");
@@ -540,7 +539,7 @@ public class MatrixFeatures {
      * @return The matrix's nullity.
      */
     public static int nullity( DenseMatrix64F A , double threshold ) {
-        SingularValueDecomposition svd = DecompositionFactory.svd();
+        SingularValueDecomposition svd = DecompositionOps.svd();
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");

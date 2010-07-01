@@ -36,13 +36,13 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  *
  * <p>
- *  To create a new instance of SingularValueDecomposition see {@link org.ejml.alg.dense.decomposition.DecompositionFactory#svd()}
+ *  To create a new instance of SingularValueDecomposition see {@link org.ejml.ops.DecompositionOps#svd()}
  * and {@link org.ejml.ops.SingularOps} contains additional helpful SVD related functions.
  * </p>
  *
  * <p>
  * <b>*Note*</b> that the ordering of singular values is not guaranteed, unless done so by a specific implementation.
- * The singular values can be put into descending order while adjusting U and V using {@link org.ejml.ops.SingularOps#descendingOrder(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F) SingularOps.descendingOrder()}.
+ * The singular values can be put into descending order while adjusting U and V using {@link org.ejml.ops.SingularOps#descendingOrder(org.ejml.data.DenseMatrix64F, boolean, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, boolean)}  SingularOps.descendingOrder()}.
  * </p>
  *
  * @author Peter Abeles

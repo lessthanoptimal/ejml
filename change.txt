@@ -10,7 +10,8 @@
 - Added SVD and EVD to SimpleMatrix
 - SVD can now selectively compute U and V
 - SVD is computed all at once.  About twice as fast now.  Not sure why earlier benchmarks didn't show this.
-- In SVD getU() and getV() can now indicate if the transposed version should be returned or not.
+- SVD getU() and getV() can now indicate if the transpose is returned or not.
+- Renamed DecompositionFactory to DecompositionOps and put quality() functions inside of it
 
 
 ----- Version 0.12

@@ -20,12 +20,12 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.DecompositionOps;
 
 
 /**
@@ -78,7 +78,7 @@ public class SolvePseudoInverse implements LinearSolver {
      * Better to overestimate than underestimate.
      */
     public SolvePseudoInverse( int maxCols ) {
-        this(new LinearSolverChol((CholeskyDecompositionCommon)DecompositionFactory.chol(maxCols,false,true)));
+        this(new LinearSolverChol((CholeskyDecompositionCommon) DecompositionOps.chol(maxCols,false,true)));
     }
 
     /**

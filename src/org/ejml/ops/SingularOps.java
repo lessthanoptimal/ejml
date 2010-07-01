@@ -40,26 +40,28 @@ public class SingularOps {
      * order.  In EJML this is not the case since it is often not needed and some computations can
      * be saved by not doing that.
      * </p>
-     *
-     * <p>
-     * TODO This is inefficient.  The shuffle should be computed first then each row copied at most once
-     * </p>
-     *
-     * @param U Matrix. Modified.
-     * @param S Diagonal matrix with singular values. Modified.
-     * @param V Matrix. Modified.
-     */
-    public static void descendingOrder( DenseMatrix64F U , DenseMatrix64F S , DenseMatrix64F V )
-    {
-        int N = Math.min(S.numRows,S.numCols);
 
-        for( int i = 0; i < N; i++ ) {
+     * @param U Matrix. Modified.
+     * @param tranU is U transposed or not.
+     * @param W Diagonal matrix with singular values. Modified.
+     * @param V Matrix. Modified.
+     * @param tranV is V transposed or not.
+     */
+    public static void descendingOrder( DenseMatrix64F U , boolean tranU ,
+                                        DenseMatrix64F W ,
+                                        DenseMatrix64F V , boolean tranV )
+    {
+        int numSingular = Math.min(W.numRows,W.numCols);
+
+        checkSvdMatrixSize(U, tranU, W, V, tranV);
+
+        for( int i = 0; i < numSingular; i++ ) {
             double bigValue=-Double.MAX_VALUE;
             int bigIndex=-1;
 
             // find the smallest singular value in the submatrix
-            for( int j = i; j < N; j++ ) {
-                double v = S.get(j,j);
+            for( int j = i; j < numSingular; j++ ) {
+                double v = W.get(j,j);
 
                 if( v > bigValue ) {
                     bigValue = v;
@@ -71,26 +73,65 @@ public class SingularOps {
             if( bigIndex == i)
                 continue;
 
-            double tmp = S.get(i,i);
-            S.set(i,i,bigValue);
-            S.set(bigIndex,bigIndex,tmp);
+            double tmp = W.get(i,i);
+            W.set(i,i,bigValue);
+            W.set(bigIndex,bigIndex,tmp);
 
             if( V != null ) {
-                // swap the columns
-                for( int row = 0; row < V.numRows; row++ ) {
-                    tmp = V.get(row,i);
-                    V.set(row,i,V.get(row,bigIndex));
-                    V.set(row,bigIndex,tmp);
-                }
+                swapRowOrCol(V, tranV, i, bigIndex);
             }
 
             if( U != null ) {
-                // swap the columns
-                for( int row = 0; row < U.numRows; row++ ) {
-                    tmp = U.get(row,i);
-                    U.set(row,i,U.get(row,bigIndex));
-                    U.set(row,bigIndex,tmp);
-                }
+                swapRowOrCol(U, tranU, i, bigIndex);
+            }
+        }
+    }
+
+    /**
+     * Checks to see if all the provided matrices are the expected size for an SVD.  If an error is encounted
+     * then an exception is thrown.  This automatically handles compact and non-compact formats
+     */
+    public static void checkSvdMatrixSize(DenseMatrix64F U, boolean tranU, DenseMatrix64F W, DenseMatrix64F V, boolean tranV ) {
+        int numSingular = Math.min(W.numRows,W.numCols);
+        boolean compact = W.numRows == W.numCols;
+
+        if( compact ) {
+            if( tranU && U.numRows != numSingular )
+                throw new IllegalArgumentException("Unexpected size of matrix U");
+            else if( !tranU && U.numCols != numSingular )
+                throw new IllegalArgumentException("Unexpected size of matrix U");
+
+            if( tranV && V.numRows != numSingular )
+                throw new IllegalArgumentException("Unexpected size of matrix V");
+            else if( !tranV && V.numCols != numSingular )
+                throw new IllegalArgumentException("Unexpected size of matrix V");
+        } else {
+            if( U.numRows != U.numCols )
+                throw new IllegalArgumentException("Unexpected size of matrix U");
+            if( V.numRows != V.numCols )
+                throw new IllegalArgumentException("Unexpected size of matrix V");
+            if( U.numRows != W.numRows )
+                throw new IllegalArgumentException("Unexpected size of W");
+            if( V.numRows != W.numCols )
+                throw new IllegalArgumentException("Unexpected size of W");
+        }
+    }
+
+    private static void swapRowOrCol(DenseMatrix64F M, boolean tran, int i, int bigIndex) {
+        double tmp;
+        if( tran ) {
+            // swap the rows
+            for( int col = 0; col < M.numCols; col++ ) {
+                tmp = M.get(i,col);
+                M.set(i,col,M.get(bigIndex,col));
+                M.set(bigIndex,col,tmp);
+            }
+        } else {
+            // swap the columns
+            for( int row = 0; row < M.numRows; row++ ) {
+                tmp = M.get(row,i);
+                M.set(row,i,M.get(row,bigIndex));
+                M.set(row,bigIndex,tmp);
             }
         }
     }
@@ -184,4 +225,5 @@ public class SingularOps {
         }
         return ret;
     }
+
 }

@@ -20,7 +20,6 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
@@ -486,7 +485,7 @@ public class SimpleMatrix {
      * @return The SVD of this matrix.
      */
     public SingularValueDecomposition computeSVD() {
-        SingularValueDecomposition alg = DecompositionFactory.svd();
+        SingularValueDecomposition alg = DecompositionOps.svd();
 
         alg.decompose(mat);
 
@@ -663,27 +662,36 @@ public class SimpleMatrix {
      * @return SVD of this matrix.
      */
     public SVD svd() {
-        return new SVD(mat);
+        return new SVD();
     }
 
     /**
      * Returns the Eigen Value Decomposition (EVD) of this matrix.
      */
     public EVD eig() {
-        return new EVD(mat);
+        return new EVD();
     }
 
     /**
      * Wrapper around SVD for SimpleMatrix
      */
-    public static class SVD
+    public class SVD
     {
         SingularValueDecomposition svd;
+        SimpleMatrix U;
+        SimpleMatrix W;
+        SimpleMatrix V;
 
-        public SVD( DenseMatrix64F A ) {
-            svd = DecompositionFactory.svd();
-            if( !svd.decompose(A))
+        public SVD() {
+            svd = DecompositionOps.svd();
+            if( !svd.decompose(mat) )
                 throw new RuntimeException("Decomposition failed");
+            U = SimpleMatrix.wrap(svd.getU(false));
+            W = SimpleMatrix.wrap(svd.getW(null));
+            V = SimpleMatrix.wrap(svd.getV(false));
+
+            // order singular values from largest to smallest
+            SingularOps.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
         }
 
         /**
@@ -694,17 +702,17 @@ public class SimpleMatrix {
          * @return An orthogonal m by m matrix.
          */
         public SimpleMatrix getU() {
-            return SimpleMatrix.wrap(svd.getU(false));
+            return U;
         }
 
         /**
-         * Returns a diagonal matrix with the singular values.  Order of the singular values
-         * is not guaranteed.
+         * Returns a diagonal matrix with the singular values.  The singular values are ordered
+         * from largest to smallest.
          *
          * @return Diagonal matrix with singular values along the diagonal.
          */
         public SimpleMatrix getW() {
-            return SimpleMatrix.wrap(svd.getW(null));
+            return W;
         }
 
         /**
@@ -715,21 +723,58 @@ public class SimpleMatrix {
          * @return An orthogonal n by n matrix.
          */
         public SimpleMatrix getV() {
-            return SimpleMatrix.wrap(svd.getV(false));
+            return V;
+        }
+
+        /**
+         * <p>
+         * Computes the quality of the computed decomposition.  A value close to or less than 1e-15
+         * is considered to be within machine precision.
+         * </p>
+         *
+         * <p>
+         * This function must be called before the original matrix has been modified or else it will
+         * produce meaningless results.
+         * </p>
+         *
+         * @return Quality of the decomposition.
+         */
+        public double quality() {
+            return DecompositionOps.quality(mat,U.getMatrix(),W.getMatrix(),V.transpose().getMatrix());
+        }
+
+        /**
+         * Computes the null space from an SVD.  For more information see {@link SingularOps#nullSpace}.
+         * @return Null space vector.
+         */
+        public SimpleMatrix nullSpace() {
+            return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
+        }
+
+        public int rank() {
+            return SingularOps.rank(svd,10.0*UtilEjml.EPS);
+        }
+
+        public int nullity() {
+            return SingularOps.nullity(svd,10.0*UtilEjml.EPS);
+        }
+
+        public SingularValueDecomposition getSVD() {
+            return svd;
         }
     }
 
     /**
      * Wrapper around EigenDecomposition for SimpleMatrix
      */
-    public static class EVD
+    public class EVD
     {
         EigenDecomposition eig;
 
-        public EVD( DenseMatrix64F A )
+        public EVD()
         {
-            eig = DecompositionFactory.eig();
-            if( !eig.decompose(A))
+            eig = DecompositionOps.eig();
+            if( !eig.decompose(mat))
                 throw new RuntimeException("Eigenvalue Decomposition failed");
         }
 
@@ -766,6 +811,27 @@ public class SimpleMatrix {
          */
         public SimpleMatrix getEigenVector( int index ) {
             return SimpleMatrix.wrap(eig.getEigenVector(index));
+        }
+
+        /**
+         * <p>
+         * Computes the quality of the computed decomposition.  A value close to or less than 1e-15
+         * is considered to be within machine precision.
+         * </p>
+         *
+         * <p>
+         * This function must be called before the original matrix has been modified or else it will
+         * produce meaningless results.
+         * </p>
+         *
+         * @return Quality of the decomposition.
+         */
+        public double quality() {
+            return DecompositionOps.quality(mat,eig);
+        }
+
+        public EigenDecomposition getEVD() {
+            return eig;
         }
     }
 }

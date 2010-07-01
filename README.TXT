@@ -6,7 +6,6 @@
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
 
-
   Project Website: http://code.google.com/p/efficient-java-matrix-library/
 
 ==========================================================================
@@ -96,11 +95,12 @@ Bugs can either be posted on that message board or at:
 
 http://code.google.com/p/efficient-java-matrix-library/issues/list
 
-
 ==========================================================================
 ----- Acknowledgements
 
-I would like to thank all the people have made various comments, suggestions, and reported bugs.
+I would like to thank all the people have made various comments, suggestions, and reported bugs.  Also David Watkins
+for writing "Fundamentals of Matrix Computations", which clearly explains algorithms and yet addresses important
+implementation issues.
 
 ==========================================================================
 ----- License

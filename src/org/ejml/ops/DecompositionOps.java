@@ -17,9 +17,10 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.ops;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.*;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
@@ -27,17 +28,32 @@ import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
 import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.SimpleMatrix;
 
 
 /**
- * Selecting which specific implementation of a decomposition to use can be difficult unless one
- * has an intimate understanding of each of them works.  This class provides static functions
- * that can be used to create a new instance of a decomposition that should work well for almost
- * all matrices and is reasonably fast.
+ * <p>
+ * Contains operations related to creating and evaluating the quality of common matrix decompositions.
+ * </p>
+ *
+ * <p>
+ * In general this is the best place to create matrix decompositions from since directly calling the
+ * algorithm is error prone since it require in depth knowledge of how the algorithm operators.  The exact
+ * implementations created is subject to change as newer, faster and more accurate implementations are added.
+ * </p>
+ *
+ * <p>
+ * Several functions are also provided to evaluate the quality of a decomposition.  This is provided
+ * as a way to sanity check a decomposition.  Often times a significant error in a decomposition will
+ * result in a poor (larger) quality value. Typically a quality value of around 1e-15 means it is within
+ * machine precision.
+ * </p>
+ *
  *
  * @author Peter Abeles
  */
-public class DecompositionFactory {
+public class DecompositionOps {
 
     /**
      * <p> If you don't know which Cholesky algorithm to use, call this function to select what
@@ -85,7 +101,7 @@ public class DecompositionFactory {
     }
 
     /**
-     * Returns a new instance of the Singular Value Decomposition (SVD).
+     * Returns a new instance of a SingularValueDecomposition.
      *
      * @return SingularValueDecomposition
      */
@@ -93,6 +109,15 @@ public class DecompositionFactory {
         return new SvdImplicitQrDecompose(true,true,true);
     }
 
+    /**
+     * Returns a new instance of a SingularValueDecomposition which can be configured to compute
+     * U and V matrices or not, be in compact form.
+     *
+     * @param needU Should it compute the U matrix.
+     * @param needV Should it compute the V matrix.
+     * @param compact Should it compute the SVD in compact form.
+     * @return
+     */
     public static SingularValueDecomposition svd( boolean needU , boolean needV , boolean compact ) {
         return new SvdImplicitQrDecompose(compact,needU,needV);
     }
@@ -117,7 +142,80 @@ public class DecompositionFactory {
         return new SwitchingEigenDecomposition();
     }
 
+    /**
+     * Same as {@link #eig()} but can turn on and off computing eigen vectors
+     *
+     * @param needVectors Should eigenvectors be computed or not.
+     * @return A new EigenDecomposition
+     */
     public static EigenDecomposition eig( boolean needVectors ) {
         return new SwitchingEigenDecomposition(needVectors,1e-8);
+    }
+
+    /**
+     * <p>
+     * Computes a metric which measures the the quality of a singular value decomposition.  If a
+     * value is returned that is close to or smaller than 1e-15 then it is within machine precision.
+     * </p>
+     *
+     * <p>
+     * SVD quality is defined as:<br>
+     * <br>
+     * Quality = || A - U W V<sup>T</sup>|| / || A || <br>
+     * where A is the original matrix , U W V is the decomposition, and ||A|| is the norm of A.
+     * </p>
+     *
+     * @param orig The original matrix which was decomposed. Not modified.
+     * @param svd The decomposition after processing 'orig'. Not modified.
+     * @return The quality of the decomposition.
+     */
+    public static double quality( DenseMatrix64F orig , SingularValueDecomposition svd )
+    {
+        return quality(orig,svd.getU(false),svd.getW(null),svd.getV(true));
+    }
+
+    public static double quality( DenseMatrix64F orig , DenseMatrix64F U , DenseMatrix64F W , DenseMatrix64F Vt )
+    {
+        SimpleMatrix _U = SimpleMatrix.wrap(U);
+        SimpleMatrix _W = SimpleMatrix.wrap(W);
+        SimpleMatrix _Vt = SimpleMatrix.wrap(Vt);
+
+        SimpleMatrix foundA = _U.mult(_W).mult(_Vt);
+
+        return SpecializedOps.diffNormF(orig,foundA.getMatrix())/foundA.normF();
+    }
+
+    /**
+     * <p>
+     * Computes a metric which measures the the quality of an eigen value decomposition.  If a
+     * value is returned that is close to or smaller than 1e-15 then it is within machine precision.
+     * </p>
+     * <p>
+     * EVD quality is defined as:<br>
+     * <br>
+     * Quality = ||A*V - V*D|| / ||A*V||.
+     *  </p>
+     *
+     * @param orig The original matrix. Not modified.
+     * @param eig EVD of the original matrix. Not modified.
+     * @return The quality of the decomposition.
+     */
+    public static double quality( DenseMatrix64F orig , EigenDecomposition eig )
+    {
+        SimpleMatrix A = SimpleMatrix.wrap(orig);
+        SimpleMatrix V = SimpleMatrix.wrap(EigenOps.createMatrixV(eig));
+        SimpleMatrix D = SimpleMatrix.wrap(EigenOps.createMatrixD(eig));
+
+        SimpleMatrix L = A.mult(V);
+        SimpleMatrix R = V.mult(D);
+
+        SimpleMatrix diff = L.minus(R);
+
+        double top = diff.normF();
+        double bottom = L.normF();
+
+        double error = top/bottom;
+
+        return error;
     }
 }

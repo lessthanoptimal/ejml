@@ -21,6 +21,9 @@ package org.ejml;
 
 import org.ejml.data.DenseMatrix64F;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 
 /**
  * Various functions that are usefull but don't have a clear location that they belong in.
@@ -119,4 +122,19 @@ public class UtilEjml {
         return ret;
     }
 
+
+    public static Integer[] sortByIndex( final double []data , int size ) {
+        Integer[] idx = new Integer[size];
+        for( int i = 0; i < size; i++ ) {
+            idx[i] = i;
+        }
+
+        Arrays.sort(idx, new Comparator<Integer>() {
+            @Override public int compare(final Integer o1, final Integer o2) {
+                return Double.compare(data[o1], data[o2]);
+            }
+        });
+
+        return idx;
+    }
 }

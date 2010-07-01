@@ -20,7 +20,6 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
@@ -28,8 +27,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -46,30 +44,70 @@ public class TestSingularOps {
         testDescendingOrder(4, 3, false);
         testDescendingOrder(3, 4, true);
         testDescendingOrder(4, 3, true);
+
+        testDescendingInputTransposed(4,5,true,true);
     }
 
+    /**
+     * Creates a random SVD that is highly unlikely to be in the correct order.  Adjust its order
+     * and see if it produces the same matrix.
+     */
     private void testDescendingOrder(int numRows, int numCols, boolean compact) {
-        SimpleMatrix U,S,V;
+        SimpleMatrix U,W,V;
 
         int minLength = Math.min(numRows,numCols);
 
         if( compact ) {
             U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,minLength,rand));
-            S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(minLength,minLength,0,1,rand));
+            W = SimpleMatrix.wrap(RandomMatrices.createDiagonal(minLength,minLength,0,1,rand));
             V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numCols,minLength,rand));
         } else {
             U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,numRows,rand));
-            S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(numRows,numCols,0,1,rand));
+            W = SimpleMatrix.wrap(RandomMatrices.createDiagonal(numRows,numCols,0,1,rand));
             V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numCols,numCols,rand));
         }
+
+        // Compute A
+        SimpleMatrix A=U.mult(W).mult(V.transpose());
+
+        // put into ascending order
+        SingularOps.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
+
+        // see if it changed the results
+        SimpleMatrix A_found = U.mult(W).mult(V.transpose());
+
+        assertTrue(A.isIdentical(A_found,1e-8));
+
+        // make sure singular values are descending
+        for( int i = 1; i < minLength; i++ ) {
+            assertTrue(W.get(i-1,i-1) >= W.get(i,i));
+        }
+    }
+
+    /**
+     * Use the transpose flags and see what happens
+     */
+    private void testDescendingInputTransposed(int numRows, int numCols, boolean tranU , boolean tranV ) {
+        SimpleMatrix U,S,V;
+
+        int minLength = Math.min(numRows,numCols);
+
+        U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,minLength,rand));
+        S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(minLength,minLength,0,1,rand));
+        V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numCols,minLength,rand));
 
         // Compute A
         SimpleMatrix A=U.mult(S).mult(V.transpose());
 
         // put into ascending order
-        SingularOps.descendingOrder(U.getMatrix(),S.getMatrix(),V.getMatrix());
+        if( tranU ) U = U.transpose();
+        if( tranV ) V = V.transpose();
+
+        SingularOps.descendingOrder(U.getMatrix(),tranU,S.getMatrix(),V.getMatrix(),tranV);
 
         // see if it changed the results
+        if( tranU ) U = U.transpose();
+        if( tranV ) V = V.transpose();
         SimpleMatrix A_found = U.mult(S).mult(V.transpose());
 
         assertTrue(A.isIdentical(A_found,1e-8));
@@ -78,6 +116,79 @@ public class TestSingularOps {
         for( int i = 1; i < minLength; i++ ) {
             assertTrue(S.get(i-1,i-1) >= S.get(i,i));
         }
+    }
+
+    /**
+     * Gives it correct input matrices and makes sure no exceptions are thrown.  All permutations
+     * are tested.
+     */
+    @Test
+    public void checkSvdMatrixSize_positive() {
+        checkSvdMatrixSize_positive(4,5);
+        checkSvdMatrixSize_positive(5,4);
+    }
+
+    /**
+     * Checks a few of the many possible bad inputs
+     */
+    @Test
+    public void checkSvdMatrixSize_negative() {
+        checkSvdMatrixSize_negative(4,5);
+        checkSvdMatrixSize_negative(5,4);
+    }
+
+    private void checkSvdMatrixSize_positive( int numRows , int numCols )
+    {
+        int s = Math.min(numRows,numCols);
+
+        // create a none compact SVD
+        DenseMatrix64F U = new DenseMatrix64F(numRows,numRows);
+        DenseMatrix64F W = new DenseMatrix64F(numRows,numCols);
+        DenseMatrix64F V = new DenseMatrix64F(numCols,numCols);
+
+        SingularOps.checkSvdMatrixSize(U,false,W,V,false);
+        CommonOps.transpose(U);CommonOps.transpose(V);
+        SingularOps.checkSvdMatrixSize(U,true,W,V,true);
+
+        // compact SVD
+        U = new DenseMatrix64F(numRows,s);
+        W = new DenseMatrix64F(s,s);
+        V = new DenseMatrix64F(numCols,s);
+
+        SingularOps.checkSvdMatrixSize(U,false,W,V,false);
+        CommonOps.transpose(U);CommonOps.transpose(V);
+        SingularOps.checkSvdMatrixSize(U,true,W,V,true);
+    }
+
+    private void checkSvdMatrixSize_negative( int numRows , int numCols )
+    {
+        int s = Math.min(numRows,numCols);
+
+        // create a none compact SVD
+        DenseMatrix64F U = new DenseMatrix64F(numRows,s);
+        DenseMatrix64F W = new DenseMatrix64F(numRows,numCols);
+        DenseMatrix64F V = new DenseMatrix64F(numCols,s);
+
+        try {
+            SingularOps.checkSvdMatrixSize(U,false,W,V,false);
+            fail("An exception should have been thrown");
+        } catch( RuntimeException e) {}
+
+
+        // compact SVD
+        U = new DenseMatrix64F(numRows,s);
+        W = new DenseMatrix64F(s,s);
+        V = new DenseMatrix64F(numCols,s);
+
+        try {
+            SingularOps.checkSvdMatrixSize(U,true,W,V,true);
+            fail("An exception should have been thrown");
+        } catch( RuntimeException e) {}
+        CommonOps.transpose(U);CommonOps.transpose(V);
+        try {
+            SingularOps.checkSvdMatrixSize(U,false,W,V,false);
+            fail("An exception should have been thrown");
+        } catch( RuntimeException e) {}
     }
 
     @Test
@@ -90,13 +201,14 @@ public class TestSingularOps {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition svd = DecompositionFactory.svd(true,true,false);
+                SingularValueDecomposition svd = DecompositionOps.svd(true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
                 SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
 
+                // pick an element inconveniently in the middle to be the null space
                 S.set(1,1,0);
                 svd.getSingularValues()[1] = 0;
 
@@ -105,6 +217,7 @@ public class TestSingularOps {
                 // now find the null space
                 SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
 
+                // see if the returned vector really is the null space
                 SimpleMatrix ns = A.mult(v);
 
                 for( int i = 0; i < ns.numRows(); i++ ) {
@@ -121,7 +234,7 @@ public class TestSingularOps {
     public void rank_and_nullity(){
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.988228951897092, -1.086594333683141, -1.433160736952583, -3.190200029661606, 0.190459703263404, -6.475629910954768, 1.400596416735888, 7.158603907761226, -0.778109120408813);
 
-        SingularValueDecomposition alg = DecompositionFactory.svd();
+        SingularValueDecomposition alg = DecompositionOps.svd();
         alg.decompose(A);
 
         assertEquals(2,SingularOps.rank(alg, UtilEjml.EPS));

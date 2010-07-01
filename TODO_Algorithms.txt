@@ -1,7 +1,6 @@
 For 0.13 Release
-- Modify original matrix for decompositions
-  * Make that the default behavior but have friendly classes make a copy by default?
-    - Easier to test?
+- Update wiki manual for SVD
+- Fix general EVD.
 
 
 For DenseMatrix64F
@@ -15,7 +14,7 @@ For DenseMatrix64F
 - Iterative solver
 
 - SVD
-  - Use QR alg to speed up singular values on very tall matrices
+  - Use QR alg to speed up singular values on very tall matrices (pg 403)
   - Divide and conquer algorithm
   - An implementation that just finds zero singular values
   - Add option to overwrite input matrix
@@ -23,8 +22,6 @@ For DenseMatrix64F
 - Eigen decomposition
   - Add option to overwrite input matrix
   - Divide and conquer algorithm.
-
-- QR with column pivoting
 
 - Accurate version of symmetric eigenvalue for 2 by 2
   - SVD
