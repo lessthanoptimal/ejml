@@ -21,7 +21,6 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 

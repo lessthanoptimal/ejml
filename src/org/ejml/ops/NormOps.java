@@ -19,6 +19,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.svd.SvdNumericalRecipes;
 import org.ejml.data.DenseMatrix64F;
@@ -134,7 +135,7 @@ public class NormOps {
      */
     public static double conditionP2( DenseMatrix64F A )
     {
-        SingularValueDecomposition svd = DecompositionOps.svd();
+        SingularValueDecomposition svd = DecompositionFactory.svd();
 
         svd.decompose(A);
 

@@ -20,6 +20,7 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
@@ -485,7 +486,7 @@ public class SimpleMatrix {
      * @return The SVD of this matrix.
      */
     public SingularValueDecomposition computeSVD() {
-        SingularValueDecomposition alg = DecompositionOps.svd();
+        SingularValueDecomposition alg = DecompositionFactory.svd();
 
         alg.decompose(mat);
 
@@ -683,7 +684,7 @@ public class SimpleMatrix {
         SimpleMatrix V;
 
         public SVD() {
-            svd = DecompositionOps.svd();
+            svd = DecompositionFactory.svd();
             if( !svd.decompose(mat) )
                 throw new RuntimeException("Decomposition failed");
             U = SimpleMatrix.wrap(svd.getU(false));
@@ -740,7 +741,7 @@ public class SimpleMatrix {
          * @return Quality of the decomposition.
          */
         public double quality() {
-            return DecompositionOps.quality(mat,U.getMatrix(),W.getMatrix(),V.transpose().getMatrix());
+            return DecompositionFactory.quality(mat,U.getMatrix(),W.getMatrix(),V.transpose().getMatrix());
         }
 
         /**
@@ -773,7 +774,7 @@ public class SimpleMatrix {
 
         public EVD()
         {
-            eig = DecompositionOps.eig();
+            eig = DecompositionFactory.eig();
             if( !eig.decompose(mat))
                 throw new RuntimeException("Eigenvalue Decomposition failed");
         }
@@ -827,7 +828,7 @@ public class SimpleMatrix {
          * @return Quality of the decomposition.
          */
         public double quality() {
-            return DecompositionOps.quality(mat,eig);
+            return DecompositionFactory.quality(mat,eig);
         }
 
         public EigenDecomposition getEVD() {

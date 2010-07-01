@@ -19,6 +19,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -82,7 +83,7 @@ public class TestEigenOps {
     public void createMatrixV() {
         DenseMatrix64F A = RandomMatrices.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition decomp = DecompositionOps.eig();
+        EigenDecomposition decomp = DecompositionFactory.eig();
         assertTrue(decomp.decompose(A));
 
         DenseMatrix64F V = EigenOps.createMatrixV(decomp);
@@ -100,7 +101,7 @@ public class TestEigenOps {
     public void createMatrixD() {
         DenseMatrix64F A = RandomMatrices.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition decomp = DecompositionOps.eig();
+        EigenDecomposition decomp = DecompositionFactory.eig();
         assertTrue(decomp.decompose(A));
 
         DenseMatrix64F D = EigenOps.createMatrixD(decomp);

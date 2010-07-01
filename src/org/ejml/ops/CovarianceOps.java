@@ -20,6 +20,7 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
@@ -88,7 +89,7 @@ public class CovarianceOps {
                     break;
             }
         } else {
-            CholeskyDecomposition alg = DecompositionOps.chol(cov.numRows, false,true);
+            CholeskyDecomposition alg = DecompositionFactory.chol(cov.numRows, false,true);
             // if an exception ever gets thrown here that means I added a new type of cholesky decomposition
             // and didn't update this code.
             LinearSolverChol solver = new LinearSolverChol((CholeskyDecompositionCommon)alg);
@@ -123,7 +124,7 @@ public class CovarianceOps {
                     break;
             }
         } else {
-            CholeskyDecomposition alg = DecompositionOps.chol(cov.numRows, false,true);
+            CholeskyDecomposition alg = DecompositionFactory.chol(cov.numRows, false,true);
             // if an exception ever gets thrown here that means I added a new type of cholesky decomposition
             // and didn't update this code.
             LinearSolverChol solver = new LinearSolverChol((CholeskyDecompositionCommon)alg);

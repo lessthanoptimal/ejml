@@ -11,7 +11,7 @@
 - SVD can now selectively compute U and V
 - SVD is computed all at once.  About twice as fast now.  Not sure why earlier benchmarks didn't show this.
 - SVD getU() and getV() can now indicate if the transpose is returned or not.
-- Renamed DecompositionFactory to DecompositionOps and put quality() functions inside of it
+- Moved quality() functions inside of DecompositionFactory
 
 
 ----- Version 0.12

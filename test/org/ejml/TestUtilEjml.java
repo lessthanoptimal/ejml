@@ -20,7 +20,6 @@
 package org.ejml;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;

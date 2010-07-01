@@ -41,7 +41,7 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  *
  * <p>
- * To create a new instance of {@link EigenDecomposition} use either {@link org.ejml.ops.DecompositionOps} or
+ * To create a new instance of {@link EigenDecomposition} use either {@link DecompositionFactory} or
  * {@link org.ejml.ops.EigenOps}.  {@link org.ejml.ops.EigenOps} contains options that allows customized
  * algorithms to be called, avoided unnecessary computations.
  * </p>

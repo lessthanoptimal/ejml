@@ -20,6 +20,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
@@ -201,7 +202,7 @@ public class TestSingularOps {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition svd = DecompositionOps.svd(true,true,false);
+                SingularValueDecomposition svd = DecompositionFactory.svd(true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
@@ -234,7 +235,7 @@ public class TestSingularOps {
     public void rank_and_nullity(){
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.988228951897092, -1.086594333683141, -1.433160736952583, -3.190200029661606, 0.190459703263404, -6.475629910954768, 1.400596416735888, 7.158603907761226, -0.778109120408813);
 
-        SingularValueDecomposition alg = DecompositionOps.svd();
+        SingularValueDecomposition alg = DecompositionFactory.svd();
         alg.decompose(A);
 
         assertEquals(2,SingularOps.rank(alg, UtilEjml.EPS));

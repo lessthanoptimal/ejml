@@ -18,13 +18,13 @@
  */
 
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.DecompositionOps;
 
 import static org.ejml.ops.CommonOps.*;
 
@@ -74,7 +74,7 @@ public class KalmanFilterAlg implements KalmanFilter{
         d = new DenseMatrix64F(dimenX,dimenZ);
         K = new DenseMatrix64F(dimenX,dimenZ);
 
-        CholeskyDecomposition chol = DecompositionOps.chol(dimenX,false,true);
+        CholeskyDecomposition chol = DecompositionFactory.chol(dimenX,false,true);
 
         solver = new LinearSolverChol((CholeskyDecompositionCommon)chol);
 
