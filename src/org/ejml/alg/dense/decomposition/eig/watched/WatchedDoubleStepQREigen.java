@@ -121,8 +121,6 @@ public class WatchedDoubleStepQREigen {
 
         double above = Math.abs(A.get(x1-1,x2));
 
-//        return target <= above * UtilEjml.EPS;
-
         // according to Matrix Computations page 352 this is what is done in Eispack
         double right = Math.abs(A.get(x1,x2+1));
         return target <= 0.5*UtilEjml.EPS*(above+right);
@@ -175,7 +173,7 @@ public class WatchedDoubleStepQREigen {
 
         if( val == 0 )
             val = 1;
-        
+
         val *= 0.95+0.2*(rand.nextDouble()-0.5);
 
         if( rand.nextBoolean() )
@@ -280,7 +278,7 @@ public class WatchedDoubleStepQREigen {
 
     private void performImplicitDoubleStep(int x1, int x2,
                                            double b11 , double b21 , double b31 ) {
-        if( !bulgeDoubleStepQn(x1,x1,b11,b21,b31,0,false) )
+        if( !bulgeDoubleStepQn(x1,b11,b21,b31,0,false) )
             return;
 
         // get rid of the bump
@@ -302,7 +300,7 @@ public class WatchedDoubleStepQREigen {
 
         // perform double steps
         for( int i = x1; i < x2-2; i++ ) {
-            if( bulgeDoubleStepQn(x1,i) && Q != null ) {
+            if( bulgeDoubleStepQn(i) && Q != null ) {
                 QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,i+1,i+4,_temp.data);
                 if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                     throw new RuntimeException("Bad");
@@ -316,7 +314,7 @@ public class WatchedDoubleStepQREigen {
         if( printHumps )
             System.out.println("removing last bump");
         // the last one has to be a single step
-        if( bulgeSingleStepQn(x1,x2-2) && Q != null ) {
+        if( bulgeSingleStepQn(x2-2) && Q != null ) {
             QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,x2-1,x2+1,_temp.data);
             if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                 throw new RuntimeException("Bad");
@@ -354,7 +352,7 @@ public class WatchedDoubleStepQREigen {
 
         // perform simple steps
         for( int i = x1; i < x2-1; i++ ) {
-            if( bulgeSingleStepQn(x1,i) && Q != null ) {
+            if( bulgeSingleStepQn(i) && Q != null ) {
                 QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,i+1,i+3,_temp.data);
                 if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                     throw new RuntimeException("Bad");
@@ -377,20 +375,22 @@ public class WatchedDoubleStepQREigen {
         double b11 = A.get(x1,x1) - eigenvalue;
         double b21 = A.get(x1+1,x1);
 
-        return bulgeSingleStepQn(x1,x1,b11,b21,0,false);
+        double threshold = Math.abs(A.get(x1,x1))*UtilEjml.EPS;
+
+        return bulgeSingleStepQn(x1,b11,b21,threshold,false);
     }
 
-    public boolean bulgeDoubleStepQn( int x1 , int i ) {
+    public boolean bulgeDoubleStepQn( int i ) {
         double a11 = A.get(i+1,i);
         double a21 = A.get(i+2,i);
         double a31 = A.get(i+3,i);
 
         double threshold = Math.abs(A.get(i,i))*UtilEjml.EPS;
 
-        return bulgeDoubleStepQn(x1,i+1,a11,a21,a31,threshold,true);
+        return bulgeDoubleStepQn(i+1,a11,a21,a31,threshold,true);
     }
 
-    public boolean bulgeDoubleStepQn( int x1 , int i , 
+    public boolean bulgeDoubleStepQn( int i ,
                                       double a11, double a21 , double a31,
                                       double threshold , boolean set )
     {
@@ -462,17 +462,17 @@ public class WatchedDoubleStepQREigen {
         return true;
     }
 
-    public boolean bulgeSingleStepQn( int x1 , int i )
+    public boolean bulgeSingleStepQn( int i )
     {
         double a11 = A.get(i+1,i);
         double a21 = A.get(i+2,i);
 
         double threshold = Math.abs(A.get(i,i))*UtilEjml.EPS;
 
-        return bulgeSingleStepQn(x1,i+1,a11,a21,threshold,true);
+        return bulgeSingleStepQn(i+1,a11,a21,threshold,true);
     }
 
-    public boolean bulgeSingleStepQn( int x1 , int i ,
+    public boolean bulgeSingleStepQn( int i ,
                                       double a11 , double a21 ,
                                       double threshold , boolean set)
     {

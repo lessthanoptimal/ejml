@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -44,15 +45,14 @@ public abstract class GeneralEigenDecompositionCheck {
     public void allTests() {
         computeVectors = true;
 
-//        checkRandom();
-//        checkKnownReal();
-//        checkKnownComplex();
-//        checkCompanionMatrix();
-//        checkRandomSymmetric();
-//        checkExceptional();
-//        checkIdentity();
-//        checkAllZeros();
-        rand = new Random(3222455);
+        checkRandom();
+        checkKnownReal();
+        checkKnownComplex();
+        checkCompanionMatrix();
+        checkRandomSymmetric();
+        checkExceptional();
+        checkIdentity();
+        checkAllZeros();
         checkWithSomeRepeatedValuesSymm();
         checkWithSingularSymm();
         checkSmallValue(false);
@@ -87,9 +87,6 @@ public abstract class GeneralEigenDecompositionCheck {
 
             for( int i = 0; i < 2; i++ ) {
                 DenseMatrix64F A = RandomMatrices.createRandom(N,N,-1,1,rand);
-
-//                if( N != 11 || i != 14 )
-//                    continue;
 
                 assertTrue(alg.decompose(A));
 
@@ -288,10 +285,6 @@ public abstract class GeneralEigenDecompositionCheck {
         for( int i = 0; i < 40; i++ ) {
             DenseMatrix64F A = RandomMatrices.createEigenvaluesSymm(ev.length,rand,ev);
 
-            if( !alg.decompose(A))  {
-                   alg.decompose(A);
-            }
-
             assertTrue(alg.decompose(A));
 
             performStandardTests(alg,A,ev.length);
@@ -369,6 +362,8 @@ public abstract class GeneralEigenDecompositionCheck {
 
                 assertFalse( Double.isNaN(v.getReal() ));
                 if( v.isReal() )
+                    numReal--;
+                else if( Math.abs(v.getImaginary()) < UtilEjml.EPS)
                     numReal--;
             }
 

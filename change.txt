@@ -17,6 +17,9 @@
 - Symmetric EVD
   * Fixed rare problem that could happen if two eigenvalues are identical and off diagonal element is small it will never converge.
   * Added code to make it more robust to very small numbers
+- Generic EVD
+  * Fixed long standing issue with eigenvectors and repeat eigenvalues
+  * Made unit test tolerant to small round off errors causing an eigen value to become imaginary
 
 
 

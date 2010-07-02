@@ -33,8 +33,6 @@ import org.ejml.ops.SpecializedOps;
 /**
  * @author Peter Abeles
  */
-// todo this is buggy with repeat eigenvalues.  part of the problem is that it ends up using
-    // solve on a singular matrix
 public class WatchedDoubleStepQREigenvector {
 
     WatchedDoubleStepQREigen implicit;
@@ -98,16 +96,14 @@ public class WatchedDoubleStepQREigenvector {
         // start at the top left corner of the matrix
         boolean triangular = true;
         for( int i = 0; i < N; i++ ) {
-            int w = N-i-1;
 
-            if( triangular && i < N-1 && !implicit.isZero(i+1,i) ) {
+            Complex64F c = implicit.eigenvalues[N-i-1];
+
+            if( triangular && !c.isReal() )
                 triangular = false;
-            }
 
-            Complex64F c = implicit.eigenvalues[w];
-
-            if( c.isReal() && eigenvectors[w] == null) {
-                solveEigenvectorDuplicateEigenvalue(c.real,w,triangular);
+            if( c.isReal() && eigenvectors[N-i-1] == null) {
+                solveEigenvectorDuplicateEigenvalue(c.real,i,triangular);
             }
         }
 
@@ -129,49 +125,36 @@ public class WatchedDoubleStepQREigenvector {
     }
 
     private void solveEigenvectorDuplicateEigenvalue( double real , int first , boolean isTriangle ) {
-        // find all the matches
-        int numMatched = 0;
 
         double scale = Math.abs(real);
         if( scale == 0 ) scale = 1;
 
-        // TODO only looking for repeats in sequence.  can automatically skip some stuff
-        for( int i = first; i >= 0; i-- ) {
-            Complex64F c = implicit.eigenvalues[i];
-
-            if( eigenvectors[i] == null && c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
-                numMatched++;
-            } else{
-                break;
-            }
-        }
-        first = N-first-1;
-
-        eigenvectorTemp.reshape(first,1, false);
+        eigenvectorTemp.reshape(N,1, false);
+        eigenvectorTemp.zero();
 
         if( first > 0 ) {
-            //TODO problem lies in these solvers
             if( isTriangle ) {
                 solveUsingTriangle(real, first , eigenvectorTemp);
             } else {
-                // TODO write a solver for quasi-triangular matrices to speed this up
                 solveWithLU(real, first , eigenvectorTemp);
             }
         }
 
         eigenvectorTemp.reshape(N,1, false);
 
-        for( int i = 0; i < numMatched; i++ ) {
-            int w = first+i;
+        for( int i = first; i < N; i++ ) {
+            Complex64F c = implicit.eigenvalues[N-i-1];
 
-            eigenvectorTemp.data[w] = 1;
+            if( c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
+                eigenvectorTemp.data[i] = 1;
 
-            DenseMatrix64F v = new DenseMatrix64F(N,1);
-            CommonOps.multTransA(Q,eigenvectorTemp,v);
-            eigenvectors[N-w-1] = v;
-            NormOps.normalizeF(v);
+                DenseMatrix64F v = new DenseMatrix64F(N,1);
+                CommonOps.multTransA(Q,eigenvectorTemp,v);
+                eigenvectors[N-i-1] = v;
+                NormOps.normalizeF(v);
 
-            eigenvectorTemp.data[w] = 0;
+                eigenvectorTemp.data[i] = 0;
+            }
         }
     }
 
@@ -219,8 +202,9 @@ public class WatchedDoubleStepQREigenvector {
         // use the already computed eigenvalues to recompute the Q and R matrices
         indexVal = 0;
         while( indexVal < N ) {
-            if (!findNextEigenvalue())
+            if (!findNextEigenvalue()) {
                 return false;
+            }
         }
 
 //        Q.print("%1.10f");
@@ -249,6 +233,7 @@ public class WatchedDoubleStepQREigenvector {
                 indexVal += 2;
                 foundEigen = true;
             } else if( implicit.steps-implicit.lastExceptional > implicit.exceptionalThreshold ) {
+//                implicit.A.print("%e");
                 //System.err.println("If it needs to do an exceptional shift then something went very bad.");
 //                return false;
                 implicit.exceptionalShift(x1,x2);

@@ -60,8 +60,8 @@ public class BenchmarkSvd {
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,500,1000};
-        int trials[] = new int[]{(int)7e5,(int)1e5,(int)5e4,100,2,1};
+        int size[] = new int[]{2,4,10,100,500,1000,2000};
+        int trials[] = new int[]{(int)7e5,(int)1e5,(int)5e4,100,2,1,1};
 
         System.out.println("Square matrix");
         // results vary significantly depending if it starts from a small or large matrix

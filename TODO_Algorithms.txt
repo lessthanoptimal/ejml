@@ -1,5 +1,5 @@
 For 0.13 Release
-- Fix general EVD.
+
 
 For DenseMatrix64F
 
@@ -37,10 +37,4 @@ For DenseMatrix64F
   - Code generator for matrix vector ops
   - Add matrix vector multiply
   - Auto switch to all of above in CommonOps
-
-
-Issues:
-
-- Non-symmetric (general case algorithm) has a problem with repeat eigenvalues.  When it tries
- to solve for them it applies the solver to a singular matrix.
 

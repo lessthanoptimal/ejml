@@ -415,11 +415,14 @@ public class SymmetricQREigen {
         // rotating by a random angle handles at least one case using a random lambda
         // does not handle well:
         // - two identical eigenvalues are next to each other and a very small diagonal element
-        double theta = (rand.nextDouble()-0.5)*Math.PI*0.05;
+        numExceptional++;
+        double mag = 0.05*numExceptional;
+        if( mag > 1.0 ) mag = 1.0;
+
+        double theta = (rand.nextDouble()-0.5)*mag;
         performImplicitSingleStep(theta,true);
 
         lastExceptional = steps;
-        numExceptional++;
     }
 
     /**

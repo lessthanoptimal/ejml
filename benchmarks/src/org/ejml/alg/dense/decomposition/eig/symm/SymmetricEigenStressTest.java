@@ -84,16 +84,9 @@ public class SymmetricEigenStressTest {
 
         DenseMatrix64F A = new DenseMatrix64F(N,N);
 
-        DenseMatrix64F L = new DenseMatrix64F(N,N);
-        DenseMatrix64F R = new DenseMatrix64F(N,N);
-
-        DenseMatrix64F r = new DenseMatrix64F(N,N);
-
-
-
         for( int i = 0; i < 1000; i++ ) {
             long seed = rand.nextLong();
-            System.out.println("Date = "+new Date()+" Seed = "+seed);
+            System.out.print("Date = "+new Date()+" Seed = "+seed);
 
             Random localRand = new Random(seed);
 
@@ -105,9 +98,9 @@ public class SymmetricEigenStressTest {
             }
 
             double error = DecompositionFactory.quality(A,decomp);
-
+            System.out.println("      error = "+error);
             if( error > 0.05 || Double.isNaN(error) || Double.isInfinite(error)) {
-                System.out.println("Large Error");
+                System.out.println("   Large Error");
                 return;
             }
         }

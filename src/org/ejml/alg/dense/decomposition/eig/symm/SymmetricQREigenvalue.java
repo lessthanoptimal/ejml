@@ -43,7 +43,7 @@ public class SymmetricQREigenvalue {
     private SymmetricQREigen helper;
 
     private int exceptionalThresh = 15;
-    private int maxIterations = exceptionalThresh*4;
+    private int maxIterations = exceptionalThresh*15;
 
     // should it ever analytically compute eigenvalues
     // if this is true then it can't compute eigenvalues at the same time

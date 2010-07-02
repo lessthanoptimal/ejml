@@ -41,7 +41,7 @@ public class TestSymmetricQREigenvector {
             A.set(i,i-1,i+0.5);
         }
 
-        A.print();
+//        A.print();
 
         SymmetricQREigenvalue value = new SymmetricQREigenvalue();
         value.process(A);
@@ -55,11 +55,11 @@ public class TestSymmetricQREigenvector {
 
         SimpleMatrix A_found = Q.transpose().mult(D).mult(Q);
 
-        D.print();
-        Q.print();
-
-        A_found.print();
-        A.print();
+//        D.print();
+//        Q.print();
+//
+//        A_found.print();
+//        A.print();
 
         assertTrue(MatrixFeatures.isIdentical(A,A_found.getMatrix(),1e-8));
 

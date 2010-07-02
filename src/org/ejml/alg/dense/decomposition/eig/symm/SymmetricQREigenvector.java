@@ -47,7 +47,7 @@ public class SymmetricQREigenvector {
     private int whichEigen;
 
     private int exceptionalThresh = 15;
-    private int maxIterations = exceptionalThresh*3;
+    private int maxIterations = exceptionalThresh*15;
 
     public SymmetricQREigenvector(SymmetricQREigen helper ) {
         this.helper = helper;

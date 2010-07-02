@@ -73,8 +73,8 @@ public class BenchmarkSymmetricEigenDecomposition {
     public static void main( String args [] ) {
         Random rand = new Random(232423);
 
-        int size[] = new int[]{2,4,10,100,200,500,1000};
-        int trials[] = new int[]{2000000,400000,80000,300,40,4,1};
+        int size[] = new int[]{2,4,10,100,200,500,1000,2000};
+        int trials[] = new int[]{2000000,400000,80000,300,40,4,1,1};
 
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
