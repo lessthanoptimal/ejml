@@ -144,7 +144,7 @@ public class SymmetricQREigenvalue {
         }
 
         // similar transforms
-        helper.performImplicitSingleStep(helper.diag[helper.x2]);
+        helper.performImplicitSingleStep(helper.diag[helper.x2],false);
     }
 
     public double[] getValues() {

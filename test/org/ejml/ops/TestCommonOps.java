@@ -438,17 +438,25 @@ public class TestCommonOps {
 
     @Test
     public void elementMax() {
-        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
 
         double m = CommonOps.elementMax(mat);
-        assertEquals(8,m,1e-8);
+        assertEquals(7,m,1e-8);
     }
 
     @Test
     public void elementMin() {
-        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, -3, 4, 5, 6, 7, 8);
 
         double m = CommonOps.elementMin(mat);
+        assertEquals(-3,m,1e-8);
+    }
+
+    @Test
+    public void elementMinAbs() {
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
+
+        double m = CommonOps.elementMinAbs(mat);
         assertEquals(0,m,1e-8);
     }
 

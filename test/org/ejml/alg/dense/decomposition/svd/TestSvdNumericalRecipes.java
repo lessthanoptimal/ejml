@@ -35,6 +35,7 @@ public class TestSvdNumericalRecipes  extends StandardSvdChecks {
 
     @Test
     public void checkAll() {
+        omitVerySmallValues = true;
         allTests();
     }
 }

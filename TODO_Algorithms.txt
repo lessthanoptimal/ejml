@@ -1,5 +1,4 @@
 For 0.13 Release
-- Update wiki manual for SVD
 - Fix general EVD.
 
 For DenseMatrix64F
@@ -11,6 +10,10 @@ For DenseMatrix64F
   - Improve performance
 
 - Iterative solver
+
+- QR
+  * Create straight forward QR and LQ factorings
+  * Use factorings in decomposition algorithms for QR and LQ
 
 - SVD
   - Use QR alg to speed up singular values on very tall matrices (pg 403)

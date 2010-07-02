@@ -11,7 +11,14 @@
 - SVD can now selectively compute U and V
 - SVD is computed all at once.  About twice as fast now.  Not sure why earlier benchmarks didn't show this.
 - SVD getU() and getV() can now indicate if the transpose is returned or not.
+- SVD fixed issue dealing with very small numbers canceling out and causing a divided by zero error
+- SVD changed exceptional shift to use a random rotation
 - Moved quality() functions inside of DecompositionFactory
+- Symmetric EVD
+  * Fixed rare problem that could happen if two eigenvalues are identical and off diagonal element is small it will never converge.
+  * Added code to make it more robust to very small numbers
+
+
 
 
 ----- Version 0.12

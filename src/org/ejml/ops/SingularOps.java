@@ -47,6 +47,7 @@ public class SingularOps {
      * @param V Matrix. Modified.
      * @param tranV is V transposed or not.
      */
+    // TODO the number of copies can probably be reduced here
     public static void descendingOrder( DenseMatrix64F U , boolean tranU ,
                                         DenseMatrix64F W ,
                                         DenseMatrix64F V , boolean tranV )
@@ -56,7 +57,7 @@ public class SingularOps {
         checkSvdMatrixSize(U, tranU, W, V, tranV);
 
         for( int i = 0; i < numSingular; i++ ) {
-            double bigValue=-Double.MAX_VALUE;
+            double bigValue=-1;
             int bigIndex=-1;
 
             // find the smallest singular value in the submatrix
@@ -72,6 +73,10 @@ public class SingularOps {
             // only swap if the current index is not the smallest
             if( bigIndex == i)
                 continue;
+
+            if( bigIndex == -1 ) {
+                throw new RuntimeException("W has uncountable elements in it");
+            }
 
             double tmp = W.get(i,i);
             W.set(i,i,bigValue);
@@ -96,23 +101,27 @@ public class SingularOps {
         boolean compact = W.numRows == W.numCols;
 
         if( compact ) {
-            if( tranU && U.numRows != numSingular )
-                throw new IllegalArgumentException("Unexpected size of matrix U");
-            else if( !tranU && U.numCols != numSingular )
-                throw new IllegalArgumentException("Unexpected size of matrix U");
+            if( U != null ) {
+                if( tranU && U.numRows != numSingular )
+                    throw new IllegalArgumentException("Unexpected size of matrix U");
+                else if( !tranU && U.numCols != numSingular )
+                    throw new IllegalArgumentException("Unexpected size of matrix U");
+            }
 
+            if( V != null ) {
             if( tranV && V.numRows != numSingular )
                 throw new IllegalArgumentException("Unexpected size of matrix V");
             else if( !tranV && V.numCols != numSingular )
                 throw new IllegalArgumentException("Unexpected size of matrix V");
+            }
         } else {
-            if( U.numRows != U.numCols )
+            if( U != null && U.numRows != U.numCols )
                 throw new IllegalArgumentException("Unexpected size of matrix U");
-            if( V.numRows != V.numCols )
+            if( V != null && V.numRows != V.numCols )
                 throw new IllegalArgumentException("Unexpected size of matrix V");
-            if( U.numRows != W.numRows )
+            if( U != null && U.numRows != W.numRows )
                 throw new IllegalArgumentException("Unexpected size of W");
-            if( V.numRows != W.numCols )
+            if( V != null && V.numRows != W.numCols )
                 throw new IllegalArgumentException("Unexpected size of W");
         }
     }

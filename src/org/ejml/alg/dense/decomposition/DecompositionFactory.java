@@ -163,7 +163,7 @@ public class DecompositionFactory {
      * SVD quality is defined as:<br>
      * <br>
      * Quality = || A - U W V<sup>T</sup>|| / || A || <br>
-     * where A is the original matrix , U W V is the decomposition, and ||A|| is the norm of A.
+     * where A is the original matrix , U W V is the decomposition, and ||A|| is the norm-f of A.
      * </p>
      *
      * @param orig The original matrix which was decomposed. Not modified.

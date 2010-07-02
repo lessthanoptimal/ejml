@@ -1001,7 +1001,7 @@ public class CommonOps {
         double max = 0;
         for( int i = 0; i < size; i++ ) {
             double val = Math.abs(dataA[i]);
-            if( val >= max ) {
+            if( val > max ) {
                 max = val;
             }
         }
@@ -1027,6 +1027,32 @@ public class CommonOps {
         double min = dataA[0];
         for( int i = 1; i < size; i++ ) {
             double val = dataA[i];
+            if( val < min ) {
+                min = val;
+            }
+        }
+
+        return min;
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the smallest absolute value.<br>
+     * <br>
+     * Min{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMinAbs( DenseMatrix64F a ) {
+        final int size = a.getNumElements();
+
+        final double dataA[] = a.data;
+
+        double min = Double.MAX_VALUE;
+        for( int i = 0; i < size; i++ ) {
+            double val = Math.abs(dataA[i]);
             if( val < min ) {
                 min = val;
             }

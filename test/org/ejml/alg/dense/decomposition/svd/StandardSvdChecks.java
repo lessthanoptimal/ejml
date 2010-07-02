@@ -44,12 +44,16 @@ public abstract class StandardSvdChecks {
 
     public abstract SingularValueDecomposition createSvd();
 
+    boolean omitVerySmallValues = false;
+
     public void allTests() {
         testDecompositionOfTrivial();
         testWide();
         testTall();
         checkGetU();
         checkGetV();
+        if( !omitVerySmallValues )
+            testVerySmallValue();
         testZero();
         testLargeToSmall();
         testIdentity();
@@ -123,6 +127,22 @@ public abstract class StandardSvdChecks {
 
         checkComponents(alg,A);
     }
+
+    /**
+     * See if it can handle very small values and not blow up.  This can some times
+     * cause a zero to appear unexpectedly and thus a divided by zero.
+     */
+    public void testVerySmallValue() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,5,-1,1,rand);
+
+        CommonOps.scale(1e-200,A);
+
+        SingularValueDecomposition alg = createSvd();
+        assertTrue(alg.decompose(A));
+
+        checkComponents(alg,A);
+    }
+
 
     public void testLots() {
         SingularValueDecomposition alg = createSvd();
@@ -211,6 +231,10 @@ public abstract class StandardSvdChecks {
         SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
         SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
         SimpleMatrix W = SimpleMatrix.wrap(svd.getW(null));
+
+        assertTrue( !U.hasUncountable() );
+        assertTrue( !Vt.hasUncountable() );
+        assertTrue( !W.hasUncountable() );
 
         if( svd.isCompact() ) {
             assertEquals(W.numCols(),W.numRows());

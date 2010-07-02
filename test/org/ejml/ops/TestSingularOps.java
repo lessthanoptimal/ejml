@@ -159,6 +159,11 @@ public class TestSingularOps {
         SingularOps.checkSvdMatrixSize(U,false,W,V,false);
         CommonOps.transpose(U);CommonOps.transpose(V);
         SingularOps.checkSvdMatrixSize(U,true,W,V,true);
+
+        // see what happens if you throw in some null matrices
+        SingularOps.checkSvdMatrixSize(null,false,W,null,false);
+        SingularOps.checkSvdMatrixSize(null,true,W,V,true);
+        SingularOps.checkSvdMatrixSize(U,true,W,null,true);
     }
 
     private void checkSvdMatrixSize_negative( int numRows , int numCols )

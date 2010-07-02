@@ -69,6 +69,9 @@ public class SymmetricQREigen {
     // current value of the bulge
     private double bulge;
 
+    // local helper functions
+    private double c,s;
+
     public SymmetricQREigen() {
         diag = new double[1];
         off = new double[1];
@@ -209,18 +212,19 @@ public class SymmetricQREigen {
         return( Math.abs(off[index]) <= 0.5*bottom*UtilEjml.EPS);
     }
 
-    protected void performImplicitSingleStep( double lambda )
+    protected void performImplicitSingleStep( double lambda , boolean byAngle )
     {
         if( x2-x1 == 1  ) {
-            createBulge2by2(x1,lambda);
+            createBulge2by2(x1,lambda,byAngle);
         } else {
-            createBulge(x1,lambda);
+            createBulge(x1,lambda,byAngle);
 
             for( int i = x1; i < x2-2 && bulge != 0.0; i++ ) {
                 removeBulge(i);
 
             }
-            removeBulgeEnd(x2-2);
+            if( bulge != 0.0 )
+                removeBulgeEnd(x2-2);
         }
     }
 
@@ -240,31 +244,19 @@ public class SymmetricQREigen {
     /**
      * Performs a similar transform on A-pI
      */
-    protected void createBulge( int x1 , double p ) {
+    protected void createBulge( int x1 , double p , boolean byAngle ) {
         double a11 = diag[x1];
         double a22 = diag[x1+1];
         double a12 = off[x1];
         double a23 = off[x1+1];
 
-        // normalize to improve resistance to overflow/underflow
-        double abs11 = Math.abs(a11);
-        double abs12 = Math.abs(a12);
-
-        double scale = abs11 > abs12 ? abs11 : abs12;
-
-        double l = (a11-p)/scale;
-        abs12 /= scale;
-
-        double alpha = Math.sqrt(l*l+abs12*abs12);
-
-        double c = l/alpha;
-        double s = a12/(scale*alpha);
-
-//        double l = a11-p;
-//        double alpha = Math.sqrt(l*l+a12*a12);
-//
-//        double c = l/alpha;
-//        double s = a12/alpha;
+        if( byAngle ) {
+            c = Math.cos(p);
+            s = Math.sin(p);
+        } else {
+            if (computeRotation(a11-p, a12))
+                return;
+        }
 
         double c2 = c*c;
         double s2 = s*s;
@@ -281,36 +273,55 @@ public class SymmetricQREigen {
             updateQ(x1,x1+1,c,s);
     }
 
-    protected void createBulge2by2( int x1 , double p ) {
+    protected void createBulge2by2( int x1 , double p , boolean byAngle ) {
         double a11 = diag[x1];
         double a22 = diag[x1+1];
         double a12 = off[x1];
 
-        // normalize to improve resistance to overflow/underflow
-        double abs11 = Math.abs(a11);
-        double abs12 = Math.abs(a12);
-
-        double scale = abs11 > abs12 ? abs11 : abs12;
-        abs12 /= scale;
-
-        double l = (a11-p)/scale;
-
-        double alpha = Math.sqrt(l*l+abs12*abs12);
-
-        double c = l/alpha;
-        double s = a12/(scale*alpha);
+        if( byAngle ) {
+            c = Math.cos(p);
+            s = Math.sin(p);
+        } else {
+            if (computeRotation(a11-p, a12))
+                return;
+        }
 
         double c2 = c*c;
         double s2 = s*s;
         double cs = c*s;
 
         // multiply the rotator on the top left.
-        diag[x1] = c2*a11 + 2.0*cs*a12 + s2*a22;
-        diag[x1+1] = c2*a22 - 2.0*cs*a12+s2*a11;
-        off[x1] = c2*a12+cs*a22 - cs*a11 - s2*a12;
+        diag[x1]   = c2*a11 + 2.0*cs*a12 + s2*a22;
+        diag[x1+1] = c2*a22 - 2.0*cs*a12 + s2*a11;
+        off[x1]    = c2*a12 + cs*a22 - cs*a11 - s2*a12;
 
         if( Q != null )
             updateQ(x1,x1+1,c,s);
+    }
+
+    /**
+     * Computes the rotation and stores it in (c,s)
+     */
+    private boolean computeRotation(double run, double rise) {
+        // normalize to improve resistance to overflow/underflow
+        double absRun = Math.abs(run);
+        double absRise = Math.abs(rise);
+
+        double scale = absRun > absRise ? absRun : absRise;
+
+        // in removeBulge() this is redundant.  probably insignificant overhead caused by it
+        if( scale == 0 )
+            return true;
+
+        absRun /= scale;
+        absRise /= scale;
+
+        double alpha = scale*Math.sqrt(absRun*absRun + absRise*absRise);
+
+        c = run/alpha;
+        s = rise/alpha;
+
+        return false;
     }
 
     protected void removeBulge( int x1 ) {
@@ -320,19 +331,8 @@ public class SymmetricQREigen {
         double a23 = off[x1+1];
         double a34 = off[x1+2];
 
-        // normalize to improve resistance to overflow/underflow
-        double absBulge = Math.abs(bulge);
-        double abs12 = Math.abs(a12);
-
-        double scale = absBulge > abs12 ? absBulge : abs12;
-
-        abs12/=scale;
-        absBulge/=scale;
-
-        double gamma = scale*Math.sqrt(abs12*abs12+absBulge*absBulge);
-
-        double c = a12/gamma;
-        double s = bulge/gamma;
+        if (computeRotation(a12, bulge))
+            return;
 
         double c2 = c*c;
         double s2 = s*s;
@@ -359,19 +359,8 @@ public class SymmetricQREigen {
         double a23 = off[x1+1];
         double a33 = diag[x1+2];
 
-         // normalize to improve resistance to overflow/underflow
-        double absBulge = Math.abs(bulge);
-        double abs12 = Math.abs(a12);
-
-        double scale = absBulge > abs12 ? absBulge : abs12;
-
-        abs12/=scale;
-        absBulge/=scale;
-
-        double gamma = scale*Math.sqrt(abs12*abs12+absBulge*absBulge);
-
-        double c = a12/gamma;
-        double s = bulge/gamma;
+        if (computeRotation(a12, bulge))
+            return;
 
         double c2 = c*c;
         double s2 = s*s;
@@ -423,22 +412,11 @@ public class SymmetricQREigen {
      * Perform a shift in a random direction that is of the same magnitude as the elements in the matrix.
      */
     public void exceptionalShift() {
-        // perform a random shift that is of the same magnitude as the matrix
-        double val = Math.abs(diag[x2]);
-
-        if( val == 0 )
-            val = 1;
-
-        val *= 0.95+0.2*(rand.nextDouble()-0.5);
-
-        if( rand.nextBoolean() )
-            val = -val;
-
-        if( x2-x1==1 ) {
-
-        } else {
-            performImplicitSingleStep(val);
-        }
+        // rotating by a random angle handles at least one case using a random lambda
+        // does not handle well:
+        // - two identical eigenvalues are next to each other and a very small diagonal element
+        double theta = (rand.nextDouble()-0.5)*Math.PI*0.05;
+        performImplicitSingleStep(theta,true);
 
         lastExceptional = steps;
         numExceptional++;

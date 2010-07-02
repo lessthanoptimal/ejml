@@ -79,7 +79,7 @@ public class SvdImplicitQrAlgorithm {
     // how many exception shifts has it performed
     protected int numExceptional;
     // the step number of the last exception shift
-    protected int lastExceptional;
+    protected int nextExceptional;
 
     // diagonal elements in the matrix
     protected double diag[];
@@ -99,7 +99,7 @@ public class SvdImplicitQrAlgorithm {
     protected int splits[];
     protected int numSplits;
 
-    // how many steps before it performs an exception shift
+    // After this many iterations it will perform an exceptional
     private int exceptionalThresh = 15;
     private int maxIterations = exceptionalThresh*3;
 
@@ -205,6 +205,7 @@ public class SvdImplicitQrAlgorithm {
         steps = 0;
         totalSteps = 0;
         numSplits = 0;
+        numExceptional = 0;
     }
 
     public boolean process() {
@@ -248,7 +249,7 @@ public class SvdImplicitQrAlgorithm {
                 resetSteps();
                 eigenBB_2x2(x1);
                 setSubmatrix(x2,x2);
-            } else if( steps-lastExceptional > exceptionalThresh ){
+            } else if( steps >= nextExceptional ){
                 exceptionShift();
             } else {
                 // perform a step
@@ -278,13 +279,19 @@ public class SvdImplicitQrAlgorithm {
             if( steps > 6 ) {
                 findingZeros = false;
             } else {
-                performImplicitSingleStep(0);
+                double scale = computeBulgeScale();
+                performImplicitSingleStep(scale,0,false);
             }
         } else {
+            // For very large and very small numbers the only way to prevent overflow/underflow
+            // is to have a common scale between the wilkinson shift and the implicit single step
+            // What happens if you don't is that when the wilkinson shift returns the value it
+            // computed it multiplies it by the scale twice, which will cause an overflow
+            double scale = computeBulgeScale();
             // use the wilkinson shift to perform a step
-            double lambda = selectWilkinsonShift();
+            double lambda = selectWilkinsonShift(scale);
 
-            performImplicitSingleStep(lambda);
+            performImplicitSingleStep(scale,lambda,false);
         }
     }
 
@@ -293,14 +300,15 @@ public class SvdImplicitQrAlgorithm {
      * using one of those singular values it uses a Wilkinson shift instead.
      */
     private void performScriptedStep() {
+        double scale = computeBulgeScale();
         if( steps > giveUpOnKnown ) {
             // it hasn't found a match after using the previously computed values yet so try something else
-            double lambda = selectWilkinsonShift();
-            performImplicitSingleStep(lambda);
+            double lambda = selectWilkinsonShift(scale);
+            performImplicitSingleStep(scale,lambda,false);
         } else {
             // use previous singular value to step
-            double s = values[x2];
-            performImplicitSingleStep(s*s);
+            double s = values[x2]/scale;
+            performImplicitSingleStep(scale,s*s,false);
         }
     }
 
@@ -321,7 +329,8 @@ public class SvdImplicitQrAlgorithm {
 
     public void resetSteps() {
         steps = 0;
-        lastExceptional = 0;
+        nextExceptional = exceptionalThresh;
+        numExceptional = 0;
     }
 
     /**
@@ -347,15 +356,18 @@ public class SvdImplicitQrAlgorithm {
      *
      * @param lambda Stepping factor.
      */
-    public void performImplicitSingleStep(double lambda) {
-        createBulge(x1,lambda);
+    public void performImplicitSingleStep(double scale , double lambda , boolean byAngle) {
+        createBulge(x1,lambda,scale,byAngle);
 
         for( int i = x1; i < x2-1 && bulge != 0.0; i++ ) {
             removeBulgeLeft(i,true);
+            if( bulge == 0 )
+                break;
             removeBulgeRight(i);
         }
 
-        removeBulgeLeft(x2-1,false);
+        if( bulge != 0 )
+            removeBulgeLeft(x2-1,false);
 
         incrementSteps();
     }
@@ -384,31 +396,39 @@ public class SvdImplicitQrAlgorithm {
         }
     }
 
+    private double computeBulgeScale() {
+        double b11 = diag[x1];
+        double b12 = off[x1];
+
+        return Math.max( Math.abs(b11) , Math.abs(b12));
+    }
+
     /**
      * Performs a similar transform on B<sup>T</sup>B-pI
      */
-    protected void createBulge( int x1 , double p ) {
+    protected void createBulge( int x1 , double p , double scale , boolean byAngle ) {
         double b11 = diag[x1];
         double b12 = off[x1];
         double b22 = diag[x1+1];
 
-        // TODO can normalization be improved here? the squaring will mess things up..
-        double u1 = b11*b11-p;
-        double u2 = b12*b11;
+        double c,s;
+        if( byAngle ) {
+            c = Math.cos(p);
+            s = Math.sin(p);
+        } else {
+            // normalize to improve resistance to overflow/underflow
+            double u1 = (b11/scale)*(b11/scale)-p;
+            double u2 = (b12/scale)*(b11/scale);
 
-        // normalize to improve resistance to overflow/underflow
-        double abs1 = Math.abs(u1);
-        double abs2 = Math.abs(u2);
+            double alpha = Math.sqrt(u1*u1 + u2*u2);
 
-        double scale = abs1 > abs2 ? abs1 : abs2;
+            if( UtilEjml.isUncountable(alpha)) {
+                System.out.println("crap");
+            }
 
-        abs1 /= scale;
-        abs2 /= scale;
-
-        double alpha = scale*Math.sqrt(abs1*abs1 + abs2*abs2);
-
-        double c = u1 / alpha;
-        double s = u2 / alpha;
+            c = u1 / alpha;
+            s = u2 / alpha;
+        }
 
         // multiply the rotator on the top left.
         diag[x1] = b11*c + b12*s;
@@ -442,6 +462,7 @@ public class SvdImplicitQrAlgorithm {
         double abs11 = Math.abs(b11);
         double absBulge = Math.abs(bulge);
 
+        // this function is only called if the bulge is not zero, thus scale cannot be zero
         double scale = absBulge > abs11 ? absBulge : abs11;
 
         abs11/=scale;
@@ -489,6 +510,7 @@ public class SvdImplicitQrAlgorithm {
         double abs12 = Math.abs(b12);
         double absBulge = Math.abs(bulge);
 
+        // this function is only called if the bulge is not zero, thus scale cannot be zero
         double scale = absBulge > abs12 ? absBulge : abs12;
 
         abs12/=scale;
@@ -532,60 +554,39 @@ public class SvdImplicitQrAlgorithm {
     }
 
     /**
-     * Selects the Wilkinson's shift for B<sup>T</sup>B.  See page 410.  It is garenteed to converge
+     * Selects the Wilkinson's shift for B<sup>T</sup>B.  See page 410.  It is guaranteed to converge
      * and converges fast in practice.
      *
-     * @return Shifting factor lambda
+     * @param scale Scale factor used to help prevent overflow/underflow
+     * @return Shifting factor lambda/(scale*scale)
      */
-    public double selectWilkinsonShift() {
+    public double selectWilkinsonShift( double scale ) {
 
         double check;
 
         if( x2-x1 > 1 ) {
-            double d1 = diag[x2-1];
-            double o1 = off[x2-2];
-            double d2 = diag[x2];
-            double o2 = off[x2-1];
-
-            double scale = Math.max( Math.abs(d1) , Math.abs(o1) );
-            scale = Math.max( scale , Math.abs(d2) );
-            scale = Math.max( scale , Math.abs(o2) );
-
-            if( scale == 0.0 )
-                return 0.0;
-
-            d1 /= scale;
-            o1 /= scale;
-            d2 /= scale;
-            o2 /= scale;
+            double d1 = diag[x2-1] / scale;
+            double o1 = off[x2-2] / scale;
+            double d2 = diag[x2] / scale;
+            double o2 = off[x2-1] / scale;
 
             eigenSmall.symm2x2_fast(o1*o1 + d1*d1 , o2*d1 , o2*o2 + d2*d2);
 
             // the shift will be the eigenvalue that is closest to the value below
             check = o2*o2 + d2*d2;
 
-            double diff0 = Math.abs(eigenSmall.value1.real-check);
-            double diff1 = Math.abs(eigenSmall.value2.real-check);
+            double diff0 = Math.abs(eigenSmall.value0.real-check);
+            double diff1 = Math.abs(eigenSmall.value1.real-check);
 
-            return diff0 < diff1 ? scale*scale*eigenSmall.value1.real :  scale*scale*eigenSmall.value2.real;
+            return diff0 < diff1 ? eigenSmall.value0.real :  eigenSmall.value1.real;
         } else {
-            double a = diag[x2-1];
-            double b = off[x2-1];
-            double c = diag[x2];
-
-            double scale = Math.max( Math.abs(b) , Math.abs(a) );
-            scale = Math.max( scale , Math.abs(c) );
-
-            if( scale == 0.0 )
-                return 0;
-
-            a /= scale;
-            b /= scale;
-            c /= scale;
+            double a = diag[x2-1]/scale;
+            double b = off[x2-1]/scale;
+            double c = diag[x2]/scale;
 
             eigenSmall.symm2x2_fast(a*a + b*b , a*b , c*c);
 
-            return scale*scale*eigenSmall.value0.getReal();
+            return eigenSmall.value0.getReal();
         }
     }
 
@@ -667,7 +668,7 @@ public class SvdImplicitQrAlgorithm {
 //        B.print();
         rotatorPushRight(row);
         int end = N-2-row;
-        for( int i = 0; i < end; i++ ) {
+        for( int i = 0; i < end && bulge != 0; i++ ) {
             rotatorPushRight2(row,i+2);
         }
 //        }
@@ -687,6 +688,12 @@ public class SvdImplicitQrAlgorithm {
 
         double scale = abs11 > abs21 ? abs11 : abs21;
 
+        if( scale == 0.0 ) {
+            // nothing to do since they are both zero
+            bulge = 0;
+            return;
+        }
+
         abs11/=scale;
         abs21/=scale;
 
@@ -703,6 +710,8 @@ public class SvdImplicitQrAlgorithm {
             double b22 = off[m+1];
             off[m+1] = b22*c;
             bulge =  b22*s;
+        }  else {
+            bulge = 0;
         }
 
 //        SimpleMatrix Q = createQ(m,m+1, c, s, true);
@@ -735,6 +744,7 @@ public class SvdImplicitQrAlgorithm {
         double abs11 = Math.abs(b11);
         double abs12 = Math.abs(b12);
 
+        // the scale can never be zero since this is not called if the bulge is zero
         double scale = abs11 > abs12 ? abs11 : abs12;
 
         abs11/=scale;
@@ -776,21 +786,12 @@ public class SvdImplicitQrAlgorithm {
      * more often with larger matrices.  By taking a random step it can break the symmetry and finish.
      */
     public void exceptionShift() {
-        // perform a random shift that is of the same magnitude as the matrix
-        double val = Math.abs(diag[x2]);
+        double angle = Math.PI*(rand.nextDouble()-0.5)*0.05;
+        performImplicitSingleStep(0,angle,true);
 
-        if( val == 0 )
-            val = 1;
-
-        val *= 0.95+0.2*(rand.nextDouble()-0.5);
-
-        if( rand.nextBoolean() )
-            val = -val;
-
-        performImplicitSingleStep(val);
-
-        lastExceptional = steps;
         numExceptional++;
+        // allow more convergence time
+        nextExceptional = steps+exceptionalThresh;  // (numExceptional+1)*
     }
 
     /**

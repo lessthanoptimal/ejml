@@ -135,11 +135,14 @@ public class WatchedDoubleStepQREigenvector {
         double scale = Math.abs(real);
         if( scale == 0 ) scale = 1;
 
-        for( int i = 0; i < N; i++ ) {
+        // TODO only looking for repeats in sequence.  can automatically skip some stuff
+        for( int i = first; i >= 0; i-- ) {
             Complex64F c = implicit.eigenvalues[i];
 
             if( eigenvectors[i] == null && c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
                 numMatched++;
+            } else{
+                break;
             }
         }
         first = N-first-1;
@@ -147,6 +150,7 @@ public class WatchedDoubleStepQREigenvector {
         eigenvectorTemp.reshape(first,1, false);
 
         if( first > 0 ) {
+            //TODO problem lies in these solvers
             if( isTriangle ) {
                 solveUsingTriangle(real, first , eigenvectorTemp);
             } else {

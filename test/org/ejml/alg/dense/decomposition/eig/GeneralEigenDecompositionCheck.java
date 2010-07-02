@@ -44,14 +44,15 @@ public abstract class GeneralEigenDecompositionCheck {
     public void allTests() {
         computeVectors = true;
 
-        checkRandom();
-        checkKnownReal();
-        checkKnownComplex();
-        checkCompanionMatrix();
-        checkRandomSymmetric();
-        checkExceptional();
-        checkIdentity();
-        checkAllZeros();
+//        checkRandom();
+//        checkKnownReal();
+//        checkKnownComplex();
+//        checkCompanionMatrix();
+//        checkRandomSymmetric();
+//        checkExceptional();
+//        checkIdentity();
+//        checkAllZeros();
+        rand = new Random(3222455);
         checkWithSomeRepeatedValuesSymm();
         checkWithSingularSymm();
         checkSmallValue(false);
@@ -256,6 +257,7 @@ public abstract class GeneralEigenDecompositionCheck {
         EigenDecomposition alg = createDecomposition();
 
         checkSymmetricMatrix(alg,2,-3,-3,-3);
+        checkSymmetricMatrix(alg,2,-3,2,2);
         checkSymmetricMatrix(alg,1,1,1,2);
     }
 
@@ -283,8 +285,12 @@ public abstract class GeneralEigenDecompositionCheck {
             numRepeated[i] = num;
         }
 
-        for( int i = 0; i < 20; i++ ) {
+        for( int i = 0; i < 40; i++ ) {
             DenseMatrix64F A = RandomMatrices.createEigenvaluesSymm(ev.length,rand,ev);
+
+            if( !alg.decompose(A))  {
+                   alg.decompose(A);
+            }
 
             assertTrue(alg.decompose(A));
 
@@ -306,7 +312,7 @@ public abstract class GeneralEigenDecompositionCheck {
                     RandomMatrices.createSymmetric(4,-1,1,rand) :
                     RandomMatrices.createRandom(4,4,-1,1,rand);
 
-            CommonOps.scale(1e-100,A);
+            CommonOps.scale(1e-200,A);
 
             assertTrue(alg.decompose(A));
 
@@ -359,7 +365,10 @@ public abstract class GeneralEigenDecompositionCheck {
 
         if( numReal >= 0 ) {
             for( int i = 0; i < A.numRows; i++ ) {
-                if( alg.getEigenvalue(i).isReal() )
+                Complex64F v = alg.getEigenvalue(i);
+
+                assertFalse( Double.isNaN(v.getReal() ));
+                if( v.isReal() )
                     numReal--;
             }
 
