@@ -38,3 +38,6 @@ For DenseMatrix64F
   - Add matrix vector multiply
   - Auto switch to all of above in CommonOps
 
+- Scaling
+  * What's that function for massaging input matrices?
+  * Divide them by the max element from the start and remove all the scaling stuff?

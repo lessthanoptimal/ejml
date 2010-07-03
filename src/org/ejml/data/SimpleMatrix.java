@@ -469,31 +469,6 @@ public class SimpleMatrix {
     }
 
     /**
-     * <p>
-     * Computes the singular value decomposition (SVD) of this matrix.  Where the SVD of a matrix
-     * A is defined as: <br>
-     * A = U W V <sup>T</sup> <br>
-     * where A is m by n, and U,W,V are all n by n. U and V are orthogonal matrices.
-     * W is a diagonal matrix.
-     * </p>
-     * <p>
-     * The SVD can be used to invert and solve matrices with singular elements that other
-     * methodes can not.  However, it is much more expensive than those other methods.
-     * </p>
-     *
-     * @see org.ejml.alg.dense.decomposition.SingularValueDecomposition
-     *
-     * @return The SVD of this matrix.
-     */
-    public SingularValueDecomposition computeSVD() {
-        SingularValueDecomposition alg = DecompositionFactory.svd();
-
-        alg.decompose(mat);
-
-        return alg;
-    }
-
-    /**
      * Reshapes the matrix.
      *
      * @see Matrix64F#reshape(int,int,boolean)

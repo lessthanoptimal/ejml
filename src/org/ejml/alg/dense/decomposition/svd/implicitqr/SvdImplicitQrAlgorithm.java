@@ -101,7 +101,7 @@ public class SvdImplicitQrAlgorithm {
 
     // After this many iterations it will perform an exceptional
     private int exceptionalThresh = 15;
-    private int maxIterations = exceptionalThresh*3;
+    private int maxIterations = exceptionalThresh*15;
 
     // should the steps use a sequence of predefined lambdas?
     boolean followScript;

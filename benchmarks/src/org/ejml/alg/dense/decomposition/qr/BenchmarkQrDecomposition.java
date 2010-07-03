@@ -82,7 +82,7 @@ public class BenchmarkQrDecomposition {
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(w*2,w,rand);
+            DenseMatrix64F mat = RandomMatrices.createRandom(w*4,w/1,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

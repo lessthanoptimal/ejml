@@ -20,7 +20,7 @@
 - Generic EVD
   * Fixed long standing issue with eigenvectors and repeat eigenvalues
   * Made unit test tolerant to small round off errors causing an eigen value to become imaginary
-
+- Added a version string to UtilEjml
 
 
 

@@ -34,7 +34,7 @@ import java.util.Random;
 public class BenchmarkSvd {
 
 
-    public static long evaluate( SingularValueDecomposition alg , DenseMatrix64F orig , int numTrials ) {
+    public static String evaluate( SingularValueDecomposition alg , DenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -44,7 +44,8 @@ public class BenchmarkSvd {
             }
         }
 
-        return System.currentTimeMillis() - prev;
+        long diff =  System.currentTimeMillis() - prev;
+        return diff+" (ms)  "+(numTrials/(diff/1000.0))+" (ops/sec)";
     }
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )

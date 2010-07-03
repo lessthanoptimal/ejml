@@ -97,7 +97,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
      * Solves for X using the QR decomposition.
      *
      * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is writen to.  Modified.
+     * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
