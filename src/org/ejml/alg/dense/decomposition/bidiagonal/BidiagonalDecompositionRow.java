@@ -31,9 +31,8 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-// todo don't store householder and explicity compute U and V upon request
 public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
-        // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
+    // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DenseMatrix64F UBV;
 
     // number of rows
@@ -73,12 +72,12 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * false otherwise.
      * 
      * @param A  The matrix that is being decomposed.  Not modified.
-     * @param transpose if true it will decompose the transpose of the matrix instead of the original.
      * @return If it detects any errors or not.
      */
-    public boolean decompose( DenseMatrix64F A , boolean transpose )
+    @Override
+    public boolean decompose( DenseMatrix64F A , boolean overwrite )
     {
-        init(A,transpose);
+        init(A,overwrite);
         return _decompose();
     }
 
@@ -86,15 +85,12 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * Sets up internal data structures and creates a copy of the input matrix.
      *
      * @param A The input matrix.  Not modified.
-     * @param transpose If the transposed should be copied or not
      */
-    protected void init(DenseMatrix64F A, boolean transpose ) {
-        if( transpose ) {
-            UBV.reshape(A.numCols,A.numRows, false);
-            CommonOps.transpose(A,UBV);
-        }  else {
-            UBV.reshape(A.numRows,A.numCols, false);
-            UBV.set(A);
+    protected void init(DenseMatrix64F A , boolean overwrite ) {
+        if( overwrite ) {
+            UBV = A;    
+        } else {
+            UBV = A.copy();
         }
 
         m = UBV.numRows;
@@ -130,6 +126,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * @param B If not null the results are stored here, if null a new matrix is created.
      * @return The bidiagonal matrix.
      */
+    @Override
     public DenseMatrix64F getB( DenseMatrix64F B , boolean compact ) {
         int w = n > m ? min + 1 : min;
 
@@ -168,6 +165,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * @param U If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
+    @Override
     public DenseMatrix64F getU( DenseMatrix64F U , boolean transpose , boolean compact ) {
         if( compact ){
             if( transpose ) {
@@ -213,6 +211,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * @param V If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
+    @Override
     public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose , boolean compact ) {
         int w = n > m ? min + 1 : min;
 

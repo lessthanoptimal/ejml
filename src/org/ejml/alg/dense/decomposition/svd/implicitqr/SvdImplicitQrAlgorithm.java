@@ -52,7 +52,6 @@ import java.util.Random;
  */
 // TODO would this be faster if diag and off diag were interpolated into a single array?
 // TODO print out all the steps again.  I think there might be some cancelations
-// todo removing need for abs in normalization by making all elements positive before hand
 public class SvdImplicitQrAlgorithm {
 
     // used in exceptional shifts
@@ -206,6 +205,7 @@ public class SvdImplicitQrAlgorithm {
         totalSteps = 0;
         numSplits = 0;
         numExceptional = 0;
+        nextExceptional = exceptionalThresh;
     }
 
     public boolean process() {
@@ -224,6 +224,7 @@ public class SvdImplicitQrAlgorithm {
     public boolean process(double values[] ) {
         this.followScript = true;
         this.values = values;
+        this.findingZeros = false;
 
         return _process();
     }
@@ -239,6 +240,7 @@ public class SvdImplicitQrAlgorithm {
             }
 
             if( x1 == x2 ) {
+//                System.out.println("steps = "+steps+"  script = "+followScript+" at "+x1);
 //                System.out.println("Split");
                 // see if it is done processing this submatrix
                 resetSteps();
@@ -302,9 +304,8 @@ public class SvdImplicitQrAlgorithm {
     private void performScriptedStep() {
         double scale = computeBulgeScale();
         if( steps > giveUpOnKnown ) {
-            // it hasn't found a match after using the previously computed values yet so try something else
-            double lambda = selectWilkinsonShift(scale);
-            performImplicitSingleStep(scale,lambda,false);
+            // give up on the script
+            followScript = false;
         } else {
             // use previous singular value to step
             double s = values[x2]/scale;
@@ -384,7 +385,7 @@ public class SvdImplicitQrAlgorithm {
      * @param c cosine of rotator.
      * @param s sine of rotator.
      */
-    private void updateRotator( DenseMatrix64F Q , int m, int n, double c, double s) {
+    protected void updateRotator( DenseMatrix64F Q , int m, int n, double c, double s) {
         int rowA = m*Q.numCols;
         int rowB = n*Q.numCols;
 
@@ -394,6 +395,16 @@ public class SvdImplicitQrAlgorithm {
             Q.data[rowA+i] = c*a + s*b;
             Q.data[rowB+i] = -s*a + c*b;
         }
+//        System.out.println("------ AFter Update Rotator "+m+" "+n);
+//        Q.print();
+//        System.out.println();
+//        int endA = rowA + Q.numCols;
+//        for( ; rowA != endA; rowA++ , rowB++ ) {
+//            double a = Q.data[rowA];
+//            double b = Q.data[rowB];
+//            Q.data[rowA] = c*a + s*b;
+//            Q.data[rowB] = -s*a + c*b;
+//        }
     }
 
     private double computeBulgeScale() {
@@ -635,7 +646,7 @@ public class SvdImplicitQrAlgorithm {
         // check for zeros along off diagonal
         for( int i = x2-1; i >= x1; i-- ) {
             if( isOffZero(i) ) {
-//                System.out.println("steps at split = "+helper.steps);
+//                System.out.println("steps at split = "+steps);
                 resetSteps();
                 splits[numSplits++] = i;
                 x1 = i+1;
@@ -646,6 +657,7 @@ public class SvdImplicitQrAlgorithm {
         // check for zeros along diagonal
         for( int i = x2-1; i >= x1; i-- ) {
             if( isDiagonalZero(i)) {
+//                System.out.println("steps at split = "+steps);
                 pushRight(i);
                 resetSteps();
                 splits[numSplits++] = i;

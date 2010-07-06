@@ -29,8 +29,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -41,23 +40,21 @@ public class TestBidiagonalDecompositionRow {
     Random rand = new Random(6455);
 
     /**
-     * See if it correctly responds to the transpose flag
+     * See if the modify and don't modify flags are respected
      */
     @Test
-    public void testTranspose() {
+    public void testModify() {
         SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(3,5,rand));
-        SimpleMatrix A_tran = A.transpose();
+        SimpleMatrix A_mod = A.copy();
 
         BidiagonalDecompositionRow decomp = new BidiagonalDecompositionRow();
-        assertTrue(decomp.decompose(A.getMatrix(),true));
+        assertTrue(decomp.decompose(A_mod.getMatrix(),true));
 
-        SimpleMatrix U = SimpleMatrix.wrap(decomp.getU(null,false,false));
-        SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));
-        SimpleMatrix V = SimpleMatrix.wrap(decomp.getV(null,false,false));
+        assertFalse(A.isIdentical(A_mod,1e-8));
 
-        SimpleMatrix A_tran_found = SimpleMatrix.wrap(U.mult(B).mult(V.transpose()).getMatrix());
-
-        assertTrue(A_tran.isIdentical(A_tran_found,1e-10));
+        A_mod.set(A);
+        assertTrue(decomp.decompose(A_mod.getMatrix(),false));
+        assertTrue(A.isIdentical(A_mod,1e-10));
     }
 
     /**

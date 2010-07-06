@@ -26,7 +26,8 @@ import org.ejml.ops.SpecializedOps;
 
 /**
  * A slower but much simpler version of {@link BidiagonalDecompositionRow} that internally uses
- * SimpleMatrix and explicitly computes the householder matrices.
+ * SimpleMatrix and explicitly computes the householder matrices.  This was easier to code up and is
+ * used to validate other implementations.
  *
  * @author Peter Abeles
  */

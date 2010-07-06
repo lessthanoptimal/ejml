@@ -442,16 +442,18 @@ public class QRDecompositionHouseholder implements QRDecomposition {
     {
         for( int i = colA0; i < A.numRows; i++ ) {
             double sum = 0;
+            int rowIndex = i*A.numCols+w0;
             for( int j = w0; j < w1; j++ ) {
-                sum += A.data[i*A.numCols+j]*u[j];
+                sum += A.data[rowIndex++]*u[j];
             }
             _temp[i] = -gamma*sum;
         }
-        
+
         for( int i = colA0; i < A.numRows; i++ ) {
             double a = _temp[i];
+            int rowIndex = i*A.numCols+w0;
             for( int j = w0; j < w1; j++ ) {
-                A.data[i*A.numCols+j] += a*u[j];
+                A.data[rowIndex++] += a*u[j];
             }
         }
     }

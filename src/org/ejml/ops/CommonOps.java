@@ -935,24 +935,24 @@ public class CommonOps {
      * where 'b' is the transpose of 'a'.
      * </p>
      *
-     * @param a The original matrix.  Not modified.
-     * @param b Where the transpose is stored. Modified.
+     * @param A The original matrix.  Not modified.
+     * @param A_tran Where the transpose is stored. Modified.
      */
-    public static void transpose( DenseMatrix64F a , DenseMatrix64F b )
+    public static void transpose( DenseMatrix64F A, DenseMatrix64F A_tran)
     {
-        if( a.numRows != b.numCols || a.numCols != b.numRows ) {
+        if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
             throw new RuntimeException("Incompatible matrix dimensions");
         }
-        final double rdata[] = b.data;
-        final double data[] = a.data;
+        final double rdata[] = A_tran.data;
+        final double data[] = A.data;
 
         int index = 0;
-        for( int i = 0; i < b.numRows; i++ ) {
+        for( int i = 0; i < A_tran.numRows; i++ ) {
             int index2 = i;
 
-            for( int j = 0; j < b.numCols; j++ ) {
+            for( int j = 0; j < A_tran.numCols; j++ ) {
                 rdata[index++] = data[index2];
-                index2 += a.numCols;
+                index2 += A.numCols;
             }
         }
     }

@@ -47,10 +47,10 @@ public interface BidiagonalDecomposition {
      * false otherwise.
      *
      * @param A  The matrix that is being decomposed.  Not modified.
-     * @param transpose if true it will decompose the transpose of the matrix instead of the original.
+     * @param overwrite Can it over write the passed in matrix
      * @return If it detects any errors or not.
      */
-    public boolean decompose( DenseMatrix64F A , boolean transpose );
+    public boolean decompose( DenseMatrix64F A , boolean overwrite );
 
     /**
      * Returns the bidiagonal matrix.

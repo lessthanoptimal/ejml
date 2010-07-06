@@ -51,22 +51,24 @@ public class BenchmarkSvd {
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
         if( numTrials <= 0 ) return;
-        System.out.println("qr separate      = "+ evaluate(new SvdImplicitQrDecompose_Separate(true,true,true,false),mat,numTrials));
         System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));
-        System.out.println("qr no U          = "+ evaluate(new SvdImplicitQrDecompose(true,false,true),mat,numTrials));
-        System.out.println("qr no U and V    = "+ evaluate(new SvdImplicitQrDecompose(true,false,false),mat,numTrials));
-        System.out.println("alt              = "+ evaluate(new SvdNumericalRecipes(),mat,numTrials));
+        System.out.println("qr smart         = "+ evaluate(new SvdImplicitQrDecompose_UltimateS(true,true,true),mat,numTrials));
+        System.out.println("qr separate      = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(true,true,true),mat,numTrials));
+//        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));
+//        System.out.println("qr no U          = "+ evaluate(new SvdImplicitQrDecompose(true,false,true),mat,numTrials));
+//        System.out.println("qr no U and V    = "+ evaluate(new SvdImplicitQrDecompose(true,false,false),mat,numTrials));
+//        System.out.println("alt              = "+ evaluate(new SvdNumericalRecipes(),mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,500,1000,2000};
-        int trials[] = new int[]{(int)7e5,(int)1e5,(int)5e4,100,2,1,1};
+        int size[] = new int[]{2,4,10,100,500,1000,2000,3000};
+        int trials[] = new int[]{(int)7e5,(int)1e5,(int)5e4,100,2,1,1,1};
 
         System.out.println("Square matrix");
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 5; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
