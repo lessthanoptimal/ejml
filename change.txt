@@ -10,7 +10,7 @@
 - Added SVD and EVD to SimpleMatrix
 - SVD can now selectively compute U and V
 - SVD is computed all at once.
-   - Performs about the same as original code but is simpler.
+   - Seems to perform slightly faster than original code and is simpler.
    - There is a loss in performance for 2 by 2 matrices.  
 - SVD getU() and getV() can now indicate if the transpose is returned or not.
 - SVD fixed issue dealing with very small numbers canceling out and causing a divided by zero error
