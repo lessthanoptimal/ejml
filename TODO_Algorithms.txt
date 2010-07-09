@@ -1,5 +1,5 @@
-For 0.13 Release
-
+For 0.14 Release
+- If scale = 0 in QR algorithm handle that better.  no divided by zero ever
 
 For DenseMatrix64F
 

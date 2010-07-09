@@ -29,7 +29,6 @@ public class EigenvalueSmall {
 
     public Complex64F value0 = new Complex64F();
     public Complex64F value1 = new Complex64F();
-    public Complex64F value2 = new Complex64F();
 
     // if |a11-a22| >> |a12+a21| there might be a better way.  see pg371
     public void value2x2( double a11 , double a12, double a21 , double a22 )
@@ -42,10 +41,10 @@ public class EigenvalueSmall {
         } else {
             double aa = (a11-a22);
             double bb = (a12+a21);
+//            double t_hat = aa/bb;
+//            double t = t_hat/(1.0+Math.sqrt(1.0+t_hat*t_hat));
 
-            double t_hat = aa/bb;
-
-            double t = t_hat/(1.0+Math.sqrt(1.0+t_hat*t_hat));
+            double t = aa/(bb+Math.sqrt(bb*bb+aa*aa));
 
             c = 1.0/Math.sqrt(1.0+t*t);
             s = c*t;

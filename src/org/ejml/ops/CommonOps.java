@@ -819,12 +819,12 @@ public class CommonOps {
 
     /**
      * <p>
-     * Performs an in-place element by element scalar multiplation.<br>
+     * Performs an in-place element by element scalar multiplication.<br>
      * <br>
      * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix that is to be scalled.  Modified.
+     * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
     public static void scale( double alpha , DenseMatrix64F a )
@@ -839,12 +839,12 @@ public class CommonOps {
 
     /**
      * <p>
-     * Performs an element by element scalar multiplation.<br>
+     * Performs an element by element scalar multiplication.<br>
      * <br>
      * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix that is to be scalled.  Modified.
+     * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
     public static void scale( double alpha , DenseMatrix64F a , DenseMatrix64F b)
@@ -858,6 +858,50 @@ public class CommonOps {
 
         for( int i = 0; i < size; i++ ) {
             dataB[i] = dataA[i]*alpha;
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar division.<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
+     * </p>
+     *
+     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param alpha the amount each element is divided by.
+     */
+    public static void div( double alpha , DenseMatrix64F a )
+    {
+        final double data[] = a.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            data[i] /= alpha;
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar division.<br>
+     * <br>
+     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
+     * </p>
+     *
+     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param alpha the amount each element is divided by.
+     */
+    public static void div( double alpha , DenseMatrix64F a , DenseMatrix64F b)
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols )
+            throw new IllegalArgumentException("Matrices must have the same shape");
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            dataB[i] = dataA[i]/alpha;
         }
     }
 

@@ -115,7 +115,7 @@ public class EigenPowerMethod {
             
             CommonOps.mult(A,q0,q1);
             double s = NormOps.normPInf(q1);
-            CommonOps.scale(1.0/s,q1,q2);
+            CommonOps.div(s,q1,q2);
 
             converged = checkConverged(A);
         }
@@ -205,7 +205,7 @@ public class EigenPowerMethod {
         for( int i = 0; i < maxIterations && !converged; i++ ) {
             solver.solve(q0,q1);
             double s = NormOps.normPInf(q1);
-            CommonOps.scale(1.0/s,q1,q2);
+            CommonOps.div(s,q1,q2);
 
             converged = checkConverged(A);
         }

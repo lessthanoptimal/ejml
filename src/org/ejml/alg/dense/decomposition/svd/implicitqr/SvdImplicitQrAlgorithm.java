@@ -433,10 +433,6 @@ public class SvdImplicitQrAlgorithm {
 
             double alpha = Math.sqrt(u1*u1 + u2*u2);
 
-            if( UtilEjml.isUncountable(alpha)) {
-                System.out.println("crap");
-            }
-
             c = u1 / alpha;
             s = u2 / alpha;
         }
@@ -798,10 +794,13 @@ public class SvdImplicitQrAlgorithm {
      * more often with larger matrices.  By taking a random step it can break the symmetry and finish.
      */
     public void exceptionShift() {
-        double angle = Math.PI*(rand.nextDouble()-0.5)*0.05;
+        numExceptional++;
+        double mag = 0.05*numExceptional;
+        if( mag > 1.0 ) mag = 1.0;
+
+        double angle = Math.PI*(rand.nextDouble()-0.5)*mag;
         performImplicitSingleStep(0,angle,true);
 
-        numExceptional++;
         // allow more convergence time
         nextExceptional = steps+exceptionalThresh;  // (numExceptional+1)*
     }

@@ -151,8 +151,8 @@ public class RealEigenvalueHessenbergStressTest {
 
         double result = top/bottom;
 
-        if( result >= tol || Double.isNaN(result) || Double.isInfinite(result))
-            System.out.println("Crap");
+//        if( result >= tol || Double.isNaN(result) || Double.isInfinite(result))
+//            System.out.println("Crap");
 
         return result;
     }

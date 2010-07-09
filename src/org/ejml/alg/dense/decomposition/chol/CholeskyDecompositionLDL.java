@@ -96,7 +96,7 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
 
         L.setReshape(mat);
 
-        double d_inv=0;
+        double di = 0;
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
                 double sum = el[i*n+j];
@@ -110,11 +110,10 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
                     if( sum <= 0.0 )
                         return false;
 
-                    d[i] = sum;
-                    d_inv = 1.0/sum;
+                    di = d[i] = sum;
                     el[i*n+i] = 1;
                 } else {
-                    el[j*n+i] = sum*d_inv;
+                    el[j*n+i] = sum/di;
                 }
             }
         }

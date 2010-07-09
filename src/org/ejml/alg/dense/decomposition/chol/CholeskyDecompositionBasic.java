@@ -41,8 +41,7 @@ public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
 
     @Override
     protected boolean decomposeLower() {
-        double el_ii;
-        double div_el_ii=0;
+        double el_ii=0;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
@@ -64,9 +63,8 @@ public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
 
                     el_ii = Math.sqrt(sum);
                     t[i*n+i] = el_ii;
-                    div_el_ii = 1.0/el_ii;
                 } else {
-                    t[j*n+i] = sum*div_el_ii;
+                    t[j*n+i] = sum/el_ii;
                 }
             }
         }
@@ -82,8 +80,7 @@ public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
 
     @Override
     protected boolean decomposeUpper() {
-        double el_ii;
-        double div_el_ii=0;
+        double el_ii=0;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
@@ -101,9 +98,8 @@ public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
                     // I suspect that the sqrt is slowing this down relative to MTJ
                     el_ii = Math.sqrt(sum);
                     t[i*n+i] = el_ii;
-                    div_el_ii = 1.0/el_ii;
                 } else {
-                    t[i*n+j] = sum*div_el_ii;
+                    t[i*n+j] = sum/el_ii;
                 }
             }
         }

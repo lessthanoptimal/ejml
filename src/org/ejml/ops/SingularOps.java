@@ -75,7 +75,8 @@ public class SingularOps {
                 continue;
 
             if( bigIndex == -1 ) {
-                throw new RuntimeException("W has uncountable elements in it");
+                // there is at least one uncountable singular value.  just stop here
+                break;
             }
 
             double tmp = W.get(i,i);

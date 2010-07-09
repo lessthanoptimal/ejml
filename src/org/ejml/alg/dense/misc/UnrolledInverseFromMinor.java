@@ -42,33 +42,33 @@ public class UnrolledInverseFromMinor {
         }
 
         if( mat.numRows == 2 ) {
-            inv2(mat,inv,1.0/max);
+            inv2(mat,inv,max);
         } else if( mat.numRows == 3 ) {
-            inv3(mat,inv,1.0/max);            
+            inv3(mat,inv,max);            
         } else if( mat.numRows == 4 ) {
-            inv4(mat,inv,1.0/max);            
+            inv4(mat,inv,max);            
         } else if( mat.numRows == 5 ) {
-            inv5(mat,inv,1.0/max);            
+            inv5(mat,inv,max);            
         } else {
             throw new IllegalArgumentException("Not supported");
         }
     }
 
-    public static void inv2( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv2( DenseMatrix64F mat , DenseMatrix64F inv , double div )
     {
         double []data = mat.data;
 
-        double a11 = data[ 0 ]*scale;
-        double a12 = data[ 1 ]*scale;
-        double a21 = data[ 2 ]*scale;
-        double a22 = data[ 3 ]*scale;
+        double a11 = data[ 0 ]/div;
+        double a12 = data[ 1 ]/div;
+        double a21 = data[ 2 ]/div;
+        double a22 = data[ 3 ]/div;
 
         double m11 = a22;
         double m12 = -( a21);
         double m21 = -( a12);
         double m22 = a11;
 
-        double det = (a11*m11 + a12*m12)/scale;
+        double det = (a11*m11 + a12*m12)*div;
 
         data = inv.data;
         data[0] = m11 / det;
@@ -78,19 +78,19 @@ public class UnrolledInverseFromMinor {
 
     }
 
-    public static void inv3( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv3( DenseMatrix64F mat , DenseMatrix64F inv , double div )
     {
         double []data = mat.data;
 
-        double a11 = data[ 0 ]*scale;
-        double a12 = data[ 1 ]*scale;
-        double a13 = data[ 2 ]*scale;
-        double a21 = data[ 3 ]*scale;
-        double a22 = data[ 4 ]*scale;
-        double a23 = data[ 5 ]*scale;
-        double a31 = data[ 6 ]*scale;
-        double a32 = data[ 7 ]*scale;
-        double a33 = data[ 8 ]*scale;
+        double a11 = data[ 0 ]/div;
+        double a12 = data[ 1 ]/div;
+        double a13 = data[ 2 ]/div;
+        double a21 = data[ 3 ]/div;
+        double a22 = data[ 4 ]/div;
+        double a23 = data[ 5 ]/div;
+        double a31 = data[ 6 ]/div;
+        double a32 = data[ 7 ]/div;
+        double a33 = data[ 8 ]/div;
 
         double m11 = a22*a33 - a23*a32;
         double m12 = -( a21*a33 - a23*a31);
@@ -102,7 +102,7 @@ public class UnrolledInverseFromMinor {
         double m32 = -( a11*a23 - a13*a21);
         double m33 = a11*a22 - a12*a21;
 
-        double det = (a11*m11 + a12*m12 + a13*m13)/scale;
+        double det = (a11*m11 + a12*m12 + a13*m13)*div;
 
         data = inv.data;
         data[0] = m11 / det;
@@ -117,26 +117,26 @@ public class UnrolledInverseFromMinor {
 
     }
 
-    public static void inv4( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv4( DenseMatrix64F mat , DenseMatrix64F inv , double div )
     {
         double []data = mat.data;
 
-        double a11 = data[ 0 ]*scale;
-        double a12 = data[ 1 ]*scale;
-        double a13 = data[ 2 ]*scale;
-        double a14 = data[ 3 ]*scale;
-        double a21 = data[ 4 ]*scale;
-        double a22 = data[ 5 ]*scale;
-        double a23 = data[ 6 ]*scale;
-        double a24 = data[ 7 ]*scale;
-        double a31 = data[ 8 ]*scale;
-        double a32 = data[ 9 ]*scale;
-        double a33 = data[ 10 ]*scale;
-        double a34 = data[ 11 ]*scale;
-        double a41 = data[ 12 ]*scale;
-        double a42 = data[ 13 ]*scale;
-        double a43 = data[ 14 ]*scale;
-        double a44 = data[ 15 ]*scale;
+        double a11 = data[ 0 ]/div;
+        double a12 = data[ 1 ]/div;
+        double a13 = data[ 2 ]/div;
+        double a14 = data[ 3 ]/div;
+        double a21 = data[ 4 ]/div;
+        double a22 = data[ 5 ]/div;
+        double a23 = data[ 6 ]/div;
+        double a24 = data[ 7 ]/div;
+        double a31 = data[ 8 ]/div;
+        double a32 = data[ 9 ]/div;
+        double a33 = data[ 10 ]/div;
+        double a34 = data[ 11 ]/div;
+        double a41 = data[ 12 ]/div;
+        double a42 = data[ 13 ]/div;
+        double a43 = data[ 14 ]/div;
+        double a44 = data[ 15 ]/div;
 
         double m11 =  + a22*(a33*a44 - a34*a43) - a23*(a32*a44 - a34*a42) + a24*(a32*a43 - a33*a42);
         double m12 = -(  + a21*(a33*a44 - a34*a43) - a23*(a31*a44 - a34*a41) + a24*(a31*a43 - a33*a41));
@@ -155,7 +155,7 @@ public class UnrolledInverseFromMinor {
         double m43 = -(  + a11*(a22*a34 - a24*a32) - a12*(a21*a34 - a24*a31) + a14*(a21*a32 - a22*a31));
         double m44 =  + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31);
 
-        double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14)/scale;
+        double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14)*div;
 
         data = inv.data;
         data[0] = m11 / det;
@@ -177,35 +177,35 @@ public class UnrolledInverseFromMinor {
 
     }
 
-    public static void inv5( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv5( DenseMatrix64F mat , DenseMatrix64F inv , double div )
     {
         double []data = mat.data;
 
-        double a11 = data[ 0 ]*scale;
-        double a12 = data[ 1 ]*scale;
-        double a13 = data[ 2 ]*scale;
-        double a14 = data[ 3 ]*scale;
-        double a15 = data[ 4 ]*scale;
-        double a21 = data[ 5 ]*scale;
-        double a22 = data[ 6 ]*scale;
-        double a23 = data[ 7 ]*scale;
-        double a24 = data[ 8 ]*scale;
-        double a25 = data[ 9 ]*scale;
-        double a31 = data[ 10 ]*scale;
-        double a32 = data[ 11 ]*scale;
-        double a33 = data[ 12 ]*scale;
-        double a34 = data[ 13 ]*scale;
-        double a35 = data[ 14 ]*scale;
-        double a41 = data[ 15 ]*scale;
-        double a42 = data[ 16 ]*scale;
-        double a43 = data[ 17 ]*scale;
-        double a44 = data[ 18 ]*scale;
-        double a45 = data[ 19 ]*scale;
-        double a51 = data[ 20 ]*scale;
-        double a52 = data[ 21 ]*scale;
-        double a53 = data[ 22 ]*scale;
-        double a54 = data[ 23 ]*scale;
-        double a55 = data[ 24 ]*scale;
+        double a11 = data[ 0 ]/div;
+        double a12 = data[ 1 ]/div;
+        double a13 = data[ 2 ]/div;
+        double a14 = data[ 3 ]/div;
+        double a15 = data[ 4 ]/div;
+        double a21 = data[ 5 ]/div;
+        double a22 = data[ 6 ]/div;
+        double a23 = data[ 7 ]/div;
+        double a24 = data[ 8 ]/div;
+        double a25 = data[ 9 ]/div;
+        double a31 = data[ 10 ]/div;
+        double a32 = data[ 11 ]/div;
+        double a33 = data[ 12 ]/div;
+        double a34 = data[ 13 ]/div;
+        double a35 = data[ 14 ]/div;
+        double a41 = data[ 15 ]/div;
+        double a42 = data[ 16 ]/div;
+        double a43 = data[ 17 ]/div;
+        double a44 = data[ 18 ]/div;
+        double a45 = data[ 19 ]/div;
+        double a51 = data[ 20 ]/div;
+        double a52 = data[ 21 ]/div;
+        double a53 = data[ 22 ]/div;
+        double a54 = data[ 23 ]/div;
+        double a55 = data[ 24 ]/div;
 
         double m11 =  + a22*( + a33*(a44*a55 - a45*a54) - a34*(a43*a55 - a45*a53) + a35*(a43*a54 - a44*a53)) - a23*( + a32*(a44*a55 - a45*a54) - a34*(a42*a55 - a45*a52) + a35*(a42*a54 - a44*a52)) + a24*( + a32*(a43*a55 - a45*a53) - a33*(a42*a55 - a45*a52) + a35*(a42*a53 - a43*a52)) - a25*( + a32*(a43*a54 - a44*a53) - a33*(a42*a54 - a44*a52) + a34*(a42*a53 - a43*a52));
         double m12 = -(  + a21*( + a33*(a44*a55 - a45*a54) - a34*(a43*a55 - a45*a53) + a35*(a43*a54 - a44*a53)) - a23*( + a31*(a44*a55 - a45*a54) - a34*(a41*a55 - a45*a51) + a35*(a41*a54 - a44*a51)) + a24*( + a31*(a43*a55 - a45*a53) - a33*(a41*a55 - a45*a51) + a35*(a41*a53 - a43*a51)) - a25*( + a31*(a43*a54 - a44*a53) - a33*(a41*a54 - a44*a51) + a34*(a41*a53 - a43*a51)));
@@ -233,7 +233,7 @@ public class UnrolledInverseFromMinor {
         double m54 = -(  + a11*( + a22*(a33*a45 - a35*a43) - a23*(a32*a45 - a35*a42) + a25*(a32*a43 - a33*a42)) - a12*( + a21*(a33*a45 - a35*a43) - a23*(a31*a45 - a35*a41) + a25*(a31*a43 - a33*a41)) + a13*( + a21*(a32*a45 - a35*a42) - a22*(a31*a45 - a35*a41) + a25*(a31*a42 - a32*a41)) - a15*( + a21*(a32*a43 - a33*a42) - a22*(a31*a43 - a33*a41) + a23*(a31*a42 - a32*a41)));
         double m55 =  + a11*( + a22*(a33*a44 - a34*a43) - a23*(a32*a44 - a34*a42) + a24*(a32*a43 - a33*a42)) - a12*( + a21*(a33*a44 - a34*a43) - a23*(a31*a44 - a34*a41) + a24*(a31*a43 - a33*a41)) + a13*( + a21*(a32*a44 - a34*a42) - a22*(a31*a44 - a34*a41) + a24*(a31*a42 - a32*a41)) - a14*( + a21*(a32*a43 - a33*a42) - a22*(a31*a43 - a33*a41) + a23*(a31*a42 - a32*a41));
 
-        double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14 + a15*m15)/scale;
+        double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14 + a15*m15)*div;
 
         data = inv.data;
         data[0] = m11 / det;

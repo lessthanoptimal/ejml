@@ -85,13 +85,14 @@
                 author="true"
                 version="true"
                 use="true"
-                windowtitle="Efficient Java Matrix Library">
+                windowtitle="Efficient Java Matrix Library"
+                overview="src/overview.html">
 
             <packageset dir="src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
 
-            <doctitle><![CDATA[<h1>Efficient Java Matrix Library</h1>]]></doctitle>
+            <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification</h1>]]></doctitle>
             <bottom><![CDATA[<i>Copyright &#169; 2009-2010 Peter Abeles All Rights Reserved.</i>]]></bottom>
             <!--<group title="Group 1 Packages" packages="com.dummy.test.a*"/>-->
             <!--<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>-->

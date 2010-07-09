@@ -130,12 +130,11 @@ public class GaussJordan extends LinearSolverAbstract {
             if( valA == 0.0 ) {
                 throw new SingularMatrixException();
             }
-            valA = 1.0/valA;
 
             dataA[bestCol*N+bestCol] = 1.0;
             // make the first element in this row 1
             for( int x = 0; x < N; x++ ) {
-                dataA[bestCol*N+x] *= valA;
+                dataA[bestCol*N+x] /= valA;
             }
 
             // make all the i columns zero, except for row i

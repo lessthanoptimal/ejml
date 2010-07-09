@@ -84,7 +84,7 @@ public class RandomMatrices {
                 double val = NormOps.normF(r);
                 if( val == 0 || Double.isNaN(val) || Double.isInfinite(val))
                     throw new RuntimeException("Failed sanity check");
-                CommonOps.scale(1.0/val,r);
+                CommonOps.div(val,r);
             }
 
             u[i] = r;

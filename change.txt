@@ -1,6 +1,14 @@
------ Version 0.13
+----- Version 0.14
 
 2010/XX/XX
+
+- Removed left over debugging print statement from SvdImplicitQrAlgorithm.
+- avoid scaling by 1.0/max since this is prone to rounding error if max is very small
+- added element wise division
+
+----- Version 0.13
+
+2010/07/08
 
 - Fixed SingularOps.descendingOrder() bug.
    * Thanks xcolwell for reporting it.

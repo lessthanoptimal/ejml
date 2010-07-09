@@ -261,9 +261,8 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
             // compute the norm2 of the matrix, with each element
             // normalized by the max value to avoid overflow problems
             tau = 0;
-            double div_max = 1.0/max;
             for( int i = j; i < numRows; i++ ) {
-                u[i] *= div_max;
+                u[i] /= max;
                 double d = u[i];
                 tau += d*d;
             }
@@ -274,9 +273,8 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
 
             double u_0 = u[j] + tau;
             gamma = u_0/tau;
-            double div_u = 1.0/u_0;
             for( int i = j+1; i < numRows; i++ ) {
-                u[i] *= div_u;
+                u[i] /= u_0;
             }
 
             tau *= max;

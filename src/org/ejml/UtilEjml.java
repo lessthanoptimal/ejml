@@ -26,7 +26,7 @@ import java.util.Comparator;
 
 
 /**
- * Various functions that are usefull but don't have a clear location that they belong in.
+ * Various functions that are useful but don't have a clear location that they belong in.
  *
  * @author Peter Abeles
  */
@@ -35,7 +35,7 @@ public class UtilEjml {
     /**
      * Version string used to indicate which version of EJML is being used.
      */
-    public static String VERSION = "0.13pre";
+    public static String VERSION = "0.13";
 
     /**
      * Default tolerance.

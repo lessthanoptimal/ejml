@@ -120,6 +120,37 @@ public class TestSingularOps {
     }
 
     /**
+     * See if it blows up with uncountable numbers
+     */
+    @Test
+    public void descendingOrder_NaN() {
+        int numRows = 5;
+        int numCols = 7;
+        int minLength = Math.min(numRows,numCols);
+
+        SimpleMatrix U,S,V;
+
+        U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,minLength,rand));
+        S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(minLength,minLength,0,1,rand));
+        V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numCols,minLength,rand));
+
+        // put in a NaN
+        S.set(2,2,Double.NaN);
+
+        SingularOps.descendingOrder(U.getMatrix(),false,S.getMatrix(),V.getMatrix(),false);
+
+        assertTrue( Double.isNaN(S.get(minLength-1,minLength-1)));
+
+        // put in an Inf
+        S.set(2,2,Double.POSITIVE_INFINITY);
+
+        SingularOps.descendingOrder(U.getMatrix(),false,S.getMatrix(),V.getMatrix(),false);
+
+        assertTrue( Double.isInfinite(S.get(0,0)));
+    }
+
+
+    /**
      * Gives it correct input matrices and makes sure no exceptions are thrown.  All permutations
      * are tested.
      */
@@ -241,7 +272,7 @@ public class TestSingularOps {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.988228951897092, -1.086594333683141, -1.433160736952583, -3.190200029661606, 0.190459703263404, -6.475629910954768, 1.400596416735888, 7.158603907761226, -0.778109120408813);
 
         SingularValueDecomposition alg = DecompositionFactory.svd();
-        alg.decompose(A);
+        assertTrue(alg.decompose(A));
 
         assertEquals(2,SingularOps.rank(alg, UtilEjml.EPS));
         assertEquals(1,SingularOps.nullity(alg, UtilEjml.EPS));
