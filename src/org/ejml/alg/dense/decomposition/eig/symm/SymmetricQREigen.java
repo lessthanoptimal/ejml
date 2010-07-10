@@ -263,10 +263,10 @@ public class SymmetricQREigen {
         double cs = c*s;
 
         // multiply the rotator on the top left.
-        diag[x1] = c2*a11 + 2.0*cs*a12 + s2*a22;
-        diag[x1+1] = c2*a22 - 2.0*cs*a12+s2*a11;
-        off[x1] = c2*a12+cs*a22 - cs*a11 - s2*a12;
-        off[x1+1] = c*a23;
+        diag[x1]   = c2*a11 + 2.0*cs*a12 + s2*a22;
+        diag[x1+1] = c2*a22 - 2.0*cs*a12 + s2*a11;
+        off[x1]    = a12*(c2-s2) + cs*(a22 - a11);
+        off[x1+1]  = c*a23;
         bulge = s*a23;
 
         if( Q != null )
@@ -293,7 +293,7 @@ public class SymmetricQREigen {
         // multiply the rotator on the top left.
         diag[x1]   = c2*a11 + 2.0*cs*a12 + s2*a22;
         diag[x1+1] = c2*a22 - 2.0*cs*a12 + s2*a11;
-        off[x1]    = c2*a12 + cs*a22 - cs*a11 - s2*a12;
+        off[x1]    = a12*(c2-s2) + cs*(a22 - a11);
 
         if( Q != null )
             updateQ(x1,x1+1,c,s);
@@ -342,7 +342,7 @@ public class SymmetricQREigen {
         diag[x1+1] = c2*a22 + 2.0*cs*a23 + s2*a33;
         diag[x1+2] = c2*a33 - 2.0*cs*a23 + s2*a22;
         off[x1] = c*a12 + s*bulge;
-        off[x1+1] = c2*a23 + cs*a33 - cs*a22 - s2*a23;
+        off[x1+1] = a23*(c2-s2) + cs*(a33 - a22);
         off[x1+2] = c*a34;
         bulge = s*a34;
 
@@ -370,7 +370,7 @@ public class SymmetricQREigen {
         diag[x1+1] = c2*a22 + 2.0*cs*a23 + s2*a33;
         diag[x1+2] = c2*a33 - 2.0*cs*a23 + s2*a22;
         off[x1] = c*a12+s*bulge;
-        off[x1+1] = c2*a23-cs*a22+cs*a33-s2*a23;
+        off[x1+1] = a23*(c2-s2) + cs*(a33 - a22);
 
         if( Q != null )
             updateQ(x1+1,x1+2,c,s);

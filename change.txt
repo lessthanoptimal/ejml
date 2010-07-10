@@ -3,8 +3,10 @@
 2010/XX/XX
 
 - Removed left over debugging print statement from SvdImplicitQrAlgorithm.
-- avoid scaling by 1.0/max since this is prone to rounding error if max is very small
-- added element wise division
+- For reflectors (used in QR) code has been added that can switch between two normalization
+  methods.  This can significant speed things up and improve accuracy.
+- Added underflow stability benchmarks for some decompositions
+- Correct some issues in SVD and Symm EVD
 
 ----- Version 0.13
 

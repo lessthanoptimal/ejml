@@ -134,9 +134,9 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
 
         // solve D*y=z
         for( int i =0; i < n; i++ ) {
-            double dd = d[i];
+            double inv_d = 1.0/d[i];
             for( int j = 0; j <= i; j++ ) {
-                a[j*n+i] /= dd;
+                a[j*n+i] *= inv_d;
             }
         }
 

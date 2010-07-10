@@ -31,7 +31,7 @@ import org.ejml.ops.CommonOps;
  * of CPU cache misses and the number of copies that are performed.
  * </p>
  *
- * @see QRDecompositionHouseholder 
+ * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder
  *
  * @author Peter Abeles
  */
@@ -243,40 +243,22 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
     {
         double u[] = dataQR[j];
 
-        // find the element with the largest absolute value in the column and make a copy
-        double max = 0;
-        for( int i = j; i < numRows; i++ ) {
-            double d = u[i];
-            // absolute value of d
-            if( d < 0 ) d = -d;
-            if( max < d ) {
-                max = d;
-            }
-        }
+        // find the largest value in this column
+        // this is used to normalize the column and mitigate overflow/underflow
+        double max = QrHelperFunctions.findMax(u,j,numRows-j);
 
         if( max == 0.0 ) {
             gamma = 0;
             error = true;
         } else {
-            // compute the norm2 of the matrix, with each element
-            // normalized by the max value to avoid overflow problems
-            tau = 0;
-            for( int i = j; i < numRows; i++ ) {
-                u[i] /= max;
-                double d = u[i];
-                tau += d*d;
-            }
-            tau = Math.sqrt(tau);
+            // computes tau and normalizes u by max
+            tau = QrHelperFunctions.computeTau(j, numRows , u, max);
 
-            if( u[j] < 0 )
-                tau = -tau;
-
+            // divide u by u_0
             double u_0 = u[j] + tau;
-            gamma = u_0/tau;
-            for( int i = j+1; i < numRows; i++ ) {
-                u[i] /= u_0;
-            }
+            QrHelperFunctions.divideElements(j+1,numRows , u, u_0 );
 
+            gamma = u_0/tau;
             tau *= max;
         }
 
@@ -297,7 +279,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         double u[] = dataQR[w];
 
         for( int j = w+1; j < numCols; j++ ) {
-            
+
             double colQ[] = dataQR[j];
             double val = colQ[w];
 
@@ -313,7 +295,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         }
 
         if( w < numCols ) {
-            u[w] = -tau;
+            u[w] = 0.0d - tau;
         }
     }
 

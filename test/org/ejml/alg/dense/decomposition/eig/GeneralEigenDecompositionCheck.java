@@ -53,6 +53,7 @@ public abstract class GeneralEigenDecompositionCheck {
         checkExceptional();
         checkIdentity();
         checkAllZeros();
+        rand = new Random(2934);
         checkWithSomeRepeatedValuesSymm();
         checkWithSingularSymm();
         checkSmallValue(false);
@@ -282,7 +283,7 @@ public abstract class GeneralEigenDecompositionCheck {
             numRepeated[i] = num;
         }
 
-        for( int i = 0; i < 40; i++ ) {
+        for( int i = 0; i < 200; i++ ) {
             DenseMatrix64F A = RandomMatrices.createEigenvaluesSymm(ev.length,rand,ev);
 
             assertTrue(alg.decompose(A));
@@ -363,7 +364,7 @@ public abstract class GeneralEigenDecompositionCheck {
                 assertFalse( Double.isNaN(v.getReal() ));
                 if( v.isReal() )
                     numReal--;
-                else if( Math.abs(v.getImaginary()) < UtilEjml.EPS)
+                else if( Math.abs(v.getImaginary()) < 10*UtilEjml.EPS)
                     numReal--;
             }
 

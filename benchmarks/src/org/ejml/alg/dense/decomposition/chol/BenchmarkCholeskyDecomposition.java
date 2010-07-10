@@ -17,12 +17,9 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 

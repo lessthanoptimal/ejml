@@ -50,9 +50,10 @@ public class BenchmarkSvd {
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
+//        mat.print("%f");
         if( numTrials <= 0 ) return;
         System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));
-        System.out.println("qr smart         = "+ evaluate(new SvdImplicitQrDecompose_UltimateS(true,true,true),mat,numTrials));
+//        System.out.println("qr smart         = "+ evaluate(new SvdImplicitQrDecompose_UltimateS(true,true,true),mat,numTrials));
         System.out.println("qr separate      = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(true,true,true),mat,numTrials));
 //        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));
 //        System.out.println("qr no U          = "+ evaluate(new SvdImplicitQrDecompose(true,false,true),mat,numTrials));
@@ -68,7 +69,7 @@ public class BenchmarkSvd {
 
         System.out.println("Square matrix");
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 5; i < size.length; i++ ) {
+        for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);

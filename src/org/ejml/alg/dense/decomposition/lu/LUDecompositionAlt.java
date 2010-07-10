@@ -95,7 +95,7 @@ public class LUDecompositionAlt extends LUDecompositionBase {
                 double lujj = dataLU[j*n+j];
                 if( lujj != 0 ) {
                     for (int i = j+1; i < m; i++) {
-                        dataLU[i*n+j] /= dataLU[j*n+j];
+                        dataLU[i*n+j] /= lujj;
                     }
                 }
             }

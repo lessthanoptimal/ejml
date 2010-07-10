@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
@@ -186,26 +187,12 @@ public class TridiagonalSimilarDecomposition {
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = 0;
-            // normalize to reduce overflow/underflow
-            // and compute tau for the reflector
-            for( int i = k; i < N; i++ ) {
-                double val = t[rowU+i] /= max;
-                tau += val*val;
-            }
-
-            tau = Math.sqrt(tau);
-
-            if( t[rowU+k] < 0 )
-                tau = -tau;
+            double tau = QrHelperFunctions.computeTau(k,N,t,rowU,max);
 
             // write the reflector into the lower left column of the matrix
             double nu = t[rowU+k] + tau;
+            QrHelperFunctions.divideElements(k+1,N,t,rowU,nu);
             t[rowU+k] = 1.0;
-
-            for( int i = k+1; i < N; i++ ) {
-                t[rowU+i] /= nu;
-            }
 
             double gamma = nu/tau;
             gammas[k] = gamma;

@@ -56,6 +56,7 @@ public class WatchedDoubleStepQREigenvector {
     int x1,x2;
 
     int indexVal;
+    boolean onscript;
 
     public boolean process( WatchedDoubleStepQREigen implicit , DenseMatrix64F A , DenseMatrix64F Q_h )
     {
@@ -79,6 +80,7 @@ public class WatchedDoubleStepQREigenvector {
         implicit.setup(A);
         implicit.setQ(Q);
         numSplits = 0;
+        onscript = true;
 
 //        System.out.println("Orig A");
 //        A.print("%12.10f");
@@ -263,18 +265,24 @@ public class WatchedDoubleStepQREigenvector {
             }
         }
         // first try using known eigenvalues in the same order they were originally found
-        if( implicit.steps < implicit.exceptionalThreshold/2 ) {
-            Complex64F a = origEigenvalues[indexVal];
-
-            // if no splits are found perform an implicit step
-            if( a.isReal() ) {
-                implicit.performImplicitSingleStep(x1,x2, a.getReal());
+        if( onscript) {
+            if( implicit.steps > implicit.exceptionalThreshold/2  ) {
+                onscript = false;
             } else {
-                implicit.performImplicitDoubleStep(x1,x2, a.real,a.imaginary);
+                Complex64F a = origEigenvalues[indexVal];
+
+                // if no splits are found perform an implicit step
+                if( a.isReal() ) {
+                    implicit.performImplicitSingleStep(x1,x2, a.getReal());
+                } else if( x2 < N-2 ) {
+                    implicit.performImplicitDoubleStep(x1,x2, a.real,a.imaginary);
+                } else {
+                    onscript = false;
+                }
             }
         } else {
             // that didn't work so try a modified order
-            if( x2-x1 >= 1 && x2 < N-1 )
+            if( x2-x1 >= 1 && x2 < N-2 )
                 implicit.implicitDoubleStep(x1,x2);
             else
                 implicit.performImplicitSingleStep(x1,x2,implicit.A.get(x2,x2));

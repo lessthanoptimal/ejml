@@ -78,7 +78,7 @@ public class WatchedDoubleStepQREigen {
     int lastExceptional;
     int numExceptional;
     int exceptionalThreshold = 20;
-    int maxIterations = exceptionalThreshold*10;
+    int maxIterations = exceptionalThreshold*20;
 
     public boolean createR = true;
 
@@ -174,7 +174,10 @@ public class WatchedDoubleStepQREigen {
         if( val == 0 )
             val = 1;
 
-        val *= 0.95+0.2*(rand.nextDouble()-0.5);
+        numExceptional++;
+        // the closer the value is the better it handles identical eigenvalues cases
+        double p = 1-Math.pow(0.1,numExceptional);
+        val *= p+2.0*(1.0-p)*(rand.nextDouble()-0.5);
 
         if( rand.nextBoolean() )
             val = -val;
@@ -182,7 +185,6 @@ public class WatchedDoubleStepQREigen {
         performImplicitSingleStep(x1,x2,val);
 
         lastExceptional = steps;
-        numExceptional++;
     }
 
     /**
@@ -222,8 +224,6 @@ public class WatchedDoubleStepQREigen {
 
         // these equations are derived when the eigenvalues are extracted from the lower right
         // 2 by 2 matrix.  See page 388 of Fundamentals of Matrix Computations 2nd ed for details.
-
-
         double b11,b21,b31;
         if( useStandardEq ) {
             b11 = ((a11- z11)*(a11- z22)- z21 * z12)/a21 + a12;
@@ -314,7 +314,7 @@ public class WatchedDoubleStepQREigen {
         if( printHumps )
             System.out.println("removing last bump");
         // the last one has to be a single step
-        if( bulgeSingleStepQn(x2-2) && Q != null ) {
+        if( x2-2 >= 0 && bulgeSingleStepQn(x2-2) && Q != null ) {
             QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,x2-1,x2+1,_temp.data);
             if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                 throw new RuntimeException("Bad");

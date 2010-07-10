@@ -60,7 +60,8 @@ class CholeskyBlockHelper {
     public boolean decompose( DenseMatrix64F mat , int indexStart , int n ) {
         double m[] = mat.data;
 
-        double el_ii=0;
+        double el_ii;
+        double div_el_ii=0;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
@@ -84,8 +85,9 @@ class CholeskyBlockHelper {
                     el_ii = Math.sqrt(sum);
                     el[i*n+i] = el_ii;
                     m[indexStart+i*mat.numCols+i] = el_ii;
+                    div_el_ii = 1.0/el_ii;
                 } else {
-                    double v = sum/el_ii;
+                    double v = sum*div_el_ii;
                     el[j*n+i] = v;
                     m[indexStart+j*mat.numCols+i] = v;
                 }

@@ -248,7 +248,7 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
             double val = qralg.getSingularValue(i);
 
             if( val < 0 ) {
-                singularValues[i] = -val;
+                singularValues[i] = 0.0d - val;
 
                 if( computeU ) {
                     // compute the results of multiplying it by an element of -1 at this location in
@@ -257,7 +257,7 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
                     int stop = start+ Ut.numCols;
 
                     for( int j = start; j < stop; j++ ) {
-                        Ut.data[j] = -Ut.data[j];
+                        Ut.data[j] = 0.0d - Ut.data[j];
                     }
                 }
             } else {

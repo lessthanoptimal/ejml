@@ -50,8 +50,6 @@ import java.util.Random;
  * 
  * @author Peter Abeles
  */
-// TODO would this be faster if diag and off diag were interpolated into a single array?
-// TODO print out all the steps again.  I think there might be some cancelations
 public class SvdImplicitQrAlgorithm {
 
     // used in exceptional shifts
@@ -100,7 +98,7 @@ public class SvdImplicitQrAlgorithm {
 
     // After this many iterations it will perform an exceptional
     private int exceptionalThresh = 15;
-    private int maxIterations = exceptionalThresh*15;
+    private int maxIterations = exceptionalThresh*100;
 
     // should the steps use a sequence of predefined lambdas?
     boolean followScript;
@@ -321,11 +319,15 @@ public class SvdImplicitQrAlgorithm {
     public boolean isOffZero(int i) {
         double bottom = Math.abs(diag[i])+Math.abs(diag[i+1]);
 
-        return Math.abs(off[i]) <= 0.5*bottom* UtilEjml.EPS;
+        return Math.abs(off[i]) <= bottom* UtilEjml.EPS;
     }
 
     public boolean isDiagonalZero(int i) {
-        return Math.abs(diag[i]) <= maxValue* UtilEjml.EPS;
+//        return Math.abs(diag[i]) <= maxValue* UtilEjml.EPS;
+        
+        double bottom = Math.abs(diag[i+1])+Math.abs(off[i]);
+
+        return Math.abs(diag[i]) <= bottom* UtilEjml.EPS;
     }
 
     public void resetSteps() {
@@ -412,6 +414,12 @@ public class SvdImplicitQrAlgorithm {
         double b12 = off[x1];
 
         return Math.max( Math.abs(b11) , Math.abs(b12));
+//
+//        double b22 = diag[x1+1];
+//
+//        double scale = Math.max( Math.abs(b11) , Math.abs(b12));
+//
+//        return Math.max(scale,Math.abs(b22));
     }
 
     /**
@@ -581,20 +589,20 @@ public class SvdImplicitQrAlgorithm {
 
             // the shift will be the eigenvalue that is closest to the value below
             check = o2*o2 + d2*d2;
-
-            double diff0 = Math.abs(eigenSmall.value0.real-check);
-            double diff1 = Math.abs(eigenSmall.value1.real-check);
-
-            return diff0 < diff1 ? eigenSmall.value0.real :  eigenSmall.value1.real;
         } else {
             double a = diag[x2-1]/scale;
             double b = off[x2-1]/scale;
             double c = diag[x2]/scale;
 
-            eigenSmall.symm2x2_fast(a*a + b*b , a*b , c*c);
+            eigenSmall.symm2x2_fast(a*a , a*b , b*b + c*c);
 
-            return eigenSmall.value0.getReal();
+            check = b*b + c*c;
         }
+
+        double diff0 = Math.abs(eigenSmall.value0.real-check);
+        double diff1 = Math.abs(eigenSmall.value1.real-check);
+
+        return diff0 < diff1 ? eigenSmall.value0.real :  eigenSmall.value1.real;
     }
 
     /**
@@ -622,7 +630,7 @@ public class SvdImplicitQrAlgorithm {
         b12 /= scale;
         b22 /= scale;
 
-        eigenSmall.symm2x2_fast(b11*b11,b11*b12,b12*b12+b22*b22);
+        eigenSmall.symm2x2_fast(b11*b11, b11*b12 , b12*b12+b22*b22);
 
         off[x1] = 0;
         diag[x1] = scale*Math.sqrt(eigenSmall.value0.real);
@@ -798,7 +806,7 @@ public class SvdImplicitQrAlgorithm {
         double mag = 0.05*numExceptional;
         if( mag > 1.0 ) mag = 1.0;
 
-        double angle = Math.PI*(rand.nextDouble()-0.5)*mag;
+        double angle = 2.0*Math.PI*(rand.nextDouble()-0.5)*mag;
         performImplicitSingleStep(0,angle,true);
 
         // allow more convergence time

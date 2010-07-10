@@ -20,12 +20,13 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
 /**
  * <p>
- * Internally performs a {@link BidiagonalDecomposition} on a row major matrix.  This is efficient
+ * Internally performs a {@link org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecomposition} on a row major matrix.  This is efficient
  * on wide or square matrices.
  * </p>
  *
@@ -70,7 +71,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
     /**
      * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
      * false otherwise.
-     * 
+     *
      * @param A  The matrix that is being decomposed.  Not modified.
      * @return If it detects any errors or not.
      */
@@ -88,7 +89,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      */
     protected void init(DenseMatrix64F A , boolean overwrite ) {
         if( overwrite ) {
-            UBV = A;    
+            UBV = A;
         } else {
             UBV = A.copy();
         }
@@ -282,27 +283,13 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
-
-            double tau = 0;
-            // normalize to reduce overflow/underflow
-            // and compute tau for the reflector
-            for( int i = k; i < m; i++ ) {
-                double val = u[i] /= max;
-                tau += val*val;
-            }
-
-            tau = Math.sqrt(tau);
-
-            if( u[k] < 0 )
-                tau = -tau;
+            double tau = QrHelperFunctions.computeTau(k,m,u ,max);
 
             // write the reflector into the lower left column of the matrix
+            // while dividing u by nu
             double nu = u[k] + tau;
+            QrHelperFunctions.divideElements_Bcol(k+1,m,n,u,b,k,nu);
             u[k] = 1.0;
-
-            for( int i = k+1; i < m; i++ ) {
-                b[i*n+k] = u[i] /= nu;
-            }
 
             double gamma = nu/tau;
             gammasU[k] = gamma;
@@ -319,44 +306,22 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
     protected void computeV(int k) {
         double b[] = UBV.data;
 
-        // find the largest value in this column
-        // this is used to normalize the column and mitigate overflow/underflow
-        double max = 0;
-
         int row = k*n;
 
-        for( int i = k+1; i < n; i++ ) {
-            // copy the householder vector to vector outside of the matrix to reduce caching issues
-            // big improvement on larger matrices and a relatively small performance hit on small matrices.
-            double val = b[row+i];
-            val = Math.abs(val);
-            if( val > max )
-                max = val;
-        }
+        // find the largest value in this column
+        // this is used to normalize the column and mitigate overflow/underflow
+        double max = QrHelperFunctions.findMax(b,row+k+1,n-k-1);
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = 0;
-            // normalize to reduce overflow/underflow
-            // and compute tau for the reflector
-            for( int i = k+1; i < n; i++ ) {
-                double val = b[row+i] /= max;
-                tau += val*val;
-            }
-
-            tau = Math.sqrt(tau);
-
-            if( b[row+k+1] < 0 )
-                tau = -tau;
+            double tau = QrHelperFunctions.computeTau(k+1,n,b,row,max);
 
             // write the reflector into the lower left column of the matrix
             double nu = b[row+k+1] + tau;
-            u[k+1] = 1.0;
+            QrHelperFunctions.divideElements_Brow(k+2,n,u,b,row,nu);
 
-            for( int i = k+2; i < n; i++ ) {
-                u[i] = b[row+i] /= nu;
-            }
+            u[k+1] = 1.0;
 
             double gamma = nu/tau;
             gammasV[k] = gamma;

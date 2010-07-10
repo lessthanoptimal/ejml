@@ -73,7 +73,7 @@ public class BenchmarkQrDecomposition {
         Random rand = new Random(23423);
 
         int size[] = new int[]{2,4,10,100,500,1000,2000};
-        int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,15,3,1,1};
+        int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,7,2,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
