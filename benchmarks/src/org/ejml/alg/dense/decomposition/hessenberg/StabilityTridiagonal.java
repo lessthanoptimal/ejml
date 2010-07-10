@@ -17,9 +17,8 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition.svd;
+package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
@@ -33,20 +32,17 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class StabilitySvdlDecomposition {
+public class StabilityTridiagonal {
 
 
-    public static double evaluate( SingularValueDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( TridiagonalSimilarDecomposition alg , DenseMatrix64F orig ) {
 
-        if( !alg.decompose(orig)) {
-            return Double.NaN;
-        }
+        alg.decompose(orig);
 
-        SimpleMatrix U = SimpleMatrix.wrap(alg.getU(false));
-        SimpleMatrix W = SimpleMatrix.wrap(alg.getW(null));
-        SimpleMatrix Vt = SimpleMatrix.wrap(alg.getV(true));
+        SimpleMatrix O = SimpleMatrix.wrap(alg.getQ(null));
+        SimpleMatrix T = SimpleMatrix.wrap(alg.getT(null));
 
-        SimpleMatrix A_found = U.mult(W).mult(Vt);
+        SimpleMatrix A_found = O.mult(T).mult(O.transpose());
         SimpleMatrix A = SimpleMatrix.wrap(orig);
 
         double top = A_found.minus(A).normF();
@@ -57,8 +53,7 @@ public class StabilitySvdlDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat));
-        System.out.println("qr ult           = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(true,true,true),mat));
+        System.out.println("tri             = "+ evaluate(new TridiagonalSimilarDecomposition(),mat));
     }
 
     public static void main( String args [] ) {
@@ -68,7 +63,7 @@ public class StabilitySvdlDecomposition {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
         System.out.println("Square matrix");
-        DenseMatrix64F orig = RandomMatrices.createRandom(size,size,-1,1,rand);
+        DenseMatrix64F orig = RandomMatrices.createSymmetric(size,-1,1,rand);
         DenseMatrix64F mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
@@ -77,6 +72,6 @@ public class StabilitySvdlDecomposition {
             runAlgorithms(mat);
         }
 
-        System.out.println("  Done.");        
+        System.out.println("  Done.");
     }
 }

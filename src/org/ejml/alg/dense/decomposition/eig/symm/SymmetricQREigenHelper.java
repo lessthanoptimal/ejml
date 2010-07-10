@@ -32,7 +32,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class SymmetricQREigen {
+public class SymmetricQREigenHelper {
 
     // used in exceptional shifts
     protected Random rand = new Random(0x34671e);
@@ -70,9 +70,9 @@ public class SymmetricQREigen {
     private double bulge;
 
     // local helper functions
-    private double c,s;
+    private double c,s,c2,s2,cs;
 
-    public SymmetricQREigen() {
+    public SymmetricQREigenHelper() {
         diag = new double[1];
         off = new double[1];
         splits = new int[1];
@@ -253,14 +253,13 @@ public class SymmetricQREigen {
         if( byAngle ) {
             c = Math.cos(p);
             s = Math.sin(p);
-        } else {
-            if (computeRotation(a11-p, a12))
-                return;
-        }
 
-        double c2 = c*c;
-        double s2 = s*s;
-        double cs = c*s;
+            c2 = c*c;
+            s2 = s*s;
+            cs = c*s;
+        } else {
+            computeRotation(a11-p, a12);
+        }
 
         // multiply the rotator on the top left.
         diag[x1]   = c2*a11 + 2.0*cs*a12 + s2*a22;
@@ -281,14 +280,14 @@ public class SymmetricQREigen {
         if( byAngle ) {
             c = Math.cos(p);
             s = Math.sin(p);
+
+            c2 = c*c;
+            s2 = s*s;
+            cs = c*s;
         } else {
-            if (computeRotation(a11-p, a12))
-                return;
+            computeRotation(a11-p, a12);
         }
 
-        double c2 = c*c;
-        double s2 = s*s;
-        double cs = c*s;
 
         // multiply the rotator on the top left.
         diag[x1]   = c2*a11 + 2.0*cs*a12 + s2*a22;
@@ -302,26 +301,34 @@ public class SymmetricQREigen {
     /**
      * Computes the rotation and stores it in (c,s)
      */
-    private boolean computeRotation(double run, double rise) {
-        // normalize to improve resistance to overflow/underflow
-        double absRun = Math.abs(run);
-        double absRise = Math.abs(rise);
+    private void computeRotation(double run, double rise) {
+//        double alpha = Math.sqrt(run*run + rise*rise);
+//        c = run/alpha;
+//        s = rise/alpha;
 
-        double scale = absRun > absRise ? absRun : absRise;
+        if( Math.abs(rise) > Math.abs(run)) {
+            double k = run/rise;
 
-        // in removeBulge() this is redundant.  probably insignificant overhead caused by it
-        if( scale == 0 )
-            return true;
+            double bottom = 1.0 + k*k;
+            double bottom_sq = Math.sqrt(bottom);
 
-        absRun /= scale;
-        absRise /= scale;
+            s2 = 1.0/bottom;
+            c2 = k*k/bottom;
+            cs = k/bottom;
+            s = 1.0/bottom_sq;
+            c = k/bottom_sq;
+        } else {
+            double t = rise/run;
 
-        double alpha = scale*Math.sqrt(absRun*absRun + absRise*absRise);
+            double bottom = 1.0 + t*t;
+            double bottom_sq = Math.sqrt(bottom);
 
-        c = run/alpha;
-        s = rise/alpha;
-
-        return false;
+            c2 = 1.0/bottom;
+            s2 = t*t/bottom;
+            cs = t/bottom;
+            c = 1.0/bottom_sq;
+            s = t/bottom_sq;
+        }
     }
 
     protected void removeBulge( int x1 ) {
@@ -331,12 +338,7 @@ public class SymmetricQREigen {
         double a23 = off[x1+1];
         double a34 = off[x1+2];
 
-        if (computeRotation(a12, bulge))
-            return;
-
-        double c2 = c*c;
-        double s2 = s*s;
-        double cs = c*s;
+        computeRotation(a12, bulge);
 
         // multiply the rotator on the top left.
         diag[x1+1] = c2*a22 + 2.0*cs*a23 + s2*a33;
@@ -359,12 +361,7 @@ public class SymmetricQREigen {
         double a23 = off[x1+1];
         double a33 = diag[x1+2];
 
-        if (computeRotation(a12, bulge))
-            return;
-
-        double c2 = c*c;
-        double s2 = s*s;
-        double cs = c*s;
+        computeRotation(a12, bulge);
 
         // multiply the rotator on the top left.
         diag[x1+1] = c2*a22 + 2.0*cs*a23 + s2*a33;
@@ -394,8 +391,12 @@ public class SymmetricQREigen {
 
         // see if it is a pathological case.  the diagonal must already be zero
         // and the eigenvalues are all zero.  so just return
-        if( scale == 0 )
+        if( scale == 0 ) {
+            off[x1] = 0;
+            diag[x1] = 0;
+            diag[x1+1] = 0;
             return;
+        }
 
         a /= scale;
         b /= scale;
@@ -419,7 +420,7 @@ public class SymmetricQREigen {
         double mag = 0.05*numExceptional;
         if( mag > 1.0 ) mag = 1.0;
 
-        double theta = (rand.nextDouble()-0.5)*mag;
+        double theta = 2.0*(rand.nextDouble()-0.5)*mag;
         performImplicitSingleStep(theta,true);
 
         lastExceptional = steps;
@@ -439,6 +440,47 @@ public class SymmetricQREigen {
             x1 = 0;
 
         return true;
+    }
+
+    public double computeShift() {
+        if( x2-x1 >= 1 )
+            return computeWilkinsonShift();
+        else
+            return diag[x2];
+    }
+
+    public double computeWilkinsonShift() {
+        double a = diag[x2-1];
+        double b = off[x2-1];
+        double c = diag[x2];
+
+        // normalize to reduce overflow
+        double absA = Math.abs(a);
+        double absB = Math.abs(b);
+        double absC = Math.abs(c);
+
+        double scale = absA > absB ? absA : absB;
+        if( absC > scale ) scale = absC;
+
+        if( scale == 0 ) {
+            throw new RuntimeException("this should never happen");
+        }
+
+        a /= scale;
+        b /= scale;
+        c /= scale;
+
+        // TODO see 385
+
+        eigenSmall.symm2x2_fast(a,b,c);
+
+        double diff0 = Math.abs(c-eigenSmall.value0.real);
+        double diff1 = Math.abs(c-eigenSmall.value1.real);
+
+        if( diff0 < diff1 )
+            return scale*eigenSmall.value0.real;
+        else
+            return scale*eigenSmall.value1.real;
     }
 
     public int getMatrixSize() {

@@ -20,17 +20,12 @@
 package org.ejml.alg.dense.decomposition.eig.symm;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
 
 
 /**
  * <p>
- * Computes the eigenvalues of a symmetric tridiagonal matrix using the symmetric QR algorithm.  To
- * compute the eigenvalues of a general real symmetric matrix this needs to be used in conjunction
- * with {@link org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition}.
- * </p>
- * <p>
- * The symmetry is taken advantage of to minimize memory and cache misses by storing the
- * matrix in two arrays along the diagonals.  Rotators are used to compute the eigenvalues.
+ * Computes the eigenvalues and eigenvectors of a symmetric tridiagonal matrix using the symmetric QR algorithm.
  * </p>
  * <p>
  * This implementation is based on the algorithm is sketched out in:<br>
@@ -38,35 +33,52 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  * @author Peter Abeles
  */
-public class SymmetricQREigenvalue {
+public class SymmetricQrAlgorithm {
 
-    private SymmetricQREigen helper;
+    // performs many of the low level calculations
+    private SymmetricQREigenHelper helper;
+
+    // transpose of the orthogonal matrix
+    private DenseMatrix64F Q;
+
+    // the eigenvalues previously computed
+    private double eigenvalues[];
 
     private int exceptionalThresh = 15;
     private int maxIterations = exceptionalThresh*15;
 
     // should it ever analytically compute eigenvalues
     // if this is true then it can't compute eigenvalues at the same time
-    private boolean fastEigenvalues = true;
+    private boolean fastEigenvalues;
 
+    // is it following a script or not
+    private boolean followingScript;
 
-    public SymmetricQREigenvalue(SymmetricQREigen helper ) {
+    public SymmetricQrAlgorithm(SymmetricQREigenHelper helper ) {
         this.helper = helper;
     }
 
     /**
-     * Creates a new SymmetricQREigenvalue class that declares its own SymmetricQREigen.
+     * Creates a new SymmetricQREigenvalue class that declares its own SymmetricQREigenHelper.
      */
-    public SymmetricQREigenvalue() {
-        this.helper = new SymmetricQREigen();
-    }
-
-    public void setFastEigenvalues(boolean fastEigenvalues) {
-        this.fastEigenvalues = fastEigenvalues;
+    public SymmetricQrAlgorithm() {
+        this.helper = new SymmetricQREigenHelper();
     }
 
     public void setMaxIterations(int maxIterations) {
         this.maxIterations = maxIterations;
+    }
+
+    public DenseMatrix64F getQ() {
+        return Q;
+    }
+
+    public void setQ(DenseMatrix64F q) {
+        Q = q;
+    }
+
+    public void setFastEigenvalues(boolean fastEigenvalues) {
+        this.fastEigenvalues = fastEigenvalues;
     }
 
     /**
@@ -93,14 +105,33 @@ public class SymmetricQREigenvalue {
      * needs to be tridiagonal.  The bottom diagonal is assumed to be the same as the top.
      *
      * @param T A tridiagonal matrix.  Not modified.
-     * @return true if it successeds and false if it fails.
+     * @return true if it succeeds and false if it fails.
      */
-    public boolean process( DenseMatrix64F T ) {
-        // if T is null then assume init was called outside of this function
+    public boolean process( DenseMatrix64F T , double eigenvalues[] ) {
         if( T != null )
             helper.init(T);
-        // TODO Clean up.  make similar to SVD
+        if( Q == null )
+            Q = CommonOps.identity(helper.N);
+        helper.setQ(Q);
 
+        this.followingScript = true;
+        this.eigenvalues = eigenvalues;
+        this.fastEigenvalues = false;
+
+        return _process();
+    }
+
+    public boolean process( DenseMatrix64F T ) {
+        if( T != null )
+            helper.init(T);
+
+        this.followingScript = false;
+        this.eigenvalues = null;
+
+        return _process();
+    }
+
+    private boolean _process() {
         while( helper.x2 >= 0 ) {
             // if it has cycled too many times give up
             if( helper.steps > maxIterations ) {
@@ -108,6 +139,7 @@ public class SymmetricQREigenvalue {
             }
 
             if( helper.x1 == helper.x2 ) {
+//                System.out.println("Steps = "+helper.steps);
                 // see if it is done processing this submatrix
                 helper.resetSteps();
                 if( !helper.nextSplit() )
@@ -119,6 +151,7 @@ public class SymmetricQREigenvalue {
                 helper.eigenvalue2by2(helper.x1);
                 helper.setSubmatrix(helper.x2,helper.x2);
             } else if( helper.steps-helper.lastExceptional > exceptionalThresh ){
+                // it isn't a good sign if exceptional shifts are being done here
                 helper.exceptionalShift();
             } else {
                 performStep();
@@ -127,6 +160,7 @@ public class SymmetricQREigenvalue {
 //            helper.printMatrix();
         }
 
+//        helper.printMatrix();
         return true;
     }
 
@@ -143,11 +177,23 @@ public class SymmetricQREigenvalue {
             }
         }
 
-        // similar transforms
-        helper.performImplicitSingleStep(helper.diag[helper.x2],false);
-    }
+        double lambda;
 
-    public double[] getValues() {
-        return helper.diag;
+        if( followingScript ) {
+            if( helper.steps > 10 ) {
+                followingScript = false;
+                return;
+            } else {
+                // Using the true eigenvalues will in general lead to the fastest convergence
+                // typically takes 1 or 2 steps
+                lambda = eigenvalues[helper.x2];
+            }
+        } else {
+            // the current eigenvalue isn't working so try something else
+            lambda = helper.computeShift();
+        }
+
+        // similar transforms
+        helper.performImplicitSingleStep(lambda,false);
     }
 }

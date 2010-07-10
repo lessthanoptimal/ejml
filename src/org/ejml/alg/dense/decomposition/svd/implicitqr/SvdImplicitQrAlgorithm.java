@@ -47,7 +47,7 @@ import java.util.Random;
  * <p>
  * Note: To watch it process the matrix step by step uncomment commented out code.
  * </p>
- * 
+ *
  * @author Peter Abeles
  */
 public class SvdImplicitQrAlgorithm {
@@ -114,6 +114,8 @@ public class SvdImplicitQrAlgorithm {
 
     // if not in scripted mode is it looking for new zeros first?
     private boolean findingZeros;
+
+    double c,s;
 
     // for debugging
 //    SimpleMatrix B;
@@ -324,7 +326,7 @@ public class SvdImplicitQrAlgorithm {
 
     public boolean isDiagonalZero(int i) {
 //        return Math.abs(diag[i]) <= maxValue* UtilEjml.EPS;
-        
+
         double bottom = Math.abs(diag[i+1])+Math.abs(off[i]);
 
         return Math.abs(diag[i]) <= bottom* UtilEjml.EPS;
@@ -430,7 +432,6 @@ public class SvdImplicitQrAlgorithm {
         double b12 = off[x1];
         double b22 = diag[x1+1];
 
-        double c,s;
         if( byAngle ) {
             c = Math.cos(p);
             s = Math.sin(p);
@@ -439,10 +440,10 @@ public class SvdImplicitQrAlgorithm {
             double u1 = (b11/scale)*(b11/scale)-p;
             double u2 = (b12/scale)*(b11/scale);
 
-            double alpha = Math.sqrt(u1*u1 + u2*u2);
+            double gamma = Math.sqrt(u1*u1 + u2*u2);
 
-            c = u1 / alpha;
-            s = u2 / alpha;
+            c = u1/gamma;
+            s = u2/gamma;
         }
 
         // multiply the rotator on the top left.
@@ -468,25 +469,37 @@ public class SvdImplicitQrAlgorithm {
         }
     }
 
+    /**
+     * Computes a rotator that will set run to zero (?)
+     */
+    protected void computeRotator( double rise , double run )
+    {
+//        double gamma = Math.sqrt(rise*rise + run*run);
+//
+//        c = rise/gamma;
+//        s = run/gamma;
+
+        // See page 384 of Fundamentals of Matrix Computations 2nd
+          if( Math.abs(rise) < Math.abs(run)) {
+              double k = rise/run;
+
+              double bottom = Math.sqrt(1.0d+k*k);
+              s = 1.0/bottom;
+              c = k/bottom;
+          } else {
+              double t = run/rise;
+              double bottom = Math.sqrt(1.0d + t*t);
+              c = 1.0/bottom;
+              s = t/bottom;
+          }
+    }
+
     protected void removeBulgeLeft( int x1 , boolean notLast ) {
         double b11 = diag[x1];
         double b12 = off[x1];
         double b22 = diag[x1+1];
 
-        // normalize to improve resistance to overflow/underflow
-        double abs11 = Math.abs(b11);
-        double absBulge = Math.abs(bulge);
-
-        // this function is only called if the bulge is not zero, thus scale cannot be zero
-        double scale = absBulge > abs11 ? absBulge : abs11;
-
-        abs11/=scale;
-        absBulge/=scale;
-
-        double gamma = scale*Math.sqrt(abs11*abs11+absBulge*absBulge);
-
-        double c = b11/gamma;
-        double s = bulge/gamma;
+        computeRotator(b11,bulge);
 
         // apply rotator on the left
         diag[x1] = c*b11 + s*bulge;
@@ -521,20 +534,7 @@ public class SvdImplicitQrAlgorithm {
         double b22 = diag[x1+1];
         double b23 = off[x1+1];
 
-        // normalize to improve resistance to overflow/underflow
-        double abs12 = Math.abs(b12);
-        double absBulge = Math.abs(bulge);
-
-        // this function is only called if the bulge is not zero, thus scale cannot be zero
-        double scale = absBulge > abs12 ? absBulge : abs12;
-
-        abs12/=scale;
-        absBulge/=scale;
-
-        double gamma = scale*Math.sqrt(abs12*abs12+absBulge*absBulge);
-
-        double c = b12/gamma;
-        double s = bulge/gamma;
+        computeRotator(b12,bulge);
 
         // apply rotator on the right
         off[x1] = b12*c + bulge*s;
@@ -698,25 +698,7 @@ public class SvdImplicitQrAlgorithm {
         double b11 = off[m];
         double b21 = diag[m+1];
 
-        // normalize to improve resistance to overflow/underflow
-        double abs11 = Math.abs(b11);
-        double abs21 = Math.abs(b21);
-
-        double scale = abs11 > abs21 ? abs11 : abs21;
-
-        if( scale == 0.0 ) {
-            // nothing to do since they are both zero
-            bulge = 0;
-            return;
-        }
-
-        abs11/=scale;
-        abs21/=scale;
-
-        double gamma = scale*Math.sqrt(abs11*abs11+abs21*abs21);
-
-        double c = b21/gamma;
-        double s = -b11/gamma;
+        computeRotator(b21,-b11);
 
         // apply rotator on the right
         off[m] = 0;
@@ -756,20 +738,7 @@ public class SvdImplicitQrAlgorithm {
         double b11 = bulge;
         double b12 = diag[m+offset];
 
-        // normalize to improve resistance to overflow/underflow
-        double abs11 = Math.abs(b11);
-        double abs12 = Math.abs(b12);
-
-        // the scale can never be zero since this is not called if the bulge is zero
-        double scale = abs11 > abs12 ? abs11 : abs12;
-
-        abs11/=scale;
-        abs12/=scale;
-
-        double gamma = scale*Math.sqrt(abs11*abs11+abs12*abs12);
-
-        double c = b12/gamma;
-        double s = -b11/gamma;
+        computeRotator(b12,-b11);
 
         diag[m+offset] = b12*c-b11*s;
 

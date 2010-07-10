@@ -7,6 +7,8 @@
   methods.  This can significant speed things up and improve accuracy.
 - Added underflow stability benchmarks for some decompositions
 - Correct some issues in SVD and Symm EVD
+- Seed up SVD by removing need for some divisions
+- Symm EVD now uses the Wilkinson shift
 
 ----- Version 0.13
 

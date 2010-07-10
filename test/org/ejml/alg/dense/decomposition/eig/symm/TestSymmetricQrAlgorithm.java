@@ -31,16 +31,17 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSymmetricQREigenvalue {
+public class TestSymmetricQrAlgorithm {
 
-    /**
+
+        /**
      * There should no need to do anything in this case.
      */
     @Test
     public void shouldNotChange() {
         DenseMatrix64F A = CommonOps.diag(2,3,4,5,6);
 
-        SymmetricQREigenvalue alg = new SymmetricQREigenvalue();
+        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
         assertTrue(alg.process(A));
 
@@ -60,7 +61,7 @@ public class TestSymmetricQREigenvalue {
             A.set(i,i-1,i+0.5);
         }
 
-        SymmetricQREigenvalue alg = new SymmetricQREigenvalue();
+        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
         assertTrue(alg.process(A));
 
@@ -87,7 +88,7 @@ public class TestSymmetricQREigenvalue {
 
 //        A.print();
 
-        SymmetricQREigenvalue alg = new SymmetricQREigenvalue();
+        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
         assertTrue(alg.process(A));
 
@@ -108,7 +109,7 @@ public class TestSymmetricQREigenvalue {
         TridiagonalSimilarDecomposition tridiag = new TridiagonalSimilarDecomposition();
         tridiag.decompose(A);
 
-        SymmetricQREigenvalue alg = new SymmetricQREigenvalue();
+        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
         assertTrue(alg.process(tridiag.getT(null)));
 
@@ -119,7 +120,7 @@ public class TestSymmetricQREigenvalue {
     /**
      * Counts the number of times the specified eigenvalue appears.
      */
-    public int countNumFound( SymmetricQREigenvalue alg , double val , double tol ) {
+    public int countNumFound( SymmetricQrAlgorithm alg , double val , double tol ) {
         int total = 0;
 
         for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {
@@ -132,4 +133,5 @@ public class TestSymmetricQREigenvalue {
 
         return total;
     }
+
 }

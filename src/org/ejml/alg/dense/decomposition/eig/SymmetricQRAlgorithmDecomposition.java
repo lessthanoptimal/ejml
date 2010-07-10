@@ -20,9 +20,8 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
-import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigen;
-import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenvalue;
-import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenvector;
+import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenHelper;
+import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -39,8 +38,7 @@ import org.ejml.ops.CommonOps;
  * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition. page 377-385
  * </p>
  *
- * @see SymmetricQREigenvalue
- * @see SymmetricQREigenvector
+ * @see org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm
  * @see org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition
  *
  * @author Peter Abeles
@@ -51,11 +49,9 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
     // matrix and can be easily computed.
     private TridiagonalSimilarDecomposition decomp;
     // helper class for eigenvalue and eigenvector algorithms
-    private SymmetricQREigen helper;
-    // computes the eigenvalues
-    private SymmetricQREigenvalue value;
+    private SymmetricQREigenHelper helper;
     // computes the eigenvectors
-    private SymmetricQREigenvector vector;
+    private SymmetricQrAlgorithm vector;
 
     // should it compute eigenvectors at the same time as the eigenvalues?
     private boolean computeVectorsWithValues = false;
@@ -80,13 +76,9 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         this.computeVectors = computeVectors;
 
         decomp = new TridiagonalSimilarDecomposition();
-        helper = new SymmetricQREigen();
+        helper = new SymmetricQREigenHelper();
 
-        value = new SymmetricQREigenvalue(helper);
-        if( computeVectors )
-            vector = new SymmetricQREigenvector(helper);
-        else
-            value.setFastEigenvalues(true);
+        vector = new SymmetricQrAlgorithm(helper);
     }
 
     public void setComputeVectorsWithValues(boolean computeVectorsWithValues) {
@@ -94,8 +86,6 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
             throw new IllegalArgumentException("Compute eigenvalues has been set to false");
 
         this.computeVectorsWithValues = computeVectorsWithValues;
-
-        value.setFastEigenvalues(!computeVectorsWithValues);
     }
 
     /**
@@ -105,7 +95,6 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
      * @param max The maximum number of QR iterations it will perform.
      */
     public void setMaxIterations( int max ) {
-        value.setMaxIterations(max);
         vector.setMaxIterations(max);
     }
 
@@ -161,8 +150,10 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         // tell eigenvector algorithm to update this matrix as it computes the rotators
         helper.setQ(V);
 
+        vector.setFastEigenvalues(false);
+
         // extract the eigenvalues
-        if( !value.process(null) )
+        if( !vector.process(null) )
             return false;
 
         // the V matrix contains the eigenvectors.  Convert those into column vectors
@@ -212,8 +203,11 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         diag = helper.copyDiag(diag);
         off = helper.copyOff(off);
 
+       vector.setQ(null);
+       vector.setFastEigenvalues(true);
+
         // extract the eigenvalues
-        if( !value.process(null) )
+        if( !vector.process(null) )
             return false;
 
         // save a copy of them since this data structure will be recycled next

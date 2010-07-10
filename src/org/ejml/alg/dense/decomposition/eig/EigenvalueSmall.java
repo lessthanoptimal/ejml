@@ -110,18 +110,26 @@ public class EigenvalueSmall {
         }
     }
 
+    /**
+     * Compute the symmetric eigenvalue using a slightly safer technique
+     */
+    // See page 385 of Fundamentals of Matrix Computations 2nd
     public void symm2x2_fast( double a11 , double a12, double a22 )
     {
-        double left = (a11+a22)/2.0;
-        double inside = 4.0*a12*a12 + (a11-a22)*(a11-a22);
-
-        if( inside < 0 ) {
-            throw new RuntimeException("The inside should never be negative");
-        } else {
-            double right = Math.sqrt(inside)/2.0;
-            value0.real = (left+right);
-            value1.real = (left-right);
-        }
+//        double p = (a11 - a22)*0.5;
+//        double r = Math.sqrt(p*p + a12*a12);
+//
+//        value0.real = a22 + a12*a12/(r-p);
+//        value1.real = a22 - a12*a12/(r+p);
+//    }
+//
+//    public void symm2x2_std( double a11 , double a12, double a22 )
+//    {
+        double left = (a11+a22)*0.5;
+        double b = (a11-a22)*0.5;
+        double right = Math.sqrt(b*b+a12*a12);
+        value0.real = (left+right);
+        value1.real = (left-right);
     }
 
 }
