@@ -209,7 +209,7 @@ public class SymmetricQREigenHelper {
     protected boolean isZero( int index ) {
         double bottom = Math.abs(diag[index])+Math.abs(diag[index+1]);
 
-        return( Math.abs(off[index]) <= 0.5*bottom*UtilEjml.EPS);
+        return( Math.abs(off[index]) <= bottom*UtilEjml.EPS);
     }
 
     protected void performImplicitSingleStep( double lambda , boolean byAngle )
@@ -288,7 +288,6 @@ public class SymmetricQREigenHelper {
             computeRotation(a11-p, a12);
         }
 
-
         // multiply the rotator on the top left.
         diag[x1]   = c2*a11 + 2.0*cs*a12 + s2*a22;
         diag[x1+1] = c2*a22 - 2.0*cs*a12 + s2*a11;
@@ -366,7 +365,7 @@ public class SymmetricQREigenHelper {
         // multiply the rotator on the top left.
         diag[x1+1] = c2*a22 + 2.0*cs*a23 + s2*a33;
         diag[x1+2] = c2*a33 - 2.0*cs*a23 + s2*a22;
-        off[x1] = c*a12+s*bulge;
+        off[x1] = c*a12 + s*bulge;
         off[x1+1] = a23*(c2-s2) + cs*(a33 - a22);
 
         if( Q != null )
@@ -474,8 +473,9 @@ public class SymmetricQREigenHelper {
 
         eigenSmall.symm2x2_fast(a,b,c);
 
-        double diff0 = Math.abs(c-eigenSmall.value0.real);
-        double diff1 = Math.abs(c-eigenSmall.value1.real);
+        // return the eigenvalue closest to c
+        double diff0 = Math.abs(eigenSmall.value0.real-c);
+        double diff1 = Math.abs(eigenSmall.value1.real-c);
 
         if( diff0 < diff1 )
             return scale*eigenSmall.value0.real;

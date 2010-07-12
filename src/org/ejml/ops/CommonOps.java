@@ -1548,11 +1548,11 @@ public class CommonOps {
      */
     public static DenseMatrix64F kron( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
     {
-        int w = A.numCols*B.numCols;
-        int h = A.numRows*B.numRows;
+        int numColsC = A.numCols*B.numCols;
+        int numRowsC = A.numRows*B.numRows;
         if( C == null ) {
-            C = new DenseMatrix64F(w,h);
-        } else if( C.numCols != w || C.numRows != h) {
+            C = new DenseMatrix64F(numRowsC,numColsC);
+        } else if( C.numCols != numColsC || C.numRows != numRowsC) {
             throw new IllegalArgumentException("C does not have the expected dimensions");
         }
 

@@ -679,5 +679,22 @@ public class TestCommonOps {
         CommonOps.kron(A,B,C);
 
         assertTrue(MatrixFeatures.isIdentical(C,C_expected,1e-8));
+
+        // test various shapes for problems
+        for( int i = 1; i <= 3; i++ ) {
+            for( int j = 1; j <= 3; j++ ) {
+                for( int k = 1; k <= 3; k++ ) {
+                    for( int l = 1; l <= 3; l++ ) {
+                        A = RandomMatrices.createRandom(i,j,rand);
+                        B = RandomMatrices.createRandom(k,l,rand);
+
+                        C = CommonOps.kron(A,B,null);
+
+                        assertEquals(i*k,C.numRows);
+                        assertEquals(j*l,C.numCols);
+                    }
+                }
+            }
+        }
     }
 }

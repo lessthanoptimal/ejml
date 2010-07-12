@@ -211,6 +211,24 @@ public class SimpleMatrix {
         return ret;
     }
 
+    /**
+     * <p>
+     * Computes the Kronecker product between this matrix and the provided B matrix:<br>
+     * <br>
+     * C = kron(A,B)
+     * </p>
+
+     * @see CommonOps#kron(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     *
+     * @param B The right matrix in the operation. Not modified.
+     * @return Kronecker product between this matrix and B.
+     */
+    public SimpleMatrix kron( SimpleMatrix B ) {
+        DenseMatrix64F C = CommonOps.kron(mat,B.mat,null);
+
+        return SimpleMatrix.wrap(C);
+    }
+
     // TODO should this function be added back?  It makes the code hard to read when its used
 //    /**
 //     * <p>
@@ -580,10 +598,20 @@ public class SimpleMatrix {
     }
 
     /**
-     * Prints the matrix to standard out.
+     * Prints the matrix to standard out with the specified precision.
      */
     public void print(int numChar , int precision) {
         UtilEjml.print(mat,numChar,precision);
+    }
+
+    /**
+     * <p>
+     * Prints the matrix to standard out given a printf() style floating point format,
+     * e.g. print("%f").
+     * </p>
+     */
+    public void print( String format ) {
+        UtilEjml.print(mat,format);
     }
 
     /**
@@ -613,6 +641,28 @@ public class SimpleMatrix {
     }
 
     /**
+     * Extracts a row or column from this matrix and returns it as a row matrix of the appropriate
+     * length.
+     *
+     * @param extractRow is a row vector begin extracted.
+     * @param element The row or column the vector is contained in.
+     * @return Extracted vector.
+     */
+    public SimpleMatrix subvector( boolean extractRow , int element )
+    {
+        int length = extractRow ? mat.numCols : mat.numRows;
+
+        DenseMatrix64F ret = new DenseMatrix64F(length,1);
+        if( extractRow ) {
+            SpecializedOps.subvector(mat,element,0,length,true,0,ret);
+        } else {
+            SpecializedOps.subvector(mat,0,element,length,false,0,ret);
+        }
+
+        return SimpleMatrix.wrap(ret);
+    }
+
+    /**
      * Checks to see if matrix 'a' is the same as this matrix within the specified
      * tolerance.
      *
@@ -634,11 +684,20 @@ public class SimpleMatrix {
     }
 
     /**
-     * Returns the Singular Value Decomposition (SVD) of this matrix.
-     * @return SVD of this matrix.
+     * Computes a compact Singular Value Decomposition (SVD) of this matrix.
+     * @return A compact SVD of this matrix.
      */
     public SVD svd() {
-        return new SVD();
+        return new SVD(true);
+    }
+
+    /**
+     * Computes the SVD in either  compact format or full format.
+     *
+     * @return SVD of this matrix.
+     */
+    public SVD svd( boolean compact ) {
+        return new SVD(compact);
     }
 
     /**
@@ -647,6 +706,19 @@ public class SimpleMatrix {
     public EVD eig() {
         return new EVD();
     }
+
+    /**
+     * Inserts matrix B into this matrix at location (insertRow, insertCol).
+     *
+     * @param insertRow First row the matrix is to be inserted into.
+     * @param insertCol First column the matrix is to be inserted into.
+     * @param B The matrix that is being inserted.
+     */
+    public void insertIntoThis(int insertRow, int insertCol, SimpleMatrix B) {
+        SpecializedOps.insert(B.getMatrix(),insertRow,insertCol,mat);
+    }
+
+
 
     /**
      * Wrapper around SVD for SimpleMatrix
@@ -658,8 +730,8 @@ public class SimpleMatrix {
         SimpleMatrix W;
         SimpleMatrix V;
 
-        public SVD() {
-            svd = DecompositionFactory.svd();
+        public SVD( boolean compact ) {
+            svd = DecompositionFactory.svd(true,true,compact);
             if( !svd.decompose(mat) )
                 throw new RuntimeException("Decomposition failed");
             U = SimpleMatrix.wrap(svd.getU(false));

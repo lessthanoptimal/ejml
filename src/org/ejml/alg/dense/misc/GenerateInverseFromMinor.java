@@ -107,10 +107,10 @@ public class GenerateInverseFromMinor {
                 "        }\n\n");
         stream.print(
                 "        if( mat.numRows == 2 ) {\n" +
-                        "            inv2(mat,inv,max);\n");
+                        "            inv2(mat,inv,1.0/max);\n");
         for( int i = 3; i <= N; i++ ) {
             stream.print("        } else if( mat.numRows == "+i+" ) {\n" +
-                    "            inv"+i+"(mat,inv,max);            \n");
+                    "            inv"+i+"(mat,inv,1.0/max);            \n");
         }
         stream.print("        } else {\n" +
                 "            throw new IllegalArgumentException(\"Not supported\");\n" +
@@ -120,7 +120,7 @@ public class GenerateInverseFromMinor {
 
     private void printFunction( int N )
     {
-        stream.print("    public static void inv"+N+"( DenseMatrix64F mat , DenseMatrix64F inv , double div )\n" +
+        stream.print("    public static void inv"+N+"( DenseMatrix64F mat , DenseMatrix64F inv , double scale )\n" +
                 "    {\n" +
                 "        double []data = mat.data;\n"+
                 "\n");
@@ -133,7 +133,7 @@ public class GenerateInverseFromMinor {
         for( int i = 1; i <= N; i++ ) {
             for( int j = 1; j <= N; j++ , index++) {
                 matrix[index] = index;
-                stream.print("        double "+a(index)+" = data[ "+index+" ]/div;\n");
+                stream.print("        double "+a(index)+" = data[ "+index+" ]*scale;\n");
             }
         }
         stream.println();
@@ -158,7 +158,7 @@ public class GenerateInverseFromMinor {
         for( int i = 2; i <= N; i++ ) {
             stream.print(" + "+a(i-1)+"*m"+1+""+i);
         }
-        stream.println(")*div;");
+        stream.println(")/scale;");
         stream.println();
         stream.print("        data = inv.data;\n");
 

@@ -295,7 +295,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         }
 
         if( w < numCols ) {
-            u[w] = 0.0d - tau;
+            u[w] = -tau;
         }
     }
 

@@ -283,17 +283,17 @@ public class SpecializedOps {
      * @param colA Column of the first element that is extracted.
      * @param length Length of the extracted vector.
      * @param row If true a row vector is extracted, otherwise a column vector is extracted.
-     * @param v0 First element in 'v' where the results are extracted to.
+     * @param offsetV First element in 'v' where the results are extracted to.
      * @param v Vector where the results are written to. Modified.
      */
-    public static void subvector(DenseMatrix64F A, int rowA, int colA, int length , boolean row, int v0, DenseMatrix64F v) {
+    public static void subvector(DenseMatrix64F A, int rowA, int colA, int length , boolean row, int offsetV, DenseMatrix64F v) {
         if( row ) {
             for( int i = 0; i < length; i++ ) {
-                v.data[v0+i] = A.get(rowA,colA+i);
+                v.data[offsetV +i] = A.get(rowA,colA+i);
             }
         } else {
             for( int i = 0; i < length; i++ ) {
-                v.data[v0+i] = A.get(rowA+i,colA);
+                v.data[offsetV +i] = A.get(rowA+i,colA);
             }
         }
     }

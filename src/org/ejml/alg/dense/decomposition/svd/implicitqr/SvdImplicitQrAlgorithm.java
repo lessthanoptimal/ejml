@@ -577,7 +577,7 @@ public class SvdImplicitQrAlgorithm {
      */
     public double selectWilkinsonShift( double scale ) {
 
-        double check;
+        double a11,a22;
 
         if( x2-x1 > 1 ) {
             double d1 = diag[x2-1] / scale;
@@ -585,22 +585,24 @@ public class SvdImplicitQrAlgorithm {
             double d2 = diag[x2] / scale;
             double o2 = off[x2-1] / scale;
 
-            eigenSmall.symm2x2_fast(o1*o1 + d1*d1 , o2*d1 , o2*o2 + d2*d2);
+            a11 = o1*o1 + d1*d1;
+            a22 = o2*o2 + d2*d2;
 
-            // the shift will be the eigenvalue that is closest to the value below
-            check = o2*o2 + d2*d2;
+            eigenSmall.symm2x2_fast(a11 , o2*d1 , a22);
         } else {
             double a = diag[x2-1]/scale;
             double b = off[x2-1]/scale;
             double c = diag[x2]/scale;
 
-            eigenSmall.symm2x2_fast(a*a , a*b , b*b + c*c);
+            a11 = a*a;
+            a22 = b*b + c*c;
 
-            check = b*b + c*c;
+            eigenSmall.symm2x2_fast(a11, a*b , a22);
         }
 
-        double diff0 = Math.abs(eigenSmall.value0.real-check);
-        double diff1 = Math.abs(eigenSmall.value1.real-check);
+        // return the eigenvalue closest to a22
+        double diff0 = Math.abs(eigenSmall.value0.real-a22);
+        double diff1 = Math.abs(eigenSmall.value1.real-a22);
 
         return diff0 < diff1 ? eigenSmall.value0.real :  eigenSmall.value1.real;
     }

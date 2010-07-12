@@ -1,5 +1,5 @@
 For 0.14 Release
-- If scale = 0 in QR algorithm handle that better.  no divided by zero ever
+- Change number of QR iterations to be proportional to the size of the matrix
 
 For DenseMatrix64F
 

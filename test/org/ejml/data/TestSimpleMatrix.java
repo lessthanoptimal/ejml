@@ -22,6 +22,7 @@ package org.ejml.data;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
 import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.SpecializedOps;
 import org.junit.Test;
 
 import java.util.Random;
@@ -119,6 +120,17 @@ public class TestSimpleMatrix {
 
         DenseMatrix64F c_dense = new DenseMatrix64F(3,3);
         CommonOps.mult(a.mat,b.mat,c_dense);
+
+        UtilTestMatrix.checkEquals(c_dense,c.mat);
+    }
+
+    @Test
+    public void kron() {
+        SimpleMatrix a = SimpleMatrix.random(3,2,rand);
+        SimpleMatrix b = SimpleMatrix.random(2,3,rand);
+        SimpleMatrix c = a.kron(b);
+
+        DenseMatrix64F c_dense = CommonOps.kron(a.getMatrix(),b.getMatrix(),null);
 
         UtilTestMatrix.checkEquals(c_dense,c.mat);
     }
@@ -345,6 +357,39 @@ public class TestSimpleMatrix {
             Complex64F c = evd.getEigenvalue(i);
             assertTrue(c != null );
             evd.getEigenVector(i);
+        }
+    }
+
+    @Test
+    public void insertIntoThis() {
+        SimpleMatrix A = new SimpleMatrix(6,4);
+        SimpleMatrix B = SimpleMatrix.random(3,2,rand);
+
+        DenseMatrix64F A_ = A.getMatrix().copy();
+
+        A.insertIntoThis(1,2,B);
+
+        SpecializedOps.insert(B.getMatrix(),1,2,A_);
+
+        UtilTestMatrix.checkEquals(A_,A.getMatrix());
+    }
+
+    @Test
+    public void subvector() {
+        SimpleMatrix A = SimpleMatrix.random(10,7,rand);
+
+        SimpleMatrix c = A.subvector(false,2);
+        SimpleMatrix r = A.subvector(true,2);
+
+        assertEquals(A.numCols(),r.numRows());
+        assertEquals(A.numRows(),c.numRows());
+
+        for( int i = 0; i < A.numCols(); i++ ) {
+            assertEquals(A.get(2,i),r.get(i,0),1e-10);
+        }
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            assertEquals(A.get(i,2),c.get(i,0),1e-10);
         }
     }
 }

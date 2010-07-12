@@ -125,11 +125,11 @@ public class EigenvalueSmall {
 //
 //    public void symm2x2_std( double a11 , double a12, double a22 )
 //    {
-        double left = (a11+a22)*0.5;
-        double b = (a11-a22)*0.5;
+        double left  = (a11+a22)*0.5;
+        double b     = (a11-a22)*0.5;
         double right = Math.sqrt(b*b+a12*a12);
-        value0.real = (left+right);
-        value1.real = (left-right);
+        value0.real = left + right;
+        value1.real = left - right;
     }
 
 }
