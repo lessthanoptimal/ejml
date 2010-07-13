@@ -9,8 +9,8 @@
 - Correct some issues in SVD and Symm EVD
 - Seed up SVD by removing need for some divisions
 - Symm EVD now uses the Wilkinson shift
-- Fixed a bug in kron() and added kron() to SimpleMatrix
-- Added functions to SimpleMatrix kron(), insertIntoThis(), subvector()
+- Fixed a bug in kron().
+- Added several new functions to SimpleMatrix and cleaned up function names.
 
 ----- Version 0.13
 

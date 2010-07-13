@@ -294,9 +294,10 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
     }
 
     /**
-     * Returns the number of elements in this matrix.
+     * Returns the number of elements in this matrix, which is equal to
+     * the number of rows times the number of columns.
      *
-     * @return The number of elements.
+     * @return The number of elements in the matrix.
      */
     @Override
     public int getNumElements() {

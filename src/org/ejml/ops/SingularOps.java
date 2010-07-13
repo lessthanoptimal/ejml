@@ -188,7 +188,7 @@ public class SingularOps {
             }
         }
 
-        // copy the row from v
+        // copy the column from v
         SpecializedOps.subvector(V,0,smallestIndex,V.numCols,false,0,v);
 
         return v;

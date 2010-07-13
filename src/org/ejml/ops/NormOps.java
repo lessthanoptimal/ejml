@@ -186,6 +186,7 @@ public class NormOps {
      * Computes the Frobenius matrix norm:<br>
      * <br>
      * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
+     * </p>
      * <p>
      * This is equivalent to the element wise p=2 norm.  See {@link #fastNormF} for another implementation
      * that is faster, but more prone to underflow/overflow errors.

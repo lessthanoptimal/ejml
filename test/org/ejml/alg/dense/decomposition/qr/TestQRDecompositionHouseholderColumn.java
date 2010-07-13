@@ -66,17 +66,17 @@ public class TestQRDecompositionHouseholderColumn extends GenericQrCheck {
 
         qr.householder(w,A.getMatrix());
 
-        SimpleMatrix U = new SimpleMatrix(width,1,qr.getQR()[w]).submatrix(w,width-1,0,0);
+        SimpleMatrix U = new SimpleMatrix(width,1,qr.getQR()[w]).extractMatrix(w,width-1,0,0);
         U.set(0,0,1); // this is not explicity set and is assumed to be 1
         SimpleMatrix I = SimpleMatrix.identity(width-w);
-        SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
+        SimpleMatrix Q = I.minus(U.mult(U.transpose()).elementMult(qr.getGamma()));
 
 
         // check the expected properties of Q
         assertTrue(Q.isIdentical(Q.transpose(),1e-6));
         assertTrue(Q.isIdentical(Q.invert(),1e-6));
 
-        SimpleMatrix result = Q.mult(A.submatrix(w,width-1,w,width-1));
+        SimpleMatrix result = Q.mult(A.extractMatrix(w,width-1,w,width-1));
 
         for( int i = 1; i < width-w; i++ ) {
             assertEquals(0,result.get(i,0),1e-5);
@@ -112,10 +112,10 @@ public class TestQRDecompositionHouseholderColumn extends GenericQrCheck {
         // compute the results using standard matrix operations
         SimpleMatrix I = SimpleMatrix.identity(width-w);
 
-        SimpleMatrix u_sub = U.submatrix(w,width-1,0,0);
+        SimpleMatrix u_sub = U.extractMatrix(w,width-1,0,0);
         u_sub.set(0,0,1);// assumed to be 1 in the algorithm
-        SimpleMatrix A_sub = A.submatrix(w,width-1,w,width-1);
-        SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
+        SimpleMatrix A_sub = A.extractMatrix(w,width-1,w,width-1);
+        SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).elementMult(gamma)).mult(A_sub);
 
         qr.updateA(w,U.getMatrix().getData(),gamma,tau);
 

@@ -25,8 +25,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -90,6 +89,7 @@ public class TestSpecializedOps {
             }
         }
     }
+
     @Test
     public void diffNormF() {
         DenseMatrix64F a = RandomMatrices.createRandom(3,2,rand);
@@ -252,6 +252,11 @@ public class TestSpecializedOps {
                 assertEquals(A.get(i,j),B.get(i-1,j-2),1e-8);
             }
         }
+    }
+
+    @Test
+    public void extractDiag() {
+        fail("Implement");
     }
 
     @Test

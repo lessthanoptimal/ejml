@@ -144,8 +144,14 @@ public class SimpleMatrix {
     }
 
     /**
+     * <p>
      * Creates a matrix where all but the diagonal elements are zero.  The values
      * of the diagonal elements are specified by the parameter 'vals'.
+     * </p>
+     *
+     * <p>
+     * To extract the diagonal elements from a matrix see {@link #extractDiag()}.
+     * </p>
      *
      * @see org.ejml.ops.CommonOps#diag(double...)
      *
@@ -350,7 +356,7 @@ public class SimpleMatrix {
      * @param val The multiplication factor.
      * @return The scaled matrix.
      */
-    public SimpleMatrix scale( double val ) {
+    public SimpleMatrix elementMult( double val ) {
         SimpleMatrix ret = new SimpleMatrix(this);
 
         CommonOps.scale(val,ret.mat);
@@ -452,7 +458,11 @@ public class SimpleMatrix {
     }
 
     /**
-     * Computes the Frobenius normal of the matrix.
+     * <p>
+     * Computes the Frobenius normal of the matrix:<br>
+     * <br>
+     * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
+     * </p>
      *
      * @see NormOps#normF(DenseMatrix64F)
      *
@@ -460,6 +470,20 @@ public class SimpleMatrix {
      */
     public double normF() {
         return NormOps.normF(mat);
+    }
+
+    /**
+     * <p>
+     * The condition p = 2 number of a matrix is used to measure the sensitivity of the linear
+     * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.
+     * </p>
+     *
+     * @see NormOps#conditionP2(DenseMatrix64F)
+     *
+     * @return The condition number.
+     */
+    public double conditionP2() {
+        return NormOps.conditionP2(mat);
     }
 
     /**
@@ -487,7 +511,15 @@ public class SimpleMatrix {
     }
 
     /**
-     * Reshapes the matrix.
+     * <p>
+     * Reshapes the matrix to the specified number of rows and columns.  If the total number of elements
+     * is <= number of elements it had before the data is saved.  Otherwise a new internal array is
+     * declared and the old data lost.
+     * </p>
+     *
+     * <p>
+     * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,false).
+     * </p>
      *
      * @see Matrix64F#reshape(int,int,boolean)
      *
@@ -496,6 +528,25 @@ public class SimpleMatrix {
      */
     public void reshape( int numRows , int numCols ) {
         mat.reshape(numRows,numCols, false);
+    }
+
+    /**
+     * <p>
+     * Increases the number of rows and/or columns by padding the matrix with zeros.
+     * </p>
+     *
+     * <p>
+     * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,true).
+     * </p>
+     *
+     * @param numRows The new number of rows in the matrix. Must be >= the old number of rows.
+     * @param numCols The new number of columns in the matrix. Must be >= the old number of columns.
+     */
+    public void grow( int numRows , int numCols ) {
+        if( mat.numRows > numRows || mat.numCols > numCols ) {
+            throw new IllegalArgumentException("The requested size must be more than the current matrix size.");
+        }
+        mat.reshape(numRows,numCols,true);
     }
 
     /**
@@ -591,6 +642,17 @@ public class SimpleMatrix {
     }
 
     /**
+     * Returns the number of elements in this matrix, which is equal to
+     * the number of rows times the number of columns.
+     *
+     * @return The number of elements in the matrix.
+     */
+    public int getNumElements() {
+        return mat.getNumElements();
+    }
+
+
+    /**
      * Prints the matrix to standard out.
      */
     public void print() {
@@ -631,8 +693,8 @@ public class SimpleMatrix {
      * @param y1 Stop row.
      * @return The submatrix.
      */
-    public SimpleMatrix submatrix(int y0 , int y1,
-                                  int x0 , int x1 ) {
+    public SimpleMatrix extractMatrix(int y0 , int y1,
+                                      int x0 , int x1 ) {
         SimpleMatrix ret = new SimpleMatrix(y1-y0+1,x1-x0+1);
 
         SpecializedOps.extract(mat,y0,y1,x0,x1,ret.mat);
@@ -648,7 +710,7 @@ public class SimpleMatrix {
      * @param element The row or column the vector is contained in.
      * @return Extracted vector.
      */
-    public SimpleMatrix subvector( boolean extractRow , int element )
+    public SimpleMatrix extractVector( boolean extractRow , int element )
     {
         int length = extractRow ? mat.numCols : mat.numRows;
 
@@ -660,6 +722,19 @@ public class SimpleMatrix {
         }
 
         return SimpleMatrix.wrap(ret);
+    }
+
+    /**
+     * <p>
+     * Extracts the diagonal from this matrix and returns them inside a column vector.
+     * </p>
+     * 
+     * @see org.ejml.ops.SpecializedOps#extractDiag(DenseMatrix64F, DenseMatrix64F)
+     * @return Diagonal elements inside a column vector.
+     */
+    public SimpleMatrix extractDiag()
+    {
+        return SimpleMatrix.wrap(SpecializedOps.extractDiag(mat,null));
     }
 
     /**
@@ -718,7 +793,24 @@ public class SimpleMatrix {
         SpecializedOps.insert(B.getMatrix(),insertRow,insertCol,mat);
     }
 
+    /**
+     * Returns the maximum absolute value of all the elements in this matrix.  This is
+     * equivalent the the infinite p-norm of the matrix.
+     *
+     * @return Largest absolute value of any element.
+     */
+    public double elementMaxAbs() {
+        return CommonOps.elementMaxAbs(mat);
+    }
 
+    /**
+     * Computes the sum of all the elements in the matrix.
+     *
+     * @return Sum of all the elements.
+     */
+    public double elementSum() {
+        return CommonOps.elementSum(mat);
+    }
 
     /**
      * Wrapper around SVD for SimpleMatrix
@@ -796,6 +888,7 @@ public class SimpleMatrix {
          * @return Null space vector.
          */
         public SimpleMatrix nullSpace() {
+            // TODO take advantage of the singular values being ordered already
             return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
         }
 

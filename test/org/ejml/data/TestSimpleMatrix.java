@@ -27,8 +27,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -252,13 +251,18 @@ public class TestSimpleMatrix {
     }
 
     @Test
-    public void norm() {
+    public void normF() {
         SimpleMatrix a = SimpleMatrix.random(3,3,rand);
 
         double norm = a.normF();
         double dnorm = NormOps.fastNormF(a.mat);
 
         assertEquals(dnorm,norm,1e-10);
+    }
+
+    @Test
+    public void conditionP2() {
+        fail("Implement");
     }
 
     @Test
@@ -290,6 +294,11 @@ public class TestSimpleMatrix {
         b.reshape(2,3, false);
 
         UtilTestMatrix.checkEquals(b,a.mat);
+    }
+
+    @Test
+    public void grow() {
+        fail("Implement");
     }
 
     @Test
@@ -375,11 +384,31 @@ public class TestSimpleMatrix {
     }
 
     @Test
-    public void subvector() {
+    public void elementSum() {
+        fail("Implement");
+    }
+
+    @Test
+    public void elementMaxAbs() {
+        fail("Implement");
+    }
+
+    @Test
+    public void extractMatrix() {
+        fail("Implement");
+    }
+
+    @Test
+    public void extractDiag() {
+        fail("Implement");
+    }
+
+    @Test
+    public void extractVector() {
         SimpleMatrix A = SimpleMatrix.random(10,7,rand);
 
-        SimpleMatrix c = A.subvector(false,2);
-        SimpleMatrix r = A.subvector(true,2);
+        SimpleMatrix c = A.extractVector(false,2);
+        SimpleMatrix r = A.extractVector(true,2);
 
         assertEquals(A.numCols(),r.numRows());
         assertEquals(A.numRows(),c.numRows());

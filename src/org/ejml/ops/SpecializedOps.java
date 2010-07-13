@@ -255,9 +255,9 @@ public class SpecializedOps {
      * @param sub Where the submatrix are stored.  Modified.
      */
     public static void extract( DenseMatrix64F orig ,
-                                  int y0 , int y1 ,
-                                  int x0 , int x1 ,
-                                  DenseMatrix64F sub )
+                                int y0 , int y1 ,
+                                int x0 , int x1 ,
+                                DenseMatrix64F sub )
     {
         sub.reshape(y1-y0+1,x1-x0+1, false);
         int y_sub = 0;
@@ -269,6 +269,33 @@ public class SpecializedOps {
             }
             y_sub++;
         }
+    }
+
+    /**
+     * Extracts the diagonal elements from 'orig' matrix and stores them in the row
+     * or column vector dst.  If dst is null then a new vector will be declared.
+     *
+     * @param orig Matrix whose diagonal elements are being extracted.
+     * @param dst If not null then a vector the results will be written into.
+     * @return Vector containing the diagonal elements.
+     */
+    public static DenseMatrix64F extractDiag( DenseMatrix64F orig , DenseMatrix64F dst )
+    {
+        int N = Math.min(orig.numRows,orig.numCols);
+
+        if( dst == null ) {
+            dst = new DenseMatrix64F(N,1);
+        } else if( MatrixFeatures.isVector(dst) ) {
+            throw new IllegalArgumentException("Expected a vector for dst.");
+        } else if( dst.getNumElements() != N ) {
+            throw new IllegalArgumentException("Expected "+N+" elements in dst.");
+        }
+
+        for( int i = 0; i < N; i++ ) {
+            dst.data[i] = orig.get(i,i);
+        }
+
+        return dst;
     }
 
     /**
