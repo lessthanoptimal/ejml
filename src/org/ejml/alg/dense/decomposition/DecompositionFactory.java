@@ -102,12 +102,13 @@ public class DecompositionFactory {
     }
 
     /**
-     * Returns a new instance of a SingularValueDecomposition.
+     * Returns a new instance of a SingularValueDecomposition which will compute
+     * the full decomposition..
      *
      * @return SingularValueDecomposition
      */
     public static SingularValueDecomposition svd() {
-        return new SvdImplicitQrDecompose(true,true,true);
+        return new SvdImplicitQrDecompose(false,true,true);
     }
 
     /**

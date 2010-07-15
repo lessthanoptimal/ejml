@@ -777,11 +777,13 @@ public class SimpleMatrix {
     }
 
     /**
-     * Computes a compact Singular Value Decomposition (SVD) of this matrix.
-     * @return A compact SVD of this matrix.
+     * Computes a full Singular Value Decomposition (SVD) of this matrix with the
+     * eigenvalues ordered from largest to smallest.
+     * 
+     * @return SVD
      */
     public SVD svd() {
-        return new SVD(true);
+        return new SVD(false);
     }
 
     /**
