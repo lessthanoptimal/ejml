@@ -28,13 +28,13 @@ package org.ejml.data;
 public abstract class Matrix64F {
 
     /**
-     * Number of columns in the matrix.
-     */
-    public int numCols;
-    /**
      * Number of rows in the matrix.
      */
     public int numRows;
+    /**
+     * Number of columns in the matrix.
+     */
+    public int numCols;
 
     /**
      * Changes the number of rows and columns in a matrix and if possible does not declare new memory.  If saveValues is

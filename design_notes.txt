@@ -11,3 +11,9 @@ Unrolled Matrix Multiplication
 - Does not always translate to tall or wide matrices
   * can be much slower than other orders
 - Did not integrate into library because of added complexity
+
+Combine matrix for DenseMatrix64
+---------------------------
+combine() is a function in SimpleMatrix that combines two matrices together and grows if needed.
+No equivalent is directly provided in CommonOps since it is horribly memory inefficient.  Why
+use DenseMatrix64 if you are going to do that.

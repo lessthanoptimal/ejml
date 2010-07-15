@@ -77,20 +77,13 @@ public class UtilEjml {
     }
 
     public static void print(DenseMatrix64F mat , int numChar , int precision ) {
-        System.out.println("DenseMatrix64F  numRows = "+mat.numRows+" numCols = "+mat.numCols);
-
         String format = "%"+numChar+"."+precision+"f ";
 
-        for( int y = 0; y < mat.numRows; y++ ) {
-            for( int x = 0; x < mat.numCols; x++ ) {
-                System.out.printf(format,mat.get(y,x));
-            }
-            System.out.println();
-        }
+        print(mat,format);
     }
 
     public static void print(DenseMatrix64F mat , String format ) {
-        System.out.println("DenseMatrix64F  numRows = "+mat.numRows+" numCols = "+mat.numCols);
+        System.out.println("Type = dense , numRows = "+mat.numRows+" , numCols = "+mat.numCols);
 
         format += " ";
 

@@ -55,6 +55,12 @@ import java.util.Random;
 public class SimpleMatrix {
 
     /**
+     * A simplified way to reference the last row or column in the matrix for some functions.
+     */
+    public static final int END = Integer.MAX_VALUE;
+
+
+    /**
      * The matrix data that this is a wrapper around.
      */
     protected DenseMatrix64F mat;
@@ -84,7 +90,7 @@ public class SimpleMatrix {
     }
 
     /**
-     * Creates a new matrix that is initially set to zero with the specified dimenisions.
+     * Creates a new matrix that is initially set to zero with the specified dimensions.
      *
      * @see org.ejml.data.DenseMatrix64F#DenseMatrix64F(int, int) 
      *
@@ -128,7 +134,7 @@ public class SimpleMatrix {
     }
 
     /**
-     * Creates a new idenity matrix with the specified size.
+     * Creates a new identity matrix with the specified size.
      *
      * @see org.ejml.ops.CommonOps#identity(int)
      *
@@ -365,6 +371,22 @@ public class SimpleMatrix {
     }
 
     /**
+     * Divides each element in this matrix by the specified value.
+     *
+     * @see CommonOps#scale(double, DenseMatrix64F)
+     *
+     * @param val Divisor.
+     * @return Matrix with its elements divided by the specified value.
+     */
+    public SimpleMatrix elementDiv( double val ) {
+        SimpleMatrix ret = new SimpleMatrix(this);
+
+        CommonOps.scale(val,ret.mat);
+
+        return ret;
+    }
+
+    /**
      * <p>
      * Returns the inverse of this matrix.<br>
      * <br>
@@ -531,25 +553,6 @@ public class SimpleMatrix {
     }
 
     /**
-     * <p>
-     * Increases the number of rows and/or columns by padding the matrix with zeros.
-     * </p>
-     *
-     * <p>
-     * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,true).
-     * </p>
-     *
-     * @param numRows The new number of rows in the matrix. Must be >= the old number of rows.
-     * @param numCols The new number of columns in the matrix. Must be >= the old number of columns.
-     */
-    public void grow( int numRows , int numCols ) {
-        if( mat.numRows > numRows || mat.numCols > numCols ) {
-            throw new IllegalArgumentException("The requested size must be more than the current matrix size.");
-        }
-        mat.reshape(numRows,numCols,true);
-    }
-
-    /**
      * Assigns the element in the Matrix to the specified value.  Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *
@@ -608,18 +611,21 @@ public class SimpleMatrix {
     }
 
     /**
-     * Creates a new SimpleMatrix with random elements.
+     * <p>
+     * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
+     * </p>
      *
      * @see org.ejml.ops.RandomMatrices#setRandom(DenseMatrix64F,java.util.Random)
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
-     * @param rand The random number generator that's used to fill the matrix.
-     * @return The new random matrix.
+     * @param minValue Lower bound
+     * @param maxValue Upper bound
+     * @param rand The random number generator that's used to fill the matrix.  @return The new random matrix.
      */
-    public static SimpleMatrix random(int numRows, int numCols, Random rand) {
+    public static SimpleMatrix random(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices.setRandom(ret.mat,rand);
+        RandomMatrices.setRandom(ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
@@ -687,6 +693,11 @@ public class SimpleMatrix {
      * original matrix.
      * </p>
      *
+     * <p>
+     * If any of the inputs are set to SimpleMatrix.END then it will be set to the last row
+     * or column in the matrix.
+     * </p>
+     *
      * @param x0 Start column.
      * @param x1 Stop column.
      * @param y0 Start row.
@@ -695,6 +706,11 @@ public class SimpleMatrix {
      */
     public SimpleMatrix extractMatrix(int y0 , int y1,
                                       int x0 , int x1 ) {
+        if( y0 == END ) y0 = mat.numRows-1;
+        if( y1 == END ) y1 = mat.numRows-1;
+        if( x0 == END ) x0 = mat.numCols-1;
+        if( x1 == END ) x1 = mat.numCols-1;
+
         SimpleMatrix ret = new SimpleMatrix(y1-y0+1,x1-x0+1);
 
         SpecializedOps.extract(mat,y0,y1,x0,x1,ret.mat);
@@ -703,8 +719,10 @@ public class SimpleMatrix {
     }
 
     /**
+     * <p>
      * Extracts a row or column from this matrix and returns it as a row matrix of the appropriate
      * length.
+     * </p>
      *
      * @param extractRow is a row vector begin extracted.
      * @param element The row or column the vector is contained in.
@@ -783,7 +801,7 @@ public class SimpleMatrix {
     }
 
     /**
-     * Inserts matrix B into this matrix at location (insertRow, insertCol).
+     * Copy matrix B into this matrix at location (insertRow, insertCol).
      *
      * @param insertRow First row the matrix is to be inserted into.
      * @param insertCol First column the matrix is to be inserted into.
@@ -791,6 +809,58 @@ public class SimpleMatrix {
      */
     public void insertIntoThis(int insertRow, int insertCol, SimpleMatrix B) {
         SpecializedOps.insert(B.getMatrix(),insertRow,insertCol,mat);
+    }
+
+    /**
+     * <p>
+     * Creates a new matrix that is a combination of this matrix and matrix B.  B is
+     * written into A at the specified location if needed the size of A is increased by
+     * growing it.  A is grown by padding the new area with zeros.
+     * </p>
+     *
+     * <p>
+     * While useful when adding data to a matrix which will be solved for it is also much
+     * less efficient than predeclaring a matrix and inserting data into it.
+     * </p>
+     *
+     * <p>
+     * If insertRow or insertCol is set to SimpleMatrix.END then it will be combined
+     * at the last row or column respectively.
+     * <p>
+     *
+     * @param insertRow Row where matrix B is written in to.
+     * @param insertCol Column where matrix B is written in to.
+     * @param B The matrix that is written into A.
+     * @return A new combined matrix.
+     */
+    public SimpleMatrix combine( int insertRow, int insertCol, SimpleMatrix B) {
+
+        if( insertRow == END ) {
+            insertRow = mat.numRows;
+        }
+
+        if( insertCol == END ) {
+            insertCol = mat.numCols;
+        }
+
+        int maxRow = insertRow + B.numRows();
+        int maxCol = insertCol + B.numCols();
+
+        SimpleMatrix ret;
+
+        if( maxRow > mat.numRows || maxCol > mat.numCols) {
+            int M = Math.max(maxRow,mat.numRows);
+            int N = Math.max(maxCol,mat.numCols);
+
+            ret = new SimpleMatrix(M,N);
+            ret.insertIntoThis(0,0,this);
+        } else {
+            ret = copy();
+        }
+
+        ret.insertIntoThis(insertRow,insertCol,B);
+
+        return ret;
     }
 
     /**
@@ -817,10 +887,10 @@ public class SimpleMatrix {
      */
     public class SVD
     {
-        SingularValueDecomposition svd;
-        SimpleMatrix U;
-        SimpleMatrix W;
-        SimpleMatrix V;
+        private SingularValueDecomposition svd;
+        private SimpleMatrix U;
+        private SimpleMatrix W;
+        private SimpleMatrix V;
 
         public SVD( boolean compact ) {
             svd = DecompositionFactory.svd(true,true,compact);
@@ -892,14 +962,29 @@ public class SimpleMatrix {
             return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
         }
 
+        /**
+         * Returns the rank of the decomposed matrix.
+         *
+         * @return Rank
+         */
         public int rank() {
             return SingularOps.rank(svd,10.0*UtilEjml.EPS);
         }
 
+        /**
+         * The nullity of the decomposed matrix.
+         *
+         * @return Nullity
+         */
         public int nullity() {
             return SingularOps.nullity(svd,10.0*UtilEjml.EPS);
         }
 
+        /**
+         * Returns the underlying decomposition that this is a wrapper around.
+         *
+         * @return SingularValueDecomposition
+         */
         public SingularValueDecomposition getSVD() {
             return svd;
         }
@@ -910,7 +995,7 @@ public class SimpleMatrix {
      */
     public class EVD
     {
-        EigenDecomposition eig;
+        private EigenDecomposition eig;
 
         public EVD()
         {
@@ -971,6 +1056,11 @@ public class SimpleMatrix {
             return DecompositionFactory.quality(mat,eig);
         }
 
+        /**
+         * Returns the underlying decomposition that this is a wrapper around.
+         *
+         * @return EigenDecomposition
+         */
         public EigenDecomposition getEVD() {
             return eig;
         }
