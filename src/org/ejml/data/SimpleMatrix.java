@@ -724,7 +724,7 @@ public class SimpleMatrix {
 
         SimpleMatrix ret = new SimpleMatrix(y1-y0+1,x1-x0+1);
 
-        CommonOps.extract(mat,y0,y1,x0,x1,ret.mat);
+        CommonOps.extract(mat,y0,y1,x0,x1,ret.mat,0,0);
 
         return ret;
     }
@@ -827,7 +827,7 @@ public class SimpleMatrix {
      * @param B The matrix that is being inserted.
      */
     public void insertIntoThis(int insertRow, int insertCol, SimpleMatrix B) {
-        CommonOps.insert(B.getMatrix(),insertRow,insertCol,mat);
+        CommonOps.insert(B.getMatrix(), mat, insertRow,insertCol);
     }
 
     /**

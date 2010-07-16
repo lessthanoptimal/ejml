@@ -12,6 +12,7 @@
 - Fixed a bug in kron().
 - Added several new functions to SimpleMatrix and cleaned up function names.
 - Fixed a bug in QR decomposition where compact flag was incorrectly handled.
+- Added QRExample* to example source code to demonstrate using extract and insert
 
 ----- Version 0.13
 

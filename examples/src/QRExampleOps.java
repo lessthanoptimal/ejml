@@ -65,7 +65,7 @@ public class QRExampleOps {
             Q_k.reshape(v.getNumElements(),v.getNumElements(),false);
 
             // use extract matrix to get the column that is to be zeroed
-            CommonOps.extract(QR,i,QR.numRows-1,i,i,v);
+            CommonOps.extract(QR,i,QR.numRows-1,i,i,v,0,0);
 
             double max = CommonOps.elementMaxAbs(v);
 
@@ -86,7 +86,7 @@ public class QRExampleOps {
                 v.set(0,1.0);
 
                 // extract the submatrix of A which is being operated on
-                CommonOps.extract(QR,i,QR.numRows-1,i,QR.numCols-1,A_small);
+                CommonOps.extract(QR,i,QR.numRows-1,i,QR.numCols-1,A_small,0,0);
 
                 // A = (I - &gamma;*u*u<sup>T</sup>)A
                 CommonOps.setIdentity(Q_k);
@@ -94,8 +94,8 @@ public class QRExampleOps {
                 CommonOps.mult(Q_k,A_small,A_mod);
 
                 // save the results
-                CommonOps.insert(A_mod,i,i,QR);
-                CommonOps.insert(v,i,i,QR);
+                CommonOps.insert(A_mod, QR, i,i);
+                CommonOps.insert(v, QR, i,i);
                 QR.set(i,i,-tau*max);
 
                 // save gamma for recomputing Q later on
@@ -111,21 +111,18 @@ public class QRExampleOps {
         DenseMatrix64F Q = CommonOps.identity(QR.numRows);
         DenseMatrix64F Q_k = new DenseMatrix64F(QR.numRows,QR.numRows);
         DenseMatrix64F u = new DenseMatrix64F(QR.numRows,1);
-        DenseMatrix64F v = new DenseMatrix64F(QR.numRows,1);
 
         DenseMatrix64F temp = new DenseMatrix64F(QR.numRows,QR.numRows);
-
 
         int N = Math.min(QR.numCols,QR.numRows);
 
         // compute Q by first extracting the householder vectors from the
         // columns of QR and then applying it to Q
         for( int j = N-1; j>= 0; j-- ) {
-            v.reshape(QR.numRows-j,1,false);
-            u.zero();
+            if( j + 1 < N )
+                u.set(j+1,0);
 
-            CommonOps.extract(QR,j, QR.numRows-1,j,j,v);
-            CommonOps.insert(v,j,0,u);
+            CommonOps.extract(QR,j, QR.numRows-1,j,j,u,j,0);
             u.set(j,1.0);
 
             // A = (I - &gamma;*u*u<sup>T</sup>)*A<br>

@@ -1574,7 +1574,7 @@ public class CommonOps {
 
     /**
      * <p>
-     * Extracts a submatrix from 'src' and stores it in 'dst'.
+     * Extracts a submatrix from 'src' and stores it in a submatrix of 'dst'.
      * </p>
      * <p>
      * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &le; y1 and x0 &le; j &le; x1 <br>
@@ -1584,32 +1584,40 @@ public class CommonOps {
      * </p>
      *
      * @param src The original matrix which is to be copied.  Not modified.
-     * @param x0 Start column.
-     * @param x1 Stop column.
-     * @param y0 Start row.
-     * @param y1 Stop row.
+     * @param srcX0 Start column.
+     * @param srcX1 Stop column.
+     * @param srcY0 Start row.
+     * @param srcY1 Stop row.
      * @param dst Where the submatrix are stored.  Modified.
+     * @param dstY0 Start row in dst.
+     * @param dstX0 start column in dst.
      */
     public static void extract( DenseMatrix64F src,
-                                int y0 , int y1 ,
-                                int x0 , int x1 ,
-                                DenseMatrix64F dst)
+                                int srcY0, int srcY1,
+                                int srcX0, int srcX1,
+                                DenseMatrix64F dst ,
+                                int dstY0, int dstX0 )
     {
-        if( y1 < y0 )
-            throw new IllegalArgumentException("y1 must be >= y0");
-        if( x1 < x0 )
-            throw new IllegalArgumentException("x1 must be >= x0");
+        if( srcY1 < srcY0 && srcX0 >= 0 && srcY1 < src.numRows)
+            throw new IllegalArgumentException("srcY1 < srcY0 && srcX0 >= 0 && srcY1 < src.numRow");
+        if( srcX1 < srcX0 && srcX0 >= 0 && srcX1 < src.numCols)
+            throw new IllegalArgumentException("srcX1 < srcX0 && srcX0 >= 0 && srcX1 < src.numCols");
 
+        int w = srcX1-srcX0+1;
+        int h = srcY1-srcY0+1;
 
-        int y_sub = 0;
-        for( int y = y0; y <= y1; y++ ) {
-            int x_sub = 0;
-            for( int x = x0; x <= x1; x++ ,x_sub++) {
-                double v = src.get(y,x);
-                dst.set(y_sub,x_sub,v);
-            }
-            y_sub++;
-        }
+        if( dstY0+h > dst.numRows )
+            throw new IllegalArgumentException("dst is too small in rows");
+        if( dstX0+w > dst.numCols )
+            throw new IllegalArgumentException("dst is too small in columns");
+
+         for( int y = 0; y < h; y++ ) {
+             for( int x = 0; x < w; x++ ) {
+                 double v = src.get(y+srcY0,x+srcX0);
+                 dst.set(dstY0+y , dstX0 +x, v);
+             }
+         }
+
     }
 
     /**
@@ -1640,20 +1648,55 @@ public class CommonOps {
      * Inserts matrix 'src' into matrix 'dest' with the (0,0) of src at (row,col) in dest.
      *
      * @param src matrix that is being copied into dest. Not modified.
-     * @param row starting location of the copy.
-     * @param col starting location of the copy.
      * @param dest Where src is being copied into. Modified.
+     * @param destY0 Start row for the copy into dest.
+     * @param destX0 Start column for the copy into dest.
      */
-    public static void insert(DenseMatrix64F src, int row, int col, DenseMatrix64F dest) {
-        if( row+src.numRows > dest.numRows)
+    public static void insert(DenseMatrix64F src, DenseMatrix64F dest, int destY0, int destX0) {
+        if( destY0 +src.numRows > dest.numRows)
             throw new IllegalArgumentException("Inserted matrix would exceed the number of rows");
 
-        if( col+src.numCols > dest.numCols)
+        if( destX0 +src.numCols > dest.numCols)
             throw new IllegalArgumentException("Inserted matrix would exceed the number of columns");
 
-        for( int i = row; i < row + src.numRows; i++ ) {
-            for( int j = col; j < col + src.numCols; j++ ) {
-                dest.set(i,j, src.get(i-row,j-col));
+        for( int i = destY0; i < destY0 + src.numRows; i++ ) {
+            for( int j = destX0; j < destX0 + src.numCols; j++ ) {
+                dest.set(i,j, src.get(i- destY0,j- destX0));
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Inserts a submatrix of 'src' into 'dest' at the specified location.
+     * </p>
+     *
+     * @param src The matrix that is to be inserted. Not modified.
+     * @param srcY0 First row in 'src' submatrix.
+     * @param srcY1 Last row in 'src' submatrix.
+     * @param srcX0 First column in 'src' submatrix.
+     * @param srcX1 Last column in 'src' submatrix.
+     * @param dest The matrix which is being written to.  Modified.
+     * @param dstY0 Destination row.
+     * @param dstX0 Destination column.
+     */
+    public static void insert(DenseMatrix64F src,
+                              int srcY0, int srcY1,
+                              int srcX0, int srcX1,
+                              DenseMatrix64F dest,
+                              int dstY0, int dstX0 ) {
+        int h = srcY1-srcY0+1;
+        int w = srcX1-srcX0+1;
+
+        if( dstY0+h > dest.numRows)
+            throw new IllegalArgumentException("Inserted matrix would exceed the number of rows");
+
+        if( dstX0+w> dest.numCols)
+            throw new IllegalArgumentException("Inserted matrix would exceed the number of columns");
+
+        for( int i = dstY0; i < dstY0 + h; i++ ) {
+            for( int j = dstX0; j < dstX0 + w; j++ ) {
+                dest.set(i,j, src.get(i-dstY0+srcY0,j-dstX0+srcX0));
             }
         }
     }

@@ -379,7 +379,7 @@ public class TestSimpleMatrix {
 
         A.insertIntoThis(1,2,B);
 
-        CommonOps.insert(B.getMatrix(),1,2,A_);
+        CommonOps.insert(B.getMatrix(), A_, 1,2);
 
         UtilTestMatrix.checkEquals(A_,A.getMatrix());
     }

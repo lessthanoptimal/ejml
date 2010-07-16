@@ -710,7 +710,7 @@ public class TestCommonOps {
 
         DenseMatrix64F B = new DenseMatrix64F(2,3);
 
-        CommonOps.extract(A,1,2,2,4,B);
+        CommonOps.extract(A,1,2,2,4,B,0,0);
 
         for( int i = 1; i < 3; i++ ) {
             for( int j = 2; j < 5; j++ ) {
@@ -746,7 +746,7 @@ public class TestCommonOps {
 
         DenseMatrix64F B = new DenseMatrix64F(8,8);
 
-        CommonOps.insert(A,1,2,B);
+        CommonOps.insert(A, B, 1,2);
 
         for( int i = 1; i < 6; i++ ) {
             for( int j = 2; j < 7; j++ ) {
