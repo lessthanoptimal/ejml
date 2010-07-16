@@ -11,6 +11,7 @@
 - Symm EVD now uses the Wilkinson shift
 - Fixed a bug in kron().
 - Added several new functions to SimpleMatrix and cleaned up function names.
+- Fixed a bug in QR decomposition where compact flag was incorrectly handled.
 
 ----- Version 0.13
 

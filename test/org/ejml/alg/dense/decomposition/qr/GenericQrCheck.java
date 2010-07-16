@@ -133,12 +133,12 @@ public abstract class GenericQrCheck {
         DenseMatrix64F Q_provided = RandomMatrices.createRandom(height,height,rand);
         DenseMatrix64F R_provided = RandomMatrices.createRandom(height,width,rand);
         
-        assertTrue(R_provided == alg.getR(R_provided, true));
+        assertTrue(R_provided == alg.getR(R_provided, false));
         assertTrue(Q_provided == alg.getQ(Q_provided, false));
 
         // get the results when no matrix is provided
         DenseMatrix64F Q_null = alg.getQ(null, false);
-        DenseMatrix64F R_null = alg.getR(null,true);
+        DenseMatrix64F R_null = alg.getR(null,false);
 
         // see if they are the same
         assertTrue(MatrixFeatures.isIdentical(Q_provided,Q_null));
@@ -162,16 +162,16 @@ public abstract class GenericQrCheck {
         alg.decompose(A.getMatrix());
 
         // check the case where it creates the matrix first
-        assertTrue(alg.getR(null,true).numRows == height);
-        assertTrue(alg.getR(null,false).numRows == width);
+        assertTrue(alg.getR(null,true).numRows == width);
+        assertTrue(alg.getR(null,false).numRows == height);
 
         // check the case where a matrix is provided
-        alg.getR(new DenseMatrix64F(height,width),true);
-        alg.getR(new DenseMatrix64F(width,width),false);
+        alg.getR(new DenseMatrix64F(width,width),true);
+        alg.getR(new DenseMatrix64F(height,width),false);
 
         // check some negative cases
         try {
-            alg.getR(new DenseMatrix64F(width,width),true);
+            alg.getR(new DenseMatrix64F(height,width),true);
             fail("Should have thrown an exception");
         } catch( IllegalArgumentException e ) {}
 

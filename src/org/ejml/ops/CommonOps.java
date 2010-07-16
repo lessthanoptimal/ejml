@@ -1546,13 +1546,12 @@ public class CommonOps {
      * @param C Where the results of the operation are stored. Modified.
      * @return The results of the operation.
      */
-    public static DenseMatrix64F kron( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
+    public static void kron( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
     {
         int numColsC = A.numCols*B.numCols;
         int numRowsC = A.numRows*B.numRows;
-        if( C == null ) {
-            C = new DenseMatrix64F(numRowsC,numColsC);
-        } else if( C.numCols != numColsC || C.numRows != numRowsC) {
+
+        if( C.numCols != numColsC || C.numRows != numRowsC) {
             throw new IllegalArgumentException("C does not have the expected dimensions");
         }
 
@@ -1571,7 +1570,91 @@ public class CommonOps {
                 }
             }
         }
+    }
 
-        return C;
+    /**
+     * <p>
+     * Extracts a submatrix from 'src' and stores it in 'dst'.
+     * </p>
+     * <p>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &le; y1 and x0 &le; j &le; x1 <br>
+     * <br>
+     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
+     * original matrix.
+     * </p>
+     *
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param x0 Start column.
+     * @param x1 Stop column.
+     * @param y0 Start row.
+     * @param y1 Stop row.
+     * @param dst Where the submatrix are stored.  Modified.
+     */
+    public static void extract( DenseMatrix64F src,
+                                int y0 , int y1 ,
+                                int x0 , int x1 ,
+                                DenseMatrix64F dst)
+    {
+        if( y1 < y0 )
+            throw new IllegalArgumentException("y1 must be >= y0");
+        if( x1 < x0 )
+            throw new IllegalArgumentException("x1 must be >= x0");
+
+
+        int y_sub = 0;
+        for( int y = y0; y <= y1; y++ ) {
+            int x_sub = 0;
+            for( int x = x0; x <= x1; x++ ,x_sub++) {
+                double v = src.get(y,x);
+                dst.set(y_sub,x_sub,v);
+            }
+            y_sub++;
+        }
+    }
+
+    /**
+     * <p>
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * can either be a row or column vector.
+     * <p>
+     *
+     * @param src Matrix whose diagonal elements are being extracted. Not modified.
+     * @param dst A vector the results will be written into. Modified.
+     */
+    public static void extractDiag( DenseMatrix64F src, DenseMatrix64F dst )
+    {
+        int N = Math.min(src.numRows, src.numCols);
+
+        if( !MatrixFeatures.isVector(dst) ) {
+            throw new IllegalArgumentException("Expected a vector for dst.");
+        } else if( dst.getNumElements() != N ) {
+            throw new IllegalArgumentException("Expected "+N+" elements in dst.");
+        }
+
+        for( int i = 0; i < N; i++ ) {
+            dst.data[i] = src.get(i,i);
+        }
+    }
+
+    /**
+     * Inserts matrix 'src' into matrix 'dest' with the (0,0) of src at (row,col) in dest.
+     *
+     * @param src matrix that is being copied into dest. Not modified.
+     * @param row starting location of the copy.
+     * @param col starting location of the copy.
+     * @param dest Where src is being copied into. Modified.
+     */
+    public static void insert(DenseMatrix64F src, int row, int col, DenseMatrix64F dest) {
+        if( row+src.numRows > dest.numRows)
+            throw new IllegalArgumentException("Inserted matrix would exceed the number of rows");
+
+        if( col+src.numCols > dest.numCols)
+            throw new IllegalArgumentException("Inserted matrix would exceed the number of columns");
+
+        for( int i = row; i < row + src.numRows; i++ ) {
+            for( int j = col; j < col + src.numCols; j++ ) {
+                dest.set(i,j, src.get(i-row,j-col));
+            }
+        }
     }
 }

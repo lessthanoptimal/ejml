@@ -95,11 +95,13 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     @Override
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
+        int N = Math.min(numRows,numCols);
+
         if( compact ) {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows,numCols);
+                Q = CommonOps.identity(numRows,N);
             } else {
-                if( Q.numRows != numRows || Q.numCols != numCols ) {
+                if( Q.numRows != numRows || Q.numCols != N ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
                     CommonOps.setIdentity(Q);
@@ -133,24 +135,31 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      * Returns an upper triangular matrix which is the R in the QR decomposition.
      *
      * @param R An upper triangular matrix.
-     * @param setZeros
+     * @param compact
      */
     @Override
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean setZeros) {
+    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
+        int N = Math.min(numRows,numCols);
+
         if( R == null ) {
-            if( setZeros ) {
-                R = new DenseMatrix64F(numRows,numCols);
-                // no need to set zeros since they are all zero already
-                setZeros = false;
+            if( compact ) {
+                R = new DenseMatrix64F(N,N);
             } else
-                R = new DenseMatrix64F(numCols,numCols);
+                R = new DenseMatrix64F(numRows,numCols);
         } else {
-            if( R.numCols != numCols ) {
-                throw new IllegalArgumentException("Unexpected number of columns.");
-            } else if( setZeros && R.numRows < numRows ) {
-                throw new IllegalArgumentException("Unexpected number of rows.");
-            } else if( !setZeros && R.numRows < numCols ) {
-                throw new IllegalArgumentException("Unexpected number of rows.");
+            if( compact ) {
+                if( R.numCols != N || R.numRows != N )
+                    throw new IllegalArgumentException("Unexpected dimensions");
+            } else {
+                if( R.numCols != numCols || R.numRows != numRows )
+                    throw new IllegalArgumentException("Unexpected dimensions");
+            }
+
+            for( int i = 0; i < R.numRows; i++ ) {
+                int min = Math.min(i,R.numCols);
+                for( int j = 0; j < min; j++ ) {
+                    R.set(i,j,0);
+                }
             }
         }
 
@@ -159,15 +168,6 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
             for( int i = 0; i <= j; i++ ) {
                 double val = colR[i];
                 R.set(i,j,val);
-            }
-        }
-
-        if( setZeros ) {
-            for( int i = 0; i < numRows; i++ ) {
-                int max = i < numCols ? i : numCols;
-                for( int j = 0; j < max; j++ ) {
-                    R.set(i,j,0);
-                }
             }
         }
 

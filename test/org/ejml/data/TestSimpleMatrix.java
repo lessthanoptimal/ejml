@@ -22,7 +22,6 @@ package org.ejml.data;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
 import org.ejml.ops.RandomMatrices;
-import org.ejml.ops.SpecializedOps;
 import org.junit.Test;
 
 import java.util.Random;
@@ -130,7 +129,8 @@ public class TestSimpleMatrix {
         SimpleMatrix b = SimpleMatrix.random(2,3, 0, 1, rand);
         SimpleMatrix c = a.kron(b);
 
-        DenseMatrix64F c_dense = CommonOps.kron(a.getMatrix(),b.getMatrix(),null);
+        DenseMatrix64F c_dense = new DenseMatrix64F(6,6);
+        CommonOps.kron(a.getMatrix(),b.getMatrix(),c_dense);
 
         UtilTestMatrix.checkEquals(c_dense,c.mat);
     }
@@ -379,7 +379,7 @@ public class TestSimpleMatrix {
 
         A.insertIntoThis(1,2,B);
 
-        SpecializedOps.insert(B.getMatrix(),1,2,A_);
+        CommonOps.insert(B.getMatrix(),1,2,A_);
 
         UtilTestMatrix.checkEquals(A_,A.getMatrix());
     }
@@ -429,7 +429,7 @@ public class TestSimpleMatrix {
 
         for( int i = 0; i < a.numRows(); i++ ) {
             for( int j = 0; j < a.numCols(); j++ ) {
-                assertEquals( a.get(i,j)*1.5 , b.get(i,j),1e-10);
+                assertEquals( a.get(i,j)/1.5 , b.get(i,j),1e-10);
             }
         }
     }
@@ -482,7 +482,9 @@ public class TestSimpleMatrix {
         SimpleMatrix a = SimpleMatrix.random(3,4, 0, 1, rand);
 
         DenseMatrix64F found = a.extractDiag().getMatrix();
-        DenseMatrix64F expected = SpecializedOps.extractDiag(a.getMatrix(),null);
+        DenseMatrix64F expected = new DenseMatrix64F(3,1);
+
+        CommonOps.extractDiag(a.getMatrix(),expected);
 
         UtilTestMatrix.checkEquals(found,expected);
     }

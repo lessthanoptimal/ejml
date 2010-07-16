@@ -82,7 +82,7 @@ public class TestQrUpdate {
         decomp.decompose(A);
         Q.reshape(m,m, false);
         decomp.getQ(Q,false);
-        decomp.getR(R,true);
+        decomp.getR(R,false);
 
         QrUpdate update = new QrUpdate(m,n);
 
@@ -117,7 +117,8 @@ public class TestQrUpdate {
         decomp.decompose(A);
         Q.reshape(m,m, false);
         decomp.getQ(Q,false);
-        decomp.getR(R,true);
+        R.reshape(m,n,false);
+        decomp.getR(R,false);
 
         DenseMatrix64F Qmod = createQMod(Q,insert);
 

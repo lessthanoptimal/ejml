@@ -95,7 +95,7 @@ public class LinearSolverQr extends LinearSolverAbstract {
         Q.reshape(numRows,numRows, false);
         R.reshape(numRows,numCols, false);
         decomposer.getQ(Q,false);
-        decomposer.getR(R,true);
+        decomposer.getR(R,false);
 
         return true;
     }

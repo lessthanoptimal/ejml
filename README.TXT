@@ -23,7 +23,7 @@ The following functionality is provided:
     * Matrix Features (rank, symmetric, definitiveness, ... ).
     * Random Matrices (covariance, orthogonal, symmetric, ... ). 
 
-Unit tests are extensively used to ensure correctness of each algorithms implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
+Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
 
 ==========================================================================
 ----- Documentation

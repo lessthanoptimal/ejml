@@ -89,7 +89,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
 
         gammas = decomposer.getGammas();
         QR = decomposer.getQR();
-        decomposer.getR(R,false);
+        decomposer.getR(R,true);
         return true;
     }
 

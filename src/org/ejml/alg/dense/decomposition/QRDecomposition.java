@@ -85,7 +85,7 @@ public interface QRDecomposition extends DecompositionInterface {
      * a new matrix is created.
      * </p>
      *
-     * @param R If not null then the R matrix is writen to it. Modified.
+     * @param R If not null then the R matrix is written to it. Modified.
      * @param compact If true only the upper triangular elements are set
      * @return The R matrix.
      */

@@ -236,70 +236,6 @@ public class SpecializedOps {
 
     /**
      * <p>
-     * Sets 'sub' equal to the specified submatrix of 'orig'.  Sub is
-     * reshaped if neccisary.  The submatrix will contains columns x0 to x1 and rows y0 to y1, all
-     * inclusive.
-     * </p>
-     * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &le; y1 and x0 &le; j &le; x1 <br>
-     * <br>
-     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
-     * original matrix.
-     * </p>
-     *
-     * @param orig The original matrix which is to be copied.  Not modified.
-     * @param x0 Start column.
-     * @param x1 Stop column.
-     * @param y0 Start row.
-     * @param y1 Stop row.
-     * @param sub Where the submatrix are stored.  Modified.
-     */
-    public static void extract( DenseMatrix64F orig ,
-                                int y0 , int y1 ,
-                                int x0 , int x1 ,
-                                DenseMatrix64F sub )
-    {
-        sub.reshape(y1-y0+1,x1-x0+1, false);
-        int y_sub = 0;
-        for( int y = y0; y <= y1; y++ ) {
-            int x_sub = 0;
-            for( int x = x0; x <= x1; x++ ,x_sub++) {
-                double v = orig.get(y,x);
-                sub.set(y_sub,x_sub,v);
-            }
-            y_sub++;
-        }
-    }
-
-    /**
-     * Extracts the diagonal elements from 'orig' matrix and stores them in the row
-     * or column vector dst.  If dst is null then a new vector will be declared.
-     *
-     * @param orig Matrix whose diagonal elements are being extracted.
-     * @param dst If not null then a vector the results will be written into.
-     * @return Vector containing the diagonal elements.
-     */
-    public static DenseMatrix64F extractDiag( DenseMatrix64F orig , DenseMatrix64F dst )
-    {
-        int N = Math.min(orig.numRows,orig.numCols);
-
-        if( dst == null ) {
-            dst = new DenseMatrix64F(N,1);
-        } else if( MatrixFeatures.isVector(dst) ) {
-            throw new IllegalArgumentException("Expected a vector for dst.");
-        } else if( dst.getNumElements() != N ) {
-            throw new IllegalArgumentException("Expected "+N+" elements in dst.");
-        }
-
-        for( int i = 0; i < N; i++ ) {
-            dst.data[i] = orig.get(i,i);
-        }
-
-        return dst;
-    }
-
-    /**
-     * <p>
      * Extracts a row or column vector from matrix A.  The first element in the matrix is at element (rowA,colA).
      * The next 'length' elements are extracted along a row or column.  The results are put into vector 'v'
      * start at its element v0.
@@ -396,19 +332,4 @@ public class SpecializedOps {
         return ret;
     }
 
-    /**
-     * Inserts matrix 'src' into matrix 'dest' with the (0,0) of src at (row,col) in dest.
-     *
-     * @param src matrix that is being copied into dest
-     * @param row starting location of the copy.
-     * @param col starting location of the copy.
-     * @param dest Where src is being copied into.
-     */
-    public static void insert(DenseMatrix64F src, int row, int col, DenseMatrix64F dest) {
-        for( int i = row; i < row + src.numRows; i++ ) {
-            for( int j = col; j < col + src.numCols; j++ ) {
-                dest.set(i,j, src.get(i-row,j-col));
-            }
-        }
-    }
 }

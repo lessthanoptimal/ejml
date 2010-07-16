@@ -134,21 +134,6 @@ public class TestSpecializedOps {
     }
 
     @Test
-    public void submatrix() {
-        DenseMatrix64F A = RandomMatrices.createRandom(6,7,rand);
-
-        DenseMatrix64F B = new DenseMatrix64F(2,3);
-
-        SpecializedOps.extract(A,2,3,3,6,B);
-
-        for( int i = 2; i <= 3; i++ ) {
-            for( int j = 3; j <= 6; j++ ) {
-                assertEquals(A.get(i,j),B.get(i-2,j-3),1e-8);
-            }
-        }
-    }
-
-    @Test
     public void subvector() {
         DenseMatrix64F A = RandomMatrices.createRandom(4,5,rand);
 
@@ -233,60 +218,5 @@ public class TestSpecializedOps {
         CommonOps.transpose(P,B);
 
         assertTrue(MatrixFeatures.isIdentical(B,Pt,1e-8));
-    }
-
-    @Test
-    public void extract() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
-        for( int i = 0; i < A.numRows; i++ ) {
-            for( int j = 0; j < A.numCols; j++ ) {
-                A.set(i,j,i*A.numRows+j);
-            }
-        }
-
-        DenseMatrix64F B = new DenseMatrix64F(2,3);
-
-        SpecializedOps.extract(A,1,2,2,4,B);
-
-        for( int i = 1; i < 3; i++ ) {
-            for( int j = 2; j < 5; j++ ) {
-                assertEquals(A.get(i,j),B.get(i-1,j-2),1e-8);
-            }
-        }
-    }
-
-    @Test
-    public void extractDiag() {
-        DenseMatrix64F a = RandomMatrices.createRandom(3,4, 0, 1, rand);
-
-        for( int i = 0; i < 3; i++ ) {
-            a.set(i,i,i+1);
-        }
-
-        DenseMatrix64F v = SpecializedOps.extractDiag(a,null);
-
-        for( int i = 0; i < 3; i++ ) {
-            assertEquals( i+1 , v.get(i) , 1e-8 );
-        }
-    }
-
-    @Test
-    public void insert() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
-        for( int i = 0; i < A.numRows; i++ ) {
-            for( int j = 0; j < A.numCols; j++ ) {
-                A.set(i,j,i*A.numRows+j);
-            }
-        }
-
-        DenseMatrix64F B = new DenseMatrix64F(8,8);
-
-        SpecializedOps.insert(A,1,2,B);
-
-        for( int i = 1; i < 6; i++ ) {
-            for( int j = 2; j < 7; j++ ) {
-                assertEquals(A.get(i-1,j-2),B.get(i,j),1e-8);
-            }
-        }
     }
 }

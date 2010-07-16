@@ -236,7 +236,8 @@ public class SimpleMatrix {
      * @return Kronecker product between this matrix and B.
      */
     public SimpleMatrix kron( SimpleMatrix B ) {
-        DenseMatrix64F C = CommonOps.kron(mat,B.mat,null);
+        DenseMatrix64F C = new DenseMatrix64F(mat.numRows*B.numRows(),mat.numCols*B.numCols());
+        CommonOps.kron(mat,B.mat,C);
 
         return SimpleMatrix.wrap(C);
     }
@@ -347,7 +348,7 @@ public class SimpleMatrix {
      * @return A matrix that contains the results.
      */
     public SimpleMatrix plus( double beta , SimpleMatrix b ) {
-        SimpleMatrix ret = new SimpleMatrix(this);
+        SimpleMatrix ret = copy();
 
         CommonOps.addEquals(ret.mat,beta,b.mat);
 
@@ -381,7 +382,7 @@ public class SimpleMatrix {
     public SimpleMatrix elementDiv( double val ) {
         SimpleMatrix ret = new SimpleMatrix(this);
 
-        CommonOps.scale(val,ret.mat);
+        CommonOps.div(val,ret.mat);
 
         return ret;
     }
@@ -565,6 +566,16 @@ public class SimpleMatrix {
     }
 
     /**
+     * Assigns an element a value based on its index in the internal array..
+     *
+     * @param index The matrix element that is being assigned a value.
+     * @param value The element's new value.
+     */
+    public void set( int index , double value ) {
+        mat.set(index,value);
+    }
+
+    /**
      * Returns the value of the specified matrix element.  Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *
@@ -713,7 +724,7 @@ public class SimpleMatrix {
 
         SimpleMatrix ret = new SimpleMatrix(y1-y0+1,x1-x0+1);
 
-        SpecializedOps.extract(mat,y0,y1,x0,x1,ret.mat);
+        CommonOps.extract(mat,y0,y1,x0,x1,ret.mat);
 
         return ret;
     }
@@ -747,12 +758,18 @@ public class SimpleMatrix {
      * Extracts the diagonal from this matrix and returns them inside a column vector.
      * </p>
      * 
-     * @see org.ejml.ops.SpecializedOps#extractDiag(DenseMatrix64F, DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#extractDiag(DenseMatrix64F, DenseMatrix64F)
      * @return Diagonal elements inside a column vector.
      */
     public SimpleMatrix extractDiag()
     {
-        return SimpleMatrix.wrap(SpecializedOps.extractDiag(mat,null));
+        int N = Math.min(mat.numCols,mat.numRows);
+
+        DenseMatrix64F diag = new DenseMatrix64F(N,1);
+
+        CommonOps.extractDiag(mat,diag);
+
+        return SimpleMatrix.wrap(diag);
     }
 
     /**
@@ -810,7 +827,7 @@ public class SimpleMatrix {
      * @param B The matrix that is being inserted.
      */
     public void insertIntoThis(int insertRow, int insertCol, SimpleMatrix B) {
-        SpecializedOps.insert(B.getMatrix(),insertRow,insertCol,mat);
+        CommonOps.insert(B.getMatrix(),insertRow,insertCol,mat);
     }
 
     /**

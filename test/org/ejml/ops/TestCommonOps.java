@@ -687,13 +687,70 @@ public class TestCommonOps {
                     for( int l = 1; l <= 3; l++ ) {
                         A = RandomMatrices.createRandom(i,j,rand);
                         B = RandomMatrices.createRandom(k,l,rand);
+                        C = new DenseMatrix64F(A.numRows*B.numRows,A.numCols*B.numCols);
 
-                        C = CommonOps.kron(A,B,null);
+                        CommonOps.kron(A,B,C);
 
                         assertEquals(i*k,C.numRows);
                         assertEquals(j*l,C.numCols);
                     }
                 }
+            }
+        }
+    }
+
+    @Test
+    public void extract() {
+        DenseMatrix64F A = new DenseMatrix64F(5,5);
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                A.set(i,j,i*A.numRows+j);
+            }
+        }
+
+        DenseMatrix64F B = new DenseMatrix64F(2,3);
+
+        CommonOps.extract(A,1,2,2,4,B);
+
+        for( int i = 1; i < 3; i++ ) {
+            for( int j = 2; j < 5; j++ ) {
+                assertEquals(A.get(i,j),B.get(i-1,j-2),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void extractDiag() {
+        DenseMatrix64F a = RandomMatrices.createRandom(3,4, 0, 1, rand);
+
+        for( int i = 0; i < 3; i++ ) {
+            a.set(i,i,i+1);
+        }
+
+        DenseMatrix64F v = new DenseMatrix64F(3,1);
+        CommonOps.extractDiag(a,v);
+
+        for( int i = 0; i < 3; i++ ) {
+            assertEquals( i+1 , v.get(i) , 1e-8 );
+        }
+    }
+
+    @Test
+    public void insert() {
+        DenseMatrix64F A = new DenseMatrix64F(5,5);
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                A.set(i,j,i*A.numRows+j);
+            }
+        }
+
+        DenseMatrix64F B = new DenseMatrix64F(8,8);
+
+        CommonOps.insert(A,1,2,B);
+
+        for( int i = 1; i < 6; i++ ) {
+            for( int j = 2; j < 7; j++ ) {
+                assertEquals(A.get(i-1,j-2),B.get(i,j),1e-8);
             }
         }
     }
