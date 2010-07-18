@@ -48,44 +48,16 @@ public abstract class GenericQrCheck {
     }
 
     /**
-     * See if it correctly decomposes a square matrix.
+     * See if it correctly decomposes a square, tall, or wide matrix.
      */
     @Test
-    public void decomposition_square() {
-        int width = 5;
-
-        QRDecomposition alg = createQRDecomposition();
-
-        SimpleMatrix A = new SimpleMatrix(width,width);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
-
-        alg.decompose(A.getMatrix());
-
-        SimpleMatrix Q = new SimpleMatrix(width,width);
-        alg.getQ(Q.getMatrix(), false);
-        SimpleMatrix R = new SimpleMatrix(width,width);
-        alg.getR(R.getMatrix(), false);
-
-//        Q.print(5,5);
-
-        // see if Q has the expected properties
-        assertTrue(MatrixFeatures.isOrthogonal(Q.getMatrix(),1e-6));
-
-        // see if it has the expected properties
-        DenseMatrix64F A_found = Q.mult(R).getMatrix();
-
-        UtilTestMatrix.checkEquals(A.getMatrix(),A_found,1e-6);
-        assertTrue(Q.transpose().mult(A).isIdentical(R,1e-6));
+    public void decompositionShape() {
+        checkDecomposition(5, 5);
+        checkDecomposition(10, 5);
+        checkDecomposition(5, 10);
     }
 
-    /**
-     * See if it correctly decomposes a non-square matrix.
-     */
-    @Test
-    public void decomposition_notSquare() {
-        int height = 10;
-        int width = 5;
-
+    private void checkDecomposition(int height, int width) {
         QRDecomposition alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width);

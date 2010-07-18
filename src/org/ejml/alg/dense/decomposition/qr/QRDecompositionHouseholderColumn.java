@@ -47,13 +47,10 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
     // used internally to store temporary data
     protected double v[];
 
-    // it can decompose a matrix up to this size
-    protected int maxCols;
-    protected int maxRows;
-
     // dimension of the decomposed matrices
     protected int numCols; // this is 'n'
     protected int numRows; // this is 'm'
+    protected int minLength;
 
     // the computed gamma for Q_k matrix
     protected double gammas[];
@@ -66,16 +63,23 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
 
     @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
-        if( numRows < numCols ) {
-            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
+        this.numCols = numCols;
+        this.numRows = numRows;
+        minLength = Math.min(numCols,numRows);
+        int maxLength = Math.max(numCols,numRows);
+
+        if( dataQR == null || dataQR.length < numCols || dataQR[0].length < numRows ) {
+            dataQR = new double[ numCols ][  numRows ];
+            v = new double[ maxLength ];
+            gammas = new double[ minLength ];
         }
 
-        this.maxCols = numCols;
-        this.maxRows = numRows;
-
-        dataQR = new double[ maxCols ][  maxRows ];
-        v = new double[ maxRows ];
-        gammas = new double[ maxCols ];
+        if( v.length < maxLength ) {
+            v = new double[ maxLength ];
+        }
+        if( gammas.length < minLength ) {
+            gammas = new double[ minLength ];
+        }
     }
 
     /**
@@ -95,13 +99,11 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     @Override
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
-        int N = Math.min(numRows,numCols);
-
         if( compact ) {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows,N);
+                Q = CommonOps.identity(numRows,minLength);
             } else {
-                if( Q.numRows != numRows || Q.numCols != N ) {
+                if( Q.numRows != numRows || Q.numCols != minLength ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
                     CommonOps.setIdentity(Q);
@@ -119,7 +121,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
             }
         }
 
-        for( int j = numCols-1; j >= 0; j-- ) {
+        for( int j = minLength-1; j >= 0; j-- ) {
             double u[] = dataQR[j];
 
             double vv = u[j];
@@ -139,16 +141,14 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     @Override
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
-        int N = Math.min(numRows,numCols);
-
         if( R == null ) {
             if( compact ) {
-                R = new DenseMatrix64F(N,N);
+                R = new DenseMatrix64F(minLength,minLength);
             } else
                 R = new DenseMatrix64F(numRows,numCols);
         } else {
             if( compact ) {
-                if( R.numCols != N || R.numRows != N )
+                if( R.numCols != minLength || R.numRows != minLength )
                     throw new IllegalArgumentException("Unexpected dimensions");
             } else {
                 if( R.numCols != numCols || R.numRows != numRows )
@@ -165,7 +165,8 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
 
         for( int j = 0; j < numCols; j++ ) {
             double colR[] = dataQR[j];
-            for( int i = 0; i <= j; i++ ) {
+            int l = Math.min(j,numRows-1);
+            for( int i = 0; i <= l; i++ ) {
                 double val = colR[i];
                 R.set(i,j,val);
             }
@@ -188,20 +189,13 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     @Override
     public boolean decompose( DenseMatrix64F A ) {
-        if( A.numCols > A.numRows ) {
-            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
-        } else if( A.numCols > maxCols || A.numRows > maxRows ) {
-            setExpectedMaxSize(A.numRows, A.numCols);
-        }
-
-        numCols = A.numCols;
-        numRows = A.numRows;
+        setExpectedMaxSize(A.numRows, A.numCols);
 
         convertToColumnMajor(A);
 
         error = false;
 
-        for( int j = 0; j < numCols; j++ ) {
+        for( int j = 0; j < minLength; j++ ) {
             householder(j);
             updateA(j);
         }

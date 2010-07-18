@@ -13,6 +13,7 @@
 - Added several new functions to SimpleMatrix and cleaned up function names.
 - Fixed a bug in QR decomposition where compact flag was incorrectly handled.
 - Added QRExample* to example source code to demonstrate using extract and insert
+- All QR decompositions now works on matrices with any shape
 
 ----- Version 0.13
 

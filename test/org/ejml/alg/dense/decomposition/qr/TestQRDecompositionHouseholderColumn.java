@@ -45,7 +45,7 @@ public class TestQRDecompositionHouseholderColumn extends GenericQrCheck {
     }
 
     /**
-     * Internall several house holder operations are performed.  This
+     * Internal several householder operations are performed.  This
      * checks to see if the householder operations and the expected result for all the
      * submatrices.
      */

@@ -1,7 +1,11 @@
 For 0.14 Release
-- Change number of QR iterations to be proportional to the size of the matrix
+- cholesky accuracy
+- block matrix multiply
 
 For DenseMatrix64F
+
+- Block Householder
+  * Apply to all QR Algorithm.  SVD first
 
 - LU
   - block

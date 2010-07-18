@@ -53,7 +53,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
-     * upper triangulr portion and Q on the lower bit.  Lower columns
+     * upper triangular portion and Q on the lower bit.  Lower columns
      * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
      */
     protected DenseMatrix64F QR;
@@ -61,13 +61,10 @@ public class QRDecompositionHouseholder implements QRDecomposition {
     // used internally to store temporary data
     protected double u[],v[];
 
-    // the maximum possible dimensions
-    protected int maxRows = -1;
-    protected int maxCols = -1;
-
     // dimension of the decomposed matrices
     protected int numCols; // this is 'n'
     protected int numRows; // this is 'm'
+    protected int minLength;
 
     protected double dataQR[];
 
@@ -82,17 +79,32 @@ public class QRDecompositionHouseholder implements QRDecomposition {
 
     @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
-        if( numRows < numCols ) {
-            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
+        error = false;
+
+        this.numCols = numCols;
+        this.numRows = numRows;
+        minLength = Math.min(numRows,numCols);
+        int maxLength = Math.max(numRows,numCols);
+
+        if( QR == null ) {
+            QR = new DenseMatrix64F(numRows,numCols);
+            u = new double[ maxLength ];
+            v = new double[ maxLength ];
+            gammas = new double[ minLength ];
+        } else {
+            QR.reshape(numRows,numCols,false);
         }
 
-        QR = new DenseMatrix64F(numRows,numCols);
         dataQR = QR.data;
-        this.maxRows = numRows;
-        this.maxCols = numCols;
-        u = new double[ numRows ];
-        v = new double[ numRows ];
-        gammas = new double[ numRows ];
+
+        if( u.length < maxLength ) {
+            u = new double[ maxLength ];
+            v = new double[ maxLength ];
+        }
+
+        if( gammas.length < minLength ) {
+            gammas = new double[ minLength ];
+        }
     }
 
     /**
@@ -113,13 +125,11 @@ public class QRDecompositionHouseholder implements QRDecomposition {
      */
     @Override
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
-        int N = Math.min(numRows,numCols);
-
         if( compact ) {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows,N);
+                Q = CommonOps.identity(numRows,minLength);
             } else {
-                if( Q.numRows != numRows || Q.numCols != N ) {
+                if( Q.numRows != numRows || Q.numCols != minLength ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
                     CommonOps.setIdentity(Q);
@@ -137,7 +147,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
             }
         }
 
-        for( int j = numCols-1; j >= 0; j-- ) {
+        for( int j = minLength-1; j >= 0; j-- ) {
             u[j] = 1;
             for( int i = j+1; i < numRows; i++ ) {
                 u[i] = QR.get(i,j);
@@ -156,16 +166,14 @@ public class QRDecompositionHouseholder implements QRDecomposition {
      */
     @Override
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
-        int N = Math.min(numRows,numCols);
-
         if( R == null ) {
             if( compact ) {
-                R = new DenseMatrix64F(N,N);
+                R = new DenseMatrix64F(minLength,minLength);
             } else
                 R = new DenseMatrix64F(numRows,numCols);
         } else {
             if( compact ) {
-                if( R.numCols != N || R.numRows != N )
+                if( R.numCols != minLength || R.numRows != minLength )
                     throw new IllegalArgumentException("Unexpected dimensions");
             } else {
                 if( R.numCols != numCols || R.numRows != numRows )
@@ -180,7 +188,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
             }
         }
 
-        for( int i = 0; i < numCols; i++ ) {
+        for( int i = 0; i < minLength; i++ ) {
             for( int j = i; j < numCols; j++ ) {
                 double val = QR.get(i,j);
                 R.set(i,j,val);
@@ -206,7 +214,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
     public boolean decompose( DenseMatrix64F A ) {
         commonSetup(A);
 
-        for( int j = 0; j < numCols; j++ ) {
+        for( int j = 0; j < minLength; j++ ) {
             householder(j);
             updateA(j);
         }
@@ -289,32 +297,32 @@ public class QRDecompositionHouseholder implements QRDecomposition {
         // much of the code below is equivalent to the rank1Update function
         // however, since &tau; has already been computed there is no need to
         // recompute it, saving a few multiplication operations
-//        for( int i = w+1; i < numCols; i++ ) {
-//            double val = 0;
-//
-//            for( int k = w; k < numRows; k++ ) {
-//                val += u[k]*dataQR[k*numCols +i];
-//            }
-//            v[i] = gamma*val;
-//        }
+        for( int i = w+1; i < numCols; i++ ) {
+            double val = 0;
+
+            for( int k = w; k < numRows; k++ ) {
+                val += u[k]*dataQR[k*numCols +i];
+            }
+            v[i] = gamma*val;
+        }
 
         // This is functionally the same as the above code but the order has been changed
         // to avoid jumping the cpu cache
-        for( int i = w+1; i < numCols; i++ ) {
-            v[i] = u[w]*dataQR[w*numCols +i];
-        }
-
-        for( int k = w+1; k < numRows; k++ ) {
-            int indexQR = k*numCols+w+1;
-            for( int i = w+1; i < numCols; i++ ) {
-//                v[i] += u[k]*dataQR[k*numCols +i];
-                v[i] += u[k]*dataQR[indexQR++];
-            }
-        }
-
-        for( int i = w+1; i < numCols; i++ ) {
-            v[i] *= gamma;
-        }
+//        for( int i = w+1; i < numCols; i++ ) {
+//            v[i] = u[w]*dataQR[w*numCols +i];
+//        }
+//
+//        for( int k = w+1; k < numRows; k++ ) {
+//            int indexQR = k*numCols+w+1;
+//            for( int i = w+1; i < numCols; i++ ) {
+////                v[i] += u[k]*dataQR[k*numCols +i];
+//                v[i] += u[k]*dataQR[indexQR++];
+//            }
+//        }
+//
+//        for( int i = w+1; i < numCols; i++ ) {
+//            v[i] *= gamma;
+//        }
 
         // end of reordered code
 
@@ -344,17 +352,9 @@ public class QRDecompositionHouseholder implements QRDecomposition {
      * @param A
      */
     protected void commonSetup(DenseMatrix64F A) {
-        if( A.numCols > A.numRows ) {
-            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
-        } else if( A.numCols > maxCols || A.numRows > maxRows ) {
-           setExpectedMaxSize(A.numRows,A.numCols);
-        }
+        setExpectedMaxSize(A.numRows,A.numCols);
 
-        QR.setReshape(A);
-
-        numCols = A.numCols;
-        numRows = A.numRows;
-        error = false;
+        QR.set(A);
     }
 
     public double[] getGammas() {
