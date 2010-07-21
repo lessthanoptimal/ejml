@@ -613,6 +613,23 @@ public class SimpleMatrix {
     }
 
     /**
+     * Creates a new iterator for traversing through a submatrix inside this matrix.  It can be traversed
+     * by row or by column.  Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
+     * 0 and 1.  The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
+     *
+     * @param rowMajor true means it will traverse through the submatrix by row first, false by columns.
+     * @param minRow first row it will start at.
+     * @param minCol first column it will start at.
+     * @param maxRow last row it will stop at.
+     * @param maxCol last column it will stop at.
+     * @return A new MatrixIterator
+     */
+    public MatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    {
+        return new MatrixIterator(mat,rowMajor, minRow, minCol, maxRow, maxCol);
+    }
+
+    /**
      * Creates and returns a matrix which is idential to this one.
      *
      * @return A new identical matrix.

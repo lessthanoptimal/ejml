@@ -26,26 +26,17 @@ import org.ejml.EjmlParameters;
  * @author Peter Abeles
  */
 public class BlockMatrix64F extends D1Matrix64F {
-    public int blockWidth;
-    // number of elements in a block
-    public int numElements;
+    public int blockLength;
 
-    int rowBlocks;
-    int colBlocks;
-    int blockRowStep;
+    int numRows;
+    int numCols;
 
-    int rowRemainder;
-    int colRemainder;
-
-    public BlockMatrix64F( int numRows , int numCols , int blockWidth )
+    public BlockMatrix64F( int numRows , int numCols , int blockLength)
     {
-
-        this.blockWidth = blockWidth;
-        this.numElements = blockWidth*blockWidth;
-
-        reshape(numRows,numCols, false);
-
-        data = new double[ blockRowStep * rowBlocks ];
+        this.data = new double[ numRows * numCols ];
+        this.blockLength = blockLength;
+        this.numRows = numRows;
+        this.numCols = numCols;
     }
 
     public BlockMatrix64F( int numRows , int numCols )
@@ -61,46 +52,19 @@ public class BlockMatrix64F extends D1Matrix64F {
     @Override
     public void reshape(int numRows, int numCols, boolean saveValues)
     {
-        this.numRows = numRows;
-        this.numCols = numCols;
+        if( numRows*numCols <= data.length  ) {
+            this.numRows = numRows;
+            this.numCols = numCols;
+        } else {
+            double[] data = new double[ numRows*numCols ];
 
-        rowBlocks = numRows/blockWidth;
-        colBlocks = numCols/blockWidth;
-
-        rowRemainder = numRows % blockWidth;
-        colRemainder = numCols % blockWidth;
-
-        if( rowRemainder > 0 ) {
-            rowBlocks++;
-        }
-
-        if( colRemainder > 0 ) {
-            colBlocks++;
-        }
-
-        blockRowStep = numElements*colBlocks;
-    }
-
-    public void set( DenseMatrix64F mat ) {
-        if( mat.numRows != numRows || mat.numCols != numCols)
-            throw new IllegalArgumentException("Rows and columns must be equal.");
-
-        for( int blockI = 0; blockI < rowBlocks; blockI++ ) {
-            int blockRows = blockI < rowBlocks-1 || rowRemainder == 0 ? blockWidth : rowRemainder;
-
-            for( int blockJ = 0; blockJ < colBlocks; blockJ++ ) {
-                int base = blockI*blockRowStep + blockJ*blockWidth;
-
-                int blockCols = blockJ < colBlocks-1 || colRemainder == 0 ? blockWidth : colRemainder;
-
-                for( int i = 0; i < blockRows; i++ ) {
-                    int indexDst = base + i*blockWidth;
-                    int indexSrc = (blockI*blockWidth+i)*mat.numCols + (blockJ*blockWidth);
-                    for( int j = 0; j < blockCols; j++ ) {
-                        data[indexDst++] = mat.data[indexSrc++];
-                    }
-                }
+            if( saveValues ) {
+                System.arraycopy(this.data,0,data,0,getNumElements());
             }
+
+            this.numRows = numRows;
+            this.numCols = numCols;
+            this.data = data;
         }
     }
 
@@ -116,35 +80,28 @@ public class BlockMatrix64F extends D1Matrix64F {
 
     @Override
     public int getIndex( int row, int col ) {
-        int blockI = row/blockWidth;
-        int blockJ = col/blockWidth;
+        // find the block it is inside
+        int blockRow = row / blockLength;
+        int blockCol = col / blockLength;
 
-        int index = blockI*blockRowStep + blockJ*blockWidth;
-        index += (row%blockWidth)*blockWidth + (col%blockWidth);
+        int index = numCols * blockRow + blockCol* blockLength;
 
-        return index;
+        int localLength = Math.min(numCols - numRows*blockRow , blockLength);
+
+        row -= blockRow*blockLength;
+        col -= blockCol*blockLength;
+        
+        return index + localLength * row + col;
     }
 
     @Override
     public double get( int row, int col) {
-        int blockI = row/blockWidth;
-        int blockJ = col/blockWidth;
-
-        int index = blockI*blockRowStep + blockJ*blockWidth;
-        index += (row%blockWidth)*blockWidth + (col%blockWidth);
-        
-        return data[ index ];
+        return data[ getIndex(row,col)];
     }
 
     @Override
     public void set( int row, int col, double val) {
-        int blockI = row/blockWidth;
-        int blockJ = col/blockWidth;
-
-        int index = blockI*blockRowStep + blockJ*blockWidth;
-        index += (row%blockWidth)*blockWidth + (col%blockWidth);
-
-        data[ index ] = val;
+        data[ getIndex(row,col)] = val;
     }
 
     @Override
@@ -159,6 +116,6 @@ public class BlockMatrix64F extends D1Matrix64F {
 
     @Override
     public int getNumElements() {
-        return blockRowStep*numRows;
+        return numRows*numCols;
     }
 }

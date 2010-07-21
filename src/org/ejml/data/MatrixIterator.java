@@ -48,6 +48,9 @@ public class MatrixIterator implements Iterator<Double> {
     // how wide the submatrix is
     private int submatrixStride;
 
+    // the current element
+    int subRow,subCol;
+
     /**
      * Creates a new iterator for traversing through a submatrix inside this matrix.  It can be traversed
      * by row or by column.  Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
@@ -95,7 +98,6 @@ public class MatrixIterator implements Iterator<Double> {
 
     @Override
     public Double next() {
-        int subRow,subCol;
         if( rowMajor ) {
             subRow = index / submatrixStride;
             subCol = index % submatrixStride;
@@ -127,5 +129,14 @@ public class MatrixIterator implements Iterator<Double> {
      */
     public boolean isRowMajor() {
         return rowMajor;
+    }
+
+    /**
+     * Sets the value of the current element.
+     *
+     * @param value The element's new value.
+     */
+    public void set( double value ) {
+        a.set(subRow+minRow,subCol+minCol,value);
     }
 }

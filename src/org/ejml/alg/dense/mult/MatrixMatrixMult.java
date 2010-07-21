@@ -1,22 +1,3 @@
-/*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
- *
- * This file is part of Efficient Java Matrix Library (EJML).
- *
- * EJML is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * EJML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
@@ -64,7 +45,9 @@ public class MatrixMatrixMult {
      */
     public static void mult_reorder( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -112,7 +95,9 @@ public class MatrixMatrixMult {
      */
     public static void mult_small( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -148,7 +133,9 @@ public class MatrixMatrixMult {
      */
     public static void mult_aux( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -182,7 +169,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransA_reorder( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -223,7 +212,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransA_small( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -259,7 +250,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransAB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -294,7 +287,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransAB_aux( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -328,7 +323,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -364,7 +361,9 @@ public class MatrixMatrixMult {
      */
     public static void multAdd_reorder( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -412,7 +411,9 @@ public class MatrixMatrixMult {
      */
     public static void multAdd_small( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -448,7 +449,9 @@ public class MatrixMatrixMult {
      */
     public static void multAdd_aux( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -482,7 +485,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransA_reorder( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -523,7 +528,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransA_small( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -559,7 +566,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransAB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -594,7 +603,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransAB_aux( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -628,7 +639,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -664,7 +677,9 @@ public class MatrixMatrixMult {
      */
     public static void mult_reorder( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -712,7 +727,9 @@ public class MatrixMatrixMult {
      */
     public static void mult_small( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -748,7 +765,9 @@ public class MatrixMatrixMult {
      */
     public static void mult_aux( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -782,7 +801,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransA_reorder( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -823,7 +844,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransA_small( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -859,7 +882,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransAB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -894,7 +919,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransAB_aux( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -928,7 +955,9 @@ public class MatrixMatrixMult {
      */
     public static void multTransB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -964,7 +993,9 @@ public class MatrixMatrixMult {
      */
     public static void multAdd_reorder( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1012,7 +1043,9 @@ public class MatrixMatrixMult {
      */
     public static void multAdd_small( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1048,7 +1081,9 @@ public class MatrixMatrixMult {
      */
     public static void multAdd_aux( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numCols != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1082,7 +1117,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransA_reorder( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1123,7 +1160,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransA_small( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numRows ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1159,7 +1198,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransAB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1194,7 +1235,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransAB_aux( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )
     {
-        if( a.numRows != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
@@ -1228,7 +1271,9 @@ public class MatrixMatrixMult {
      */
     public static void multAddTransB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
-        if( a.numCols != b.numCols ) {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");

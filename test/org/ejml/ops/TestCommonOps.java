@@ -49,6 +49,9 @@ public class TestCommonOps {
         check.checkAll();
     }
 
+    /**
+     * Make sure the multiplication methods here have the same behavior as the ones in MatrixMatrixMult.
+     */
     @Test
     public void checkAllMatrixMults() {
         int numChecked = 0;
@@ -59,7 +62,7 @@ public class TestCommonOps {
         for( Method method : methods ) {
             String name = method.getName();
 
-            // only look at function which perform matrix multiplcation
+            // only look at function which perform matrix multiplication
             if( !name.contains("mult") || name.contains("Element"))
                 continue;
 
@@ -207,124 +210,6 @@ public class TestCommonOps {
     }
 
     @Test
-    public void addEquals() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
-
-        CommonOps.addEquals(a,b);
-
-        UtilTestMatrix.checkMat(a,5,5,5,5,5,5);
-        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
-    }
-
-    @Test
-    public void addEquals_beta() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
-
-        CommonOps.addEquals(a,2.0,b);
-
-        UtilTestMatrix.checkMat(a,10,9,8,7,6,5);
-        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
-    }
-
-    @Test
-    public void add() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
-        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
-
-        CommonOps.add(a,b,c);
-
-        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
-        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
-        UtilTestMatrix.checkMat(c,5,5,5,5,5,5);
-    }
-
-    @Test
-    public void add_beta() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
-        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
-
-        CommonOps.add(a,2.0,b,c);
-
-        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
-        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
-        UtilTestMatrix.checkMat(c,10,9,8,7,6,5);
-    }
-
-    @Test
-    public void add_alpha_beta() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
-        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
-
-        CommonOps.add(2.0,a,2.0,b,c);
-
-        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
-        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
-        UtilTestMatrix.checkMat(c,10,10,10,10,10,10);
-    }
-
-    @Test
-    public void add_alpha() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
-        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
-
-        CommonOps.add(2.0,a,b,c);
-
-        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
-        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
-        UtilTestMatrix.checkMat(c,5,6,7,8,9,10);
-    }
-
-    @Test
-    public void add_scalar_c() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
-
-        CommonOps.add(a,2.0,c);
-
-        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
-        UtilTestMatrix.checkMat(c,2,3,4,5,6,7);
-    }
-
-    @Test
-    public void add_scalar() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-
-        CommonOps.add(a,2.0);
-
-        UtilTestMatrix.checkMat(a,2,3,4,5,6,7);
-    }
-
-    @Test
-    public void subEquals() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 5, 5, 5, 5, 5);
-
-        CommonOps.subEquals(a,b);
-
-        UtilTestMatrix.checkMat(a,-5,-4,-3,-2,-1,0);
-        UtilTestMatrix.checkMat(b,5,5,5,5,5,5);
-    }
-
-    @Test
-    public void sub() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
-        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 5, 5, 5, 5, 5);
-        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
-
-        CommonOps.sub(a,b,c);
-
-        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
-        UtilTestMatrix.checkMat(b,5,5,5,5,5,5);
-        UtilTestMatrix.checkMat(c,-5,-4,-3,-2,-1,0);
-    }
-
-    @Test
     public void solve() {
         DenseMatrix64F a = new DenseMatrix64F(2,2, true, 1, 2, 7, -3);
         DenseMatrix64F b = RandomMatrices.createRandom(2,5,rand);
@@ -339,98 +224,6 @@ public class TestCommonOps {
         solver.solve(b,c_exp);
 
         UtilTestMatrix.checkEquals(c_exp,c,1e-8);
-    }
-
-    @Test
-    public void scale() {
-        double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
-        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
-
-        CommonOps.scale(s,mat);
-
-        assertEquals(d[0]*s,mat.get(0,0),1e-8);
-        assertEquals(d[1]*s,mat.get(0,1),1e-8);
-        assertEquals(d[2]*s,mat.get(1,0),1e-8);
-        assertEquals(d[3]*s,mat.get(1,1),1e-8);
-    }
-
-    @Test
-    public void scale_two_input() {
-        double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
-        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
-        DenseMatrix64F r = new DenseMatrix64F(2,2, true, d);
-
-        CommonOps.scale(s,mat,r);
-
-        assertEquals(d[0],mat.get(0,0),1e-8);
-        assertEquals(d[1],mat.get(0,1),1e-8);
-        assertEquals(d[2],mat.get(1,0),1e-8);
-        assertEquals(d[3],mat.get(1,1),1e-8);
-
-        assertEquals(d[0]*s,r.get(0,0),1e-8);
-        assertEquals(d[1]*s,r.get(0,1),1e-8);
-        assertEquals(d[2]*s,r.get(1,0),1e-8);
-        assertEquals(d[3]*s,r.get(1,1),1e-8);
-    }
-
-    @Test
-    public void div() {
-        double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
-        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
-
-        CommonOps.div(s,mat);
-
-        assertEquals(d[0]/s,mat.get(0,0),1e-8);
-        assertEquals(d[1]/s,mat.get(0,1),1e-8);
-        assertEquals(d[2]/s,mat.get(1,0),1e-8);
-        assertEquals(d[3]/s,mat.get(1,1),1e-8);
-    }
-
-    @Test
-    public void div_two_input() {
-        double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
-        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
-        DenseMatrix64F r = new DenseMatrix64F(2,2, true, d);
-
-        CommonOps.div(s,mat,r);
-
-        assertEquals(d[0],mat.get(0,0),1e-8);
-        assertEquals(d[1],mat.get(0,1),1e-8);
-        assertEquals(d[2],mat.get(1,0),1e-8);
-        assertEquals(d[3],mat.get(1,1),1e-8);
-
-        assertEquals(d[0]/s,r.get(0,0),1e-8);
-        assertEquals(d[1]/s,r.get(0,1),1e-8);
-        assertEquals(d[2]/s,r.get(1,0),1e-8);
-        assertEquals(d[3]/s,r.get(1,1),1e-8);
-    }
-
-    @Test
-    public void set() {
-        double d[] = new double[]{10,12.5,-2,5.5};
-        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
-
-        CommonOps.set(mat,1);
-
-        for( int i = 0; i < mat.getNumElements(); i++ ) {
-            assertEquals(1,mat.get(i),1e-8);
-        }
-    }
-
-    @Test
-    public void zero() {
-        double d[] = new double[]{10,12.5,-2,5.5};
-        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
-
-        mat.zero();
-
-        for( int i = 0; i < mat.getNumElements(); i++ ) {
-            assertEquals(0,mat.get(i),1e-8);
-        }
     }
 
     @Test
@@ -468,38 +261,6 @@ public class TestCommonOps {
         double val = CommonOps.trace(mat);
 
         assertEquals(12,val,1e-6);
-    }
-
-    @Test
-    public void elementMax() {
-        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
-
-        double m = CommonOps.elementMax(mat);
-        assertEquals(7,m,1e-8);
-    }
-
-    @Test
-    public void elementMin() {
-        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, -3, 4, 5, 6, 7, 8);
-
-        double m = CommonOps.elementMin(mat);
-        assertEquals(-3,m,1e-8);
-    }
-
-    @Test
-    public void elementMinAbs() {
-        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
-
-        double m = CommonOps.elementMinAbs(mat);
-        assertEquals(0,m,1e-8);
-    }
-
-    @Test
-    public void elementMaxAbs() {
-        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, 3, 4, 5, -6, 7, -8);
-
-        double m = CommonOps.elementMaxAbs(mat);
-        assertEquals(8,m,1e-8);
     }
 
     @Test
@@ -550,40 +311,6 @@ public class TestCommonOps {
         found = new DenseMatrix64F(2,4);
         CommonOps.pinv(A,found);
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-4));
-    }
-
-    @Test
-    public void elementSum() {
-        DenseMatrix64F M = RandomMatrices.createRandom(5,5,rand);
-        // make it smaller than the original size to make sure it is bounding
-        // the summation correctly
-        M.reshape(4,3, false);
-
-        double sum = 0;
-        for( int i = 0; i < M.numRows; i++ ) {
-            for( int j = 0; j < M.numCols; j++ ) {
-                sum += M.get(i,j);
-            }
-        }
-
-        assertEquals(sum,CommonOps.elementSum(M),1e-8);
-    }
-
-    @Test
-    public void elementSumAbs() {
-        DenseMatrix64F M = RandomMatrices.createRandom(5,5,rand);
-        // make it smaller than the original size to make sure it is bounding
-        // the summation correctly
-        M.reshape(4,3, false);
-
-        double sum = 0;
-        for( int i = 0; i < M.numRows; i++ ) {
-            for( int j = 0; j < M.numCols; j++ ) {
-                sum += Math.abs(M.get(i,j));
-            }
-        }
-
-        assertEquals(sum,CommonOps.elementSum(M),1e-8);
     }
 
     @Test
@@ -773,5 +500,281 @@ public class TestCommonOps {
                 assertEquals(A.get(i+1,j+1),B.get(i+3,j+2),1e-8);
             }
         }
+    }
+
+   @Test
+    public void addEquals() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
+
+        CommonOps.addEquals(a,b);
+
+        UtilTestMatrix.checkMat(a,5,5,5,5,5,5);
+        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
+    }
+
+    @Test
+    public void addEquals_beta() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
+
+        CommonOps.addEquals(a,2.0,b);
+
+        UtilTestMatrix.checkMat(a,10,9,8,7,6,5);
+        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
+    }
+
+    @Test
+    public void add() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.add(a,b,c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
+        UtilTestMatrix.checkMat(c,5,5,5,5,5,5);
+    }
+
+    @Test
+    public void add_beta() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.add(a,2.0,b,c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
+        UtilTestMatrix.checkMat(c,10,9,8,7,6,5);
+    }
+
+    @Test
+    public void add_alpha_beta() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.add(2.0,a,2.0,b,c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
+        UtilTestMatrix.checkMat(c,10,10,10,10,10,10);
+    }
+
+    @Test
+    public void add_alpha() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 4, 3, 2, 1, 0);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.add(2.0,a,b,c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(b,5,4,3,2,1,0);
+        UtilTestMatrix.checkMat(c,5,6,7,8,9,10);
+    }
+
+    @Test
+    public void add_scalar_c() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.add(a,2.0,c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(c,2,3,4,5,6,7);
+    }
+
+    @Test
+    public void add_scalar() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+
+        CommonOps.add(a,2.0);
+
+        UtilTestMatrix.checkMat(a,2,3,4,5,6,7);
+    }
+
+    @Test
+    public void subEquals() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 5, 5, 5, 5, 5);
+
+        CommonOps.subEquals(a,b);
+
+        UtilTestMatrix.checkMat(a,-5,-4,-3,-2,-1,0);
+        UtilTestMatrix.checkMat(b,5,5,5,5,5,5);
+    }
+
+    @Test
+    public void sub() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 5, 5, 5, 5, 5);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.sub(a,b,c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(b,5,5,5,5,5,5);
+        UtilTestMatrix.checkMat(c,-5,-4,-3,-2,-1,0);
+    }
+
+    @Test
+    public void scale() {
+        double s = 2.5;
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.scale(s,mat);
+
+        assertEquals(d[0]*s,mat.get(0,0),1e-8);
+        assertEquals(d[1]*s,mat.get(0,1),1e-8);
+        assertEquals(d[2]*s,mat.get(1,0),1e-8);
+        assertEquals(d[3]*s,mat.get(1,1),1e-8);
+    }
+
+    @Test
+    public void scale_two_input() {
+        double s = 2.5;
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+        DenseMatrix64F r = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.scale(s,mat,r);
+
+        assertEquals(d[0],mat.get(0,0),1e-8);
+        assertEquals(d[1],mat.get(0,1),1e-8);
+        assertEquals(d[2],mat.get(1,0),1e-8);
+        assertEquals(d[3],mat.get(1,1),1e-8);
+
+        assertEquals(d[0]*s,r.get(0,0),1e-8);
+        assertEquals(d[1]*s,r.get(0,1),1e-8);
+        assertEquals(d[2]*s,r.get(1,0),1e-8);
+        assertEquals(d[3]*s,r.get(1,1),1e-8);
+    }
+
+    @Test
+    public void div() {
+        double s = 2.5;
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.div(s,mat);
+
+        assertEquals(d[0]/s,mat.get(0,0),1e-8);
+        assertEquals(d[1]/s,mat.get(0,1),1e-8);
+        assertEquals(d[2]/s,mat.get(1,0),1e-8);
+        assertEquals(d[3]/s,mat.get(1,1),1e-8);
+    }
+
+    @Test
+    public void div_two_input() {
+        double s = 2.5;
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+        DenseMatrix64F r = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.div(s,mat,r);
+
+        assertEquals(d[0],mat.get(0,0),1e-8);
+        assertEquals(d[1],mat.get(0,1),1e-8);
+        assertEquals(d[2],mat.get(1,0),1e-8);
+        assertEquals(d[3],mat.get(1,1),1e-8);
+
+        assertEquals(d[0]/s,r.get(0,0),1e-8);
+        assertEquals(d[1]/s,r.get(0,1),1e-8);
+        assertEquals(d[2]/s,r.get(1,0),1e-8);
+        assertEquals(d[3]/s,r.get(1,1),1e-8);
+    }
+
+    @Test
+    public void set() {
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.set(mat,1);
+
+        for( int i = 0; i < mat.getNumElements(); i++ ) {
+            assertEquals(1,mat.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void zero() {
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+
+        mat.zero();
+
+        for( int i = 0; i < mat.getNumElements(); i++ ) {
+            assertEquals(0,mat.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void elementMax() {
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
+
+        double m = CommonOps.elementMax(mat);
+        assertEquals(7,m,1e-8);
+    }
+
+    @Test
+    public void elementMin() {
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, -3, 4, 5, 6, 7, 8);
+
+        double m = CommonOps.elementMin(mat);
+        assertEquals(-3,m,1e-8);
+    }
+
+    @Test
+    public void elementMinAbs() {
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
+
+        double m = CommonOps.elementMinAbs(mat);
+        assertEquals(0,m,1e-8);
+    }
+
+    @Test
+    public void elementMaxAbs() {
+        DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, 3, 4, 5, -6, 7, -8);
+
+        double m = CommonOps.elementMaxAbs(mat);
+        assertEquals(8,m,1e-8);
+    }
+
+    @Test
+    public void elementSum() {
+        DenseMatrix64F M = RandomMatrices.createRandom(5,5,rand);
+        // make it smaller than the original size to make sure it is bounding
+        // the summation correctly
+        M.reshape(4,3, false);
+
+        double sum = 0;
+        for( int i = 0; i < M.numRows; i++ ) {
+            for( int j = 0; j < M.numCols; j++ ) {
+                sum += M.get(i,j);
+            }
+        }
+
+        assertEquals(sum,CommonOps.elementSum(M),1e-8);
+    }
+
+    @Test
+    public void elementSumAbs() {
+        DenseMatrix64F M = RandomMatrices.createRandom(5,5,rand);
+        // make it smaller than the original size to make sure it is bounding
+        // the summation correctly
+        M.reshape(4,3, false);
+
+        double sum = 0;
+        for( int i = 0; i < M.numRows; i++ ) {
+            for( int j = 0; j < M.numCols; j++ ) {
+                sum += Math.abs(M.get(i,j));
+            }
+        }
+
+        assertEquals(sum,CommonOps.elementSum(M),1e-8);
     }
 }

@@ -28,6 +28,7 @@ import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -431,346 +432,6 @@ public class CommonOps {
     }
 
     /**
-     * <p>Performs the an element by element multiplication operation:<br>
-     * <br>
-     * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
-     * </p>
-     * @param a The left matrix in the multiplication operation. Modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     */
-    public static void elementMult( DenseMatrix64F a , DenseMatrix64F b )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
-        }
-
-        int length = a.getNumElements();
-        double dataA[] = a.data;
-        double dataB[] = b.data;
-
-        for( int i = 0; i < length; i++ ) {
-            dataA[i] *= dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the an element by element multiplication operation:<br>
-     * <br>
-     * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
-     * </p>
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
-     */
-    public static void elementMult( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
-        }
-
-        int length = a.getNumElements();
-        double dataA[] = a.data;
-        double dataB[] = b.data;
-        double dataC[] = c.data;
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i] * dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following operation:<br>
-     * <br>
-     * a = a + b <br>
-     * a<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
-     * </p>
-     *
-     * @param a A Matrix. Modified.
-     * @param b A Matrix. Not modified.
-     */
-    public static void addEquals( DenseMatrix64F a , DenseMatrix64F b )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataA[i] += dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following operation:<br>
-     * <br>
-     * a = a +  &beta; * b  <br>
-     * a<sub>ij</sub> = a<sub>ij</sub> + &beta; * b<sub>ij</sub>
-     * </p>
-     *
-     * @param beta The number that matrix 'b' is multiplied by.
-     * @param a A Matrix. Modified.
-     * @param b A Matrix. Not modified.
-     */
-    public static void addEquals( DenseMatrix64F a , double beta, DenseMatrix64F b )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataA[i] += beta * dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following operation:<br>
-     * <br>
-     * c = a + b <br>
-     * c<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
-     * </p>
-     *
-     * <p>
-     * Matrix C can be the same instance as Matrix A and/or B.
-     * </p>
-     *
-     * @param a A Matrix. Not modified.
-     * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
-     */
-    public static void add( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i]+dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following operation:<br>
-     * <br>
-     * c = a + &beta; * b <br>
-     * c<sub>ij</sub> = a<sub>ij</sub> + &beta; * b<sub>ij</sub> <br>
-     * </p>
-     *
-     * <p>
-     * Matrix C can be the same instance as Matrix A and/or B.
-     * </p>
-     *
-     * @param a A Matrix. Not modified.
-     * @param beta Scaling factor for matrix b.
-     * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
-     */
-    public static void add( DenseMatrix64F a , double beta , DenseMatrix64F b , DenseMatrix64F c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i]+beta*dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following operation:<br>
-     * <br>
-     * c = &alpha; * a + &beta; * b <br>
-     * c<sub>ij</sub> = &alpha; * a<sub>ij</sub> + &beta; * b<sub>ij</sub> <br>
-     * </p>
-     *
-     * <p>
-     * Matrix C can be the same instance as Matrix A and/or B.
-     * </p>
-     *
-     * @param alpha A scaling factor for matrix a.
-     * @param a A Matrix. Not modified.
-     * @param beta A scaling factor for matrix b.
-     * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
-     */
-    public static void add( double alpha , DenseMatrix64F a , double beta , DenseMatrix64F b , DenseMatrix64F c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = alpha*dataA[i]+beta*dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following operation:<br>
-     * <br>
-     * c = &alpha; * a + b <br>
-     * c<sub>ij</sub> = &alpha; * a<sub>ij</sub> + b<sub>ij</sub> <br>
-     * </p>
-     *
-     * <p>
-     * Matrix C can be the same instance as Matrix A and/or B.
-     * </p>
-     *
-     * @param alpha A scaling factor for matrix a.
-     * @param a A Matrix. Not modified.
-     * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
-     */
-    public static void add( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = alpha*dataA[i]+dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs an in-place scalar addition:<br>
-     * <br>
-     * a = a + val<br>
-     * a<sub>ij</sub> = a<sub>ij</sub> + val<br>
-     * </p>
-     *
-     * @param a A matrix.  Modified.
-     * @param val The value that's added to each element.
-     */
-    public static void add( DenseMatrix64F a , double val ) {
-        final double dataA[] = a.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataA[i] += val;
-        }
-    }
-
-    /**
-     * <p>Performs scalar addition:<br>
-     * <br>
-     * c = a + val<br>
-     * c<sub>ij</sub> = a<sub>ij</sub> + val<br>
-     * </p>
-     *
-     * @param a A matrix. Not modified.
-     * @param c A matrix. Modified.
-     * @param val The value that's added to each element.
-     */
-    public static void add( DenseMatrix64F a , double val , DenseMatrix64F c ) {
-        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new IllegalArgumentException("Dimensions of a and c do not match.");
-        }
-        final double dataA[] = a.data;
-        final double dataC[] = c.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i]+val;
-        }
-    }
-
-    /**
-     * <p>Performs the following subtraction operation:<br>
-     * <br>
-     * a = a - b  <br>
-     * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub>
-     * </p>
-     *
-     * @param a A Matrix. Modified.
-     * @param b A Matrix. Not modified.
-     */
-    public static void subEquals( DenseMatrix64F a , DenseMatrix64F b )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataA[i] -= dataB[i];
-        }
-    }
-
-    /**
-     * <p>Performs the following subtraction operation:<br>
-     * <br>
-     * c = a - b  <br>
-     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub>
-     * </p>
-     * <p>
-     * Matrix C can be the same instance as Matrix A and/or B.
-     * </p>
-     *
-     * @param a A Matrix. Not modified.
-     * @param b A Matrix. Not modified.
-     * @param c A Matrix. Modified.
-     */
-    public static void sub( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
-        }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i] - dataB[i];
-        }
-    }
-
-    /**
      * <p>
      * Solves for x in the following equation:<br>
      * <br>
@@ -815,133 +476,6 @@ public class CommonOps {
 
         solver.solve(b,x);
         return true;
-    }
-
-    /**
-     * <p>
-     * Performs an in-place element by element scalar multiplication.<br>
-     * <br>
-     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
-     * </p>
-     *
-     * @param a The matrix that is to be scaled.  Modified.
-     * @param alpha the amount each element is multiplied by.
-     */
-    public static void scale( double alpha , DenseMatrix64F a )
-    {
-        final double data[] = a.data;
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            data[i] *= alpha;
-        }
-    }
-
-    /**
-     * <p>
-     * Performs an element by element scalar multiplication.<br>
-     * <br>
-     * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>
-     * </p>
-     *
-     * @param a The matrix that is to be scaled.  Modified.
-     * @param alpha the amount each element is multiplied by.
-     */
-    public static void scale( double alpha , DenseMatrix64F a , DenseMatrix64F b)
-    {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new IllegalArgumentException("Matrices must have the same shape");
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            dataB[i] = dataA[i]*alpha;
-        }
-    }
-
-    /**
-     * <p>
-     * Performs an in-place element by element scalar division.<br>
-     * <br>
-     * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
-     * </p>
-     *
-     * @param a The matrix whose elements are to be divided.  Modified.
-     * @param alpha the amount each element is divided by.
-     */
-    public static void div( double alpha , DenseMatrix64F a )
-    {
-        final double data[] = a.data;
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            data[i] /= alpha;
-        }
-    }
-
-    /**
-     * <p>
-     * Performs an element by element scalar division.<br>
-     * <br>
-     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
-     * </p>
-     *
-     * @param a The matrix whose elements are to be divided.  Modified.
-     * @param alpha the amount each element is divided by.
-     */
-    public static void div( double alpha , DenseMatrix64F a , DenseMatrix64F b)
-    {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new IllegalArgumentException("Matrices must have the same shape");
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            dataB[i] = dataA[i]/alpha;
-        }
-    }
-
-    /**
-     * <p>
-     * Changes the sign of every element in the matrix.<br>
-     * <br>
-     * a<sub>ij</sub> = -a<sub>ij</sub>
-     * </p>
-     *
-     * @param a A matrix. Modified.
-     */
-    public static void changeSign( DenseMatrix64F a )
-    {
-        final double data[] = a.data;
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            data[i] = -data[i];
-        }
-    }
-
-    /**
-     * <p>
-     * Sets every element in the matrix to the specified value.<br>
-     * <br>
-     * a<sub>ij</sub> = value
-     * <p>
-     *
-     * @param a A matrix whose elements are about to be set. Modified.
-     * @param value The value each element will have.
-     */
-    public static void set( DenseMatrix64F a , double value )
-    {
-        final double data[] = a.data;
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            data[i] = value;
-        }
     }
 
     /**
@@ -1001,109 +535,6 @@ public class CommonOps {
         }
     }
 
-    /**
-     * <p>
-     * Returns the value of the element in the matrix that has the largest value.<br>
-     * <br>
-     * Max{ a<sub>ij</sub> } for all i and j<br>
-     * </p>
-     *
-     * @param a A matrix.
-     * @return The max element value of the matrix.
-     */
-    public static double elementMax( DenseMatrix64F a ) {
-        final int size = a.getNumElements();
-
-        final double dataA[] = a.data;
-
-        double max = dataA[0];
-        for( int i = 1; i < size; i++ ) {
-            double val = dataA[i];
-            if( val >= max ) {
-                max = val;
-            }
-        }
-
-        return max;
-    }
-
-    /**
-     * <p>
-     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
-     * <br>
-     * Max{ |a<sub>ij</sub>| } for all i and j<br>
-     * </p>
-     *
-     * @param a A matrix.
-     * @return The max element value of the matrix.
-     */
-    public static double elementMaxAbs( DenseMatrix64F a ) {
-        final int size = a.getNumElements();
-
-        final double dataA[] = a.data;
-
-        double max = 0;
-        for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(dataA[i]);
-            if( val > max ) {
-                max = val;
-            }
-        }
-
-        return max;
-    }
-
-    /**
-     * <p>
-     * Returns the value of the element in the matrix that has the minimum value.<br>
-     * <br>
-     * Min{ a<sub>ij</sub> } for all i and j<br>
-     * </p>
-     *
-     * @param a A matrix.
-     * @return The value of element in the matrix with the minimum value.
-     */
-    public static double elementMin( DenseMatrix64F a ) {
-        final int size = a.getNumElements();
-
-        final double dataA[] = a.data;
-
-        double min = dataA[0];
-        for( int i = 1; i < size; i++ ) {
-            double val = dataA[i];
-            if( val < min ) {
-                min = val;
-            }
-        }
-
-        return min;
-    }
-
-    /**
-     * <p>
-     * Returns the absolute value of the element in the matrix that has the smallest absolute value.<br>
-     * <br>
-     * Min{ |a<sub>ij</sub>| } for all i and j<br>
-     * </p>
-     *
-     * @param a A matrix.
-     * @return The max element value of the matrix.
-     */
-    public static double elementMinAbs( DenseMatrix64F a ) {
-        final int size = a.getNumElements();
-
-        final double dataA[] = a.data;
-
-        double min = Double.MAX_VALUE;
-        for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(dataA[i]);
-            if( val < min ) {
-                min = val;
-            }
-        }
-
-        return min;
-    }
 
     /**
      * <p>
@@ -1286,50 +717,6 @@ public class CommonOps {
 
             CommonOps.multTransA(A,AAT,invA);
         }
-    }
-
-    /**
-     * <p>
-     * Computes the sum of all the elements in the matrix:<br>
-     * <br>
-     * sum(i=1:m , j=1:n ; a<sub>ij</sub>)
-     * <p>
-     *
-     * @param mat An m by n matrix. Not modified.
-     * @return The sum of the elements.
-     */
-    public static double elementSum( DenseMatrix64F mat ) {
-        double total = 0;
-
-        int size = mat.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            total += mat.data[i];
-        }
-
-        return total;
-    }
-
-    /**
-     * <p>
-     * Computes the sum of the absolute value all the elements in the matrix:<br>
-     * <br>
-     * sum(i=1:m , j=1:n ; |a<sub>ij</sub>|)
-     * <p>
-     *
-     * @param mat An m by n matrix. Not modified.
-     * @return The sum of the absolute value of each element.
-     */
-    public static double elementSumAbs( DenseMatrix64F mat ) {
-        double total = 0;
-
-        int size = mat.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            total += Math.abs(mat.data[i]);
-        }
-
-        return total;
     }
 
     /**
@@ -1700,4 +1087,620 @@ public class CommonOps {
             }
         }
     }
+
+    /**
+     * <p>
+     * Returns the value of the element in the matrix that has the largest value.<br>
+     * <br>
+     * Max{ a<sub>ij</sub> } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMax( D1Matrix64F a ) {
+        final int size = a.getNumElements();
+
+        final double dataA[] = a.data;
+
+        double max = dataA[0];
+        for( int i = 1; i < size; i++ ) {
+            double val = dataA[i];
+            if( val >= max ) {
+                max = val;
+            }
+        }
+
+        return max;
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
+     * <br>
+     * Max{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMaxAbs( D1Matrix64F a ) {
+        final int size = a.getNumElements();
+
+        final double dataA[] = a.data;
+
+        double max = 0;
+        for( int i = 0; i < size; i++ ) {
+            double val = Math.abs(dataA[i]);
+            if( val > max ) {
+                max = val;
+            }
+        }
+
+        return max;
+    }
+
+    /**
+     * <p>
+     * Returns the value of the element in the matrix that has the minimum value.<br>
+     * <br>
+     * Min{ a<sub>ij</sub> } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix.
+     * @return The value of element in the matrix with the minimum value.
+     */
+    public static double elementMin( D1Matrix64F a ) {
+        final int size = a.getNumElements();
+
+        final double dataA[] = a.data;
+
+        double min = dataA[0];
+        for( int i = 1; i < size; i++ ) {
+            double val = dataA[i];
+            if( val < min ) {
+                min = val;
+            }
+        }
+
+        return min;
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the smallest absolute value.<br>
+     * <br>
+     * Min{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMinAbs( D1Matrix64F a ) {
+        final int size = a.getNumElements();
+
+        final double dataA[] = a.data;
+
+        double min = Double.MAX_VALUE;
+        for( int i = 0; i < size; i++ ) {
+            double val = Math.abs(dataA[i]);
+            if( val < min ) {
+                min = val;
+            }
+        }
+
+        return min;
+    }
+
+    /**
+     * <p>Performs the an element by element multiplication operation:<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the multiplication operation. Modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     */
+    public static void elementMult( D1Matrix64F a , D1Matrix64F b )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        int length = a.getNumElements();
+        double dataA[] = a.data;
+        double dataB[] = b.data;
+
+        for( int i = 0; i < length; i++ ) {
+            dataA[i] *= dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the an element by element multiplication operation:<br>
+     * <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void elementMult( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numRows != c.numRows || a.numCols != c.numCols ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        int length = a.getNumElements();
+        double dataA[] = a.data;
+        double dataB[] = b.data;
+        double dataC[] = c.data;
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = dataA[i] * dataB[i];
+        }
+    }
+
+    /**
+     * <p>
+     * Computes the sum of all the elements in the matrix:<br>
+     * <br>
+     * sum(i=1:m , j=1:n ; a<sub>ij</sub>)
+     * <p>
+     *
+     * @param mat An m by n matrix. Not modified.
+     * @return The sum of the elements.
+     */
+    public static double elementSum( DenseMatrix64F mat ) {
+        double total = 0;
+
+        int size = mat.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            total += mat.data[i];
+        }
+
+        return total;
+    }
+
+    /**
+     * <p>
+     * Computes the sum of the absolute value all the elements in the matrix:<br>
+     * <br>
+     * sum(i=1:m , j=1:n ; |a<sub>ij</sub>|)
+     * <p>
+     *
+     * @param mat An m by n matrix. Not modified.
+     * @return The sum of the absolute value of each element.
+     */
+    public static double elementSumAbs( DenseMatrix64F mat ) {
+        double total = 0;
+
+        int size = mat.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            total += Math.abs(mat.data[i]);
+        }
+
+        return total;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a + b <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param a A Matrix. Modified.
+     * @param b A Matrix. Not modified.
+     */
+    public static void addEquals( D1Matrix64F a , D1Matrix64F b )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataA[i] += dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a +  &beta; * b  <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> + &beta; * b<sub>ij</sub>
+     * </p>
+     *
+     * @param beta The number that matrix 'b' is multiplied by.
+     * @param a A Matrix. Modified.
+     * @param b A Matrix. Not modified.
+     */
+    public static void addEquals( D1Matrix64F a , double beta, D1Matrix64F b )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataA[i] += beta * dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a + b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void add( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+            throw new RuntimeException("The matrices are not all the same dimension.");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final double dataC[] = c.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = dataA[i]+dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a + &beta; * b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> + &beta; * b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param beta Scaling factor for matrix b.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void add( D1Matrix64F a , double beta , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+            throw new RuntimeException("The matrices are not all the same dimension.");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final double dataC[] = c.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = dataA[i]+beta*dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = &alpha; * a + &beta; * b <br>
+     * c<sub>ij</sub> = &alpha; * a<sub>ij</sub> + &beta; * b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param alpha A scaling factor for matrix a.
+     * @param a A Matrix. Not modified.
+     * @param beta A scaling factor for matrix b.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void add( double alpha , D1Matrix64F a , double beta , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+            throw new RuntimeException("The matrices are not all the same dimension.");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final double dataC[] = c.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = alpha*dataA[i]+beta*dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = &alpha; * a + b <br>
+     * c<sub>ij</sub> = &alpha; * a<sub>ij</sub> + b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param alpha A scaling factor for matrix a.
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void add( double alpha , D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+            throw new RuntimeException("The matrices are not all the same dimension.");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final double dataC[] = c.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = alpha*dataA[i]+dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs an in-place scalar addition:<br>
+     * <br>
+     * a = a + val<br>
+     * a<sub>ij</sub> = a<sub>ij</sub> + val<br>
+     * </p>
+     *
+     * @param a A matrix.  Modified.
+     * @param val The value that's added to each element.
+     */
+    public static void add( D1Matrix64F a , double val ) {
+        final double dataA[] = a.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataA[i] += val;
+        }
+    }
+
+    /**
+     * <p>Performs scalar addition:<br>
+     * <br>
+     * c = a + val<br>
+     * c<sub>ij</sub> = a<sub>ij</sub> + val<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param c A matrix. Modified.
+     * @param val The value that's added to each element.
+     */
+    public static void add( D1Matrix64F a , double val , D1Matrix64F c ) {
+        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
+            throw new IllegalArgumentException("Dimensions of a and c do not match.");
+        }
+        final double dataA[] = a.data;
+        final double dataC[] = c.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = dataA[i]+val;
+        }
+    }
+
+    /**
+     * <p>Performs the following subtraction operation:<br>
+     * <br>
+     * a = a - b  <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub>
+     * </p>
+     *
+     * @param a A Matrix. Modified.
+     * @param b A Matrix. Not modified.
+     */
+    public static void subEquals( D1Matrix64F a , D1Matrix64F b )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataA[i] -= dataB[i];
+        }
+    }
+
+    /**
+     * <p>Performs the following subtraction operation:<br>
+     * <br>
+     * c = a - b  <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub>
+     * </p>
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix. Modified.
+     */
+    public static void sub( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final double dataC[] = c.data;
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            dataC[i] = dataA[i] - dataB[i];
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar multiplication.<br>
+     * <br>
+     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param a The matrix that is to be scaled.  Modified.
+     * @param alpha the amount each element is multiplied by.
+     */
+    public static void scale( double alpha , DenseMatrix64F a )
+    {
+        final double data[] = a.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            data[i] *= alpha;
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar multiplication.<br>
+     * <br>
+     * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param a The matrix that is to be scaled.  Modified.
+     * @param alpha the amount each element is multiplied by.
+     */
+    public static void scale( double alpha , DenseMatrix64F a , DenseMatrix64F b)
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols )
+            throw new IllegalArgumentException("Matrices must have the same shape");
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            dataB[i] = dataA[i]*alpha;
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar division.<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
+     * </p>
+     *
+     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param alpha the amount each element is divided by.
+     */
+    public static void div( double alpha , D1Matrix64F a )
+    {
+        final double data[] = a.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            data[i] /= alpha;
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar division.<br>
+     * <br>
+     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
+     * </p>
+     *
+     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param alpha the amount each element is divided by.
+     */
+    public static void div( double alpha , D1Matrix64F a , D1Matrix64F b)
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols )
+            throw new IllegalArgumentException("Matrices must have the same shape");
+
+        final double dataA[] = a.data;
+        final double dataB[] = b.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            dataB[i] = dataA[i]/alpha;
+        }
+    }
+
+    /**
+     * <p>
+     * Changes the sign of every element in the matrix.<br>
+     * <br>
+     * a<sub>ij</sub> = -a<sub>ij</sub>
+     * </p>
+     *
+     * @param a A matrix. Modified.
+     */
+    public static void changeSign( D1Matrix64F a )
+    {
+        final double data[] = a.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            data[i] = -data[i];
+        }
+    }
+
+    /**
+     * <p>
+     * Sets every element in the matrix to the specified value.<br>
+     * <br>
+     * a<sub>ij</sub> = value
+     * <p>
+     *
+     * @param a A matrix whose elements are about to be set. Modified.
+     * @param value The value each element will have.
+     */
+    public static void set( D1Matrix64F a , double value )
+    {
+        final double data[] = a.data;
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            data[i] = value;
+        }
+    }
+
 }

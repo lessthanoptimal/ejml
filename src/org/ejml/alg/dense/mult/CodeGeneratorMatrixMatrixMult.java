@@ -123,7 +123,9 @@ public class CodeGeneratorMatrixMatrixMult {
         String b_numRows = tranB ? "b.numCols" : "b.numRows";
 
         String ret =
-                        "        if( "+a_numCols+" != "+b_numRows+" ) {\n" +
+                        "        if( a == c || b == c )\n" +
+                        "            throw new IllegalArgumentException(\"Neither 'a' or 'b' can be the same matrix as 'c'\");\n"+
+                        "        else if( "+a_numCols+" != "+b_numRows+" ) {\n" +
                         "            throw new MatrixDimensionException(\"The 'a' and 'b' matrices do not have compatible dimensions\");\n" +
                         "        } else if( "+a_numRows+" != c.numRows || "+b_numCols+" != c.numCols ) {\n" +
                         "            throw new MatrixDimensionException(\"The results matrix does not have the desired dimensions\");\n" +

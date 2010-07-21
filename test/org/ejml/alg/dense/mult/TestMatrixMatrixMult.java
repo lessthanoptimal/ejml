@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -39,10 +40,47 @@ import static org.junit.Assert.fail;
 public class TestMatrixMatrixMult {
     Random rand = new Random(121342);
 
+    /**
+     * Checks to see that it only accepts input matrices that have compatible shapes
+     */
     @Test
     public void checkShapesOfInput() {
         CheckMatrixMultShape check = new CheckMatrixMultShape(MatrixMatrixMult.class);
         check.checkAll();
+    }
+
+    /**
+     * Checks to see if the input 'c' matrix is not 'a' or 'b'
+     */
+    @Test
+    public void checkInputInstance() throws IllegalAccessException {
+        Method methods[] = MatrixMatrixMult.class.getMethods();
+        for( Method method : methods ) {
+            String name = method.getName();
+
+            if( !name.contains("mult") )
+                continue;
+
+
+            // make sure it checks that the c matrix is not a or b
+            try {
+                DenseMatrix64F a = new DenseMatrix64F(2,2);
+                DenseMatrix64F b = new DenseMatrix64F(2,2);
+                invoke(method,2.0,a,b,a);
+                fail("An exception should have been thrown");
+            } catch( InvocationTargetException e ) {
+                assertTrue(e.getTargetException() instanceof IllegalArgumentException );
+            }
+
+            try {
+                DenseMatrix64F a = new DenseMatrix64F(2,2);
+                DenseMatrix64F b = new DenseMatrix64F(2,2);
+                invoke(method,2.0,a,b,b);
+                fail("An exception should have been thrown");
+            } catch( InvocationTargetException e ) {
+                assertTrue(e.getTargetException() instanceof IllegalArgumentException );
+            }
+        }
     }
 
     /**
@@ -93,7 +131,7 @@ public class TestMatrixMatrixMult {
     }
 
     /**
-     * Sees if all the matrix multiplcations produce the expected results against the provided
+     * Sees if all the matrix multiplications produce the expected results against the provided
      * known solution.
      */
     private void checkResults( DenseMatrix64F a_orig ,
@@ -111,7 +149,7 @@ public class TestMatrixMatrixMult {
             String name = method.getName();
 //            System.out.println(name);
 
-            // only look at function which perform matrix multiplcation
+            // only look at function which perform matrix multiplications
             if( !name.contains("mult") )
                 continue;
 
@@ -145,7 +183,7 @@ public class TestMatrixMatrixMult {
                 }
             }
 
-            invoke(method,alpha,a,b,c);
+            invoke(method,alpha,a,b,c);;
 
             if( !MatrixFeatures.isIdentical(expected,c,1e-12) ) {
                 fail("Did not produce the expected results");

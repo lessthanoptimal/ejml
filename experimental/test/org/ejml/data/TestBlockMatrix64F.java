@@ -21,8 +21,6 @@ package org.ejml.data;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-
 
 /**
  * @author Peter Abeles
@@ -41,39 +39,4 @@ public class TestBlockMatrix64F {
         g.allTests();
     }
 
-    @Test
-    public void setDenseMatrix64F() {
-        double d[][] = new double[][]{{1,2},{3,4},{5,6}};
-
-        DenseMatrix64F rowMat = new DenseMatrix64F(d);
-
-        BlockMatrix64F blockMat;
-
-        // try differnt sizes of blocks and see if they all work
-        blockMat = new BlockMatrix64F(rowMat.numRows,rowMat.numCols,10);
-        blockMat.set(rowMat);
-        checkIdentical(blockMat,rowMat);
-
-        blockMat = new BlockMatrix64F(rowMat.numRows,rowMat.numCols,2);
-        blockMat.set(rowMat);
-        checkIdentical(blockMat,rowMat);
-
-        blockMat = new BlockMatrix64F(rowMat.numRows,rowMat.numCols,3);
-        blockMat.set(rowMat);
-        checkIdentical(blockMat,rowMat);
-    }
-
-    private void checkIdentical( Matrix64F a , Matrix64F b ) {
-        assertTrue(a.getNumRows() == b.getNumRows());
-        assertTrue(a.getNumCols() == b.getNumCols());
-
-        int numRows = a.getNumRows();
-        int numCols = a.getNumCols();
-
-        for( int i = 0; i < numRows; i++ ) {
-            for( int j = 0; j < numCols; j++ ) {
-                assertTrue(a.get(i,j)==b.get(i,j));
-            }
-        }
-    }
 }

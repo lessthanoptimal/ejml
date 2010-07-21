@@ -48,12 +48,24 @@ public abstract class GenericTestsMatrix64F {
     }
 
     public void testSetAndGet_2D() {
-        Matrix64F mat = createMatrix(2,3);
+        int M = 10;
+        int N = 12;
 
-        mat.set(1,1,2);
+        Matrix64F mat = createMatrix(M,N);
 
-        assertEquals(0,mat.get(0,0),1e-6);
-        assertEquals(2,mat.get(1,1),1e-6);
+        for( int i = 0; i < M; i++ ) {
+            for( int j = 0; j < N; j++ ) {
+                mat.set(i,j, i*M+j);
+            }
+        }
+
+        for( int i = 0; i < M; i++ ) {
+            for( int j = 0; j < N; j++ ) {
+                double found = mat.get(i,j);
+
+                assertEquals(i*M+j,found,1e-8);
+            }
+        }
     }
 
 }
