@@ -411,9 +411,9 @@ public class TestSimpleMatrix {
     }
 
     @Test
-    public void elementMult() {
+    public void scale() {
         SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
-        SimpleMatrix b = a.elementMult(1.5);
+        SimpleMatrix b = a.scale(1.5);
 
         for( int i = 0; i < a.numRows(); i++ ) {
             for( int j = 0; j < a.numCols(); j++ ) {
@@ -423,9 +423,9 @@ public class TestSimpleMatrix {
     }
 
     @Test
-    public void elementDiv() {
+    public void div_scalar() {
         SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
-        SimpleMatrix b = a.elementDiv(1.5);
+        SimpleMatrix b = a.div(1.5);
 
         for( int i = 0; i < a.numRows(); i++ ) {
             for( int j = 0; j < a.numCols(); j++ ) {

@@ -58,7 +58,7 @@ public class QRExampleSimple {
 
             if( max > 0 && v.getNumElements() > 1 ) {
                 // normalize to reduce overflow issues
-                v = v.elementDiv(max);
+                v = v.div(max);
 
                 // compute the magnitude of the vector
                 double tau = v.normF();
@@ -69,7 +69,7 @@ public class QRExampleSimple {
                 double u_0 = v.get(0) + tau;
                 double gamma = u_0/tau;
 
-                v = v.elementDiv(u_0);
+                v = v.div(u_0);
                 v.set(0,1.0);
 
                 // extract the submatrix of A which is being operated on

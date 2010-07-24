@@ -318,7 +318,7 @@ public class SimpleMatrix {
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#sub(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps#sub(D1Matrix64F, D1Matrix64F, D1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -341,7 +341,7 @@ public class SimpleMatrix {
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#add( DenseMatrix64F, double , DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps#add( D1Matrix64F, double , D1Matrix64F, D1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -363,7 +363,7 @@ public class SimpleMatrix {
      * @param val The multiplication factor.
      * @return The scaled matrix.
      */
-    public SimpleMatrix elementMult( double val ) {
+    public SimpleMatrix scale( double val ) {
         SimpleMatrix ret = new SimpleMatrix(this);
 
         CommonOps.scale(val,ret.mat);
@@ -374,12 +374,12 @@ public class SimpleMatrix {
     /**
      * Divides each element in this matrix by the specified value.
      *
-     * @see CommonOps#scale(double, DenseMatrix64F)
+     * @see CommonOps#div(double, D1Matrix64F)
      *
      * @param val Divisor.
      * @return Matrix with its elements divided by the specified value.
      */
-    public SimpleMatrix elementDiv( double val ) {
+    public SimpleMatrix div( double val ) {
         SimpleMatrix ret = new SimpleMatrix(this);
 
         CommonOps.div(val,ret.mat);
@@ -463,7 +463,7 @@ public class SimpleMatrix {
      * a<sub>ij</sub> = val<br>
      * </p>
      *
-     * @see CommonOps#set(DenseMatrix64F, double)
+     * @see CommonOps#set(D1Matrix64F, double)
      *
      * @param val The value each element is set to.
      */
@@ -474,7 +474,7 @@ public class SimpleMatrix {
     /**
      * Sets all the elements in the matrix equal to zero.
      *
-     * @see CommonOps#set(DenseMatrix64F, double)
+     * @see CommonOps#set(D1Matrix64F, double)
      */
     public void zero() {
         mat.zero();

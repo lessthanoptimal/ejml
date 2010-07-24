@@ -16,6 +16,7 @@
 - All QR decompositions now works on matrices with any shape
 - Added set() to MatrixIterator
 - Added additional checks to matrix multiply that makes sure 'c' is not the same matrix as 'a' or ''b'
+  - Suggested by xcolwell
 
 ----- Version 0.13
 
