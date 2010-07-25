@@ -19,14 +19,17 @@
 
 package org.ejml.data;
 
+import java.io.Serializable;
 
 /**
  * An abstract class for all 64 bit floating point rectangular matrices.
  *
  * @author Peter Abeles
  */
-public abstract class Matrix64F {
+public abstract class Matrix64F implements Serializable {
 
+    private static final long serialVersionUID = 423423451942L;
+    
     /**
      * Number of rows in the matrix.
      */

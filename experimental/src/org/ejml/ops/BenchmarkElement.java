@@ -39,7 +39,7 @@ public class BenchmarkElement {
 
         long timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {
-            CommonOps.div(num,A);
+            CommonOps.divide(num,A);
         }
         long timeAfter = System.currentTimeMillis();
 

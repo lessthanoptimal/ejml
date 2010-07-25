@@ -22,8 +22,7 @@ package org.ejml.data;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.MatrixDimensionException;
 import org.ejml.ops.CommonOps;
-
-import java.io.Serializable;
+import org.ejml.ops.MatrixIO;
 
 
 /**
@@ -83,7 +82,7 @@ import java.io.Serializable;
  *
  * @author Peter Abeles
  */
-public class DenseMatrix64F extends D1Matrix64F implements Serializable {
+public class DenseMatrix64F extends D1Matrix64F {
 
     /**
      * <p>
@@ -405,7 +404,7 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
      *
      */
     public void print() {
-        UtilEjml.print(this);
+        MatrixIO.print(this);
     }
 
     /**
@@ -415,6 +414,6 @@ public class DenseMatrix64F extends D1Matrix64F implements Serializable {
      * @param format The format which each element is printed uses.  See printf.
      */
     public void print( String format ) {
-        UtilEjml.print(this,format);
+        MatrixIO.print(this,format);
     }
 }

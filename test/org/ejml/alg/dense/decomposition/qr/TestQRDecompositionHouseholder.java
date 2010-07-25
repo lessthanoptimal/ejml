@@ -66,7 +66,7 @@ public class TestQRDecompositionHouseholder extends GenericQrCheck {
 
         qr.householder(w,A.getMatrix());
 
-        SimpleMatrix U = new SimpleMatrix(width,1,qr.getU()).extractMatrix(w,width-1,0,0);
+        SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU()).extractMatrix(w,width-1,0,0);
 
         SimpleMatrix I = SimpleMatrix.identity(width-w);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));

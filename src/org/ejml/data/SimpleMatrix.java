@@ -26,6 +26,7 @@ import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.ops.*;
 
+import java.io.IOException;
 import java.util.Random;
 
 
@@ -33,21 +34,44 @@ import java.util.Random;
  * <p>
  * {@link org.ejml.data.SimpleMatrix} is a wrapper around {@link org.ejml.data.DenseMatrix64F} that provides an
  * easy to use object oriented interface for performing matrix operations.  It is designed to be
- * more accessible to novice programmers and provide a way to rapidly code up solutions.  The disadvantage
- * of using this class is that it is more resource intensive.  While hard to generalize, in a KalmanFilter example there was
- * about a 30% performance hit when SimpleMatrix was used exclusively.
+ * more accessible to novice programmers and provide a way to rapidly code up solutions by simplifying
+ * memory management and providing easy to use functions.
  * </p>
  *
  * <p>
- * It is easy to work with both {@link org.ejml.data.DenseMatrix64F} and SimpleMatrix in the same code base.
+ * Most functions in SimpleMatrix do not modify the original matrix.  Instead they
+ * create a new SimpleMatrix instance which is modified and returned.  This greatly simplifies memory
+ * management and writing of code in general. It also allows operations to be chained, as is shown
+ * below:<br>
+ * <br>
+ * SimpleMatrix K = P.mult(H.transpose().mult(S.invert()));
+ * </p>
+ *
+ * <p>
+ * Working with both {@link org.ejml.data.DenseMatrix64F} and SimpleMatrix in the same code base is easy.
  * To access the internal DenseMatrix64F in a SimpleMatrix simply call {@link org.ejml.data.SimpleMatrix#getMatrix()}.
- * To turn a DenseMatrix64F into a SimpleMatrix use {@link SimpleMatrix#wrap(DenseMatrix64F)}.
+ * To turn a DenseMatrix64F into a SimpleMatrix use {@link SimpleMatrix#wrap(DenseMatrix64F)}.  Not
+ * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
+ * DenseMatrix64F.
  * </p>
  *
  * <p>
- * Most of the functions related to this class do not modify the original matrix.  Instead they
- * create a new instance which is modified and returned.  This greatly simplifies memory
- * management and writing of code in general.
+ * PERFORMANCE: The disadvantage of using this class is that it is more resource intensive, since
+ * it creates a new matrix each time an operation is performed.  This makes the JavaVM work harder and
+ * Java automatically initializes the matrix to be all zeros.  Typically operations on small matrices
+ * or operations that have a runtime linear with the number of elements are the most affected.  More
+ * computationally intensive operations have only a slight unnoticeable performance loss.
+ * </p>
+ *
+ * <p>
+ * It is hard to judge how significant the performance hit will be in general.  Often the performance
+ * hit is insignificant since other parts of the application are more processor intensive or the bottle
+ * neck is a more computationally complex operation.  The best approach is benchmark and then optimize the code.
+ * </p>
+ *
+ * <p>
+ * The object oriented approach used in SimpleMatrix was originally inspired by Jama.
+ * http://math.nist.gov/javanumerics/jama/
  * </p>
  *
  * @author Peter Abeles
@@ -61,7 +85,7 @@ public class SimpleMatrix {
 
 
     /**
-     * The matrix data that this is a wrapper around.
+     * Internal matrix which this is a wrapper around.
      */
     protected DenseMatrix64F mat;
 
@@ -69,13 +93,13 @@ public class SimpleMatrix {
      * Creates a new matrix with the specified initial value.
      *
      * @see DenseMatrix64F#DenseMatrix64F(int,int,boolean,double...)
-     *
-     * @param numRows The number of rows.
+     *  @param numRows The number of rows.
      * @param numCols The number of columns.
+     * @param rowMajor If the data is stored in a row major or column major format.
      * @param data The row-major formatted 1D array. Not modified.
      */
-    public SimpleMatrix( int numRows , int numCols , double data[] ) {
-        mat = new DenseMatrix64F(numRows,numCols, true, data);
+    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double data[]) {
+        mat = new DenseMatrix64F(numRows,numCols, rowMajor, data);
     }
 
     /**
@@ -332,6 +356,7 @@ public class SimpleMatrix {
         return ret;
     }
 
+    // TODO remove this function?
     /**
      * <p>
      * Performs a matrix addition and scale operation.<br>
@@ -374,15 +399,15 @@ public class SimpleMatrix {
     /**
      * Divides each element in this matrix by the specified value.
      *
-     * @see CommonOps#div(double, D1Matrix64F)
+     * @see CommonOps#divide(double, D1Matrix64F)
      *
      * @param val Divisor.
      * @return Matrix with its elements divided by the specified value.
      */
-    public SimpleMatrix div( double val ) {
+    public SimpleMatrix divide( double val ) {
         SimpleMatrix ret = new SimpleMatrix(this);
 
-        CommonOps.div(val,ret.mat);
+        CommonOps.divide(val,ret.mat);
 
         return ret;
     }
@@ -458,7 +483,7 @@ public class SimpleMatrix {
 
     /**
      * <p>
-     * Sets all the elements in the matrix equal to the specified value.<br>
+     * Sets all the elements in this matrix equal to the specified value.<br>
      * <br>
      * a<sub>ij</sub> = val<br>
      * </p>
@@ -690,14 +715,14 @@ public class SimpleMatrix {
      * Prints the matrix to standard out.
      */
     public void print() {
-        UtilEjml.print(mat);
+        MatrixIO.print(mat);
     }
 
     /**
      * Prints the matrix to standard out with the specified precision.
      */
     public void print(int numChar , int precision) {
-        UtilEjml.print(mat,numChar,precision);
+        MatrixIO.print(mat,numChar,precision);
     }
 
     /**
@@ -707,7 +732,7 @@ public class SimpleMatrix {
      * </p>
      */
     public void print( String format ) {
-        UtilEjml.print(mat,format);
+        MatrixIO.print(mat,format);
     }
 
     /**
@@ -917,6 +942,54 @@ public class SimpleMatrix {
     public double elementSum() {
         return CommonOps.elementSum(mat);
     }
+
+    /**
+     * <p>
+     * Changes the sign of every element in the matrix.<br>
+     * <br>
+     * a<sub>ij</sub> = -a<sub>ij</sub>
+     * </p>
+     *
+     * @return A matrix that is the negative of the original.
+     */
+    public SimpleMatrix negative() {
+        SimpleMatrix A = copy();
+        CommonOps.changeSign(A.getMatrix());
+        return A;
+    }
+
+    /**
+     * <p>
+     * Saves this matrix to a file.
+     * </p>
+     *
+     * @see MatrixIO#save(DenseMatrix64F, String)
+     *
+     * @param fileName 
+     * @throws IOException
+     */
+    public void saveToFile( String fileName )
+        throws IOException
+    {
+        MatrixIO.save(mat,fileName);
+    }
+
+    /**
+     * <p>
+     * Loads a new matrix from a file.
+     * </p>
+     * 
+     * @see MatrixIO#load(String)
+     *
+     * @param fileName File which is to be loaded.
+     * @return The matrix.
+     * @throws IOException
+     */
+    public static SimpleMatrix load( String fileName )
+            throws IOException {
+        return SimpleMatrix.wrap( MatrixIO.load(fileName));
+    }
+
 
     /**
      * Wrapper around SVD for SimpleMatrix

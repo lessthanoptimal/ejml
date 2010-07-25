@@ -40,7 +40,7 @@ public class TestSimpleMatrix {
     @Test
     public void constructor_1d_array() {
         double d[] = new double[]{2,5,3,9,-2,6,7,4};
-        SimpleMatrix s = new SimpleMatrix(3,2,d);
+        SimpleMatrix s = new SimpleMatrix(3,2, true, d);
         DenseMatrix64F m = new DenseMatrix64F(3,2, true, d);
 
         UtilTestMatrix.checkEquals(m,s.getMatrix());
@@ -425,7 +425,7 @@ public class TestSimpleMatrix {
     @Test
     public void div_scalar() {
         SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
-        SimpleMatrix b = a.div(1.5);
+        SimpleMatrix b = a.divide(1.5);
 
         for( int i = 0; i < a.numRows(); i++ ) {
             for( int j = 0; j < a.numCols(); j++ ) {
@@ -506,5 +506,16 @@ public class TestSimpleMatrix {
         for( int i = 0; i < A.numRows(); i++ ) {
             assertEquals(A.get(i,2),c.get(i,0),1e-10);
         }
+    }
+
+    @Test
+    public void negative() {
+        SimpleMatrix A = SimpleMatrix.random(5,7,-1,1,rand);
+
+        SimpleMatrix A_neg = A.negative();
+
+        double value = A.plus(A_neg).normF();
+
+        assertEquals(0,value,1e-8);
     }
 }

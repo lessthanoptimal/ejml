@@ -17,6 +17,8 @@
 - Added set() to MatrixIterator
 - Added additional checks to matrix multiply that makes sure 'c' is not the same matrix as 'a' or ''b'
   - Suggested by xcolwell
+- Moved IO functions to MatrixIO
+  - Provide a way to save/read DenseMatrix64F and SimpleMatrix to/from a file.
 
 ----- Version 0.13
 

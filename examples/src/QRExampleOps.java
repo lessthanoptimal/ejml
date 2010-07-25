@@ -71,7 +71,7 @@ public class QRExampleOps {
 
             if( max > 0 && v.getNumElements() > 1 ) {
                 // normalize to reduce overflow issues
-                CommonOps.div(max,v);
+                CommonOps.divide(max,v);
 
                 // compute the magnitude of the vector
                 double tau = NormOps.normF(v);
@@ -82,7 +82,7 @@ public class QRExampleOps {
                 double u_0 = v.get(0) + tau;
                 double gamma = u_0/tau;
 
-                CommonOps.div(u_0,v);
+                CommonOps.divide(u_0,v);
                 v.set(0,1.0);
 
                 // extract the submatrix of A which is being operated on

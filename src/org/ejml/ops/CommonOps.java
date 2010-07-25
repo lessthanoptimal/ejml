@@ -1630,7 +1630,7 @@ public class CommonOps {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void div( double alpha , D1Matrix64F a )
+    public static void divide( double alpha , D1Matrix64F a )
     {
         final double data[] = a.data;
         final int size = a.getNumElements();
@@ -1650,7 +1650,7 @@ public class CommonOps {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void div( double alpha , D1Matrix64F a , D1Matrix64F b)
+    public static void divide( double alpha , D1Matrix64F a , D1Matrix64F b)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");
@@ -1702,5 +1702,4 @@ public class CommonOps {
             data[i] = value;
         }
     }
-
 }
