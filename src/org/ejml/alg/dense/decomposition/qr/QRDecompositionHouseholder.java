@@ -226,7 +226,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
      * <p>
      * Computes the householder vector "u" for the first column of submatrix j.  Note this is
      * a specialized householder for this problem.  There is some protection against
-     * overfloaw and underflow.
+     * overflow and underflow.
      * </p>
      * <p>
      * Q = I - &gamma;uu<sup>T</sup>
@@ -297,32 +297,32 @@ public class QRDecompositionHouseholder implements QRDecomposition {
         // much of the code below is equivalent to the rank1Update function
         // however, since &tau; has already been computed there is no need to
         // recompute it, saving a few multiplication operations
-        for( int i = w+1; i < numCols; i++ ) {
-            double val = 0;
-
-            for( int k = w; k < numRows; k++ ) {
-                val += u[k]*dataQR[k*numCols +i];
-            }
-            v[i] = gamma*val;
-        }
+//        for( int i = w+1; i < numCols; i++ ) {
+//            double val = 0;
+//
+//            for( int k = w; k < numRows; k++ ) {
+//                val += u[k]*dataQR[k*numCols +i];
+//            }
+//            v[i] = gamma*val;
+//        }
 
         // This is functionally the same as the above code but the order has been changed
         // to avoid jumping the cpu cache
-//        for( int i = w+1; i < numCols; i++ ) {
-//            v[i] = u[w]*dataQR[w*numCols +i];
-//        }
-//
-//        for( int k = w+1; k < numRows; k++ ) {
-//            int indexQR = k*numCols+w+1;
-//            for( int i = w+1; i < numCols; i++ ) {
-////                v[i] += u[k]*dataQR[k*numCols +i];
-//                v[i] += u[k]*dataQR[indexQR++];
-//            }
-//        }
-//
-//        for( int i = w+1; i < numCols; i++ ) {
-//            v[i] *= gamma;
-//        }
+        for( int i = w+1; i < numCols; i++ ) {
+            v[i] = u[w]*dataQR[w*numCols +i];
+        }
+
+        for( int k = w+1; k < numRows; k++ ) {
+            int indexQR = k*numCols+w+1;
+            for( int i = w+1; i < numCols; i++ ) {
+//                v[i] += u[k]*dataQR[k*numCols +i];
+                v[i] += u[k]*dataQR[indexQR++];
+            }
+        }
+
+        for( int i = w+1; i < numCols; i++ ) {
+            v[i] *= gamma;
+        }
 
         // end of reordered code
 

@@ -21,6 +21,7 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.SubmatrixOps;
 import org.ejml.alg.dense.mult.VectorVectorMult;
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -298,7 +299,7 @@ public class RandomMatrices {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom( DenseMatrix64F mat , double min , double max , Random rand )
+    public static void setRandom( D1Matrix64F mat , double min , double max , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getNumElements();

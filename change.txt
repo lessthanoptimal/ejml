@@ -19,6 +19,8 @@
   - Suggested by xcolwell
 - Moved IO functions to MatrixIO
   - Provide a way to save/read DenseMatrix64F and SimpleMatrix to/from a file.
+- Fixed and added more block operations.
+- Creates a new class to store transpose algorithms.  Including a new block one.
 
 ----- Version 0.13
 

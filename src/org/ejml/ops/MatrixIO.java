@@ -1,6 +1,26 @@
+/*
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.ejml.ops;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 import java.io.*;
 
@@ -78,17 +98,17 @@ public class MatrixIO {
         return ret;
     }
 
-    public static void print( DenseMatrix64F mat ) {
+    public static void print( Matrix64F mat ) {
         print(mat,6,3);
     }
 
-    public static void print(DenseMatrix64F mat , int numChar , int precision ) {
+    public static void print(Matrix64F mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f ";
 
         print(mat,format);
     }
 
-    public static void print(DenseMatrix64F mat , String format ) {
+    public static void print(Matrix64F mat , String format ) {
         System.out.println("Type = dense , numRows = "+mat.numRows+" , numCols = "+mat.numCols);
 
         format += " ";

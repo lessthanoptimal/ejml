@@ -24,6 +24,7 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.misc.TransposeAlgs;
 import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
@@ -486,18 +487,7 @@ public class CommonOps {
      */
     public static void transpose( DenseMatrix64F mat ) {
         if( mat.numCols == mat.numRows ){
-            final double data[] = mat.data;
-
-            for( int i = 0; i < mat.numRows; i++ ) {
-                int index = i*mat.numCols+i+1;
-                for( int j = i+1; j < mat.numCols; j++ ) {
-                    int otherIndex = j*mat.numCols+i;
-                    double val = data[index];
-                    data[index] = data[otherIndex];
-                    data[otherIndex] = val;
-                    index++;
-                }
-            }
+            TransposeAlgs.square(mat);
         } else {
             DenseMatrix64F b = new DenseMatrix64F(mat.numCols,mat.numRows);
             transpose(mat,b);
@@ -521,18 +511,11 @@ public class CommonOps {
         if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
             throw new RuntimeException("Incompatible matrix dimensions");
         }
-        final double rdata[] = A_tran.data;
-        final double data[] = A.data;
 
-        int index = 0;
-        for( int i = 0; i < A_tran.numRows; i++ ) {
-            int index2 = i;
-
-            for( int j = 0; j < A_tran.numCols; j++ ) {
-                rdata[index++] = data[index2];
-                index2 += A.numCols;
-            }
-        }
+        if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH && A.numCols > EjmlParameters.TRANSPOSE_SWITCH )
+            TransposeAlgs.block(A,A_tran,EjmlParameters.BLOCK_WIDTH);
+        else
+            TransposeAlgs.standard(A,A_tran);
     }
 
 

@@ -20,6 +20,7 @@
 package org.ejml.data;
 
 import org.ejml.EjmlParameters;
+import org.ejml.ops.MatrixIO;
 
 
 /**
@@ -27,9 +28,6 @@ import org.ejml.EjmlParameters;
  */
 public class BlockMatrix64F extends D1Matrix64F {
     public int blockLength;
-
-    int numRows;
-    int numCols;
 
     public BlockMatrix64F( int numRows , int numCols , int blockLength)
     {
@@ -84,12 +82,14 @@ public class BlockMatrix64F extends D1Matrix64F {
         int blockRow = row / blockLength;
         int blockCol = col / blockLength;
 
-        int index = numCols * blockRow + blockCol* blockLength;
+        int localHeight = Math.min(numRows - blockRow*blockLength , blockLength);
 
-        int localLength = Math.min(numCols - numRows*blockRow , blockLength);
+        int index = blockRow*blockLength*numCols + blockCol* localHeight * blockLength;
 
-        row -= blockRow*blockLength;
-        col -= blockCol*blockLength;
+        int localLength = Math.min(numCols - blockLength*blockCol , blockLength);
+
+        row = row % blockLength;
+        col = col % blockLength;
         
         return index + localLength * row + col;
     }
@@ -117,5 +117,10 @@ public class BlockMatrix64F extends D1Matrix64F {
     @Override
     public int getNumElements() {
         return numRows*numCols;
+    }
+
+    @Override
+    public void print() {
+        MatrixIO.print(this);
     }
 }

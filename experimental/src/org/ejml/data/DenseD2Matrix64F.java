@@ -73,4 +73,8 @@ public class DenseD2Matrix64F extends Matrix64F implements Serializable {
     public int getNumElements() {
         return numRows*numCols;
     }
+
+    @Override
+    public void print() {
+    }
 }

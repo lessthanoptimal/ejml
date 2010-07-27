@@ -1,6 +1,6 @@
 For 0.14 Release
 - cholesky accuracy
-- block matrix multiply
+- block matrix multiple
 
 For DenseMatrix64F
 
@@ -22,6 +22,7 @@ For DenseMatrix64F
    evaluate performance improvement
 
 - QR
+  * New QR that uses a regular transposed matrix.  Take advantage of better transpose.
   * Create straight forward QR and LQ factorings
   * Use factorings in decomposition algorithms for QR and LQ
 

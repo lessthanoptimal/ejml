@@ -32,7 +32,7 @@ public class TestBlockMatrix64F {
         GenericTestsD1Matrix64F g;
         g = new GenericTestsD1Matrix64F() {
             protected D1Matrix64F createMatrix(int numRows, int numCols) {
-                return new BlockMatrix64F(numRows,numCols);
+                return new BlockMatrix64F(numRows,numCols,10);
             }
         };
 

@@ -20,13 +20,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.decomposition.svd.SvdNumericalRecipes;
-import org.ejml.alg.dense.linsol.gj.GaussJordan;
-import org.ejml.alg.dense.linsol.gj.GaussJordanNoPivot;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLuKJI;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
-import org.ejml.alg.dense.linsol.svd.LinearSolverSvdNR;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;

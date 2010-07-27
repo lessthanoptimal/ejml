@@ -25,7 +25,7 @@ import org.ejml.data.Matrix64F;
 /**
  * @author Peter Abeles
  */
-public class CopyMatrix {
+public class GenericMatrixOps {
 
 //    public static DenseD2Matrix64F convertToD2( DenseMatrix64F orig ) {
 //        DenseD2Matrix64F ret = new DenseD2Matrix64F(orig.numRows,orig.numCols);
@@ -34,6 +34,23 @@ public class CopyMatrix {
 //
 //        return ret;
 //    }
+
+    public static boolean isEquivalent( Matrix64F a , Matrix64F b , double tol )
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols )
+            return false;
+
+        for( int i = 0; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.numCols; j++ ) {
+                double diff = Math.abs(a.get(i,j) - b.get(i,j));
+
+                if( diff > tol )
+                    return false;
+            }
+        }
+
+        return true;
+    }
 
     public static void copy( Matrix64F from , Matrix64F to )
     {

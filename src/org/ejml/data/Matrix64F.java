@@ -109,4 +109,6 @@ public abstract class Matrix64F implements Serializable {
      * @return Number of elements in this matrix.
      */
     public abstract int getNumElements();
+
+    public abstract void print();
 }

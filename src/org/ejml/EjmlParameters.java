@@ -33,7 +33,7 @@ public class EjmlParameters {
      * In modern computers there are high speed memory caches.  It is assumed that a square
      * block with this width can be contained entirely in one of those caches.  Settings this
      * value too large can have a dramatic effect on performance in some situations.  Setting
-     * it too low results in a less dramatic perforance hit.  The optimal value is dependent
+     * it too low results in a less dramatic performance hit.  The optimal value is dependent
      * on the computer's memory architecture.
      * </p>
      * <p>
@@ -41,6 +41,8 @@ public class EjmlParameters {
      * </p>
      */
     public static int BLOCK_WIDTH = 20;
+
+    public static int TRANSPOSE_SWITCH = BLOCK_WIDTH*10;
 
     /**
      * At what point does it switch from a small matrix multiply to the reorder version.
