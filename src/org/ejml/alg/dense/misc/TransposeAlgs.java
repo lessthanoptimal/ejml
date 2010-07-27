@@ -41,7 +41,7 @@ public class TransposeAlgs {
 
         for( int i = 0; i < mat.numRows; i++ ) {
             int index = i*mat.numCols+i+1;
-            int indexOther = i;
+            int indexOther = (i+1)*mat.numCols + i;
             for( int j = i+1; j < mat.numCols; j++ , indexOther += mat.numCols) {
                 double val = data[index];
                 data[index] = data[indexOther];
