@@ -42,7 +42,7 @@ public class EjmlParameters {
      */
     public static int BLOCK_WIDTH = 20;
 
-    public static int TRANSPOSE_SWITCH = BLOCK_WIDTH*10;
+    public static int TRANSPOSE_SWITCH = 375;
 
     /**
      * At what point does it switch from a small matrix multiply to the reorder version.

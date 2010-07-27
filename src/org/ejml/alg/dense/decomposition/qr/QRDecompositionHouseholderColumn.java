@@ -39,7 +39,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
-     * upper triangulr portion and Q on the lower bit.  Lower columns
+     * upper triangular portion and Q on the lower bit.  Lower columns
      * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
      */
     protected double dataQR[][]; // [ column][ row ]

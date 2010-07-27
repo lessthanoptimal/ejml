@@ -41,11 +41,11 @@ public class TransposeAlgs {
 
         for( int i = 0; i < mat.numRows; i++ ) {
             int index = i*mat.numCols+i+1;
-            for( int j = i+1; j < mat.numCols; j++ ) {
-                int otherIndex = j*mat.numCols+i;
+            int indexOther = i;
+            for( int j = i+1; j < mat.numCols; j++ , indexOther += mat.numCols) {
                 double val = data[index];
-                data[index] = data[otherIndex];
-                data[otherIndex] = val;
+                data[index] = data[indexOther];
+                data[indexOther] = val;
                 index++;
             }
         }
@@ -62,21 +62,25 @@ public class TransposeAlgs {
     public static void block( DenseMatrix64F A , DenseMatrix64F A_tran ,
                               final int blockLength )
     {
-        for( int i = 0; i < A_tran.numRows; i += blockLength ) {
-            int blockHeight = Math.min( blockLength , A_tran.numRows - i);
+        for( int i = 0; i < A.numRows; i += blockLength ) {
+            int blockHeight = Math.min( blockLength , A.numRows - i);
 
-            for( int j = 0; j < A_tran.numCols; j += blockLength ) {
-                int blockWidth = Math.min( blockLength , A_tran.numCols - j);
+            for( int j = 0; j < A.numCols; j += blockLength ) {
+                int blockWidth = Math.min( blockLength , A.numCols - j);
 
-                int indexDst = i*A_tran.numCols + j;
-                int indexSrc = j*A.numCols + i;
+                int indexSrc = i*A.numCols + j;
+                int indexDst = j*A_tran.numCols + i;
 
-                for( int l = 0; l < blockWidth; l++ ) {
-                    int rowSrc = indexSrc + l*A.numCols;
-                    int rowDst = indexDst + l;
-                    for( int k = 0; k < blockHeight; k++ , rowDst += A_tran.numCols ) {
-                        A_tran.data[ rowDst ] = A.data[rowSrc++];
+                for( int l = 0; l < blockWidth; l++ , indexSrc++ ) {
+                    int rowSrc = indexSrc;
+                    int rowDst = indexDst;
+                    int end = rowDst + blockHeight;
+//                    for( int k = 0; k < blockHeight; k++ , rowSrc += A.numCols ) {
+                    for( ; rowDst < end; rowSrc += A.numCols ) {
+                        // faster to write in sequence than to read in sequence
+                        A_tran.data[ rowDst++ ] = A.data[rowSrc];
                     }
+                    indexDst += A_tran.numCols;
                 }
             }
         }

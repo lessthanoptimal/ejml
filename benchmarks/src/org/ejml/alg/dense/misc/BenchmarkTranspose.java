@@ -45,13 +45,13 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long block( DenseMatrix64F mat , int numTrials) {
+    public static long block( DenseMatrix64F mat , int numTrials , int blockLength ) {
         DenseMatrix64F tran = new DenseMatrix64F(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            TransposeAlgs.block(mat,tran,EjmlParameters.BLOCK_WIDTH);
+            TransposeAlgs.block(mat,tran,blockLength);
         }
         long curr = System.currentTimeMillis();
 
@@ -87,7 +87,10 @@ public class BenchmarkTranspose {
 
     public static void main( String args[] ) {
 
-        evaluateMatrix(20, 1000000);
+//        evaluateMatrix(3, 50000000);
+//        evaluateMatrix(20, 1000000);
+//        evaluateMatrix(120, 50000);
+//        evaluateMatrix(EjmlParameters.TRANSPOSE_SWITCH+1, 4000);
         evaluateMatrix(5000, 5);
     }
 
@@ -97,18 +100,25 @@ public class BenchmarkTranspose {
 
         System.out.println("---------- Square ----------------");
         System.out.println("In place  : "+square(A, n));
-        System.out.println("Block     : "+block(A, n));
+        System.out.println("Block     : "+block(A, n, EjmlParameters.BLOCK_WIDTH));
+        System.out.println("Block 15  : "+block(A, n, 15));
+        System.out.println("Block 20  : "+block(A, n, 20));
+        System.out.println("Block 30  : "+block(A, n, 30));
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
         System.out.println();
         System.out.println("---------- Tall ----------------");
         A = RandomMatrices.createRandom(2*length,length,rand);
-        System.out.println("Block     : "+block(A, n));
+        System.out.println("Block     : "+block(A, n,EjmlParameters.BLOCK_WIDTH));
+        System.out.println("Block 20  : "+block(A, n, 20));
+        System.out.println("Block 30  : "+block(A, n, 30));
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
         System.out.println("---------- Wide ----------------");
         A = RandomMatrices.createRandom(length,2*length,rand);
-        System.out.println("Block     : "+block(A, n));
+        System.out.println("Block     : "+block(A, n, EjmlParameters.BLOCK_WIDTH));
+        System.out.println("Block 20  : "+block(A, n, 20));
+        System.out.println("Block 30  : "+block(A, n, 30));
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
     }
