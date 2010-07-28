@@ -83,6 +83,48 @@ public class TestBlockMatrixOps {
     }
 
     @Test
+    public void mult() {
+        // trivial case
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+
+        // stuff larger than the block size
+        checkMult(BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
+        checkMult(BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
+
+        // stuff smaller than the block size
+        checkMult(BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
+        checkMult(BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
+
+        // stuff multiple blocks
+        checkMult(BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
+        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
+        checkMult(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
+        checkMult(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
+
+    }
+
+    private void checkMult(int m, int n, int o) {
+        DenseMatrix64F A_d = RandomMatrices.createRandom(m, n,rand);
+        DenseMatrix64F B_d = RandomMatrices.createRandom(n, o,rand);
+        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
+
+        BlockMatrix64F A_b = BlockMatrixOps.convert(A_d,BLOCK_LENGTH);
+        BlockMatrix64F B_b = BlockMatrixOps.convert(B_d,BLOCK_LENGTH);
+        BlockMatrix64F C_b = BlockMatrixOps.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
+
+        CommonOps.mult(A_d,B_d,C_d);
+        BlockMatrixOps.mult(A_b,B_b,C_b);
+
+        assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
+    }
+
+
+    @Test
     public void convertTranSrc_block_to_dense() {
         checkTranSrcBlockToDense(10,10);
         checkTranSrcBlockToDense(5,8);

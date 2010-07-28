@@ -128,7 +128,80 @@ public class BlockMatrixOps {
 
     public static void mult( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
     {
+        if( A.numCols != B.numRows )
+            throw new IllegalArgumentException("Rows in A are incompatible with columns in B");
+        if( A.numRows != C.numRows )
+            throw new IllegalArgumentException("Rows in A are incompatible with rows in C");
+        if( B.numCols != C.numCols )
+            throw new IllegalArgumentException("Columns in B are incompatible with columns in C");
+        if( A.blockLength != B.blockLength || A.blockLength != C.blockLength )
+            throw new IllegalArgumentException("Block lengths are not all the same.");
 
+        final int blockLength = A.blockLength;
+
+        for( int i = 0; i < A.numRows; i += blockLength ) {
+            int heightA = Math.min( blockLength , A.numRows - i);
+
+            for( int j = 0; j < B.numCols; j += blockLength ) {
+                int widthB = Math.min( blockLength , B.numCols-j);
+
+                int indexC = i*C.numCols + j*heightA;
+
+                for( int k = 0; k < A.numCols; k += blockLength ) {
+                    int widthA = Math.min( blockLength , A.numCols - k);
+
+                    int indexA = i*A.numCols + k*heightA;
+                    int indexB = k*B.numCols + j*widthA;
+
+                    if( k == 0 )
+                        multBlockSet(A,B,C,indexA,indexB,indexC,heightA,widthA,widthB);
+                    else
+                        multBlockAdd(A,B,C,indexA,indexB,indexC,heightA,widthA,widthB);
+                }
+            }
+        }
+    }
+
+    /**
+     * Performs a matrix multiplication between inner block matrices.
+     *
+     * (m , o) += (m , n) * (n , o)
+     */
+    private static void multBlockAdd(BlockMatrix64F A, BlockMatrix64F B, BlockMatrix64F C,
+                                     int indexA, int indexB, int indexC,
+                                     int m, int n, int o) {
+        for( int i = 0; i < m; i++ ) {
+            for( int j = 0; j < o; j++ ) {
+                double val = 0;
+
+                for( int k = 0; k < n; k++ ) {
+                    val += A.data[i*n + k + indexA] * B.data[k*o + j + indexB];
+                }
+
+                C.data[ i*o + j + indexC ] += val;
+            }
+        }
+    }
+
+    /**
+     * Performs a matrix multiplication between inner block matrices.
+     *
+     * (m , o) += (m , n) * (n , o)
+     */
+    private static void multBlockSet(BlockMatrix64F A, BlockMatrix64F B, BlockMatrix64F C,
+                                     int indexA, int indexB, int indexC,
+                                     int m, int n, int o) {
+        for( int i = 0; i < m; i++ ) {
+            for( int j = 0; j < o; j++ ) {
+                double val = 0;
+
+                for( int k = 0; k < n; k++ ) {
+                    val += A.data[i*n + k + indexA] * B.data[k*o + j + indexB];
+                }
+
+                C.data[ i*o + j + indexC ] = val;
+            }
+        }
     }
 
     /**
@@ -182,6 +255,30 @@ public class BlockMatrixOps {
 
         RandomMatrices.setRandom(ret,min,max,rand);
 
+        return ret;
+    }
+
+    public static BlockMatrix64F createRandom( int numRows , int numCols ,
+                                               double min , double max , Random rand ,
+                                               int blockLength )
+    {
+        BlockMatrix64F ret = new BlockMatrix64F(numRows,numCols,blockLength);
+
+        RandomMatrices.setRandom(ret,min,max,rand);
+
+        return ret;
+    }
+
+
+    public static BlockMatrix64F convert(DenseMatrix64F A , int blockLength ) {
+        BlockMatrix64F ret = new BlockMatrix64F(A.numRows,A.numCols,blockLength);
+        convert(A,ret);
+        return ret;
+    }
+
+    public static BlockMatrix64F convert(DenseMatrix64F A ) {
+        BlockMatrix64F ret = new BlockMatrix64F(A.numRows,A.numCols);
+        convert(A,ret);
         return ret;
     }
 
