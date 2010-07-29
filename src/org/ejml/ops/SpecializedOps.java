@@ -341,10 +341,10 @@ public class SpecializedOps {
      */
     public static double diagProd( DenseMatrix64F T )
     {
-        double prod = 0;
+        double prod = 1.0;
         int N = Math.min(T.numRows,T.numCols);
         for( int i = 0; i < N; i++ ) {
-            prod += T.get(i,i);
+            prod *= T.get(i,i);
         }
 
         return prod;
