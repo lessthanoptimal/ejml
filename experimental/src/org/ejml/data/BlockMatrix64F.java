@@ -24,6 +24,8 @@ import org.ejml.ops.MatrixIO;
 
 
 /**
+ * A row-major block matrix declared on to one continuous array.
+ *
  * @author Peter Abeles
  */
 public class BlockMatrix64F extends D1Matrix64F {

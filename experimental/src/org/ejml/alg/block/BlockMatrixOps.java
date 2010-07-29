@@ -146,12 +146,13 @@ public class BlockMatrixOps {
                 int widthB = Math.min( blockLength , B.numCols-j);
 
                 int indexC = i*C.numCols + j*heightA;
+                int indexA = i*A.numCols;
+                int indexBB = 0;
 
-                for( int k = 0; k < A.numCols; k += blockLength ) {
+                for( int k = 0; k < A.numCols; k += blockLength , indexA += heightA , indexBB += B.numCols) {
                     int widthA = Math.min( blockLength , A.numCols - k);
 
-                    int indexA = i*A.numCols + k*heightA;
-                    int indexB = k*B.numCols + j*widthA;
+                    int indexB = indexBB + j*widthA;
 
                     if( k == 0 )
                         multBlockSet(A,B,C,indexA,indexB,indexC,heightA,widthA,widthB);
@@ -169,17 +170,37 @@ public class BlockMatrixOps {
      */
     private static void multBlockAdd(BlockMatrix64F A, BlockMatrix64F B, BlockMatrix64F C,
                                      int indexA, int indexB, int indexC,
-                                     int m, int n, int o) {
+                                     final int m, final int n, final int o) {
+//        for( int i = 0; i < m; i++ ) {
+//            for( int j = 0; j < o; j++ ) {
+//                double val = 0;
+//
+//                for( int k = 0; k < n; k++ ) {
+//                    val += A.data[i*n + k + indexA] * B.data[k*o + j + indexB];
+//                }
+//
+//                C.data[ i*o + j + indexC ] += val;
+//            }
+//        }
+
         for( int i = 0; i < m; i++ ) {
-            for( int j = 0; j < o; j++ ) {
+            for( int j = 0; j < o; j++ , indexC++ ) {
+                int indexBB = indexB + j;
+                int indexAA = indexA;
+
                 double val = 0;
 
-                for( int k = 0; k < n; k++ ) {
-                    val += A.data[i*n + k + indexA] * B.data[k*o + j + indexB];
+                int end = indexA + n;
+
+                for( ; indexAA != end; indexAA++) {
+                    val += A.data[ indexAA ] * B.data[indexBB];
+                    indexBB += o;
                 }
 
-                C.data[ i*o + j + indexC ] += val;
+                C.data[ indexC ] += val;
             }
+
+            indexA += n;
         }
     }
 
@@ -190,17 +211,25 @@ public class BlockMatrixOps {
      */
     private static void multBlockSet(BlockMatrix64F A, BlockMatrix64F B, BlockMatrix64F C,
                                      int indexA, int indexB, int indexC,
-                                     int m, int n, int o) {
+                                     final int m, final int n, final int o) {
         for( int i = 0; i < m; i++ ) {
-            for( int j = 0; j < o; j++ ) {
+            for( int j = 0; j < o; j++ , indexC++ ) {
+                int indexBB = indexB + j;
+                int indexAA = indexA;
+
                 double val = 0;
 
-                for( int k = 0; k < n; k++ ) {
-                    val += A.data[i*n + k + indexA] * B.data[k*o + j + indexB];
+                int end = indexA + n;
+
+                for( ; indexAA != end; indexAA++) {
+                    val += A.data[ indexAA ] * B.data[indexBB];
+                    indexBB += o;
                 }
 
-                C.data[ i*o + j + indexC ] = val;
+                C.data[ indexC ] = val;
             }
+
+            indexA += n;
         }
     }
 

@@ -20,6 +20,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.blockd3.BlockD3MatrixOps;
+import org.ejml.data.BlockD3Matrix64F;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -108,6 +110,22 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
+    public static long multBlockD3Native( DenseMatrix64F matA , DenseMatrix64F matB ,
+                                          DenseMatrix64F matResult , int numTrials) {
+        BlockD3Matrix64F blockA = BlockD3MatrixOps.convert(matA);
+        BlockD3Matrix64F blockB = BlockD3MatrixOps.convert(matB);
+        BlockD3Matrix64F blockC = new BlockD3Matrix64F(matResult.numRows,matResult.numCols);
+
+        long prev = System.currentTimeMillis();
+
+        for( int i = 0; i < numTrials; i++ ) {
+            BlockD3MatrixOps.mult(blockA,blockB,blockC);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
 
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
@@ -116,12 +134,13 @@ public class BenchmarkMatrixMatrixMult {
         DenseMatrix64F matB = RandomMatrices.createRandom(numCols,numK,rand);
         DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
 
-        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d\n",
-                mult(matA,matB,matResult,numTrials),
+        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d BlockD3 %7d\n",
+                0,//mult(matA,matB,matResult,numTrials),
                 0,//multSmall(matA,matB,matResult,numTrials),
                 0,//multAux(matA,matB,matResult,numTrials),
                 multReorder(matA,matB,matResult,numTrials),
-                multBlockNative(matA,matB,matResult,numTrials));
+                multBlockNative(matA,matB,matResult,numTrials),
+                multBlockD3Native(matA,matB,matResult,numTrials));
         System.gc();
     }
 
@@ -135,7 +154,7 @@ public class BenchmarkMatrixMatrixMult {
         int N = size.length;
 
         System.out.println("******* Square:\n");
-        for( int i = 6; i < N; i++ ) {
+        for( int i = 7; i < N; i++ ) {
             System.out.println("\nWidth = "+size[i]);
 
             performTests(size[i],size[i],size[i],count[i]);

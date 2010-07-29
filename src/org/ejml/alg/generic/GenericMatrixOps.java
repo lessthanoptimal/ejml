@@ -21,6 +21,7 @@ package org.ejml.alg.generic;
 
 import org.ejml.data.Matrix64F;
 
+import java.util.Random;
 
 /**
  * @author Peter Abeles
@@ -60,6 +61,16 @@ public class GenericMatrixOps {
         for( int i = 0; i < numRows; i++ ) {
             for( int j = 0; j < numCols; j++ ) {
                 to.set(i,j,from.get(i,j));
+            }
+        }
+    }
+
+    public static void setRandom( Matrix64F a , double min , double max , Random rand )
+    {
+        for( int i = 0; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.numCols; j++ ) {
+                double val = rand.nextDouble()*(max-min)+min;
+                a.set(i,j,val);
             }
         }
     }
