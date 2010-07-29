@@ -134,13 +134,13 @@ public class BenchmarkMatrixMatrixMult {
         DenseMatrix64F matB = RandomMatrices.createRandom(numCols,numK,rand);
         DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
 
-        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d BlockD3 %7d\n",
-                0,//mult(matA,matB,matResult,numTrials),
+        System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
+                mult(matA,matB,matResult,numTrials),
                 0,//multSmall(matA,matB,matResult,numTrials),
-                0,//multAux(matA,matB,matResult,numTrials),
+                multAux(matA,matB,matResult,numTrials),
                 multReorder(matA,matB,matResult,numTrials),
                 multBlockNative(matA,matB,matResult,numTrials),
-                multBlockD3Native(matA,matB,matResult,numTrials));
+                0);//multBlockD3Native(matA,matB,matResult,numTrials));
         System.gc();
     }
 
@@ -154,7 +154,7 @@ public class BenchmarkMatrixMatrixMult {
         int N = size.length;
 
         System.out.println("******* Square:\n");
-        for( int i = 7; i < N; i++ ) {
+        for( int i = 8; i < N; i++ ) {
             System.out.println("\nWidth = "+size[i]);
 
             performTests(size[i],size[i],size[i],count[i]);

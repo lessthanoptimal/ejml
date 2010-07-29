@@ -207,6 +207,7 @@ public class CodeGeneratorMatrixMatrixMult {
                 header + makeBoundsCheck(false,false, null)+
                         "        double valA;\n"+
                         "        int indexCbase= 0;\n" +
+                        "        int endOfKLoop = b.numRows*b.numCols;\n"+
                         "\n" +
                         "        for( int i = 0; i < a.numRows; i++ ) {\n" +
                         "            int indexA = i*a.numCols;\n" +
@@ -218,19 +219,18 @@ public class CodeGeneratorMatrixMatrixMult {
                         "\n" +
                         "            "+valLine +
                         "\n" +
-                        "            for( ; indexB < end; indexB++ ) {\n" +
-                        "                dataC[indexC++] "+assignment+" valA*dataB[indexB];\n" +
+                        "            while( indexB < end ) {\n" +
+                        "                dataC[indexC++] "+assignment+" valA*dataB[indexB++];\n" +
                         "            }\n" +
                         "\n" +
                         "            // now add to it\n"+
-                        "            for( int k = 1; k < a.numCols; k++ ) {\n"+
-                        "                indexB = k*b.numCols;\n" +
+                        "            while( indexB != endOfKLoop ) { // k loop\n"+
                         "                indexC = indexCbase;\n" +
                         "                end = indexB + b.numCols;\n" +
                         "\n" +
                         "                "+valLine+
                         "\n" +
-                        "                for( ; indexB < end; ) {\n" +
+                        "                while( indexB < end ) { // j loop\n" +
                         "                    dataC[indexC++] += valA*dataB[indexB++];\n" +
                         "                }\n" +
                         "            }\n" +
@@ -266,7 +266,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                int indexA = aIndexStart;\n" +
                         "                int indexB = j;\n" +
                         "                int end = indexA + b.numRows;\n" +
-                        "                for( ;indexA < end; ) {\n" +
+                        "                while( indexA < end ) {\n" +
                         "                    total += dataA[indexA++] * dataB[indexB];\n" +
                         "                    indexB += b.numCols;\n" +
                         "                }\n" +
@@ -340,7 +340,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "            int indexB = 0;\n" +
                         "            int end = indexB+b.numCols;\n" +
                         "            int indexC = indexC_start;\n" +
-                        "            for( ; indexB<end; ) {\n" +
+                        "            while( indexB<end ) {\n" +
                         "                dataC[indexC++] "+assignment+" valA*dataB[indexB++];\n" +
                         "            }\n" +
                         "            // now increment it\n" +
@@ -349,7 +349,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                end = indexB+b.numCols;\n" +
                         "                indexC = indexC_start;\n" +
                         "                // this is the loop for j\n" +
-                        "                for( ; indexB<end; ) {\n" +
+                        "                while( indexB<end ) {\n" +
                         "                    dataC[indexC++] += valA*dataB[indexB++];\n" +
                         "                }\n" +
                         "            }\n" +
@@ -423,7 +423,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "\n" +
                         "                double total = 0;\n" +
                         "\n" +
-                        "                for( ;indexA<end; ) {\n" +
+                        "                while( indexA<end ) {\n" +
                         "                    total += dataA[indexA++] * dataB[indexB++];\n" +
                         "                }\n" +
                         "\n" +

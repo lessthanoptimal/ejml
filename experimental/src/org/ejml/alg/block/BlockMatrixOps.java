@@ -126,6 +126,8 @@ public class BlockMatrixOps {
         }
     }
 
+    // This can be speed up by inlining the multBlock* calls, reducing number of multiplications
+    // and other stuff.  doesn't seem to have any speed advantage over mult_reorder()
     public static void mult( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
     {
         if( A.numCols != B.numRows )
@@ -146,13 +148,12 @@ public class BlockMatrixOps {
                 int widthB = Math.min( blockLength , B.numCols-j);
 
                 int indexC = i*C.numCols + j*heightA;
-                int indexA = i*A.numCols;
-                int indexBB = 0;
 
-                for( int k = 0; k < A.numCols; k += blockLength , indexA += heightA , indexBB += B.numCols) {
+                for( int k = 0; k < A.numCols; k += blockLength ) {
                     int widthA = Math.min( blockLength , A.numCols - k);
 
-                    int indexB = indexBB + j*widthA;
+                    int indexA = i*A.numCols + k*heightA;
+                    int indexB = k*B.numCols + j*widthA;
 
                     if( k == 0 )
                         multBlockSet(A,B,C,indexA,indexB,indexC,heightA,widthA,widthB);

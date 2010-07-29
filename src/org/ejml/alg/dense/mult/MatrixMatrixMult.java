@@ -1,22 +1,3 @@
-/*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
- *
- * This file is part of Efficient Java Matrix Library (EJML).
- *
- * EJML is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * EJML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
@@ -78,6 +59,7 @@ public class MatrixMatrixMult {
 
         double valA;
         int indexCbase= 0;
+        int endOfKLoop = b.numRows*b.numCols;
 
         for( int i = 0; i < a.numRows; i++ ) {
             int indexA = i*a.numCols;
@@ -89,19 +71,18 @@ public class MatrixMatrixMult {
 
             valA = dataA[indexA++];
 
-            for( ; indexB < end; indexB++ ) {
-                dataC[indexC++] = valA*dataB[indexB];
+            while( indexB < end ) {
+                dataC[indexC++] = valA*dataB[indexB++];
             }
 
             // now add to it
-            for( int k = 1; k < a.numCols; k++ ) {
-                indexB = k*b.numCols;
+            while( indexB != endOfKLoop ) { // k loop
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
                 valA = dataA[indexA++];
 
-                for( ; indexB < end; ) {
+                while( indexB < end ) { // j loop
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -136,7 +117,7 @@ public class MatrixMatrixMult {
                 int indexA = aIndexStart;
                 int indexB = j;
                 int end = indexA + b.numRows;
-                for( ;indexA < end; ) {
+                while( indexA < end ) {
                     total += dataA[indexA++] * dataB[indexB];
                     indexB += b.numCols;
                 }
@@ -210,7 +191,7 @@ public class MatrixMatrixMult {
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
-            for( ; indexB<end; ) {
+            while( indexB<end ) {
                 dataC[indexC++] = valA*dataB[indexB++];
             }
             // now increment it
@@ -219,7 +200,7 @@ public class MatrixMatrixMult {
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
-                for( ; indexB<end; ) {
+                while( indexB<end ) {
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -365,7 +346,7 @@ public class MatrixMatrixMult {
 
                 double total = 0;
 
-                for( ;indexA<end; ) {
+                while( indexA<end ) {
                     total += dataA[indexA++] * dataB[indexB++];
                 }
 
@@ -394,6 +375,7 @@ public class MatrixMatrixMult {
 
         double valA;
         int indexCbase= 0;
+        int endOfKLoop = b.numRows*b.numCols;
 
         for( int i = 0; i < a.numRows; i++ ) {
             int indexA = i*a.numCols;
@@ -405,19 +387,18 @@ public class MatrixMatrixMult {
 
             valA = dataA[indexA++];
 
-            for( ; indexB < end; indexB++ ) {
-                dataC[indexC++] += valA*dataB[indexB];
+            while( indexB < end ) {
+                dataC[indexC++] += valA*dataB[indexB++];
             }
 
             // now add to it
-            for( int k = 1; k < a.numCols; k++ ) {
-                indexB = k*b.numCols;
+            while( indexB != endOfKLoop ) { // k loop
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
                 valA = dataA[indexA++];
 
-                for( ; indexB < end; ) {
+                while( indexB < end ) { // j loop
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -452,7 +433,7 @@ public class MatrixMatrixMult {
                 int indexA = aIndexStart;
                 int indexB = j;
                 int end = indexA + b.numRows;
-                for( ;indexA < end; ) {
+                while( indexA < end ) {
                     total += dataA[indexA++] * dataB[indexB];
                     indexB += b.numCols;
                 }
@@ -526,7 +507,7 @@ public class MatrixMatrixMult {
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
-            for( ; indexB<end; ) {
+            while( indexB<end ) {
                 dataC[indexC++] += valA*dataB[indexB++];
             }
             // now increment it
@@ -535,7 +516,7 @@ public class MatrixMatrixMult {
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
-                for( ; indexB<end; ) {
+                while( indexB<end ) {
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -681,7 +662,7 @@ public class MatrixMatrixMult {
 
                 double total = 0;
 
-                for( ;indexA<end; ) {
+                while( indexA<end ) {
                     total += dataA[indexA++] * dataB[indexB++];
                 }
 
@@ -710,6 +691,7 @@ public class MatrixMatrixMult {
 
         double valA;
         int indexCbase= 0;
+        int endOfKLoop = b.numRows*b.numCols;
 
         for( int i = 0; i < a.numRows; i++ ) {
             int indexA = i*a.numCols;
@@ -721,19 +703,18 @@ public class MatrixMatrixMult {
 
             valA = alpha*dataA[indexA++];
 
-            for( ; indexB < end; indexB++ ) {
-                dataC[indexC++] = valA*dataB[indexB];
+            while( indexB < end ) {
+                dataC[indexC++] = valA*dataB[indexB++];
             }
 
             // now add to it
-            for( int k = 1; k < a.numCols; k++ ) {
-                indexB = k*b.numCols;
+            while( indexB != endOfKLoop ) { // k loop
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
                 valA = alpha*dataA[indexA++];
 
-                for( ; indexB < end; ) {
+                while( indexB < end ) { // j loop
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -768,7 +749,7 @@ public class MatrixMatrixMult {
                 int indexA = aIndexStart;
                 int indexB = j;
                 int end = indexA + b.numRows;
-                for( ;indexA < end; ) {
+                while( indexA < end ) {
                     total += dataA[indexA++] * dataB[indexB];
                     indexB += b.numCols;
                 }
@@ -842,7 +823,7 @@ public class MatrixMatrixMult {
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
-            for( ; indexB<end; ) {
+            while( indexB<end ) {
                 dataC[indexC++] = valA*dataB[indexB++];
             }
             // now increment it
@@ -851,7 +832,7 @@ public class MatrixMatrixMult {
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
-                for( ; indexB<end; ) {
+                while( indexB<end ) {
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -997,7 +978,7 @@ public class MatrixMatrixMult {
 
                 double total = 0;
 
-                for( ;indexA<end; ) {
+                while( indexA<end ) {
                     total += dataA[indexA++] * dataB[indexB++];
                 }
 
@@ -1026,6 +1007,7 @@ public class MatrixMatrixMult {
 
         double valA;
         int indexCbase= 0;
+        int endOfKLoop = b.numRows*b.numCols;
 
         for( int i = 0; i < a.numRows; i++ ) {
             int indexA = i*a.numCols;
@@ -1037,19 +1019,18 @@ public class MatrixMatrixMult {
 
             valA = alpha*dataA[indexA++];
 
-            for( ; indexB < end; indexB++ ) {
-                dataC[indexC++] += valA*dataB[indexB];
+            while( indexB < end ) {
+                dataC[indexC++] += valA*dataB[indexB++];
             }
 
             // now add to it
-            for( int k = 1; k < a.numCols; k++ ) {
-                indexB = k*b.numCols;
+            while( indexB != endOfKLoop ) { // k loop
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
                 valA = alpha*dataA[indexA++];
 
-                for( ; indexB < end; ) {
+                while( indexB < end ) { // j loop
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -1084,7 +1065,7 @@ public class MatrixMatrixMult {
                 int indexA = aIndexStart;
                 int indexB = j;
                 int end = indexA + b.numRows;
-                for( ;indexA < end; ) {
+                while( indexA < end ) {
                     total += dataA[indexA++] * dataB[indexB];
                     indexB += b.numCols;
                 }
@@ -1158,7 +1139,7 @@ public class MatrixMatrixMult {
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
-            for( ; indexB<end; ) {
+            while( indexB<end ) {
                 dataC[indexC++] += valA*dataB[indexB++];
             }
             // now increment it
@@ -1167,7 +1148,7 @@ public class MatrixMatrixMult {
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
-                for( ; indexB<end; ) {
+                while( indexB<end ) {
                     dataC[indexC++] += valA*dataB[indexB++];
                 }
             }
@@ -1313,7 +1294,7 @@ public class MatrixMatrixMult {
 
                 double total = 0;
 
-                for( ;indexA<end; ) {
+                while( indexA<end ) {
                     total += dataA[indexA++] * dataB[indexB++];
                 }
 

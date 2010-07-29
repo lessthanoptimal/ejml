@@ -151,6 +151,8 @@ public class BlockD3MatrixOps {
                     double blockA[] = A.blocks[ blockI ][ blockK ];
                     double blockB[] = B.blocks[ blockK ][ blockJ ];
 
+                    // by inlining these functions it can be made to be comparable (but slightly
+                    // slow than) mult_reorder().  Now its about 1.5x slower
                     if( k == 0 )
                         multBlockSet(blockA,blockB,blockC,heightA,widthA,widthB,blockLength);
                     else
