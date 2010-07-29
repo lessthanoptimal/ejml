@@ -23,6 +23,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.SpecializedOps;
 
 
 /**
@@ -91,6 +92,11 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
         QR = decomposer.getQR();
         decomposer.getR(R,true);
         return true;
+    }
+
+    @Override
+    public double quality() {
+        return Math.abs(SpecializedOps.diagProd(R));
     }
 
     /**

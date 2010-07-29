@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenvalueSmall;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.MatrixFeatures;
@@ -283,7 +283,7 @@ public class WatchedDoubleStepQREigen {
 
         // get rid of the bump
         if( Q != null ) {
-            QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,x1,x1+3,_temp.data);
+            QrHelperFunctions.rank1UpdateMultR(Q,u.data,gamma,0,x1,x1+3,_temp.data);
             if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) ) {
                 u.print();
 
@@ -301,7 +301,7 @@ public class WatchedDoubleStepQREigen {
         // perform double steps
         for( int i = x1; i < x2-2; i++ ) {
             if( bulgeDoubleStepQn(i) && Q != null ) {
-                QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,i+1,i+4,_temp.data);
+                QrHelperFunctions.rank1UpdateMultR(Q,u.data,gamma,0,i+1,i+4,_temp.data);
                 if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                     throw new RuntimeException("Bad");
             }
@@ -315,7 +315,7 @@ public class WatchedDoubleStepQREigen {
             System.out.println("removing last bump");
         // the last one has to be a single step
         if( x2-2 >= 0 && bulgeSingleStepQn(x2-2) && Q != null ) {
-            QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,x2-1,x2+1,_temp.data);
+            QrHelperFunctions.rank1UpdateMultR(Q,u.data,gamma,0,x2-1,x2+1,_temp.data);
             if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                 throw new RuntimeException("Bad");
 
@@ -339,7 +339,7 @@ public class WatchedDoubleStepQREigen {
 
         // get rid of the bump
         if( Q != null ) {
-            QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,x1,x1+2,_temp.data);
+            QrHelperFunctions.rank1UpdateMultR(Q,u.data,gamma,0,x1,x1+2,_temp.data);
             if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                 throw new RuntimeException("Bad");
         }
@@ -353,7 +353,7 @@ public class WatchedDoubleStepQREigen {
         // perform simple steps
         for( int i = x1; i < x2-1; i++ ) {
             if( bulgeSingleStepQn(i) && Q != null ) {
-                QRDecompositionHouseholder.rank1UpdateMultR(Q,u.data,gamma,0,i+1,i+3,_temp.data);
+                QrHelperFunctions.rank1UpdateMultR(Q,u.data,gamma,0,i+1,i+3,_temp.data);
                 if( checkOrthogonal && !MatrixFeatures.isOrthogonal(Q,1e-8) )
                     throw new RuntimeException("Bad");
             }
@@ -436,7 +436,7 @@ public class WatchedDoubleStepQREigen {
         // compute A_1 = Q_1^T * A * Q_1
 
         // apply Q*A  - just do the 3 rows
-        QRDecompositionHouseholder.rank1UpdateMultR(A,u.data,gamma,0,i,i+3,_temp.data);
+        QrHelperFunctions.rank1UpdateMultR(A,u.data,gamma,0,i,i+3,_temp.data);
 
         if( set ) {
             A.set(i,i-1,-max*tau);
@@ -450,7 +450,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         // apply A*Q - just the three things
-        QRDecompositionHouseholder.rank1UpdateMultL(A,u.data,gamma,0,i,i+3,_temp.data);
+        QrHelperFunctions.rank1UpdateMultL(A,u.data,gamma,0,i,i+3,_temp.data);
 
 //        System.out.println("  after Q*A*Q ");
 //        A.print();
@@ -514,7 +514,7 @@ public class WatchedDoubleStepQREigen {
         // compute A_1 = Q_1^T * A * Q_1
 
         // apply Q*A  - just do the 3 rows
-        QRDecompositionHouseholder.rank1UpdateMultR(A,u.data,gamma,0,i,i+2,_temp.data);
+        QrHelperFunctions.rank1UpdateMultR(A,u.data,gamma,0,i,i+2,_temp.data);
 
         if( set ) {
             A.set(i,i-1,-max*tau);
@@ -522,7 +522,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         // apply A*Q - just the three things
-        QRDecompositionHouseholder.rank1UpdateMultL(A,u.data,gamma,0,i,i+2,_temp.data);
+        QrHelperFunctions.rank1UpdateMultL(A,u.data,gamma,0,i,i+2,_temp.data);
 
         if(checkUncountable && MatrixFeatures.hasUncountable(A)) {
             throw new RuntimeException("bad matrix");

@@ -89,6 +89,17 @@ public class LinearSolverSvdNR extends LinearSolverAbstract {
         }
     }
 
+    @Override
+    public double quality() {
+        double quality = 1.0;
+        int N = Math.min(m,n);
+
+        for( int i = 0; i < N; i++ ) {
+            quality *= w[i];
+        }
+        return quality;
+    }
+
     /**
      * A function that's used internally to find the solution to a vector of B
      */

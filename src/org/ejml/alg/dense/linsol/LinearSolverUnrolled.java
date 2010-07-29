@@ -47,6 +47,11 @@ public class LinearSolverUnrolled implements LinearSolver {
     }
 
     @Override
+    public double quality() {
+        return Double.NaN;
+    }
+
+    @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
         throw new RuntimeException("Not supported");
     }

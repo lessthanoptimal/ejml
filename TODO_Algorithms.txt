@@ -1,6 +1,5 @@
 For 0.14 Release
 - cholesky accuracy
-- block matrix multiple
 
 For DenseMatrix64F
 

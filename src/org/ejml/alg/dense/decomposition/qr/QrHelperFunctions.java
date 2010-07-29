@@ -19,6 +19,8 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.data.DenseMatrix64F;
+
 
 /**
  * <p>
@@ -169,5 +171,103 @@ public class QrHelperFunctions {
             tau = -tau;
 
         return tau;
+    }
+
+    /**
+     * <p>
+     * Performs a rank-1 update operation on the submatrix specified by w with the multiply on the right.<br>
+     * <br>
+     * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
+     * </p>
+     * <p>
+     * The order that matrix multiplies are performed has been carefully selected
+     * to minimize the number of operations.
+     * </p>
+     *
+     * <p>
+     * Before this can become a truly generic operation the submatrix specification needs
+     * to be made more generic.
+     * </p>
+     */
+    public static void rank1UpdateMultR( DenseMatrix64F A , double u[] , double gamma ,
+                                         int colA0,
+                                         int w0, int w1 ,
+                                         double _temp[] )
+    {
+//        for( int i = colA0; i < A.numCols; i++ ) {
+//            double val = 0;
+//
+//            for( int k = w0; k < w1; k++ ) {
+//                val += u[k]*A.data[k*A.numCols +i];
+//            }
+//            _temp[i] = gamma*val;
+//        }
+
+        // reordered to reduce cpu cache issues
+        for( int i = colA0; i < A.numCols; i++ ) {
+            _temp[i] = u[w0]*A.data[w0 *A.numCols +i];
+        }
+
+        for( int k = w0+1; k < w1; k++ ) {
+            int indexA = k*A.numCols + colA0;
+            double valU = u[k];
+            for( int i = colA0; i < A.numCols; i++ ) {
+                _temp[i] += valU*A.data[indexA++];
+            }
+        }
+        for( int i = colA0; i < A.numCols; i++ ) {
+            _temp[i] *= gamma;
+        }
+
+        // end of reorder
+
+        for( int i = w0; i < w1; i++ ) {
+            double valU = u[i];
+
+            int indexA = i*A.numCols + colA0;
+            for( int j = colA0; j < A.numCols; j++ ) {
+                A.data[indexA++] -= valU*_temp[j];
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Performs a rank-1 update operation on the submatrix specified by w with the multiply on the left.<br>
+     * <br>
+     * A = A(I - &gamma;*u*u<sup>T</sup>)<br>
+     * </p>
+     * <p>
+     * The order that matrix multiplies are performed has been carefully selected
+     * to minimize the number of operations.
+     * </p>
+     *
+     * <p>
+     * Before this can become a truly generic operation the submatrix specification needs
+     * to be made more generic.
+     * </p>
+     */
+    public static void rank1UpdateMultL( DenseMatrix64F A , double u[] ,
+                                         double gamma ,
+                                         int colA0,
+                                         int w0 , int w1 ,
+                                         double _temp[] )
+    {
+        for( int i = colA0; i < A.numRows; i++ ) {
+            double sum = 0;
+            int rowIndex = i*A.numCols+w0;
+            for( int j = w0; j < w1; j++ ) {
+                sum += A.data[rowIndex++]*u[j];
+            }
+            _temp[i] = -gamma*sum;
+        }
+
+        for( int i = colA0; i < A.numRows; i++ ) {
+            double a = _temp[i];
+            int rowIndex = i*A.numCols+w0;
+            for( int j = w0; j < w1; j++ ) {
+                A.data[rowIndex++] += a*u[j];
+            }
+        }
     }
 }

@@ -332,4 +332,22 @@ public class SpecializedOps {
         return ret;
     }
 
+    /**
+     * Computes the product of the diagonal elements.  For a diagonal or triangular
+     * matrix this is the determinant.
+     *
+     * @param T A matrix.
+     * @return product of the diagonal elements.
+     */
+    public static double diagProd( DenseMatrix64F T )
+    {
+        double prod = 0;
+        int N = Math.min(T.numRows,T.numCols);
+        for( int i = 0; i < N; i++ ) {
+            prod += T.get(i,i);
+        }
+
+        return prod;
+    }
+
 }

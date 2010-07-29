@@ -23,6 +23,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.SpecializedOps;
 
 
 /**
@@ -51,6 +52,11 @@ public class LinearSolverChol extends LinearSolverAbstract {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public double quality() {
+        return Math.abs(SpecializedOps.diagProd(decomp.getT()));
     }
 
     /**

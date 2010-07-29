@@ -44,6 +44,11 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
     }
 
     @Override
+    public double quality() {
+        return Math.abs(decomp.computeDeterminant());
+    }
+
+    @Override
     public void invert(DenseMatrix64F A_inv) {
         double []vv = decomp._getVV();
         DenseMatrix64F LU = decomp.getLU();

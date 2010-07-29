@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
@@ -155,7 +155,7 @@ public class HessenbergSimilarDecomposition {
             for( int i = j+2; i < N; i++ ) {
                 u[i] = QH.get(i,j);
             }
-            QRDecompositionHouseholder.rank1UpdateMultR(Q,u,gammas[j],j+1,j+1,N,b);
+            QrHelperFunctions.rank1UpdateMultR(Q,u,gammas[j],j+1,j+1,N,b);
         }
 
         return Q;
@@ -209,10 +209,10 @@ public class HessenbergSimilarDecomposition {
                 gammas[k] = gamma;
 
                 // ---------- multiply on the left by Q_k
-                QRDecompositionHouseholder.rank1UpdateMultR(QH,u,gamma,k+1,k+1,N,b);
+                QrHelperFunctions.rank1UpdateMultR(QH,u,gamma,k+1,k+1,N,b);
 
                 // ---------- multiply on the right by Q_k
-                QRDecompositionHouseholder.rank1UpdateMultL(QH,u,gamma,0,k+1,N,b);
+                QrHelperFunctions.rank1UpdateMultL(QH,u,gamma,0,k+1,N,b);
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg

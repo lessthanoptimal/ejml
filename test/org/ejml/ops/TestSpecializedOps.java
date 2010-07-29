@@ -219,4 +219,17 @@ public class TestSpecializedOps {
 
         assertTrue(MatrixFeatures.isIdentical(B,Pt,1e-8));
     }
+
+    @Test
+    public void diagProd() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3);
+
+        A.set(0,0,1);
+        A.set(1,1,2);
+        A.set(2,2,3);
+
+        double found = SpecializedOps.diagProd(A);
+
+        assertEquals(6,found,1e-8);
+    }
 }

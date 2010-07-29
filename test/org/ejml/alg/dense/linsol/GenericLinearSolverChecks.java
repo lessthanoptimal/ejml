@@ -48,6 +48,29 @@ public abstract class GenericLinearSolverChecks {
     protected double tol = 1e-8;
 
     /**
+     * See if a matrix that is more singular has a lower quality.
+     */
+    @Test
+    public void checkQuality() {
+        DenseMatrix64F A_good = CommonOps.diag(4,3,2,1);
+        DenseMatrix64F A_bad = CommonOps.diag(4,3,2,0.1);
+
+        LinearSolver solver = createSolver(4,4);
+
+        assertTrue(solver.setA(A_good));
+        double q_good = solver.quality();
+
+        // if it returns NaN then it does not support quality
+        if( Double.isNaN(q_good))
+            return;
+
+        assertTrue(solver.setA(A_bad));
+        double q_bad = solver.quality();
+
+        assertTrue(q_bad < q_good);
+    }
+
+    /**
      * A very easy matrix to decompose
      */
     @Test

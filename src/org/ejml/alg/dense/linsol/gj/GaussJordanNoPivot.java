@@ -44,6 +44,11 @@ public class GaussJordanNoPivot extends LinearSolverAbstract {
     }
 
     @Override
+    public double quality() {
+        return Double.NaN;
+    }
+
+    @Override
     public void invert( DenseMatrix64F A )
     {
         GaussJordan.checkArgumentSquare(A,"A");

@@ -19,7 +19,6 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -198,9 +197,9 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
                 u[i] = UBV.get(i,j);
             }
             if( transpose )
-                QRDecompositionHouseholder.rank1UpdateMultL(U,u,gammasU[j],j,j,m,this.b);
+                QrHelperFunctions.rank1UpdateMultL(U,u,gammasU[j],j,j,m,this.b);
             else
-                QRDecompositionHouseholder.rank1UpdateMultR(U,u,gammasU[j],j,j,m,this.b);
+                QrHelperFunctions.rank1UpdateMultR(U,u,gammasU[j],j,j,m,this.b);
         }
 
         return U;
@@ -245,9 +244,9 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
                 u[i] = UBV.get(j,i);
             }
             if( transpose )
-                QRDecompositionHouseholder.rank1UpdateMultL(V,u,gammasV[j],j+1,j+1,n,this.b);
+                QrHelperFunctions.rank1UpdateMultL(V,u,gammasV[j],j+1,j+1,n,this.b);
             else
-                QRDecompositionHouseholder.rank1UpdateMultR(V,u,gammasV[j],j+1,j+1,n,this.b);
+                QrHelperFunctions.rank1UpdateMultR(V,u,gammasV[j],j+1,j+1,n,this.b);
         }
 
         return V;
@@ -295,7 +294,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
             gammasU[k] = gamma;
 
             // ---------- multiply on the left by Q_k
-            QRDecompositionHouseholder.rank1UpdateMultR(UBV,u,gamma,k+1,k,m,this.b);
+            QrHelperFunctions.rank1UpdateMultR(UBV,u,gamma,k+1,k,m,this.b);
 
             b[k*n+k] = -tau*max;
         } else {
@@ -329,7 +328,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
             // writing to u could be avoided by working directly with b.
             // requires writing a custom rank1Update function
             // ---------- multiply on the left by Q_k
-            QRDecompositionHouseholder.rank1UpdateMultL(UBV,u,gamma,k+1,k+1,n,this.b);
+            QrHelperFunctions.rank1UpdateMultL(UBV,u,gamma,k+1,k+1,n,this.b);
 
             b[row+k+1] = -tau*max;
         } else {

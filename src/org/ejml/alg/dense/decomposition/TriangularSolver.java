@@ -52,12 +52,20 @@ public class TriangularSolver {
      */
     public static void solveL( double L[] , double []b , int n )
     {
+//        for( int i = 0; i < n; i++ ) {
+//            double sum = b[i];
+//            for( int k=0; k<i; k++ ) {
+//                sum -= L[i*n+k]* b[k];
+//            }
+//            b[i] = sum / L[i*n+i];
+//        }
         for( int i = 0; i < n; i++ ) {
             double sum = b[i];
+            int indexL = i*n;
             for( int k=0; k<i; k++ ) {
-                sum -= L[i*n+k]* b[k];
+                sum -= L[indexL++]* b[k];
             }
-            b[i] = sum / L[i*n+i];
+            b[i] = sum / L[indexL];
         }
     }
 
@@ -127,10 +135,18 @@ public class TriangularSolver {
      */
     public static void solveU( double U[] , double []b , int n )
     {
+//        for( int i =n-1; i>=0; i-- ) {
+//            double sum = b[i];
+//            for( int j = i+1; j <n; j++ ) {
+//                sum -= U[i*n+j]* b[j];
+//            }
+//            b[i] = sum/U[i*n+i];
+//        }
         for( int i =n-1; i>=0; i-- ) {
             double sum = b[i];
+            int indexU = i*n+i+1;
             for( int j = i+1; j <n; j++ ) {
-                sum -= U[i*n+j]* b[j];
+                sum -= U[indexU++]* b[j];
             }
             b[i] = sum/U[i*n+i];
         }
@@ -138,10 +154,18 @@ public class TriangularSolver {
 
     public static void solveU( double U[] , double []b , int sideLength , int minRow , int maxRow )
     {
+//        for( int i =maxRow-1; i>=minRow; i-- ) {
+//            double sum = b[i];
+//            for( int j = i+1; j <maxRow; j++ ) {
+//                sum -= U[i*sideLength+j]* b[j];
+//            }
+//            b[i] = sum/U[i*sideLength+i];
+//        }
         for( int i =maxRow-1; i>=minRow; i-- ) {
             double sum = b[i];
+            int indexU = i*sideLength+i+1;
             for( int j = i+1; j <maxRow; j++ ) {
-                sum -= U[i*sideLength+j]* b[j];
+                sum -= U[indexU++]* b[j];
             }
             b[i] = sum/U[i*sideLength+i];
         }

@@ -68,6 +68,11 @@ public class GaussJordan extends LinearSolverAbstract {
         return true;
     }
 
+    @Override
+    public double quality() {
+        return Double.NaN;
+    }
+
     public static void checkArgumentSquare( DenseMatrix64F mat , String name )
     {
         if( mat.numCols != mat.numRows)

@@ -24,6 +24,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.SpecializedOps;
 
 
 /**
@@ -98,6 +99,11 @@ public class LinearSolverQr extends LinearSolverAbstract {
         decomposer.getR(R,false);
 
         return true;
+    }
+
+    @Override
+    public double quality() {
+        return Math.abs(SpecializedOps.diagProd(R));
     }
 
     /**

@@ -71,6 +71,25 @@ public interface LinearSolver {
 
     /**
      * <p>
+     * Returns the quality of the linear system.  Higher the value the better the solution
+     * is and the less singular A was. This is intended as a quick way to verify that a valid
+     * solution was returned.
+     * </p>
+     *
+     * <p>
+     * How the quality is computed depends on the algorithm.  Typically linear solvers will
+     * generate a triangular matrix.  One way to compute the quality is to return the
+     * determinant's absolute value for that triangular matrix.
+     * </p>
+     * <p>
+     * If not supported by the solver then Double.NaN is returned.
+     * </p>
+     * @return The quality of the linear system.
+     */
+    public double quality();
+
+    /**
+     * <p>
      * Solves for X in the linear system, AX=B.
      * </p>
      * <p>

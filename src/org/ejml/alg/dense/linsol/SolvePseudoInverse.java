@@ -118,6 +118,11 @@ public class SolvePseudoInverse implements LinearSolver {
     }
 
     @Override
+    public double quality() {
+        return Double.NaN;
+    }
+
+    @Override
     public void solve( DenseMatrix64F b, DenseMatrix64F x) {
         CommonOps.mult(pinv,b,x);
     }

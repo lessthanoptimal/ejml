@@ -126,7 +126,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
 
             double vv = u[j];
             u[j] = 1;
-            QRDecompositionHouseholder.rank1UpdateMultR(Q,u,gammas[j],j,j,numRows,v);
+            QrHelperFunctions.rank1UpdateMultR(Q,u,gammas[j],j,j,numRows,v);
             u[j] = vv;
         }
 

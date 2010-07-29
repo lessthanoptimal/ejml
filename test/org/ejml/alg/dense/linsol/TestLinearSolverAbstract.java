@@ -66,6 +66,11 @@ public class TestLinearSolverAbstract {
         }
 
         @Override
+        public double quality() {
+            return Double.NaN;
+        }
+
+        @Override
         public void solve(DenseMatrix64F B, DenseMatrix64F X) {
               solveCalled = true;
         }
