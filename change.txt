@@ -22,7 +22,8 @@
 - Fixed and added more block matrix operations.
 - Creates a new class to store transpose algorithms.
    * Including a new block one that is about 40% faster on large non-square matrices.
-
+- Added quality() to LinearSolver to provide a quick way to validate results.
+- Added MatrixIO.show() for visually showing a matrix's state.
 ----- Version 0.13
 
 2010/07/08

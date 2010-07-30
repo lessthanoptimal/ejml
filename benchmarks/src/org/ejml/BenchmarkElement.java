@@ -17,9 +17,11 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.ops;
+package org.ejml;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
 

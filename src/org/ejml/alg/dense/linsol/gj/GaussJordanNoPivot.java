@@ -45,7 +45,7 @@ public class GaussJordanNoPivot extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return Double.NaN;
+        throw new IllegalArgumentException("Not supported by this solver.");
     }
 
     @Override

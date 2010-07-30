@@ -70,7 +70,7 @@ public class GaussJordan extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return Double.NaN;
+        throw new IllegalArgumentException("Not supported by this solver.");
     }
 
     public static void checkArgumentSquare( DenseMatrix64F mat , String name )

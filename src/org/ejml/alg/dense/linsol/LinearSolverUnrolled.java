@@ -48,7 +48,7 @@ public class LinearSolverUnrolled implements LinearSolver {
 
     @Override
     public double quality() {
-        return Double.NaN;
+        throw new IllegalArgumentException("Not supported by this solver.");
     }
 
     @Override

@@ -22,6 +22,8 @@ package org.ejml.ops;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 
 
@@ -37,10 +39,29 @@ public class MatrixIO {
      * Red positive and blue negative.  More intense the color larger the element's absolute value
      * is.
      * 
-     * @param A
+     * @param A A matrix.
+     * @param title Name of the window.
      */
-    public static void displayMatrix( DenseMatrix64F A ) {
-        // TODO implement
+    public static void show( DenseMatrix64F A , String title ) {
+        JFrame frame = new JFrame(title);
+
+        int width = 300;
+        int height = 300;
+
+        if( A.numRows > A.numCols) {
+            width = width*A.numCols/A.numRows;
+        } else {
+            height = height*A.numRows/A.numCols;
+        }
+
+        MatrixComponent panel = new MatrixComponent(width,height);
+        panel.setMatrix(A);
+
+        frame.add(panel, BorderLayout.CENTER);
+
+        frame.pack();
+        frame.setVisible(true);
+
     }
 
     /**
@@ -120,4 +141,18 @@ public class MatrixIO {
             System.out.println();
         }
     }
+
+//    public static void main( String []args ) {
+//        Random rand = new Random(234234);
+//        DenseMatrix64F A = RandomMatrices.createRandom(50,70,rand);
+//
+//        SingularValueDecomposition decomp = DecompositionFactory.svd();
+//
+//        decomp.decompose(A);
+//
+//        displayMatrix(A,"Original");
+//        displayMatrix(decomp.getU(false),"U");
+//        displayMatrix(decomp.getV(false),"V");
+//        displayMatrix(decomp.getW(null),"W");
+//    }
 }

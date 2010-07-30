@@ -1336,7 +1336,7 @@ public class CommonOps {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    public static void add( final D1Matrix64F a , final D1Matrix64F b , final D1Matrix64F c )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
@@ -1569,9 +1569,11 @@ public class CommonOps {
      * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , DenseMatrix64F a )
+    public static void scale( double alpha , D1Matrix64F a )
     {
         final double data[] = a.data;
+        // on very small matrices (2 by 2) the call to getNumElements() can slow it down
+        // slightly compared to other libraries since it involves an extra multiplication.  
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
@@ -1589,7 +1591,7 @@ public class CommonOps {
      * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , DenseMatrix64F a , DenseMatrix64F b)
+    public static void scale( double alpha , D1Matrix64F a , D1Matrix64F b)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");

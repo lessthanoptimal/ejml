@@ -71,8 +71,8 @@ public interface LinearSolver {
 
     /**
      * <p>
-     * Returns the quality of the linear system.  Higher the value the better the solution
-     * is and the less singular A was. This is intended as a quick way to verify that a valid
+     * Returns the quality of the linear system.  The quality is a positive number where larger values
+     * indicate a better solution.  This is intended as a quick way to verify that a valid
      * solution was returned.
      * </p>
      *
@@ -82,7 +82,7 @@ public interface LinearSolver {
      * determinant's absolute value for that triangular matrix.
      * </p>
      * <p>
-     * If not supported by the solver then Double.NaN is returned.
+     * If not supported by the solver then the runtime exception IllegalArgumentException is thrown.
      * </p>
      * @return The quality of the linear system.
      */
