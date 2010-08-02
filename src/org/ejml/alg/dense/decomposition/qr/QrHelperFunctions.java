@@ -52,7 +52,7 @@ public class QrHelperFunctions {
         int stopIndex = startU + length;
         for( ; index < stopIndex; index++ ) {
             double val = u[index];
-            val = (val <= 0.0D) ? 0.0D - val : val;
+            val = (val < 0.0D) ? -val : val;
             if( val > max )
                 max = val;
         }
@@ -223,6 +223,50 @@ public class QrHelperFunctions {
 
         for( int i = w0; i < w1; i++ ) {
             double valU = u[i];
+
+            int indexA = i*A.numCols + colA0;
+            for( int j = colA0; j < A.numCols; j++ ) {
+                A.data[indexA++] -= valU*_temp[j];
+            }
+        }
+    }
+
+    public static void rank1UpdateMultR(DenseMatrix64F A,
+                                        double u[], int offsetU,
+                                        double gamma,
+                                        int colA0,
+                                        int w0, int w1,
+                                        double _temp[])
+    {
+//        for( int i = colA0; i < A.numCols; i++ ) {
+//            double val = 0;
+//
+//            for( int k = w0; k < w1; k++ ) {
+//                val += u[k+offsetU]*A.data[k*A.numCols +i];
+//            }
+//            _temp[i] = gamma*val;
+//        }
+
+        // reordered to reduce cpu cache issues
+        for( int i = colA0; i < A.numCols; i++ ) {
+            _temp[i] = u[w0+offsetU]*A.data[w0 *A.numCols +i];
+        }
+
+        for( int k = w0+1; k < w1; k++ ) {
+            int indexA = k*A.numCols + colA0;
+            double valU = u[k+offsetU];
+            for( int i = colA0; i < A.numCols; i++ ) {
+                _temp[i] += valU*A.data[indexA++];
+            }
+        }
+        for( int i = colA0; i < A.numCols; i++ ) {
+            _temp[i] *= gamma;
+        }
+
+        // end of reorder
+
+        for( int i = w0; i < w1; i++ ) {
+            double valU = u[i+offsetU];
 
             int indexA = i*A.numCols + colA0;
             for( int j = colA0; j < A.numCols; j++ ) {

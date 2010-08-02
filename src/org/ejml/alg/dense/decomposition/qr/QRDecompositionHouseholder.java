@@ -200,7 +200,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
 
     /**
      * <p>
-     * Inorder to decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
+     * In order to decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
      * It requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
      * </p>
      *

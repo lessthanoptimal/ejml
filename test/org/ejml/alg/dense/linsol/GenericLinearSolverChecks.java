@@ -58,11 +58,13 @@ public abstract class GenericLinearSolverChecks {
         LinearSolver solver = createSolver(4,4);
 
         assertTrue(solver.setA(A_good));
-        double q_good = solver.quality();
-
-        // if it returns NaN then it does not support quality
-        if( Double.isNaN(q_good))
+        double q_good;
+        try {
+            q_good = solver.quality();
+        } catch( IllegalArgumentException e ) {
+            // quality is not supported
             return;
+        }
 
         assertTrue(solver.setA(A_bad));
         double q_bad = solver.quality();

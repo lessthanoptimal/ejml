@@ -31,18 +31,19 @@ import org.ejml.ops.CommonOps;
  * of CPU cache misses and the number of copies that are performed.
  * </p>
  *
- * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder
+ * @see QRDecompositionHouseholder
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholderColumn implements QRDecomposition {
+// TODO remove QR Col and replace with this one?
+// -- On small matrices col seems to be about 10% faster
+public class QRDecompositionHouseholderTran implements QRDecomposition {
 
     /**
-     * Where the Q and R matrices are stored.  R is stored in the
-     * upper triangular portion and Q on the lower bit.  Lower columns
-     * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
+     * Where the Q and R matrices are stored.  For speed reasons
+     * this is transposed
      */
-    protected double dataQR[][]; // [ column][ row ]
+    protected DenseMatrix64F QR;
 
     // used internally to store temporary data
     protected double v[];
@@ -68,10 +69,12 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         minLength = Math.min(numCols,numRows);
         int maxLength = Math.max(numCols,numRows);
 
-        if( dataQR == null || dataQR.length < numCols || dataQR[0].length < numRows ) {
-            dataQR = new double[ numCols ][  numRows ];
+        if( QR == null ) {
+            QR = new DenseMatrix64F(numCols,numRows);
             v = new double[ maxLength ];
             gammas = new double[ minLength ];
+        } else {
+            QR.reshape(numCols,numRows,false);
         }
 
         if( v.length < maxLength ) {
@@ -83,17 +86,15 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
     }
 
     /**
-     * Returns the combined QR matrix in a 2D array format that is column major.
-     *
-     * @return The QR matrix in a 2D matrix column major format. [ column ][ row ]
+     * Inner matrix that stores the decomposition
      */
-    public double[][] getQR() {
-        return dataQR;
+    public DenseMatrix64F getQR() {
+        return QR;
     }
 
     /**
-     * Computes the Q matrix from the imformation stored in the QR matrix.  This
-     * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
+     * Computes the Q matrix from the information stored in the QR matrix.  This
+     * operation requires about 4(m<sup2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
      */
@@ -122,12 +123,11 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         }
 
         for( int j = minLength-1; j >= 0; j-- ) {
-            double u[] = dataQR[j];
-
-            double vv = u[j];
-            u[j] = 1;
-            QrHelperFunctions.rank1UpdateMultR(Q,u,gammas[j],j,j,numRows,v);
-            u[j] = vv;
+            int diagIndex = j*numRows+j;
+            double before = QR.data[diagIndex];
+            QR.data[diagIndex] = 1;
+            QrHelperFunctions.rank1UpdateMultR(Q,QR.data,j*numRows,gammas[j],j,j,numRows,v);
+            QR.data[diagIndex] = before;
         }
 
         return Q;
@@ -163,14 +163,13 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
             }
         }
 
-        for( int j = 0; j < numCols; j++ ) {
-            double colR[] = dataQR[j];
-            int l = Math.min(j,numRows-1);
-            for( int i = 0; i <= l; i++ ) {
-                double val = colR[i];
+        for( int i = 0; i < minLength; i++ ) {
+            for( int j = i; j < numCols; j++ ) {
+                double val = QR.get(j,i);
                 R.set(i,j,val);
             }
         }
+
 
         return R;
     }
@@ -191,7 +190,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
     public boolean decompose( DenseMatrix64F A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
-        convertToColumnMajor(A);
+        CommonOps.transpose(A,QR);
 
         error = false;
 
@@ -203,20 +202,6 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         return !error;
     }
 
-    /**
-     * Converts the standard row-major matrix into a column-major vector
-     * that is advantageous for this problem.
-     *
-     * @param A original matrix that is to be decomposed.
-     */
-    protected void convertToColumnMajor(DenseMatrix64F A) {
-        for( int x = 0; x < numCols; x++ ) {
-            double colQ[] = dataQR[x];
-            for( int y = 0; y < numRows; y++ ) {
-                colQ[y] = A.data[y*numCols+x];
-            }
-        }
-    }
 
     /**
      * <p>
@@ -235,22 +220,22 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     protected void householder( int j )
     {
-        double u[] = dataQR[j];
+        int startQR = j*numRows;
+        int endQR = startQR+numRows;
+        startQR += j;
 
-        // find the largest value in this column
-        // this is used to normalize the column and mitigate overflow/underflow
-        double max = QrHelperFunctions.findMax(u,j,numRows-j);
+        double max = QrHelperFunctions.findMax(QR.data,startQR,numRows-j);
 
         if( max == 0.0 ) {
             gamma = 0;
             error = true;
         } else {
             // computes tau and normalizes u by max
-            tau = QrHelperFunctions.computeTau(j, numRows , u, max);
+            tau = QrHelperFunctions.computeTau(startQR, endQR , QR.data, max);
 
             // divide u by u_0
-            double u_0 = u[j] + tau;
-            QrHelperFunctions.divideElements(j+1,numRows , u, u_0 );
+            double u_0 = QR.data[startQR] + tau;
+            QrHelperFunctions.divideElements(startQR+1,endQR , QR.data, u_0 );
 
             gamma = u_0/tau;
             tau *= max;
@@ -270,26 +255,53 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     protected void updateA( int w )
     {
-        double u[] = dataQR[w];
+//        int rowW = w*numRows;
+//        int rowJ = rowW + numRows;
+//
+//        for( int j = w+1; j < numCols; j++ , rowJ += numRows) {
+//            double val = QR.data[rowJ + w];
+//
+//            for( int k = w+1; k < numRows; k++ ) {
+//                val += QR.data[rowW + k]*QR.data[rowJ + k];
+//            }
+//            val *= gamma;
+//
+//            QR.data[rowJ + w] -= val;
+//            for( int i = w+1; i < numRows; i++ ) {
+//                QR.data[rowJ + i] -= QR.data[rowW + i]*val;
+//            }
+//        }
+//
+//        if( w < numCols ) {
+//            QR.data[rowW + w] = -tau;
+//        }
 
-        for( int j = w+1; j < numCols; j++ ) {
+        int rowW = w*numRows + w + 1;
+        int rowJ = rowW + numRows;
+        int rowJEnd = rowJ + (numCols-w-1)*numRows;
+        int indexWEnd = rowW + numRows - w - 1;
 
-            double colQ[] = dataQR[j];
-            double val = colQ[w];
+        for( ; rowJEnd != rowJ; rowJ += numRows) {
+            double val = QR.data[rowJ - 1];
 
-            for( int k = w+1; k < numRows; k++ ) {
-                val += u[k]*colQ[k];
+            int indexW = rowW;
+            int indexJ = rowJ;
+
+            while( indexW != indexWEnd ) {
+                val += QR.data[indexW++]*QR.data[indexJ++];
             }
             val *= gamma;
 
-            colQ[w] -= val;
-            for( int i = w+1; i < numRows; i++ ) {
-                colQ[i] -= u[i]*val;
+            QR.data[rowJ - 1] -= val;
+            indexW = rowW;
+            indexJ = rowJ;
+            while( indexW != indexWEnd ) {
+                QR.data[indexJ++] -= QR.data[indexW++]*val;
             }
         }
 
         if( w < numCols ) {
-            u[w] = -tau;
+            QR.data[rowW - 1] = -tau;
         }
     }
 

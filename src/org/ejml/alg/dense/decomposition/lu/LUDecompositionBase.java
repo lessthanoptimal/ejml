@@ -210,9 +210,11 @@ public abstract class LUDecompositionBase implements LUDecomposition {
             double sum = vv[ip];
             vv[ip] = vv[i];
             if( ii != 0 ) {
-                for( int j = ii-1; j < i; j++ ) {
-                    sum -= dataLU[i* n +j]*vv[j];
-                }
+//                for( int j = ii-1; j < i; j++ )
+//                    sum -= dataLU[i* n +j]*vv[j];
+                int index = i*n + ii-1;
+                for( int j = ii-1; j < i; j++ )
+                    sum -= dataLU[index++]*vv[j];
             } else if( sum != 0.0 ) {
                 ii=i+1;
             }

@@ -2,7 +2,13 @@ Block Matrix Multiply
 ---------------------------
 - Block matrix multiplication does have fewer cache misses.
 - Converting from row major to block and multiplying causes too many cache misses.
-- Was verified empirically.
+- Two different types of block matrix were created.
+  * single continuous array
+  * N*M arrays
+- After making the code ugly and barely readable they had comparable performance to multReorder(),
+  when multiplying two block matrices together.
+- The code currently committed and that resides in experimental has
+  not been optimized as much, but is readable.
 
 Unrolled Matrix Multiplication
 ---------------------------

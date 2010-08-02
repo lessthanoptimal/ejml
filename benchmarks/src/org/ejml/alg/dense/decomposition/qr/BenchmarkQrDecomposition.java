@@ -63,27 +63,39 @@ public class BenchmarkQrDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
+    public static long tran( DenseMatrix64F orig , int numTrials ) {
+
+        QRDecompositionHouseholderTran alg = new QRDecompositionHouseholderTran();
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( !alg.decompose(orig) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
         System.out.println("basic            = "+ basic(mat,numTrials));
         System.out.println("column           = "+ column(mat,numTrials));
+        System.out.println("tran             = "+ tran(mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
         int size[] = new int[]{2,4,10,100,500,1000,2000};
-        int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,7,2,1,1};
+        int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,5,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
-
-            System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
-
-            System.out.print("* Creating matrix ");
             DenseMatrix64F mat = RandomMatrices.createRandom(w*4,w/1,rand);
-            System.out.println("  Done.");
+             System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);
             runAlgorithms(mat,trials[i]);
         }
     }

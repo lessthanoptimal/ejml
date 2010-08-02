@@ -15,15 +15,13 @@ For DenseMatrix64F
 - Iterative solver
 
 - Cholesky
- * Change scale by 1.0/max to div by max to improve stability
- * See SVN revision 105
- * it was reverted since division is slower than multiplication and there is no way to
-   evaluate performance improvement
+ * Improve stability
 
 - QR
-  * New QR that uses a regular transposed matrix.  Take advantage of better transpose.
-  * Create straight forward QR and LQ factorings
-  * Use factorings in decomposition algorithms for QR and LQ
+  * Block version
+  * Replace col with tran variant of QR decomposition?
+    - tran does not use a custom matrix format.
+    - tran seems to be about 10% slower on small matrices.
 
 - SVD
   - Use QR alg to speed up singular values on very tall matrices (pg 403)
@@ -39,6 +37,7 @@ For DenseMatrix64F
   - SVD
   - SymmEig
 
+- Unroll block matrix multiplication when full block.
 - Fast Matrix Multiply
 - hard code cholesky decomposition for small matrices
 
@@ -47,6 +46,3 @@ For DenseMatrix64F
   - Code generator for matrix vector ops
   - Add matrix vector multiply
   - Auto switch to all of above in CommonOps
-
-CHANGE NULL INPUT PARADIGM
-- two functions.  one that always declares the variable and one which always takes one for input

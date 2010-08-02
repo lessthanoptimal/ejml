@@ -36,7 +36,7 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
     private CholeskyBlockHelper chol;
 
     /**
-     * Creates a CholeksyDecomposition capable of decompositong a matrix that is
+     * Creates a CholeksyDecomposition capable of decomposing a matrix that is
      * n by n, where n is the width.
      *
      * @param decomposeOrig Should it decompose the matrix that is passed in or declare a new one?

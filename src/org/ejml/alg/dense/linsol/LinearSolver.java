@@ -73,7 +73,7 @@ public interface LinearSolver {
      * <p>
      * Returns the quality of the linear system.  The quality is a positive number where larger values
      * indicate a better solution.  This is intended as a quick way to verify that a valid
-     * solution was returned.
+     * solution was returned. It should be called after setA() has been called.
      * </p>
      *
      * <p>

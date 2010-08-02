@@ -58,7 +58,7 @@ public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
                 }
 
                 if( i == j ) {
-                    // is it positive-definate?
+                    // is it positive-definite?
                     if( sum <= 0.0 )
                         return false;
 
@@ -94,7 +94,7 @@ public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
                 }
 
                 if( i == j ) {
-                    // is it positive-definate?
+                    // is it positive-definite?
                     if( sum <= 0.0 )
                         return false;
 

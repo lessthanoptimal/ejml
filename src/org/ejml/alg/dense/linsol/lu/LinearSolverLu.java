@@ -56,10 +56,17 @@ public class LinearSolverLu extends LinearSolverLuBase {
 
         double []vv = decomp._getVV();
 
+//        for( int j = 0; j < numCols; j++ ) {
+//            for( int i = 0; i < this.numCols; i++ ) vv[i] = dataB[i*numCols+j];
+//            decomp._solveVectorInternal(vv);
+//            for( int i = 0; i < this.numCols; i++ ) dataX[i*numCols+j] = vv[i];
+//        }
         for( int j = 0; j < numCols; j++ ) {
-            for( int i = 0; i < this.numCols; i++ ) vv[i] = dataB[i*numCols+j];
+            int index = j;
+            for( int i = 0; i < this.numCols; i++ , index += numCols ) vv[i] = dataB[index];
             decomp._solveVectorInternal(vv);
-            for( int i = 0; i < this.numCols; i++ ) dataX[i*numCols+j] = vv[i];
+            index = j;
+            for( int i = 0; i < this.numCols; i++ , index += numCols ) dataX[index] = vv[i];
         }
 
         if( doImprove ) {
