@@ -36,11 +36,13 @@ public class EjmlParameters {
      * it too low results in a less dramatic performance hit.  The optimal value is dependent
      * on the computer's memory architecture.
      * </p>
-     * <p>
-     * block size = 8*BLOCK_WIDTH*BLOCK_WIDTH.
-     * </p>
      */
     public static int BLOCK_WIDTH = 20;
+
+    /**
+     * Number of elements in a block.
+     */
+    public static int BLOCK_SIZE = BLOCK_WIDTH*BLOCK_WIDTH;
 
     public static int TRANSPOSE_SWITCH = 375;
 

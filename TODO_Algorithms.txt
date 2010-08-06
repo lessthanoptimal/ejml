@@ -42,6 +42,7 @@ For DenseMatrix64F
 - hard code cholesky decomposition for small matrices
 
 - Matrix Multiplication:
+  - Try a variant on mult_aux that does the vector mult up to block size then goes down a row.
   - Finish vector vector multiply
   - Code generator for matrix vector ops
   - Add matrix vector multiply

@@ -383,7 +383,7 @@ public class SimpleMatrix {
     /**
      * Multiplies each element in this matrix by the specified value.
      *
-     * @see CommonOps#scale(double, DenseMatrix64F)
+     * @see CommonOps#scale(double, D1Matrix64F)
      *
      * @param val The multiplication factor.
      * @return The scaled matrix.
