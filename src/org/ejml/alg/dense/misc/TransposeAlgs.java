@@ -101,7 +101,8 @@ public class TransposeAlgs {
         for( int i = 0; i < A_tran.numRows; i++ ) {
             int index2 = i;
 
-            for( int j = 0; j < A_tran.numCols; j++ ) {
+            int end = index + A_tran.numCols;
+            while( index < end ) {
                 rdata[index++] = data[index2];
                 index2 += A.numCols;
             }

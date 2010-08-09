@@ -80,10 +80,18 @@ public class LUDecompositionAlt extends LUDecompositionBase {
 
             if (p != j) {
                 // swap the rows
-                for (int k = 0; k < n; k++) {
-                    double t = dataLU[p*n + k];
-                    dataLU[p*n + k] = dataLU[j*n + k];
-                    dataLU[j*n + k] = t;
+//                for (int k = 0; k < n; k++) {
+//                    double t = dataLU[p*n + k];
+//                    dataLU[p*n + k] = dataLU[j*n + k];
+//                    dataLU[j*n + k] = t;
+//                }
+                int rowP = p*n;
+                int rowJ = j*n;
+                int endP = rowP+n;
+                for (;rowP < endP; rowP++,rowJ++) {
+                    double t = dataLU[rowP];
+                    dataLU[rowP] = dataLU[rowJ];
+                    dataLU[rowJ] = t;
                 }
                 int k = pivot[p]; pivot[p] = pivot[j]; pivot[j] = k;
                 pivsign = -pivsign;

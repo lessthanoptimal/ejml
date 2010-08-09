@@ -66,7 +66,7 @@ public class MatrixComponent extends JPanel {
 
                     image.setRGB(j,i,rgb);
                 } else {
-                    int p = 255-(int)(255.0*(value/maxValue));
+                    int p = 255+(int)(255.0*(value/maxValue));
                     int rgb = 255 << 24 | p << 16 | p << 8 | 255;
 
                     image.setRGB(j,i,rgb);

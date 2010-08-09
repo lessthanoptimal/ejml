@@ -26,6 +26,7 @@
 
     <target name="clean">
         <delete dir="${build.dir}"/>
+        <delete dir="docs/api"/>
     </target>
 
     <target name="compile">

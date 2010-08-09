@@ -190,8 +190,9 @@ public abstract class LUDecompositionBase implements LUDecomposition {
 
         double ret = pivsign;
 
-        for( int i = 0; i < n; i++ ) {
-            ret *= dataLU[i* n +i];
+        int total = m*n;
+        for( int i = 0; i < total; i += n + 1 ) {
+            ret *= dataLU[i];
         }
 
         return ret;

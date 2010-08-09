@@ -1,5 +1,8 @@
-For 0.14 Release
+For 0.15 Release
 - cholesky accuracy
+  * hard coded cholesky inverse for small matrices
+- Define LinearSolver.quality() better using condition number
+  * approximate with normalized determinant of triangular matrix?
 
 For DenseMatrix64F
 
@@ -22,6 +25,8 @@ For DenseMatrix64F
   * Replace col with tran variant of QR decomposition?
     - tran does not use a custom matrix format.
     - tran seems to be about 10% slower on small matrices.
+
+- QR with column pivoting
 
 - SVD
   - Use QR alg to speed up singular values on very tall matrices (pg 403)

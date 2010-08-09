@@ -512,7 +512,8 @@ public class CommonOps {
             throw new RuntimeException("Incompatible matrix dimensions");
         }
 
-        if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH && A.numCols > EjmlParameters.TRANSPOSE_SWITCH )
+        if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH &&
+                A.numCols > EjmlParameters.TRANSPOSE_SWITCH )
             TransposeAlgs.block(A,A_tran,EjmlParameters.BLOCK_WIDTH);
         else
             TransposeAlgs.standard(A,A_tran);

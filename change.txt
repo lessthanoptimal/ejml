@@ -1,6 +1,13 @@
------ Version 0.14
+----- Version 0.15
 
 2010/XX/XX
+
+- Minor speed ups in LU, determinant, transpose
+- Fixed a bug in MatrixComponent.  Negative elements were not handled correctly.
+
+----- Version 0.14
+
+2010/08/07
 
 - Removed left over debugging print statement from SvdImplicitQrAlgorithm.
 - For reflectors (used in QR) code has been added that can switch between two normalization
@@ -24,6 +31,7 @@
    * Including a new block one that is about 40% faster on large non-square matrices.
 - Added quality() to LinearSolver to provide a quick way to validate results.
 - Added MatrixIO.show() for visually showing a matrix's state.
+
 ----- Version 0.13
 
 2010/07/08
