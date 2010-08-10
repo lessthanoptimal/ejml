@@ -103,7 +103,7 @@ public class LinearSolverQr extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return Math.abs(SpecializedOps.diagProd(R));
+        return SpecializedOps.qualityUpperTriangular(R);
     }
 
     /**

@@ -94,10 +94,22 @@ public class LinearSolverSvdNR extends LinearSolverAbstract {
         double quality = 1.0;
         int N = Math.min(m,n);
 
+        double max = 0;
         for( int i = 0; i < N; i++ ) {
-            quality *= w[i];
+            double value = Math.abs(w[i]);
+
+            if( value > max ) {
+                max = value;
+            }
         }
-        return quality;
+
+        if( max == 0.0d )
+            return 0.0d;
+
+        for( int i = 0; i < N; i++ ) {
+            quality *= w[i]/max;
+        }
+        return Math.abs(quality);
     }
 
     /**

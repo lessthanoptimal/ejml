@@ -350,4 +350,35 @@ public class SpecializedOps {
         return prod;
     }
 
+    /**
+     * Computes the quality of a triangular matrix, where the quality of a matrix
+     * is defined in {@link org.ejml.alg.dense.linsol.LinearSolver#quality()}.  In
+     * this situation the quality os the absolute value of the product of
+     * each diagonal element divided by the magnitude of the largest diagonal element.
+     * If all diagonal elements are zero then zero is returned.
+     *
+     * @param T A matrix.
+     * @return product of the diagonal elements.
+     */
+    public static double qualityUpperTriangular( DenseMatrix64F T )
+    {
+        int N = Math.min(T.numRows,T.numCols);
+
+        double max = 0.0d;
+        for( int i = 0; i < N; i++ ) {
+            double value = Math.abs(T.get(i,i));
+            if( value > max )
+                max = value;
+        }
+
+        if( max == 0.0d )
+            return 0.0;
+
+        double quality = 1.0;
+        for( int i = 0; i < N; i++ ) {
+            quality *= T.get(i,i)/max;
+        }
+
+        return Math.abs(quality);
+    }
 }

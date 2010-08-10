@@ -45,7 +45,7 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return Math.abs(decomp.computeDeterminant());
+        return decomp.quality();
     }
 
     @Override

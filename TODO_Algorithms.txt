@@ -15,7 +15,10 @@ For DenseMatrix64F
 - Least Squares Solver
   - Improve performance
 
-- Iterative solver
+- Linear Solver
+  * Iterative
+  * Add condition(), use Hager's method? pg 132
+  * Put this new condition into NormOps since it should be much faster
 
 - Cholesky
  * Improve stability

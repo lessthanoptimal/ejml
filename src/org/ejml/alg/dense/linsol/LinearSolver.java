@@ -71,19 +71,19 @@ public interface LinearSolver {
 
     /**
      * <p>
-     * Returns the quality of the linear system.  The quality is a positive number where larger values
-     * indicate a better solution.  This is intended as a quick way to verify that a valid
-     * solution was returned. It should be called after setA() has been called.
-     * </p>
+     * Returns a very quick to compute measure of how singular the system is.  This measure will
+     * be invariant to the scale of the matrix and always be positive, with larger values
+     * indicating it is less singular.  If not supported by the solver then the runtime
+     * exception IllegalArgumentException is thrown.  This is NOT the matrix's condition.
+     * <p>
      *
      * <p>
-     * How the quality is computed depends on the algorithm.  Typically linear solvers will
-     * generate a triangular matrix.  One way to compute the quality is to return the
-     * determinant's absolute value for that triangular matrix.
+     * How this function is implemented is not specified.  One possible implementation is the following:
+     * In many decompositions a triangular matrix
+     * is extracted.  The determinant of a triangular matrix is easily computed and once normalized
+     * to be scale invariant and its absolute value taken it will provide functionality described above.
      * </p>
-     * <p>
-     * If not supported by the solver then the runtime exception IllegalArgumentException is thrown.
-     * </p>
+     *
      * @return The quality of the linear system.
      */
     public double quality();

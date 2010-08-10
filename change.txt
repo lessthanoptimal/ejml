@@ -4,6 +4,7 @@
 
 - Minor speed ups in LU, determinant, transpose
 - Fixed a bug in MatrixComponent.  Negative elements were not handled correctly.
+- More clearly defined what LinearSolver.quality() is and made it invariant of the matrix's scale.
 
 ----- Version 0.14
 

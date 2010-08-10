@@ -90,7 +90,7 @@ public class LinearSolverQrHouse extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return Math.abs(SpecializedOps.diagProd(QR));
+        return SpecializedOps.qualityUpperTriangular(QR);
     }
 
     /**

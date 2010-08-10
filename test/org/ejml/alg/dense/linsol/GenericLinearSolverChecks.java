@@ -73,6 +73,35 @@ public abstract class GenericLinearSolverChecks {
     }
 
     /**
+     * Makes sure that the quality is scale invariant
+     */
+    @Test
+    public void checkQuality_Scale() {
+        DenseMatrix64F A = new DenseMatrix64F(2,2,true,0.1,-3,5,-4.3);
+
+        LinearSolver solver = createSolver(4,4);
+
+        assertTrue(solver.setA(A));
+        // see if quality is supported
+        try {
+            solver.quality();
+        } catch( IllegalArgumentException e ) {
+            // quality is not supported
+            return;
+        }
+
+        double qualityOrig = solver.quality();
+
+        CommonOps.scale(5.6,A);
+
+        assertTrue(solver.setA(A));
+
+        double qualityScaled = solver.quality();
+
+        assertEquals(qualityOrig,qualityScaled,1e-8);
+    }
+
+    /**
      * A very easy matrix to decompose
      */
     @Test

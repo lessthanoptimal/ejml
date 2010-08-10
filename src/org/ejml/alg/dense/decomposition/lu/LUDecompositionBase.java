@@ -198,6 +198,10 @@ public abstract class LUDecompositionBase implements LUDecomposition {
         return ret;
     }
 
+    public double quality() {
+        return SpecializedOps.qualityUpperTriangular(LU);
+    }
+
     /**
      * a specialized version of solve that avoid additional checks that are not needed.
      */
