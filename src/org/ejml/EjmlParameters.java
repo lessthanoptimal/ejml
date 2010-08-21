@@ -37,6 +37,7 @@ public class EjmlParameters {
      * on the computer's memory architecture.
      * </p>
      */
+    // See design notes
     public static int BLOCK_WIDTH = 20;
 
     /**

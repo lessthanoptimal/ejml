@@ -171,10 +171,28 @@ public class DenseMatrix64F extends D1Matrix64F {
     }
 
     /**
-     * A constructor where no data is defined and the shape set to zero.  This
-     * is useful when the matrices data is defined else where.
+     * Default constructor where nothing is assigned.  In general this should not be used.
      */
     public DenseMatrix64F(){}
+
+    /**
+     * Creates a new DenseMatrix64F around the provided data.  The data must encode
+     * a row-major matrix.  Any modification to the returned matrix will modify the
+     * provided data.
+     *
+     * @param numRows Number of rows in the matrix.
+     * @param numCols Number of columns in the matrix.
+     * @param data Data that is being wrapped. Referenced Saved.
+     * @return A matrix which references the provided data internally.
+     */
+    public static DenseMatrix64F wrap( int numRows , int numCols , double []data ) {
+        DenseMatrix64F s = new DenseMatrix64F();
+        s.data = data;
+        s.numRows = numRows;
+        s.numCols = numCols;
+
+        return s;
+    }
 
     /**
      * <p>

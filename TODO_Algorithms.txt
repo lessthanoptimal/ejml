@@ -1,8 +1,11 @@
 For 0.15 Release
+- cholesky block
+  * rework it so that its faster on better block sizes
 - cholesky accuracy
   * hard coded cholesky inverse for small matrices
 - Define LinearSolver.quality() better using condition number
   * approximate with normalized determinant of triangular matrix?
+- increase block size?
 
 For DenseMatrix64F
 

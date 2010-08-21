@@ -60,6 +60,8 @@ public class TestDenseMatrix64F {
 
         DenseMatrix64F mat = new DenseMatrix64F(3,2, true, d);
 
+        assertTrue( mat.data != d );
+
         assertEquals(1,mat.get(0,0),1e-8);
         assertEquals(2,mat.get(0,1),1e-8);
         assertEquals(3,mat.get(1,0),1e-8);
@@ -113,12 +115,30 @@ public class TestDenseMatrix64F {
         DenseMatrix64F mat = new DenseMatrix64F(d);
         DenseMatrix64F copy = new DenseMatrix64F(mat);
 
+        assertTrue( mat.data != copy.data );
+
         assertEquals(mat.getNumCols(),copy.getNumCols());
         assertEquals(mat.getNumRows(),copy.getNumRows());
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
             assertEquals(mat.get(i),copy.get(i),1e-10);
         }
+    }
+
+    @Test
+    public void wrap() {
+        double d[] = new double[]{1,2,3,4,5,6};
+
+        DenseMatrix64F mat = DenseMatrix64F.wrap(3,2,d);
+
+        assertTrue(mat.data==d);
+
+        assertEquals(1,mat.get(0,0),1e-8);
+        assertEquals(2,mat.get(0,1),1e-8);
+        assertEquals(3,mat.get(1,0),1e-8);
+        assertEquals(4,mat.get(1,1),1e-8);
+        assertEquals(5,mat.get(2,0),1e-8);
+        assertEquals(6,mat.get(2,1),1e-8);
     }
 
     @Test

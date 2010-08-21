@@ -39,14 +39,15 @@ public class TransposeAlgs {
     {
         final double data[] = mat.data;
 
-        for( int i = 0; i < mat.numRows; i++ ) {
-            int index = i*mat.numCols+i+1;
+        int index = 1;
+        int indexEnd = mat.numCols;
+        for( int i = 0; i < mat.numRows;
+             i++ , index += i+1 , indexEnd += mat.numCols ) {
             int indexOther = (i+1)*mat.numCols + i;
-            for( int j = i+1; j < mat.numCols; j++ , indexOther += mat.numCols) {
+            for( ; index < indexEnd; index++, indexOther += mat.numCols) {
                 double val = data[index];
                 data[index] = data[indexOther];
                 data[indexOther] = val;
-                index++;
             }
         }
     }
@@ -54,6 +55,10 @@ public class TransposeAlgs {
     /**
      * Performs a transpose across block sub-matrices.  Reduces
      * the number of cache misses on larger matrices.
+     *
+     * *NOTE* If this is beneficial is highly dependent on the computer it is run on. e.g:
+     * - Q6600 Almost twice as fast as standard.
+     * - Pentium-M Same speed and some times a bit slower than standard.
      *
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
@@ -65,13 +70,18 @@ public class TransposeAlgs {
         for( int i = 0; i < A.numRows; i += blockLength ) {
             int blockHeight = Math.min( blockLength , A.numRows - i);
 
+            int indexSrc = i*A.numCols;
+            int indexDst = i;
+
             for( int j = 0; j < A.numCols; j += blockLength ) {
                 int blockWidth = Math.min( blockLength , A.numCols - j);
 
-                int indexSrc = i*A.numCols + j;
-                int indexDst = j*A_tran.numCols + i;
+//                int indexSrc = i*A.numCols + j;
+//                int indexDst = j*A_tran.numCols + i;
 
-                for( int l = 0; l < blockWidth; l++ , indexSrc++ ) {
+                int indexSrcEnd = indexSrc + blockWidth;
+//                for( int l = 0; l < blockWidth; l++ , indexSrc++ ) {
+                for( ; indexSrc < indexSrcEnd;  indexSrc++ ) {
                     int rowSrc = indexSrc;
                     int rowDst = indexDst;
                     int end = rowDst + blockHeight;

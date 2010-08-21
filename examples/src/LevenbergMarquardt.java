@@ -56,7 +56,7 @@ public class LevenbergMarquardt {
     private Function func;
 
     // the optimized parameters and associated costs
-    private DenseMatrix64F param = new DenseMatrix64F();
+    private DenseMatrix64F param;
     private double initialCost;
     private double finalCost;
 

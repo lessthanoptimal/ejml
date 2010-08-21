@@ -1,3 +1,14 @@
+Block Size
+---------------------------
+- Transpose
+  * Q6600 ran fast at 200 for 10k matrices.  didn't check higher
+  * Pentium-M degrades performance slighly for 2k matrix.
+  * Selected 60 as a compromise between Q6600 and pentium-m performance.
+- Block Cholesky
+  * 20 seems to be optimal, 60 slows it down a lot.
+
+
+
 Block Matrix Multiply
 ---------------------------
 - Block matrix multiplication does have fewer cache misses.

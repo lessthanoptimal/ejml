@@ -91,7 +91,7 @@ public class BenchmarkTranspose {
 //        evaluateMatrix(20, 1000000);
 //        evaluateMatrix(120, 50000);
 //        evaluateMatrix(EjmlParameters.TRANSPOSE_SWITCH+1, 4000);
-//        evaluateMatrix(5000, 5);
+//        evaluateMatrix(2000, 80);
         evaluateMatrix(10000, 1);
     }
 
