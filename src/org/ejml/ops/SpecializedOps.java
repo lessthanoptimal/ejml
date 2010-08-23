@@ -364,15 +364,10 @@ public class SpecializedOps {
     {
         int N = Math.min(T.numRows,T.numCols);
 
-        double max = 0.0d;
-        for( int i = 0; i < N; i++ ) {
-            double value = Math.abs(T.get(i,i));
-            if( value > max )
-                max = value;
-        }
+        double max = CommonOps.elementMaxAbs(T);
 
         if( max == 0.0d )
-            return 0.0;
+            return 0.0d;
 
         double quality = 1.0;
         for( int i = 0; i < N; i++ ) {
