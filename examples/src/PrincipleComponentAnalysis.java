@@ -37,7 +37,7 @@ import org.ejml.ops.SingularOps;
  * </p>
  * <p>
  * PCA is typically derived as an eigenvalue problem.  However in this implementation {@link org.ejml.alg.dense.decomposition.SingularValueDecomposition SVD}
- * is since it can produce a more numerically stable solution.  Computation using EVD requires explicitly
+ * is used instead because it will produce a more numerically stable solution.  Computation using EVD requires explicitly
  * computing the variance of each sample set. The variance is computed by squaring the residual, which can
  * cause loss of precision.
  * </p>
@@ -48,6 +48,7 @@ import org.ejml.ops.SingularOps;
  * 2) For each sample (e.g. an image ) call addSample()<br>
  * 3) After all the samples have been added call computeBasis()<br>
  * 4) Call  sampleToEigenSpace() , eigenToSampleSpace() , errorMembership() , response()
+ * </p>
  *
  * @author Peter Abeles
  */
@@ -108,7 +109,8 @@ public class PrincipleComponentAnalysis {
     /**
      * Computes a basis (the principle components) from the most dominant eigenvectors.
      *
-     * @param numComponents Number of vectors it will use to describe the data.
+     * @param numComponents Number of vectors it will use to describe the data.  Typically much
+     * smaller than the number of elements in the input vector.
      */
     public void computeBasis( int numComponents ) {
         if( numComponents > A.getNumCols() )
@@ -147,7 +149,7 @@ public class PrincipleComponentAnalysis {
         // Singular values are in an arbitrary order initially
         SingularOps.descendingOrder(null,false,W,V_t,true);
 
-        // strip off unneeded components and find the PVA basis
+        // strip off unneeded components and find the basis
         V_t.reshape(numComponents,mean.length,true);
     }
 

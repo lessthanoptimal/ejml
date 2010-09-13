@@ -54,7 +54,6 @@ public abstract class LUDecompositionBase implements LUDecomposition {
     // used by determinant
     protected double pivsign;
 
-    @Override
     public void setExpectedMaxSize( int numRows , int numCols )
     {
         LU = new DenseMatrix64F(numRows,numCols);
@@ -77,6 +76,11 @@ public abstract class LUDecompositionBase implements LUDecomposition {
 
     public int[] getPivot() {
         return pivot;
+    }
+
+    @Override
+    public boolean modifyInput() {
+        return false;
     }
 
     /**

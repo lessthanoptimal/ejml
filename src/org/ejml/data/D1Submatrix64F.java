@@ -17,36 +17,36 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
-
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
-
-import java.util.Random;
-
-import static org.junit.Assert.assertTrue;
+package org.ejml.data;
 
 
 /**
+ * <p>
+ * Describes a rectangular submatrix inside of a {@link D1Matrix64F}.
+ * </p>
+ *
+ * <p>
+ * Rows are row0 <= i < row1 and Columns are col0 <= j < col1
+ * </p>
+ * 
  * @author Peter Abeles
  */
-public class CheckDecompositionInterface {
+public class D1Submatrix64F {
+    public D1Matrix64F original;
 
-    /**
-     * Checks to see if the matrix is or is not modified as according to the modified
-     * flag.
-     *
-     * @param decomp
-     */
-    public static void checkModifiedInput( DecompositionInterface decomp ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(4,4,new Random(0x434));
-        DenseMatrix64F A_orig = A.copy();
+    // bounding rows and columns
+    public int row0,col0;
+    public int row1,col1;
 
-        assertTrue(decomp.decompose(A));
+    public D1Submatrix64F() {
+    }
 
-        boolean modified = !MatrixFeatures.isIdentical(A,A_orig);
-
-        assertTrue(decomp.modifyInput()==modified);
+    public D1Submatrix64F(D1Matrix64F original,
+                          int row0, int col0, int row1, int col1) {
+        this.original = original;
+        this.row0 = row0;
+        this.col0 = col0;
+        this.row1 = row1;
+        this.col1 = col1;
     }
 }

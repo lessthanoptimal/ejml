@@ -19,7 +19,6 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
@@ -43,11 +42,6 @@ public abstract class GenericCholeskyTests {
     boolean canR = true;
 
     public abstract CholeskyDecomposition create( boolean lower );
-
-    @Test
-    public void testExpectedSize() {
-        CheckDecompositionInterface.checkExpectedMaxSize(create(true));
-    }
 
     @Test
     public void testDecomposeL() {

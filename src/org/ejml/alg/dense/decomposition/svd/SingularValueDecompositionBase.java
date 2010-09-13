@@ -64,7 +64,6 @@ public abstract class SingularValueDecompositionBase implements SingularValueDec
     protected double xx[];
     protected double tmp[];
 
-    @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
         this.maxRows = numRows;
         this.maxCols = numCols;

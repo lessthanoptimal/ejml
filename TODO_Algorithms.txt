@@ -40,6 +40,8 @@ For DenseMatrix64F
   - An implementation that just finds zero singular values
   - Add option to overwrite input matrix
 
+- Incremental SVD
+
 - Eigen decomposition
   - Add option to overwrite input matrix
   - Divide and conquer algorithm.

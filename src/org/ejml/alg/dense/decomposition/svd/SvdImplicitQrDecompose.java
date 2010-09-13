@@ -164,6 +164,11 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
         return true;
     }
 
+    @Override
+    public boolean modifyInput() {
+        return false;
+    }
+
     private boolean bidiagonalization(DenseMatrix64F orig) {
         // change the matrix to bidiagonal form
         if( transposed ) {
@@ -264,10 +269,6 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition {
                 singularValues[i] = val;
             }
         }
-    }
-
-    @Override
-    public void setExpectedMaxSize(int numRows, int numCols) {
     }
 
     @Override

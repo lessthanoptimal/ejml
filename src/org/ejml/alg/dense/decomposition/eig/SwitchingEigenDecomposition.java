@@ -96,10 +96,7 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
     }
 
     @Override
-    public void setExpectedMaxSize(int numRows, int numCols) {
-        if( symmetric )
-            symmetricAlg.setExpectedMaxSize(numRows,numCols);
-        else
-            generalAlg.setExpectedMaxSize(numRows,numCols);
+    public boolean modifyInput() {
+        return false;
     }
 }

@@ -19,13 +19,13 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
 import org.junit.Test;
 
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
 import static org.junit.Assert.assertTrue;
 
 
@@ -38,17 +38,18 @@ public class TestCholeskyDecompositionBlock extends GenericCholeskyTests {
         canR = false;
     }
 
+    @Test
+    public void checkModifyInput() {
+        checkModifiedInput(new CholeskyDecompositionBlock(false,2));
+        checkModifiedInput(new CholeskyDecompositionBlock(true,2));
+    }
+
     @Override
     public CholeskyDecomposition create(boolean lower) {
         if( !lower )
             throw new IllegalArgumentException("Doesn't suppoer upper form");
 
         return new CholeskyDecompositionBlock(false,1);
-    }
-
-    @Test
-    public void testExpectedSize() {
-        CheckDecompositionInterface.checkExpectedMaxSize(new CholeskyDecompositionBlock(false,1));
     }
 
     /**

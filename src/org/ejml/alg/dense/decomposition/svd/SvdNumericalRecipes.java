@@ -76,6 +76,11 @@ public class SvdNumericalRecipes extends SingularValueDecompositionBase {
         return true;
     }
 
+    @Override
+    public boolean modifyInput() {
+        return false;
+    }
+
     private boolean decompose() {
         int l = 0;
         double anorm, f, g, h, s, scale;

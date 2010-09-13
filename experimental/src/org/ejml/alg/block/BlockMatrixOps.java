@@ -20,7 +20,9 @@
 package org.ejml.alg.block;
 
 import org.ejml.data.BlockMatrix64F;
+import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -69,10 +71,14 @@ public class BlockMatrixOps {
      * @param src Original BlockMatrix64F..  Not modified.
      * @param dst Equivalent DenseMatrix64F.  Modified.
      */
-    public static void convert( BlockMatrix64F src , DenseMatrix64F dst )
+    public static DenseMatrix64F convert( BlockMatrix64F src , DenseMatrix64F dst )
     {
-        if( dst.numRows != src.numRows || dst.numCols != src.numCols )
-            throw new IllegalArgumentException("Must be the same size.");
+        if( dst != null ) {
+            if( dst.numRows != src.numRows || dst.numCols != src.numCols )
+                throw new IllegalArgumentException("Must be the same size.");
+        } else {
+            dst = new DenseMatrix64F(src.numRows,src.numCols);        
+        }
 
         for( int i = 0; i < src.numRows; i += src.blockLength ) {
             int blockHeight = Math.min( src.blockLength , src.numRows - i);
@@ -93,6 +99,8 @@ public class BlockMatrixOps {
                 }
             }
         }
+
+        return dst;
     }
 
     /**
@@ -141,97 +149,21 @@ public class BlockMatrixOps {
 
         final int blockLength = A.blockLength;
 
-        for( int i = 0; i < A.numRows; i += blockLength ) {
-            int heightA = Math.min( blockLength , A.numRows - i);
+        D1Submatrix64F Asub = new D1Submatrix64F(A,0,0,A.numRows,A.numCols);
+        D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
+        D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
 
-            for( int j = 0; j < B.numCols; j += blockLength ) {
-                int widthB = Math.min( blockLength , B.numCols-j);
-
-                int indexC = i*C.numCols + j*heightA;
-
-                for( int k = 0; k < A.numCols; k += blockLength ) {
-                    int widthA = Math.min( blockLength , A.numCols - k);
-
-                    int indexA = i*A.numCols + k*heightA;
-                    int indexB = k*B.numCols + j*widthA;
-
-                    if( k == 0 )
-                        multBlockSet(A,B,C,indexA,indexB,indexC,heightA,widthA,widthB);
-                    else
-                        multBlockAdd(A,B,C,indexA,indexB,indexC,heightA,widthA,widthB);
-                }
-            }
-        }
+        BlockMatrixMultiplication.mult(blockLength,Asub,Bsub,Csub);
     }
 
-    /**
-     * Performs a matrix multiplication between inner block matrices.
-     *
-     * (m , o) += (m , n) * (n , o)
-     */
-    private static void multBlockAdd(BlockMatrix64F A, BlockMatrix64F B, BlockMatrix64F C,
-                                     int indexA, int indexB, int indexC,
-                                     final int m, final int n, final int o) {
-//        for( int i = 0; i < m; i++ ) {
-//            for( int j = 0; j < o; j++ ) {
-//                double val = 0;
-//
-//                for( int k = 0; k < n; k++ ) {
-//                    val += A.data[i*n + k + indexA] * B.data[k*o + j + indexB];
-//                }
-//
-//                C.data[ i*o + j + indexC ] += val;
-//            }
-//        }
+    public static void multTransA( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
+    {
 
-        for( int i = 0; i < m; i++ ) {
-            for( int j = 0; j < o; j++ , indexC++ ) {
-                int indexBB = indexB + j;
-                int indexAA = indexA;
-
-                double val = 0;
-
-                int end = indexA + n;
-
-                for( ; indexAA != end; indexAA++) {
-                    val += A.data[ indexAA ] * B.data[indexBB];
-                    indexBB += o;
-                }
-
-                C.data[ indexC ] += val;
-            }
-
-            indexA += n;
-        }
     }
 
-    /**
-     * Performs a matrix multiplication between inner block matrices.
-     *
-     * (m , o) += (m , n) * (n , o)
-     */
-    private static void multBlockSet(BlockMatrix64F A, BlockMatrix64F B, BlockMatrix64F C,
-                                     int indexA, int indexB, int indexC,
-                                     final int m, final int n, final int o) {
-        for( int i = 0; i < m; i++ ) {
-            for( int j = 0; j < o; j++ , indexC++ ) {
-                int indexBB = indexB + j;
-                int indexAA = indexA;
+    public static void multTransB( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
+    {
 
-                double val = 0;
-
-                int end = indexA + n;
-
-                for( ; indexAA != end; indexAA++) {
-                    val += A.data[ indexAA ] * B.data[indexBB];
-                    indexBB += o;
-                }
-
-                C.data[ indexC ] = val;
-            }
-
-            indexA += n;
-        }
     }
 
     /**
@@ -312,4 +244,19 @@ public class BlockMatrixOps {
         return ret;
     }
 
+    public static boolean isIdentical( BlockMatrix64F A , BlockMatrix64F B )
+    {
+        if( A.blockLength != B.blockLength )
+            return false;
+
+        return MatrixFeatures.isIdentical(A,B);
+    }
+
+    public static boolean isIdentical( BlockMatrix64F A , BlockMatrix64F B , double tol )
+    {
+        if( A.blockLength != B.blockLength )
+            return false;
+
+        return MatrixFeatures.isIdentical(A,B,tol);
+    }
 }

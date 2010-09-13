@@ -87,7 +87,8 @@ public class WatchedDoubleStepQRDecomposition implements EigenDecomposition {
     }
 
     @Override
-    public void setExpectedMaxSize(int numRows, int numCols) {
+    public boolean modifyInput() {
+        return false;
     }
 
     @Override

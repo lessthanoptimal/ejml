@@ -45,8 +45,8 @@ public abstract class GeneralLuDecompositionChecks {
     public abstract LUDecomposition create( int numRows , int numCols );
 
     @Test
-    public void testExpectedSize() {
-        CheckDecompositionInterface.checkExpectedMaxSize(create(0,0));
+    public void testModifiedInput() {
+        CheckDecompositionInterface.checkModifiedInput(create(0,0));
     }
 
     /**

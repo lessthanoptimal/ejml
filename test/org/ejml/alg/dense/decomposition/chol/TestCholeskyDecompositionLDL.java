@@ -19,13 +19,13 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
 import org.junit.Test;
 
 import java.util.Random;
 
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
 import static org.junit.Assert.*;
 
 
@@ -37,8 +37,8 @@ public class TestCholeskyDecompositionLDL {
     Random rand = new Random(0x45478);
 
         @Test
-    public void testExpectedSize() {
-        CheckDecompositionInterface.checkExpectedMaxSize(new CholeskyDecompositionLDL());
+    public void checkModifyInput() {
+        checkModifiedInput(new CholeskyDecompositionLDL());
     }
 
     @Test

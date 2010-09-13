@@ -364,6 +364,7 @@ public class SpecializedOps {
     {
         int N = Math.min(T.numRows,T.numCols);
 
+        // TODO make faster by just checking the upper triangular portion
         double max = CommonOps.elementMaxAbs(T);
 
         if( max == 0.0d )

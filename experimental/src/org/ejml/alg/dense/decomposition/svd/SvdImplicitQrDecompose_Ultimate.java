@@ -158,6 +158,11 @@ public class SvdImplicitQrDecompose_Ultimate implements SingularValueDecompositi
         return true;
     }
 
+    @Override
+    public boolean modifyInput() {
+        return false;
+    }
+
     private void init(DenseMatrix64F orig, boolean transposed) {
         if( transposed ) {
             computeU = prefComputeV;
@@ -287,10 +292,6 @@ public class SvdImplicitQrDecompose_Ultimate implements SingularValueDecompositi
                 }
             }
         }
-    }
-
-    @Override
-    public void setExpectedMaxSize(int numRows, int numCols) {
     }
 
     @Override

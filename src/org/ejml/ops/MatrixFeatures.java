@@ -27,6 +27,7 @@ import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -43,7 +44,7 @@ public class MatrixFeatures {
      * @param m A matrix. Not modified.
      * @return True if any element in the matrix is NaN.
      */
-    public static boolean hasNaN( DenseMatrix64F m )
+    public static boolean hasNaN( D1Matrix64F m )
     {
         int length = m.getNumElements();
         double data[] = m.data;
@@ -61,7 +62,7 @@ public class MatrixFeatures {
      * @param m A matrix. Not modified.
      * @return True if any element in the matrix is NaN of Infinite.
      */
-    public static boolean hasUncountable( DenseMatrix64F m )
+    public static boolean hasUncountable( D1Matrix64F m )
     {
         int length = m.getNumElements();
         double data[] = m.data;
@@ -81,7 +82,7 @@ public class MatrixFeatures {
      *
      * @return True if it is a vector and false if it is not.
      */
-    public static boolean isVector( DenseMatrix64F mat ) {
+    public static boolean isVector( D1Matrix64F mat ) {
         return (mat.numCols == 1 || mat.numRows == 1);
     }
 
@@ -143,7 +144,7 @@ public class MatrixFeatures {
      * @param mat A matrix. Not modified.
      * @return True if it is a square matrix and false if it is not.
      */
-    public static boolean isSquare( DenseMatrix64F mat ) {
+    public static boolean isSquare( D1Matrix64F mat ) {
         return mat.numCols == mat.numRows;
     }
 
@@ -245,7 +246,7 @@ public class MatrixFeatures {
      * @param tol How close to being identical each element needs to be.
      * @return true if similar and false otherwise.
      */
-    public static boolean isIdentical( DenseMatrix64F a , DenseMatrix64F b , double tol )
+    public static boolean isIdentical( D1Matrix64F a , D1Matrix64F b , double tol )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
@@ -312,12 +313,12 @@ public class MatrixFeatures {
      * @param b A matrix. Not modified.
      * @return true if identical and false otherwise.
      */
-    public static boolean isIdentical( DenseMatrix64F a, DenseMatrix64F b ) {
+    public static boolean isIdentical( D1Matrix64F a, D1Matrix64F b ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }
 
-        int length = a.getNumElements();
+        final int length = a.getNumElements();
         for( int i = 0; i < length; i++ ) {
             if( a.get(i) != b.get(i)) {
                 return false;

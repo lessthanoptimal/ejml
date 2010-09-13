@@ -58,7 +58,6 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
     // tempoary variable used by various functions
     double vv[];
 
-    @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
         if( numRows != numCols ) {
             throw new IllegalArgumentException("Can only decompose square matrices");
@@ -126,6 +125,11 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean modifyInput() {
+        return false;
     }
 
     /**

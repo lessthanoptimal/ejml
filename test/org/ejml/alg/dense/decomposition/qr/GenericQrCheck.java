@@ -43,8 +43,8 @@ public abstract class GenericQrCheck {
     abstract protected QRDecomposition createQRDecomposition();
 
     @Test
-    public void testExpectedSize() {
-        CheckDecompositionInterface.checkExpectedMaxSize(createQRDecomposition());
+    public void testModifiedInput() {
+        CheckDecompositionInterface.checkModifiedInput(createQRDecomposition());
     }
 
     /**

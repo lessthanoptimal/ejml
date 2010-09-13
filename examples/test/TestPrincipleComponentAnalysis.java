@@ -17,36 +17,17 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+import org.junit.Test;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
-
-import java.util.Random;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
  * @author Peter Abeles
  */
-public class CheckDecompositionInterface {
-
-    /**
-     * Checks to see if the matrix is or is not modified as according to the modified
-     * flag.
-     *
-     * @param decomp
-     */
-    public static void checkModifiedInput( DecompositionInterface decomp ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(4,4,new Random(0x434));
-        DenseMatrix64F A_orig = A.copy();
-
-        assertTrue(decomp.decompose(A));
-
-        boolean modified = !MatrixFeatures.isIdentical(A,A_orig);
-
-        assertTrue(decomp.modifyInput()==modified);
+public class TestPrincipleComponentAnalysis {
+    @Test
+    public void stuff() {
+        fail("implement");
     }
 }

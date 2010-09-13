@@ -7,6 +7,7 @@
 - More clearly defined what LinearSolver.quality() is and made it invariant of the matrix's scale.
 - Added wrap to DenseMatrix64F for handling raw data.
 - Added PrincipleComponentAnalysis example
+- Changed DecompositionInterface
 
 ----- Version 0.14
 

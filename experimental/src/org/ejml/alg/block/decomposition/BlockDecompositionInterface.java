@@ -17,31 +17,23 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.alg.block.decomposition;
 
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
  * <p>
- * An interface for performing matrix decompositions on a {@link org.ejml.data.DenseMatrix64F}.
+ * An interface for performing matrix decompositions on a {@link org.ejml.data.BlockMatrix64F}.
  * </p>
  *
  * <p>
- * A matrix decomposition is an algorithm which decomposes the input matrix into a set of equivalent
- * matrices that store the same information as the original.  Decompositions are useful
- * in that they allow specialized efficient algorithms to be run on generic input
- * matrices.
- * </p>
- *
- * <p>
- * By default most decompositions will modify the input matrix.  This is done to save
- * memory and simply code by reducing the number of cases which need to be tested.
+ * For more information on decompositions see {@link org.ejml.alg.dense.decomposition.DecompositionInterface}.
  * </p>
  *
  * @author Peter Abeles
  */
-public interface DecompositionInterface {
+public interface BlockDecompositionInterface {
 
     /**
      * Computes the decomposition of the input matrix.  Depending on the implementation

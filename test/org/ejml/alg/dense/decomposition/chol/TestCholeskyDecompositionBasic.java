@@ -20,6 +20,9 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
+import org.junit.Test;
+
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
 
 
 /**
@@ -30,5 +33,11 @@ public class TestCholeskyDecompositionBasic extends GenericCholeskyTests {
     @Override
     public CholeskyDecomposition create(boolean lower) {
         return new CholeskyDecompositionBasic(false,lower);
+    }
+
+    @Test
+    public void checkModifyInput() {
+        checkModifiedInput(new CholeskyDecompositionBasic(false,true));
+        checkModifiedInput(new CholeskyDecompositionBasic(true,true));
     }
 }

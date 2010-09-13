@@ -82,7 +82,6 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
         this.decomposeOrig = decomposeOrig;
     }
 
-    @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
         if( numRows != numCols ) {
             throw new IllegalArgumentException("Can only decompose square matrices");
@@ -145,6 +144,11 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
         } else {
             return decomposeUpper();
         }
+    }
+
+    @Override
+    public boolean modifyInput() {
+        return decomposeOrig;
     }
 
     /**

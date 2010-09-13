@@ -105,7 +105,6 @@ public class TestBlockMatrixOps {
         checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
         checkMult(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
         checkMult(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
-
     }
 
     private void checkMult(int m, int n, int o) {
@@ -123,6 +122,87 @@ public class TestBlockMatrixOps {
         assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
     }
 
+    @Test
+    public void multTransA() {
+        // trivial case
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+
+        // stuff larger than the block size
+        checkMultTransA(BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
+        checkMultTransA(BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
+
+        // stuff smaller than the block size
+        checkMultTransA(BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
+        checkMultTransA(BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
+
+        // stuff multiple blocks
+        checkMultTransA(BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
+        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
+        checkMultTransA(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
+        checkMultTransA(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
+
+    }
+
+    private void checkMultTransA(int m, int n, int o) {
+        DenseMatrix64F A_d = RandomMatrices.createRandom(n, m,rand);
+        DenseMatrix64F B_d = RandomMatrices.createRandom(n, o,rand);
+        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
+
+        BlockMatrix64F A_b = BlockMatrixOps.convert(A_d,BLOCK_LENGTH);
+        BlockMatrix64F B_b = BlockMatrixOps.convert(B_d,BLOCK_LENGTH);
+        BlockMatrix64F C_b = BlockMatrixOps.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
+
+        CommonOps.multTransA(A_d,B_d,C_d);
+        BlockMatrixOps.multTransA(A_b,B_b,C_b);
+
+        assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
+    }
+
+    @Test
+    public void multTransB() {
+        // trivial case
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+
+        // stuff larger than the block size
+        checkMultTransB(BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
+        checkMultTransB(BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
+
+        // stuff smaller than the block size
+        checkMultTransB(BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
+        checkMultTransB(BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
+
+        // stuff multiple blocks
+        checkMultTransB(BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
+        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
+        checkMultTransB(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
+        checkMultTransB(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
+
+    }
+
+    private void checkMultTransB(int m, int n, int o) {
+        DenseMatrix64F A_d = RandomMatrices.createRandom(m, n,rand);
+        DenseMatrix64F B_d = RandomMatrices.createRandom(o, n,rand);
+        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
+
+        BlockMatrix64F A_b = BlockMatrixOps.convert(A_d,BLOCK_LENGTH);
+        BlockMatrix64F B_b = BlockMatrixOps.convert(B_d,BLOCK_LENGTH);
+        BlockMatrix64F C_b = BlockMatrixOps.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
+
+        CommonOps.multTransB(A_d,B_d,C_d);
+        BlockMatrixOps.multTransB(A_b,B_b,C_b);
+
+        assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
+    }
 
     @Test
     public void convertTranSrc_block_to_dense() {

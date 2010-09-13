@@ -17,15 +17,16 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.alg.block.decomposition;
 
+import org.ejml.alg.dense.decomposition.DecompositionInterface;
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
  * <p>
  * A Cholesky Decomposition is a special decomposition for positive-definite symmetric matrices
- * that is more efficient than other general purposes decomposition. It refactors matrices
+ * that is more efficient than other general purposes decomposition. It decomposes matrices
  * using one of the two following equations:<br>
  * <br>
  * L*L<sup>T</sup>=A<br>
@@ -33,14 +34,9 @@ import org.ejml.data.DenseMatrix64F;
  * <br>
  * where L is a lower triangular matrix and R is an upper triangular matrix.<br>
  * </p>
- *
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL
- *
  * @author Peter Abeles
  */
-public interface CholeskyDecomposition extends DecompositionInterface {
+public interface BlockCholeskyDecomposition extends DecompositionInterface {
 
     /**
      * If true the decomposition was for a lower triangular matrix.

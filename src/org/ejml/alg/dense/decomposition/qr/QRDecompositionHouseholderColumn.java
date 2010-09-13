@@ -61,7 +61,6 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
     // did it encounter an error?
     protected boolean error;
 
-    @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
         this.numCols = numCols;
         this.numRows = numRows;
@@ -201,6 +200,11 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
         }
 
         return !error;
+    }
+
+    @Override
+    public boolean modifyInput() {
+        return false;
     }
 
     /**

@@ -143,6 +143,11 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         }
     }
 
+    @Override
+    public boolean modifyInput() {
+        return false;
+    }
+
     private boolean extractTogether(DenseMatrix64F orig) {
         // extract the orthogonal from the similar transform
         V = decomp.getQTran(V);
@@ -213,12 +218,5 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
         // save a copy of them since this data structure will be recycled next
         values = helper.copyEigenvalues(values);
         return true;
-    }
-
-    /**
-     * Doesn't do anything.
-     */
-    @Override
-    public void setExpectedMaxSize(int numRows, int numCols) {
     }
 }
