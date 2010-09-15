@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL;
@@ -63,7 +63,7 @@ public class BenchmarkInvertSymPosDef {
 //        System.out.println("invert LU-NR            = "+ invertLU_nr(mat,numTrials));
 //        System.out.println("invert LU-Alt           = "+ invertLU_alt(mat,numTrials));
         System.out.println("invert Cholesky         = "+ invertCholesky(
-                new LinearSolverChol(new CholeskyDecompositionBasic( false,true)),
+                new LinearSolverChol(new CholeskyDecompositionInner( false,true)),
                 mat,numTrials));
         System.out.println("invert CholeskyLDL        = "+ invertCholesky(
                 new LinearSolverCholLDL(new CholeskyDecompositionLDL()),

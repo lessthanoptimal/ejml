@@ -20,7 +20,7 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
@@ -74,7 +74,7 @@ public class DecompositionFactory {
         if( widthMax >= EjmlParameters.SWITCH_BLOCK_CHOLESKY && lower ) {
             return new CholeskyDecompositionBlock(decomposeOrig, EjmlParameters.BLOCK_WIDTH);
         } else {
-            return new CholeskyDecompositionBasic(decomposeOrig,lower);
+            return new CholeskyDecompositionInner(decomposeOrig,lower);
         }
     }
 

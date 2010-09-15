@@ -19,7 +19,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -45,7 +45,7 @@ public class CovarianceRandomDraw {
     public CovarianceRandomDraw( Random rand , DenseMatrix64F cov )
     {
         r = new DenseMatrix64F(cov.numRows,1);
-        CholeskyDecompositionBasic choleky = new CholeskyDecompositionBasic( false,true);
+        CholeskyDecompositionInner choleky = new CholeskyDecompositionInner( false,true);
 
         choleky.decompose(cov);
 

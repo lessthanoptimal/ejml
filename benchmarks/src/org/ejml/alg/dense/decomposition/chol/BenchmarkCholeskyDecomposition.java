@@ -38,7 +38,7 @@ public class BenchmarkCholeskyDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        CholeskyDecompositionBasic alg = new CholeskyDecompositionBasic(false,true);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false,true);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -53,7 +53,7 @@ public class BenchmarkCholeskyDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        CholeskyDecompositionBasic alg = new CholeskyDecompositionBasic(false,false);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false,false);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {

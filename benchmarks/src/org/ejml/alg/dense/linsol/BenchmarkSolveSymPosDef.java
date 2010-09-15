@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL;
@@ -58,7 +58,7 @@ public class BenchmarkSolveSymPosDef {
     private static void runAlgorithms( DenseMatrix64F A , DenseMatrix64F b ,int numTrials )
     {
         System.out.println("Solve Cholesky         = "+solve(
-                new LinearSolverChol(new CholeskyDecompositionBasic(false,true)),
+                new LinearSolverChol(new CholeskyDecompositionInner(false,true)),
                 A,b,numTrials));
         System.out.println("Solve Cholesky LDL     = "+solve(
                 new LinearSolverCholLDL(new CholeskyDecompositionLDL()),

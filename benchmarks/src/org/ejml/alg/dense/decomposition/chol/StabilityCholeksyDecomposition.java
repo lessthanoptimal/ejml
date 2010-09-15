@@ -55,7 +55,7 @@ public class StabilityCholeksyDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
-        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionBasic(),mat));
+        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner(),mat));
         System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock(false,10),mat));
 
     }

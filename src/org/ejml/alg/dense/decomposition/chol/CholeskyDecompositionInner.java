@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 /**
  * <p>
- * This implementation of a Cholesky decomposition using a straight forward implementation.
+ * This implementation of a Cholesky decomposition using the inner-product form.
  * For large matrices a block implementation is better.  On larger matrices the lower triangular
  * decomposition is significantly faster.  This is faster on smaller matrices than {@link CholeskyDecompositionBlock}
  * but much slower on larger matices.
@@ -29,13 +29,13 @@ package org.ejml.alg.dense.decomposition.chol;
  *
  * @author Peter Abeles
  */
-public class CholeskyDecompositionBasic extends CholeskyDecompositionCommon {
+public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
 
-    public CholeskyDecompositionBasic() {
+    public CholeskyDecompositionInner() {
         super(false,true);
     }
 
-    public CholeskyDecompositionBasic( boolean decomposeOrig, boolean lower) {
+    public CholeskyDecompositionInner( boolean decomposeOrig, boolean lower) {
         super(decomposeOrig, lower);
     }
 

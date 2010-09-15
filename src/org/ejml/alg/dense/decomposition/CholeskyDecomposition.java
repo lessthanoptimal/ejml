@@ -34,7 +34,7 @@ import org.ejml.data.DenseMatrix64F;
  * where L is a lower triangular matrix and R is an upper triangular matrix.<br>
  * </p>
  *
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic
+ * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner
  * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock
  * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL
  *

@@ -100,7 +100,7 @@ public class TestCholeskyDecompositionBlock extends GenericCholeskyTests {
         assertTrue(solver.setA(A));
         solver.invert(A_inv_block);
 
-        CholeskyDecompositionBasic alg = new CholeskyDecompositionBasic(false ,true);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false ,true);
         solver = new LinearSolverChol(alg);
         assertTrue(solver.setA(A));
         solver.invert(A_inv);

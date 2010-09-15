@@ -24,7 +24,7 @@ import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.LUDecomposition;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.D1Matrix64F;
@@ -103,7 +103,7 @@ public class MatrixFeatures {
         if( !isSquare(A))
            return false;
 
-        CholeskyDecompositionBasic chol = new CholeskyDecompositionBasic(false,true);
+        CholeskyDecompositionInner chol = new CholeskyDecompositionInner(false,true);
         return chol.decompose(A);
     }
 

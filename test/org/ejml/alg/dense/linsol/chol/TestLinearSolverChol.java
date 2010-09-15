@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.RandomMatrices;
@@ -42,7 +42,7 @@ public class TestLinearSolverChol {
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        CholeskyDecompositionBasic alg = new CholeskyDecompositionBasic( false, true);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner( false, true);
         LinearSolverChol solver = new LinearSolverChol(alg);
         assertTrue(solver.setA(A));
         solver.invert(A);

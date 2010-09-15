@@ -42,7 +42,7 @@ import org.ejml.ops.CommonOps;
  * where L is a lower triangular matrix and R is an upper traingular matrix.<br>
  * </p>
  *
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic
+ * @see CholeskyDecompositionInner
  * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock
  * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL
  *

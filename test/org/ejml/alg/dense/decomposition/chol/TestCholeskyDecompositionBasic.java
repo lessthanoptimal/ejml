@@ -32,12 +32,12 @@ public class TestCholeskyDecompositionBasic extends GenericCholeskyTests {
 
     @Override
     public CholeskyDecomposition create(boolean lower) {
-        return new CholeskyDecompositionBasic(false,lower);
+        return new CholeskyDecompositionInner(false,lower);
     }
 
     @Test
     public void checkModifyInput() {
-        checkModifiedInput(new CholeskyDecompositionBasic(false,true));
-        checkModifiedInput(new CholeskyDecompositionBasic(true,true));
+        checkModifiedInput(new CholeskyDecompositionInner(false,true));
+        checkModifiedInput(new CholeskyDecompositionInner(true,true));
     }
 }

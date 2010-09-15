@@ -31,7 +31,7 @@ import static org.ejml.ops.CommonOps.*;
 /**
  * The difference between this and {@link KalmanFilterOps} is that it takes advantage of
  * the covariance matrix being a symetric positive semi-definite matrix.  This allows
- * it to be decomposed using {@link org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBasic}.  There are two advantages here,
+ * it to be decomposed using {@link org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner}.  There are two advantages here,
  * 1) all memory is predeclared and 2) CholeksyDecomposition is more efficient than the more
  * generic {@link org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt LUDecomposition}.  It also makes
  * calls to matrix vector multiplcation operations, which has a slight performance advantage.
