@@ -183,7 +183,7 @@ public class TestMatrixMatrixMult {
                 }
             }
 
-            invoke(method,alpha,a,b,c);;
+            invoke(method,alpha,a,b,c);
 
             if( !MatrixFeatures.isIdentical(expected,c,1e-12) ) {
                 fail("Did not produce the expected results");

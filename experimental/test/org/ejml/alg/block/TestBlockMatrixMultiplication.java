@@ -23,80 +23,147 @@ import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 
 /**
  * @author Peter Abeles
  */
-// TODO use reflections in these tests for different permutations of mult
 public class TestBlockMatrixMultiplication {
 
     private static Random rand = new Random(234234);
 
-    private static final int blockLength = 4;
+    private static final int BLOCK_LENGTH = 4;
     
     private static final int numRows = 10;
     private static final int numCols = 13;
 
 
     /**
-     * Checks to see if matrix multiplcation handles submatrix correctly
+     * Checks to see if matrix multiplication variants handles submatrices correctly
      */
     @Test
     public void mult_submatrix() {
+        Method methods[] = BlockMatrixMultiplication.class.getDeclaredMethods();
+
+        int numFound = 0;
+        for( Method m : methods) {
+            String name = m.getName();
+
+            if( name.contains("Block") || !name.contains("mult") )
+                continue;
+
+//            System.out.println("name = "+name);
+
+            boolean transA = false;
+            boolean transB = false;
+
+            if( name.contains("TransA"))
+                transA = true;
+
+            if( name.contains("TransB"))
+                transB = true;
+
+            checkMult_submatrix(m,transA,transB);
+            numFound++;
+        }
+
+        // make sure all the functions were in fact tested
+        assertEquals(3,numFound);
+    }
+
+    private static void checkMult_submatrix( Method func , boolean transA , boolean transB )
+    {
         // the submatrix is the same size as the originals
-        checkMult_submatirx( sub(0,0,numRows,numCols),sub(0,0,numCols,numRows));
+        checkMult_submatrix( func , transA , transB , sub(0,0,numRows,numCols),sub(0,0,numCols,numRows));
 
         // submatrix has a size in multiples of the block
-        checkMult_submatirx( sub(blockLength,blockLength,blockLength*2,blockLength*2),
-                sub(blockLength,blockLength,blockLength*2,blockLength*2));
+        checkMult_submatrix( func , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2),
+                sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2));
 
         // submatrix row and column ends at a fraction of a block
-        checkMult_submatirx( sub(blockLength,blockLength,numRows,numCols),
-                sub(blockLength,blockLength,numCols,numRows));
+        checkMult_submatrix( func , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH,numRows,numCols),
+                sub(BLOCK_LENGTH, BLOCK_LENGTH,numCols,numRows));
+
+        // the previous tests have some symmetry in it which can mask errors
+        checkMult_submatrix( func , transA , transB , sub(0, BLOCK_LENGTH,BLOCK_LENGTH,2*BLOCK_LENGTH),
+                sub(0, BLOCK_LENGTH,BLOCK_LENGTH,numRows));
     }
 
     /**
      * Multiplies the two sub-matrices together.  Checks to see if the same result
      * is found when multiplied using the normal algorithm versus the submatrix one.
      */
-    private static void checkMult_submatirx( D1Submatrix64F A , D1Submatrix64F B ) {
-        BlockMatrix64F origA = BlockMatrixOps.createRandom(numRows,numCols,-1,1, rand, blockLength);
-        BlockMatrix64F origB = BlockMatrixOps.createRandom(numCols,numRows,-1,1, rand, blockLength);
+    private static void checkMult_submatrix( Method func , boolean transA , boolean transB ,
+                                             D1Submatrix64F A , D1Submatrix64F B ) {
+        if( A.col0 % BLOCK_LENGTH != 0 || A.row0 % BLOCK_LENGTH != 0)
+            throw new IllegalArgumentException("Submatrix A is not block aligned");
+        if( B.col0 % BLOCK_LENGTH != 0 || B.row0 % BLOCK_LENGTH != 0)
+            throw new IllegalArgumentException("Submatrix B is not block aligned");
 
-        BlockMatrix64F subC = new BlockMatrix64F(numRows,numRows, blockLength);
-
+        BlockMatrix64F origA = BlockMatrixOps.createRandom(numRows,numCols,-1,1, rand, BLOCK_LENGTH);
+        BlockMatrix64F origB = BlockMatrixOps.createRandom(numCols,numRows,-1,1, rand, BLOCK_LENGTH);
 
         A.original = origA;
         B.original = origB;
         int w = B.col1-B.col0;
         int h = A.row1-A.row0;
-        D1Submatrix64F C = new D1Submatrix64F(subC,0,0,w,h);
+
+        // offset it to make the test harder
+        BlockMatrix64F subC = new BlockMatrix64F(BLOCK_LENGTH +h, BLOCK_LENGTH +w, BLOCK_LENGTH);
+        D1Submatrix64F C = new D1Submatrix64F(subC, BLOCK_LENGTH, BLOCK_LENGTH,subC.numRows,subC.numCols);
 
         DenseMatrix64F rmC = multByExtract(A,B);
-        // TODO fix by putting the results in C at the specified location inside
-        BlockMatrixMultiplication.mult(blockLength,A,B,C);
 
-        System.out.println("------------");
-        rmC.print();
-        subC.print();
+        if( transA ) {
+            origA = BlockMatrixOps.transpose(origA,null);
+            transposeSub(A);
+            A.original = origA;
+        }
+
+        if( transB ) {
+            origB = BlockMatrixOps.transpose(origB,null);
+            transposeSub(B);
+            B.original = origB;
+        }
+
+        try {
+            func.invoke(null,BLOCK_LENGTH,A,B,C);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+//        subC.print();
+//        rmC.print();
 
         for( int i = C.row0; i < C.row1; i++ ) {
             for( int j = C.col0; j < C.col1; j++ ) {
+//                System.out.println(i+" "+j);
                 double diff = Math.abs(subC.get(i,j) - rmC.get(i-C.row0,j-C.col0));
-                if( diff >= 1e-12 ) {
-                    System.out.println(subC.get(i,j)+"  "+rmC.get(i-C.row0,j-C.col0));
-                    System.out.println("crap");
-                }
+//                System.out.println(subC.get(i,j)+" "+rmC.get(i-C.row0,j-C.col0));
                 assertTrue(diff < 1e-12);
             }
         }
+    }
+
+    private static void transposeSub(D1Submatrix64F A) {
+        int temp = A.col0;
+        A.col0 = A.row0;
+        A.row0 = temp;
+        temp = A.col1;
+        A.col1 = A.row1;
+        A.row1 = temp;
     }
 
     private static D1Submatrix64F sub( int row0 , int col0 , int row1 , int col1 ) {
@@ -120,14 +187,99 @@ public class TestBlockMatrixMultiplication {
         return C;
     }
 
+    /**
+     * Check the inner block multiplication functions against various shapes of inputs
+     */
     @Test
-    public void multTransA() {
-        fail("Implement");
+    public void testAllBlockMult()
+    {
+        checkBlockMultCase(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkBlockMultCase(BLOCK_LENGTH -1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkBlockMultCase(BLOCK_LENGTH -1, BLOCK_LENGTH -1, BLOCK_LENGTH);
+        checkBlockMultCase(BLOCK_LENGTH -1, BLOCK_LENGTH -1, BLOCK_LENGTH -1);
+        checkBlockMultCase(BLOCK_LENGTH,   BLOCK_LENGTH -1, BLOCK_LENGTH -1);
+        checkBlockMultCase(BLOCK_LENGTH, BLOCK_LENGTH,   BLOCK_LENGTH -1);
+
     }
 
-    @Test
-    public void multTransB() {
-        fail("Implement");
+    /**
+     * Searches for all inner block matrix operations and tests their correctness.
+     */
+    private void checkBlockMultCase(final int heightA, final int widthA, final int widthB) {
+        Method methods[] = BlockMatrixMultiplication.class.getDeclaredMethods();
+
+        int numFound = 0;
+        for( Method m : methods) {
+            String name = m.getName();
+
+            if( !name.contains("Block"))
+                continue;
+
+//            System.out.println("name = "+name);
+
+            boolean transA = false;
+            boolean transB = false;
+
+            if( name.contains("TransA"))
+                transA = true;
+
+            if( name.contains("TransB"))
+                transB = true;
+
+            boolean isAdd = name.contains("Add");
+
+            checkBlockMult(isAdd,transA,transB,m,heightA,widthA,widthB);
+            numFound++;
+        }
+
+        // make sure all the functions were in fact tested
+        assertEquals(6,numFound);
+    }
+
+    /**
+     * The inner block multiplication is in a row major format.  Test it against
+     * operations for DenseMatrix64F
+     */
+    private void checkBlockMult( boolean isAdd , boolean transA , boolean transB , Method method,
+                                 final int heightA, final int widthA, final int widthB )
+    {
+        DenseMatrix64F A = RandomMatrices.createRandom(heightA,widthA,rand);
+        DenseMatrix64F B = RandomMatrices.createRandom(widthA,widthB,rand);
+        DenseMatrix64F C = new DenseMatrix64F(heightA,widthB);
+
+        CommonOps.mult(A,B,C);
+
+        DenseMatrix64F C_found = new DenseMatrix64F(heightA,widthB);
+        // if it is set then it should overwrite everything just fine
+        if( !isAdd )
+            RandomMatrices.setRandom(C_found,rand);
+
+        if( transA )
+            CommonOps.transpose(A);
+        if( transB )
+            CommonOps.transpose(B);
+
+        invoke(method,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
+
+        assertTrue(MatrixFeatures.isIdentical(C,C_found,1e-10));
+
+    }
+
+    public static void invoke(Method func,
+                              double[] dataA, double []dataB, double []dataC,
+                              int indexA, int indexB, int indexC,
+                              final int heightA, final int widthA, final int widthB )
+    {
+        try {
+            func.invoke(null, dataA, dataB, dataC,
+                    indexA,indexB,indexC,
+                    heightA,widthA,widthB);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

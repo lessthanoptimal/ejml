@@ -1,3 +1,6 @@
+- Optimize block matrix code
+
+
 For 0.15 Release
 - cholesky block
   * rework it so that its faster on better block sizes

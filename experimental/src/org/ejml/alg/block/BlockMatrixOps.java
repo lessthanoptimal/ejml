@@ -139,7 +139,7 @@ public class BlockMatrixOps {
     public static void mult( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
     {
         if( A.numCols != B.numRows )
-            throw new IllegalArgumentException("Rows in A are incompatible with columns in B");
+            throw new IllegalArgumentException("Columns in A are incompatible with rows in B");
         if( A.numRows != C.numRows )
             throw new IllegalArgumentException("Rows in A are incompatible with rows in C");
         if( B.numCols != C.numCols )
@@ -158,12 +158,42 @@ public class BlockMatrixOps {
 
     public static void multTransA( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
     {
+        if( A.numRows != B.numRows )
+            throw new IllegalArgumentException("Rows in A are incompatible with rows in B");
+        if( A.numCols != C.numRows )
+            throw new IllegalArgumentException("Columns in A are incompatible with rows in C");
+        if( B.numCols != C.numCols )
+            throw new IllegalArgumentException("Columns in B are incompatible with columns in C");
+        if( A.blockLength != B.blockLength || A.blockLength != C.blockLength )
+            throw new IllegalArgumentException("Block lengths are not all the same.");
 
+        final int blockLength = A.blockLength;
+
+        D1Submatrix64F Asub = new D1Submatrix64F(A,0,0,A.numRows,A.numCols);
+        D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
+        D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
+
+        BlockMatrixMultiplication.multTransA(blockLength,Asub,Bsub,Csub);
     }
 
     public static void multTransB( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
     {
+        if( A.numCols != B.numCols )
+            throw new IllegalArgumentException("Columns in A are incompatible with columns in B");
+        if( A.numRows != C.numRows )
+            throw new IllegalArgumentException("Rows in A are incompatible with rows in C");
+        if( B.numRows != C.numCols )
+            throw new IllegalArgumentException("Rows in B are incompatible with columns in C");
+        if( A.blockLength != B.blockLength || A.blockLength != C.blockLength )
+            throw new IllegalArgumentException("Block lengths are not all the same.");
 
+        final int blockLength = A.blockLength;
+
+        D1Submatrix64F Asub = new D1Submatrix64F(A,0,0,A.numRows,A.numCols);
+        D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
+        D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
+
+        BlockMatrixMultiplication.multTransB(blockLength,Asub,Bsub,Csub);
     }
 
     /**
@@ -172,12 +202,17 @@ public class BlockMatrixOps {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void transpose( BlockMatrix64F A , BlockMatrix64F A_tran )
+    public static BlockMatrix64F transpose( BlockMatrix64F A , BlockMatrix64F A_tran )
     {
-        if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows )
-            throw new IllegalArgumentException("Incompatible dimensions.");
-        if( A.blockLength != A_tran.blockLength )
-            throw new IllegalArgumentException("Incompatible block size.");
+        if( A_tran != null ) {
+            if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows )
+                throw new IllegalArgumentException("Incompatible dimensions.");
+            if( A.blockLength != A_tran.blockLength )
+                throw new IllegalArgumentException("Incompatible block size.");
+        } else {
+            A_tran = new BlockMatrix64F(A.numCols,A.numRows,A.blockLength);
+
+        }
 
         for( int i = 0; i < A.numRows; i += A.blockLength ) {
             int blockHeight = Math.min( A.blockLength , A.numRows - i);
@@ -191,6 +226,8 @@ public class BlockMatrixOps {
                 transposeBlock( A , A_tran , indexA , indexC , blockWidth , blockHeight );
             }
         }
+
+        return A_tran;
     }
 
     /**

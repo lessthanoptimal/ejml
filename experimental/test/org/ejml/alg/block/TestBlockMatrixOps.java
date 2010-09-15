@@ -26,9 +26,13 @@ import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -82,32 +86,150 @@ public class TestBlockMatrixOps {
         assertTrue( GenericMatrixOps.isEquivalent(A,B,1e-8));
     }
 
+
+    /**
+     * Makes sure the bounds check on input matrices for mult() is done correctly
+     */
     @Test
-    public void mult() {
-        // trivial case
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+    public void testMultInputChecks() {
+        Method methods[] = BlockMatrixOps.class.getDeclaredMethods();
 
-        // stuff larger than the block size
-        checkMult(BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
-        checkMult(BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
+        int numFound = 0;
+        for( Method m : methods) {
+            String name = m.getName();
 
-        // stuff smaller than the block size
-        checkMult(BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
-        checkMult(BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
+            if( !name.contains("mult"))
+                continue;
 
-        // stuff multiple blocks
-        checkMult(BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
-        checkMult(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
-        checkMult(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
-        checkMult(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
+            boolean transA = false;
+            boolean transB = false;
+
+            if( name.contains("TransA"))
+                transA = true;
+
+            if( name.contains("TransB"))
+                transB = true;
+
+            checkMultInput(m,transA,transB);
+            numFound++;
+        }
+
+        // make sure all the functions were in fact tested
+        assertEquals(3,numFound);
     }
 
-    private void checkMult(int m, int n, int o) {
+    /**
+     * Makes sure exceptions are thrown for badly shaped input matrices.
+     */
+    private void checkMultInput( Method func, boolean transA , boolean transB ) {
+        // bad block size
+        BlockMatrix64F A = new BlockMatrix64F(5,4,3);
+        BlockMatrix64F B = new BlockMatrix64F(4,6,3);
+        BlockMatrix64F C = new BlockMatrix64F(5,6,4);
+
+        invokeErrorCheck(func, transA , transB , A, B, C);
+        C.blockLength = 3;
+        B.blockLength = 4;
+        invokeErrorCheck(func, transA , transB ,A, B, C);
+        B.blockLength = 3;
+        A.blockLength = 4;
+        invokeErrorCheck(func, transA , transB , A, B, C);
+        A.blockLength = 3;
+
+        // check for bad size C
+        C.numCols = 7;
+        invokeErrorCheck(func,transA , transB ,A,B,C);
+        C.numCols = 6;
+        C.numRows = 4;
+        invokeErrorCheck(func,transA , transB ,A,B,C);
+
+        // make A and B incompatible
+        A.numCols = 3;
+        invokeErrorCheck(func,transA , transB ,A,B,C);
+    }
+
+    private void invokeErrorCheck(Method func, boolean transA , boolean transB ,
+                                  BlockMatrix64F a, BlockMatrix64F b, BlockMatrix64F c) {
+
+        if( transA )
+            a = BlockMatrixOps.transpose(a,null);
+        if( transB )
+            b = BlockMatrixOps.transpose(b,null);
+
+        try {
+            func.invoke(null, a, b, c);
+            fail("No exception");
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            if( !(e.getCause() instanceof IllegalArgumentException) )
+                fail("Unexpected exception: "+e.getCause().getMessage());
+        }
+    }
+
+    /**
+     * Tests for correctness multiplication of an entire matrix for all multiplication operations.
+     */
+    @Test
+    public void testMultSolution() {
+        Method methods[] = BlockMatrixOps.class.getDeclaredMethods();
+
+        int numFound = 0;
+        for( Method m : methods) {
+            String name = m.getName();
+
+            if( !name.contains("mult"))
+                continue;
+
+//            System.out.println("name = "+name);
+
+            boolean transA = false;
+            boolean transB = false;
+
+            if( name.contains("TransA"))
+                transA = true;
+
+            if( name.contains("TransB"))
+                transB = true;
+
+            checkMult(m,transA,transB);
+            numFound++;
+        }
+
+        // make sure all the functions were in fact tested
+        assertEquals(3,numFound);
+    }
+
+    /**
+     * Test the method against various matrices of different sizes and shapes which have partial
+     * blocks.
+     */
+    private void checkMult( Method func, boolean transA , boolean transB ) {
+        // trivial case
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
+
+        // stuff larger than the block size
+        checkMult(func,transA,transB,BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
+        checkMult(func,transA,transB,BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
+
+        // stuff smaller than the block size
+        checkMult(func,transA,transB,BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
+        checkMult(func,transA,transB,BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
+
+        // stuff multiple blocks
+        checkMult(func,transA,transB,BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
+        checkMult(func,transA,transB,BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
+        checkMult(func,transA,transB,BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
+        checkMult(func,transA,transB,BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
+    }
+
+    private void checkMult( Method func, boolean transA , boolean transB ,
+                            int m, int n, int o) {
         DenseMatrix64F A_d = RandomMatrices.createRandom(m, n,rand);
         DenseMatrix64F B_d = RandomMatrices.createRandom(n, o,rand);
         DenseMatrix64F C_d = new DenseMatrix64F(m, o);
@@ -115,94 +237,27 @@ public class TestBlockMatrixOps {
         BlockMatrix64F A_b = BlockMatrixOps.convert(A_d,BLOCK_LENGTH);
         BlockMatrix64F B_b = BlockMatrixOps.convert(B_d,BLOCK_LENGTH);
         BlockMatrix64F C_b = BlockMatrixOps.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
+
+        if( transA )
+            A_b=BlockMatrixOps.transpose(A_b,null);
+
+        if( transB )
+            B_b=BlockMatrixOps.transpose(B_b,null);
 
         CommonOps.mult(A_d,B_d,C_d);
-        BlockMatrixOps.mult(A_b,B_b,C_b);
+        try {
+            func.invoke(null,A_b,B_b,C_b);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
 
+//        C_d.print();
+//        C_b.print();
         assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
     }
 
-    @Test
-    public void multTransA() {
-        // trivial case
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
-
-        // stuff larger than the block size
-        checkMultTransA(BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
-        checkMultTransA(BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
-
-        // stuff smaller than the block size
-        checkMultTransA(BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
-        checkMultTransA(BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
-
-        // stuff multiple blocks
-        checkMultTransA(BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
-        checkMultTransA(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
-        checkMultTransA(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
-        checkMultTransA(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
-
-    }
-
-    private void checkMultTransA(int m, int n, int o) {
-        DenseMatrix64F A_d = RandomMatrices.createRandom(n, m,rand);
-        DenseMatrix64F B_d = RandomMatrices.createRandom(n, o,rand);
-        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
-
-        BlockMatrix64F A_b = BlockMatrixOps.convert(A_d,BLOCK_LENGTH);
-        BlockMatrix64F B_b = BlockMatrixOps.convert(B_d,BLOCK_LENGTH);
-        BlockMatrix64F C_b = BlockMatrixOps.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
-
-        CommonOps.multTransA(A_d,B_d,C_d);
-        BlockMatrixOps.multTransA(A_b,B_b,C_b);
-
-        assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
-    }
-
-    @Test
-    public void multTransB() {
-        // trivial case
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
-
-        // stuff larger than the block size
-        checkMultTransB(BLOCK_LENGTH+1, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH+1, BLOCK_LENGTH);
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH+1);
-        checkMultTransB(BLOCK_LENGTH+1, BLOCK_LENGTH+1, BLOCK_LENGTH+1);
-
-        // stuff smaller than the block size
-        checkMultTransB(BLOCK_LENGTH-1, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH-1, BLOCK_LENGTH);
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH-1);
-        checkMultTransB(BLOCK_LENGTH-1, BLOCK_LENGTH-1, BLOCK_LENGTH-1);
-
-        // stuff multiple blocks
-        checkMultTransB(BLOCK_LENGTH*2, BLOCK_LENGTH, BLOCK_LENGTH);
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH*2, BLOCK_LENGTH);
-        checkMultTransB(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH*2);
-        checkMultTransB(BLOCK_LENGTH*2, BLOCK_LENGTH*2, BLOCK_LENGTH*2);
-        checkMultTransB(BLOCK_LENGTH*2+4, BLOCK_LENGTH*2+3, BLOCK_LENGTH*2+2);
-
-    }
-
-    private void checkMultTransB(int m, int n, int o) {
-        DenseMatrix64F A_d = RandomMatrices.createRandom(m, n,rand);
-        DenseMatrix64F B_d = RandomMatrices.createRandom(o, n,rand);
-        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
-
-        BlockMatrix64F A_b = BlockMatrixOps.convert(A_d,BLOCK_LENGTH);
-        BlockMatrix64F B_b = BlockMatrixOps.convert(B_d,BLOCK_LENGTH);
-        BlockMatrix64F C_b = BlockMatrixOps.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
-
-        CommonOps.multTransB(A_d,B_d,C_d);
-        BlockMatrixOps.multTransB(A_b,B_b,C_b);
-
-        assertTrue( GenericMatrixOps.isEquivalent(C_d,C_b,1e-8));
-    }
 
     @Test
     public void convertTranSrc_block_to_dense() {
