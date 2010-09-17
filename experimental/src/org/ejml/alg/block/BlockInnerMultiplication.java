@@ -22,13 +22,12 @@ package org.ejml.alg.block;
 import org.ejml.data.D1Submatrix64F;
 
 /**
- * Contains matrix multiplication operations on  {@link org.ejml.data.BlockMatrix64F}. To
- * reduce code complexity all operations take a submatrix as input.
+ * Matrix multiplication for the inner blocks inside of a {@link org.ejml.data.BlockMatrix64F}.
  *
  * @author Peter Abeles
  */
 // TODO optimize the code.  Don't forget to simply comment out the current readable code
-public class BlockMatrixMultiplication {
+public class BlockInnerMultiplication {
 
     /**
      * <p>
@@ -171,9 +170,11 @@ public class BlockMatrixMultiplication {
     }
 
     /**
-     * Performs a matrix multiplication between inner block matrices.
-     *
-     * (m , o) = (m , n) * (n , o)
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = A B
+     * </p>
      */
     protected static void multBlockSet( double[] dataA, double []dataB, double []dataC,
                                         int indexA, int indexB, int indexC,
@@ -200,9 +201,11 @@ public class BlockMatrixMultiplication {
     }
 
     /**
-     * Performs a matrix multiplication between inner block matrices.
-     *
-     * (m , o) += (m , n) * (n , o)
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = C + A B
+     * </p>
      */
     protected static void multBlockAdd( double[] dataA, double []dataB, double []dataC,
                                       int indexA, int indexB, int indexC,
@@ -212,34 +215,68 @@ public class BlockMatrixMultiplication {
 //                double val = 0;
 //
 //                for( int k = 0; k < widthA; k++ ) {
-//                    val += dataA[i*widthA + k + indexA] * dataB[k*widthB + j + indexB];
+//                    val += dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
 //                }
 //
-//                dataC[ i*widthB + j + indexC ] += val;
+//                dataC[ i*widthC + j + indexC ] += val;
 //            }
 //        }
 
+//        for( int i = 0; i < heightA; i++ ) {
+//            for( int j = 0; j < widthC; j++ , indexC++ ) {
+//                int indexBB = indexB + j;
+//                int indexAA = indexA;
+//
+//                double val = 0;
+//
+//                int end = indexA + widthA;
+//
+//                for( ; indexAA != end; indexAA++) {
+//                    val += dataA[ indexAA ] * dataB[indexBB];
+//                    indexBB += widthC;
+//                }
+//
+//                dataC[ indexC ] += val;
+//            }
+//
+//            indexA += widthA;
+//        }
+
+//        for( int i = 0; i < heightA; i++ ) {
+//            for( int k = 0; k < widthA; k++ ) {
+//                for( int j = 0; j < widthC; j++ ) {
+//                    dataC[ i*widthC + j + indexC ] += dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                }
+//            }
+//        }
+
+
+        int a = indexA;
         for( int i = 0; i < heightA; i++ ) {
-            for( int j = 0; j < widthC; j++ , indexC++ ) {
-                int indexBB = indexB + j;
-                int indexAA = indexA;
+            int b = indexB;
+            int rowC = i*widthC + indexC;
+            int endC = rowC + widthC;
+            int endA = a + widthA;
 
-                double val = 0;
+            while( a != endA ) {//for( int k = 0; k < widthA; k++ ) {
+                double valA = dataA[a++];
 
-                int end = indexA + widthA;
+                int c = rowC;
 
-                for( ; indexAA != end; indexAA++) {
-                    val += dataA[ indexAA ] * dataB[indexBB];
-                    indexBB += widthC;
+                while( c != endC  ) {//for( int j = 0; j < widthC; j++ ) {
+                    dataC[ c++ ] += valA * dataB[ b++ ];
                 }
-
-                dataC[ indexC ] += val;
             }
-
-            indexA += widthA;
         }
     }
 
+    /**
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = A <sup>T</sup>B
+     * </p>
+     */
     protected static void multTransABlockSet( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {
@@ -256,7 +293,13 @@ public class BlockMatrixMultiplication {
         }
     }
 
-
+    /**
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = C + A <sup>T</sup>B
+     * </p>
+     */
     protected static void multTransABlockAdd( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
@@ -273,6 +316,53 @@ public class BlockMatrixMultiplication {
         }
     }
 
+    /**
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = C + &alpha; A <sup>T</sup>B
+     * </p>
+     */
+    protected static void multTransABlockAdd( double alpha , double[] dataA, double []dataB, double []dataC,
+                                              int indexA, int indexB, int indexC,
+                                              final int heightA, final int widthA, final int widthC ) {
+//        for( int i = 0; i < widthA; i++ ) {
+//            for( int j = 0; j < widthC; j++ ) {
+//                double val = 0;
+//
+//                for( int k = 0; k < heightA; k++ ) {
+//                    val += dataA[k*widthA + i + indexA] * dataB[k*widthC + j + indexB];
+//                }
+//
+//                dataC[ i*widthC + j + indexC ] += alpha*val;
+//            }
+//        }
+
+        int endOffset = heightA*widthA;
+        for( int i = 0; i < widthA; i++ ) {
+            int c = i*widthC + indexC;
+            for( int j = 0; j < widthC; j++ ) {
+                double val = 0;
+
+                int a = i + indexA;
+                int b = j + indexB;
+                int end = a + endOffset;
+                for( ; a != end; a += widthA , b += widthC ) {
+                    val += dataA[a] * dataB[b];
+                }
+
+                dataC[ c++ ] += alpha*val;
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = A B<sup>T</sup>
+     * </p>
+     */
     protected static void multTransBBlockSet( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {
@@ -289,6 +379,13 @@ public class BlockMatrixMultiplication {
         }
     }
 
+    /**
+     * <p>
+     * Performs the follow operation on individual inner blocks:<br>
+     * <br>
+     * C = C + A B<sup>T</sup>
+     * </p>
+     */
     protected static void multTransBBlockAdd( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {

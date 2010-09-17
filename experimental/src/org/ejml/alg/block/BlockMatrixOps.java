@@ -29,6 +29,8 @@ import java.util.Random;
 
 
 /**
+ * Various operations on {@link BlockMatrix64F}.
+ *
  * @author Peter Abeles
  */
 public class BlockMatrixOps {
@@ -153,7 +155,7 @@ public class BlockMatrixOps {
         D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
         D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
 
-        BlockMatrixMultiplication.mult(blockLength,Asub,Bsub,Csub);
+        BlockInnerMultiplication.mult(blockLength,Asub,Bsub,Csub);
     }
 
     public static void multTransA( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
@@ -173,7 +175,7 @@ public class BlockMatrixOps {
         D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
         D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
 
-        BlockMatrixMultiplication.multTransA(blockLength,Asub,Bsub,Csub);
+        BlockInnerMultiplication.multTransA(blockLength,Asub,Bsub,Csub);
     }
 
     public static void multTransB( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
@@ -193,7 +195,7 @@ public class BlockMatrixOps {
         D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
         D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
 
-        BlockMatrixMultiplication.multTransB(blockLength,Asub,Bsub,Csub);
+        BlockInnerMultiplication.multTransB(blockLength,Asub,Bsub,Csub);
     }
 
     /**

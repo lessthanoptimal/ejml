@@ -23,11 +23,12 @@ import org.ejml.data.D1Submatrix64F;
 
 
 /**
- * Contains triangular solvers for {@link org.ejml.data.BlockMatrix64F}.
+ * Contains triangular solvers for inner blocks of a {@link org.ejml.data.BlockMatrix64F}.
  *
  * @author Peter Abeles
  */
-public class BlockTriangularSolver {
+// todo add solveL_transB()
+public class BlockInnerTriangularSolver {
 
     /**
      * <p>
@@ -37,6 +38,8 @@ public class BlockTriangularSolver {
      * <br>
      * where L is a lower triangular matrix.
      * </p>
+     *
+     * The triangle must be a full inner block inside a {@link org.ejml.data.BlockMatrix64F}.
      *
      * @param L A single block that is lower triangular. Not modified.
      * @param B A submatrix. Modified.
@@ -92,6 +95,78 @@ public class BlockTriangularSolver {
                     sum -= L[offsetL + i*m+k]* b[offsetB + k*n+j];
                 }
                 b[offsetB + i*n+j] = sum / L[offsetL + i*m+i];
+            }
+        }
+    }
+
+    public static void solveU( int blockLength , D1Submatrix64F U, D1Submatrix64F B )
+    {
+        int M = U.row1- U.row0;
+        if( M > blockLength )
+            throw new IllegalArgumentException("L can be at most the size of a block");
+        if( M != B.row1-B.row0 )
+            throw new IllegalArgumentException("L and B must have the same number of rows.");
+
+        int offsetU = U.row0* U.original.numCols+M* U.col0;
+
+        double dataU[] = U.original.data;
+        double dataB[] = B.original.data;
+
+        for( int i = B.col0; i < B.col1; i += blockLength ) {
+            int offsetB = B.row0*B.original.numCols + M*i;
+
+            int N = Math.min(B.col1 , i + blockLength ) - i;
+            solveU(dataU,dataB,M,N,offsetU,offsetB);
+        }
+    }
+
+    public static void solveU( double U[] , double []b ,
+                               int m , int n ,
+                               int offsetU , int offsetB )
+    {
+        for( int j = 0; j < n; j++ ) {
+            for( int i = m-1; i >= 0; i-- ) {
+                double sum = b[offsetB + i*n+j];
+                for( int k=i+1; k<m; k++ ) {
+                    sum -= U[offsetU + i*m+k]* b[offsetB + k*n+j];
+                }
+                b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
+            }
+        }
+    }
+
+    public static void solveTransU( int blockLength , D1Submatrix64F U, D1Submatrix64F B )
+    {
+        int M = U.row1- U.row0;
+        if( M > blockLength )
+            throw new IllegalArgumentException("L can be at most the size of a block");
+        if( M != B.row1-B.row0 )
+            throw new IllegalArgumentException("L and B must have the same number of rows.");
+
+        int offsetU = U.row0* U.original.numCols+M* U.col0;
+
+        double dataU[] = U.original.data;
+        double dataB[] = B.original.data;
+
+        for( int i = B.col0; i < B.col1; i += blockLength ) {
+            int offsetB = B.row0*B.original.numCols + M*i;
+
+            int N = Math.min(B.col1 , i + blockLength ) - i;
+            solveTransU(dataU,dataB,M,N,offsetU,offsetB);
+        }
+    }
+
+    public static void solveTransU( double U[] , double []b ,
+                                    int m , int n ,
+                                    int offsetU , int offsetB )
+    {
+        for( int j = 0; j < n; j++ ) {
+            for( int i = 0; i < m; i++ ) {
+                double sum = b[offsetB + i*n+j];
+                for( int k=0; k<i; k++ ) {
+                    sum -= U[offsetU + k*m+i]* b[offsetB + k*n+j];
+                }
+                b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
             }
         }
     }

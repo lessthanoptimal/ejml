@@ -19,7 +19,7 @@
 
 package org.ejml.alg.block.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix64F;
 
 
 /**
@@ -43,7 +43,7 @@ public interface BlockDecompositionInterface {
      * @param orig The matrix which is being decomposed.  Modification is implementation dependent.
      * @return Returns if it was able to decompose the matrix.
      */
-    public boolean decompose( DenseMatrix64F orig );
+    public boolean decompose( BlockMatrix64F orig );
 
     /**
      * Is the input matrix modified.

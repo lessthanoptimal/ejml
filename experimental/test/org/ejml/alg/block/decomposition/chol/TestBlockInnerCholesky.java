@@ -17,40 +17,25 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.data;
+package org.ejml.alg.block.decomposition.chol;
+
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 
 /**
- * <p>
- * Describes a rectangular submatrix inside of a {@link D1Matrix64F}.
- * </p>
- *
- * <p>
- * Rows are row0 <= i < row1 and Columns are col0 <= j < col1
- * </p>
- * 
  * @author Peter Abeles
  */
-public class D1Submatrix64F {
-    public D1Matrix64F original;
+public class TestBlockInnerCholesky {
+    @Test
+    public void upper() {
+        // decompose a DenseMatrix64F to find expected solution
 
-    // bounding rows and columns
-    public int row0,col0;
-    public int row1,col1;
+        // decompose using the algorithm
 
-    public D1Submatrix64F() {
-    }
-
-    public D1Submatrix64F(D1Matrix64F original,
-                          int row0, int col0, int row1, int col1) {
-        this.original = original;
-        this.row0 = row0;
-        this.col0 = col0;
-        this.row1 = row1;
-        this.col1 = col1;
-    }
-
-    public D1Submatrix64F(BlockMatrix64F original) {
-        this.original = original;
+        // set lower triangular potion to be zero so that it is exactly the same
+        
+        fail("implement");
     }
 }

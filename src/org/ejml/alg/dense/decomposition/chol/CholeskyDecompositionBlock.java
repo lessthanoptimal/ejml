@@ -181,6 +181,7 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
      */
     public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c , int startIndexC )
     {
+        // todo doesn't only a triangular portion need to be updated?
         double dataA[] = a.data;
         double dataC[] = c.data;
 

@@ -19,8 +19,7 @@
 
 package org.ejml.alg.block.decomposition;
 
-import org.ejml.alg.dense.decomposition.DecompositionInterface;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix64F;
 
 
 /**
@@ -36,7 +35,7 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  * @author Peter Abeles
  */
-public interface BlockCholeskyDecomposition extends DecompositionInterface {
+public interface BlockCholeskyDecomposition extends BlockDecompositionInterface {
 
     /**
      * If true the decomposition was for a lower triangular matrix.
@@ -57,9 +56,8 @@ public interface BlockCholeskyDecomposition extends DecompositionInterface {
      * Otherwise a new matrix is created and the results written to it.
      * </p>
      *
-     * @param T If not null then the decomposed matrix is written here.
      * @return A lower or upper triangular matrix.
      */
-    public DenseMatrix64F getT( DenseMatrix64F T );
+    public BlockMatrix64F getT();
 
 }

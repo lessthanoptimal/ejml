@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestBlockMatrixMultiplication {
+public class TestBlockInnerMultiplication {
 
     private static Random rand = new Random(234234);
 
@@ -53,7 +53,7 @@ public class TestBlockMatrixMultiplication {
      */
     @Test
     public void mult_submatrix() {
-        Method methods[] = BlockMatrixMultiplication.class.getDeclaredMethods();
+        Method methods[] = BlockInnerMultiplication.class.getDeclaredMethods();
 
         int numFound = 0;
         for( Method m : methods) {
@@ -157,7 +157,7 @@ public class TestBlockMatrixMultiplication {
         }
     }
 
-    private static void transposeSub(D1Submatrix64F A) {
+    public static void transposeSub(D1Submatrix64F A) {
         int temp = A.col0;
         A.col0 = A.row0;
         A.row0 = temp;
@@ -199,14 +199,13 @@ public class TestBlockMatrixMultiplication {
         checkBlockMultCase(BLOCK_LENGTH -1, BLOCK_LENGTH -1, BLOCK_LENGTH -1);
         checkBlockMultCase(BLOCK_LENGTH,   BLOCK_LENGTH -1, BLOCK_LENGTH -1);
         checkBlockMultCase(BLOCK_LENGTH, BLOCK_LENGTH,   BLOCK_LENGTH -1);
-
     }
 
     /**
      * Searches for all inner block matrix operations and tests their correctness.
      */
     private void checkBlockMultCase(final int heightA, final int widthA, final int widthB) {
-        Method methods[] = BlockMatrixMultiplication.class.getDeclaredMethods();
+        Method methods[] = BlockInnerMultiplication.class.getDeclaredMethods();
 
         int numFound = 0;
         for( Method m : methods) {
@@ -233,7 +232,7 @@ public class TestBlockMatrixMultiplication {
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(6,numFound);
+        assertEquals(7,numFound);
     }
 
     /**
@@ -259,21 +258,34 @@ public class TestBlockMatrixMultiplication {
         if( transB )
             CommonOps.transpose(B);
 
-        invoke(method,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
+        double alpha = 2.0;
+
+        if( method.getParameterTypes().length == 10 ) {
+            CommonOps.scale(alpha,C);
+        }
+
+        invoke(method,alpha,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
 
         assertTrue(MatrixFeatures.isIdentical(C,C_found,1e-10));
 
     }
 
     public static void invoke(Method func,
+                              double alpha ,
                               double[] dataA, double []dataB, double []dataC,
                               int indexA, int indexB, int indexC,
                               final int heightA, final int widthA, final int widthB )
     {
         try {
-            func.invoke(null, dataA, dataB, dataC,
-                    indexA,indexB,indexC,
-                    heightA,widthA,widthB);
+            if( func.getParameterTypes().length == 9 ) {
+                func.invoke(null, dataA, dataB, dataC,
+                        indexA,indexB,indexC,
+                        heightA,widthA,widthB);
+            } else {
+                func.invoke(null, alpha , dataA, dataB, dataC,
+                        indexA,indexB,indexC,
+                        heightA,widthA,widthB);
+            }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {

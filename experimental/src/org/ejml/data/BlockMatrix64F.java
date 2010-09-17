@@ -44,6 +44,19 @@ public class BlockMatrix64F extends D1Matrix64F {
         this(numRows,numCols, EjmlParameters.BLOCK_WIDTH);
     }
 
+    public void set( BlockMatrix64F A ) {
+        this.blockLength = A.blockLength;
+        this.numRows = A.numRows;
+        this.numCols = A.numCols;
+
+        int N = numCols*numRows;
+
+        if( data.length < N )
+            data = new double[ N ];
+
+        System.arraycopy(A.data,0,data,0,N);
+    }
+
     @Override
     public double[] getData() {
         return data;
@@ -124,5 +137,11 @@ public class BlockMatrix64F extends D1Matrix64F {
     @Override
     public void print() {
         MatrixIO.print(this);
+    }
+
+    public BlockMatrix64F copy() {
+        BlockMatrix64F A = new BlockMatrix64F(numRows,numCols,blockLength);
+        A.set(this);
+        return A;
     }
 }
