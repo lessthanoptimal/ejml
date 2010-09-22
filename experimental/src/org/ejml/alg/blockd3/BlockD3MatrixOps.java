@@ -181,18 +181,40 @@ public class BlockD3MatrixOps {
 //            }
 //        }
 
-        int rowA = 0;
-        for( int i = 0; i < m; i++ , rowA += blockLength) {
-            for( int j = 0; j < o; j++ ) {
-                double val = 0;
-                int indexB = j;
-                int indexA = rowA;
-                int end = indexA + n;
-                for( ; indexA != end; indexA++ , indexB += blockLength ) {
-                    val += blockA[ indexA ]*blockB[ indexB ];
-                }
+//        int rowA = 0;
+//        for( int i = 0; i < m; i++ , rowA += blockLength) {
+//            for( int j = 0; j < o; j++ ) {
+//                double val = 0;
+//                int indexB = j;
+//                int indexA = rowA;
+//                int end = indexA + n;
+//                for( ; indexA != end; indexA++ , indexB += blockLength ) {
+//                    val += blockA[ indexA ]*blockB[ indexB ];
+//                }
+//
+//                blockC[ rowA + j] += val;
+//            }
+//        }
 
-                blockC[ rowA + j] += val;
+//        for( int k = 0; k < n; k++ ) {
+//            for( int i = 0; i < m; i++ ) {
+//                for( int j = 0; j < o; j++ ) {
+//                    blockC[ i*blockLength + j] += blockA[ i*blockLength + k]*blockB[ k*blockLength + j];
+//                }
+//            }
+//        }
+
+        for( int k = 0; k < n; k++ ) {
+            int rowB = k*blockLength;
+            int endB = rowB+o;
+            for( int i = 0; i < m; i++ ) {
+                int indexC = i*blockLength;
+                double valA = blockA[ indexC + k];
+                int indexB = rowB;
+                
+                while( indexB != endB ) {
+                    blockC[ indexC++ ] += valA*blockB[ indexB++];
+                }
             }
         }
     }

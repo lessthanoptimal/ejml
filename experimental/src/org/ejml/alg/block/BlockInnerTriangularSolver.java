@@ -34,34 +34,81 @@ public class BlockInnerTriangularSolver {
      * <p>
      * Performs an in-place solve operation on the provided submatrix.<br>
      * <br>
-     * B = L<sup>-1</sup> B<br>
+     * B = T<sup>-1</sup> B<br>
      * <br>
-     * where L is a lower triangular matrix.
+     * where T is a triangular matrix. T or B can be optionally transposed.
      * </p>
      *
      * The triangle must be a full inner block inside a {@link org.ejml.data.BlockMatrix64F}.
      *
-     * @param L A single block that is lower triangular. Not modified.
+     *
+     * @param blockLength Size of the inner blocks in the block matrix.
+     * @param upper If T is upper or lower triangular.
+     * @param T An upper or lower triangular matrix that is contained in an inner block.
      * @param B A submatrix. Modified.
+     * @param transT If T is transposed or not.
+     * @param transB If B is transposed or not.
      */
-    public static void solveL( int blockLength , D1Submatrix64F L , D1Submatrix64F B )
+    public static void solve( int blockLength ,
+                              boolean upper , D1Submatrix64F T ,
+                              D1Submatrix64F B ,
+                              boolean transT , boolean transB )
     {
-        int M = L.row1-L.row0;
+        int M = T.row1-T.row0;
         if( M > blockLength )
             throw new IllegalArgumentException("L can be at most the size of a block");
-        if( M != B.row1-B.row0 )
-            throw new IllegalArgumentException("L and B must have the same number of rows.");
 
-        int offsetL = L.row0*L.original.numCols+M*L.col0;
+        int offsetT = T.row0*T.original.numCols+M*T.col0;
 
-        double dataL[] = L.original.data;
+        double dataT[] = T.original.data;
         double dataB[] = B.original.data;
 
-        for( int i = B.col0; i < B.col1; i += blockLength ) {
-            int offsetB = B.row0*B.original.numCols + M*i;
+        if( transB ) {
+            if( upper ) {
+                if ( transT ) {
+                    throw new IllegalArgumentException("Operation not yet supported");
+                } else {
+                    throw new IllegalArgumentException("Operation not yet supported");
+                }
+            } else {
+                if ( transT ) {
+                    throw new IllegalArgumentException("Operation not yet supported");
+                } else {
+                    throw new IllegalArgumentException("Operation not yet supported");
+                }
+            }
+        } else {
+            if( M != B.row1-B.row0 )
+                throw new IllegalArgumentException("L and B must have the same number of rows.");
 
-            int N = Math.min(B.col1 , i + blockLength ) - i;
-            solveL(dataL,dataB,M,N,offsetL,offsetB);
+            if( upper ) {
+                if ( transT ) {
+                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+                        int offsetB = B.row0*B.original.numCols + M*i;
+
+                        int N = Math.min(B.col1 , i + blockLength ) - i;
+                        solveTransU(dataT,dataB,M,N,offsetT,offsetB);
+                    }
+                } else {
+                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+                        int offsetB = B.row0*B.original.numCols + M*i;
+
+                        int N = Math.min(B.col1 , i + blockLength ) - i;
+                        solveU(dataT,dataB,M,N,offsetT,offsetB);
+                    }
+                }
+            } else {
+                if ( transT ) {
+                   throw new IllegalArgumentException("Operation not yet supported");
+                } else {
+                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+                        int offsetB = B.row0*B.original.numCols + M*i;
+
+                        int N = Math.min(B.col1 , i + blockLength ) - i;
+                        solveL(dataT,dataB,M,N,offsetT,offsetB);
+                    }
+                }
+            }
         }
     }
 
@@ -99,27 +146,6 @@ public class BlockInnerTriangularSolver {
         }
     }
 
-    public static void solveU( int blockLength , D1Submatrix64F U, D1Submatrix64F B )
-    {
-        int M = U.row1- U.row0;
-        if( M > blockLength )
-            throw new IllegalArgumentException("L can be at most the size of a block");
-        if( M != B.row1-B.row0 )
-            throw new IllegalArgumentException("L and B must have the same number of rows.");
-
-        int offsetU = U.row0* U.original.numCols+M* U.col0;
-
-        double dataU[] = U.original.data;
-        double dataB[] = B.original.data;
-
-        for( int i = B.col0; i < B.col1; i += blockLength ) {
-            int offsetB = B.row0*B.original.numCols + M*i;
-
-            int N = Math.min(B.col1 , i + blockLength ) - i;
-            solveU(dataU,dataB,M,N,offsetU,offsetB);
-        }
-    }
-
     public static void solveU( double U[] , double []b ,
                                int m , int n ,
                                int offsetU , int offsetB )
@@ -132,27 +158,6 @@ public class BlockInnerTriangularSolver {
                 }
                 b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
             }
-        }
-    }
-
-    public static void solveTransU( int blockLength , D1Submatrix64F U, D1Submatrix64F B )
-    {
-        int M = U.row1- U.row0;
-        if( M > blockLength )
-            throw new IllegalArgumentException("L can be at most the size of a block");
-        if( M != B.row1-B.row0 )
-            throw new IllegalArgumentException("L and B must have the same number of rows.");
-
-        int offsetU = U.row0* U.original.numCols+M* U.col0;
-
-        double dataU[] = U.original.data;
-        double dataB[] = B.original.data;
-
-        for( int i = B.col0; i < B.col1; i += blockLength ) {
-            int offsetB = B.row0*B.original.numCols + M*i;
-
-            int N = Math.min(B.col1 , i + blockLength ) - i;
-            solveTransU(dataU,dataB,M,N,offsetU,offsetB);
         }
     }
 

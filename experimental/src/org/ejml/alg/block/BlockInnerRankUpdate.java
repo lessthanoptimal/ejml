@@ -81,9 +81,8 @@ public class BlockInnerRankUpdate {
      * Rank N update function for a symmetric inner submatrix and only operates on the upper
      * triangular portion of the submatrix.
      */
-    // TODO unit test
     public static void symmRankNUpdate_U( int blockLength ,
-                                         D1Submatrix64F A , D1Submatrix64F B )
+                                          D1Submatrix64F A , D1Submatrix64F B )
     {
 
         int heightB = B.row1-B.row0;
@@ -120,7 +119,13 @@ public class BlockInnerRankUpdate {
         }
     }
 
-    // todo only need two dimensions here, lengthA, widthB
+    /**
+     * <p>
+     * Performs the following operation on a block:<br>
+     * <br>
+     * c = c - a<sup>T</sup>a<br>
+     * </p>
+     */
     protected static void multTransABlockMinus( double[] dataA, double []dataC,
                                                 int indexA, int indexB, int indexC,
                                                 final int heightA, final int widthA, final int widthC ) {

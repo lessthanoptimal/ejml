@@ -135,12 +135,12 @@ public class BenchmarkMatrixMatrixMult {
         DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
-                mult(matA,matB,matResult,numTrials),
+                0,//mult(matA,matB,matResult,numTrials),
                 0,//multSmall(matA,matB,matResult,numTrials),
-                multAux(matA,matB,matResult,numTrials),
+                0,//multAux(matA,matB,matResult,numTrials),
                 multReorder(matA,matB,matResult,numTrials),
                 multBlockNative(matA,matB,matResult,numTrials),
-                0);//multBlockD3Native(matA,matB,matResult,numTrials));
+                multBlockD3Native(matA,matB,matResult,numTrials));
         System.gc();
     }
 
@@ -160,30 +160,30 @@ public class BenchmarkMatrixMatrixMult {
             performTests(size[i],size[i],size[i],count[i]);
         }
 
-        N = 5;//sizeTall.length
+        N = sizeTall.length;
         System.out.println("\n******* Wide A:");
-        for( int i = 0; i < N; i++ ) {
+        for( int i = 5; i < N; i++ ) {
             System.out.println("\nHeight = "+sizeTall[i]);
 
             performTests(sizeTall[i],1500,100,countTall[i]);
         }
 
         System.out.println("\n******* Tall A:");
-        for( int i = 0; i < N; i++ ) {
+        for( int i = 5; i < N; i++ ) {
             System.out.println("\nWidth = "+sizeTall[i]);
 
             performTests(1500,sizeTall[i],100,countTall[i]);
         }
 
         System.out.println("\n******* Wide B:");
-        for( int i = 0; i < N; i++ ) {
+        for( int i = 5; i < N; i++ ) {
             System.out.println("\nHeight = "+sizeTall[i]);
 
             performTests(100,sizeTall[i],1500,countTall[i]);
         }
 
         System.out.println("\n******* Tall B:");
-        for( int i = 0; i < N; i++ ) {
+        for( int i = 5; i < N; i++ ) {
             System.out.println("\nWidth = "+sizeTall[i]);
 
             performTests(100,1500,sizeTall[i],countTall[i]);

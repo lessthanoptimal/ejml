@@ -41,27 +41,26 @@ import static org.junit.Assert.fail;
 /**
  * @author Peter Abeles
  */
-// TODO use reflection
 public class TestBlockInnerTriangularSolver {
 
     Random rand = new Random(234534);
 
 
     /**
-     * Test all submatrix solvers
+     * Test all inner block solvers
      */
     @Test
-    public void checkSolve() {
+    public void testSolveArray() {
         Method methods[] = BlockInnerTriangularSolver.class.getMethods();
 
         int numFound = 0;
         for( Method m : methods) {
             String name = m.getName();
 
-            if( !name.contains("solve") )
+            if( !name.contains("solve") || name.compareTo("solve") == 0 )
                 continue;
 
-            System.out.println("name = "+name);
+//            System.out.println("name = "+name);
 
             boolean solveL = name.contains("L");
             boolean transT;
@@ -72,18 +71,13 @@ public class TestBlockInnerTriangularSolver {
             else
                 transT = name.contains("TransU");
 
-
-            if( m.getParameterTypes().length == 3 ) {
-                check_solve_submatrix(m,solveL,transT,transB);
-            } else {
-                check_solve_array(m,solveL,transT,transB);
-            }
+            check_solve_array(m,solveL,transT,transB);
 
             numFound++;
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(6,numFound);
+        assertEquals(3,numFound);
     }
 
     /**
@@ -142,11 +136,26 @@ public class TestBlockInnerTriangularSolver {
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
     }
 
+
+    /**
+     * Check all permutations of solve for submatrices
+     */
+    @Test
+    public void testSolve() {
+        check_solve_submatrix(false,false,false);
+        check_solve_submatrix(true,false,false);
+        check_solve_submatrix(false,true,false);
+//        check_solve_submatrix(false,true,false);
+//        check_solve_submatrix(false,false,true);
+//        check_solve_submatrix(true,false,true);
+//        check_solve_submatrix(false,true,true);
+//        check_solve_submatrix(false,true,true);
+    }
+
     /**
      * Checks to see if solve functions that use sub matrices as input work correctly
      */
-    public void check_solve_submatrix( Method m ,
-                                       boolean solveL , boolean transT , boolean transB ) {
+    private void check_solve_submatrix( boolean solveL , boolean transT , boolean transB ) {
         // compute expected solution
         DenseMatrix64F L = createRandomLowerTriangular(3);
         DenseMatrix64F B = RandomMatrices.createRandom(3,5,rand);
@@ -179,15 +188,10 @@ public class TestBlockInnerTriangularSolver {
             TestBlockInnerMultiplication.transposeSub(sub_B);
         }
 
-        sub_L.original.print();
-        sub_B.original.print();
-        try {
-            m.invoke(null,3,sub_L,sub_B);
-        } catch (IllegalAccessException e) {
-            fail("invoke failed");
-        } catch (InvocationTargetException e) {
-            fail("invoke failed");
-        }
+//        sub_L.original.print();
+//        sub_B.original.print();
+
+        BlockInnerTriangularSolver.solve(3,!solveL,sub_L,sub_B,transT,transB);
 
         assertTrue(GenericMatrixOps.isEquivalent(X,b_B,1e-10));
     }

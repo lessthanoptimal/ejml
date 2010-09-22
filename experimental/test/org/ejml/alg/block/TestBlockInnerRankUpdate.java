@@ -23,12 +23,12 @@ import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.SimpleMatrix;
+import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -41,14 +41,25 @@ public class TestBlockInnerRankUpdate {
     int N = 4;
 
     /**
-     * Test it where the matrix being updated is a full block
+     * Tests rankNUpdate with various sized input matrices
      */
-    // TODO merge single and multiple into one function with a for loop
     @Test
-    public void rankNUpdate_single() {
+    public void rankNUpdate() {
+        // the matrix being updated is a whole block
+        checkRankNUpdate(N, N-2);
+
+        // the matrix being updated is multiple blocks + a fraction
+        checkRankNUpdate(N*2+1, N-2);
+
+        // matrix being updated is less than a block
+        checkRankNUpdate(N-1, N-2);
+
+    }
+
+    private void checkRankNUpdate(int lengthA, int heightB) {
         double alpha = -2.0;
-        SimpleMatrix origA = SimpleMatrix.random(N,N,-1,1,rand);
-        SimpleMatrix origB = SimpleMatrix.random(N-2,N,-1,1,rand);
+        SimpleMatrix origA = SimpleMatrix.random(lengthA,lengthA,-1,1,rand);
+        SimpleMatrix origB = SimpleMatrix.random(heightB,lengthA,-1,1,rand);
 
         BlockMatrix64F blockA = BlockMatrixOps.convert(origA.getMatrix(),N);
         BlockMatrix64F blockB = BlockMatrixOps.convert(origB.getMatrix(),N);
@@ -61,18 +72,27 @@ public class TestBlockInnerRankUpdate {
 
 
         assertTrue(GenericMatrixOps.isEquivalent(expected.getMatrix(),blockA,1e-8));
-
     }
+
 
     /**
-     * Test it where the matrix being updated is composed of multiple blocks with a partial
-     * block at the end.  This tests multiple blocks and a block that is less than the full block size.
+     * Tests symmRankNUpdate_U with various sized input matrices
      */
     @Test
-    public void rankNUpdate_multiple() {
-        double alpha = -2.0;
-        SimpleMatrix origA = SimpleMatrix.random(N*2+1,N*2+1,-1,1,rand);
-        SimpleMatrix origB = SimpleMatrix.random(N-2,N*2+1,-1,1,rand);
+    public void symmRankNUpdate_U() {
+        // the matrix being updated is a whole block
+        checkSymmRankNUpdate_U(N, N-2);
+
+        // the matrix being updated is multiple blocks + a fraction
+        checkSymmRankNUpdate_U(N*2+1, N-2);
+
+        // matrix being updated is less than a block
+        checkSymmRankNUpdate_U(N-1, N-2);
+    }
+
+    private void checkSymmRankNUpdate_U(int lengthA, int heightB) {
+        SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices.createSymmPosDef(lengthA,rand));
+        SimpleMatrix origB = SimpleMatrix.random(heightB,lengthA,-1,1,rand);
 
         BlockMatrix64F blockA = BlockMatrixOps.convert(origA.getMatrix(),N);
         BlockMatrix64F blockB = BlockMatrixOps.convert(origB.getMatrix(),N);
@@ -80,14 +100,9 @@ public class TestBlockInnerRankUpdate {
         D1Submatrix64F subA = new D1Submatrix64F(blockA,0,0,origA.numRows(),origA.numCols());
         D1Submatrix64F subB = new D1Submatrix64F(blockB,0,0,origB.numRows(),origB.numCols());
 
-        SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
-        BlockInnerRankUpdate.rankNUpdate(N,alpha,subA,subB);
+        SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
+        BlockInnerRankUpdate.symmRankNUpdate_U(N,subA,subB);
 
-        assertTrue(GenericMatrixOps.isEquivalent(expected.getMatrix(),blockA,1e-8));
-    }
-
-    @Test
-    public void symmRankNUpdate_U() {
-        fail("Implement");
+        assertTrue(GenericMatrixOps.isEquivalentTriangle(true,expected.getMatrix(),blockA,1e-8));
     }
 }

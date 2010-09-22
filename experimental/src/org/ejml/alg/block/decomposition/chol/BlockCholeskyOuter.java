@@ -85,7 +85,7 @@ public class BlockCholeskyOuter implements BlockCholeskyDecomposition {
             // on the last block these operations are not needed.
             if( widthA == blockLength ) {
                 // B = U^-1 B
-                BlockInnerTriangularSolver.solveTransU(blockLength,subA,subB);
+                BlockInnerTriangularSolver.solve(blockLength,true,subA,subB,true,false);
 
                 // C = C - B^T * B
                 // TODO take advantage of symmetry

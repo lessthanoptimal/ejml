@@ -20,6 +20,9 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuter;
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -80,6 +83,24 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
+
+    public static long choleskyBlockU( DenseMatrix64F orig , int numTrials ) {
+
+        BlockCholeskyOuter alg = new BlockCholeskyOuter();
+
+        BlockMatrix64F A = BlockMatrixOps.convert(orig);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( !alg.decompose(A.copy()) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
     public static long choleskyLDL( DenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
@@ -97,20 +118,21 @@ public class BenchmarkCholeskyDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
-        System.out.println("Lower            = "+ choleskyL(mat,numTrials));
+//        System.out.println("Lower            = "+ choleskyL(mat,numTrials));
 //        System.out.println("Upper            = "+ choleskyU(mat,numTrials));
         System.out.println("Lower Block      = "+ choleskyL_block(mat,numTrials));
 //        System.out.println("LDL              = "+ choleskyLDL(mat,numTrials));
+        System.out.println("Real Block      = "+ choleskyBlockU(mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,500,1000,2000,4000};
-        int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1};
+        int size[] = new int[]{2,4,10,100,500,1000,2000,4000,10000};
+        int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 6; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
