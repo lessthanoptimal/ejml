@@ -64,7 +64,7 @@ public class TestBlockInnerTriangularSolver {
 
             boolean solveL = name.contains("L");
             boolean transT;
-            boolean transB = name.contains("transB");
+            boolean transB = name.contains("TransB");
 
             if( solveL )
                 transT = name.contains("TransL");
@@ -77,7 +77,7 @@ public class TestBlockInnerTriangularSolver {
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(3,numFound);
+        assertEquals(4,numFound);
     }
 
     /**
@@ -113,7 +113,8 @@ public class TestBlockInnerTriangularSolver {
         }
 
         if( transB ) {
-            CommonOps.transpose(B);
+            CommonOps.transpose(found);
+            CommonOps.transpose(expected);
         }
 
         // create arrays that are offset from the original
@@ -126,12 +127,11 @@ public class TestBlockInnerTriangularSolver {
         } catch (IllegalAccessException e) {
             fail("invoke failed");
         } catch (InvocationTargetException e) {
-            fail("invoke failed");
+            throw new RuntimeException(e.getCause());
         }
 
         // put the solution into B, minus the offset
         System.arraycopy(dataB,offsetB,found.data,0,found.data.length);
-
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
     }
@@ -147,7 +147,7 @@ public class TestBlockInnerTriangularSolver {
         check_solve_submatrix(false,true,false);
 //        check_solve_submatrix(false,true,false);
 //        check_solve_submatrix(false,false,true);
-//        check_solve_submatrix(true,false,true);
+        check_solve_submatrix(true,false,true);
 //        check_solve_submatrix(false,true,true);
 //        check_solve_submatrix(false,true,true);
     }
@@ -184,8 +184,9 @@ public class TestBlockInnerTriangularSolver {
         }
 
         if( transB ) {
-            sub_B.original = BlockMatrixOps.transpose((BlockMatrix64F)sub_B.original,null);
+            sub_B.original = b_B = BlockMatrixOps.transpose((BlockMatrix64F)sub_B.original,null);
             TestBlockInnerMultiplication.transposeSub(sub_B);
+            CommonOps.transpose(X);
         }
 
 //        sub_L.original.print();

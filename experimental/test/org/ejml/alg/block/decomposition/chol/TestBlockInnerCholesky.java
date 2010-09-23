@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -39,12 +40,24 @@ public class TestBlockInnerCholesky {
 
     @Test
     public void upper() {
-        int N = 5;
+        checkDecompose(5, false);
+        checkNotPositiveDefinite(5,true);
+    }
 
-        DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
+    @Test
+    public void lower() {
+        checkDecompose(5, true);
+        checkNotPositiveDefinite(5,true);
+    }
+
+    /**
+     * Test a positive case where it should be able to decompose the matrix
+     */
+    private void checkDecompose(int n, boolean lower) {
+        DenseMatrix64F A = RandomMatrices.createSymmPosDef(n,rand);
 
         // decompose a DenseMatrix64F to find expected solution
-        CholeskyDecomposition chol = DecompositionFactory.chol(N,false,false);
+        CholeskyDecomposition chol = DecompositionFactory.chol(n,false,lower);
         assertTrue(chol.decompose(A));
 
         DenseMatrix64F expected = chol.getT(null);
@@ -54,12 +67,37 @@ public class TestBlockInnerCholesky {
         System.arraycopy(A.data,0,data,2,A.getNumElements());
 
         // decompose using the algorithm
-        assertTrue(BlockInnerCholesky.upper(data,2,N));
+        if( lower )
+            assertTrue(BlockInnerCholesky.lower(data,2, n));
+        else
+            assertTrue(BlockInnerCholesky.upper(data,2, n));
 
-        DenseMatrix64F found = new DenseMatrix64F(N,N);
+        DenseMatrix64F found = new DenseMatrix64F(n, n);
         System.arraycopy(data,2,found.data,0,found.data.length);
 
         // set lower triangular potion to be zero so that it is exactly the same
-        assertTrue(GenericMatrixOps.isEquivalentTriangle(true,expected,found,1e-10));
+        assertTrue(GenericMatrixOps.isEquivalentTriangle(!lower,expected,found,1e-10));
+    }
+
+    /**
+     * See if it fails when the matrix is not positive definite.
+     */
+    private void checkNotPositiveDefinite(int n, boolean lower) {
+        DenseMatrix64F A = new DenseMatrix64F(n,n);
+        for( int i = 0; i < n; i++ ) {
+            for( int j = 0; j < n; j++ ) {
+                A.set(i,j,1);
+            }
+        }
+
+        // copy the original data by an offset
+        double data[] = new double[ A.getNumElements() + 2 ];
+        System.arraycopy(A.data,0,data,2,A.getNumElements());
+
+        // decompose using the algorithm
+        if( lower )
+            assertFalse(BlockInnerCholesky.lower(data,2, n));
+        else
+            assertFalse(BlockInnerCholesky.upper(data,2, n));
     }
 }

@@ -9,6 +9,18 @@ Block Size
 
 
 
+Block Cholesky Decomposition
+---------------------------
+The DenseMatrix64F based CholeskyDecompositionBlock class is easier to tune and offers equivalent
+performance to BlockMatrix64F based BlockCholeskyOuter class. CholeskyDecompositionBlock achieves
+ optimal performance with bunch smaller block sizes, but its performance actually degrades when
+ larger blocks that are optimal for BlockMatrix64F algorithms are used.  CholeskyDecompositionBlock
+ also works directly with DenseMatrix64F and avoids the need to convert matrix types.
+
+ However selecting the default class for Cholesky decomposition is not obvious because using
+ CholeskyDecompositionBlock would require an additional tuning parameter making the library
+ even more difficult to use.
+
 Block Matrix Multiply
 ---------------------------
 - Block matrix multiplication does have fewer cache misses.

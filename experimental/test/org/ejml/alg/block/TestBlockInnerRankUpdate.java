@@ -70,27 +70,25 @@ public class TestBlockInnerRankUpdate {
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
         BlockInnerRankUpdate.rankNUpdate(N,alpha,subA,subB);
 
-
         assertTrue(GenericMatrixOps.isEquivalent(expected.getMatrix(),blockA,1e-8));
     }
 
-
     /**
-     * Tests symmRankNUpdate_U with various sized input matrices
+     * Tests symmRankNMinus_U with various sized input matrices
      */
     @Test
-    public void symmRankNUpdate_U() {
+    public void symmRankNMinus_U() {
         // the matrix being updated is a whole block
-        checkSymmRankNUpdate_U(N, N-2);
+        checkSymmRankNMinus_U(N, N-2);
 
         // the matrix being updated is multiple blocks + a fraction
-        checkSymmRankNUpdate_U(N*2+1, N-2);
+        checkSymmRankNMinus_U(N*2+1, N-2);
 
         // matrix being updated is less than a block
-        checkSymmRankNUpdate_U(N-1, N-2);
+        checkSymmRankNMinus_U(N-1, N-2);
     }
 
-    private void checkSymmRankNUpdate_U(int lengthA, int heightB) {
+    private void checkSymmRankNMinus_U(int lengthA, int heightB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices.createSymmPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random(heightB,lengthA,-1,1,rand);
 
@@ -101,8 +99,39 @@ public class TestBlockInnerRankUpdate {
         D1Submatrix64F subB = new D1Submatrix64F(blockB,0,0,origB.numRows(),origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
-        BlockInnerRankUpdate.symmRankNUpdate_U(N,subA,subB);
+        BlockInnerRankUpdate.symmRankNMinus_U(N,subA,subB);
 
         assertTrue(GenericMatrixOps.isEquivalentTriangle(true,expected.getMatrix(),blockA,1e-8));
+    }
+
+    @Test
+    public void symmRankNMinus_L() {
+        // the matrix being updated is a whole block
+        checkSymmRankNMinus_L(N, N-2);
+
+        // the matrix being updated is multiple blocks + a fraction
+        checkSymmRankNMinus_L(N*2+1, N-2);
+
+        // matrix being updated is less than a block
+        checkSymmRankNMinus_L(N-1, N-2);
+    }
+
+    private void checkSymmRankNMinus_L(int lengthA, int widthB) {
+        SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices.createSymmPosDef(lengthA,rand));
+        SimpleMatrix origB = SimpleMatrix.random(lengthA,widthB,-1,1,rand);
+
+        BlockMatrix64F blockA = BlockMatrixOps.convert(origA.getMatrix(),N);
+        BlockMatrix64F blockB = BlockMatrixOps.convert(origB.getMatrix(),N);
+
+        D1Submatrix64F subA = new D1Submatrix64F(blockA,0,0,origA.numRows(),origA.numCols());
+        D1Submatrix64F subB = new D1Submatrix64F(blockB,0,0,origB.numRows(),origB.numCols());
+
+        SimpleMatrix expected = origA.plus(origB.mult(origB.transpose()).scale(-1));
+        BlockInnerRankUpdate.symmRankNMinus_L(N,subA,subB);
+
+//        expected.print();
+//        blockA.print();
+
+        assertTrue(GenericMatrixOps.isEquivalentTriangle(false,expected.getMatrix(),blockA,1e-8));
     }
 }

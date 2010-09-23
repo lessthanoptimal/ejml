@@ -175,13 +175,15 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
      * where c is a submatrix.
      * </p>
      *
+     * Only the upper triangle is updated.
+     *
      * @param a A matrix.
      * @param c A matrix.
      * @param startIndexC start of the submatrix in c.
      */
-    public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c , int startIndexC )
+    public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c ,
+                                          int startIndexC )
     {
-        // todo doesn't only a triangular portion need to be updated?
         double dataA[] = a.data;
         double dataC[] = c.data;
 

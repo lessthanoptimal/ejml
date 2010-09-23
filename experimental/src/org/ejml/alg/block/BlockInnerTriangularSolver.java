@@ -27,7 +27,6 @@ import org.ejml.data.D1Submatrix64F;
  *
  * @author Peter Abeles
  */
-// todo add solveL_transB()
 public class BlockInnerTriangularSolver {
 
     /**
@@ -39,8 +38,9 @@ public class BlockInnerTriangularSolver {
      * where T is a triangular matrix. T or B can be optionally transposed.
      * </p>
      *
+     * <p>
      * The triangle must be a full inner block inside a {@link org.ejml.data.BlockMatrix64F}.
-     *
+     * </p>
      *
      * @param blockLength Size of the inner blocks in the block matrix.
      * @param upper If T is upper or lower triangular.
@@ -74,7 +74,13 @@ public class BlockInnerTriangularSolver {
                 if ( transT ) {
                     throw new IllegalArgumentException("Operation not yet supported");
                 } else {
-                    throw new IllegalArgumentException("Operation not yet supported");
+                    for( int i = B.row0; i < B.row1; i += blockLength ) {
+                        int N = Math.min(B.row1 , i + blockLength ) - i;
+
+                        int offsetB = i*B.original.numCols + N*B.col0;
+
+                        solveLTransB(dataT,dataB,M,N,offsetT,offsetB);
+                    }
                 }
             }
         } else {
@@ -116,21 +122,18 @@ public class BlockInnerTriangularSolver {
      * <p>
      * Solves for non-singular lower triangular matrices using forward substitution.
      * <br>
-     * b = L<sup>-1</sup>b<br>
+     * B = L<sup>-1</sup>B<br>
      * <br>
-     * where b is a vector, L is an n by n matrix.<br>
+     * where B is a (m by n) matrix, L is a triangular (m by m) matrix.
      * </p>
      *
-     * L is a m by m matrix
-     * B is a m by n matrix
-     *
-     * @param L An n by n non-singular lower triangular matrix. Not modified.
-     * @param b A vector of length n. Modified.
-     * @param n The size of the matrices.
+     * @param L An m by m non-singular lower triangular matrix. Not modified.
+     * @param b An m by n matrix. Modified.
+     * @param m size of the L matrix
+     * @param n number of columns in the B matrix.
      * @param offsetL initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
-    // TODO optimize
     public static void solveL( double L[] , double []b ,
                                int m , int n ,
                                int offsetL , int offsetB )
@@ -146,6 +149,66 @@ public class BlockInnerTriangularSolver {
         }
     }
 
+     /**
+     * <p>
+     * Solves for non-singular lower triangular matrices using forward substitution.
+     * <br>
+     * B<sup>T</sup> = L<sup>-1</sup>B<sup>T</sup><br>
+     * <br>
+     * where B is a (n by m) matrix, L is a triangular (m by m) matrix.
+     * </p>
+     *
+     * @param L An m by m non-singular lower triangular matrix. Not modified.
+     * @param b An n by m matrix. Modified.
+     * @param m size of the L matrix
+     * @param n number of columns in the B matrix.
+     * @param offsetL initial index in L where the matrix starts
+     * @param offsetB initial index in B where the matrix starts
+     */
+    public static void solveLTransB( double L[] , double []b ,
+                                     int m , int n ,
+                                     int offsetL , int offsetB )
+    {
+//        for( int j = 0; j < n; j++ ) {
+//            for( int i = 0; i < m; i++ ) {
+//                double sum = b[offsetB + j*m+i];
+//                for( int k=0; k<i; k++ ) {
+//                    sum -= L[offsetL + i*m+k]* b[offsetB + j*m+k];
+//                }
+//                b[offsetB + j*m+i] = sum / L[offsetL + i*m+i];
+//            }
+//        }
+        for( int j = 0; j < n; j++ ) {
+            for( int i = 0; i < m; i++ ) {
+                double sum = b[offsetB + j*m+i];
+                int l = offsetL+i*m;
+                int bb = offsetB +j*m;
+                int endL = l+i;
+                while( l != endL ) {
+//                for( int k=0; k<i; k++ ) {
+                    sum -= L[l++]* b[bb++];
+                }
+                b[offsetB + j*m+i] = sum / L[offsetL + i*m+i];
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Solves for non-singular upper triangular matrices using forward substitution.
+     * <br>
+     * B = U<sup>-1</sup>B<br>
+     * <br>
+     * where B (m by n) is a matrix, U is a (m by m ) triangular matrix.<br>
+     * </p>
+     *
+     * @param U An m by m non-singular upper triangular matrix. Not modified.
+     * @param b An m by n matrix. Modified.
+     * @param m size of the L matrix
+     * @paramUn number of columns in the B matrix.
+     * @param offsetU initial index in L where the matrix starts
+     * @param offsetB initial index in B where the matrix starts
+     */
     public static void solveU( double U[] , double []b ,
                                int m , int n ,
                                int offsetU , int offsetB )
@@ -161,6 +224,22 @@ public class BlockInnerTriangularSolver {
         }
     }
 
+    /**
+     * <p>
+     * Solves for non-singular upper triangular matrices using forward substitution.
+     * <br>
+     * B = U<sup>-T</sup>B<br>
+     * <br>
+     * where B (m by n) is a matrix, U is a (m by m ) triangular matrix.<br>
+     * </p>
+     *
+     * @param U An m by m non-singular upper triangular matrix. Not modified.
+     * @param b An m by n matrix. Modified.
+     * @param m size of the L matrix
+     * @paramUn number of columns in the B matrix.
+     * @param offsetU initial index in L where the matrix starts
+     * @param offsetB initial index in B where the matrix starts
+     */
     public static void solveTransU( double U[] , double []b ,
                                     int m , int n ,
                                     int offsetU , int offsetB )

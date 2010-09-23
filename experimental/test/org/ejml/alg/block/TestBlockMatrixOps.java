@@ -308,4 +308,36 @@ public class TestBlockMatrixOps {
 
         assertTrue( GenericMatrixOps.isEquivalent(A_t,B_t,1e-8));
     }
+
+    @Test
+    public void zeroTriangle_upper() {
+        BlockMatrix64F B = BlockMatrixOps.createRandom(BLOCK_LENGTH*2+1,BLOCK_LENGTH*2+1,-1,1,rand,BLOCK_LENGTH);
+
+        BlockMatrixOps.zeroTriangle(true,B);
+
+        for( int i = 0; i < B.numRows; i++ ) {
+            for( int j = 0; j < B.numCols; j++ ) {
+                if( j <= i )
+                    assertTrue(B.get(i,j) != 0 );
+                else
+                    assertTrue(B.get(i,j) == 0 );
+            }
+        }
+    }
+
+    @Test
+    public void zeroTriangle_lower() {
+        BlockMatrix64F B = BlockMatrixOps.createRandom(BLOCK_LENGTH*2+1,BLOCK_LENGTH*2+1,-1,1,rand,BLOCK_LENGTH);
+
+        BlockMatrixOps.zeroTriangle(false,B);
+
+        for( int i = 0; i < B.numRows; i++ ) {
+            for( int j = 0; j < B.numCols; j++ ) {
+                if( j >= i )
+                    assertTrue(B.get(i,j) != 0 );
+                else
+                    assertTrue(B.get(i,j) == 0 );
+            }
+        }
+    }
 }

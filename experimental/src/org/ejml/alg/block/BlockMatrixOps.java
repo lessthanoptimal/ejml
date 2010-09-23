@@ -298,4 +298,62 @@ public class BlockMatrixOps {
 
         return MatrixFeatures.isIdentical(A,B,tol);
     }
+
+    /**
+     * Sets either the upper or low triangle of a matrix to zero
+     */
+    public static void zeroTriangle( boolean upper , BlockMatrix64F A )
+    {
+        int blockLength = A.blockLength;
+
+        if( upper ) {
+            for( int i = 0; i < A.numRows; i += blockLength ) {
+                int h = Math.min(blockLength,A.numRows-i);
+
+                for( int j = i; j < A.numCols; j += blockLength ) {
+                    int w = Math.min(blockLength,A.numCols-j);
+
+                    int index = i*A.numCols + h*j;
+
+                    if( j == i ) {
+                        for( int k = 0; k < h; k++ ) {
+                            for( int l = k+1; l < w; l++ ) {
+                                A.data[index + w*k+l ] = 0;
+                            }
+                        }
+                    } else {
+                        for( int k = 0; k < h; k++ ) {
+                            for( int l = 0; l < w; l++ ) {
+                                A.data[index + w*k+l ] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            for( int i = 0; i < A.numRows; i += blockLength ) {
+                int h = Math.min(blockLength,A.numRows-i);
+
+                for( int j = 0; j <= i; j += blockLength ) {
+                    int w = Math.min(blockLength,A.numCols-j);
+
+                    int index = i*A.numCols + h*j;
+
+                    if( j == i ) {
+                        for( int k = 0; k < h; k++ ) {
+                            for( int l = 0; l < k; l++ ) {
+                                A.data[index + w*k+l ] = 0;
+                            }
+                        }
+                    } else {
+                        for( int k = 0; k < h; k++ ) {
+                            for( int l = 0; l < w; l++ ) {
+                                A.data[index + w*k+l ] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

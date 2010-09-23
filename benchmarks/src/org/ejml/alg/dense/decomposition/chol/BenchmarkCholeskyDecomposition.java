@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuter;
+import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
@@ -86,7 +86,24 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyBlockU( DenseMatrix64F orig , int numTrials ) {
 
-        BlockCholeskyOuter alg = new BlockCholeskyOuter();
+        BlockCholeskyOuterForm alg = new BlockCholeskyOuterForm(false);
+
+        BlockMatrix64F A = BlockMatrixOps.convert(orig);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( !alg.decompose(A.copy()) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
+    public static long choleskyBlockL( DenseMatrix64F orig , int numTrials ) {
+
+        BlockCholeskyOuterForm alg = new BlockCholeskyOuterForm(true);
 
         BlockMatrix64F A = BlockMatrixOps.convert(orig);
 
@@ -118,11 +135,12 @@ public class BenchmarkCholeskyDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
-//        System.out.println("Lower            = "+ choleskyL(mat,numTrials));
+        System.out.println("Lower            = "+ choleskyL(mat,numTrials));
 //        System.out.println("Upper            = "+ choleskyU(mat,numTrials));
         System.out.println("Lower Block      = "+ choleskyL_block(mat,numTrials));
 //        System.out.println("LDL              = "+ choleskyLDL(mat,numTrials));
-        System.out.println("Real Block      = "+ choleskyBlockU(mat,numTrials));
+        System.out.println("Real Block U     = "+ choleskyBlockU(mat,numTrials));
+        System.out.println("Real Block L     = "+ choleskyBlockL(mat,numTrials));
     }
 
     public static void main( String args [] ) {
@@ -132,7 +150,7 @@ public class BenchmarkCholeskyDecomposition {
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 6; i < size.length; i++ ) {
+        for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);

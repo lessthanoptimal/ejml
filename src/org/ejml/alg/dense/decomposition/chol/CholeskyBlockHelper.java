@@ -81,7 +81,6 @@ class CholeskyBlockHelper {
                     if( sum <= 0.0 )
                         return false;
 
-                    // I suspect that the sqrt is slowing this down relative to MTJ
                     el_ii = Math.sqrt(sum);
                     el[i*n+i] = el_ii;
                     m[indexStart+i*mat.numCols+i] = el_ii;

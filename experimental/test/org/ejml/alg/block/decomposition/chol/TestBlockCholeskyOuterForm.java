@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestBlockCholeskyOuter {
+public class TestBlockCholeskyOuterForm {
 
     Random rand = new Random(1231);
 
@@ -59,15 +59,34 @@ public class TestBlockCholeskyOuter {
 
             BlockMatrix64F blockA = BlockMatrixOps.convert(A,bl);
 
-            BlockCholeskyOuter blockChol = new BlockCholeskyOuter();
+            BlockCholeskyOuterForm blockChol = new BlockCholeskyOuterForm(false);
 
             assertTrue(blockChol.decompose(blockA));
 
-            for( int i = 0; i < N; i++ ) {
-                for( int j = 0; j < i; j++ ) {
-                    blockA.set(i,j,0);
-                }
-            }
+            assertTrue(GenericMatrixOps.isEquivalent(L,blockA,1e-8));
+        }
+    }
+
+    /**
+     * Test upper cholesky decomposition for upper triangular.
+     */
+    @Test
+    public void testLower() {
+        // test against various different sizes
+        for( int N = bl-2; N <= 13; N += 2 ) {
+
+            DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
+
+            CholeskyDecomposition chol = DecompositionFactory.chol(1,false,true);
+            assertTrue(chol.decompose(A));
+
+            DenseMatrix64F L = chol.getT(null);
+
+            BlockMatrix64F blockA = BlockMatrixOps.convert(A,bl);
+
+            BlockCholeskyOuterForm blockChol = new BlockCholeskyOuterForm(true);
+
+            assertTrue(blockChol.decompose(blockA));
 
             assertTrue(GenericMatrixOps.isEquivalent(L,blockA,1e-8));
         }
