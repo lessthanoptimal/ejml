@@ -70,6 +70,16 @@ public class DenseD2Matrix64F extends Matrix64F implements Serializable {
     }
 
     @Override
+    public double unsafe_get( int row, int col) {
+        return get(row,col);
+    }
+
+    @Override
+    public void unsafe_set( int row, int col, double val) {
+        set(row,col,val);
+    }
+
+    @Override
     public int getNumElements() {
         return numRows*numCols;
     }

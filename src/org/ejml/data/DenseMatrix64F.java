@@ -247,6 +247,11 @@ public class DenseMatrix64F extends D1Matrix64F {
         data[ row * numCols + col ] = value;
     }
 
+    @Override
+    public void unsafe_set( int row , int col , double value ) {
+        data[ row * numCols + col ] = value;
+    }
+
     /**
      * <p>
      * Adds 'value' to the specified element in the matrix.<br>
@@ -281,6 +286,11 @@ public class DenseMatrix64F extends D1Matrix64F {
             throw new IllegalArgumentException("Specified element is out of bounds: "+row+" "+col);
         }
 
+        return data[ row * numCols + col ];
+    }
+
+    @Override
+    public double unsafe_get( int row , int col ) {
         return data[ row * numCols + col ];
     }
 

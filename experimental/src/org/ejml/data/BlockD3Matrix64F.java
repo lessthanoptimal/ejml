@@ -102,6 +102,16 @@ public class BlockD3Matrix64F extends Matrix64F {
     }
 
     @Override
+    public double unsafe_get( int row, int col) {
+        return get(row,col);
+    }
+
+    @Override
+    public void unsafe_set( int row, int col, double val) {
+        set(row,col,val);
+    }
+
+    @Override
     public int getNumRows() {
         return numRows;
     }

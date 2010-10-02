@@ -58,6 +58,8 @@ public abstract class Matrix64F implements Serializable {
      */
     public abstract double get( int row , int col );
 
+    public abstract double unsafe_get( int row , int col );
+
     /**
      * Sets the value of the specified matrix element.
      *
@@ -66,6 +68,8 @@ public abstract class Matrix64F implements Serializable {
      * @param val  The element's new value.
      */
     public abstract void set( int row , int col , double val );
+
+    public abstract void unsafe_set( int row , int col , double val );
 
     /**
      * Creates a new iterator for traversing through a submatrix inside this matrix.  It can be traversed
