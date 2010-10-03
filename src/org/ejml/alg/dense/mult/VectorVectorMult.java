@@ -67,7 +67,7 @@ public class VectorVectorMult {
 
         double total = 0;
         for( int i = 0; i < m; i++ ) {
-           total += x.data[i] * y.data[i];
+           total += x.get(i) * y.get(i);
         }
 
         return total;
@@ -102,10 +102,10 @@ public class VectorVectorMult {
             double total = 0;
 
             for( int j = 0; j < n; j++ ) {
-                total += x.data[j]*A.get(j,i);
+                total += x.get(j)*A.get(j,i);
             }
 
-            result += total*y.data[i];
+            result += total*y.get(i);
         }
 
         return result;
@@ -141,10 +141,10 @@ public class VectorVectorMult {
             double total = 0;
 
             for( int j = 0; j < n; j++ ) {
-                total += x.data[j]*A.get(i,j);
+                total += x.get(j)*A.get(i,j);
             }
 
-            result += total*y.data[i];
+            result += total*y.get(i);
         }
 
         return result;
@@ -215,14 +215,14 @@ public class VectorVectorMult {
             for( int i = 0; i < m; i++ ) {
                 double xdat = x.data[i];
                 for( int j = 0; j < n; j++ ) {
-                    A.data[index++] += xdat*y.data[j];
+                    A.data[index++] += xdat*y.get(j);
                 }
             }
         } else {
             for( int i = 0; i < m; i++ ) {
                 double xdat = x.data[i];
                 for( int j = 0; j < n; j++ ) {
-                    A.data[index++] += gamma*xdat*y.data[j];
+                    A.data[index++] += gamma*xdat*y.get(j);
                 }
             }
         }
@@ -250,10 +250,10 @@ public class VectorVectorMult {
 
         double sum = 0;
         for( int i = 0; i < n; i++ ) {
-            sum += u.data[i]*x.data[i];
+            sum += u.get(i)*x.get(i);
         }
         for( int i = 0; i < n; i++ ) {
-            y.data[i] = x.data[i] + gamma*u.data[i]*sum;
+            y.data[i] = x.get(i) + gamma*u.get(i)*sum;
         }
     }
 

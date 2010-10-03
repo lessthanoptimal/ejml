@@ -53,42 +53,40 @@ public class MatrixVectorMult {
      * where A is a matrix, b is a column or transposed row vector, and c is a column vector.
      * </p>
      *
-     * @param A A matrix that is m by n. Not modified.
+     * @param a A matrix that is m by n. Not modified.
      * @param b A vector that has length n. Not modified.
      * @param c A column vector that has length m. Modified.
      */
-    public static void mult( DenseMatrix64F A , DenseMatrix64F b, DenseMatrix64F c)
+    public static void mult( DenseMatrix64F a, DenseMatrix64F b, DenseMatrix64F c)
     {
         if( c.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
-        } else if( c.numRows != A.numRows ) {
+        } else if( c.numRows != a.numRows ) {
             throw new MatrixDimensionException("C is not the expected length");
         }
         
         if( b.numRows == 1 ) {
-            if( A.numCols != b.numCols ) {
+            if( a.numCols != b.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
             }
         } else if( b.numCols == 1 ) {
-            if( A.numCols != b.numRows ) {
+            if( a.numCols != b.numRows ) {
                 throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataB = b.data;
         final double[] dataC = c.data;
-        final double dataA[] = A.data;
 
         int indexA = 0;
         int cIndex = 0;
-        double b0 = dataB[0];
-        for( int i = 0; i < A.numRows; i++ ) {
-            double total = dataA[indexA++] * b0;
+        double b0 = b.get(0);
+        for( int i = 0; i < a.numRows; i++ ) {
+            double total = a.get(indexA++) * b0;
 
-            for( int j = 1; j < A.numCols; j++ ) {
-                total += dataA[indexA++] * dataB[j];
+            for( int j = 1; j < a.numCols; j++ ) {
+                total += a.get(indexA++) * b.get(j);
             }
 
             dataC[cIndex++] = total;
@@ -132,17 +130,15 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        double[] dataB = B.data;
         double[] dataC = C.data;
-        double dataA[] = A.data;
 
         int indexA = 0;
         int cIndex = 0;
         for( int i = 0; i < A.numRows; i++ ) {
-            double total = dataA[indexA++] * dataB[0];
+            double total = A.get(indexA++) * B.get(0);
 
             for( int j = 1; j < A.numCols; j++ ) {
-                total += dataA[indexA++] * dataB[j];
+                total += A.get(indexA++) * B.get(j);
             }
 
             dataC[cIndex++] += total;
@@ -191,9 +187,7 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataB = B.data;
         final double[] dataC = C.data;
-        final double dataA[] = A.data;
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -201,7 +195,7 @@ public class MatrixVectorMult {
 
             int indexA = i;
             for( int j = 0; j < A.numRows; j++ ) {
-                total += dataA[indexA] * dataB[j];
+                total += A.get(indexA) * B.get(j);
                 indexA += A.numCols;
             }
 
@@ -236,20 +230,18 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataB = B.data;
         final double[] dataC = C.data;
-        double dataA[] = A.data;
 
-        double B_val = dataB[0];
+        double B_val = B.get(0);
         for( int i = 0; i < A.numCols; i++ ) {
-            dataC[i] = dataA[i] * B_val;
+            dataC[i] = A.get(i) * B_val;
         }
 
         int indexA = A.numCols;
         for( int i = 1; i < A.numRows; i++ ) {
-            B_val = dataB[i];
+            B_val = B.get(i);
             for( int j = 0; j < A.numCols; j++ ) {
-                dataC[j] += dataA[indexA++] * B_val;
+                dataC[j] += A.get(indexA++) * B_val;
             }
         }
     }
@@ -294,9 +286,7 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataB = B.data;
         final double[] dataC = C.data;
-        double dataA[] = A.data;
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -304,7 +294,7 @@ public class MatrixVectorMult {
 
             int indexA = i;
             for( int j = 0; j < A.numRows; j++ ) {
-                total += dataA[indexA] * dataB[j];
+                total += A.get(indexA) * B.get(j);
                 indexA += A.numCols;
             }
 
@@ -339,15 +329,13 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataB = B.data;
         final double[] dataC = C.data;
-        double dataA[] = A.data;
 
         int indexA = 0;
         for( int j = 0; j < A.numRows; j++ ) {
-            double B_val = dataB[j];
+            double B_val = B.get(j);
             for( int i = 0; i < A.numCols; i++ ) {
-                dataC[i] += dataA[indexA++] * B_val;
+                dataC[i] += A.get(indexA++) * B_val;
             }
         }
     }

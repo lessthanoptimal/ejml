@@ -33,6 +33,7 @@ public abstract class GenericTestsMatrix64F {
         testGetNumRows();
         testGetNumCols();
         testSetAndGet_2D();
+        testSetAndGet_2D_unsafe();
     }
 
     public void testGetNumRows() {
@@ -70,6 +71,35 @@ public abstract class GenericTestsMatrix64F {
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {
                 double found = mat.get(i,j);
+
+                assertEquals(i* m +j,found,1e-8);
+            }
+        }
+    }
+
+    public void testSetAndGet_2D_unsafe() {
+        // test a variety of different shapes.  Added rigor needed
+        // to properly test block matrix.
+        checkSetAndGet_unsafe(10, 12);
+        checkSetAndGet_unsafe(12, 10);
+        checkSetAndGet_unsafe(10, 10);
+        checkSetAndGet_unsafe(19, 5);
+        checkSetAndGet_unsafe(5, 19);
+        checkSetAndGet_unsafe(19, 19);
+    }
+
+    private void checkSetAndGet_unsafe(int m, int n) {
+        Matrix64F mat = createMatrix(m, n);
+
+        for( int i = 0; i < m; i++ ) {
+            for( int j = 0; j < n; j++ ) {
+                mat.unsafe_set(i,j, i* m +j);
+            }
+        }
+
+        for( int i = 0; i < m; i++ ) {
+            for( int j = 0; j < n; j++ ) {
+                double found = mat.unsafe_get(i,j);
 
                 assertEquals(i* m +j,found,1e-8);
             }

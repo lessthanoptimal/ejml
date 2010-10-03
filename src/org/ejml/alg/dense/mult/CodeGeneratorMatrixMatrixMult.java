@@ -131,8 +131,6 @@ public class CodeGeneratorMatrixMatrixMult {
                         "            throw new MatrixDimensionException(\"The results matrix does not have the desired dimensions\");\n" +
                         "        }\n" +
                         "\n" +
-                        "        double dataA[] = a.data;\n" +
-                        "        double dataB[] = b.data;\n" +
                         "        double dataC[] = c.data;\n" +
                         "\n";
 
@@ -196,9 +194,9 @@ public class CodeGeneratorMatrixMatrixMult {
         header = makeHeader("mult","reorder",add,alpha, false, false,false);
 
         if( alpha ) {
-            valLine = "valA = alpha*dataA[indexA++];\n";
+            valLine = "valA = alpha*a.get(indexA++);\n";
         } else {
-            valLine = "valA = dataA[indexA++];\n";
+            valLine = "valA = a.get(indexA++);\n";
         }
 
         String assignment = add ? "+=" : "=";
@@ -220,7 +218,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "            "+valLine +
                         "\n" +
                         "            while( indexB < end ) {\n" +
-                        "                dataC[indexC++] "+assignment+" valA*dataB[indexB++];\n" +
+                        "                dataC[indexC++] "+assignment+" valA*b.get(indexB++);\n" +
                         "            }\n" +
                         "\n" +
                         "            // now add to it\n"+
@@ -231,7 +229,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                "+valLine+
                         "\n" +
                         "                while( indexB < end ) { // j loop\n" +
-                        "                    dataC[indexC++] += valA*dataB[indexB++];\n" +
+                        "                    dataC[indexC++] += valA*b.get(indexB++);\n" +
                         "                }\n" +
                         "            }\n" +
                         "            indexCbase += c.numCols;\n" +
@@ -267,7 +265,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                int indexB = j;\n" +
                         "                int end = indexA + b.numRows;\n" +
                         "                while( indexA < end ) {\n" +
-                        "                    total += dataA[indexA++] * dataB[indexB];\n" +
+                        "                    total += a.get(indexA++) * b.get(indexB);\n" +
                         "                    indexB += b.numCols;\n" +
                         "                }\n" +
                         "\n" +
@@ -297,14 +295,14 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        for( int j = 0; j < b.numCols; j++ ) {\n" +
                         "            // create a copy of the column in B to avoid cache issues\n" +
                         "            for( int k = 0; k < b.numRows; k++ ) {\n" +
-                        "                aux[k] = dataB[k*b.numCols+j];\n" +
+                        "                aux[k] = b.get(k,j);\n" +
                         "            }\n" +
                         "\n" +
                         "            int indexA = 0;\n" +
                         "            for( int i = 0; i < a.numRows; i++ ) {\n" +
                         "                double total = 0;\n" +
                         "                for( int k = 0; k < b.numRows; ) {\n" +
-                        "                    total += dataA[indexA++]*aux[k++];\n" +
+                        "                    total += a.get(indexA++)*aux[k++];\n" +
                         "                }\n" +
                         valLine +
                         "            }\n" +
@@ -321,11 +319,11 @@ public class CodeGeneratorMatrixMatrixMult {
         String assignment = add ? "+=" : "=";
 
         if( alpha ) {
-            valLine1 = "valA = alpha*dataA[i];\n";
-            valLine2 = "valA = alpha*dataA[k*a.numCols+i];\n";
+            valLine1 = "valA = alpha*a.get(i);\n";
+            valLine2 = "valA = alpha*a.get(k,i);\n";
         } else {
-            valLine1 = "valA = dataA[i];\n";
-            valLine2 = "valA = dataA[k*a.numCols+i];\n";
+            valLine1 = "valA = a.get(i);\n";
+            valLine2 = "valA = a.get(k,i);\n";
         }
 
         String foo =
@@ -341,7 +339,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "            int end = indexB+b.numCols;\n" +
                         "            int indexC = indexC_start;\n" +
                         "            while( indexB<end ) {\n" +
-                        "                dataC[indexC++] "+assignment+" valA*dataB[indexB++];\n" +
+                        "                dataC[indexC++] "+assignment+" valA*b.get(indexB++);\n" +
                         "            }\n" +
                         "            // now increment it\n" +
                         "            for( int k = 1; k < a.numRows; k++ ) {\n" +
@@ -350,7 +348,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                indexC = indexC_start;\n" +
                         "                // this is the loop for j\n" +
                         "                while( indexB<end ) {\n" +
-                        "                    dataC[indexC++] += valA*dataB[indexB++];\n" +
+                        "                    dataC[indexC++] += valA*b.get(indexB++);\n" +
                         "                }\n" +
                         "            }\n" +
                         "        }\n" +
@@ -385,7 +383,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "\n" +
                         "                // loop for k\n" +
                         "                for(; indexB < end; indexB += b.numCols ) {\n" +
-                        "                    total += dataA[indexA] * dataB[indexB];\n" +
+                        "                    total += a.get(indexA) * b.get(indexB);\n" +
                         "                    indexA += a.numCols;\n" +
                         "                }\n" +
                         "\n" +
@@ -424,7 +422,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                double total = 0;\n" +
                         "\n" +
                         "                while( indexA<end ) {\n" +
-                        "                    total += dataA[indexA++] * dataB[indexB++];\n" +
+                        "                    total += a.get(indexA++) * b.get(indexB++);\n" +
                         "                }\n" +
                         "\n" +
                         "                "+valLine +
@@ -461,7 +459,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                double total = 0;\n" +
                         "\n" +
                         "                for( ;indexB<end; ) {\n" +
-                        "                    total += dataA[indexA] * dataB[indexB++];\n" +
+                        "                    total += a.get(indexA) * b.get(indexB++);\n" +
                         "                    indexA += a.numCols;\n" +
                         "                }\n" +
                         "\n" +
@@ -490,14 +488,14 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        int indexC = 0;\n" +
                         "        for( int i = 0; i < a.numCols; i++ ) {\n" +
                         "            for( int k = 0; k < b.numCols; k++ ) {\n" +
-                        "                aux[k] = dataA[k*a.numCols+i];\n" +
+                        "                aux[k] = a.get(k,i);\n" +
                         "            }\n" +
                         "\n" +
                         "            for( int j = 0; j < b.numRows; j++ ) {\n" +
                         "                double total = 0;\n" +
                         "\n" +
                         "                for( int k = 0; k < b.numCols; k++ ) {\n" +
-                        "                    total += aux[k] * dataB[j*b.numCols+k];\n" +
+                        "                    total += aux[k] * b.get(j,k);\n" +
                         "                }\n" +
                         "                "+valLine +
                         "            }\n" +

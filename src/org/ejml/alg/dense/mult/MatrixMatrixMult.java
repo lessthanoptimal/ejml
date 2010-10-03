@@ -1,22 +1,3 @@
-/*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
- *
- * This file is part of Efficient Java Matrix Library (EJML).
- *
- * EJML is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * EJML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
@@ -72,8 +53,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -88,10 +67,10 @@ public class MatrixMatrixMult {
             int indexC = indexCbase;
             int end = indexB + b.numCols;
 
-            valA = dataA[indexA++];
+            valA = a.get(indexA++);
 
             while( indexB < end ) {
-                dataC[indexC++] = valA*dataB[indexB++];
+                dataC[indexC++] = valA*b.get(indexB++);
             }
 
             // now add to it
@@ -99,10 +78,10 @@ public class MatrixMatrixMult {
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
-                valA = dataA[indexA++];
+                valA = a.get(indexA++);
 
                 while( indexB < end ) { // j loop
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
             indexCbase += c.numCols;
@@ -122,8 +101,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int aIndexStart = 0;
@@ -137,7 +114,7 @@ public class MatrixMatrixMult {
                 int indexB = j;
                 int end = indexA + b.numRows;
                 while( indexA < end ) {
-                    total += dataA[indexA++] * dataB[indexB];
+                    total += a.get(indexA++) * b.get(indexB);
                     indexB += b.numCols;
                 }
 
@@ -160,8 +137,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ b.numRows ];
@@ -169,14 +144,14 @@ public class MatrixMatrixMult {
         for( int j = 0; j < b.numCols; j++ ) {
             // create a copy of the column in B to avoid cache issues
             for( int k = 0; k < b.numRows; k++ ) {
-                aux[k] = dataB[k*b.numCols+j];
+                aux[k] = b.get(k,j);
             }
 
             int indexA = 0;
             for( int i = 0; i < a.numRows; i++ ) {
                 double total = 0;
                 for( int k = 0; k < b.numRows; ) {
-                    total += dataA[indexA++]*aux[k++];
+                    total += a.get(indexA++)*aux[k++];
                 }
                 dataC[i*c.numCols+j] = total;
             }
@@ -196,8 +171,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -206,21 +179,21 @@ public class MatrixMatrixMult {
             int indexC_start = i*c.numCols;
 
             // first assign R
-            valA = dataA[i];
+            valA = a.get(i);
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
             while( indexB<end ) {
-                dataC[indexC++] = valA*dataB[indexB++];
+                dataC[indexC++] = valA*b.get(indexB++);
             }
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
-                valA = dataA[k*a.numCols+i];
+                valA = a.get(k,i);
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
                 while( indexB<end ) {
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
         }
@@ -239,8 +212,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -255,7 +226,7 @@ public class MatrixMatrixMult {
 
                 // loop for k
                 for(; indexB < end; indexB += b.numCols ) {
-                    total += dataA[indexA] * dataB[indexB];
+                    total += a.get(indexA) * b.get(indexB);
                     indexA += a.numCols;
                 }
 
@@ -277,8 +248,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -292,7 +261,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 for( ;indexB<end; ) {
-                    total += dataA[indexA] * dataB[indexB++];
+                    total += a.get(indexA) * b.get(indexB++);
                     indexA += a.numCols;
                 }
 
@@ -314,8 +283,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ a.numRows ];
@@ -323,14 +290,14 @@ public class MatrixMatrixMult {
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
-                aux[k] = dataA[k*a.numCols+i];
+                aux[k] = a.get(k,i);
             }
 
             for( int j = 0; j < b.numRows; j++ ) {
                 double total = 0;
 
                 for( int k = 0; k < b.numCols; k++ ) {
-                    total += aux[k] * dataB[j*b.numCols+k];
+                    total += aux[k] * b.get(j,k);
                 }
                 dataC[indexC++] = total;
             }
@@ -350,8 +317,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -366,7 +331,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 while( indexA<end ) {
-                    total += dataA[indexA++] * dataB[indexB++];
+                    total += a.get(indexA++) * b.get(indexB++);
                 }
 
                 dataC[cIndex++] = total;
@@ -388,8 +353,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -404,10 +367,10 @@ public class MatrixMatrixMult {
             int indexC = indexCbase;
             int end = indexB + b.numCols;
 
-            valA = dataA[indexA++];
+            valA = a.get(indexA++);
 
             while( indexB < end ) {
-                dataC[indexC++] += valA*dataB[indexB++];
+                dataC[indexC++] += valA*b.get(indexB++);
             }
 
             // now add to it
@@ -415,10 +378,10 @@ public class MatrixMatrixMult {
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
-                valA = dataA[indexA++];
+                valA = a.get(indexA++);
 
                 while( indexB < end ) { // j loop
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
             indexCbase += c.numCols;
@@ -438,8 +401,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int aIndexStart = 0;
@@ -453,7 +414,7 @@ public class MatrixMatrixMult {
                 int indexB = j;
                 int end = indexA + b.numRows;
                 while( indexA < end ) {
-                    total += dataA[indexA++] * dataB[indexB];
+                    total += a.get(indexA++) * b.get(indexB);
                     indexB += b.numCols;
                 }
 
@@ -476,8 +437,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ b.numRows ];
@@ -485,14 +444,14 @@ public class MatrixMatrixMult {
         for( int j = 0; j < b.numCols; j++ ) {
             // create a copy of the column in B to avoid cache issues
             for( int k = 0; k < b.numRows; k++ ) {
-                aux[k] = dataB[k*b.numCols+j];
+                aux[k] = b.get(k,j);
             }
 
             int indexA = 0;
             for( int i = 0; i < a.numRows; i++ ) {
                 double total = 0;
                 for( int k = 0; k < b.numRows; ) {
-                    total += dataA[indexA++]*aux[k++];
+                    total += a.get(indexA++)*aux[k++];
                 }
                 dataC[i*c.numCols+j] += total;
             }
@@ -512,8 +471,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -522,21 +479,21 @@ public class MatrixMatrixMult {
             int indexC_start = i*c.numCols;
 
             // first assign R
-            valA = dataA[i];
+            valA = a.get(i);
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
             while( indexB<end ) {
-                dataC[indexC++] += valA*dataB[indexB++];
+                dataC[indexC++] += valA*b.get(indexB++);
             }
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
-                valA = dataA[k*a.numCols+i];
+                valA = a.get(k,i);
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
                 while( indexB<end ) {
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
         }
@@ -555,8 +512,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -571,7 +526,7 @@ public class MatrixMatrixMult {
 
                 // loop for k
                 for(; indexB < end; indexB += b.numCols ) {
-                    total += dataA[indexA] * dataB[indexB];
+                    total += a.get(indexA) * b.get(indexB);
                     indexA += a.numCols;
                 }
 
@@ -593,8 +548,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -608,7 +561,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 for( ;indexB<end; ) {
-                    total += dataA[indexA] * dataB[indexB++];
+                    total += a.get(indexA) * b.get(indexB++);
                     indexA += a.numCols;
                 }
 
@@ -630,8 +583,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ a.numRows ];
@@ -639,14 +590,14 @@ public class MatrixMatrixMult {
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
-                aux[k] = dataA[k*a.numCols+i];
+                aux[k] = a.get(k,i);
             }
 
             for( int j = 0; j < b.numRows; j++ ) {
                 double total = 0;
 
                 for( int k = 0; k < b.numCols; k++ ) {
-                    total += aux[k] * dataB[j*b.numCols+k];
+                    total += aux[k] * b.get(j,k);
                 }
                 dataC[indexC++] += total;
             }
@@ -666,8 +617,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -682,7 +631,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 while( indexA<end ) {
-                    total += dataA[indexA++] * dataB[indexB++];
+                    total += a.get(indexA++) * b.get(indexB++);
                 }
 
                 dataC[cIndex++] += total;
@@ -704,8 +653,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -720,10 +667,10 @@ public class MatrixMatrixMult {
             int indexC = indexCbase;
             int end = indexB + b.numCols;
 
-            valA = alpha*dataA[indexA++];
+            valA = alpha*a.get(indexA++);
 
             while( indexB < end ) {
-                dataC[indexC++] = valA*dataB[indexB++];
+                dataC[indexC++] = valA*b.get(indexB++);
             }
 
             // now add to it
@@ -731,10 +678,10 @@ public class MatrixMatrixMult {
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
-                valA = alpha*dataA[indexA++];
+                valA = alpha*a.get(indexA++);
 
                 while( indexB < end ) { // j loop
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
             indexCbase += c.numCols;
@@ -754,8 +701,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int aIndexStart = 0;
@@ -769,7 +714,7 @@ public class MatrixMatrixMult {
                 int indexB = j;
                 int end = indexA + b.numRows;
                 while( indexA < end ) {
-                    total += dataA[indexA++] * dataB[indexB];
+                    total += a.get(indexA++) * b.get(indexB);
                     indexB += b.numCols;
                 }
 
@@ -792,8 +737,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ b.numRows ];
@@ -801,14 +744,14 @@ public class MatrixMatrixMult {
         for( int j = 0; j < b.numCols; j++ ) {
             // create a copy of the column in B to avoid cache issues
             for( int k = 0; k < b.numRows; k++ ) {
-                aux[k] = dataB[k*b.numCols+j];
+                aux[k] = b.get(k,j);
             }
 
             int indexA = 0;
             for( int i = 0; i < a.numRows; i++ ) {
                 double total = 0;
                 for( int k = 0; k < b.numRows; ) {
-                    total += dataA[indexA++]*aux[k++];
+                    total += a.get(indexA++)*aux[k++];
                 }
                 dataC[i*c.numCols+j] = alpha*total;
             }
@@ -828,8 +771,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -838,21 +779,21 @@ public class MatrixMatrixMult {
             int indexC_start = i*c.numCols;
 
             // first assign R
-            valA = alpha*dataA[i];
+            valA = alpha*a.get(i);
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
             while( indexB<end ) {
-                dataC[indexC++] = valA*dataB[indexB++];
+                dataC[indexC++] = valA*b.get(indexB++);
             }
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
-                valA = alpha*dataA[k*a.numCols+i];
+                valA = alpha*a.get(k,i);
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
                 while( indexB<end ) {
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
         }
@@ -871,8 +812,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -887,7 +826,7 @@ public class MatrixMatrixMult {
 
                 // loop for k
                 for(; indexB < end; indexB += b.numCols ) {
-                    total += dataA[indexA] * dataB[indexB];
+                    total += a.get(indexA) * b.get(indexB);
                     indexA += a.numCols;
                 }
 
@@ -909,8 +848,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -924,7 +861,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 for( ;indexB<end; ) {
-                    total += dataA[indexA] * dataB[indexB++];
+                    total += a.get(indexA) * b.get(indexB++);
                     indexA += a.numCols;
                 }
 
@@ -946,8 +883,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ a.numRows ];
@@ -955,14 +890,14 @@ public class MatrixMatrixMult {
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
-                aux[k] = dataA[k*a.numCols+i];
+                aux[k] = a.get(k,i);
             }
 
             for( int j = 0; j < b.numRows; j++ ) {
                 double total = 0;
 
                 for( int k = 0; k < b.numCols; k++ ) {
-                    total += aux[k] * dataB[j*b.numCols+k];
+                    total += aux[k] * b.get(j,k);
                 }
                 dataC[indexC++] = alpha*total;
             }
@@ -982,8 +917,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -998,7 +931,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 while( indexA<end ) {
-                    total += dataA[indexA++] * dataB[indexB++];
+                    total += a.get(indexA++) * b.get(indexB++);
                 }
 
                 dataC[cIndex++] = alpha*total;
@@ -1020,8 +953,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -1036,10 +967,10 @@ public class MatrixMatrixMult {
             int indexC = indexCbase;
             int end = indexB + b.numCols;
 
-            valA = alpha*dataA[indexA++];
+            valA = alpha*a.get(indexA++);
 
             while( indexB < end ) {
-                dataC[indexC++] += valA*dataB[indexB++];
+                dataC[indexC++] += valA*b.get(indexB++);
             }
 
             // now add to it
@@ -1047,10 +978,10 @@ public class MatrixMatrixMult {
                 indexC = indexCbase;
                 end = indexB + b.numCols;
 
-                valA = alpha*dataA[indexA++];
+                valA = alpha*a.get(indexA++);
 
                 while( indexB < end ) { // j loop
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
             indexCbase += c.numCols;
@@ -1070,8 +1001,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int aIndexStart = 0;
@@ -1085,7 +1014,7 @@ public class MatrixMatrixMult {
                 int indexB = j;
                 int end = indexA + b.numRows;
                 while( indexA < end ) {
-                    total += dataA[indexA++] * dataB[indexB];
+                    total += a.get(indexA++) * b.get(indexB);
                     indexB += b.numCols;
                 }
 
@@ -1108,8 +1037,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ b.numRows ];
@@ -1117,14 +1044,14 @@ public class MatrixMatrixMult {
         for( int j = 0; j < b.numCols; j++ ) {
             // create a copy of the column in B to avoid cache issues
             for( int k = 0; k < b.numRows; k++ ) {
-                aux[k] = dataB[k*b.numCols+j];
+                aux[k] = b.get(k,j);
             }
 
             int indexA = 0;
             for( int i = 0; i < a.numRows; i++ ) {
                 double total = 0;
                 for( int k = 0; k < b.numRows; ) {
-                    total += dataA[indexA++]*aux[k++];
+                    total += a.get(indexA++)*aux[k++];
                 }
                 dataC[i*c.numCols+j] += alpha*total;
             }
@@ -1144,8 +1071,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         double valA;
@@ -1154,21 +1079,21 @@ public class MatrixMatrixMult {
             int indexC_start = i*c.numCols;
 
             // first assign R
-            valA = alpha*dataA[i];
+            valA = alpha*a.get(i);
             int indexB = 0;
             int end = indexB+b.numCols;
             int indexC = indexC_start;
             while( indexB<end ) {
-                dataC[indexC++] += valA*dataB[indexB++];
+                dataC[indexC++] += valA*b.get(indexB++);
             }
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
-                valA = alpha*dataA[k*a.numCols+i];
+                valA = alpha*a.get(k,i);
                 end = indexB+b.numCols;
                 indexC = indexC_start;
                 // this is the loop for j
                 while( indexB<end ) {
-                    dataC[indexC++] += valA*dataB[indexB++];
+                    dataC[indexC++] += valA*b.get(indexB++);
                 }
             }
         }
@@ -1187,8 +1112,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -1203,7 +1126,7 @@ public class MatrixMatrixMult {
 
                 // loop for k
                 for(; indexB < end; indexB += b.numCols ) {
-                    total += dataA[indexA] * dataB[indexB];
+                    total += a.get(indexA) * b.get(indexB);
                     indexA += a.numCols;
                 }
 
@@ -1225,8 +1148,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -1240,7 +1161,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 for( ;indexB<end; ) {
-                    total += dataA[indexA] * dataB[indexB++];
+                    total += a.get(indexA) * b.get(indexB++);
                     indexA += a.numCols;
                 }
 
@@ -1262,8 +1183,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         if( aux == null ) aux = new double[ a.numRows ];
@@ -1271,14 +1190,14 @@ public class MatrixMatrixMult {
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
-                aux[k] = dataA[k*a.numCols+i];
+                aux[k] = a.get(k,i);
             }
 
             for( int j = 0; j < b.numRows; j++ ) {
                 double total = 0;
 
                 for( int k = 0; k < b.numCols; k++ ) {
-                    total += aux[k] * dataB[j*b.numCols+k];
+                    total += aux[k] * b.get(j,k);
                 }
                 dataC[indexC++] += alpha*total;
             }
@@ -1298,8 +1217,6 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        double dataA[] = a.data;
-        double dataB[] = b.data;
         double dataC[] = c.data;
 
         int cIndex = 0;
@@ -1314,7 +1231,7 @@ public class MatrixMatrixMult {
                 double total = 0;
 
                 while( indexA<end ) {
-                    total += dataA[indexA++] * dataB[indexB++];
+                    total += a.get(indexA++) * b.get(indexB++);
                 }
 
                 dataC[cIndex++] += alpha*total;

@@ -50,7 +50,7 @@ public abstract class Matrix64F implements Serializable {
     public abstract void reshape(int numRows, int numCols, boolean saveValues);
 
     /**
-     * Returns the value of value of the specified matrix element..
+     * Returns the value of value of the specified matrix element.
      *
      * @param row Matrix element's row index..
      * @param col Matrix element's column index.
@@ -58,6 +58,16 @@ public abstract class Matrix64F implements Serializable {
      */
     public abstract double get( int row , int col );
 
+    /**
+     * Same as {@link #get} but does not perform bounds check on input parameters.  This results in about a 25%
+     * speed increase but potentially sacrifices stability and makes it more difficult to track down simple errors.
+     * It is not recommended that this function be used, except in highly optimized code where the bounds are
+     * implicitly being checked.
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @return The specified element's value.
+     */
     public abstract double unsafe_get( int row , int col );
 
     /**
@@ -69,6 +79,17 @@ public abstract class Matrix64F implements Serializable {
      */
     public abstract void set( int row , int col , double val );
 
+
+    /**
+     * Same as {@link #set} but does not perform bounds check on input parameters.  This results in about a 25%
+     * speed increase but potentially sacrifices stability and makes it more difficult to track down simple errors.
+     * It is not recommended that this function be used, except in highly optimized code where the bounds are
+     * implicitly being checked.
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @param val  The element's new value.
+     */
     public abstract void unsafe_set( int row , int col , double val );
 
     /**

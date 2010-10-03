@@ -1,13 +1,12 @@
-- Optimize block matrix code
-
+- wrapper so that block cholesky can be used on regular matrices
+- merge cholesky offset by index classes
+  * are these fast enough to replace the base class that assumes an index of zero?
 
 For 0.15 Release
 - cholesky block
   * rework it so that its faster on better block sizes
 - cholesky accuracy
   * hard coded cholesky inverse for small matrices
-- Define LinearSolver.quality() better using condition number
-  * approximate with normalized determinant of triangular matrix?
 - increase block size?
 
 For DenseMatrix64F
@@ -52,6 +51,11 @@ For DenseMatrix64F
 - Accurate version of symmetric eigenvalue for 2 by 2
   - SVD
   - SymmEig
+
+- remove hand inlining of functions
+  * See if creating RowD1Matrix64F interface would slow things down
+  * if not start replacing all functions with that
+  * add function add( index ) function to that class.
 
 - Unroll block matrix multiplication when full block.
 - Fast Matrix Multiply
