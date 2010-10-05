@@ -47,11 +47,11 @@ public class CodeGeneratorMatrixMatrixMult {
         String preamble =
                 "package org.ejml.alg.dense.mult;\n" +
                         "\n" +
-                        "import org.ejml.data.DenseMatrix64F;\n"+
+                        "import org.ejml.data.RowD1Matrix64F;\n"+
                         "\n" +
                         "/**\n" +
                         " * <p>\n" +
-                        " * This class contains various types of matrix matrix multiplcation operations for {@link DenseMatrix64F}.\n" +
+                        " * This class contains various types of matrix matrix multiplcation operations for {@link RowD1Matrix64F}.\n" +
                         " * </p>\n" +
                         " * <p>\n" +
                         " * Two algorithms that are equivalent can often have very different runtime performance.\n" +
@@ -130,8 +130,6 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        } else if( "+a_numRows+" != c.numRows || "+b_numCols+" != c.numCols ) {\n" +
                         "            throw new MatrixDimensionException(\"The results matrix does not have the desired dimensions\");\n" +
                         "        }\n" +
-                        "\n" +
-                        "        double dataC[] = c.data;\n" +
                         "\n";
 
         if( auxLength != null ) {
@@ -178,9 +176,9 @@ public class CodeGeneratorMatrixMatrixMult {
         if( hasAlpha ) ret += "double alpha , ";
 
         if( hasAux ) {
-            ret += "DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c , double []aux )\n";
+            ret += "RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )\n";
         } else {
-            ret += "DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )\n";
+            ret += "RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )\n";
         }
 
         ret += "    {\n";
@@ -199,7 +197,7 @@ public class CodeGeneratorMatrixMatrixMult {
             valLine = "valA = a.get(indexA++);\n";
         }
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         String foo =
                 header + makeBoundsCheck(false,false, null)+
@@ -210,7 +208,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        for( int i = 0; i < a.numRows; i++ ) {\n" +
                         "            int indexA = i*a.numCols;\n" +
                         "\n"+
-                        "            // need to assign dataC to a value initially\n" +
+                        "            // need to assign c.data to a value initially\n" +
                         "            int indexB = 0;\n" +
                         "            int indexC = indexCbase;\n" +
                         "            int end = indexB + b.numCols;\n" +
@@ -218,7 +216,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "            "+valLine +
                         "\n" +
                         "            while( indexB < end ) {\n" +
-                        "                dataC[indexC++] "+assignment+" valA*b.get(indexB++);\n" +
+                        "                c."+assignment+"(indexC++ , valA*b.get(indexB++));\n" +
                         "            }\n" +
                         "\n" +
                         "            // now add to it\n"+
@@ -229,7 +227,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                "+valLine+
                         "\n" +
                         "                while( indexB < end ) { // j loop\n" +
-                        "                    dataC[indexC++] += valA*b.get(indexB++);\n" +
+                        "                    c.plus(indexC++ , valA*b.get(indexB++));\n" +
                         "                }\n" +
                         "            }\n" +
                         "            indexCbase += c.numCols;\n" +
@@ -244,12 +242,12 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult","small",add,alpha, false, false,false);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "                dataC[cIndex++] "+assignment+" alpha*total;\n";
+            valLine = "                c."+assignment+"( cIndex++ , alpha*total );\n";
         } else {
-            valLine = "                dataC[cIndex++] "+assignment+" total;\n";
+            valLine = "                c."+assignment+"( cIndex++ , total );\n";
         }
 
         String foo =
@@ -282,12 +280,12 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult","aux",add,alpha, true, false,false);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "                dataC[i*c.numCols+j] "+assignment+" alpha*total;\n";
+            valLine = "                c."+assignment+"( i*c.numCols+j , alpha*total );\n";
         } else {
-            valLine = "                dataC[i*c.numCols+j] "+assignment+" total;\n";
+            valLine = "                c."+assignment+"( i*c.numCols+j , total );\n";
         }
 
         String foo =
@@ -295,7 +293,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        for( int j = 0; j < b.numCols; j++ ) {\n" +
                         "            // create a copy of the column in B to avoid cache issues\n" +
                         "            for( int k = 0; k < b.numRows; k++ ) {\n" +
-                        "                aux[k] = b.get(k,j);\n" +
+                        "                aux[k] = b.unsafe_get(k,j);\n" +
                         "            }\n" +
                         "\n" +
                         "            int indexA = 0;\n" +
@@ -316,14 +314,14 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult","reorder",add,alpha, false, true,false);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
             valLine1 = "valA = alpha*a.get(i);\n";
-            valLine2 = "valA = alpha*a.get(k,i);\n";
+            valLine2 = "valA = alpha*a.unsafe_get(k,i);\n";
         } else {
             valLine1 = "valA = a.get(i);\n";
-            valLine2 = "valA = a.get(k,i);\n";
+            valLine2 = "valA = a.unsafe_get(k,i);\n";
         }
 
         String foo =
@@ -339,7 +337,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "            int end = indexB+b.numCols;\n" +
                         "            int indexC = indexC_start;\n" +
                         "            while( indexB<end ) {\n" +
-                        "                dataC[indexC++] "+assignment+" valA*b.get(indexB++);\n" +
+                        "                c."+assignment+"( indexC++ , valA*b.get(indexB++));\n" +
                         "            }\n" +
                         "            // now increment it\n" +
                         "            for( int k = 1; k < a.numRows; k++ ) {\n" +
@@ -348,7 +346,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "                indexC = indexC_start;\n" +
                         "                // this is the loop for j\n" +
                         "                while( indexB<end ) {\n" +
-                        "                    dataC[indexC++] += valA*b.get(indexB++);\n" +
+                        "                    c.plus( indexC++ , valA*b.get(indexB++));\n" +
                         "                }\n" +
                         "            }\n" +
                         "        }\n" +
@@ -361,12 +359,12 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult","small",add,alpha, false, true,false);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "dataC[cIndex++] "+assignment+" alpha*total;\n";
+            valLine = "c."+assignment+"( cIndex++ , alpha*total );\n";
         } else {
-            valLine = "dataC[cIndex++] "+assignment+" total;\n";
+            valLine = "c."+assignment+"( cIndex++ , total );\n";
         }
 
         String foo =
@@ -400,12 +398,12 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult",null,add,alpha, false, false,true);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "dataC[cIndex++] "+assignment+" alpha*total;\n";
+            valLine = "c."+assignment+"( cIndex++ , alpha*total );\n";
         } else {
-            valLine = "dataC[cIndex++] "+assignment+" total;\n";
+            valLine = "c."+assignment+"( cIndex++ , total );\n";
         }
 
         String foo =
@@ -438,12 +436,12 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult",null,add,alpha, false, true,true);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "dataC[cIndex++] "+assignment+" alpha*total;\n";
+            valLine = "c."+assignment+"( cIndex++ , alpha*total );\n";
         } else {
-            valLine = "dataC[cIndex++] "+assignment+" total;\n";
+            valLine = "c."+assignment+"( cIndex++ , total );\n";
         }
 
         String foo =
@@ -475,12 +473,12 @@ public class CodeGeneratorMatrixMatrixMult {
 
         header = makeHeader("mult","aux",add,alpha, true, true,true);
 
-        String assignment = add ? "+=" : "=";
+        String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "dataC[indexC++] "+assignment+" alpha*total;\n";
+            valLine = "c."+assignment+"( indexC++ , alpha*total );\n";
         } else {
-            valLine = "dataC[indexC++] "+assignment+" total;\n";
+            valLine = "c."+assignment+"( indexC++ , total );\n";
         }
 
         String foo =
@@ -488,14 +486,14 @@ public class CodeGeneratorMatrixMatrixMult {
                         "        int indexC = 0;\n" +
                         "        for( int i = 0; i < a.numCols; i++ ) {\n" +
                         "            for( int k = 0; k < b.numCols; k++ ) {\n" +
-                        "                aux[k] = a.get(k,i);\n" +
+                        "                aux[k] = a.unsafe_get(k,i);\n" +
                         "            }\n" +
                         "\n" +
                         "            for( int j = 0; j < b.numRows; j++ ) {\n" +
                         "                double total = 0;\n" +
                         "\n" +
                         "                for( int k = 0; k < b.numCols; k++ ) {\n" +
-                        "                    total += aux[k] * b.get(j,k);\n" +
+                        "                    total += aux[k] * b.unsafe_get(j,k);\n" +
                         "                }\n" +
                         "                "+valLine +
                         "            }\n" +

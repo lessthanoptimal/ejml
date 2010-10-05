@@ -32,7 +32,10 @@ import java.util.Random;
  */
 public class BenchmarkInliningGetSet {
 
-    public static long bound( DenseMatrix64F A , int n ) {
+    /**
+     * Bounds checks are performed on get(i,j)
+     */
+    public static long benchGet( DenseMatrix64F A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -56,7 +59,10 @@ public class BenchmarkInliningGetSet {
         return after-before;
     }
 
-    public static long fast( DenseMatrix64F A , int n ) {
+    /**
+     * Unsafe version of get(i,j) with no bounds checking
+     */
+    public static long getUnsafeGet( DenseMatrix64F A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -80,6 +86,9 @@ public class BenchmarkInliningGetSet {
         return after-before;
     }
 
+    /**
+     * Get by index is used here.
+     */
     public static long get1D( DenseMatrix64F A , int n ) {
 
         long before = System.currentTimeMillis();
@@ -106,6 +115,9 @@ public class BenchmarkInliningGetSet {
         return after-before;
     }
 
+    /**
+     * Hand inlined version of get(i,j)
+     */
     public static long inlined( DenseMatrix64F A , int n ) {
 
         long before = System.currentTimeMillis();
@@ -137,9 +149,9 @@ public class BenchmarkInliningGetSet {
 
         long time1D = get1D(A,N);
         long timeInlined = inlined(A,N);
-        long timeBound = bound(A,N);
-        long timeFast = fast(A,N);
+        long timeGet = benchGet(A,N);
+        long timeUnsafeGet = getUnsafeGet(A,N);
         
-        System.out.println("Bound = "+timeBound+"  Inlined "+timeInlined+" fast "+timeFast+" 1D "+time1D);
+        System.out.println("get = "+timeGet+"  Inlined "+timeInlined+" unsafe_get "+timeUnsafeGet+" get1D "+time1D);
     }
 }

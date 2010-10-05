@@ -963,7 +963,7 @@ public class SimpleMatrix {
      * Saves this matrix to a file.
      * </p>
      *
-     * @see MatrixIO#save(DenseMatrix64F, String)
+     * @see MatrixIO#save( Matrix64F, String)
      *
      * @param fileName 
      * @throws IOException
@@ -987,7 +987,15 @@ public class SimpleMatrix {
      */
     public static SimpleMatrix load( String fileName )
             throws IOException {
-        return SimpleMatrix.wrap( MatrixIO.load(fileName));
+        Matrix64F mat = MatrixIO.load(fileName);
+
+        // see if its a DenseMatrix64F
+        if( mat instanceof DenseMatrix64F ) {
+            return SimpleMatrix.wrap((DenseMatrix64F)mat);
+        } else {
+            // if not convert it into one and wrap it
+            return SimpleMatrix.wrap( new DenseMatrix64F(mat));
+        }
     }
 
 

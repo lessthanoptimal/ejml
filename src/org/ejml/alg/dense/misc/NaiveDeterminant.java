@@ -85,9 +85,9 @@ public class NaiveDeterminant {
     public static double recursive( DenseMatrix64F mat )
     {
         if(mat.numRows == 1) {
-            return mat.data[0];
+            return mat.get(0);
         } else if(mat.numRows == 2) {
-            return mat.data[0] * mat.data[3] - mat.data[1] * mat.data[2];
+            return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
         } else if( mat.numRows == 3 ) {
             return UnrolledDeterminantFromMinor.det3(mat);
         }

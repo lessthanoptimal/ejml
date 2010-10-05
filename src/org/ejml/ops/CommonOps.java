@@ -1111,11 +1111,9 @@ public class CommonOps {
     public static double elementMaxAbs( D1Matrix64F a ) {
         final int size = a.getNumElements();
 
-        final double dataA[] = a.data;
-
         double max = 0;
         for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(dataA[i]);
+            double val = Math.abs(a.get( i ));
             if( val > max ) {
                 max = val;
             }

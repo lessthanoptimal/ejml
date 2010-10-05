@@ -82,16 +82,6 @@ public class BlockMatrix64F extends D1Matrix64F {
     }
 
     @Override
-    public void set( int index , double val ) {
-        data[index] = val;
-    }
-
-    @Override
-    public double get( int index ) {
-        return data[index];    
-    }
-
-    @Override
     public int getIndex( int row, int col ) {
         // find the block it is inside
         int blockRow = row / blockLength;

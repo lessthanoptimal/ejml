@@ -25,6 +25,7 @@ import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.mult.CheckMatrixMultShape;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 import org.ejml.data.UtilTestMatrix;
 import org.junit.Test;
 
@@ -104,10 +105,10 @@ public class TestCommonOps {
             if( hasAlpha )
                 checkMethod = MatrixMatrixMult.class.getMethod(
                         name,double.class,
-                        DenseMatrix64F.class, DenseMatrix64F.class,DenseMatrix64F.class);
+                        RowD1Matrix64F.class, RowD1Matrix64F.class,RowD1Matrix64F.class);
             else
                 checkMethod = MatrixMatrixMult.class.getMethod(
-                        name, DenseMatrix64F.class, DenseMatrix64F.class,DenseMatrix64F.class);
+                        name, RowD1Matrix64F.class, RowD1Matrix64F.class,RowD1Matrix64F.class);
         } catch (NoSuchMethodException e) {
             checkMethod = null;
         }
@@ -116,10 +117,10 @@ public class TestCommonOps {
             if( hasAlpha )
                 checkMethod = MatrixMatrixMult.class.getMethod(
                         name+"_reorder",double.class,
-                        DenseMatrix64F.class, DenseMatrix64F.class,DenseMatrix64F.class);
+                        RowD1Matrix64F.class, RowD1Matrix64F.class,RowD1Matrix64F.class);
             else
                 checkMethod = MatrixMatrixMult.class.getMethod(
-                        name+"_reorder", DenseMatrix64F.class, DenseMatrix64F.class,DenseMatrix64F.class);
+                        name+"_reorder", RowD1Matrix64F.class, RowD1Matrix64F.class,RowD1Matrix64F.class);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }

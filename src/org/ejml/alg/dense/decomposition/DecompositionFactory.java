@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;

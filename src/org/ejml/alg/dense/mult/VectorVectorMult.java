@@ -19,7 +19,9 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -61,7 +63,7 @@ public class VectorVectorMult {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static double innerProd( DenseMatrix64F x, DenseMatrix64F y )
+    public static double innerProd( D1Matrix64F x, D1Matrix64F y )
     {
         int m = x.getNumElements();
 
@@ -84,7 +86,7 @@ public class VectorVectorMult {
      * @return  The results.
      */
     // TODO better name for this
-    public static double innerProdA( DenseMatrix64F x, DenseMatrix64F A , DenseMatrix64F y )
+    public static double innerProdA( D1Matrix64F x, D1Matrix64F A , D1Matrix64F y )
     {
         int n = A.numRows;
 
@@ -102,7 +104,7 @@ public class VectorVectorMult {
             double total = 0;
 
             for( int j = 0; j < n; j++ ) {
-                total += x.get(j)*A.get(j,i);
+                total += x.get(j)*A.unsafe_get(j,i);
             }
 
             result += total*y.get(i);
@@ -123,7 +125,7 @@ public class VectorVectorMult {
      * @return  The results.
      */
     // TODO better name for this
-    public static double innerProdTranA( DenseMatrix64F x, DenseMatrix64F A , DenseMatrix64F y )
+    public static double innerProdTranA( D1Matrix64F x, D1Matrix64F A , D1Matrix64F y )
     {
         int n = A.numRows;
 
@@ -141,7 +143,7 @@ public class VectorVectorMult {
             double total = 0;
 
             for( int j = 0; j < n; j++ ) {
-                total += x.get(j)*A.get(i,j);
+                total += x.get(j)*A.unsafe_get(i,j);
             }
 
             result += total*y.get(i);
@@ -171,7 +173,7 @@ public class VectorVectorMult {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProd( DenseMatrix64F x, DenseMatrix64F y, DenseMatrix64F A ) {
+    public static void outerProd( D1Matrix64F x, D1Matrix64F y, RowD1Matrix64F A ) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -179,7 +181,7 @@ public class VectorVectorMult {
         for( int i = 0; i < m; i++ ) {
             double xdat = x.data[i];
             for( int j = 0; j < n; j++ ) {
-                A.data[index++] = xdat*y.data[j];
+                A.set(index++ ,  xdat*y.get(j) );
             }
         }
     }
@@ -206,7 +208,7 @@ public class VectorVectorMult {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void addOuterProd( double gamma , DenseMatrix64F x, DenseMatrix64F y, DenseMatrix64F A ) {
+    public static void addOuterProd( double gamma , D1Matrix64F x, D1Matrix64F y, RowD1Matrix64F A ) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -215,14 +217,14 @@ public class VectorVectorMult {
             for( int i = 0; i < m; i++ ) {
                 double xdat = x.data[i];
                 for( int j = 0; j < n; j++ ) {
-                    A.data[index++] += xdat*y.get(j);
+                    A.plus( index++ , xdat*y.get(j) );
                 }
             }
         } else {
             for( int i = 0; i < m; i++ ) {
                 double xdat = x.data[i];
                 for( int j = 0; j < n; j++ ) {
-                    A.data[index++] += gamma*xdat*y.get(j);
+                    A.plus( index++ , gamma*xdat*y.get(j));
                 }
             }
         }
@@ -240,11 +242,11 @@ public class VectorVectorMult {
      * </p>
      * @param u A vector. Not modified.
      * @param x a vector. Not modified.
-     * @param y Where the result are writen to.
+     * @param y Vector where the result are written to.
      */
     public static void householder( double gamma,
-                                    DenseMatrix64F u ,
-                                    DenseMatrix64F x , DenseMatrix64F y )
+                                    D1Matrix64F u ,
+                                    D1Matrix64F x , D1Matrix64F y )
     {
         int n = u.getNumElements();
 
@@ -253,7 +255,7 @@ public class VectorVectorMult {
             sum += u.get(i)*x.get(i);
         }
         for( int i = 0; i < n; i++ ) {
-            y.data[i] = x.get(i) + gamma*u.get(i)*sum;
+            y.set( i , x.get(i) + gamma*u.get(i)*sum);
         }
     }
 

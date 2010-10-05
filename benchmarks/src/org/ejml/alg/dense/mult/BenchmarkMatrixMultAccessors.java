@@ -1,6 +1,26 @@
-package org.ejml.ops;
+/*
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
 
@@ -10,7 +30,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class BenchmarkMatrixMultInlining {
+public class BenchmarkMatrixMultAccessors {
 
     /**
      * All reads/writes have been inline by hand
@@ -59,7 +79,7 @@ public class BenchmarkMatrixMultInlining {
     }
 
     /**
-     * Wrapper functions are used to access matrix internals
+     * Wrapper functions with no bounds checking are used to access matrix internals
      */
     public static long wrapped( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
     {
@@ -90,8 +110,7 @@ public class BenchmarkMatrixMultInlining {
                 valA = a.get(indexA++);
 
                 while( indexB < end ) { // j loop
-                    c.data[indexC++] += valA*b.get(indexB++);
-//                    c.set( indexC , c.get(indexC) + valA*b.get(indexB++));indexC++;
+                    c.plus( indexC++ , valA*b.get(indexB++));
                 }
             }
             indexCbase += c.numCols;
@@ -115,8 +134,8 @@ public class BenchmarkMatrixMultInlining {
 
             for( int k = 1; k < b.numRows; k++ ) {
                 for( int j = 0; j < b.numCols; j++ ) {
-                    c.set(i,j, c.get(i,j) + a.get(i,k)*b.get(k,j));
-//                    c.data[i*b.numCols+j] +=a.get(i,k)*b.get(k,j);
+//                    c.set(i,j, c.get(i,j) + a.get(i,k)*b.get(k,j));
+                    c.data[i*b.numCols+j] +=a.get(i,k)*b.get(k,j);
                 }
             }
         }

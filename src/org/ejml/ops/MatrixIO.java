@@ -19,7 +19,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.Matrix64F;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class MatrixIO {
      * @param A A matrix.
      * @param title Name of the window.
      */
-    public static void show( DenseMatrix64F A , String title ) {
+    public static void show( D1Matrix64F A , String title ) {
         JFrame frame = new JFrame(title);
 
         int width = 300;
@@ -71,7 +71,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void save( DenseMatrix64F A , String fileName )
+    public static void save( Matrix64F A , String fileName )
         throws IOException
     {
         FileOutputStream fileStream = new FileOutputStream(fileName);
@@ -99,15 +99,15 @@ public class MatrixIO {
      * @return  DenseMatrix64F
      * @throws IOException
      */
-    public static DenseMatrix64F load( String fileName )
+    public static <T extends Matrix64F> T load( String fileName )
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
         ObjectInputStream stream = new ObjectInputStream(fileStream);
 
-        DenseMatrix64F ret;
+        T ret;
         try {
-            ret = (DenseMatrix64F)stream.readObject();
+            ret = (T)stream.readObject();
             if( stream.available() !=  0 ) {
                 throw new RuntimeException("File not completely read?");
             }
@@ -116,7 +116,7 @@ public class MatrixIO {
         }
 
         stream.close();
-        return ret;
+        return (T)ret;
     }
 
     public static void print( Matrix64F mat ) {

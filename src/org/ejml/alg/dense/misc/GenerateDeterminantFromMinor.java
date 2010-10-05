@@ -75,7 +75,7 @@ public class GenerateDeterminantFromMinor {
                 "\n" +
                 "package org.ejml.alg.dense.misc;\n" +
                 "\n" +
-                "import org.ejml.data.DenseMatrix64F;\n" +
+                "import org.ejml.data.RowD1Matrix64F;\n" +
                 "\n" +
                 "\n" +
                 "/**\n" +
@@ -92,28 +92,24 @@ public class GenerateDeterminantFromMinor {
     }
 
     private void print2() {
-        stream.print("    public static double det2( DenseMatrix64F mat )\n" +
+        stream.print("    public static double det2( RowD1Matrix64F mat )\n" +
                 "    {\n" +
-                "        double m[] = mat.data;\n" +
-                "        \n" +
-                "        return m[0]*m[3] - m[1]*m[2];\n" +
+                "        return mat.get(0)*mat.get(3) - mat.get(1)*mat.get(2);\n" +
                 "    }\n\n");
     }
 
     private void print3() {
-        stream.print("    public static double det3( DenseMatrix64F mat )\n" +
+        stream.print("    public static double det3( RowD1Matrix64F mat )\n" +
                 "    {\n" +
-                "        double m[] = mat.data;\n" +
-                "\n" +
-                "        double a11 = m[0];\n" +
-                "        double a12 = m[1];\n" +
-                "        double a13 = m[2];\n" +
-                "        double a21 = m[3];\n" +
-                "        double a22 = m[4];\n" +
-                "        double a23 = m[5];\n" +
-                "        double a31 = m[6];\n" +
-                "        double a32 = m[7];\n" +
-                "        double a33 = m[8];\n" +
+                "        double a11 = mat.get( 0 );\n" +
+                "        double a12 = mat.get( 1 );\n" +
+                "        double a13 = mat.get( 2 );\n" +
+                "        double a21 = mat.get( 3 );\n" +
+                "        double a22 = mat.get( 4 );\n" +
+                "        double a23 = mat.get( 5 );\n" +
+                "        double a31 = mat.get( 6 );\n" +
+                "        double a32 = mat.get( 7 );\n" +
+                "        double a33 = mat.get( 8 );\n" +
                 "\n" +
                 "        double a = a11*(a22*a33 - a23*a32);\n" +
                 "        double b = a12*(a21*a33 - a23*a31);\n" +
@@ -128,10 +124,10 @@ public class GenerateDeterminantFromMinor {
     {
         stream.print(
                 "    \n" +
-                        "    public static double det( DenseMatrix64F mat ) {\n");
+                        "    public static double det( RowD1Matrix64F mat ) {\n");
         stream.print(
                 "        if( mat.numRows == 2 ) {\n" +
-                        "            return det2(mat);\n");
+                "            return det2(mat);\n");
         for( int i = 3; i <= N; i++ ) {
             stream.print("        } else if( mat.numRows == "+i+" ) {\n" +
                     "            return det"+i+"(mat);            \n");
@@ -144,9 +140,8 @@ public class GenerateDeterminantFromMinor {
 
     private void printFunction( int N )
     {
-        stream.print("    public static double det"+N+"( DenseMatrix64F mat )\n" +
+        stream.print("    public static double det"+N+"( RowD1Matrix64F mat )\n" +
                 "    {\n" +
-                "        double []data = mat.data;\n"+
                 "\n");
 
 
@@ -159,13 +154,13 @@ public class GenerateDeterminantFromMinor {
             int origIndex = i*N+1;
             for( int j = 1; j <= M; j++ , origIndex++,index++) {
                 matrix[index] = index;
-                stream.print("        double  "+a(index)+" = data[ "+origIndex+" ];\n");
+                stream.print("        double  "+a(index)+" = mat.get( "+origIndex+" );\n");
             }
         }
 
         stream.print("\n");
         stream.print("        double ret = 0;\n");
-        stream.print("        ret += data[ 0 ] * (");
+        stream.print("        ret += mat.get( 0 ) * (");
         minor(matrix,0,M);
         stream.print(");\n");
         
@@ -173,7 +168,7 @@ public class GenerateDeterminantFromMinor {
             for( int i = 1; i <= M; i++ ) {
                 index = (minor-2)+(i-1)*M;
                 int origIndex = minor-2+i*N;
-                stream.print("        "+a(index)+" = data[ "+origIndex+" ];\n");
+                stream.print("        "+a(index)+" = mat.get( "+origIndex+" );\n");
             }
 
             if( minor % 2 == 0 ) {
@@ -181,7 +176,7 @@ public class GenerateDeterminantFromMinor {
             } else {
                stream.print("        ret += ");
             }
-            stream.print("data[ "+(minor-1)+" ] * (");
+            stream.print("mat.get( "+(minor-1)+" ) * (");
             minor(matrix,0,M);
             stream.print(");\n");
         }

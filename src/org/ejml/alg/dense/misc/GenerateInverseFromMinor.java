@@ -77,7 +77,7 @@ public class GenerateInverseFromMinor {
                 "\n" +
                 "package org.ejml.alg.dense.misc;\n" +
                 "\n" +
-                "import org.ejml.data.DenseMatrix64F;\n" +
+                "import org.ejml.data.RowD1Matrix64F;\n" +
                 "\n" +
                 "\n" +
                 "/**\n" +
@@ -97,8 +97,8 @@ public class GenerateInverseFromMinor {
     {
         stream.print(
                 "    \n" +
-                        "    public static void inv( DenseMatrix64F mat , DenseMatrix64F inv ) {\n");
-        stream.print("        double max = Math.abs(mat.data[0]);\n" +
+                        "    public static void inv( RowD1Matrix64F mat , RowD1Matrix64F inv ) {\n");
+        stream.print("        double max = Math.abs(mat.get(0));\n" +
                 "        int N = mat.getNumElements();\n" +
                 "        \n" +
                 "        for( int i = 1; i < N; i++ ) {\n" +
@@ -120,9 +120,8 @@ public class GenerateInverseFromMinor {
 
     private void printFunction( int N )
     {
-        stream.print("    public static void inv"+N+"( DenseMatrix64F mat , DenseMatrix64F inv , double scale )\n" +
+        stream.print("    public static void inv"+N+"( RowD1Matrix64F mat , RowD1Matrix64F inv , double scale )\n" +
                 "    {\n" +
-                "        double []data = mat.data;\n"+
                 "\n");
 
 
@@ -133,7 +132,7 @@ public class GenerateInverseFromMinor {
         for( int i = 1; i <= N; i++ ) {
             for( int j = 1; j <= N; j++ , index++) {
                 matrix[index] = index;
-                stream.print("        double "+a(index)+" = data[ "+index+" ]*scale;\n");
+                stream.print("        double "+a(index)+" = mat.get( "+index+" )*scale;\n");
             }
         }
         stream.println();
@@ -160,12 +159,11 @@ public class GenerateInverseFromMinor {
         }
         stream.println(")/scale;");
         stream.println();
-        stream.print("        data = inv.data;\n");
 
         index = 0;
         for( int i = 1; i <= N; i++ ) {
             for( int j = 1; j <= N; j++ , index++) {
-                stream.print("        data["+index+"] = m"+j+""+i+" / det;\n");
+                stream.print("        inv.set("+index+" , m"+j+""+i+" / det );\n");
             }
         }
         stream.println();

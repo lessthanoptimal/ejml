@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -35,19 +35,17 @@ public class TransposeAlgs {
      *
      * @param mat The matrix that is transposed in-place.  Modified.
      */
-    public static void square( DenseMatrix64F mat )
+    public static void square( RowD1Matrix64F mat )
     {
-        final double data[] = mat.data;
-
         int index = 1;
         int indexEnd = mat.numCols;
         for( int i = 0; i < mat.numRows;
              i++ , index += i+1 , indexEnd += mat.numCols ) {
             int indexOther = (i+1)*mat.numCols + i;
             for( ; index < indexEnd; index++, indexOther += mat.numCols) {
-                double val = data[index];
-                data[index] = data[indexOther];
-                data[indexOther] = val;
+                double val = mat.get( index );
+                mat.set( index , mat.get( indexOther ));
+                mat.set( indexOther , val );
             }
         }
     }
@@ -64,7 +62,7 @@ public class TransposeAlgs {
      * @param A_tran Transposed matrix.  Modified.
      * @param blockLength Length of a block.
      */
-    public static void block( DenseMatrix64F A , DenseMatrix64F A_tran ,
+    public static void block( RowD1Matrix64F A , RowD1Matrix64F A_tran ,
                               final int blockLength )
     {
         for( int i = 0; i < A.numRows; i += blockLength ) {
@@ -88,7 +86,7 @@ public class TransposeAlgs {
 //                    for( int k = 0; k < blockHeight; k++ , rowSrc += A.numCols ) {
                     for( ; rowDst < end; rowSrc += A.numCols ) {
                         // faster to write in sequence than to read in sequence
-                        A_tran.data[ rowDst++ ] = A.data[rowSrc];
+                        A_tran.set( rowDst++ , A.get( rowSrc ));
                     }
                     indexDst += A_tran.numCols;
                 }
@@ -102,18 +100,15 @@ public class TransposeAlgs {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standard( DenseMatrix64F A, DenseMatrix64F A_tran)
+    public static void standard( RowD1Matrix64F A, RowD1Matrix64F A_tran)
     {
-        final double rdata[] = A_tran.data;
-        final double data[] = A.data;
-
         int index = 0;
         for( int i = 0; i < A_tran.numRows; i++ ) {
             int index2 = i;
 
             int end = index + A_tran.numCols;
             while( index < end ) {
-                rdata[index++] = data[index2];
+                A_tran.set( index++ , A.get( index2 ));
                 index2 += A.numCols;
             }
         }

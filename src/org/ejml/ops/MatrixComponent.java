@@ -19,7 +19,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.D1Matrix64F;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,13 +40,13 @@ public class MatrixComponent extends JPanel {
         setMinimumSize(new Dimension(width,height));
     }
 
-    public synchronized void setMatrix( DenseMatrix64F A ) {
+    public synchronized void setMatrix( D1Matrix64F A ) {
         double maxValue = CommonOps.elementMaxAbs(A);
         renderMatrix(A,image,maxValue);
         repaint();
     }
 
-    public static void renderMatrix( DenseMatrix64F M , BufferedImage image , double maxValue )
+    public static void renderMatrix( D1Matrix64F M , BufferedImage image , double maxValue )
     {
         int w = image.getWidth();
         int h = image.getHeight();

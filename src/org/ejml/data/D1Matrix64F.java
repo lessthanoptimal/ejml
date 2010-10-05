@@ -52,18 +52,48 @@ public abstract class D1Matrix64F extends Matrix64F {
     public abstract int getIndex( int row, int col );
 
     /**
-     * Returns the value of the matrix at the specified internal array index.
+     * Returns the value of the matrix at the specified internal array index. The element at which row and column
+     * returned by this function depends upon the matrix's internal structure, e.g. row-major, column-major, or block.
      *
      * @param index Internal array index.
      * @return Value at the specified index.
      */
-    public abstract double get( int index );
+    public double get( int index ) {
+        return data[index];
+    }
 
     /**
-     * Sets the element's value at the specified index.
+     * Sets the element's value at the specified index.  The element at which row and column
+     * modified by this function depends upon the matrix's internal structure, e.g. row-major, column-major, or block.
      *
      * @param index Index of element that is to be set.
      * @param val The new value of the index.
      */
-    public abstract void set( int index , double val );
+    public void set( int index , double val ) {
+        data[index] = val;
+    }
+
+    /**
+     * Adds the specified value to the internal data array at the specified index.  This is intended for use
+     * in highly optimized code.  The (row,column) of the modified element is dependent upon the matrix's
+     * internal structure.
+     *
+     * @param index The index which is being modified.
+     * @param val The value that is being added.
+     */
+    public void plus( int index , double val ) {
+        data[index] += val;
+    }
+
+    /**
+     * Subtracts the specified value to the internal data array at the specified index.  This is intended for use
+     * in highly optimized code.  The (row,column) of the modified element is dependent upon the matrix's
+     * internal structure.
+     *
+     * @param index The index which is being modified.
+     * @param val The value that is being subtracted.
+     */
+    public void minus( int index , double val ) {
+        data[index] -= val;
+    }
 }

@@ -8,6 +8,7 @@
 - Added wrap to DenseMatrix64F for handling raw data.
 - Added PrincipleComponentAnalysis example
 - Changed DecompositionInterface
+- Added unsafe_get() and unsafe_set() to Matrix64F and implementing classes.
 - Cholesky decomposition for a block matrix and associated helper functions.
 - Started to remove unnecessary manual inlining of simplistic functions.
 

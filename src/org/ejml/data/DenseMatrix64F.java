@@ -82,7 +82,7 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
-public class DenseMatrix64F extends D1Matrix64F {
+public class DenseMatrix64F extends RowD1Matrix64F {
 
     /**
      * <p>
@@ -174,6 +174,20 @@ public class DenseMatrix64F extends D1Matrix64F {
      * Default constructor where nothing is assigned.  In general this should not be used.
      */
     public DenseMatrix64F(){}
+
+    /**
+     * Creates a new DenseMatrix64F which contains the same information as the provided Matrix64F.
+     *
+     * @param mat Matrix whose values will be copied.  Not modified.
+     */
+    public DenseMatrix64F(Matrix64F mat) {
+        this(mat.numRows,mat.numCols);
+        for( int i = 0; i < numRows; i++ ) {
+            for( int j = 0; j < numCols; j++ ) {
+                set(i,j, mat.get(i,j));
+            }
+        }
+    }
 
     /**
      * Creates a new DenseMatrix64F around the provided data.  The data must encode
@@ -295,18 +309,8 @@ public class DenseMatrix64F extends D1Matrix64F {
     }
 
     @Override
-    public double get( int index ) {
-        return data[ index ];
-    }
-
-    @Override
     public int getIndex( int row , int col ) {
         return row * numCols + col;
-    }
-
-    @Override
-    public void set( int index , double val ) {
-        data[ index ] = val;
     }
 
     /**

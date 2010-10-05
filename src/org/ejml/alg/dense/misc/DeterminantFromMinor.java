@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -110,7 +111,7 @@ public class DeterminantFromMinor {
      * @param mat The matrix whose determinant is to be computed.
      * @return The determinant.
      */
-    public double compute( DenseMatrix64F mat ) {
+    public double compute( RowD1Matrix64F mat ) {
         if( width != mat.numCols || width != mat.numRows ) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
@@ -222,9 +223,7 @@ public class DeterminantFromMinor {
         }
     }
 
-    private void createMinor( DenseMatrix64F mat ) {
-
-        double matData[] = mat.data;
+    private void createMinor( RowD1Matrix64F mat ) {
 
         int w = minWidth-1;
         int firstRow = (width-w)*width;
@@ -235,7 +234,7 @@ public class DeterminantFromMinor {
             int dstIndex = i;
 
             for( int j = 0; j < w; j++ ) {
-                tempMat.data[dstIndex] = matData[srcIndex];
+                tempMat.set( dstIndex , mat.get( srcIndex ) );
                 dstIndex += w;
                 srcIndex += width;
             }

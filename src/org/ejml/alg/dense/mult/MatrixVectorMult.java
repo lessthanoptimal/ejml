@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -57,7 +58,7 @@ public class MatrixVectorMult {
      * @param b A vector that has length n. Not modified.
      * @param c A column vector that has length m. Modified.
      */
-    public static void mult( DenseMatrix64F a, DenseMatrix64F b, DenseMatrix64F c)
+    public static void mult( RowD1Matrix64F a, RowD1Matrix64F b, RowD1Matrix64F c)
     {
         if( c.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -77,8 +78,6 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataC = c.data;
-
         int indexA = 0;
         int cIndex = 0;
         double b0 = b.get(0);
@@ -89,7 +88,7 @@ public class MatrixVectorMult {
                 total += a.get(indexA++) * b.get(j);
             }
 
-            dataC[cIndex++] = total;
+            c.set(cIndex++ , total);
         }
     }
 
@@ -110,7 +109,7 @@ public class MatrixVectorMult {
      * @param B A vector that has length n. Not modified.
      * @param C A column vector that has length m. Modified.
      */
-    public static void multAdd( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
+    public static void multAdd( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
     {
 
         if( C.numCols != 1 ) {
@@ -130,8 +129,6 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        double[] dataC = C.data;
-
         int indexA = 0;
         int cIndex = 0;
         for( int i = 0; i < A.numRows; i++ ) {
@@ -141,7 +138,7 @@ public class MatrixVectorMult {
                 total += A.get(indexA++) * B.get(j);
             }
 
-            dataC[cIndex++] += total;
+            C.plus(cIndex++ , total );
         }
     }
 
@@ -168,7 +165,7 @@ public class MatrixVectorMult {
      * @param B A that has length m and is a column. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multTransA_small( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
+    public static void multTransA_small( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -186,8 +183,6 @@ public class MatrixVectorMult {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
-
-        final double[] dataC = C.data;
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -199,7 +194,7 @@ public class MatrixVectorMult {
                 indexA += A.numCols;
             }
 
-            dataC[cIndex++] = total;
+            C.set(cIndex++ , total);
         }
     }
 
@@ -211,7 +206,7 @@ public class MatrixVectorMult {
      * @param B A that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multTransA_reorder( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
+    public static void multTransA_reorder( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -230,18 +225,16 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataC = C.data;
-
         double B_val = B.get(0);
         for( int i = 0; i < A.numCols; i++ ) {
-            dataC[i] = A.get(i) * B_val;
+            C.set( i , A.get(i) * B_val );
         }
 
         int indexA = A.numCols;
         for( int i = 1; i < A.numRows; i++ ) {
             B_val = B.get(i);
             for( int j = 0; j < A.numCols; j++ ) {
-                dataC[j] += A.get(indexA++) * B_val;
+                C.plus(  j , A.get(indexA++) * B_val );
             }
         }
     }
@@ -267,7 +260,7 @@ public class MatrixVectorMult {
      * @param B A that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multAddTransA_small( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
+    public static void multAddTransA_small( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -285,8 +278,6 @@ public class MatrixVectorMult {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
-
-        final double[] dataC = C.data;
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -298,7 +289,7 @@ public class MatrixVectorMult {
                 indexA += A.numCols;
             }
 
-            dataC[cIndex++] += total;
+            C.plus( cIndex++ , total );
         }
     }
 
@@ -310,7 +301,7 @@ public class MatrixVectorMult {
      * @param B A that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multAddTransA_reorder( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C )
+    public static void multAddTransA_reorder( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -329,13 +320,11 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        final double[] dataC = C.data;
-
         int indexA = 0;
         for( int j = 0; j < A.numRows; j++ ) {
             double B_val = B.get(j);
             for( int i = 0; i < A.numCols; i++ ) {
-                dataC[i] += A.get(indexA++) * B_val;
+                C.plus( i , A.get(indexA++) * B_val );
             }
         }
     }
