@@ -19,6 +19,7 @@
 
 package org.ejml.alg.block.decomposition.chol;
 
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.D1Submatrix64F;
 
 
@@ -35,7 +36,7 @@ public class BlockInnerCholesky {
         int n = T.row1-T.row0;
         int indexT = T.row0* T.original.numCols + T.col0*n;
 
-        return upper(T.original.data,indexT,n);
+        return upper(T.original,indexT,n);
     }
 
     public static boolean lower( D1Submatrix64F T )
@@ -43,7 +44,7 @@ public class BlockInnerCholesky {
         int n = T.row1-T.row0;
         int indexT = T.row0* T.original.numCols + T.col0*n;
 
-        return lower(T.original.data,indexT,n);
+        return lower(T.original,indexT,n);
     }
 
     /**
@@ -55,17 +56,17 @@ public class BlockInnerCholesky {
      * @param n Number of rows and columns of the matrix.
      * @return If the decomposition succeeded.
      */
-    public static boolean upper( double[]T , int indexT , int n ) {
+    public static boolean upper( D1Matrix64F T , int indexT , int n ) {
         double el_ii;
         double div_el_ii=0;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = T[ indexT + i*n+j];
+                double sum = T.get( indexT + i*n+j );
 
                 // todo optimize
                 for( int k = 0; k < i; k++ ) {
-                    sum -= T[ indexT + k*n+i] * T[ indexT + k*n+j];
+                    sum -= T.get( indexT + k*n+i) * T.get( indexT + k*n+j);
                 }
 
                 if( i == j ) {
@@ -74,10 +75,10 @@ public class BlockInnerCholesky {
                         return false;
 
                     el_ii = Math.sqrt(sum);
-                    T[ indexT + i*n+i] = el_ii;
+                    T.set( indexT + i*n+i , el_ii );
                     div_el_ii = 1.0/el_ii;
                 } else {
-                    T[ indexT + i*n+j] = sum*div_el_ii;
+                    T.set( indexT + i*n+j , sum*div_el_ii );
                 }
             }
         }
@@ -95,17 +96,17 @@ public class BlockInnerCholesky {
      * @param n Number of rows and columns of the matrix.
      * @return If the decomposition succeeded.
      */
-    public static boolean lower( double[]T , int indexT , int n ) {
+    public static boolean lower( D1Matrix64F T , int indexT , int n ) {
         double el_ii;
         double div_el_ii=0;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = T[ indexT + j*n+i];
+                double sum = T.get( indexT + j*n+i);
 
                 // todo optimize
                 for( int k = 0; k < i; k++ ) {
-                    sum -= T[ indexT + i*n+k] * T[ indexT + j*n+k];
+                    sum -= T.get( indexT + i*n+k ) * T.get( indexT + j*n+k);
                 }
 
                 if( i == j ) {
@@ -114,10 +115,10 @@ public class BlockInnerCholesky {
                         return false;
 
                     el_ii = Math.sqrt(sum);
-                    T[ indexT + i*n+i] = el_ii;
+                    T.set( indexT + i*n+i , el_ii );
                     div_el_ii = 1.0/el_ii;
                 } else {
-                    T[ indexT + j*n+i] = sum*div_el_ii;
+                    T.set( indexT + j*n+i , sum*div_el_ii );
                 }
             }
         }

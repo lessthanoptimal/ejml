@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
 
@@ -58,7 +59,7 @@ public class MatrixVectorMult {
      * @param b A vector that has length n. Not modified.
      * @param c A column vector that has length m. Modified.
      */
-    public static void mult( RowD1Matrix64F a, RowD1Matrix64F b, RowD1Matrix64F c)
+    public static void mult( RowD1Matrix64F a, D1Matrix64F b, D1Matrix64F c)
     {
         if( c.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -109,7 +110,7 @@ public class MatrixVectorMult {
      * @param B A vector that has length n. Not modified.
      * @param C A column vector that has length m. Modified.
      */
-    public static void multAdd( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
+    public static void multAdd( RowD1Matrix64F A , D1Matrix64F B , D1Matrix64F C )
     {
 
         if( C.numCols != 1 ) {
@@ -165,7 +166,7 @@ public class MatrixVectorMult {
      * @param B A that has length m and is a column. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multTransA_small( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
+    public static void multTransA_small( RowD1Matrix64F A , D1Matrix64F B , D1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -199,14 +200,14 @@ public class MatrixVectorMult {
     }
 
     /**
-     * An alternative implemenation of {@link #multTransA_small} that performs well on large
+     * An alternative implementation of {@link #multTransA_small} that performs well on large
      * matrices.  There is a relative performance hit when used on small matrices.
      *
      * @param A A matrix that is m by n. Not modified.
-     * @param B A that has length m. Not modified.
+     * @param B A Vector that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multTransA_reorder( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
+    public static void multTransA_reorder( RowD1Matrix64F A , D1Matrix64F B , D1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -257,10 +258,10 @@ public class MatrixVectorMult {
      * </p>
      *
      * @param A A matrix that is m by n. Not modified.
-     * @param B A that has length m. Not modified.
+     * @param B A vector that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multAddTransA_small( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
+    public static void multAddTransA_small( RowD1Matrix64F A , D1Matrix64F B , D1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -294,14 +295,14 @@ public class MatrixVectorMult {
     }
 
     /**
-     * An alternative implemenation of {@link #multAddTransA_small} that performs well on large
+     * An alternative implementation of {@link #multAddTransA_small} that performs well on large
      * matrices.  There is a relative performance hit when used on small matrices.
      *
      * @param A A matrix that is m by n. Not modified.
-     * @param B A that has length m. Not modified.
+     * @param B A vector that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multAddTransA_reorder( RowD1Matrix64F A , RowD1Matrix64F B , RowD1Matrix64F C )
+    public static void multAddTransA_reorder( RowD1Matrix64F A , D1Matrix64F B , D1Matrix64F C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");

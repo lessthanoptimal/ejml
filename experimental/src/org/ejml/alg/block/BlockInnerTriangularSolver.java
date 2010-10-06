@@ -19,6 +19,7 @@
 
 package org.ejml.alg.block;
 
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.D1Submatrix64F;
 
 
@@ -60,9 +61,6 @@ public class BlockInnerTriangularSolver {
 
         int offsetT = T.row0*T.original.numCols+M*T.col0;
 
-        double dataT[] = T.original.data;
-        double dataB[] = B.original.data;
-
         if( transB ) {
             if( upper ) {
                 if ( transT ) {
@@ -79,7 +77,7 @@ public class BlockInnerTriangularSolver {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        solveLTransB(dataT,dataB,M,N,offsetT,offsetB);
+                        solveLTransB(T.original,B.original,M,N,offsetT,offsetB);
                     }
                 }
             }
@@ -93,14 +91,14 @@ public class BlockInnerTriangularSolver {
                         int offsetB = B.row0*B.original.numCols + M*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        solveTransU(dataT,dataB,M,N,offsetT,offsetB);
+                        solveTransU(T.original,B.original,M,N,offsetT,offsetB);
                     }
                 } else {
                     for( int i = B.col0; i < B.col1; i += blockLength ) {
                         int offsetB = B.row0*B.original.numCols + M*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        solveU(dataT,dataB,M,N,offsetT,offsetB);
+                        solveU(T.original,B.original,M,N,offsetT,offsetB);
                     }
                 }
             } else {
@@ -111,7 +109,7 @@ public class BlockInnerTriangularSolver {
                         int offsetB = B.row0*B.original.numCols + M*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        solveL(dataT,dataB,M,N,offsetT,offsetB);
+                        solveL(T.original,B.original,M,N,offsetT,offsetB);
                     }
                 }
             }
@@ -134,17 +132,17 @@ public class BlockInnerTriangularSolver {
      * @param offsetL initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
-    public static void solveL( double L[] , double []b ,
+    public static void solveL( D1Matrix64F L , D1Matrix64F b ,
                                int m , int n ,
                                int offsetL , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
-                double sum = b[offsetB + i*n+j];
+                double sum = b.get( offsetB + i*n+j );
                 for( int k=0; k<i; k++ ) {
-                    sum -= L[offsetL + i*m+k]* b[offsetB + k*n+j];
+                    sum -= L.get( offsetL + i*m+k )* b.get(offsetB + k*n+j );
                 }
-                b[offsetB + i*n+j] = sum / L[offsetL + i*m+i];
+                b.set(offsetB + i*n+j , sum / L.get( offsetL + i*m+i ) );
             }
         }
     }
@@ -165,7 +163,7 @@ public class BlockInnerTriangularSolver {
      * @param offsetL initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
-    public static void solveLTransB( double L[] , double []b ,
+    public static void solveLTransB( D1Matrix64F L , D1Matrix64F b ,
                                      int m , int n ,
                                      int offsetL , int offsetB )
     {
@@ -180,15 +178,15 @@ public class BlockInnerTriangularSolver {
 //        }
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
-                double sum = b[offsetB + j*m+i];
+                double sum = b.get(offsetB + j*m+i );
                 int l = offsetL+i*m;
                 int bb = offsetB +j*m;
                 int endL = l+i;
                 while( l != endL ) {
 //                for( int k=0; k<i; k++ ) {
-                    sum -= L[l++]* b[bb++];
+                    sum -= L.get(l++)* b.get(bb++);
                 }
-                b[offsetB + j*m+i] = sum / L[offsetL + i*m+i];
+                b.set(offsetB + j*m+i , sum / L.get(offsetL + i*m+i));
             }
         }
     }
@@ -209,17 +207,17 @@ public class BlockInnerTriangularSolver {
      * @param offsetU initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
-    public static void solveU( double U[] , double []b ,
+    public static void solveU( D1Matrix64F U , D1Matrix64F b ,
                                int m , int n ,
                                int offsetU , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = m-1; i >= 0; i-- ) {
-                double sum = b[offsetB + i*n+j];
+                double sum = b.get( offsetB + i*n+j );
                 for( int k=i+1; k<m; k++ ) {
-                    sum -= U[offsetU + i*m+k]* b[offsetB + k*n+j];
+                    sum -= U.get( offsetU + i*m+k )* b.get(offsetB + k*n+j);
                 }
-                b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
+                b.set(offsetB + i*n+j , sum / U.get(offsetU + i*m+i));
             }
         }
     }
@@ -240,17 +238,17 @@ public class BlockInnerTriangularSolver {
      * @param offsetU initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
-    public static void solveTransU( double U[] , double []b ,
+    public static void solveTransU( D1Matrix64F U , D1Matrix64F b ,
                                     int m , int n ,
                                     int offsetU , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
-                double sum = b[offsetB + i*n+j];
+                double sum = b.get(offsetB + i*n+j);
                 for( int k=0; k<i; k++ ) {
-                    sum -= U[offsetU + k*m+i]* b[offsetB + k*n+j];
+                    sum -= U.get(offsetU + k*m+i)* b.get(offsetB + k*n+j);
                 }
-                b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
+                b.set(offsetB + i*n+j , sum / U.get(offsetU + i*m+i));
             }
         }
     }

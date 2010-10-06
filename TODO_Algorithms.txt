@@ -53,9 +53,7 @@ For DenseMatrix64F
   - SymmEig
 
 - remove hand inlining of functions
-  * See if creating RowD1Matrix64F interface would slow things down
-  * if not start replacing all functions with that
-  * add function add( index ) function to that class.
+  * Create class that simulates cache misses and counts them.
 
 - Unroll block matrix multiplication when full block.
 - Fast Matrix Multiply

@@ -31,6 +31,7 @@ import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -64,7 +65,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void mult( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult.mult(a,b,c);
@@ -88,7 +89,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void mult( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -110,7 +111,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multTransA( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numCols == 1 ) {
             // todo check a.numCols == 1 and do inner product?
@@ -141,7 +142,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multTransA( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -164,7 +165,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numRows == 1 ) {
             MatrixVectorMult.mult(a,b,c);
@@ -186,7 +187,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multTransB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult.multTransB(alpha,a,b,c);
@@ -204,7 +205,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multTransAB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numRows == 1) {
             // there are significantly faster algorithms when dealing with vectors
@@ -233,7 +234,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multTransAB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -255,7 +256,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAdd( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult.multAdd(a,b,c);
@@ -281,7 +282,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAdd( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -303,7 +304,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAddTransA( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numCols == 1 ) {
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -334,7 +335,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAddTransA( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -357,7 +358,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAddTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         MatrixMatrixMult.multAddTransB(a,b,c);
     }
@@ -375,7 +376,7 @@ public class CommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAddTransB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult.multAddTransB(alpha,a,b,c);
@@ -389,11 +390,11 @@ public class CommonOps {
      * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not Modifed.
-     * @param b The right matrix in the multiplication operation. Not Modifed.
+     * @param a The left matrix in the multiplication operation. Not Modified.
+     * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAddTransAB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numRows == 1 ) {
             // there are significantly faster algorithms when dealing with vectors
@@ -418,11 +419,11 @@ public class CommonOps {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not Modifed.
-     * @param b The right matrix in the multiplication operation. Not Modifed.
+     * @param a The left matrix in the multiplication operation. Not Modified.
+     * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( double alpha , DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static void multAddTransAB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -1135,11 +1136,9 @@ public class CommonOps {
     public static double elementMin( D1Matrix64F a ) {
         final int size = a.getNumElements();
 
-        final double dataA[] = a.data;
-
-        double min = dataA[0];
+        double min = a.get(0);
         for( int i = 1; i < size; i++ ) {
-            double val = dataA[i];
+            double val = a.get(i);
             if( val < min ) {
                 min = val;
             }
@@ -1161,11 +1160,9 @@ public class CommonOps {
     public static double elementMinAbs( D1Matrix64F a ) {
         final int size = a.getNumElements();
 
-        final double dataA[] = a.data;
-
         double min = Double.MAX_VALUE;
         for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(dataA[i]);
+            double val = Math.abs(a.get(i));
             if( val < min ) {
                 min = val;
             }
@@ -1189,11 +1186,9 @@ public class CommonOps {
         }
 
         int length = a.getNumElements();
-        double dataA[] = a.data;
-        double dataB[] = b.data;
 
         for( int i = 0; i < length; i++ ) {
-            dataA[i] *= dataB[i];
+            a.times(i , b.get(i));
         }
     }
 
@@ -1214,12 +1209,9 @@ public class CommonOps {
         }
 
         int length = a.getNumElements();
-        double dataA[] = a.data;
-        double dataB[] = b.data;
-        double dataC[] = c.data;
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i] * dataB[i];
+            c.set( i , a.get(i) * b.get(i) );
         }
     }
 
@@ -1233,13 +1225,13 @@ public class CommonOps {
      * @param mat An m by n matrix. Not modified.
      * @return The sum of the elements.
      */
-    public static double elementSum( DenseMatrix64F mat ) {
+    public static double elementSum( D1Matrix64F mat ) {
         double total = 0;
 
         int size = mat.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            total += mat.data[i];
+            total += mat.get(i);
         }
 
         return total;
@@ -1255,13 +1247,13 @@ public class CommonOps {
      * @param mat An m by n matrix. Not modified.
      * @return The sum of the absolute value of each element.
      */
-    public static double elementSumAbs( DenseMatrix64F mat ) {
+    public static double elementSumAbs( D1Matrix64F mat ) {
         double total = 0;
 
         int size = mat.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            total += Math.abs(mat.data[i]);
+            total += Math.abs(mat.get(i));
         }
 
         return total;

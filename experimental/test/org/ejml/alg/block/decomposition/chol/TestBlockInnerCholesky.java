@@ -22,6 +22,7 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.generic.GenericMatrixOps;
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -65,12 +66,14 @@ public class TestBlockInnerCholesky {
         // copy the original data by an offset
         double data[] = new double[ A.getNumElements() + 2 ];
         System.arraycopy(A.data,0,data,2,A.getNumElements());
+        BlockMatrix64F tempA = new BlockMatrix64F();
+        tempA.data = data;
 
         // decompose using the algorithm
         if( lower )
-            assertTrue(BlockInnerCholesky.lower(data,2, n));
+            assertTrue(BlockInnerCholesky.lower(tempA,2, n));
         else
-            assertTrue(BlockInnerCholesky.upper(data,2, n));
+            assertTrue(BlockInnerCholesky.upper(tempA,2, n));
 
         DenseMatrix64F found = new DenseMatrix64F(n, n);
         System.arraycopy(data,2,found.data,0,found.data.length);
@@ -93,11 +96,13 @@ public class TestBlockInnerCholesky {
         // copy the original data by an offset
         double data[] = new double[ A.getNumElements() + 2 ];
         System.arraycopy(A.data,0,data,2,A.getNumElements());
+        BlockMatrix64F tempA = new BlockMatrix64F();
+        tempA.data = data;
 
         // decompose using the algorithm
         if( lower )
-            assertFalse(BlockInnerCholesky.lower(data,2, n));
+            assertFalse(BlockInnerCholesky.lower(tempA,2, n));
         else
-            assertFalse(BlockInnerCholesky.upper(data,2, n));
+            assertFalse(BlockInnerCholesky.upper(tempA,2, n));
     }
 }

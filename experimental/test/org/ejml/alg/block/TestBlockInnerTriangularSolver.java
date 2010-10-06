@@ -122,8 +122,14 @@ public class TestBlockInnerTriangularSolver {
         double dataL[] = offsetArray(L.data,offsetL);
         double dataB[] = offsetArray(found.data,offsetB);
 
+
         try {
-            m.invoke(null,dataL,dataB,3,4,offsetL,offsetB);
+            BlockMatrix64F tempL = new BlockMatrix64F();
+            BlockMatrix64F tempB = new BlockMatrix64F();
+            tempL.data = dataL;
+            tempB.data = dataB;
+
+            m.invoke(null,tempL,tempB,3,4,offsetL,offsetB);
         } catch (IllegalAccessException e) {
             fail("invoke failed");
         } catch (InvocationTargetException e) {

@@ -19,6 +19,7 @@
 
 package org.ejml.alg.block;
 
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.D1Submatrix64F;
 
 /**
@@ -65,10 +66,10 @@ public class BlockInnerMultiplication {
                     int indexB = (k-A.col0+B.row0)*B.original.numCols + j*widthA;
 
                     if( k == A.col0 )
-                        multBlockSet(A.original.data,B.original.data,C.original.data,
+                        multBlockSet(A.original,B.original,C.original,
                                 indexA,indexB,indexC,heightA,widthA,widthB);
                     else
-                        multBlockAdd(A.original.data,B.original.data,C.original.data,
+                        multBlockAdd(A.original,B.original,C.original,
                                 indexA,indexB,indexC,heightA,widthA,widthB);
                 }
             }
@@ -113,10 +114,10 @@ public class BlockInnerMultiplication {
 //                    System.out.println("heightA "+heightA+" widthA "+widthA+" widthB "+widthB);
 
                     if( k == A.row0 )
-                        multTransABlockSet(A.original.data,B.original.data,C.original.data,
+                        multTransABlockSet(A.original,B.original,C.original,
                                 indexA,indexB,indexC,heightA,widthA,widthB);
                     else
-                        multTransABlockAdd(A.original.data,B.original.data,C.original.data,
+                        multTransABlockAdd(A.original,B.original,C.original,
                                 indexA,indexB,indexC,heightA,widthA,widthB);
                 }
             }
@@ -159,10 +160,10 @@ public class BlockInnerMultiplication {
                     int indexB = j*B.original.numCols + (k-A.col0+B.col0)*widthC;
 
                     if( k == A.col0 )
-                        multTransBBlockSet(A.original.data,B.original.data,C.original.data,
+                        multTransBBlockSet(A.original,B.original,C.original,
                                 indexA,indexB,indexC,heightA,widthA,widthC);
                     else
-                        multTransBBlockAdd(A.original.data,B.original.data,C.original.data,
+                        multTransBBlockAdd(A.original,B.original,C.original,
                                 indexA,indexB,indexC,heightA,widthA,widthC);
                 }
             }
@@ -176,7 +177,7 @@ public class BlockInnerMultiplication {
      * C = A B
      * </p>
      */
-    protected static void multBlockSet( double[] dataA, double []dataB, double []dataC,
+    protected static void multBlockSet( D1Matrix64F A, D1Matrix64F B, D1Matrix64F C,
                                         int indexA, int indexB, int indexC,
                                         final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < heightA; i++ ) {
@@ -189,11 +190,11 @@ public class BlockInnerMultiplication {
                 int end = indexA + widthA;
 
                 for( ; indexAA != end; indexAA++) {
-                    val += dataA[ indexAA ] * dataB[indexBB];
+                    val += A.get( indexAA ) * B.get(indexBB);
                     indexBB += widthC;
                 }
 
-                dataC[ indexC ] = val;
+                C.set( indexC , val );
             }
 
             indexA += widthA;
@@ -207,9 +208,9 @@ public class BlockInnerMultiplication {
      * C = C + A B
      * </p>
      */
-    protected static void multBlockAdd( double[] dataA, double []dataB, double []dataC,
-                                      int indexA, int indexB, int indexC,
-                                      final int heightA, final int widthA, final int widthC) {
+    protected static void multBlockAdd( D1Matrix64F A, D1Matrix64F B, D1Matrix64F C,
+                                        int indexA, int indexB, int indexC,
+                                        final int heightA, final int widthA, final int widthC) {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int j = 0; j < widthC; j++ ) {
 //                double val = 0;
@@ -259,12 +260,12 @@ public class BlockInnerMultiplication {
             int endA = a + widthA;
 
             while( a != endA ) {//for( int k = 0; k < widthA; k++ ) {
-                double valA = dataA[a++];
+                double valA = A.get(a++);
 
                 int c = rowC;
 
                 while( c != endC  ) {//for( int j = 0; j < widthC; j++ ) {
-                    dataC[ c++ ] += valA * dataB[ b++ ];
+                    C.plus( c++ , valA * B.get( b++ ) );
                 }
             }
         }
@@ -277,7 +278,7 @@ public class BlockInnerMultiplication {
      * C = A <sup>T</sup>B
      * </p>
      */
-    protected static void multTransABlockSet( double[] dataA, double []dataB, double []dataC,
+    protected static void multTransABlockSet( D1Matrix64F A, D1Matrix64F B, D1Matrix64F C,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < widthA; i++ ) {
@@ -285,10 +286,10 @@ public class BlockInnerMultiplication {
                 double val = 0;
 
                 for( int k = 0; k < heightA; k++ ) {
-                    val += dataA[k*widthA + i + indexA] * dataB[k*widthC + j + indexB];
+                    val += A.get(k*widthA + i + indexA) * B.get(k*widthC + j + indexB);
                 }
 
-                dataC[ i*widthC + j + indexC ] = val;
+                C.set( i*widthC + j + indexC , val );
             }
         }
     }
@@ -300,7 +301,7 @@ public class BlockInnerMultiplication {
      * C = C + A <sup>T</sup>B
      * </p>
      */
-    protected static void multTransABlockAdd( double[] dataA, double []dataB, double []dataC,
+    protected static void multTransABlockAdd( D1Matrix64F A, D1Matrix64F B, D1Matrix64F C,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
         for( int i = 0; i < widthA; i++ ) {
@@ -308,10 +309,10 @@ public class BlockInnerMultiplication {
                 double val = 0;
 
                 for( int k = 0; k < heightA; k++ ) {
-                    val += dataA[k*widthA + i + indexA] * dataB[k*widthC + j + indexB];
+                    val += A.get(k*widthA + i + indexA ) * B.get( k*widthC + j + indexB );
                 }
 
-                dataC[ i*widthC + j + indexC ] += val;
+                C.plus( i*widthC + j + indexC , val );
             }
         }
     }
@@ -323,7 +324,7 @@ public class BlockInnerMultiplication {
      * C = C + &alpha; A <sup>T</sup>B
      * </p>
      */
-    protected static void multTransABlockAdd( double alpha , double[] dataA, double []dataB, double []dataC,
+    protected static void multTransABlockAdd( double alpha , D1Matrix64F A, D1Matrix64F B, D1Matrix64F C,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
 //        for( int i = 0; i < widthA; i++ ) {
@@ -348,10 +349,10 @@ public class BlockInnerMultiplication {
                 int b = j + indexB;
                 int end = a + endOffset;
                 for( ; a != end; a += widthA , b += widthC ) {
-                    val += dataA[a] * dataB[b];
+                    val += A.get(a) * B.get(b);
                 }
 
-                dataC[ c++ ] += alpha*val;
+                C.plus( c++ , alpha*val );
             }
         }
     }
@@ -363,7 +364,7 @@ public class BlockInnerMultiplication {
      * C = A B<sup>T</sup>
      * </p>
      */
-    protected static void multTransBBlockSet( double[] dataA, double []dataB, double []dataC,
+    protected static void multTransBBlockSet( D1Matrix64F A , D1Matrix64F B , D1Matrix64F C,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < heightA; i++ ) {
@@ -371,10 +372,10 @@ public class BlockInnerMultiplication {
                 double val = 0;
 
                 for( int k = 0; k < widthA; k++ ) {
-                    val += dataA[i*widthA + k + indexA] * dataB[j*widthA + k + indexB];
+                    val += A.get(i*widthA + k + indexA ) * B.get( j*widthA + k + indexB );
                 }
 
-                dataC[ i*widthC + j + indexC ] = val;
+                C.set( i*widthC + j + indexC , val );
             }
         }
     }
@@ -386,7 +387,7 @@ public class BlockInnerMultiplication {
      * C = C + A B<sup>T</sup>
      * </p>
      */
-    protected static void multTransBBlockAdd( double[] dataA, double []dataB, double []dataC,
+    protected static void multTransBBlockAdd( D1Matrix64F A, D1Matrix64F B , D1Matrix64F C,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < heightA; i++ ) {
@@ -394,10 +395,10 @@ public class BlockInnerMultiplication {
                 double val = 0;
 
                 for( int k = 0; k < widthA; k++ ) {
-                    val += dataA[i*widthA + k + indexA] * dataB[j*widthA + k + indexB];
+                    val += A.get( i*widthA + k + indexA ) * B.get( j*widthA + k + indexB );
                 }
 
-                dataC[ i*widthC + j + indexC ] += val;
+                C.plus(  i*widthC + j + indexC , val );
             }
         }
     }

@@ -141,9 +141,7 @@ public class GenerateDeterminantFromMinor {
     private void printFunction( int N )
     {
         stream.print("    public static double det"+N+"( RowD1Matrix64F mat )\n" +
-                "    {\n" +
-                "\n");
-
+                "    {\n");
 
         // extracts the first minor
         int M = N-1;
