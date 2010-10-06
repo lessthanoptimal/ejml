@@ -1342,14 +1342,10 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i]+dataB[i];
+            c.set( i , a.get(i)+b.get(i) );
         }
     }
 
@@ -1376,14 +1372,10 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i]+beta*dataB[i];
+            c.set( i , a.get(i)+beta*b.get(i) );
         }
     }
 
@@ -1411,14 +1403,10 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = alpha*dataA[i]+beta*dataB[i];
+            c.set(i , alpha*a.get(i) + beta*b.get(i));
         }
     }
 
@@ -1445,14 +1433,10 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = alpha*dataA[i]+dataB[i];
+            c.set( i , alpha*a.get(i) + b.get(i));
         }
     }
 
@@ -1467,12 +1451,10 @@ public class CommonOps {
      * @param val The value that's added to each element.
      */
     public static void add( D1Matrix64F a , double val ) {
-        final double dataA[] = a.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataA[i] += val;
+            a.plus( i , val);
         }
     }
 
@@ -1491,13 +1473,11 @@ public class CommonOps {
         if( a.numRows != c.numRows || a.numCols != c.numCols ) {
             throw new IllegalArgumentException("Dimensions of a and c do not match.");
         }
-        final double dataA[] = a.data;
-        final double dataC[] = c.data;
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i]+val;
+            c.set( i , a.get(i) + val);
         }
     }
 
@@ -1517,13 +1497,10 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataA[i] -= dataB[i];
+            a.minus( i , b.get(i) );
         }
     }
 
@@ -1547,14 +1524,10 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-        final double dataC[] = c.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataC[i] = dataA[i] - dataB[i];
+            c.set( i , a.get(i) - b.get(i));
         }
     }
 
@@ -1570,13 +1543,12 @@ public class CommonOps {
      */
     public static void scale( double alpha , D1Matrix64F a )
     {
-        final double data[] = a.data;
         // on very small matrices (2 by 2) the call to getNumElements() can slow it down
         // slightly compared to other libraries since it involves an extra multiplication.  
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            data[i] *= alpha;
+            a.times( i , alpha );
         }
     }
 
@@ -1595,12 +1567,10 @@ public class CommonOps {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            dataB[i] = dataA[i]*alpha;
+            b.set( i , a.get(i)*alpha );
         }
     }
 
@@ -1616,11 +1586,10 @@ public class CommonOps {
      */
     public static void divide( double alpha , D1Matrix64F a )
     {
-        final double data[] = a.data;
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            data[i] /= alpha;
+            a.div( i , alpha );
         }
     }
 
@@ -1639,12 +1608,10 @@ public class CommonOps {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            dataB[i] = dataA[i]/alpha;
+            b.set( i , a.get(i)/alpha );
         }
     }
 
@@ -1659,11 +1626,10 @@ public class CommonOps {
      */
     public static void changeSign( D1Matrix64F a )
     {
-        final double data[] = a.data;
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            data[i] = -data[i];
+            a.set( i , - a.get(i) );
         }
     }
 
@@ -1679,11 +1645,10 @@ public class CommonOps {
      */
     public static void set( D1Matrix64F a , double value )
     {
-        final double data[] = a.data;
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            data[i] = value;
+            a.set( i , value );
         }
     }
 }

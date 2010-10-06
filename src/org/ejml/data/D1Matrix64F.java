@@ -74,9 +74,16 @@ public abstract class D1Matrix64F extends Matrix64F {
     }
 
     /**
-     * Adds the specified value to the internal data array at the specified index.  This is intended for use
-     * in highly optimized code.  The (row,column) of the modified element is dependent upon the matrix's
-     * internal structure.
+     * <p>
+     * Adds the specified value to the internal data array at the specified index.<br>
+     * <br>
+     * Equivalent to: this.data[index] += val;
+     * </p>
+     *
+     * <p>
+     * Intended for use in highly optimized code.  The  row/column coordinate of the modified element is
+     * dependent upon the matrix's internal structure.
+     * </p>
      *
      * @param index The index which is being modified.
      * @param val The value that is being added.
@@ -86,14 +93,59 @@ public abstract class D1Matrix64F extends Matrix64F {
     }
 
     /**
-     * Subtracts the specified value to the internal data array at the specified index.  This is intended for use
-     * in highly optimized code.  The (row,column) of the modified element is dependent upon the matrix's
-     * internal structure.
+     * <p>
+     * Subtracts the specified value to the internal data array at the specified index.<br>
+     * <br>
+     * Equivalent to: this.data[index] -= val;
+     * </p>
+     *
+     * <p>
+     * Intended for use in highly optimized code.  The  row/column coordinate of the modified element is
+     * dependent upon the matrix's internal structure.
+     * </p>
      *
      * @param index The index which is being modified.
      * @param val The value that is being subtracted.
      */
     public void minus( int index , double val ) {
         data[index] -= val;
+    }
+
+    /**
+     * <p>
+     * Multiplies the specified value to the internal data array at the specified index.<br>
+     * <br>
+     * Equivalent to: this.data[index] *= val;
+     * </p>
+     *
+     * <p>
+     * Intended for use in highly optimized code.  The  row/column coordinate of the modified element is
+     * dependent upon the matrix's internal structure.
+     * </p>
+     *
+     * @param index The index which is being modified.
+     * @param val The value that is being multiplied.
+     */
+    public void times( int index , double val ) {
+        data[index] *= val;
+    }
+
+    /**
+     * <p>
+     * Divides the specified value to the internal data array at the specified index.<br>
+     * <br>
+     * Equivalent to: this.data[index] /= val;
+     * </p>
+     *
+     * <p>
+     * Intended for use in highly optimized code.  The  row/column coordinate of the modified element is
+     * dependent upon the matrix's internal structure.
+     * </p>
+     *
+     * @param index The index which is being modified.
+     * @param val The value that is being divided.
+     */
+    public void div( int index , double val ) {
+        data[index] /= val;
     }
 }
