@@ -81,7 +81,7 @@ public class CovarianceOps {
 
             switch( cov.numCols ) {
                 case 1:
-                    cov.data[0] = 1.0/cov.data[0];
+                    cov.set(0,  1.0/cov.get(0));
                     break;
 
                 default:

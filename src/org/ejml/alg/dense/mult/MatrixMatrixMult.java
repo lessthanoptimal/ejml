@@ -1,29 +1,10 @@
-/*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
- *
- * This file is part of Efficient Java Matrix Library (EJML).
- *
- * EJML is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * EJML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowD1Matrix64F;
 
 /**
  * <p>
- * This class contains various types of matrix matrix multiplcation operations for {@link RowD1Matrix64F}.
+ * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix64F}.
  * </p>
  * <p>
  * Two algorithms that are equivalent can often have very different runtime performance.
@@ -33,13 +14,13 @@ import org.ejml.data.RowD1Matrix64F;
  * </p>
  *
  * <p>
- * Algorithms that are labled as 'reorder' are designed to avoid caching jumping issues, some times at the cost
+ * Algorithms that are labeled as 'reorder' are designed to avoid caching jumping issues, some times at the cost
  * of increasing the number of operations.  This is important for large matrices.  The straight forward 
  * implementation seems to be faster for small matrices.
  * </p>
  * 
  * <p>
- * Algorithms that are labled as 'aux' use an auxilary array of length n.  This array is used to create
+ * Algorithms that are labeled as 'aux' use an auxiliary array of length n.  This array is used to create
  * a copy of an out of sequence column vector that is referenced several times.  This reduces the number
  * of cache misses.  If the 'aux' parameter passed in is null then the array is declared internally.
  * </p>
@@ -60,7 +41,7 @@ import org.ejml.data.RowD1Matrix64F;
  */
 public class MatrixMatrixMult {
     /**
-     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -106,7 +87,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -140,7 +121,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -172,7 +153,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransA( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransA_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -211,7 +192,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransA( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransA_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -245,7 +226,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransAB( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransAB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -278,7 +259,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransAB( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransAB_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -310,7 +291,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransB( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -344,7 +325,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAdd( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAdd( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAdd_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -390,7 +371,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAdd( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAdd( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAdd_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -424,7 +405,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAdd( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAdd( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAdd_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -456,7 +437,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransA( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransA_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -495,7 +476,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransA( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransA_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -529,7 +510,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransAB( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransAB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -562,7 +543,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransAB( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransAB_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -594,7 +575,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransB( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -628,7 +609,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#mult(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -674,7 +655,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#mult(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -708,7 +689,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#mult(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -740,7 +721,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransA(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransA_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -779,7 +760,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransA(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransA_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -813,7 +794,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransAB(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransAB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -846,7 +827,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransAB(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransAB_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -878,7 +859,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multTransB(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multTransB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multTransB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -912,7 +893,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAdd(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAdd(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAdd_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -958,7 +939,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAdd(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAdd(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAdd_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -992,7 +973,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAdd(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAdd(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAdd_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -1024,7 +1005,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransA(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransA_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -1063,7 +1044,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransA(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransA_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -1097,7 +1078,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransAB(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransAB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
@@ -1130,7 +1111,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransAB(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransAB_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
     {
@@ -1162,7 +1143,7 @@ public class MatrixMatrixMult {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#multAddTransB(double,  org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#multAddTransB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void multAddTransB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {

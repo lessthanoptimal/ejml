@@ -19,6 +19,8 @@
 
 package org.ejml.data;
 
+import org.ejml.alg.dense.mult.MatrixDimensionException;
+
 
 /**
  * A generic abstract class for matrices whose data is stored in a single 1D array of doubles.  The
@@ -52,6 +54,26 @@ public abstract class D1Matrix64F extends Matrix64F {
     public abstract int getIndex( int row, int col );
 
     /**
+     * Sets the value of this matrix to be the same as the value of the provided matrix.  Both
+     * matrices must have the same shape:<br>
+     * <br>
+     * a<sub>ij</sub> = b<sub>ij</sub><br>
+     * <br>
+     *
+     * @param b The matrix that this matrix is to be set equal to.
+     */
+    public void set( D1Matrix64F b )
+    {
+        if( numRows != b.numRows || numCols != b.numCols ) {
+            throw new MatrixDimensionException("The two matrices do not have compatible shapes.");
+        }
+
+        int dataLength = b.getNumElements();
+
+        System.arraycopy(b.data, 0, this.data, 0, dataLength);
+    }
+
+    /**
      * Returns the value of the matrix at the specified internal array index. The element at which row and column
      * returned by this function depends upon the matrix's internal structure, e.g. row-major, column-major, or block.
      *
@@ -69,8 +91,9 @@ public abstract class D1Matrix64F extends Matrix64F {
      * @param index Index of element that is to be set.
      * @param val The new value of the index.
      */
-    public void set( int index , double val ) {
-        data[index] = val;
+    public double set( int index , double val ) {
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        return data[index] = val;
     }
 
     /**
@@ -88,8 +111,9 @@ public abstract class D1Matrix64F extends Matrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being added.
      */
-    public void plus( int index , double val ) {
-        data[index] += val;
+    public double plus( int index , double val ) {
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        return data[index] += val;
     }
 
     /**
@@ -107,8 +131,9 @@ public abstract class D1Matrix64F extends Matrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being subtracted.
      */
-    public void minus( int index , double val ) {
-        data[index] -= val;
+    public double minus( int index , double val ) {
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        return data[index] -= val;
     }
 
     /**
@@ -126,8 +151,9 @@ public abstract class D1Matrix64F extends Matrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being multiplied.
      */
-    public void times( int index , double val ) {
-        data[index] *= val;
+    public double times( int index , double val ) {
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        return data[index] *= val;
     }
 
     /**
@@ -145,7 +171,8 @@ public abstract class D1Matrix64F extends Matrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being divided.
      */
-    public void div( int index , double val ) {
-        data[index] /= val;
+    public double div( int index , double val ) {
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        return data[index] /= val;
     }
 }

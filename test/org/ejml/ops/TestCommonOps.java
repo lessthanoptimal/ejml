@@ -329,7 +329,7 @@ public class TestCommonOps {
             assertEquals(1,a.numCols);
 
             for( int j = 0; j < M.numRows; j++ ) {
-                assertEquals(a.data[j],M.get(j,i),1e-8);
+                assertEquals(a.get(j),M.get(j,i),1e-8);
             }
         }
     }

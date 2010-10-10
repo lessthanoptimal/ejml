@@ -132,7 +132,7 @@ public class DeterminantFromMinor {
                 }
                 int prevLevelIndex = levelIndexes[level-1]++;
 
-                double val = mat.data[(level-1)*width+levelRemoved[level-1]];
+                double val = mat.get((level-1)*width+levelRemoved[level-1]);
                 if( prevLevelIndex % 2 == 0 ) {
                     levelResults[level-1] += val * levelResults[level];
                 } else {
@@ -151,7 +151,7 @@ public class DeterminantFromMinor {
 
                 if( levelWidth == minWidth ) {
                     createMinor(mat);
-                    double subresult = mat.data[level*width+levelRemoved[level]];
+                    double subresult = mat.get(level*width+levelRemoved[level]);
 
                     subresult *= UnrolledDeterminantFromMinor.det(tempMat);
 

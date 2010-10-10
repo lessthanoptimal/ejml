@@ -33,7 +33,7 @@ import org.ejml.ops.SpecializedOps;
  */
 public class LinearSolverLuKJI extends LinearSolverLuBase {
 
-    private double []dataLU;
+    private DenseMatrix64F LU;
     private int[] pivot;
 
     public LinearSolverLuKJI( LUDecompositionBase decomp ) {
@@ -46,7 +46,7 @@ public class LinearSolverLuKJI extends LinearSolverLuBase {
         boolean ret = super.setA(A);
 
         pivot = decomp.getPivot();
-        dataLU = decomp.getLU().data;
+        LU = decomp.getLU();
 
         return ret;
     }
@@ -73,24 +73,23 @@ public class LinearSolverLuKJI extends LinearSolverLuBase {
 
         // Copy right hand side with pivoting
         int nx = b.numCols;
-        double[] dataX = x.data;
 
         // Solve L*Y = B(piv,:)
         for (int k = 0; k < numCols; k++) {
             for (int i = k+1; i < numCols; i++) {
                 for (int j = 0; j < nx; j++) {
-                    dataX[i*nx+j] -= dataX[k*nx+j]*dataLU[i* numCols +k];
+                    x.minus( i*nx+j , x.get(k*nx+j)*LU.get(i* numCols +k));
                 }
             }
         }
         // Solve U*X = Y;
         for (int k = numCols -1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
-                dataX[k*nx+j] /= dataLU[k* numCols +k];
+                x.div( k*nx+j , LU.get(k* numCols +k));
             }
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < nx; j++) {
-                    dataX[i*nx+j] -= dataX[k*nx+j]*dataLU[i* numCols +k];
+                    x.minus(i*nx+j , x.get(k*nx+j)*LU.get( i* numCols +k ));
                 }
             }
         }

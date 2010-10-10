@@ -22,7 +22,9 @@ package org.ejml.ops;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.svd.SvdNumericalRecipes;
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -80,7 +82,7 @@ public class NormOps {
         int size = A.getNumElements();
 
         for( int i = 0; i < size; i++) {
-            A.data[i] /= val;
+            A.div(i , val);
         }
     }
 
@@ -167,14 +169,13 @@ public class NormOps {
      *
      * @param a The matrix whose norm is computed.  Not modified.
      */
-    public static double fastNormF( DenseMatrix64F a ) {
+    public static double fastNormF( D1Matrix64F a ) {
         double total = 0;
 
-        final double data[] = a.data;
         int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            double val = data[i];
+            double val = a.get(i);
             total += val*val;
         }
 
@@ -195,7 +196,7 @@ public class NormOps {
      * @param a The matrix whose norm is computed.  Not modified.
      * @return The norm's value.
      */
-    public static double normF( DenseMatrix64F a ) {
+    public static double normF( D1Matrix64F a ) {
         double total = 0;
 
         double scale = CommonOps.elementMaxAbs(a);
@@ -203,11 +204,10 @@ public class NormOps {
         if( scale == 0.0 )
             return 0.0;
 
-        final double data[] = a.data;
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            double val = data[i]/scale;
+            double val = a.get(i)/scale;
             total += val*val;
         }
 
@@ -229,7 +229,7 @@ public class NormOps {
      * @param p p value.
      * @return The norm's value.
      */
-    public static double elementP( DenseMatrix64F A , double p ) {
+    public static double elementP( RowD1Matrix64F A , double p ) {
         if( p == 1 ) {
             return CommonOps.elementSumAbs(A);
         } if( p == 2 ) {
@@ -245,7 +245,7 @@ public class NormOps {
             int size = A.getNumElements();
 
             for( int i = 0; i < size; i++ ) {
-                double a = A.data[i]/max;
+                double a = A.get(i)/max;
 
                 total += Math.pow(Math.abs(a),p);
             }
@@ -261,7 +261,7 @@ public class NormOps {
      * @param p p value.
      * @return The norm's value.
      */
-    public static double fastElementP( DenseMatrix64F A , double p ) {
+    public static double fastElementP( D1Matrix64F A , double p ) {
         if( p == 2 ) {
             return fastNormF(A);
         } else {
@@ -270,7 +270,7 @@ public class NormOps {
             int size = A.getNumElements();
 
             for( int i = 0; i < size; i++ ) {
-                double a = A.data[i];
+                double a = A.get(i);
 
                 total += Math.pow(Math.abs(a),p);
             }

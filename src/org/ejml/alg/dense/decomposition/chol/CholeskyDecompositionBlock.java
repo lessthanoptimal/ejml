@@ -104,7 +104,7 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
                 int indexSrc = i*blockWidth* T.numCols + (i+1)*blockWidth;
                 int indexDst = (i+1)*blockWidth* T.numCols + i*blockWidth;
 
-                solveL_special(chol.getL().data, T,indexSrc,indexDst,B);
+                solveL_special(chol.getL(), T,indexSrc,indexDst,B);
 
                 int indexL = (i+1)*blockWidth*n + (i+1)*blockWidth;
                 symmRankTranA_sub(B, T,indexL);
@@ -118,7 +118,7 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
         // zero the top right corner.
         for( int i = 0; i < n; i++ ) {
             for( int j = i+1; j < n; j++ ) {
-                t[i*n+j] = 0.0;
+                T.set(i*n+j , 0.0 );
             }
         }
 
@@ -142,27 +142,23 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
      * @param indexDst First index of the submatrix where the results are going to.
      * @param B
      */
-    public static void solveL_special( double L[] ,
+    public static void solveL_special( DenseMatrix64F L ,
                                        DenseMatrix64F b_src,
                                        int indexSrc , int indexDst ,
                                        DenseMatrix64F B )
     {
-        double dataSrc[] = b_src.data;
-
-        double b[]= B.data;
-        final int m = B.numRows;
+        final int widthL = B.numRows;
         final int n = B.numCols;
-        int widthL = m;
 
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < widthL; i++ ) {
-                double sum = dataSrc[indexSrc+i*b_src.numCols+j];
+                double sum = b_src.get( indexSrc+i*b_src.numCols+j );
                 for( int k=0; k<i; k++ ) {
-                    sum -= L[i*widthL+k]* b[k*n+j];
+                    sum -= L.unsafe_get(i,k)* B.get(k*n+j);
                 }
-                double val = sum / L[i*widthL+i];
-                dataSrc[indexDst+j*b_src.numCols+i] = val;
-                b[i*n+j] = val;
+                double val = sum / L.unsafe_get(i,i);
+                b_src.set( indexDst+j*b_src.numCols+i , val );
+                B.set(i*n+j,  val);
             }
         }
     }
@@ -184,17 +180,14 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
     public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c ,
                                           int startIndexC )
     {
-        double dataA[] = a.data;
-        double dataC[] = c.data;
-
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < a.numRows; k++ ) {
-                double valA = dataA[k*a.numCols+i];
+                double valA = a.get(k*a.numCols+i);
                 int indexC = startIndexC+i*c.numCols+i;
                 int indexR = k*a.numCols+i;
                 int end = k*a.numCols + a.numCols;
                 for(; indexR < end; ) {
-                    dataC[indexC++] -= valA * dataA[indexR++];
+                    c.minus( indexC++ , valA * a.get(indexR++) );
                 }
 //                for( int j = i; j < a.numCols; j++ ) {
 //                    dataC[startIndexC+i*c.numCols+j] -= valA * dataA[k*a.numCols+j];

@@ -48,7 +48,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
 
     private QRDecompositionHouseholderColumn decomposer;
 
-    private double []a;
+    private DenseMatrix64F a;
 
     protected int maxRows = -1;
     protected int maxCols = -1;
@@ -70,7 +70,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
     {
         this.maxRows = maxRows; this.maxCols = maxCols;
 
-        a = new double[ maxRows ];
+        a = new DenseMatrix64F( maxRows );
         R = new DenseMatrix64F(maxCols,maxCols);
     }
 
@@ -119,7 +119,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                a[i] = B.data[i*BnumCols + colB];
+                a.set(i, B.unsafe_get(i ,colB) );
             }
 
             // Solve Qa=b
@@ -130,27 +130,27 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
             for( int n = 0; n < numCols; n++ ) {
                 double []u = QR[n];
 
-                double ub = a[n];
+                double ub = a.get(n);
                 // U^T*b
                 for( int i = n+1; i < numRows; i++ ) {
-                    ub += u[i]*a[i];
+                    ub += u[i]*a.get(i);
                 }
 
                 // gamma*U^T*b
                 ub *= gammas[n];
 
-                a[n] -= ub;
+                a.minus(n, ub);
                 for( int i = n+1; i < numRows; i++ ) {
-                    a[i] -= u[i]*ub;
+                    a.minus(i,  u[i]*ub);
                 }
             }
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R.data,a,numCols);
+            TriangularSolver.solveU(R,a,numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
-                X.data[i*X.numCols+colB] = a[i];
+                X.unsafe_set(i,colB, a.get(i));
             }
         }
     }

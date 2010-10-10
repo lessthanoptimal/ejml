@@ -58,28 +58,26 @@ public class GaussJordanNoPivot extends LinearSolverAbstract {
 
         final int dimen = A.numCols;
 
-        double dataA[] = A.data;
-
         for( int i = 0; i < dimen; i++ ) {
             double valA = A.get(i,i);
 
             if( valA == 0 )
                 throw new IllegalArgumentException("This algorithm only works if all the diagonal elements are not zero");
 
-            dataA[i*dimen+i] = 1.0;
+            A.set(i*dimen+i, 1.0);
             // make the first element in this row 1
             for( int x = 0; x < dimen; x++ ) {
-                dataA[i*dimen+x] /= valA;
+                A.div(i*dimen+x, valA);
             }
 
             // make all the i columns zero, except for row i
             for( int j = 0; j < dimen; j++ ) {
                 if( i == j ) continue;
                 double val = A.get(j,i);
-                dataA[j*dimen+i] = 0;
+                A.set(j*dimen+i, 0);
 
                 for( int x = 0; x < dimen; x++ ) {
-                    dataA[j*dimen+x] -= val*dataA[i*dimen+x];
+                    A.minus(j*dimen+x, val*A.get(i*dimen+x));
                 }
             }
         }
@@ -103,36 +101,33 @@ public class GaussJordanNoPivot extends LinearSolverAbstract {
 
         final int dimen = A.numCols;
 
-        double dataA[] = A.data;
-        double dataX[] = X.data;
-
         for( int i = 0; i < dimen; i++ ) {
             double valA = A.get(i,i);
 
             if( valA == 0 )
                 throw new IllegalArgumentException("This algorithm only works if all the diagonal elements are not zero");
 
-            dataA[i*dimen+i] = 1.0;
+            A.set(i*dimen+i , 1.0 );
             // make the first element in this row 1
             for( int x = 0; x < dimen; x++ ) {
-                dataA[i*dimen+x] /= valA;
+                A.div(i*dimen+x, valA);
             }
             for( int x = 0; x < B.numCols; x++ ) {
-                dataX[i*X.numCols+x] /= valA;
+                X.div(i*X.numCols+x, valA);
             }
 
             // make all the i columns zero, except for row i
             for( int j = 0; j < dimen; j++ ) {
                 if( i == j ) continue;
                 double val = A.get(j,i);
-                dataA[j*dimen+i] = 0;
+                A.set(j*dimen+i, 0);
 
                 for( int x = 0; x < dimen; x++ ) {
-                    dataA[j*dimen+x] -= val*dataA[i*dimen+x];
+                    A.minus(j*dimen+x , val*A.unsafe_get(i,x));
                 }
 
                 for( int x = 0; x < X.numCols; x++ ) {
-                    dataX[j*X.numCols+x] -= val*dataX[i*X.numCols+x];
+                    X.minus(j*X.numCols+x, val*X.get(i*X.numCols+x));
                 }
             }
         }

@@ -20,7 +20,6 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.mult.MatrixDimensionException;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixIO;
 
@@ -240,6 +239,12 @@ public class DenseMatrix64F extends RowD1Matrix64F {
         this.numCols = numCols;
     }
 
+    public void reshape( int length ) {
+        if( data.length < length ) {
+            data = new double[ length ];
+        }
+    }
+
     /**
      * <p>
      * Assigns the element in the Matrix to the specified value.  Performs a bounds check to make sure
@@ -361,26 +366,6 @@ public class DenseMatrix64F extends RowD1Matrix64F {
 
         this.numRows = b.numRows;
         this.numCols = b.numCols;
-
-        System.arraycopy(b.data, 0, this.data, 0, dataLength);
-    }
-
-    /**
-     * Sets the value of this matrix to be the same as the value of the provided matrix.  Both
-     * matrices must have the same shape:<br>
-     * <br>
-     * a<sub>ij</sub> = b<sub>ij</sub><br>
-     * <br>
-     *
-     * @param b The matrix that this matrix is to be set equal to.
-     */
-    public void set( DenseMatrix64F b )
-    {
-        if( numRows != b.numRows || numCols != b.numCols ) {
-            throw new MatrixDimensionException("The two matrices do not have compatible shapes.");
-        }
-
-        int dataLength = b.getNumElements();
 
         System.arraycopy(b.data, 0, this.data, 0, dataLength);
     }

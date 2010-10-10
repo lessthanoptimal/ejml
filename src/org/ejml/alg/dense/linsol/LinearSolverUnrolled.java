@@ -59,7 +59,7 @@ public class LinearSolverUnrolled implements LinearSolver {
     @Override
     public void invert(DenseMatrix64F A_inv) {
         if( A.numRows == 1 )
-            A_inv.data[0] = 1.0/A.data[0];
+            A_inv.set(0,  1.0/A.get(0));
         UnrolledInverseFromMinor.inv(A,A_inv);
     }
 }

@@ -102,7 +102,7 @@ public class GenerateInverseFromMinor {
                 "        int N = mat.getNumElements();\n" +
                 "        \n" +
                 "        for( int i = 1; i < N; i++ ) {\n" +
-                "            double a = Math.abs(mat.data[i]);\n" +
+                "            double a = Math.abs(mat.get(i));\n" +
                 "            if( a > max ) max = a;\n" +
                 "        }\n\n");
         stream.print(

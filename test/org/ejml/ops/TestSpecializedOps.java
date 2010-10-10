@@ -112,8 +112,8 @@ public class TestSpecializedOps {
 
         CommonOps.sub(a,b,c);
         double expectedNorm = 0;
-        for( int i = 0; i < c.data.length; i++ ) {
-            expectedNorm += Math.abs(c.data[i]);
+        for( int i = 0; i < c.getNumElements(); i++ ) {
+            expectedNorm += Math.abs(c.get(i));
         }
         double foundNorm = SpecializedOps.diffNormP1(a,b);
 
@@ -142,17 +142,17 @@ public class TestSpecializedOps {
         // first extract a row vector
         SpecializedOps.subvector(A,2,1,2,true,1,v);
 
-        assertEquals(0,v.data[0],1e-8);
+        assertEquals(0,v.get(0),1e-8);
 
         for( int i = 0; i < 2; i++ ) {
-            assertEquals(A.get(2,1+i),v.data[1+i],1e-8);
+            assertEquals(A.get(2,1+i),v.get(1+i),1e-8);
         }
 
         // now extract a column vector
         SpecializedOps.subvector(A,2,1,2,false,1,v);
 
         for( int i = 0; i < 2; i++ ) {
-            assertEquals(A.get(2+i,1),v.data[1+i],1e-8);
+            assertEquals(A.get(2+i,1),v.get(1+i),1e-8);
         }
     }
 
@@ -172,7 +172,7 @@ public class TestSpecializedOps {
             assertEquals(1,a.getNumCols());
 
             for( int j = 0; j < A.numRows; j++ ) {
-                assertEquals(A.get(j,i),a.data[j],1e-8);
+                assertEquals(A.get(j,i),a.get(j),1e-8);
             }
         }
 
@@ -187,7 +187,7 @@ public class TestSpecializedOps {
             assertEquals(5,a.getNumCols());
 
             for( int j = 0; j < A.numCols; j++ ) {
-                assertEquals(A.get(i,j),a.data[j],1e-8);
+                assertEquals(A.get(i,j),a.get(j),1e-8);
             }
         }
 

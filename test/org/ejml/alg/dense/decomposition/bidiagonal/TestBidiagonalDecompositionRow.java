@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -209,7 +210,7 @@ public class TestBidiagonalDecompositionRow {
         DenseMatrix64F C = new DenseMatrix64F(m,n);
         DenseMatrix64F u = new DenseMatrix64F(m,1);
 
-        DenseMatrix64F UBV = alg.getUBV();
+        RowD1Matrix64F UBV = alg.getUBV();
 
         for( int i = 0; i < n; i++ ) {
             alg.computeU(i);
@@ -255,7 +256,7 @@ public class TestBidiagonalDecompositionRow {
         DenseMatrix64F C = new DenseMatrix64F(m,n);
         DenseMatrix64F u = new DenseMatrix64F(n,1);
 
-        DenseMatrix64F UBV = alg.getUBV();
+        RowD1Matrix64F UBV = alg.getUBV();
 
 //        A.print();
 

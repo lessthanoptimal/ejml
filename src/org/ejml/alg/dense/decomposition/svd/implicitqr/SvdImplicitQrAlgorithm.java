@@ -155,10 +155,10 @@ public class SvdImplicitQrAlgorithm {
 //        B = new SimpleMatrix(A);
 //        B.print();
 
-        maxValue = diag[0] = A.data[0];
+        maxValue = diag[0] = A.get(0);
         maxValue = Math.abs(maxValue);
         for( int i = 1; i < N; i++ ) {
-            double a = diag[i] = A.data[i*A.numCols+i];
+            double a = diag[i] = A.unsafe_get(i,i);
             double b = off[i-1] = A.get(i-1,i);
 
             if( Math.abs(a) > maxValue ) {
@@ -394,20 +394,20 @@ public class SvdImplicitQrAlgorithm {
         int rowB = n*Q.numCols;
 
         for( int i = 0; i < Q.numCols; i++ ) {
-            double a = Q.data[rowA+i];
-            double b = Q.data[rowB+i];
-            Q.data[rowA+i] = c*a + s*b;
-            Q.data[rowB+i] = -s*a + c*b;
+            double a = Q.get(rowA+i);
+            double b = Q.get(rowB+i);
+            Q.set( rowA+i, c*a + s*b);
+            Q.set( rowB+i, -s*a + c*b);
         }
 //        System.out.println("------ AFter Update Rotator "+m+" "+n);
 //        Q.print();
 //        System.out.println();
 //        int endA = rowA + Q.numCols;
 //        for( ; rowA != endA; rowA++ , rowB++ ) {
-//            double a = Q.data[rowA];
-//            double b = Q.data[rowB];
-//            Q.data[rowA] = c*a + s*b;
-//            Q.data[rowB] = -s*a + c*b;
+//            double a = Q.get(rowA);
+//            double b = Q.get(rowB);
+//            Q.set(rowA, c*a + s*b);
+//            Q.set(rowB, -s*a + c*b);
 //        }
     }
 

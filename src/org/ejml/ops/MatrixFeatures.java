@@ -47,10 +47,9 @@ public class MatrixFeatures {
     public static boolean hasNaN( D1Matrix64F m )
     {
         int length = m.getNumElements();
-        double data[] = m.data;
 
         for( int i = 0; i < length; i++ ) {
-            if( Double.isNaN(data[i]))
+            if( Double.isNaN(m.get(i)))
                 return true;
         }
         return false;
@@ -65,10 +64,9 @@ public class MatrixFeatures {
     public static boolean hasUncountable( D1Matrix64F m )
     {
         int length = m.getNumElements();
-        double data[] = m.data;
 
         for( int i = 0; i < length; i++ ) {
-            double a = data[i];
+            double a = m.get(i);
             if( Double.isNaN(a) || Double.isInfinite(a))
                 return true;
         }
@@ -252,12 +250,10 @@ public class MatrixFeatures {
             return false;
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            double diff = dataA[i] - dataB[i];
+            double diff = a.get(i) - b.get(i);
             if( diff < 0 ) diff = -diff;
 
             if( diff > tol ) {
@@ -390,10 +386,10 @@ public class MatrixFeatures {
         for( int i = 0; i < mat.numRows; i++ ) {
             for( int j = 0; j < mat.numCols; j++ ) {
                 if( i == j ) {
-                    if( Math.abs(mat.data[index++]-1) > tol )
+                    if( Math.abs(mat.get(index++)-1) > tol )
                         return false;
                 } else {
-                    if( Math.abs(mat.data[index++]) > tol )
+                    if( Math.abs(mat.get(index++)) > tol )
                         return false;
                 }
             }
@@ -416,7 +412,7 @@ public class MatrixFeatures {
         int index = 0;
         for( int i = 0; i < mat.numRows; i++ ) {
             for( int j = 0; j < mat.numCols; j++ ) {
-                if( Math.abs(mat.data[index++]-val) > tol )
+                if( Math.abs(mat.get(index++)-val) > tol )
                     return false;
 
             }
@@ -456,14 +452,14 @@ public class MatrixFeatures {
      * @param tol Numerical tolerance.
      * @return True if they are the negative of each other within tolerance.
      */
-    public static boolean isNegative(DenseMatrix64F a, DenseMatrix64F b, double tol) {
+    public static boolean isNegative(D1Matrix64F a, D1Matrix64F b, double tol) {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrix dimensions must match");
 
         int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            if( Math.abs(a.data[i]+b.data[i]) > tol )
+            if( Math.abs(a.get(i)+b.get(i)) > tol )
                 return false;
         }
 

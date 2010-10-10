@@ -33,8 +33,8 @@ public class LinearSolverChol extends LinearSolverAbstract {
 
     CholeskyDecompositionCommon decomp;
     int n;
-    double vv[];
-    double t[];
+    DenseMatrix64F vv;
+    DenseMatrix64F t;
 
     public LinearSolverChol( CholeskyDecompositionCommon decomp ) {
         this.decomp = decomp;
@@ -47,7 +47,7 @@ public class LinearSolverChol extends LinearSolverAbstract {
         if( decomp.decompose(A) ){
             n = A.numCols;
             vv = decomp._getVV();
-            t = decomp.getT().data;
+            t = decomp.getT();
             return true;
         } else {
             return false;
@@ -82,14 +82,12 @@ public class LinearSolverChol extends LinearSolverAbstract {
 
         int numCols = B.numCols;
 
-        double dataB[] = B.data;
-        double dataX[] = X.data;
 
         if(decomp.isLower()) {
             for( int j = 0; j < numCols; j++ ) {
-                for( int i = 0; i < n; i++ ) vv[i] = dataB[i*numCols+j];
+                for( int i = 0; i < n; i++ ) vv.set( i , B.unsafe_get( i , j) );
                 solveInternalL();
-                for( int i = 0; i < n; i++ ) dataX[i*numCols+j] = vv[i];
+                for( int i = 0; i < n; i++ ) X.unsafe_set(i , j , vv.get(i) );
             }
         } else {
             throw new RuntimeException("Implement");
@@ -118,10 +116,8 @@ public class LinearSolverChol extends LinearSolverAbstract {
             throw new RuntimeException("Unexpected matrix dimension");
         }
 
-        double a[] = inv.data;
-
         if(decomp.isLower()) {
-            setToInverseL(a);
+            setToInverseL(inv);
         } else {
             throw new RuntimeException("Implement");
         }
@@ -130,26 +126,27 @@ public class LinearSolverChol extends LinearSolverAbstract {
     /**
      * Sets the matrix to the inverse using a lower triangular amtrix.
      */
-    public void setToInverseL( double a[] ) {
+    public void setToInverseL( DenseMatrix64F a ) {
         for( int i =0; i < n; i++ ) {
-            double el_ii = t[i*n+i];
+            double el_ii = t.unsafe_get( i , i );
             for( int j = 0; j <= i; j++ ) {
                 double sum = (i==j) ? 1.0 : 0;
                 for( int k=i-1; k >=j; k-- ) {
-                    sum -= t[i*n+k]*a[j*n+k];
+                    sum -= t.unsafe_get(i , k )*a.unsafe_get(j , k );
                 }
-                a[j*n+i] = sum / el_ii;
+                a.unsafe_set( j, i ,  sum / el_ii );
             }
         }
         for( int i=n-1; i>=0; i-- ) {
-            double el_ii = t[i*n+i];
+            double el_ii = t.unsafe_get( i, i );
 
             for( int j = 0; j <= i; j++ ) {
-                double sum = (i<j) ? 0 : a[j*n+i];
+                double sum = (i<j) ? 0 : a.unsafe_get( j, i );
                 for( int k=i+1;k<n;k++) {
-                    sum -= t[k*n+i]*a[j*n+k];
+                    sum -= t.unsafe_get( k, i )*a.unsafe_get( j , k );
                 }
-                a[i*n+j] = a[j*n+i] = sum / el_ii;
+                a.unsafe_set( j , i , sum /= el_ii );
+                a.unsafe_set( i , j , sum );
             }
         }
     }

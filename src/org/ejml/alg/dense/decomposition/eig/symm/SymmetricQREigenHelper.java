@@ -112,10 +112,10 @@ public class SymmetricQREigenHelper {
 
         // copy the tridiagonal portion of the matrix
         for( int i = 0; i < N; i++ ) {
-            diag[i] = T.data[i*N+i];
+            diag[i] = T.get(i*N+i);
 
             if( i+1 < N ) {
-                off[i] = T.data[i*N+i+1];
+                off[i] = T.get(i*N+i+1);
             }
         }
     }
@@ -234,10 +234,10 @@ public class SymmetricQREigenHelper {
         int rowB = n*N;
 
         for( int i = 0; i < N; i++ ) {
-            double a = Q.data[rowA+i];
-            double b = Q.data[rowB+i];
-            Q.data[rowA+i] = c*a + s*b;
-            Q.data[rowB+i] = -s*a + c*b;
+            double a = Q.get( rowA+i );
+            double b = Q.get( rowB+i );
+            Q.set( rowA+i , c*a + s*b );
+            Q.set( rowB+i , -s*a + c*b );
         }
     }
 

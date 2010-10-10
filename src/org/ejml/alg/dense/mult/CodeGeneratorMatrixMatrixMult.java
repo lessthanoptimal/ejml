@@ -51,7 +51,7 @@ public class CodeGeneratorMatrixMatrixMult {
                         "\n" +
                         "/**\n" +
                         " * <p>\n" +
-                        " * This class contains various types of matrix matrix multiplcation operations for {@link RowD1Matrix64F}.\n" +
+                        " * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix64F}.\n" +
                         " * </p>\n" +
                         " * <p>\n" +
                         " * Two algorithms that are equivalent can often have very different runtime performance.\n" +
@@ -61,13 +61,13 @@ public class CodeGeneratorMatrixMatrixMult {
                         " * </p>\n" +
                         " *\n" +
                         " * <p>\n" +
-                        " * Algorithms that are labled as 'reorder' are designed to avoid caching jumping issues, some times at the cost\n" +
+                        " * Algorithms that are labeled as 'reorder' are designed to avoid caching jumping issues, some times at the cost\n" +
                         " * of increasing the number of operations.  This is important for large matrices.  The straight forward \n" +
                         " * implementation seems to be faster for small matrices.\n" +
                         " * </p>\n" +
                         " * \n" +
                         " * <p>\n" +
-                        " * Algorithms that are labled as 'aux' use an auxilary array of length n.  This array is used to create\n" +
+                        " * Algorithms that are labeled as 'aux' use an auxiliary array of length n.  This array is used to create\n" +
                         " * a copy of an out of sequence column vector that is referenced several times.  This reduces the number\n" +
                         " * of cache misses.  If the 'aux' parameter passed in is null then the array is declared internally.\n" +
                         " * </p>\n" +
@@ -142,7 +142,7 @@ public class CodeGeneratorMatrixMatrixMult {
     private String makeComment( String nameOp , boolean hasAlpha )
     {
         String a = hasAlpha ? "double, " : "";
-        String inputs = "("+a+" org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)";
+        String inputs = "("+a+" org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)";
 
 
         String ret =

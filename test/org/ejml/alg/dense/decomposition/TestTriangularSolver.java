@@ -49,7 +49,7 @@ public class TestTriangularSolver {
         DenseMatrix64F expected = RandomMatrices.createRandom(3,1,rand);
         DenseMatrix64F found = B.copy();
 
-        TriangularSolver.solveL(L.data,found.data,3);
+        TriangularSolver.solveL(L,found,3);
         CommonOps.mult(L_inv,B,expected);
 
 
@@ -77,7 +77,7 @@ public class TestTriangularSolver {
         DenseMatrix64F expected = RandomMatrices.createRandom(3,4,rand);
         DenseMatrix64F found = B.copy();
 
-        TriangularSolver.solveL(L.data,found.data,3,4);
+        TriangularSolver.solveL(L,found,3,4);
         CommonOps.mult(L_inv,B,expected);
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
@@ -91,7 +91,7 @@ public class TestTriangularSolver {
         DenseMatrix64F expected = RandomMatrices.createRandom(3,1,rand);
         DenseMatrix64F found = B.copy();
 
-        TriangularSolver.solveTranL(L.data,found.data,3);
+        TriangularSolver.solveTranL(L,found,3);
 
         CommonOps.transpose(L);
         DenseMatrix64F L_inv = L.copy();
@@ -117,7 +117,7 @@ public class TestTriangularSolver {
         DenseMatrix64F expected = RandomMatrices.createRandom(3,1,rand);
         DenseMatrix64F found = B.copy();
 
-        TriangularSolver.solveU(U.data,found.data,3);
+        TriangularSolver.solveU(U,found,3);
         CommonOps.mult(U_inv,B,expected);
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));

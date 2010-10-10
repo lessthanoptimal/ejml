@@ -51,10 +51,8 @@ public class LinearSolverLu extends LinearSolverLuBase {
 
         int numCols = b.numCols;
 
-        double dataB[] = b.data;
-        double dataX[] = x.data;
 
-        double []vv = decomp._getVV();
+        DenseMatrix64F vv = decomp._getVV();
 
 //        for( int j = 0; j < numCols; j++ ) {
 //            for( int i = 0; i < this.numCols; i++ ) vv[i] = dataB[i*numCols+j];
@@ -63,10 +61,10 @@ public class LinearSolverLu extends LinearSolverLuBase {
 //        }
         for( int j = 0; j < numCols; j++ ) {
             int index = j;
-            for( int i = 0; i < this.numCols; i++ , index += numCols ) vv[i] = dataB[index];
+            for( int i = 0; i < this.numCols; i++ , index += numCols ) vv.set(i , b.get(index));
             decomp._solveVectorInternal(vv);
             index = j;
-            for( int i = 0; i < this.numCols; i++ , index += numCols ) dataX[index] = vv[i];
+            for( int i = 0; i < this.numCols; i++ , index += numCols ) x.set(index , vv.get(i) );
         }
 
         if( doImprove ) {

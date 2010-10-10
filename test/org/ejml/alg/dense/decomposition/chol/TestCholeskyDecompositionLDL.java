@@ -57,7 +57,7 @@ public class TestCholeskyDecompositionLDL {
 
         UtilTestMatrix.checkEquals(L,foundL);
         for( int i = 0; i < D.length; i++ ) {
-            assertEquals(D[i],cholesky.getD()[i],1e-8);
+            assertEquals(D[i],cholesky.getD().get(i),1e-8);
         }
     }
 

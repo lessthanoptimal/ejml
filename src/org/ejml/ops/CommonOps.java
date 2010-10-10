@@ -533,17 +533,15 @@ public class CommonOps {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( DenseMatrix64F a ) {
+    public static double trace( RowD1Matrix64F a ) {
         if( a.numRows != a.numCols ) {
             throw new IllegalArgumentException("The matrix must be square");
         }
 
-        final double data[] = a.data;
-
         double sum = 0;
         int index = 0;
         for( int i = 0; i < a.numRows; i++ ) {
-            sum += data[index];
+            sum += a.get(index);
             index += 1 + a.numCols;
         }
 
@@ -573,7 +571,7 @@ public class CommonOps {
             if( numCol >= 2 ) {
                 return UnrolledDeterminantFromMinor.det(mat);
             } else {
-                return mat.data[0];
+                return mat.get(0);
             }
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();
@@ -609,7 +607,7 @@ public class CommonOps {
             if( mat.numCols >= 2 ) {
                 UnrolledInverseFromMinor.inv(mat,mat);
             } else {
-                mat.data[0] = 1.0/mat.data[0];
+                mat.set(0, 1.0/mat.get(0));
             }
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();
@@ -655,7 +653,7 @@ public class CommonOps {
             if( result.numCols >= 2 ) {
                 UnrolledInverseFromMinor.inv(mat,result);
             } else {
-                result.data[0] = 1.0/mat.data[0];
+                result.set(0,  1.0/mat.get(0));
             }
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();
@@ -780,20 +778,19 @@ public class CommonOps {
      *
      * @param mat A square matrix.
      */
-    public static void setIdentity( DenseMatrix64F mat )
+    public static void setIdentity( RowD1Matrix64F mat )
     {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
-        double data[] = mat.data;
         int length = mat.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            data[i] = 0;
+            mat.set(i , 0 );
         }
 
         int index = 0;
         for( int i = 0; i < width; i++ , index += mat.numCols + 1) {
-            data[index] = 1;
+            mat.set( index , 1 );
         }
     }
 
@@ -1012,7 +1009,7 @@ public class CommonOps {
         }
 
         for( int i = 0; i < N; i++ ) {
-            dst.data[i] = src.get(i,i);
+            dst.set(i,  src.get(i,i));
         }
     }
 
@@ -1086,11 +1083,9 @@ public class CommonOps {
     public static double elementMax( D1Matrix64F a ) {
         final int size = a.getNumElements();
 
-        final double dataA[] = a.data;
-
-        double max = dataA[0];
+        double max = a.get(0);
         for( int i = 1; i < size; i++ ) {
-            double val = dataA[i];
+            double val = a.get(i);
             if( val >= max ) {
                 max = val;
             }
@@ -1275,13 +1270,10 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataA[i] += dataB[i];
+            a.plus(i, b.get(i));
         }
     }
 
@@ -1302,13 +1294,10 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            dataA[i] += beta * dataB[i];
+            a.plus(i, beta * b.get(i));
         }
     }
 

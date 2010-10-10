@@ -1,3 +1,6 @@
+- see if offset triangle solve is slower than the standard
+  * if not make offset the only triangle solver
+
 - wrapper so that block cholesky can be used on regular matrices
 - merge cholesky offset by index classes
   * are these fast enough to replace the base class that assumes an index of zero?

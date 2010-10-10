@@ -37,7 +37,7 @@ public class UnrolledInverseFromMinor {
         int N = mat.getNumElements();
         
         for( int i = 1; i < N; i++ ) {
-            double a = Math.abs(mat.data[i]);
+            double a = Math.abs(mat.get(i));
             if( a > max ) max = a;
         }
 

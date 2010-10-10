@@ -21,6 +21,7 @@ package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 import org.ejml.ops.CommonOps;
 
 /**
@@ -33,7 +34,7 @@ import org.ejml.ops.CommonOps;
  */
 public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
-    private DenseMatrix64F UBV;
+    private RowD1Matrix64F UBV;
 
     // number of rows
     private int m;
@@ -75,7 +76,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A , boolean overwrite )
+    public boolean decompose( RowD1Matrix64F A , boolean overwrite )
     {
         init(A,overwrite);
         return _decompose();
@@ -86,11 +87,11 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      *
      * @param A The input matrix.  Not modified.
      */
-    protected void init(DenseMatrix64F A , boolean overwrite ) {
+    protected void init( RowD1Matrix64F A , boolean overwrite ) {
         if( overwrite ) {
             UBV = A;
         } else {
-            UBV = A.copy();
+            UBV = new DenseMatrix64F(A);
         }
 
         m = UBV.numRows;
@@ -116,7 +117,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      *
      * @return UBV matrix.
      */
-    public DenseMatrix64F getUBV() {
+    public RowD1Matrix64F getUBV() {
         return UBV;
     }
 
@@ -135,14 +136,14 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
                 B = new DenseMatrix64F(min,w);
             } else {
                 B.reshape(min,w, false);
-                B.zero();
+                CommonOps.set(B,0);
             }
         } else {
             if( B == null ) {
                 B = new DenseMatrix64F(m,n);
             } else {
                 B.reshape(m,n, false);
-                B.zero();
+                CommonOps.set(B,0);
             }
         }
 
@@ -265,8 +266,6 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
     }
 
     protected void computeU( int k) {
-        double b[] = UBV.data;
-
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
         double max = 0;
@@ -274,7 +273,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
         for( int i = k; i < m; i++ ) {
             // copy the householder vector to vector outside of the matrix to reduce caching issues
             // big improvement on larger matrices and a relatively small performance hit on small matrices.
-            double val = u[i] = b[i*n+k];
+            double val = u[i] = UBV.get( i*n + k );
             val = Math.abs(val);
             if( val > max )
                 max = val;
@@ -287,7 +286,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
             // write the reflector into the lower left column of the matrix
             // while dividing u by nu
             double nu = u[k] + tau;
-            QrHelperFunctions.divideElements_Bcol(k+1,m,n,u,b,k,nu);
+            QrHelperFunctions.divideElements_Bcol(k+1,m,n,u,UBV,k,nu);
             u[k] = 1.0;
 
             double gamma = nu/tau;
@@ -296,29 +295,27 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
             // ---------- multiply on the left by Q_k
             QrHelperFunctions.rank1UpdateMultR(UBV,u,gamma,k+1,k,m,this.b);
 
-            b[k*n+k] = -tau*max;
+            UBV.set( k*n+k , -tau*max );
         } else {
             gammasU[k] = 0;
         }
     }
 
     protected void computeV(int k) {
-        double b[] = UBV.data;
-
         int row = k*n;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
-        double max = QrHelperFunctions.findMax(b,row+k+1,n-k-1);
+        double max = QrHelperFunctions.findMax(UBV,row+k+1,n-k-1);
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = QrHelperFunctions.computeTau(k+1,n,b,row,max);
+            double tau = QrHelperFunctions.computeTau(k+1,n,UBV,row,max);
 
             // write the reflector into the lower left column of the matrix
-            double nu = b[row+k+1] + tau;
-            QrHelperFunctions.divideElements_Brow(k+2,n,u,b,row,nu);
+            double nu = UBV.get( row+k+1 ) + tau;
+            QrHelperFunctions.divideElements_Brow(k+2,n,u,UBV,row,nu);
 
             u[k+1] = 1.0;
 
@@ -330,7 +327,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
             // ---------- multiply on the left by Q_k
             QrHelperFunctions.rank1UpdateMultL(UBV,u,gamma,k+1,k+1,n,this.b);
 
-            b[row+k+1] = -tau*max;
+            UBV.set( row+k+1 , -tau*max );
         } else {
             gammasV[k] = 0;
         }

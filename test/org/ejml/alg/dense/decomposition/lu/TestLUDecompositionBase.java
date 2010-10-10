@@ -22,12 +22,14 @@ package org.ejml.alg.dense.decomposition.lu;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.misc.DeterminantFromMinor;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -64,12 +66,12 @@ public class TestLUDecompositionBase {
         int width = 10;
         DenseMatrix64F LU = RandomMatrices.createRandom(width,width,rand);
 
-        double a[] = new double[]{1,2,3,4,5,6,7,8,9,10};
-        double b[] = new double[]{1,2,3,4,5,6,7,8,9,10};
+        DenseMatrix64F a = new DenseMatrix64F(10,1,true,new double[]{1,2,3,4,5,6,7,8,9,10});
+        DenseMatrix64F b = new DenseMatrix64F(10,1,true,new double[]{1,2,3,4,5,6,7,8,9,10});
         for( int i = 0; i < width; i++ ) LU.set(i,i,1);
 
-        TriangularSolver.solveL(LU.data,a,width);
-        TriangularSolver.solveU(LU.data,a,width);
+        TriangularSolver.solveL(LU,a,width);
+        TriangularSolver.solveU(LU,a,width);
 
         DebugDecompose alg = new DebugDecompose(width);
         for( int i = 0; i < width; i++ ) alg.getIndx()[i] = i;
@@ -77,9 +79,7 @@ public class TestLUDecompositionBase {
         
         alg._solveVectorInternal(b);
 
-        for( int i = 0; i < width; i++ ) {
-            assertEquals(a[i],b[i],1e-6);
-        }
+        assertTrue(MatrixFeatures.isIdentical(a,b,1e-6));
     }
 
     private static class DebugDecompose extends LUDecompositionBase
@@ -91,7 +91,6 @@ public class TestLUDecompositionBase {
 
         void setLU( DenseMatrix64F LU ) {
             this.LU = LU;
-            this.dataLU = LU.data;
         }
 
         @Override

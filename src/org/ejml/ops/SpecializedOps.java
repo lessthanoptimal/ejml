@@ -19,7 +19,9 @@
 
 package org.ejml.ops;
 
+import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -38,14 +40,14 @@ public class SpecializedOps {
      * </p>
      *
      * <p>
-     * In practice {@link org.ejml.alg.dense.mult.VectorVectorMult#householder(double, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F) multHouseholder}
+     * In practice {@link org.ejml.alg.dense.mult.VectorVectorMult#householder(double, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}  multHouseholder}
      * should be used for performance reasons since there is no need to calculate Q explicitly.
      * </p>
      *
      * @param u A vector. Not modified.
      * @return An orthogonal reflector.
      */
-    public static DenseMatrix64F createReflector( DenseMatrix64F u ) {
+    public static DenseMatrix64F createReflector( RowD1Matrix64F u ) {
         if( !MatrixFeatures.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
@@ -66,7 +68,7 @@ public class SpecializedOps {
      * </p>
      *
      * <p>
-     * In practice {@link org.ejml.alg.dense.mult.VectorVectorMult#householder(double, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F) multHouseholder}
+     * In practice {@link org.ejml.alg.dense.mult.VectorVectorMult#householder(double, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}  multHouseholder}
      * should be used for performance reasons since there is no need to calculate Q explicitly.
      * </p>
      *
@@ -99,14 +101,11 @@ public class SpecializedOps {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
 
-        double dataSrc[] = src.data;
-        double dataDst[] = dst.data;
-
         for( int i = 0; i < src.numRows; i++ ) {
             int indexDst = i*src.numCols;
             int indexSrc = order[i]*src.numCols;
 
-            System.arraycopy(dataSrc,indexSrc,dataDst,indexDst,src.numCols);
+            System.arraycopy(src.data,indexSrc,dst.data,indexDst,src.numCols);
         }
 
         return dst;
@@ -129,39 +128,33 @@ public class SpecializedOps {
      *
      * @return The F normal of the difference matrix.
      */
-    public static double diffNormF( DenseMatrix64F a , DenseMatrix64F b )
+    public static double diffNormF( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
         }
-
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
 
         final int size = a.getNumElements();
 
         DenseMatrix64F diff = new DenseMatrix64F(size,1);
 
         for( int i = 0; i < size; i++ ) {
-            diff.data[i] = dataB[i] - dataA[i];
+            diff.set(i , b.get(i) - a.get(i));
         }
         return NormOps.normF(diff);
     }
 
-    public static double diffNormF_fast( DenseMatrix64F a , DenseMatrix64F b )
+    public static double diffNormF_fast( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
         final int size = a.getNumElements();
 
         double total=0;
         for( int i = 0; i < size; i++ ) {
-            double diff = dataB[i] - dataA[i];
+            double diff = b.get(i) - a.get(i);
             total += diff*diff;
         }
         return Math.sqrt(total);
@@ -184,20 +177,17 @@ public class SpecializedOps {
      *
      * @return The p=1 p-norm of the difference matrix.
      */
-    public static double diffNormP1( DenseMatrix64F a , DenseMatrix64F b )
+    public static double diffNormP1( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
         }
 
-        final double dataA[] = a.data;
-        final double dataB[] = b.data;
-
         final int size = a.getNumElements();
 
         double total=0;
         for( int i = 0; i < size; i++ ) {
-            total += Math.abs(dataB[i] - dataA[i]);
+            total += Math.abs(b.get(i) - a.get(i));
         }
         return total;
     }
@@ -213,7 +203,7 @@ public class SpecializedOps {
      * @param B A square matrix that the results are saved to.  Modified.
      * @param alpha Scaling factor for the identity matrix.
      */
-    public static void addIdentity( DenseMatrix64F A , DenseMatrix64F B , double alpha )
+    public static void addIdentity( RowD1Matrix64F A , RowD1Matrix64F B , double alpha )
     {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("A must be square");
@@ -226,9 +216,9 @@ public class SpecializedOps {
         for( int i = 0; i < n; i++ ) {
             for( int j = 0; j < n; j++ , index++) {
                 if( i == j ) {
-                    B.data[index] = A.data[index] + alpha;
+                    B.set( index , A.get(index) + alpha);
                 } else {
-                    B.data[index] = A.data[index];
+                    B.set( index , A.get(index) );
                 }
             }
         }
@@ -249,14 +239,14 @@ public class SpecializedOps {
      * @param offsetV First element in 'v' where the results are extracted to.
      * @param v Vector where the results are written to. Modified.
      */
-    public static void subvector(DenseMatrix64F A, int rowA, int colA, int length , boolean row, int offsetV, DenseMatrix64F v) {
+    public static void subvector(RowD1Matrix64F A, int rowA, int colA, int length , boolean row, int offsetV, RowD1Matrix64F v) {
         if( row ) {
             for( int i = 0; i < length; i++ ) {
-                v.data[offsetV +i] = A.get(rowA,colA+i);
+                v.set( offsetV +i , A.get(rowA,colA+i) );
             }
         } else {
             for( int i = 0; i < length; i++ ) {
-                v.data[offsetV +i] = A.get(rowA+i,colA);
+                v.set( offsetV +i , A.get(rowA+i,colA));
             }
         }
     }
@@ -268,7 +258,7 @@ public class SpecializedOps {
      * @param column If true then column vectors will be created.
      * @return Set of vectors.
      */
-    public static DenseMatrix64F[] splitIntoVectors( DenseMatrix64F A , boolean column )
+    public static DenseMatrix64F[] splitIntoVectors( RowD1Matrix64F A , boolean column )
     {
         int w = column ? A.numCols : A.numRows;
 
@@ -339,12 +329,12 @@ public class SpecializedOps {
      * @param T A matrix.
      * @return product of the diagonal elements.
      */
-    public static double diagProd( DenseMatrix64F T )
+    public static double diagProd( RowD1Matrix64F T )
     {
         double prod = 1.0;
         int N = Math.min(T.numRows,T.numCols);
         for( int i = 0; i < N; i++ ) {
-            prod *= T.get(i,i);
+            prod *= T.unsafe_get(i,i);
         }
 
         return prod;
@@ -360,7 +350,7 @@ public class SpecializedOps {
      * @param T A matrix.
      * @return product of the diagonal elements.
      */
-    public static double qualityUpperTriangular( DenseMatrix64F T )
+    public static double qualityUpperTriangular( RowD1Matrix64F T )
     {
         int N = Math.min(T.numRows,T.numCols);
 
@@ -372,7 +362,7 @@ public class SpecializedOps {
 
         double quality = 1.0;
         for( int i = 0; i < N; i++ ) {
-            quality *= T.get(i,i)/max;
+            quality *= T.unsafe_get(i,i)/max;
         }
 
         return Math.abs(quality);

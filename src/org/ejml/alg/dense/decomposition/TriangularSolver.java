@@ -19,6 +19,8 @@
 
 package org.ejml.alg.dense.decomposition;
 
+import org.ejml.data.RowD1Matrix64F;
+
 /**
  * <p>
  * This contains algorithms for solving systems of equations where T is a
@@ -50,7 +52,7 @@ public class TriangularSolver {
      * @param b A vector of length n. Modified.
      * @param n The size of the matrices.
      */
-    public static void solveL( double L[] , double []b , int n )
+    public static void solveL( RowD1Matrix64F L , RowD1Matrix64F b , int n )
     {
 //        for( int i = 0; i < n; i++ ) {
 //            double sum = b[i];
@@ -60,12 +62,12 @@ public class TriangularSolver {
 //            b[i] = sum / L[i*n+i];
 //        }
         for( int i = 0; i < n; i++ ) {
-            double sum = b[i];
+            double sum = b.get(i);
             int indexL = i*n;
             for( int k=0; k<i; k++ ) {
-                sum -= L[indexL++]* b[k];
+                sum -= L.get(indexL++)* b.get(k);
             }
-            b[i] = sum / L[indexL];
+            b.set(i,  sum / L.get(indexL));
         }
     }
 
@@ -79,15 +81,15 @@ public class TriangularSolver {
      * @param m
      * @param n
      */
-    public static void solveL( double L[] , double []b , int m , int n )
+    public static void solveL( RowD1Matrix64F L , RowD1Matrix64F b , int m , int n )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
-                double sum = b[i*n+j];
+                double sum = b.get(i*n+j);
                 for( int k=0; k<i; k++ ) {
-                    sum -= L[i*m+k]* b[k*n+j];
+                    sum -= L.unsafe_get(i,k)* b.unsafe_get(k,j);
                 }
-                b[i*n+j] = sum / L[i*m+i];
+                b.set(i*n+j,  sum / L.unsafe_get(i,i));
             }
         }
     }
@@ -109,14 +111,14 @@ public class TriangularSolver {
      * @param b A vector of length n. Modified.
      * @param n The size of the matrices.
      */
-    public static void solveTranL( double L[] , double []b , int n )
+    public static void solveTranL( RowD1Matrix64F L , RowD1Matrix64F b , int n )
     {
         for( int i =n-1; i>=0; i-- ) {
-            double sum = b[i];
+            double sum = b.get(i);
             for( int k = i+1; k <n; k++ ) {
-                sum -= L[k*n+i]* b[k];
+                sum -= L.unsafe_get(k,i)* b.get(k);
             }
-            b[i] = sum/L[i*n+i];
+            b.set(i, sum/L.unsafe_get(i,i));
         }
     }
 
@@ -133,7 +135,7 @@ public class TriangularSolver {
      * @param b A vector of length n. Modified.
      * @param n The size of the matrices.
      */
-    public static void solveU( double U[] , double []b , int n )
+    public static void solveU( RowD1Matrix64F U , RowD1Matrix64F b , int n )
     {
 //        for( int i =n-1; i>=0; i-- ) {
 //            double sum = b[i];
@@ -143,16 +145,16 @@ public class TriangularSolver {
 //            b[i] = sum/U[i*n+i];
 //        }
         for( int i =n-1; i>=0; i-- ) {
-            double sum = b[i];
+            double sum = b.get(i);
             int indexU = i*n+i+1;
             for( int j = i+1; j <n; j++ ) {
-                sum -= U[indexU++]* b[j];
+                sum -= U.get(indexU++) * b.get(j);
             }
-            b[i] = sum/U[i*n+i];
+            b.set(i,  sum/U.unsafe_get(i,i));
         }
     }
 
-    public static void solveU( double U[] , double []b , int sideLength , int minRow , int maxRow )
+    public static void solveU( RowD1Matrix64F U , RowD1Matrix64F b , int sideLength , int minRow , int maxRow )
     {
 //        for( int i =maxRow-1; i>=minRow; i-- ) {
 //            double sum = b[i];
@@ -162,12 +164,12 @@ public class TriangularSolver {
 //            b[i] = sum/U[i*sideLength+i];
 //        }
         for( int i =maxRow-1; i>=minRow; i-- ) {
-            double sum = b[i];
+            double sum = b.get(i);
             int indexU = i*sideLength+i+1;
             for( int j = i+1; j <maxRow; j++ ) {
-                sum -= U[indexU++]* b[j];
+                sum -= U.get(indexU++)* b.get(j);
             }
-            b[i] = sum/U[i*sideLength+i];
+            b.set(i,  sum/U.unsafe_get(i,i));
         }
     }
 }

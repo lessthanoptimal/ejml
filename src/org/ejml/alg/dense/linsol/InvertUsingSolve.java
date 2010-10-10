@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 import org.ejml.ops.CommonOps;
 
 
@@ -32,7 +33,7 @@ import org.ejml.ops.CommonOps;
  */
 public class InvertUsingSolve {
     public static void invert( LinearSolver solver , DenseMatrix64F A_inv ) {
-        DenseMatrix64F A = solver.getA();
+        RowD1Matrix64F A = solver.getA();
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");

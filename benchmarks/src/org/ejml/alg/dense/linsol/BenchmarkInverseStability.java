@@ -117,7 +117,7 @@ public class BenchmarkInverseStability {
                 DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 3, 2, 4, 6, 4, 6, -2);
                 DenseMatrix64F A_inv = new DenseMatrix64F(3,3);
 
-                A.data[w] += delta;
+                A.plus(w,  delta);
 
                 try {
                     if( !alg.setA(A) ) {

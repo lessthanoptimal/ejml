@@ -22,6 +22,7 @@ package org.ejml.alg.dense.linsol.gj;
 import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 
 /**
@@ -73,7 +74,7 @@ public class GaussJordan extends LinearSolverAbstract {
         throw new IllegalArgumentException("Not supported by this solver.");
     }
 
-    public static void checkArgumentSquare( DenseMatrix64F mat , String name )
+    public static void checkArgumentSquare( RowD1Matrix64F mat , String name )
     {
         if( mat.numCols != mat.numRows)
             throw new IllegalArgumentException("'"+name+"' must be a square matrix.");
@@ -89,7 +90,6 @@ public class GaussJordan extends LinearSolverAbstract {
         
         final int N = A.numCols;
 
-        double dataA[] = A.data;
 
         for( int i = 0; i < N; i++ ) {
             ipiv[i] = 0;
@@ -108,7 +108,7 @@ public class GaussJordan extends LinearSolverAbstract {
                 if( ipiv[j] != 1 ) {
                     for( int k = 0; k < N; k++ ) {
                         if( ipiv[k] == 0 ) {
-                            double val = dataA[j*N+k];
+                            double val = A.unsafe_get(j,k);
                             if( val < 0 ) val = -val;
                             if( val > bestVal ) {
                                 bestVal = val;
@@ -125,7 +125,7 @@ public class GaussJordan extends LinearSolverAbstract {
             ipiv[bestCol]++;
 
             if( bestRow != bestCol ) {
-                swapRow(dataA,A.numCols,bestRow,bestCol);
+                swapRow(A,A.numCols,bestRow,bestCol);
             }
 
             indexRow[i] = bestRow;
@@ -136,25 +136,25 @@ public class GaussJordan extends LinearSolverAbstract {
                 throw new SingularMatrixException();
             }
 
-            dataA[bestCol*N+bestCol] = 1.0;
+            A.set(bestCol*N+bestCol, 1.0);
             // make the first element in this row 1
             for( int x = 0; x < N; x++ ) {
-                dataA[bestCol*N+x] /= valA;
+                A.div(bestCol*N+x, valA);
             }
 
             // make all the i columns zero, except for row i
             for( int j = 0; j < N; j++ ) {
                 if( bestCol == j ) continue;
                 double val = A.get(j,bestCol);
-                dataA[j*N+bestCol] = 0;
+                A.set(j*N+bestCol, 0);
 
                 for( int x = 0; x < N; x++ ) {
-                    dataA[j*N+x] -= val*dataA[bestCol*N+x];
+                    A.minus(j*N+x, val*A.get(bestCol*N+x));
                 }
             }
         }
 
-        unscramble(N, dataA, indexRow, indexCol);
+        unscramble(N, A, indexRow, indexCol);
     }
 
     /**
@@ -173,9 +173,6 @@ public class GaussJordan extends LinearSolverAbstract {
 
         final int N = A.numCols;
 
-        double dataA[] = A.data;
-        double dataX[] = X.data;
-
         for( int i = 0; i < N; i++ ) {
             ipiv[i] = 0;
         }
@@ -193,7 +190,7 @@ public class GaussJordan extends LinearSolverAbstract {
                 if( ipiv[j] != 1 ) {
                     for( int k = 0; k < N; k++ ) {
                         if( ipiv[k] == 0 ) {
-                            double val = dataA[j*N+k];
+                            double val = A.unsafe_get(j,k);
                             if( val < 0 ) val = -val;
                             if( val > bestVal ) {
                                 bestVal = val;
@@ -207,8 +204,8 @@ public class GaussJordan extends LinearSolverAbstract {
             ipiv[bestCol]++;
 
             if( bestRow != bestCol ) {
-                swapRow(dataA,A.numCols,bestRow,bestCol);
-                swapRow(dataX,X.numCols,bestRow,bestCol);
+                swapRow(A,A.numCols,bestRow,bestCol);
+                swapRow(X,X.numCols,bestRow,bestCol);
             }
 
             indexRow[i] = bestRow;
@@ -220,50 +217,50 @@ public class GaussJordan extends LinearSolverAbstract {
             }
             valA = 1.0/valA;
 
-            dataA[bestCol*N+bestCol] = 1.0;
+            A.unsafe_set(bestCol,bestCol, 1.0);
             // make the first element in this row 1
             for( int x = 0; x < N; x++ ) {
-                dataA[bestCol*N+x] *= valA;
+                A.times(bestCol*N+x,  valA);
             }
             for( int x = 0; x < X.numCols; x++ ) {
-                dataX[bestCol*X.numCols+x] *= valA;
+                X.times(bestCol*X.numCols+x, valA);
             }
 
             // make all the i columns zero, except for row i
             for( int j = 0; j < N; j++ ) {
                 if( bestCol == j ) continue;
                 double val = A.get(j,bestCol);
-                dataA[j*N+bestCol] = 0;
+                A.set(j*N+bestCol, 0);
 
                 for( int x = 0; x < N; x++ ) {
-                    dataA[j*N+x] -= val*dataA[bestCol*N+x];
+                    A.minus(j*N+x, val*A.get(bestCol*N+x));
                 }
 
                 for( int x = 0; x < X.numCols; x++ ) {
-                    dataX[j*X.numCols+x] -= val*dataX[bestCol*X.numCols+x];
+                    X.minus(j*X.numCols+x, val*X.get(bestCol*X.numCols+x));
                 }
             }
         }
 
-        unscramble(N, dataA, indexRow, indexCol);
+        unscramble(N, A, indexRow, indexCol);
     }
 
-    private static void unscramble(int N, double[] data, int[] indexRow, int[] indexCol) {
+    private static void unscramble(int N, RowD1Matrix64F data, int[] indexRow, int[] indexCol) {
         for( int i = N -1; i >= 0; i-- ) {
             if( indexRow[i] != indexCol[i]) {
                 for( int k = 0; k < N; k++ ){
                     int row = k*N;
                     int ir = row + indexRow[i];
                     int ic = row + indexCol[i];
-                    double temp = data[ir];
-                    data[ir] = data[ic];
-                    data[ic] = temp;
+                    double temp = data.get(ir);
+                    data.set(ir, data.get(ic));
+                    data.set(ic, temp);
                 }
             }
         }
     }
 
-    private static void swapRow( double data[] , int numCols , int fromRow , int toRow )
+    private static void swapRow( RowD1Matrix64F data , int numCols , int fromRow , int toRow )
     {
         int indexFrom = fromRow*numCols;
         int indexTo = toRow*numCols;
@@ -271,9 +268,9 @@ public class GaussJordan extends LinearSolverAbstract {
         int end = indexFrom + numCols;
 
         for( ; indexFrom < end; indexFrom++ , indexTo++) {
-            double temp = data[indexTo];
-            data[indexTo] = data[indexFrom];
-            data[indexFrom] = temp;
+            double temp = data.get(indexTo);
+            data.set(indexTo, data.get(indexFrom));
+            data.set(indexFrom, temp);
         }
     }
 }

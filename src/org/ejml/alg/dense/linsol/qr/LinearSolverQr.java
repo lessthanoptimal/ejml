@@ -129,7 +129,7 @@ public class LinearSolverQr extends LinearSolverAbstract {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                Y.data[i] = B.get(i,colB);
+                Y.set(i, B.unsafe_get(i,colB));
             }
 
             // Solve Qa=b
@@ -137,11 +137,11 @@ public class LinearSolverQr extends LinearSolverAbstract {
             CommonOps.multTransA(Q,Y,Z);
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R.data,Z.data,numCols);
+            TriangularSolver.solveU(R,Z,numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
-                X.set(i,colB,Z.data[i]);
+                X.unsafe_set(i,colB,Z.get(i));
             }
         }
     }

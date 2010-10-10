@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowD1Matrix64F;
 
 /**
  * <p>
@@ -46,11 +47,11 @@ public interface BidiagonalDecomposition {
      * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
      * false otherwise.
      *
-     * @param A  The matrix that is being decomposed.  Not modified.
+     * @param A  The matrix that is being decomposed.
      * @param overwrite Can it over write the passed in matrix
      * @return If it detects any errors or not.
      */
-    public boolean decompose( DenseMatrix64F A , boolean overwrite );
+    public boolean decompose( RowD1Matrix64F A , boolean overwrite );
 
     /**
      * Returns the bidiagonal matrix.

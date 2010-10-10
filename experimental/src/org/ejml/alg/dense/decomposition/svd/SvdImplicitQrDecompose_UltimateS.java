@@ -131,7 +131,7 @@ public class SvdImplicitQrDecompose_UltimateS implements SingularValueDecomposit
         }
 
         for( int i = 0; i < numSingular; i++ ) {
-            W.data[i*W.numCols+i] = singularValues[i];
+            W.unsafe_set(i,i, singularValues[i]);
         }
 
         return W;
@@ -290,7 +290,7 @@ public class SvdImplicitQrDecompose_UltimateS implements SingularValueDecomposit
                     int stop = start+ Ut.numCols;
 
                     for( int j = start; j < stop; j++ ) {
-                        Ut.data[j] = -Ut.data[j];
+                        Ut.set(j, -Ut.get(j));
                     }
                 }
             }

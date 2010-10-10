@@ -168,7 +168,7 @@ public class WatchedDoubleStepQREigenvector {
         SpecializedOps.subvector(implicit.A,0,index,index,false,0,r);
         CommonOps.changeSign(r);
 
-        TriangularSolver.solveU(implicit.A.data,r.data,implicit.A.numRows,0,index);
+        TriangularSolver.solveU(implicit.A,r,implicit.A.numRows,0,index);
 
         for( int i = 0; i < index; i++ ) {
             implicit.A.add(i,i,real);

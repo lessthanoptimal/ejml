@@ -192,7 +192,7 @@ public class TestRandomMatrices {
         RandomMatrices.addRandom(A,1,2,rand);
 
         for( int i = 0; i < A.getNumElements(); i++ ) {
-            assertTrue(A.data[i] >= -1 && A.data[i] <= 0 );
+            assertTrue(A.get(i) >= -1 && A.get(i) <= 0 );
         }
     }
 

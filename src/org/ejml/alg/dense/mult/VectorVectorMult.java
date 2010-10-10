@@ -179,7 +179,7 @@ public class VectorVectorMult {
 
         int index = 0;
         for( int i = 0; i < m; i++ ) {
-            double xdat = x.data[i];
+            double xdat = x.get(i);
             for( int j = 0; j < n; j++ ) {
                 A.set(index++ ,  xdat*y.get(j) );
             }
@@ -215,14 +215,14 @@ public class VectorVectorMult {
         int index = 0;
         if( gamma == 1.0 ) {
             for( int i = 0; i < m; i++ ) {
-                double xdat = x.data[i];
+                double xdat = x.get(i);
                 for( int j = 0; j < n; j++ ) {
                     A.plus( index++ , xdat*y.get(j) );
                 }
             }
         } else {
             for( int i = 0; i < m; i++ ) {
-                double xdat = x.data[i];
+                double xdat = x.get(i);
                 for( int j = 0; j < n; j++ ) {
                     A.plus( index++ , gamma*xdat*y.get(j));
                 }
