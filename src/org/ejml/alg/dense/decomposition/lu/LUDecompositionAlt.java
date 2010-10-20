@@ -44,13 +44,13 @@ public class LUDecompositionAlt extends LUDecompositionBase {
     {
         decomposeCommonInit(a);
 
-        DenseMatrix64F LUcolj = vv;
+        double LUcolj[] = vv;
 
         for( int j = 0; j < n; j++ ) {
 
             // make a copy of the column to avoid cache jumping issues
             for( int i = 0; i < m; i++) {
-                LUcolj.set( i , LU.unsafe_get(i , j ));
+                LUcolj[i] = dataLU[i*n + j];
             }
 
             // Apply previous transformations.
@@ -61,18 +61,17 @@ public class LUDecompositionAlt extends LUDecompositionBase {
                 int kmax = i < j ? i : j;
                 double s = 0.0;
                 for (int k = 0; k < kmax; k++) {
-                    s += LU.get( rowIndex+k )*LUcolj.get(k);
+                    s += dataLU[rowIndex+k]*LUcolj[k];
                 }
 
-                LUcolj.minus( i , s );
-                LU.set( rowIndex+j , LUcolj.get(i) );
+                dataLU[rowIndex+j] = LUcolj[i] -= s;
             }
 
             // Find pivot and exchange if necessary.
             int p = j;
-            double max = Math.abs(LUcolj.get(p));
+            double max = Math.abs(LUcolj[p]);
             for (int i = j+1; i < m; i++) {
-                double v = Math.abs(LUcolj.get(i));
+                double v = Math.abs(LUcolj[i]);
                 if ( v > max) {
                     p = i;
                     max = v;
@@ -90,9 +89,9 @@ public class LUDecompositionAlt extends LUDecompositionBase {
                 int rowJ = j*n;
                 int endP = rowP+n;
                 for (;rowP < endP; rowP++,rowJ++) {
-                    double t = LU.get(rowP);
-                    LU.set( rowP , LU.get(rowJ) );
-                    LU.set( rowJ , t );
+                    double t = dataLU[rowP];
+                    dataLU[rowP] = dataLU[rowJ];
+                    dataLU[rowJ] = t;
                 }
                 int k = pivot[p]; pivot[p] = pivot[j]; pivot[j] = k;
                 pivsign = -pivsign;
@@ -101,10 +100,10 @@ public class LUDecompositionAlt extends LUDecompositionBase {
 
             // Compute multipliers.
             if (j < m ) {
-                double lujj = LU.unsafe_get( j, j );
+                double lujj = dataLU[j*n+j];
                 if( lujj != 0 ) {
                     for (int i = j+1; i < m; i++) {
-                        LU.div( i*n+j , lujj );
+                        dataLU[i*n+j] /= lujj;
                     }
                 }
             }

@@ -44,8 +44,6 @@ public class BlockMatrix64F extends D1Matrix64F {
         this(numRows,numCols, EjmlParameters.BLOCK_WIDTH);
     }
 
-    public BlockMatrix64F(){}
-
     public void set( BlockMatrix64F A ) {
         this.blockLength = A.blockLength;
         this.numRows = A.numRows;

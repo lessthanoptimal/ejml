@@ -42,9 +42,11 @@ public abstract class LUDecompositionBase implements LUDecomposition {
 
     // the shape of the matrix
     protected int m,n;
+    // data in the matrix
+    protected double dataLU[];
 
     // used in set, solve, invert
-    protected DenseMatrix64F vv;
+    protected double vv[];
     // used in set
     protected int indx[];
     protected int pivot[];
@@ -56,9 +58,10 @@ public abstract class LUDecompositionBase implements LUDecomposition {
     {
         LU = new DenseMatrix64F(numRows,numCols);
 
+        this.dataLU = LU.data;
         maxWidth = Math.max(numRows,numCols);
 
-        vv = new DenseMatrix64F( maxWidth );
+        vv = new double[ maxWidth ];
         indx = new int[ maxWidth ];
         pivot = new int[ maxWidth ];
     }
@@ -173,7 +176,7 @@ public abstract class LUDecompositionBase implements LUDecomposition {
     @Override
     public boolean isSingular() {
         for( int i = 0; i < m; i++ ) {
-            if( Math.abs(LU.unsafe_get( i, i ) ) < UtilEjml.EPS )
+            if( Math.abs(dataLU[i* n +i]) < UtilEjml.EPS )
                 return true;
         }
         return false;
@@ -193,7 +196,7 @@ public abstract class LUDecompositionBase implements LUDecomposition {
 
         int total = m*n;
         for( int i = 0; i < total; i += n + 1 ) {
-            ret *= LU.get(i);
+            ret *= dataLU[i];
         }
 
         return ret;
@@ -206,32 +209,32 @@ public abstract class LUDecompositionBase implements LUDecomposition {
     /**
      * a specialized version of solve that avoid additional checks that are not needed.
      */
-    public void _solveVectorInternal( DenseMatrix64F vv )
+    public void _solveVectorInternal( double []vv )
     {
         // Solve L*Y = B
         int ii = 0;
 
         for( int i = 0; i < n; i++ ) {
             int ip = indx[i];
-            double sum = vv.get(ip);
-            vv.set(ip , vv.get(i));
+            double sum = vv[ip];
+            vv[ip] = vv[i];
             if( ii != 0 ) {
 //                for( int j = ii-1; j < i; j++ )
 //                    sum -= dataLU[i* n +j]*vv[j];
                 int index = i*n + ii-1;
                 for( int j = ii-1; j < i; j++ )
-                    sum -= LU.get(index++)*vv.get(j);
+                    sum -= dataLU[index++]*vv[j];
             } else if( sum != 0.0 ) {
                 ii=i+1;
             }
-            vv.set(i , sum );
+            vv[i] = sum;
         }
 
         // Solve U*X = Y;
-        TriangularSolver.solveU(LU,vv,n);
+        TriangularSolver.solveU(dataLU,vv,n);
     }
 
-    public DenseMatrix64F _getVV() {
+    public double[] _getVV() {
         return vv;
     }
 }

@@ -19,7 +19,6 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.D1Matrix64F;
 import org.ejml.data.D1Submatrix64F;
 
 
@@ -76,7 +75,7 @@ public class BlockInnerRankUpdate {
 
 
                 BlockInnerMultiplication.multTransABlockAdd(alpha,
-                        B.original,B.original,A.original,
+                        B.original.data,B.original.data,A.original.data,
                         indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
             }
         }
@@ -123,10 +122,10 @@ public class BlockInnerRankUpdate {
 
                 if( i == j ) {
                     // only the upper portion of this block needs to be modified since it is along a diagonal
-                    multTransABlockMinus_U( B.original,A.original,
+                    multTransABlockMinus_U( B.original.data,A.original.data,
                             indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
                 } else {
-                    multTransABlockMinus( B.original,A.original,
+                    multTransABlockMinus( B.original.data,A.original.data,
                             indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
                 }
             }
@@ -173,10 +172,10 @@ public class BlockInnerRankUpdate {
                 int indexB_j = j*B.original.numCols + widthB_j*B.col0;
 
                 if( i == j ) {
-                    multTransBBlockMinus_L( B.original,A.original,
+                    multTransBBlockMinus_L( B.original.data,A.original.data,
                             indexB_i,indexB_j,indexA,widthB,heightB_i,widthB_j);
                 } else {
-                    multTransBBlockMinus( B.original,A.original,
+                    multTransBBlockMinus( B.original.data,A.original.data,
                             indexB_i,indexB_j,indexA,widthB,heightB_i,widthB_j);
                 }
             }
@@ -190,7 +189,7 @@ public class BlockInnerRankUpdate {
      * c = c - a<sup>T</sup>a<br>
      * </p>
      */
-    protected static void multTransABlockMinus( D1Matrix64F A , D1Matrix64F C,
+    protected static void multTransABlockMinus( double[] dataA, double []dataC,
                                                 int indexA, int indexB, int indexC,
                                                 final int heightA, final int widthA, final int widthC ) {
 //        for( int i = 0; i < widthA; i++ ) {
@@ -211,11 +210,11 @@ public class BlockInnerRankUpdate {
             int rowB = k*widthC + indexB;
             int endB = rowB + widthC;
             while( a != endA ) {
-                double valA = A.get(a++);
+                double valA = dataA[a++];
 
                 int b = rowB;
                 while( b != endB ) {
-                    C.minus( c++ , valA * A.get(b++));
+                    dataC[ c++ ] -= valA * dataA[b++];
                 }
             }
         }
@@ -228,7 +227,7 @@ public class BlockInnerRankUpdate {
      * c = c - a<sup>T</sup>a<br>
      * </p>
      */
-    protected static void multTransABlockMinus_U( D1Matrix64F A, D1Matrix64F C,
+    protected static void multTransABlockMinus_U( double[] dataA, double []dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int heightA, final int widthA, final int widthC ) {
 //        for( int i = 0; i < widthA; i++ ) {
@@ -244,7 +243,7 @@ public class BlockInnerRankUpdate {
         for( int i = 0; i < widthA; i++ ) {
             for( int k = 0; k < heightA; k++ ) {
 
-                double valA = A.get(k*widthA + i + indexA );
+                double valA = dataA[k*widthA + i + indexA];
                 int b = k*widthC + indexB + i;
                 int c = i*widthC + indexC + i;
 
@@ -252,7 +251,7 @@ public class BlockInnerRankUpdate {
 
                 while( c != endC ) {
 //                for( int j = i; j < widthC; j++ ) {
-                    C.minus( c++ , valA * A.get(b++) );
+                    dataC[ c++ ] -= valA * dataA[b++];
                 }
             }
         }
@@ -265,7 +264,7 @@ public class BlockInnerRankUpdate {
      * c = c - a*a<sup>T</sup><br>
      * </p>
      */
-    protected static void multTransBBlockMinus( D1Matrix64F A, D1Matrix64F C,
+    protected static void multTransBBlockMinus( double[] dataA, double []dataC,
                                                 int indexA, int indexB, int indexC,
                                                 final int widthA, final int heightA, final int widthC ) {
 //        for( int i = 0; i < heightA; i++ ) {
@@ -289,9 +288,9 @@ public class BlockInnerRankUpdate {
                 int b = rowB;
 
                 while( a != endA ) {
-                    sum += A.get(a++) * A.get(b++);
+                    sum += dataA[a++] * dataA[b++];
                 }
-                C.minus( rowC + j , sum );
+                dataC[ rowC + j ] -= sum;
             }
         }
     }
@@ -303,7 +302,7 @@ public class BlockInnerRankUpdate {
      * c = c - a*a<sup>T</sup><br>
      * </p>
      */
-    protected static void multTransBBlockMinus_L( D1Matrix64F A , D1Matrix64F C,
+    protected static void multTransBBlockMinus_L( double[] dataA, double []dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int widthA, final int heightA, final int widthC ) {
 //        for( int i = 0; i < heightA; i++ ) {
@@ -328,9 +327,9 @@ public class BlockInnerRankUpdate {
                 int b = rowB;
 
                 while( a != endA ) {
-                    sum += A.get(a++) * A.get(b++);
+                    sum += dataA[a++] * dataA[b++];
                 }
-                C.minus( rowC + j , sum );
+                dataC[ rowC + j ] -= sum;
             }
         }
 

@@ -50,12 +50,13 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
 
     // the decomposed matrix
     private DenseMatrix64F L;
+    private double[] el;
 
     // the D vector
-    private DenseMatrix64F d;
+    private double[] d;
 
-    // temporary variable used by various functions
-    DenseMatrix64F vv;
+    // tempoary variable used by various functions
+    double vv[];
 
     public void setExpectedMaxSize( int numRows , int numCols ) {
         if( numRows != numCols ) {
@@ -65,9 +66,10 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
         this.maxWidth = numRows;
 
         this.L = new DenseMatrix64F(maxWidth,maxWidth);
+        this.el = L.data;
 
-        this.vv = new DenseMatrix64F(maxWidth);
-        this.d = new DenseMatrix64F(maxWidth);
+        this.vv = new double[maxWidth];
+        this.d = new double[maxWidth];
     }
 
     /**
@@ -96,10 +98,10 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
         double d_inv=0;
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = L.unsafe_get( i , j );
+                double sum = el[i*n+j];
 
                 for( int k = 0; k < i; k++ ) {
-                    sum -= L.unsafe_get( i , k )*L.unsafe_get( j, k )*d.get(k);
+                    sum -= el[i*n+k]*el[j*n+k]*d[k];
                 }
 
                 if( i == j ) {
@@ -107,18 +109,18 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
                     if( sum <= 0.0 )
                         return false;
 
-                    d.set(i , sum );
+                    d[i] = sum;
                     d_inv = 1.0/sum;
-                    L.unsafe_set( i , i , 1 );
+                    el[i*n+i] = 1;
                 } else {
-                    L.unsafe_set( j , i , sum*d_inv );
+                    el[j*n+i] = sum*d_inv;
                 }
             }
         }
         // zero the top right corner.
         for( int i = 0; i < n; i++ ) {
             for( int j = i+1; j < n; j++ ) {
-                L.unsafe_set( i , j , 0.0 );
+                el[i*n+j] = 0.0;
             }
         }
 
@@ -135,7 +137,7 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
      *
      * @return diagonal elements of D
      */
-    public DenseMatrix64F getD() {
+    public double[] getD() {
         return d;
     }
 
@@ -149,7 +151,7 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
         return L;
     }
 
-    public DenseMatrix64F _getVV() {
+    public double[] _getVV() {
         return vv;
     }
 }

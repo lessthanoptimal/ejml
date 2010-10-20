@@ -58,9 +58,10 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
 
     // the decomposed matrix
     protected DenseMatrix64F T;
+    protected double[] t;
 
-    // temporary variable used by various functions
-    protected DenseMatrix64F vv;
+    // tempoary variable used by various functions
+    protected double vv[];
 
     // should it store the results from the decompose in the matrix that is passed in?
     private boolean decomposeOrig;
@@ -90,9 +91,10 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
 
         if( !decomposeOrig ) {
             this.T = new DenseMatrix64F(maxWidth,maxWidth);
+            this.t = T.data;
         }
 
-        this.vv = new DenseMatrix64F(maxWidth);
+        this.vv = new double[maxWidth];
     }
 
     /**
@@ -131,6 +133,7 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
 
         if( decomposeOrig ) {
             T = mat;
+            t = T.data;
         } else {
 //            L.set(mat);
             T.setReshape(mat);
@@ -178,13 +181,13 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
         if( lower ) {
             for( int i = 0; i < n; i++ ) {
                 for( int j = 0; j <= i; j++ ) {
-                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
+                    T.set(i,j,this.T.get(i,j));
                 }
             }
         } else {
             for( int i = 0; i < n; i++ ) {
                 for( int j = i; j < n; j++ ) {
-                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
+                    T.set(i,j,this.T.get(i,j));
                 }
             }
         }
@@ -201,7 +204,7 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
         return T;
     }
 
-    public DenseMatrix64F _getVV() {
+    public double[] _getVV() {
         return vv;
     }
 }

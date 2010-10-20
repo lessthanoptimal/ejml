@@ -38,7 +38,7 @@ public class EjmlParameters {
      * </p>
      */
     // See design notes
-    public static int BLOCK_WIDTH = 50;
+    public static int BLOCK_WIDTH = 20;
 
     /**
      * Number of elements in a block.

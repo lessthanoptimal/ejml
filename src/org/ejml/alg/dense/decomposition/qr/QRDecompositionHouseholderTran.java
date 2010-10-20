@@ -123,10 +123,10 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
 
         for( int j = minLength-1; j >= 0; j-- ) {
             int diagIndex = j*numRows+j;
-            double before = QR.get(diagIndex);
-            QR.set(diagIndex , 1 );
+            double before = QR.data[diagIndex];
+            QR.data[diagIndex] = 1;
             QrHelperFunctions.rank1UpdateMultR(Q,QR.data,j*numRows,gammas[j],j,j,numRows,v);
-            QR.set(diagIndex , before );
+            QR.data[diagIndex] = before;
         }
 
         return Q;
@@ -227,7 +227,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
         int endQR = startQR+numRows;
         startQR += j;
 
-        double max = QrHelperFunctions.findMax(QR,startQR,numRows-j);
+        double max = QrHelperFunctions.findMax(QR.data,startQR,numRows-j);
 
         if( max == 0.0 ) {
             gamma = 0;
@@ -237,7 +237,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
             tau = QrHelperFunctions.computeTau(startQR, endQR , QR.data, max);
 
             // divide u by u_0
-            double u_0 = QR.get(startQR) + tau;
+            double u_0 = QR.data[startQR] + tau;
             QrHelperFunctions.divideElements(startQR+1,endQR , QR.data, u_0 );
 
             gamma = u_0/tau;
@@ -262,21 +262,21 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
 //        int rowJ = rowW + numRows;
 //
 //        for( int j = w+1; j < numCols; j++ , rowJ += numRows) {
-//            double val = QR.get(row) + w];
+//            double val = QR.data[rowJ + w];
 //
 //            for( int k = w+1; k < numRows; k++ ) {
-//                val += QR.get(rowW + k)*QR.get(rowJ + k);
+//                val += QR.data[rowW + k]*QR.data[rowJ + k];
 //            }
 //            val *= gamma;
 //
-//            QR.minus(rowJ + w,  val );
+//            QR.data[rowJ + w] -= val;
 //            for( int i = w+1; i < numRows; i++ ) {
-//                QR.minus(rowJ + i, QR.get(rowW + i)*val);
+//                QR.data[rowJ + i] -= QR.data[rowW + i]*val;
 //            }
 //        }
 //
 //        if( w < numCols ) {
-//            QR.set(rowW + w, -tau);
+//            QR.data[rowW + w] = -tau;
 //        }
 
         int rowW = w*numRows + w + 1;
@@ -285,26 +285,26 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
         int indexWEnd = rowW + numRows - w - 1;
 
         for( ; rowJEnd != rowJ; rowJ += numRows) {
-            double val = QR.get(rowJ - 1);
+            double val = QR.data[rowJ - 1];
 
             int indexW = rowW;
             int indexJ = rowJ;
 
             while( indexW != indexWEnd ) {
-                val += QR.get(indexW++)*QR.get(indexJ++);
+                val += QR.data[indexW++]*QR.data[indexJ++];
             }
             val *= gamma;
 
-            QR.minus(rowJ - 1 , val );
+            QR.data[rowJ - 1] -= val;
             indexW = rowW;
             indexJ = rowJ;
             while( indexW != indexWEnd ) {
-                QR.minus( indexJ++ , QR.get(indexW++)*val);
+                QR.data[indexJ++] -= QR.data[indexW++]*val;
             }
         }
 
         if( w < numCols ) {
-            QR.set(rowW - 1, -tau );
+            QR.data[rowW - 1] = -tau;
         }
     }
 

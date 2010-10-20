@@ -20,7 +20,6 @@
 package org.ejml.alg.block;
 
 import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Matrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -265,7 +264,7 @@ public class TestBlockInnerMultiplication {
             CommonOps.scale(alpha,C);
         }
 
-        invoke(method,alpha,A,B,C_found,0,0,0,A.numRows,A.numCols,C_found.numCols);
+        invoke(method,alpha,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
 
         assertTrue(MatrixFeatures.isIdentical(C,C_found,1e-10));
 
@@ -273,17 +272,17 @@ public class TestBlockInnerMultiplication {
 
     public static void invoke(Method func,
                               double alpha ,
-                              D1Matrix64F A, D1Matrix64F B, D1Matrix64F C,
+                              double[] dataA, double []dataB, double []dataC,
                               int indexA, int indexB, int indexC,
                               final int heightA, final int widthA, final int widthB )
     {
         try {
             if( func.getParameterTypes().length == 9 ) {
-                func.invoke(null, A, B, C,
+                func.invoke(null, dataA, dataB, dataC,
                         indexA,indexB,indexC,
                         heightA,widthA,widthB);
             } else {
-                func.invoke(null, alpha , A, B, C,
+                func.invoke(null, alpha , dataA, dataB, dataC,
                         indexA,indexB,indexC,
                         heightA,widthA,widthB);
             }

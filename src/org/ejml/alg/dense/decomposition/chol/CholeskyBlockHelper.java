@@ -34,9 +34,10 @@ class CholeskyBlockHelper {
 
     // the decomposed matrix
     private DenseMatrix64F L;
+    private double[] el;
 
     /**
-     * Creates a CholeksyDecomposition capable of decompositong a matrix that is
+     * Creates a CholeksyDecomposition capable of decomposing a matrix that is
      * n by n, where n is the width.
      *
      * @param widthMax The maximum width of a matrix that can be processed.
@@ -44,6 +45,7 @@ class CholeskyBlockHelper {
     public CholeskyBlockHelper(int widthMax ) {
 
         this.L = new DenseMatrix64F(widthMax,widthMax);
+        this.el = L.data;
     }
 
     /**
@@ -56,13 +58,14 @@ class CholeskyBlockHelper {
      * @return True if it was able to finish the decomposition.
      */
     public boolean decompose( DenseMatrix64F mat , int indexStart , int n ) {
+        double m[] = mat.data;
 
         double el_ii;
         double div_el_ii=0;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = mat.get( indexStart+i*mat.numCols+j );
+                double sum = m[indexStart+i*mat.numCols+j];
 
                 int iEl = i*n;
                 int jEl = j*n;
@@ -70,7 +73,7 @@ class CholeskyBlockHelper {
                 // k = 0:i-1
                 for( ; iEl<end; iEl++,jEl++ ) {
 //                    sum -= el[i*n+k]*el[j*n+k];
-                    sum -= L.get(iEl)*L.get(jEl);
+                    sum -= el[iEl]*el[jEl];
                 }
 
                 if( i == j ) {
@@ -79,13 +82,13 @@ class CholeskyBlockHelper {
                         return false;
 
                     el_ii = Math.sqrt(sum);
-                    L.set( i*n + i , el_ii );
-                    mat.set( indexStart+i*mat.numCols+i , el_ii );
+                    el[i*n+i] = el_ii;
+                    m[indexStart+i*mat.numCols+i] = el_ii;
                     div_el_ii = 1.0/el_ii;
                 } else {
                     double v = sum*div_el_ii;
-                    L.set( j*n + i , v );
-                    mat.set( indexStart+j*mat.numCols+i , v );
+                    el[j*n+i] = v;
+                    m[indexStart+j*mat.numCols+i] = v;
                 }
             }
         }

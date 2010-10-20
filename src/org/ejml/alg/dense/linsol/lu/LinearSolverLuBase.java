@@ -50,7 +50,7 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
 
     @Override
     public void invert(DenseMatrix64F A_inv) {
-        DenseMatrix64F vv = decomp._getVV();
+        double []vv = decomp._getVV();
         DenseMatrix64F LU = decomp.getLU();
         
         if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
@@ -58,14 +58,15 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
 
         int n = A.numCols;
 
+        double dataInv[] = A_inv.data;
 
         for( int j = 0; j < n; j++ ) {
             // don't need to change inv into an identity matrix before hand
-            for( int i = 0; i < n; i++ ) vv.set( i ,  i == j ? 1 : 0 );
+            for( int i = 0; i < n; i++ ) vv[i] = i == j ? 1 : 0;
             decomp._solveVectorInternal(vv);
 //            for( int i = 0; i < n; i++ ) dataInv[i* n +j] = vv[i];
             int index = j;
-            for( int i = 0; i < n; i++ , index += n) A_inv.set( index , vv.get(i));
+            for( int i = 0; i < n; i++ , index += n) dataInv[ index ] = vv[i];
         }
     }
 
@@ -83,29 +84,32 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
             throw new IllegalArgumentException("bad shapes");
         }
 
+        double dataA[] = A.data;
+        double dataB[] = b.data;
+        double dataX[] = x.data;
 
         final int nc = b.numCols;
         final int n = b.numCols;
 
-        DenseMatrix64F vv = decomp._getVV();
+        double []vv = decomp._getVV();
         DenseMatrix64F LU = decomp.getLU();
 
 //        BigDecimal sdp = new BigDecimal(0);
         for( int k = 0; k < nc; k++ ) {
             for( int i = 0; i < n; i++ ) {
                 // *NOTE* in the book this is a long double.  extra precision might be required
-                double sdp = -b.get( i * nc + k);
+                double sdp = -dataB[ i * nc + k];
 //                BigDecimal sdp = new BigDecimal(-dataB[ i * nc + k]);
                 for( int j = 0; j < n; j++ ) {
-                    sdp += A.get(i* n +j) * x.get( j * nc + k);
+                    sdp += dataA[i* n +j] * dataX[ j * nc + k];
 //                    sdp = sdp.add( BigDecimal.valueOf(dataA[i* n +j] * dataX[ j * nc + k]));
                 }
-                vv.set(i , sdp);
+                vv[i] = sdp;
 //                vv[i] = sdp.doubleValue();
             }
             decomp._solveVectorInternal(vv);
             for( int i = 0; i < n; i++ ) {
-                x.minus(  i*nc + k , vv.get(i) );
+                dataX[i*nc + k] -= vv[i];
             }
         }
     }

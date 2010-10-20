@@ -110,7 +110,7 @@ public class LinearSolverQr extends LinearSolverAbstract {
      * Solves for X using the QR decomposition.
      *
      * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is writen to.  Modified.
+     * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
@@ -129,7 +129,7 @@ public class LinearSolverQr extends LinearSolverAbstract {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                Y.set(i, B.unsafe_get(i,colB));
+                Y.data[i] = B.get(i,colB);
             }
 
             // Solve Qa=b
@@ -137,11 +137,11 @@ public class LinearSolverQr extends LinearSolverAbstract {
             CommonOps.multTransA(Q,Y,Z);
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R,Z,numCols);
+            TriangularSolver.solveU(R.data,Z.data,numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
-                X.unsafe_set(i,colB,Z.get(i));
+                X.set(i,colB,Z.data[i]);
             }
         }
     }

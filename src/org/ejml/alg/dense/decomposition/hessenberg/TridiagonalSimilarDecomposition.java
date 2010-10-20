@@ -89,7 +89,7 @@ public class TridiagonalSimilarDecomposition {
             T.zero();
 
 
-        T.set( 0 , QT.get(0));
+        T.data[0] = QT.data[0];
 
         for( int i = 1; i < N; i++ ) {
             T.set(i,i, QT.get(i,i));
@@ -98,8 +98,8 @@ public class TridiagonalSimilarDecomposition {
             T.set(i,i-1,a);
         }
 
-        T.unsafe_set( (N-1), N-1 , QT.unsafe_get((N-1) , N-1 ));
-        T.unsafe_set( (N-1), N-2 , QT.unsafe_get((N-2) , N-1 ));
+        T.data[(N-1)*N+N-1] = QT.data[(N-1)*N+N-1];
+        T.data[(N-1)*N+N-2] = QT.data[(N-2)*N+N-1];
 
         return T;
     }
@@ -144,7 +144,7 @@ public class TridiagonalSimilarDecomposition {
         for( int j = N-2; j >= 0; j-- ) {
             w[j+1] = 1;
             for( int i = j+2; i < N; i++ ) {
-                w[i] = QT.unsafe_get(j , i);
+                w[i] = QT.data[j*N+i];
             }
             QrHelperFunctions.rank1UpdateMultL(Q,w,gammas[j+1],j+1,j+1,N,b);
         }
@@ -169,6 +169,7 @@ public class TridiagonalSimilarDecomposition {
      * Computes and performs the similar a transform for submatrix k.
      */
     private void similarTransform( int k) {
+        double t[] = QT.data;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
@@ -177,7 +178,7 @@ public class TridiagonalSimilarDecomposition {
         int rowU = (k-1)*N;
 
         for( int i = k; i < N; i++ ) {
-            double val = Math.abs(QT.get(rowU+i));
+            double val = Math.abs(t[rowU+i]);
             if( val > max )
                 max = val;
         }
@@ -185,12 +186,12 @@ public class TridiagonalSimilarDecomposition {
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = QrHelperFunctions.computeTau(k,N,QT,rowU,max);
+            double tau = QrHelperFunctions.computeTau(k,N,t,rowU,max);
 
             // write the reflector into the lower left column of the matrix
-            double nu = QT.get(rowU+k) + tau;
-            QrHelperFunctions.divideElements(k+1,N,QT,rowU,nu);
-            QT.set(rowU+k , 1.0 );
+            double nu = t[rowU+k] + tau;
+            QrHelperFunctions.divideElements(k+1,N,t,rowU,nu);
+            t[rowU+k] = 1.0;
 
             double gamma = nu/tau;
             gammas[k] = gamma;
@@ -200,7 +201,7 @@ public class TridiagonalSimilarDecomposition {
 
             // since the first element in the householder vector is known to be 1
             // store the full upper hessenberg
-            QT.set(rowU+k , -tau*max);
+            t[rowU+k] = -tau*max;
         } else {
             gammas[k] = 0;
         }
@@ -223,10 +224,10 @@ public class TridiagonalSimilarDecomposition {
             // to get the information.  Reduces the number of matrix writes need
             // improving large matrix performance
             for( int j = row; j < i; j++ ) {
-                total += QT.unsafe_get(j,i)*QT.get(startU+j);
+                total += QT.data[j*N+i]*QT.data[startU+j];
             }
             for( int j = i; j < N; j++ ) {
-                total += QT.unsafe_get(i,j)*QT.get(startU+j);
+                total += QT.data[i*N+j]*QT.data[startU+j];
             }
             w[i] = -gamma*total;
         }
@@ -234,25 +235,25 @@ public class TridiagonalSimilarDecomposition {
         double alpha = 0;
 
         for( int i = row; i < N; i++ ) {
-            alpha += QT.get(startU+i)*w[i];
+            alpha += QT.data[startU+i]*w[i];
         }
         alpha *= -0.5*gamma;
 
         // w = v + alpha*u
         for( int i = row; i < N; i++ ) {
-            w[i] += alpha*QT.get(startU+i);
+            w[i] += alpha*QT.data[startU+i];
         }
         // A = A + w*u^T + u*w^T
         for( int i = row; i < N; i++ ) {
 
             double ww = w[i];
-            double uu = QT.get(startU+i);
+            double uu = QT.data[startU+i];
 
             int rowA = i*N;
             for( int j = i; j < N; j++ ) {
                 // only write to the upper portion of the matrix
                 // this reduces the number of cache misses
-                QT.plus(rowA+j , ww*QT.get(startU+j) + w[j]*uu );
+                QT.data[rowA+j] += ww*QT.data[startU+j] + w[j]*uu;
             }
         }
 

@@ -52,12 +52,12 @@ public class LUDecompositionNR extends LUDecompositionBase {
         for( int i = 0; i < m; i++ ) {
             double big = 0.0;
             for( int j = 0; j < n; j++ ) {
-                double temp = Math.abs(LU.get( i* n +j ));
+                double temp = Math.abs(dataLU[i* n +j]);
                 if( big < temp ) big = temp;
             }
             // see if it is singular
             if( big == 0.0 ) big = 1.0;
-            vv.set(i , 1.0/big );
+            vv[i] = 1.0/big;
         }
 
         // outermost kij loop
@@ -67,7 +67,7 @@ public class LUDecompositionNR extends LUDecompositionBase {
             // start search by row for largest pivot element
             double big = 0.0;
             for( int i=k; i< m; i++ ) {
-                double temp = vv.get(i)* LU.unsafe_get( i, k );
+                double temp = vv[i]* dataLU[i* n +k];
                 if( temp < 0 ) temp = -temp;
                 if( temp > big ) {
                     big = temp;
@@ -87,12 +87,12 @@ public class LUDecompositionNR extends LUDecompositionBase {
                     int end = k_n+n;
                     // j=0:n-1
                     for( ; k_n < end; imax_n++,k_n++) {
-                        double temp = LU.get(imax_n);
-                        LU.set( imax_n , LU.get(k_n) );
-                        LU.set( k_n , temp );
+                        double temp = dataLU[imax_n];
+                        dataLU[imax_n] = dataLU[k_n];
+                        dataLU[k_n] = temp;
                     }
                     pivsign = -pivsign;
-                    vv.set( imax , vv.get(k));
+                    vv[imax] = vv[k];
 
                     int z = pivot[imax]; pivot[imax] = pivot[k]; pivot[k] = z;
                 }
@@ -100,9 +100,9 @@ public class LUDecompositionNR extends LUDecompositionBase {
                 indx[k] = imax;
                 // for some applications it is better to have this set to tiny even though
                 // it is singular.  see the book
-                double element_kk = LU.get( k* n +k );
+                double element_kk = dataLU[k* n +k];
                 if( element_kk == 0.0) {
-                    LU.set( k* n +k ,  TINY );
+                    dataLU[k* n +k] = TINY;
                     element_kk = TINY;
                 }
 
@@ -111,8 +111,7 @@ public class LUDecompositionNR extends LUDecompositionBase {
                     int i_n=i*n;
 
                     // divide the pivot element
-                    LU.div( i_n + k , element_kk );
-                    double temp = LU.get(i_n +k );
+                    double temp = dataLU[i_n +k] /= element_kk;
 
                     int k_n = k*n + k+1;
                     int end = i_n+n;
@@ -121,7 +120,7 @@ public class LUDecompositionNR extends LUDecompositionBase {
                     // j = k+1:n-1
                     for( ; i_n<end; k_n++,i_n++) {
                         // dataLU[i*n +j] -= temp* dataLU[k* n +j];
-                        LU.minus( i_n , temp* LU.get(k_n));
+                        dataLU[i_n] -= temp* dataLU[k_n];
                     }
                 }
             }

@@ -66,6 +66,8 @@ public class QRDecompositionHouseholder implements QRDecomposition {
     protected int numRows; // this is 'm'
     protected int minLength;
 
+    protected double dataQR[];
+
     // the computed gamma for Q_k matrix
     protected double gammas[];
     // local variables
@@ -91,6 +93,8 @@ public class QRDecompositionHouseholder implements QRDecomposition {
         } else {
             QR.reshape(numRows,numCols,false);
         }
+
+        dataQR = QR.data;
 
         if( u.length < maxLength ) {
             u = new double[ maxLength ];
@@ -244,7 +248,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
         double max = 0;
         for( int i = j; i < numRows; i++ ) {
 
-            double d = u[i] = QR.get(index);
+            double d = u[i] = dataQR[index];
 
             // absolute value of d
             if( d < 0 ) d = -d;
@@ -309,14 +313,14 @@ public class QRDecompositionHouseholder implements QRDecomposition {
         // This is functionally the same as the above code but the order has been changed
         // to avoid jumping the cpu cache
         for( int i = w+1; i < numCols; i++ ) {
-            v[i] = u[w]*QR.unsafe_get(w,i);
+            v[i] = u[w]*dataQR[w*numCols +i];
         }
 
         for( int k = w+1; k < numRows; k++ ) {
             int indexQR = k*numCols+w+1;
             for( int i = w+1; i < numCols; i++ ) {
 //                v[i] += u[k]*dataQR[k*numCols +i];
-                v[i] += u[k]*QR.get(indexQR++);
+                v[i] += u[k]*dataQR[indexQR++];
             }
         }
 
@@ -332,17 +336,17 @@ public class QRDecompositionHouseholder implements QRDecomposition {
             int indexQR = i*numCols+w+1;
             for( int j = w+1; j < numCols; j++ ) {
 //                dataQR[i*numCols+j] -= valU*v[j];
-                QR.minus(indexQR++ , valU*v[j]);
+                dataQR[indexQR++] -= valU*v[j];
             }
         }
 
         if( w < numCols ) {
-            QR.unsafe_set(w,w, -tau);
+            dataQR[w+w*numCols] = -tau;
         }
 
         // save the Q matrix in the lower portion of QR
         for( int i = w+1; i < numRows; i++ ) {
-            QR.unsafe_set(i,w,  u[i]);
+            dataQR[w+i*numCols] = u[i];
         }
     }
 

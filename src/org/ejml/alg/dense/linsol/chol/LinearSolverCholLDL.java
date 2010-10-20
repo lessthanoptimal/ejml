@@ -33,9 +33,9 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
 
     private CholeskyDecompositionLDL decomp;
     private int n;
-    private DenseMatrix64F vv;
-    private DenseMatrix64F L;
-    private DenseMatrix64F d;
+    private double vv[];
+    private double el[];
+    private double d[];
 
     public LinearSolverCholLDL( CholeskyDecompositionLDL decomp ) {
         this.decomp = decomp;
@@ -52,7 +52,7 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
         if( decomp.decompose(A) ){
             n = A.numCols;
             vv = decomp._getVV();
-            L = decomp.getL();
+            el = decomp.getL().data;
             d = decomp.getD();
             return true;
         } else {
@@ -86,10 +86,15 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
 
-        for( int j = 0; j < B.numCols; j++ ) {
-            for( int i = 0; i < n; i++ ) vv.set( i , B.unsafe_get( i, j ) );
+        int numCols = B.numCols;
+
+        double dataB[] = B.data;
+        double dataX[] = X.data;
+
+        for( int j = 0; j < numCols; j++ ) {
+            for( int i = 0; i < n; i++ ) vv[i] = dataB[i*numCols+j];
             solveInternal();
-            for( int i = 0; i < n; i++ ) X.unsafe_set( i , j , vv.get(i) );
+            for( int i = 0; i < n; i++ ) dataX[i*numCols+j] = vv[i];
         }
     }
 
@@ -98,15 +103,15 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
      */
     private void solveInternal() {
         // solve L*s=b storing y in x
-        TriangularSolver.solveL(L,vv,n);
+        TriangularSolver.solveL(el,vv,n);
 
         // solve D*y=s
         for( int i = 0; i < n; i++ ) {
-            vv.div( i, d.get(i) );
+            vv[i] /= d[i];
         }
 
         // solve L^T*x=y
-        TriangularSolver.solveTranL(L,vv,n);
+        TriangularSolver.solveTranL(el,vv,n);
     }
 
     /**
@@ -120,34 +125,35 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
             throw new RuntimeException("Unexpected matrix dimension");
         }
 
+        double a[] = inv.data;
+
         // solve L*z = b
         for( int i =0; i < n; i++ ) {
             for( int j = 0; j <= i; j++ ) {
                 double sum = (i==j) ? 1.0 : 0.0;
                 for( int k=i-1; k >=j; k-- ) {
-                    sum -= L.unsafe_get(i, k )*inv.unsafe_get( j, k );
+                    sum -= el[i*n+k]*a[j*n+k];
                 }
-                inv.unsafe_set( j , i , sum );
+                a[j*n+i] = sum;
             }
         }
 
         // solve D*y=z
         for( int i =0; i < n; i++ ) {
-            double inv_d = 1.0/d.get(i);
+            double inv_d = 1.0/d[i];
             for( int j = 0; j <= i; j++ ) {
-                inv.times( j*n+i , inv_d );
+                a[j*n+i] *= inv_d;
             }
         }
 
         // solve L^T*x = y
         for( int i=n-1; i>=0; i-- ) {
             for( int j = 0; j <= i; j++ ) {
-                double sum = (i<j) ? 0 : inv.unsafe_get(j, i);
+                double sum = (i<j) ? 0 : a[j*n+i];
                 for( int k=i+1;k<n;k++) {
-                    sum -= L.unsafe_get( k, i )*inv.unsafe_get( j, k );
+                    sum -= el[k*n+i]*a[j*n+k];
                 }
-                inv.unsafe_set(i,j,sum);
-                inv.unsafe_set(j,i,sum);
+                a[i*n+j] = a[j*n+i] = sum;
             }
         }
     }

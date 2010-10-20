@@ -64,10 +64,10 @@ public class SmartRotatorUpdate {
         int indexB = rowB*R.numCols;
 
         for( int i = 0; i < l; i++ , indexA++,indexB++) {
-            double a = R.get(indexA);
-            double b = R.get(indexB);
-            R.set(indexA, c*a + s*b);
-            R.set(indexB, -s*a + c*b);
+            double a = R.data[indexA];
+            double b = R.data[indexB];
+            R.data[indexA] = c*a + s*b;
+            R.data[indexB] = -s*a + c*b;
         }
     }
 }

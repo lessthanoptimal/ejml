@@ -59,7 +59,7 @@ public class BlockMatrixOps {
                     int indexSrc = indexSrcRow;
                     int end = indexSrc + blockWidth;
                     for( ;indexSrc != end; ) {
-                        dst.set( indexDst++ , src.get(indexSrc++));
+                        dst.data[indexDst++] = src.data[indexSrc++];
                     }
                     indexSrcRow += dst.numCols;
                 }
@@ -95,7 +95,7 @@ public class BlockMatrixOps {
                     int indexDst = indexDstRow;
                     int end = indexSrc + blockWidth;
                     for( ;indexSrc != end; ) {
-                        dst.set( indexDst++ , src.get(indexSrc++));
+                        dst.data[indexDst++] = src.data[indexSrc++];
                     }
                     indexDstRow += dst.numCols;
                 }
@@ -129,7 +129,7 @@ public class BlockMatrixOps {
                     int rowSrc = indexSrc + l*src.numCols;
                     int rowDst = indexDst + l;
                     for( int k = 0; k < blockHeight; k++ , rowDst += blockWidth ) {
-                        dst.set( rowDst , src.get(rowSrc++));
+                        dst.data[ rowDst ] = src.data[rowSrc++];
                     }
                 }
             }
@@ -244,7 +244,7 @@ public class BlockMatrixOps {
             int rowIndexA = indexA + width*i;
             int end = rowIndexA + width;
             for( ; rowIndexA < end; rowIndexC += height, rowIndexA++ ) {
-                A_tran.set( rowIndexC , A.get( rowIndexA ) );
+                A_tran.data[ rowIndexC ] = A.data[ rowIndexA ];
             }
         }
     }
@@ -318,13 +318,13 @@ public class BlockMatrixOps {
                     if( j == i ) {
                         for( int k = 0; k < h; k++ ) {
                             for( int l = k+1; l < w; l++ ) {
-                                A.set(index + w*k+l , 0 );
+                                A.data[index + w*k+l ] = 0;
                             }
                         }
                     } else {
                         for( int k = 0; k < h; k++ ) {
                             for( int l = 0; l < w; l++ ) {
-                                A.set( index + w*k+l , 0 );
+                                A.data[index + w*k+l ] = 0;
                             }
                         }
                     }
@@ -342,13 +342,13 @@ public class BlockMatrixOps {
                     if( j == i ) {
                         for( int k = 0; k < h; k++ ) {
                             for( int l = 0; l < k; l++ ) {
-                                A.set( index + w*k+l , 0 );
+                                A.data[index + w*k+l ] = 0;
                             }
                         }
                     } else {
                         for( int k = 0; k < h; k++ ) {
                             for( int l = 0; l < w; l++ ) {
-                                A.set( index + w*k+l , 0 );
+                                A.data[index + w*k+l ] = 0;
                             }
                         }
                     }

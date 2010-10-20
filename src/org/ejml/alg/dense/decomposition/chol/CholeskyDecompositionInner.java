@@ -46,7 +46,7 @@ public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = T.unsafe_get( i , j );
+                double sum = t[i*n+j];
 
                 int iEl = i*n;
                 int jEl = j*n;
@@ -54,7 +54,7 @@ public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
                 // k = 0:i-1
                 for( ; iEl<end; iEl++,jEl++ ) {
 //                    sum -= el[i*n+k]*el[j*n+k];
-                    sum -= T.get(iEl)* T.get(jEl);
+                    sum -= t[iEl]* t[jEl];
                 }
 
                 if( i == j ) {
@@ -63,17 +63,17 @@ public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
                         return false;
 
                     el_ii = Math.sqrt(sum);
-                    T.unsafe_set( i , i , el_ii );
+                    t[i*n+i] = el_ii;
                     div_el_ii = 1.0/el_ii;
                 } else {
-                    T.unsafe_set( j , i , sum*div_el_ii );
+                    t[j*n+i] = sum*div_el_ii;
                 }
             }
         }
         // zero the top right corner.
         for( int i = 0; i < n; i++ ) {
             for( int j = i+1; j < n; j++ ) {
-                T.unsafe_set( i , j , 0.0 );
+                t[i*n+j] = 0.0;
             }
         }
 
@@ -87,10 +87,10 @@ public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = T.unsafe_get( i , j );
+                double sum = t[i*n+j];
 
                 for( int k = 0; k < i; k++ ) {
-                    sum -= T.unsafe_get( k , i )* T.unsafe_get( k , j );
+                    sum -= t[k*n+i]* t[k*n+j];
                 }
 
                 if( i == j ) {
@@ -100,17 +100,17 @@ public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
 
                     // I suspect that the sqrt is slowing this down relative to MTJ
                     el_ii = Math.sqrt(sum);
-                    T.unsafe_set( i , i , el_ii );
+                    t[i*n+i] = el_ii;
                     div_el_ii = 1.0/el_ii;
                 } else {
-                    T.unsafe_set( i , j , sum*div_el_ii );
+                    t[i*n+j] = sum*div_el_ii;
                 }
             }
         }
         // zero the lower left corner.
         for( int i = 0; i < n; i++ ) {
             for( int j = 0; j < i; j++ ) {
-                T.unsafe_set( i  , j , 0.0 );
+                t[i*n+j] = 0.0;
             }
         }
 

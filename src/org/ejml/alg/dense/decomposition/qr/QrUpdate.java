@@ -247,23 +247,23 @@ public class QrUpdate {
             for( int j = 0; j < m_m; j++ ) {
                 double sum = 0;
                 for( int k = 0; k < m; k++ ) {
-                    sum += Qm.unsafe_get(i,k)* U_tran.unsafe_get(j,k+1);
+                    sum += Qm.data[i*m+k]* U_tran.data[j*m_m+k+1];
                 }
-                Q.unsafe_set(i,j, sum);
+                Q.data[i*m_m+j] = sum;
             }
         }
 
         for( int j = 0; j < m_m; j++ ) {
-            Q.unsafe_set(rowIndex, j, U_tran.get(j*m_m));
+            Q.data[rowIndex*m_m+j] = U_tran.data[j*m_m];
         }
 
         for( int i = rowIndex+1; i < m_m; i++ ) {
             for( int j = 0; j < m_m; j++ ) {
                 double sum = 0;
                 for( int k = 0; k < m; k++ ) {
-                    sum += Qm.unsafe_get(i-1 , k )* U_tran.unsafe_get(j , k+1);
+                    sum += Qm.data[(i-1)*m+k]* U_tran.data[j*m_m+k+1];
                 }
-                Q.unsafe_set(i,j, sum );
+                Q.data[i*m_m+j] = sum;
             }
         }
     }
@@ -281,9 +281,9 @@ public class QrUpdate {
             for( int j = 1; j < m; j++ ) {
                 double sum = 0;
                 for( int k = 0; k < m; k++ ) {
-                    sum += Qm.unsafe_get(i,k)* U_tran.unsafe_get(j,k);
+                    sum += Qm.data[i*m+k]* U_tran.data[j*m+k];
                 }
-                Q.unsafe_set(i,j-1, sum);
+                Q.data[i*m_m+j-1] = sum;
             }
         }
 
@@ -291,9 +291,9 @@ public class QrUpdate {
             for( int j = 1; j < m; j++ ) {
                 double sum = 0;
                 for( int k = 0; k < m; k++ ) {
-                    sum += Qm.unsafe_get(i,k)* U_tran.unsafe_get(j,k);
+                    sum += Qm.data[i*m+k]* U_tran.data[j*m+k];
                 }
-                Q.unsafe_set(i-1 , j-1,  sum);
+                Q.data[(i-1)*m_m+j-1] = sum;
             }
         }
     }
@@ -306,9 +306,9 @@ public class QrUpdate {
             for( int j = 0; j < n; j++ ) {
                 double sum = 0;
                 for( int k = i-1; k <= j; k++ ) {
-                    sum += U_tran.unsafe_get(i,k) * R.unsafe_get(k,j);
+                    sum += U_tran.data[i*m+k] * R.data[k*n+j];
                 }
-                R.unsafe_set((i-1) , j, sum);
+                R.data[(i-1)*n+j] = sum;
             }
         }
     }
@@ -316,7 +316,7 @@ public class QrUpdate {
     private void applyFirstGivens(double[] row) {
         double c,s;
         double xi = row[0];
-        double xj = R.get(0);
+        double xj = R.data[0];
 
         double r = xi*xi + xj*xj;
         if( r != 0 ) {
@@ -329,21 +329,21 @@ public class QrUpdate {
             s = 0;
         }
 
-        R.set(0, r);
+        R.data[0] = r;
         for( int col = 1; col < n; col++ ) {
             double vali = row[col];
-            double valj = R.get(col);
+            double valj = R.data[col];
 
-            R.set(col, c*vali + s*valj );
+            R.data[col] = c*vali + s*valj;
             r_row[col] = c*valj - s*vali;
         }
 
         // set U to its initial values
         CommonOps.setIdentity(U_tran);
-        U_tran.set(0, c);
-        U_tran.set(1, s);
-        U_tran.set(m_m, -s);
-        U_tran.set(m_m+1, c );
+        U_tran.data[0] = c;
+        U_tran.data[1] = s;
+        U_tran.data[m_m] = -s;
+        U_tran.data[m_m+1] = c;
     }
 
     private void applyLaterGivens()
@@ -352,7 +352,7 @@ public class QrUpdate {
             // first compute the rotation
             double c,s;
             double xi = r_row[row];
-            double xj = R.unsafe_get(row,row);
+            double xj = R.data[n*row+row];
 
             double r = xi*xi + xj*xj;
             if( r != 0 ) {
@@ -366,22 +366,22 @@ public class QrUpdate {
             }
 
             // update R matrix
-            R.unsafe_set(row,row, r);
+            R.data[n*row+row] = r;
             for( int col = row+1; col < n; col++ ) {
                 double vali = r_row[col];
-                double valj = R.unsafe_get(row,col);
+                double valj = R.data[n*row+col];
 
-                R.unsafe_set(row,col, c*vali + s*valj);
+                R.data[n*row+col] = c*vali + s*valj;
                 r_row[col] = c*valj - s*vali;
             }
 
             // compute U^T = U^T_(x+1) * U^T_x
             for( int col = 0; col <= row+1; col++ ) {
-                double q1 = U_tran.unsafe_get(row,col);
-                double q2 = U_tran.unsafe_get(row+1,col);
+                double q1 = U_tran.data[row*m_m+col];
+                double q2 = U_tran.data[(row+1)*m_m+col];
 
-                U_tran.unsafe_set(row,col, c*q1 + s*q2);
-                U_tran.unsafe_set(row+1,col,  c*q2 - s*q1);
+                U_tran.data[row*m_m+col] = c*q1 + s*q2;
+                U_tran.data[(row+1)*m_m+col] = c*q2 - s*q1;
             }
         }
     }
@@ -390,12 +390,12 @@ public class QrUpdate {
     {
         CommonOps.setIdentity(U_tran);
 
-        double xj = Q.unsafe_get(selectedRow,m-1);
+        double xj = Q.data[selectedRow*m+m-1];
 
         for( int j = m-2; j >= 0; j-- ) {
             // first compute the rotation
             double c,s;
-            double xi = Q.unsafe_get(selectedRow,j);
+            double xi = Q.data[selectedRow*m+j];
 
             double r = xi*xi + xj*xj;
             if( r != 0 ) {
@@ -412,11 +412,11 @@ public class QrUpdate {
 
             // compute U^T = U^T_(x+1) * U^T_x
             for( int col = j; col < m; col++ ) {
-                double q1 = U_tran.unsafe_get(j,col);
-                double q2 = U_tran.unsafe_get(j+1,col);
+                double q1 = U_tran.data[j*m+col];
+                double q2 = U_tran.data[(j+1)*m+col];
 
-                U_tran.unsafe_set(j,col,  c*q1 + s*q2);
-                U_tran.unsafe_set((j+1),col,  c*q2 - s*q1);
+                U_tran.data[j*m+col] = c*q1 + s*q2;
+                U_tran.data[(j+1)*m+col] = c*q2 - s*q1;
             }
         }
     }

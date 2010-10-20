@@ -100,6 +100,7 @@ public class BidiagonalDecompositionNaive {
 
     protected void computeU( int k) {
         u.reshape(m,1, false);
+        double u[] = this.u.data;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
@@ -108,7 +109,7 @@ public class BidiagonalDecompositionNaive {
         for( int i = k; i < m; i++ ) {
             // copy the householder vector to vector outside of the matrix to reduce caching issues
             // big improvement on larger matrices and a relatively small performance hit on small matrices.
-            double val = u.set(i , B.get(i,k) );
+            double val = u[i] = B.get(i,k);
             val = Math.abs(val);
             if( val > max )
                 max = val;
@@ -121,21 +122,21 @@ public class BidiagonalDecompositionNaive {
             // normalize to reduce overflow/underflow
             // and compute tau for the reflector
             for( int i = k; i < m; i++ ) {
-                double val = u.div( i , max );
+                double val = u[i] /= max;
                 tau += val*val;
             }
 
             tau = Math.sqrt(tau);
 
-            if( u.get(k) < 0 )
+            if( u[k] < 0 )
                 tau = -tau;
 
             // write the reflector into the lower left column of the matrix
-            double nu = u.get(k) + tau;
-            u.set(k , 1.0 );
+            double nu = u[k] + tau;
+            u[k] = 1.0;
 
             for( int i = k+1; i < m; i++ ) {
-                u.div( i , nu );
+                u[i] /= nu;
             }
 
             SimpleMatrix Q_k = SimpleMatrix.wrap(SpecializedOps.createReflector(this.u,nu/tau));
@@ -147,6 +148,8 @@ public class BidiagonalDecompositionNaive {
     protected void computeV(int k) {
         u.reshape(n,1, false);
         u.zero();
+        double u[] = this.u.data;
+
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
@@ -155,7 +158,7 @@ public class BidiagonalDecompositionNaive {
         for( int i = k+1; i < n; i++ ) {
             // copy the householder vector to vector outside of the matrix to reduce caching issues
             // big improvement on larger matrices and a relatively small performance hit on small matrices.
-            double val = u.set( i , B.get(k,i) );
+            double val = u[i] = B.get(k,i);
             val = Math.abs(val);
             if( val > max )
                 max = val;
@@ -168,21 +171,21 @@ public class BidiagonalDecompositionNaive {
             // normalize to reduce overflow/underflow
             // and compute tau for the reflector
             for( int i = k+1; i < n; i++ ) {
-                double val = u.div( i,  max );
+                double val = u[i] /= max;
                 tau += val*val;
             }
 
             tau = Math.sqrt(tau);
 
-            if( u.get(k+1) < 0 )
+            if( u[k+1] < 0 )
                 tau = -tau;
 
             // write the reflector into the lower left column of the matrix
-            double nu = u.plus( k+1 , tau );
-            u.set( k+1 , 1.0 );
+            double nu = u[k+1] + tau;
+            u[k+1] = 1.0;
 
             for( int i = k+2; i < n; i++ ) {
-                u.div( i,  nu );
+                u[i] /= nu;
             }
 
             // ---------- multiply on the left by Q_k

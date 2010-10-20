@@ -143,7 +143,7 @@ public class HessenbergSimilarDecomposition {
         if( Q == null ) {
             Q = new DenseMatrix64F(N,N);
             for( int i = 0; i < N; i++ ) {
-                Q.unsafe_set(i,i, 1);
+                Q.data[i*N+i] = 1;
             }
         } else if( N != Q.numRows || N != Q.numCols )
             throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
@@ -153,7 +153,7 @@ public class HessenbergSimilarDecomposition {
         for( int j = N-2; j >= 0; j-- ) {
             u[j+1] = 1;
             for( int i = j+2; i < N; i++ ) {
-                u[i] = QH.unsafe_get(i,j);
+                u[i] = QH.get(i,j);
             }
             QrHelperFunctions.rank1UpdateMultR(Q,u,gammas[j],j+1,j+1,N,b);
         }
@@ -165,6 +165,7 @@ public class HessenbergSimilarDecomposition {
      * Internal function for computing the decomposition.
      */
     private boolean _decompose() {
+        double h[] = QH.data;
 
         for( int k = 0; k < N-2; k++ ) {
             // find the largest value in this column
@@ -174,7 +175,7 @@ public class HessenbergSimilarDecomposition {
             for( int i = k+1; i < N; i++ ) {
                 // copy the householder vector to vector outside of the matrix to reduce caching issues
                 // big improvement on larger matrices and a relatively small performance hit on small matrices.
-                double val = u[i] = QH.unsafe_get(i,k);
+                double val = u[i] = h[i*N+k];
                 val = Math.abs(val);
                 if( val > max )
                     max = val;
@@ -201,7 +202,7 @@ public class HessenbergSimilarDecomposition {
                 u[k+1] = 1.0;
 
                 for( int i = k+2; i < N; i++ ) {
-                    QH.unsafe_set(i , k ,  u[i] /= nu );
+                    h[i*N+k] = u[i] /= nu;
                 }
 
                 double gamma = nu/tau;
@@ -215,7 +216,7 @@ public class HessenbergSimilarDecomposition {
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg
-                QH.unsafe_set((k+1),k, -tau*max );
+                h[(k+1)*N+k] = -tau*max;
 
             } else {
                 gammas[k] = 0;
