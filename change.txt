@@ -10,7 +10,11 @@
 - Changed DecompositionInterface
 - Added unsafe_get() and unsafe_set() to Matrix64F and implementing classes.
 - Cholesky decomposition for a block matrix and associated helper functions.
-- Started to remove unnecessary manual inlining of simplistic functions.
+- Simplistic functions have had the hand inlining removed.
+  * After marking it was found that sometimes more complex functions had their performance
+    significantly degraded after they started to use very light weight wrappers.
+  * In some cases it seems to slightly improve performance when setters/getters are used.
+  * Yes these changes were statistically significant by a large margin.
 
 ----- Version 0.14
 
