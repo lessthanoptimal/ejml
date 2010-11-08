@@ -1,4 +1,4 @@
-/*
+package org.ejml.example;/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -17,10 +17,8 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.data.SimpleMatrix;
+import org.ejml.example.QRExampleSimple;
 import org.junit.Test;
 
 import java.util.Random;
@@ -30,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestQRExampleOps {
+public class TestQRExampleSimple {
 
     Random rand = new Random(23423);
 
@@ -43,19 +41,18 @@ public class TestQRExampleOps {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random(numRows,numCols,-1,1,rand);
 
-        QRExampleOps alg = new QRExampleOps();
+        QRExampleSimple alg = new QRExampleSimple();
 
         alg.decompose(A);
 
-        DenseMatrix64F Q = alg.getQ();
-        DenseMatrix64F R = alg.getR();
+        SimpleMatrix Q = alg.getQ();
+        SimpleMatrix R = alg.getR();
 
-        DenseMatrix64F A_found = new DenseMatrix64F(numRows,numCols);
-        CommonOps.mult(Q,R,A_found);
+        SimpleMatrix A_found = Q.mult(R);
 
-        assertTrue( MatrixFeatures.isIdentical(A,A_found,1e-8));
+        assertTrue( A.isIdentical(A_found,1e-8));
     }
 
 

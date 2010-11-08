@@ -226,14 +226,14 @@ public class SimpleMatrix {
 
     /**
      * <p>
-     * Performs a matrix multiplication operation.<br>
+     * Returns a matrix which is the result of matrix multiplication:<br>
      * <br>
      * c = a * b <br>
      * <br>
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#mult(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps#mult(RowD1Matrix64F, RowD1Matrix64F, RowD1Matrix64F)
      *
      * @param b A matrix that is n by bn. Not modified.
      *
@@ -312,14 +312,14 @@ public class SimpleMatrix {
 
     /**
      * <p>
-     * Performs a matrix addition operation.<br>
+     * Returns the result of matrix addition:<br>
      * <br>
      * c = a + b <br>
      * <br>
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#mult(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps#mult(RowD1Matrix64F, RowD1Matrix64F, RowD1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -335,7 +335,7 @@ public class SimpleMatrix {
 
     /**
      * <p>
-     * Performs a matrix subtraction operation.<br>
+     * Returns the result of matrix subtraction:<br>
      * <br>
      * c = a - b <br>
      * <br>
@@ -381,7 +381,10 @@ public class SimpleMatrix {
     }
 
     /**
-     * Multiplies each element in this matrix by the specified value.
+     * <p>
+     * Returns the result of scaling each element by 'val':<br>
+     * b<sub>i,j</sub> = val*a<sub>i,j</sub>
+     * </p>
      *
      * @see CommonOps#scale(double, D1Matrix64F)
      *
@@ -397,7 +400,10 @@ public class SimpleMatrix {
     }
 
     /**
-     * Divides each element in this matrix by the specified value.
+     * <p>
+     * Returns the result of dividing each element by 'val':
+     * b<sub>i,j</sub> = a<sub>i,j</sub>/val
+     * </p>
      *
      * @see CommonOps#divide(double, D1Matrix64F)
      *
@@ -416,7 +422,7 @@ public class SimpleMatrix {
      * <p>
      * Returns the inverse of this matrix.<br>
      * <br>
-     * a<sup>-1<sup><br>
+     * b = a<sup>-1<sup><br>
      * </p>
      *
      * <p>
@@ -512,7 +518,7 @@ public class SimpleMatrix {
      * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
      * </p>
      *
-     * @see NormOps#normF(DenseMatrix64F)
+     * @see NormOps#normF(D1Matrix64F)
      *
      * @return The matrix's Frobenius normal.
      */
@@ -550,7 +556,7 @@ public class SimpleMatrix {
      * Computes the trace of the matrix.
      * </p>
      *
-     * @see CommonOps#trace(DenseMatrix64F)
+     * @see CommonOps#trace(RowD1Matrix64F)
      *
      * @return The trace of the matrix.
      */
@@ -740,7 +746,7 @@ public class SimpleMatrix {
      * Creates a new SimpleMatrix which is a submatrix of this matrix.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &le; y1 and x0 &le; j &le; x1<br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1<br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -759,12 +765,12 @@ public class SimpleMatrix {
      */
     public SimpleMatrix extractMatrix(int y0 , int y1,
                                       int x0 , int x1 ) {
-        if( y0 == END ) y0 = mat.numRows-1;
-        if( y1 == END ) y1 = mat.numRows-1;
-        if( x0 == END ) x0 = mat.numCols-1;
-        if( x1 == END ) x1 = mat.numCols-1;
+        if( y0 == END ) y0 = mat.numRows;
+        if( y1 == END ) y1 = mat.numRows;
+        if( x0 == END ) x0 = mat.numCols;
+        if( x1 == END ) x1 = mat.numCols;
 
-        SimpleMatrix ret = new SimpleMatrix(y1-y0+1,x1-x0+1);
+        SimpleMatrix ret = new SimpleMatrix(y1-y0,x1-x0);
 
         CommonOps.extract(mat,y0,y1,x0,x1,ret.mat,0,0);
 
@@ -945,9 +951,27 @@ public class SimpleMatrix {
 
     /**
      * <p>
-     * Changes the sign of every element in the matrix.<br>
+     * Returns a matrix which is the result of an element by element multiplication of 'this' and 'b':
+     * c<sub>i,j</sub> = a<sub>i,j</sub>*b<sub>i,j</sub>
+     * </p>
+     * 
+     * @param b A simple matrix.
+     * @return The element by element multiplication of 'this' and 'b'.
+     */
+    public SimpleMatrix elementMult( SimpleMatrix b )
+    {
+        SimpleMatrix c = new SimpleMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementMult(mat,b.getMatrix(),c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
+     * Returns a new matrix whose elements are the negative of 'this' matrix's elements.<br>
      * <br>
-     * a<sub>ij</sub> = -a<sub>ij</sub>
+     * b<sub>ij</sub> = -a<sub>ij</sub>
      * </p>
      *
      * @return A matrix that is the negative of the original.

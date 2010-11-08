@@ -35,6 +35,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -429,16 +430,27 @@ public class TestCommonOps {
 
     @Test
     public void extract() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
-        for( int i = 0; i < A.numRows; i++ ) {
-            for( int j = 0; j < A.numCols; j++ ) {
-                A.set(i,j,i*A.numRows+j);
-            }
-        }
+        DenseMatrix64F A = RandomMatrices.createRandom(5,5, 0, 1, rand);
 
         DenseMatrix64F B = new DenseMatrix64F(2,3);
 
-        CommonOps.extract(A,1,2,2,4,B,0,0);
+        CommonOps.extract(A,1,3,2,5,B,0,0);
+
+        for( int i = 1; i < 3; i++ ) {
+            for( int j = 2; j < 5; j++ ) {
+                assertEquals(A.get(i,j),B.get(i-1,j-2),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void extract_ret() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,5, 0, 1, rand);
+
+        DenseMatrix64F B = CommonOps.extract(A,1,3,2,5);
+
+        assertEquals(B.numRows,2);
+        assertEquals(B.numCols,3);
 
         for( int i = 1; i < 3; i++ ) {
             for( int j = 2; j < 5; j++ ) {

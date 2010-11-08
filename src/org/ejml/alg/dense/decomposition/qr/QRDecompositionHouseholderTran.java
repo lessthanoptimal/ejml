@@ -142,12 +142,12 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
         if( R == null ) {
             if( compact ) {
-                R = new DenseMatrix64F(minLength,minLength);
+                R = new DenseMatrix64F(minLength,numCols);
             } else
                 R = new DenseMatrix64F(numRows,numCols);
         } else {
             if( compact ) {
-                if( R.numCols != minLength || R.numRows != minLength )
+                if( R.numCols != numCols || R.numRows != minLength )
                     throw new IllegalArgumentException("Unexpected dimensions");
             } else {
                 if( R.numCols != numCols || R.numRows != numRows )
@@ -162,8 +162,8 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
             }
         }
 
-        for( int i = 0; i < minLength; i++ ) {
-            for( int j = i; j < numCols; j++ ) {
+        for( int i = 0; i < R.numRows; i++ ) {
+            for( int j = i; j < R.numCols; j++ ) {
                 double val = QR.get(j,i);
                 R.set(i,j,val);
             }
@@ -210,7 +210,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
      * <p>
      * Computes the householder vector "u" for the first column of submatrix j.  Note this is
      * a specialized householder for this problem.  There is some protection against
-     * overfloaw and underflow.
+     * overflow and underflow.
      * </p>
      * <p>
      * Q = I - &gamma;uu<sup>T</sup>
@@ -234,7 +234,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
             error = true;
         } else {
             // computes tau and normalizes u by max
-            tau = QrHelperFunctions.computeTau(startQR, endQR , QR.data, max);
+            tau = QrHelperFunctions.computeTauAndDivide(startQR, endQR , QR.data, max);
 
             // divide u by u_0
             double u_0 = QR.data[startQR] + tau;
@@ -242,6 +242,8 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
 
             gamma = u_0/tau;
             tau *= max;
+
+            QR.data[startQR] = -tau;
         }
 
         gammas[j] = gamma;
@@ -285,6 +287,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
         int indexWEnd = rowW + numRows - w - 1;
 
         for( ; rowJEnd != rowJ; rowJ += numRows) {
+            // assume the first element in u is 1
             double val = QR.data[rowJ - 1];
 
             int indexW = rowW;
@@ -301,10 +304,6 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
             while( indexW != indexWEnd ) {
                 QR.data[indexJ++] -= QR.data[indexW++]*val;
             }
-        }
-
-        if( w < numCols ) {
-            QR.data[rowW - 1] = -tau;
         }
     }
 

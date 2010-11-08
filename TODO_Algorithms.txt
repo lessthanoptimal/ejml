@@ -4,6 +4,7 @@
 - wrapper so that block cholesky can be used on regular matrices
 - merge cholesky offset by index classes
   * are these fast enough to replace the base class that assumes an index of zero?
+- for all QR decomposition, when computing Q don't multiply against the identity matrix
 
 For 0.15 Release
 - cholesky block
@@ -11,11 +12,10 @@ For 0.15 Release
 - cholesky accuracy
   * hard coded cholesky inverse for small matrices
 - increase block size?
+- Block QR
+- Unit test for PCA example
 
 For DenseMatrix64F
-
-- Block Householder
-  * Apply to all QR Algorithm.  SVD first
 
 - LU
   - block

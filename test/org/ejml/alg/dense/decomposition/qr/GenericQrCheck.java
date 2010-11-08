@@ -52,12 +52,15 @@ public abstract class GenericQrCheck {
      */
     @Test
     public void decompositionShape() {
-        checkDecomposition(5, 5);
-        checkDecomposition(10, 5);
-        checkDecomposition(5, 10);
+        checkDecomposition(5, 5 ,false);
+        checkDecomposition(10, 5,false);
+        checkDecomposition(5, 10,false);
+        checkDecomposition(5, 5 ,true);
+        checkDecomposition(10, 5,true);
+        checkDecomposition(5, 10,true);
     }
 
-    private void checkDecomposition(int height, int width) {
+    private void checkDecomposition(int height, int width, boolean compact ) {
         QRDecomposition alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width);
@@ -65,10 +68,12 @@ public abstract class GenericQrCheck {
 
         alg.decompose(A.getMatrix());
 
-        SimpleMatrix Q = new SimpleMatrix(height,height);
-        alg.getQ(Q.getMatrix(), false);
-        SimpleMatrix R = new SimpleMatrix(height,width);
-        alg.getR(R.getMatrix(), false);
+        int minStride = Math.min(height,width);
+
+        SimpleMatrix Q = new SimpleMatrix(height,compact ? minStride : height);
+        alg.getQ(Q.getMatrix(), compact);
+        SimpleMatrix R = new SimpleMatrix(compact ? minStride : height,width);
+        alg.getR(R.getMatrix(), compact);
 
 
         // see if Q has the expected properties

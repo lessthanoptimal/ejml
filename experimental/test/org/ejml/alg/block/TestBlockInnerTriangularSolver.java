@@ -175,8 +175,8 @@ public class TestBlockInnerTriangularSolver {
         BlockMatrix64F b_L = BlockMatrixOps.convert(L,3);
         BlockMatrix64F b_B = BlockMatrixOps.convert(B,3);
 
-        D1Submatrix64F sub_L = new D1Submatrix64F(b_L,0,0,3,3);
-        D1Submatrix64F sub_B = new D1Submatrix64F(b_B,0,0,3,5);
+        D1Submatrix64F sub_L = new D1Submatrix64F(b_L,0, 3, 0, 3);
+        D1Submatrix64F sub_B = new D1Submatrix64F(b_B,0, 3, 0, 5);
 
         if( transT ) {
             sub_L.original = BlockMatrixOps.transpose((BlockMatrix64F)sub_L.original,null);

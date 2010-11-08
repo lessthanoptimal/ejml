@@ -10,11 +10,18 @@
 - Changed DecompositionInterface
 - Added unsafe_get() and unsafe_set() to Matrix64F and implementing classes.
 - Cholesky decomposition for a block matrix and associated helper functions.
-- Simplistic functions have had the hand inlining removed.
+- Simplistic functions have had the hand inlining removed. Suggested by Kaspar Thommen.
   * After marking it was found that sometimes more complex functions had their performance
     significantly degraded after they started to use very light weight wrappers.
   * In some cases it seems to slightly improve performance when setters/getters are used.
   * Yes these changes were statistically significant by a large margin.
+- Changed behavior of CommonOps.extract() to make its behavior match other submatrix operations better
+- Added the ability to create a new matrix if a null dst is provided in several CommonOps functions.
+- Moved examples into their own java package.  Makes selectively running those unit tests easier in IntelliJ
+- Added elementMult() to SimpleMatrix. Suggested by Nikita Rokotyan.
+- Fixed bug in the different QR decomposition implementations for compact R.
+  * Added compact QR to generic tests
+
 
 ----- Version 0.14
 

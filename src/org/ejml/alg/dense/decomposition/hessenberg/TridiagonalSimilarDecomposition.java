@@ -186,7 +186,7 @@ public class TridiagonalSimilarDecomposition {
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = QrHelperFunctions.computeTau(k,N,t,rowU,max);
+            double tau = QrHelperFunctions.computeTauAndDivide(k,N,t,rowU,max);
 
             // write the reflector into the lower left column of the matrix
             double nu = t[rowU+k] + tau;

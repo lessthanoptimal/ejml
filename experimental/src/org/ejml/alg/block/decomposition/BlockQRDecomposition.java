@@ -19,6 +19,7 @@
 
 package org.ejml.alg.block.decomposition;
 
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -46,7 +47,7 @@ public interface BlockQRDecomposition extends BlockDecompositionInterface {
      * @param compact If true an m by n matrix is created, otherwise n by n.
      * @return The Q matrix.
      */
-    public DenseMatrix64F getQ(DenseMatrix64F Q, boolean compact);
+    public BlockMatrix64F getQ(BlockMatrix64F Q, boolean compact);
 
     /**
      * <p>
@@ -68,6 +69,6 @@ public interface BlockQRDecomposition extends BlockDecompositionInterface {
      * @param compact If true only the upper triangular elements are set
      * @return The R matrix.
      */
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact);
+    public BlockMatrix64F getR(BlockMatrix64F R, boolean compact);
 
 }

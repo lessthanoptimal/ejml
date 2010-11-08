@@ -187,6 +187,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
                 U.reshape(m,m, false);
         }
 
+        // todo the very first multiplication can be avoided by setting to the rank1update output
         CommonOps.setIdentity(U);
 
         for( int i = 0; i < m; i++ ) u[i] = 0;
@@ -238,6 +239,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
 
 //        UBV.print();
 
+        // todo the very first multiplication can be avoided by setting to the rank1update output
         for( int j = min-1; j >= 0; j-- ) {
             u[j+1] = 1;
             for( int i = j+2; i < n; i++ ) {
@@ -282,7 +284,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
-            double tau = QrHelperFunctions.computeTau(k,m,u ,max);
+            double tau = QrHelperFunctions.computeTauAndDivide(k,m,u ,max);
 
             // write the reflector into the lower left column of the matrix
             // while dividing u by nu
@@ -314,7 +316,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = QrHelperFunctions.computeTau(k+1,n,b,row,max);
+            double tau = QrHelperFunctions.computeTauAndDivide(k+1,n,b,row,max);
 
             // write the reflector into the lower left column of the matrix
             double nu = b[row+k+1] + tau;

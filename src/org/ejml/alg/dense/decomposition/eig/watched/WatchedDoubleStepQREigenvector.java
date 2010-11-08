@@ -178,7 +178,7 @@ public class WatchedDoubleStepQREigenvector {
     private void solveWithLU(double real, int index, DenseMatrix64F r ) {
         DenseMatrix64F A = new DenseMatrix64F(index,index);
 
-        CommonOps.extract(implicit.A,0,index-1,0,index-1,A,0,0);
+        CommonOps.extract(implicit.A,0,index,0,index,A,0,0);
 
         for( int i = 0; i < index; i++ ) {
             A.add(i,i,-real);

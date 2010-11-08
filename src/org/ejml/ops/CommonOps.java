@@ -505,12 +505,17 @@ public class CommonOps {
      * </p>
      *
      * @param A The original matrix.  Not modified.
-     * @param A_tran Where the transpose is stored. Modified.
+     * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
+     * @return The transposed matrix.
      */
-    public static void transpose( DenseMatrix64F A, DenseMatrix64F A_tran)
+    public static DenseMatrix64F transpose( DenseMatrix64F A, DenseMatrix64F A_tran)
     {
-        if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
-            throw new RuntimeException("Incompatible matrix dimensions");
+        if( A_tran == null ) {
+            A_tran = new DenseMatrix64F(A.numCols,A.numRows);
+        } else {
+            if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
+                throw new RuntimeException("Incompatible matrix dimensions");
+            }
         }
 
         if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH &&
@@ -518,6 +523,8 @@ public class CommonOps {
             TransposeAlgs.block(A,A_tran,EjmlParameters.BLOCK_WIDTH);
         else
             TransposeAlgs.standard(A,A_tran);
+
+        return A_tran;
     }
 
 
@@ -946,7 +953,7 @@ public class CommonOps {
      * Extracts a submatrix from 'src' and stores it in a submatrix of 'dst'.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &le; y1 and x0 &le; j &le; x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -954,9 +961,9 @@ public class CommonOps {
      *
      * @param src The original matrix which is to be copied.  Not modified.
      * @param srcX0 Start column.
-     * @param srcX1 Stop column.
+     * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
-     * @param srcY1 Stop row.
+     * @param srcY1 Stop row+1.
      * @param dst Where the submatrix are stored.  Modified.
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
@@ -967,13 +974,13 @@ public class CommonOps {
                                 DenseMatrix64F dst ,
                                 int dstY0, int dstX0 )
     {
-        if( srcY1 < srcY0 && srcX0 >= 0 && srcY1 < src.numRows)
-            throw new IllegalArgumentException("srcY1 < srcY0 && srcX0 >= 0 && srcY1 < src.numRow");
-        if( srcX1 < srcX0 && srcX0 >= 0 && srcX1 < src.numCols)
-            throw new IllegalArgumentException("srcX1 < srcX0 && srcX0 >= 0 && srcX1 < src.numCols");
+        if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
+            throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+        if( srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols )
+            throw new IllegalArgumentException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
 
-        int w = srcX1-srcX0+1;
-        int h = srcY1-srcY0+1;
+        int w = srcX1-srcX0;
+        int h = srcY1-srcY0;
 
         if( dstY0+h > dst.numRows )
             throw new IllegalArgumentException("dst is too small in rows");
@@ -987,6 +994,48 @@ public class CommonOps {
              }
          }
 
+    }
+
+    /**
+     * <p>
+     * Creates a new matrix which is the specified submatrix of 'src'
+     * </p>
+     * <p>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * <br>
+     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
+     * original matrix.
+     * </p>
+     *
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param srcX0 Start column.
+     * @param srcX1 Stop column+1.
+     * @param srcY0 Start row.
+     * @param srcY1 Stop row+1.
+     * @return Extracted submatrix.
+     */
+    public static DenseMatrix64F extract( DenseMatrix64F src,
+                                          int srcY0, int srcY1,
+                                          int srcX0, int srcX1 )
+    {
+        if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
+            throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+        if( srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols )
+            throw new IllegalArgumentException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+
+        int w = srcX1-srcX0;
+        int h = srcY1-srcY0;
+
+        DenseMatrix64F dst = new DenseMatrix64F(h,w);
+
+        for( int y = 0; y < h; y++ ) {
+            for( int x = 0; x < w; x++ ) {
+                double v = src.get(y+srcY0,x+srcX0);
+                dst.set(y , x, v);
+            }
+        }
+
+        return dst;
     }
 
     /**
@@ -1200,7 +1249,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();

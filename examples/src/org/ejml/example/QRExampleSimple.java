@@ -1,4 +1,4 @@
-/*
+package org.ejml.example;/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -17,24 +17,24 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.NormOps;
+import org.ejml.data.SimpleMatrix;
+
+import static org.ejml.data.SimpleMatrix.END;
 
 /**
  * <p>
  * Example code for computing the QR decomposition of a matrix. It demonstrates how to
- * extract a submatrix and insert one matrix into another one using the operator interface.
+ * extract a submatrix and insert one matrix into another one using SimpleMatrix.
  * </p>
  *
  * Note: This code is horribly inefficient and is for demonstration purposes only.
  *
  * @author Peter Abeles
  */
-public class QRExampleOps {
+public class QRExampleSimple {
 
     // where the QR decomposition is stored
-    private DenseMatrix64F QR;
+    private SimpleMatrix QR;
 
     // used for computing Q
     private double gammas[];
@@ -44,37 +44,24 @@ public class QRExampleOps {
      *
      * @param A Matrix which is to be decomposed.  Not modified.
      */
-    public void decompose( DenseMatrix64F A ) {
+    public void decompose( SimpleMatrix A ) {
 
         this.QR = A.copy();
 
-        int N = Math.min(A.numCols,A.numRows);
-
-        gammas = new double[ A.numCols ];
-
-        DenseMatrix64F A_small = new DenseMatrix64F(A.numRows,A.numCols);
-        DenseMatrix64F A_mod = new DenseMatrix64F(A.numRows,A.numCols);
-        DenseMatrix64F v = new DenseMatrix64F(A.numRows,1);
-        DenseMatrix64F Q_k = new DenseMatrix64F(A.numRows,A.numRows);
+        int N = Math.min(A.numCols(),A.numRows());
+        gammas = new double[ A.numCols() ];
 
         for( int i = 0; i < N; i++ ) {
-            // reshape temporary variables
-            A_small.reshape(QR.numRows-i,QR.numCols-i,false);
-            A_mod.reshape(A_small.numRows,A_small.numCols,false);
-            v.reshape(A_small.numRows,1,false);
-            Q_k.reshape(v.getNumElements(),v.getNumElements(),false);
-
             // use extract matrix to get the column that is to be zeroed
-            CommonOps.extract(QR,i,QR.numRows-1,i,i,v,0,0);
-
-            double max = CommonOps.elementMaxAbs(v);
+            SimpleMatrix v = QR.extractMatrix(i, END,i,i+1);
+            double max = v.elementMaxAbs();
 
             if( max > 0 && v.getNumElements() > 1 ) {
                 // normalize to reduce overflow issues
-                CommonOps.divide(max,v);
+                v = v.divide(max);
 
                 // compute the magnitude of the vector
-                double tau = NormOps.normF(v);
+                double tau = v.normF();
 
                 if( v.get(0) < 0 )
                     tau *= -1.0;
@@ -82,21 +69,18 @@ public class QRExampleOps {
                 double u_0 = v.get(0) + tau;
                 double gamma = u_0/tau;
 
-                CommonOps.divide(u_0,v);
+                v = v.divide(u_0);
                 v.set(0,1.0);
 
                 // extract the submatrix of A which is being operated on
-                CommonOps.extract(QR,i,QR.numRows-1,i,QR.numCols-1,A_small,0,0);
+                SimpleMatrix A_small = QR.extractMatrix(i,END,i,END);
 
                 // A = (I - &gamma;*u*u<sup>T</sup>)A
-                CommonOps.setIdentity(Q_k);
-                CommonOps.multAddTransB(-gamma,v,v,Q_k);
-                CommonOps.mult(Q_k,A_small,A_mod);
+                A_small = A_small.plus(-gamma,v.mult(v.transpose()).mult(A_small));
 
                 // save the results
-                CommonOps.insert(A_mod, QR, i,i);
-                CommonOps.insert(v, QR, i,i);
-                QR.set(i,i,-tau*max);
+                QR.insertIntoThis(i,i,A_small);
+                QR.insertIntoThis(i+1,i,v.extractMatrix(1,END,0,1));
 
                 // save gamma for recomputing Q later on
                 gammas[i] = gamma;
@@ -107,29 +91,20 @@ public class QRExampleOps {
     /**
      * Returns the Q matrix.
      */
-    public DenseMatrix64F getQ() {
-        DenseMatrix64F Q = CommonOps.identity(QR.numRows);
-        DenseMatrix64F Q_k = new DenseMatrix64F(QR.numRows,QR.numRows);
-        DenseMatrix64F u = new DenseMatrix64F(QR.numRows,1);
+    public SimpleMatrix getQ() {
+        SimpleMatrix Q = SimpleMatrix.identity(QR.numRows());
 
-        DenseMatrix64F temp = new DenseMatrix64F(QR.numRows,QR.numRows);
-
-        int N = Math.min(QR.numCols,QR.numRows);
+        int N = Math.min(QR.numCols(),QR.numRows());
 
         // compute Q by first extracting the householder vectors from the
         // columns of QR and then applying it to Q
         for( int j = N-1; j>= 0; j-- ) {
-            if( j + 1 < N )
-                u.set(j+1,0);
-
-            CommonOps.extract(QR,j, QR.numRows-1,j,j,u,j,0);
+            SimpleMatrix u = new SimpleMatrix(QR.numRows(),1);
+            u.insertIntoThis(j,0,QR.extractMatrix(j, END,j,j+1));
             u.set(j,1.0);
 
             // A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
-            CommonOps.setIdentity(Q_k);
-            CommonOps.multAddTransB(-gammas[j],u,u,Q_k);
-            CommonOps.mult(Q_k,Q,temp);
-            Q.set(temp);
+            Q = Q.plus(-gammas[j],u.mult(u.transpose()).mult(Q));
         }
 
         return Q;
@@ -138,13 +113,13 @@ public class QRExampleOps {
     /**
      * Returns the R matrix.
      */
-    public DenseMatrix64F getR() {
-        DenseMatrix64F R = new DenseMatrix64F(QR.numRows,QR.numCols);
+    public SimpleMatrix getR() {
+        SimpleMatrix R = new SimpleMatrix(QR.numRows(),QR.numCols());
 
-        int N = Math.min(QR.numCols,QR.numRows);
+        int N = Math.min(QR.numCols(),QR.numRows());
 
         for( int i = 0; i < N; i++ ) {
-            for( int j = i; j < QR.numCols; j++ ) {
+            for( int j = i; j < QR.numCols(); j++ ) {
                 R.set(i,j, QR.get(i,j));
             }
         }

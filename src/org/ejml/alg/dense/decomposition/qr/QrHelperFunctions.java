@@ -123,7 +123,7 @@ public class QrHelperFunctions {
         }
     }
 
-    public static double computeTau(int j, int numRows , double[] u, int startU , double max) {
+    public static double computeTauAndDivide(int j, int numRows , double[] u, int startU , double max) {
         // compute the norm2 of the matrix, with each element
         // normalized by the max value to avoid overflow problems
         double tau = 0;
@@ -149,9 +149,28 @@ public class QrHelperFunctions {
         return tau;
     }
 
-    public static double computeTau(int j, int numRows , double[] u , double max) {
-        // compute the norm2 of the matrix, with each element
-        // normalized by the max value to avoid overflow problems
+    /**
+     * Normalizes elements in 'u' by dividing by max and computes the norm2 of the normalized
+     * array u.  Adjust the sign of the returned value depending on the size of the first
+     * element in 'u'. Normalization is done to avoid overflow.
+     *
+     * <pre>
+     * for i=j:numRows
+     *   u[i] = u[i] / max
+     *   tau = tau + u[i]*u[i]
+     * end
+     * tau = sqrt(tau)
+     * if( u[j] < 0 )
+     *    tau = -tau;
+     * </pre>
+     *
+     * @param j Element in 'u' that it starts at.
+     * @param numRows Element in 'u' that it stops at.
+     * @param u Array
+     * @param max Max value in 'u' that is used to normalize it.
+     * @return norm2 of 'u'
+     */
+    public static double computeTauAndDivide(int j, int numRows , double[] u , double max) {
         double tau = 0;
         double div_max = 1.0/max;
         if( Double.isInfinite(div_max)) {

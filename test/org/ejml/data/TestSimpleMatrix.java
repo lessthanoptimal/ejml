@@ -28,6 +28,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -462,10 +463,26 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void elementMult() {
+        SimpleMatrix A = SimpleMatrix.random(4,5,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random(4,5,-1,1,rand);
+
+        SimpleMatrix C = A.elementMult(B);
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            for( int j = 0; j < A.numCols(); j++ ) {
+                double expected = A.get(i,j)*B.get(i,j);
+
+                assertTrue(expected == C.get(i,j));
+            }
+        }
+    }
+
+    @Test
     public void extractMatrix() {
         SimpleMatrix a = SimpleMatrix.random(7,5, 0, 1, rand);
 
-        SimpleMatrix b = a.extractMatrix(2,4,3,4);
+        SimpleMatrix b = a.extractMatrix(2,5,3,5);
 
         for( int i = 2; i <= 4; i++ ) {
             for( int j = 3; j <= 4; j++ ) {

@@ -142,12 +142,12 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
         if( R == null ) {
             if( compact ) {
-                R = new DenseMatrix64F(minLength,minLength);
+                R = new DenseMatrix64F(minLength,numCols);
             } else
                 R = new DenseMatrix64F(numRows,numCols);
         } else {
             if( compact ) {
-                if( R.numCols != minLength || R.numRows != minLength )
+                if( R.numCols != numCols || R.numRows != minLength )
                     throw new IllegalArgumentException("Unexpected dimensions");
             } else {
                 if( R.numCols != numCols || R.numRows != numRows )
@@ -250,7 +250,7 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
             error = true;
         } else {
             // computes tau and normalizes u by max
-            tau = QrHelperFunctions.computeTau(j, numRows , u, max);
+            tau = QrHelperFunctions.computeTauAndDivide(j, numRows , u, max);
 
             // divide u by u_0
             double u_0 = u[j] + tau;
@@ -258,6 +258,8 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
 
             gamma = u_0/tau;
             tau *= max;
+
+            u[j] = -tau;
         }
 
         gammas[j] = gamma;
@@ -290,10 +292,6 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
             for( int i = w+1; i < numRows; i++ ) {
                 colQ[i] -= u[i]*val;
             }
-        }
-
-        if( w < numCols ) {
-            u[w] = -tau;
         }
     }
 

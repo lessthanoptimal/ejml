@@ -311,32 +311,136 @@ public class TestBlockMatrixOps {
 
     @Test
     public void zeroTriangle_upper() {
-        BlockMatrix64F B = BlockMatrixOps.createRandom(BLOCK_LENGTH*2+1,BLOCK_LENGTH*2+1,-1,1,rand,BLOCK_LENGTH);
+        int r = 3;
 
-        BlockMatrixOps.zeroTriangle(true,B);
+        for( int numRows = 2; numRows <= 6; numRows += 2 ){
+            for( int numCols = 2; numCols <= 6; numCols += 2 ){
+                BlockMatrix64F B = BlockMatrixOps.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrixOps.zeroTriangle(true,B);
 
-        for( int i = 0; i < B.numRows; i++ ) {
-            for( int j = 0; j < B.numCols; j++ ) {
-                if( j <= i )
-                    assertTrue(B.get(i,j) != 0 );
-                else
-                    assertTrue(B.get(i,j) == 0 );
+                for( int i = 0; i < B.numRows; i++ ) {
+                    for( int j = 0; j < B.numCols; j++ ) {
+                        if( j <= i )
+                            assertTrue(B.get(i,j) != 0 );
+                        else
+                            assertTrue(B.get(i,j) == 0 );
+                    }
+                }
             }
         }
     }
 
     @Test
     public void zeroTriangle_lower() {
-        BlockMatrix64F B = BlockMatrixOps.createRandom(BLOCK_LENGTH*2+1,BLOCK_LENGTH*2+1,-1,1,rand,BLOCK_LENGTH);
 
-        BlockMatrixOps.zeroTriangle(false,B);
+        int r = 3;
 
-        for( int i = 0; i < B.numRows; i++ ) {
-            for( int j = 0; j < B.numCols; j++ ) {
-                if( j >= i )
-                    assertTrue(B.get(i,j) != 0 );
-                else
-                    assertTrue(B.get(i,j) == 0 );
+        for( int numRows = 2; numRows <= 6; numRows += 2 ){
+            for( int numCols = 2; numCols <= 6; numCols += 2 ){
+                BlockMatrix64F B = BlockMatrixOps.createRandom(numRows,numCols,-1,1,rand,r);
+
+                BlockMatrixOps.zeroTriangle(false,B);
+
+                for( int i = 0; i < B.numRows; i++ ) {
+                    for( int j = 0; j < B.numCols; j++ ) {
+                        if( j >= i )
+                            assertTrue(B.get(i,j) != 0 );
+                        else
+                            assertTrue(B.get(i,j) == 0 );
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void copyTriangle() {
+
+
+        int r = 3;
+
+        // test where src and dst are the same size
+        for( int numRows = 2; numRows <= 6; numRows += 2 ){
+            for( int numCols = 2; numCols <= 6; numCols += 2 ){
+                BlockMatrix64F A = BlockMatrixOps.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrix64F B = new BlockMatrix64F(numRows,numCols,r);
+
+                BlockMatrixOps.copyTriangle(true,A,B);
+
+                for( int i = 0; i < numRows; i++) {
+                    for( int j = 0; j < numCols; j++ ) {
+                        if( j >= i )
+                            assertTrue(A.get(i,j) == B.get(i,j));
+                        else
+                            assertTrue( 0 == B.get(i,j));
+                    }
+                }
+
+                CommonOps.set(B,0);
+                BlockMatrixOps.copyTriangle(false,A,B);
+                
+                for( int i = 0; i < numRows; i++) {
+                    for( int j = 0; j < numCols; j++ ) {
+                        if( j <= i )
+                            assertTrue(A.get(i,j) == B.get(i,j));
+                        else
+                            assertTrue( 0 == B.get(i,j));
+                    }
+                }
+            }
+        }
+
+        // now the dst will be smaller than the source
+        BlockMatrix64F B = new BlockMatrix64F(r+1,r+1,r);
+        for( int numRows = 4; numRows <= 6; numRows += 1 ){
+            for( int numCols = 4; numCols <= 6; numCols += 1 ){
+                BlockMatrix64F A = BlockMatrixOps.createRandom(numRows,numCols,-1,1,rand,r);
+                CommonOps.set(B,0);
+
+                BlockMatrixOps.copyTriangle(true,A,B);
+
+                for( int i = 0; i < B.numRows; i++) {
+                    for( int j = 0; j < B.numCols; j++ ) {
+                        if( j >= i )
+                            assertTrue(A.get(i,j) == B.get(i,j));
+                        else
+                            assertTrue( 0 == B.get(i,j));
+                    }
+                }
+
+                CommonOps.set(B,0);
+                BlockMatrixOps.copyTriangle(false,A,B);
+
+                for( int i = 0; i < B.numRows; i++) {
+                    for( int j = 0; j < B.numCols; j++ ) {
+                        if( j <= i )
+                            assertTrue(A.get(i,j) == B.get(i,j));
+                        else
+                            assertTrue( 0 == B.get(i,j));
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void setIdentity() {
+        int r = 3;
+
+        for( int numRows = 2; numRows <= 6; numRows += 2 ){
+            for( int numCols = 2; numCols <= 6; numCols += 2 ){
+                BlockMatrix64F A = BlockMatrixOps.createRandom(numRows,numCols,-1,1,rand,r);
+
+                BlockMatrixOps.setIdentity(A);
+
+                for( int i = 0; i < numRows; i++ ) {
+                    for( int j = 0; j < numCols; j++ ) {
+                        if( i == j )
+                            assertEquals(1.0,A.get(i,j),1e-8);
+                        else
+                            assertEquals(0.0,A.get(i,j),1e-8);
+                    }
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-/*
+package org.ejml.example;/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -19,6 +19,7 @@
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
+import org.ejml.example.LevenbergMarquardt;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 

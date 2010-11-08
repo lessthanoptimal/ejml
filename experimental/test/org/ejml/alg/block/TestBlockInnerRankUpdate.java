@@ -64,8 +64,8 @@ public class TestBlockInnerRankUpdate {
         BlockMatrix64F blockA = BlockMatrixOps.convert(origA.getMatrix(),N);
         BlockMatrix64F blockB = BlockMatrixOps.convert(origB.getMatrix(),N);
 
-        D1Submatrix64F subA = new D1Submatrix64F(blockA,0,0,origA.numRows(),origA.numCols());
-        D1Submatrix64F subB = new D1Submatrix64F(blockB,0,0,origB.numRows(),origB.numCols());
+        D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
+        D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
         BlockInnerRankUpdate.rankNUpdate(N,alpha,subA,subB);
@@ -95,8 +95,8 @@ public class TestBlockInnerRankUpdate {
         BlockMatrix64F blockA = BlockMatrixOps.convert(origA.getMatrix(),N);
         BlockMatrix64F blockB = BlockMatrixOps.convert(origB.getMatrix(),N);
 
-        D1Submatrix64F subA = new D1Submatrix64F(blockA,0,0,origA.numRows(),origA.numCols());
-        D1Submatrix64F subB = new D1Submatrix64F(blockB,0,0,origB.numRows(),origB.numCols());
+        D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
+        D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
         BlockInnerRankUpdate.symmRankNMinus_U(N,subA,subB);
@@ -123,8 +123,8 @@ public class TestBlockInnerRankUpdate {
         BlockMatrix64F blockA = BlockMatrixOps.convert(origA.getMatrix(),N);
         BlockMatrix64F blockB = BlockMatrixOps.convert(origB.getMatrix(),N);
 
-        D1Submatrix64F subA = new D1Submatrix64F(blockA,0,0,origA.numRows(),origA.numCols());
-        D1Submatrix64F subB = new D1Submatrix64F(blockB,0,0,origB.numRows(),origB.numCols());
+        D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
+        D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.mult(origB.transpose()).scale(-1));
         BlockInnerRankUpdate.symmRankNMinus_L(N,subA,subB);

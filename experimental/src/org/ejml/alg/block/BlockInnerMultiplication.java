@@ -26,6 +26,8 @@ import org.ejml.data.D1Submatrix64F;
  *
  * @author Peter Abeles
  */
+// TODO Add a check to make sure the sub matrices are aligned along the blocks and of appropriate dimensions
+    // make option if necessary
 // TODO optimize the code.  Don't forget to simply comment out the current readable code
 public class BlockInnerMultiplication {
 
@@ -73,6 +75,92 @@ public class BlockInnerMultiplication {
                 }
             }
         }
+    }
+
+    /**
+     * <p>
+     * Performs a matrix multiplication on {@link org.ejml.data.BlockMatrix64F} submatrices.<br>
+     * <br>
+     * c = c + a * b <br>
+     * <br>
+     * </p>
+     *
+     * <p>
+     * It is assumed that all submatrices start at the beginning of a block and end at the end of a block.
+     * </p>
+     *
+     * @param blockLength Size of the blocks in the submatrix.
+     * @param A A submatrix.  Not modified.
+     * @param B A submatrix.  Not modified.
+     * @param C Result of the operation.  Modified,
+     */
+    public static void multAdd( int blockLength ,
+                             D1Submatrix64F A , D1Submatrix64F B ,
+                             D1Submatrix64F C )
+    {
+        checkInput( blockLength,A,B,C);
+
+        for( int i = A.row0; i < A.row1; i += blockLength ) {
+            int heightA = Math.min( blockLength , A.row1 - i );
+
+            for( int j = B.col0; j < B.col1; j += blockLength ) {
+                int widthB = Math.min( blockLength , B.col1 - j );
+
+                int indexC = (i-A.row0+C.row0)*C.original.numCols + (j-B.col0+C.col0)*heightA;
+
+                for( int k = A.col0; k < A.col1; k += blockLength ) {
+                    int widthA = Math.min( blockLength , A.col1 - k );
+
+                    int indexA = i*A.original.numCols + k*heightA;
+                    int indexB = (k-A.col0+B.row0)*B.original.numCols + j*widthA;
+
+                    multBlockAdd(A.original.data,B.original.data,C.original.data,
+                            indexA,indexB,indexC,heightA,widthA,widthB);
+                }
+            }
+        }
+    }
+
+    private static void checkInput( int blockLength ,
+                                    D1Submatrix64F A , D1Submatrix64F B ,
+                                    D1Submatrix64F C )
+    {
+        int Arow = A.getRows();int Acol = A.getCols();
+        int Brow = B.getRows();int Bcol = B.getCols();
+        int Crow = C.getRows();int Ccol = C.getCols();
+
+        if( Arow != Crow )
+            throw new RuntimeException("Mismatch A and C rows");
+        if( Bcol != Ccol )
+            throw new RuntimeException("Mismatch B and C columns");
+        if( Acol != Brow )
+            throw new RuntimeException("Mismatch A columns and B rows");
+
+        if( !blockAligned(blockLength,A))
+            throw new RuntimeException("Sub-Matrix A is not block aligned");
+
+        if( !blockAligned(blockLength,B))
+            throw new RuntimeException("Sub-Matrix B is not block aligned");
+
+        if( !blockAligned(blockLength,C))
+            throw new RuntimeException("Sub-Matrix C is not block aligned");
+    }
+
+    private static boolean blockAligned( int blockLength , D1Submatrix64F A ) {
+        if( A.col0 % blockLength != 0 )
+            return false;
+        if( A.row0 % blockLength != 0 )
+            return false;
+
+        if( A.col1 % blockLength != 0 ) {
+            return A.col1 == A.original.numCols;
+        }
+
+        if( A.row1 % blockLength != 0 ) {
+            return A.row1 == A.original.numRows;
+        }
+
+        return true;
     }
 
     /**
@@ -176,7 +264,7 @@ public class BlockInnerMultiplication {
      * C = A B
      * </p>
      */
-    protected static void multBlockSet( double[] dataA, double []dataB, double []dataC,
+    public static void multBlockSet( double[] dataA, double []dataB, double []dataC,
                                         int indexA, int indexB, int indexC,
                                         final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < heightA; i++ ) {
@@ -207,7 +295,7 @@ public class BlockInnerMultiplication {
      * C = C + A B
      * </p>
      */
-    protected static void multBlockAdd( double[] dataA, double []dataB, double []dataC,
+    public static void multBlockAdd( double[] dataA, double []dataB, double []dataC,
                                       int indexA, int indexB, int indexC,
                                       final int heightA, final int widthA, final int widthC) {
 //        for( int i = 0; i < heightA; i++ ) {
@@ -223,17 +311,20 @@ public class BlockInnerMultiplication {
 //        }
 
 //        for( int i = 0; i < heightA; i++ ) {
-//            for( int j = 0; j < widthC; j++ , indexC++ ) {
-//                int indexBB = indexB + j;
+//            int endJ = indexB+widthC;
+//            int indexB_ = indexB;
+//            // or( int j = 0; j < widthC; j++ )
+//            for( ; indexB_ != endJ; indexB_++ , indexC++ ) {
+//                int indexBB = indexB_;
 //                int indexAA = indexA;
 //
 //                double val = 0;
 //
 //                int end = indexA + widthA;
 //
-//                for( ; indexAA != end; indexAA++) {
+//                //for( int k = 0; k < widthA; k++ ) {
+//                for( ; indexAA != end; indexAA++, indexBB += widthC) {
 //                    val += dataA[ indexAA ] * dataB[indexBB];
-//                    indexBB += widthC;
 //                }
 //
 //                dataC[ indexC ] += val;
@@ -300,7 +391,7 @@ public class BlockInnerMultiplication {
      * C = C + A <sup>T</sup>B
      * </p>
      */
-    protected static void multTransABlockAdd( double[] dataA, double []dataB, double []dataC,
+    public static void multTransABlockAdd( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
         for( int i = 0; i < widthA; i++ ) {
@@ -323,7 +414,7 @@ public class BlockInnerMultiplication {
      * C = C + &alpha; A <sup>T</sup>B
      * </p>
      */
-    protected static void multTransABlockAdd( double alpha , double[] dataA, double []dataB, double []dataC,
+    public static void multTransABlockAdd( double alpha , double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
 //        for( int i = 0; i < widthA; i++ ) {

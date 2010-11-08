@@ -1,4 +1,4 @@
-/*
+package org.ejml.example;/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).

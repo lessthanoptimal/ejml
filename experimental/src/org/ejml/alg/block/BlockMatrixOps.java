@@ -22,6 +22,7 @@ package org.ejml.alg.block;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 
@@ -151,9 +152,9 @@ public class BlockMatrixOps {
 
         final int blockLength = A.blockLength;
 
-        D1Submatrix64F Asub = new D1Submatrix64F(A,0,0,A.numRows,A.numCols);
-        D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
-        D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
+        D1Submatrix64F Asub = new D1Submatrix64F(A,0, A.numRows, 0, A.numCols);
+        D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
+        D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
 
         BlockInnerMultiplication.mult(blockLength,Asub,Bsub,Csub);
     }
@@ -171,9 +172,9 @@ public class BlockMatrixOps {
 
         final int blockLength = A.blockLength;
 
-        D1Submatrix64F Asub = new D1Submatrix64F(A,0,0,A.numRows,A.numCols);
-        D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
-        D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
+        D1Submatrix64F Asub = new D1Submatrix64F(A,0, A.numRows, 0, A.numCols);
+        D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
+        D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
 
         BlockInnerMultiplication.multTransA(blockLength,Asub,Bsub,Csub);
     }
@@ -191,9 +192,9 @@ public class BlockMatrixOps {
 
         final int blockLength = A.blockLength;
 
-        D1Submatrix64F Asub = new D1Submatrix64F(A,0,0,A.numRows,A.numCols);
-        D1Submatrix64F Bsub = new D1Submatrix64F(B,0,0,B.numRows,B.numCols);
-        D1Submatrix64F Csub = new D1Submatrix64F(C,0,0,C.numRows,C.numCols);
+        D1Submatrix64F Asub = new D1Submatrix64F(A,0, A.numRows, 0, A.numCols);
+        D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
+        D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
 
         BlockInnerMultiplication.multTransB(blockLength,Asub,Bsub,Csub);
     }
@@ -341,7 +342,8 @@ public class BlockMatrixOps {
 
                     if( j == i ) {
                         for( int k = 0; k < h; k++ ) {
-                            for( int l = 0; l < k; l++ ) {
+                            int z = Math.min(k,w);
+                            for( int l = 0; l < z; l++ ) {
                                 A.data[index + w*k+l ] = 0;
                             }
                         }
@@ -355,5 +357,115 @@ public class BlockMatrixOps {
                 }
             }
         }
+    }
+
+    /**
+     * Copies either the upper or lower triangular portion of src into dst.  src and dst must
+     * be the same shape.
+     *
+     * @param upper If the upper or lower triangle is copied.
+     * @param src The source matrix. Not modified.
+     * @param dst The destination matrix. Modified.
+     */
+    public static void copyTriangle( boolean upper , BlockMatrix64F src , BlockMatrix64F dst )
+    {
+        if( src.blockLength != dst.blockLength )
+            throw new IllegalArgumentException("Block size is different");
+        if( src.numRows < dst.numRows )
+            throw new IllegalArgumentException("The src has fewer rows than dst");
+        if( src.numCols < dst.numCols )
+            throw new IllegalArgumentException("The src has fewer columns than dst");
+
+        int blockLength = src.blockLength;
+
+        int numRows = Math.min(src.numRows,dst.numRows);
+        int numCols = Math.min(src.numCols,dst.numCols);
+
+        if( upper ) {
+            for( int i = 0; i < numRows; i += blockLength ) {
+                int heightSrc = Math.min(blockLength,src.numRows-i);
+                int heightDst = Math.min(blockLength,dst.numRows-i);
+
+                for( int j = i; j < numCols; j += blockLength ) {
+                    int widthSrc = Math.min(blockLength,src.numCols-j);
+                    int widthDst = Math.min(blockLength,dst.numCols-j);
+
+                    int indexSrc = i*src.numCols + heightSrc*j;
+                    int indexDst = i*dst.numCols + heightDst*j;
+
+                    if( j == i ) {
+                        for( int k = 0; k < heightDst; k++ ) {
+                            for( int l = k; l < widthDst; l++ ) {
+                                dst.data[indexDst + widthDst*k+l ] = src.data[indexSrc + widthSrc*k+l ];
+                            }
+                        }
+                    } else {
+                        for( int k = 0; k < heightDst; k++ ) {
+                            System.arraycopy(src.data, indexSrc + widthSrc * k, dst.data, indexDst + widthDst * k, widthDst);
+                        }
+                    }
+                }
+            }
+        } else {
+            for( int i = 0; i < numRows; i += blockLength ) {
+                int heightSrc = Math.min(blockLength,src.numRows-i);
+                int heightDst = Math.min(blockLength,dst.numRows-i);
+
+                for( int j = 0; j <= i; j += blockLength ) {
+                    int widthSrc = Math.min(blockLength,src.numCols-j);
+                    int widthDst = Math.min(blockLength,dst.numCols-j);
+
+                    int indexSrc = i*src.numCols + heightSrc*j;
+                    int indexDst = i*dst.numCols + heightDst*j;
+
+                    if( j == i ) {
+                        for( int k = 0; k < heightDst; k++ ) {
+                            int z = Math.min(k+1,widthDst);
+                            for( int l = 0; l < z; l++ ) {
+                                dst.data[indexDst + widthDst*k+l ] = src.data[indexSrc + widthSrc*k+l ];
+                            }
+                        }
+                    } else {
+                        for( int k = 0; k < heightDst; k++ ) {
+                            System.arraycopy(src.data, indexSrc + widthSrc * k, dst.data, indexDst + widthDst * k, widthDst);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the value of A to all zeros except along the diagonal.
+     * @param A Block matrix.
+     */
+    public static void setIdentity( BlockMatrix64F A )
+    {
+        int minLength = Math.min(A.numRows,A.numCols);
+
+        CommonOps.set(A,0);
+
+        int blockLength = A.blockLength;
+
+        for( int i = 0; i < minLength; i += blockLength ) {
+            int h = Math.min(blockLength,A.numRows-i);
+            int w = Math.min(blockLength,A.numCols-i);
+
+            int index = i*A.numCols + h*i;
+
+            int m = Math.min(h,w);
+            for( int k = 0; k < m; k++ ) {
+                A.data[index + k*w + k ] = 1;
+            }
+        }
+    }
+
+    public static void checkIdenticalShape( BlockMatrix64F A , BlockMatrix64F B ) {
+        if( A.blockLength != B.blockLength )
+            throw new IllegalArgumentException("Block size is different");
+        if( A.numRows != B.numRows )
+            throw new IllegalArgumentException("Number of rows is different");
+        if( A.numCols != B.numCols )
+            throw new IllegalArgumentException("NUmber of columns is different");
     }
 }

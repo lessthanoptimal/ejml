@@ -19,6 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.decomposition.qr.BlockMatrix64HouseholderQR;
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -38,9 +41,13 @@ public class BenchmarkQrDecomposition {
         QRDecompositionHouseholder alg = new QRDecompositionHouseholder();
 
         long prev = System.currentTimeMillis();
-
+        DenseMatrix64F B;
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( alg.modifyInput())
+                B = orig.copy();
+            else
+                B = orig;
+            if( !alg.decompose(B) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -53,9 +60,14 @@ public class BenchmarkQrDecomposition {
         QRDecompositionHouseholderColumn alg = new QRDecompositionHouseholderColumn();
 
         long prev = System.currentTimeMillis();
+        DenseMatrix64F B;
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( alg.modifyInput())
+                B = orig.copy();
+            else
+                B = orig;
+            if( !alg.decompose(B) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -68,9 +80,36 @@ public class BenchmarkQrDecomposition {
         QRDecompositionHouseholderTran alg = new QRDecompositionHouseholderTran();
 
         long prev = System.currentTimeMillis();
+        DenseMatrix64F B;
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( alg.modifyInput())
+                B = orig.copy();
+            else
+                B = orig;
+            if( !alg.decompose(B) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
+    public static long block( DenseMatrix64F orig , int numTrials ) {
+
+        BlockMatrix64F A = BlockMatrixOps.convert(orig);
+        BlockMatrix64HouseholderQR alg = new BlockMatrix64HouseholderQR();
+
+        BlockMatrix64F B;
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( alg.modifyInput())
+                B = A.copy();
+            else
+                B = A;
+            if( !alg.decompose(B) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -83,6 +122,7 @@ public class BenchmarkQrDecomposition {
         System.out.println("basic            = "+ basic(mat,numTrials));
         System.out.println("column           = "+ column(mat,numTrials));
         System.out.println("tran             = "+ tran(mat,numTrials));
+        System.out.println("block            = "+ block(mat,numTrials));
     }
 
     public static void main( String args [] ) {

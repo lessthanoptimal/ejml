@@ -1,4 +1,4 @@
-/*
+package org.ejml.example;/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -17,42 +17,17 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.ejml.data.SimpleMatrix;
 import org.junit.Test;
 
-import java.util.Random;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
  */
-public class TestQRExampleSimple {
-
-    Random rand = new Random(23423);
-
-
+public class TestPrincipleComponentAnalysis {
     @Test
-    public void basic() {
-        checkMatrix(7,5);
-        checkMatrix(5,5);
-        checkMatrix(7,7);
+    public void stuff() {
+        fail("implement");
     }
-
-    private void checkMatrix( int numRows , int numCols ) {
-        SimpleMatrix A = SimpleMatrix.random(numRows,numCols,-1,1,rand);
-
-        QRExampleSimple alg = new QRExampleSimple();
-
-        alg.decompose(A);
-
-        SimpleMatrix Q = alg.getQ();
-        SimpleMatrix R = alg.getR();
-
-        SimpleMatrix A_found = Q.mult(R);
-
-        assertTrue( A.isIdentical(A_found,1e-8));
-    }
-
-
 }

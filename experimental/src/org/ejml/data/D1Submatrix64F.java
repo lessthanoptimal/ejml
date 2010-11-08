@@ -19,6 +19,8 @@
 
 package org.ejml.data;
 
+import java.awt.*;
+
 
 /**
  * <p>
@@ -42,7 +44,7 @@ public class D1Submatrix64F {
     }
 
     public D1Submatrix64F(D1Matrix64F original,
-                          int row0, int col0, int row1, int col1) {
+                          int row0, int row1, int col0, int col1) {
         this.original = original;
         this.row0 = row0;
         this.col0 = col0;
@@ -52,5 +54,35 @@ public class D1Submatrix64F {
 
     public D1Submatrix64F(BlockMatrix64F original) {
         this.original = original;
+        row1 = original.numRows;
+        col1 = original.numCols;
+    }
+
+    public int getRows() {
+        return row1 - row0;
+    }
+
+    public int getCols() {
+        return col1 - col0;
+    }
+
+    public double get(int row, int col ) {
+        return original.get(row+row0,col+col0);
+    }
+
+    public void set(int row, int col, double value) {
+        original.set(row+row0,col+col0,value);
+    }
+
+    public SimpleMatrix extract() {
+        SimpleMatrix ret = new SimpleMatrix(row1-row0,col1-col0);
+
+        for( int i = 0; i < ret.numRows(); i++ ) {
+            for( int j = 0; j < ret.numCols(); j++ ) {
+                ret.set(i,j,get(i,j));
+            }
+        }
+
+        return ret;
     }
 }

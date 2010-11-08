@@ -22,6 +22,7 @@ package org.ejml.alg.block;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -64,38 +65,34 @@ public class TestBlockInnerMultiplication {
 
 //            System.out.println("name = "+name);
 
-            boolean transA = false;
-            boolean transB = false;
+            boolean transA = name.contains("TransA");
+            boolean transB = name.contains("TransB");
 
-            if( name.contains("TransA"))
-                transA = true;
+            boolean add = name.contains("Add");
 
-            if( name.contains("TransB"))
-                transB = true;
-
-            checkMult_submatrix(m,transA,transB);
+            checkMult_submatrix(m,add,transA,transB);
             numFound++;
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(3,numFound);
+        assertEquals(4,numFound);
     }
 
-    private static void checkMult_submatrix( Method func , boolean transA , boolean transB )
+    private static void checkMult_submatrix( Method func , boolean add , boolean transA , boolean transB )
     {
         // the submatrix is the same size as the originals
-        checkMult_submatrix( func , transA , transB , sub(0,0,numRows,numCols),sub(0,0,numCols,numRows));
+        checkMult_submatrix( func , add , transA , transB , sub(0,0,numRows,numCols),sub(0,0,numCols,numRows));
 
         // submatrix has a size in multiples of the block
-        checkMult_submatrix( func , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2),
+        checkMult_submatrix( func , add , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2),
                 sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2));
 
         // submatrix row and column ends at a fraction of a block
-        checkMult_submatrix( func , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH,numRows,numCols),
+        checkMult_submatrix( func , add , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH,numRows,numCols),
                 sub(BLOCK_LENGTH, BLOCK_LENGTH,numCols,numRows));
 
         // the previous tests have some symmetry in it which can mask errors
-        checkMult_submatrix( func , transA , transB , sub(0, BLOCK_LENGTH,BLOCK_LENGTH,2*BLOCK_LENGTH),
+        checkMult_submatrix( func , add , transA , transB , sub(0, BLOCK_LENGTH,BLOCK_LENGTH,2*BLOCK_LENGTH),
                 sub(0, BLOCK_LENGTH,BLOCK_LENGTH,numRows));
     }
 
@@ -103,7 +100,7 @@ public class TestBlockInnerMultiplication {
      * Multiplies the two sub-matrices together.  Checks to see if the same result
      * is found when multiplied using the normal algorithm versus the submatrix one.
      */
-    private static void checkMult_submatrix( Method func , boolean transA , boolean transB ,
+    private static void checkMult_submatrix( Method func , boolean add , boolean transA , boolean transB ,
                                              D1Submatrix64F A , D1Submatrix64F B ) {
         if( A.col0 % BLOCK_LENGTH != 0 || A.row0 % BLOCK_LENGTH != 0)
             throw new IllegalArgumentException("Submatrix A is not block aligned");
@@ -119,10 +116,11 @@ public class TestBlockInnerMultiplication {
         int h = A.row1-A.row0;
 
         // offset it to make the test harder
-        BlockMatrix64F subC = new BlockMatrix64F(BLOCK_LENGTH +h, BLOCK_LENGTH +w, BLOCK_LENGTH);
-        D1Submatrix64F C = new D1Submatrix64F(subC, BLOCK_LENGTH, BLOCK_LENGTH,subC.numRows,subC.numCols);
+        // randomize to see if its set or adding
+        BlockMatrix64F subC = BlockMatrixOps.createRandom(BLOCK_LENGTH +h, BLOCK_LENGTH +w, -1,1,rand, BLOCK_LENGTH);
+        D1Submatrix64F C = new D1Submatrix64F(subC, BLOCK_LENGTH, subC.numRows, BLOCK_LENGTH, subC.numCols);
 
-        DenseMatrix64F rmC = multByExtract(A,B);
+        DenseMatrix64F rmC = multByExtract(add,A,B,C);
 
         if( transA ) {
             origA = BlockMatrixOps.transpose(origA,null);
@@ -167,24 +165,21 @@ public class TestBlockInnerMultiplication {
     }
 
     private static D1Submatrix64F sub( int row0 , int col0 , int row1 , int col1 ) {
-        return new D1Submatrix64F(null,row0,col0,row1,col1);
+        return new D1Submatrix64F(null,row0, row1, col0, col1);
     }
 
-    private static DenseMatrix64F multByExtract( D1Submatrix64F subA , D1Submatrix64F subB )
+    private static DenseMatrix64F multByExtract( boolean add ,
+                                                 D1Submatrix64F subA , D1Submatrix64F subB ,
+                                                 D1Submatrix64F subC )
     {
-        DenseMatrix64F rmA = BlockMatrixOps.convert((BlockMatrix64F)subA.original,null);
-        DenseMatrix64F rmB = BlockMatrixOps.convert((BlockMatrix64F)subB.original,null);
+        SimpleMatrix A = subA.extract();
+        SimpleMatrix B = subB.extract();
+        SimpleMatrix C = subC.extract();
 
-        DenseMatrix64F A = new DenseMatrix64F(subA.row1-subA.row0,subA.col1-subA.col0);
-        CommonOps.extract(rmA,subA.row0,subA.row1-1,subA.col0,subA.col1-1,A,0,0);
-        DenseMatrix64F B = new DenseMatrix64F(subB.row1-subB.row0,subB.col1-subB.col0);
-        CommonOps.extract(rmB,subB.row0,subB.row1-1,subB.col0,subB.col1-1,B,0,0);
-
-        DenseMatrix64F C = new DenseMatrix64F(A.numRows,B.numCols);
-
-        CommonOps.mult(A,B,C);
-
-        return C;
+        if( add )
+            return A.mult(B).plus(C).getMatrix();
+        else
+            return A.mult(B).getMatrix();
     }
 
     /**

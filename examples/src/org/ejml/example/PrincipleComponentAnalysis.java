@@ -1,4 +1,4 @@
-/*
+package org.ejml.example;/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -89,10 +89,10 @@ public class PrincipleComponentAnalysis {
     }
 
     /**
-     * Adds a new sample to the internal data structure for later processing.  All the samples
+     * Adds a new sample of the raw data to internal data structure for later processing.  All the samples
      * must be added before computeBasis is called.
      *
-     * @param sampleData
+     * @param sampleData Sample from original raw data.
      */
     public void addSample( double[] sampleData ) {
         if( A.getNumCols() != sampleData.length )
@@ -164,7 +164,7 @@ public class PrincipleComponentAnalysis {
             throw new IllegalArgumentException("Invalid component");
 
         DenseMatrix64F v = new DenseMatrix64F(1,A.numCols);
-        CommonOps.extract(V_t,which,which,0,A.numCols-1,v,0,0);
+        CommonOps.extract(V_t,which,which+1,0,A.numCols,v,0,0);
 
         return v.data;
     }
