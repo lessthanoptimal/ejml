@@ -42,7 +42,7 @@ import org.ejml.ops.CommonOps;
  *
  * <p>
  * For the most part this is a straight forward implementation.  To improve performance on large matrices a column is writen to an array and the order
- * of some of the loops has been changed.  This will degrade performance noticably on small matrices.  Since
+ * of some of the loops has been changed.  This will degrade performance noticeably on small matrices.  Since
  * it is unlikely that the QR decomposition would be a bottle neck when small matrices are involved only
  * one implementation is provided.
  * </p>

@@ -52,7 +52,7 @@ public class D1Submatrix64F {
         this.col1 = col1;
     }
 
-    public D1Submatrix64F(BlockMatrix64F original) {
+    public D1Submatrix64F(D1Matrix64F original) {
         this.original = original;
         row1 = original.numRows;
         col1 = original.numCols;

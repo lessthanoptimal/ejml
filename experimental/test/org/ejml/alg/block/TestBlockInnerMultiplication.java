@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -44,143 +44,6 @@ public class TestBlockInnerMultiplication {
     private static Random rand = new Random(234234);
 
     private static final int BLOCK_LENGTH = 4;
-    
-    private static final int numRows = 10;
-    private static final int numCols = 13;
-
-
-    /**
-     * Checks to see if matrix multiplication variants handles submatrices correctly
-     */
-    @Test
-    public void mult_submatrix() {
-        Method methods[] = BlockInnerMultiplication.class.getDeclaredMethods();
-
-        int numFound = 0;
-        for( Method m : methods) {
-            String name = m.getName();
-
-            if( name.contains("Block") || !name.contains("mult") )
-                continue;
-
-//            System.out.println("name = "+name);
-
-            boolean transA = name.contains("TransA");
-            boolean transB = name.contains("TransB");
-
-            boolean add = name.contains("Add");
-
-            checkMult_submatrix(m,add,transA,transB);
-            numFound++;
-        }
-
-        // make sure all the functions were in fact tested
-        assertEquals(4,numFound);
-    }
-
-    private static void checkMult_submatrix( Method func , boolean add , boolean transA , boolean transB )
-    {
-        // the submatrix is the same size as the originals
-        checkMult_submatrix( func , add , transA , transB , sub(0,0,numRows,numCols),sub(0,0,numCols,numRows));
-
-        // submatrix has a size in multiples of the block
-        checkMult_submatrix( func , add , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2),
-                sub(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH *2, BLOCK_LENGTH *2));
-
-        // submatrix row and column ends at a fraction of a block
-        checkMult_submatrix( func , add , transA , transB , sub(BLOCK_LENGTH, BLOCK_LENGTH,numRows,numCols),
-                sub(BLOCK_LENGTH, BLOCK_LENGTH,numCols,numRows));
-
-        // the previous tests have some symmetry in it which can mask errors
-        checkMult_submatrix( func , add , transA , transB , sub(0, BLOCK_LENGTH,BLOCK_LENGTH,2*BLOCK_LENGTH),
-                sub(0, BLOCK_LENGTH,BLOCK_LENGTH,numRows));
-    }
-
-    /**
-     * Multiplies the two sub-matrices together.  Checks to see if the same result
-     * is found when multiplied using the normal algorithm versus the submatrix one.
-     */
-    private static void checkMult_submatrix( Method func , boolean add , boolean transA , boolean transB ,
-                                             D1Submatrix64F A , D1Submatrix64F B ) {
-        if( A.col0 % BLOCK_LENGTH != 0 || A.row0 % BLOCK_LENGTH != 0)
-            throw new IllegalArgumentException("Submatrix A is not block aligned");
-        if( B.col0 % BLOCK_LENGTH != 0 || B.row0 % BLOCK_LENGTH != 0)
-            throw new IllegalArgumentException("Submatrix B is not block aligned");
-
-        BlockMatrix64F origA = BlockMatrixOps.createRandom(numRows,numCols,-1,1, rand, BLOCK_LENGTH);
-        BlockMatrix64F origB = BlockMatrixOps.createRandom(numCols,numRows,-1,1, rand, BLOCK_LENGTH);
-
-        A.original = origA;
-        B.original = origB;
-        int w = B.col1-B.col0;
-        int h = A.row1-A.row0;
-
-        // offset it to make the test harder
-        // randomize to see if its set or adding
-        BlockMatrix64F subC = BlockMatrixOps.createRandom(BLOCK_LENGTH +h, BLOCK_LENGTH +w, -1,1,rand, BLOCK_LENGTH);
-        D1Submatrix64F C = new D1Submatrix64F(subC, BLOCK_LENGTH, subC.numRows, BLOCK_LENGTH, subC.numCols);
-
-        DenseMatrix64F rmC = multByExtract(add,A,B,C);
-
-        if( transA ) {
-            origA = BlockMatrixOps.transpose(origA,null);
-            transposeSub(A);
-            A.original = origA;
-        }
-
-        if( transB ) {
-            origB = BlockMatrixOps.transpose(origB,null);
-            transposeSub(B);
-            B.original = origB;
-        }
-
-        try {
-            func.invoke(null,BLOCK_LENGTH,A,B,C);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-
-//        subC.print();
-//        rmC.print();
-
-        for( int i = C.row0; i < C.row1; i++ ) {
-            for( int j = C.col0; j < C.col1; j++ ) {
-//                System.out.println(i+" "+j);
-                double diff = Math.abs(subC.get(i,j) - rmC.get(i-C.row0,j-C.col0));
-//                System.out.println(subC.get(i,j)+" "+rmC.get(i-C.row0,j-C.col0));
-                assertTrue(diff < 1e-12);
-            }
-        }
-    }
-
-    public static void transposeSub(D1Submatrix64F A) {
-        int temp = A.col0;
-        A.col0 = A.row0;
-        A.row0 = temp;
-        temp = A.col1;
-        A.col1 = A.row1;
-        A.row1 = temp;
-    }
-
-    private static D1Submatrix64F sub( int row0 , int col0 , int row1 , int col1 ) {
-        return new D1Submatrix64F(null,row0, row1, col0, col1);
-    }
-
-    private static DenseMatrix64F multByExtract( boolean add ,
-                                                 D1Submatrix64F subA , D1Submatrix64F subB ,
-                                                 D1Submatrix64F subC )
-    {
-        SimpleMatrix A = subA.extract();
-        SimpleMatrix B = subB.extract();
-        SimpleMatrix C = subC.extract();
-
-        if( add )
-            return A.mult(B).plus(C).getMatrix();
-        else
-            return A.mult(B).getMatrix();
-    }
 
     /**
      * Check the inner block multiplication functions against various shapes of inputs
@@ -206,9 +69,6 @@ public class TestBlockInnerMultiplication {
         for( Method m : methods) {
             String name = m.getName();
 
-            if( !name.contains("Block"))
-                continue;
-
 //            System.out.println("name = "+name);
 
             boolean transA = false;
@@ -220,32 +80,44 @@ public class TestBlockInnerMultiplication {
             if( name.contains("TransB"))
                 transB = true;
 
-            boolean isAdd = name.contains("Add");
+            // See if the results are added, subtracted, or set to the output matrix
+            int operationType = 0;
+            if( name.contains("Plus")) operationType = 1;
+            else if ( name.contains("Minus")) operationType = -1;
+            else if( name.contains("Set")) operationType = 0;
 
-            checkBlockMult(isAdd,transA,transB,m,heightA,widthA,widthB);
+            checkBlockMult(operationType,transA,transB,m,heightA,widthA,widthB);
             numFound++;
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(7,numFound);
+        assertEquals(15,numFound);
     }
 
     /**
      * The inner block multiplication is in a row major format.  Test it against
      * operations for DenseMatrix64F
      */
-    private void checkBlockMult( boolean isAdd , boolean transA , boolean transB , Method method,
+    private void checkBlockMult( int operationType , boolean transA , boolean transB , Method method,
                                  final int heightA, final int widthA, final int widthB )
     {
+        boolean hasAlpha = method.getParameterTypes().length == 10;
+
+        if( hasAlpha && operationType == -1 )
+            fail("No point to minus and alpha");
+
         DenseMatrix64F A = RandomMatrices.createRandom(heightA,widthA,rand);
         DenseMatrix64F B = RandomMatrices.createRandom(widthA,widthB,rand);
         DenseMatrix64F C = new DenseMatrix64F(heightA,widthB);
 
-        CommonOps.mult(A,B,C);
+        if( operationType == -1 )
+            CommonOps.mult(-1,A,B,C);
+        else
+            CommonOps.mult(A,B,C);
 
         DenseMatrix64F C_found = new DenseMatrix64F(heightA,widthB);
         // if it is set then it should overwrite everything just fine
-        if( !isAdd )
+        if( operationType == 0)
             RandomMatrices.setRandom(C_found,rand);
 
         if( transA )
@@ -255,14 +127,22 @@ public class TestBlockInnerMultiplication {
 
         double alpha = 2.0;
 
-        if( method.getParameterTypes().length == 10 ) {
+        if( hasAlpha ) {
             CommonOps.scale(alpha,C);
         }
 
         invoke(method,alpha,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
 
-        assertTrue(MatrixFeatures.isIdentical(C,C_found,1e-10));
-
+        if( !MatrixFeatures.isIdentical(C,C_found,1e-10) ) {
+            C.print();
+            C_found.print();
+            System.out.println("Method "+method.getName());
+            System.out.println("transA " +transA);
+            System.out.println("transB " +transB);
+            System.out.println("type   " +operationType);
+            System.out.println("alpha  " +hasAlpha);
+            fail("Not identical");
+        }
     }
 
     public static void invoke(Method func,

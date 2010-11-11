@@ -1,4 +1,4 @@
-package org.ejml.example;/*
+/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -17,7 +17,7 @@ package org.ejml.example;/*
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.junit.Test;
+package org.ejml.example;import org.junit.Test;
 
 import static org.junit.Assert.fail;
 

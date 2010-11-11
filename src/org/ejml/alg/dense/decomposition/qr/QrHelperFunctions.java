@@ -170,7 +170,8 @@ public class QrHelperFunctions {
      * @param max Max value in 'u' that is used to normalize it.
      * @return norm2 of 'u'
      */
-    public static double computeTauAndDivide(int j, int numRows , double[] u , double max) {
+    public static double computeTauAndDivide(final int j, final int numRows ,
+                                             final double[] u , final double max) {
         double tau = 0;
         double div_max = 1.0/max;
         if( Double.isInfinite(div_max)) {

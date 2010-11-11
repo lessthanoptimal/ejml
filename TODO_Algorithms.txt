@@ -1,24 +1,22 @@
-- see if offset triangle solve is slower than the standard
-  * if not make offset the only triangle solver
-
-- wrapper so that block cholesky can be used on regular matrices
-- merge cholesky offset by index classes
-  * are these fast enough to replace the base class that assumes an index of zero?
-- for all QR decomposition, when computing Q don't multiply against the identity matrix
-
 For 0.15 Release
-- cholesky block
-  * rework it so that its faster on better block sizes
-- cholesky accuracy
-  * hard coded cholesky inverse for small matrices
-- increase block size?
+- Block Cholesky
 - Block QR
+- Block multiplication?
+
+For 0.16 Release
+- Remove QR-col and replace with QR-tran?
+- Remove chol-block for dense with chol-block64?
+- Merge inner triangular solver code
 - Unit test for PCA example
+- Matrix type generic for solver?
 
 For DenseMatrix64F
 
 - LU
   - block
+
+- Cholesky
+  - unwrap for small matrices.  improve accuracy
 
 - Least Squares Solver
   - Improve performance
@@ -32,7 +30,6 @@ For DenseMatrix64F
  * Improve stability
 
 - QR
-  * Block version
   * Replace col with tran variant of QR decomposition?
     - tran does not use a custom matrix format.
     - tran seems to be about 10% slower on small matrices.
@@ -55,10 +52,6 @@ For DenseMatrix64F
   - SVD
   - SymmEig
 
-- remove hand inlining of functions
-  * Create class that simulates cache misses and counts them.
-
-- Unroll block matrix multiplication when full block.
 - Fast Matrix Multiply
 - hard code cholesky decomposition for small matrices
 

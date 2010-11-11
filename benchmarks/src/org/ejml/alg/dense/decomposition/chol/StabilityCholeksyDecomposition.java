@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
+import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
@@ -56,7 +57,7 @@ public class StabilityCholeksyDecomposition {
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
         System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner(),mat));
-        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock(false,10),mat));
+        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL),mat));
 
     }
 

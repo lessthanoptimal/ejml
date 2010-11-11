@@ -126,7 +126,7 @@ public class LinearSolverQrHouse extends LinearSolverAbstract {
                 double ub = a[n];
                 // U^T*b
                 for( int i = n+1; i < numRows; i++ ) {
-                    ub += (u[i] = QR.get(i,n))*a[i];
+                    ub += (u[i] = QR.unsafe_get(i,n))*a[i];
                 }
 
                 // gamma*U^T*b

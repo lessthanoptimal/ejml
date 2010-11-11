@@ -1,4 +1,4 @@
-package org.ejml.example;/*
+/*
  * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
@@ -17,7 +17,7 @@ package org.ejml.example;/*
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.ejml.data.DenseMatrix64F;
+package org.ejml.example;import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.example.*;
 import org.ejml.ops.CommonOps;

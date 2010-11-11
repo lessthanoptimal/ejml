@@ -72,7 +72,7 @@ public class BenchmarkCholeskyDecomposition {
         long prev = System.currentTimeMillis();
 
         CholeskyDecompositionBlock alg = new CholeskyDecompositionBlock(false,
-                EjmlParameters.BLOCK_WIDTH);
+                EjmlParameters.BLOCK_WIDTH_CHOL);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -135,7 +135,7 @@ public class BenchmarkCholeskyDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
-        System.out.println("Lower            = "+ choleskyL(mat,numTrials));
+//        System.out.println("Lower            = "+ choleskyL(mat,numTrials));
 //        System.out.println("Upper            = "+ choleskyU(mat,numTrials));
         System.out.println("Lower Block      = "+ choleskyL_block(mat,numTrials));
 //        System.out.println("LDL              = "+ choleskyLDL(mat,numTrials));
@@ -150,7 +150,7 @@ public class BenchmarkCholeskyDecomposition {
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 7; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);

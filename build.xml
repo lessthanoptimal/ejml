@@ -2,6 +2,7 @@
 
 
     <property name="src.dir"     value="src"/>
+    <property name="experimental.src.dir"     value="experimental/src"/>
     <property name="test.dir"     value="test"/>
 
     <property name="build.dir"   value="build"/>
@@ -43,7 +44,19 @@
         </javac>
     </target>
 
+    <target name="compile experimental">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${experimental.src.dir}" destdir="${classes.dir}">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
     <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
+    </target>
+
+    <target name="jar experimental" depends="compile,compile experimental">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
     </target>

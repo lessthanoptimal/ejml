@@ -74,7 +74,7 @@ public class BlockInnerRankUpdate {
                 int indexB_j = B.row0*B.original.numCols + j*heightB;
 
 
-                BlockInnerMultiplication.multTransABlockAdd(alpha,
+                BlockInnerMultiplication.blockMultPlusTransA(alpha,
                         B.original.data,B.original.data,A.original.data,
                         indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
             }
@@ -202,13 +202,18 @@ public class BlockInnerRankUpdate {
 //            }
 //        }
 
-        for( int k = 0; k < heightA; k++ ) {
-            int a = k*widthA + indexA;
-            int c = indexC;
-            int endA = a + widthA;
+        int rowB = indexB;
+        int endLoopK = rowB + heightA*widthC;
+        int startA = indexA;
 
-            int rowB = k*widthC + indexB;
+        //for( int k = 0; k < heightA; k++ ) {
+        for( ; rowB != endLoopK; rowB += widthC , startA += widthA ) {
+            int a = startA;
+            int c = indexC;
+
+            int endA = a + widthA;
             int endB = rowB + widthC;
+
             while( a != endA ) {
                 double valA = dataA[a++];
 
@@ -276,12 +281,17 @@ public class BlockInnerRankUpdate {
 //                dataC[ i*widthC + j + indexC ] -= sum;
 //            }
 //        }
-        for( int i = 0; i < heightA; i++ ) {
-            int rowA = i*widthA+indexA;
-            int endA = rowA + widthA;
+        
+        int rowA = indexA;
+        int startC = indexC;
+        for( int i = 0; i < heightA; i++ , rowA += widthA , startC += widthC ) {
+            final int endA = rowA + widthA;
             int rowB = indexB;
-            int rowC = i*widthC + indexC;
-            for( int j = 0; j < widthC; j++ , rowB += widthA) {
+            int rowC = startC;
+            int endLoopJ = rowC + widthC;
+
+            // for( int j = 0; j < widthC; j++  ) {
+            for( ; rowC != endLoopJ; rowB += widthA) {
                 double sum = 0;
 
                 int a = rowA;
@@ -290,7 +300,7 @@ public class BlockInnerRankUpdate {
                 while( a != endA ) {
                     sum += dataA[a++] * dataA[b++];
                 }
-                dataC[ rowC + j ] -= sum;
+                dataC[ rowC++ ] -= sum;
             }
         }
     }

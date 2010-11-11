@@ -45,9 +45,9 @@ public class BlockHouseHolder {
      * @param Y
      * @param gamma
      */
-    public static boolean decomposeQR_block_col( int blockLength ,
-                                                 D1Submatrix64F Y ,
-                                                 double gamma[] )
+    public static boolean decomposeQR_block_col( final int blockLength ,
+                                                 final D1Submatrix64F Y ,
+                                                 final double gamma[] )
     {
         int width = Y.col1-Y.col0;
         for( int i = 0; i < width; i++ ) {
@@ -79,8 +79,8 @@ public class BlockHouseHolder {
      *
      * @return If there was any problems or not. true = no problem.
      */
-    private static boolean computeHouseHolder(int blockLength, D1Submatrix64F Y,
-                                              double[] gamma, int i) {
+    private static boolean computeHouseHolder( final int blockLength, final D1Submatrix64F Y,
+                                              final double[] gamma, final int i) {
         double max = BlockHouseHolder.findMaxCol(blockLength,Y,i);
 
         if( max == 0.0 ) {
@@ -106,10 +106,13 @@ public class BlockHouseHolder {
      *
      * A = (I - &gamma;*u*u<sup>T</sup>)A
      */
-    public static void applyHouseholderCol( int blockLength ,
-                                            D1Submatrix64F A , int col , double gamma )
+    public static void applyHouseholderCol( final int blockLength ,
+                                            final D1Submatrix64F A , final int col , final double gamma )
     {
-        int width = A.col1 - A.col0;
+        final int width = A.col1 - A.col0;
+
+        final double dataA[] = A.original.data;
+
         for( int j = col+1; j < width; j++ ) {
 
             double total = 0;
@@ -126,16 +129,16 @@ public class BlockHouseHolder {
                     indexU += width*(col+1);
                     indexA += width*col;
 
-                    total = A.original.data[ indexA ];
+                    total = dataA[ indexA ];
 
                     indexA += width;
 
                     for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
-                        total += A.original.data[ indexU ] * A.original.data[ indexA ];
+                        total += dataA[ indexU ] * dataA[ indexA ];
                     }
                 } else {
                     for( int k = 0; k < height; k++ , indexU += width, indexA += width ) {
-                        total += A.original.data[ indexU ] * A.original.data[ indexA ];
+                        total += dataA[ indexU ] * dataA[ indexA ];
                     }
                 }
             }
@@ -152,16 +155,16 @@ public class BlockHouseHolder {
                     indexU += width*(col+1);
                     indexA += width*col;
 
-                    A.original.data[ indexA ] -= total;
+                    dataA[ indexA ] -= total;
 
                     indexA += width;
 
                     for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
-                        A.original.data[ indexA ] -= total*A.original.data[ indexU ];
+                        dataA[ indexA ] -= total*dataA[ indexU ];
                     }
                 } else {
                     for( int k = 0; k < height; k++ , indexU += width, indexA += width ) {
-                        A.original.data[ indexA ] -= total*A.original.data[ indexU ];
+                        dataA[ indexA ] -= total*dataA[ indexU ];
                     }
                 }
             }
@@ -173,9 +176,11 @@ public class BlockHouseHolder {
      * Divides the elements at the specified column by 'val'.  Takes in account
      * the zeros and the first element being implicitly equal to one.
      */
-    public static void divideElements( int blockLength ,
-                                       D1Submatrix64F Y , int col , double val ) {
-        int width = Y.col1-Y.col0;
+    public static void divideElements( final int blockLength ,
+                                       final D1Submatrix64F Y , final int col , final double val ) {
+        final int width = Y.col1-Y.col0;
+
+        final double dataY[] = Y.original.data;
 
         for( int i = Y.row0; i < Y.row1; i += blockLength ) {
             int height = Math.min( blockLength , Y.row1 - i );
@@ -186,11 +191,11 @@ public class BlockHouseHolder {
                 index += width*(col+1);
 
                 for( int k = col+1; k < height; k++ , index += width ) {
-                    Y.original.data[index] /= val;
+                    dataY[index] /= val;
                 }
             } else {
                 for( int k = 0; k < height; k++ , index += width ) {
-                    Y.original.data[index] /= val;
+                    dataY[index] /= val;
                 }
             }
         }
@@ -213,9 +218,11 @@ public class BlockHouseHolder {
      * </pre>
      *
      */
-    public static double computeTauAndDivide( int blockLength ,
-                                              D1Submatrix64F Y , int col , double max ) {
-        int width = Y.col1-Y.col0;
+    public static double computeTauAndDivide( final int blockLength ,
+                                              final D1Submatrix64F Y , final int col , final double max ) {
+        final int width = Y.col1-Y.col0;
+
+        final double dataY[] = Y.original.data;
 
         double top=0;
         double norm2 = 0;
@@ -228,17 +235,17 @@ public class BlockHouseHolder {
             if( i == Y.row0 ) {
                 index += width*col;
                 // save this value so that the sign can be determined later on
-                top = Y.original.data[index] /= max;
+                top = dataY[index] /= max;
                 norm2 += top*top;
                 index += width;
 
                 for( int k = col+1; k < height; k++ , index += width ) {
-                    double val = Y.original.data[index] /= max;
+                    double val = dataY[index] /= max;
                     norm2 += val*val;
                 }
             } else {
                 for( int k = 0; k < height; k++ , index += width ) {
-                    double val = Y.original.data[index] /= max;
+                    double val = dataY[index] /= max;
                     norm2 += val*val;
                 }
             }
@@ -256,9 +263,11 @@ public class BlockHouseHolder {
      * Finds the element in the column with the largest absolute value. The offset
      * from zero is automatically taken in account based on the column.
      */
-    public static double findMaxCol( int blockLength , D1Submatrix64F Y , int col )
+    public static double findMaxCol( final int blockLength , final D1Submatrix64F Y , final int col )
     {
-        int width = Y.col1-Y.col0;
+        final int width = Y.col1-Y.col0;
+
+        final double dataY[] = Y.original.data;     
 
         double max = 0;
 
@@ -270,14 +279,14 @@ public class BlockHouseHolder {
             if( i == Y.row0 ) {
                 index += width*col;
                 for( int k = col; k < height; k++ , index += width ) {
-                    double v = Math.abs(Y.original.data[index]);
+                    double v = Math.abs(dataY[index]);
                     if( v > max ) {
                         max = v;
                     }
                 }
             } else {
                 for( int k = 0; k < height; k++ , index += width ) {
-                    double v = Math.abs(Y.original.data[index]);
+                    double v = Math.abs(dataY[index]);
                     if( v > max ) {
                         max = v;
                     }
@@ -317,23 +326,20 @@ public class BlockHouseHolder {
      * @param beta Beta's for householder vectors.
      * @param betaIndex Index of first relevant beta.
      */
-    public static void computeW_Column( int blockLength ,
-                                        D1Submatrix64F Y , D1Submatrix64F W ,
-                                        double temp[], double beta[] , int betaIndex ) {
+    public static void computeW_Column( final int blockLength ,
+                                        final D1Submatrix64F Y , final D1Submatrix64F W ,
+                                        final double temp[], final double beta[] , int betaIndex ) {
 
-        int widthB = W.col1-W.col0;
-        double b = beta[betaIndex++];
+        final int widthB = W.col1-W.col0;
 
         // set the first column in W
-        initializeW(blockLength, W, Y, widthB, b);
+        initializeW(blockLength, W, Y, widthB, beta[betaIndex++]);
 
         // set up rest of the columns
         for( int j = 1; j < widthB; j++ ) {
-            b = beta[betaIndex++];
-
             //compute the z vector and insert it into W
             computeY_t_V(blockLength,Y,j,temp);
-            computeZ(blockLength,Y,W,j,temp,b);
+            computeZ(blockLength,Y,W,j,temp,beta[betaIndex++]);
         }
     }
 
@@ -352,9 +358,13 @@ public class BlockHouseHolder {
      * @param widthB How wide the W block matrix is.
      * @param b beta
      */
-    public static void initializeW(int blockLength,
-                                    D1Submatrix64F W, D1Submatrix64F Y,
-                                    int widthB, double b) {
+    public static void initializeW( final int blockLength,
+                                    final D1Submatrix64F W, final D1Submatrix64F Y,
+                                    final int widthB, final double b) {
+
+        final double dataW[] = W.original.data;
+        final double dataY[] = Y.original.data;
+
         for( int i = W.row0; i < W.row1; i += blockLength ) {
             int heightW = Math.min( blockLength , W.row1 - i );
 
@@ -363,15 +373,15 @@ public class BlockHouseHolder {
 
             // take in account the first element in V being 1
             if( i == W.row0 ) {
-                W.original.data[indexW] = -b;
+                dataW[indexW] = -b;
                 indexW += widthB;
                 indexY += widthB;
                 for( int k = 1; k < heightW; k++ , indexW += widthB , indexY += widthB ) {
-                    W.original.data[indexW] = -b* Y.original.data[indexY];
+                    dataW[indexW] = -b* dataY[indexY];
                 }
             } else {
                 for( int k = 0; k < heightW; k++ , indexW += widthB , indexY += widthB ) {
-                    W.original.data[indexW] = -b* Y.original.data[indexY];
+                    dataW[indexW] = -b* dataY[indexY];
                 }
             }
         }
@@ -386,16 +396,21 @@ public class BlockHouseHolder {
      * V is a column in the Y matrix. Z is a column in the W matrix.  Both Z and V are
      * column 'col'.
      */
-    public static void computeZ( int blockLength , D1Submatrix64F Y , D1Submatrix64F W,
-                                 int col , double []temp , double beta )
+    public static void computeZ( final int blockLength , final D1Submatrix64F Y , final D1Submatrix64F W,
+                                 final int col , final double []temp , final double beta )
     {
-        int width = Y.col1-Y.col0;
+        final int width = Y.col1-Y.col0;
+
+        final double dataW[] = W.original.data;
+        final double dataY[] = Y.original.data;
+
+        final int colsW = W.original.numCols;
 
         for( int i = Y.row0; i < Y.row1; i += blockLength ) {
             int heightW = Math.min( blockLength , Y.row1 - i );
 
-            int indexW = i*W.original.numCols + heightW*W.col0;
-            int indexZ = i*W.original.numCols + heightW*W.col0 + col;
+            int indexW = i*colsW + heightW*W.col0;
+            int indexZ = i*colsW + heightW*W.col0 + col;
             int indexV = i*Y.original.numCols + heightW*Y.col0 + col;
 
 
@@ -404,23 +419,20 @@ public class BlockHouseHolder {
                 double total = 0;
 
                 for( int j = 0; j < col; j++ ) {
-                    total += W.original.data[indexW+j] * temp[j];
+                    total += dataW[indexW+j] * temp[j];
                 }
 
                 // add the two vectors together and multiply by -beta
                 if( i == Y.row0 ) {
                     if( k < col ) {
-                        W.original.data[indexZ] = -beta*total;
+                        dataW[indexZ] = -beta*total;
                     } else if( k == col ) {
-                        W.original.data[indexZ] = -beta*(1.0 + total);
+                        dataW[indexZ] = -beta*(1.0 + total);
                     } else {
-                        W.original.data[indexZ] = -beta*(Y.original.data[indexV] + total);
+                        dataW[indexZ] = -beta*(dataY[indexV] + total);
                     }
                 } else {
-                    double a = W.original.data[indexZ];
-                    a = Y.original.data[indexV];
-
-                    W.original.data[indexZ] = -beta*(Y.original.data[indexV] + total);
+                    dataW[indexZ] = -beta*(dataY[indexV] + total);
                 }
             }
         }
@@ -434,9 +446,13 @@ public class BlockHouseHolder {
      *
      * @param temp Temporary storage of least length 'col' 
      */
-    public static void computeY_t_V( int blockLength , D1Submatrix64F Y , int col , double []temp )
+    public static void computeY_t_V( final int blockLength , final D1Submatrix64F Y ,
+                                     final int col , final double []temp )
     {
-        int widthB = Y.col1-Y.col0;
+        final int widthB = Y.col1-Y.col0;
+
+        final double dataY[] = Y.original.data;
+        final int numCols = Y.original.numCols;
 
         for( int j = 0; j < col; j++ ) {
             double total = 0;
@@ -446,8 +462,8 @@ public class BlockHouseHolder {
             for( int i = Y.row0; i < Y.row1; i += blockLength ) {
                 int heightW = Math.min( blockLength , Y.row1 - i );
 
-                int indexY = i*Y.original.numCols + heightW*Y.col0 + j;
-                int indexV = i*Y.original.numCols + heightW*Y.col0 + col;
+                int indexY = i*numCols + heightW*Y.col0 + j;
+                int indexV = i*numCols + heightW*Y.col0 + col;
 
                 if( i == Y.row0 ) {
                     // skip zeros
@@ -455,17 +471,17 @@ public class BlockHouseHolder {
                     indexV += widthB*col;
 
                     // the first element in v is going to be 1
-                    total = Y.original.data[indexY];
+                    total = dataY[indexY];
 
                     indexY += widthB;
                     indexV += widthB;
 
                     for( int k = col+1; k < heightW; k++ , indexV += widthB , indexY += widthB ) {
-                        total += Y.original.data[indexY] * Y.original.data[indexV];
+                        total += dataY[indexY] * dataY[indexV];
                     }
                 } else {
                     for( int k = 0; k < heightW; k++ , indexV += widthB , indexY += widthB ) {
-                        total += Y.original.data[indexY] * Y.original.data[indexV];
+                        total += dataY[indexY] * dataY[indexV];
                     }
                 }
             }
@@ -479,9 +495,9 @@ public class BlockHouseHolder {
      * is the matrix that stores the householder vectors.
      *
      */
-    public static void multAdd_zeros( int blockLength ,
-                                      D1Submatrix64F Y , D1Submatrix64F B ,
-                                      D1Submatrix64F C )
+    public static void multAdd_zeros( final int blockLength ,
+                                      final D1Submatrix64F Y , final D1Submatrix64F B ,
+                                      final D1Submatrix64F C )
     {
         int widthY = Y.col1 - Y.col0;
 
@@ -501,7 +517,7 @@ public class BlockHouseHolder {
                         multBlockAdd_zerosone(Y.original.data,B.original.data,C.original.data,
                             indexY,indexB,indexC,heightY,widthY,widthB);
                     } else {
-                        BlockInnerMultiplication.multBlockAdd(Y.original.data,B.original.data,C.original.data,
+                        BlockInnerMultiplication.blockMultPlus(Y.original.data,B.original.data,C.original.data,
                                 indexY,indexB,indexC,heightY,widthY,widthB);
                     }
                 }
@@ -558,7 +574,7 @@ public class BlockHouseHolder {
                     multTransABlockSet(A.original.data,B.original.data,C.original.data,
                             indexA,indexB,indexC,heightA,widthA,widthB);
                 else
-                    BlockInnerMultiplication.multTransABlockAdd(A.original.data,B.original.data,C.original.data,
+                    BlockInnerMultiplication.blockMultPlusTransA(A.original.data,B.original.data,C.original.data,
                             indexA,indexB,indexC,heightA,widthA,widthB);
             }
         }

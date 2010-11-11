@@ -22,6 +22,7 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.alg.block.BlockInnerRankUpdate;
 import org.ejml.alg.block.BlockInnerTriangularSolver;
 import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.BlockCholeskyDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
@@ -99,7 +100,7 @@ public class BlockCholeskyOuterForm implements BlockCholeskyDecomposition {
             // on the last block these operations are not needed.
             if( widthA == blockLength ) {
                 // B = L^-1 B
-                BlockInnerTriangularSolver.solve(blockLength,false,subA,subB,false,true);
+                BlockTriangularSolver.solveBlock(blockLength,false,subA,subB,false,true);
 
                 // C = C - B * B^T
                 BlockInnerRankUpdate.symmRankNMinus_L(blockLength,subC,subB);
@@ -138,7 +139,7 @@ public class BlockCholeskyOuterForm implements BlockCholeskyDecomposition {
             // on the last block these operations are not needed.
             if( widthA == blockLength ) {
                 // B = U^-1 B
-                BlockInnerTriangularSolver.solve(blockLength,true,subA,subB,true,false);
+                BlockTriangularSolver.solveBlock(blockLength,true,subA,subB,true,false);
 
                 // C = C - B^T * B
                 BlockInnerRankUpdate.symmRankNMinus_U(blockLength,subC,subB);

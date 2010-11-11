@@ -19,6 +19,8 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.ejml.alg.generic.CodeGeneratorMisc;
+
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
@@ -35,58 +37,59 @@ import java.io.PrintStream;
  *
  * @author Peter Abeles
  */
-public class CodeGeneratorMatrixMatrixMult {
+public class GeneratorMatrixMatrixMult {
 
     PrintStream stream;
 
-    public CodeGeneratorMatrixMatrixMult( String fileName ) throws FileNotFoundException {
+    public GeneratorMatrixMatrixMult( String fileName ) throws FileNotFoundException {
         stream = new PrintStream(fileName);
     }
 
     public void createClass() {
-        String preamble =
+        String preamble = CodeGeneratorMisc.COPYRIGHT +
+                "\n" +
                 "package org.ejml.alg.dense.mult;\n" +
-                        "\n" +
-                        "import org.ejml.data.RowD1Matrix64F;\n"+
-                        "\n" +
-                        "/**\n" +
-                        " * <p>\n" +
-                        " * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix64F}.\n" +
-                        " * </p>\n" +
-                        " * <p>\n" +
-                        " * Two algorithms that are equivalent can often have very different runtime performance.\n" +
-                        " * This is because of how modern computers uses fast memory caches to speed up reading/writing to data.\n" +
-                        " * Depending on the order in which variables are processed different algorithms can run much faster than others,\n" +
-                        " * even if the number of operations is the same.\n" +
-                        " * </p>\n" +
-                        " *\n" +
-                        " * <p>\n" +
-                        " * Algorithms that are labeled as 'reorder' are designed to avoid caching jumping issues, some times at the cost\n" +
-                        " * of increasing the number of operations.  This is important for large matrices.  The straight forward \n" +
-                        " * implementation seems to be faster for small matrices.\n" +
-                        " * </p>\n" +
-                        " * \n" +
-                        " * <p>\n" +
-                        " * Algorithms that are labeled as 'aux' use an auxiliary array of length n.  This array is used to create\n" +
-                        " * a copy of an out of sequence column vector that is referenced several times.  This reduces the number\n" +
-                        " * of cache misses.  If the 'aux' parameter passed in is null then the array is declared internally.\n" +
-                        " * </p>\n" +
-                        " *\n" +
-                        " * <p>\n" +
-                        " * Typically the straight forward implementation runs about 30% faster on smaller matrices and\n" +
-                        " * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.\n" +
-                        " * </p>\n" +
-                        " * \n" +
-                        " * <p>\n" +
-                        " * <center>******** IMPORTANT **********</center>\n" +
-                        " * This class was auto generated using {@link org.ejml.alg.dense.mult.CodeGeneratorMatrixMatrixMult}\n" +
-                        " * If this code needs to be modified, please modify {@link org.ejml.alg.dense.mult.CodeGeneratorMatrixMatrixMult} instead\n" +
-                        " * and regenerate the code by running that.\n" +
-                        " * </p>\n" +
-                        " * \n" +
-                        " * @author Peter Abeles\n" +
-                        " */\n"+
-                        "public class MatrixMatrixMult {\n";
+                "\n" +
+                "import org.ejml.data.RowD1Matrix64F;\n"+
+                "\n" +
+                "/**\n" +
+                " * <p>\n" +
+                " * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix64F}.\n" +
+                " * </p>\n" +
+                " * <p>\n" +
+                " * Two algorithms that are equivalent can often have very different runtime performance.\n" +
+                " * This is because of how modern computers uses fast memory caches to speed up reading/writing to data.\n" +
+                " * Depending on the order in which variables are processed different algorithms can run much faster than others,\n" +
+                " * even if the number of operations is the same.\n" +
+                " * </p>\n" +
+                " *\n" +
+                " * <p>\n" +
+                " * Algorithms that are labeled as 'reorder' are designed to avoid caching jumping issues, some times at the cost\n" +
+                " * of increasing the number of operations.  This is important for large matrices.  The straight forward \n" +
+                " * implementation seems to be faster for small matrices.\n" +
+                " * </p>\n" +
+                " * \n" +
+                " * <p>\n" +
+                " * Algorithms that are labeled as 'aux' use an auxiliary array of length n.  This array is used to create\n" +
+                " * a copy of an out of sequence column vector that is referenced several times.  This reduces the number\n" +
+                " * of cache misses.  If the 'aux' parameter passed in is null then the array is declared internally.\n" +
+                " * </p>\n" +
+                " *\n" +
+                " * <p>\n" +
+                " * Typically the straight forward implementation runs about 30% faster on smaller matrices and\n" +
+                " * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.\n" +
+                " * </p>\n" +
+                " * \n" +
+                " * <p>\n" +
+                " * <center>******** IMPORTANT **********</center>\n" +
+                " * This class was auto generated using {@link org.ejml.alg.dense.mult.CodeGeneratorMatrixMatrixMult}\n" +
+                " * If this code needs to be modified, please modify {@link org.ejml.alg.dense.mult.CodeGeneratorMatrixMatrixMult} instead\n" +
+                " * and regenerate the code by running that.\n" +
+                " * </p>\n" +
+                " * \n" +
+                " * @author Peter Abeles\n" +
+                " */\n"+
+                "public class MatrixMatrixMult {\n";
 
         stream.print(preamble);
 
@@ -503,7 +506,7 @@ public class CodeGeneratorMatrixMatrixMult {
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        CodeGeneratorMatrixMatrixMult gen = new CodeGeneratorMatrixMatrixMult("MatrixMatrixMult.java");
+        GeneratorMatrixMatrixMult gen = new GeneratorMatrixMatrixMult("MatrixMatrixMult.java");
 
         gen.createClass();
     }

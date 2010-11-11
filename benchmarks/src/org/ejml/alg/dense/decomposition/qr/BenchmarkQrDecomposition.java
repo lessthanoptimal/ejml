@@ -119,8 +119,8 @@ public class BenchmarkQrDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
-        System.out.println("basic            = "+ basic(mat,numTrials));
-        System.out.println("column           = "+ column(mat,numTrials));
+//        System.out.println("basic            = "+ basic(mat,numTrials));
+//        System.out.println("column           = "+ column(mat,numTrials));
         System.out.println("tran             = "+ tran(mat,numTrials));
         System.out.println("block            = "+ block(mat,numTrials));
     }
@@ -132,7 +132,7 @@ public class BenchmarkQrDecomposition {
         int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,5,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 4; i < size.length; i++ ) {
             int w = size[i];
             DenseMatrix64F mat = RandomMatrices.createRandom(w*4,w/1,rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);

@@ -85,7 +85,7 @@ public class SolvePseudoInverse implements LinearSolver {
      * Creates a new solver using a cholesky decomposition as its default solver.
      */
     public SolvePseudoInverse() {
-        this(new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH)));
+        this(new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL)));
     }
 
     public void setMaxSize( int maxRows , int maxCols ) {

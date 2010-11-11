@@ -20,9 +20,6 @@
 package org.ejml.alg.block;
 
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
-import org.ejml.alg.generic.GenericMatrixOps;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -46,8 +43,30 @@ public class TestBlockInnerTriangularSolver {
     Random rand = new Random(234534);
 
 
+    @Test
+    public void testInvertLower() {
+        DenseMatrix64F A = RandomMatrices.createUpperTriangle(5,0,-1,1,rand);
+        CommonOps.transpose(A);
+
+        DenseMatrix64F A_inv = A.copy();
+
+        BlockInnerTriangularSolver.invertLower(A_inv.data,5,0);
+
+        DenseMatrix64F S = new DenseMatrix64F(5,5);
+        CommonOps.mult(A,A_inv,S);
+        
+        for( int i = 0; i < 5; i++ ) {
+            for( int j = 0; j < 5; j++ ) {
+                if( i != j )
+                    assertEquals(0,S.get(i,j),1e-8);
+                else
+                    assertEquals(1,S.get(i,j),1e-8);
+            }
+        }
+    }
+
     /**
-     * Test all inner block solvers
+     * Test all inner block solvers using reflections to look up the functions
      */
     @Test
     public void testSolveArray() {
@@ -57,7 +76,7 @@ public class TestBlockInnerTriangularSolver {
         for( Method m : methods) {
             String name = m.getName();
 
-            if( !name.contains("solve") || name.compareTo("solve") == 0 )
+            if( !name.contains("solve") || name.compareTo("solve") == 0 || name.compareTo("solveBlock") == 0 )
                 continue;
 
 //            System.out.println("name = "+name);
@@ -77,7 +96,7 @@ public class TestBlockInnerTriangularSolver {
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(4,numFound);
+        assertEquals(5,numFound);
     }
 
     /**
@@ -134,67 +153,6 @@ public class TestBlockInnerTriangularSolver {
         System.arraycopy(dataB,offsetB,found.data,0,found.data.length);
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
-    }
-
-
-    /**
-     * Check all permutations of solve for submatrices
-     */
-    @Test
-    public void testSolve() {
-        check_solve_submatrix(false,false,false);
-        check_solve_submatrix(true,false,false);
-        check_solve_submatrix(false,true,false);
-//        check_solve_submatrix(false,true,false);
-//        check_solve_submatrix(false,false,true);
-        check_solve_submatrix(true,false,true);
-//        check_solve_submatrix(false,true,true);
-//        check_solve_submatrix(false,true,true);
-    }
-
-    /**
-     * Checks to see if solve functions that use sub matrices as input work correctly
-     */
-    private void check_solve_submatrix( boolean solveL , boolean transT , boolean transB ) {
-        // compute expected solution
-        DenseMatrix64F L = createRandomLowerTriangular(3);
-        DenseMatrix64F B = RandomMatrices.createRandom(3,5,rand);
-        DenseMatrix64F X = new DenseMatrix64F(3,5);
-
-        if( !solveL ) {
-            CommonOps.transpose(L);
-        }
-
-        if( transT ) {
-           CommonOps.transpose(L);
-        }
-
-        CommonOps.solve(L,B,X);
-
-        // do it again using block matrices
-        BlockMatrix64F b_L = BlockMatrixOps.convert(L,3);
-        BlockMatrix64F b_B = BlockMatrixOps.convert(B,3);
-
-        D1Submatrix64F sub_L = new D1Submatrix64F(b_L,0, 3, 0, 3);
-        D1Submatrix64F sub_B = new D1Submatrix64F(b_B,0, 3, 0, 5);
-
-        if( transT ) {
-            sub_L.original = BlockMatrixOps.transpose((BlockMatrix64F)sub_L.original,null);
-            TestBlockInnerMultiplication.transposeSub(sub_L);
-        }
-
-        if( transB ) {
-            sub_B.original = b_B = BlockMatrixOps.transpose((BlockMatrix64F)sub_B.original,null);
-            TestBlockInnerMultiplication.transposeSub(sub_B);
-            CommonOps.transpose(X);
-        }
-
-//        sub_L.original.print();
-//        sub_B.original.print();
-
-        BlockInnerTriangularSolver.solve(3,!solveL,sub_L,sub_B,transT,transB);
-
-        assertTrue(GenericMatrixOps.isEquivalent(X,b_B,1e-10));
     }
 
     private DenseMatrix64F createRandomLowerTriangular( int N ) {

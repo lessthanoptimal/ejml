@@ -221,13 +221,13 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
      *
      * @param j Which submatrix to work off of.
      */
-    protected void householder( int j )
+    protected void householder( final int j )
     {
         int startQR = j*numRows;
         int endQR = startQR+numRows;
         startQR += j;
 
-        double max = QrHelperFunctions.findMax(QR.data,startQR,numRows-j);
+        final double max = QrHelperFunctions.findMax(QR.data,startQR,numRows-j);
 
         if( max == 0.0 ) {
             gamma = 0;
@@ -258,7 +258,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
      *
      * @param w The submatrix.
      */
-    protected void updateA( int w )
+    protected void updateA( final int w )
     {
 //        int rowW = w*numRows;
 //        int rowJ = rowW + numRows;
@@ -266,43 +266,42 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
 //        for( int j = w+1; j < numCols; j++ , rowJ += numRows) {
 //            double val = QR.data[rowJ + w];
 //
+//            // val = gamma*u^T * A
 //            for( int k = w+1; k < numRows; k++ ) {
 //                val += QR.data[rowW + k]*QR.data[rowJ + k];
 //            }
 //            val *= gamma;
 //
+//            // A - val*u
 //            QR.data[rowJ + w] -= val;
 //            for( int i = w+1; i < numRows; i++ ) {
 //                QR.data[rowJ + i] -= QR.data[rowW + i]*val;
 //            }
 //        }
-//
-//        if( w < numCols ) {
-//            QR.data[rowW + w] = -tau;
-//        }
 
-        int rowW = w*numRows + w + 1;
+        final double data[] = QR.data;
+        final int rowW = w*numRows + w + 1;
         int rowJ = rowW + numRows;
-        int rowJEnd = rowJ + (numCols-w-1)*numRows;
-        int indexWEnd = rowW + numRows - w - 1;
+        final int rowJEnd = rowJ + (numCols-w-1)*numRows;
+        final int indexWEnd = rowW + numRows - w - 1;
 
         for( ; rowJEnd != rowJ; rowJ += numRows) {
             // assume the first element in u is 1
-            double val = QR.data[rowJ - 1];
+            double val = data[rowJ - 1];
 
             int indexW = rowW;
             int indexJ = rowJ;
 
             while( indexW != indexWEnd ) {
-                val += QR.data[indexW++]*QR.data[indexJ++];
+                val += data[indexW++]*data[indexJ++];
             }
             val *= gamma;
 
-            QR.data[rowJ - 1] -= val;
+            data[rowJ - 1] -= val;
             indexW = rowW;
             indexJ = rowJ;
             while( indexW != indexWEnd ) {
-                QR.data[indexJ++] -= QR.data[indexW++]*val;
+                data[indexJ++] -= data[indexW++]*val;
             }
         }
     }

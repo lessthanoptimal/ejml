@@ -39,7 +39,6 @@ public class TestQRDecompositionHouseholderTran extends GenericQrCheck {
 
     Random rand = new Random(0xff);
 
-
     @Override
     protected QRDecomposition createQRDecomposition() {
         return new QRDecompositionHouseholderTran();

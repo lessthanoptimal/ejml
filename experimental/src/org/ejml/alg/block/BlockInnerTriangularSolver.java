@@ -31,90 +31,27 @@ public class BlockInnerTriangularSolver {
 
     /**
      * <p>
-     * Performs an in-place solve operation on the provided submatrix.<br>
-     * <br>
-     * B = T<sup>-1</sup> B<br>
-     * <br>
-     * where T is a triangular matrix. T or B can be optionally transposed.
+     * Inverts a square lower triangular matrix:  L = L<sup>-1</sup>
      * </p>
      *
-     * <p>
-     * The triangle must be a full inner block inside a {@link org.ejml.data.BlockMatrix64F}.
-     * </p>
-     *
-     * @param blockLength Size of the inner blocks in the block matrix.
-     * @param upper If T is upper or lower triangular.
-     * @param T An upper or lower triangular matrix that is contained in an inner block.
-     * @param B A submatrix. Modified.
-     * @param transT If T is transposed or not.
-     * @param transB If B is transposed or not.
+     * @param L Lower triangular matrix.  Overwritten with the inverse. Modified.
+     * @param m The number of rows and columns.
+     * @param offsetL which index does the matrix start at.
      */
-    public static void solve( int blockLength ,
-                              boolean upper , D1Submatrix64F T ,
-                              D1Submatrix64F B ,
-                              boolean transT , boolean transB )
+    public static void invertLower( double L[] ,
+                                    int m ,
+                                    int offsetL )
     {
-        int M = T.row1-T.row0;
-        if( M > blockLength )
-            throw new IllegalArgumentException("L can be at most the size of a block");
-
-        int offsetT = T.row0*T.original.numCols+M*T.col0;
-
-        double dataT[] = T.original.data;
-        double dataB[] = B.original.data;
-
-        if( transB ) {
-            if( upper ) {
-                if ( transT ) {
-                    throw new IllegalArgumentException("Operation not yet supported");
-                } else {
-                    throw new IllegalArgumentException("Operation not yet supported");
+        for( int i = 0; i < m; i++ ) {
+            double L_ii = L[ offsetL + i*m + i ];
+            for( int j = 0; j < i; j++ ) {
+                double val = 0;
+                for( int k = 0; k < i; k++ ) {
+                    val += L[offsetL + i*m + k] * L[ offsetL + k*m + j ];
                 }
-            } else {
-                if ( transT ) {
-                    throw new IllegalArgumentException("Operation not yet supported");
-                } else {
-                    for( int i = B.row0; i < B.row1; i += blockLength ) {
-                        int N = Math.min(B.row1 , i + blockLength ) - i;
-
-                        int offsetB = i*B.original.numCols + N*B.col0;
-
-                        solveLTransB(dataT,dataB,M,N,offsetT,offsetB);
-                    }
-                }
+                L[ offsetL + i*m + j ] = -val / L_ii;
             }
-        } else {
-            if( M != B.row1-B.row0 )
-                throw new IllegalArgumentException("L and B must have the same number of rows.");
-
-            if( upper ) {
-                if ( transT ) {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
-
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        solveTransU(dataT,dataB,M,N,offsetT,offsetB);
-                    }
-                } else {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
-
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        solveU(dataT,dataB,M,N,offsetT,offsetB);
-                    }
-                }
-            } else {
-                if ( transT ) {
-                   throw new IllegalArgumentException("Operation not yet supported");
-                } else {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
-
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        solveL(dataT,dataB,M,N,offsetT,offsetB);
-                    }
-                }
-            }
+            L[ offsetL + i*m + i ] =  1.0 / L_ii;
         }
     }
 
@@ -143,6 +80,37 @@ public class BlockInnerTriangularSolver {
                 double sum = b[offsetB + i*n+j];
                 for( int k=0; k<i; k++ ) {
                     sum -= L[offsetL + i*m+k]* b[offsetB + k*n+j];
+                }
+                b[offsetB + i*n+j] = sum / L[offsetL + i*m+i];
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Solves for non-singular transposed lower triangular matrices using backwards substitution:
+     * <br>
+     * B = L<sup>-T</sup>B<br>
+     * <br>
+     * where B is a (m by n) matrix, L is a triangular (m by m) matrix.
+     * </p>
+     *
+     * @param L An m by m non-singular lower triangular matrix. Not modified.
+     * @param b An m by n matrix. Modified.
+     * @param m size of the L matrix
+     * @param n number of columns in the B matrix.
+     * @param offsetL initial index in L where the matrix starts
+     * @param offsetB initial index in B where the matrix starts
+     */
+    public static void solveTransL( double L[] , double []b ,
+                                    int m , int n ,
+                                    int offsetL , int offsetB )
+    {
+        for( int j = 0; j < n; j++ ) {
+            for( int i = m-1; i >= 0; i-- ) {
+                double sum = b[offsetB + i*n+j];
+                for( int k=i+1; k<m; k++ ) {
+                    sum -= L[offsetL + k*m+i]* b[offsetB + k*n+j];
                 }
                 b[offsetB + i*n+j] = sum / L[offsetL + i*m+i];
             }
@@ -195,7 +163,7 @@ public class BlockInnerTriangularSolver {
 
     /**
      * <p>
-     * Solves for non-singular upper triangular matrices using forward substitution.
+     * Solves for non-singular upper triangular matrices using backwards substitution.
      * <br>
      * B = U<sup>-1</sup>B<br>
      * <br>

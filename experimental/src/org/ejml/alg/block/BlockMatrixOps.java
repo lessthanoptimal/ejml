@@ -156,7 +156,7 @@ public class BlockMatrixOps {
         D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
         D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
 
-        BlockInnerMultiplication.mult(blockLength,Asub,Bsub,Csub);
+        BlockMultiplication.mult(blockLength,Asub,Bsub,Csub);
     }
 
     public static void multTransA( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
@@ -176,7 +176,7 @@ public class BlockMatrixOps {
         D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
         D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
 
-        BlockInnerMultiplication.multTransA(blockLength,Asub,Bsub,Csub);
+        BlockMultiplication.multTransA(blockLength,Asub,Bsub,Csub);
     }
 
     public static void multTransB( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
@@ -196,7 +196,7 @@ public class BlockMatrixOps {
         D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
         D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
 
-        BlockInnerMultiplication.multTransB(blockLength,Asub,Bsub,Csub);
+        BlockMultiplication.multTransB(blockLength,Asub,Bsub,Csub);
     }
 
     /**

@@ -131,10 +131,10 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
     }
 
     /**
-     * This is a variable on the {@link org.ejml.alg.dense.decomposition.TriangularSolver#solveL} function.
+     * This is a variation on the {@link org.ejml.alg.dense.decomposition.TriangularSolver#solveL} function.
      * It grabs the input from the top right row rectangle of the source matrix then writes the results
      * to the lower bottom column rectangle.  The rectangle matrices just matrices are submatrices
-     * of the matrix that is being decomposed.  The results are also writen to B.
+     * of the matrix that is being decomposed.  The results are also written to B.
      *
      * @param L A lower triangular matrix.
      * @param b_src matrix with the vectors that are to be solved for
@@ -142,27 +142,48 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
      * @param indexDst First index of the submatrix where the results are going to.
      * @param B
      */
-    public static void solveL_special( double L[] ,
-                                       DenseMatrix64F b_src,
-                                       int indexSrc , int indexDst ,
-                                       DenseMatrix64F B )
+    public static void solveL_special( final double L[] ,
+                                       final DenseMatrix64F b_src,
+                                       final int indexSrc , final int indexDst ,
+                                       final DenseMatrix64F B )
     {
-        double dataSrc[] = b_src.data;
+        final double dataSrc[] = b_src.data;
 
-        double b[]= B.data;
+        final double b[]= B.data;
         final int m = B.numRows;
         final int n = B.numCols;
-        int widthL = m;
+        final int widthL = m;
+
+//        for( int j = 0; j < n; j++ ) {
+//            for( int i = 0; i < widthL; i++ ) {
+//                double sum = dataSrc[indexSrc+i*b_src.numCols+j];
+//                for( int k=0; k<i; k++ ) {
+//                    sum -= L[i*widthL+k]* b[k*n+j];
+//                }
+//                double val = sum / L[i*widthL+i];
+//                dataSrc[indexDst+j*b_src.numCols+i] = val;
+//                b[i*n+j] = val;
+//            }
+//        }
 
         for( int j = 0; j < n; j++ ) {
-            for( int i = 0; i < widthL; i++ ) {
+            int indexb = j;
+            int rowL = 0;
+            
+            //for( int i = 0; i < widthL; i++
+            for( int i = 0; i < widthL; i++ ,  indexb += n, rowL += widthL ) {
                 double sum = dataSrc[indexSrc+i*b_src.numCols+j];
-                for( int k=0; k<i; k++ ) {
-                    sum -= L[i*widthL+k]* b[k*n+j];
+
+                int indexL = rowL;
+                int endL = indexL + i;
+                int indexB = j;
+                //for( int k=0; k<i; k++ ) {
+                for( ; indexL != endL; indexB += n) {
+                    sum -= L[indexL++]* b[indexB];
                 }
                 double val = sum / L[i*widthL+i];
                 dataSrc[indexDst+j*b_src.numCols+i] = val;
-                b[i*n+j] = val;
+                b[indexb] = val;
             }
         }
     }
@@ -184,23 +205,34 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
     public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c ,
                                           int startIndexC )
     {
-        double dataA[] = a.data;
-        double dataC[] = c.data;
+        final double dataA[] = a.data;
+        final double dataC[] = c.data;
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            for( int k = 0; k < a.numRows; k++ ) {
-                double valA = dataA[k*a.numCols+i];
-                int indexC = startIndexC+i*c.numCols+i;
-                int indexR = k*a.numCols+i;
-                int end = k*a.numCols + a.numCols;
-                for(; indexR < end; ) {
-                    dataC[indexC++] -= valA * dataA[indexR++];
-                }
+//        for( int i = 0; i < a.numCols; i++ ) {
+//            for( int k = 0; k < a.numRows; k++ ) {
+//                double valA = dataA[k*a.numCols+i];
+//
 //                for( int j = i; j < a.numCols; j++ ) {
 //                    dataC[startIndexC+i*c.numCols+j] -= valA * dataA[k*a.numCols+j];
 //                }
+//            }
+//        }
 
+        final int strideC = c.numCols + 1;
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexA = i;
+            int endR = a.numCols;
+
+            for( int k = 0; k < a.numRows; k++ , indexA += a.numCols , endR += a.numCols) {
+                int indexC = startIndexC;
+                final double valA = dataA[indexA];
+                int indexR = indexA;
+
+                while( indexR < endR ) {
+                    dataC[indexC++] -= valA * dataA[indexR++];
+                }
             }
+            startIndexC += strideC;
         }
 
     }

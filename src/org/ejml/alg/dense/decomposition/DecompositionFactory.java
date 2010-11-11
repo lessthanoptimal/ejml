@@ -72,7 +72,7 @@ public class DecompositionFactory {
     public static CholeskyDecomposition chol( int widthMax , boolean decomposeOrig, boolean lower )
     {
         if( widthMax >= EjmlParameters.SWITCH_BLOCK_CHOLESKY && lower ) {
-            return new CholeskyDecompositionBlock(decomposeOrig, EjmlParameters.BLOCK_WIDTH);
+            return new CholeskyDecompositionBlock(decomposeOrig, EjmlParameters.BLOCK_WIDTH_CHOL);
         } else {
             return new CholeskyDecompositionInner(decomposeOrig,lower);
         }
