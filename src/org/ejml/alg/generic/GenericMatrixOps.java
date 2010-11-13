@@ -53,6 +53,22 @@ public class GenericMatrixOps {
         return true;
     }
 
+    public static boolean isIdentity( Matrix64F a , double tol )
+    {
+        for( int i = 0; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.numCols; j++ ) {
+                if( i == j ) {
+                    if( Math.abs(a.get(i,j)-1.0) > tol )
+                        return false;
+                } else {
+                    if( Math.abs(a.get(i,j)) > tol )
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public static boolean isEquivalentTriangle( boolean upper , Matrix64F a , Matrix64F b , double tol )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )

@@ -57,11 +57,8 @@ public class BlockMatrixOps {
                 int indexSrcRow = i*dst.numCols + j;
 
                 for( int k = 0; k < blockHeight; k++ ) {
-                    int indexSrc = indexSrcRow;
-                    int end = indexSrc + blockWidth;
-                    for( ;indexSrc != end; ) {
-                        dst.data[indexDst++] = src.data[indexSrc++];
-                    }
+                    System.arraycopy(src.data,indexSrcRow,dst.data,indexDst,blockWidth);
+                    indexDst += blockWidth;
                     indexSrcRow += dst.numCols;
                 }
             }
@@ -93,11 +90,8 @@ public class BlockMatrixOps {
                 int indexDstRow = i*dst.numCols + j;
 
                 for( int k = 0; k < blockHeight; k++ ) {
-                    int indexDst = indexDstRow;
-                    int end = indexSrc + blockWidth;
-                    for( ;indexSrc != end; ) {
-                        dst.data[indexDst++] = src.data[indexSrc++];
-                    }
+                    System.arraycopy(src.data,indexSrc,dst.data,indexDstRow,blockWidth);
+                    indexSrc += blockWidth;
                     indexDstRow += dst.numCols;
                 }
             }
@@ -433,6 +427,20 @@ public class BlockMatrixOps {
                 }
             }
         }
+    }
+
+    /**
+     * <p>
+     * Sets every element in the matrix to the specified value.<br>
+     * <br>
+     * a<sub>ij</sub> = value
+     * <p>
+     *
+     * @param A A matrix whose elements are about to be set. Modified.
+     * @param value The value each element will have.
+     */
+    public static void set( BlockMatrix64F A , double value ) {
+        CommonOps.set(A,value);
     }
 
     /**

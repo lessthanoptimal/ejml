@@ -17,36 +17,22 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
-
-import java.util.Random;
-
-import static org.junit.Assert.assertTrue;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
+import org.junit.Test;
 
 
 /**
  * @author Peter Abeles
  */
-public class CheckDecompositionInterface {
+public class TestLinearSolverCholBlock64 {
 
-    /**
-     * Checks to see if the matrix is or is not modified as according to the modified
-     * flag.
-     *
-     * @param decomp
-     */
-    public static void checkModifiedInput( DecompositionInterface decomp ) {
-        DenseMatrix64F A = RandomMatrices.createSymmPosDef(4,new Random(0x434));
-        DenseMatrix64F A_orig = A.copy();
+    @Test
+    public void standardTests() {
+        LinearSolverCholBlock64 solver = new LinearSolverCholBlock64();
 
-        assertTrue(decomp.decompose(A));
-
-        boolean modified = !MatrixFeatures.isIdentical(A,A_orig);
-
-        assertTrue(decomp.inputModified()==modified);
+        BaseCholeskySolveTests tests = new BaseCholeskySolveTests();
+        tests.standardTests(solver);
     }
 }

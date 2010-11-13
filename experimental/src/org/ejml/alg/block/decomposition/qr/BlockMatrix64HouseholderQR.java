@@ -286,7 +286,7 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      * @return Returns true since the input matrix is modified.
      */
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return true;
     }
 }

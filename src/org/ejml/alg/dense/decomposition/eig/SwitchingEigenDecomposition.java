@@ -96,7 +96,7 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 }

@@ -95,14 +95,15 @@ public class GeneratorBlockInnerMultiplication {
         String o = ( opType == Operation.MINUS ) ? "-=" : "+=";
         String m = hasAlpha ? "alpha*" : "";
 
-        stream.println(
+        stream.print(
                 "        int a = indexA;\n"+
-                "        for( int i = 0; i < heightA; i++ ) {\n" +
+                "        int rowC = indexC;\n"+
+                "        for( int i = 0; i < heightA; i++ , rowC += widthC ) {\n" +
                 "            int b = indexB;\n" +
-                "            int rowC = i*widthC + indexC;\n" +
-                "            int endC = rowC + widthC;\n" +
-                "            int endA = a + widthA;\n" +
                 "\n" +
+                "            final int endC = rowC + widthC;\n" +
+                "            final int endA = a + widthA;"+
+                "\n"+
                 "            while( a != endA ) {//for( int k = 0; k < widthA; k++ ) {\n" +
                 "                double valA = "+m+"dataA[a++];\n" +
                 "\n" +
@@ -160,24 +161,23 @@ public class GeneratorBlockInnerMultiplication {
         stream.println();
 
         stream.print(
-        "        for( int i = 0; i < widthA; i++ ) {\n" +
+        "        int rowC = indexC;\n"+
+        "        for( int i = 0; i < widthA; i++ , rowC += widthC) {\n" +
         "            int colA = i + indexA;\n" +
-        "            int rowC = i*widthC + indexC;\n" +
         "            int endA = colA + widthA*heightA;\n" +
-        "            int rowB = indexB;\n" +
+        "            int b = indexB;\n" +
         "\n" +
         "            // for( int k = 0; k < heightA; k++ ) {\n" +
-        "            for( ; colA != endA; colA += widthA , rowB += widthC ) {\n" +
+        "            while(colA != endA ) {\n" +
         "                double valA = "+m+"dataA[colA];\n" +
         "\n" +
         "                int c = rowC;\n" +
-        "                int b = rowB;\n" +
-        "                int endB = b + widthC;\n" +
+        "                final int endB = b + widthC;\n" +
         "\n" +
         "                //for( int j = 0; j < widthC; j++ ) {\n");
         if( opType == Operation.SET ) {
             stream.print(
-                    "                if( rowB == indexB ) {\n" +
+                    "                if( b == indexB ) {\n" +
                     "                    while( b != endB ) {\n" +
                     "                        dataC[ c++ ] = valA * dataB[b++];\n" +
                     "                    } \n" +
@@ -193,6 +193,7 @@ public class GeneratorBlockInnerMultiplication {
                     "                }\n");
         }
         stream.print(
+        "                colA += widthA;"+
         "            }\n" +
         "        }\n");
 
@@ -255,7 +256,7 @@ public class GeneratorBlockInnerMultiplication {
         stream.print(
                 "     * </p>\n" +
                 "     */\n" +
-                "    public static void "+funcName+"("+alphaParam+" double[] dataA, double []dataB, double []dataC,\n" +
+                "    public static void "+funcName+"("+alphaParam+" final double[] dataA, final double []dataB, final double []dataC,\n" +
                 "                                     int indexA, int indexB, int indexC,\n" +
                 "                                     final int heightA, final int widthA, final int widthC) {\n");
     }

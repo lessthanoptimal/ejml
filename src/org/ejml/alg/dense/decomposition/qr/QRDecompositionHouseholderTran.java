@@ -202,7 +202,7 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 

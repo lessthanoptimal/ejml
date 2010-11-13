@@ -77,7 +77,7 @@ public class SvdNumericalRecipes extends SingularValueDecompositionBase {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 

@@ -347,10 +347,11 @@ public class SpecializedOps {
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.
      *
-     * @param T A matrix.
-     * @return product of the diagonal elements.
+     * @param upper if it is upper triangular or not.
+     * @param T A matrix.  @return product of the diagonal elements.
+     * @return the quality of the system.
      */
-    public static double qualityUpperTriangular( RowD1Matrix64F T )
+    public static double qualityTriangular(boolean upper, D1Matrix64F T)
     {
         int N = Math.min(T.numRows,T.numCols);
 

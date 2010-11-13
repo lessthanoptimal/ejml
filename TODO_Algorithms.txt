@@ -2,6 +2,7 @@ For 0.15 Release
 - Block Cholesky
 - Block QR
 - Block multiplication?
+- wrapper for decomp chol
 
 For 0.16 Release
 - Remove QR-col and replace with QR-tran?
@@ -9,6 +10,7 @@ For 0.16 Release
 - Merge inner triangular solver code
 - Unit test for PCA example
 - Matrix type generic for solver?
+- Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 
 For DenseMatrix64F
 

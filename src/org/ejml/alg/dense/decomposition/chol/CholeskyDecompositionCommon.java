@@ -147,7 +147,7 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return decomposeOrig;
     }
 

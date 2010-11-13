@@ -65,4 +65,6 @@ public class EjmlParameters {
      * </p>
      */
     public static int SWITCH_BLOCK_CHOLESKY = 1000;
+
+    public static int SWITCH_BLOCK64_CHOLESKY = 2000;
 }

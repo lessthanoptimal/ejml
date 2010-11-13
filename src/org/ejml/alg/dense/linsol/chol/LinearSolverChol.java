@@ -56,7 +56,7 @@ public class LinearSolverChol extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return Math.abs(SpecializedOps.diagProd(decomp.getT()));
+        return SpecializedOps.qualityTriangular(true, decomp.getT());
     }
 
     /**

@@ -34,9 +34,41 @@ public class BlockInnerTriangularSolver {
      * Inverts a square lower triangular matrix:  L = L<sup>-1</sup>
      * </p>
      *
-     * @param L Lower triangular matrix.  Overwritten with the inverse. Modified.
+     * @param L Lower triangular matrix being inverted. Not modified.
+     * @oaran K_inv Where the inverse is stored.  Can be the same as L.  Modified.
      * @param m The number of rows and columns.
-     * @param offsetL which index does the matrix start at.
+     * @param offsetL which index does the L matrix start at.
+     * @param offsetL_inv which index does the L_inv matrix start at.
+     *
+     */
+    public static void invertLower( double L[] ,
+                                    double L_inv[] ,
+                                    int m ,
+                                    int offsetL ,
+                                    int offsetL_inv )
+    {
+        for( int i = 0; i < m; i++ ) {
+            double L_ii = L[ offsetL + i*m + i ];
+            for( int j = 0; j < i; j++ ) {
+                double val = 0;
+                for( int k = 0; k < i; k++ ) {
+                    val += L[offsetL + i*m + k] * L_inv[ offsetL_inv + k*m + j ];
+                }
+                L_inv[ offsetL_inv + i*m + j ] = -val / L_ii;
+            }
+            L_inv[ offsetL_inv + i*m + i ] =  1.0 / L_ii;
+        }
+    }
+
+    /**
+     * <p>
+     * Inverts a square lower triangular matrix:  L = L<sup>-1</sup>
+     * </p>
+     *
+     * @param L Lower triangular matrix being inverted. Over written with inverted matrix.  Modified.
+     * @param m The number of rows and columns.
+     * @param offsetL which index does the L matrix start at.
+     *
      */
     public static void invertLower( double L[] ,
                                     int m ,

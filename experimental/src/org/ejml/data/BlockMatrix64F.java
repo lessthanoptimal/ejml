@@ -81,6 +81,11 @@ public class BlockMatrix64F extends D1Matrix64F {
         }
     }
 
+    public void reshape(int numRows, int numCols, int blockLength , boolean saveValues) {
+        this.blockLength = blockLength;
+        this.reshape(numRows,numCols,saveValues);
+    }
+
     @Override
     public int getIndex( int row, int col ) {
         // find the block it is inside

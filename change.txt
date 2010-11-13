@@ -21,6 +21,8 @@
 - Added elementMult() to SimpleMatrix. Suggested by Nikita Rokotyan.
 - Fixed bug in the different QR decomposition implementations for compact QR.
   * Added compact QR to generic tests
+- Fixed bug in LinearSolverFactory.symmetric() where LU instead of cholesky was being created.
+
 
 
 ----- Version 0.14

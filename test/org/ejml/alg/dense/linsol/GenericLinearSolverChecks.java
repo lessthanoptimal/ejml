@@ -73,6 +73,32 @@ public abstract class GenericLinearSolverChecks {
     }
 
     /**
+     * See if quality is scale invariant
+     */
+    @Test
+    public void checkQuality_scale() {
+        DenseMatrix64F A = CommonOps.diag(4,3,2,1);
+        DenseMatrix64F Asmall = A.copy();
+        CommonOps.scale(0.01,Asmall);
+
+        LinearSolver solver = createSolver(4,4);
+
+        assertTrue(solver.setA(A));
+        double q;
+        try {
+            q = solver.quality();
+        } catch( IllegalArgumentException e ) {
+            // quality is not supported
+            return;
+        }
+
+        assertTrue(solver.setA(Asmall));
+        double q_small = solver.quality();
+
+        assertEquals(q_small,q,1e-8);
+    }
+
+    /**
      * Makes sure that the quality is scale invariant
      */
     @Test

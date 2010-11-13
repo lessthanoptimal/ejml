@@ -39,9 +39,9 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyL( DenseMatrix64F orig , int numTrials ) {
 
-        long prev = System.currentTimeMillis();
-
         CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false,true);
+
+        long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -54,9 +54,9 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyU( DenseMatrix64F orig , int numTrials ) {
 
-        long prev = System.currentTimeMillis();
-
         CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false,false);
+
+        long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -69,10 +69,10 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyL_block( DenseMatrix64F orig , int numTrials ) {
 
-        long prev = System.currentTimeMillis();
-
         CholeskyDecompositionBlock alg = new CholeskyDecompositionBlock(false,
                 EjmlParameters.BLOCK_WIDTH_CHOL);
+
+        long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -86,14 +86,12 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyBlockU( DenseMatrix64F orig , int numTrials ) {
 
-        BlockCholeskyOuterForm alg = new BlockCholeskyOuterForm(false);
-
-        BlockMatrix64F A = BlockMatrixOps.convert(orig);
+        CholeskyDecompositionBlock64 alg = new CholeskyDecompositionBlock64(false);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(A.copy()) ) {
+            if( !alg.decompose(orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -103,14 +101,12 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyBlockL( DenseMatrix64F orig , int numTrials ) {
 
-        BlockCholeskyOuterForm alg = new BlockCholeskyOuterForm(true);
-
-        BlockMatrix64F A = BlockMatrixOps.convert(orig);
+        CholeskyDecompositionBlock64 alg = new CholeskyDecompositionBlock64(false);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(A.copy()) ) {
+            if( !alg.decompose(orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -150,7 +146,7 @@ public class BenchmarkCholeskyDecomposition {
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 7; i < size.length; i++ ) {
+        for( int i = 6; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);

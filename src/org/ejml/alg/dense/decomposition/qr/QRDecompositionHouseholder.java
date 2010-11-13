@@ -222,7 +222,7 @@ public class QRDecompositionHouseholder implements QRDecomposition {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 

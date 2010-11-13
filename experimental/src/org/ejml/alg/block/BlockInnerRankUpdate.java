@@ -73,7 +73,6 @@ public class BlockInnerRankUpdate {
                 int indexA = rowA * A.original.numCols + (j-B.col0+A.col0)*heightA;
                 int indexB_j = B.row0*B.original.numCols + j*heightB;
 
-
                 BlockInnerMultiplication.blockMultPlusTransA(alpha,
                         B.original.data,B.original.data,A.original.data,
                         indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
@@ -164,8 +163,7 @@ public class BlockInnerRankUpdate {
             int heightA = Math.min( blockLength , A.row1 - rowA);
 
             for( int j = B.row0; j <= i; j += blockLength ) {
-                // todo j == i do only a triangle block
-
+                
                 int widthB_j = Math.min(blockLength,B.row1-j);
 
                 int indexA = rowA * A.original.numCols + (j-B.row0+A.col0)*heightA;
@@ -269,8 +267,8 @@ public class BlockInnerRankUpdate {
      * c = c - a*a<sup>T</sup><br>
      * </p>
      */
-    protected static void multTransBBlockMinus( double[] dataA, double []dataC,
-                                                int indexA, int indexB, int indexC,
+    protected static void multTransBBlockMinus( final double[] dataA, final double []dataC,
+                                                final int indexA, final int indexB, final int indexC,
                                                 final int widthA, final int heightA, final int widthC ) {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int j = 0; j < widthC; j++ ) {
@@ -283,24 +281,23 @@ public class BlockInnerRankUpdate {
 //        }
         
         int rowA = indexA;
-        int startC = indexC;
-        for( int i = 0; i < heightA; i++ , rowA += widthA , startC += widthC ) {
+        int c = indexC;
+        for( int i = 0; i < heightA; i++ , rowA += widthA ) {
             final int endA = rowA + widthA;
             int rowB = indexB;
-            int rowC = startC;
-            int endLoopJ = rowC + widthC;
+            final int endLoopJ = c + widthC;
 
             // for( int j = 0; j < widthC; j++  ) {
-            for( ; rowC != endLoopJ; rowB += widthA) {
-                double sum = 0;
-
+            while( c != endLoopJ ) {
                 int a = rowA;
                 int b = rowB;
 
+                double sum = 0;
                 while( a != endA ) {
                     sum += dataA[a++] * dataA[b++];
                 }
-                dataC[ rowC++ ] -= sum;
+                dataC[ c++ ] -= sum;
+                rowB += widthA;
             }
         }
     }

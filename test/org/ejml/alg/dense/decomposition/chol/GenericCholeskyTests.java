@@ -81,7 +81,7 @@ public abstract class GenericCholeskyTests {
      * If it is not positive definate it should fail
      */
     @Test
-    public void testNotPositiveDefinate() {
+    public void testNotPositiveDefinite() {
         DenseMatrix64F A = new DenseMatrix64F(2,2, true, 1, -1, -1, -2);
 
         CholeskyDecomposition alg = create(true);

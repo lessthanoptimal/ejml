@@ -32,6 +32,7 @@ import org.ejml.data.D1Submatrix64F;
  * Assumptions:
  * <ul>
  *  <le> All submatrices are aligned along the inner blocks of the {@link org.ejml.data.BlockMatrix64F}.
+ *  <le> Some times vectors are assumed to have leading zeros and a one.
  * </ul>
  * 
  * @author Peter Abeles
@@ -103,8 +104,12 @@ public class BlockHouseHolder {
     }
 
     /**
-     *
-     * A = (I - &gamma;*u*u<sup>T</sup>)A
+     * <p>
+     * Applies a householder reflector stored in column 'col' to the remainder of the columns
+     * in the block after it.  Takes in account leading zeros and one.<br>
+     * <br>
+     * A = (I - &gamma;*u*u<sup>T</sup>)A<br>
+     * </p>
      */
     public static void applyHouseholderCol( final int blockLength ,
                                             final D1Submatrix64F A , final int col , final double gamma )
@@ -117,7 +122,7 @@ public class BlockHouseHolder {
 
             double total = 0;
 
-            // total = U^T * A
+            // total = U^T * A(:,j)
             for( int i = A.row0; i < A.row1; i += blockLength ) {
 
                 int height = Math.min( blockLength , A.row1 - i );
@@ -126,25 +131,32 @@ public class BlockHouseHolder {
                 int indexA = i*A.original.numCols + height*A.col0 + j;
 
                 if( i == A.row0 ) {
+                    // handle leading zeros
                     indexU += width*(col+1);
                     indexA += width*col;
 
+                    // handle leading one
                     total = dataA[ indexA ];
 
                     indexA += width;
 
+                    // standard vector dot product
                     for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
                         total += dataA[ indexU ] * dataA[ indexA ];
                     }
                 } else {
-                    for( int k = 0; k < height; k++ , indexU += width, indexA += width ) {
+                    // standard vector dot product
+                    int endU = indexU + width*height;
+//                    for( int k = 0; k < height; k++ ) {
+                    for( ; indexU != endU; indexU += width, indexA += width ) {
                         total += dataA[ indexU ] * dataA[ indexA ];
                     }
                 }
             }
 
             total *= gamma;
-            // A - gamma*u*total
+            // A(:,j) - gamma*U*total
+
             for( int i = A.row0; i < A.row1; i += blockLength ) {
                 int height = Math.min( blockLength , A.row1 - i );
 
@@ -163,7 +175,9 @@ public class BlockHouseHolder {
                         dataA[ indexA ] -= total*dataA[ indexU ];
                     }
                 } else {
-                    for( int k = 0; k < height; k++ , indexU += width, indexA += width ) {
+                    int endU = indexU + width*height;
+                    // for( int k = 0; k < height; k++
+                    for( ; indexU != endU; indexU += width, indexA += width ) {
                         dataA[ indexA ] -= total*dataA[ indexU ];
                     }
                 }
@@ -174,7 +188,7 @@ public class BlockHouseHolder {
 
     /**
      * Divides the elements at the specified column by 'val'.  Takes in account
-     * the zeros and the first element being implicitly equal to one.
+     * leading zeros and one.
      */
     public static void divideElements( final int blockLength ,
                                        final D1Submatrix64F Y , final int col , final double val ) {
@@ -194,7 +208,9 @@ public class BlockHouseHolder {
                     dataY[index] /= val;
                 }
             } else {
-                for( int k = 0; k < height; k++ , index += width ) {
+                int endIndex = index + width*height;
+                //for( int k = 0; k < height; k++
+                for( ; index != endIndex; index += width ) {
                     dataY[index] /= val;
                 }
             }
@@ -406,6 +422,8 @@ public class BlockHouseHolder {
 
         final int colsW = W.original.numCols;
 
+        final double beta_neg = -beta;
+
         for( int i = Y.row0; i < Y.row1; i += blockLength ) {
             int heightW = Math.min( blockLength , Y.row1 - i );
 
@@ -413,26 +431,40 @@ public class BlockHouseHolder {
             int indexZ = i*colsW + heightW*W.col0 + col;
             int indexV = i*Y.original.numCols + heightW*Y.col0 + col;
 
+            if( i == Y.row0 ) {
+                // handle the triangular portion with the leading zeros and the one
+                for( int k = 0; k < heightW; k++ , indexZ += width, indexW += width , indexV += width ) {
+                    // compute the rows of W * h
+                    double total = 0;
 
-            for( int k = 0; k < heightW; k++ , indexZ += width, indexW += width , indexV += width ) {
-                // compute the rows of W * h
-                double total = 0;
-
-                for( int j = 0; j < col; j++ ) {
-                    total += dataW[indexW+j] * temp[j];
-                }
-
-                // add the two vectors together and multiply by -beta
-                if( i == Y.row0 ) {
-                    if( k < col ) {
-                        dataW[indexZ] = -beta*total;
-                    } else if( k == col ) {
-                        dataW[indexZ] = -beta*(1.0 + total);
-                    } else {
-                        dataW[indexZ] = -beta*(dataY[indexV] + total);
+                    for( int j = 0; j < col; j++ ) {
+                        total += dataW[indexW+j] * temp[j];
                     }
-                } else {
-                    dataW[indexZ] = -beta*(dataY[indexV] + total);
+
+                    // add the two vectors together and multiply by -beta
+                    if( k < col ) {  // zeros
+                        dataW[indexZ] = -beta*total;
+                    } else if( k == col ) { // one
+                        dataW[indexZ] = beta_neg*(1.0 + total);
+                    } else { // normal data
+                        dataW[indexZ] = beta_neg*(dataY[indexV] + total);
+                    }
+                }
+            } else {
+                int endZ = indexZ + width*heightW;
+//                for( int k = 0; k < heightW; k++ ,
+                while( indexZ != endZ ) {
+                    // compute the rows of W * h
+                    double total = 0;
+
+                    for( int j = 0; j < col; j++ ) {
+                        total += dataW[indexW+j] * temp[j];
+                    }
+
+                    // add the two vectors together and multiply by -beta
+                    dataW[indexZ] = beta_neg*(dataY[indexV] + total);
+
+                    indexZ += width; indexW += width; indexV += width;
                 }
             }
         }
@@ -526,8 +558,12 @@ public class BlockHouseHolder {
     }
 
     /**
+     * <p>
      * Inner block mult add operation that takes in account the zeros and on in dataA,
-     * which is the top part of the Y block vector that has the householder vectors.
+     * which is the top part of the Y block vector that has the householder vectors.<br>
+     * <br>
+     * C = C + A * B
+     * </p>
      */
     public static void multBlockAdd_zerosone( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,

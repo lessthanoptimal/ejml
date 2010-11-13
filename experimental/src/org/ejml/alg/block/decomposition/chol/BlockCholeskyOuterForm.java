@@ -162,7 +162,7 @@ public class BlockCholeskyOuterForm implements BlockCholeskyDecomposition {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return true;
     }
 }

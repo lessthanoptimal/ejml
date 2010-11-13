@@ -144,7 +144,7 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 

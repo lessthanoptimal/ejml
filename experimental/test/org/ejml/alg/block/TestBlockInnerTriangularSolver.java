@@ -20,6 +20,7 @@
 package org.ejml.alg.block;
 
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
+import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -44,7 +45,27 @@ public class TestBlockInnerTriangularSolver {
 
 
     @Test
-    public void testInvertLower() {
+    public void testInvertLower_two() {
+        DenseMatrix64F A = RandomMatrices.createUpperTriangle(5,0,-1,1,rand);
+        CommonOps.transpose(A);
+
+        DenseMatrix64F A_inv = A.copy();
+
+        BlockInnerTriangularSolver.invertLower(A.data,A_inv.data,5,0,0);
+
+        DenseMatrix64F S = new DenseMatrix64F(5,5);
+        CommonOps.mult(A,A_inv,S);
+
+        assertTrue(GenericMatrixOps.isIdentity(S,1e-8));
+
+        // see if it works with the same input matrix
+        BlockInnerTriangularSolver.invertLower(A.data,A.data,5,0,0);
+
+        assertTrue(MatrixFeatures.isIdentical(A,A_inv,1e-8));
+    }
+
+    @Test
+    public void testInvertLower_one() {
         DenseMatrix64F A = RandomMatrices.createUpperTriangle(5,0,-1,1,rand);
         CommonOps.transpose(A);
 
@@ -54,15 +75,8 @@ public class TestBlockInnerTriangularSolver {
 
         DenseMatrix64F S = new DenseMatrix64F(5,5);
         CommonOps.mult(A,A_inv,S);
-        
-        for( int i = 0; i < 5; i++ ) {
-            for( int j = 0; j < 5; j++ ) {
-                if( i != j )
-                    assertEquals(0,S.get(i,j),1e-8);
-                else
-                    assertEquals(1,S.get(i,j),1e-8);
-            }
-        }
+
+        assertTrue(GenericMatrixOps.isIdentity(S,1e-8));
     }
 
     /**

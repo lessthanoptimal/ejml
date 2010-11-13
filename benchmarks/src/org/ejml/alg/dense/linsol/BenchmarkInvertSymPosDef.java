@@ -19,9 +19,13 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
@@ -62,21 +66,27 @@ public class BenchmarkInvertSymPosDef {
 //        System.out.println("invert GJ               = "+ invertGJ(mat,numTrials));
 //        System.out.println("invert LU-NR            = "+ invertLU_nr(mat,numTrials));
 //        System.out.println("invert LU-Alt           = "+ invertLU_alt(mat,numTrials));
-        System.out.println("invert Cholesky         = "+ invertCholesky(
-                new LinearSolverChol(new CholeskyDecompositionInner( false,true)),
+//        System.out.println("invert Cholesky Inner       = "+ invertCholesky(
+//                new LinearSolverChol(new CholeskyDecompositionInner( false,true)),
+//                mat,numTrials));
+        System.out.println("invert Cholesky Block Dense = "+ invertCholesky(
+                new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL)),
                 mat,numTrials));
-        System.out.println("invert CholeskyLDL        = "+ invertCholesky(
-                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
+//        System.out.println("invert CholeskyLDL          = "+ invertCholesky(
+//                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
+//                mat,numTrials));
+        System.out.println("invert CholeskyBlock64      = "+ invertCholesky(
+                new LinearSolverCholBlock64(),
                 mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,1000,2000,4000};
-        int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,3,1,1};
+        int size[] = new int[]{2,4,10,100,1000,2000,4000,8000};
+        int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,3,1,1,1};
 
-        for( int i = 3; i < size.length; i++ ) {
+        for( int i = 4; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);

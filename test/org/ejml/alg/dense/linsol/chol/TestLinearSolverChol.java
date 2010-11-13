@@ -34,25 +34,15 @@ import static org.junit.Assert.assertTrue;
  * @author Peter Abeles
  */
 public class TestLinearSolverChol {
-    Random rand = new Random(0x45);
 
     @Test
-    public void testInverseAndSolve() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
-        DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
+    public void standardTests() {
 
         CholeskyDecompositionInner alg = new CholeskyDecompositionInner( false, true);
         LinearSolverChol solver = new LinearSolverChol(alg);
-        assertTrue(solver.setA(A));
-        solver.invert(A);
-        solver.solve(b,x);
 
-
-        DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
-        DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
-
-        UtilTestMatrix.checkEquals(A_inv,A,1e-5);
-        UtilTestMatrix.checkEquals(x_expected,x,1e-5);
+        BaseCholeskySolveTests tests = new BaseCholeskySolveTests();
+        tests.standardTests(solver);
     }
+
 }

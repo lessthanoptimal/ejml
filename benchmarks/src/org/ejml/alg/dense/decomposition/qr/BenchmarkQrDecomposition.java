@@ -43,7 +43,7 @@ public class BenchmarkQrDecomposition {
         long prev = System.currentTimeMillis();
         DenseMatrix64F B;
         for( long i = 0; i < numTrials; i++ ) {
-            if( alg.modifyInput())
+            if( alg.inputModified())
                 B = orig.copy();
             else
                 B = orig;
@@ -63,7 +63,7 @@ public class BenchmarkQrDecomposition {
         DenseMatrix64F B;
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( alg.modifyInput())
+            if( alg.inputModified())
                 B = orig.copy();
             else
                 B = orig;
@@ -83,7 +83,7 @@ public class BenchmarkQrDecomposition {
         DenseMatrix64F B;
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( alg.modifyInput())
+            if( alg.inputModified())
                 B = orig.copy();
             else
                 B = orig;
@@ -105,7 +105,7 @@ public class BenchmarkQrDecomposition {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( alg.modifyInput())
+            if( alg.inputModified())
                 B = A.copy();
             else
                 B = A;

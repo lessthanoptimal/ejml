@@ -45,6 +45,57 @@ public class TestBlockTriangularSolver {
 
     Random rand = new Random(234534);
 
+    @Test
+    public void invert_two() {
+        // block size
+        int r = 3;
+
+        double temp[] = new double[r*r];
+
+        for( int size = 1; size <= 9; size++ ) {
+            BlockMatrix64F T = BlockMatrixOps.createRandom(size,size,-1,1,rand,r);
+            BlockMatrixOps.zeroTriangle(true,T);
+
+            BlockMatrix64F T_inv = T.copy();
+
+            BlockTriangularSolver.invert(r,false,new D1Submatrix64F(T),new D1Submatrix64F(T_inv),temp);
+
+            BlockMatrix64F C = new BlockMatrix64F(size,size,r);
+
+            BlockMatrixOps.mult(T,T_inv,C);
+
+            assertTrue(GenericMatrixOps.isIdentity(C,1e-8));
+
+            // see if passing in the same matrix instance twice messes it up or not
+            BlockTriangularSolver.invert(r,false,new D1Submatrix64F(T),new D1Submatrix64F(T),temp);
+
+            assertTrue(BlockMatrixOps.isIdentical(T,T_inv,1e-8));
+        }
+    }
+
+    @Test
+    public void invert_one() {
+        // block size
+        int r = 3;
+
+        double temp[] = new double[r*r];
+
+        for( int size = 1; size <= 9; size++ ) {
+            BlockMatrix64F T = BlockMatrixOps.createRandom(size,size,-1,1,rand,r);
+            BlockMatrixOps.zeroTriangle(true,T);
+
+            BlockMatrix64F T_inv = T.copy();
+
+            BlockTriangularSolver.invert(r,false,new D1Submatrix64F(T_inv),temp);
+
+            BlockMatrix64F C = new BlockMatrix64F(size,size,r);
+
+            BlockMatrixOps.mult(T,T_inv,C);
+
+            assertTrue(GenericMatrixOps.isIdentity(C,1e-8));
+        }
+    }
+
 
     /**
      * Test solving several different triangular systems with different sizes.

@@ -128,7 +128,7 @@ public class CholeskyDecompositionLDL implements DecompositionInterface {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 

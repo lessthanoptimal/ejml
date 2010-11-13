@@ -20,6 +20,10 @@
 package org.ejml.alg.block;
 
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.RowD1Matrix64F;
+import org.ejml.ops.CommonOps;
+
+import static org.ejml.alg.block.BlockInnerMultiplication.blockMultMinus;
 
 
 /**
@@ -30,12 +34,128 @@ import org.ejml.data.D1Submatrix64F;
  * <p>
  * For a more detailed description of a similar algorithm see:
  * Page 30 in "Fundamentals of Matrix Computations" 2nd Ed. by David S. Watkins
- * or any description of a block triangular solver in any other computational linear algebra book
+ * or any description of a block triangular solver in any other computational linear algebra book.
  * </p>
  *
  * @author Peter Abeles
  */
 public class BlockTriangularSolver {
+
+    /**
+     * Inverts an upper or lower triangular block submatrix.
+     *
+     * @param blockLength
+     * @param upper Is it upper or lower triangular.
+     * @param T Triangular matrix that is to be inverted.  Must be block aligned.  Not Modified.
+     * @param T_inv Where the inverse is stored.  This can be the same as T.  Modified.
+     * @param temp Work space variable that is size blockLength*blockLength.  
+     */
+    public static void invert( final int blockLength ,
+                               final boolean upper ,
+                               final D1Submatrix64F T ,
+                               final D1Submatrix64F T_inv ,
+                               final double temp[] )
+    {
+        if( upper )
+            throw new IllegalArgumentException("Upper triangular matrices not supported yet");
+
+        if( temp.length < blockLength*blockLength )
+            throw new IllegalArgumentException("Temp must be at least blockLength*blockLength long.");
+
+        if( T.row0 != T_inv.row0 || T.row1 != T_inv.row1 || T.col0 != T_inv.col0 || T.col1 != T_inv.col1)
+            throw new IllegalArgumentException("T and T_inv must be at the same elements in the matrix");
+
+        final int M = T.row1-T.row0;
+
+        final double dataT[] = T.original.data;
+        final double dataX[] = T_inv.original.data;
+
+        final int offsetT = T.row0*T.original.numCols+M*T.col0;
+
+        for( int i = 0; i < M; i += blockLength ) {
+            int heightT = Math.min(T.row1-(i+T.row0),blockLength);
+
+            int indexII = offsetT + T.original.numCols*(i+T.row0) + heightT*(i+T.col0);
+
+            for( int j = 0; j < i; j += blockLength ) {
+                int widthX = Math.min(T.col1-(j+T.col0),blockLength);
+
+                for( int w = 0; w < temp.length; w++ ) {
+                    temp[w] = 0;
+                }
+
+                for( int k = j; k < i; k += blockLength ) {
+                    int widthT = Math.min(T.col1-(k+T.col0),blockLength);
+
+                    int indexL = offsetT + T.original.numCols*(i+T.row0) + heightT*(k+T.col0);
+                    int indexX = offsetT + T.original.numCols*(k+T.row0) + widthT*(j+T.col0);
+
+                    blockMultMinus(dataT,dataX,temp,indexL,indexX,0,heightT,widthT,widthX);
+                }
+
+                int indexX = offsetT + T.original.numCols*(i+T.row0) + heightT*(j+T.col0);
+
+                BlockInnerTriangularSolver.solveL(dataT,temp,heightT,widthX,indexII,0);
+                System.arraycopy(temp,0,dataX,indexX,widthX*heightT);
+            }
+            BlockInnerTriangularSolver.invertLower(dataT,dataX,heightT,indexII,indexII);
+        }
+    }
+
+    /**
+     * Inverts an upper or lower triangular block submatrix.
+     *
+     * @param blockLength
+     * @param upper Is it upper or lower triangular.
+     * @param T Triangular matrix that is to be inverted.  Overwritten with solution.  Modified.
+     * @param temp Work space variable that is size blockLength*blockLength.
+     */
+    public static void invert( final int blockLength ,
+                               final boolean upper ,
+                               final D1Submatrix64F T ,
+                               final double temp[] )
+    {
+        if( upper )
+            throw new IllegalArgumentException("Upper triangular matrices not supported yet");
+
+        if( temp.length < blockLength*blockLength )
+            throw new IllegalArgumentException("Temp must be at least blockLength*blockLength long.");
+
+        final int M = T.row1-T.row0;
+
+        final double dataT[] = T.original.data;
+        final int offsetT = T.row0*T.original.numCols+M*T.col0;
+
+        for( int i = 0; i < M; i += blockLength ) {
+            int heightT = Math.min(T.row1-(i+T.row0),blockLength);
+
+            int indexII = offsetT + T.original.numCols*(i+T.row0) + heightT*(i+T.col0);
+
+            for( int j = 0; j < i; j += blockLength ) {
+                int widthX = Math.min(T.col1-(j+T.col0),blockLength);
+
+                for( int w = 0; w < temp.length; w++ ) {
+                    temp[w] = 0;
+                }
+
+                for( int k = j; k < i; k += blockLength ) {
+                    int widthT = Math.min(T.col1-(k+T.col0),blockLength);
+
+                    int indexL = offsetT + T.original.numCols*(i+T.row0) + heightT*(k+T.col0);
+                    int indexX = offsetT + T.original.numCols*(k+T.row0) + widthT*(j+T.col0);
+
+                    blockMultMinus(dataT,dataT,temp,indexL,indexX,0,heightT,widthT,widthX);
+                }
+
+                int indexX = offsetT + T.original.numCols*(i+T.row0) + heightT*(j+T.col0);
+
+                BlockInnerTriangularSolver.solveL(dataT,temp,heightT,widthX,indexII,0);
+                System.arraycopy(temp,0,dataT,indexX,widthX*heightT);
+            }
+            BlockInnerTriangularSolver.invertLower(dataT,heightT,indexII);
+        }
+    }
+
 
     /**
      * <p>
@@ -46,6 +166,19 @@ public class BlockTriangularSolver {
      * where T is a triangular matrix. T or B can be transposed.  T is a square matrix of arbitrary
      * size and B has the same number of rows as T and an arbitrary number of columns.
      * </p>
+     *
+     * <pre>
+     * for i=1:m
+     *     for j=1:i-1
+     *         val = 0
+     *         for k=j:i-1
+     *             val = val - L(i,k) * X(k,j)
+     *         end
+     *         x(i,j) = val / L(i,i)
+     *     end
+     *     x(i,i) = 1 / L(i,i)
+     * end
+     * </pre>
      *
      * @param blockLength Size of the inner blocks.
      * @param upper If T is upper or lower triangular.
@@ -247,8 +380,6 @@ public class BlockTriangularSolver {
                     Y.row0 = Binner.row1;
                     Y.row1 = Math.min(Y.row0+blockLength,B.row1);
                 }
-
-
 
                 // step through each block column
                 for( int k = B.col0; k < B.col1; k += blockLength ) {

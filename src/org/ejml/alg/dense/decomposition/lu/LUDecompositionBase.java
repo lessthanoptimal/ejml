@@ -79,7 +79,7 @@ public abstract class LUDecompositionBase implements LUDecomposition {
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 
@@ -203,7 +203,7 @@ public abstract class LUDecompositionBase implements LUDecomposition {
     }
 
     public double quality() {
-        return SpecializedOps.qualityUpperTriangular(LU);
+        return SpecializedOps.qualityTriangular(true, LU);
     }
 
     /**

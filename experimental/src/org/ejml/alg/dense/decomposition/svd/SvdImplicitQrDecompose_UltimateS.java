@@ -159,7 +159,7 @@ public class SvdImplicitQrDecompose_UltimateS implements SingularValueDecomposit
     }
 
     @Override
-    public boolean modifyInput() {
+    public boolean inputModified() {
         return false;
     }
 
