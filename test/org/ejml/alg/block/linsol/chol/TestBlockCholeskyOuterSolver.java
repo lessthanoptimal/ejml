@@ -20,17 +20,17 @@
 package org.ejml.alg.block.linsol.chol;
 
 import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -100,8 +100,36 @@ public class TestBlockCholeskyOuterSolver {
     }
 
     @Test
-    public void quality() {
-        fail("implement");
+    public void testQuality() {
+        BlockCholeskyOuterSolver solver = new BlockCholeskyOuterSolver();
+
+        DenseMatrix64F A = CommonOps.diag(5,3,2,1);
+        DenseMatrix64F B = CommonOps.diag(5,3,2,0.001);
+
+        assertTrue(solver.setA(BlockMatrixOps.convert(A,r)));
+        double qualityA = solver.quality();
+
+        assertTrue(solver.setA(BlockMatrixOps.convert(B,r)));
+        double qualityB = solver.quality();
+
+        assertTrue(qualityB < qualityA);
+    }
+
+    @Test
+    public void testQuality_scale() {
+        BlockCholeskyOuterSolver solver = new BlockCholeskyOuterSolver();
+
+        DenseMatrix64F A = CommonOps.diag(5,3,2,1);
+        DenseMatrix64F B = A.copy();
+        CommonOps.scale(0.001,B);
+
+        assertTrue(solver.setA(BlockMatrixOps.convert(A,r)));
+        double qualityA = solver.quality();
+
+        assertTrue(solver.setA(BlockMatrixOps.convert(B,r)));
+        double qualityB = solver.quality();
+
+        assertEquals(qualityB,qualityA,1e-8);
     }
 
     protected BlockMatrix64F createMatrixSPD( int width ) {
