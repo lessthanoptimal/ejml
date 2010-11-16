@@ -128,7 +128,7 @@ public class LinearSolverChol extends LinearSolverAbstract {
     }
 
     /**
-     * Sets the matrix to the inverse using a lower triangular amtrix.
+     * Sets the matrix to the inverse using a lower triangular matrix.
      */
     public void setToInverseL( double a[] ) {
         for( int i =0; i < n; i++ ) {

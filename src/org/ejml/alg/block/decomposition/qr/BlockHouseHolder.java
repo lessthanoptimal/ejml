@@ -51,7 +51,9 @@ public class BlockHouseHolder {
                                                  final double gamma[] )
     {
         int width = Y.col1-Y.col0;
-        for( int i = 0; i < width; i++ ) {
+        int height = Y.row1-Y.row0;
+        int min = Math.min(width,height);
+        for( int i = 0; i < min; i++ ) {
             // compute the householder vector
             if (!computeHouseHolder(blockLength, Y, gamma, i))
                 return false;
@@ -351,8 +353,10 @@ public class BlockHouseHolder {
         // set the first column in W
         initializeW(blockLength, W, Y, widthB, beta[betaIndex++]);
 
+        final int min = Math.min(widthB,W.row1-W.row0);
+
         // set up rest of the columns
-        for( int j = 1; j < widthB; j++ ) {
+        for( int j = 1; j < min; j++ ) {
             //compute the z vector and insert it into W
             computeY_t_V(blockLength,Y,j,temp);
             computeZ(blockLength,Y,W,j,temp,beta[betaIndex++]);
@@ -568,11 +572,15 @@ public class BlockHouseHolder {
     public static void multBlockAdd_zerosone( double[] dataA, double []dataB, double []dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC) {
+
+
         for( int i = 0; i < heightA; i++ ) {
             for( int j = 0; j < widthC; j++ ) {
-                double val = dataB[i*widthC+j+indexB];
+                double val = i < widthA ? dataB[i*widthC+j+indexB] : 0;
 
-                for( int k = 0; k < i; k++ ) {
+                int end = Math.min(i,widthA);
+
+                for( int k = 0; k < end; k++ ) {
                     val += dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
                 }
 
@@ -627,7 +635,7 @@ public class BlockHouseHolder {
                                               final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < widthA; i++ ) {
             for( int j = 0; j < widthC; j++ ) {
-                double val = dataB[i*widthC + j + indexB];
+                double val = i < heightA ? dataB[i*widthC + j + indexB] : 0;
 
                 for( int k = i+1; k < heightA; k++ ) {
                     val += dataA[k*widthA + i + indexA] * dataB[k*widthC + j + indexB];

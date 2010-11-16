@@ -66,15 +66,15 @@ public class BenchmarkInvertSymPosDef {
 //        System.out.println("invert GJ               = "+ invertGJ(mat,numTrials));
 //        System.out.println("invert LU-NR            = "+ invertLU_nr(mat,numTrials));
 //        System.out.println("invert LU-Alt           = "+ invertLU_alt(mat,numTrials));
-//        System.out.println("invert Cholesky Inner       = "+ invertCholesky(
-//                new LinearSolverChol(new CholeskyDecompositionInner( false,true)),
-//                mat,numTrials));
+        System.out.println("invert Cholesky Inner       = "+ invertCholesky(
+                new LinearSolverChol(new CholeskyDecompositionInner( false,true)),
+                mat,numTrials));
         System.out.println("invert Cholesky Block Dense = "+ invertCholesky(
                 new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL)),
                 mat,numTrials));
-//        System.out.println("invert CholeskyLDL          = "+ invertCholesky(
-//                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
-//                mat,numTrials));
+        System.out.println("invert CholeskyLDL          = "+ invertCholesky(
+                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
+                mat,numTrials));
         System.out.println("invert CholeskyBlock64      = "+ invertCholesky(
                 new LinearSolverCholBlock64(),
                 mat,numTrials));
@@ -86,7 +86,7 @@ public class BenchmarkInvertSymPosDef {
         int size[] = new int[]{2,4,10,100,1000,2000,4000,8000};
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,3,1,1,1};
 
-        for( int i = 4; i < size.length; i++ ) {
+        for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);

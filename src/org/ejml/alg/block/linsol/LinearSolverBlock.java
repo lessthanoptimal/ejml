@@ -55,7 +55,8 @@ public interface LinearSolverBlock {
     /**
      * <p>
      * Specifies the A matrix in the linear equation.  A reference
-     * is saved internally but the matrix is not modified.  This
+     * is saved internally and the matrix might be modified modified.  To determine if
+     * the input matrix is modified call {@link #inputModified()}.  This
      * reference is discarded the next time this function is called.
      * </p>
      *
@@ -64,8 +65,8 @@ public interface LinearSolverBlock {
      * is because some decompositions don't detect singular matrices.
      * </p>
      *
-     * @param A The A matrix in the linear equation. Not modified. Reference saved.
-     * @return true if it can be processed.
+     * @param A System matrix. Might modified. Reference saved.
+     * @return true True if the system can be solved for.
      */
     public boolean setA( BlockMatrix64F A );
 

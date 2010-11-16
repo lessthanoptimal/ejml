@@ -29,15 +29,35 @@ import org.ejml.ops.SpecializedOps;
 
 
 /**
+ * <p> Linear solver that uses a block cholesky decomposition. </p>
+ *
+ * <p>
+ * Solver works by using the standard Cholesky solving strategy:<br>
+ * A=L*L<sup>T</sup> <br>
+ * A*x=b<br>
+ * L*L<sup>T</sup>*x = b <br>
+ * L*y = b<br>
+ * L<sup>T</sup>*x = y<br>
+ * x = L<sup>-T</sup>y
+ * </p>
+ *
+ * <p>
+ * It is also possible to use the upper triangular cholesky decomposition.
+ * </p>
+ *
  * @author Peter Abeles
  */
 public class BlockCholeskyOuterSolver implements LinearSolverBlock {
 
+    // cholesky decomposition
     private BlockCholeskyOuterForm chol = new BlockCholeskyOuterForm(true);
 
+    // size of a block take from input matrix
     private int blockLength;
 
+    // can the input matrix B in solve be overwritten.
     private boolean overwriteB = false;
+    // temporary data structure used in some calculation.
     private double temp[];
 
     public void setOverwriteB( boolean doit ){
@@ -49,6 +69,12 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
         return chol.getT();
     }
 
+    /**
+     * Decomposes and overwrites the input matrix.
+     *
+     * @param A Semi-Positive Definite (SPD) system matrix. Modified. Reference saved.
+     * @return If the matrix can be decomposed.  Will always return false of not SPD.
+     */
     @Override
     public boolean setA(BlockMatrix64F A) {
         // Extract a lower triangular solution
@@ -88,7 +114,7 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
             X.set(B);
         }
 
-        //  L *L^T*X = B
+        //  L * L^T*X = B
 
         // Solve for Y:  L*Y = B
         BlockTriangularSolver.solve(blockLength,false,L,new D1Submatrix64F(X),false);
@@ -108,13 +134,18 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
         if( temp == null || temp.length < blockLength*blockLength )
             temp = new double[ blockLength* blockLength ];
 
+        // zero the upper triangular portion of A_inv
         BlockMatrixOps.zeroTriangle(true,A_inv);
 
         D1Submatrix64F L = new D1Submatrix64F(T);
         D1Submatrix64F B = new D1Submatrix64F(A_inv);
 
+        // invert L from cholesky decomposition and write the solution into the lower
+        // triangular portion of A_inv
+        // B = inv(L)
         BlockTriangularSolver.invert(blockLength,false,L,B,temp);
 
+        // B = L^-T * B
         // todo could speed up by taking advantage of B being lower triangular
         BlockTriangularSolver.solveL(blockLength,L,B,true);
     }

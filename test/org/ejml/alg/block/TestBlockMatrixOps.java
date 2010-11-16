@@ -356,7 +356,6 @@ public class TestBlockMatrixOps {
     @Test
     public void copyTriangle() {
 
-
         int r = 3;
 
         // test where src and dst are the same size
@@ -444,4 +443,20 @@ public class TestBlockMatrixOps {
             }
         }
     }
+
+    @Test
+    public void convertSimple() {
+        fail("implement");
+    }
+
+    @Test
+    public void identity() {
+        fail("Implement");
+    }
+
+    @Test
+    public void extractAligned() {
+        fail("Implement");
+    }
+
 }

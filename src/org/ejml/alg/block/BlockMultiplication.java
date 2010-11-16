@@ -100,7 +100,7 @@ public class BlockMultiplication {
                                 D1Submatrix64F A , D1Submatrix64F B ,
                                 D1Submatrix64F C )
     {
-        checkInput( blockLength,A,B,C);
+//        checkInput( blockLength,A,B,C);
 
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );

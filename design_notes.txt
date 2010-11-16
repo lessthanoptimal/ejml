@@ -13,13 +13,23 @@ Block Cholesky Decomposition
 ---------------------------
 The DenseMatrix64F based CholeskyDecompositionBlock class is easier to tune and offers equivalent
 performance to BlockMatrix64F based BlockCholeskyOuter class. CholeskyDecompositionBlock achieves
- optimal performance with bunch smaller block sizes, but its performance actually degrades when
- larger blocks that are optimal for BlockMatrix64F algorithms are used.  CholeskyDecompositionBlock
- also works directly with DenseMatrix64F and avoids the need to convert matrix types.
+optimal performance with munch smaller block sizes, but its performance actually degrades when
+larger blocks that are optimal for BlockMatrix64F algorithms are used.  CholeskyDecompositionBlock
+also works directly with DenseMatrix64F and avoids the need to convert matrix types.
 
- However selecting the default class for Cholesky decomposition is not obvious because using
- CholeskyDecompositionBlock would require an additional tuning parameter making the library
- even more difficult to use.
+Block matrix solver is much faster than the row-major solver.
+
+However selecting the default class for Cholesky decomposition is not obvious because using
+CholeskyDecompositionBlock would require an additional tuning parameter making the library
+even more difficult to use.
+
+Block QR Decomposition
+--------------------------
+
+Saving the W matrix instead of recomputing it each time was tried.  For smaller matrices it has
+a noticeable speed improvement when solving.  Anything over 2k it seems to be negligible and almost double 
+the memory required.  Block QR Decomposition is only used on larger matrices so there is no point in
+saving W for later reuse when solving.
 
 Block Matrix Multiply
 ---------------------------

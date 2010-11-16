@@ -24,13 +24,13 @@ import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -43,14 +43,36 @@ public class TestBlockMatrix64HouseholderQR {
     int r = 3;
 
     @Test
+    public void applyQTran() {
+        for( int i = 1; i <= 3*r; i++ ) {
+            for( int j = 1; j <= 3*r; j++ ) {
+                BlockMatrix64F A = BlockMatrixOps.createRandom(i,j,-1,1,rand,r);
+
+                BlockMatrix64HouseholderQR alg = new BlockMatrix64HouseholderQR();
+                assertTrue(alg.decompose(A.copy()));
+
+                alg.applyQTran(A);
+
+                // the lower left triangle should be zeros since this is a QR decomposition
+                for( int k = 0; k < A.numCols; k++ ) {
+                    for( int l = k+1; l < A.numRows; l++ ) {
+                        assertEquals(0,A.get(l,k),1e-8);
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    @Test
     public void checkInternalData() {
-        checkSize(r-1,r-1);
-        checkSize(r,r);
-        checkSize(3*r,r);
-        checkSize(r,3*r);
-        checkSize(3*r,3*r);
-        checkSize(3*r+r-1,r);
-        checkSize(r,3*r+r-1);
+        for( int i = 1; i <= 3*r; i++ ) {
+            for( int j = 1; j <= 3*r; j++ ) {
+//                System.out.println("i = "+i+" j = "+j);
+                checkSize(i,j);
+            }
+        }
     }
 
     private void checkSize( int numRows , int numCols ) {
@@ -72,21 +94,14 @@ public class TestBlockMatrix64HouseholderQR {
 
     @Test
     public void fullDecomposition() {
-        checkFullDecomposition(r-1,r-1,true);
-        checkFullDecomposition(r,r,true);
-        checkFullDecomposition(3*r,r,true);
-        checkFullDecomposition(r,3*r,true);
-        checkFullDecomposition(3*r,3*r,true);
-        checkFullDecomposition(3*r+r-1,r,true);
-        checkFullDecomposition(r,3*r+r-1,true);
-
-        checkFullDecomposition(r-1,r-1,false);
-        checkFullDecomposition(r,r,false);
-        checkFullDecomposition(3*r,r,false);
-        checkFullDecomposition(r,3*r,false);
-        checkFullDecomposition(3*r,3*r,false);
-        checkFullDecomposition(3*r+r-1,r,false);
-        checkFullDecomposition(r,3*r+r-1,false);
+        for( int i = 1; i <= 3*r; i++ ) {
+            for( int j = 1; j <= 3*r; j++ ) {
+//                i=4;j=4;
+//                System.out.println("i = "+i+" j = "+j);
+                checkFullDecomposition(i,j,true);
+                checkFullDecomposition(i,j,false);
+            }
+        }
     }
 
     private void checkFullDecomposition( int numRows , int numCols , boolean compact ) {

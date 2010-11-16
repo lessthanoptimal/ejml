@@ -167,19 +167,6 @@ public class BlockTriangularSolver {
      * size and B has the same number of rows as T and an arbitrary number of columns.
      * </p>
      *
-     * <pre>
-     * for i=1:m
-     *     for j=1:i-1
-     *         val = 0
-     *         for k=j:i-1
-     *             val = val - L(i,k) * X(k,j)
-     *         end
-     *         x(i,j) = val / L(i,i)
-     *     end
-     *     x(i,i) = 1 / L(i,i)
-     * end
-     * </pre>
-     *
      * @param blockLength Size of the inner blocks.
      * @param upper If T is upper or lower triangular.
      * @param T An upper or lower triangular matrix. Not modified.
@@ -191,20 +178,21 @@ public class BlockTriangularSolver {
                               final D1Submatrix64F B ,
                               final boolean transT ) {
 
-        if( upper )
-            throw new IllegalArgumentException("Upper triangular matrices not supported yet");
-
-        solveL(blockLength,T,B,transT);
+        if( upper ) {
+            solveR(blockLength,T,B,transT);
+        } else {
+            solveL(blockLength,T,B,transT);
+        }
     }
 
 
     /**
      * <p>
-     * Performs an in-place solve operation on the provided block aligned sub-matrices.<br>
+     * Performs an in-place solve operation where T is contained in a single block.<br>
      * <br>
      * B = T<sup>-1</sup> B<br>
      * <br>
-     * where T is a triangular matrix. T or B can be transposed.  T must be a single complete inner block
+     * where T is a triangular matrix contained in an inner block. T or B can be transposed.  T must be a single complete inner block
      * and B is either a column block vector or row block vector.
      * </p>
      *
@@ -320,6 +308,9 @@ public class BlockTriangularSolver {
 
         if( transL ) {
             startI = lengthL - lengthL % blockLength;
+            if( startI == lengthL && lengthL >= blockLength )
+                startI -= blockLength;
+
             stepI = -blockLength;
         } else {
             startI = 0;
@@ -364,7 +355,7 @@ public class BlockTriangularSolver {
                     //Tinner.col1 = Tinner.col1;
 
 //                    Binner.row0 = Binner.row0;
-                    Binner.row1 = B.row0;
+                    Binner.row1 = B.row1;
 
                     Y.row0 = Binner.row0-blockLength;
                     Y.row1 = Binner.row0;
@@ -391,12 +382,126 @@ public class BlockTriangularSolver {
                     Y.col1 = Binner.col1;
 
                     if( transL ) {
-                        // Y = Y - T * B
+                        // Y = Y - T^T * B
                         BlockMultiplication.multMinusTransA(blockLength, Linner,Binner,Y);
                     } else {
 
                         // Y = Y - T * B
                         BlockMultiplication.multMinus(blockLength, Linner,Binner,Y);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Solves upper triangular systems:<br>
+     * <br>
+     * B = R<sup>-1</sup> B<br>
+     * <br>
+     * </p>
+     *
+     * <p> Reverse or forward substitution is used depending upon L being transposed or not. </p>
+     *
+     * @param blockLength
+     * @param R Upper triangular with dimensions m by m.  Not modified.
+     * @param B A matrix with dimensions m by n.  Solution is written into here. Modified.
+     * @param transR Is the triangular matrix transposed?
+     */
+    public static void solveR( final int blockLength ,
+                               final D1Submatrix64F R,
+                               final D1Submatrix64F B ,
+                               boolean transR ) {
+
+        D1Submatrix64F Y = new D1Submatrix64F(B.original);
+
+        D1Submatrix64F Rinner = new D1Submatrix64F(R.original);
+        D1Submatrix64F Binner = new D1Submatrix64F(B.original);
+
+        int lengthR = R.col1- R.col0;
+
+        int startI,stepI;
+
+        if( transR ) {
+            startI = 0;
+            stepI = blockLength;
+        } else {
+            startI = lengthR - lengthR % blockLength;
+            if( startI == lengthR && lengthR >= blockLength )
+                startI -= blockLength;
+
+            stepI = -blockLength;
+        }
+
+        for( int i = startI; ; i += stepI ) {
+            if( transR ) {
+                if( i >= lengthR ) break;
+            } else {
+                if( i < 0 ) break;
+            }
+
+            // width and height of the inner T(i,i) block
+            int widthT = Math.min(blockLength, lengthR-i);
+
+            Rinner.col0 = R.col0 + i;    Rinner.col1 = Rinner.col0 + widthT;
+            Rinner.row0 = R.row0 + i;    Rinner.row1 = Rinner.row0 + widthT;
+
+            Binner.col0 = B.col0;       Binner.col1 = B.col1;
+            Binner.row0 = B.row0 + i;   Binner.row1 = Binner.row0 + widthT;
+
+            // solve the top row block
+            // B(i,:) = T(i,i)^-1 Y(i,:)
+            solveBlock(blockLength,true, Rinner,Binner,transR,false);
+
+            boolean updateY;
+            if( transR ) {
+                updateY = Rinner.row1 < R.row1;
+            } else {
+                updateY = Rinner.row0 > 0;
+            }
+            if( updateY ) {
+                // Y[i,:] = Y[i,:] - sum j=1:i-1 { T[i,j] B[j,i] }
+                // where i is the next block down
+                // The summation is a block inner product
+                if( transR ) {
+                    Rinner.col0 = Rinner.col1;
+                    Rinner.col1 = Math.min(Rinner.col0+blockLength, R.col1);
+                    Rinner.row0 = R.row0;
+                    //Rinner.row1 = Rinner.row1;
+
+                    Binner.row0 = B.row0;
+                    //Binner.row1 = Binner.row1;
+
+                    Y.row0 = Binner.row1;
+                    Y.row1 = Math.min(Y.row0+blockLength,B.row1);
+                } else {
+                    Rinner.row1 = Rinner.row0;
+                    Rinner.row0 = Rinner.row1 - blockLength;
+                    Rinner.col1 = R.col1;
+
+//                    Binner.row0 = Binner.row0;
+                    Binner.row1 = B.row1;
+
+                    Y.row0 = Binner.row0-blockLength;
+                    Y.row1 = Binner.row0;
+                }
+
+                // step through each block column
+                for( int k = B.col0; k < B.col1; k += blockLength ) {
+
+                    Binner.col0 = k;
+                    Binner.col1 = Math.min(k+blockLength,B.col1);
+
+                    Y.col0 = Binner.col0;
+                    Y.col1 = Binner.col1;
+
+                    if( transR ) {
+                        // Y = Y - T^T * B
+                        BlockMultiplication.multMinusTransA(blockLength, Rinner,Binner,Y);
+                    } else {
+                        // Y = Y - T * B
+                        BlockMultiplication.multMinus(blockLength, Rinner,Binner,Y);
                     }
                 }
             }

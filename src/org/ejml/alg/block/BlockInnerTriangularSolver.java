@@ -23,7 +23,26 @@ import org.ejml.data.D1Submatrix64F;
 
 
 /**
+ * <p>
  * Contains triangular solvers for inner blocks of a {@link org.ejml.data.BlockMatrix64F}.
+ * </p>
+ *
+ * <p>
+ * Algorithm for lower triangular inverse:<br>
+ *
+ * <pre>
+ * for i=1:m
+ *     for j=1:i-1
+ *         val = 0
+ *         for k=j:i-1
+ *             val = val - L(i,k) * X(k,j)
+ *         end
+ *         x(i,j) = val / L(i,i)
+ *     end
+ *     x(i,i) = 1 / L(i,i)
+ * end
+ * </pre> 
+ * </p>
  *
  * @author Peter Abeles
  */
@@ -93,7 +112,7 @@ public class BlockInnerTriangularSolver {
      * <br>
      * B = L<sup>-1</sup>B<br>
      * <br>
-     * where B is a (m by n) matrix, L is a triangular (m by m) matrix.
+     * where B is a (m by n) matrix, L is a lower triangular (m by m) matrix.
      * </p>
      *
      * @param L An m by m non-singular lower triangular matrix. Not modified.
@@ -124,7 +143,7 @@ public class BlockInnerTriangularSolver {
      * <br>
      * B = L<sup>-T</sup>B<br>
      * <br>
-     * where B is a (m by n) matrix, L is a triangular (m by m) matrix.
+     * where B is a (m by n) matrix, L is a lower triangular (m by m) matrix.
      * </p>
      *
      * @param L An m by m non-singular lower triangular matrix. Not modified.
@@ -155,7 +174,7 @@ public class BlockInnerTriangularSolver {
      * <br>
      * B<sup>T</sup> = L<sup>-1</sup>B<sup>T</sup><br>
      * <br>
-     * where B is a (n by m) matrix, L is a triangular (m by m) matrix.
+     * where B is a (n by m) matrix, L is a lower triangular (m by m) matrix.
      * </p>
      *
      * @param L An m by m non-singular lower triangular matrix. Not modified.
@@ -199,7 +218,7 @@ public class BlockInnerTriangularSolver {
      * <br>
      * B = U<sup>-1</sup>B<br>
      * <br>
-     * where B (m by n) is a matrix, U is a (m by m ) triangular matrix.<br>
+     * where B (m by n) is a matrix, U is a (m by m ) upper triangular matrix.<br>
      * </p>
      *
      * @param U An m by m non-singular upper triangular matrix. Not modified.
@@ -230,7 +249,7 @@ public class BlockInnerTriangularSolver {
      * <br>
      * B = U<sup>-T</sup>B<br>
      * <br>
-     * where B (m by n) is a matrix, U is a (m by m ) triangular matrix.<br>
+     * where B (m by n) is a matrix, U is a (m by m ) upper triangular matrix.<br>
      * </p>
      *
      * @param U An m by m non-singular upper triangular matrix. Not modified.

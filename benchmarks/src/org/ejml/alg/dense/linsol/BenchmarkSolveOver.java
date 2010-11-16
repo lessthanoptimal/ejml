@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
@@ -59,43 +60,46 @@ public class BenchmarkSolveOver {
 
     private static void runAlgorithms( int numTrials )
     {
-        System.out.println("solve QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse(),numTrials));
-        System.out.println("solve QR house Col    = "+ solveBenchmark(
+//        System.out.println("  solve QR house        = "+ solveBenchmark(
+//                new LinearSolverQrHouse(),numTrials));
+        System.out.println("  solve QR house Col    = "+ solveBenchmark(
                 new LinearSolverQrHouseCol(),numTrials));
-        System.out.println("solve PInv            = "+ solveBenchmark(
-                new SolvePseudoInverse(),numTrials));
-//        System.out.println("solve SVD             = "+ solveBenchmark(
+        System.out.println("  solve QR Block64      = "+ solveBenchmark(
+                new LinearSolverQrBlock64(),numTrials));
+//        System.out.println("  solve PInv            = "+ solveBenchmark(
+//                new SolvePseudoInverse(),numTrials));
+//        System.out.println("  solve SVD             = "+ solveBenchmark(
 //                new LinearSolverSvd(new SvdNumericalRecipes(A.numRows,A.numCols)),numTrials/8));
     }
 
     public static void main( String args [] ) {
-        int trialsWith[] = new int[]{3000,2000,1500,1000,800,600};
-        int trialsWithout[] = new int[]{14000,10000,8000,6000,4000,4000};
+        int trialsWith[] = new int[]{2000,1000,200,7,1,1,1,1,1};
+
+        int width[] = new int[]{2,4,10,100,500,1000,2000,5000};
 
         int N = 10000;
 
         includeSet = true;
         System.out.println("Solving for least squares fitting type problems with set");
-        for( int i = 1; i <= 6; i++ ) {
+        for( int i = 4; i < width.length; i++ ) {
 
-            System.out.printf("DOF = %d\n",i);
-            A = new DenseMatrix64F(N,i);
+            System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
+            A = new DenseMatrix64F(N,width[i]);
             B = new DenseMatrix64F(N,1);
 
-            runAlgorithms(trialsWith[i-1]/2);
+            runAlgorithms(trialsWith[i]);
         }
 
         System.out.println();
         includeSet = false;
         System.out.println("Solving for least squares fitting type problems without set");
-        for( int i = 1; i <= 6; i++ ) {
+        for( int i = 4; i < width.length; i++ ) {
 
-            System.out.printf("DOF = %d\n",i);
-            A = new DenseMatrix64F(N,i);
+            System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
+            A = new DenseMatrix64F(N,width[i]);
             B = new DenseMatrix64F(N,1);
 
-            runAlgorithms(trialsWithout[i-1]);
+            runAlgorithms(trialsWith[i]);
         }
 
     }

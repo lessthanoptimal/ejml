@@ -140,7 +140,7 @@ public class BenchmarkMatrixMatrixMult {
                 0,//multAux(matA,matB,matResult,numTrials),
                 multReorder(matA,matB,matResult,numTrials),
                 multBlockNative(matA,matB,matResult,numTrials),
-                multBlockD3Native(matA,matB,matResult,numTrials));
+                0);//multBlockD3Native(matA,matB,matResult,numTrials));
         System.gc();
     }
 

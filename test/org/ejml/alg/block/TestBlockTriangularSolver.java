@@ -105,16 +105,24 @@ public class TestBlockTriangularSolver {
         // block size
         int r = 3;
 
-        for( int triangleSize = 1; triangleSize <= 9; triangleSize++ ) {
-            for( int cols = 1; cols <= 9; cols++ ) {
-                BlockMatrix64F T = BlockMatrixOps.createRandom(triangleSize,triangleSize,-1,1,rand,r);
-                BlockMatrixOps.zeroTriangle(true,T);
+        for( int dir = 0; dir < 2; dir++ ) {
+            boolean upper = dir == 0;
+            for( int triangleSize = 1; triangleSize <= 9; triangleSize++ ) {
+                for( int cols = 1; cols <= 9; cols++ ) {
+//                System.out.println("triangle "+triangleSize+" cols "+cols);
+                    BlockMatrix64F T = BlockMatrixOps.createRandom(triangleSize,triangleSize,-1,1,rand,r);
+                    BlockMatrixOps.zeroTriangle(true,T);
 
-                BlockMatrix64F B = BlockMatrixOps.createRandom(triangleSize,cols,-1,1,rand,r);
-                BlockMatrix64F Y = new BlockMatrix64F(B.numRows,B.numCols,r);
+                    if( upper ) {
+                        T=BlockMatrixOps.transpose(T,null);
+                    }
 
-                checkSolve(T,B,Y,r,false);
-                checkSolve(T,B,Y,r,true);
+                    BlockMatrix64F B = BlockMatrixOps.createRandom(triangleSize,cols,-1,1,rand,r);
+                    BlockMatrix64F Y = new BlockMatrix64F(B.numRows,B.numCols,r);
+
+                    checkSolve(T,B,Y,r,upper,false);
+                    checkSolve(T,B,Y,r,upper,true);
+                }
             }
         }
     }
@@ -124,10 +132,10 @@ public class TestBlockTriangularSolver {
      * these inputs.  The solution is computed directly.
      */
     private void checkSolve( BlockMatrix64F T , BlockMatrix64F B , BlockMatrix64F Y ,
-                             int r , boolean transT )
+                             int r , boolean upper , boolean transT )
     {
         if( transT ) {
-             BlockMatrix64F T_tran = BlockMatrixOps.transpose(T,null);
+            BlockMatrix64F T_tran = BlockMatrixOps.transpose(T,null);
 
             // Compute Y directly from the expected result B
             BlockMatrixOps.mult(T_tran,B,Y);
@@ -137,7 +145,7 @@ public class TestBlockTriangularSolver {
         }
 
         // Y is overwritten with the solution
-        BlockTriangularSolver.solve(r,false,new D1Submatrix64F(T),new D1Submatrix64F(Y),transT);
+        BlockTriangularSolver.solve(r,upper,new D1Submatrix64F(T),new D1Submatrix64F(Y),transT);
 
         assertTrue( BlockMatrixOps.isIdentical(B,Y,1e-8));
     }

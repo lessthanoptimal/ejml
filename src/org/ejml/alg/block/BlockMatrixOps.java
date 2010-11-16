@@ -22,6 +22,7 @@ package org.ejml.alg.block;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -354,8 +355,8 @@ public class BlockMatrixOps {
     }
 
     /**
-     * Copies either the upper or lower triangular portion of src into dst.  src and dst must
-     * be the same shape.
+     * Copies either the upper or lower triangular portion of src into dst.  Dst can be smaller
+     * than src.
      *
      * @param upper If the upper or lower triangle is copied.
      * @param src The source matrix. Not modified.
@@ -468,6 +469,52 @@ public class BlockMatrixOps {
         }
     }
 
+    /**
+     * Converts the block matrix into a SimpleMatrix.
+     *
+     * @param A Block matrix that is being converted.  Not modified.
+     * @return Equivalent SimpleMatrix.
+     */
+    public static SimpleMatrix convertSimple( BlockMatrix64F A ) {
+        DenseMatrix64F B = convert(A,null);
+
+        return SimpleMatrix.wrap(B);
+    }
+
+    /**
+     * Returns a new matrix with ones along the diagonal and zeros everywhere else.
+     *
+     * @param numRows Number of rows.
+     * @param numCols NUmber of columns.
+     * @param blockLength Block length.
+     * @return An identify matrix.
+     */
+    public static BlockMatrix64F identity(int numRows, int numCols, int blockLength ) {
+        BlockMatrix64F A = new BlockMatrix64F(numRows,numCols,blockLength);
+
+        int minLength = Math.min(numRows,numCols);
+
+        for( int i = 0; i < minLength; i += blockLength ) {
+            int h = Math.min(blockLength,A.numRows-i);
+            int w = Math.min(blockLength,A.numCols-i);
+
+            int index = i*A.numCols + h*i;
+
+            int m = Math.min(h,w);
+            for( int k = 0; k < m; k++ ) {
+                A.data[index + k*w + k ] = 1;
+            }
+        }
+
+        return A;
+    }
+
+    /**
+     * Checks to see if the two matrices have an identical shape an block size.
+     *
+     * @param A Matrix.
+     * @param B Matrix.
+     */
     public static void checkIdenticalShape( BlockMatrix64F A , BlockMatrix64F B ) {
         if( A.blockLength != B.blockLength )
             throw new IllegalArgumentException("Block size is different");
@@ -475,5 +522,43 @@ public class BlockMatrixOps {
             throw new IllegalArgumentException("Number of rows is different");
         if( A.numCols != B.numCols )
             throw new IllegalArgumentException("NUmber of columns is different");
+    }
+
+    /**
+     * Extracts a matrix from src into dst.  The submatrix which is copied has its initial coordinate
+     * at (0,0) and ends at (dst.numRows,dst.numCols).
+     *
+     * @param src Matrix which a submatrix is being extracted from. Not modified.
+     * @param dst Where the submatrix is written to.  Its rows and columns be less than or equal to 'src'.  Modified.
+     */
+    public static void extractAligned(BlockMatrix64F src, BlockMatrix64F dst) {
+        if( src.blockLength != dst.blockLength )
+            throw new IllegalArgumentException("Block size is different");
+        if( src.numRows < dst.numRows )
+            throw new IllegalArgumentException("The src has fewer rows than dst");
+        if( src.numCols < dst.numCols )
+            throw new IllegalArgumentException("The src has fewer columns than dst");
+
+        int blockLength = src.blockLength;
+
+        int numRows = Math.min(src.numRows,dst.numRows);
+        int numCols = Math.min(src.numCols,dst.numCols);
+
+        for( int i = 0; i < numRows; i += blockLength ) {
+            int heightSrc = Math.min(blockLength,src.numRows-i);
+            int heightDst = Math.min(blockLength,dst.numRows-i);
+
+            for( int j = 0; j < numCols; j += blockLength ) {
+                int widthSrc = Math.min(blockLength,src.numCols-j);
+                int widthDst = Math.min(blockLength,dst.numCols-j);
+
+                int indexSrc = i*src.numCols + heightSrc*j;
+                int indexDst = i*dst.numCols + heightDst*j;
+
+                for( int k = 0; k < heightDst; k++ ) {
+                    System.arraycopy(src.data, indexSrc + widthSrc * k, dst.data, indexDst + widthDst * k, widthDst);
+                }
+            }
+        }
     }
 }

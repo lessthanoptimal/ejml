@@ -123,14 +123,28 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
             }
         }
 
-        D1Submatrix64F subQ = new D1Submatrix64F(Q);
+        applyQ(Q);
+
+        return Q;
+    }
+
+    /**
+     * <p>
+     * Multiplies the provided matrix by Q using householder reflectors.  This is more
+     * efficient that computing Q then applying it to the matrix.
+     * </p>
+     *
+     * <p>
+     * B = Q * B
+     * </p>
+     *
+     * @param B Matrix which Q is applied to.  Modified.
+     */
+    public void applyQ( BlockMatrix64F B ) {
 
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
 
-        // Apply reflectors in reverse order.  See equations below.  Note parentheses
-        // Q = Q*(I - &gamma; W*Y^T)
-        // R = Q^T*A  = (Q3^T * (Q2^T * (Q1^t * A)))
-        // (Q1 * (Q2 * (Q3 R))) = Q*R = A
+        D1Submatrix64F subB = new D1Submatrix64F(B);
 
         W.col0 = W.row0 = 0;
         Y.row1 = W.row1 = dataA.numRows;
@@ -142,29 +156,81 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
         if( start < 0 )
             start = 0;
 
+        // (Q1^T * (Q2^T * (Q3^t * A)))
         for( int i = start; i >= 0; i -= blockLength ) {
 
             Y.col0 = i;
             Y.col1 = Math.min(Y.col0+blockLength,dataA.numCols);
             Y.row0 = i;
-            subQ.col0 = i;
-            subQ.row0 = i;
+            subB.col0 = i;
+            subB.row0 = i;
 
-            W.col1 = Y.col1-Y.col0;
-            W.row0 = Y.row0;
+            setW();
             WTA.row1 = Y.col1-Y.col0;
-            WTA.col1 = subQ.col1-subQ.col0;
+            WTA.col1 = subB.col1-subB.col0;
             WTA.original.reshape(WTA.row1,WTA.col1,false);
 
             // Compute W matrix from reflectors stored in Y
             BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
             // Apply the Qi to Q
-            BlockHouseHolder.multTransA(blockLength,Y,subQ,WTA);
-            BlockMultiplication.multPlus(blockLength,W,WTA,subQ);
+            BlockHouseHolder.multTransA(blockLength,Y,subB,WTA);
+            BlockMultiplication.multPlus(blockLength,W,WTA,subB);
         }
+    }
 
-        return Q;
+    /**
+     * <p>
+     * Multiplies the provided matrix by Q<sup>T</sup> using householder reflectors.  This is more
+     * efficient that computing Q then applying it to the matrix.
+     * </p>
+     *
+     * <p>
+     * Q = Q*(I - &gamma; W*Y^T)<br>
+     * QR = A => R = Q^T*A  = (Q3^T * (Q2^T * (Q1^t * A)))
+     * </p>
+     *
+     * @param B Matrix which Q is applied to.  Modified.
+     */
+    public void applyQTran( BlockMatrix64F B ) {
+        int minDimen = Math.min(dataA.numCols,dataA.numRows);
+
+        D1Submatrix64F subB = new D1Submatrix64F(B);
+
+        W.col0 = W.row0 = 0;
+        Y.row1 = W.row1 = dataA.numRows;
+        WTA.row0 = WTA.col0 = 0;
+
+        // (Q3^T * (Q2^T * (Q1^t * A)))
+        for( int i = 0; i < minDimen; i += blockLength ) {
+
+            Y.col0 = i;
+            Y.col1 = Math.min(Y.col0+blockLength,dataA.numCols);
+            Y.row0 = i;
+            
+            subB.row0 = i;
+//            subB.row1 = B.numRows;
+//            subB.col0 = 0;
+//            subB.col1 = B.numCols;
+
+            setW();
+//            W.original.reshape(W.row1,W.col1,false);
+            WTA.row0 = 0;
+            WTA.col0 = 0;
+            WTA.row1 = W.col1-W.col0;
+            WTA.col1 = subB.col1-subB.col0;
+            WTA.original.reshape(WTA.row1,WTA.col1,false);
+
+            // Compute W matrix from reflectors stored in Y
+            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+
+            // Apply the Qi to Q
+            BlockMultiplication.multTransA(blockLength,W,subB,WTA);
+            BlockHouseHolder.multAdd_zeros(blockLength,Y,WTA,subB);
+
+//            subB.extract().print();
+
+        }
     }
 
     /**
@@ -209,9 +275,7 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
         for( int j = 0; j < m; j += blockLength ) {
             Y.col0 = j;
             Y.col1 = Math.min( orig.numCols , Y.col0 + blockLength );
-            W.col1 = Y.col1 - Y.col0;
             Y.row0 = j;
-            W.row0 = j;
 
             // compute the QR decomposition of the left most block column
             // this overwrites the original input matrix
@@ -261,7 +325,7 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      */
     protected void updateA( D1Submatrix64F A )
     {
-        BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+        setW();
 
         A.row0 = Y.row0;
         A.row1 = Y.row1;
@@ -275,9 +339,19 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
         WTA.original.reshape(WTA.row1,WTA.col1,false);
 
         if( A.col1 > A.col0 ) {
+            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+
             BlockMultiplication.multTransA(blockLength,W,A,WTA);
             BlockHouseHolder.multAdd_zeros(blockLength,Y,WTA,A);
         }
+    }
+
+    /**
+     * Sets the submatrix of W up give Y is already configured and if it is being cached or not.
+     */
+    private void setW() {
+        W.col1 = Y.col1 - Y.col0;
+        W.row0 = Y.row0;
     }
 
     /**
