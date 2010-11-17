@@ -20,13 +20,11 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
-import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL;
+import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -72,9 +70,12 @@ public class BenchmarkInvertSymPosDef {
         System.out.println("invert Cholesky Block Dense = "+ invertCholesky(
                 new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL)),
                 mat,numTrials));
-        System.out.println("invert CholeskyLDL          = "+ invertCholesky(
-                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
+        System.out.println("invert smart                = "+ invertCholesky(
+                new SmartSolverChol(),
                 mat,numTrials));
+//        System.out.println("invert CholeskyLDL          = "+ invertCholesky(
+//                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
+//                mat,numTrials));
         System.out.println("invert CholeskyBlock64      = "+ invertCholesky(
                 new LinearSolverCholBlock64(),
                 mat,numTrials));

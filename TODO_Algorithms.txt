@@ -1,8 +1,6 @@
 For 0.15 Release
-- Block QR
-  - Cache W?
+- unit tests
 - Block multiplication?
-- improve Solver/inverse for chol and LU DenseMatrix64F
 
 For 0.16 Release
 - Remove QR-col and replace with QR-tran?
@@ -12,6 +10,8 @@ For 0.16 Release
 - Unit test for PCA example
 - Matrix type generic for solver?
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
+- Improve cholesky block inverse by taking advantage of symmetry
+- Clean up decomposition factory
 
 For DenseMatrix64F
 

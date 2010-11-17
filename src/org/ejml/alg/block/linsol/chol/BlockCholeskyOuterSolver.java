@@ -147,6 +147,7 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
 
         // B = L^-T * B
         // todo could speed up by taking advantage of B being lower triangular
+        // todo take advantage of symmetry
         BlockTriangularSolver.solveL(blockLength,L,B,true);
     }
 

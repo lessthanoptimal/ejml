@@ -131,6 +131,8 @@ public class LinearSolverChol extends LinearSolverAbstract {
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
     public void setToInverseL( double a[] ) {
+        // inverts the lower triangular system and saves the result
+        // in the upper triangle to minimize cache misses
         for( int i =0; i < n; i++ ) {
             double el_ii = t[i*n+i];
             for( int j = 0; j <= i; j++ ) {
@@ -141,6 +143,8 @@ public class LinearSolverChol extends LinearSolverAbstract {
                 a[j*n+i] = sum / el_ii;
             }
         }
+        // solve the system and handle the previous solution being in the upper triangle
+        // takes advantage of symmetry
         for( int i=n-1; i>=0; i-- ) {
             double el_ii = t[i*n+i];
 

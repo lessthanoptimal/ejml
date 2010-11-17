@@ -64,7 +64,9 @@ public class EjmlParameters {
      * in that case the block performed much better.
      * </p>
      */
-    public static int SWITCH_BLOCK_CHOLESKY = 1000;
+    public static int SWITCH_BLOCK_CHOLESKY = 500;
 
-    public static int SWITCH_BLOCK64_CHOLESKY = 2000;
+    public static int SWITCH_BLOCK64_CHOLESKY = 1000;
+
+    public static int SWITCH_BLOCK64_QR = 2000;
 }

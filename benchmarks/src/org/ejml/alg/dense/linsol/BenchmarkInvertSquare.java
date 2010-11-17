@@ -68,10 +68,10 @@ public class BenchmarkInvertSquare {
 
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
-        System.out.println("invert GJ No Pivot     = "+ invertBenchmark(
-                new GaussJordanNoPivot(),mat,numTrials));
-        System.out.println("invert GJ              = "+ invertBenchmark(
-                new GaussJordan(mat.numRows),mat,numTrials));
+//        System.out.println("invert GJ No Pivot     = "+ invertBenchmark(
+//                new GaussJordanNoPivot(),mat,numTrials));
+//        System.out.println("invert GJ              = "+ invertBenchmark(
+//                new GaussJordan(mat.numRows),mat,numTrials));
         System.out.println("invert LU              = "+ invertBenchmark(
                 new LinearSolverLu(new LUDecompositionAlt()),mat,numTrials));
         System.out.println("invert LU  NR          = "+ invertBenchmark(
@@ -83,8 +83,8 @@ public class BenchmarkInvertSquare {
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,5,10,100,1000,2000};
-        int trials[] = new int[]{(int)2e7,(int)5e6,(int)2e6,(int)1e6,1000,3,1};
+        int size[] = new int[]{2,4,5,10,100,1000,2000,5000,10000};
+        int trials[] = new int[]{(int)2e7,(int)5e6,(int)2e6,(int)1e6,1000,3,1,1,1};
 
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];

@@ -29,6 +29,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -37,6 +38,44 @@ import static org.junit.Assert.assertTrue;
 public class TestTriangularSolver {
 
     Random rand = new Random(0xff);
+
+
+    @Test
+    public void invert_inplace() {
+        DenseMatrix64F L = createRandomLowerTriangular();
+
+        DenseMatrix64F L_inv = L.copy();
+
+        TriangularSolver.invertLower(L_inv.data,L.numRows);
+
+        DenseMatrix64F I = new DenseMatrix64F(L.numRows,L.numCols);
+
+        CommonOps.mult(L,L_inv,I);
+
+        assertTrue(MatrixFeatures.isIdentity(I,1e-8));
+    }
+
+    @Test
+    public void invert() {
+        fail("Implement");
+    }
+
+    @Test
+    public void invert_temp() {
+        DenseMatrix64F L = createRandomLowerTriangular();
+
+        DenseMatrix64F L_inv = L.copy();
+
+        double temp[] = new double[ L.numRows ];
+
+        TriangularSolver.invertLower(L.data,L_inv.data,L.numRows,temp);
+
+        DenseMatrix64F I = new DenseMatrix64F(L.numRows,L.numCols);
+
+        CommonOps.mult(L,L_inv,I);
+
+        assertTrue(MatrixFeatures.isIdentity(I,1e-8));
+    }
 
     @Test
     public void solveL_vector() {
@@ -54,6 +93,11 @@ public class TestTriangularSolver {
 
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
+    }
+
+    @Test
+    public void solveTransL_matrix() {
+        fail("Implement");
     }
 
     private DenseMatrix64F createRandomLowerTriangular() {

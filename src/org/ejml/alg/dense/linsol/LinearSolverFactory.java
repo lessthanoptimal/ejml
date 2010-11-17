@@ -22,9 +22,11 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.SmartSolverQr;
 
 
 /**
@@ -58,7 +60,7 @@ public class LinearSolverFactory {
      * @return A new least-squares solver for over determined systems.
      */
     public static LinearSolver leastSquares() {
-        return new LinearSolverQrHouseCol();
+        return new SmartSolverQr();
     }
 
     /**
@@ -67,7 +69,7 @@ public class LinearSolverFactory {
      * @return A new solver for symmetric matrices.
      */
     public static LinearSolver symmetric() {
-        return new LinearSolverChol(new CholeskyDecompositionInner( false,true));
+        return new SmartSolverChol();
     }
 
     /**

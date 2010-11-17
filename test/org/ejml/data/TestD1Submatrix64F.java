@@ -19,8 +19,15 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -29,18 +36,38 @@ import static org.junit.Assert.fail;
  */
 public class TestD1Submatrix64F {
 
+    Random rand = new Random(234234);
+
     @Test
     public void get() {
-        fail("Implement");
+        DenseMatrix64F A = RandomMatrices.createRandom(5,10,-1,1,rand);
+
+        D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
+
+        assertEquals(A.get(3,2),S.get(1,1),1e-8);
     }
 
     @Test
     public void set() {
-        fail("Implement");
+        DenseMatrix64F A = RandomMatrices.createRandom(5,10,-1,1,rand);
+
+        D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
+
+        S.set(1,1,5);
+
+        assertEquals(A.get(3,2),5,1e-8);
     }
 
     @Test
     public void extract() {
-        fail("Implement");
+        DenseMatrix64F A = RandomMatrices.createRandom(5,10,-1,1,rand);
+
+        D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
+
+        SimpleMatrix M = S.extract();
+
+        DenseMatrix64F E = CommonOps.extract(A,2,4,1,10);
+
+        assertTrue(MatrixFeatures.isIdentical(E,M.getMatrix()));
     }
 }

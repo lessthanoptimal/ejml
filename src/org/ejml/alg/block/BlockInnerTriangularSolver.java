@@ -70,7 +70,7 @@ public class BlockInnerTriangularSolver {
             double L_ii = L[ offsetL + i*m + i ];
             for( int j = 0; j < i; j++ ) {
                 double val = 0;
-                for( int k = 0; k < i; k++ ) {
+                for( int k = j; k < i; k++ ) {
                     val += L[offsetL + i*m + k] * L_inv[ offsetL_inv + k*m + j ];
                 }
                 L_inv[ offsetL_inv + i*m + j ] = -val / L_ii;
@@ -97,7 +97,7 @@ public class BlockInnerTriangularSolver {
             double L_ii = L[ offsetL + i*m + i ];
             for( int j = 0; j < i; j++ ) {
                 double val = 0;
-                for( int k = 0; k < i; k++ ) {
+                for( int k = j; k < i; k++ ) {
                     val += L[offsetL + i*m + k] * L[ offsetL + k*m + j ];
                 }
                 L[ offsetL + i*m + j ] = -val / L_ii;

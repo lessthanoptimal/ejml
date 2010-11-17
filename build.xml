@@ -39,14 +39,14 @@
 
 
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
             <classpath refid="project.classpath"/>
         </javac>
     </target>
 
     <target name="compile experimental">
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${experimental.src.dir}" destdir="${classes.dir}">
+        <javac srcdir="${experimental.src.dir}" destdir="${classes.dir}" includeantruntime="false">
             <classpath refid="project.classpath"/>
         </javac>
     </target>
@@ -66,7 +66,7 @@
         <mkdir dir="${testreport.dir}"/>
         <mkdir dir="${testclasses.dir}"/>
 
-        <javac srcdir="${test.dir}" destdir="${testclasses.dir}">
+        <javac srcdir="${test.dir}" destdir="${testclasses.dir}" includeantruntime="false">
            <classpath>
                 <path refid="test.classpath"/>
             </classpath>

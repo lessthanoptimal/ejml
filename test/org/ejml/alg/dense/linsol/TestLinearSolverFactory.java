@@ -72,7 +72,7 @@ public class TestLinearSolverFactory {
 
     @Test
     public void symmetric() {
-        DenseMatrix64F A = RandomMatrices.createSymmetric(5,-1,1,rand);
+        DenseMatrix64F A = RandomMatrices.createSymmPosDef(5,rand);
         DenseMatrix64F x = RandomMatrices.createRandom(5,1,rand);
         DenseMatrix64F y = new DenseMatrix64F(5,1);
 
