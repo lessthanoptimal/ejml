@@ -135,10 +135,10 @@ public class BenchmarkMatrixMatrixMult {
         DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
-                0,//mult(matA,matB,matResult,numTrials),
+                mult(matA,matB,matResult,numTrials),
                 0,//multSmall(matA,matB,matResult,numTrials),
                 0,//multAux(matA,matB,matResult,numTrials),
-                multReorder(matA,matB,matResult,numTrials),
+                0,//multReorder(matA,matB,matResult,numTrials),
                 multBlockNative(matA,matB,matResult,numTrials),
                 0);//multBlockD3Native(matA,matB,matResult,numTrials));
         System.gc();
@@ -148,8 +148,8 @@ public class BenchmarkMatrixMatrixMult {
         int size[] = new int[]{2,4,10,15,20,50,100,200,500,1000,2000,4000,10000};
         int count[] = new int[]{40000000,10000000,1000000,300000,100000,10000,1000,100,8,2,1,1,1};
 
-        int sizeTall[] = new int[]{1,2,4,10,20,50,100,200,500,1000};
-        int countTall[] = new int[]{3000,2400,1500,1000,200,200,100,50,10,5};
+        int sizeTall[] = new int[]{1,2,4,10,20,50,100,200,500,1000,2000,5000,10000};
+        int countTall[] = new int[]{3000,2400,1500,1000,200,200,100,50,10,5,2,1,1};
 
         int N = size.length;
 
@@ -169,21 +169,21 @@ public class BenchmarkMatrixMatrixMult {
         }
 
         System.out.println("\n******* Tall A:");
-        for( int i = 5; i < N; i++ ) {
+        for( int i = 7; i < N; i++ ) {
             System.out.println("\nWidth = "+sizeTall[i]);
 
             performTests(1500,sizeTall[i],100,countTall[i]);
         }
 
         System.out.println("\n******* Wide B:");
-        for( int i = 5; i < N; i++ ) {
+        for( int i = 7; i < N; i++ ) {
             System.out.println("\nHeight = "+sizeTall[i]);
 
             performTests(100,sizeTall[i],1500,countTall[i]);
         }
 
         System.out.println("\n******* Tall B:");
-        for( int i = 5; i < N; i++ ) {
+        for( int i = 7; i < N; i++ ) {
             System.out.println("\nWidth = "+sizeTall[i]);
 
             performTests(100,1500,sizeTall[i],countTall[i]);

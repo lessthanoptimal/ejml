@@ -182,31 +182,14 @@ public class BlockMultiplication {
         if( Acol != Brow )
             throw new RuntimeException("Mismatch A columns and B rows");
 
-        if( !blockAligned(blockLength,A))
+        if( !BlockMatrixOps.blockAligned(blockLength,A))
             throw new RuntimeException("Sub-Matrix A is not block aligned");
 
-        if( !blockAligned(blockLength,B))
+        if( !BlockMatrixOps.blockAligned(blockLength,B))
             throw new RuntimeException("Sub-Matrix B is not block aligned");
 
-        if( !blockAligned(blockLength,C))
+        if( !BlockMatrixOps.blockAligned(blockLength,C))
             throw new RuntimeException("Sub-Matrix C is not block aligned");
-    }
-
-    private static boolean blockAligned( int blockLength , D1Submatrix64F A ) {
-        if( A.col0 % blockLength != 0 )
-            return false;
-        if( A.row0 % blockLength != 0 )
-            return false;
-
-        if( A.col1 % blockLength != 0 ) {
-            return A.col1 == A.original.numCols;
-        }
-
-        if( A.row1 % blockLength != 0 ) {
-            return A.row1 == A.original.numRows;
-        }
-
-        return true;
     }
 
     /**

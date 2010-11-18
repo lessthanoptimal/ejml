@@ -11,7 +11,8 @@ For 0.16 Release
 - Matrix type generic for solver?
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 - Improve cholesky block inverse by taking advantage of symmetry
-- Clean up decomposition factory
+- Clean up decomposition factory and linear solver factory
+  * Have them take a matrix or system as an input and return the solver/decomposer?
 
 For DenseMatrix64F
 

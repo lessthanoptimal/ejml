@@ -21,14 +21,16 @@ package org.ejml.alg.block.linsol.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
+import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.SimpleMatrix;
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -70,16 +72,82 @@ public class TestBlockQrHouseHolderSolver {
 
     @Test
     public void testInvert() {
-        fail("Implement");
+        int r = 3;
+        BlockQrHouseHolderSolver solver = new BlockQrHouseHolderSolver();
+
+        for( int i = 1; i <= r*3; i++ ) {
+            BlockMatrix64F A = BlockMatrixOps.createRandom(i,i,-1,1,rand,r);
+
+            BlockMatrix64F A_orig = A.copy();
+            BlockMatrix64F I = new BlockMatrix64F(i,i,r);
+
+            assertTrue(solver.setA(A.copy()));
+
+            solver.invert(A);
+
+            // A times its inverse is an identity matrix
+            BlockMatrixOps.mult(A,A_orig,I);
+
+            assertTrue(GenericMatrixOps.isIdentity(I,1e-8));
+        }
     }
 
     @Test
     public void testQuality() {
-        fail("Implement");
+        BlockMatrix64F A = BlockMatrixOps.convert(CommonOps.diag(4,3,2,1),3);
+        BlockMatrix64F B = BlockMatrixOps.convert(CommonOps.diag(4,3,2,0.1),3);
+
+        // see if a matrix with smaller singular value has a worse quality
+        BlockQrHouseHolderSolver solver = new BlockQrHouseHolderSolver();
+        assertTrue(solver.setA(A.copy()));
+        double qualityA = solver.quality();
+
+        assertTrue(solver.setA(B.copy()));
+        double qualityB = solver.quality();
+
+        assertTrue(qualityB<qualityA);
+    }
+
+    /**
+     * Checks to see if quality is scale invariant.
+     */
+    @Test
+    public void testQuality_scale() {
+        BlockMatrix64F A = BlockMatrixOps.convert(CommonOps.diag(4,3,2,1),3);
+        BlockMatrix64F B = A.copy();
+        CommonOps.scale(2,B);
+
+        // see if a matrix with smaller singular value has a worse quality
+        BlockQrHouseHolderSolver solver = new BlockQrHouseHolderSolver();
+        assertTrue(solver.setA(A.copy()));
+        double qualityA = solver.quality();
+
+        assertTrue(solver.setA(B.copy()));
+        double qualityB = solver.quality();
+
+        assertEquals(qualityA,qualityB,1e-8);
     }
 
     @Test
     public void testInputModified() {
-        fail("Implement");
+        BlockMatrix64F A = BlockMatrixOps.createRandom(5,4,-1,1,rand,3);
+
+        BlockQrHouseHolderSolver solver = new BlockQrHouseHolderSolver();
+        assertTrue(solver.setA(A));
+
+        // test no modify as default value
+        BlockMatrix64F B = BlockMatrixOps.createRandom(4,3,-1,1,rand,3);
+        BlockMatrix64F C = BlockMatrixOps.createRandom(5,3,-1,1,rand,3);
+
+        BlockMatrix64F C_orig = C.copy();
+
+        solver.solve(C,B);
+
+        assertTrue(MatrixFeatures.isIdentical(C,C_orig));
+
+        // set modify to true
+        solver.setModifyB(true);
+        solver.solve(C,B);
+        assertFalse(MatrixFeatures.isIdentical(C,C_orig));
     }
 }

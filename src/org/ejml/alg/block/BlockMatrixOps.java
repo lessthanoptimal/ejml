@@ -445,7 +445,8 @@ public class BlockMatrixOps {
     }
 
     /**
-     * Sets the value of A to all zeros except along the diagonal.
+     * <p>Sets the value of A to all zeros except along the diagonal.</p>
+     *
      * @param A Block matrix.
      */
     public static void setIdentity( BlockMatrix64F A )
@@ -470,7 +471,7 @@ public class BlockMatrixOps {
     }
 
     /**
-     * Converts the block matrix into a SimpleMatrix.
+     * <p>Converts the block matrix into a SimpleMatrix.</p>
      *
      * @param A Block matrix that is being converted.  Not modified.
      * @return Equivalent SimpleMatrix.
@@ -482,7 +483,9 @@ public class BlockMatrixOps {
     }
 
     /**
+     * <p>
      * Returns a new matrix with ones along the diagonal and zeros everywhere else.
+     * </p>
      *
      * @param numRows Number of rows.
      * @param numCols NUmber of columns.
@@ -510,7 +513,9 @@ public class BlockMatrixOps {
     }
 
     /**
+     * <p>
      * Checks to see if the two matrices have an identical shape an block size.
+     * </p>
      *
      * @param A Matrix.
      * @param B Matrix.
@@ -525,8 +530,11 @@ public class BlockMatrixOps {
     }
 
     /**
+     * <p>
      * Extracts a matrix from src into dst.  The submatrix which is copied has its initial coordinate
-     * at (0,0) and ends at (dst.numRows,dst.numCols).
+     * at (0,0) and ends at (dst.numRows,dst.numCols). The end rows/columns must be aligned along blocks
+     * or else it will silently screw things up.
+     * </p>
      *
      * @param src Matrix which a submatrix is being extracted from. Not modified.
      * @param dst Where the submatrix is written to.  Its rows and columns be less than or equal to 'src'.  Modified.
@@ -560,5 +568,29 @@ public class BlockMatrixOps {
                 }
             }
         }
+    }
+
+    /**
+     * Checks to see if the submatrix has its boundaries along inner blocks.
+     *
+     * @param blockLength Size of an inner block.
+     * @param A Submatrix.
+     * @return If it is block aligned or not.
+     */
+    public static boolean blockAligned( int blockLength , D1Submatrix64F A ) {
+        if( A.col0 % blockLength != 0 )
+            return false;
+        if( A.row0 % blockLength != 0 )
+            return false;
+
+        if( A.col1 % blockLength != 0 && A.col1 != A.original.numCols ) {
+            return false;
+        }
+
+        if( A.row1 % blockLength != 0 && A.row1 != A.original.numRows) {
+            return false;
+        }
+
+        return true;
     }
 }

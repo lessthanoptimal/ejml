@@ -21,7 +21,9 @@ package org.ejml.alg.block;
 
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
+import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -31,6 +33,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -446,17 +449,75 @@ public class TestBlockMatrixOps {
 
     @Test
     public void convertSimple() {
-        fail("implement");
+        BlockMatrix64F A = BlockMatrixOps.createRandom(4,6,-1,1,rand,3);
+
+        SimpleMatrix S = BlockMatrixOps.convertSimple(A);
+
+        assertEquals(A.numRows,S.numRows());
+        assertEquals(A.numCols,S.numCols());
+
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                assertEquals(A.get(i,j),S.get(i,j),1e-8);
+            }
+        }
     }
 
     @Test
     public void identity() {
-        fail("Implement");
+        // test square
+        BlockMatrix64F A = BlockMatrixOps.identity(4,4,3);
+        assertTrue(GenericMatrixOps.isIdentity(A,1e-8));
+
+        // test wide
+        A = BlockMatrixOps.identity(4,5,3);
+        assertTrue(GenericMatrixOps.isIdentity(A,1e-8));
+
+        // test tall
+        A = BlockMatrixOps.identity(5,4,3);
+        assertTrue(GenericMatrixOps.isIdentity(A,1e-8));
     }
 
     @Test
     public void extractAligned() {
-        fail("Implement");
+        BlockMatrix64F A = BlockMatrixOps.createRandom(10,11,-1,1,rand,3);
+        BlockMatrix64F B = new BlockMatrix64F(9,11,3);
+
+        BlockMatrixOps.extractAligned(A,B);
+
+        for( int i = 0; i < B.numRows; i++ ) {
+            for( int j = 0; j < B.numCols; j++ ) {
+                assertEquals(A.get(i,j),B.get(i,j),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void blockAligned() {
+        int r = 3;
+        BlockMatrix64F A = BlockMatrixOps.createRandom(10,11,-1,1,rand,r);
+
+        D1Submatrix64F S = new D1Submatrix64F(A);
+
+        assertTrue(BlockMatrixOps.blockAligned(r,S));
+
+        S.row0 = r;
+        S.col0 = 2*r;
+
+        assertTrue(BlockMatrixOps.blockAligned(r,S));
+
+        // test negative cases
+        S.row0 = r-1;
+        assertFalse(BlockMatrixOps.blockAligned(r,S));
+        S.row0 = 0;
+        S.col0 = 1;
+        assertFalse(BlockMatrixOps.blockAligned(r,S));
+        S.col0 = 0;
+        S.row1 = 8;
+        assertFalse(BlockMatrixOps.blockAligned(r,S));
+        S.row1 = 10;
+        S.col0 = 10;
+        assertFalse(BlockMatrixOps.blockAligned(r,S));
     }
 
 }

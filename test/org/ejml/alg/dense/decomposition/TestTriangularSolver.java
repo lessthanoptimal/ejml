@@ -57,18 +57,11 @@ public class TestTriangularSolver {
 
     @Test
     public void invert() {
-        fail("Implement");
-    }
-
-    @Test
-    public void invert_temp() {
         DenseMatrix64F L = createRandomLowerTriangular();
 
         DenseMatrix64F L_inv = L.copy();
 
-        double temp[] = new double[ L.numRows ];
-
-        TriangularSolver.invertLower(L.data,L_inv.data,L.numRows,temp);
+        TriangularSolver.invertLower(L.data,L_inv.data,L.numRows);
 
         DenseMatrix64F I = new DenseMatrix64F(L.numRows,L.numCols);
 
@@ -93,11 +86,6 @@ public class TestTriangularSolver {
 
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
-    }
-
-    @Test
-    public void solveTransL_matrix() {
-        fail("Implement");
     }
 
     private DenseMatrix64F createRandomLowerTriangular() {

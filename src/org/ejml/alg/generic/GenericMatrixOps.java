@@ -53,6 +53,14 @@ public class GenericMatrixOps {
         return true;
     }
 
+    /**
+     * Returns true if the provided matrix is has a value of 1 along the diagonal
+     * elements and zero along all the other elements.
+     *
+     * @param a Matrix being inspected.
+     * @param tol How close to zero or one each element needs to be.
+     * @return If it is within tolerance to an identity matrix.
+     */
     public static boolean isIdentity( Matrix64F a , double tol )
     {
         for( int i = 0; i < a.numRows; i++ ) {

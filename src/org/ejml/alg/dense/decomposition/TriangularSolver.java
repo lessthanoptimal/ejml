@@ -74,35 +74,6 @@ public class TriangularSolver {
         }
     }
 
-    public static void invertLower( double L[] , double L_inv[] , int m , double temp[] ) {
-        for( int j = 0; j < m; j++ ) {
-            temp[j] =  1.0 / L[ j*m + j ];
-
-            for( int k = j+1; k < m; k++ )
-                temp[k] = L[ k*m + j ];
-
-            for( int i = j+1; i < m; i++ ) {
-                double val = 0;
-
-//                for( int k = j; k < i; k++ ) {
-//                    val += L[ i*m + k] * temp[ k ];
-//                }
-                int indexL = i*m;
-                for( int k = j; k < i; k++ ) {
-                    val += L[ indexL++ ] * temp[ k ];
-                }
-
-                temp[ i ] = -val / L[ indexL ];
-            }
-
-            for( int k = j; k < m; k++ )
-                L_inv[ k*m + j ] = temp[k];
-        }
-    }
-
-
-
-
     /**
      * <p>
      * Solves for non-singular lower triangular matrices using forward substitution.
@@ -154,21 +125,6 @@ public class TriangularSolver {
                     sum -= L[i*m+k]* b[k*n+j];
                 }
                 b[i*n+j] = sum / L[i*m+i];
-            }
-        }
-    }
-
-    public static void solveTranL( double L[] , double []b , int m , int n )
-    {
-        for( int i=n-1; i>=0; i-- ) {
-            double el_ii = L[i*n+i];
-
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i<j) ? 0 : b[j*n+i];
-                for( int k=i+1;k<n;k++) {
-                    sum -= L[k*n+i]*b[j*n+k];
-                }
-                b[i*n+j] = b[j*n+i] = sum / el_ii;
             }
         }
     }
