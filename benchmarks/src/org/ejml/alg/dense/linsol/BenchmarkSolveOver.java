@@ -72,13 +72,13 @@ public class BenchmarkSolveOver {
     }
 
     public static void main( String args [] ) {
-        int trialsWith[] = new int[]{2000,1000,200,7,1,1,1,1,1};
+        int trialsWith[] = new int[]{2000,1000,200,7,1,1,1,1,1,1};
 
-        int width[] = new int[]{2,4,10,100,500,1000,2000,5000};
+        int width[] = new int[]{2,4,10,100,500,1000,2000,5000,10000};
 
         includeSet = true;
         System.out.println("Solving for least squares fitting type problems with set");
-        for( int i = 4; i < width.length; i++ ) {
+        for( int i = 0; i < width.length; i++ ) {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);

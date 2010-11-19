@@ -20,7 +20,6 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
@@ -72,10 +71,8 @@ public class DecompositionFactory {
      */
     public static CholeskyDecomposition chol( int widthMax , boolean decomposeOrig, boolean lower )
     {
-        if( widthMax < EjmlParameters.SWITCH_BLOCK_CHOLESKY ) {
+        if( widthMax < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
             return new CholeskyDecompositionInner(decomposeOrig,lower);
-        } else if( widthMax < EjmlParameters.SWITCH_BLOCK64_CHOLESKY && !lower ) {
-            return new CholeskyDecompositionBlock(decomposeOrig, EjmlParameters.BLOCK_WIDTH_CHOL);
         } else {
             return new CholeskyDecompositionBlock64(lower);
         }
@@ -133,10 +130,6 @@ public class DecompositionFactory {
      * @return QRDecomposition
      */
     public static QRDecomposition qr() {
-        return new QRDecompositionHouseholderColumn();
-    }
-
-    public static QRDecomposition qr( int numRows , int numCols ) {
         return new QRDecompositionHouseholderColumn();
     }
 

@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
 
@@ -49,7 +49,7 @@ public class SmartSolverChol implements LinearSolver  {
         this.decomposeOriginal = decomposeOriginal;
 
         CholeskyDecompositionCommon d;
-        d = new CholeskyDecompositionBlock(decomposeOriginal, EjmlParameters.BLOCK_WIDTH_CHOL);
+        d = new CholeskyDecompositionInner(decomposeOriginal, true);
         s = new LinearSolverChol(d);
         type = Type.BLOCK;
     }
@@ -77,7 +77,7 @@ public class SmartSolverChol implements LinearSolver  {
             CholeskyDecompositionCommon d;
             switch( selected ) {
                 case BLOCK:
-                    d = new CholeskyDecompositionBlock(decomposeOriginal, EjmlParameters.BLOCK_WIDTH_CHOL);
+                    d = new CholeskyDecompositionInner(decomposeOriginal, true);
                     s = new LinearSolverChol(d);
                     break;
 

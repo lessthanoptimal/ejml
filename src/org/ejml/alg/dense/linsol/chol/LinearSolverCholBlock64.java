@@ -21,9 +21,7 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.WrapLinearSolverBlock64;
-import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 
 
