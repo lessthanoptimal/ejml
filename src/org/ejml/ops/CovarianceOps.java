@@ -72,28 +72,7 @@ public class CovarianceOps {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DenseMatrix64F cov ) {
-        if( cov.numCols <= 4 ) {
-            if( cov.numCols != cov.numRows ) {
-                throw new IllegalArgumentException("Must be a square matrix.");
-            }
-
-            switch( cov.numCols ) {
-                case 1:
-                    cov.set(0,  1.0/cov.get(0));
-                    break;
-
-                default:
-                    UnrolledInverseFromMinor.inv(cov,cov);
-                    break;
-            }
-        } else {
-
-            LinearSolver solver = LinearSolverFactory.symmetric();
-            if( !solver.setA(cov) )
-                return false;
-            solver.invert(cov);
-        }
-        return true;
+        return invert(cov,cov);
     }
 
     /**
@@ -104,23 +83,19 @@ public class CovarianceOps {
      * @param cov_inv The inverse of cov.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( DenseMatrix64F cov , DenseMatrix64F cov_inv ) {
+    public static boolean invert( final DenseMatrix64F cov , final DenseMatrix64F cov_inv ) {
         if( cov.numCols <= 4 ) {
             if( cov.numCols != cov.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
             }
 
-            switch( cov.numCols ) {
-                case 1:
-                    cov_inv.data[0] = 1.0/cov_inv.data[0];
-                    break;
+            if( cov.numCols >= 2 )
+                UnrolledInverseFromMinor.inv(cov,cov_inv);
+            else
+                cov_inv.data[0] = 1.0/cov_inv.data[0];
 
-                default:
-                    UnrolledInverseFromMinor.inv(cov,cov_inv);
-                    break;
-            }
         } else {
-             LinearSolver solver = LinearSolverFactory.symmetric();
+            LinearSolver solver = LinearSolverFactory.symmetric();
             if( !solver.setA(cov) )
                 return false;
             solver.invert(cov_inv);

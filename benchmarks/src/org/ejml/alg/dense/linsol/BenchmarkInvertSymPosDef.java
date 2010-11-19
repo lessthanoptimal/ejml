@@ -26,6 +26,7 @@ import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CovarianceOps;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -38,18 +39,29 @@ import java.util.Random;
  */
 public class BenchmarkInvertSymPosDef {
 
+    public static long invertCovar( DenseMatrix64F orig , int numTrials ) {
+
+        DenseMatrix64F A = new DenseMatrix64F(orig.numRows,orig.numCols);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            CovarianceOps.invert(orig,A);
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
 
     public static long invertCholesky( LinearSolver alg , DenseMatrix64F orig , int numTrials ) {
 
         DenseMatrix64F A = new DenseMatrix64F(orig.numRows,orig.numCols);
 
-        if( !alg.setA(orig) ) {
-            throw new RuntimeException("Bad matrix");
-        }
-
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
+            if( !alg.setA(orig) ) {
+                throw new RuntimeException("Bad matrix");
+            }
             alg.invert(A);
         }
 
@@ -60,6 +72,7 @@ public class BenchmarkInvertSymPosDef {
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
 
+        System.out.println("invert covariance         = "+ invertCovar(mat,numTrials));
 //        System.out.println("invert GJ No Pivot     = "+ invertGJ_NoPivot(mat,numTrials));
 //        System.out.println("invert GJ               = "+ invertGJ(mat,numTrials));
 //        System.out.println("invert LU-NR            = "+ invertLU_nr(mat,numTrials));
@@ -84,8 +97,8 @@ public class BenchmarkInvertSymPosDef {
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,1000,2000,4000,8000};
-        int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,3,1,1,1};
+        int size[] = new int[]{2,4,6,10,100,1000,2000,4000,8000};
+        int trials[] = new int[]{(int)1e7,(int)3e6,(int)1e6,(int)4e5,1000,3,1,1,1};
 
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];

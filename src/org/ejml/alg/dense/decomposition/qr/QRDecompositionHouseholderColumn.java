@@ -239,11 +239,11 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     protected void householder( int j )
     {
-        double u[] = dataQR[j];
+        final double u[] = dataQR[j];
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
-        double max = QrHelperFunctions.findMax(u,j,numRows-j);
+        final double max = QrHelperFunctions.findMax(u,j,numRows-j);
 
         if( max == 0.0 ) {
             gamma = 0;
@@ -276,11 +276,11 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition {
      */
     protected void updateA( int w )
     {
-        double u[] = dataQR[w];
+        final double u[] = dataQR[w];
 
         for( int j = w+1; j < numCols; j++ ) {
 
-            double colQ[] = dataQR[j];
+            final double colQ[] = dataQR[j];
             double val = colQ[w];
 
             for( int k = w+1; k < numRows; k++ ) {

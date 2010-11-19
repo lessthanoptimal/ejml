@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.DenseMatrix64F;
 
 
 /**
@@ -32,12 +32,12 @@ public class UnrolledInverseFromMinor {
     
     public static final int MAX = 5;
     
-    public static void inv( RowD1Matrix64F mat , RowD1Matrix64F inv ) {
-        double max = Math.abs(mat.get(0));
+    public static void inv( DenseMatrix64F mat , DenseMatrix64F inv ) {
+        double max = Math.abs(mat.data[0]);
         int N = mat.getNumElements();
         
         for( int i = 1; i < N; i++ ) {
-            double a = Math.abs(mat.get(i));
+            double a = Math.abs(mat.data[i]);
             if( a > max ) max = a;
         }
 
@@ -54,13 +54,14 @@ public class UnrolledInverseFromMinor {
         }
     }
 
-    public static void inv2( RowD1Matrix64F mat , RowD1Matrix64F inv , double scale )
+    public static void inv2( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
     {
+        double []data = mat.data;
 
-        double a11 = mat.get( 0 )*scale;
-        double a12 = mat.get( 1 )*scale;
-        double a21 = mat.get( 2 )*scale;
-        double a22 = mat.get( 3 )*scale;
+        double a11 = data[ 0 ]*scale;
+        double a12 = data[ 1 ]*scale;
+        double a21 = data[ 2 ]*scale;
+        double a22 = data[ 3 ]*scale;
 
         double m11 = a22;
         double m12 = -( a21);
@@ -69,25 +70,27 @@ public class UnrolledInverseFromMinor {
 
         double det = (a11*m11 + a12*m12)/scale;
 
-        inv.set(0 , m11 / det );
-        inv.set(1 , m21 / det );
-        inv.set(2 , m12 / det );
-        inv.set(3 , m22 / det );
+        data = inv.data;
+        data[0] = m11 / det;
+        data[1] = m21 / det;
+        data[2] = m12 / det;
+        data[3] = m22 / det;
 
     }
 
-    public static void inv3( RowD1Matrix64F mat , RowD1Matrix64F inv , double scale )
+    public static void inv3( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
     {
+        double []data = mat.data;
 
-        double a11 = mat.get( 0 )*scale;
-        double a12 = mat.get( 1 )*scale;
-        double a13 = mat.get( 2 )*scale;
-        double a21 = mat.get( 3 )*scale;
-        double a22 = mat.get( 4 )*scale;
-        double a23 = mat.get( 5 )*scale;
-        double a31 = mat.get( 6 )*scale;
-        double a32 = mat.get( 7 )*scale;
-        double a33 = mat.get( 8 )*scale;
+        double a11 = data[ 0 ]*scale;
+        double a12 = data[ 1 ]*scale;
+        double a13 = data[ 2 ]*scale;
+        double a21 = data[ 3 ]*scale;
+        double a22 = data[ 4 ]*scale;
+        double a23 = data[ 5 ]*scale;
+        double a31 = data[ 6 ]*scale;
+        double a32 = data[ 7 ]*scale;
+        double a33 = data[ 8 ]*scale;
 
         double m11 = a22*a33 - a23*a32;
         double m12 = -( a21*a33 - a23*a31);
@@ -101,37 +104,39 @@ public class UnrolledInverseFromMinor {
 
         double det = (a11*m11 + a12*m12 + a13*m13)/scale;
 
-        inv.set(0 , m11 / det );
-        inv.set(1 , m21 / det );
-        inv.set(2 , m31 / det );
-        inv.set(3 , m12 / det );
-        inv.set(4 , m22 / det );
-        inv.set(5 , m32 / det );
-        inv.set(6 , m13 / det );
-        inv.set(7 , m23 / det );
-        inv.set(8 , m33 / det );
+        data = inv.data;
+        data[0] = m11 / det;
+        data[1] = m21 / det;
+        data[2] = m31 / det;
+        data[3] = m12 / det;
+        data[4] = m22 / det;
+        data[5] = m32 / det;
+        data[6] = m13 / det;
+        data[7] = m23 / det;
+        data[8] = m33 / det;
 
     }
 
-    public static void inv4( RowD1Matrix64F mat , RowD1Matrix64F inv , double scale )
+    public static void inv4( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
     {
+        double []data = mat.data;
 
-        double a11 = mat.get( 0 )*scale;
-        double a12 = mat.get( 1 )*scale;
-        double a13 = mat.get( 2 )*scale;
-        double a14 = mat.get( 3 )*scale;
-        double a21 = mat.get( 4 )*scale;
-        double a22 = mat.get( 5 )*scale;
-        double a23 = mat.get( 6 )*scale;
-        double a24 = mat.get( 7 )*scale;
-        double a31 = mat.get( 8 )*scale;
-        double a32 = mat.get( 9 )*scale;
-        double a33 = mat.get( 10 )*scale;
-        double a34 = mat.get( 11 )*scale;
-        double a41 = mat.get( 12 )*scale;
-        double a42 = mat.get( 13 )*scale;
-        double a43 = mat.get( 14 )*scale;
-        double a44 = mat.get( 15 )*scale;
+        double a11 = data[ 0 ]*scale;
+        double a12 = data[ 1 ]*scale;
+        double a13 = data[ 2 ]*scale;
+        double a14 = data[ 3 ]*scale;
+        double a21 = data[ 4 ]*scale;
+        double a22 = data[ 5 ]*scale;
+        double a23 = data[ 6 ]*scale;
+        double a24 = data[ 7 ]*scale;
+        double a31 = data[ 8 ]*scale;
+        double a32 = data[ 9 ]*scale;
+        double a33 = data[ 10 ]*scale;
+        double a34 = data[ 11 ]*scale;
+        double a41 = data[ 12 ]*scale;
+        double a42 = data[ 13 ]*scale;
+        double a43 = data[ 14 ]*scale;
+        double a44 = data[ 15 ]*scale;
 
         double m11 =  + a22*(a33*a44 - a34*a43) - a23*(a32*a44 - a34*a42) + a24*(a32*a43 - a33*a42);
         double m12 = -(  + a21*(a33*a44 - a34*a43) - a23*(a31*a44 - a34*a41) + a24*(a31*a43 - a33*a41));
@@ -152,53 +157,55 @@ public class UnrolledInverseFromMinor {
 
         double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14)/scale;
 
-        inv.set(0 , m11 / det );
-        inv.set(1 , m21 / det );
-        inv.set(2 , m31 / det );
-        inv.set(3 , m41 / det );
-        inv.set(4 , m12 / det );
-        inv.set(5 , m22 / det );
-        inv.set(6 , m32 / det );
-        inv.set(7 , m42 / det );
-        inv.set(8 , m13 / det );
-        inv.set(9 , m23 / det );
-        inv.set(10 , m33 / det );
-        inv.set(11 , m43 / det );
-        inv.set(12 , m14 / det );
-        inv.set(13 , m24 / det );
-        inv.set(14 , m34 / det );
-        inv.set(15 , m44 / det );
+        data = inv.data;
+        data[0] = m11 / det;
+        data[1] = m21 / det;
+        data[2] = m31 / det;
+        data[3] = m41 / det;
+        data[4] = m12 / det;
+        data[5] = m22 / det;
+        data[6] = m32 / det;
+        data[7] = m42 / det;
+        data[8] = m13 / det;
+        data[9] = m23 / det;
+        data[10] = m33 / det;
+        data[11] = m43 / det;
+        data[12] = m14 / det;
+        data[13] = m24 / det;
+        data[14] = m34 / det;
+        data[15] = m44 / det;
 
     }
 
-    public static void inv5( RowD1Matrix64F mat , RowD1Matrix64F inv , double scale )
+    public static void inv5( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
     {
+        double []data = mat.data;
 
-        double a11 = mat.get( 0 )*scale;
-        double a12 = mat.get( 1 )*scale;
-        double a13 = mat.get( 2 )*scale;
-        double a14 = mat.get( 3 )*scale;
-        double a15 = mat.get( 4 )*scale;
-        double a21 = mat.get( 5 )*scale;
-        double a22 = mat.get( 6 )*scale;
-        double a23 = mat.get( 7 )*scale;
-        double a24 = mat.get( 8 )*scale;
-        double a25 = mat.get( 9 )*scale;
-        double a31 = mat.get( 10 )*scale;
-        double a32 = mat.get( 11 )*scale;
-        double a33 = mat.get( 12 )*scale;
-        double a34 = mat.get( 13 )*scale;
-        double a35 = mat.get( 14 )*scale;
-        double a41 = mat.get( 15 )*scale;
-        double a42 = mat.get( 16 )*scale;
-        double a43 = mat.get( 17 )*scale;
-        double a44 = mat.get( 18 )*scale;
-        double a45 = mat.get( 19 )*scale;
-        double a51 = mat.get( 20 )*scale;
-        double a52 = mat.get( 21 )*scale;
-        double a53 = mat.get( 22 )*scale;
-        double a54 = mat.get( 23 )*scale;
-        double a55 = mat.get( 24 )*scale;
+        double a11 = data[ 0 ]*scale;
+        double a12 = data[ 1 ]*scale;
+        double a13 = data[ 2 ]*scale;
+        double a14 = data[ 3 ]*scale;
+        double a15 = data[ 4 ]*scale;
+        double a21 = data[ 5 ]*scale;
+        double a22 = data[ 6 ]*scale;
+        double a23 = data[ 7 ]*scale;
+        double a24 = data[ 8 ]*scale;
+        double a25 = data[ 9 ]*scale;
+        double a31 = data[ 10 ]*scale;
+        double a32 = data[ 11 ]*scale;
+        double a33 = data[ 12 ]*scale;
+        double a34 = data[ 13 ]*scale;
+        double a35 = data[ 14 ]*scale;
+        double a41 = data[ 15 ]*scale;
+        double a42 = data[ 16 ]*scale;
+        double a43 = data[ 17 ]*scale;
+        double a44 = data[ 18 ]*scale;
+        double a45 = data[ 19 ]*scale;
+        double a51 = data[ 20 ]*scale;
+        double a52 = data[ 21 ]*scale;
+        double a53 = data[ 22 ]*scale;
+        double a54 = data[ 23 ]*scale;
+        double a55 = data[ 24 ]*scale;
 
         double m11 =  + a22*( + a33*(a44*a55 - a45*a54) - a34*(a43*a55 - a45*a53) + a35*(a43*a54 - a44*a53)) - a23*( + a32*(a44*a55 - a45*a54) - a34*(a42*a55 - a45*a52) + a35*(a42*a54 - a44*a52)) + a24*( + a32*(a43*a55 - a45*a53) - a33*(a42*a55 - a45*a52) + a35*(a42*a53 - a43*a52)) - a25*( + a32*(a43*a54 - a44*a53) - a33*(a42*a54 - a44*a52) + a34*(a42*a53 - a43*a52));
         double m12 = -(  + a21*( + a33*(a44*a55 - a45*a54) - a34*(a43*a55 - a45*a53) + a35*(a43*a54 - a44*a53)) - a23*( + a31*(a44*a55 - a45*a54) - a34*(a41*a55 - a45*a51) + a35*(a41*a54 - a44*a51)) + a24*( + a31*(a43*a55 - a45*a53) - a33*(a41*a55 - a45*a51) + a35*(a41*a53 - a43*a51)) - a25*( + a31*(a43*a54 - a44*a53) - a33*(a41*a54 - a44*a51) + a34*(a41*a53 - a43*a51)));
@@ -228,31 +235,32 @@ public class UnrolledInverseFromMinor {
 
         double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14 + a15*m15)/scale;
 
-        inv.set(0 , m11 / det );
-        inv.set(1 , m21 / det );
-        inv.set(2 , m31 / det );
-        inv.set(3 , m41 / det );
-        inv.set(4 , m51 / det );
-        inv.set(5 , m12 / det );
-        inv.set(6 , m22 / det );
-        inv.set(7 , m32 / det );
-        inv.set(8 , m42 / det );
-        inv.set(9 , m52 / det );
-        inv.set(10 , m13 / det );
-        inv.set(11 , m23 / det );
-        inv.set(12 , m33 / det );
-        inv.set(13 , m43 / det );
-        inv.set(14 , m53 / det );
-        inv.set(15 , m14 / det );
-        inv.set(16 , m24 / det );
-        inv.set(17 , m34 / det );
-        inv.set(18 , m44 / det );
-        inv.set(19 , m54 / det );
-        inv.set(20 , m15 / det );
-        inv.set(21 , m25 / det );
-        inv.set(22 , m35 / det );
-        inv.set(23 , m45 / det );
-        inv.set(24 , m55 / det );
+        data = inv.data;
+        data[0] = m11 / det;
+        data[1] = m21 / det;
+        data[2] = m31 / det;
+        data[3] = m41 / det;
+        data[4] = m51 / det;
+        data[5] = m12 / det;
+        data[6] = m22 / det;
+        data[7] = m32 / det;
+        data[8] = m42 / det;
+        data[9] = m52 / det;
+        data[10] = m13 / det;
+        data[11] = m23 / det;
+        data[12] = m33 / det;
+        data[13] = m43 / det;
+        data[14] = m53 / det;
+        data[15] = m14 / det;
+        data[16] = m24 / det;
+        data[17] = m34 / det;
+        data[18] = m44 / det;
+        data[19] = m54 / det;
+        data[20] = m15 / det;
+        data[21] = m25 / det;
+        data[22] = m35 / det;
+        data[23] = m45 / det;
+        data[24] = m55 / det;
 
     }
 

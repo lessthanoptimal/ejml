@@ -181,13 +181,13 @@ public abstract class CholeskyDecompositionCommon implements CholeskyDecompositi
         if( lower ) {
             for( int i = 0; i < n; i++ ) {
                 for( int j = 0; j <= i; j++ ) {
-                    T.set(i,j,this.T.get(i,j));
+                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
                 }
             }
         } else {
             for( int i = 0; i < n; i++ ) {
                 for( int j = i; j < n; j++ ) {
-                    T.set(i,j,this.T.get(i,j));
+                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
                 }
             }
         }

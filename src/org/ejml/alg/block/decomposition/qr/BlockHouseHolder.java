@@ -143,7 +143,9 @@ public class BlockHouseHolder {
                     indexA += width;
 
                     // standard vector dot product
-                    for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
+                    int endA = indexA + (height-col-1)*width;
+                    for( ; indexA != endA; indexU += width, indexA += width ) {
+//                    for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
                         total += dataA[ indexU ] * dataA[ indexA ];
                     }
                 } else {

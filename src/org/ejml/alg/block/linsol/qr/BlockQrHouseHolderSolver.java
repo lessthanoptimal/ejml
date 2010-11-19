@@ -62,6 +62,10 @@ public class BlockQrHouseHolderSolver implements LinearSolverBlock {
     // If it can be then a matrix copy can be avoided
     protected boolean modifyB = false;
 
+    public BlockQrHouseHolderSolver() {
+        decomp.setSaveW(true);
+    }
+
     public void setModifyB(boolean modifyB) {
         this.modifyB = modifyB;
     }

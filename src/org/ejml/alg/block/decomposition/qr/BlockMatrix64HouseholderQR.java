@@ -82,6 +82,9 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
     // stores the computed gammas
     private double gammas[] = new double[1];
 
+    // save the W matrix the first time it is computed in the decomposition
+    private boolean saveW = false;
+
     /**
      * This is the input matrix after it has been overwritten with the decomposition.
      *
@@ -89,6 +92,23 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      */
     public BlockMatrix64F getQR() {
         return dataA;
+    }
+
+    /**
+     * <p>
+     * Sets if it should internally save the W matrix before performing the decomposition.  Must
+     * be set before decomposition the matrix.
+     * </p>
+     *
+     * <p>
+     * Saving W can result in about a 5% savings when solving systems around a height of 5k.  The
+     * price is that it needs to save a matrix the size of the input matrix.
+     * </p>
+     *
+     * @param saveW If the W matrix should be saved or not.
+     */
+    public void setSaveW(boolean saveW) {
+        this.saveW = saveW;
     }
 
     /**
@@ -140,6 +160,7 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      *
      * @param B Matrix which Q is applied to.  Modified.
      */
+    @Override
     public void applyQ( BlockMatrix64F B ) {
 
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
@@ -171,7 +192,8 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
             WTA.original.reshape(WTA.row1,WTA.col1,false);
 
             // Compute W matrix from reflectors stored in Y
-            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+            if( !saveW )
+                BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
             // Apply the Qi to Q
             BlockHouseHolder.multTransA(blockLength,Y,subB,WTA);
@@ -192,6 +214,7 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      *
      * @param B Matrix which Q is applied to.  Modified.
      */
+    @Override
     public void applyQTran( BlockMatrix64F B ) {
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
 
@@ -222,14 +245,12 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
             WTA.original.reshape(WTA.row1,WTA.col1,false);
 
             // Compute W matrix from reflectors stored in Y
-            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+            if( !saveW )
+                BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
             // Apply the Qi to Q
             BlockMultiplication.multTransA(blockLength,W,subB,WTA);
             BlockHouseHolder.multAdd_zeros(blockLength,Y,WTA,subB);
-
-//            subB.extract().print();
-
         }
     }
 
@@ -313,6 +334,10 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
             temp = new double[blockLength];
         if( gammas.length < orig.numCols )
             gammas = new double[ orig.numCols ];
+
+        if( saveW ) {
+            dataW.reshape(orig.numRows,orig.numCols,false);
+        }
     }
 
     /**
@@ -343,6 +368,8 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
 
             BlockMultiplication.multTransA(blockLength,W,A,WTA);
             BlockHouseHolder.multAdd_zeros(blockLength,Y,WTA,A);
+        } else if( saveW ) {
+            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
         }
     }
 
@@ -350,8 +377,15 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      * Sets the submatrix of W up give Y is already configured and if it is being cached or not.
      */
     private void setW() {
-        W.col1 = Y.col1 - Y.col0;
-        W.row0 = Y.row0;
+        if( saveW ) {
+            W.col0 = Y.col0;
+            W.col1 = Y.col1;
+            W.row0 = Y.row0;
+            W.row1 = Y.row1;
+        } else {
+            W.col1 = Y.col1 - Y.col0;
+            W.row0 = Y.row0;
+        }
     }
 
     /**

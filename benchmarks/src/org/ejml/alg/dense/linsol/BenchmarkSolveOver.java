@@ -20,7 +20,6 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
@@ -77,11 +76,10 @@ public class BenchmarkSolveOver {
 
         int width[] = new int[]{2,4,10,100,500,1000,2000,5000};
 
-        int N = 10000;
-
         includeSet = true;
         System.out.println("Solving for least squares fitting type problems with set");
         for( int i = 4; i < width.length; i++ ) {
+            int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
             A = new DenseMatrix64F(N,width[i]);
@@ -94,6 +92,7 @@ public class BenchmarkSolveOver {
         includeSet = false;
         System.out.println("Solving for least squares fitting type problems without set");
         for( int i = 4; i < width.length; i++ ) {
+            int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
             A = new DenseMatrix64F(N,width[i]);

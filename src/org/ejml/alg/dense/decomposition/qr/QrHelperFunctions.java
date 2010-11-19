@@ -60,7 +60,8 @@ public class QrHelperFunctions {
         return max;
     }
 
-    public static void divideElements(int j, int numRows , double[] u, double u_0 ) {
+    public static void divideElements(final int j, final int numRows ,
+                                      final double[] u, final double u_0 ) {
         double div_u = 1.0/u_0;
 
         if( Double.isInfinite(div_u)) {

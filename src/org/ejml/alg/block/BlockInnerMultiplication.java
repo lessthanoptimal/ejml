@@ -297,7 +297,7 @@ public class BlockInnerMultiplication {
         int rowC = indexC;
         for( int i = 0; i < widthA; i++ , rowC += widthC) {
             int colA = i + indexA;
-            int endA = colA + widthA*heightA;
+            final int endA = colA + widthA*heightA;
             int b = indexB;
 
             // for( int k = 0; k < heightA; k++ ) {

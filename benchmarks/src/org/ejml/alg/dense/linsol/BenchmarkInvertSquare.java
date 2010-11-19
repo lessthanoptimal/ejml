@@ -21,11 +21,10 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR;
-import org.ejml.alg.dense.linsol.gj.GaussJordan;
-import org.ejml.alg.dense.linsol.gj.GaussJordanNoPivot;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -66,6 +65,18 @@ public class BenchmarkInvertSquare {
         return System.currentTimeMillis() - prev;
     }
 
+    public static long invertOpsBenchmark( DenseMatrix64F orig , int numTrials ) {
+        DenseMatrix64F A = new DenseMatrix64F(orig.numRows,orig.numCols);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            CommonOps.invert(orig,A);
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
 //        System.out.println("invert GJ No Pivot     = "+ invertBenchmark(
@@ -76,6 +87,8 @@ public class BenchmarkInvertSquare {
                 new LinearSolverLu(new LUDecompositionAlt()),mat,numTrials));
         System.out.println("invert LU  NR          = "+ invertBenchmark(
                 new LinearSolverLu(new LUDecompositionNR()),mat,numTrials));
+        System.out.println("invert Ops             = "+
+                invertOpsBenchmark(mat,numTrials));
 //        System.out.println("unrolled               = "+
 //                invertUnrolledBenchmark(mat,numTrials));
     }
@@ -83,10 +96,10 @@ public class BenchmarkInvertSquare {
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,5,10,100,1000,2000,5000,10000};
+        int size[] = new int[]{2,4,6,10,100,1000,2000,5000,10000};
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)2e6,(int)1e6,1000,3,1,1,1};
 
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 2; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);

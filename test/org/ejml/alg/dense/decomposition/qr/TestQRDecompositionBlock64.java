@@ -17,34 +17,18 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.block.decomposition.qr;
+package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.alg.block.decomposition.BlockQRDecomposition;
-import org.junit.Test;
+import org.ejml.alg.dense.decomposition.QRDecomposition;
+
 
 /**
  * @author Peter Abeles
  */
-public class TestBlockMatrix64HouseholderQR {
+public class TestQRDecompositionBlock64 extends GenericQrCheck {
 
-    @Test
-    public void generic() {
-        BlockQRDecomposition decomp = new BlockMatrix64HouseholderQR();
-
-        GenericBlock64QrDecompositionTests tests;
-        tests = new GenericBlock64QrDecompositionTests(decomp);
-
-        tests.allTests();
-    }
-
-    @Test
-    public void genericSaveW() {
-        BlockMatrix64HouseholderQR decomp = new BlockMatrix64HouseholderQR();
-        decomp.setSaveW(true);
-
-        GenericBlock64QrDecompositionTests tests;
-        tests = new GenericBlock64QrDecompositionTests(decomp);
-
-        tests.allTests();
+    @Override
+    protected QRDecomposition createQRDecomposition() {
+        return new QRDecompositionBlock64();
     }
 }

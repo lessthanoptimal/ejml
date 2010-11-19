@@ -20,7 +20,6 @@
 package org.ejml.alg.block.decomposition;
 
 import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
 
 
 /**
@@ -70,5 +69,19 @@ public interface BlockQRDecomposition extends BlockDecompositionInterface {
      * @return The R matrix.
      */
     public BlockMatrix64F getR(BlockMatrix64F R, boolean compact);
+
+    /**
+     * Performs B = Q*b
+     *
+     * @param B Matrix
+     */
+    public void applyQ( BlockMatrix64F B );
+
+    /**
+     * Performs B = Q<sup>T</sup>*b
+     *
+     * @param B Matrix
+     */
+    public void applyQTran( BlockMatrix64F B );
 
 }

@@ -21,6 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
+import org.ejml.alg.dense.decomposition.BaseDecompositionBlock64;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
@@ -32,23 +33,20 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class CholeskyDecompositionBlock64 implements CholeskyDecomposition {
-
-    private BlockCholeskyOuterForm alg;
-    private BlockMatrix64F A = new BlockMatrix64F(1,1);
+public class CholeskyDecompositionBlock64 extends BaseDecompositionBlock64 implements CholeskyDecomposition {
 
     public CholeskyDecompositionBlock64( boolean lower ) {
-        alg = new BlockCholeskyOuterForm(lower);
+        super(new BlockCholeskyOuterForm(lower));
     }
 
     @Override
     public boolean isLower() {
-        return alg.isLower();
+        return ((BlockCholeskyOuterForm)alg).isLower();
     }
 
     @Override
     public DenseMatrix64F getT(DenseMatrix64F T) {
-        BlockMatrix64F T_block = alg.getT();
+        BlockMatrix64F T_block = ((BlockCholeskyOuterForm)alg).getT();
 
         if( T == null ) {
             T = new DenseMatrix64F(T_block.numRows,T_block.numCols);
@@ -57,19 +55,5 @@ public class CholeskyDecompositionBlock64 implements CholeskyDecomposition {
         BlockMatrixOps.convert(T_block,T);
         // todo set zeros
         return T;
-    }
-
-    @Override
-    public boolean decompose(DenseMatrix64F orig) {
-        A.reshape(orig.numRows,orig.numCols,false);
-
-        BlockMatrixOps.convert(orig,A);
-
-        return alg.decompose(A);
-    }
-
-    @Override
-    public boolean inputModified() {
-        return false;
     }
 }

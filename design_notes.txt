@@ -29,7 +29,8 @@ Block QR Decomposition
 Saving the W matrix instead of recomputing it each time was tried.  For smaller matrices it has
 a noticeable speed improvement when solving.  Anything over 2k it seems to be negligible and almost double 
 the memory required.  Block QR Decomposition is only used on larger matrices so there is no point in
-saving W for later reuse when solving.
+saving W for later reuse when solving.  Based on profiling results W can save about 5% of runtime when solving
+a system.
 
 Block Matrix Multiply
 ---------------------------
