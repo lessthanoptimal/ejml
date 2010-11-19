@@ -1,8 +1,6 @@
-For 0.15 Release
-- unit tests
-- Block multiplication?
 
 For 0.16 Release
+- Improve QR block memory and add back in to smart solver and decomposition factory.
 - Remove QR-col and replace with QR-tran?
 - Remove QRDecompositionHouseholder?
 - Remove chol-block for dense with chol-block64?
@@ -14,24 +12,23 @@ For 0.16 Release
 - Clean up decomposition factory and linear solver factory
   * Have them take a matrix or system as an input and return the solver/decomposer?
 
-For DenseMatrix64F
+----------------------------------------------------------
 
 - LU
   - block
 
 - Cholesky
   - unwrap for small matrices.  improve accuracy
-
-- Least Squares Solver
-  - Improve performance
+  - improve stability
 
 - Linear Solver
   * Iterative
   * Add condition(), use Hager's method? pg 132
   * Put this new condition into NormOps since it should be much faster
-
-- Cholesky
- * Improve stability
+  * Redesign Linear Solvers
+    - By default modify all inputs if its advantageous
+    - Create a "safe" wrapper that will use copies instead
+    - Add isModifiedA() isModifiedB()
 
 - QR
   * Replace col with tran variant of QR decomposition?

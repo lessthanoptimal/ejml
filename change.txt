@@ -9,7 +9,7 @@
 - Added PrincipleComponentAnalysis example
 - Changed DecompositionInterface
 - Added unsafe_get() and unsafe_set() to Matrix64F and implementing classes.
-- Cholesky decomposition for a block matrix and associated helper functions.
+- Cholesky and QR decompositions for a block matrix and associated helper functions.
 - Simplistic functions have had the hand inlining removed. Suggested by Kaspar Thommen.
   * After marking it was found that sometimes more complex functions had their performance
     significantly degraded after they started to use very light weight wrappers.
@@ -22,6 +22,8 @@
 - Fixed bug in the different QR decomposition implementations for compact QR.
   * Added compact QR to generic tests
 - Fixed bug in LinearSolverFactory.symmetric() where LU instead of cholesky was being created.
+- EjmlParameters.MEMORY provides a way for it to select algorithms which are fast but memory hogs or
+  slower but more memory efficient.
 
 
 

@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.linsol.LinearSolver;
@@ -51,7 +52,7 @@ public class SmartSolverChol implements LinearSolver  {
         CholeskyDecompositionCommon d;
         d = new CholeskyDecompositionInner(decomposeOriginal, true);
         s = new LinearSolverChol(d);
-        type = Type.BLOCK;
+        type = Type.INNER;
     }
 
     public SmartSolverChol() {
@@ -68,7 +69,7 @@ public class SmartSolverChol implements LinearSolver  {
         Type selected;
 
         if( A.numCols < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
-            selected = Type.BLOCK;
+            selected = Type.INNER;
         } else {
             selected = Type.BLOCK64;
         }
@@ -76,13 +77,18 @@ public class SmartSolverChol implements LinearSolver  {
         if( selected != type ) {
             CholeskyDecompositionCommon d;
             switch( selected ) {
-                case BLOCK:
+                case INNER:
                     d = new CholeskyDecompositionInner(decomposeOriginal, true);
                     s = new LinearSolverChol(d);
                     break;
 
                 case BLOCK64:
-                    s = new LinearSolverCholBlock64();
+                    if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
+                        s = new LinearSolverCholBlock64();
+                    else {
+                        d = new CholeskyDecompositionBlock(decomposeOriginal, EjmlParameters.BLOCK_WIDTH_CHOL);
+                        s = new LinearSolverChol(d);
+                    }
                     break;
             }
             type = selected;
@@ -126,7 +132,7 @@ public class SmartSolverChol implements LinearSolver  {
      * Different implementation types.
      */
     static enum Type {
-        BLOCK,
+        INNER,
         BLOCK64
     }
 }

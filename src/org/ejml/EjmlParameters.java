@@ -29,6 +29,12 @@ package org.ejml;
 public class EjmlParameters {
 
     /**
+     * Used to adjust which algorithms are used.  Often there is a trade off between memory usage
+     * and speed.
+     */
+    public static MemoryUsage MEMORY = MemoryUsage.FASTER;
+
+    /**
      * <p>
      * In modern computers there are high speed memory caches.  It is assumed that a square
      * block with this width can be contained entirely in one of those caches.  Settings this
@@ -67,4 +73,17 @@ public class EjmlParameters {
     public static int SWITCH_BLOCK64_CHOLESKY = 1000;
 
     public static int SWITCH_BLOCK64_QR = 2000;
+
+    public static enum MemoryUsage
+    {
+        /**
+         * Use lower memory algorithm while not totally sacrificing speed.
+         */
+        LOW_MEMORY,
+        /**
+         * Always favor faster algorithms even if they use more memory.
+         */
+        FASTER
+
+    }
 }

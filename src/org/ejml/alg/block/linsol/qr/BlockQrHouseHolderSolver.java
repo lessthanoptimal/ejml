@@ -178,11 +178,11 @@ public class BlockQrHouseHolderSolver implements LinearSolverBlock {
 
         // Need to copy the R matrix since solve requires whole blocks
         // todo improve
-        BlockMatrix64F U = new BlockMatrix64F(M,M,QR.blockLength);
-        BlockMatrixOps.copyTriangle(true,QR,U);
+        tempU.reshape(M,M,QR.blockLength,false);
+        BlockMatrixOps.copyTriangle(true,QR,tempU);
 
         BlockTriangularSolver.solve(QR.blockLength,true,
-                new D1Submatrix64F(U),new D1Submatrix64F(A_inv),false);
+                new D1Submatrix64F(tempU),new D1Submatrix64F(A_inv),false);
     }
 
     @Override

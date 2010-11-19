@@ -20,12 +20,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.linsol.LinearSolver;
-import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
-import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -72,7 +67,11 @@ public class SmartSolverQr implements LinearSolver  {
                     break;
 
                 case BLOCK64:
-                    s = new LinearSolverQrBlock64();
+                    if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
+//                        s = new LinearSolverQrBlock64();
+                        s = new LinearSolverQrHouseCol();
+                    else
+                        s = new LinearSolverQrHouseCol();
                     break;
             }
             type = selected;

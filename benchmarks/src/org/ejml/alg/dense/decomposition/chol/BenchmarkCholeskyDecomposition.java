@@ -20,9 +20,6 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
-import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -146,7 +143,7 @@ public class BenchmarkCholeskyDecomposition {
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 6; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
