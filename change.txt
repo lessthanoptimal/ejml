@@ -1,6 +1,6 @@
 ----- Version 0.15
 
-2010/XX/XX
+2010/11/20
 
 - Minor speed ups in LU, determinant, transpose
 - Fixed a bug in MatrixComponent.  Negative elements were not handled correctly.
