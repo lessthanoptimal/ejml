@@ -74,5 +74,15 @@ public class TestLinearSolverAbstract {
         public void solve(DenseMatrix64F B, DenseMatrix64F X) {
               solveCalled = true;
         }
+
+        @Override
+        public boolean modifiesA() {
+            return false;
+        }
+
+        @Override
+        public boolean modifiesB() {
+            return false;
+        }
     }
 }

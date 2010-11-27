@@ -55,19 +55,8 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
     // size of a block take from input matrix
     private int blockLength;
 
-    // can the input matrix B in solve be overwritten.
-    private boolean overwriteB = false;
     // temporary data structure used in some calculation.
     private double temp[];
-
-    public void setOverwriteB( boolean doit ){
-        this.overwriteB = doit;
-    }
-
-    @Override
-    public BlockMatrix64F getA() {
-        return chol.getT();
-    }
 
     /**
      * Decomposes and overwrites the input matrix.
@@ -91,6 +80,10 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
         return SpecializedOps.qualityTriangular(false,chol.getT());
     }
 
+    /**
+     * If X == null then the solution is written into B.  Otherwise the solution is copied
+     * from B into X.
+     */
     @Override
     public void solve(BlockMatrix64F B, BlockMatrix64F X) {
         if( B.blockLength != blockLength )
@@ -102,25 +95,22 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
             if( X.blockLength != blockLength )
                 throw new IllegalArgumentException("Unexpected blocklength in X.");
             if( X.numRows != L.col1 ) throw new IllegalArgumentException("Not enough rows in X");
-        } else if( !overwriteB ) {
-            throw new IllegalArgumentException("X is null and overwriteB is false.");
         }
+        
         if( B.numRows != L.col1 ) throw new IllegalArgumentException("Not enough rows in B");
-
-        // need to set X to be since the solver overwrites the input matrix
-        if( overwriteB ){
-            X = B;
-        } else {
-            X.set(B);
-        }
 
         //  L * L^T*X = B
 
         // Solve for Y:  L*Y = B
-        BlockTriangularSolver.solve(blockLength,false,L,new D1Submatrix64F(X),false);
+        BlockTriangularSolver.solve(blockLength,false,L,new D1Submatrix64F(B),false);
 
         // L^T * X = Y
-        BlockTriangularSolver.solve(blockLength,false,L,new D1Submatrix64F(X),true);
+        BlockTriangularSolver.solve(blockLength,false,L,new D1Submatrix64F(B),true);
+
+        if( X != null ) {
+            // copy the solution from B into X
+            BlockMatrixOps.extractAligned(B,X);
+        }
 
     }
 
@@ -152,7 +142,12 @@ public class BlockCholeskyOuterSolver implements LinearSolverBlock {
     }
 
     @Override
-    public boolean inputModified() {
+    public boolean modifiesA() {
         return chol.inputModified();
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return true;
     }
 }

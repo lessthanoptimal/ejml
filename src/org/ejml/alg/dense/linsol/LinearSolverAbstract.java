@@ -41,7 +41,6 @@ public abstract class LinearSolverAbstract implements LinearSolver {
     protected int numRows;
     protected int numCols;
 
-    @Override
     public DenseMatrix64F getA() {
         return A;
     }
@@ -54,6 +53,6 @@ public abstract class LinearSolverAbstract implements LinearSolver {
 
     @Override
     public void invert(DenseMatrix64F A_inv) {
-        InvertUsingSolve.invert(this,A_inv);
+        InvertUsingSolve.invert(this,A,A_inv);
     }
 }

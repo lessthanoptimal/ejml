@@ -25,15 +25,14 @@ import org.ejml.ops.CommonOps;
 
 
 /**
- * A matrix can be easily inversted by solving a system with an identify matrix.  The only
+ * A matrix can be easily inverted by solving a system with an identify matrix.  The only
  * disadvantage of this approach is that additional computations are required compared to
  * a specialized solution.
  *
  * @author Peter Abeles
  */
 public class InvertUsingSolve {
-    public static void invert( LinearSolver solver , DenseMatrix64F A_inv ) {
-        RowD1Matrix64F A = solver.getA();
+    public static void invert( LinearSolver solver , RowD1Matrix64F A , DenseMatrix64F A_inv ) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");

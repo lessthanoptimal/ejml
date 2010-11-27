@@ -45,18 +45,12 @@ import org.ejml.data.BlockMatrix64F;
  */
 public interface LinearSolverBlock {
 
-    /**
-     * Returns a reference to the matrix A that it is processing.
-     *
-     * @return Matrix A.
-     */
-    public BlockMatrix64F getA();
 
     /**
      * <p>
      * Specifies the A matrix in the linear equation.  A reference
      * is saved internally and the matrix might be modified modified.  To determine if
-     * the input matrix is modified call {@link #inputModified()}.  This
+     * the input matrix is modified call {@link #modifiesA()}.  This
      * reference is discarded the next time this function is called.
      * </p>
      *
@@ -116,5 +110,8 @@ public interface LinearSolverBlock {
      *
      * @return If the input matrix is modified or not.
      */
-    public boolean inputModified();
+    public boolean modifiesA();
+
+    public boolean modifiesB();
+
 }

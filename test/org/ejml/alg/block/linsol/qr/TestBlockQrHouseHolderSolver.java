@@ -20,17 +20,16 @@
 package org.ejml.alg.block.linsol.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -106,6 +105,7 @@ public class TestBlockQrHouseHolderSolver {
         double qualityB = solver.quality();
 
         assertTrue(qualityB<qualityA);
+        assertEquals(qualityB*10.0,qualityA,1e-8);
     }
 
     /**
@@ -129,25 +129,36 @@ public class TestBlockQrHouseHolderSolver {
     }
 
     @Test
-    public void testInputModified() {
-        BlockMatrix64F A = BlockMatrixOps.createRandom(5,4,-1,1,rand,3);
+    public void modifiesA(){
+        BlockMatrix64F A = BlockMatrixOps.createRandom(4,4,-1,1,rand,3);
+        BlockMatrix64F A_orig = A.copy();
 
         BlockQrHouseHolderSolver solver = new BlockQrHouseHolderSolver();
+
         assertTrue(solver.setA(A));
 
-        // test no modify as default value
-        BlockMatrix64F B = BlockMatrixOps.createRandom(4,3,-1,1,rand,3);
-        BlockMatrix64F C = BlockMatrixOps.createRandom(5,3,-1,1,rand,3);
+        boolean modified = !MatrixFeatures.isIdentical(A,A_orig);
 
-        BlockMatrix64F C_orig = C.copy();
-
-        solver.solve(C,B);
-
-        assertTrue(MatrixFeatures.isIdentical(C,C_orig));
-
-        // set modify to true
-        solver.setModifyB(true);
-        solver.solve(C,B);
-        assertFalse(MatrixFeatures.isIdentical(C,C_orig));
+        assertTrue(modified == solver.modifiesA());
     }
+
+    @Test
+    public void modifiesB(){
+        BlockMatrix64F A = BlockMatrixOps.createRandom(4,4,-1,1,rand,3);
+
+        BlockQrHouseHolderSolver solver = new BlockQrHouseHolderSolver();
+
+        assertTrue(solver.setA(A));
+
+        BlockMatrix64F B = BlockMatrixOps.createRandom(4,2,-1,1,rand,3);
+        BlockMatrix64F B_orig = B.copy();
+        BlockMatrix64F X = new BlockMatrix64F(A.numRows,B.numCols,3);
+
+        solver.solve(B,X);
+
+        boolean modified = !MatrixFeatures.isIdentical(B_orig,B);
+
+        assertTrue(modified == solver.modifiesB());
+    }
+
 }

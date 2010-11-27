@@ -17,25 +17,24 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition.svd;
+package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
-import org.junit.Test;
+import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
+import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.data.DenseMatrix64F;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestSvdNumericalRecipes  extends StandardSvdChecks {
+public class TestLinearSolverQrHouseTran extends GenericLinearSolverChecks {
 
-    @Override
-    public SingularValueDecomposition createSvd() {
-        return new SvdNumericalRecipes();
+    public TestLinearSolverQrHouseTran() {
+//         shouldFailSingular = false;
     }
 
-    @Test
-    public void checkAll() {
-        omitVerySmallValues = true;
-        allTests();
+    @Override
+    protected LinearSolver createSolver( DenseMatrix64F A ) {
+        return new LinearSolverQrHouseTran();
     }
 }

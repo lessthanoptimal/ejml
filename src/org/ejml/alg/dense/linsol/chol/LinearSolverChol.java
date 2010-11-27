@@ -157,4 +157,14 @@ public class LinearSolverChol extends LinearSolverAbstract {
             }
         }
     }
+
+    @Override
+    public boolean modifiesA() {
+        return false;
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
+    }
 }

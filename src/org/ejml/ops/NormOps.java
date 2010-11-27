@@ -21,7 +21,6 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
-import org.ejml.alg.dense.decomposition.svd.SvdNumericalRecipes;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
@@ -420,9 +419,10 @@ public class NormOps {
      * @return The norm.
      */
     public static double inducedP2( DenseMatrix64F A ) {
-        SingularValueDecomposition svd = new SvdNumericalRecipes();
+        SingularValueDecomposition svd = DecompositionFactory.svd(false,false,true);
 
-        svd.decompose(A);
+        if( !svd.decompose(A) )
+            throw new RuntimeException("Decomposition failed");
 
         double[] singularValues = svd.getSingularValues();
 

@@ -21,6 +21,7 @@ package org.ejml.alg.dense.linsol.gj;
 
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.data.DenseMatrix64F;
 
 
 /**
@@ -34,7 +35,7 @@ public class TestGaussJordan extends GenericLinearSolverChecks {
     }
 
     @Override
-    protected LinearSolver createSolver(int numRows, int numCols) {
-        return new GaussJordan(numRows);
+    protected LinearSolver createSolver( DenseMatrix64F A ) {
+        return new GaussJordan(A.numRows);
     }
 }

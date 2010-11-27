@@ -45,11 +45,6 @@ public class SmartSolverQr implements LinearSolver  {
     }
 
     @Override
-    public DenseMatrix64F getA() {
-        return s.getA();
-    }
-
-    @Override
     public boolean setA(DenseMatrix64F A) {
 
         Type selected;
@@ -93,6 +88,16 @@ public class SmartSolverQr implements LinearSolver  {
     @Override
     public void invert(DenseMatrix64F A_inv) {
         s.invert(A_inv);
+    }
+
+    @Override
+    public boolean modifiesA() {
+        return false;
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
     }
 
     public LinearSolver getS() {

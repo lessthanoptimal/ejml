@@ -22,6 +22,7 @@ package org.ejml.alg.dense.linsol.lu;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.data.DenseMatrix64F;
 
 
 /**
@@ -35,7 +36,7 @@ public class TestLinearSolverLu extends GenericLinearSolverChecks {
     }
 
     @Override
-    protected LinearSolver createSolver(int numRows, int numCols) {
+    protected LinearSolver createSolver( DenseMatrix64F A ) {
         LUDecompositionAlt decomp = new LUDecompositionAlt();
 
         return new LinearSolverLu(decomp);

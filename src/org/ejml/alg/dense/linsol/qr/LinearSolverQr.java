@@ -145,4 +145,14 @@ public class LinearSolverQr extends LinearSolverAbstract {
             }
         }
     }
+
+    @Override
+    public boolean modifiesA() {
+        return decomposer.inputModified();
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
+    }
 }

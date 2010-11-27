@@ -132,4 +132,14 @@ public class GaussJordanNoPivot extends LinearSolverAbstract {
             }
         }
     }
+
+    @Override
+    public boolean modifiesA() {
+        return false;
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
+    }
 }

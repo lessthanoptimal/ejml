@@ -24,6 +24,7 @@ import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.mult.SubmatrixOps;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -52,12 +53,24 @@ public class TestAdjLinearSolverQr extends GenericLinearSolverChecks {
         System.arraycopy(row, 0, A_e.data, insert * n, n);
         SubmatrixOps.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
 
+        // Compute the solution to the modified  system
+        DenseMatrix64F X = RandomMatrices.createRandom(n,2,rand);
+        DenseMatrix64F Y = new DenseMatrix64F(A_e.numRows,X.numCols);
+        CommonOps.mult(A_e,X,Y);
+
+        // create the solver from A then add a A.  The solver
+        // should be equivalent to one created from A_e
         AdjustableLinearSolver adjSolver = new AdjLinearSolverQr();
 
-        adjSolver.setA(A);
+        assertTrue(adjSolver.setA(A));
         adjSolver.addRowToA(row,insert);
 
-        assertTrue(MatrixFeatures.isIdentical(A_e,adjSolver.getA(),1e-8));
+        // solve the system and see if it gets the expected solution
+        DenseMatrix64F X_found = RandomMatrices.createRandom(X.numRows,X.numCols,rand);
+        adjSolver.solve(Y,X_found);
+
+        // see if they produce the same results
+        assertTrue(MatrixFeatures.isIdentical(X_found,X,1e-8));
     }
 
     @Test
@@ -73,16 +86,29 @@ public class TestAdjLinearSolverQr extends GenericLinearSolverChecks {
         SubmatrixOps.setSubMatrix(A,A_e,0,0,0,0,remove,n);
         SubmatrixOps.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
+        // Compute the solution to the modified system
+        DenseMatrix64F X = RandomMatrices.createRandom(n,2,rand);
+        DenseMatrix64F Y = new DenseMatrix64F(A_e.numRows,X.numCols);
+        CommonOps.mult(A_e,X,Y);
+
+        // create the solver from the original system then modify it
         AdjustableLinearSolver adjSolver = new AdjLinearSolverQr();
 
         adjSolver.setA(A);
         adjSolver.removeRowFromA(remove);
 
-        assertTrue(MatrixFeatures.isIdentical(A_e,adjSolver.getA(),1e-8));
+        // see if it produces the epected results
+
+        // solve the system and see if it gets the expected solution
+        DenseMatrix64F X_found = RandomMatrices.createRandom(X.numRows,X.numCols,rand);
+        adjSolver.solve(Y,X_found);
+
+        // see if they produce the same results
+        assertTrue(MatrixFeatures.isIdentical(X_found,X,1e-8));
     }
 
     @Override
-    protected LinearSolver createSolver(int numRows, int numCols) {
+    protected LinearSolver createSolver( DenseMatrix64F A ) {
         return new AdjLinearSolverQr();
     }
 }

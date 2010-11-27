@@ -19,13 +19,15 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.data.DenseMatrix64F;
+
 /**
  * @author Peter Abeles
  */
 public class TestSolvePseudoInverse extends GenericLinearSolverChecks{
 
     @Override
-    protected LinearSolver createSolver(int numRows, int numCols) {
-        return new SolvePseudoInverse(numRows);
+    protected LinearSolver createSolver( DenseMatrix64F A ) {
+        return new SolvePseudoInverse(A.numRows);
     }
 }

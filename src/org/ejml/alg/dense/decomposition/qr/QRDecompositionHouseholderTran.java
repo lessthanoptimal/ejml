@@ -121,6 +121,8 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
             }
         }
 
+        // Unlike applyQ() this takes advantage of zeros in the identity matrix
+        // by not multiplying across all rows.
         for( int j = minLength-1; j >= 0; j-- ) {
             int diagIndex = j*numRows+j;
             double before = QR.data[diagIndex];
@@ -130,6 +132,39 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
         }
 
         return Q;
+    }
+
+    /**
+     * A = Q*A
+     *
+     * @param A Matrix that is being multiplied by Q.  Is modified.
+     */
+    public void applyQ( DenseMatrix64F A ) {
+        if( A.numRows != numRows )
+            throw new IllegalArgumentException("A must have at least "+numRows+" rows.");
+
+        for( int j = minLength-1; j >= 0; j-- ) {
+            int diagIndex = j*numRows+j;
+            double before = QR.data[diagIndex];
+            QR.data[diagIndex] = 1;
+            QrHelperFunctions.rank1UpdateMultR(A,QR.data,j*numRows,gammas[j],0,j,numRows,v);
+            QR.data[diagIndex] = before;
+        }
+    }
+
+    /**
+     * A = Q<sup>T</sup>*A
+     *
+     * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
+     */
+    public void applyTranQ( DenseMatrix64F A ) {
+        for( int j = 0; j < minLength; j++ ) {
+            int diagIndex = j*numRows+j;
+            double before = QR.data[diagIndex];
+            QR.data[diagIndex] = 1;
+            QrHelperFunctions.rank1UpdateMultR(A,QR.data,j*numRows,gammas[j],0,j,numRows,v);
+            QR.data[diagIndex] = before;
+        }
     }
 
     /**
@@ -157,15 +192,14 @@ public class QRDecompositionHouseholderTran implements QRDecomposition {
             for( int i = 0; i < R.numRows; i++ ) {
                 int min = Math.min(i,R.numCols);
                 for( int j = 0; j < min; j++ ) {
-                    R.set(i,j,0);
+                    R.unsafe_set(i,j,0);
                 }
             }
         }
 
         for( int i = 0; i < R.numRows; i++ ) {
             for( int j = i; j < R.numCols; j++ ) {
-                double val = QR.get(j,i);
-                R.set(i,j,val);
+                R.unsafe_set(i,j,QR.unsafe_get(j,i));
             }
         }
 

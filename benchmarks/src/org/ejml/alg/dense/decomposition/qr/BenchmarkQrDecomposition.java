@@ -79,10 +79,10 @@ public class BenchmarkQrDecomposition {
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
 //        System.out.println("basic            = "+ generic( new QRDecompositionHouseholder(), mat,numTrials));
-//        System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn() ,mat,numTrials));
+        System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn() ,mat,numTrials));
         System.out.println("tran             = "+ generic( new QRDecompositionHouseholderTran() , mat,numTrials));
-        System.out.println("block  native    = "+ block(mat,numTrials));
-        System.out.println("block wrapper    = "+ generic( new QRDecompositionBlock64() , mat,numTrials));
+//        System.out.println("block  native    = "+ block(mat,numTrials));
+//        System.out.println("block wrapper    = "+ generic( new QRDecompositionBlock64() , mat,numTrials));
     }
 
     public static void main( String args [] ) {
@@ -92,7 +92,7 @@ public class BenchmarkQrDecomposition {
         int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,5,1,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 5; i < size.length; i++ ) {
+        for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
             DenseMatrix64F mat = RandomMatrices.createRandom(w*4,w/1,rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);

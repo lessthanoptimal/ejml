@@ -33,6 +33,5 @@ public class LinearSolverQrBlock64 extends WrapLinearSolverBlock64 {
 
     public LinearSolverQrBlock64() {
         super(new BlockQrHouseHolderSolver());
-        ((BlockQrHouseHolderSolver)alg).setModifyB(true);
     }
 }

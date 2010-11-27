@@ -48,6 +48,45 @@ public abstract class GenericLinearSolverChecks {
     protected double tol = 1e-8;
 
     /**
+     * Checks to see if the modifyA() flag is set correctly
+     */
+    @Test
+    public void modifiesA() {
+        DenseMatrix64F A_orig = RandomMatrices.createRandom(4,4,rand);
+        DenseMatrix64F A = A_orig.copy();
+
+        LinearSolver solver = createSolver(A);
+
+        assertTrue(solver.setA(A));
+
+        boolean modified = !MatrixFeatures.isIdentical(A_orig,A);
+
+        assertTrue(modified == solver.modifiesA());
+    }
+
+    /**
+     * Checks to see if the modifyB() flag is set correctly
+     */
+    @Test
+    public void modifiesB() {
+        DenseMatrix64F A = RandomMatrices.createRandom(4,4,rand);
+
+        LinearSolver solver = createSolver(A);
+
+        assertTrue(solver.setA(A));
+
+        DenseMatrix64F B = RandomMatrices.createRandom(4,2,rand);
+        DenseMatrix64F B_orig = B.copy();
+        DenseMatrix64F X = new DenseMatrix64F(A.numRows,B.numCols);
+
+        solver.solve(B,X);
+
+        boolean modified = !MatrixFeatures.isIdentical(B_orig,B);
+
+        assertTrue(modified == solver.modifiesB());
+    }
+
+    /**
      * See if a matrix that is more singular has a lower quality.
      */
     @Test
@@ -55,7 +94,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A_good = CommonOps.diag(4,3,2,1);
         DenseMatrix64F A_bad = CommonOps.diag(4,3,2,0.1);
 
-        LinearSolver solver = createSolver(4,4);
+        LinearSolver solver = createSolver(A_good);
 
         assertTrue(solver.setA(A_good));
         double q_good;
@@ -70,6 +109,8 @@ public abstract class GenericLinearSolverChecks {
         double q_bad = solver.quality();
 
         assertTrue(q_bad < q_good);
+
+        assertEquals(q_bad*10.0,q_good,1e-8);
     }
 
     /**
@@ -81,7 +122,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F Asmall = A.copy();
         CommonOps.scale(0.01,Asmall);
 
-        LinearSolver solver = createSolver(4,4);
+        LinearSolver solver = createSolver(A);
 
         assertTrue(solver.setA(A));
         double q;
@@ -107,7 +148,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 18, 21.5, 4.9000);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolver solver = createSolver(3,3);
+        LinearSolver solver = createSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -128,7 +169,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 8, 33, 15.5);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolver solver = createSolver(3,3);
+        LinearSolver solver = createSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -142,7 +183,7 @@ public abstract class GenericLinearSolverChecks {
     public void square_singular() {
         DenseMatrix64F A = new DenseMatrix64F(3,3);
 
-        LinearSolver solver = createSolver(3,3);
+        LinearSolver solver = createSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
     }
 
@@ -167,7 +208,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A = createPolyA(t,3);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolver solver = createSolver(7,3);
+        LinearSolver solver = createSolver(A);
         assertTrue(solver.setA(A));
 
         solver.solve(B,x);
@@ -196,7 +237,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DenseMatrix64F A_inv = RandomMatrices.createRandom(3,3,rand);
 
-        LinearSolver solver = createSolver(3,3);
+        LinearSolver solver = createSolver(A);
 
         solver.setA(A);
         solver.invert(A_inv);
@@ -215,16 +256,5 @@ public abstract class GenericLinearSolverChecks {
         }
     }
 
-    @Test
-    public void getA() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-
-        LinearSolver solver = createSolver(3,3);
-
-        solver.setA(A);
-
-        assertTrue(MatrixFeatures.isIdentical(A,solver.getA(),1e-8) );
-    }
-
-    protected abstract LinearSolver createSolver( int numRows , int numCols );
+    protected abstract LinearSolver createSolver( DenseMatrix64F A );
 }

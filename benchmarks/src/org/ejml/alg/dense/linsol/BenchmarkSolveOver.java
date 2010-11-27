@@ -19,8 +19,8 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -44,6 +44,8 @@ public class BenchmarkSolveOver {
         RandomMatrices.setRandom(A,rand);
         RandomMatrices.setRandom(B,rand);
 
+        DenseMatrix64F B_tmp = new DenseMatrix64F(B.numRows,B.numCols);
+
         if( !includeSet ) solver.setA(A);
 
         long prev = System.currentTimeMillis();
@@ -51,7 +53,13 @@ public class BenchmarkSolveOver {
         for( long i = 0; i < numTrials; i++ ) {
             if(includeSet) solver.setA(A);
 
-            solver.solve(B,X);
+            if( solver.modifiesB() ) {
+                B_tmp.set(B);
+                solver.solve(B_tmp,X);
+            } else {
+                solver.solve(B,X);
+            }
+
         }
 
         return System.currentTimeMillis() - prev;
@@ -63,16 +71,16 @@ public class BenchmarkSolveOver {
 //                new LinearSolverQrHouse(),numTrials));
         System.out.println("  solve QR house Col    = "+ solveBenchmark(
                 new LinearSolverQrHouseCol(),numTrials));
-        System.out.println("  solve QR Block64      = "+ solveBenchmark(
-                new LinearSolverQrBlock64(),numTrials));
+        System.out.println("  solve QR tran        = "+ solveBenchmark(
+                new LinearSolverQrHouseTran(),numTrials));
+//        System.out.println("  solve QR Block64      = "+ solveBenchmark(
+//                new LinearSolverQrBlock64(),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
-//        System.out.println("  solve SVD             = "+ solveBenchmark(
-//                new LinearSolverSvd(new SvdNumericalRecipes(A.numRows,A.numCols)),numTrials/8));
     }
 
     public static void main( String args [] ) {
-        int trialsWith[] = new int[]{2000,1000,200,7,1,1,1,1,1,1};
+        int trialsWith[] = new int[]{3000000,1000000,200000,400,3,1,1,1,1,1};
 
         int width[] = new int[]{2,4,10,100,500,1000,2000,5000,10000};
 
@@ -91,7 +99,7 @@ public class BenchmarkSolveOver {
         System.out.println();
         includeSet = false;
         System.out.println("Solving for least squares fitting type problems without set");
-        for( int i = 4; i < width.length; i++ ) {
+        for( int i = 0; i < width.length; i++ ) {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);

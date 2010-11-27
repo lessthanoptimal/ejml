@@ -23,6 +23,7 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.TransposeAlgs;
 import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
@@ -472,6 +473,9 @@ public class CommonOps {
         } else {
             throw new IllegalArgumentException("Can't solve for under determined systems since there are an infinite number of solutions.");
         }
+
+        // make sure the inputs 'a' and 'b' are not modified
+        solver = new LinearSolverSafe(solver);
 
         if( !solver.setA(a) )
             return false;

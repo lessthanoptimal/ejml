@@ -24,21 +24,45 @@ import org.ejml.data.DenseMatrix64F;
 
 /**
  * <p>
- * Computes solutions for systems that have the form:<br>
- * A*X = B.<br>
- * where A &isin; &real; <sup>m &times; n</sup>, X &isin; &real; <sup>n &times; p</sup>,
- * B &isin; &real; <sup>m &times; p</sup>, and m &ge; n.
- * </p>
- * <p>
- *  If m = n then there is an exact solution, if m > n then it is an over determined system and a best fit
- * in the least-squares sense solution is found instead.  If no solution can be found
- * for A then false is returned by {@link #setA}.
+ * An implementation of LinearSolver solves a linear system or inverts a matrix.  It masks more complex
+ * implementation details, while giving the programmer control over memory management and performance.
+ * To quickly detect nearly singular matrices without computing the SVD the {@link #quality()}
+ * function is provided.
  * </p>
  *
  * <p>
- * A function is provided for computing the inverse of A.  This can be accomplished by using the solve function
- * also, but sometimes there are faster ways to compute the inverse.  Solvers are also designed to be
- * reused, which allows more efficient use of memory.
+ * A linear system is defined as:
+ * A*X = B.<br>
+ * where A &isin; &real; <sup>m &times; n</sup>, X &isin; &real; <sup>n &times; p</sup>,
+ * B &isin; &real; <sup>m &times; p</sup>.  Different implementations can solve different
+ * types and shapes in input matrices and have different memory and runtime performance.
+ *</p>
+
+ * <p>
+ * To solve a system:<br>
+ * <ol>
+ * <li> Call {@link #setA(org.ejml.data.DenseMatrix64F)}
+ * <li> Call {@link #solve(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)}.
+ * </ol>
+ * </p>
+ *
+ * <p>
+ * To invert a matrix:<br>
+ * <ol>
+ * <li> Call {@link #setA(org.ejml.data.DenseMatrix64F)}
+ * <li> Call {@link #invert(org.ejml.data.DenseMatrix64F)}.
+ * </ol>
+ * A matrix can also be inverted by passing in an identity matrix to solve, but this will be
+ * slower and more memory intensive than the specialized invert() function.
+ * </p>
+ *
+ * <p>
+ * <b>IMPORTANT:</b> Depending upon the implementation, input matrices might be overwritten by
+ * the solver.  This
+ * reduces memory and computational requirements and give more control to the programmer.  If
+ * the input matrices need to be not modified then {@link LinearSolverSafe} can be used.  The
+ * functions {@link #modifiesA()} and {@link #modifiesB()} specify which input matrices are being
+ * modified.
  * </p>
  *
  * @author Peter Abeles
@@ -46,17 +70,10 @@ import org.ejml.data.DenseMatrix64F;
 public interface LinearSolver {
 
     /**
-     * Returns a reference to the matrix A that it is processing.
-     *
-     * @return Matrix A.
-     */
-    public DenseMatrix64F getA();
-
-    /**
      * <p>
-     * Specifies the A matrix in the linear equation.  A reference
-     * is saved internally but the matrix is not modified.  This
-     * reference is discarded the next time this function is called.
+     * Specifies the A matrix in the linear equation.  A reference might be saved
+     * and it might also be modified depending on the implementation.  If it is modified
+     * then {@link #modifiesA()} will return true.
      * </p>
      *
      * <p>
@@ -64,7 +81,7 @@ public interface LinearSolver {
      * is because some decompositions don't detect singular matrices.
      * </p>
      *
-     * @param A The A matrix in the linear equation. Not modified. Reference saved.
+     * @param A The 'A' matrix in the linear equation. Might be modified or have the reference.
      * @return true if it can be processed.
      */
     public boolean setA( DenseMatrix64F A );
@@ -90,23 +107,41 @@ public interface LinearSolver {
 
     /**
      * <p>
-     * Solves for X in the linear system, AX=B.
+     * Solves for X in the linear system, A*X=B.
      * </p>
      * <p>
-     * In some implementations B and X can be the same instance of a variable.
+     * In some implementations 'B' and 'X' can be the same instance of a variable.  Call
+     * {@link #modifiesB()} to determine if 'B' is modified.
      * </p>
      *
-     * @param B A matrix &real; <sup>m &times; p</sup>.  Not modified.
+     * @param B A matrix &real; <sup>m &times; p</sup>.  Might be modified.
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
     public void solve( DenseMatrix64F B , DenseMatrix64F X );
 
 
     /**
-     * Computes the inverse of A matrix and writes the results to the
-     * provided matrix.
+     * Computes the inverse of of the 'A' matrix passed into {@link #setA(org.ejml.data.DenseMatrix64F)}
+     * and writes the results to the provided matrix.  If 'A_inv' needs to be different from 'A'
+     * is implementation dependent.
      *
      * @param A_inv Where the inverted matrix saved. Modified.
      */
     public void invert( DenseMatrix64F A_inv );
+
+    /**
+     * Returns true if the passed in matrix to {@link #setA(org.ejml.data.DenseMatrix64F)}
+     * is modified.
+     *
+     * @return true if A is modified in setA().
+     */
+    public boolean modifiesA();
+
+    /**
+     * Returns true if the passed in 'B' matrix to {@link #solve(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)}
+     * is modified.
+     *
+     * @return true if B is modified in solve(B,X).
+     */
+    public boolean modifiesB();
 }

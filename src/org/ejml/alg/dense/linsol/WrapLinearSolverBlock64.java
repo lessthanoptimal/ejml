@@ -42,16 +42,10 @@ public class WrapLinearSolverBlock64 implements LinearSolver {
     protected BlockMatrix64F blockB = new BlockMatrix64F(1,1);
     // block matrix copy of X matrix passed into solve
     protected BlockMatrix64F blockX = new BlockMatrix64F(1,1);
-    // original input A matrix.
-    protected DenseMatrix64F A;
+
 
     public WrapLinearSolverBlock64( LinearSolverBlock alg ) {
         this.alg = alg;
-    }
-
-    @Override
-    public DenseMatrix64F getA() {
-        return A;
     }
 
     /**
@@ -64,7 +58,6 @@ public class WrapLinearSolverBlock64 implements LinearSolver {
     public boolean setA(DenseMatrix64F A) {
         blockA.reshape(A.numRows,A.numCols,false);
         BlockMatrixOps.convert(A,blockA);
-        this.A = A;
 
         return alg.setA(blockA);
     }
@@ -104,5 +97,15 @@ public class WrapLinearSolverBlock64 implements LinearSolver {
         alg.invert(blockB);
 
         BlockMatrixOps.convert(blockB,A_inv);
+    }
+
+    @Override
+    public boolean modifiesA() {
+        return false;
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
     }
 }

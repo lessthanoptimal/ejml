@@ -23,6 +23,7 @@ import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -42,6 +43,50 @@ public class TestQRDecompositionHouseholderTran extends GenericQrCheck {
     @Override
     protected QRDecomposition createQRDecomposition() {
         return new QRDecompositionHouseholderTran();
+    }
+
+    /**
+     * Sees if computing Q explicitly and applying Q produces the same results
+     */
+    @Test
+    public void applyQ() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,4,rand);
+
+        QRDecompositionHouseholderTran alg = new QRDecompositionHouseholderTran();
+
+        assertTrue(alg.decompose(A));
+
+        DenseMatrix64F Q = alg.getQ(null,false);
+        DenseMatrix64F B = RandomMatrices.createRandom(5,2,rand);
+
+        DenseMatrix64F expected = new DenseMatrix64F(B.numRows,B.numCols);
+        CommonOps.mult(Q,B,expected);
+
+        alg.applyQ(B);
+
+        assertTrue(MatrixFeatures.isIdentical(expected,B,1e-8));
+    }
+
+    /**
+     * Sees if computing Q^T explicitly and applying Q^T produces the same results
+     */
+    @Test
+    public void applyTranQ() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,4,rand);
+
+        QRDecompositionHouseholderTran alg = new QRDecompositionHouseholderTran();
+
+        assertTrue(alg.decompose(A));
+
+        DenseMatrix64F Q = alg.getQ(null,false);
+        DenseMatrix64F B = RandomMatrices.createRandom(5,2,rand);
+
+        DenseMatrix64F expected = new DenseMatrix64F(B.numRows,B.numCols);
+        CommonOps.multTransA(Q,B,expected);
+
+        alg.applyTranQ(B);
+
+        assertTrue(MatrixFeatures.isIdentical(expected,B,1e-8));
     }
 
     /**

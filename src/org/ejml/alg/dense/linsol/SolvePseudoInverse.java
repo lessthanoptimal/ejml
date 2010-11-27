@@ -128,12 +128,17 @@ public class SolvePseudoInverse implements LinearSolver {
     }
 
     @Override
-    public DenseMatrix64F getA() {
-        return A;
+    public void invert(DenseMatrix64F A_inv) {
+        A_inv.set(pinv);
     }
 
     @Override
-    public void invert(DenseMatrix64F A_inv) {
-        A_inv.set(pinv);
+    public boolean modifiesA() {
+        return false;
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
     }
 }

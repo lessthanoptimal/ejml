@@ -51,7 +51,7 @@ public class TestInvertUsingSolve {
         LinearSolver solver = new LinearSolverLu(decomp);
 
         solver.setA(A);
-        InvertUsingSolve.invert(solver,A_inv);
+        InvertUsingSolve.invert(solver,A,A_inv);
 
         DenseMatrix64F I = RandomMatrices.createRandom(3,3,rand);
 

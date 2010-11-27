@@ -19,43 +19,71 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
- * Solver which uses an unrolled inverse to compute the inverse.  This can only invert matrices and not solve.
- * This is faster than LU inverse but only supports small matrices..
+ * Ensures that any linear solver it is wrapped around will never modify
+ * the input matrices.
  *
  * @author Peter Abeles
  */
-public class LinearSolverUnrolled implements LinearSolver {
-    DenseMatrix64F A;
+public class LinearSolverSafe implements LinearSolver {
+
+    // the solver it is wrapped around
+    private LinearSolver alg;
+
+    // local copies of input matrices that can be modified.
+    private DenseMatrix64F A;
+    private DenseMatrix64F B;
+
+    /**
+     *
+     * @param alg The solver it is wrapped around.
+     */
+    public LinearSolverSafe(LinearSolver alg) {
+        this.alg = alg;
+    }
 
     @Override
     public boolean setA(DenseMatrix64F A) {
-        if( A.numRows != A.numCols)
-            return false;
 
-        this.A = A;
-        return A.numRows <= UnrolledInverseFromMinor.MAX;
+        if( alg.modifiesA() ) {
+            if( this.A == null ) {
+                this.A = A.copy();
+            } else if( this.A.numRows != A.numRows || this.A.numCols != A.numCols ) {
+                this.A.reshape(A.numRows,A.numCols,false);
+                this.A.set(A);
+            }
+            return alg.setA(this.A);
+        }
+
+        return alg.setA(A);
     }
 
     @Override
     public double quality() {
-        throw new IllegalArgumentException("Not supported by this solver.");
+        return alg.quality();
     }
 
     @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
-        throw new RuntimeException("Not supported");
+        if( alg.modifiesB() ) {
+            if( this.B == null ) {
+                this.B = B.copy();
+            } else if( this.B.numRows != B.numRows || this.B.numCols != B.numCols ) {
+                this.B.reshape(A.numRows,B.numCols,false);
+                this.B.set(B);
+            }
+            B = this.B;
+        }
+
+        alg.solve(B,X);
     }
 
     @Override
     public void invert(DenseMatrix64F A_inv) {
-        if( A.numRows == 1 )
-            A_inv.set(0,  1.0/A.get(0));
-        UnrolledInverseFromMinor.inv(A,A_inv);
+        alg.invert(A_inv);
     }
 
     @Override

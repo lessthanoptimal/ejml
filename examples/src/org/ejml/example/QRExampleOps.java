@@ -98,7 +98,7 @@ public class QRExampleOps {
                 // save the results
                 CommonOps.insert(A_mod, QR, i,i);
                 CommonOps.insert(v, QR, i,i);
-                QR.set(i,i,-tau*max);
+                QR.unsafe_set(i,i,-tau*max);
 
                 // save gamma for recomputing Q later on
                 gammas[i] = gamma;
@@ -147,7 +147,7 @@ public class QRExampleOps {
 
         for( int i = 0; i < N; i++ ) {
             for( int j = i; j < QR.numCols; j++ ) {
-                R.set(i,j, QR.get(i,j));
+                R.unsafe_set(i,j, QR.unsafe_get(i,j));
             }
         }
 

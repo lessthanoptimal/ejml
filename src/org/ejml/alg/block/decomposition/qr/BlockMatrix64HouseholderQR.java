@@ -142,8 +142,8 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
                 }
             }
         }
-
-        applyQ(Q);
+ 
+        applyQ(Q,true);
 
         return Q;
     }
@@ -162,7 +162,17 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      */
     @Override
     public void applyQ( BlockMatrix64F B ) {
+        applyQ(B,false);
+    }
 
+    /**
+     * Specialized version of applyQ() that allows the zeros in an identity matrix
+     * to be taken advantage of depending on if isIdentity is true or not.
+     *
+     * @param B
+     * @param isIdentity If B is an identity matrix.
+     */
+    public void applyQ( BlockMatrix64F B , boolean isIdentity ) {
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
 
         D1Submatrix64F subB = new D1Submatrix64F(B);
@@ -183,7 +193,8 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
             Y.col0 = i;
             Y.col1 = Math.min(Y.col0+blockLength,dataA.numCols);
             Y.row0 = i;
-            subB.col0 = i;
+            if( isIdentity )
+                subB.col0 = i;
             subB.row0 = i;
 
             setW();

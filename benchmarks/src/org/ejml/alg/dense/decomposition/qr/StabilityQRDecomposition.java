@@ -43,7 +43,7 @@ public class StabilityQRDecomposition {
         }
 
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null,true));
-        SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null,false));
+        SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null,true));
 
         SimpleMatrix A_found = Q.mult(R);
         SimpleMatrix A = SimpleMatrix.wrap(orig);
@@ -55,6 +55,8 @@ public class StabilityQRDecomposition {
     {
         System.out.println("qr               = "+ evaluate(new QRDecompositionHouseholder(),mat));
         System.out.println("qr col           = "+ evaluate(new QRDecompositionHouseholderColumn(),mat));
+        System.out.println("qr tran          = "+ evaluate(new QRDecompositionHouseholderTran(),mat));
+        System.out.println("qr block         = "+ evaluate(new QRDecompositionBlock64(),mat));
     }
 
     public static void main( String args [] ) {

@@ -55,24 +55,10 @@ public class BlockQrHouseHolderSolver implements LinearSolverBlock {
     protected BlockMatrix64F QR;
 
     // block aligned triangular copies of B and U
-    protected BlockMatrix64F tempB = new BlockMatrix64F(1,1,1);
     protected BlockMatrix64F tempU = new BlockMatrix64F(1,1,1);
-
-    // can the input B matrix be modified?
-    // If it can be then a matrix copy can be avoided
-    protected boolean modifyB = false;
 
     public BlockQrHouseHolderSolver() {
         decomp.setSaveW(true);
-    }
-
-    public void setModifyB(boolean modifyB) {
-        this.modifyB = modifyB;
-    }
-
-    @Override
-    public BlockMatrix64F getA() {
-        return QR;
     }
 
     /**
@@ -116,13 +102,6 @@ public class BlockQrHouseHolderSolver implements LinearSolverBlock {
             throw new IllegalArgumentException("Rows in B do not match the rows in A.");
         if( B.blockLength != QR.blockLength || X.blockLength != QR.blockLength )
             throw new IllegalArgumentException("All matrices must have the same block length.");
-
-        //  Copy B since it can't be modified
-        if( !modifyB ) {
-            tempB.reshape(B.numRows,B.numCols,B.blockLength,false);
-            tempB.set(B);
-            B = tempB;
-        }
 
         // The system being solved for can be described as:
         // Q*R*X = B
@@ -186,7 +165,12 @@ public class BlockQrHouseHolderSolver implements LinearSolverBlock {
     }
 
     @Override
-    public boolean inputModified() {
+    public boolean modifiesA() {
         return decomp.inputModified();
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return true;
     }
 }

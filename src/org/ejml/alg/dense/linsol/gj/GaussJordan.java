@@ -245,6 +245,16 @@ public class GaussJordan extends LinearSolverAbstract {
         unscramble(N, A, indexRow, indexCol);
     }
 
+    @Override
+    public boolean modifiesA() {
+        return false;
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
+    }
+
     private static void unscramble(int N, RowD1Matrix64F data, int[] indexRow, int[] indexCol) {
         for( int i = N -1; i >= 0; i-- ) {
             if( indexRow[i] != indexCol[i]) {

@@ -26,11 +26,11 @@ import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -54,14 +54,15 @@ public class GenericBlock64QrDecompositionTests {
      * Runs all the tests.
      */
     public void allTests() {
+        applyQ();
         applyQTran();
         checkInternalData();
         fullDecomposition();
     }
 
     /**
-     * Tests applyQTran() for correctness by applying it to the original matrix
-     * and seeing if it becomes triangular.
+     * Test applyQTran() by explicitly computing Q and compare the results of multiplying
+     * a matrix by Q<sup>T</sup> and applying Q to it.
      */
     public void applyQTran() {
         for( int i = 1; i <= 3*r; i++ ) {
@@ -70,18 +71,41 @@ public class GenericBlock64QrDecompositionTests {
 
                 assertTrue(alg.decompose(A.copy()));
 
-                alg.applyQTran(A);
+                BlockMatrix64F Q = alg.getQ(null,false);
 
-                // the lower left triangle should be zeros since this is a QR decomposition
-                for( int k = 0; k < A.numCols; k++ ) {
-                    for( int l = k+1; l < A.numRows; l++ ) {
-                        assertEquals(0,A.get(l,k),1e-8);
-                    }
-                }
+                BlockMatrix64F B = BlockMatrixOps.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix64F expected = new BlockMatrix64F(i,j,r);
+
+                BlockMatrixOps.multTransA(Q,B,expected);
+                alg.applyQTran(B);
+
+                assertTrue(MatrixFeatures.isIdentical(expected,B,1e-8));
             }
         }
+    }
 
+    /**
+     * Test applyQ() by explicitly computing Q and compare the results of multiplying
+     * a matrix by Q and applying Q to it.
+     */
+    public void applyQ() {
+        for( int i = 1; i <= 3*r; i++ ) {
+            for( int j = 1; j <= 3*r; j++ ) {
+                BlockMatrix64F A = BlockMatrixOps.createRandom(i,j,-1,1,rand,r);
 
+                assertTrue(alg.decompose(A.copy()));
+
+                BlockMatrix64F Q = alg.getQ(null,false);
+
+                BlockMatrix64F B = BlockMatrixOps.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix64F expected = new BlockMatrix64F(i,j,r);
+
+                BlockMatrixOps.mult(Q,B,expected);
+                alg.applyQ(B);
+
+                assertTrue(MatrixFeatures.isIdentical(expected,B,1e-8));
+            }
+        }
     }
 
     /**

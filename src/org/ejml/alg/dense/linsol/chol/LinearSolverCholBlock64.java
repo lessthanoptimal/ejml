@@ -35,8 +35,6 @@ public class LinearSolverCholBlock64 extends WrapLinearSolverBlock64 {
 
     public LinearSolverCholBlock64() {
         super(new BlockCholeskyOuterSolver());
-        // reduce the amount of memory that needs to be declared and copied
-        ((BlockCholeskyOuterSolver)alg).setOverwriteB(true);
     }
 
     /**
