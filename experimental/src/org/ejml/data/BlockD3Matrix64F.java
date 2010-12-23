@@ -130,4 +130,9 @@ public class BlockD3Matrix64F extends Matrix64F {
     public void print() {
         MatrixIO.print(this);
     }
+
+    @Override
+    public <T extends Matrix64F> T copy() {
+        return null;
+    }
 }

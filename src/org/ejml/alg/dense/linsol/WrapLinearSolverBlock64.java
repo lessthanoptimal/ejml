@@ -20,21 +20,20 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.linsol.LinearSolverBlock;
 import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
- * Wrapper that allows {@link LinearSolverBlock} to implements {@link LinearSolver}.  It works
+ * Wrapper that allows {@link LinearSolver<BlockMatrix64F>} to implements {@link LinearSolver}.  It works
  * by converting {@link DenseMatrix64F} into {@link BlockMatrix64F} and calling the equivalent
  * functions.  Since a local copy is made all input matrices are never modified.
  *
  * @author Peter Abeles
  */
-public class WrapLinearSolverBlock64 implements LinearSolver {
-    protected LinearSolverBlock alg = new BlockCholeskyOuterSolver();
+public class WrapLinearSolverBlock64 implements LinearSolver<DenseMatrix64F> {
+    protected LinearSolver<BlockMatrix64F> alg = new BlockCholeskyOuterSolver();
 
     // block matrix copy of the system A matrix.
     protected BlockMatrix64F blockA = new BlockMatrix64F(1,1);
@@ -44,7 +43,7 @@ public class WrapLinearSolverBlock64 implements LinearSolver {
     protected BlockMatrix64F blockX = new BlockMatrix64F(1,1);
 
 
-    public WrapLinearSolverBlock64( LinearSolverBlock alg ) {
+    public WrapLinearSolverBlock64( LinearSolver<BlockMatrix64F> alg ) {
         this.alg = alg;
     }
 

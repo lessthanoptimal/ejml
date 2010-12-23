@@ -19,14 +19,12 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.alg.dense.linsol.qr.SmartSolverQr;
+import org.ejml.data.DenseMatrix64F;
 
 
 /**
@@ -39,7 +37,7 @@ public class LinearSolverFactory {
     /**
      * Creates a general purpose solver.  Use this if you are not sure what you need.
      */
-    public static LinearSolver general() {
+    public static LinearSolver<DenseMatrix64F> general() {
         // todo create a solver which uses linear or least squares
         return leastSquares();
     }
@@ -49,7 +47,7 @@ public class LinearSolverFactory {
      *
      * @return A new linear solver.
      */
-    public static LinearSolver linear() {
+    public static LinearSolver<DenseMatrix64F> linear() {
         return new LinearSolverLu(new LUDecompositionAlt());
     }
 
@@ -59,7 +57,7 @@ public class LinearSolverFactory {
      *
      * @return A new least-squares solver for over determined systems.
      */
-    public static LinearSolver leastSquares() {
+    public static LinearSolver<DenseMatrix64F> leastSquares() {
         return new SmartSolverQr();
     }
 
@@ -68,7 +66,7 @@ public class LinearSolverFactory {
      *
      * @return A new solver for symmetric matrices.
      */
-    public static LinearSolver symmetric() {
+    public static LinearSolver<DenseMatrix64F> symmetric() {
         return new SmartSolverChol();
     }
 

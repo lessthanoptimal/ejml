@@ -35,7 +35,7 @@ import org.ejml.data.DenseMatrix64F;
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract implements LinearSolver {
+public abstract class LinearSolverAbstract implements LinearSolver<DenseMatrix64F> {
 
     protected DenseMatrix64F A;
     protected int numRows;

@@ -32,7 +32,15 @@ import org.ejml.data.DenseMatrix64F;
 
 
 /**
+ * <p>
  * Used to compute features that describe the structure of a matrix.
+ * <p>
+ *
+ * <p>
+ * Unless explicitly stated otherwise it is assumed that the elements of input matrices
+ * contain only real numbers.  If an element is NaN or infinite then the behavior is undefined.
+ * See IEEE 754 for more information on this issue.
+ * </p>
  *
  * @author Peter Abeles
  */
@@ -239,8 +247,8 @@ public class MatrixFeatures {
      * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol
      * </p>
      *
-     * @param a A matrix. Not modified.
-     * @param b A matrix. Not modified.
+     * @param a A matrix containing only real values. Not modified.
+     * @param b A matrix containing only real values. Not modified.
      * @param tol How close to being identical each element needs to be.
      * @return true if similar and false otherwise.
      */
@@ -304,9 +312,15 @@ public class MatrixFeatures {
      * The two matrices are identical if:<br>
      * a<sub>ij</sub> == b<sub>ij</sub>
      * </p>
+     *
+     * <p>
+     * NOTE: This function is only defined for real numbers.  If either matrix
+     * contains NaN or infinite numbers the response is undefined. See IEEE 754
+     * for more information on this issue.
+     * </p>
      * 
-     * @param a A matrix. Not modified.
-     * @param b A matrix. Not modified.
+     * @param a A matrix containing only real values. Not modified.
+     * @param b A matrix containing only real values. Not modified.
      * @return true if identical and false otherwise.
      */
     public static boolean isIdentical( D1Matrix64F a, D1Matrix64F b ) {

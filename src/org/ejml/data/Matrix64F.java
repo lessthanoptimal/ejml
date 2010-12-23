@@ -135,5 +135,28 @@ public abstract class Matrix64F implements Serializable {
      */
     public abstract int getNumElements();
 
+    /**
+     * Assigns the value of 'this' matrix to be the same as 'A'.  The shape of
+     * both matrices must be the same.
+     *
+     * @param A The matrix whose value is to be copied into 'this'.
+     */
+    public void set( Matrix64F A ) {
+        if( A.numRows != numRows )
+            throw new IllegalArgumentException("Unexpected number of rows.");
+
+        if( A.numCols != numCols )
+            throw new IllegalArgumentException("Unexpected number of columns.");
+
+
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                set(i,j,A.get(i,j));
+            }
+        }
+    }
+
+    public abstract <T extends Matrix64F> T copy();
+
     public abstract void print();
 }

@@ -411,6 +411,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      *
      * @return A new identical matrix.
      */
+    @SuppressWarnings({"unchecked"})
     public DenseMatrix64F copy() {
         return new DenseMatrix64F(this);
     }

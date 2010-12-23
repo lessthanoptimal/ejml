@@ -96,7 +96,7 @@ public class TestLinearSolverSafe {
 
     }
 
-    private class DummySolver implements LinearSolver
+    private class DummySolver implements LinearSolver<DenseMatrix64F>
     {
         boolean modifiesA;
         boolean modifiesB;

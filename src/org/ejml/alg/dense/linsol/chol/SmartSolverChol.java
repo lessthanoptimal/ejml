@@ -37,7 +37,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class SmartSolverChol implements LinearSolver  {
+public class SmartSolverChol implements LinearSolver<DenseMatrix64F>  {
 
     // instance of the solver it is currently using
     private LinearSolver s;

@@ -7,11 +7,11 @@ For 0.16 Release
   * Only if memory requires of chol-block64 can't be reduced
 - Merge inner triangular solver code
 - Unit test for PCA example
-- Matrix type generic for solver?
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 - Improve cholesky block inverse by taking advantage of symmetry
 - Clean up decomposition factory and linear solver factory
   * Have them take a matrix or system as an input and return the solver/decomposer?
+- rename isIdentical to isEqual since most people are used to equal?
 
 
 Ideas for reducing memory requirements:
@@ -32,10 +32,6 @@ Ideas for reducing memory requirements:
   * Iterative
   * Add condition(), use Hager's method? pg 132
   * Put this new condition into NormOps since it should be much faster
-  * Redesign Linear Solvers
-    - By default modify all inputs if its advantageous
-    - Create a "safe" wrapper that will use copies instead
-    - Add isModifiedA() isModifiedB()
 
 - QR
   * Replace col with tran variant of QR decomposition?

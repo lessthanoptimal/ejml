@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -28,29 +28,30 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class LinearSolverSafe implements LinearSolver {
+@SuppressWarnings({"unchecked"})
+public class LinearSolverSafe<T extends Matrix64F> implements LinearSolver<T> {
 
     // the solver it is wrapped around
-    private LinearSolver alg;
+    private LinearSolver<T> alg;
 
     // local copies of input matrices that can be modified.
-    private DenseMatrix64F A;
-    private DenseMatrix64F B;
+    private T A;
+    private T B;
 
     /**
      *
      * @param alg The solver it is wrapped around.
      */
-    public LinearSolverSafe(LinearSolver alg) {
+    public LinearSolverSafe(LinearSolver<T> alg) {
         this.alg = alg;
     }
 
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(T A) {
 
         if( alg.modifiesA() ) {
             if( this.A == null ) {
-                this.A = A.copy();
+                this.A = (T)A.copy();
             } else if( this.A.numRows != A.numRows || this.A.numCols != A.numCols ) {
                 this.A.reshape(A.numRows,A.numCols,false);
                 this.A.set(A);
@@ -67,10 +68,10 @@ public class LinearSolverSafe implements LinearSolver {
     }
 
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(T B, T X) {
         if( alg.modifiesB() ) {
             if( this.B == null ) {
-                this.B = B.copy();
+                this.B = (T)B.copy();
             } else if( this.B.numRows != B.numRows || this.B.numCols != B.numCols ) {
                 this.B.reshape(A.numRows,B.numCols,false);
                 this.B.set(B);
@@ -82,7 +83,7 @@ public class LinearSolverSafe implements LinearSolver {
     }
 
     @Override
-    public void invert(DenseMatrix64F A_inv) {
+    public void invert(T A_inv) {
         alg.invert(A_inv);
     }
 

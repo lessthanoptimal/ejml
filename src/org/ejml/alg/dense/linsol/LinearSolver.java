@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -41,16 +41,16 @@ import org.ejml.data.DenseMatrix64F;
  * <p>
  * To solve a system:<br>
  * <ol>
- * <li> Call {@link #setA(org.ejml.data.DenseMatrix64F)}
- * <li> Call {@link #solve(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)}.
+ * <li> Call {@link #setA(org.ejml.data.Matrix64F)}
+ * <li> Call {@link #solve(org.ejml.data.Matrix64F, org.ejml.data.Matrix64F)}.
  * </ol>
  * </p>
  *
  * <p>
  * To invert a matrix:<br>
  * <ol>
- * <li> Call {@link #setA(org.ejml.data.DenseMatrix64F)}
- * <li> Call {@link #invert(org.ejml.data.DenseMatrix64F)}.
+ * <li> Call {@link #setA(org.ejml.data.Matrix64F)}
+ * <li> Call {@link #invert(org.ejml.data.Matrix64F)}.
  * </ol>
  * A matrix can also be inverted by passing in an identity matrix to solve, but this will be
  * slower and more memory intensive than the specialized invert() function.
@@ -67,7 +67,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface LinearSolver {
+public interface LinearSolver< T extends Matrix64F> {
 
     /**
      * <p>
@@ -84,7 +84,7 @@ public interface LinearSolver {
      * @param A The 'A' matrix in the linear equation. Might be modified or have the reference.
      * @return true if it can be processed.
      */
-    public boolean setA( DenseMatrix64F A );
+    public boolean setA( T A );
 
     /**
      * <p>
@@ -117,20 +117,20 @@ public interface LinearSolver {
      * @param B A matrix &real; <sup>m &times; p</sup>.  Might be modified.
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
-    public void solve( DenseMatrix64F B , DenseMatrix64F X );
+    public void solve( T B , T X );
 
 
     /**
-     * Computes the inverse of of the 'A' matrix passed into {@link #setA(org.ejml.data.DenseMatrix64F)}
+     * Computes the inverse of of the 'A' matrix passed into {@link #setA(org.ejml.data.Matrix64F)}
      * and writes the results to the provided matrix.  If 'A_inv' needs to be different from 'A'
      * is implementation dependent.
      *
      * @param A_inv Where the inverted matrix saved. Modified.
      */
-    public void invert( DenseMatrix64F A_inv );
+    public void invert( T A_inv );
 
     /**
-     * Returns true if the passed in matrix to {@link #setA(org.ejml.data.DenseMatrix64F)}
+     * Returns true if the passed in matrix to {@link #setA(org.ejml.data.Matrix64F)}
      * is modified.
      *
      * @return true if A is modified in setA().
@@ -138,7 +138,7 @@ public interface LinearSolver {
     public boolean modifiesA();
 
     /**
-     * Returns true if the passed in 'B' matrix to {@link #solve(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)}
+     * Returns true if the passed in 'B' matrix to {@link #solve(org.ejml.data.Matrix64F, org.ejml.data.Matrix64F)}
      * is modified.
      *
      * @return true if B is modified in solve(B,X).

@@ -29,7 +29,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class LinearSolverUnrolled implements LinearSolver {
+public class LinearSolverUnrolled implements LinearSolver<DenseMatrix64F> {
     DenseMatrix64F A;
 
     @Override

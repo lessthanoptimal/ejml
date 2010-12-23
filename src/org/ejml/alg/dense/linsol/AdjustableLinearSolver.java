@@ -19,6 +19,8 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.data.DenseMatrix64F;
+
 /**
  * In many situations solutions to linear systems that share many of the same data points are needed.
  * This can happen when solving using the most recent data or when rejecting outliers.  In these situations
@@ -28,7 +30,7 @@ package org.ejml.alg.dense.linsol;
  *
  * @author Peter Abeles
  */
-public interface AdjustableLinearSolver extends LinearSolver {
+public interface AdjustableLinearSolver extends LinearSolver<DenseMatrix64F> {
 
 
     /**

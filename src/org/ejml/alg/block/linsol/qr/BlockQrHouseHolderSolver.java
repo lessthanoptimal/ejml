@@ -22,7 +22,7 @@ package org.ejml.alg.block.linsol.qr;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.qr.BlockMatrix64HouseholderQR;
-import org.ejml.alg.block.linsol.LinearSolverBlock;
+import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.ops.SpecializedOps;
@@ -46,7 +46,7 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public class BlockQrHouseHolderSolver implements LinearSolverBlock {
+public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
     // QR decomposition algorithm
     protected BlockMatrix64HouseholderQR decomp = new BlockMatrix64HouseholderQR();

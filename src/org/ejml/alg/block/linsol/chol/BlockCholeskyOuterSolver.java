@@ -22,7 +22,7 @@ package org.ejml.alg.block.linsol.chol;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
-import org.ejml.alg.block.linsol.LinearSolverBlock;
+import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.ops.SpecializedOps;
@@ -47,7 +47,7 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public class BlockCholeskyOuterSolver implements LinearSolverBlock {
+public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     // cholesky decomposition
     private BlockCholeskyOuterForm chol = new BlockCholeskyOuterForm(true);

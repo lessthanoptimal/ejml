@@ -87,4 +87,9 @@ public class DenseD2Matrix64F extends Matrix64F implements Serializable {
     @Override
     public void print() {
     }
+
+    @Override
+    public <T extends Matrix64F> T copy() {
+        return null;
+    }
 }

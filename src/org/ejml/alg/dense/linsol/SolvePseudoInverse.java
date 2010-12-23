@@ -47,7 +47,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class SolvePseudoInverse implements LinearSolver {
+public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
 
     // linear solver that is used to invert the matrix
     private LinearSolver inverter;

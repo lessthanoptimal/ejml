@@ -7,6 +7,9 @@
  * improved unit test to detect the bug
 - Changed contract for LinearSolver and added functions to determine if the input
   is being modified or not.
+- Genericified LinearSolver
+  * Removed LinearBlockSolver
+- Clarified behavior of functions in MatrixFeatures.
 
 ----- Version 0.15
 
