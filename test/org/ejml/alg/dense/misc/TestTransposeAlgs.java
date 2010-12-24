@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -45,11 +46,7 @@ public class TestTransposeAlgs {
         assertEquals(mat.getNumCols(),matTran.getNumRows());
         assertEquals(mat.getNumRows(),matTran.getNumCols());
 
-        for( int y = 0; y < mat.getNumRows(); y++ ){
-            for( int x = 0; x < mat.getNumCols(); x++ ) {
-                assertEquals(mat.get(y,x),matTran.get(x,y),1e-6);
-            }
-        }
+        EjmlUnitTests.assertEqualsTrans(mat,matTran,0);
     }
 
     @Test
@@ -65,11 +62,7 @@ public class TestTransposeAlgs {
                 assertEquals(numCols,matTran.getNumRows());
                 assertEquals(numRows,matTran.getNumCols());
 
-                for( int y = 0; y < numRows; y++ ){
-                    for( int x = 0; x < numCols; x++ ) {
-                        assertEquals(mat.get(y,x),matTran.get(x,y),1e-6);
-                    }
-                }
+                EjmlUnitTests.assertEqualsTrans(mat,matTran,0);
             }
         }
     }
@@ -84,11 +77,7 @@ public class TestTransposeAlgs {
         assertEquals(mat.getNumCols(),matTran.getNumRows());
         assertEquals(mat.getNumRows(),matTran.getNumCols());
 
-        for( int y = 0; y < mat.getNumRows(); y++ ){
-            for( int x = 0; x < mat.getNumCols(); x++ ) {
-                assertEquals(mat.get(y,x),matTran.get(x,y),1e-6);
-            }
-        }
+        EjmlUnitTests.assertEqualsTrans(mat,matTran,0);
     }
     
 }

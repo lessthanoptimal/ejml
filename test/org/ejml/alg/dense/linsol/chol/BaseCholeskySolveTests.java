@@ -19,14 +19,11 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
-import org.junit.Test;
 
 import java.util.Random;
 
@@ -59,13 +56,12 @@ public class BaseCholeskySolveTests {
         solver.solve(b,x);
 
         // see if the input got modified
-        UtilTestMatrix.checkEquals(A,A_orig,1e-5);
-        UtilTestMatrix.checkEquals(b,B_orig,1e-5);
-
+        EjmlUnitTests.assertEquals(A,A_orig,1e-5);
+        EjmlUnitTests.assertEquals(b,B_orig,1e-5);
 
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        UtilTestMatrix.checkEquals(x_expected,x,1e-5);
+        EjmlUnitTests.assertEquals(x_expected,x,1e-6);
     }
 
     public void testInvert( LinearSolver solver ) {
@@ -76,7 +72,7 @@ public class BaseCholeskySolveTests {
 
         DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
 
-        UtilTestMatrix.checkEquals(A_inv,A,1e-5);
+        EjmlUnitTests.assertEquals(A_inv,A,1e-5);
     }
 
     public void testQuality( LinearSolver solver ) {

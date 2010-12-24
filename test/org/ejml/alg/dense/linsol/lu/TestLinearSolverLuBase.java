@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -59,6 +59,6 @@ public class TestLinearSolverLuBase {
 
 //        DenseMatrix64F x_truth = new DenseMatrix64F(3,1,new double[]{1,2,3});
 
-        UtilTestMatrix.checkEquals(x,x_improved);
+        EjmlUnitTests.assertEquals(x,x_improved,1e-8);
     }
 }

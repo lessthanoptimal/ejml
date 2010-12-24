@@ -21,7 +21,7 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -185,9 +185,7 @@ public class TestMatrixMatrixMult {
 
             invoke(method,alpha,a,b,c);
 
-            if( !MatrixFeatures.isIdentical(expected,c,1e-12) ) {
-                fail("Did not produce the expected results");
-            }
+            EjmlUnitTests.assertEquals(expected,c,1e-12);
             numChecked++;
         }
 

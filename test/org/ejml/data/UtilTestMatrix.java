@@ -28,27 +28,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class UtilTestMatrix {
 
-    public static void checkEquals( DenseMatrix64F matA , DenseMatrix64F matB )
-    {
-        checkEquals(matA,matB,1e-8);
-    }
-
-    public static void checkEquals( DenseMatrix64F matA , DenseMatrix64F matB , double tol )
-    {
-        assertEquals(matA.numCols,matB.numCols);
-        assertEquals(matA.numRows,matB.numRows);
-
-        int size = matA.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            if( Math.abs(matA.data[i] - matB.data[i]) > tol ) {
-               System.out.println("ADASDASD");
-            }
-
-            assertEquals(matA.data[i],matB.data[i],tol);
-        }
-    }
-
     public static void checkMat( DenseMatrix64F mat , double ...d )
     {
         double data[] = mat.getData();

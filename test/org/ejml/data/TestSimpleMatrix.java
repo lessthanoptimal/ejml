@@ -20,6 +20,7 @@
 package org.ejml.data;
 
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.NormOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -28,7 +29,6 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -44,7 +44,7 @@ public class TestSimpleMatrix {
         SimpleMatrix s = new SimpleMatrix(3,2, true, d);
         DenseMatrix64F m = new DenseMatrix64F(3,2, true, d);
 
-        UtilTestMatrix.checkEquals(m,s.getMatrix());
+        EjmlUnitTests.assertEquals(m,s.getMatrix(),1e-8);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class TestSimpleMatrix {
         SimpleMatrix s = new SimpleMatrix(d);
         DenseMatrix64F mat = new DenseMatrix64F(d);
 
-        UtilTestMatrix.checkEquals(mat,s.getMatrix());
+        EjmlUnitTests.assertEquals(mat,s.getMatrix(),1e-8);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class TestSimpleMatrix {
         SimpleMatrix s = new SimpleMatrix(mat);
 
         assertTrue( mat != s.getMatrix() );
-        UtilTestMatrix.checkEquals(mat,s.getMatrix());
+        EjmlUnitTests.assertEquals(mat,s.getMatrix(),1e-8);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class TestSimpleMatrix {
         SimpleMatrix copy = new SimpleMatrix(orig);
 
         assertTrue(orig.mat != copy.mat);
-        UtilTestMatrix.checkEquals(orig.mat,copy.mat);
+        EjmlUnitTests.assertEquals(orig.mat,copy.mat,1e-8);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TestSimpleMatrix {
 
         DenseMatrix64F d = CommonOps.identity(3);
 
-        UtilTestMatrix.checkEquals(d,s.mat);
+        EjmlUnitTests.assertEquals(d,s.mat,1e-8);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F dTran = new DenseMatrix64F(2,3);
         CommonOps.transpose(orig.mat,dTran);
 
-        UtilTestMatrix.checkEquals(dTran,tran.mat);
+        EjmlUnitTests.assertEquals(dTran,tran.mat,1e-8);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(3,3);
         CommonOps.mult(a.mat,b.mat,c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(6,6);
         CommonOps.kron(a.getMatrix(),b.getMatrix(),c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
 //    @Test
@@ -146,13 +146,13 @@ public class TestSimpleMatrix {
 //        CommonOps.mult(a.mat,b.mat,c_dense);
 //
 //        c = a.mult(false,false,b);
-//        UtilTestMatrix.checkEquals(c_dense,c.mat);
+//        EjmlUnitTests.assertEquals(c_dense,c.mat);
 //        c = a.transpose().mult(true,false,b);
-//        UtilTestMatrix.checkEquals(c_dense,c.mat);
+//        EjmlUnitTests.assertEquals(c_dense,c.mat);
 //        c = a.mult(false,true,b.transpose());
-//        UtilTestMatrix.checkEquals(c_dense,c.mat);
+//        EjmlUnitTests.assertEquals(c_dense,c.mat);
 //        c = a.transpose().mult(true,true,b.transpose());
-//        UtilTestMatrix.checkEquals(c_dense,c.mat);
+//        EjmlUnitTests.assertEquals(c_dense,c.mat);
 //    }
 
     @Test
@@ -164,7 +164,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
         CommonOps.add(a.mat,b.mat,c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
 
@@ -177,7 +177,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
         CommonOps.sub(a.mat,b.mat,c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
 
@@ -190,7 +190,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
         CommonOps.add(a.mat,2.5,b.mat,c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
     @Test
@@ -201,7 +201,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F d_inv = new DenseMatrix64F(3,3);
         CommonOps.invert(a.mat,d_inv);
 
-         UtilTestMatrix.checkEquals(d_inv,inv.mat);
+         EjmlUnitTests.assertEquals(d_inv,inv.mat,1e-8);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
         CommonOps.solve(a.mat,b.mat,c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
     /**
@@ -228,7 +228,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
         CommonOps.solve(a.mat,b.mat,c_dense);
 
-        UtilTestMatrix.checkEquals(c_dense,c.mat);
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
     @Test
@@ -239,7 +239,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F d = new DenseMatrix64F(3,3);
         CommonOps.set(d,16.0);
 
-        UtilTestMatrix.checkEquals(d,a.mat);
+        EjmlUnitTests.assertEquals(d,a.mat,1e-8);
     }
 
     @Test
@@ -249,7 +249,7 @@ public class TestSimpleMatrix {
 
         DenseMatrix64F d = new DenseMatrix64F(3,3);
 
-        UtilTestMatrix.checkEquals(d,a.mat);
+        EjmlUnitTests.assertEquals(d,a.mat,1e-8);
     }
 
     @Test
@@ -300,7 +300,7 @@ public class TestSimpleMatrix {
         a.reshape(2,3);
         b.reshape(2,3, false);
 
-        UtilTestMatrix.checkEquals(b,a.mat);
+        EjmlUnitTests.assertEquals(b,a.mat,1e-8);
     }
 
     @Test
@@ -338,7 +338,7 @@ public class TestSimpleMatrix {
         SimpleMatrix b = a.copy();
 
         assertTrue(a.mat!=b.mat);
-        UtilTestMatrix.checkEquals(b.mat,a.mat);
+        EjmlUnitTests.assertEquals(b.mat,a.mat,1e-8);
     }
 
     @Test
@@ -353,7 +353,7 @@ public class TestSimpleMatrix {
 
         SimpleMatrix a_found = U.mult(W).mult(V.transpose());
 
-        UtilTestMatrix.checkEquals(a.mat,a_found.mat);
+        EjmlUnitTests.assertEquals(a.mat,a_found.mat,1e-8);
     }
 
     @Test
@@ -382,7 +382,7 @@ public class TestSimpleMatrix {
 
         CommonOps.insert(B.getMatrix(), A_, 1,2);
 
-        UtilTestMatrix.checkEquals(A_,A.getMatrix());
+        EjmlUnitTests.assertEquals(A_,A.getMatrix(),1e-8);
     }
 
     @Test
@@ -503,7 +503,7 @@ public class TestSimpleMatrix {
 
         CommonOps.extractDiag(a.getMatrix(),expected);
 
-        UtilTestMatrix.checkEquals(found,expected);
+        EjmlUnitTests.assertEquals(found,expected,1e-8);
     }
 
     @Test

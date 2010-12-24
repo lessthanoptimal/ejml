@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -155,7 +155,7 @@ public abstract class GenericLinearSolverChecks {
 
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        UtilTestMatrix.checkEquals(x_expected,x);
+        EjmlUnitTests.assertEquals(x_expected,x,1e-8);
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class GenericLinearSolverChecks {
 
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        UtilTestMatrix.checkEquals(x_expected,x);
+        EjmlUnitTests.assertEquals(x_expected,x,1e-8);
     }
 
     @Test

@@ -26,7 +26,9 @@ import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.ops.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Random;
 
 
@@ -721,24 +723,40 @@ public class SimpleMatrix {
      * Prints the matrix to standard out.
      */
     public void print() {
-        MatrixIO.print(mat);
+        MatrixIO.print(System.out,mat);
     }
 
     /**
      * Prints the matrix to standard out with the specified precision.
      */
     public void print(int numChar , int precision) {
-        MatrixIO.print(mat,numChar,precision);
+        MatrixIO.print(System.out,mat,numChar,precision);
     }
 
     /**
      * <p>
-     * Prints the matrix to standard out given a printf() style floating point format,
+     * Prints the matrix to standard out given a {@link java.io.PrintStream#printf) style floating point format,
      * e.g. print("%f").
      * </p>
      */
     public void print( String format ) {
-        MatrixIO.print(mat,format);
+        MatrixIO.print(System.out,mat,format);
+    }
+
+    /**
+     * <p>
+     * Converts the array into a string format for display purposes.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix64F)}.
+     * </p>
+     *
+     * @return String representation of the matrix.
+     */
+    @Override
+    public String toString() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        MatrixIO.print(new PrintStream(stream),mat);
+
+        return stream.toString();
     }
 
     /**

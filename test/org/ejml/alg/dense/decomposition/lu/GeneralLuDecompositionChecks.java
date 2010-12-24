@@ -23,8 +23,8 @@ import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.alg.dense.decomposition.LUDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
-import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -69,8 +69,8 @@ public abstract class GeneralLuDecompositionChecks {
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
         SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
 
-        UtilTestMatrix.checkEquals(octLower,L.getMatrix(),1e-5);
-        UtilTestMatrix.checkEquals(octUpper,U.getMatrix(),1e-5);
+        EjmlUnitTests.assertEquals(octLower,L.getMatrix(),1e-5);
+        EjmlUnitTests.assertEquals(octUpper,U.getMatrix(),1e-5);
 
         DenseMatrix64F A_found = P.mult(L).mult(U).getMatrix();
         assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));

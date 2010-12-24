@@ -17,10 +17,11 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.example;import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
-import org.ejml.example.*;
+package org.ejml.example;
+
+import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class TestCompareKalmanResults {
             DenseMatrix64F X = a.getState();
             DenseMatrix64F P = a.getCovariance();
 
-            UtilTestMatrix.checkEquals(testX,X);
-            UtilTestMatrix.checkEquals(testP,P);
+            EjmlUnitTests.assertEquals(testX,X,1e-8);
+            EjmlUnitTests.assertEquals(testP,P,1e-8);
     }
 }

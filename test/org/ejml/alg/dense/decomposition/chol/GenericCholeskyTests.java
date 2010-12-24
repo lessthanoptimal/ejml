@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public abstract class GenericCholeskyTests {
 
         DenseMatrix64F foundL = cholesky.getT(null);
 
-        UtilTestMatrix.checkEquals(L,foundL);
+        EjmlUnitTests.assertEquals(L,foundL,1e-8);
     }
 
     @Test
@@ -74,7 +74,7 @@ public abstract class GenericCholeskyTests {
 
         DenseMatrix64F foundR = cholesky.getT(null);
 
-        UtilTestMatrix.checkEquals(R,foundR);
+        EjmlUnitTests.assertEquals(R,foundR,1e-8);
     }
 
     /**

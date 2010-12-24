@@ -141,7 +141,7 @@ public class BlockMatrix64F extends D1Matrix64F {
 
     @Override
     public void print() {
-        MatrixIO.print(this);
+        MatrixIO.print(System.out,this);
     }
 
     public BlockMatrix64F copy() {

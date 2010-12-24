@@ -20,6 +20,7 @@
 package org.ejml.data;
 
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -161,7 +162,7 @@ public class TestDenseMatrix64F {
 
         mat2.set(mat);
 
-        UtilTestMatrix.checkEquals(mat,mat2,1e-10);
+        EjmlUnitTests.assertEquals(mat,mat2,1e-10);
     }
 
 	@Test
@@ -199,7 +200,7 @@ public class TestDenseMatrix64F {
         assertEquals(mat.getNumCols(),mat2.getNumCols());
         assertEquals(mat.getNumRows(),mat2.getNumRows());
 
-        UtilTestMatrix.checkEquals(mat,mat2,1e-10);
+        EjmlUnitTests.assertEquals(mat,mat2,1e-10);
     }
 
     @Test

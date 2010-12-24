@@ -23,6 +23,9 @@ import org.ejml.UtilEjml;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixIO;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 
 /**
  * <p>
@@ -423,16 +426,33 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      */
     @Override
     public void print() {
-        MatrixIO.print(this);
+        MatrixIO.print(System.out,this);
     }
 
     /**
-     * Prints the value of this matrix to the screen.  For more options see
-     * {@link UtilEjml}
+     * <p>
+     * Prints the value of this matrix to the screen using the same format as {@link java.io.PrintStream#printf).
+     * </p>
      *
-     * @param format The format which each element is printed uses.  See printf.
+     * @param format The format which each element is printed uses.
      */
     public void print( String format ) {
-        MatrixIO.print(this,format);
+        MatrixIO.print(System.out,this,format);
+    }
+
+    /**
+     * <p>
+     * Converts the array into a string format for display purposes.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix64F)}.
+     * </p>
+     *
+     * @return String representation of the matrix.
+     */
+    @Override
+    public String toString() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        MatrixIO.print(new PrintStream(stream),this);
+
+        return stream.toString();
     }
 }

@@ -82,7 +82,6 @@ public class TestVectorVectorMult {
         double found = VectorVectorMult.innerProdTranA(x,A,y);
 
         assertEquals(expected,found,1e-8);
-
     }
 
     @Test
@@ -97,8 +96,7 @@ public class TestVectorVectorMult {
         DenseMatrix64F D =  RandomMatrices.createRandom(4,4,rand);
         MatrixMatrixMult.multTransB(A,B,D);
 
-        assertTrue(MatrixFeatures.isIdentical(D,C));
-
+        EjmlUnitTests.assertEquals(D,C,0);
     }
 
     @Test
@@ -127,7 +125,7 @@ public class TestVectorVectorMult {
         MatrixMatrixMult.multTransB(2.5,A,B,E);
         CommonOps.add(D,E,D);
 
-        assertTrue(MatrixFeatures.isIdentical(D,C));
+        EjmlUnitTests.assertEquals(D,C,0);
     }
 
     @Test
@@ -147,7 +145,7 @@ public class TestVectorVectorMult {
         VectorVectorMult.addOuterProd(gamma,u,u,L);
         CommonOps.mult(L,x,y_exp);
 
-        assertTrue(MatrixFeatures.isIdentical(y,y_exp,1e-8));
+        EjmlUnitTests.assertEquals(y,y_exp,1e-8);
     }
 
     @Test
@@ -165,7 +163,6 @@ public class TestVectorVectorMult {
         CommonOps.mult(Q,x,expected);
         VectorVectorMult.householder(-2.0,u,x,found);
 
-        assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
-
+        EjmlUnitTests.assertEquals(expected,found,1e-8);
     }
 }

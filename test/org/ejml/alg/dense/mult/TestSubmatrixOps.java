@@ -20,10 +20,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -51,6 +49,6 @@ public class TestSubmatrixOps {
         }
 
         // see if they are the same
-        assertTrue(MatrixFeatures.isIdentical(B,C));
+        EjmlUnitTests.assertEquals(B,C,0);
     }
 }

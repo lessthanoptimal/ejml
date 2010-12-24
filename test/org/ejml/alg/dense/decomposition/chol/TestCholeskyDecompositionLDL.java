@@ -20,7 +20,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
@@ -55,7 +55,7 @@ public class TestCholeskyDecompositionLDL {
 
         DenseMatrix64F foundL = cholesky.getL();
 
-        UtilTestMatrix.checkEquals(L,foundL);
+        EjmlUnitTests.assertEquals(L,foundL,1e-8);
         for( int i = 0; i < D.length; i++ ) {
             assertEquals(D[i],cholesky.getD()[i],1e-8);
         }

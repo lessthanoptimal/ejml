@@ -10,6 +10,10 @@
 - Genericified LinearSolver
   * Removed LinearBlockSolver
 - Clarified behavior of functions in MatrixFeatures.
+- Added EjmlUnitTests
+  * converted many internal unit tests to use this class
+- Changed MatrixIO to take a PrintStream as an input
+- Adding support for toString()
 
 ----- Version 0.15
 

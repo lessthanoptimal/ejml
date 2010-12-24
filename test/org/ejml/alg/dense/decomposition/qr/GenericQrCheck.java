@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
-import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -86,7 +86,7 @@ public abstract class GenericQrCheck {
         // see if it has the expected properties
         DenseMatrix64F A_found = Q.mult(R).getMatrix();
 
-        UtilTestMatrix.checkEquals(A.getMatrix(),A_found,1e-6);
+        EjmlUnitTests.assertEquals(A.getMatrix(),A_found,1e-6);
         assertTrue(Q.transpose().mult(A).isIdentical(R,1e-6));
     }
 

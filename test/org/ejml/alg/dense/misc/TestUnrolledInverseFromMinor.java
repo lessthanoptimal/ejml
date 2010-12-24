@@ -22,7 +22,7 @@ package org.ejml.alg.dense.misc;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -60,7 +60,7 @@ public class TestUnrolledInverseFromMinor {
             // compute the result from the algorithm being tested
             UnrolledInverseFromMinor.inv(A,found);
 
-            assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
+            EjmlUnitTests.assertEquals(expected,found,1e-8);
         }
 
     }

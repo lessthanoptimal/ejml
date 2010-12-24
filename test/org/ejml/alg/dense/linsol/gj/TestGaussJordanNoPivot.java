@@ -20,7 +20,7 @@
 package org.ejml.alg.dense.linsol.gj;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 
@@ -46,8 +46,8 @@ public class TestGaussJordanNoPivot {
         DenseMatrix64F inv = new DenseMatrix64F(3,3, true, 0.1616965, -0.0667108, -0.0971946, 0.1027170, -0.0287166, 0.1568368, -0.0046388, 0.1303291, 0.0574332);
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        UtilTestMatrix.checkEquals(inv,A,1e-6);
-        UtilTestMatrix.checkEquals(x_expected,x);
+        EjmlUnitTests.assertEquals(inv,A,1e-6);
+        EjmlUnitTests.assertEquals(x_expected,x,1e-6);
     }
 
     /**

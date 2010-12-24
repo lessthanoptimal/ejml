@@ -119,26 +119,26 @@ public class MatrixIO {
         return (T)ret;
     }
 
-    public static void print( Matrix64F mat ) {
-        print(mat,6,3);
+    public static void print( PrintStream out , Matrix64F mat ) {
+        print(out,mat,6,3);
     }
 
-    public static void print(Matrix64F mat , int numChar , int precision ) {
+    public static void print(PrintStream out, Matrix64F mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f ";
 
-        print(mat,format);
+        print(out, mat,format);
     }
 
-    public static void print(Matrix64F mat , String format ) {
-        System.out.println("Type = dense , numRows = "+mat.numRows+" , numCols = "+mat.numCols);
+    public static void print(PrintStream out , Matrix64F mat , String format ) {
+        out.println("Type = dense , numRows = "+mat.numRows+" , numCols = "+mat.numCols);
 
         format += " ";
 
         for( int y = 0; y < mat.numRows; y++ ) {
             for( int x = 0; x < mat.numCols; x++ ) {
-                System.out.printf(format,mat.get(y,x));
+                out.printf(format,mat.get(y,x));
             }
-            System.out.println();
+            out.println();
         }
     }
 

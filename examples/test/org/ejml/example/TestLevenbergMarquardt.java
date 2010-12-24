@@ -17,9 +17,10 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.example;import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
-import org.ejml.example.LevenbergMarquardt;
+package org.ejml.example;
+
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -55,7 +56,7 @@ public class TestLevenbergMarquardt {
         alg.computeNumericalJacobian(param,X,numJacobian);
         func.deriv(X,analyticalJacobian);
 
-        UtilTestMatrix.checkEquals(analyticalJacobian,numJacobian,1e-6);
+        EjmlUnitTests.assertEquals(analyticalJacobian,numJacobian,1e-6);
     }
 
     /**
@@ -91,7 +92,7 @@ public class TestLevenbergMarquardt {
         DenseMatrix64F foundParam = alg.getParameters();
 
         assertEquals(0,alg.getFinalCost(),1e-8);
-        UtilTestMatrix.checkEquals(param,foundParam,1e-6);
+        EjmlUnitTests.assertEquals(param,foundParam,1e-6);
     }
 
     /**

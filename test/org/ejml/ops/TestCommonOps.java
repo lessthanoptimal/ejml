@@ -35,7 +35,6 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -225,7 +224,7 @@ public class TestCommonOps {
 
         solver.solve(b,c_exp);
 
-        UtilTestMatrix.checkEquals(c_exp,c,1e-8);
+        EjmlUnitTests.assertEquals(c_exp,c,1e-8);
     }
 
     @Test
@@ -236,7 +235,7 @@ public class TestCommonOps {
         CommonOps.transpose(mat,matTran);
         CommonOps.transpose(mat);
 
-        UtilTestMatrix.checkEquals(mat,matTran);
+        EjmlUnitTests.assertEquals(mat,matTran,1e-8);
     }
 
     @Test
@@ -281,8 +280,8 @@ public class TestCommonOps {
             CommonOps.invert(a,a_inv);
             CommonOps.invert(a);
 
-            UtilTestMatrix.checkEquals(a,a_inv);
-            UtilTestMatrix.checkEquals(a_lu,a);
+            EjmlUnitTests.assertEquals(a,a_inv,1e-8);
+            EjmlUnitTests.assertEquals(a_lu,a,1e-8);
         }
     }
 

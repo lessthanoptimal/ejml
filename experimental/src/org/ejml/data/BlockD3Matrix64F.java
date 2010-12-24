@@ -128,7 +128,7 @@ public class BlockD3Matrix64F extends Matrix64F {
 
     @Override
     public void print() {
-        MatrixIO.print(this);
+        MatrixIO.print(System.out,this);
     }
 
     @Override

@@ -22,7 +22,7 @@ package org.ejml.alg.dense.decomposition.chol;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
+import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
@@ -105,6 +105,6 @@ public class TestCholeskyDecompositionBlock extends GenericCholeskyTests {
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
-        UtilTestMatrix.checkEquals(A_inv,A_inv_block,1e-5);
+        EjmlUnitTests.assertEquals(A_inv,A_inv_block,1e-5);
     }
 }
