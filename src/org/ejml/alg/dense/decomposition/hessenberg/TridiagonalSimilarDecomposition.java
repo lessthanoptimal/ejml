@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
+import org.ejml.alg.dense.decomposition.DecompositionInterface;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -40,7 +41,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class TridiagonalSimilarDecomposition {
+public class TridiagonalSimilarDecomposition implements DecompositionInterface {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores
@@ -60,7 +61,6 @@ public class TridiagonalSimilarDecomposition {
 
     public TridiagonalSimilarDecomposition() {
         N = 1;
-        QT = new DenseMatrix64F(N,N);
         w = new double[N];
         b = new double[N];
         gammas = new double[N];
@@ -157,12 +157,15 @@ public class TridiagonalSimilarDecomposition {
      *
      * @param A Symmetric matrix that is going to be decomposed.  Not modified.
      */
-    public void decompose( DenseMatrix64F A ) {
+    @Override
+    public boolean decompose( DenseMatrix64F A ) {
         init(A);
 
         for( int k = 1; k < N; k++ ) {
             similarTransform(k);
         }
+
+        return true;
     }
 
     /**
@@ -271,7 +274,6 @@ public class TridiagonalSimilarDecomposition {
 
         if( A.numCols != N ) {
             N = A.numCols;
-            QT.reshape(N,N, false);
 
             if( w.length < N ) {
                 w = new double[ N ];
@@ -280,9 +282,11 @@ public class TridiagonalSimilarDecomposition {
             }
         }
 
-        // just copy the top right triangle
-        for( int i = 0; i < N; i++ ) {
-            System.arraycopy(A.data, i * N + i, QT.data, i * N + i, N - i);
-        }
+        QT = A;
+    }
+
+    @Override
+    public boolean inputModified() {
+        return true;
     }
 }

@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.safeDecomposition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -49,7 +50,7 @@ public class TestHessenbergSimilarDecomposition {
     private void checkItAll(DenseMatrix64F A) {
         HessenbergSimilarDecomposition decomp = new HessenbergSimilarDecomposition(A.numRows);
 
-        assertTrue(decomp.decompose(A));
+        assertTrue(safeDecomposition(decomp,A));
 
         DenseMatrix64F Q = decomp.getQ(null);
         DenseMatrix64F H = decomp.getH(null);
@@ -84,7 +85,7 @@ public class TestHessenbergSimilarDecomposition {
 
         HessenbergSimilarDecomposition decomp = new HessenbergSimilarDecomposition(A.numRows);
 
-        assertTrue(decomp.decompose(A));
+        assertTrue(safeDecomposition(decomp,A));
 
         assertTrue(MatrixFeatures.isIdentical(A,B,0));
     }
@@ -119,7 +120,7 @@ public class TestHessenbergSimilarDecomposition {
 
         HessenbergSimilarDecomposition decomp = new HessenbergSimilarDecomposition(A.numRows);
 
-        assertTrue(decomp.decompose(A));
+        assertTrue(safeDecomposition(decomp,A));
         
         DenseMatrix64F QH = decomp.getQH();
 //        System.out.println("------------ QH -----------");
@@ -172,7 +173,7 @@ public class TestHessenbergSimilarDecomposition {
 
         HessenbergSimilarDecomposition decomp = new HessenbergSimilarDecomposition(A.numRows);
 
-        assertTrue(decomp.decompose(A));
+        assertTrue(safeDecomposition(decomp,A));
 
         DenseMatrix64F QH = decomp.getQH();
 

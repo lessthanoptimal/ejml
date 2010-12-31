@@ -68,6 +68,31 @@ public class TestRandomMatrices {
     }
 
     @Test
+    public void createInSpan() {
+        DenseMatrix64F span[] = RandomMatrices.createSpan(5,5,rand);
+
+        DenseMatrix64F A = RandomMatrices.createInSpan(span,-1,1,rand);
+
+        // reconstructed matrix
+        DenseMatrix64F R = new DenseMatrix64F(A.numRows,A.numCols);
+
+        DenseMatrix64F tmp = new DenseMatrix64F(A.numRows,A.numCols);
+
+        // project the matrix into the span and recreate the original matrix
+        for( int i = 0; i < 5; i++ ) {
+            double val =  VectorVectorMult.innerProd(span[i],A);
+            assertTrue( Math.abs(val) > 0 );
+
+            CommonOps.scale(val,span[i],tmp);
+            CommonOps.add(R,tmp,R);
+        }
+
+        double error = SpecializedOps.diffNormF(A,R);
+
+        assertEquals( error , 0 , 1e-8 );
+    }
+
+    @Test
     public void createOrthogonal() {
         for( int numRows = 3; numRows <= 5; numRows++ ) {
             for( int numCols = 1; numCols <= numRows; numCols++ ) {

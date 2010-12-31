@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
+import org.ejml.alg.dense.decomposition.DecompositionInterface;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -45,7 +46,7 @@ import org.ejml.ops.CommonOps;
  * </p>
  */
 // TODO create a column based one similar to what was done for QR decomposition?
-public class HessenbergSimilarDecomposition {
+public class HessenbergSimilarDecomposition implements DecompositionInterface {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DenseMatrix64F QH;
     // number of rows and columns of the matrix being decompose
@@ -64,7 +65,6 @@ public class HessenbergSimilarDecomposition {
      * @param initialSize Expected size of the matrices it will decompose.
      */
     public HessenbergSimilarDecomposition( int initialSize ) {
-        QH = new DenseMatrix64F(initialSize,initialSize);
         gammas = new double[ initialSize ];
         b = new double[ initialSize ];
         u = new double[ initialSize ];
@@ -80,13 +80,13 @@ public class HessenbergSimilarDecomposition {
      * @param A  The matrix that is being decomposed.  Not modified.
      * @return If it detects any errors or not.
      */
+    @Override
     public boolean decompose( DenseMatrix64F A )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be square.");
 
-        QH.reshape(A.numRows,A.numCols, false);
-        QH.set(A);
+        QH = A;
 
         N = A.numCols;
 
@@ -96,6 +96,11 @@ public class HessenbergSimilarDecomposition {
             u = new double[ N ];
         }
         return _decompose();
+    }
+
+    @Override
+    public boolean inputModified() {
+        return true;
     }
 
     /**

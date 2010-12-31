@@ -34,6 +34,17 @@ import static org.junit.Assert.assertTrue;
 public class CheckDecompositionInterface {
 
     /**
+     * Performs a decomposition and makes sure the input matrix is not modified.
+     */
+    public static boolean safeDecomposition( DecompositionInterface decomp , DenseMatrix64F A ) {
+
+        DenseMatrix64F A_orig = decomp.inputModified() ? A.copy() : A;
+
+        return decomp.decompose(A_orig);
+    }
+
+
+    /**
      * Checks to see if the matrix is or is not modified as according to the modified
      * flag.
      *

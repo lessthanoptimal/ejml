@@ -98,12 +98,12 @@ public class EjmlUnitTests {
                 double valB = B.get(i,j);
 
                 if( Double.isNaN(valA) ) {
-                    assertTrue(Double.isNaN(valB),"At ("+i+","+j+" A = "+valA+" B = "+valB);
+                    assertTrue(Double.isNaN(valB),"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 } else if( Double.isInfinite(valA) ) {
-                    assertTrue(Double.isInfinite(valB),"At ("+i+","+j+" A = "+valA+" B = "+valB);
+                    assertTrue(Double.isInfinite(valB),"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 } else {
                     double diff = Math.abs( valA-valB);
-                    assertTrue(diff <= tol,"At ("+i+","+j+" A = "+valA+" B = "+valB);
+                    assertTrue(diff <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 }
             }
         }

@@ -145,7 +145,7 @@ public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
 
     @Override
     public boolean inputModified() {
-        return false;
+        return decomp.inputModified();
     }
 
     private boolean extractTogether(DenseMatrix64F orig) {

@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.safeDecomposition;
 import static org.junit.Assert.assertTrue;
 
 
@@ -42,7 +43,7 @@ public class TestTridiagonalSimilarDecomposition {
 
         TridiagonalSimilarDecomposition alg = new TridiagonalSimilarDecomposition();
 
-        alg.decompose(A.getMatrix());
+        assertTrue(safeDecomposition(alg,A.getMatrix()));
 
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null));
         SimpleMatrix T = SimpleMatrix.wrap(alg.getT(null));

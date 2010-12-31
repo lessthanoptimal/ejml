@@ -28,6 +28,7 @@ import org.ejml.ops.*;
 
 import java.util.Random;
 
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.safeDecomposition;
 import static org.junit.Assert.*;
 
 
@@ -89,7 +90,7 @@ public abstract class GeneralEigenDecompositionCheck {
             for( int i = 0; i < 2; i++ ) {
                 DenseMatrix64F A = RandomMatrices.createRandom(N,N,-1,1,rand);
 
-                assertTrue(alg.decompose(A));
+                assertTrue(safeDecomposition(alg,A));
 
                 performStandardTests(alg,A,-1);
             }
@@ -105,7 +106,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(A));
+        assertTrue(safeDecomposition(alg,A));
         performStandardTests(alg,A,-1);
 
         testForEigenpair(alg,1.686542,0,-0.739990,-0.667630,-0.081761);
@@ -140,7 +141,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         // the eigenvalues of the companion matrix matches the roots of the polynomial
         EigenDecomposition alg = createDecomposition();
-        assertTrue(alg.decompose(companion));
+        assertTrue(safeDecomposition(alg,companion));
 
         performStandardTests(alg,companion,n);
     }
@@ -153,7 +154,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(A));
+        assertTrue(safeDecomposition(alg,A));
 
         testForEigenvalue(alg,A,1.686542,0,1);
         testForEigenvalue(alg,A,0.079014,0,1);
@@ -170,7 +171,7 @@ public abstract class GeneralEigenDecompositionCheck {
                 0.78564,   0.29794,   0.91926);
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(A));
+        assertTrue(safeDecomposition(alg,A));
 
         testForEigenvalue(alg,A,0.00426,0,1);
         testForEigenvalue(alg,A,0.67856,0,1);
@@ -186,7 +187,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(A));
+        assertTrue(safeDecomposition(alg,A));
         performStandardTests(alg,A,-1);
 
         testForEigenpair(alg,-0.39996,0,0.87010,0.43425,-0.23314);
@@ -204,7 +205,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
                 EigenDecomposition alg = createDecomposition();
 
-                assertTrue(alg.decompose(A));
+                assertTrue(safeDecomposition(alg,A));
 
                 performStandardTests(alg,A,N);
             }
@@ -220,7 +221,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(A));
+        assertTrue(safeDecomposition(alg,A));
 
         performStandardTests(alg,A,1);
     }
@@ -230,7 +231,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(I));
+        assertTrue(safeDecomposition(alg,I));
 
         performStandardTests(alg,I,4);
 
@@ -245,7 +246,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
         EigenDecomposition alg = createDecomposition();
 
-        assertTrue(alg.decompose(A));
+        assertTrue(safeDecomposition(alg,A));
 
         performStandardTests(alg,A,5);
         testEigenvalues(alg,0);
@@ -286,7 +287,7 @@ public abstract class GeneralEigenDecompositionCheck {
         for( int i = 0; i < 200; i++ ) {
             DenseMatrix64F A = RandomMatrices.createEigenvaluesSymm(ev.length,rand,ev);
 
-            assertTrue(alg.decompose(A));
+            assertTrue(safeDecomposition(alg,A));
 
             performStandardTests(alg,A,ev.length);
 
@@ -308,7 +309,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
             CommonOps.scale(1e-200,A);
 
-            assertTrue(alg.decompose(A));
+            assertTrue(safeDecomposition(alg,A));
 
 //        A.print("%15.13e");
 
@@ -327,7 +328,7 @@ public abstract class GeneralEigenDecompositionCheck {
 
             CommonOps.scale(1e100,A);
 
-            assertTrue(alg.decompose(A));
+            assertTrue(safeDecomposition(alg,A));
 
             performStandardTests(alg,A,-1);
         }

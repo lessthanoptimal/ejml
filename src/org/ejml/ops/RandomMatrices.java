@@ -95,6 +95,30 @@ public class RandomMatrices {
     }
 
     /**
+     * Creates a random vector that is inside the specified span.
+     *
+     * @param span The span the random vector belongs in.
+     * @param rand RNG
+     * @return A random vector within the specified span.
+     */
+    public static DenseMatrix64F createInSpan( DenseMatrix64F[] span , double min , double max , Random rand ) {
+        DenseMatrix64F A = new DenseMatrix64F(span.length,1);
+
+        DenseMatrix64F B = new DenseMatrix64F(span[0].getNumElements(),1);
+
+        for( int i = 0; i < span.length; i++ ) {
+            B.set(span[0]);
+            double val = rand.nextDouble()*(max-min)+min;
+            CommonOps.scale(val,B);
+
+            CommonOps.add(A,B,A);
+
+        }
+
+        return A;
+    }
+
+    /**
      * <p>
      * Creates a random orthogonal or isometric matrix, depending on the number of rows and columns.
      * The number of rows must be more than or equal to the number of columns.

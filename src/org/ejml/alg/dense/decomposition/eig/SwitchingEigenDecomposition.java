@@ -43,6 +43,8 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
     // should it compute eigenvectors or just eigenvalues?
     boolean computeVectors;
 
+    DenseMatrix64F A = new DenseMatrix64F(1,1);
+
     /**
      *
      * @param computeVectors
@@ -80,7 +82,9 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-        symmetric = MatrixFeatures.isSymmetric(orig,tol);
+        A.setReshape(orig);
+
+        symmetric = MatrixFeatures.isSymmetric(A,tol);
 
         if( symmetric ) {
             if( symmetricAlg == null )
@@ -90,13 +94,15 @@ public class SwitchingEigenDecomposition implements EigenDecomposition {
         }
 
         return symmetric ?
-                symmetricAlg.decompose(orig) :
-                generalAlg.decompose(orig);
+                symmetricAlg.decompose(A) :
+                generalAlg.decompose(A);
 
     }
 
     @Override
     public boolean inputModified() {
+        // since it doesn't know which algorithm will be used until a matrix is provided make a copy
+        // of all inputs
         return false;
     }
 }

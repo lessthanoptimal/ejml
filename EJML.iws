@@ -5,35 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/TestLinearSolverCholLDL.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/TestLinearSolverCholLDL.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/misc/TestTransposeAlgs.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/misc/TestTransposeAlgs.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/test/org/ejml/example/TestCompareKalmanResults.java" afterPath="$PROJECT_DIR$/examples/test/org/ejml/example/TestCompareKalmanResults.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/MatrixIO.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/MatrixIO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/DenseMatrix64F.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/DenseMatrix64F.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/data/TestDenseMatrix64F.java" afterPath="$PROJECT_DIR$/test/org/ejml/data/TestDenseMatrix64F.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/lu/TestLinearSolverLuBase.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/lu/TestLinearSolverLuBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/misc/TestUnrolledInverseFromMinor.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/misc/TestUnrolledInverseFromMinor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/experimental/src/org/ejml/data/BlockD3Matrix64F.java" afterPath="$PROJECT_DIR$/experimental/src/org/ejml/data/BlockD3Matrix64F.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestTridiagonalSimilarDecomposition.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestTridiagonalSimilarDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SymmetricQRAlgorithmDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SymmetricQRAlgorithmDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/test/org/ejml/example/TestPrincipleComponentAnalysis.java" afterPath="$PROJECT_DIR$/examples/test/org/ejml/example/TestPrincipleComponentAnalysis.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/HessenbergSimilarDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/HessenbergSimilarDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SwitchingEigenDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SwitchingEigenDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestHessenbergSimilarDecomposition.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestHessenbergSimilarDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/WatchedDoubleStepQRDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/WatchedDoubleStepQRDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TODO_Algorithms.txt" afterPath="$PROJECT_DIR$/TODO_Algorithms.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionBlock.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionBlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestSubmatrixOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestSubmatrixOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/test/org/ejml/example/TestLevenbergMarquardt.java" afterPath="$PROJECT_DIR$/examples/test/org/ejml/example/TestLevenbergMarquardt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/BaseCholeskySolveTests.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/BaseCholeskySolveTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/data/UtilTestMatrix.java" afterPath="$PROJECT_DIR$/test/org/ejml/data/UtilTestMatrix.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/data/TestSimpleMatrix.java" afterPath="$PROJECT_DIR$/test/org/ejml/data/TestSimpleMatrix.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestGaussJordanNoPivot.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestGaussJordanNoPivot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionLDL.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionLDL.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestRandomMatrices.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestRandomMatrices.java" />
     </list>
     <ignored path=".idea/workspace.xml" />
     <ignored path="EJML.iws" />
@@ -93,65 +80,13 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MatrixIO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixIO.java">
+      <file leaf-file-name="TestPrincipleComponentAnalysis.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/examples/test/org/ejml/example/TestPrincipleComponentAnalysis.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="131" column="40" selection-start="3674" selection-end="3685" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PrintStream.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///opt/jdk/latest/src.zip!/java/io/PrintStream.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="31" selection-start="2122" selection-end="2122" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OutputStream.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///opt/jdk/latest/src.zip!/java/io/OutputStream.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="22" selection-start="851" selection-end="851" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SimpleMatrix.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="738" column="21" selection-start="22909" selection-end="22909" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestCholeskyDecompositionBlock.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionBlock.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="108" column="28" selection-start="3287" selection-end="3287" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DenseMatrix64F.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/data/DenseMatrix64F.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="442" column="0" selection-start="13972" selection-end="14438" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlockMatrix64F.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="143" column="34" selection-start="3840" selection-end="3840" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="71" column="23" selection-start="2187" selection-end="2187" vertical-scroll-proportion="0.19278607">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -159,25 +94,43 @@
       <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/change.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="64" selection-start="1244" selection-end="1244" vertical-scroll-proportion="0.0">
+            <state line="17" column="25" selection-start="613" selection-end="613" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EjmlUnitTests.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java">
+      <file leaf-file-name="TODO_Algorithms.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="26" selection-start="960" selection-end="973" vertical-scroll-proportion="0.22813688">
+            <state line="7" column="36" selection-start="328" selection-end="328" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="System.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///opt/jdk/latest/src.zip!/java/lang/System.java">
+      <file leaf-file-name="PrincipleComponentAnalysis.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/src/org/ejml/example/PrincipleComponentAnalysis.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="29" selection-start="2846" selection-end="2846" vertical-scroll-proportion="0.0">
+            <state line="250" column="18" selection-start="8917" selection-end="8917" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RandomMatrices.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="128" column="21" selection-start="4399" selection-end="4399" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestRandomMatrices.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestRandomMatrices.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="91" column="0" selection-start="3012" selection-end="3012" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -193,22 +146,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/org/ejml/data/TestSimpleMatrix.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/data/TestDenseMatrix64F.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-        <option value="$PROJECT_DIR$/examples/test/org/ejml/example/TestLevenbergMarquardt.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
-        <option value="$PROJECT_DIR$/examples/test/org/ejml/example/TestCompareKalmanResults.java" />
-        <option value="$PROJECT_DIR$/experimental/src/org/ejml/data/BlockD3Matrix64F.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java" />
-        <option value="$PROJECT_DIR$/change.txt" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/MatrixIO.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/data/DenseMatrix64F.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionBlock.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecomposition.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SymmetricQRAlgorithmDecomposition.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/HessenbergSimilarDecomposition.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/WatchedDoubleStepQRDecomposition.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SwitchingEigenDecomposition.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestTridiagonalSimilarDecomposition.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestHessenbergSimilarDecomposition.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestRandomMatrices.java" />
+        <option value="$PROJECT_DIR$/change.txt" />
+        <option value="$PROJECT_DIR$/TODO_Algorithms.txt" />
+        <option value="$PROJECT_DIR$/examples/test/org/ejml/example/TestPrincipleComponentAnalysis.java" />
       </list>
     </option>
   </component>
@@ -251,7 +204,6 @@
     </navigator>
     <panes>
       <pane id="Favorites" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -270,8 +222,371 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="decomposition" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="decomposition" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="eig" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="decomposition" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="decomposition" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hessenberg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="decomposition" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="eig" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="example" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -353,17 +668,17 @@
       </option>
       <envs />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="54796" />
+        <option name="DEBUG_PORT" value="50392" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestMatrixMatrixMult" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="TestRandomMatrices.createInSpan" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.alg.dense.mult.*" />
+          <option name="PATTERN" value="org.ejml.ops.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -371,41 +686,9 @@
       <module name="ejml" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.dense.mult" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.mult.TestMatrixMatrixMult" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="51421" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestSubmatrixOps.setSubMatrix" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.alg.dense.mult.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.dense.mult" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.mult.TestSubmatrixOps" />
-      <option name="METHOD_NAME" value="setSubMatrix" />
+      <option name="PACKAGE_NAME" value="org.ejml.ops" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestRandomMatrices" />
+      <option name="METHOD_NAME" value="createInSpan" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
@@ -417,17 +700,17 @@
       </option>
       <envs />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="37212" />
+        <option name="DEBUG_PORT" value="45183" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestTransposeAlgs" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="TestPrincipleComponentAnalysis.checkBasis" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.alg.dense.misc.*" />
+          <option name="PATTERN" value="org.ejml.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -435,10 +718,10 @@
       <module name="ejml" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.dense.misc" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.misc.TestTransposeAlgs" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="org.ejml.example" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.example.TestPrincipleComponentAnalysis" />
+      <option name="METHOD_NAME" value="checkBasis" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -449,17 +732,17 @@
       </option>
       <envs />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="36862" />
+        <option name="DEBUG_PORT" value="42179" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestCholeskyDecompositionBlock" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="TestPrincipleComponentAnalysis.sampleToEigenSpace" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.alg.dense.decomposition.chol.*" />
+          <option name="PATTERN" value="org.ejml.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -467,10 +750,10 @@
       <module name="ejml" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.dense.decomposition.chol" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.decomposition.chol.TestCholeskyDecompositionBlock" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="org.ejml.example" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.example.TestPrincipleComponentAnalysis" />
+      <option name="METHOD_NAME" value="sampleToEigenSpace" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -481,7 +764,39 @@
       </option>
       <envs />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="34504" />
+        <option name="DEBUG_PORT" value="47574" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestPrincipleComponentAnalysis.response" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.example" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.example.TestPrincipleComponentAnalysis" />
+      <option name="METHOD_NAME" value="response" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="44819" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
@@ -703,16 +1018,16 @@
       <method />
     </configuration>
     <list size="10">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.org.ejml" />
-      <item index="1" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
-      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
-      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
-      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
-      <item index="5" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
-      <item index="6" class="java.lang.String" itemvalue="JUnit.TestMatrixMatrixMult" />
-      <item index="7" class="java.lang.String" itemvalue="JUnit.TestSubmatrixOps.setSubMatrix" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.TestTransposeAlgs" />
-      <item index="9" class="java.lang.String" itemvalue="JUnit.TestCholeskyDecompositionBlock" />
+      <item index="0" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
+      <item index="1" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
+      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
+      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
+      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.org.ejml" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.TestRandomMatrices.createInSpan" />
+      <item index="7" class="java.lang.String" itemvalue="JUnit.TestPrincipleComponentAnalysis.checkBasis" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.TestPrincipleComponentAnalysis.sampleToEigenSpace" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.TestPrincipleComponentAnalysis.response" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -773,16 +1088,16 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19976498" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20768602" sideWeight="0.6627497" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38660398" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19976498" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38895416" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35486507" sideWeight="0.3349001" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29681113" sideWeight="0.3948296" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" sideWeight="0.6627497" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35486507" sideWeight="0.60517037" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32542926" sideWeight="0.6028202" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -806,7 +1121,7 @@
     <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="- added solver for QRDecompositionHouseholderTran&#10;- Deleted NR SVD&#10;- Change LinearSolver so that it allows modification of input matrices.&#10; * Added LinearSolverSafe that ensures inputs are not modified.&#10;- Improved some unit tests and other minor changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added EjmlUnitTests&#10;  * Generic unit testing class that should work in any unit testing framework.&#10;  * Changed many of the internal tests to use this class&#10;- toString() support added to DenseMatrix64F and SimpleMatrix&#10;- MatrixIO takes a generic input stream instead of always using System.out&#10;" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -829,6 +1144,7 @@
     <MESSAGE value="- improved internal bechmarks&#10;- added save W to BlockMatrix64HouseholderQR&#10;- added applyQ() t BlockQRDecomposition interface&#10;- created QRDecinoisutionBlock64, which is a wrapper around BlockMatrix64HouseholderQR for DenseMatrix64F&#10;- removedwrappings from UnrolledInverseFromMinor.  Might not be necissary but trying to track down some performance issues.&#10;- tweeked CovarianceOps and other classes&#10;- improved and made unit tests" />
     <MESSAGE value="- fixed performance issue on small matrix inversion for SPD matrices" />
     <MESSAGE value="- added solver for QRDecompositionHouseholderTran&#10;- Deleted NR SVD&#10;- Change LinearSolver so that it allows modification of input matrices.&#10; * Added LinearSolverSafe that ensures inputs are not modified.&#10;- Improved some unit tests and other minor changes" />
+    <MESSAGE value="- Added EjmlUnitTests&#10;  * Generic unit testing class that should work in any unit testing framework.&#10;  * Changed many of the internal tests to use this class&#10;- toString() support added to DenseMatrix64F and SimpleMatrix&#10;- MatrixIO takes a generic input stream instead of always using System.out&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -846,115 +1162,117 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/TestWatchedDoubleStepQRDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="22" selection-start="2438" selection-end="2438" vertical-scroll-proportion="0.0">
+        <state line="36" column="17" selection-start="1237" selection-end="1237" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/test/org/ejml/example/TestCompareKalmanResults.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/TestSwitchingEigenDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="51" selection-start="2837" selection-end="2837" vertical-scroll-proportion="0.0">
+        <state line="35" column="16" selection-start="1202" selection-end="1202" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionBlock64.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecompositionOrig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="13" selection-start="1059" selection-end="1059" vertical-scroll-proportion="0.0">
+        <state line="134" column="37" selection-start="4136" selection-end="4136" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCovarianceOps.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/WatchedDoubleStepQRDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="13" selection-start="958" selection-end="958" vertical-scroll-proportion="0.0">
+        <state line="90" column="41" selection-start="3128" selection-end="3128" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestEigenOps.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="13" selection-start="1182" selection-end="1182" vertical-scroll-proportion="0.0">
+        <state line="40" column="0" selection-start="1278" selection-end="1278" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experimental/src/org/ejml/data/BlockD3Matrix64F.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SwitchingEigenDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="130" column="23" selection-start="3251" selection-end="3262" vertical-scroll-proportion="0.0">
+        <state line="104" column="24" selection-start="3414" selection-end="3414" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="143" column="34" selection-start="3840" selection-end="3840" vertical-scroll-proportion="0.0">
+        <state line="159" column="0" selection-start="5036" selection-end="5036" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///opt/jdk/latest/src.zip!/java/lang/System.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="29" selection-start="2846" selection-end="2846" vertical-scroll-proportion="0.0">
+        <state line="312" column="60" selection-start="9963" selection-end="10000" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///opt/jdk/latest/src.zip!/java/io/PrintStream.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestTridiagonalSimilarDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="31" selection-start="2122" selection-end="2122" vertical-scroll-proportion="0.0">
+        <state line="45" column="57" selection-start="1527" selection-end="1527" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///opt/jdk/latest/src.zip!/java/io/OutputStream.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/hessenberg/TestHessenbergSimilarDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="22" selection-start="851" selection-end="851" vertical-scroll-proportion="0.0">
+        <state line="52" column="48" selection-start="1823" selection-end="1823" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixIO.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="40" selection-start="3674" selection-end="3685" vertical-scroll-proportion="0.0">
+        <state line="128" column="21" selection-start="4399" selection-end="4399" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/DenseMatrix64F.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestRandomMatrices.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="442" column="0" selection-start="13972" selection-end="14438" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="738" column="21" selection-start="22909" selection-end="22909" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/TestCholeskyDecompositionBlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="108" column="28" selection-start="3287" selection-end="3287" vertical-scroll-proportion="0.0">
+        <state line="91" column="0" selection-start="3012" selection-end="3012" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="64" selection-start="1244" selection-end="1244" vertical-scroll-proportion="0.0">
+        <state line="17" column="25" selection-start="613" selection-end="613" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java">
+    <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="26" selection-start="960" selection-end="973" vertical-scroll-proportion="0.22813688">
+        <state line="7" column="36" selection-start="328" selection-end="328" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/src/org/ejml/example/PrincipleComponentAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="250" column="18" selection-start="8917" selection-end="8917" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/test/org/ejml/example/TestPrincipleComponentAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="23" selection-start="2187" selection-end="2187" vertical-scroll-proportion="0.19278607">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

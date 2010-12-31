@@ -88,7 +88,7 @@ public class WatchedDoubleStepQRDecomposition implements EigenDecomposition {
 
     @Override
     public boolean inputModified() {
-        return false;
+        return hessenberg.inputModified();
     }
 
     @Override

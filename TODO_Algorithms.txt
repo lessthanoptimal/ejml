@@ -6,7 +6,6 @@ For 0.16 Release
 - Remove chol-block for dense with chol-block64?
   * Only if memory requires of chol-block64 can't be reduced
 - Merge inner triangular solver code
-- Unit test for PCA example
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 - Improve cholesky block inverse by taking advantage of symmetry
 - Clean up decomposition factory and linear solver factory
@@ -44,12 +43,10 @@ Ideas for reducing memory requirements:
   - Use QR alg to speed up singular values on very tall matrices (pg 403)
   - Divide and conquer algorithm
   - An implementation that just finds zero singular values
-  - Add option to overwrite input matrix
 
 - Incremental SVD
 
 - Eigen decomposition
-  - Add option to overwrite input matrix
   - Divide and conquer algorithm.
 
 - Accurate version of symmetric eigenvalue for 2 by 2
