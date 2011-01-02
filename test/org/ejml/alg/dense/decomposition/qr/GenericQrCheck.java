@@ -66,7 +66,7 @@ public abstract class GenericQrCheck {
         SimpleMatrix A = new SimpleMatrix(height,width);
         RandomMatrices.setRandom(A.getMatrix(),rand);
 
-        alg.decompose(A.getMatrix());
+        assertTrue(alg.decompose(A.copy().getMatrix()));
 
         int minStride = Math.min(height,width);
 

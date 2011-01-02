@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
+import org.ejml.EjmlParameters;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.decomposition.BlockDecompositionInterface;
 import org.ejml.data.BlockMatrix64F;
@@ -35,7 +36,8 @@ public class BaseDecompositionBlock64 implements DecompositionInterface {
 
     protected BlockDecompositionInterface alg;
 
-    protected BlockMatrix64F Ablock = new BlockMatrix64F(1,1);
+    protected double[]tmp;
+    protected BlockMatrix64F Ablock = new BlockMatrix64F();
 
     public BaseDecompositionBlock64(BlockDecompositionInterface alg) {
         this.alg = alg;
@@ -43,15 +45,32 @@ public class BaseDecompositionBlock64 implements DecompositionInterface {
 
     @Override
     public boolean decompose(DenseMatrix64F A) {
-        Ablock.reshape(A.numRows,A.numCols,false);
+        Ablock.numRows = A.numRows;
+        Ablock.numCols = A.numCols;
+        Ablock.blockLength = EjmlParameters.BLOCK_WIDTH;
+        Ablock.data = A.data;
 
-        BlockMatrixOps.convert(A,Ablock);
+        int tmpLength = Math.min( Ablock.blockLength , A.numRows ) * A.numCols;
 
-        return alg.decompose(Ablock);
+        if( tmp == null || tmp.length < tmpLength )
+            tmp = new double[ tmpLength ];
+
+        // doing an in-place convert is much more memory efficient at the cost of a little
+        // but of CPU
+        BlockMatrixOps.convertRowToBlock(A.numRows,A.numCols,Ablock.blockLength,A.data,tmp);
+
+        boolean ret = alg.decompose(Ablock);
+
+        // convert it back to the normal format if it wouldn't have been modified
+        if( !alg.inputModified() ) {
+            BlockMatrixOps.convertBlockToRow(A.numRows,A.numCols,Ablock.blockLength,A.data,tmp);
+        }
+
+        return ret;
     }
 
     @Override
     public boolean inputModified() {
-        return false;
+        return alg.inputModified();
     }
 }

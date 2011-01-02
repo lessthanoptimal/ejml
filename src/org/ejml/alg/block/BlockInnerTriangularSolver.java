@@ -19,9 +19,6 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.D1Submatrix64F;
-
-
 /**
  * <p>
  * Contains triangular solvers for inner blocks of a {@link org.ejml.data.BlockMatrix64F}.
@@ -119,20 +116,21 @@ public class BlockInnerTriangularSolver {
      * @param b An m by n matrix. Modified.
      * @param m size of the L matrix
      * @param n number of columns in the B matrix.
+     * @param strideL number of elements that need to be added to go to the next row in L
      * @param offsetL initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
     public static void solveL( double L[] , double []b ,
                                int m , int n ,
-                               int offsetL , int offsetB )
+                               int strideL , int offsetL , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
                 double sum = b[offsetB + i*n+j];
                 for( int k=0; k<i; k++ ) {
-                    sum -= L[offsetL + i*m+k]* b[offsetB + k*n+j];
+                    sum -= L[offsetL + i*strideL+k]* b[offsetB + k*n+j];
                 }
-                b[offsetB + i*n+j] = sum / L[offsetL + i*m+i];
+                b[offsetB + i*n+j] = sum / L[offsetL + i*strideL+i];
             }
         }
     }
@@ -150,20 +148,21 @@ public class BlockInnerTriangularSolver {
      * @param b An m by n matrix. Modified.
      * @param m size of the L matrix
      * @param n number of columns in the B matrix.
+     * @param strideL number of elements that need to be added to go to the next row in L
      * @param offsetL initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */
     public static void solveTransL( double L[] , double []b ,
                                     int m , int n ,
-                                    int offsetL , int offsetB )
+                                    int strideL , int offsetL , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = m-1; i >= 0; i-- ) {
                 double sum = b[offsetB + i*n+j];
                 for( int k=i+1; k<m; k++ ) {
-                    sum -= L[offsetL + k*m+i]* b[offsetB + k*n+j];
+                    sum -= L[offsetL + k*strideL+i]* b[offsetB + k*n+j];
                 }
-                b[offsetB + i*n+j] = sum / L[offsetL + i*m+i];
+                b[offsetB + i*n+j] = sum / L[offsetL + i*strideL+i];
             }
         }
     }
@@ -186,7 +185,7 @@ public class BlockInnerTriangularSolver {
      */
     public static void solveLTransB( double L[] , double []b ,
                                      int m , int n ,
-                                     int offsetL , int offsetB )
+                                     int strideL , int offsetL , int offsetB )
     {
 //        for( int j = 0; j < n; j++ ) {
 //            for( int i = 0; i < m; i++ ) {
@@ -200,14 +199,14 @@ public class BlockInnerTriangularSolver {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
                 double sum = b[offsetB + j*m+i];
-                int l = offsetL+i*m;
+                int l = offsetL+i*strideL;
                 int bb = offsetB +j*m;
                 int endL = l+i;
                 while( l != endL ) {
 //                for( int k=0; k<i; k++ ) {
                     sum -= L[l++]* b[bb++];
                 }
-                b[offsetB + j*m+i] = sum / L[offsetL + i*m+i];
+                b[offsetB + j*m+i] = sum / L[offsetL + i*strideL+i];
             }
         }
     }
@@ -230,15 +229,15 @@ public class BlockInnerTriangularSolver {
      */
     public static void solveU( double U[] , double []b ,
                                int m , int n ,
-                               int offsetU , int offsetB )
+                               int strideU , int offsetU , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = m-1; i >= 0; i-- ) {
                 double sum = b[offsetB + i*n+j];
                 for( int k=i+1; k<m; k++ ) {
-                    sum -= U[offsetU + i*m+k]* b[offsetB + k*n+j];
+                    sum -= U[offsetU + i*strideU+k]* b[offsetB + k*n+j];
                 }
-                b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
+                b[offsetB + i*n+j] = sum / U[offsetU + i*strideU+i];
             }
         }
     }
@@ -261,15 +260,15 @@ public class BlockInnerTriangularSolver {
      */
     public static void solveTransU( double U[] , double []b ,
                                     int m , int n ,
-                                    int offsetU , int offsetB )
+                                    int strideU , int offsetU , int offsetB )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
                 double sum = b[offsetB + i*n+j];
                 for( int k=0; k<i; k++ ) {
-                    sum -= U[offsetU + k*m+i]* b[offsetB + k*n+j];
+                    sum -= U[offsetU + k*strideU+i]* b[offsetB + k*n+j];
                 }
-                b[offsetB + i*n+j] = sum / U[offsetU + i*m+i];
+                b[offsetB + i*n+j] = sum / U[offsetU + i*strideU+i];
             }
         }
     }

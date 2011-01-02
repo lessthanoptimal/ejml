@@ -19,8 +19,8 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -48,10 +48,17 @@ public class BenchmarkSolveOver {
 
         if( !includeSet ) solver.setA(A);
 
+        DenseMatrix64F A_copy = solver.modifiesA() ? A.<DenseMatrix64F>copy() : A;
+
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if(includeSet) solver.setA(A);
+
+            if( solver.modifiesA() ) {
+                A_copy.set(A);
+            }
+
+            if(includeSet) solver.setA(A_copy);
 
             if( solver.modifiesB() ) {
                 B_tmp.set(B);
@@ -71,10 +78,10 @@ public class BenchmarkSolveOver {
 //                new LinearSolverQrHouse(),numTrials));
         System.out.println("  solve QR house Col    = "+ solveBenchmark(
                 new LinearSolverQrHouseCol(),numTrials));
-        System.out.println("  solve QR tran        = "+ solveBenchmark(
-                new LinearSolverQrHouseTran(),numTrials));
-//        System.out.println("  solve QR Block64      = "+ solveBenchmark(
-//                new LinearSolverQrBlock64(),numTrials));
+//        System.out.println("  solve QR tran        = "+ solveBenchmark(
+//                new LinearSolverQrHouseTran(),numTrials));
+        System.out.println("  solve QR Block64      = "+ solveBenchmark(
+                new LinearSolverQrBlock64(),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }
@@ -86,7 +93,7 @@ public class BenchmarkSolveOver {
 
         includeSet = true;
         System.out.println("Solving for least squares fitting type problems with set");
-        for( int i = 0; i < width.length; i++ ) {
+        for( int i = 8; i < width.length; i++ ) {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);

@@ -12,10 +12,7 @@ For 0.16 Release
   * Have them take a matrix or system as an input and return the solver/decomposer?
 - rename isIdentical to isEqual since most people are used to equal?
 
-
 Ideas for reducing memory requirements:
-  1) In-place convert between DenseMatrix64F and BlockMatrix64F
-  2) Get solve to work on partial blocks
   3) Stack W to minimize size
 
 ----------------------------------------------------------

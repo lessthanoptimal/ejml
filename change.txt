@@ -16,6 +16,8 @@
 - Adding support for toString()
 - EVD and SVD now modify their inputs by default
 - Added unit test for PCA
+- Added in-place converting to and from row-major to block matrices.
+- Trangular block solver can handle unaligned input
 
 ----- Version 0.15
 
@@ -43,8 +45,6 @@
 - Fixed bug in LinearSolverFactory.symmetric() where LU instead of cholesky was being created.
 - EjmlParameters.MEMORY provides a way for it to select algorithms which are fast but memory hogs or
   slower but more memory efficient.
-
-
 
 ----- Version 0.14
 

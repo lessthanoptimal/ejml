@@ -19,23 +19,17 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -99,6 +93,7 @@ public class TestBlockTriangularSolver {
 
     /**
      * Test solving several different triangular systems with different sizes.
+     * All matrices begin and end along block boundaries.
      */
     @Test
     public void testSolve() {
@@ -122,6 +117,11 @@ public class TestBlockTriangularSolver {
 
                     checkSolve(T,B,Y,r,upper,false);
                     checkSolve(T,B,Y,r,upper,true);
+
+                    // test cases where the submatrix is not aligned with the inner
+                    // blocks
+                    checkSolveUnaligned(T,B,Y,r,upper,false);
+                    checkSolveUnaligned(T,B,Y,r,upper,true);
                 }
             }
         }
@@ -148,6 +148,41 @@ public class TestBlockTriangularSolver {
         BlockTriangularSolver.solve(r,upper,new D1Submatrix64F(T),new D1Submatrix64F(Y),transT);
 
         assertTrue( BlockMatrixOps.isIdentical(B,Y,1e-8));
+    }
+
+    /**
+     * Checks to see if BlockTriangularSolver.solve produces the expected output given
+     * these inputs.  The solution is computed directly.
+     */
+    private void checkSolveUnaligned( BlockMatrix64F T , BlockMatrix64F B , BlockMatrix64F Y ,
+                                      int r , boolean upper , boolean transT )
+    {
+        BlockMatrix64F T2;
+
+        if( upper )
+            T2 = BlockMatrixOps.createRandom(T.numRows+1,T.numCols,-1,1,rand,T.blockLength);
+        else
+            T2 = BlockMatrixOps.createRandom(T.numRows,T.numCols+1,-1,1,rand,T.blockLength);
+
+        CommonOps.insert(T,T2,0,0);
+
+        if( transT ) {
+            BlockMatrix64F T_tran = BlockMatrixOps.transpose(T,null);
+
+            // Compute Y directly from the expected result B
+            BlockMatrixOps.mult(T_tran,B,Y);
+        } else {
+            // Compute Y directly from the expected result B
+            BlockMatrixOps.mult(T,B,Y);
+        }
+
+        int size = T.numRows;
+
+        // Y is overwritten with the solution
+        BlockTriangularSolver.solve(r,upper,new D1Submatrix64F(T2,0,size,0,size),new D1Submatrix64F(Y),transT);
+
+        assertTrue( "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols,
+                BlockMatrixOps.isIdentical(B,Y,1e-8));
     }
 
 

@@ -20,8 +20,6 @@
 package org.ejml.alg.block;
 
 import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.RowD1Matrix64F;
-import org.ejml.ops.CommonOps;
 
 import static org.ejml.alg.block.BlockInnerMultiplication.blockMultMinus;
 
@@ -95,7 +93,7 @@ public class BlockTriangularSolver {
 
                 int indexX = offsetT + T.original.numCols*(i+T.row0) + heightT*(j+T.col0);
 
-                BlockInnerTriangularSolver.solveL(dataT,temp,heightT,widthX,indexII,0);
+                BlockInnerTriangularSolver.solveL(dataT,temp,heightT,widthX,heightT,indexII,0);
                 System.arraycopy(temp,0,dataX,indexX,widthX*heightT);
             }
             BlockInnerTriangularSolver.invertLower(dataT,dataX,heightT,indexII,indexII);
@@ -149,7 +147,7 @@ public class BlockTriangularSolver {
 
                 int indexX = offsetT + T.original.numCols*(i+T.row0) + heightT*(j+T.col0);
 
-                BlockInnerTriangularSolver.solveL(dataT,temp,heightT,widthX,indexII,0);
+                BlockInnerTriangularSolver.solveL(dataT,temp,heightT,widthX,heightT,indexII,0);
                 System.arraycopy(temp,0,dataT,indexX,widthX*heightT);
             }
             BlockInnerTriangularSolver.invertLower(dataT,heightT,indexII);
@@ -208,11 +206,14 @@ public class BlockTriangularSolver {
                                    final D1Submatrix64F B ,
                                    final boolean transT ,final boolean transB )
     {
-        final int M = T.row1-T.row0;
-        if( M > blockLength )
+        int Trows = T.row1-T.row0;
+        if( Trows > blockLength )
             throw new IllegalArgumentException("T can be at most the size of a block");
+        // number of rows in a block.  The submatrix can be smaller than a block
+        final int blockT_rows = Math.min(blockLength,T.original.numRows-T.row0);
+        final int blockT_cols = Math.min(blockLength,T.original.numCols-T.col0);
 
-        int offsetT = T.row0*T.original.numCols+M*T.col0;
+        int offsetT = T.row0*T.original.numCols+blockT_rows*T.col0;
 
         final double dataT[] = T.original.data;
         final double dataB[] = B.original.data;
@@ -233,44 +234,44 @@ public class BlockTriangularSolver {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        BlockInnerTriangularSolver.solveLTransB(dataT,dataB,M,N,offsetT,offsetB);
+                        BlockInnerTriangularSolver.solveLTransB(dataT,dataB,blockT_rows,N,blockT_rows,offsetT,offsetB);
                     }
                 }
             }
         } else {
-            if( M != B.row1-B.row0 )
+            if( Trows != B.row1-B.row0 )
                 throw new IllegalArgumentException("T and B must have the same number of rows.");
 
             if( upper ) {
                 if ( transT ) {
                     for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
+                        int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        BlockInnerTriangularSolver.solveTransU(dataT,dataB,M,N,offsetT,offsetB);
+                        BlockInnerTriangularSolver.solveTransU(dataT,dataB,Trows,N,Trows,offsetT,offsetB);
                     }
                 } else {
                     for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
+                        int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        BlockInnerTriangularSolver.solveU(dataT,dataB,M,N,offsetT,offsetB);
+                        BlockInnerTriangularSolver.solveU(dataT,dataB,Trows,N,Trows,offsetT,offsetB);
                     }
                 }
             } else {
                 if ( transT ) {
                     for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
+                        int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        BlockInnerTriangularSolver.solveTransL(dataT,dataB,M,N,offsetT,offsetB);
+                        BlockInnerTriangularSolver.solveTransL(dataT,dataB,Trows,N,blockT_cols,offsetT,offsetB);
                     }
                 } else {
                     for( int i = B.col0; i < B.col1; i += blockLength ) {
-                        int offsetB = B.row0*B.original.numCols + M*i;
+                        int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1 , i + blockLength ) - i;
-                        BlockInnerTriangularSolver.solveL(dataT,dataB,M,N,offsetT,offsetB);
+                        BlockInnerTriangularSolver.solveL(dataT,dataB,Trows,N,blockT_cols,offsetT,offsetB);
                     }
                 }
             }
@@ -302,7 +303,7 @@ public class BlockTriangularSolver {
         D1Submatrix64F Linner = new D1Submatrix64F(L.original);
         D1Submatrix64F Binner = new D1Submatrix64F(B.original);
 
-        int lengthL = L.col1- L.col0;
+        int lengthL = B.row1 - B.row0;
 
         int startI,stepI;
 
@@ -316,7 +317,6 @@ public class BlockTriangularSolver {
             startI = 0;
             stepI = blockLength;
         }
-
 
         for( int i = startI; ; i += stepI ) {
             if( transL ) {
@@ -402,6 +402,8 @@ public class BlockTriangularSolver {
      * <br>
      * </p>
      *
+     * <p>Only the first B.numRows rows in R will be processed.  Lower triangular elements are ignored.<p>
+     *
      * <p> Reverse or forward substitution is used depending upon L being transposed or not. </p>
      *
      * @param blockLength
@@ -414,12 +416,17 @@ public class BlockTriangularSolver {
                                final D1Submatrix64F B ,
                                boolean transR ) {
 
+        int lengthR = B.row1 - B.row0;
+        if( R.getCols() != lengthR ) {
+            throw new IllegalArgumentException("Number of columns in R must be equal to the number of rows in B");
+        } else if( R.getRows() != lengthR ) {
+            throw new IllegalArgumentException("Number of rows in R must be equal to the number of rows in B");
+        }
+
         D1Submatrix64F Y = new D1Submatrix64F(B.original);
 
         D1Submatrix64F Rinner = new D1Submatrix64F(R.original);
         D1Submatrix64F Binner = new D1Submatrix64F(B.original);
-
-        int lengthR = R.col1- R.col0;
 
         int startI,stepI;
 

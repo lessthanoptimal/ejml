@@ -156,7 +156,7 @@ public class TestBlockInnerTriangularSolver {
         double dataB[] = offsetArray(found.data,offsetB);
 
         try {
-            m.invoke(null,dataL,dataB,3,4,offsetL,offsetB);
+            m.invoke(null,dataL,dataB,3,4,3,offsetL,offsetB);
         } catch (IllegalAccessException e) {
             fail("invoke failed");
         } catch (InvocationTargetException e) {

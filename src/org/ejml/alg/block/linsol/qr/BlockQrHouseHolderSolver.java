@@ -54,8 +54,6 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
     // the input matrix which has been decomposed
     protected BlockMatrix64F QR;
 
-    // block aligned triangular copies of B and U
-    protected BlockMatrix64F tempU = new BlockMatrix64F(1,1,1);
 
     public BlockQrHouseHolderSolver() {
         decomp.setSaveW(true);
@@ -112,22 +110,13 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
         // Second solve for Y using the upper triangle matrix R and the just computed Y
         // X = R^-1 * Y
-
-        // BlockTriangularSolver.solve() can't handle a triangle which is a partial inner block.
-        // to get around that issue both the triangle and X matrix need to be copied into another
-        // matrix.
-        // TODO make solvers that can handle partial blocks and not sacrifice speed
-
         BlockMatrixOps.extractAligned(B,X);
 
         // extract a block aligned matrix
         int M = Math.min(QR.numRows,QR.numCols);
-        tempU.reshape(M,M,QR.blockLength,false);
-        BlockMatrixOps.copyTriangle(true,QR,tempU);
-
 
         BlockTriangularSolver.solve(QR.blockLength,true,
-                new D1Submatrix64F(tempU),new D1Submatrix64F(X),false);
+                new D1Submatrix64F(QR,0,M,0,M),new D1Submatrix64F(X),false);
 
     }
 
@@ -154,14 +143,8 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
         // Solve using upper triangular R matrix
         // R*A^-1 = y
         // A^-1 = R^-1*y
-
-        // Need to copy the R matrix since solve requires whole blocks
-        // todo improve
-        tempU.reshape(M,M,QR.blockLength,false);
-        BlockMatrixOps.copyTriangle(true,QR,tempU);
-
         BlockTriangularSolver.solve(QR.blockLength,true,
-                new D1Submatrix64F(tempU),new D1Submatrix64F(A_inv),false);
+                new D1Submatrix64F(QR,0,M,0,M),new D1Submatrix64F(A_inv),false);
     }
 
     @Override

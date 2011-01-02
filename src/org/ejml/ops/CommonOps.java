@@ -32,6 +32,7 @@ import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 import org.ejml.data.RowD1Matrix64F;
 
 
@@ -972,10 +973,10 @@ public class CommonOps {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract( DenseMatrix64F src,
+    public static void extract( Matrix64F src,
                                 int srcY0, int srcY1,
                                 int srcX0, int srcX1,
-                                DenseMatrix64F dst ,
+                                Matrix64F dst ,
                                 int dstY0, int dstX0 )
     {
         if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
@@ -1018,7 +1019,7 @@ public class CommonOps {
      * @param srcY1 Stop row+1.
      * @return Extracted submatrix.
      */
-    public static DenseMatrix64F extract( DenseMatrix64F src,
+    public static DenseMatrix64F extract( Matrix64F src,
                                           int srcY0, int srcY1,
                                           int srcX0, int srcX1 )
     {
@@ -1074,7 +1075,7 @@ public class CommonOps {
      * @param destY0 Start row for the copy into dest.
      * @param destX0 Start column for the copy into dest.
      */
-    public static void insert(DenseMatrix64F src, DenseMatrix64F dest, int destY0, int destX0) {
+    public static void insert( Matrix64F src, Matrix64F dest, int destY0, int destX0) {
         if( destY0 +src.numRows > dest.numRows)
             throw new IllegalArgumentException("Inserted matrix would exceed the number of rows");
 
@@ -1102,11 +1103,11 @@ public class CommonOps {
      * @param dstY0 Destination row.
      * @param dstX0 Destination column.
      */
-    public static void insert(DenseMatrix64F src,
-                              int srcY0, int srcY1,
-                              int srcX0, int srcX1,
-                              DenseMatrix64F dest,
-                              int dstY0, int dstX0 ) {
+    public static void insert( Matrix64F src,
+                               int srcY0, int srcY1,
+                               int srcX0, int srcX1,
+                               Matrix64F dest,
+                               int dstY0, int dstX0 ) {
         int h = srcY1-srcY0+1;
         int w = srcX1-srcX0+1;
 

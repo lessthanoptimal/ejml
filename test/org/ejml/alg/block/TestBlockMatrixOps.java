@@ -33,9 +33,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -69,6 +67,26 @@ public class TestBlockMatrixOps {
     }
 
     @Test
+    public void convertInline_dense_to_block() {
+        for( int i = 2; i < 30; i += 5 ) {
+            for( int j = 2; j < 30; j += 5 ) {
+                checkConvertInline_dense_to_block(i,j);
+            }
+        }
+    }
+
+    private void checkConvertInline_dense_to_block( int m , int n ) {
+        double tmp[] = new double[BLOCK_LENGTH*n];
+        DenseMatrix64F A = RandomMatrices.createRandom(m,n,rand);
+        DenseMatrix64F A_orig = A.copy();
+
+        BlockMatrixOps.convertRowToBlock(m,n,BLOCK_LENGTH,A.data,tmp);
+        BlockMatrix64F B = BlockMatrix64F.wrap(A.data,A.numRows,A.numCols,BLOCK_LENGTH);
+
+        assertTrue( GenericMatrixOps.isEquivalent(A_orig,B,1e-8));
+    }
+
+    @Test
     public void convert_block_to_dense() {
         checkBlockToDense(10,10);
         checkBlockToDense(5,8);
@@ -89,6 +107,25 @@ public class TestBlockMatrixOps {
         assertTrue( GenericMatrixOps.isEquivalent(A,B,1e-8));
     }
 
+    @Test
+    public void convertInline_block_to_dense() {
+        for( int i = 2; i < 30; i += 5 ) {
+            for( int j = 2; j < 30; j += 5 ) {
+                checkConvertInline_block_to_dense(i,j);
+            }
+        }
+    }
+
+    private void checkConvertInline_block_to_dense( int m , int n ) {
+        double tmp[] = new double[BLOCK_LENGTH*n];
+        BlockMatrix64F A = BlockMatrixOps.createRandom(m,n,-1,1,rand,BLOCK_LENGTH);
+        BlockMatrix64F A_orig = A.copy();
+
+        BlockMatrixOps.convertBlockToRow(m,n,BLOCK_LENGTH,A.data,tmp);
+        DenseMatrix64F B = DenseMatrix64F.wrap(A.numRows,A.numCols,A.data);
+
+        assertTrue( GenericMatrixOps.isEquivalent(A_orig,B,1e-8));
+    }
 
     /**
      * Makes sure the bounds check on input matrices for mult() is done correctly

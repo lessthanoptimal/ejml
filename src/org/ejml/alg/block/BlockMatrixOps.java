@@ -67,6 +67,46 @@ public class BlockMatrixOps {
     }
 
     /**
+     * <p>
+     * Converts matrix data stored is a row major format into a block row major format in place.
+     * </p>
+     * 
+     * @param numRows number of rows in the matrix.
+     * @param numCols number of columns in the matrix.
+     * @param blockLength Block size in the converted matrix.
+     * @param data Matrix data in a row-major format. Modified.
+     * @param tmp Temporary data structure that is to be the size of a block row.
+     */
+    public static void convertRowToBlock( int numRows , int numCols , int blockLength ,
+                                          double[] data, double[] tmp )
+    {
+        int minLength = Math.min( blockLength , numRows ) * numCols;
+        if( tmp.length < minLength ) {
+            throw new IllegalArgumentException("tmp must be at least "+minLength+" long ");
+        }
+
+        for( int i = 0; i < numRows; i += blockLength ) {
+            int blockHeight = Math.min( blockLength , numRows - i);
+
+            System.arraycopy(data,i*numCols,tmp,0,blockHeight*numCols);
+
+
+            for( int j = 0; j < numCols; j += blockLength ) {
+                int blockWidth = Math.min( blockLength , numCols - j);
+
+                int indexDst = i*numCols + blockHeight*j;
+                int indexSrcRow = j;
+
+                for( int k = 0; k < blockHeight; k++ ) {
+                    System.arraycopy(tmp,indexSrcRow,data,indexDst,blockWidth);
+                    indexDst += blockWidth;
+                    indexSrcRow += numCols;
+                }
+            }
+        }
+    }
+
+    /**
      * Converts a row major block matrix into a row major matrix.
      *
      * @param src Original BlockMatrix64F..  Not modified.
@@ -99,6 +139,45 @@ public class BlockMatrixOps {
         }
 
         return dst;
+    }
+
+    /**
+     * <p>
+     * Converts matrix data stored is a block row major format into a row major format in place.
+     * </p>
+     *
+     * @param numRows number of rows in the matrix.
+     * @param numCols number of columns in the matrix.
+     * @param blockLength Block size in the converted matrix.
+     * @param data Matrix data in a block row-major format. Modified.
+     * @param tmp Temporary data structure that is to be the size of a block row.
+     */
+    public static void convertBlockToRow( int numRows , int numCols , int blockLength ,
+                                          double[] data, double[] tmp )
+    {
+        int minLength = Math.min( blockLength , numRows ) * numCols;
+        if( tmp.length < minLength ) {
+            throw new IllegalArgumentException("tmp must be at least "+minLength+" long ");
+        }
+
+        for( int i = 0; i < numRows; i += blockLength ) {
+            int blockHeight = Math.min( blockLength , numRows - i);
+
+            System.arraycopy(data,i*numCols,tmp,0,blockHeight*numCols);
+
+            for( int j = 0; j < numCols; j += blockLength ) {
+                int blockWidth = Math.min( blockLength , numCols - j);
+
+                int indexSrc = blockHeight*j;
+                int indexDstRow = i*numCols + j;
+
+                for( int k = 0; k < blockHeight; k++ ) {
+                    System.arraycopy(tmp,indexSrc,data,indexDstRow,blockWidth);
+                    indexSrc += blockWidth;
+                    indexDstRow += numCols;
+                }
+            }
+        }
     }
 
     /**

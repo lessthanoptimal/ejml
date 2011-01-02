@@ -82,7 +82,7 @@ public class BenchmarkQrDecomposition {
         System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn() ,mat,numTrials));
         System.out.println("tran             = "+ generic( new QRDecompositionHouseholderTran() , mat,numTrials));
 //        System.out.println("block  native    = "+ block(mat,numTrials));
-//        System.out.println("block wrapper    = "+ generic( new QRDecompositionBlock64() , mat,numTrials));
+        System.out.println("block wrapper    = "+ generic( new QRDecompositionBlock64() , mat,numTrials));
     }
 
     public static void main( String args [] ) {
