@@ -97,6 +97,6 @@ public class BenchmarkGenerics {
         int N = 10000000;
 
         System.out.println("dense   = "+benchmarkDense(A,2.5,N));
-        System.out.println("generic = "+benchmarkDense(A,2.5,N));
+        System.out.println("generic = "+benchmarkGeneric(A,2.5,N));
     }
 }
