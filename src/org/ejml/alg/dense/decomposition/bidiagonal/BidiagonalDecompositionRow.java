@@ -31,7 +31,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
+public class BidiagonalDecompositionRow implements BidiagonalDecomposition<DenseMatrix64F> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DenseMatrix64F UBV;
 
@@ -75,9 +75,9 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A , boolean overwrite )
+    public boolean decompose( DenseMatrix64F A  )
     {
-        init(A,overwrite);
+        init(A);
         return _decompose();
     }
 
@@ -86,12 +86,8 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      *
      * @param A The input matrix.  Not modified.
      */
-    protected void init(DenseMatrix64F A , boolean overwrite ) {
-        if( overwrite ) {
-            UBV = A;
-        } else {
-            UBV = A.copy();
-        }
+    protected void init(DenseMatrix64F A ) {
+        UBV = A;
 
         m = UBV.numRows;
         n = UBV.numCols;
@@ -354,5 +350,10 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition {
      */
     public double[] getGammasV() {
         return gammasV;
+    }
+
+    @Override
+    public boolean inputModified() {
+        return true;
     }
 }

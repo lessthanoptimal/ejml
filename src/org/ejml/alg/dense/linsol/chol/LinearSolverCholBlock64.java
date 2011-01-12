@@ -26,7 +26,7 @@ import org.ejml.data.DenseMatrix64F;
 
 
 /**
- * A wrapper around {@link org.ejml.alg.block.decomposition.BlockCholeskyDecomposition} that allows
+ * A wrapper around {@link org.ejml.alg.dense.decomposition.CholeskyDecomposition}(BlockMatrix64F) that allows
  * it to be easily used with {@link org.ejml.data.DenseMatrix64F}.
  *
  * @author Peter Abeles

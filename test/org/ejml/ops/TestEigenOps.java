@@ -83,7 +83,7 @@ public class TestEigenOps {
     public void createMatrixV() {
         DenseMatrix64F A = RandomMatrices.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition decomp = DecompositionFactory.eig();
+        EigenDecomposition<DenseMatrix64F> decomp = DecompositionFactory.eig();
         assertTrue(decomp.decompose(A));
 
         DenseMatrix64F V = EigenOps.createMatrixV(decomp);

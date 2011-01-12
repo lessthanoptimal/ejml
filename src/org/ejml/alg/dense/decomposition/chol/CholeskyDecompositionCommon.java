@@ -48,7 +48,8 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public abstract class CholeskyDecompositionCommon implements CholeskyDecomposition {
+public abstract class CholeskyDecompositionCommon
+        implements CholeskyDecomposition<DenseMatrix64F> {
 
     // it can decompose a matrix up to this width
     protected int maxWidth=-1;

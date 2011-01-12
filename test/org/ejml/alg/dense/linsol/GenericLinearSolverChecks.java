@@ -256,5 +256,5 @@ public abstract class GenericLinearSolverChecks {
         }
     }
 
-    protected abstract LinearSolver createSolver( DenseMatrix64F A );
+    protected abstract LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A );
 }

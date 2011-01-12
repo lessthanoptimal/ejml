@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -43,7 +44,8 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface CholeskyDecomposition extends DecompositionInterface {
+public interface CholeskyDecomposition <MatrixType extends Matrix64F> 
+        extends DecompositionInterface<MatrixType> {
 
     /**
      * If true the decomposition was for a lower triangular matrix.
@@ -67,6 +69,6 @@ public interface CholeskyDecomposition extends DecompositionInterface {
      * @param T If not null then the decomposed matrix is written here.
      * @return A lower or upper triangular matrix.
      */
-    public DenseMatrix64F getT( DenseMatrix64F T );
+    public MatrixType getT( MatrixType T  );
 
 }

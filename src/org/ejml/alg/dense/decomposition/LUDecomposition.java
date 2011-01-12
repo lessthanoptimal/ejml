@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -44,12 +44,13 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface LUDecomposition extends DecompositionInterface {
+public interface LUDecomposition <T extends Matrix64F>
+        extends DecompositionInterface<T> {
 
     /**
      * <p>
      * Returns the L matrix from the decomposition.  Should only
-     * be called after {@link #decompose(org.ejml.data.DenseMatrix64F)} has
+     * be called after {@link #decompose(org.ejml.data.Matrix64F)} has
      * been called.
      * </p>
      *
@@ -61,12 +62,12 @@ public interface LUDecomposition extends DecompositionInterface {
      * @param lower If not null then the L matrix is written here.  Modified.
      * @return The L matrix.
      */
-    public DenseMatrix64F getLower( DenseMatrix64F lower );
+    public T getLower( T lower );
 
     /**
      * <p>
      * Returns the U matrix from the decomposition.  Should only
-     * be called after {@link #decompose(org.ejml.data.DenseMatrix64F)} has
+     * be called after {@link #decompose(org.ejml.data.Matrix64F)}  has
      * been called.
      * </p>
      *
@@ -78,23 +79,14 @@ public interface LUDecomposition extends DecompositionInterface {
      * @param upper If not null then the U matrix is written here.  Modified.
      * @return The U matrix.
      */
-    public DenseMatrix64F getUpper( DenseMatrix64F upper );
+    public T getUpper( T upper );
 
     /**
      * <p>
      * For numerical stability there are often row interchanges.  This computes
      * a pivot matrix that will undo those changes.
      */
-    public DenseMatrix64F getPivot( DenseMatrix64F pivot );
-    
-    /**
-     * Computes the LU decomposition.  If a singular matrix is encountered it should still
-     * decompose the matrix.
-     *
-     * @param orig The matrix which is being decomposed.  Not modified.
-     * @return Returns if it was able to decompose the matrix.
-     */
-    public boolean decompose( DenseMatrix64F orig );
+    public T getPivot( T pivot );
 
     /**
      * Returns true if the decomposition detected a singular matrix.  This check

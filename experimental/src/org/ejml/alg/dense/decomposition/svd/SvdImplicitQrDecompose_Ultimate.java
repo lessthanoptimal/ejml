@@ -38,7 +38,8 @@ import org.ejml.ops.CommonOps;
  * 
  * @author Peter Abeles
  */
-public class SvdImplicitQrDecompose_Ultimate implements SingularValueDecomposition {
+public class SvdImplicitQrDecompose_Ultimate
+        implements SingularValueDecomposition<DenseMatrix64F> {
 
     private int numRows;
     private int numCols;
@@ -261,7 +262,7 @@ public class SvdImplicitQrDecompose_Ultimate implements SingularValueDecompositi
             A_mod.reshape(orig.numRows,orig.numCols,false);
             A_mod.set(orig);
         }
-        if( !bidiag.decompose(A_mod,true) )
+        if( !bidiag.decompose(A_mod) )
             return true;
         return false;
     }

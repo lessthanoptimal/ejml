@@ -23,9 +23,6 @@ import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +30,6 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 

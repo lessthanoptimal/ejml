@@ -42,7 +42,8 @@ import org.ejml.data.DenseMatrix64F;
  * @author Peter Abeles
  */
 //TODO looks like there might be some pointless copying of arrays going on
-public class WatchedDoubleStepQRDecomposition implements EigenDecomposition {
+public class WatchedDoubleStepQRDecomposition
+        implements EigenDecomposition<DenseMatrix64F> {
 
     HessenbergSimilarDecomposition hessenberg;
     WatchedDoubleStepQREigenvalue algValue;

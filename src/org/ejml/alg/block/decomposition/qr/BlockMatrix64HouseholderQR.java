@@ -21,7 +21,7 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockMultiplication;
-import org.ejml.alg.block.decomposition.BlockQRDecomposition;
+import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 
@@ -58,7 +58,8 @@ import org.ejml.data.D1Submatrix64F;
  *
  * @author Peter Abeles
  */
-public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
+public class BlockMatrix64HouseholderQR
+        implements QRDecomposition<BlockMatrix64F> {
 
     // the input matrix which is overwritten with the decomposition.
     // Reflectors are stored in the lower triangular portion. The R matrix is stored
@@ -160,7 +161,6 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      *
      * @param B Matrix which Q is applied to.  Modified.
      */
-    @Override
     public void applyQ( BlockMatrix64F B ) {
         applyQ(B,false);
     }
@@ -225,7 +225,6 @@ public class BlockMatrix64HouseholderQR implements BlockQRDecomposition {
      *
      * @param B Matrix which Q is applied to.  Modified.
      */
-    @Override
     public void applyQTran( BlockMatrix64F B ) {
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
 

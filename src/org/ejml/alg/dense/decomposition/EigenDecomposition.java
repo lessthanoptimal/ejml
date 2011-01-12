@@ -20,7 +20,7 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -47,7 +47,8 @@ import org.ejml.data.DenseMatrix64F;
  * </p>
  * @author Peter Abeles
  */
-public interface EigenDecomposition extends DecompositionInterface {
+public interface EigenDecomposition<MatrixType extends Matrix64F>
+        extends DecompositionInterface<MatrixType> {
 
     /**
      * Returns the number of eigenvalues/eigenvectors.  This is the matrix's dimension.
@@ -76,5 +77,5 @@ public interface EigenDecomposition extends DecompositionInterface {
      * @param index Index of the eigenvalue eigenvector pair.
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
-    public DenseMatrix64F getEigenVector( int index );
+    public MatrixType getEigenVector( int index );
 }

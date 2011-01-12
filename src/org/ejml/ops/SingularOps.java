@@ -162,7 +162,7 @@ public class SingularOps {
      * @param v Where the null space is written to. If null then a new matrix is declared.  Modified.
      * @return The null space.
      */
-    public static DenseMatrix64F nullSpace( SingularValueDecomposition svd , DenseMatrix64F v )
+    public static DenseMatrix64F nullSpace( SingularValueDecomposition<DenseMatrix64F> svd , DenseMatrix64F v )
     {
         int N = svd.numberOfSingularValues();
         double s[] = svd.getSingularValues();

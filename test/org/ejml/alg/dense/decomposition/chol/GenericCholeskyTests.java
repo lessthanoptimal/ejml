@@ -41,7 +41,7 @@ public abstract class GenericCholeskyTests {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition create( boolean lower );
+    public abstract CholeskyDecomposition<DenseMatrix64F> create( boolean lower );
 
     @Test
     public void testDecomposeL() {
@@ -52,7 +52,7 @@ public abstract class GenericCholeskyTests {
 
         DenseMatrix64F L = new DenseMatrix64F(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
 
-        CholeskyDecomposition cholesky = create(true);
+        CholeskyDecomposition<DenseMatrix64F> cholesky = create(true);
         assertTrue(cholesky.decompose(A));
 
         DenseMatrix64F foundL = cholesky.getT(null);
@@ -69,7 +69,7 @@ public abstract class GenericCholeskyTests {
 
         DenseMatrix64F R = new DenseMatrix64F(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
 
-        CholeskyDecomposition cholesky = create(false);
+        CholeskyDecomposition<DenseMatrix64F> cholesky = create(false);
         assertTrue(cholesky.decompose(A));
 
         DenseMatrix64F foundR = cholesky.getT(null);
@@ -84,7 +84,7 @@ public abstract class GenericCholeskyTests {
     public void testNotPositiveDefinite() {
         DenseMatrix64F A = new DenseMatrix64F(2,2, true, 1, -1, -1, -2);
 
-        CholeskyDecomposition alg = create(true);
+        CholeskyDecomposition<DenseMatrix64F> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -96,7 +96,7 @@ public abstract class GenericCholeskyTests {
     public void getT() {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        CholeskyDecomposition cholesky = create(true);
+        CholeskyDecomposition<DenseMatrix64F> cholesky = create(true);
 
         assertTrue(cholesky.decompose(A));
 

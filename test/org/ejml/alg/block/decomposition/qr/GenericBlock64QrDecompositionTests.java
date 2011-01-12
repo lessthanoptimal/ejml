@@ -20,7 +20,6 @@
 package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.decomposition.BlockQRDecomposition;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
@@ -35,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 
 
 /**
- * Generic tests that test the compliance of an implementation of BlockQRDecomposition.
+ * Generic tests that test the compliance of an implementation of QRDecomposition(BlockMatrix64F).
  *
  * @author Peter Abeles
  */
@@ -44,9 +43,9 @@ public class GenericBlock64QrDecompositionTests {
 
     int r = 3;
 
-    BlockQRDecomposition alg;
+    BlockMatrix64HouseholderQR alg;
 
-    public GenericBlock64QrDecompositionTests(BlockQRDecomposition alg) {
+    public GenericBlock64QrDecompositionTests(BlockMatrix64HouseholderQR alg) {
         this.alg = alg;
     }
 

@@ -52,7 +52,7 @@ public class TestBlockCholeskyOuterForm {
         for( int N = bl-2; N <= 13; N += 2 ) {
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition chol = DecompositionFactory.chol(1,false,false);
+            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,false,false);
             assertTrue(chol.decompose(A));
 
             DenseMatrix64F L = chol.getT(null);
@@ -77,7 +77,7 @@ public class TestBlockCholeskyOuterForm {
 
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition chol = DecompositionFactory.chol(1,false,true);
+            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,false,true);
             assertTrue(chol.decompose(A));
 
             DenseMatrix64F L = chol.getT(null);

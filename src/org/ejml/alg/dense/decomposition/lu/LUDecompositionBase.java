@@ -33,7 +33,8 @@ import org.ejml.ops.SpecializedOps;
  * </p>
  * @author Peter Abeles
  */
-public abstract class LUDecompositionBase implements LUDecomposition {
+public abstract class LUDecompositionBase
+        implements LUDecomposition<DenseMatrix64F> {
     // the decomposed matrix
     protected DenseMatrix64F LU;
 

@@ -19,7 +19,6 @@
 
 package org.ejml.alg.block.decomposition.qr;
 
-import org.ejml.alg.block.decomposition.BlockQRDecomposition;
 import org.junit.Test;
 
 /**
@@ -29,7 +28,7 @@ public class TestBlockMatrix64HouseholderQR {
 
     @Test
     public void generic() {
-        BlockQRDecomposition decomp = new BlockMatrix64HouseholderQR();
+        BlockMatrix64HouseholderQR decomp = new BlockMatrix64HouseholderQR();
 
         GenericBlock64QrDecompositionTests tests;
         tests = new GenericBlock64QrDecompositionTests(decomp);

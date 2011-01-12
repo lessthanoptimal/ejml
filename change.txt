@@ -9,6 +9,8 @@
   is being modified or not.
 - Genericified LinearSolver
   * Removed LinearBlockSolver
+- Genericified DecompositionInterface
+  * Removed block decomposition interfaces
 - Clarified behavior of functions in MatrixFeatures.
 - Added EjmlUnitTests
   * converted many internal unit tests to use this class

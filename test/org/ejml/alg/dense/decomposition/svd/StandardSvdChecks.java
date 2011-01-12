@@ -42,7 +42,7 @@ public abstract class StandardSvdChecks {
 
     Random rand = new Random(73675);
 
-    public abstract SingularValueDecomposition createSvd();
+    public abstract SingularValueDecomposition<DenseMatrix64F> createSvd();
 
     boolean omitVerySmallValues = false;
 
@@ -164,7 +164,7 @@ public abstract class StandardSvdChecks {
     public void checkGetU() {
         DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         DenseMatrix64F U = alg.getU(false);
@@ -183,7 +183,7 @@ public abstract class StandardSvdChecks {
     public void checkGetV() {
         DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         DenseMatrix64F V = alg.getV(false);
@@ -226,7 +226,7 @@ public abstract class StandardSvdChecks {
         return num;
     }
 
-    private void checkComponents( SingularValueDecomposition svd , DenseMatrix64F expected )
+    private void checkComponents( SingularValueDecomposition<DenseMatrix64F> svd , DenseMatrix64F expected )
     {
         SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
         SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));

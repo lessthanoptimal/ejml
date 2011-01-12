@@ -19,9 +19,6 @@
 
 package org.ejml.data;
 
-import java.awt.*;
-
-
 /**
  * <p>
  * Describes a rectangular submatrix inside of a {@link D1Matrix64F}.

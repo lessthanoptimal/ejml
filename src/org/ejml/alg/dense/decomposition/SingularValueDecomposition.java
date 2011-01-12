@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -47,7 +47,8 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public abstract interface SingularValueDecomposition extends DecompositionInterface {
+public abstract interface SingularValueDecomposition <T extends Matrix64F>
+        extends DecompositionInterface<T> {
 
     /**
      * Returns the singular values.  This is the diagonal elements of the W matrix in the decomposition.
@@ -84,7 +85,7 @@ public abstract interface SingularValueDecomposition extends DecompositionInterf
      * @param transposed If the returned U is transposed.
      * @return An orthogonal matrix.
      */
-    public DenseMatrix64F getU( boolean transposed );
+    public T getU( boolean transposed );
 
     /**
      * <p>
@@ -99,7 +100,7 @@ public abstract interface SingularValueDecomposition extends DecompositionInterf
      * @param transposed If the returned V is transposed.
      * @return An orthogonal matrix.
      */
-    public DenseMatrix64F getV( boolean transposed );
+    public T getV( boolean transposed );
 
     /**
      * Returns a diagonal matrix with the singular values.  Order of the singular values
@@ -108,7 +109,7 @@ public abstract interface SingularValueDecomposition extends DecompositionInterf
      * @return Diagonal matrix with singular values along the diagonal.
      * @param W If not null then the W matrix is written to it.  Modified.
      */
-    public DenseMatrix64F getW( DenseMatrix64F W );
+    public T getW( T W );
 
     /**
      * Number of rows in the decomposed matrix.

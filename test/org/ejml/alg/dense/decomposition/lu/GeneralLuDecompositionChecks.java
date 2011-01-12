@@ -42,7 +42,7 @@ public abstract class GeneralLuDecompositionChecks {
 
     Random rand = new Random(0xff);
 
-    public abstract LUDecomposition create( int numRows , int numCols );
+    public abstract LUDecomposition<DenseMatrix64F> create( int numRows , int numCols );
 
     @Test
     public void testModifiedInput() {
@@ -60,7 +60,7 @@ public abstract class GeneralLuDecompositionChecks {
         DenseMatrix64F octLower = new DenseMatrix64F(3,3, true, 1, 0, 0, -0.6, 1, 0, 0.3, -0.44068, 1);
         DenseMatrix64F octUpper = new DenseMatrix64F(3,3, true, 5, 2, 3, 0, 5.9, 1.3, 0, 0, 7.67288);
 
-        LUDecomposition alg = create(3,3);
+        LUDecomposition<DenseMatrix64F> alg = create(3,3);
         assertTrue(alg.decompose(A));
 
         assertFalse(alg.isSingular());
@@ -82,7 +82,7 @@ public abstract class GeneralLuDecompositionChecks {
         for( int i = 2; i <= 20; i++ ) {
             DenseMatrix64F A = RandomMatrices.createRandom(i,i,-1,1,rand);
 
-            LUDecomposition alg = create(i,i);
+            LUDecomposition<DenseMatrix64F> alg = create(i,i);
             assertTrue(alg.decompose(A));
 
             assertFalse(alg.isSingular());
@@ -100,7 +100,7 @@ public abstract class GeneralLuDecompositionChecks {
     public void zeroMatrix() {
         DenseMatrix64F A = new DenseMatrix64F(3,3);
 
-        LUDecomposition alg = create(3,3);
+        LUDecomposition<DenseMatrix64F> alg = create(3,3);
 
         assertTrue(alg.decompose(A));
         assertTrue(alg.isSingular());
@@ -141,7 +141,7 @@ public abstract class GeneralLuDecompositionChecks {
     public void getLower_getUpper() {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
 
-        LUDecomposition alg = create(3,3);
+        LUDecomposition<DenseMatrix64F> alg = create(3,3);
 
         alg.decompose(A);
 
@@ -162,7 +162,7 @@ public abstract class GeneralLuDecompositionChecks {
     public void testFat() {
         DenseMatrix64F A = new DenseMatrix64F(2,3, true, 1, 2, 3, 2, 4, 6.1);
 
-        LUDecomposition alg = create(2,3);
+        LUDecomposition<DenseMatrix64F> alg = create(2,3);
 
         assertTrue(alg.decompose(A));
 //        assertFalse(alg.isSingular());
@@ -180,7 +180,7 @@ public abstract class GeneralLuDecompositionChecks {
     public void testTall() {
         DenseMatrix64F A = new DenseMatrix64F(3,2, true, 1, 2, 3, 2, 4, 6.1);
 
-        LUDecomposition alg = create(3,2);
+        LUDecomposition<DenseMatrix64F> alg = create(3,2);
 
         assertTrue(alg.decompose(A));
 //        assertFalse(alg.isSingular());

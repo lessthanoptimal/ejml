@@ -32,7 +32,8 @@ import org.ejml.ops.MatrixFeatures;
  *
  * @author Peter Abeles
  */
-public class SwitchingEigenDecomposition implements EigenDecomposition {
+public class SwitchingEigenDecomposition
+        implements EigenDecomposition<DenseMatrix64F> {
     // tolerance used in deciding if a matrix is symmetric or not
     private double tol;
 

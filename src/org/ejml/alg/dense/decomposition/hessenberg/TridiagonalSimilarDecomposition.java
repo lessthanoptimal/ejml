@@ -41,7 +41,8 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class TridiagonalSimilarDecomposition implements DecompositionInterface {
+public class TridiagonalSimilarDecomposition
+        implements DecompositionInterface<DenseMatrix64F> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores

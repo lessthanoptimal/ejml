@@ -386,7 +386,7 @@ public abstract class GeneralEigenDecompositionCheck {
      * Checks to see if an eigenvalue is complex then the eigenvector is null.  If it is real it
      * then checks to see if the equation A*v = lambda*v holds true.
      */
-    public void testPairsConsistent( EigenDecomposition alg , DenseMatrix64F A )
+    public void testPairsConsistent( EigenDecomposition<DenseMatrix64F> alg , DenseMatrix64F A )
     {
 //        System.out.println("-------------------------------------------------------------------------");
         int N = alg.getNumberOfEigenvalues();
@@ -478,7 +478,7 @@ public abstract class GeneralEigenDecompositionCheck {
     /**
      * Checks to see if all the real eigenvectors are linearly independent of each other.
      */
-    public void testVectorsLinearlyIndependent( EigenDecomposition alg ) {
+    public void testVectorsLinearlyIndependent( EigenDecomposition<DenseMatrix64F> alg ) {
         int N = alg.getNumberOfEigenvalues();
 
         // create a matrix out of the eigenvectors
@@ -510,7 +510,7 @@ public abstract class GeneralEigenDecompositionCheck {
     /**
      * Sees if the pair of eigenvalue and eigenvector was found in the decomposition.
      */
-    public void testForEigenpair( EigenDecomposition alg , double valueReal ,
+    public void testForEigenpair( EigenDecomposition<DenseMatrix64F> alg , double valueReal ,
                                   double valueImg , double... vector )
     {
         int N = alg.getNumberOfEigenvalues();

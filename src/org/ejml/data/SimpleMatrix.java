@@ -1046,7 +1046,7 @@ public class SimpleMatrix {
      */
     public class SVD
     {
-        private SingularValueDecomposition svd;
+        private SingularValueDecomposition<DenseMatrix64F> svd;
         private SimpleMatrix U;
         private SimpleMatrix W;
         private SimpleMatrix V;
@@ -1154,7 +1154,7 @@ public class SimpleMatrix {
      */
     public class EVD
     {
-        private EigenDecomposition eig;
+        private EigenDecomposition<DenseMatrix64F> eig;
 
         public EVD()
         {

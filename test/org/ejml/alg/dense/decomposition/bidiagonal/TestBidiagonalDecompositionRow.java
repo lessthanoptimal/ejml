@@ -30,7 +30,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -49,13 +50,9 @@ public class TestBidiagonalDecompositionRow {
         SimpleMatrix A_mod = A.copy();
 
         BidiagonalDecompositionRow decomp = new BidiagonalDecompositionRow();
-        assertTrue(decomp.decompose(A_mod.getMatrix(),true));
+        assertTrue(decomp.decompose(A_mod.getMatrix()));
 
-        assertFalse(A.isIdentical(A_mod,1e-8));
-
-        A_mod.set(A);
-        assertTrue(decomp.decompose(A_mod.getMatrix(),false));
-        assertTrue(A.isIdentical(A_mod,1e-10));
+        assertTrue(decomp.inputModified() != A.isIdentical(A_mod,1e-8));
     }
 
     /**
@@ -78,7 +75,7 @@ public class TestBidiagonalDecompositionRow {
         BidiagonalDecompositionRow decomp = new BidiagonalDecompositionRow();
         BidiagonalDecompositionNaive naive = new BidiagonalDecompositionNaive();
 
-        assertTrue(decomp.decompose(A.getMatrix(),false));
+        assertTrue(decomp.decompose(A.getMatrix().copy()));
         assertTrue(naive.decompose(A.getMatrix()));
 
         SimpleMatrix U = SimpleMatrix.wrap(decomp.getU(null,false,false));
@@ -115,14 +112,14 @@ public class TestBidiagonalDecompositionRow {
                 for( int tall = 0; tall <= 2; tall++ ) {
                     DenseMatrix64F A = RandomMatrices.createRandom(N+tall,N,rand);
 
-                    assertTrue(decomp.decompose(A,false));
+                    assertTrue(decomp.decompose(A.<DenseMatrix64F>copy()));
 
                     checkGeneric(A, decomp);
                 }
                 for( int wide = 1; wide <= 2; wide++ ) {
                     DenseMatrix64F A = RandomMatrices.createRandom(N,N+wide,rand);
 
-                    assertTrue(decomp.decompose(A,false));
+                    assertTrue(decomp.decompose(A.copy()));
 
                     checkGeneric(A, decomp);
                 }
@@ -136,7 +133,7 @@ public class TestBidiagonalDecompositionRow {
 
         BidiagonalDecompositionRow decomp = new BidiagonalDecompositionRow();
 
-        assertTrue(decomp.decompose(A.getMatrix(),false));
+        assertTrue(decomp.decompose(A.getMatrix().copy()));
 
         checkGeneric(A.getMatrix(), decomp);
     }
@@ -190,7 +187,7 @@ public class TestBidiagonalDecompositionRow {
 
         BidiagonalDecompositionRow decomp = new BidiagonalDecompositionRow();
 
-        assertTrue(decomp.decompose(A.getMatrix(),false));
+        assertTrue(decomp.decompose(A.getMatrix().copy()));
 
         checkGeneric(A.getMatrix(), decomp);
     }
@@ -297,7 +294,7 @@ public class TestBidiagonalDecompositionRow {
 
 
         public DebugBidiagonal( DenseMatrix64F A ) {
-            init(A,false);
+            init(A.<DenseMatrix64F>copy());
         }
 
         @Override

@@ -20,10 +20,9 @@
 package org.ejml.alg.block.decomposition.chol;
 
 import org.ejml.alg.block.BlockInnerRankUpdate;
-import org.ejml.alg.block.BlockInnerTriangularSolver;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
-import org.ejml.alg.block.decomposition.BlockCholeskyDecomposition;
+import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 
@@ -39,7 +38,7 @@ import org.ejml.data.D1Submatrix64F;
  *
  * @author Peter Abeles
  */
-public class BlockCholeskyOuterForm implements BlockCholeskyDecomposition {
+public class BlockCholeskyOuterForm implements CholeskyDecomposition<BlockMatrix64F> {
 
     // if it should compute an upper or lower triangular matrix
     private boolean lower = false;
@@ -157,8 +156,12 @@ public class BlockCholeskyOuterForm implements BlockCholeskyDecomposition {
     }
 
     @Override
-    public BlockMatrix64F getT() {
-        return this.T;
+    public BlockMatrix64F getT(BlockMatrix64F T) {
+        if( T == null )
+            return this.T;
+        T.set(this.T);
+
+        return T;
     }
 
     @Override

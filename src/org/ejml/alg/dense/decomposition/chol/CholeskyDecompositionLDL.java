@@ -41,7 +41,8 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class CholeskyDecompositionLDL implements DecompositionInterface {
+public class CholeskyDecompositionLDL
+        implements DecompositionInterface<DenseMatrix64F> {
 
     // it can decompose a matrix up to this width
     private int maxWidth;

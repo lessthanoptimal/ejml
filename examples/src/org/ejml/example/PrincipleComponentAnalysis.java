@@ -57,7 +57,7 @@ import org.ejml.ops.SingularOps;
 public class PrincipleComponentAnalysis {
 
     // decomposition used to compute principle components
-    private SingularValueDecomposition svd;
+    private SingularValueDecomposition<DenseMatrix64F> svd;
 
     // principle component subspace is stored in the rows
     private DenseMatrix64F V_t;

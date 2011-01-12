@@ -37,7 +37,7 @@ import org.ejml.ops.CommonOps;
  */
 // TODO remove QR Col and replace with this one?
 // -- On small matrices col seems to be about 10% faster
-public class QRDecompositionHouseholderTran implements QRDecomposition {
+public class QRDecompositionHouseholderTran implements QRDecomposition<DenseMatrix64F> {
 
     /**
      * Where the Q and R matrices are stored.  For speed reasons

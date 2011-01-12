@@ -77,7 +77,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(false,chol.getT());
+        return SpecializedOps.qualityTriangular(false,chol.getT(null));
     }
 
     /**
@@ -89,7 +89,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
         if( B.blockLength != blockLength )
             throw new IllegalArgumentException("Unexpected blocklength in B.");
 
-        D1Submatrix64F L = new D1Submatrix64F(chol.getT());
+        D1Submatrix64F L = new D1Submatrix64F(chol.getT(null));
 
         if( X != null ) {
             if( X.blockLength != blockLength )
@@ -116,7 +116,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public void invert(BlockMatrix64F A_inv) {
-        BlockMatrix64F T = chol.getT();
+        BlockMatrix64F T = chol.getT(null);
         if( A_inv.numRows != T.numRows || A_inv.numCols != T.numCols )
             throw new IllegalArgumentException("Unexpected number or rows and/or columns");
 

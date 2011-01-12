@@ -40,7 +40,7 @@ import static org.junit.Assert.fail;
 public abstract class GenericQrCheck {
     Random rand = new Random(0xff);
 
-    abstract protected QRDecomposition createQRDecomposition();
+    abstract protected QRDecomposition<DenseMatrix64F> createQRDecomposition();
 
     @Test
     public void testModifiedInput() {
@@ -99,7 +99,7 @@ public abstract class GenericQrCheck {
         int width = 5;
         int height = 10;
 
-        QRDecomposition alg = createQRDecomposition();
+        QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width);
         RandomMatrices.setRandom(A.getMatrix(),rand);

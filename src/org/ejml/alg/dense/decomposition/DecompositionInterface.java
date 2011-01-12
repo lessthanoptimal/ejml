@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -41,7 +41,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface DecompositionInterface {
+public interface DecompositionInterface <T extends Matrix64F> {
 
     /**
      * Computes the decomposition of the input matrix.  Depending on the implementation
@@ -52,10 +52,10 @@ public interface DecompositionInterface {
      * @param orig The matrix which is being decomposed.  Modification is implementation dependent.
      * @return Returns if it was able to decompose the matrix.
      */
-    public boolean decompose( DenseMatrix64F orig );
+    public boolean decompose( T orig );
 
     /**
-     * Is the input matrix to {@link #decompose(org.ejml.data.DenseMatrix64F)} is modified during
+     * Is the input matrix to {@link #decompose(org.ejml.data.Matrix64F)} is modified during
      * the decomposition process.
      *
      * @return true if the input matrix to decompose() is modified.

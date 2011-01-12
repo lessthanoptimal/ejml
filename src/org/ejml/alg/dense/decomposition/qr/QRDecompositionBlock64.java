@@ -28,12 +28,13 @@ import org.ejml.data.DenseMatrix64F;
 
 
 /**
- * Wrapper that allows {@link org.ejml.alg.block.decomposition.BlockQRDecomposition} to be used
- * as a {@link QRDecomposition}.
+ * Wrapper that allows {@link QRDecomposition}(BlockMatrix64F) to be used
+ * as a {@link QRDecomposition}(DenseMatrix64F).
  *
  * @author Peter Abeles
  */
-public class QRDecompositionBlock64 extends BaseDecompositionBlock64 implements QRDecomposition  {
+public class QRDecompositionBlock64
+        extends BaseDecompositionBlock64 implements QRDecomposition<DenseMatrix64F>  {
 
     public QRDecompositionBlock64() {
         super(new BlockMatrix64HouseholderQR());

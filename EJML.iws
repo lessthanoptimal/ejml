@@ -5,30 +5,74 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/qr/TestBlockQrHouseHolderSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/qr/TestBlockQrHouseHolderSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/qr/BlockQrHouseHolderSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/qr/BlockQrHouseHolderSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ejml.iml" afterPath="$PROJECT_DIR$/ejml.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java" afterPath="$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TODO_Algorithms.txt" afterPath="$PROJECT_DIR$/TODO_Algorithms.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/chol/StabilityCholeksyDecomposition.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/chol/StabilityCholeksyDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SymmetricQRAlgorithmDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SymmetricQRAlgorithmDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/bidiagonal/StabilityBidiagonalDecomposition.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/bidiagonal/StabilityBidiagonalDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/TestBlockMatrix64HouseholderQR.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/TestBlockMatrix64HouseholderQR.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestDecompositionFactory.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestDecompositionFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/lu/LUDecompositionBase.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/lu/LUDecompositionBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionBlock64.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionBlock64.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/BlockCholeskyDecomposition.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/BlockQRDecomposition.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/TestLinearSolverCholBlock64.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/TestLinearSolverCholBlock64.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionFactory.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/bidiagonal/BidiagonalDecompositionRow.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/bidiagonal/BidiagonalDecompositionRow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholder.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/TestSvdImplicitQrDecompose.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/TestSvdImplicitQrDecompose.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/implicitqr/TestSvdImplicitQrAlgorithm.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/implicitqr/TestSvdImplicitQrAlgorithm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockMultiplication.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockMultiplication.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" afterPath="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SmartSolverQr.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SmartSolverQr.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/bidiagonal" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/SingularValueDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/SingularValueDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/chol/LinearSolverCholBlock64.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/chol/LinearSolverCholBlock64.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/chol/CholeskyDecompositionCommon.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/chol/CholeskyDecompositionCommon.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/EigenOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/EigenOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/chol/TestBlockInnerCholesky.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/chol/TestBlockInnerCholesky.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/HessenbergSimilarDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/HessenbergSimilarDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SwitchingEigenDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/SwitchingEigenDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/chol/CholeskyDecompositionLDL.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/chol/CholeskyDecompositionLDL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderTran.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderTran.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/org/ejml/example/PrincipleComponentAnalysis.java" afterPath="$PROJECT_DIR$/examples/src/org/ejml/example/PrincipleComponentAnalysis.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/BlockDecompositionInterface.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderColumn.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderColumn.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/chol/CholeskyDecompositionBlock64.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/chol/CholeskyDecompositionBlock64.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/chol/TestBlockCholeskyOuterForm.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/chol/TestBlockCholeskyOuterForm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/EigenDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/EigenDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/CholeskyDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/CholeskyDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/chol/BlockCholeskyOuterSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/chol/BlockCholeskyOuterSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/D1Submatrix64F.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/D1Submatrix64F.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/BaseDecompositionBlock64.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/BaseDecompositionBlock64.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerMultiplication.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerMultiplication.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/WatchedDoubleStepQRDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/eig/WatchedDoubleStepQRDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/eig/symm/SymmetricEigenStressTest.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/eig/symm/SymmetricEigenStressTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/qr/StabilityQRDecomposition.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/qr/StabilityQRDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/GenericBlock64QrDecompositionTests.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/GenericBlock64QrDecompositionTests.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/experimental/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose_UltimateS.java" afterPath="$PROJECT_DIR$/experimental/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose_UltimateS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/TestLinearSolverChol.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/chol/TestLinearSolverChol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestTriangularSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestTriangularSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/experimental/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose_Ultimate.java" afterPath="$PROJECT_DIR$/experimental/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose_Ultimate.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/LUDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/LUDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/chol/BlockCholeskyOuterForm.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/chol/BlockCholeskyOuterForm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/SimpleMatrix.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/hessenberg/TridiagonalSimilarDecomposition.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/lu/TestLinearSolverLuKJI.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/lu/TestLinearSolverLuKJI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/bidiagonal/BenchmarkBidiagonalDecomposition.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/bidiagonal/BenchmarkBidiagonalDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/qr/BlockMatrix64HouseholderQR.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/qr/BlockMatrix64HouseholderQR.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionInterface.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionInterface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/bidiagonal/TestBidiagonalDecompositionRow.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/bidiagonal/TestBidiagonalDecompositionRow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/bidiagonal/BidiagonalDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/bidiagonal/BidiagonalDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestEigenOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestEigenOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/QRDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/QRDecomposition.java" />
     </list>
     <ignored path=".idea/workspace.xml" />
     <ignored path="EJML.iws" />
@@ -88,19 +132,57 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TestMatrixFeatures.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java">
+      <file leaf-file-name="DecompositionFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="152" column="37" selection-start="4562" selection-end="4562" vertical-scroll-proportion="0.0">
+            <state line="204" column="90" selection-start="7920" selection-end="7920" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BenchmarkEquality.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java">
+      <file leaf-file-name="GenericBlock64QrDecompositionTests.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/GenericBlock64QrDecompositionTests.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="23" selection-start="1478" selection-end="1478" vertical-scroll-proportion="0.0">
+            <state line="36" column="97" selection-start="1341" selection-end="1341" vertical-scroll-proportion="0.0">
+              <folding>
+                <marker date="1294803303000" expanded="false" signature="835:1237" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QRDecompositionBlock64.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionBlock64.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="25" selection-start="1323" selection-end="1323" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LinearSolverCholBlock64.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/chol/LinearSolverCholBlock64.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="61" selection-start="822" selection-end="822" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SvdImplicitQrDecompose.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="45" column="13" selection-start="1791" selection-end="1791" vertical-scroll-proportion="0.33288947">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlockCholeskyOuterForm.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/chol/BlockCholeskyOuterForm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="160" column="24" selection-start="5127" selection-end="5127" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -108,29 +190,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BenchmarkVariousOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkVariousOps.java">
+      <file leaf-file-name="CholeskyDecomposition.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/CholeskyDecomposition.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="17" selection-start="1158" selection-end="1535" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MatrixFeatures.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="380" column="20" selection-start="10960" selection-end="11585" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EjmlUnitTests.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="13" selection-start="960" selection-end="960" vertical-scroll-proportion="-2.9600887">
-              <folding />
+            <state line="47" column="38" selection-start="1666" selection-end="1688" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -138,16 +204,25 @@
       <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/change.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="60" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0">
+            <state line="12" column="42" selection-start="402" selection-end="402" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TODO_Algorithms.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
+      <file leaf-file-name="TestBlockCholeskyOuterSolver.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="83" selection-start="619" selection-end="619" vertical-scroll-proportion="0.0">
+            <state line="63" column="0" selection-start="2112" selection-end="2112" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlockCholeskyOuterSolver.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/linsol/chol/BlockCholeskyOuterSolver.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="91" column="53" selection-start="2890" selection-end="2890" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -163,22 +238,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/qr/TestBlockQrHouseHolderSolver.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/chol/TestBlockCholeskyOuterForm.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/chol/TestBlockInnerCholesky.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/TestBlockMatrix64HouseholderQR.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestEigenOps.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/lu/TestLinearSolverLuKJI.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" />
-        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/ops/EigenOps.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionFactory.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestDecompositionFactory.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionBlock64.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/chol/LinearSolverCholBlock64.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/GenericBlock64QrDecompositionTests.java" />
         <option value="$PROJECT_DIR$/change.txt" />
-        <option value="$PROJECT_DIR$/TODO_Algorithms.txt" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/chol/BlockCholeskyOuterForm.java" />
       </list>
     </option>
   </component>
@@ -236,60 +311,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ops" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -792,8 +813,9 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19976498" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20768602" sideWeight="0.6627497" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38895416" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38895416" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -805,7 +827,6 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19976498" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -825,7 +846,7 @@
     <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="- triangular solver works on unaligned inputs&#10;- BlockQRSolver does not create a local block aligned copy for solving" />
+    <option name="LAST_COMMIT_MESSAGE" value="- added isEquals to MatrixFeatures&#10;- changed behavior of isIdentical&#10;- adjusted value of SWITCH_BLOCK64_QR in EjmlParameters" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -850,6 +871,7 @@
     <MESSAGE value="- added solver for QRDecompositionHouseholderTran&#10;- Deleted NR SVD&#10;- Change LinearSolver so that it allows modification of input matrices.&#10; * Added LinearSolverSafe that ensures inputs are not modified.&#10;- Improved some unit tests and other minor changes" />
     <MESSAGE value="- Added EjmlUnitTests&#10;  * Generic unit testing class that should work in any unit testing framework.&#10;  * Changed many of the internal tests to use this class&#10;- toString() support added to DenseMatrix64F and SimpleMatrix&#10;- MatrixIO takes a generic input stream instead of always using System.out&#10;" />
     <MESSAGE value="- triangular solver works on unaligned inputs&#10;- BlockQRSolver does not create a local block aligned copy for solving" />
+    <MESSAGE value="- added isEquals to MatrixFeatures&#10;- changed behavior of isIdentical&#10;- adjusted value of SWITCH_BLOCK64_QR in EjmlParameters" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -867,116 +889,120 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="51" selection-start="1836" selection-end="1836" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="121" column="42" selection-start="4092" selection-end="4092" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="195" column="43" selection-start="5611" selection-end="5611" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="51" selection-start="2483" selection-end="2483" vertical-scroll-proportion="0.0">
+        <state line="258" column="51" selection-start="7395" selection-end="7395" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/lu/TestLinearSolverLuKJI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="42" selection-start="1391" selection-end="1391" vertical-scroll-proportion="0.0">
+        <state line="30" column="55" selection-start="1117" selection-end="1117" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/eig/GeneralEigenDecompositionCheck.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="42" selection-start="3745" selection-end="3745" vertical-scroll-proportion="0.0">
+        <state line="425" column="34" selection-start="13710" selection-end="13710" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestEigenOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="51" selection-start="5774" selection-end="5774" vertical-scroll-proportion="0.0">
+        <state line="75" column="23" selection-start="2315" selection-end="2315" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EigenOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="42" selection-start="1965" selection-end="1965" vertical-scroll-proportion="0.0">
+        <state line="283" column="33" selection-start="9885" selection-end="9885" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestDecompositionFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="106" column="42" selection-start="3269" selection-end="3269" vertical-scroll-proportion="0.0">
+        <state line="36" column="4" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkVariousOps.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionBlock64.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="17" selection-start="1158" selection-end="1535" vertical-scroll-proportion="0.0">
+        <state line="35" column="25" selection-start="1323" selection-end="1323" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/decomposition/qr/GenericBlock64QrDecompositionTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="23" selection-start="1478" selection-end="1478" vertical-scroll-proportion="0.0">
+        <state line="36" column="97" selection-start="1341" selection-end="1341" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1294803303000" expanded="false" signature="835:1237" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/CholeskyDecomposition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="38" selection-start="1666" selection-end="1688" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="152" column="37" selection-start="4562" selection-end="4562" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="60" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0">
+        <state line="12" column="42" selection-start="402" selection-end="402" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="83" selection-start="619" selection-end="619" vertical-scroll-proportion="0.0">
+        <state line="63" column="0" selection-start="2112" selection-end="2112" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/linsol/chol/BlockCholeskyOuterSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="380" column="20" selection-start="10960" selection-end="11585" vertical-scroll-proportion="0.0">
+        <state line="91" column="53" selection-start="2890" selection-end="2890" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/chol/BlockCholeskyOuterForm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="13" selection-start="960" selection-end="960" vertical-scroll-proportion="-2.9600887">
+        <state line="160" column="24" selection-start="5127" selection-end="5127" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/DecompositionFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="204" column="90" selection-start="7920" selection-end="7920" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/chol/LinearSolverCholBlock64.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="61" selection-start="822" selection-end="822" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/svd/SvdImplicitQrDecompose.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="13" selection-start="1791" selection-end="1791" vertical-scroll-proportion="0.33288947">
           <folding />
         </state>
       </provider>

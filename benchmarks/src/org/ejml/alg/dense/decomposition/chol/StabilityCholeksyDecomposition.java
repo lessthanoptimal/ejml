@@ -37,7 +37,7 @@ import java.util.Random;
 public class StabilityCholeksyDecomposition {
 
 
-    public static double evaluate( CholeskyDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( CholeskyDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
         if( !alg.decompose(orig)) {
             return Double.NaN;

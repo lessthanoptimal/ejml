@@ -19,7 +19,8 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decomposition.DecompositionInterface;
+import org.ejml.data.Matrix64F;
 
 /**
  * <p>
@@ -39,18 +40,8 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface BidiagonalDecomposition {
-
-
-    /**
-     * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
-     * false otherwise.
-     *
-     * @param A  The matrix that is being decomposed.  Not modified.
-     * @param overwrite Can it over write the passed in matrix
-     * @return If it detects any errors or not.
-     */
-    public boolean decompose( DenseMatrix64F A , boolean overwrite );
+public interface BidiagonalDecomposition <T extends Matrix64F>
+        extends DecompositionInterface<T> {
 
     /**
      * Returns the bidiagonal matrix.
@@ -58,7 +49,7 @@ public interface BidiagonalDecomposition {
      * @param B If not null the results are stored here, if null a new matrix is created.
      * @return The bidiagonal matrix.
      */
-    public DenseMatrix64F getB( DenseMatrix64F B , boolean compact );
+    public T getB( T B , boolean compact );
 
     /**
      * Returns the orthogonal U matrix.
@@ -66,7 +57,7 @@ public interface BidiagonalDecomposition {
      * @param U If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DenseMatrix64F getU( DenseMatrix64F U , boolean transpose , boolean compact );
+    public T getU( T U , boolean transpose , boolean compact );
 
 
     /**
@@ -75,6 +66,6 @@ public interface BidiagonalDecomposition {
      * @param V If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DenseMatrix64F getV( DenseMatrix64F V ,  boolean transpose , boolean compact );
+    public T getV( T V ,  boolean transpose , boolean compact );
 
 }

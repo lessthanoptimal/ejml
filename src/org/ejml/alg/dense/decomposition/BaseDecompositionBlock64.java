@@ -21,7 +21,6 @@ package org.ejml.alg.dense.decomposition;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.decomposition.BlockDecompositionInterface;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 
@@ -32,14 +31,14 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class BaseDecompositionBlock64 implements DecompositionInterface {
+public class BaseDecompositionBlock64 implements DecompositionInterface<DenseMatrix64F> {
 
-    protected BlockDecompositionInterface alg;
+    protected DecompositionInterface<BlockMatrix64F> alg;
 
     protected double[]tmp;
     protected BlockMatrix64F Ablock = new BlockMatrix64F();
 
-    public BaseDecompositionBlock64(BlockDecompositionInterface alg) {
+    public BaseDecompositionBlock64(DecompositionInterface<BlockMatrix64F> alg) {
         this.alg = alg;
     }
 

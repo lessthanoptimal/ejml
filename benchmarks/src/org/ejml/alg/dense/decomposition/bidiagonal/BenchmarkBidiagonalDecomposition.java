@@ -38,7 +38,7 @@ public class BenchmarkBidiagonalDecomposition {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig,false) ) {
+            if( !alg.decompose(orig.copy()) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }

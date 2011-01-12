@@ -69,7 +69,7 @@ public class DecompositionFactory {
      * @param lower should a lower or upper triangular matrix be used.
      * @return A new CholeskyDecomposition.
      */
-    public static CholeskyDecomposition chol( int widthMax , boolean decomposeOrig, boolean lower )
+    public static CholeskyDecomposition<DenseMatrix64F> chol( int widthMax , boolean decomposeOrig, boolean lower )
     {
         if( widthMax < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
             return new CholeskyDecompositionInner(decomposeOrig,lower);
@@ -78,7 +78,7 @@ public class DecompositionFactory {
         }
     }
 
-    public static CholeskyDecomposition chol() {
+    public static CholeskyDecomposition<DenseMatrix64F> chol() {
         return chol(10,false,true);
     }
 
@@ -97,7 +97,7 @@ public class DecompositionFactory {
      *
      * @return LUDecomposition
      */
-    public static LUDecomposition lu() {
+    public static LUDecomposition<DenseMatrix64F> lu() {
         return new LUDecompositionAlt();
     }
 
@@ -107,7 +107,7 @@ public class DecompositionFactory {
      *
      * @return SingularValueDecomposition
      */
-    public static SingularValueDecomposition svd() {
+    public static SingularValueDecomposition<DenseMatrix64F> svd() {
         return new SvdImplicitQrDecompose(false,true,true);
     }
 
@@ -120,7 +120,7 @@ public class DecompositionFactory {
      * @param compact Should it compute the SVD in compact form.
      * @return
      */
-    public static SingularValueDecomposition svd( boolean needU , boolean needV , boolean compact ) {
+    public static SingularValueDecomposition<DenseMatrix64F> svd( boolean needU , boolean needV , boolean compact ) {
         return new SvdImplicitQrDecompose(compact,needU,needV);
     }
 
@@ -129,7 +129,7 @@ public class DecompositionFactory {
      *
      * @return QRDecomposition
      */
-    public static QRDecomposition qr() {
+    public static QRDecomposition<DenseMatrix64F> qr() {
         return new QRDecompositionHouseholderColumn();
     }
 
@@ -140,7 +140,7 @@ public class DecompositionFactory {
      *
      * @return A new EigenDecomposition.
      */
-    public static EigenDecomposition eig() {
+    public static EigenDecomposition<DenseMatrix64F> eig() {
         return new SwitchingEigenDecomposition();
     }
 
@@ -150,7 +150,7 @@ public class DecompositionFactory {
      * @param needVectors Should eigenvectors be computed or not.
      * @return A new EigenDecomposition
      */
-    public static EigenDecomposition eig( boolean needVectors ) {
+    public static EigenDecomposition<DenseMatrix64F> eig( boolean needVectors ) {
         return new SwitchingEigenDecomposition(needVectors,1e-8);
     }
 
@@ -171,7 +171,7 @@ public class DecompositionFactory {
      * @param svd The decomposition after processing 'orig'. Not modified.
      * @return The quality of the decomposition.
      */
-    public static double quality( DenseMatrix64F orig , SingularValueDecomposition svd )
+    public static double quality( DenseMatrix64F orig , SingularValueDecomposition<DenseMatrix64F> svd )
     {
         return quality(orig,svd.getU(false),svd.getW(null),svd.getV(true));
     }
@@ -202,7 +202,7 @@ public class DecompositionFactory {
      * @param eig EVD of the original matrix. Not modified.
      * @return The quality of the decomposition.
      */
-    public static double quality( DenseMatrix64F orig , EigenDecomposition eig )
+    public static double quality( DenseMatrix64F orig , EigenDecomposition<DenseMatrix64F> eig )
     {
         SimpleMatrix A = SimpleMatrix.wrap(orig);
         SimpleMatrix V = SimpleMatrix.wrap(EigenOps.createMatrixV(eig));

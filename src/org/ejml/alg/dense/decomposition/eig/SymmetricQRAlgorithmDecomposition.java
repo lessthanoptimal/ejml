@@ -43,7 +43,8 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class SymmetricQRAlgorithmDecomposition implements EigenDecomposition {
+public class SymmetricQRAlgorithmDecomposition
+        implements EigenDecomposition<DenseMatrix64F> {
 
     // computes a tridiagonal matrix whose eigenvalues are the same as the original
     // matrix and can be easily computed.

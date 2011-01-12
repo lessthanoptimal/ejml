@@ -238,7 +238,7 @@ public class TestSingularOps {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition svd = DecompositionFactory.svd(true,true,false);
+                SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));

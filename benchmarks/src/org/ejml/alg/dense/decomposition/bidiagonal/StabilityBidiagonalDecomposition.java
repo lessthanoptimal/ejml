@@ -35,9 +35,9 @@ import java.util.Random;
 public class StabilityBidiagonalDecomposition {
 
 
-    public static double evaluate( BidiagonalDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( BidiagonalDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
-        if( !alg.decompose(orig,false)) {
+        if( !alg.decompose(orig.<DenseMatrix64F>copy())) {
             return Double.NaN;
         }
 

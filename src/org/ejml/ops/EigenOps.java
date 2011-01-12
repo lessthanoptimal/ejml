@@ -281,7 +281,7 @@ public class EigenOps {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return An m by m matrix containing eigenvectors in its columns.
      */
-    public static DenseMatrix64F createMatrixV( EigenDecomposition eig )
+    public static DenseMatrix64F createMatrixV( EigenDecomposition<DenseMatrix64F> eig )
     {
         int N = eig.getNumberOfEigenvalues();
 

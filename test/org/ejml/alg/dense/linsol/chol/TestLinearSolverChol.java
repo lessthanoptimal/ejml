@@ -20,14 +20,7 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.UtilTestMatrix;
-import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
-
-import java.util.Random;
-
-import static org.junit.Assert.assertTrue;
 
 
 /**

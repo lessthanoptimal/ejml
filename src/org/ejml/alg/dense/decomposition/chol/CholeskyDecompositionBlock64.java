@@ -33,7 +33,8 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class CholeskyDecompositionBlock64 extends BaseDecompositionBlock64 implements CholeskyDecomposition {
+public class CholeskyDecompositionBlock64
+        extends BaseDecompositionBlock64 implements CholeskyDecomposition<DenseMatrix64F> {
 
     public CholeskyDecompositionBlock64( boolean lower ) {
         super(new BlockCholeskyOuterForm(lower));
@@ -46,7 +47,7 @@ public class CholeskyDecompositionBlock64 extends BaseDecompositionBlock64 imple
 
     @Override
     public DenseMatrix64F getT(DenseMatrix64F T) {
-        BlockMatrix64F T_block = ((BlockCholeskyOuterForm)alg).getT();
+        BlockMatrix64F T_block = ((BlockCholeskyOuterForm)alg).getT(null);
 
         if( T == null ) {
             T = new DenseMatrix64F(T_block.numRows,T_block.numCols);

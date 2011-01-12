@@ -35,7 +35,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholderColumn implements QRDecomposition {
+public class QRDecompositionHouseholderColumn implements QRDecomposition<DenseMatrix64F> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the

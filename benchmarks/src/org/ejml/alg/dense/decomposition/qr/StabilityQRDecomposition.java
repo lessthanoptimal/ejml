@@ -36,7 +36,7 @@ import java.util.Random;
 public class StabilityQRDecomposition {
 
 
-    public static double evaluate( QRDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( QRDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
         if( !alg.decompose(orig)) {
             return Double.NaN;

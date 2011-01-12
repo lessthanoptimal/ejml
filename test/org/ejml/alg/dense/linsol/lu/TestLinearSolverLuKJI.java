@@ -36,7 +36,7 @@ public class TestLinearSolverLuKJI extends GenericLinearSolverChecks {
     }
 
     @Override
-    protected LinearSolver createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
         LUDecompositionAlt decomp = new LUDecompositionAlt();
 
         return new LinearSolverLuKJI(decomp);

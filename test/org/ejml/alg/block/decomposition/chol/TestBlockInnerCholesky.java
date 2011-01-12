@@ -57,7 +57,7 @@ public class TestBlockInnerCholesky {
         DenseMatrix64F A = RandomMatrices.createSymmPosDef(n,rand);
 
         // decompose a DenseMatrix64F to find expected solution
-        CholeskyDecomposition chol = DecompositionFactory.chol(n,false,lower);
+        CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(n,false,lower);
         assertTrue(chol.decompose(A));
 
         DenseMatrix64F expected = chol.getT(null);

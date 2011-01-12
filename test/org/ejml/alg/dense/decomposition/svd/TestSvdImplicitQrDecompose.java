@@ -76,7 +76,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
         for( int k = 0; k < 2; k++ ) {
             compact = k == 0;
 
-            SingularValueDecomposition alg = new SvdImplicitQrDecompose(compact,true,true);
+            SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,true,true);
 
             DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
 
@@ -103,7 +103,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
                              DenseMatrix64F V ,
                              boolean checkU , boolean checkV )
     {
-        SingularValueDecomposition alg = new SvdImplicitQrDecompose(compact,checkU,checkV);
+        SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,checkU,checkV);
 
         assertTrue(alg.decompose(A));
 

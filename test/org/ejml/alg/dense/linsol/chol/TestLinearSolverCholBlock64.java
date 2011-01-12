@@ -19,7 +19,6 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.junit.Test;
 
 

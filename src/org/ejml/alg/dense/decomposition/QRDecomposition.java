@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -50,11 +50,12 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface QRDecomposition extends DecompositionInterface {
+public interface QRDecomposition <T extends Matrix64F>
+        extends DecompositionInterface<T> {
     /**
      * <p>
      * Returns the Q matrix from the decomposition.  Should only
-     * be called after {@link #decompose(org.ejml.data.DenseMatrix64F)} has
+     * be called after {@link #decompose(org.ejml.data.Matrix64F)} has
      * been called.
      * </p>
      *
@@ -67,12 +68,12 @@ public interface QRDecomposition extends DecompositionInterface {
      * @param compact If true an m by n matrix is created, otherwise n by n.
      * @return The Q matrix.
      */
-    public DenseMatrix64F getQ(DenseMatrix64F Q, boolean compact);
+    public T getQ( T Q, boolean compact);
 
     /**
      * <p>
      * Returns the R matrix from the decomposition.  Should only be
-     * called after {@link #decompose(org.ejml.data.DenseMatrix64F)} has been.
+     * called after {@link #decompose(org.ejml.data.Matrix64F)} has been.
      * </p>
      * <p>
      * If setZeros is true then an n &times; m matrix is required and all the elements are set.
@@ -89,14 +90,5 @@ public interface QRDecomposition extends DecompositionInterface {
      * @param compact If true only the upper triangular elements are set
      * @return The R matrix.
      */
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact);
-
-    /**
-     * Computes the QR decomposition of matrix A.  If the decomposition was able
-     * to finish without detecting any major issues this function returns true.
-     *
-     * @param A The matrix being decomposed. Not modified.
-     * @return true if A could be decomposed without error and false if not.
-     */
-    public boolean decompose( DenseMatrix64F A );
+    public T getR( T R, boolean compact);
 }

@@ -46,7 +46,8 @@ import org.ejml.ops.CommonOps;
  * </p>
  */
 // TODO create a column based one similar to what was done for QR decomposition?
-public class HessenbergSimilarDecomposition implements DecompositionInterface {
+public class HessenbergSimilarDecomposition
+        implements DecompositionInterface<DenseMatrix64F> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DenseMatrix64F QH;
     // number of rows and columns of the matrix being decompose
