@@ -45,7 +45,7 @@ public class TestMatrixIO {
         DenseMatrix64F A_copy = MatrixIO.load("temp.mat");
 
         assertTrue(A != A_copy);
-        assertTrue(MatrixFeatures.isIdentical(A,A_copy));
+        assertTrue(MatrixFeatures.isEquals(A,A_copy));
 
         // clean up
         File f = new File("temp.mat");

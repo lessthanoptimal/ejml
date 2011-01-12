@@ -19,8 +19,8 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.SmartSolverQr;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -80,8 +80,10 @@ public class BenchmarkSolveOver {
                 new LinearSolverQrHouseCol(),numTrials));
 //        System.out.println("  solve QR tran        = "+ solveBenchmark(
 //                new LinearSolverQrHouseTran(),numTrials));
-        System.out.println("  solve QR Block64      = "+ solveBenchmark(
-                new LinearSolverQrBlock64(),numTrials));
+//        System.out.println("  solve QR Block64      = "+ solveBenchmark(
+//                new LinearSolverQrBlock64(),numTrials));
+        System.out.println("  solve smart QR        = "+ solveBenchmark(
+                new SmartSolverQr(),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }
@@ -93,7 +95,7 @@ public class BenchmarkSolveOver {
 
         includeSet = true;
         System.out.println("Solving for least squares fitting type problems with set");
-        for( int i = 8; i < width.length; i++ ) {
+        for( int i = 0; i < width.length; i++ ) {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);

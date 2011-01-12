@@ -56,7 +56,7 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
 
     public BlockQrHouseHolderSolver() {
-        decomp.setSaveW(true);
+        decomp.setSaveW(false);
     }
 
     /**

@@ -63,7 +63,7 @@ public class TestBlockTriangularSolver {
             // see if passing in the same matrix instance twice messes it up or not
             BlockTriangularSolver.invert(r,false,new D1Submatrix64F(T),new D1Submatrix64F(T),temp);
 
-            assertTrue(BlockMatrixOps.isIdentical(T,T_inv,1e-8));
+            assertTrue(BlockMatrixOps.isEquals(T,T_inv,1e-8));
         }
     }
 
@@ -147,7 +147,7 @@ public class TestBlockTriangularSolver {
         // Y is overwritten with the solution
         BlockTriangularSolver.solve(r,upper,new D1Submatrix64F(T),new D1Submatrix64F(Y),transT);
 
-        assertTrue( BlockMatrixOps.isIdentical(B,Y,1e-8));
+        assertTrue( BlockMatrixOps.isEquals(B,Y,1e-8));
     }
 
     /**
@@ -182,7 +182,7 @@ public class TestBlockTriangularSolver {
         BlockTriangularSolver.solve(r,upper,new D1Submatrix64F(T2,0,size,0,size),new D1Submatrix64F(Y),transT);
 
         assertTrue( "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols,
-                BlockMatrixOps.isIdentical(B,Y,1e-8));
+                BlockMatrixOps.isEquals(B,Y,1e-8));
     }
 
 

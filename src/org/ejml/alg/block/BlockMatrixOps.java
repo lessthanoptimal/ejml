@@ -358,20 +358,20 @@ public class BlockMatrixOps {
         return ret;
     }
 
-    public static boolean isIdentical( BlockMatrix64F A , BlockMatrix64F B )
+    public static boolean isEquals( BlockMatrix64F A , BlockMatrix64F B )
     {
         if( A.blockLength != B.blockLength )
             return false;
 
-        return MatrixFeatures.isIdentical(A,B);
+        return MatrixFeatures.isEquals(A,B);
     }
 
-    public static boolean isIdentical( BlockMatrix64F A , BlockMatrix64F B , double tol )
+    public static boolean isEquals( BlockMatrix64F A , BlockMatrix64F B , double tol )
     {
         if( A.blockLength != B.blockLength )
             return false;
 
-        return MatrixFeatures.isIdentical(A,B,tol);
+        return MatrixFeatures.isEquals(A,B,tol);
     }
 
     /**

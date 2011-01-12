@@ -59,7 +59,7 @@ public abstract class GenericLinearSolverChecks {
 
         assertTrue(solver.setA(A));
 
-        boolean modified = !MatrixFeatures.isIdentical(A_orig,A);
+        boolean modified = !MatrixFeatures.isEquals(A_orig,A);
 
         assertTrue(modified == solver.modifiesA());
     }
@@ -81,7 +81,7 @@ public abstract class GenericLinearSolverChecks {
 
         solver.solve(B,X);
 
-        boolean modified = !MatrixFeatures.isIdentical(B_orig,B);
+        boolean modified = !MatrixFeatures.isEquals(B_orig,B);
 
         assertTrue(modified == solver.modifiesB());
     }

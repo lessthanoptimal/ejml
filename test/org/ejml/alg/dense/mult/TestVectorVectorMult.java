@@ -114,7 +114,7 @@ public class TestVectorVectorMult {
         MatrixMatrixMult.multTransB(A,B,E);
         CommonOps.add(D,E,D);
 
-        assertTrue(MatrixFeatures.isIdentical(D,C));
+        assertTrue(MatrixFeatures.isEquals(D,C));
 
         // now try it with another gamma
         C = RandomMatrices.createRandom(4,4,rand);

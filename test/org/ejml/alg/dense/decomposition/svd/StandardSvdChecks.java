@@ -174,7 +174,7 @@ public abstract class StandardSvdChecks {
 
         CommonOps.transpose(U,found);
 
-        assertTrue( MatrixFeatures.isIdentical(Ut,found));
+        assertTrue( MatrixFeatures.isEquals(Ut,found));
     }
 
     /**
@@ -193,7 +193,7 @@ public abstract class StandardSvdChecks {
 
         CommonOps.transpose(V,found);
 
-        assertTrue( MatrixFeatures.isIdentical(Vt,found));
+        assertTrue( MatrixFeatures.isEquals(Vt,found));
     }
 
     /**

@@ -154,8 +154,8 @@ public abstract class GeneralLuDecompositionChecks {
         DenseMatrix64F L_ret = alg.getLower(null);
         DenseMatrix64F U_ret = alg.getUpper(null);
 
-        assertTrue(MatrixFeatures.isIdentical(L_provided,L_ret));
-        assertTrue(MatrixFeatures.isIdentical(U_provided,U_ret));
+        assertTrue(MatrixFeatures.isEquals(L_provided,L_ret));
+        assertTrue(MatrixFeatures.isEquals(U_provided,U_ret));
     }
 
     @Test

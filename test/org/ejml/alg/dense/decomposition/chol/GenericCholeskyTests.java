@@ -104,6 +104,6 @@ public abstract class GenericCholeskyTests {
         DenseMatrix64F L_provided = RandomMatrices.createRandom(3,3,rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
-        assertTrue(MatrixFeatures.isIdentical(L_null,L_provided));
+        assertTrue(MatrixFeatures.isEquals(L_null,L_provided));
     }
 }

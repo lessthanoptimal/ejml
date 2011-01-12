@@ -28,7 +28,6 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -68,6 +67,6 @@ public class TestD1Submatrix64F {
 
         DenseMatrix64F E = CommonOps.extract(A,2,4,1,10);
 
-        assertTrue(MatrixFeatures.isIdentical(E,M.getMatrix()));
+        assertTrue(MatrixFeatures.isEquals(E,M.getMatrix()));
     }
 }

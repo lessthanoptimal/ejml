@@ -63,8 +63,7 @@ public class SmartSolverQr implements LinearSolver<DenseMatrix64F>  {
 
                 case BLOCK64:
                     if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
-//                        s = new LinearSolverQrBlock64();
-                        s = new LinearSolverQrHouseCol();
+                        s = new LinearSolverQrBlock64();
                     else
                         s = new LinearSolverQrHouseCol();
                     break;

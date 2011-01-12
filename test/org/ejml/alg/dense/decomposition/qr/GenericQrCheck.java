@@ -118,8 +118,8 @@ public abstract class GenericQrCheck {
         DenseMatrix64F R_null = alg.getR(null,false);
 
         // see if they are the same
-        assertTrue(MatrixFeatures.isIdentical(Q_provided,Q_null));
-        assertTrue(MatrixFeatures.isIdentical(R_provided,R_null));
+        assertTrue(MatrixFeatures.isEquals(Q_provided,Q_null));
+        assertTrue(MatrixFeatures.isEquals(R_provided,R_null));
     }
 
     /**

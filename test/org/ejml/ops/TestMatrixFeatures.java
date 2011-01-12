@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static junit.framework.Assert.assertEquals;
 import static org.ejml.UtilEjml.parseMatrix;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -131,7 +132,7 @@ public class TestMatrixFeatures {
 
 
     @Test
-    public void isIdentical() {
+    public void isEquals() {
         String a = "-0.779094   1.682750   0.039239\n" +
                  "   1.304014  -1.880739   1.438741\n" +
                  "  -0.746918   1.382356  -0.520416";
@@ -139,15 +140,21 @@ public class TestMatrixFeatures {
         DenseMatrix64F m = parseMatrix(a,3);
         DenseMatrix64F n = parseMatrix(a,3);
 
-        assertTrue(MatrixFeatures.isIdentical(m,n));
+        assertTrue(MatrixFeatures.isEquals(m,n));
 
         n.set(2,1,-0.5);
+        assertFalse(MatrixFeatures.isEquals(m,n));
 
-        assertFalse(MatrixFeatures.isIdentical(m,n));
+        m.set(2,1,Double.NaN);
+        n.set(2,1,Double.NaN);
+        assertFalse(MatrixFeatures.isEquals(m,n));
+        m.set(2,1,Double.POSITIVE_INFINITY);
+        n.set(2,1,Double.POSITIVE_INFINITY);
+        assertTrue(MatrixFeatures.isEquals(m,n));
     }
 
     @Test
-    public void isIdentical_tol() {
+    public void isEquals_tol() {
         String a = "-0.779094   1.682750   0.039239\n" +
                  "   1.304014  -1.880739   1.438741\n" +
                  "  -0.746918   1.382356  -0.520416";
@@ -155,13 +162,45 @@ public class TestMatrixFeatures {
         DenseMatrix64F m = parseMatrix(a,3);
         DenseMatrix64F n = parseMatrix(a,3);
 
-        assertTrue(MatrixFeatures.isIdentical(m,n,1e-6));
+        assertTrue(MatrixFeatures.isEquals(m,n,1e-6));
 
         n.set(2,1,n.get(2,1)+1e-25);
-        assertTrue(MatrixFeatures.isIdentical(m,n,1e-6));
+        assertTrue(MatrixFeatures.isEquals(m,n,1e-6));
 
         n.set(2,1,n.get(2,1)+1e-2);
-        assertFalse(MatrixFeatures.isIdentical(m,n,1e-6));
+        assertFalse(MatrixFeatures.isEquals(m,n,1e-6));
+
+        m.set(2,1,Double.NaN);
+        n.set(2,1,Double.NaN);
+        assertFalse(MatrixFeatures.isEquals(m,n,1e-6));
+        m.set(2,1,Double.POSITIVE_INFINITY);
+        n.set(2,1,Double.POSITIVE_INFINITY);
+        assertFalse(MatrixFeatures.isEquals(m,n,1e-6));
+    }
+
+    @Test
+    public void isIdentical() {
+
+        double values[] = new double[]{1.0,Double.NaN,Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY};
+
+        for( int i = 0; i < values.length; i++ ) {
+            for( int j = 0; j < values.length; j++ ) {
+                checkIdentical(values[i],values[j],1e-8,i==j);
+            }
+        }
+
+        checkIdentical(1.0,1.5,1e-8,false);
+        checkIdentical(1.5,1.0,1e-8,false);
+        checkIdentical(1.0,1.0000000001,1e-8,true);
+    }
+
+    private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
+        DenseMatrix64F A = new DenseMatrix64F(2,2);
+        CommonOps.set(A,valA);
+        DenseMatrix64F B = new DenseMatrix64F(2,2);
+        CommonOps.set(B,valB);
+
+        assertEquals(expected,MatrixFeatures.isIdentical(A,B,tol));
     }
 
     @Test

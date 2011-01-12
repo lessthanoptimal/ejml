@@ -72,7 +72,7 @@ public class EjmlParameters {
      */
     public static int SWITCH_BLOCK64_CHOLESKY = 1000;
 
-    public static int SWITCH_BLOCK64_QR = 2000;
+    public static int SWITCH_BLOCK64_QR = 1500;
 
     public static enum MemoryUsage
     {

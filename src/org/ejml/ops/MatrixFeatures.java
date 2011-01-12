@@ -237,41 +237,6 @@ public class MatrixFeatures {
     }
 
     /**
-     * <p>
-     * Checks to see if each element in the two matrices are within tolerance of
-     * each other.
-     * <p>
-     *
-     * <p>
-     * The two matrices are identical with in tolerance if:<br>
-     * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol
-     * </p>
-     *
-     * @param a A matrix containing only real values. Not modified.
-     * @param b A matrix containing only real values. Not modified.
-     * @param tol How close to being identical each element needs to be.
-     * @return true if similar and false otherwise.
-     */
-    public static boolean isIdentical( D1Matrix64F a , D1Matrix64F b , double tol )
-    {
-        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
-            return false;
-        }
-
-        final int length = a.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            double diff = a.get(i) - b.get(i);
-            if( diff < 0 ) diff = -diff;
-
-            if( diff > tol ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Checks to see if the two matrices are inverses of each other.
      *
      * @param a A matrix. Not modified.
@@ -305,32 +270,113 @@ public class MatrixFeatures {
 
     /**
      * <p>
-     * Checks to see if each element in the two matrices are identical.
+     * Checks to see if each element in the two matrices are within tolerance of
+     * each other: tol &ge; |a<sub>ij</sub> - b<sub>ij</sub>|.
      * <p>
      *
      * <p>
-     * The two matrices are identical if:<br>
-     * a<sub>ij</sub> == b<sub>ij</sub>
+     * NOTE: If any of the elements are not countable then false is returned.
      * </p>
      *
+     * @param a A matrix. Not modified.
+     * @param b A matrix. Not modified.
+     * @param tol How close to being identical each element needs to be.
+     * @return true if similar and false otherwise.
+     */
+    public static boolean isEquals( D1Matrix64F a , D1Matrix64F b , double tol )
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+            return false;
+        }
+
+        if( tol == 0.0 )
+            return isEquals(a,b);
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            if( !(tol >= Math.abs(a.get(i) - b.get(i))) ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * <p>
-     * NOTE: This function is only defined for real numbers.  If either matrix
-     * contains NaN or infinite numbers the response is undefined. See IEEE 754
-     * for more information on this issue.
+     * Checks to see if each element in the two matrices are equal:
+     * a<sub>ij</sub> == b<sub>ij</sub>
+     * <p>
+     *
+     * <p>
+     * NOTE: If any of the elements are NaN then false is returned.  If two corresponding
+     * elements are both positive or negative infinity then they are equal.
      * </p>
      * 
-     * @param a A matrix containing only real values. Not modified.
-     * @param b A matrix containing only real values. Not modified.
+     * @param a A matrix. Not modified.
+     * @param b A matrix. Not modified.
      * @return true if identical and false otherwise.
      */
-    public static boolean isIdentical( D1Matrix64F a, D1Matrix64F b ) {
+    public static boolean isEquals( D1Matrix64F a, D1Matrix64F b ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }
 
         final int length = a.getNumElements();
         for( int i = 0; i < length; i++ ) {
-            if( a.get(i) != b.get(i)) {
+            if( !(a.get(i) == b.get(i)) ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if each corresponding element in the two matrices are
+     * within tolerance of each other or have the some symbolic meaning.  This
+     * can handle NaN and Infinite numbers.
+     * <p>
+     *
+     * <p>
+     * If both elements are countable then the following equality test is used:<br>
+     * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol.<br>
+     * Otherwise both numbers must both be Double.NaN, Double.POSITIVE_INFINITY, or
+     * Double.NEGATIVE_INFINITY to be identical.
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param b A matrix. Not modified.
+     * @param tol Tolerance for equality.
+     * @return true if identical and false otherwise.
+     */
+     public static boolean isIdentical( D1Matrix64F a, D1Matrix64F b , double tol ) {
+        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+            return false;
+        }
+        if( tol < 0 )
+            throw new IllegalArgumentException("Tolerance must be greater than or equal to zero.");
+
+        final int length = a.getNumElements();
+        for( int i = 0; i < length; i++ ) {
+            double valA = a.get(i);
+            double valB = b.get(i);
+
+            // if either is negative or positive infinity the result will be positive infinity
+            // if either is NaN the result will be NaN
+            double diff = Math.abs(valA-valB);
+
+            // diff = NaN == false
+            // diff = infinity == false
+            if( tol >= diff )
+                continue;
+
+            if( Double.isNaN(valA) ) {
+                return Double.isNaN(valB);
+            } else if( Double.isInfinite(valA) ) {
+                return valA == valB;
+            } else {
                 return false;
             }
         }

@@ -5,22 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockInnerTriangularSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockInnerTriangularSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/qr/BenchmarkQrDecomposition.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/qr/BenchmarkQrDecomposition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/qr/TestBlockQrHouseHolderSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/qr/TestBlockQrHouseHolderSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/qr/BlockQrHouseHolderSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/qr/BlockQrHouseHolderSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockTriangularSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockTriangularSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerTriangularSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerTriangularSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/BaseDecompositionBlock64.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/BaseDecompositionBlock64.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ejml.iml" afterPath="$PROJECT_DIR$/ejml.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java" afterPath="$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TODO_Algorithms.txt" afterPath="$PROJECT_DIR$/TODO_Algorithms.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" afterPath="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockMatrixOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockMatrixOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SmartSolverQr.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SmartSolverQr.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
     </list>
     <ignored path=".idea/workspace.xml" />
     <ignored path="EJML.iws" />
@@ -80,10 +88,48 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BlockTriangularSolver.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/BlockTriangularSolver.java">
+      <file leaf-file-name="TestMatrixFeatures.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="259" column="83" selection-start="10792" selection-end="10792" vertical-scroll-proportion="0.0">
+            <state line="152" column="37" selection-start="4562" selection-end="4562" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BenchmarkEquality.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="47" column="23" selection-start="1478" selection-end="1478" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BenchmarkVariousOps.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkVariousOps.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="50" column="17" selection-start="1158" selection-end="1535" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MatrixFeatures.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="380" column="20" selection-start="10960" selection-end="11585" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EjmlUnitTests.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="13" selection-start="960" selection-end="960" vertical-scroll-proportion="-2.9600887">
               <folding />
             </state>
           </provider>
@@ -92,43 +138,16 @@
       <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/change.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="51" selection-start="734" selection-end="734" vertical-scroll-proportion="0.0">
+            <state line="20" column="60" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TODO_Algorithms.txt" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TODO_Algorithms.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="0" selection-start="689" selection-end="689" vertical-scroll-proportion="0.4323725">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestBlockInnerTriangularSolver.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerTriangularSolver.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="158" column="44" selection-start="4787" selection-end="4787" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlockInnerTriangularSolver.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/BlockInnerTriangularSolver.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="271" column="48" selection-start="9819" selection-end="9819" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestBlockTriangularSolver.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="189" column="0" selection-start="6423" selection-end="6423" vertical-scroll-proportion="0.0">
+            <state line="11" column="83" selection-start="619" selection-end="619" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -144,20 +163,20 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/qr/BlockMatrix64HouseholderQR.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockMatrixOps.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/data/BlockMatrix64F.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/BaseDecompositionBlock64.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/qr/TestBlockQrHouseHolderSolver.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/lu/GeneralLuDecompositionChecks.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java" />
-        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/qr/BenchmarkQrDecomposition.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/block/linsol/qr/BlockQrHouseHolderSolver.java" />
-        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/block/BlockInnerTriangularSolver.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerTriangularSolver.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/block/BlockTriangularSolver.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java" />
+        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java" />
         <option value="$PROJECT_DIR$/change.txt" />
         <option value="$PROJECT_DIR$/TODO_Algorithms.txt" />
       </list>
@@ -220,6 +239,60 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ops" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Favorites" />
@@ -279,134 +352,6 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.org.ejml">
-    <configuration default="false" name="TestBlockTriangularSolver.testSolve_BlockAligned" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.alg.block.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.block" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.block.TestBlockTriangularSolver" />
-      <option name="METHOD_NAME" value="testSolve_BlockAligned" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="58408" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestBlockTriangularSolver.testSolve" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.alg.block.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.block" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.block.TestBlockTriangularSolver" />
-      <option name="METHOD_NAME" value="testSolve" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="37661" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="org.ejml.alg.block" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.alg.block.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.block" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="54321" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestBlockTriangularSolver.invert_two" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.alg.block.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.block" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.block.TestBlockTriangularSolver" />
-      <option name="METHOD_NAME" value="invert_two" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="32952" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
     <configuration default="false" name="org.ejml" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
@@ -433,6 +378,129 @@
       <envs />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="59288" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestMatrixFeatures.isIdentical" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.ops" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestMatrixFeatures" />
+      <option name="METHOD_NAME" value="isIdentical" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="60692" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="BenchmarkEquality" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.BenchmarkEquality" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="ejml" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="57294" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestMatrixFeatures.isEquals_tol" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.ops" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestMatrixFeatures" />
+      <option name="METHOD_NAME" value="isEquals_tol" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="52918" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestMatrixFeatures.isEquals" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.ops" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestMatrixFeatures" />
+      <option name="METHOD_NAME" value="isEquals" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="53941" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
@@ -654,16 +722,16 @@
       <method />
     </configuration>
     <list size="10">
-      <item index="0" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
-      <item index="1" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
-      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
-      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
-      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.TestBlockTriangularSolver.testSolve_BlockAligned" />
-      <item index="6" class="java.lang.String" itemvalue="JUnit.TestBlockTriangularSolver.testSolve" />
-      <item index="7" class="java.lang.String" itemvalue="JUnit.org.ejml.alg.block" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.TestBlockTriangularSolver.invert_two" />
-      <item index="9" class="java.lang.String" itemvalue="JUnit.org.ejml" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.org.ejml" />
+      <item index="1" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
+      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
+      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
+      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
+      <item index="5" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.TestMatrixFeatures.isIdentical" />
+      <item index="7" class="java.lang.String" itemvalue="Application.BenchmarkEquality" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.TestMatrixFeatures.isEquals_tol" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.TestMatrixFeatures.isEquals" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -757,7 +825,7 @@
     <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added EjmlUnitTests&#10;  * Generic unit testing class that should work in any unit testing framework.&#10;  * Changed many of the internal tests to use this class&#10;- toString() support added to DenseMatrix64F and SimpleMatrix&#10;- MatrixIO takes a generic input stream instead of always using System.out&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="- triangular solver works on unaligned inputs&#10;- BlockQRSolver does not create a local block aligned copy for solving" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -781,6 +849,7 @@
     <MESSAGE value="- fixed performance issue on small matrix inversion for SPD matrices" />
     <MESSAGE value="- added solver for QRDecompositionHouseholderTran&#10;- Deleted NR SVD&#10;- Change LinearSolver so that it allows modification of input matrices.&#10; * Added LinearSolverSafe that ensures inputs are not modified.&#10;- Improved some unit tests and other minor changes" />
     <MESSAGE value="- Added EjmlUnitTests&#10;  * Generic unit testing class that should work in any unit testing framework.&#10;  * Changed many of the internal tests to use this class&#10;- toString() support added to DenseMatrix64F and SimpleMatrix&#10;- MatrixIO takes a generic input stream instead of always using System.out&#10;" />
+    <MESSAGE value="- triangular solver works on unaligned inputs&#10;- BlockQRSolver does not create a local block aligned copy for solving" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -798,114 +867,116 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestTriangularSolver.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/CheckDecompositionInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="13" selection-start="1199" selection-end="1199" vertical-scroll-proportion="0.0">
+        <state line="58" column="51" selection-start="1836" selection-end="1836" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/decomposition/qr/BlockHouseHolder.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/qr/GenericQrCheck.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="525" column="78" selection-start="18327" selection-end="18327" vertical-scroll-proportion="0.0">
+        <state line="121" column="42" selection-start="4092" selection-end="4092" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockMatrixOps.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/svd/StandardSvdChecks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="13" selection-start="1427" selection-end="1427" vertical-scroll-proportion="0.0">
+        <state line="195" column="43" selection-start="5611" selection-end="5611" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/generic/GenericMatrixOps.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="106" column="17" selection-start="3275" selection-end="3275" vertical-scroll-proportion="0.0">
+        <state line="83" column="51" selection-start="2483" selection-end="2483" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixIO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="975" column="23" selection-start="34120" selection-end="34120" vertical-scroll-proportion="0.0">
+        <state line="47" column="42" selection-start="1391" selection-end="1391" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/BlockMatrixOps.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="13" selection-start="1185" selection-end="1185" vertical-scroll-proportion="0.0">
+        <state line="116" column="42" selection-start="3745" selection-end="3745" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/junit-4.7.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/linsol/chol/TestBlockCholeskyOuterSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="40" selection-start="404" selection-end="404" vertical-scroll-proportion="-6.25">
+        <state line="187" column="51" selection-start="5774" selection-end="5774" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderColumn.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/data/TestD1Submatrix64F.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="190" column="0" selection-start="6217" selection-end="6217" vertical-scroll-proportion="0.0">
+        <state line="70" column="42" selection-start="1965" selection-end="1965" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/linsol/qr/BlockQrHouseHolderSolver.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/chol/GenericCholeskyTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="144" column="24" selection-start="4769" selection-end="4769" vertical-scroll-proportion="0.0">
+        <state line="106" column="42" selection-start="3269" selection-end="3269" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java">
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkVariousOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="22" selection-start="3370" selection-end="3370" vertical-scroll-proportion="0.0">
+        <state line="50" column="17" selection-start="1158" selection-end="1535" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockInnerTriangularSolver.java">
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/ops/BenchmarkEquality.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="158" column="44" selection-start="4787" selection-end="4787" vertical-scroll-proportion="0.0">
-          <folding />
+        <state line="47" column="23" selection-start="1478" selection-end="1478" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/BlockInnerTriangularSolver.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="271" column="48" selection-start="9819" selection-end="9819" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/block/TestBlockTriangularSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="189" column="0" selection-start="6423" selection-end="6423" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/block/BlockTriangularSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="259" column="83" selection-start="10792" selection-end="10792" vertical-scroll-proportion="0.0">
+        <state line="152" column="37" selection-start="4562" selection-end="4562" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="51" selection-start="734" selection-end="734" vertical-scroll-proportion="0.0">
+        <state line="20" column="60" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="689" selection-end="689" vertical-scroll-proportion="0.4323725">
+        <state line="11" column="83" selection-start="619" selection-end="619" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="380" column="20" selection-start="10960" selection-end="11585" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/EjmlUnitTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="13" selection-start="960" selection-end="960" vertical-scroll-proportion="-2.9600887">
           <folding />
         </state>
       </provider>

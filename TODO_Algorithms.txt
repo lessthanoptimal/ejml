@@ -10,7 +10,6 @@ For 0.16 Release
 - Improve cholesky block inverse by taking advantage of symmetry
 - Clean up decomposition factory and linear solver factory
   * Have them take a matrix or system as an input and return the solver/decomposer?
-- rename isIdentical to isEqual since most people are used to equal?
 
 Ideas for reducing memory requirements:
   3) Stack W to minimize size

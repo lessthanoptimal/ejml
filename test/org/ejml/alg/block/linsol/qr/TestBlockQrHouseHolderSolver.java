@@ -63,7 +63,7 @@ public class TestBlockQrHouseHolderSolver {
 
                     solver.solve(Y,X_found);
 
-                    assertTrue(BlockMatrixOps.isIdentical(X,X_found,1e-8));
+                    assertTrue(BlockMatrixOps.isEquals(X,X_found,1e-8));
                 }
             }
         }
@@ -137,7 +137,7 @@ public class TestBlockQrHouseHolderSolver {
 
         assertTrue(solver.setA(A));
 
-        boolean modified = !MatrixFeatures.isIdentical(A,A_orig);
+        boolean modified = !MatrixFeatures.isEquals(A,A_orig);
 
         assertTrue(modified == solver.modifiesA());
     }
@@ -156,7 +156,7 @@ public class TestBlockQrHouseHolderSolver {
 
         solver.solve(B,X);
 
-        boolean modified = !MatrixFeatures.isIdentical(B_orig,B);
+        boolean modified = !MatrixFeatures.isEquals(B_orig,B);
 
         assertTrue(modified == solver.modifiesB());
     }
