@@ -34,7 +34,7 @@ import org.ejml.data.D1Submatrix64F;
  *  <le> All submatrices are aligned along the inner blocks of the {@link org.ejml.data.BlockMatrix64F}.
  *  <le> Some times vectors are assumed to have leading zeros and a one.
  * </ul>
- * 
+ *
  * @author Peter Abeles
  */
 public class BlockHouseHolder {
@@ -55,11 +55,11 @@ public class BlockHouseHolder {
         int min = Math.min(width,height);
         for( int i = 0; i < min; i++ ) {
             // compute the householder vector
-            if (!computeHouseHolder(blockLength, Y, gamma, i))
+            if (!computeHouseHolderCol(blockLength, Y, gamma, i))
                 return false;
 
-            // apply to test of the columns in the block
-            applyHouseholderCol(blockLength,Y,i,gamma[Y.col0+i]);
+            // apply to rest of the columns in the block
+            rank1UpdateMultR_Col(blockLength,Y,i,gamma[Y.col0+i]);
         }
 
         return true;
@@ -82,19 +82,19 @@ public class BlockHouseHolder {
      *
      * @return If there was any problems or not. true = no problem.
      */
-    private static boolean computeHouseHolder( final int blockLength, final D1Submatrix64F Y,
-                                              final double[] gamma, final int i) {
+    public static boolean computeHouseHolderCol( final int blockLength, final D1Submatrix64F Y,
+                                                 final double[] gamma, final int i) {
         double max = BlockHouseHolder.findMaxCol(blockLength,Y,i);
 
         if( max == 0.0 ) {
             return false;
         } else {
             // computes tau and normalizes u by max
-            double tau = computeTauAndDivide(blockLength, Y, i, max);
+            double tau = computeTauAndDivideCol(blockLength, Y, i, max);
 
             // divide u by u_0
             double u_0 = Y.get(i,i) + tau;
-            divideElements(blockLength,Y,i, u_0 );
+            divideElementsCol(blockLength,Y,i, u_0 );
 
             gamma[Y.col0+i] = u_0/tau;
             tau *= max;
@@ -107,56 +107,66 @@ public class BlockHouseHolder {
 
     /**
      * <p>
+     * Computes the householder vector from the specified row
+     * </p>
+     *
+     * <p>
+     * The householder vector 'u' is computed as follows:<br>
+     * <br>
+     * u(1) = 1 <br>
+     * u(i) = x(i)/(&tau; + x(1))<br>
+     * </p>
+     *
+     * The first element is implicitly assumed to be one and not written.
+     *
+     * @return If there was any problems or not. true = no problem.
+     */
+    public static boolean computeHouseHolderRow( final int blockLength, final D1Submatrix64F Y,
+                                                 final double[] gamma, final int i) {
+        double max = BlockHouseHolder.findMaxRow(blockLength,Y,i,i+1);
+
+        if( max == 0.0 ) {
+            return false;
+        } else {
+            // computes tau and normalizes u by max
+            double tau = computeTauAndDivideRow(blockLength, Y, i,i+1, max);
+
+            // divide u by u_0
+            double u_0 = Y.get(i,i) + tau;
+            divideElementsRow(blockLength,Y,i,i+1, u_0 );
+
+            gamma[Y.row0+i] = u_0/tau;
+            tau *= max;
+
+            // after the reflector is applied the column would be all zeros but be -tau in the first element
+            Y.set(i,i+1,-tau);
+        }
+        return true;
+    }
+
+    /**
+     * <p>
      * Applies a householder reflector stored in column 'col' to the remainder of the columns
      * in the block after it.  Takes in account leading zeros and one.<br>
      * <br>
-     * A = (I - &gamma;*u*u<sup>T</sup>)A<br>
+     * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
      * </p>
+     *
+     * @param A submatrix that is at most one block wide and aligned along inner blocks
+     * @param col The column in A containing 'u'
+     *
      */
-    public static void applyHouseholderCol( final int blockLength ,
+    public static void rank1UpdateMultR_Col( final int blockLength ,
                                             final D1Submatrix64F A , final int col , final double gamma )
     {
-        final int width = A.col1 - A.col0;
+        final int width = Math.min(blockLength,A.col1 - A.col0);
 
         final double dataA[] = A.original.data;
 
         for( int j = col+1; j < width; j++ ) {
 
-            double total = 0;
-
             // total = U^T * A(:,j)
-            for( int i = A.row0; i < A.row1; i += blockLength ) {
-
-                int height = Math.min( blockLength , A.row1 - i );
-
-                int indexU = i*A.original.numCols + height*A.col0 + col;
-                int indexA = i*A.original.numCols + height*A.col0 + j;
-
-                if( i == A.row0 ) {
-                    // handle leading zeros
-                    indexU += width*(col+1);
-                    indexA += width*col;
-
-                    // handle leading one
-                    total = dataA[ indexA ];
-
-                    indexA += width;
-
-                    // standard vector dot product
-                    int endA = indexA + (height-col-1)*width;
-                    for( ; indexA != endA; indexU += width, indexA += width ) {
-//                    for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
-                        total += dataA[ indexU ] * dataA[ indexA ];
-                    }
-                } else {
-                    // standard vector dot product
-                    int endU = indexU + width*height;
-//                    for( int k = 0; k < height; k++ ) {
-                    for( ; indexU != endU; indexU += width, indexA += width ) {
-                        total += dataA[ indexU ] * dataA[ indexA ];
-                    }
-                }
-            }
+            double total = innerProdCol(blockLength, A, col, width, j, width);
 
             total *= gamma;
             // A(:,j) - gamma*U*total
@@ -186,15 +196,157 @@ public class BlockHouseHolder {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * <p>
+     * Applies a householder reflector stored in column 'col' to the top block row (excluding
+     * the first column) of A.  Takes in account leading zeros and one.<br>
+     * <br>
+     * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
+     * </p>
+     *
+     * @param A submatrix that is at most one block wide and aligned along inner blocks
+     * @param col The column in A containing 'u'
+     *
+     */
+    public static void rank1UpdateMultR_TopRow( final int blockLength ,
+                                                final D1Submatrix64F A , final int col , final double gamma )
+    {
+        final double dataA[] = A.original.data;
+
+        final int widthCol = Math.min( blockLength , A.col1 - col );
+
+        // step through columns in top block, skipping over the first block
+        for( int colStartJ = A.col0 + blockLength; colStartJ < A.col1; colStartJ += blockLength ) {
+            final int widthJ = Math.min( blockLength , A.col1 - colStartJ);
+
+            for( int j = 0; j < widthJ; j++ ) {
+                // total = U^T * A(:,j) * gamma
+                double total = innerProdCol(blockLength, A, col, widthCol, colStartJ+j, widthJ)*gamma;
+
+                // A(:,j) - gamma*U*total
+                // just update the top most block
+                int i = A.row0;
+                int height = Math.min( blockLength , A.row1 - i );
+
+                int indexU = i*A.original.numCols + height*A.col0 + col;
+                int indexA = i*A.original.numCols + height*colStartJ + j;
+
+                // take in account zeros and one
+                indexU += widthCol*(col+1);
+                indexA += widthJ*col;
+
+                dataA[ indexA ] -= total;
+
+                indexA += widthJ;
+
+                for( int k = col+1; k < height; k++ , indexU += widthCol, indexA += widthJ ) {
+                    dataA[ indexA ] -= total*dataA[ indexU ];
+                }
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Applies a householder reflector stored in row 'row' to the remainder of the row
+     * in the block after it.  Takes in account leading zeros and one.<br>
+     * <br>
+     * A = A*(I - &gamma;*u*u<sup>T</sup>)<br>
+     * </p>
+     *
+     * @param A submatrix that is block aligned
+     * @param row The row in A containing 'u'
+     * @param colStart First index in 'u' that the reflector starts at
+     *
+     */
+    public static void rank1UpdateMultL_Row( final int blockLength ,
+                                             final D1Submatrix64F A ,
+                                             final int row , final int colStart , final double gamma )
+    {
+        final int height = Math.min(blockLength,A.row1 - A.row0);
+
+        final double dataA[] = A.original.data;
+
+        for( int j = row+1; j < height; j++ ) {
 
         }
+    }
+
+    /**
+     * <p>
+     * Computes the inner product of column vector 'colA' against column vector 'colB' while taking account leading zeros and one.<br>
+     * <br>
+     * ret = a<sup>T*b
+     * </p>
+     *
+     * <p>
+     * Column A is assumed to be a householder vector.  Element at 'colA' is one and previous ones are zero.
+     * </p>
+     *
+     * @param blockLength
+     * @param A block aligned submatrix.
+     * @param colA Row of first column vector.
+     * @param widthA how wide the column block that colA is inside of.
+     * @param colB Row of second column vector.
+     * @param widthB how wide the column block that colB is inside of.
+     * @return dot product of the two vectors.
+     */
+    protected static double innerProdCol( int blockLength, D1Submatrix64F A,
+                                          int colA, int widthA,
+                                          int colB, int widthB ) {
+        double total = 0;
+
+        final double data[] = A.original.data;
+        // first column in the blocks
+        final int colBlockA = A.col0 + colA - colA % blockLength;
+        final int colBlockB = A.col0 + colB - colB % blockLength;
+        colA -= colBlockA;
+        colB -= colBlockB;
+
+        // compute dot product down column vectors
+        for( int i = A.row0; i < A.row1; i += blockLength ) {
+
+            int height = Math.min( blockLength , A.row1 - i );
+
+            int indexA = i*A.original.numCols + height*colBlockA + colA;
+            int indexB = i*A.original.numCols + height*colBlockB + colB;
+
+            if( i == A.row0 ) {
+                // handle leading zeros
+                indexA += widthA*(colA + 1);
+                indexB += widthB*colA;
+
+                // handle leading one
+                total = data[indexB];
+
+                indexB += widthB;
+
+                // standard vector dot product
+                int endA = indexA + (height - colA - 1)*widthA;
+                for( ; indexA != endA; indexA += widthA, indexB += widthB ) {
+//                    for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
+                    total += data[indexA] * data[indexB];
+                }
+            } else {
+                // standard vector dot product
+                int endA = indexA + widthA*height;
+//                    for( int k = 0; k < height; k++ ) {
+                for( ; indexA != endA; indexA += widthA, indexB += widthB ) {
+                    total += data[indexA] * data[indexB];
+                }
+            }
+        }
+        return total;
     }
 
     /**
      * Divides the elements at the specified column by 'val'.  Takes in account
      * leading zeros and one.
      */
-    public static void divideElements( final int blockLength ,
+    public static void divideElementsCol( final int blockLength ,
                                        final D1Submatrix64F Y , final int col , final double val ) {
         final int width = Y.col1-Y.col0;
 
@@ -222,6 +374,37 @@ public class BlockHouseHolder {
     }
 
     /**
+     * Divides the elements in the specified row starting at element colStart by 'val'.
+     */
+    public static void divideElementsRow( final int blockLength ,
+                                          final D1Submatrix64F Y ,
+                                          final int row , final int colStart ,
+                                          final double val ) {
+        final int height = Math.min(blockLength , Y.row1-Y.row0);
+
+        final double dataY[] = Y.original.data;
+
+
+        for( int j = Y.col0; j < Y.col1; j += blockLength ) {
+            int width = Math.min( blockLength , Y.col1 - j );
+
+            int index = Y.row0*Y.original.numCols + height*j + row*width;
+
+            if( j == Y.col0 ) {
+                index += colStart;
+
+                for( int k = colStart; k < width; k++ ) {
+                    dataY[index++] /= val;
+                }
+            } else {
+                for( int k = 0; k < width; k++ ) {
+                    dataY[index++] /= val;
+                }
+            }
+        }
+    }
+
+    /**
      * <p>
      * From the specified column of Y tau is computed and each element is divided by 'max'.
      * See code below:
@@ -238,8 +421,9 @@ public class BlockHouseHolder {
      * </pre>
      *
      */
-    public static double computeTauAndDivide( final int blockLength ,
-                                              final D1Submatrix64F Y , final int col , final double max ) {
+    public static double computeTauAndDivideCol( final int blockLength ,
+                                                 final D1Submatrix64F Y ,
+                                                 final int col , final double max ) {
         final int width = Y.col1-Y.col0;
 
         final double dataY[] = Y.original.data;
@@ -280,6 +464,69 @@ public class BlockHouseHolder {
     }
 
     /**
+     * <p>
+     * From the specified row of Y tau is computed and each element is divided by 'max'.
+     * See code below:
+     * </p>
+     *
+     * <pre>
+     * for j=row:Y.numCols
+     *   Y[row][j] = u[row][j] / max
+     *   tau = tau + u[row][j]*u[row][j]
+     * end
+     * tau = sqrt(tau)
+     * if( Y[row][row] < 0 )
+     *    tau = -tau;
+     * </pre>
+     *
+     * @param row Which row in the block will be processed
+     * @param colStart The first column that computation of tau will start at
+     * @param max used to normalize and prevent buffer over flow
+     *
+     */
+    public static double computeTauAndDivideRow( final int blockLength ,
+                                                 final D1Submatrix64F Y ,
+                                                 final int row , final int colStart , final double max ) {
+        final int height = Math.min(blockLength , Y.row1-Y.row0);
+
+        final double dataY[] = Y.original.data;
+
+        double top=0;
+        double norm2 = 0;
+
+        for( int j = Y.col0; j < Y.col1; j += blockLength ) {
+            int width = Math.min( blockLength , Y.col1 - j );
+
+            int index = Y.row0*Y.original.numCols + height*j + row*width;
+
+            if( j == Y.col0 ) {
+                index += colStart;
+                // save this value so that the sign can be determined later on
+                top = dataY[index] /= max;
+                norm2 += top*top;
+                index++;
+
+                for( int k = colStart+1; k < width; k++ ) {
+                    double val = dataY[index++] /= max;
+                    norm2 += val*val;
+                }
+            } else {
+                for( int k = 0; k < width; k++ ) {
+                    double val = dataY[index++] /= max;
+                    norm2 += val*val;
+                }
+            }
+        }
+
+        norm2 = Math.sqrt(norm2);
+
+        if( top < 0 )
+            norm2 = -norm2;
+
+        return norm2;
+    }
+
+    /**
      * Finds the element in the column with the largest absolute value. The offset
      * from zero is automatically taken in account based on the column.
      */
@@ -287,7 +534,7 @@ public class BlockHouseHolder {
     {
         final int width = Y.col1-Y.col0;
 
-        final double dataY[] = Y.original.data;     
+        final double dataY[] = Y.original.data;
 
         double max = 0;
 
@@ -307,6 +554,46 @@ public class BlockHouseHolder {
             } else {
                 for( int k = 0; k < height; k++ , index += width ) {
                     double v = Math.abs(dataY[index]);
+                    if( v > max ) {
+                        max = v;
+                    }
+                }
+            }
+        }
+
+        return max;
+    }
+
+    /**
+     * Finds the element in the column with the largest absolute value. The offset
+     * from zero is automatically taken in account based on the column.
+     */
+    public static double findMaxRow( final int blockLength ,
+                                          final D1Submatrix64F Y ,
+                                          final int row , final int colStart ) {
+        final int height = Math.min(blockLength , Y.row1-Y.row0);
+
+        final double dataY[] = Y.original.data;
+
+        double max = 0;
+
+        for( int j = Y.col0; j < Y.col1; j += blockLength ) {
+            int width = Math.min( blockLength , Y.col1 - j );
+
+            int index = Y.row0*Y.original.numCols + height*j + row*width;
+
+            if( j == Y.col0 ) {
+                index += colStart;
+
+                for( int k = colStart; k < width; k++ ) {
+                    double v = Math.abs(dataY[index++]);
+                    if( v > max ) {
+                        max = v;
+                    }
+                }
+            } else {
+                for( int k = 0; k < width; k++ ) {
+                    double v = Math.abs(dataY[index++]);
                     if( v > max ) {
                         max = v;
                     }
@@ -482,7 +769,7 @@ public class BlockHouseHolder {
      *
      * width of Y must be along the block of original matrix A
      *
-     * @param temp Temporary storage of least length 'col' 
+     * @param temp Temporary storage of least length 'col'
      */
     public static void computeY_t_V( final int blockLength , final D1Submatrix64F Y ,
                                      final int col , final double []temp )

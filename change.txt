@@ -21,6 +21,9 @@
 - Added in-place converting to and from row-major to block matrices.
 - Trangular block solver can handle unaligned input
 - Modified isIdentical and added isEquals to MatrixFeatures.
+  * Resulting from a discussion with Kaspar Thommen
+- SimpleMatrix has been made more easy to extend by adding a protected function that declares
+  new instances of SimpleMatrix. Now function calls will return the correct type. 
 
 ----- Version 0.15
 

@@ -25,6 +25,7 @@ import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 
@@ -113,7 +114,7 @@ public class GenericBlock64QrDecompositionTests {
     public void checkInternalData() {
         for( int i = 1; i <= 3*r; i++ ) {
             for( int j = 1; j <= 3*r; j++ ) {
-//                System.out.println("i = "+i+" j = "+j);
+                System.out.println("i = "+i+" j = "+j);
                 checkSize(i,j);
             }
         }
@@ -132,7 +133,7 @@ public class GenericBlock64QrDecompositionTests {
 //        expected.print();
 //        Ab.print();
 
-        assertTrue(GenericMatrixOps.isEquivalent(expected,Ab,1e-8));
+        EjmlUnitTests.assertEquals(expected,Ab,1e-8);
     }
 
     /**

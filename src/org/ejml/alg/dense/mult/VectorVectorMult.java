@@ -69,7 +69,7 @@ public class VectorVectorMult {
 
         double total = 0;
         for( int i = 0; i < m; i++ ) {
-           total += x.get(i) * y.get(i);
+            total += x.get(i) * y.get(i);
         }
 
         return total;

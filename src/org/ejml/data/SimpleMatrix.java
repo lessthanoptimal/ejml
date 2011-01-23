@@ -72,6 +72,11 @@ import java.util.Random;
  * </p>
  *
  * <p>
+ * If SimpleMatrix is extended then the protected function {link #createMatrix} should be extended and return
+ * the child class.  The results of SimpleMatrix operations will then be of the correct matrix type. 
+ * </p>
+ *
+ * <p>
  * The object oriented approach used in SimpleMatrix was originally inspired by Jama.
  * http://math.nist.gov/javanumerics/jama/
  * </p>
@@ -160,6 +165,19 @@ public class SimpleMatrix {
     }
 
     /**
+     * Used internally for creating new instances of SimpleMatrix.  If SimpleMatrix is extended
+     * by another class this function should be overridden so that the returned matrices are
+     * of the correct type.
+     *
+     * @param numRows number of rows in the new matrix.
+     * @param numCols number of columns in the new matrix.
+     * @return
+     */
+    protected SimpleMatrix createMatrix( int numRows , int numCols ) {
+        return new SimpleMatrix(numRows,numCols);
+    }
+
+    /**
      * Creates a new identity matrix with the specified size.
      *
      * @see org.ejml.ops.CommonOps#identity(int)
@@ -219,7 +237,7 @@ public class SimpleMatrix {
      * @return A matrix that is n by m.
      */
     public SimpleMatrix transpose() {
-        SimpleMatrix ret = new SimpleMatrix(mat.numCols,mat.numRows);
+        SimpleMatrix ret = createMatrix(mat.numCols,mat.numRows);
 
         CommonOps.transpose(mat,ret.mat);
 
@@ -242,7 +260,7 @@ public class SimpleMatrix {
      * @return The results of this operation.
      */
     public SimpleMatrix mult( SimpleMatrix b ) {
-        SimpleMatrix ret = new SimpleMatrix(mat.numRows,b.mat.numCols);
+        SimpleMatrix ret = createMatrix(mat.numRows,b.mat.numCols);
 
         CommonOps.mult(mat,b.mat,ret.mat);
 
@@ -296,16 +314,16 @@ public class SimpleMatrix {
 //        SimpleMatrix ret;
 //
 //        if( tranA && tranB ) {
-//            ret = new SimpleMatrix(mat.numCols,b.mat.numRows);
+//            ret = createMatrix(mat.numCols,b.mat.numRows);
 //            CommonOps.multTransAB(mat,b.mat,ret.mat);
 //        } else if( tranA ) {
-//            ret = new SimpleMatrix(mat.numCols,b.mat.numCols);
+//            ret = createMatrix(mat.numCols,b.mat.numCols);
 //            CommonOps.multTransA(mat,b.mat,ret.mat);
 //        } else if( tranB ) {
-//            ret = new SimpleMatrix(mat.numRows,b.mat.numRows);
+//            ret = createMatrix(mat.numRows,b.mat.numRows);
 //            CommonOps.multTransB(mat,b.mat,ret.mat);
 //        }  else  {
-//            ret = new SimpleMatrix(mat.numRows,b.mat.numCols);
+//            ret = createMatrix(mat.numRows,b.mat.numCols);
 //            CommonOps.mult(mat,b.mat,ret.mat);
 //        }
 //
@@ -328,7 +346,7 @@ public class SimpleMatrix {
      * @return The results of this operation.
      */
     public SimpleMatrix plus( SimpleMatrix b ) {
-        SimpleMatrix ret = new SimpleMatrix(this);
+        SimpleMatrix ret = copy();
 
         CommonOps.addEquals(ret.mat,b.mat);
 
@@ -351,7 +369,7 @@ public class SimpleMatrix {
      * @return The results of this operation.
      */
     public SimpleMatrix minus( SimpleMatrix b ) {
-        SimpleMatrix ret = new SimpleMatrix(this);
+        SimpleMatrix ret = copy();
 
         CommonOps.subEquals(ret.mat,b.mat);
 
@@ -394,7 +412,7 @@ public class SimpleMatrix {
      * @return The scaled matrix.
      */
     public SimpleMatrix scale( double val ) {
-        SimpleMatrix ret = new SimpleMatrix(this);
+        SimpleMatrix ret = copy();
 
         CommonOps.scale(val,ret.mat);
 
@@ -413,7 +431,7 @@ public class SimpleMatrix {
      * @return Matrix with its elements divided by the specified value.
      */
     public SimpleMatrix divide( double val ) {
-        SimpleMatrix ret = new SimpleMatrix(this);
+        SimpleMatrix ret = copy();
 
         CommonOps.divide(val,ret.mat);
 
@@ -439,7 +457,7 @@ public class SimpleMatrix {
      * @return The inverse of this matrix.
      */
     public SimpleMatrix invert() {
-        SimpleMatrix ret = new SimpleMatrix(mat.numRows,mat.numCols);
+        SimpleMatrix ret = createMatrix(mat.numRows,mat.numCols);
         if( !CommonOps.invert(mat,ret.mat) ) {
             throw new SingularMatrixException();
         }
@@ -469,7 +487,7 @@ public class SimpleMatrix {
      */
     public SimpleMatrix solve( SimpleMatrix b )
     {
-        SimpleMatrix x = new SimpleMatrix(mat.numCols,b.mat.numCols);
+        SimpleMatrix x = createMatrix(mat.numCols,b.mat.numCols);
 
         if( !CommonOps.solve(mat,b.mat,x.mat) )
             throw new SingularMatrixException();
@@ -668,7 +686,9 @@ public class SimpleMatrix {
      * @return A new identical matrix.
      */
     public SimpleMatrix copy() {
-        return new SimpleMatrix(this);
+        SimpleMatrix ret = createMatrix(mat.numRows,mat.numCols);
+        ret.mat.set(this.mat);
+        return ret;
     }
 
     /**
@@ -788,7 +808,7 @@ public class SimpleMatrix {
         if( x0 == END ) x0 = mat.numCols;
         if( x1 == END ) x1 = mat.numCols;
 
-        SimpleMatrix ret = new SimpleMatrix(y1-y0,x1-x0);
+        SimpleMatrix ret = createMatrix(y1-y0,x1-x0);
 
         CommonOps.extract(mat,y0,y1,x0,x1,ret.mat,0,0);
 
@@ -937,7 +957,7 @@ public class SimpleMatrix {
             int M = Math.max(maxRow,mat.numRows);
             int N = Math.max(maxCol,mat.numCols);
 
-            ret = new SimpleMatrix(M,N);
+            ret = createMatrix(M,N);
             ret.insertIntoThis(0,0,this);
         } else {
             ret = copy();
@@ -978,7 +998,7 @@ public class SimpleMatrix {
      */
     public SimpleMatrix elementMult( SimpleMatrix b )
     {
-        SimpleMatrix c = new SimpleMatrix(mat.numRows,mat.numCols);
+        SimpleMatrix c = createMatrix(mat.numRows,mat.numCols);
 
         CommonOps.elementMult(mat,b.getMatrix(),c.getMatrix());
 

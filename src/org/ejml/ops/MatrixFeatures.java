@@ -275,7 +275,9 @@ public class MatrixFeatures {
      * <p>
      *
      * <p>
-     * NOTE: If any of the elements are not countable then false is returned.
+     * NOTE: If any of the elements are not countable then false is returned.<br>
+     * NOTE: If a tolerance of zero is passed in this is equivalent to calling
+     * {@link #isEquals(org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}
      * </p>
      *
      * @param a A matrix. Not modified.

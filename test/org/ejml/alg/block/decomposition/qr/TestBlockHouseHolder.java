@@ -21,6 +21,7 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran;
+import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
@@ -32,8 +33,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -65,9 +65,11 @@ public class TestBlockHouseHolder {
     }
 
     @Test
-    public void applyHouseholderCol() {
+    public void rank1UpdateMultR_Col() {
+
+        // check various sized matrices
         double gamma = 2.5;
-        A = SimpleMatrix.random(r*2+r-1,r,-1,1,rand);
+        A = SimpleMatrix.random(r*2+r-1,r*2-1,-1,1,rand);
 
         SimpleMatrix U = A.extractMatrix(0,A.numRows(),1,2);
         U.set(0,0,0);
@@ -78,8 +80,7 @@ public class TestBlockHouseHolder {
 
         BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
 
-        BlockHouseHolder.applyHouseholderCol(r,new D1Submatrix64F(Ab),1,gamma);
-
+        BlockHouseHolder.rank1UpdateMultR_Col(r,new D1Submatrix64F(Ab),1,gamma);
 
         for( int i = 1; i < expected.numRows(); i++ ) {
             assertEquals(expected.get(i,0),Ab.get(i,2),1e-8);
@@ -87,23 +88,86 @@ public class TestBlockHouseHolder {
     }
 
     @Test
-    public void divideElements() {
+    public void rank1UpdateMultR_TopRow() {
+        double gamma = 2.5;
+        A = SimpleMatrix.random(r*2+r-1,r*2-1,-1,1,rand);
+
+        SimpleMatrix U = A.extractMatrix(0,A.numRows(),1,2);
+        U.set(0,0,0);
+        U.set(1,0,1);
+
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+
+        BlockHouseHolder.rank1UpdateMultR_TopRow(r,new D1Submatrix64F(Ab),1,gamma);
+
+        // check all the columns now
+        for( int i = 0; i < r; i++ ) {
+            for( int j = r; j < A.numCols(); j++ ) {
+                SimpleMatrix V = A.extractMatrix(0,A.numRows(),j,j+1);
+                SimpleMatrix expected = V.minus(U.mult(U.transpose().mult(V)).scale(gamma));
+
+                assertEquals(i+" "+j,expected.get(i,0),Ab.get(i,j),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void rank1UpdateMultL_Row() {
+        fail("Implement");
+    }
+
+    /**
+     * Check inner product when column blocks have two different widths
+     */
+    @Test
+    public void innerProd() {
+        DenseMatrix64F A = RandomMatrices.createRandom(r*2+r-1,r*2-1,-1,1,rand);
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A,r);
+
+        DenseMatrix64F v0 = CommonOps.extract(A,0,A.numRows,1,2);
+        DenseMatrix64F v1 = CommonOps.extract(A,0,A.numRows,r+1,r+2);
+        v0.set(0,0.0);
+        v0.set(1,1.0);
+
+        double expected = VectorVectorMult.innerProd(v0,v1);
+
+        double found = BlockHouseHolder.innerProdCol(r,new D1Submatrix64F(Ab),1,r,r+1,r-1);
+
+        assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void divideElementsCol() {
 
         double div = 1.5;
         int col = 1;
         BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r,-1,1,rand,r);
         BlockMatrix64F A_orig = A.copy();
 
-        BlockHouseHolder.divideElements(r,new D1Submatrix64F(A),col,div);
+        BlockHouseHolder.divideElementsCol(r,new D1Submatrix64F(A),col,div);
 
         for( int i = col+1; i < A.numRows; i++ ) {
             assertEquals(A_orig.get(i,col)/div , A.get(i,col),1e-8);
         }
-
     }
 
     @Test
-    public void computeTauAndDivide() {
+    public void divideElementsRow() {
+
+        double div = 1.5;
+        int row = 1;
+        BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
+        BlockMatrix64F A_orig = A.copy();
+
+        BlockHouseHolder.divideElementsRow(r,new D1Submatrix64F(A),row,row+1,div);
+
+        for( int i = row+1; i < A.numCols; i++ ) {
+            assertEquals(A_orig.get(row,i)/div , A.get(row,i),1e-8);
+        }
+    }
+
+    @Test
+    public void computeTauAndDivideCol() {
 
         double max = 1.5;
         int col = 1;
@@ -118,7 +182,7 @@ public class TestBlockHouseHolder {
         }
         expected = Math.sqrt(expected);
 
-        double found = BlockHouseHolder.computeTauAndDivide(r,new D1Submatrix64F(A),col,max);
+        double found = BlockHouseHolder.computeTauAndDivideCol(r,new D1Submatrix64F(A),col,max);
 
         assertEquals(expected,found,1e-8);
 
@@ -129,7 +193,32 @@ public class TestBlockHouseHolder {
     }
 
     @Test
-    public void findMaxCol() {
+    public void computeTauAndDivideRow() {
+        double max = 1.5;
+        int row = 1;
+        int colStart = row+1;
+        BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
+        BlockMatrix64F A_orig = A.copy();
+
+        // manual alg
+        double expected = 0;
+        for( int j = colStart; j < A.numCols; j++ ) {
+            double val = A.get(row,j)/max;
+            expected += val*val;
+        }
+        expected = Math.sqrt(expected);
+
+        double found = BlockHouseHolder.computeTauAndDivideRow(r,new D1Submatrix64F(A),row,colStart,max);
+
+        assertEquals(expected,found,1e-8);
+
+        for( int j = colStart; j < A.numCols; j++ ) {
+            assertEquals(A_orig.get(row,j)/max , A.get(row,j),1e-8);
+        }
+    }
+
+    @Test
+    public void testFindMaxCol() {
         BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r,-1,1,rand,r);
 
         // make sure it ignores the first element
@@ -137,6 +226,19 @@ public class TestBlockHouseHolder {
         A.set(5,1,-2346);
 
         double max = BlockHouseHolder.findMaxCol(r,new D1Submatrix64F(A),1);
+
+        assertEquals(2346,max,1e-8);
+    }
+
+    @Test
+    public void testFindMaxRow() {
+        BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r*2-1,-1,1,rand,r);
+
+        // make sure it ignores the first element
+        A.set(1,1,100000);
+        A.set(1,4,-2346);
+
+        double max = BlockHouseHolder.findMaxRow(r,new D1Submatrix64F(A),1,2);
 
         assertEquals(2346,max,1e-8);
     }
