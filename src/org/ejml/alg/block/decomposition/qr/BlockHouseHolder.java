@@ -270,8 +270,34 @@ public class BlockHouseHolder {
 
         final double dataA[] = A.original.data;
 
-        for( int j = row+1; j < height; j++ ) {
+        for( int i = row+1; i < height; i++ ) {
+            // total = U^T * A(i,:)
+            double total = innerProdRow(blockLength, A, colStart,row, height, i, height);
 
+            total *= gamma;
+            // A(i,:) - gamma*U*total
+
+            for( int j = A.col0; j < A.col1; j += blockLength ) {
+                int width = Math.min( blockLength , A.col1 - j );
+
+                int indexU = A.row0*A.original.numCols + height*j + row*width;
+                int indexA = A.row0*A.original.numCols + height*j + i*width;
+
+                if( j == A.col0 ) {
+                    indexU += colStart+1;
+                    indexA += colStart;
+
+                    dataA[indexA++] -= total;
+
+                    for( int k = colStart+1; k < width; k++ ) {
+                        dataA[ indexA++ ] -= total*dataA[ indexU++ ];
+                    }
+                } else {
+                    for( int k = 0; k < width; k++ ) {
+                        dataA[ indexA++ ] -= total*dataA[ indexU++ ];
+                    }
+                }
+            }
         }
     }
 
@@ -288,9 +314,9 @@ public class BlockHouseHolder {
      *
      * @param blockLength
      * @param A block aligned submatrix.
-     * @param colA Row of first column vector.
+     * @param colA Column inside the block of first column vector.
      * @param widthA how wide the column block that colA is inside of.
-     * @param colB Row of second column vector.
+     * @param colB Column inside the block of second column vector.
      * @param widthB how wide the column block that colB is inside of.
      * @return dot product of the two vectors.
      */
@@ -303,8 +329,8 @@ public class BlockHouseHolder {
         // first column in the blocks
         final int colBlockA = A.col0 + colA - colA % blockLength;
         final int colBlockB = A.col0 + colB - colB % blockLength;
-        colA -= colBlockA;
-        colB -= colBlockB;
+        colA = colA % blockLength;
+        colB = colB % blockLength;
 
         // compute dot product down column vectors
         for( int i = A.row0; i < A.row1; i += blockLength ) {
@@ -339,6 +365,73 @@ public class BlockHouseHolder {
                 }
             }
         }
+        return total;
+    }
+
+    /**
+     * <p>
+     * Computes the inner product of row vector 'rowA' against row vector 'rowB' while taking account leading zeros and one.<br>
+     * <br>
+     * ret = a<sup>T*b
+     * </p>
+     *
+     * <p>
+     * Row A is assumed to be a householder vector.  Element at 'colStartA' is one and previous ones are zero.
+     * </p>
+     *
+     * @param blockLength
+     * @param A block aligned submatrix.
+     * @param colStart First element in the vectors.
+     * @param rowA Row index inside the block of first row vector.
+     * @param heightA how tall the row block that rowA is inside of.
+     * @param rowB Row index inside the block of second row vector.
+     * @param heightB how tall the row block that rowB is inside of.
+     * @return dot product of the two vectors.
+     */
+    protected static double innerProdRow( int blockLength, D1Submatrix64F A,
+                                          int colStart ,
+                                          int rowA, int heightA,
+                                          int rowB, int heightB ) {
+        double total = 0;
+
+        final double data[] = A.original.data;
+
+        // row index of the block in the original matrix
+        final int rowBlockA = A.row0 + rowA - rowA % blockLength;
+        final int rowBlockB = A.row0 + rowB - rowB % blockLength;
+        rowA = rowA % blockLength;
+        rowB = rowB % blockLength;
+
+        // compute dot product down column vectors
+        for( int j = A.col0; j < A.col1; j += blockLength ) {
+            int width = Math.min(blockLength,A.col1-j);
+
+            int indexA = rowBlockA*A.original.numCols + heightA*j + rowA*width;
+            int indexB = rowBlockB*A.original.numCols + heightB*j + rowB*width;
+
+            if( j == A.col0 ) {
+                indexA += colStart+1;
+                indexB += colStart;
+
+                // handle leading one
+                total = data[indexB];
+
+                indexB++;
+
+                // standard vector dot product
+                int endA = indexA + width-colStart-1;
+                for( ; indexA != endA; indexA++, indexB++) {
+                    total += data[indexA] * data[indexB];
+                }
+            } else {
+                // standard vector dot product
+                int endA = indexA + width;
+                for( ; indexA != endA; indexA++, indexB++) {
+                    total += data[indexA] * data[indexB];
+                }
+            }
+        }
+
         return total;
     }
 

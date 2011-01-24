@@ -33,7 +33,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -113,27 +114,88 @@ public class TestBlockHouseHolder {
 
     @Test
     public void rank1UpdateMultL_Row() {
-        fail("Implement");
+        double gamma = 2.5;
+        A = SimpleMatrix.random(r*2+r-1,r*2+r-1,-1,1,rand);
+
+        SimpleMatrix U = A.extractMatrix(1,2,0,A.numCols()).transpose();
+        U.set(0,0);
+        U.set(1,1);
+
+        SimpleMatrix expected = A.minus( A.mult(U).mult(U.transpose()).scale(gamma) );
+
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+
+//        Ab.print();
+        BlockHouseHolder.rank1UpdateMultL_Row(r,new D1Submatrix64F(Ab),1,1,gamma);
+
+        for( int j = 1; j < expected.numCols(); j++ ) {
+            assertEquals(expected.get(2,j),Ab.get(2,j),1e-8);
+        }
     }
 
     /**
      * Check inner product when column blocks have two different widths
      */
     @Test
-    public void innerProd() {
-        DenseMatrix64F A = RandomMatrices.createRandom(r*2+r-1,r*2-1,-1,1,rand);
+    public void innerProdCol() {
+        DenseMatrix64F A = RandomMatrices.createRandom(r*2+r-1,r*3-1,-1,1,rand);
         BlockMatrix64F Ab = BlockMatrixOps.convert(A,r);
 
-        DenseMatrix64F v0 = CommonOps.extract(A,0,A.numRows,1,2);
-        DenseMatrix64F v1 = CommonOps.extract(A,0,A.numRows,r+1,r+2);
-        v0.set(0,0.0);
-        v0.set(1,1.0);
+        int row = 0;
+        int innerCol = 1;
+        for( int colBlock = 0; colBlock < r*2; colBlock+=r) {
+            int colA = colBlock+innerCol;
+            int colB = colA+innerCol+1;
+            int widthA = Math.min(r,A.numCols - (colA-colA%r));
+            int widthB = Math.min(r,A.numCols - (colB-colB%r));
 
-        double expected = VectorVectorMult.innerProd(v0,v1);
+            DenseMatrix64F v0 = CommonOps.extract(A,row,A.numRows,colA,colA+1);
+            DenseMatrix64F v1 = CommonOps.extract(A,row,A.numRows,colB,colB+1);
+            for( int j = 0; j < innerCol; j++ ) {
+                v0.set(j,0.0);
+            }
+            v0.set(innerCol,1.0);
 
-        double found = BlockHouseHolder.innerProdCol(r,new D1Submatrix64F(Ab),1,r,r+1,r-1);
+            double expected = VectorVectorMult.innerProd(v0,v1);
 
-        assertEquals(expected,found,1e-8);
+            D1Submatrix64F subAb = new D1Submatrix64F(Ab,row,A.numRows,colBlock,A.numCols);
+
+            double found = BlockHouseHolder.innerProdCol(r,subAb,colA-colBlock,widthA,colB-colBlock,widthB);
+
+            assertEquals(expected,found,1e-8);
+        }
+    }
+
+
+    @Test
+    public void innerProdRow() {
+        DenseMatrix64F A = RandomMatrices.createRandom(r*3-1,r*2+r-1,-1,1,rand);
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A,r);
+
+        int col = 0;
+        int innerRow = 1;
+        for( int rowBlock = 0; rowBlock < r*2; rowBlock+=r) {
+            int rowA = rowBlock+innerRow;
+            int rowB = rowA+innerRow+1;
+            int heightA = Math.min(r,A.numRows - (rowA-rowA%r));
+            int heightB = Math.min(r,A.numRows - (rowB-rowB%r));
+
+            DenseMatrix64F v0 = CommonOps.extract(A,rowA,rowA+1,col,A.numRows);
+            DenseMatrix64F v1 = CommonOps.extract(A,rowB,rowB+1,col,A.numRows);
+            for( int j = 0; j < innerRow; j++ ) {
+                v0.set(j,0.0);
+            }
+            v0.set(innerRow,1.0);
+
+            double expected = VectorVectorMult.innerProd(v0,v1);
+
+            D1Submatrix64F subAb = new D1Submatrix64F(Ab,rowBlock,A.numRows,col,A.numCols);
+
+            double found = BlockHouseHolder.innerProdRow(r,subAb,rowA-rowBlock,
+                    rowA-rowBlock,heightA,rowB-rowBlock,heightB);
+
+            assertEquals(expected,found,1e-8);
+        }
     }
 
     @Test
