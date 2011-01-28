@@ -19,7 +19,10 @@
 
 package org.ejml.data;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Contains functions useful for testing the results of matrices
@@ -39,8 +42,18 @@ public class UtilTestMatrix {
 
     public static void checkSameElements( double tol, int length , double a[], double b[] )
     {
+        double aa[] = new double[ length ];
+        double bb[] = new double[ length ];
+
+        System.arraycopy(a,0,aa,0,length);
+        System.arraycopy(b,0,bb,0,length);
+
+        Arrays.sort(aa);
+        Arrays.sort(bb);
+
         for( int i = 0; i < length; i++ ) {
-            checkNumFound(1,tol,a[i],b);
+            if( Math.abs(aa[i]-bb[i])> tol )
+                fail("Mismatched elements");
         }
     }
 
@@ -55,4 +68,6 @@ public class UtilTestMatrix {
 
         assertEquals(expected,numFound);
     }
+
+    
 }

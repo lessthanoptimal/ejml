@@ -195,11 +195,12 @@ public class RandomMatrices {
      * 
      * @param numRows Number of rows in generated matrix.
      * @param numCols NUmber of columns in generated matrix.
-     * @param sv Singular values of the matrix.
      * @param rand Random number generator.
+     * @param sv Singular values of the matrix.
      * @return A new matrix with the specified singular values.
      */
-    public static DenseMatrix64F createSingularValues( int numRows , int numCols , double sv[] , Random rand ) {
+    public static DenseMatrix64F createSingularValues(int numRows, int numCols,
+                                                      Random rand, double ...sv) {
         DenseMatrix64F U = RandomMatrices.createOrthogonal(numRows,numRows,rand);
         DenseMatrix64F V = RandomMatrices.createOrthogonal(numCols,numCols,rand);
 

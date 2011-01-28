@@ -159,9 +159,9 @@ public class TestRandomMatrices {
 
         for( int numRows = 1; numRows <= 4; numRows++ ) {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
-                DenseMatrix64F A = RandomMatrices.createSingularValues(numRows,numCols,sv,rand);
+                DenseMatrix64F A = RandomMatrices.createSingularValues(numRows,numCols, rand, sv);
 
-                SingularValueDecomposition svd = DecompositionFactory.svd();
+                SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd();
                 assertTrue(svd.decompose(A));
 
                 int o = Math.min(numRows,numCols);
@@ -171,9 +171,9 @@ public class TestRandomMatrices {
         }
 
         // see if it fills in zeros when it is smaller than the dimension
-        DenseMatrix64F A = RandomMatrices.createSingularValues(5,5,sv,rand);
+        DenseMatrix64F A = RandomMatrices.createSingularValues(5,5, rand, sv);
 
-        SingularValueDecomposition svd = DecompositionFactory.svd();
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd();
         assertTrue(svd.decompose(A));
 
         UtilTestMatrix.checkSameElements(1e-8,sv.length,sv,svd.getSingularValues());
@@ -188,7 +188,7 @@ public class TestRandomMatrices {
         assertTrue(MatrixFeatures.isSymmetric(A,1e-10));
 
         // decompose the matrix and extract its eigenvalues
-        EigenDecomposition eig = DecompositionFactory.eig();
+        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig();
         assertTrue(eig.decompose(A));
 
         double ev[] = new double[5];

@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
  * @author Peter Abeles
  */
 public abstract class GenericBidiagonalCheck {
-    Random rand = new Random(0xff);
+    protected Random rand = new Random(0xff);
 
     abstract protected BidiagonalDecomposition<DenseMatrix64F> createQRDecomposition();
 
@@ -44,53 +44,99 @@ public abstract class GenericBidiagonalCheck {
         CheckDecompositionInterface.checkModifiedInput(createQRDecomposition());
     }
 
-    /**
-     * Decomposes the matrix and then recomposes it.
-     */
     @Test
-    public void testUsingDefinition() {
-        for( int i = 1; i <= 5; i++ ) {
-            for( int j = 1; j <= 5; j++ ) {
-                checkDefinition(i,j);
+    public void testRandomMatrices() {
+        BidiagonalDecomposition<DenseMatrix64F> decomp = createQRDecomposition();
+
+        for( int i = 0; i < 10; i++ ) {
+            for( int N = 2;  N <= 10; N++ ) {
+                for( int tall = 0; tall <= 2; tall++ ) {
+                    DenseMatrix64F A = RandomMatrices.createRandom(N+tall,N,rand);
+
+                    assertTrue(decomp.decompose(A.<DenseMatrix64F>copy()));
+
+                    checkGeneric(A, decomp);
+                }
+                for( int wide = 1; wide <= 2; wide++ ) {
+                    DenseMatrix64F A = RandomMatrices.createRandom(N,N+wide,rand);
+
+                    assertTrue(decomp.decompose(A.copy()));
+
+                    checkGeneric(A, decomp);
+                }
             }
         }
     }
 
-    private void checkDefinition(int m, int n) {
-        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(m,n,rand));
+    @Test
+    public void testIdentity() {
+        SimpleMatrix A = SimpleMatrix.identity(5);
 
         BidiagonalDecomposition<DenseMatrix64F> decomp = createQRDecomposition();
 
         assertTrue(decomp.decompose(A.getMatrix().copy()));
 
+        checkGeneric(A.getMatrix(), decomp);
+    }
+
+    @Test
+    public void testZero() {
+        SimpleMatrix A = new SimpleMatrix(5,5);
+
+        BidiagonalDecomposition<DenseMatrix64F> decomp = createQRDecomposition();
+
+        assertTrue(decomp.decompose(A.getMatrix().copy()));
+
+        checkGeneric(A.getMatrix(), decomp);
+    }
+
+    /**
+     * Checks to see if the decomposition will reconstruct the original input matrix
+     */
+    protected void checkGeneric(DenseMatrix64F a,
+                                BidiagonalDecomposition<DenseMatrix64F> decomp) {
+        // check the full version
         SimpleMatrix U = SimpleMatrix.wrap(decomp.getU(null,false,false));
         SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));
         SimpleMatrix V = SimpleMatrix.wrap(decomp.getV(null,false,false));
 
         DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).getMatrix();
 
-//        A.print();
-//        foundA.print();
+        assertTrue(MatrixFeatures.isIdentical(a,foundA,1e-8));
 
-        assertTrue(MatrixFeatures.isIdentical(A.getMatrix(),foundA,1e-8));
-    }
+        //       check with transpose
+        SimpleMatrix Ut = SimpleMatrix.wrap(decomp.getU(null,true,false));
 
-    /**
-     * Sees if the compact and transpose flag are correctly handled.  Does
-     * a permutation of each
-     */
-    @Test
-    public void testCompactTranspose() {
+        assertTrue(U.transpose().isIdentical(Ut,1e-8));
 
-        for( int i = 0; i < 2; i++ ) {
-            boolean isTransposed = i == 0;
-            for( int j = 0; j < 2; j++ ) {
-                boolean isCompact = j == 0;
+        SimpleMatrix Vt = SimpleMatrix.wrap(decomp.getV(null,true,false));
 
-//                fail("Implement");
-            }
-        }
+        assertTrue(V.transpose().isIdentical(Vt,1e-8));
 
+//        U.print();
+//        V.print();
+//        B.print();
+//        System.out.println("------------------------");
+
+        // now test compact
+        U = SimpleMatrix.wrap(decomp.getU(null,false,true));
+        B = SimpleMatrix.wrap(decomp.getB(null,true));
+        V = SimpleMatrix.wrap(decomp.getV(null,false,true));
+
+//        U.print();
+//        V.print();
+//        B.print();
+
+        foundA = U.mult(B).mult(V.transpose()).getMatrix();
+
+        assertTrue(MatrixFeatures.isIdentical(a,foundA,1e-8));
+
+        //       check with transpose
+        Ut = SimpleMatrix.wrap(decomp.getU(null,true,true));
+        Vt = SimpleMatrix.wrap(decomp.getV(null,true,true));
+
+        assertTrue(U.transpose().isIdentical(Ut,1e-8));
+        assertTrue(V.transpose().isIdentical(Vt,1e-8));
     }
 
 }

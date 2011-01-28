@@ -77,25 +77,41 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
 
     private void checkAllPermutations(int numRows, int numCols) {
 
-        for( int k = 0; k < 2; k++ ) {
-            compact = k == 0;
+        for( int a = 0; a < 2; a++ ) {
+            boolean singular = a == 0;
 
-            SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,true,true);
+            for( int k = 0; k < 2; k++ ) {
+                compact = k == 0;
 
-            DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+                SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,true,true);
 
-            assertTrue(alg.decompose(A.<DenseMatrix64F>copy()));
+                DenseMatrix64F A;
 
-            DenseMatrix64F origU = alg.getU(false);
-            double sv[] = alg.getSingularValues();
-            DenseMatrix64F origV = alg.getV(false);
+                if( singular ) {
+                    double sv[] = new double[ Math.min(numRows,numCols)];
+//                    for( int i = 0; i < sv.length; i++ )
+//                        sv[i] = rand.nextDouble()*2;
+//                    sv[0] = 0;
 
-            for( int i = 0; i < 2; i++ ) {
-                needU = i == 0;
-                for( int j = 0; j < 2; j++ ) {
-                    needV = j==0;
+                    A = RandomMatrices.createSingularValues(numRows,numCols,rand,sv);
+//                    A = new DenseMatrix64F(numRows,numCols);
+                } else {
+                    A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+                }
 
-                    testPartial(A,origU,sv,origV,needU,needV);
+                assertTrue(alg.decompose(A.<DenseMatrix64F>copy()));
+
+                DenseMatrix64F origU = alg.getU(false);
+                double sv[] = alg.getSingularValues();
+                DenseMatrix64F origV = alg.getV(false);
+
+                for( int i = 0; i < 2; i++ ) {
+                    needU = i == 0;
+                    for( int j = 0; j < 2; j++ ) {
+                        needV = j==0;
+
+                        testPartial(A,origU,sv,origV,needU,needV);
+                    }
                 }
             }
         }

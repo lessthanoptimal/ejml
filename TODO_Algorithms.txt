@@ -35,6 +35,7 @@ Ideas for reducing memory requirements:
     - tran seems to be about 10% slower on small matrices.
 
 - QR with column pivoting
+  * Update BidiagonalDecompositionTall to use that then update SvdImplicitQrDecompose.
 
 - SVD
   - Save up rotators, multiply against each other, then multiply against U and V

@@ -85,16 +85,13 @@ public class BidiagonalDecompositionTall
 
     @Override
     public DenseMatrix64F getU(DenseMatrix64F U, boolean transpose, boolean compact) {
-        U = BidiagonalDecompositionRow.handleU(U,transpose,compact, m, n,min);
+        U = BidiagonalDecompositionRow.handleU(U,false,compact, m, n,min);
 
         if( compact ) {
             // U = Q*U1
             DenseMatrix64F Q1 = decompQR.getQ(null,true);
             DenseMatrix64F U1 = decompBi.getU(null,false,true);
             CommonOps.mult(Q1,U1,U);
-
-            if( transpose )
-                CommonOps.transpose(U);
         } else {
            // U = [Q1*U1 Q2]
             DenseMatrix64F Q = decompQR.getQ(U,false);
@@ -104,6 +101,9 @@ public class BidiagonalDecompositionTall
             CommonOps.mult(Q1,U1,tmp);
             CommonOps.insert(tmp,Q,0,0);
         }
+
+        if( transpose )
+            CommonOps.transpose(U);
 
         return U;
     }
@@ -115,8 +115,10 @@ public class BidiagonalDecompositionTall
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-        if( !decompQR.decompose(orig) )
-            return false;
+        if( !decompQR.decompose(orig) ) {
+            throw new RuntimeException("A singular matrix must have been passed in.   Maybe QR with column pivoting instead?");
+//            return false;
+        }
 
         m = orig.numRows;
         n = orig.numCols;

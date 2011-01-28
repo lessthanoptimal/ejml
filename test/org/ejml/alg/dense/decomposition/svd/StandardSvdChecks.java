@@ -98,14 +98,22 @@ public abstract class StandardSvdChecks {
     }
 
     public void testZero() {
-        DenseMatrix64F A = new DenseMatrix64F(6,6);
 
-        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
-        assertTrue(alg.decompose(A));
+        for( int i = 1; i <= 16; i += 5 ) {
+            for( int j = 1; j <= 16; j += 5 ) {
+                DenseMatrix64F A = new DenseMatrix64F(i,j);
 
-        assertEquals(6,checkOccurrence(0,alg.getSingularValues(),6),1e-5);
+                SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
+                assertTrue(alg.decompose(A));
 
-        checkComponents(alg,A);
+                int min = Math.min(i,j);
+
+                assertEquals(min,checkOccurrence(0,alg.getSingularValues(),min),1e-5);
+
+                checkComponents(alg,A);
+            }
+        }
+
     }
 
     public void testIdentity() {
