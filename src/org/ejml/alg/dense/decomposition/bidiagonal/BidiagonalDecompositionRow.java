@@ -25,13 +25,15 @@ import org.ejml.ops.CommonOps;
 
 /**
  * <p>
- * Internally performs a {@link org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecomposition} on a row major matrix.  This is efficient
- * on wide or square matrices.
+ * Performs a {@link org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecomposition} using
+ * householder reflectors.  This is efficient on wide or square matrices.
  * </p>
  *
  * @author Peter Abeles
  */
-public class BidiagonalDecompositionRow implements BidiagonalDecomposition<DenseMatrix64F> {
+public class BidiagonalDecompositionRow
+        implements BidiagonalDecomposition<DenseMatrix64F>
+{
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DenseMatrix64F UBV;
 
@@ -116,6 +118,15 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
         return UBV;
     }
 
+    @Override
+    public void getDiagonal(double[] diag, double[] off) {
+        diag[0] = UBV.get(0);
+        for( int i = 1; i < n; i++ ) {
+            diag[i] = UBV.unsafe_get(i,i);
+            off[i-1] = UBV.unsafe_get(i-1,i);
+        }
+    }
+
     /**
      * Returns the bidiagonal matrix.
      *
@@ -124,6 +135,23 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
      */
     @Override
     public DenseMatrix64F getB( DenseMatrix64F B , boolean compact ) {
+        B = handleB(B, compact,m,n,min);
+
+        //System.arraycopy(UBV.data, 0, B.data, 0, UBV.getNumElements());
+
+        B.set(0,0,UBV.get(0,0));
+        for( int i = 1; i < min; i++ ) {
+            B.set(i,i, UBV.get(i,i));
+            B.set(i-1,i, UBV.get(i-1,i));
+        }
+        if( n > m )
+            B.set(min-1,min,UBV.get(min-1,min));
+
+        return B;
+    }
+
+    public static DenseMatrix64F handleB(DenseMatrix64F B, boolean compact,
+                                          int m , int n , int min ) {
         int w = n > m ? min + 1 : min;
 
         if( compact ) {
@@ -141,17 +169,6 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
                 B.zero();
             }
         }
-
-        //System.arraycopy(UBV.data, 0, B.data, 0, UBV.getNumElements());
-
-        B.set(0,0,UBV.get(0,0));
-        for( int i = 1; i < min; i++ ) {
-            B.set(i,i, UBV.get(i,i));
-            B.set(i-1,i, UBV.get(i-1,i));
-        }
-        if( n > m )
-            B.set(min-1,min,UBV.get(min-1,min));
-
         return B;
     }
 
@@ -163,6 +180,28 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
      */
     @Override
     public DenseMatrix64F getU( DenseMatrix64F U , boolean transpose , boolean compact ) {
+        U = handleU(U, transpose, compact,m,n,min);
+        CommonOps.setIdentity(U);
+
+        for( int i = 0; i < m; i++ ) u[i] = 0;
+
+        for( int j = min-1; j >= 0; j-- ) {
+            u[j] = 1;
+            for( int i = j+1; i < m; i++ ) {
+                u[i] = UBV.get(i,j);
+            }
+            if( transpose )
+                QrHelperFunctions.rank1UpdateMultL(U,u,gammasU[j],j,j,m);
+            else
+                QrHelperFunctions.rank1UpdateMultR(U,u,gammasU[j],j,j,m,this.b);
+        }
+
+        return U;
+    }
+
+    public static DenseMatrix64F handleU(DenseMatrix64F U,
+                                         boolean transpose, boolean compact,
+                                         int m, int n , int min ) {
         if( compact ){
             if( transpose ) {
                 if( U == null )
@@ -183,22 +222,6 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
                 U.reshape(m,m, false);
         }
 
-        // todo the very first multiplication can be avoided by setting to the rank1update output
-        CommonOps.setIdentity(U);
-
-        for( int i = 0; i < m; i++ ) u[i] = 0;
-
-        for( int j = min-1; j >= 0; j-- ) {
-            u[j] = 1;
-            for( int i = j+1; i < m; i++ ) {
-                u[i] = UBV.get(i,j);
-            }
-            if( transpose )
-                QrHelperFunctions.rank1UpdateMultL(U,u,gammasU[j],j,j,m,this.b);
-            else
-                QrHelperFunctions.rank1UpdateMultR(U,u,gammasU[j],j,j,m,this.b);
-        }
-
         return U;
     }
 
@@ -210,6 +233,28 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
      */
     @Override
     public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose , boolean compact ) {
+        V = handleV(V, transpose, compact,m,n,min);
+        CommonOps.setIdentity(V);
+
+//        UBV.print();
+
+        // todo the very first multiplication can be avoided by setting to the rank1update output
+        for( int j = min-1; j >= 0; j-- ) {
+            u[j+1] = 1;
+            for( int i = j+2; i < n; i++ ) {
+                u[i] = UBV.get(j,i);
+            }
+            if( transpose )
+                QrHelperFunctions.rank1UpdateMultL(V,u,gammasV[j],j+1,j+1,n);
+            else
+                QrHelperFunctions.rank1UpdateMultR(V,u,gammasV[j],j+1,j+1,n,this.b);
+        }
+
+        return V;
+    }
+
+    public static DenseMatrix64F handleV(DenseMatrix64F V, boolean transpose, boolean compact,
+                                   int m , int n , int min ) {
         int w = n > m ? min + 1 : min;
 
         if( compact ) {
@@ -231,22 +276,6 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
                 V.reshape(n,n, false);
         }
 
-        CommonOps.setIdentity(V);
-
-//        UBV.print();
-
-        // todo the very first multiplication can be avoided by setting to the rank1update output
-        for( int j = min-1; j >= 0; j-- ) {
-            u[j+1] = 1;
-            for( int i = j+2; i < n; i++ ) {
-                u[i] = UBV.get(j,i);
-            }
-            if( transpose )
-                QrHelperFunctions.rank1UpdateMultL(V,u,gammasV[j],j+1,j+1,n,this.b);
-            else
-                QrHelperFunctions.rank1UpdateMultR(V,u,gammasV[j],j+1,j+1,n,this.b);
-        }
-
         return V;
     }
 
@@ -255,8 +284,13 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
      */
     private boolean _decompose() {
         for( int k = 0; k < min; k++ ) {
+//            UBV.print();
             computeU(k);
+//            System.out.println("--- after U");
+//            UBV.print();
             computeV(k);
+//            System.out.println("--- after V");
+//            UBV.print();
         }
 
         return true;
@@ -326,7 +360,7 @@ public class BidiagonalDecompositionRow implements BidiagonalDecomposition<Dense
             // writing to u could be avoided by working directly with b.
             // requires writing a custom rank1Update function
             // ---------- multiply on the left by Q_k
-            QrHelperFunctions.rank1UpdateMultL(UBV,u,gamma,k+1,k+1,n,this.b);
+            QrHelperFunctions.rank1UpdateMultL(UBV,u,gamma,k+1,k+1,n);
 
             b[row+k+1] = -tau*max;
         } else {

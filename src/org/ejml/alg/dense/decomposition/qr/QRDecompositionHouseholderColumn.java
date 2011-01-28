@@ -148,7 +148,8 @@ public class QRDecompositionHouseholderColumn implements QRDecomposition<DenseMa
         } else {
             if( compact ) {
                 if( R.numCols != numCols || R.numRows != minLength )
-                    throw new IllegalArgumentException("Unexpected dimensions");
+                    throw new IllegalArgumentException(
+                            "Unexpected dimensions: found( "+R.numRows+" "+R.numCols+" ) expected( "+minLength+" "+numCols+" )");
             } else {
                 if( R.numCols != numCols || R.numRows != numRows )
                     throw new IllegalArgumentException("Unexpected dimensions");

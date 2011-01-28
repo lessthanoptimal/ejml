@@ -315,23 +315,20 @@ public class QrHelperFunctions {
     public static void rank1UpdateMultL( DenseMatrix64F A , double u[] ,
                                          double gamma ,
                                          int colA0,
-                                         int w0 , int w1 ,
-                                         double _temp[] )
+                                         int w0 , int w1 )
     {
         for( int i = colA0; i < A.numRows; i++ ) {
+            int startIndex = i*A.numCols+w0;
             double sum = 0;
-            int rowIndex = i*A.numCols+w0;
+            int rowIndex = startIndex;
             for( int j = w0; j < w1; j++ ) {
                 sum += A.data[rowIndex++]*u[j];
             }
-            _temp[i] = -gamma*sum;
-        }
+            sum = -gamma*sum;
 
-        for( int i = colA0; i < A.numRows; i++ ) {
-            double a = _temp[i];
-            int rowIndex = i*A.numCols+w0;
+            rowIndex = startIndex;
             for( int j = w0; j < w1; j++ ) {
-                A.data[rowIndex++] += a*u[j];
+                A.data[rowIndex++] += sum*u[j];
             }
         }
     }

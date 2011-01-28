@@ -125,11 +125,32 @@ public class TestBlockHouseHolder {
 
         BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
 
-//        Ab.print();
         BlockHouseHolder.rank1UpdateMultL_Row(r,new D1Submatrix64F(Ab),1,1,gamma);
 
         for( int j = 1; j < expected.numCols(); j++ ) {
             assertEquals(expected.get(2,j),Ab.get(2,j),1e-8);
+        }
+    }
+
+    @Test
+    public void rank1UpdateMultL_LeftCol() {
+        double gamma = 2.5;
+        A = SimpleMatrix.random(r*2+r-1,r*2+r-1,-1,1,rand);
+
+        SimpleMatrix U = A.extractMatrix(1,2,0,A.numCols()).transpose();
+        U.set(0,0);
+        U.set(1,1);
+
+        SimpleMatrix expected = A.minus( A.mult(U).mult(U.transpose()).scale(gamma) );
+
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+
+        BlockHouseHolder.rank1UpdateMultL_LeftCol(r,new D1Submatrix64F(Ab),1,1,gamma);
+
+        for( int i = r; i < A.numRows(); i++ ) {
+            for( int j = 0; j < r; j++ ) {
+                assertEquals(expected.get(i,j),Ab.get(i,j),1e-8);
+            }
         }
     }
 

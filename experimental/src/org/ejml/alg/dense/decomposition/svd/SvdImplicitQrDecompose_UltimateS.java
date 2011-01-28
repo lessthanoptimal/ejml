@@ -48,6 +48,9 @@ public class SvdImplicitQrDecompose_UltimateS
     private BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
     private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithmSmart();
 
+    private double diag[];
+    private double off[];
+
     private DenseMatrix64F Ut;
     private DenseMatrix64F Vt;
 
@@ -66,8 +69,8 @@ public class SvdImplicitQrDecompose_UltimateS
     private boolean prefComputeV;
 
     // stores the results of bidiagonalization
-    private double diag[];
-    private double off[];
+    private double diagOld[];
+    private double offOld[];
 
     // Either a copy of the input matrix or a copy of it transposed
     private DenseMatrix64F A_mod = new DenseMatrix64F(1,1);
@@ -177,7 +180,9 @@ public class SvdImplicitQrDecompose_UltimateS
         numCols = orig.numCols;
 
         smallSide = Math.min(numRows,numCols);
-        if( diag == null || diag.length < smallSide ) {
+        if( diagOld == null || diagOld.length < smallSide ) {
+            diagOld = new double[ smallSide ];
+            offOld = new double[ smallSide -1];
             diag = new double[ smallSide ];
             off = new double[ smallSide -1];
         }
@@ -199,8 +204,8 @@ public class SvdImplicitQrDecompose_UltimateS
             qralg.initParam(numCols,numRows);
         else
             qralg.initParam(numRows,numCols);
-        diag = qralg.swapDiag(diag);
-        off = qralg.swapOff(off);
+        diagOld = qralg.swapDiag(diagOld);
+        offOld = qralg.swapOff(offOld);
         // set it up to compute both U and V matrices
         qralg.setFastValues(false);
         if( computeU )
@@ -213,7 +218,7 @@ public class SvdImplicitQrDecompose_UltimateS
 
         long pointB = System.currentTimeMillis();
 
-        if( !qralg.process(diag) )
+        if( !qralg.process(diagOld) )
             return true;
 
         long pointC = System.currentTimeMillis();
@@ -238,12 +243,13 @@ public class SvdImplicitQrDecompose_UltimateS
         long pointB = System.currentTimeMillis();
 
         // compute singular values
-        qralg.setMatrix(A_mod);
+        bidiag.getDiagonal(diag,off);
+        qralg.setMatrix(numRows,numCols,diag,off);
 
         // copy the diagonal elements
         // this way it doesn't need to be copied twice and will slightly speed it up
-        System.arraycopy(qralg.getDiag(),0,diag,0,smallSide);
-        System.arraycopy(qralg.getOff(),0,off,0,smallSide-1);
+        System.arraycopy(diag,0, diagOld,0,smallSide);
+        System.arraycopy(off,0, offOld,0,smallSide-1);
 
         qralg.setFastValues(true);
         qralg.setUt(null);

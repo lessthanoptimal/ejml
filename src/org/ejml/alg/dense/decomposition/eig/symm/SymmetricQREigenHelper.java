@@ -73,8 +73,6 @@ public class SymmetricQREigenHelper {
     private double c,s,c2,s2,cs;
 
     public SymmetricQREigenHelper() {
-        diag = new double[1];
-        off = new double[1];
         splits = new int[1];
     }
 
@@ -102,22 +100,17 @@ public class SymmetricQREigenHelper {
     /**
      * Sets up and declares internal data structures.
      *
-     * @param T The tridiagonal matrix that is to be processed.  Not modified.
+     * @param diag Diagonal elements from tridiagonal matrix. Modified.
+     * @param off Off diagonal elements from tridiagonal matrix. Modified.
+     * @param numCols number of columns (and rows) in the matrix.
      */
-    public void init( DenseMatrix64F T ) {
-        if( T.numCols != T.numRows )
-            throw new IllegalArgumentException("Matrix must be square.");
+    public void init( double diag[] ,
+                      double off[],
+                      int numCols ) {
+        reset(numCols);
 
-        reset(T.numCols);
-
-        // copy the tridiagonal portion of the matrix
-        for( int i = 0; i < N; i++ ) {
-            diag[i] = T.data[i*N+i];
-
-            if( i+1 < N ) {
-                off[i] = T.data[i*N+i+1];
-            }
-        }
+        this.diag = diag;
+        this.off = off;
     }
 
     /**
@@ -147,9 +140,10 @@ public class SymmetricQREigenHelper {
     public void reset( int N ) {
         this.N = N;
 
-        if( diag.length < N ) {
-            diag = new double[N];
-            off = new double[N-1];
+        this.diag = null;
+        this.off = null;
+
+        if( splits.length < N ) {
             splits = new int[N];
         }
 

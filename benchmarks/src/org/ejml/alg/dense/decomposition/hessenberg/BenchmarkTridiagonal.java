@@ -35,7 +35,7 @@ public class BenchmarkTridiagonal {
 
     public static long basic( DenseMatrix64F orig , int numTrials ) {
 
-        TridiagonalSimilarDecomposition alg = new TridiagonalSimilarDecomposition();
+        TridiagonalDecompositionHouseholder alg = new TridiagonalDecompositionHouseholder();
 
         long prev = System.currentTimeMillis();
 
@@ -48,7 +48,7 @@ public class BenchmarkTridiagonal {
 
     public static long alt( DenseMatrix64F orig , int numTrials ) {
 
-        TridiagonalSimilarDecompositionOrig alg = new TridiagonalSimilarDecompositionOrig();
+        TridiagonalDecompositionHouseholderOrig alg = new TridiagonalDecompositionHouseholderOrig();
 
         long prev = System.currentTimeMillis();
 

@@ -218,7 +218,7 @@ public class HessenbergSimilarDecomposition
                 QrHelperFunctions.rank1UpdateMultR(QH,u,gamma,k+1,k+1,N,b);
 
                 // ---------- multiply on the right by Q_k
-                QrHelperFunctions.rank1UpdateMultL(QH,u,gamma,0,k+1,N,b);
+                QrHelperFunctions.rank1UpdateMultL(QH,u,gamma,0,k+1,N);
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg

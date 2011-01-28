@@ -32,7 +32,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class TridiagonalSimilarDecompositionOrig {
+public class TridiagonalDecompositionHouseholderOrig {
 
     /**
      * Internal storage of decomposed matrix.  The tridiagonal matrix is stored in the
@@ -51,7 +51,7 @@ public class TridiagonalSimilarDecompositionOrig {
     // temporary storage
     double b[];
 
-    public TridiagonalSimilarDecompositionOrig() {
+    public TridiagonalDecompositionHouseholderOrig() {
         N = 1;
         QT = new DenseMatrix64F(N,N);
         w = new double[N];

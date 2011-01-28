@@ -23,7 +23,12 @@
 - Modified isIdentical and added isEquals to MatrixFeatures.
   * Resulting from a discussion with Kaspar Thommen
 - SimpleMatrix has been made more easy to extend by adding a protected function that declares
-  new instances of SimpleMatrix. Now function calls will return the correct type. 
+  new instances of SimpleMatrix. Now function calls will return the correct type.
+- TridiagonalSimilarDecomposition is now an interface and related code has been made more
+  general purpose.
+- Added bidiagonalization for tall matrices when U is not needed
+- Modified BidiagonalizeDecomposition interface
+- SVD and EVD QR algorithm take in diagonal and off diagonal as inputs not the matrix.
 
 ----- Version 0.15
 

@@ -114,7 +114,7 @@ public class GenericBlock64QrDecompositionTests {
     public void checkInternalData() {
         for( int i = 1; i <= 3*r; i++ ) {
             for( int j = 1; j <= 3*r; j++ ) {
-                System.out.println("i = "+i+" j = "+j);
+//                System.out.println("i = "+i+" j = "+j);
                 checkSize(i,j);
             }
         }

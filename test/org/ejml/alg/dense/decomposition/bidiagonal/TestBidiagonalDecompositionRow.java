@@ -65,8 +65,6 @@ public class TestBidiagonalDecompositionRow {
                 checkNaive(i,j);
             }
         }
-
-//        checkNaive(2, 3);
     }
 
     private void checkNaive(int m, int n) {

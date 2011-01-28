@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkBidiagonalDecomposition {
 
 
-    public static long evaluate( BidiagonalDecomposition alg , DenseMatrix64F orig , int numTrials ) {
+    public static long evaluate( BidiagonalDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -41,6 +41,9 @@ public class BenchmarkBidiagonalDecomposition {
             if( !alg.decompose(orig.copy()) ) {
                 throw new RuntimeException("Bad matrix");
             }
+//            alg.getU(null,false,false);
+//            alg.getV(null,false,false);
+
         }
 
         return System.currentTimeMillis() - prev;
@@ -50,13 +53,15 @@ public class BenchmarkBidiagonalDecomposition {
     {
         if( numTrials <= 0 ) return;
         System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow(),mat,numTrials));
+        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall(),mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,500,1000};
-        int trials[] = new int[]{(int)4e6,(int)1e6,(int)1e5,300,3,1};
+        int size[] = new int[]{2,4,10,100,500,1000,2000,5000,10000};
+        int trials[] = new int[]{(int)4e6,(int)1e6,(int)1e5,200,1,1,1,1,1};
+//        int trials[] = new int[]{(int)1e6,(int)2e5,(int)2e4,50,1,1,1,1,1};
 
         System.out.println("Square matrix");
         // results vary significantly depending if it starts from a small or large matrix
@@ -75,15 +80,16 @@ public class BenchmarkBidiagonalDecomposition {
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
+            int h = w*3;
 
-            int t = trials[i]*3/5;
+            int t = trials[i];
 
             if( t == 0 ) continue;
 
-            System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
+            System.out.printf("Decomposition size w=%3d h=%3d for %12d trials\n",w,h,t);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(2*w,w,rand);
+            DenseMatrix64F mat = RandomMatrices.createRandom(h,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }

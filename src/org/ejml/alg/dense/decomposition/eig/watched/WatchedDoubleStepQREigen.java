@@ -450,7 +450,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         // apply A*Q - just the three things
-        QrHelperFunctions.rank1UpdateMultL(A,u.data,gamma,0,i,i+3,_temp.data);
+        QrHelperFunctions.rank1UpdateMultL(A,u.data,gamma,0,i,i+3);
 
 //        System.out.println("  after Q*A*Q ");
 //        A.print();
@@ -522,7 +522,7 @@ public class WatchedDoubleStepQREigen {
         }
 
         // apply A*Q - just the three things
-        QrHelperFunctions.rank1UpdateMultL(A,u.data,gamma,0,i,i+2,_temp.data);
+        QrHelperFunctions.rank1UpdateMultL(A,u.data,gamma,0,i,i+2);
 
         if(checkUncountable && MatrixFeatures.hasUncountable(A)) {
             throw new RuntimeException("bad matrix");

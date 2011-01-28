@@ -22,6 +22,7 @@ package org.ejml.alg.dense.decomposition.svd;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecomposition;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow;
+import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionTall;
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -48,8 +49,15 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
     private int numRows;
     private int numCols;
 
-    private BidiagonalDecomposition<DenseMatrix64F> bidiag = new BidiagonalDecompositionRow();
+    // dimensions of transposed matrix
+    private int numRowsT;
+    private int numColsT;
+
+    private BidiagonalDecomposition<DenseMatrix64F> bidiag;
     private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
+
+    double diag[];
+    double off[];
 
     private DenseMatrix64F Ut;
     private DenseMatrix64F Vt;
@@ -196,7 +204,8 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
      * Compute singular values and U and V at the same time
      */
     private boolean computeUWV() {
-        qralg.setMatrix(A_mod);
+        bidiag.getDiagonal(diag,off);
+        qralg.setMatrix(numRowsT,numColsT,diag,off);
 
 //        long pointA = System.currentTimeMillis();
         // compute U and V matrices
@@ -232,13 +241,31 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
         if( transposed ) {
             computeU = prefComputeV;
             computeV = prefComputeU;
+            numRowsT = orig.numCols;
+            numColsT = orig.numRows;
         } else {
             computeU = prefComputeU;
             computeV = prefComputeV;
+            numRowsT = orig.numRows;
+            numColsT = orig.numCols;
         }
 
         numRows = orig.numRows;
         numCols = orig.numCols;
+
+        if( diag == null || diag.length < numColsT ) {
+            diag = new double[ numColsT ];
+            off = new double[ numColsT-1 ];
+        }
+
+        // if it is a tall matrix and U is not needed then there is faster decomposition algorithm
+        if( numRows > numCols * 2 && !computeU ) {
+            if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall) ) {
+                bidiag = new BidiagonalDecompositionTall();
+            }
+        } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow) ) {
+            bidiag = new BidiagonalDecompositionRow();
+        }
     }
 
     /**

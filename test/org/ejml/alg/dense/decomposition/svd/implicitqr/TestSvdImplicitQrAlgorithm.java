@@ -24,7 +24,6 @@ import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
 import org.junit.Test;
 
 import java.util.Random;
@@ -49,13 +48,15 @@ public class TestSvdImplicitQrAlgorithm {
     public void oneBidiagonalMatrix() {
         SvdImplicitQrAlgorithm svd = new SvdImplicitQrAlgorithm(true);
         for( int N = 5; N < 10; N++ ) {
-            DenseMatrix64F A = CommonOps.identity(N);
+            double diag[] = new double[N];
+            double off[] = new double[N-1];
+            diag[0]=1;
             for( int i = 0; i < N-1; i++ ) {
-                A.set(i,i+1,1);
+                diag[i+1]=1;
+                off[i] = 1;
             }
 
-
-            svd.setMatrix(A);
+            svd.setMatrix(N,N,diag,off);
 
             assertTrue(svd.process());
 
@@ -72,10 +73,11 @@ public class TestSvdImplicitQrAlgorithm {
      */
     @Test
     public void knownDiagonal() {
-        DenseMatrix64F A = CommonOps.diag(1,2,3,4,5);
+        double diag[] = new double[]{1,2,3,4,5};
+        double off[] = new double[diag.length-1];
 
         SvdImplicitQrAlgorithm svd = new SvdImplicitQrAlgorithm(true);
-        svd.setMatrix(A);
+        svd.setMatrix(diag.length,diag.length,diag,off);
 
         assertTrue(svd.process());
 
@@ -91,16 +93,15 @@ public class TestSvdImplicitQrAlgorithm {
      */
     @Test
     public void zeroOnDiagonal() {
-        DenseMatrix64F A = CommonOps.diag(1,2,3,4,5,6);
-        for( int i = 0; i < 5; i++ ) {
-            A.set(i,i+1,2);
-        }
-        A.set(2,2,0);
+        double diag[] = new double[]{1,2,3,4,5,6};
+        double off[] = new double[]{2,2,2,2,2};
+
+        diag[2] = 0;
 
 //        A.print();
 
         SvdImplicitQrAlgorithm svd = new SvdImplicitQrAlgorithm(false);
-        svd.setMatrix(A);
+        svd.setMatrix(6,6,diag,off);
 
         assertTrue(svd.process());
 
@@ -139,13 +140,12 @@ public class TestSvdImplicitQrAlgorithm {
     @Test
     public void zeroOnDiagonalFull() {
         for( int where = 0; where < 6; where++ ) {
-            DenseMatrix64F A = CommonOps.diag(1,2,3,4,5,6);
-            for( int i = 0; i < 5; i++ ) {
-                A.set(i,i+1,2);
-            }
-            A.set(where,where,0);
+            double diag[] = new double[]{1,2,3,4,5,6};
+            double off[] = new double[]{2,2,2,2,2};
 
-            checkFullDecomposition(6, A);
+            diag[where] = 0;
+
+            checkFullDecomposition(6, diag, off );
         }
     }
 
@@ -157,15 +157,16 @@ public class TestSvdImplicitQrAlgorithm {
     public void randomMatricesFullDecompose() {
 
         for( int N = 2; N <= 20; N++ ) {
-//            System.out.println("--------------------------------------");
-            DenseMatrix64F A = new DenseMatrix64F(N,N);
-            A.set(0,0,rand.nextDouble());
+            double diag[] = new double[N];
+            double off[] = new double[N];
+
+            diag[0] = rand.nextDouble();
             for( int i = 1; i < N; i++ ) {
-                A.set(i,i,rand.nextDouble());
-                A.set(i-1,i,rand.nextDouble());
+                diag[i]=rand.nextDouble();
+                off[i-1] = rand.nextDouble();
             }
 
-            checkFullDecomposition(N, A);
+            checkFullDecomposition(N, diag,off);
         }
     }
 
@@ -173,10 +174,10 @@ public class TestSvdImplicitQrAlgorithm {
      * Checks the full decomposing my multiplying the components together and seeing if it
      * gets the original matrix again.
      */
-    private void checkFullDecomposition(int n, DenseMatrix64F a) {
+    private void checkFullDecomposition(int n, double diag[] , double off[] ) {
 //        a.print();
 
-        SvdImplicitQrAlgorithm svd = createHelper(a);
+        SvdImplicitQrAlgorithm svd = createHelper(n,n,diag.clone(),off.clone());
         svd.setFastValues(true);
         assertTrue(svd.process());
 
@@ -184,7 +185,7 @@ public class TestSvdImplicitQrAlgorithm {
 
         svd.setFastValues(false);
         double values[] = svd.diag.clone();
-        svd.setMatrix(a);
+        svd.setMatrix(n,n,diag.clone(),off.clone());
         svd.setUt(CommonOps.identity(n));
         svd.setVt(CommonOps.identity(n));
         assertTrue(svd.process(values));
@@ -199,23 +200,29 @@ public class TestSvdImplicitQrAlgorithm {
         SimpleMatrix A_found = Ut.transpose().mult(W).mult(Vt);
 //            A_found.print();
 
-        assertTrue(MatrixFeatures.isIdentical(a,A_found.getMatrix(),1e-8));
-//            System.out.println();
+        assertEquals(diag[0],A_found.get(0,0),1e-8);
+        for( int i = 0; i < n-1; i++ ) {
+            assertEquals(diag[i+1],A_found.get(i+1,i+1),1e-8);
+            assertEquals(off[i],A_found.get(i,i+1),1e-8);
+        }
     }
 
-    public static SvdImplicitQrAlgorithm createHelper(DenseMatrix64F a) {
+    public static SvdImplicitQrAlgorithm createHelper( DenseMatrix64F a ) {
         BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
         assertTrue(bidiag.decompose(a.<DenseMatrix64F>copy()));
+        double diag[] = new double[a.numRows];
+        double off[] = new double[ diag.length-1 ];
+        bidiag.getDiagonal(diag,off);
+
+        return createHelper(a.numRows,a.numCols,diag,off);
+    }
+
+    public static SvdImplicitQrAlgorithm createHelper( int numRows , int numCols ,
+                                                       double diag[] , double off[] ) {
 
         SvdImplicitQrAlgorithm helper = new SvdImplicitQrAlgorithm();
-        DenseMatrix64F B = bidiag.getB(null,true);
 
-//        SimpleMatrix U = SimpleMatrix.wrap(bidiag.getU(null));
-//        SimpleMatrix V = SimpleMatrix.wrap(bidiag.getV(null));
-//
-//        U.mult(SimpleMatrix.wrap(B)).mult(V.transpose()).print();
-
-        helper.setMatrix(B);
+        helper.setMatrix(numRows,numCols,diag,off);
         return helper;
     }
 

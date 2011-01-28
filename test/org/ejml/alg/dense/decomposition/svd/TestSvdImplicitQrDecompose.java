@@ -58,6 +58,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
         needV = true;
         allTests();
     }
+
     /**
      * This SVD can be configured to compute or not compute different components
      * Checks to see if it has the expected behavior no matter how it is configured
@@ -69,6 +70,9 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
         checkAllPermutations(5, 5);
         checkAllPermutations(7, 5);
         checkAllPermutations(5, 7);
+//        // for much taller or wider matrices different algs might be used
+        checkAllPermutations(30, 5);
+        checkAllPermutations(5, 30);
     }
 
     private void checkAllPermutations(int numRows, int numCols) {
@@ -80,7 +84,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
 
             DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
 
-            assertTrue(alg.decompose(A));
+            assertTrue(alg.decompose(A.<DenseMatrix64F>copy()));
 
             DenseMatrix64F origU = alg.getU(false);
             double sv[] = alg.getSingularValues();
@@ -105,7 +109,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
     {
         SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,checkU,checkV);
 
-        assertTrue(alg.decompose(A));
+        assertTrue(alg.decompose(A.<DenseMatrix64F>copy()));
 
         UtilTestMatrix.checkSameElements(1e-10,sv.length,sv,alg.getSingularValues());
 

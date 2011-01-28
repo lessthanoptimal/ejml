@@ -65,7 +65,7 @@ public abstract class StandardSvdChecks {
     {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         assertEquals(3, SingularOps.rank(alg, UtilEjml.EPS));
@@ -82,7 +82,7 @@ public abstract class StandardSvdChecks {
     public void testWide() {
         DenseMatrix64F A = RandomMatrices.createRandom(5,20,-1,1,rand);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         checkComponents(alg,A);
@@ -91,7 +91,7 @@ public abstract class StandardSvdChecks {
     public void testTall() {
         DenseMatrix64F A = RandomMatrices.createRandom(21,5,-1,1,rand);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         checkComponents(alg,A);
@@ -100,7 +100,7 @@ public abstract class StandardSvdChecks {
     public void testZero() {
         DenseMatrix64F A = new DenseMatrix64F(6,6);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         assertEquals(6,checkOccurrence(0,alg.getSingularValues(),6),1e-5);
@@ -111,7 +111,7 @@ public abstract class StandardSvdChecks {
     public void testIdentity() {
         DenseMatrix64F A = CommonOps.identity(6,6);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         assertEquals(6,checkOccurrence(1,alg.getSingularValues(),6),1e-5);
@@ -122,7 +122,7 @@ public abstract class StandardSvdChecks {
     public void testLarger() {
         DenseMatrix64F A = RandomMatrices.createRandom(200,200,-1,1,rand);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         checkComponents(alg,A);
@@ -137,7 +137,7 @@ public abstract class StandardSvdChecks {
 
         CommonOps.scale(1e-200,A);
 
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         checkComponents(alg,A);
@@ -145,7 +145,7 @@ public abstract class StandardSvdChecks {
 
 
     public void testLots() {
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
 
         for( int i = 1; i < 10; i++ ) {
             for( int j = 1; j < 10; j++ ) {
@@ -202,7 +202,7 @@ public abstract class StandardSvdChecks {
      * new memory, this way it actually uses memory.
      */
     public void testLargeToSmall() {
-        SingularValueDecomposition alg = createSvd();
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
 
         // first the larger one
         DenseMatrix64F A = RandomMatrices.createRandom(10,10,-1,1,rand);

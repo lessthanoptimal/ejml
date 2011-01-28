@@ -19,9 +19,8 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -34,19 +33,20 @@ import static org.junit.Assert.assertTrue;
 public class TestSymmetricQrAlgorithm {
 
 
-        /**
+    /**
      * There should no need to do anything in this case.
      */
     @Test
     public void shouldNotChange() {
-        DenseMatrix64F A = CommonOps.diag(2,3,4,5,6);
+        double diag[] = new double[]{2,3,4,5,6};
+        double off[] = new double[diag.length-1];
 
         SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
-        assertTrue(alg.process(A));
+        assertTrue(alg.process(diag.length,diag,off));
 
-        for( int i = 0; i < A.numCols; i++ ) {
-            assertEquals(1,countNumFound(alg,A.get(i,i),1e-4));
+        for( int i = 0; i < diag.length; i++ ) {
+            assertEquals(1,countNumFound(alg,diag[i],1e-4));
         }
     }
 
@@ -55,15 +55,16 @@ public class TestSymmetricQrAlgorithm {
      */
     @Test
     public void hasOffDiagonal() {
-        DenseMatrix64F A = CommonOps.diag(2,3,4,5,6);
-        for( int i = 1; i < A.numCols; i++ ) {
-            A.set(i-1,i,i+0.5);
-            A.set(i,i-1,i+0.5);
+        double diag[] = new double[]{2,3,4,5,6};
+        double off[] = new double[diag.length-1];
+
+        for( int i = 1; i < diag.length; i++ ) {
+            off[i-1] = i+0.5;
         }
 
         SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
-        assertTrue(alg.process(A));
+        assertTrue(alg.process(diag.length,diag,off));
 
         assertEquals(1,countNumFound(alg,-1.26677,1e-4));
         assertEquals(1,countNumFound(alg,0.93171,1e-4));
@@ -80,17 +81,18 @@ public class TestSymmetricQrAlgorithm {
     @Test
     public void zeroDiagonalNotZeroOff() {
         int N = 5;
-        DenseMatrix64F A = new DenseMatrix64F(N,N);
+        double diag[] = new double[N];
+        double off[] = new double[N-1];
+
         for( int i = 0; i < N-1; i++ ) {
-            A.set(i,i+1,i+0.5);
-            A.set(i+1,i,i+0.5);
+            off[i] = i+0.5;
         }
 
 //        A.print();
 
         SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
-        assertTrue(alg.process(A));
+        assertTrue(alg.process(N,diag,off));
 
         assertEquals(1,countNumFound(alg,-4.39719,1e-4));
         assertEquals(1,countNumFound(alg,-1.29023,1e-4));
@@ -106,12 +108,17 @@ public class TestSymmetricQrAlgorithm {
     public void multipleEigenvalues() {
         DenseMatrix64F A = new DenseMatrix64F(5,5, true, 2.191140, -0.098491, -0.397037, 0.367426, -0.208338, -0.098491, 2.776741, 0.623341, 0.624798, 0.401906, -0.397037, 0.623341, 3.571302, -0.239631, -0.264573, 0.367426, 0.624798, -0.239631, 3.625034, -0.162896, -0.208338, 0.401906, -0.264573, -0.162896, 3.835783);
 
-        TridiagonalSimilarDecomposition tridiag = new TridiagonalSimilarDecomposition();
+        TridiagonalDecompositionHouseholder tridiag = new TridiagonalDecompositionHouseholder();
         tridiag.decompose(A);
+
+        double diag[] = new double[5];
+        double off[] = new double[4];
+
+        tridiag.getDiagonal(diag,off);
 
         SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
 
-        assertTrue(alg.process(tridiag.getT(null)));
+        assertTrue(alg.process(5,diag,off));
 
         assertEquals(3,countNumFound(alg,4,1e-4));
         assertEquals(2,countNumFound(alg,2,1e-4));

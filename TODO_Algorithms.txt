@@ -10,6 +10,7 @@ For 0.16 Release
 - Improve cholesky block inverse by taking advantage of symmetry
 - Clean up decomposition factory and linear solver factory
   * Have them take a matrix or system as an input and return the solver/decomposer?
+- Why slower performance on Arm processor for element-wise operations?
 
 Ideas for reducing memory requirements:
   3) Stack W to minimize size
@@ -36,7 +37,7 @@ Ideas for reducing memory requirements:
 - QR with column pivoting
 
 - SVD
-  - Use QR alg to speed up singular values on very tall matrices (pg 403)
+  - Save up rotators, multiply against each other, then multiply against U and V
   - Divide and conquer algorithm
   - An implementation that just finds zero singular values
 

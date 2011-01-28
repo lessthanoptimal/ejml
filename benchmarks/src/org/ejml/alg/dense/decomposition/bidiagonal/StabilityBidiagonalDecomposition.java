@@ -57,6 +57,7 @@ public class StabilityBidiagonalDecomposition {
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
         System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow(),mat));
+        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall(),mat));
     }
 
     public static void main( String args [] ) {

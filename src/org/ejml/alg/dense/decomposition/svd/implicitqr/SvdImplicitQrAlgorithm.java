@@ -146,25 +146,21 @@ public class SvdImplicitQrAlgorithm {
 
     /**
      *
-     * @param A An upper bidiagonal matrix.
      */
-    public void setMatrix( DenseMatrix64F A ) {
-//        System.out.println("Bidiagonal input matrix");
-//        A.print();
-        initParam(A.numRows,A.numCols);
-//        B = new SimpleMatrix(A);
-//        B.print();
+    public void setMatrix( int numRows , int numCols, double diag[], double off[] ) {
+        initParam(numRows,numCols);
+        this.diag = diag;
+        this.off = off;
 
-        maxValue = diag[0] = A.get(0);
-        maxValue = Math.abs(maxValue);
+        maxValue = Math.abs(diag[0]);
         for( int i = 1; i < N; i++ ) {
-            double a = diag[i] = A.unsafe_get(i,i);
-            double b = off[i-1] = A.get(i-1,i);
+            double a = Math.abs(diag[i]);
+            double b = Math.abs(off[i-1]);
 
-            if( Math.abs(a) > maxValue ) {
+            if( a > maxValue ) {
                 maxValue = Math.abs(a);
             }
-            if( Math.abs(b) > maxValue ) {
+            if( b > maxValue ) {
                 maxValue = Math.abs(b);
             }
         }
@@ -192,9 +188,7 @@ public class SvdImplicitQrAlgorithm {
 
         this.N = N;
 
-        if( diag == null || diag.length < N ) {
-            diag = new double[N];
-            off = new double[N-1];
+        if( splits == null || splits.length < N ) {
             splits = new int[N];
         }
 

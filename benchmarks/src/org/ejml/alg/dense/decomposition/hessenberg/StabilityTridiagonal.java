@@ -35,11 +35,11 @@ import java.util.Random;
 public class StabilityTridiagonal {
 
 
-    public static double evaluate( TridiagonalSimilarDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( TridiagonalDecompositionHouseholder alg , DenseMatrix64F orig ) {
 
         alg.decompose(orig);
 
-        SimpleMatrix O = SimpleMatrix.wrap(alg.getQ(null));
+        SimpleMatrix O = SimpleMatrix.wrap(alg.getQ(null,false));
         SimpleMatrix T = SimpleMatrix.wrap(alg.getT(null));
 
         SimpleMatrix A_found = O.mult(T).mult(O.transpose());
@@ -53,7 +53,7 @@ public class StabilityTridiagonal {
 
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
-        System.out.println("tri             = "+ evaluate(new TridiagonalSimilarDecomposition(),mat));
+        System.out.println("tri             = "+ evaluate(new TridiagonalDecompositionHouseholder(),mat));
     }
 
     public static void main( String args [] ) {

@@ -68,4 +68,12 @@ public interface BidiagonalDecomposition <T extends Matrix64F>
      */
     public T getV( T V ,  boolean transpose , boolean compact );
 
+    /**
+     * Extracts the diagonal and off diagonal elements from the decomposition.
+     *
+     * @param diag diagonal elements from B.
+     * @param off off diagonal elements form B.
+     */
+    public void getDiagonal( double diag[], double off[] );
+
 }

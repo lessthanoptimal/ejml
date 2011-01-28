@@ -61,7 +61,7 @@ public abstract class GenericQrCheck {
     }
 
     private void checkDecomposition(int height, int width, boolean compact ) {
-        QRDecomposition alg = createQRDecomposition();
+        QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width);
         RandomMatrices.setRandom(A.getMatrix(),rand);
@@ -131,7 +131,7 @@ public abstract class GenericQrCheck {
         int width = 5;
         int height = 10;
 
-        QRDecomposition alg = createQRDecomposition();
+        QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width);
         RandomMatrices.setRandom(A.getMatrix(),rand);
@@ -167,7 +167,7 @@ public abstract class GenericQrCheck {
         int height = 10;
         int width = 5;
 
-        QRDecomposition alg = createQRDecomposition();
+        QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width);
         RandomMatrices.setRandom(A.getMatrix(),rand);

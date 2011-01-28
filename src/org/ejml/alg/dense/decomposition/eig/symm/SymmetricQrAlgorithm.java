@@ -104,12 +104,17 @@ public class SymmetricQrAlgorithm {
      * Computes the eigenvalue of the provided tridiagonal matrix.  Note that only the upper portion
      * needs to be tridiagonal.  The bottom diagonal is assumed to be the same as the top.
      *
-     * @param T A tridiagonal matrix.  Not modified.
+     * @param sideLength Number of rows and columns in the input matrix.
+     * @param diag Diagonal elements from tridiagonal matrix. Modified.
+     * @param off Off diagonal elements from tridiagonal matrix. Modified.
      * @return true if it succeeds and false if it fails.
      */
-    public boolean process( DenseMatrix64F T , double eigenvalues[] ) {
-        if( T != null )
-            helper.init(T);
+    public boolean process( int sideLength,
+                            double diag[] ,
+                            double off[] ,
+                            double eigenvalues[] ) {
+        if( diag != null )
+            helper.init(diag,off,sideLength);
         if( Q == null )
             Q = CommonOps.identity(helper.N);
         helper.setQ(Q);
@@ -121,15 +126,18 @@ public class SymmetricQrAlgorithm {
         return _process();
     }
 
-    public boolean process( DenseMatrix64F T ) {
-        if( T != null )
-            helper.init(T);
+    public boolean process( int sideLength,
+                            double diag[] ,
+                            double off[] ) {
+        if( diag != null )
+            helper.init(diag,off,sideLength);
 
         this.followingScript = false;
         this.eigenvalues = null;
 
         return _process();
     }
+
 
     private boolean _process() {
         while( helper.x2 >= 0 ) {

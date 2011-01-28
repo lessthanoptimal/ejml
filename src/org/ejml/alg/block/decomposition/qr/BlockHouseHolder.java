@@ -132,14 +132,13 @@ public class BlockHouseHolder {
             double tau = computeTauAndDivideRow(blockLength, Y, i,i+1, max);
 
             // divide u by u_0
-            double u_0 = Y.get(i,i) + tau;
+            double u_0 = Y.get(i,i+1) + tau;
             divideElementsRow(blockLength,Y,i,i+1, u_0 );
 
             gamma[Y.row0+i] = u_0/tau;
-            tau *= max;
 
             // after the reflector is applied the column would be all zeros but be -tau in the first element
-            Y.set(i,i+1,-tau);
+            Y.set(i,i+1,-tau*max);
         }
         return true;
     }
@@ -224,7 +223,7 @@ public class BlockHouseHolder {
 
             for( int j = 0; j < widthJ; j++ ) {
                 // total = U^T * A(:,j) * gamma
-                double total = innerProdCol(blockLength, A, col, widthCol, colStartJ+j, widthJ)*gamma;
+                double total = innerProdCol(blockLength, A, col, widthCol, (colStartJ-A.col0)+j, widthJ)*gamma;
 
                 // A(:,j) - gamma*U*total
                 // just update the top most block
@@ -297,6 +296,57 @@ public class BlockHouseHolder {
                         dataA[ indexA++ ] -= total*dataA[ indexU++ ];
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Applies a householder reflector stored in row 'row' to the left column block.
+     * Takes in account leading zeros and one.<br>
+     * <br>
+     * A = A*(I - &gamma;*u*u<sup>T</sup>)<br>
+     * </p>
+     *
+     * @param A submatrix that is block aligned
+     * @param row The row in A containing 'u'
+     * @param colStart First index in 'u' that the reflector starts at
+     *
+     */
+    public static void rank1UpdateMultL_LeftCol( final int blockLength ,
+                                                 final D1Submatrix64F A ,
+                                                 final int row , final int colStart , final double gamma )
+    {
+        final int heightU = Math.min(blockLength,A.row1 - A.row0);
+        final int width = Math.min(blockLength,A.col1-A.col0);
+
+        final double data[] = A.original.data;
+
+
+        for( int blockStart = A.row0+blockLength; blockStart < A.row1; blockStart += blockLength) {
+            final int heightA = Math.min(blockLength,A.row1 - blockStart);
+
+            for( int i = 0; i < heightA; i++ ) {
+
+                // total = U^T * A(i,:)
+                double total = innerProdRow(blockLength, A, colStart,row, heightU, i+(blockStart-A.row0), heightA);
+
+                total *= gamma;
+                // A(i,:) - gamma*U*total
+
+                int indexU = A.row0*A.original.numCols + heightU*A.col0 + row*width;
+                int indexA = blockStart*A.original.numCols + heightA*A.col0 + i*width;
+
+                // skip over zeros and assume first element in U is 1
+                indexU += colStart+1;
+                indexA += colStart;
+
+                data[indexA++] -= total;
+
+                for( int k = colStart+1; k < width; k++ ) {
+                    data[ indexA++ ] -= total*data[ indexU++ ];
+                }
+
             }
         }
     }
@@ -410,6 +460,7 @@ public class BlockHouseHolder {
             int indexB = rowBlockB*A.original.numCols + heightB*j + rowB*width;
 
             if( j == A.col0 ) {
+                // skip zeros
                 indexA += colStart+1;
                 indexB += colStart;
 
@@ -419,15 +470,15 @@ public class BlockHouseHolder {
                 indexB++;
 
                 // standard vector dot product
-                int endA = indexA + width-colStart-1;
-                for( ; indexA != endA; indexA++, indexB++) {
-                    total += data[indexA] * data[indexB];
+                for( int k = colStart+1; k < width; k++) {
+                    total += data[indexA++] * data[indexB++];
                 }
             } else {
                 // standard vector dot product
-                int endA = indexA + width;
-                for( ; indexA != endA; indexA++, indexB++) {
-                    total += data[indexA] * data[indexB];
+                for( int k = 0; k < width; k++) {
+                    double aa = data[indexA];
+                    double bb = data[indexB];
+                    total += data[indexA++] * data[indexB++];
                 }
             }
         }
@@ -441,7 +492,7 @@ public class BlockHouseHolder {
      */
     public static void divideElementsCol( final int blockLength ,
                                        final D1Submatrix64F Y , final int col , final double val ) {
-        final int width = Y.col1-Y.col0;
+        final int width = Math.min(blockLength,Y.col1-Y.col0);
 
         final double dataY[] = Y.original.data;
 
@@ -517,7 +568,7 @@ public class BlockHouseHolder {
     public static double computeTauAndDivideCol( final int blockLength ,
                                                  final D1Submatrix64F Y ,
                                                  final int col , final double max ) {
-        final int width = Y.col1-Y.col0;
+        final int width = Math.min(blockLength,Y.col1-Y.col0);
 
         final double dataY[] = Y.original.data;
 
@@ -625,7 +676,7 @@ public class BlockHouseHolder {
      */
     public static double findMaxCol( final int blockLength , final D1Submatrix64F Y , final int col )
     {
-        final int width = Y.col1-Y.col0;
+        final int width = Math.min(blockLength,Y.col1-Y.col0);
 
         final double dataY[] = Y.original.data;
 

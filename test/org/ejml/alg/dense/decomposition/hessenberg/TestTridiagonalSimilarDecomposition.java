@@ -41,11 +41,11 @@ public class TestTridiagonalSimilarDecomposition {
     public void fullTest() {
         SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createSymmetric(5,-1,1,rand));
 
-        TridiagonalSimilarDecomposition alg = new TridiagonalSimilarDecomposition();
+        TridiagonalDecompositionHouseholder alg = new TridiagonalDecompositionHouseholder();
 
         assertTrue(safeDecomposition(alg,A.getMatrix()));
 
-        SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null));
+        SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null,false));
         SimpleMatrix T = SimpleMatrix.wrap(alg.getT(null));
 
 

@@ -22,6 +22,7 @@ package org.ejml.alg.dense.decomposition.eig;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenHelper;
 import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -39,7 +40,7 @@ import org.ejml.ops.CommonOps;
  * </p>
  *
  * @see org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm
- * @see org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition
+ * @see org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder
  *
  * @author Peter Abeles
  */
@@ -48,7 +49,7 @@ public class SymmetricQRAlgorithmDecomposition
 
     // computes a tridiagonal matrix whose eigenvalues are the same as the original
     // matrix and can be easily computed.
-    private TridiagonalSimilarDecomposition decomp;
+    private TridiagonalSimilarDecomposition<DenseMatrix64F> decomp;
     // helper class for eigenvalue and eigenvector algorithms
     private SymmetricQREigenHelper helper;
     // computes the eigenvectors
@@ -64,6 +65,9 @@ public class SymmetricQRAlgorithmDecomposition
     private double diag[];
     private double off[];
 
+    private double diagSaved[];
+    private double offSaved[];
+
     // temporary variable used to store/compute eigenvectors
     private DenseMatrix64F V;
     // the extracted eigenvectors
@@ -76,7 +80,7 @@ public class SymmetricQRAlgorithmDecomposition
 
         this.computeVectors = computeVectors;
 
-        decomp = new TridiagonalSimilarDecomposition();
+        decomp = new TridiagonalDecompositionHouseholder();
         helper = new SymmetricQREigenHelper();
 
         vector = new SymmetricQrAlgorithm(helper);
@@ -123,21 +127,29 @@ public class SymmetricQRAlgorithmDecomposition
      */
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-        // compute a similar tridiagonal matrix
-        decomp.decompose(orig);
+        if( orig.numCols != orig.numRows )
+            throw new IllegalArgumentException("Matrix must be square.");
 
-        // get raw decompose matrix in its internal format
-        // this works for this particular decomposition algorithm only
-        DenseMatrix64F QT = decomp.getQT();
+        int N = orig.numRows;
+
+        // compute a similar tridiagonal matrix
+        if( !decomp.decompose(orig) )
+            return false;
+
+        if( diag == null || diag.length < N) {
+            diag = new double[N];
+            off = new double[N-1];
+        }
+        decomp.getDiagonal(diag,off);
 
         // Tell the helper to work with this matrix
-        helper.init(QT);
+        helper.init(diag,off,N);
 
         if( computeVectors ) {
             if( computeVectorsWithValues ) {
-                return extractTogether(orig);
+                return extractTogether();
             }  else {
-                return extractSeparate(orig);
+                return extractSeparate(N);
             }
         } else {
             return computeEigenValues();
@@ -149,9 +161,9 @@ public class SymmetricQRAlgorithmDecomposition
         return decomp.inputModified();
     }
 
-    private boolean extractTogether(DenseMatrix64F orig) {
+    private boolean extractTogether() {
         // extract the orthogonal from the similar transform
-        V = decomp.getQTran(V);
+        V = decomp.getQ(V,true);
 
         // tell eigenvector algorithm to update this matrix as it computes the rotators
         helper.setQ(V);
@@ -159,7 +171,7 @@ public class SymmetricQRAlgorithmDecomposition
         vector.setFastEigenvalues(false);
 
         // extract the eigenvalues
-        if( !vector.process(null) )
+        if( !vector.process(-1,null,null) )
             return false;
 
         // the V matrix contains the eigenvectors.  Convert those into column vectors
@@ -171,24 +183,24 @@ public class SymmetricQRAlgorithmDecomposition
         return true;
     }
 
-    private boolean extractSeparate(DenseMatrix64F orig) {
+    private boolean extractSeparate(int numCols) {
         if (!computeEigenValues())
             return false;
 
         // ---- set up the helper to decompose the same tridiagonal matrix
         // swap arrays instead of copying them to make it slightly faster
-        helper.reset(orig.numCols);
-        diag = helper.swapDiag(diag);
-        off = helper.swapOff(off);
+        helper.reset(numCols);
+        diagSaved = helper.swapDiag(diagSaved);
+        offSaved = helper.swapOff(offSaved);
 
         // extract the orthogonal from the similar transform
-        V = decomp.getQTran(V);
+        V = decomp.getQ(V,true);
 
         // tell eigenvector algorithm to update this matrix as it computes the rotators
         vector.setQ(V);
 
         // extract eigenvectors
-        if( !vector.process(null, values) )
+        if( !vector.process(-1,null,null, values) )
             return false;
 
         // the ordering of the eigenvalues might have changed
@@ -205,19 +217,19 @@ public class SymmetricQRAlgorithmDecomposition
      * @return
      */
     private boolean computeEigenValues() {
-        // make a copy of the internal tridiagonal matrix data for later use
-        diag = helper.copyDiag(diag);
-        off = helper.copyOff(off);
+       // make a copy of the internal tridiagonal matrix data for later use
+       diagSaved = helper.copyDiag(diagSaved);
+       offSaved = helper.copyOff(offSaved);
 
        vector.setQ(null);
        vector.setFastEigenvalues(true);
 
-        // extract the eigenvalues
-        if( !vector.process(null) )
-            return false;
+       // extract the eigenvalues
+       if( !vector.process(-1,null,null) )
+           return false;
 
-        // save a copy of them since this data structure will be recycled next
-        values = helper.copyEigenvalues(values);
-        return true;
-    }
+       // save a copy of them since this data structure will be recycled next
+       values = helper.copyEigenvalues(values);
+       return true;
+   }
 }

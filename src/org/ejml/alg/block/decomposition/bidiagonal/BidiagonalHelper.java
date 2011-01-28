@@ -36,11 +36,15 @@ public class BidiagonalHelper {
      * @param A
      * @param gammasU
      */
+
     public static boolean bidiagOuterBlocks( final int blockLength ,
                                              final D1Submatrix64F A ,
                                              final double gammasU[],
                                              final double gammasV[])
     {
+//        System.out.println("---------- Orig");
+//        A.original.print();
+
         int width = Math.min(blockLength,A.col1-A.col0);
         int height = Math.min(blockLength,A.row1-A.row0);
 
@@ -59,11 +63,26 @@ public class BidiagonalHelper {
             // apply to the top row block
             rank1UpdateMultR_TopRow(blockLength,A,i,gammasU[A.col0+i]);
 
+            System.out.println("After column stuff");
+            A.original.print();
+
             //-- Apply reflector to the row
             if(!computeHouseHolderRow(blockLength,A,gammasV,i))
                 return false;
+            
+            // apply to rest of the rows in the row block
+            rank1UpdateMultL_Row(blockLength,A,i,i+1,gammasV[A.row0+i]);
 
+            System.out.println("After update row");
+            A.original.print();
 
+            // apply to the left column block
+            // TODO THIS WON'T WORK!!!!!!!!!!!!!
+            // Needs the whole matrix to have been updated by the left reflector to compute the correct solution
+            rank1UpdateMultL_LeftCol(blockLength,A,i,i+1,gammasV[A.row0+i]);
+
+            System.out.println("After row stuff");
+            A.original.print();
         }
 
         return true;
