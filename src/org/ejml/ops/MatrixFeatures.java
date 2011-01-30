@@ -29,6 +29,7 @@ import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -283,7 +284,7 @@ public class MatrixFeatures {
      * @param a A matrix. Not modified.
      * @param b A matrix. Not modified.
      * @param tol How close to being identical each element needs to be.
-     * @return true if similar and false otherwise.
+     * @return true if equals and false otherwise.
      */
     public static boolean isEquals( D1Matrix64F a , D1Matrix64F b , double tol )
     {
@@ -301,6 +302,51 @@ public class MatrixFeatures {
                 return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if each element in the upper or lower triangular portion of the two matrices are within tolerance of
+     * each other: tol &ge; |a<sub>ij</sub> - b<sub>ij</sub>|.
+     * <p>
+     *
+     * <p>
+     * NOTE: If any of the elements are not countable then false is returned.<br>
+     * NOTE: If a tolerance of zero is passed in this is equivalent to calling
+     * {@link #isEquals(org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param b A matrix. Not modified.
+     * @param upper true of upper triangular and false for lower.
+     * @param tol How close to being identical each element needs to be.
+     * @return true if equals and false otherwise.
+     */
+    public static boolean isEqualsTriangle(Matrix64F a, Matrix64F b, boolean upper, double tol)
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+            return false;
+        }
+
+        if( upper ) {
+            for( int i = 0; i < a.numRows; i++ ) {
+                for( int j = i; j < a.numCols; j++ ) {
+                    if( Math.abs(a.get(i,j)-b.get(i,j)) > tol )
+                        return false;
+                }
+            }
+        } else {
+            for( int i = 0; i < a.numRows; i++ ) {
+                int end = Math.min(i,a.numCols-1);
+
+                for( int j = 0; j <= end; j++ ) {
+                    if( Math.abs(a.get(i,j)-b.get(i,j)) > tol )
+                        return false;
+                }
+            }
+        }
+
         return true;
     }
 

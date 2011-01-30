@@ -28,6 +28,7 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
 import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.EigenOps;
 import org.ejml.ops.SpecializedOps;
@@ -219,5 +220,21 @@ public class DecompositionFactory {
         double error = top/bottom;
 
         return error;
+    }
+
+    /**
+     * Makes sure the decomposed matrix is not modified.
+     *
+     * @param decomp
+     * @param M
+     * @param <T>
+     * @return
+     */
+    public static <T extends Matrix64F> boolean decomposeSafe( DecompositionInterface<T> decomp, T M ) {
+        if( decomp.inputModified() ) {
+            return decomp.decompose(M.<T>copy());
+        } else {
+            return decomp.decompose(M);
+        }
     }
 }

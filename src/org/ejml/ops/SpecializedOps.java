@@ -112,6 +112,38 @@ public class SpecializedOps {
     }
 
     /**
+     * Copies just the upper or lower triangular portion of a matrix.
+     *
+     * @param src Matrix being copied. Not modified.
+     * @param dst Where just a triangle from src is copied.  If null a new one will be created. Modified.
+     * @param upper If the upper or lower triangle should be copied.
+     * @return The copied matrix.
+     */
+    public static DenseMatrix64F copyTriangle( DenseMatrix64F src , DenseMatrix64F dst , boolean upper ) {
+        if( dst == null ) {
+            dst = new DenseMatrix64F(src.numRows,src.numCols);
+        } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
+            throw new IllegalArgumentException("src and dst must have the same dimensions.");
+        }
+
+        if( upper ) {
+            int N = Math.min(src.numRows,src.numCols);
+            for( int i = 0; i < N; i++ ) {
+                int index = i*src.numCols+i;
+                System.arraycopy(src.data,index,dst.data,index,src.numCols-i);
+            }
+        } else {
+            for( int i = 0; i < src.numRows; i++ ) {
+                int length = Math.min(i+1,src.numCols);
+                int index = i*src.numCols;
+                System.arraycopy(src.data,index,dst.data,index,length);
+            }
+        }
+
+        return dst;
+    }
+
+    /**
      * <p>
      * Computes the F norm of the difference between the two Matrices:<br>
      * <br>

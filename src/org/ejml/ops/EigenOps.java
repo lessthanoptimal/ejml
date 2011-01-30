@@ -310,7 +310,7 @@ public class EigenOps {
      * @return EVD for any matrix.
      * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      */
-    public static EigenDecomposition decompositionGeneral( boolean computeVectors ) {
+    public static EigenDecomposition<DenseMatrix64F> decompositionGeneral( boolean computeVectors ) {
         return new WatchedDoubleStepQRDecomposition(computeVectors);
     }
 
@@ -321,7 +321,7 @@ public class EigenOps {
      * @return EVD for symmetric matrices.
      * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      */
-    public static EigenDecomposition decompositionSymmetric( boolean computeVectors ) {
+    public static EigenDecomposition<DenseMatrix64F> decompositionSymmetric( boolean computeVectors ) {
         return new SymmetricQRAlgorithmDecomposition(computeVectors);
     }
 }

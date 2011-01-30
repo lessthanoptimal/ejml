@@ -179,6 +179,31 @@ public class TestMatrixFeatures {
     }
 
     @Test
+    public void isEqualsTriangle() {
+
+        // see if it works with different sized matrices
+        for( int m = 2; m < 10; m+=3) {
+            for( int n = 2; n < 10; n += 3 ) {
+                DenseMatrix64F a = RandomMatrices.createRandom(m,n,rand);
+                DenseMatrix64F b = a.copy();
+
+                // make the bottom triangle not the same
+                b.set(m-1,0,0);
+
+                assertTrue("m = "+m+" n = "+n,MatrixFeatures.isEqualsTriangle(a,b, true, 1e-8));
+                assertFalse(MatrixFeatures.isEqualsTriangle(a,b, false, 1e-8));
+
+                // make the upper triangle not the same
+                b = a.copy();
+                b.set(0,n-1,0);
+
+                assertFalse(MatrixFeatures.isEqualsTriangle(a,b, true, 1e-8));
+                assertTrue(MatrixFeatures.isEqualsTriangle(a,b, false, 1e-8));
+            }
+        }
+    }
+
+    @Test
     public void isIdentical() {
 
         double values[] = new double[]{1.0,Double.NaN,Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY};

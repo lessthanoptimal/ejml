@@ -25,8 +25,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -87,6 +86,26 @@ public class TestSpecializedOps {
 
             for( int j = 0; j < A.numCols; j++ ) {
                 assertEquals(A.get(o,j),C.get(i,j),1e-16);
+            }
+        }
+    }
+
+    @Test
+    public void copyTriangle() {
+
+        for( int m = 2; m <= 6; m += 2 ) {
+            for( int n = 2; n <= 6; n += 2 ) {
+                DenseMatrix64F A = RandomMatrices.createRandom(m,n,rand);
+
+                DenseMatrix64F B = SpecializedOps.copyTriangle(A,null,true);
+
+                assertTrue(MatrixFeatures.isEqualsTriangle(A,B, true, 1e-8));
+                assertFalse(MatrixFeatures.isEquals(A,B,1e-8));
+
+                CommonOps.set(B,0);
+                SpecializedOps.copyTriangle(A,B,false);
+                assertTrue(MatrixFeatures.isEqualsTriangle(A,B, false, 1e-8));
+                assertFalse(MatrixFeatures.isEquals(A,B,1e-8));
             }
         }
     }

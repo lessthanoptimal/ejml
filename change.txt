@@ -29,6 +29,7 @@
 - Added bidiagonalization for tall matrices when U is not needed
 - Modified BidiagonalizeDecomposition interface
 - SVD and EVD QR algorithm take in diagonal and off diagonal as inputs not the matrix.
+- Added dense matrix copy triangle and isEqualsTriangle
 
 ----- Version 0.15
 

@@ -737,7 +737,7 @@ public class CommonOps {
             } else {
                 ret[i].reshape(A.numRows,1, false);
             }
-            
+
             DenseMatrix64F u = ret[i];
 
             for( int j = 0; j < A.numRows; j++ ) {
@@ -1135,9 +1135,10 @@ public class CommonOps {
      * @return The max element value of the matrix.
      */
     public static double elementMax( D1Matrix64F a ) {
+        final int size = a.getNumElements();
 
         double max = a.get(0);
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        for( int i = 1; i < size; i++ ) {
             double val = a.get(i);
             if( val >= max ) {
                 max = val;
@@ -1158,9 +1159,10 @@ public class CommonOps {
      * @return The max element value of the matrix.
      */
     public static double elementMaxAbs( D1Matrix64F a ) {
+        final int size = a.getNumElements();
 
         double max = 0;
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        for( int i = 0; i < size; i++ ) {
             double val = Math.abs(a.get( i ));
             if( val > max ) {
                 max = val;
@@ -1181,9 +1183,10 @@ public class CommonOps {
      * @return The value of element in the matrix with the minimum value.
      */
     public static double elementMin( D1Matrix64F a ) {
+        final int size = a.getNumElements();
 
         double min = a.get(0);
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        for( int i = 1; i < size; i++ ) {
             double val = a.get(i);
             if( val < min ) {
                 min = val;
@@ -1204,9 +1207,10 @@ public class CommonOps {
      * @return The max element value of the matrix.
      */
     public static double elementMinAbs( D1Matrix64F a ) {
+        final int size = a.getNumElements();
 
         double min = Double.MAX_VALUE;
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        for( int i = 0; i < size; i++ ) {
             double val = Math.abs(a.get(i));
             if( val < min ) {
                 min = val;
@@ -1230,7 +1234,9 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             a.times(i , b.get(i));
         }
     }
@@ -1251,7 +1257,9 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set( i , a.get(i) * b.get(i) );
         }
     }
@@ -1263,14 +1271,16 @@ public class CommonOps {
      * sum(i=1:m , j=1:n ; a<sub>ij</sub>)
      * <p>
      *
-     * @param a An m by n matrix. Not modified.
+     * @param mat An m by n matrix. Not modified.
      * @return The sum of the elements.
      */
-    public static double elementSum( D1Matrix64F a ) {
+    public static double elementSum( D1Matrix64F mat ) {
         double total = 0;
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
-            total += a.get(i);
+        int size = mat.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            total += mat.get(i);
         }
 
         return total;
@@ -1283,14 +1293,16 @@ public class CommonOps {
      * sum(i=1:m , j=1:n ; |a<sub>ij</sub>|)
      * <p>
      *
-     * @param a An m by n matrix. Not modified.
+     * @param mat An m by n matrix. Not modified.
      * @return The sum of the absolute value of each element.
      */
-    public static double elementSumAbs( D1Matrix64F a ) {
+    public static double elementSumAbs( D1Matrix64F mat ) {
         double total = 0;
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
-            total += Math.abs(a.get(i));
+        int size = mat.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            total += Math.abs(mat.get(i));
         }
 
         return total;
@@ -1312,7 +1324,9 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             a.plus(i, b.get(i));
         }
     }
@@ -1334,7 +1348,9 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             a.plus(i, beta * b.get(i));
         }
     }
@@ -1361,7 +1377,9 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set( i , a.get(i)+b.get(i) );
         }
     }
@@ -1389,7 +1407,9 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set( i , a.get(i)+beta*b.get(i) );
         }
     }
@@ -1418,7 +1438,9 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set(i , alpha*a.get(i) + beta*b.get(i));
         }
     }
@@ -1446,7 +1468,9 @@ public class CommonOps {
             throw new RuntimeException("The matrices are not all the same dimension.");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set( i , alpha*a.get(i) + b.get(i));
         }
     }
@@ -1462,8 +1486,9 @@ public class CommonOps {
      * @param val The value that's added to each element.
      */
     public static void add( D1Matrix64F a , double val ) {
+        final int length = a.getNumElements();
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        for( int i = 0; i < length; i++ ) {
             a.plus( i , val);
         }
     }
@@ -1484,7 +1509,9 @@ public class CommonOps {
             throw new IllegalArgumentException("Dimensions of a and c do not match.");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set( i , a.get(i) + val);
         }
     }
@@ -1505,7 +1532,9 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             a.minus( i , b.get(i) );
         }
     }
@@ -1530,7 +1559,9 @@ public class CommonOps {
             throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
             c.set( i , a.get(i) - b.get(i));
         }
     }
@@ -1548,8 +1579,10 @@ public class CommonOps {
     public static void scale( double alpha , D1Matrix64F a )
     {
         // on very small matrices (2 by 2) the call to getNumElements() can slow it down
-        // slightly compared to other libraries since it involves an extra multiplication.  
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        // slightly compared to other libraries since it involves an extra multiplication.
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
             a.times( i , alpha );
         }
     }
@@ -1569,7 +1602,9 @@ public class CommonOps {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
             b.set( i , a.get(i)*alpha );
         }
     }
@@ -1586,7 +1621,9 @@ public class CommonOps {
      */
     public static void divide( double alpha , D1Matrix64F a )
     {
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
             a.div( i , alpha );
         }
     }
@@ -1606,7 +1643,9 @@ public class CommonOps {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");
 
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
             b.set( i , a.get(i)/alpha );
         }
     }
@@ -1622,7 +1661,9 @@ public class CommonOps {
      */
     public static void changeSign( D1Matrix64F a )
     {
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
             a.set( i , - a.get(i) );
         }
     }
@@ -1639,7 +1680,9 @@ public class CommonOps {
      */
     public static void set( D1Matrix64F a , double value )
     {
-        for( int i = a.getNumElements()-1; i >=0; i-- ) {
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
             a.set( i , value );
         }
     }
