@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -271,7 +271,7 @@ public class BlockHouseHolder {
 
         for( int i = row+1; i < height; i++ ) {
             // total = U^T * A(i,:)
-            double total = innerProdRow(blockLength, A, colStart,row, height, i, height);
+            double total = innerProdRow(blockLength, colStart, A, row, height, A , i, height);
 
             total *= gamma;
             // A(i,:) - gamma*U*total
@@ -329,7 +329,7 @@ public class BlockHouseHolder {
             for( int i = 0; i < heightA; i++ ) {
 
                 // total = U^T * A(i,:)
-                double total = innerProdRow(blockLength, A, colStart,row, heightU, i+(blockStart-A.row0), heightA);
+                double total = innerProdRow(blockLength, colStart, A, row, heightU, A, i+(blockStart-A.row0), heightA);
 
                 total *= gamma;
                 // A(i,:) - gamma*U*total
@@ -430,25 +430,26 @@ public class BlockHouseHolder {
      * </p>
      *
      * @param blockLength
-     * @param A block aligned submatrix.
      * @param colStart First element in the vectors.
-     * @param rowA Row index inside the block of first row vector.
+     * @param A block aligned submatrix.
+     * @param rowA Row index inside the sub-matrix of first row vector has zeros and ones.
      * @param heightA how tall the row block that rowA is inside of.
-     * @param rowB Row index inside the block of second row vector.
+     * @param rowB Row index inside the sub-matrix of second row vector.
      * @param heightB how tall the row block that rowB is inside of.
      * @return dot product of the two vectors.
      */
-    protected static double innerProdRow( int blockLength, D1Submatrix64F A,
-                                          int colStart ,
-                                          int rowA, int heightA,
-                                          int rowB, int heightB ) {
+    public static double innerProdRow(int blockLength, int colStart,
+                                      D1Submatrix64F A,
+                                      int rowA, int heightA,
+                                      D1Submatrix64F B,
+                                      int rowB, int heightB) {
         double total = 0;
 
         final double data[] = A.original.data;
 
         // row index of the block in the original matrix
         final int rowBlockA = A.row0 + rowA - rowA % blockLength;
-        final int rowBlockB = A.row0 + rowB - rowB % blockLength;
+        final int rowBlockB = B.row0 + rowB - rowB % blockLength;
         rowA = rowA % blockLength;
         rowB = rowB % blockLength;
 
@@ -457,7 +458,7 @@ public class BlockHouseHolder {
             int width = Math.min(blockLength,A.col1-j);
 
             int indexA = rowBlockA*A.original.numCols + heightA*j + rowA*width;
-            int indexB = rowBlockB*A.original.numCols + heightB*j + rowB*width;
+            int indexB = rowBlockB*B.original.numCols + heightB*j + rowB*width;
 
             if( j == A.col0 ) {
                 // skip zeros
@@ -476,8 +477,8 @@ public class BlockHouseHolder {
             } else {
                 // standard vector dot product
                 for( int k = 0; k < width; k++) {
-                    double aa = data[indexA];
-                    double bb = data[indexB];
+//                    double aa = data[indexA];
+//                    double bb = data[indexB];
                     total += data[indexA++] * data[indexB++];
                 }
             }
@@ -1075,6 +1076,60 @@ public class BlockHouseHolder {
                 }
 
                 dataC[ i*widthC + j + indexC ] = val;
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Adds two row vectors together after scaling the second.<br>
+     * <br>
+     * a = a + &alpha;b
+     * </p>
+     *
+     * <p>
+     * rowA and rowB must be inside of the first block row.
+     * </p>
+     *
+     * @param blockLength
+     * @param col Which column is the first column
+     * @param A
+     * @param rowA
+     * @param B
+     * @param rowB
+     */
+    public static void plusScale_row( int blockLength ,
+                                      int col,
+                                      double alpha,
+                                      D1Submatrix64F A ,
+                                      int rowA,
+                                      D1Submatrix64F B ,
+                                      int rowB )
+    {
+        int height = Math.min(blockLength,A.row1-A.row0);
+
+        int width = A.col1-A.col0;
+
+        double dataA[] = A.original.data;
+        double dataB[] = B.original.data;
+
+        for( int j = 0; j < width; j += blockLength ) {
+            int w = Math.min(blockLength,width-j);
+
+            int indexA = A.row0*A.original.numCols + height*(A.col0+j) + rowA*w;
+            int indexB = B.row0*B.original.numCols + height*(B.col0+j) + rowB*w;
+
+            if( j == 0 ) {
+                indexA += col;
+                indexB += col;
+
+                for( int k = col; k < height; k++ ) {
+                    dataA[indexA++] += alpha*dataB[indexB++];
+                }
+            } else {
+                for( int k = 0; k < height; k++ ) {
+                    dataA[indexA++] += alpha*dataB[indexB++];
+                }
             }
         }
     }

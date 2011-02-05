@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -73,14 +73,14 @@ import java.io.PrintStream;
  *
  *
  * <p>
- * An alternative to working directly with DenseMatrix64 is {@link org.ejml.data.SimpleMatrix}.
+ * An alternative to working directly with DenseMatrix64 is {@link org.ejml.simple.SimpleMatrix}.
  * SimpleMatrix is a wrapper around DenseMatrix64F that provides an easier to use object oriented way of manipulating
  * matrices, at the cost of efficiency.
  * </p>
  *
  * @see org.ejml.ops.CommonOps
  * @see org.ejml.ops.SpecializedOps
- * @see org.ejml.data.SimpleMatrix
+ * @see org.ejml.simple.SimpleMatrix
  *
  * @author Peter Abeles
  */

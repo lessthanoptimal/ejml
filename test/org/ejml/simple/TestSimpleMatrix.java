@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -17,8 +17,10 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.data;
+package org.ejml.simple;
 
+import org.ejml.data.Complex64F;
+import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.NormOps;
@@ -345,7 +347,7 @@ public class TestSimpleMatrix {
     public void svd() {
         SimpleMatrix a = SimpleMatrix.random(3,4, 0, 1, rand);
 
-        SimpleMatrix.SVD svd = a.svd();
+        SimpleSVD svd = a.svd();
 
         SimpleMatrix U = svd.getU();
         SimpleMatrix W = svd.getW();
@@ -360,7 +362,7 @@ public class TestSimpleMatrix {
     public void eig() {
         SimpleMatrix a = SimpleMatrix.random(4,4, 0, 1, rand);
 
-        SimpleMatrix.EVD evd = a.eig();
+        SimpleEVD evd = a.eig();
 
         assertEquals(4,evd.getNumberOfEigenvalues());
 
@@ -517,11 +519,11 @@ public class TestSimpleMatrix {
         assertEquals(A.numRows(),c.numRows());
 
         for( int i = 0; i < A.numCols(); i++ ) {
-            assertEquals(A.get(2,i),r.get(i,0),1e-10);
+            assertEquals(A.get(2,i),r.get(i),1e-10);
         }
 
         for( int i = 0; i < A.numRows(); i++ ) {
-            assertEquals(A.get(i,2),c.get(i,0),1e-10);
+            assertEquals(A.get(i,2),c.get(i),1e-10);
         }
     }
 

@@ -1,3 +1,7 @@
+Change log for EJML
+
+Date format: year/month/day
+
 ----- Version 0.16
 
 20XX/XX/XX
@@ -26,11 +30,15 @@
   new instances of SimpleMatrix. Now function calls will return the correct type.
 - TridiagonalSimilarDecomposition is now an interface and related code has been made more
   general purpose.
-- Added bidiagonalization for tall matrices when U is not needed
+- Added a QR decomposition that supports bidiagonalization for tall matrices
+  * Results in significantly faster SVD when U is not needed.
+  * Not used yet in SVD because QR decomposition without column pivots is unstable for singular matrices.
 - Modified BidiagonalizeDecomposition interface
 - SVD and EVD QR algorithm take in diagonal and off diagonal as inputs not the matrix.
 - Added dense matrix copy triangle and isEqualsTriangle
-
+- Changed logo to more accurately represent a Householder reflector.
+- Pushed SimpleMatrix into its own package.
+  * To make it easy to extend, SimpleMatrix now extends SimpleBase
 ----- Version 0.15
 
 2010/11/20

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,8 +42,8 @@ import org.ejml.data.D1Submatrix64F;
  * <p>
  * Each iteration can be sketched as follows:
  * <pre>
- * QR_Decomposition( A(:,i-r,i) )
- * W=computeW( A(:,i-r,i) )
+ * QR_Decomposition( A(:,i-r to i) )
+ * W=computeW( A(:,i-r to i) )
  * A(:,i:n) = (I + W*Y<sup>T</sup>)<sup>T</sup>A(:,i:n)
  * </pre>
  * Where r is the block size, i is the submatrix being considered, A is the input matrix,

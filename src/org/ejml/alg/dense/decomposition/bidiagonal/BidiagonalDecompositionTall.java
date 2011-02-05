@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,6 +41,10 @@ import org.ejml.ops.CommonOps;
  * </p>
  *
  * <p>
+ * WARNING:  Currently can't handle singular matrices.
+ * </p>
+ *
+ * <p>
  * See page 404 in "Fundamentals of Matrix Computations", 2nd by David S. Watkins.
  * </p>
  *
@@ -50,6 +54,7 @@ import org.ejml.ops.CommonOps;
 public class BidiagonalDecompositionTall
         implements BidiagonalDecomposition<DenseMatrix64F>
 {
+    // TODO change to QR with column pivoting so that it can handle singular matrices
     QRDecomposition<DenseMatrix64F> decompQR = DecompositionFactory.qr();
     BidiagonalDecomposition<DenseMatrix64F> decompBi = new BidiagonalDecompositionRow();
 

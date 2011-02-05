@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,9 +26,9 @@ import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
+import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
 import java.util.Random;
@@ -212,8 +212,8 @@ public class TestBlockHouseHolder {
 
             D1Submatrix64F subAb = new D1Submatrix64F(Ab,rowBlock,A.numRows,col,A.numCols);
 
-            double found = BlockHouseHolder.innerProdRow(r,subAb,rowA-rowBlock,
-                    rowA-rowBlock,heightA,rowB-rowBlock,heightB);
+            double found = BlockHouseHolder.innerProdRow(r, rowA-rowBlock, subAb,
+                    rowA-rowBlock,heightA,subAb,rowB-rowBlock,heightB);
 
             assertEquals(expected,found,1e-8);
         }
@@ -453,6 +453,19 @@ public class TestBlockHouseHolder {
                 Y.set(i,j,0);
             }
             Y.set(j,j,1);
+        }
+    }
+
+    @Test
+    public void plusScale_row() {
+        A = SimpleMatrix.random(r*2+r-1,r*2+2,-1,1,rand);
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix());
+
+        int row0 = 1;
+        int row1 = 2;
+
+        for( int i = 0; i < A.numCols(); i++ ) {
+
         }
     }
 }

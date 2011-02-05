@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,9 +29,9 @@ import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
 import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
-import org.ejml.data.SimpleMatrix;
 import org.ejml.ops.EigenOps;
 import org.ejml.ops.SpecializedOps;
+import org.ejml.simple.SimpleMatrix;
 
 
 /**

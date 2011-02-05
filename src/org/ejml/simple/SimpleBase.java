@@ -1,0 +1,829 @@
+/*
+ * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * EJML is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * EJML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.ejml.simple;
+
+import org.ejml.alg.dense.decomposition.SingularMatrixException;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.MatrixIterator;
+import org.ejml.ops.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
+
+/**
+ * Parent of {@link SimpleMatrix} implements all the standard matrix operations and uses
+ * generics to allow the returned matrix type to be changed.  This class should be extended
+ * instead of SimpleMatrix.
+ *
+ * @author Peter Abeles
+ */
+@SuppressWarnings({"unchecked"})
+public abstract class SimpleBase <T extends SimpleBase> {
+
+    /**
+     * Internal matrix which this is a wrapper around.
+     */
+    protected DenseMatrix64F mat;
+
+
+    public SimpleBase( int numRows , int numCols ) {
+        mat = new DenseMatrix64F(numRows, numCols);
+    }
+
+    protected SimpleBase() {
+    }
+
+    /**
+     * Used internally for creating new instances of SimpleMatrix.  If SimpleMatrix is extended
+     * by another class this function should be overridden so that the returned matrices are
+     * of the correct type.
+     *
+     * @param numRows number of rows in the new matrix.
+     * @param numCols number of columns in the new matrix.
+     * @return A new matrix.
+     */
+    protected abstract T createMatrix( int numRows , int numCols );
+
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally.  This is useful
+     * when an operation is needed that is not provided by this class.
+     * </p>
+     *
+     * @return Reference to the internal DenseMatrix64F.
+     */
+    public DenseMatrix64F getMatrix() {
+        return mat;
+    }
+
+    /**
+     * <p>
+     * Returns the transpose of this matrix.<br>
+     * a<sup>T</sup>
+     * </p>
+     *
+     * @see org.ejml.ops.CommonOps#transpose(DenseMatrix64F,DenseMatrix64F)
+     *
+     * @return A matrix that is n by m.
+     */
+    public T transpose() {
+        T ret = createMatrix(mat.numCols,mat.numRows);
+
+        CommonOps.transpose(mat,ret.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns a matrix which is the result of matrix multiplication:<br>
+     * <br>
+     * c = a * b <br>
+     * <br>
+     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
+     * </p>
+     *
+     * @see CommonOps#mult(org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F)
+     *
+     * @param b A matrix that is n by bn. Not modified.
+     *
+     * @return The results of this operation.
+     */
+    public T mult( T b ) {
+        T ret = createMatrix(mat.numRows,b.getMatrix().numCols);
+
+        CommonOps.mult(mat,b.getMatrix(),ret.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Computes the Kronecker product between this matrix and the provided B matrix:<br>
+     * <br>
+     * C = kron(A,B)
+     * </p>
+
+     * @see CommonOps#kron(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     *
+     * @param B The right matrix in the operation. Not modified.
+     * @return Kronecker product between this matrix and B.
+     */
+    public T kron( T B ) {
+        T ret = createMatrix(mat.numRows*B.numRows(),mat.numCols*B.numCols());
+        CommonOps.kron(mat,B.getMatrix(),ret.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns the result of matrix addition:<br>
+     * <br>
+     * c = a + b <br>
+     * <br>
+     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
+     * </p>
+     *
+     * @see CommonOps#mult(org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F)
+     *
+     * @param b m by n matrix. Not modified.
+     *
+     * @return The results of this operation.
+     */
+    public T plus( T b ) {
+        T ret = copy();
+
+        CommonOps.addEquals(ret.getMatrix(),b.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns the result of matrix subtraction:<br>
+     * <br>
+     * c = a - b <br>
+     * <br>
+     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
+     * </p>
+     *
+     * @see CommonOps#sub(org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
+     *
+     * @param b m by n matrix. Not modified.
+     *
+     * @return The results of this operation.
+     */
+    public T minus( T b ) {
+        T ret = copy();
+
+        CommonOps.subEquals(ret.getMatrix(),b.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Performs a matrix addition and scale operation.<br>
+     * <br>
+     * c = a + &beta;*b <br>
+     * <br>
+     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
+     * </p>
+     *
+     * @see CommonOps#add( org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
+     *
+     * @param b m by n matrix. Not modified.
+     *
+     * @return A matrix that contains the results.
+     */
+    public T plus( double beta , T b ) {
+        T ret = copy();
+
+        CommonOps.addEquals(ret.getMatrix(),beta,b.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns the result of scaling each element by 'val':<br>
+     * b<sub>i,j</sub> = val*a<sub>i,j</sub>
+     * </p>
+     *
+     * @see CommonOps#scale(double, org.ejml.data.D1Matrix64F)
+     *
+     * @param val The multiplication factor.
+     * @return The scaled matrix.
+     */
+    public T scale( double val ) {
+        T ret = copy();
+
+        CommonOps.scale(val,ret.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns the result of dividing each element by 'val':
+     * b<sub>i,j</sub> = a<sub>i,j</sub>/val
+     * </p>
+     *
+     * @see CommonOps#divide(double, org.ejml.data.D1Matrix64F)
+     *
+     * @param val Divisor.
+     * @return Matrix with its elements divided by the specified value.
+     */
+    public T divide( double val ) {
+        T ret = copy();
+
+        CommonOps.divide(val,ret.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns the inverse of this matrix.<br>
+     * <br>
+     * b = a<sup>-1<sup><br>
+     * </p>
+     *
+     * <p>
+     * If the matrix could not be inverted then SingularMatrixException is thrown.  Even
+     * if no exception is thrown the matrix could still be singular or nearly singular.
+     * </p>
+     *
+     * @see CommonOps#invert(DenseMatrix64F, DenseMatrix64F)
+     *
+     * @throws org.ejml.alg.dense.decomposition.SingularMatrixException
+     *
+     * @return The inverse of this matrix.
+     */
+    public T invert() {
+        T ret = createMatrix(mat.numRows,mat.numCols);
+        if( !CommonOps.invert(mat,ret.getMatrix()) ) {
+            throw new SingularMatrixException();
+        }
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Solves for X in the following equation:<br>
+     * <br>
+     * x = a<sup>-1</sup>b<br>
+     * <br>
+     * where 'a' is this matrix and 'b' is an n by p matrix.
+     * </p>
+     *
+     * <p>
+     * If the system could not be solved then SingularMatrixException is thrown.  Even
+     * if no exception is thrown 'a' could still be singular or nearly singular.
+     * </p>
+     *
+     * @see CommonOps#solve(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     *
+     * @throws SingularMatrixException
+     *
+     * @param b n by p matrix. Not modified.
+     * @return The solution for 'x' that is n by p.
+     */
+    public T solve( T b )
+    {
+        T x = createMatrix(mat.numCols,b.getMatrix().numCols);
+
+        if( !CommonOps.solve(mat,b.getMatrix(),x.getMatrix()) )
+            throw new SingularMatrixException();
+
+        return x;
+    }
+
+
+    /**
+     * Sets the elements in this matrix to be equal to the elements in the passed in matrix.
+     * Both matrix must have the same dimension.
+     *
+     * @param a The matrix whose value this matrix is being set to.
+     */
+    public void set( T a ) {
+        mat.set(a.getMatrix());
+    }
+
+
+    /**
+     * <p>
+     * Sets all the elements in this matrix equal to the specified value.<br>
+     * <br>
+     * a<sub>ij</sub> = val<br>
+     * </p>
+     *
+     * @see CommonOps#set(org.ejml.data.D1Matrix64F , double)
+     *
+     * @param val The value each element is set to.
+     */
+    public void set( double val ) {
+        CommonOps.set(mat,val);
+    }
+
+    /**
+     * Sets all the elements in the matrix equal to zero.
+     *
+     * @see CommonOps#set(org.ejml.data.D1Matrix64F , double)
+     */
+    public void zero() {
+        mat.zero();
+    }
+
+    /**
+     * <p>
+     * Computes the Frobenius normal of the matrix:<br>
+     * <br>
+     * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
+     * </p>
+     *
+     * @see org.ejml.ops.NormOps#normF(org.ejml.data.D1Matrix64F)
+     *
+     * @return The matrix's Frobenius normal.
+     */
+    public double normF() {
+        return NormOps.normF(mat);
+    }
+
+    /**
+     * <p>
+     * The condition p = 2 number of a matrix is used to measure the sensitivity of the linear
+     * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.
+     * </p>
+     *
+     * @see NormOps#conditionP2(DenseMatrix64F)
+     *
+     * @return The condition number.
+     */
+    public double conditionP2() {
+        return NormOps.conditionP2(mat);
+    }
+
+    /**
+     * Computes the determinant of the matrix.
+     *
+     * @see CommonOps#det(DenseMatrix64F)
+     *
+     * @return The determinant.
+     */
+    public double determinant() {
+        return CommonOps.det(mat);
+    }
+
+    /**
+     * <p>
+     * Computes the trace of the matrix.
+     * </p>
+     *
+     * @see CommonOps#trace(org.ejml.data.RowD1Matrix64F)
+     *
+     * @return The trace of the matrix.
+     */
+    public double trace() {
+        return CommonOps.trace(mat);
+    }
+
+    /**
+     * <p>
+     * Reshapes the matrix to the specified number of rows and columns.  If the total number of elements
+     * is <= number of elements it had before the data is saved.  Otherwise a new internal array is
+     * declared and the old data lost.
+     * </p>
+     *
+     * <p>
+     * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,false).
+     * </p>
+     *
+     * @see org.ejml.data.Matrix64F#reshape(int,int,boolean)
+     *
+     * @param numRows The new number of rows in the matrix.
+     * @param numCols The new number of columns in the matrix.
+     */
+    public void reshape( int numRows , int numCols ) {
+        mat.reshape(numRows,numCols, false);
+    }
+
+    /**
+     * Assigns the element in the Matrix to the specified value.  Performs a bounds check to make sure
+     * the requested element is part of the matrix.
+     *
+     * @param row The row of the element.
+     * @param col The column of the element.
+     * @param value The element's new value.
+     */
+    public void set( int row , int col , double value ) {
+        mat.set(row,col,value);
+    }
+
+    /**
+     * Assigns an element a value based on its index in the internal array..
+     *
+     * @param index The matrix element that is being assigned a value.
+     * @param value The element's new value.
+     */
+    public void set( int index , double value ) {
+        mat.set(index,value);
+    }
+
+    /**
+     * Returns the value of the specified matrix element.  Performs a bounds check to make sure
+     * the requested element is part of the matrix.
+     *
+     * @param row The row of the element.
+     * @param col The column of the element.
+     * @return The value of the element.
+     */
+    public double get( int row , int col ) {
+        return mat.get(row,col);
+    }
+
+    /**
+     * Returns the value of the matrix at the specified index of the 1D row major array.
+     *
+     * @see org.ejml.data.DenseMatrix64F#get(int)
+     *
+     * @param index The element's index whose value is to be returned
+     * @return The value of the specified element.
+     */
+    public double get( int index ) {
+        return mat.data[ index ];
+    }
+
+    /**
+     * Returns the index in the matrix's array.
+     *
+     * @see org.ejml.data.DenseMatrix64F#getIndex(int, int)
+     *
+     * @param row The row number.
+     * @param col The column number.
+     * @return The index of the specified element.
+     */
+    public int getIndex( int row , int col ) {
+        return row * mat.numCols + col;
+    }
+
+    /**
+     * Creates a new iterator for traversing through a submatrix inside this matrix.  It can be traversed
+     * by row or by column.  Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
+     * 0 and 1.  The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
+     *
+     * @param rowMajor true means it will traverse through the submatrix by row first, false by columns.
+     * @param minRow first row it will start at.
+     * @param minCol first column it will start at.
+     * @param maxRow last row it will stop at.
+     * @param maxCol last column it will stop at.
+     * @return A new MatrixIterator
+     */
+    public MatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    {
+        return new MatrixIterator(mat,rowMajor, minRow, minCol, maxRow, maxCol);
+    }
+
+    /**
+     * Creates and returns a matrix which is idential to this one.
+     *
+     * @return A new identical matrix.
+     */
+    public T copy() {
+        T ret = createMatrix(mat.numRows,mat.numCols);
+        ret.getMatrix().set(this.getMatrix());
+        return ret;
+    }
+
+    /**
+     * Returns the number of rows in this matrix.
+     *
+     * @return number of rows.
+     */
+    public int numRows() {
+        return mat.numRows;
+    }
+
+    /**
+     * Returns the number of columns in this matrix.
+     *
+     * @return number of columns.
+     */
+    public int numCols() {
+        return mat.numCols;
+    }
+
+    /**
+     * Returns the number of elements in this matrix, which is equal to
+     * the number of rows times the number of columns.
+     *
+     * @return The number of elements in the matrix.
+     */
+    public int getNumElements() {
+        return mat.getNumElements();
+    }
+
+
+    /**
+     * Prints the matrix to standard out.
+     */
+    public void print() {
+        MatrixIO.print(System.out,mat);
+    }
+
+    /**
+     * Prints the matrix to standard out with the specified precision.
+     */
+    public void print(int numChar , int precision) {
+        MatrixIO.print(System.out,mat,numChar,precision);
+    }
+
+    /**
+     * <p>
+     * Prints the matrix to standard out given a {@link java.io.PrintStream#printf) style floating point format,
+     * e.g. print("%f").
+     * </p>
+     */
+    public void print( String format ) {
+        MatrixIO.print(System.out,mat,format);
+    }
+
+    /**
+     * <p>
+     * Converts the array into a string format for display purposes.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.Matrix64F)}.
+     * </p>
+     *
+     * @return String representation of the matrix.
+     */
+    public String toString() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        MatrixIO.print(new PrintStream(stream),mat);
+
+        return stream.toString();
+    }
+
+    /**
+     * <p>
+     * Creates a new SimpleMatrix which is a submatrix of this matrix.
+     * </p>
+     * <p>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1<br>
+     * <br>
+     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
+     * original matrix.
+     * </p>
+     *
+     * <p>
+     * If any of the inputs are set to T.END then it will be set to the last row
+     * or column in the matrix.
+     * </p>
+     *
+     * @param x0 Start column.
+     * @param x1 Stop column.
+     * @param y0 Start row.
+     * @param y1 Stop row.
+     * @return The submatrix.
+     */
+    public T extractMatrix(int y0 , int y1,
+                                      int x0 , int x1 ) {
+        if( y0 == SimpleMatrix.END ) y0 = mat.numRows;
+        if( y1 == SimpleMatrix.END ) y1 = mat.numRows;
+        if( x0 == SimpleMatrix.END ) x0 = mat.numCols;
+        if( x1 == SimpleMatrix.END ) x1 = mat.numCols;
+
+        T ret = createMatrix(y1-y0,x1-x0);
+
+        CommonOps.extract(mat,y0,y1,x0,x1,ret.getMatrix(),0,0);
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Extracts a row or column from this matrix and returns it as a row vector of the appropriate
+     * length.
+     * </p>
+     *
+     * @param extractRow If true a row will be extracted.
+     * @param element The row or column the vector is contained in.
+     * @return Extracted vector in a row.
+     */
+    public T extractVector( boolean extractRow , int element )
+    {
+        int length = extractRow ? mat.numCols : mat.numRows;
+
+        T ret = createMatrix(length,1);
+        if( extractRow ) {
+            SpecializedOps.subvector(mat,element,0,length,true,0,ret.getMatrix());
+        } else {
+            SpecializedOps.subvector(mat,0,element,length,false,0,ret.getMatrix());
+        }
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Extracts the diagonal from this matrix and returns them inside a column vector.
+     * </p>
+     *
+     * @see org.ejml.ops.CommonOps#extractDiag(DenseMatrix64F, DenseMatrix64F)
+     * @return Diagonal elements inside a column vector.
+     */
+    public T extractDiag()
+    {
+        int N = Math.min(mat.numCols,mat.numRows);
+
+        T diag = createMatrix(N,1);
+
+        CommonOps.extractDiag(mat,diag.getMatrix());
+
+        return diag;
+    }
+
+    /**
+     * Checks to see if matrix 'a' is the same as this matrix within the specified
+     * tolerance.
+     *
+     * @param a The matrix it is being compared against.
+     * @param tol How similar they must be to be equals.
+     * @return If they are equal within tolerance of each other.
+     */
+    public boolean isIdentical(T a, double tol) {
+        return MatrixFeatures.isIdentical(mat,a.getMatrix(),tol);
+    }
+
+    /**
+     * Checks to see if any of the elements in this matrix are either NaN or infinite.
+     *
+     * @return True of an element is NaN or infinite.  False otherwise.
+     */
+    public boolean hasUncountable() {
+        return MatrixFeatures.hasUncountable(mat);
+    }
+
+    /**
+     * Computes a full Singular Value Decomposition (SVD) of this matrix with the
+     * eigenvalues ordered from largest to smallest.
+     *
+     * @return SVD
+     */
+    public SimpleSVD svd() {
+        return new SimpleSVD(mat,false);
+    }
+
+    /**
+     * Computes the SVD in either  compact format or full format.
+     *
+     * @return SVD of this matrix.
+     */
+    public SimpleSVD svd( boolean compact ) {
+        return new SimpleSVD(mat,compact);
+    }
+
+    /**
+     * Returns the Eigen Value Decomposition (EVD) of this matrix.
+     */
+    public SimpleEVD eig() {
+        return new SimpleEVD(mat);
+    }
+
+    /**
+     * Copy matrix B into this matrix at location (insertRow, insertCol).
+     *
+     * @param insertRow First row the matrix is to be inserted into.
+     * @param insertCol First column the matrix is to be inserted into.
+     * @param B The matrix that is being inserted.
+     */
+    public void insertIntoThis(int insertRow, int insertCol, T B) {
+        CommonOps.insert(B.getMatrix(), mat, insertRow,insertCol);
+    }
+
+    /**
+     * <p>
+     * Creates a new matrix that is a combination of this matrix and matrix B.  B is
+     * written into A at the specified location if needed the size of A is increased by
+     * growing it.  A is grown by padding the new area with zeros.
+     * </p>
+     *
+     * <p>
+     * While useful when adding data to a matrix which will be solved for it is also much
+     * less efficient than predeclaring a matrix and inserting data into it.
+     * </p>
+     *
+     * <p>
+     * If insertRow or insertCol is set to SimpleMatrix.END then it will be combined
+     * at the last row or column respectively.
+     * <p>
+     *
+     * @param insertRow Row where matrix B is written in to.
+     * @param insertCol Column where matrix B is written in to.
+     * @param B The matrix that is written into A.
+     * @return A new combined matrix.
+     */
+    public T combine( int insertRow, int insertCol, T B) {
+
+        if( insertRow == SimpleMatrix.END ) {
+            insertRow = mat.numRows;
+        }
+
+        if( insertCol == SimpleMatrix.END ) {
+            insertCol = mat.numCols;
+        }
+
+        int maxRow = insertRow + B.numRows();
+        int maxCol = insertCol + B.numCols();
+
+        T ret;
+
+        if( maxRow > mat.numRows || maxCol > mat.numCols) {
+            int M = Math.max(maxRow,mat.numRows);
+            int N = Math.max(maxCol,mat.numCols);
+
+            ret = createMatrix(M,N);
+            ret.insertIntoThis(0,0,this);
+        } else {
+            ret = copy();
+        }
+
+        ret.insertIntoThis(insertRow,insertCol,B);
+
+        return ret;
+    }
+
+    /**
+     * Returns the maximum absolute value of all the elements in this matrix.  This is
+     * equivalent the the infinite p-norm of the matrix.
+     *
+     * @return Largest absolute value of any element.
+     */
+    public double elementMaxAbs() {
+        return CommonOps.elementMaxAbs(mat);
+    }
+
+    /**
+     * Computes the sum of all the elements in the matrix.
+     *
+     * @return Sum of all the elements.
+     */
+    public double elementSum() {
+        return CommonOps.elementSum(mat);
+    }
+
+    /**
+     * <p>
+     * Returns a matrix which is the result of an element by element multiplication of 'this' and 'b':
+     * c<sub>i,j</sub> = a<sub>i,j</sub>*b<sub>i,j</sub>
+     * </p>
+     *
+     * @param b A simple matrix.
+     * @return The element by element multiplication of 'this' and 'b'.
+     */
+    public T elementMult( T b )
+    {
+        T c = createMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementMult(mat,b.getMatrix(),c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
+     * Returns a new matrix whose elements are the negative of 'this' matrix's elements.<br>
+     * <br>
+     * b<sub>ij</sub> = -a<sub>ij</sub>
+     * </p>
+     *
+     * @return A matrix that is the negative of the original.
+     */
+    public T negative() {
+        T A = copy();
+        CommonOps.changeSign(A.getMatrix());
+        return A;
+    }
+
+    /**
+     * <p>
+     * Saves this matrix to a file.
+     * </p>
+     *
+     * @see MatrixIO#save( org.ejml.data.Matrix64F , String)
+     *
+     * @param fileName
+     * @throws java.io.IOException
+     */
+    public void saveToFile( String fileName )
+        throws IOException
+    {
+        MatrixIO.save(mat,fileName);
+    }
+
+    /**
+     * Prints the number of rows and column in this matrix.
+     */
+    public void printDimensions() {
+        System.out.println("[rows = "+numRows()+" , cols = "+numCols()+" ]");
+    }
+}
