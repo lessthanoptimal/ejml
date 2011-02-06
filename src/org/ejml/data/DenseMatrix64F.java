@@ -263,7 +263,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     @Override
     public void set( int row , int col , double value ) {
         if( col < 0 || col >= numCols || row < 0 || row >= numRows ) {
-            throw new IllegalArgumentException("Specified element is out of bounds");
+            throw new IllegalArgumentException("Specified element is out of bounds: ("+row+" , "+col+")");
         }
 
         data[ row * numCols + col ] = value;

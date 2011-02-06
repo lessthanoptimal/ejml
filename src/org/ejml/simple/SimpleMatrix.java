@@ -19,6 +19,7 @@
 
 package org.ejml.simple;
 
+import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 import org.ejml.ops.CommonOps;
@@ -147,6 +148,17 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public SimpleMatrix( DenseMatrix64F orig ) {
         this.mat = orig.copy();
+    }
+
+    /**
+     * Creates a new SimpleMatrix which is a copy of the Matrix64F.
+     *
+     * @param orig The original matrix whose value is copied.  Not modified.
+     */
+    public SimpleMatrix( Matrix64F orig ) {
+        this.mat = new DenseMatrix64F(orig.numRows,orig.numCols);
+
+        GenericMatrixOps.copy(orig,mat);
     }
 
     protected SimpleMatrix(){}

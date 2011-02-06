@@ -29,8 +29,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -169,6 +168,27 @@ public class TestSimpleMatrix {
         EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
+    @Test
+    public void dot() {
+        SimpleMatrix a = SimpleMatrix.random(10,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(10,1,-1,1,rand);
+
+        double expected = 0;
+        for( int i = 0; i < 10; i++ )
+            expected += a.get(i)*b.get(i);
+
+        double found = a.dot(b);
+
+        assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void isVector() {
+        assertTrue(new SimpleMatrix(1,1).isVector());
+        assertTrue(new SimpleMatrix(1,10).isVector());
+        assertTrue(new SimpleMatrix(10,1).isVector());
+        assertFalse(new SimpleMatrix(6,5).isVector());
+    }
 
     @Test
     public void minus() {

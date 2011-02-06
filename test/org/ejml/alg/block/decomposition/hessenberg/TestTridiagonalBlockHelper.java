@@ -20,8 +20,12 @@
 package org.ejml.alg.block.decomposition.hessenberg;
 
 import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -38,37 +42,95 @@ public class TestTridiagonalBlockHelper {
     Random rand = new Random(234324);
     int r = 3;
 
+    /**
+     * Compare against a simple tridiagonalization implementation
+     */
+    @Test
+    public void tridiagUpperRow() {
+
+        int offX = r;
+        int offY = r;
+
+        // test it out on a variety of sizes
+        for( int width = 1; width <= 3*r; width++ ) {
+//            System.out.println("********* width "+width);
+
+            // create a random symmetric matrix
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createSymmetric(width,-1,1,rand));
+
+            TridiagonalDecompositionHouseholderOrig decomp = new TridiagonalDecompositionHouseholderOrig();
+            decomp.decompose(A.getMatrix());
+
+            D1Submatrix64F Ab = insertIntoBlock(offX,offY,A,r);
+            D1Submatrix64F V = new D1Submatrix64F(new BlockMatrix64F(r,offX+A.numCols(),r));
+            V.col0 = offX;
+            V.row1 = Ab.row1-Ab.row0;
+            int gammaOffset = offX;
+            double gammas[] = new double[gammaOffset+A.numCols()];
+            TridiagonalBlockHelper.tridiagUpperRow(r,Ab,gammas,V);
+
+            DenseMatrix64F expected = decomp.getQT();
+
+            // see if the decomposed matrix is the same
+            for( int i = 0; i < r; i++ ) {
+                for( int j = i; j < width; j++ ) {
+                    assertEquals(i+" "+j,expected.get(i,j),Ab.get(i,j),1e-8);
+                }
+            }
+            // check the gammas
+            for( int i = 0; i < Math.min(width-1,r); i++ ) {
+                assertEquals(decomp.getGamma(i+1),gammas[i+gammaOffset],1e-8);
+            }
+        }
+    }
+
 
     @Test
     public void applyReflectorsToRow() {
-        SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
-        A = A.mult(A.transpose());
-        SimpleMatrix A_orig = A.copy();
-        SimpleMatrix V = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
 
-        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
-        BlockMatrix64F Vb = BlockMatrixOps.convert(V.getMatrix(),r);
+        // try different offsets to make sure there are no implicit assumptions
+        for( int offX = 0; offX <= r; offX += r) {
+            for( int offY = 0; offY <= r; offY += r) {
+                SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+                A = A.mult(A.transpose());
+                SimpleMatrix A_orig = A.copy();
+                SimpleMatrix V = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
 
-        int row = r-1;
+                D1Submatrix64F Ab = insertIntoBlock(offY,offX,A,r);
+                D1Submatrix64F Vb = insertIntoBlock(0,offX,V,r);
 
-        // manually apply "reflectors" to A
-        for( int i = 0; i < row; i++ ) {
-            SimpleMatrix u = A_orig.extractVector(true,i);
-            SimpleMatrix v = V.extractVector(true,i);
+                int row = r-1;
 
-            for( int j = 0; j <= i; j++ ) {
-                u.set(j,0.0);
+                // manually apply "reflectors" to A
+                for( int i = 0; i < row; i++ ) {
+                    SimpleMatrix u = A_orig.extractVector(true,i);
+                    SimpleMatrix v = V.extractVector(true,i);
+
+                    for( int j = 0; j <= i; j++ ) {
+                        u.set(j,0.0);
+                    }
+                    u.set(i+1,1.0);
+
+                    A = A.plus(u.mult(v.transpose())).plus(v.mult(u.transpose()));
+                }
+                // apply the reflector to that row
+                TridiagonalBlockHelper.applyReflectorsToRow(r,Ab,Vb,row);
+
+                // compare to manually computed solution
+                for( int i = row; i < A.numCols(); i++ ) {
+                    assertEquals(A.get(row,i),Ab.get(row,i),1e-8);
+                }
             }
-            u.set(i+1,1.0);
-
-            A = A.minus(u.mult(v.transpose())).minus(v.mult(u.transpose()));
         }
+    }
 
-        TridiagonalBlockHelper.applyReflectorsToRow(r,new D1Submatrix64F(Ab,0,r,0,A.numCols()),
-                new D1Submatrix64F(Vb),row);
-        for( int i = row; i < A.numCols(); i++ ) {
-            assertEquals(A.get(row,i),Ab.get(row,i),1e-8);
-        }
+    private static D1Submatrix64F insertIntoBlock( int offRow , int offCol , SimpleMatrix A , int r )
+    {
+        DenseMatrix64F B = new DenseMatrix64F(offRow+A.numRows(),offCol+A.numCols());
+        CommonOps.insert(A.getMatrix(),B,offRow,offCol);
+
+        BlockMatrix64F C = BlockMatrixOps.convert(B,r);
+        return new D1Submatrix64F(C,offRow,C.numRows,offCol,C.numCols);
     }
 
     @Test
@@ -93,6 +155,91 @@ public class TestTridiagonalBlockHelper {
 
         for( int i = row+1; i < A.numCols(); i++ ) {
             assertEquals(v.get(i),V.get(row,i),1e-8);
+        }
+    }
+
+    /**
+     * Check by performing the calculation manually
+     */
+    @Test
+    public void computeY() {
+        SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+        SimpleMatrix Vo = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
+
+        for( int row = 0; row < r; row++ ) {
+            SimpleMatrix AA = A.copy();
+            SimpleMatrix u = A.extractVector(true,row);
+            SimpleMatrix y;
+
+            double gamma = 1.3;
+
+            // zero elements that should already be zero
+            for( int i = 0; i < row; i++ ) {
+                u.set(i,0);
+                for( int j = i+2; j < A.numRows(); j++ ) {
+                    AA.set(i,j,0);
+                    AA.set(j,i,0);
+                }
+            }
+            u.set(row,0);
+            u.set(row+1,1);
+
+            if( row > 0 ) {
+                SimpleMatrix U = A.extractMatrix(0,row,0,A.numCols()).transpose();
+                SimpleMatrix V = Vo.extractMatrix(0,row,0,A.numCols()).transpose();
+
+                for( int i = 0; i < row; i++ ) {
+                    for( int j = 0; j <= i; j++ ) {
+                        U.set(j,i,0);
+                    }
+                    U.set(i+1,i,1);
+                }
+
+                y = AA.plus(U.mult(V.transpose())).plus(V.mult(U.transpose())).mult(u);
+            } else {
+                y = AA.mult(u);
+            }
+
+            y = y.scale(-gamma);
+
+            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+            BlockMatrix64F Vb = BlockMatrixOps.convert(Vo.getMatrix(),r);
+
+            TridiagonalBlockHelper.computeY(r,new D1Submatrix64F(Ab),new D1Submatrix64F(Vb),row,gamma);
+
+            for( int i = row+1; i < A.numCols(); i++ ) {
+                assertEquals(Vb.get(row,i),y.get(i),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void computeRowOfV() {
+        SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+        SimpleMatrix V = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
+
+        double gamma = 2.3;
+
+        for( int row = 0; row < r; row++ ) {
+            SimpleMatrix u = A.extractVector(true,row);
+            SimpleMatrix y = V.extractVector(true,row);
+
+            for( int i = 0; i <= row; i++ ) {
+                u.set(i,0);
+            }
+            u.set(row+1,1);
+
+            SimpleMatrix v = y.plus(u.scale(-(gamma/2.0)*u.dot(y)));
+
+            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+            BlockMatrix64F Vb = BlockMatrixOps.convert(V.getMatrix(),r);
+
+            TridiagonalBlockHelper.computeRowOfV(r,new D1Submatrix64F(Ab),new D1Submatrix64F(Vb),
+                    row,gamma);
+
+            for( int i = row+1; i < A.numCols(); i++ ) {
+                assertEquals(Vb.get(row,i),v.get(i),1e-8);
+            }
         }
     }
 }

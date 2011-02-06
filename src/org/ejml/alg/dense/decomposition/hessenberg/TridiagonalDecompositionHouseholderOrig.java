@@ -138,6 +138,8 @@ public class TridiagonalDecompositionHouseholderOrig {
 
         for( int k = 1; k < N; k++ ) {
             similarTransform(k);
+//            System.out.println("k=="+k);
+//            QT.print();
         }
     }
 
@@ -226,12 +228,14 @@ public class TridiagonalDecompositionHouseholderOrig {
         // w = v + alpha*u
         for( int i = row; i < N; i++ ) {
             w[i] += alpha*QT.data[startU+i];
+//            System.out.println("w["+i+"] = "+w[i]);
         }
         // A = A + w*u^T + u*w^T
         for( int i = row; i < N; i++ ) {
 
             double ww = w[i];
             double uu = QT.data[startU+i];
+//            System.out.println("u["+i+"] = "+uu);
 
             for( int j = i; j < N; j++ ) {
                 QT.data[j*N+i] = QT.data[i*N+j] += ww*QT.data[startU+j] + w[j]*uu;
@@ -263,5 +267,9 @@ public class TridiagonalDecompositionHouseholderOrig {
 
         // just copy the top right triangle
         QT.set(A);
+    }
+
+    public double getGamma( int index ) {
+        return gammas[index];
     }
 }

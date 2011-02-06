@@ -238,7 +238,6 @@ public class BlockMultiplication {
         }
     }
 
-    // todo unit test
     public static void multPlusTransA( int blockLength ,
                                        D1Submatrix64F A , D1Submatrix64F B ,
                                        D1Submatrix64F C )
@@ -264,7 +263,6 @@ public class BlockMultiplication {
         }
     }
 
-    // todo unit test
     public static void multMinusTransA( int blockLength ,
                                         D1Submatrix64F A , D1Submatrix64F B ,
                                         D1Submatrix64F C )

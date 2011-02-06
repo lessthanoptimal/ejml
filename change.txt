@@ -39,6 +39,8 @@ Date format: year/month/day
 - Changed logo to more accurately represent a Householder reflector.
 - Pushed SimpleMatrix into its own package.
   * To make it easy to extend, SimpleMatrix now extends SimpleBase
+  * Added dot() and isVector() is SimpleMatrix.
+
 ----- Version 0.15
 
 2010/11/20

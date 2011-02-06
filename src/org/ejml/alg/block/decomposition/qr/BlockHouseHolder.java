@@ -422,11 +422,11 @@ public class BlockHouseHolder {
      * <p>
      * Computes the inner product of row vector 'rowA' against row vector 'rowB' while taking account leading zeros and one.<br>
      * <br>
-     * ret = a<sup>T*b
+     * ret = a<sup>T</sup>*b
      * </p>
      *
      * <p>
-     * Row A is assumed to be a householder vector.  Element at 'colStartA' is one and previous ones are zero.
+     * Row A is assumed to be a householder vector.  Element at 'colStartA' is one and previous elements are zero.
      * </p>
      *
      * @param blockLength
@@ -445,7 +445,8 @@ public class BlockHouseHolder {
                                       int rowB, int heightB) {
         double total = 0;
 
-        final double data[] = A.original.data;
+        final double dataA[] = A.original.data;
+        final double dataB[] = B.original.data;
 
         // row index of the block in the original matrix
         final int rowBlockA = A.row0 + rowA - rowA % blockLength;
@@ -454,32 +455,34 @@ public class BlockHouseHolder {
         rowB = rowB % blockLength;
 
         // compute dot product down column vectors
-        for( int j = A.col0; j < A.col1; j += blockLength ) {
+        final int startJ = A.col0 + colStart - colStart % blockLength;
+        colStart = colStart % blockLength;
+        for( int j = startJ; j < A.col1; j += blockLength ) {
             int width = Math.min(blockLength,A.col1-j);
 
             int indexA = rowBlockA*A.original.numCols + heightA*j + rowA*width;
             int indexB = rowBlockB*B.original.numCols + heightB*j + rowB*width;
 
-            if( j == A.col0 ) {
+            if( j == startJ ) {
                 // skip zeros
                 indexA += colStart+1;
                 indexB += colStart;
 
                 // handle leading one
-                total = data[indexB];
+                total = dataB[indexB];
 
                 indexB++;
 
                 // standard vector dot product
                 for( int k = colStart+1; k < width; k++) {
-                    total += data[indexA++] * data[indexB++];
+                    total += dataA[indexA++] * dataB[indexB++];
                 }
             } else {
                 // standard vector dot product
                 for( int k = 0; k < width; k++) {
-//                    double aa = data[indexA];
-//                    double bb = data[indexB];
-                    total += data[indexA++] * data[indexB++];
+                    double aa = dataA[indexA];
+                    double bb = dataB[indexB];
+                    total += dataA[indexA++] * dataB[indexB++];
                 }
             }
         }
@@ -523,12 +526,44 @@ public class BlockHouseHolder {
      */
     public static void divideElementsRow( final int blockLength ,
                                           final D1Submatrix64F Y ,
-                                          final int row , final int colStart ,
+                                          final int row , int colStart ,
                                           final double val ) {
         final int height = Math.min(blockLength , Y.row1-Y.row0);
 
         final double dataY[] = Y.original.data;
 
+        int startJ = Y.col0 + colStart - colStart%blockLength;
+        colStart = colStart % blockLength;
+
+        for( int j = startJ; j < Y.col1; j += blockLength ) {
+            int width = Math.min( blockLength , Y.col1 - j );
+
+            int index = Y.row0*Y.original.numCols + height*j + row*width;
+
+            if( j == startJ ) {
+                index += colStart;
+
+                for( int k = colStart; k < width; k++ ) {
+                    dataY[index++] /= val;
+                }
+            } else {
+                for( int k = 0; k < width; k++ ) {
+                    dataY[index++] /= val;
+                }
+            }
+        }
+    }
+
+    /**
+     * Scales the elements in the specified row starting at element colStart by 'val'.
+     */
+    public static void scaleElementsRow( final int blockLength ,
+                                         final D1Submatrix64F Y ,
+                                         final int row , final int colStart ,
+                                         final double val ) {
+        final int height = Math.min(blockLength , Y.row1-Y.row0);
+
+        final double dataY[] = Y.original.data;
 
         for( int j = Y.col0; j < Y.col1; j += blockLength ) {
             int width = Math.min( blockLength , Y.col1 - j );
@@ -539,11 +574,11 @@ public class BlockHouseHolder {
                 index += colStart;
 
                 for( int k = colStart; k < width; k++ ) {
-                    dataY[index++] /= val;
+                    dataY[index++] *= val;
                 }
             } else {
                 for( int k = 0; k < width; k++ ) {
-                    dataY[index++] /= val;
+                    dataY[index++] *= val;
                 }
             }
         }
@@ -631,7 +666,7 @@ public class BlockHouseHolder {
      */
     public static double computeTauAndDivideRow( final int blockLength ,
                                                  final D1Submatrix64F Y ,
-                                                 final int row , final int colStart , final double max ) {
+                                                 final int row , int colStart , final double max ) {
         final int height = Math.min(blockLength , Y.row1-Y.row0);
 
         final double dataY[] = Y.original.data;
@@ -639,12 +674,15 @@ public class BlockHouseHolder {
         double top=0;
         double norm2 = 0;
 
-        for( int j = Y.col0; j < Y.col1; j += blockLength ) {
+        int startJ = Y.col0 + colStart - colStart%blockLength;
+        colStart = colStart%blockLength;
+
+        for( int j = startJ; j < Y.col1; j += blockLength ) {
             int width = Math.min( blockLength , Y.col1 - j );
 
             int index = Y.row0*Y.original.numCols + height*j + row*width;
 
-            if( j == Y.col0 ) {
+            if( j == startJ ) {
                 index += colStart;
                 // save this value so that the sign can be determined later on
                 top = dataY[index] /= max;
@@ -1106,28 +1144,31 @@ public class BlockHouseHolder {
                                       D1Submatrix64F B ,
                                       int rowB )
     {
-        int height = Math.min(blockLength,A.row1-A.row0);
+        final int height = Math.min(blockLength,A.row1-A.row0);
 
-        int width = A.col1-A.col0;
+        final int width = A.col1-A.col0;
 
         double dataA[] = A.original.data;
         double dataB[] = B.original.data;
 
-        for( int j = 0; j < width; j += blockLength ) {
+        final int startJ = col - col%blockLength;
+        col = col%blockLength;
+
+        for( int j = startJ; j < width; j += blockLength ) {
             int w = Math.min(blockLength,width-j);
 
             int indexA = A.row0*A.original.numCols + height*(A.col0+j) + rowA*w;
             int indexB = B.row0*B.original.numCols + height*(B.col0+j) + rowB*w;
 
-            if( j == 0 ) {
+            if( j == startJ ) {
                 indexA += col;
                 indexB += col;
 
-                for( int k = col; k < height; k++ ) {
+                for( int k = col; k < w; k++ ) {
                     dataA[indexA++] += alpha*dataB[indexB++];
                 }
             } else {
-                for( int k = 0; k < height; k++ ) {
+                for( int k = 0; k < w; k++ ) {
                     dataA[indexA++] += alpha*dataB[indexB++];
                 }
             }

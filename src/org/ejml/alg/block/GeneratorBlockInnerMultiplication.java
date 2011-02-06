@@ -193,7 +193,7 @@ public class GeneratorBlockInnerMultiplication {
                     "                }\n");
         }
         stream.print(
-        "                colA += widthA;"+
+        "                colA += widthA;\n"+
         "            }\n" +
         "        }\n");
 

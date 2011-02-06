@@ -27,6 +27,7 @@ import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -250,6 +251,21 @@ public class TestBlockHouseHolder {
     }
 
     @Test
+    public void scaleElementsRow() {
+
+        double div = 1.5;
+        int row = 1;
+        BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
+        BlockMatrix64F A_orig = A.copy();
+
+        BlockHouseHolder.scaleElementsRow(r,new D1Submatrix64F(A),row,row+1,div);
+
+        for( int i = row+1; i < A.numCols; i++ ) {
+            assertEquals(A_orig.get(row,i)*div , A.get(row,i),1e-8);
+        }
+    }
+
+    @Test
     public void computeTauAndDivideCol() {
 
         double max = 1.5;
@@ -420,7 +436,7 @@ public class TestBlockHouseHolder {
         // Y'*V
         SimpleMatrix expected = Y.transpose().mult(V);
 
-        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix());
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
         double found[] = new double[ M ];
 
         BlockHouseHolder.computeY_t_V(r,new D1Submatrix64F(Ab,0, A.numRows(), 0, r),M,found);
@@ -459,13 +475,22 @@ public class TestBlockHouseHolder {
     @Test
     public void plusScale_row() {
         A = SimpleMatrix.random(r*2+r-1,r*2+2,-1,1,rand);
-        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix());
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
 
+        // perform the operation manually
         int row0 = 1;
         int row1 = 2;
+        int col = 1;
+        double scale = -2.6;
 
-        for( int i = 0; i < A.numCols(); i++ ) {
-
+        for( int i = col; i < A.numCols(); i++ ) {
+            double val = A.get(row0,i) + scale*A.get(row1,i);
+            A.set(row0,i,val);
         }
+
+        BlockHouseHolder.plusScale_row(r,col,scale,new D1Submatrix64F(Ab),row0,
+                new D1Submatrix64F(Ab),row1);
+
+        EjmlUnitTests.assertEquals(A.getMatrix(),Ab,1e-8);
     }
 }

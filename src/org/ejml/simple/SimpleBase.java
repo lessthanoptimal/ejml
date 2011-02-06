@@ -20,6 +20,7 @@
 package org.ejml.simple;
 
 import org.ejml.alg.dense.decomposition.SingularMatrixException;
+import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.MatrixIterator;
 import org.ejml.ops.*;
@@ -202,6 +203,32 @@ public abstract class SimpleBase <T extends SimpleBase> {
         CommonOps.addEquals(ret.getMatrix(),beta,b.getMatrix());
 
         return ret;
+    }
+
+    /**
+     * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
+     *
+     * @param v The second vector in the dot product.  Not modified.
+     * @return dot product
+     */
+    public double dot( T v ) {
+        if( !isVector() ) {
+            throw new IllegalArgumentException("'this' matrix is not a vector.");
+        } else if( !v.isVector() ) {
+            throw new IllegalArgumentException("'v' matrix is not a vector.");
+        }
+
+        return VectorVectorMult.innerProd(mat,v.getMatrix());
+    }
+
+    /**
+     * Returns true if this matrix is a vector.  A vector is defined as a matrix
+     * that has either one row or column.
+     *
+     * @return Returns true for vectors and false otherwise.
+     */
+    public boolean isVector() {
+        return mat.numRows == 1 || mat.numCols == 1;
     }
 
     /**

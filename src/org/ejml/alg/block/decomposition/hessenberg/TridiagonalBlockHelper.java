@@ -51,27 +51,40 @@ public class TridiagonalBlockHelper {
     public static void tridiagUpperRow( final int blockLength ,
                                         final D1Submatrix64F A ,
                                         final double gammas[] ,
-                                        final D1Submatrix64F V ,
-                                        double y[] )
+                                        final D1Submatrix64F V )
     {
-        // step through rows in the block
-        for( int i = 0; i < blockLength; i++ ) {
-            // Apply previous reflectors to the targeted row in 'A'
-            if( i > 0 )
-                applyReflectorsToRow( blockLength , A , V , i );
+        int blockHeight = Math.min(blockLength,A.row1-A.row0);
+        if( blockHeight <= 1 )
+            return;
+        int width = A.col1-A.col0;
+        int num = Math.min(width-1,blockHeight);
+        int applyIndex = Math.min(width,blockHeight);
 
+        // step through rows in the block
+        for( int i = 0; i < num; i++ ) {
             // compute the new reflector and save it in a row in 'A'
             computeHouseHolderRow(blockLength,A,gammas,i);
+            double gamma = gammas[A.row0+i];
 
             // compute y
+            computeY(blockLength,A,V,i,gamma);
 
-            // compute v and update 'V'
+            // compute v from y
+            computeRowOfV(blockLength,A,V,i,gamma);
 
+            // Apply the reflectors to the next row in 'A' only
+            if( i+1 < applyIndex ) {
+                applyReflectorsToRow( blockLength , A , V , i+1 );
+            }
         }
     }
 
     /**
+     * <p>
      * Applies the reflectors that have been computed previously to the specified row.
+     * <br>
+     * A = A + u*v^T + v*u^T only along the specified row in A.
+     * </p>
      *
      * @param blockLength
      * @param A Contains the reflectors and the row being updated.
@@ -85,12 +98,10 @@ public class TridiagonalBlockHelper {
     {
         int height = Math.min(blockLength, A.row1 - A.row0);
 
-        int blockWidth = A.col1-A.col0;
-
         double dataA[] = A.original.data;
         double dataV[] = V.original.data;
 
-        int indexA,indexU,indexV;
+        int indexU,indexV;
 
         // for each previously computed reflector
         for( int i = 0; i < row; i++ ) {
@@ -102,40 +113,15 @@ public class TridiagonalBlockHelper {
             double u_row = (i+1 == row) ? 1.0 : dataA[ indexU ];
             double v_row = dataV[ indexV ];
 
-            // grab only the relevant row from A = A - u*v^T - v*u^T
-            //
-            // a(i) = a(i) - u(row)*v(i) - v(row)*u(i)
-            for( int j = 0; j < blockWidth; j += blockLength ) {
-                width = Math.min(blockLength,A.col1 - j);
+            // take in account the leading one
+            double before = A.get(i,i+1);
+            A.set(i,i+1,1);
 
-                indexA = A.original.numCols*A.row0 + height*(A.col0+j) + row*width;
-                indexU = A.original.numCols*A.row0 + height*(A.col0+j) + i*width;
-                indexV = V.original.numCols*V.row0 + height*(V.col0+j) + i*width;
+            // grab only the relevant row from A = A + u*v^T + v*u^T
+            BlockHouseHolder.plusScale_row(blockLength,row,u_row,A,row,V,i);
+            BlockHouseHolder.plusScale_row(blockLength,row,v_row,A,row,A,i);
 
-                if( j == 0 ) {
-                    // because of symmetry only elements at 'row' and beyond are updated
-                    indexA += row;
-                    indexV += row;
-                    indexU += row;
-
-                    if( i+1 == row ) {
-                        // handle the one in 'u'
-                        dataA[ indexA++ ] -= v_row + u_row*dataV[ indexV++ ];
-                        indexU++;
-                    } else {
-                        dataA[ indexA++ ] -= v_row*dataA[ indexU++ ] + u_row*dataV[ indexV++ ];
-                    }
-
-                    // proceed as usual now
-                    for( int k = row+1; k < width; k++ ) {
-                        dataA[ indexA++ ] -= v_row*dataA[ indexU++ ] + u_row*dataV[ indexV++ ];
-                    }
-                } else {
-                    for( int k = 0; k < width; k++ ) {
-                        dataA[ indexA++ ] -= v_row*dataA[ indexU++ ] + u_row*dataV[ indexV++ ];
-                    }
-                }
-            }
+            A.set(i,i+1,before);
         }
     }
 
@@ -143,7 +129,7 @@ public class TridiagonalBlockHelper {
      * <p>
      * Computes the 'y' vector and stores the result in 'v'<br>
      * <br>
-     * y = &gamma;(A-U*V^T - V*U^T)u
+     * y = -&gamma;(A + U*V^T + V*U^T)u
      * </p>
      *
      * @param blockLength
@@ -157,6 +143,8 @@ public class TridiagonalBlockHelper {
                                  int row ,
                                  double gamma )
     {
+        // Elements in 'y' before 'row' are known to be zero and the element at 'row'
+        // is not used. Thus only elements after row and after are computed.
         // y = A*u
         multA_u(blockLength,A,V,row);
 
@@ -164,22 +152,26 @@ public class TridiagonalBlockHelper {
             // height of the top block of A and V should be the same
             int height = Math.min(blockLength,A.row1-A.row0);
 
-            // y = y - u_i*v_i^t*u - v_i*u_i^t*u
+            // y = y + u_i*v_i^t*u + v_i*u_i^t*u
 
             // v_i^t*u
             double dot_v_u = BlockHouseHolder.innerProdRow(blockLength, row+1,
                     A,row,height,V,i,height);
             // u_i^t*u
             double dot_u_u = BlockHouseHolder.innerProdRow(blockLength, row+1,
-                    A,row,height,V,i,height);
+                    A,row,height,A,i,height);
 
-            // todo unit test for plusScale_row
-            BlockHouseHolder.plusScale_row(blockLength,row,-dot_v_u,A,row,V,i);
-            // todo take in account the one?
-            BlockHouseHolder.plusScale_row(blockLength,row,-dot_u_u,A,row,A,i);
+            // y = y - u_i*(v_i^t*u)
+            // the ones in these 'u' are skipped over since A is only updated 
+            BlockHouseHolder.plusScale_row(blockLength,row+1,dot_v_u,V,row,A,i);
+
+            // y = y - v_i*(u_i^t*u)
+            // the 1 in U is taken account above
+            BlockHouseHolder.plusScale_row(blockLength,row+1,dot_u_u,V,row,V,i);
         }
 
         // y = gamma*y
+        BlockHouseHolder.scaleElementsRow(blockLength,V,row,row+1,-gamma);
     }
 
     /**
@@ -212,5 +204,40 @@ public class TridiagonalBlockHelper {
 
             V.set(row,i,val);
         }
+    }
+
+    /**
+     * <p>
+     * Final computation for a single row of 'v':<br>
+     * <br>
+     * v = y -(1/2)&gamma;(y^T*u)*u
+     * </p>
+     *
+     * @param blockLength
+     * @param A
+     * @param V
+     * @param row
+     * @param gamma
+     */
+    public static void computeRowOfV( final int blockLength ,
+                                      final D1Submatrix64F A ,
+                                      final D1Submatrix64F V ,
+                                      int row ,
+                                      double gamma )
+    {
+        int height = Math.min(blockLength,A.row1-A.row0);
+
+        // val=(y^T*u)
+        double val = BlockHouseHolder.innerProdRow(blockLength, row+1,
+                A,row,height,V,row,height);
+
+        // take in account the one
+        double before = A.get(row,row+1);
+        A.set(row,row+1,1);
+
+        // v = y - (1/2)gamma*val * u
+        BlockHouseHolder.plusScale_row(blockLength,row+1,-0.5*gamma*val,V,row,A,row);
+
+        A.set(row,row+1,before);
     }
 }

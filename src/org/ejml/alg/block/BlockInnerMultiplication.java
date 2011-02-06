@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2010, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -105,7 +105,8 @@ public class BlockInnerMultiplication {
                 while( b != endB ) {
                     dataC[ c++ ] += valA * dataB[b++];
                 }
-                colA += widthA;            }
+                colA += widthA;
+            }
         }
     }
 
@@ -205,7 +206,8 @@ public class BlockInnerMultiplication {
                 while( b != endB ) {
                     dataC[ c++ ] -= valA * dataB[b++];
                 }
-                colA += widthA;            }
+                colA += widthA;
+            }
         }
     }
 
@@ -297,7 +299,7 @@ public class BlockInnerMultiplication {
         int rowC = indexC;
         for( int i = 0; i < widthA; i++ , rowC += widthC) {
             int colA = i + indexA;
-            final int endA = colA + widthA*heightA;
+            int endA = colA + widthA*heightA;
             int b = indexB;
 
             // for( int k = 0; k < heightA; k++ ) {
@@ -317,7 +319,8 @@ public class BlockInnerMultiplication {
                         dataC[ c++ ] += valA * dataB[b++];
                     }
                 }
-                colA += widthA;            }
+                colA += widthA;
+            }
         }
     }
 
@@ -417,7 +420,8 @@ public class BlockInnerMultiplication {
                 while( b != endB ) {
                     dataC[ c++ ] += valA * dataB[b++];
                 }
-                colA += widthA;            }
+                colA += widthA;
+            }
         }
     }
 
@@ -529,7 +533,8 @@ public class BlockInnerMultiplication {
                         dataC[ c++ ] += valA * dataB[b++];
                     }
                 }
-                colA += widthA;            }
+                colA += widthA;
+            }
         }
     }
 

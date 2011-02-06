@@ -19,6 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
+import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.decomposition.hessenberg.TridiagonalDecompositionBlockHouseholder;
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -40,7 +43,10 @@ public class BenchmarkTridiagonal {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            alg.decompose(orig);
+            if( alg.inputModified())
+                alg.decompose(orig.<DenseMatrix64F>copy());
+            else
+                alg.decompose(orig);
         }
 
         return System.currentTimeMillis() - prev;
@@ -59,20 +65,39 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
+    public static long block( DenseMatrix64F orig , int numTrials ) {
+
+        BlockMatrix64F A = BlockMatrixOps.convert(orig);
+
+        TridiagonalDecompositionBlockHouseholder alg = new TridiagonalDecompositionBlockHouseholder();
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( alg.inputModified())
+                alg.decompose(A.<BlockMatrix64F>copy());
+            else
+                alg.decompose(A);
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
         System.out.println("basic            = "+ basic(mat,numTrials));
-        System.out.println("alt              = "+ alt(mat,numTrials));
+//        System.out.println("alt              = "+ alt(mat,numTrials));
+        System.out.println("block            = "+ block(mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,500,1000,2000};
-        int trials[] = new int[]{(int)8e6,(int)2e6,(int)2e5,600,12,3,1,1};
+        int size[] = new int[]{2,4,10,100,500,1000,2000,5000};
+        int trials[] = new int[]{(int)8e6,(int)2e6,(int)2e5,600,12,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 3; i < size.length; i++ ) {
             int w = size[i];
 
             System.out.printf("Processing size %3d for %12d trials\n",w,trials[i]);
