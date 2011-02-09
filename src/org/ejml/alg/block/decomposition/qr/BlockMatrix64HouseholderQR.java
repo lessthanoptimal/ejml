@@ -117,35 +117,43 @@ public class BlockMatrix64HouseholderQR
      */
     @Override
     public BlockMatrix64F getQ(BlockMatrix64F Q, boolean compact) {
+        Q = initializeQ(Q, dataA.numRows , dataA.numCols  , blockLength , compact);
+ 
+        applyQ(Q,true);
 
-        // sanity check input Q matrix or declare a new matrix to store results
-        int minLength = Math.min(dataA.numRows,dataA.numCols);
+        return Q;
+    }
+
+    /**
+     * Sanity checks the input or declares a new matrix.  Return matrix is an identity matrix.
+     */
+    public static BlockMatrix64F initializeQ(BlockMatrix64F Q,
+                                              int numRows , int numCols , int blockLength ,
+                                              boolean compact) {
+        int minLength = Math.min(numRows,numCols);
         if( compact ) {
             if( Q == null ) {
-                Q = new BlockMatrix64F(dataA.numRows,minLength,blockLength);
+                Q = new BlockMatrix64F(numRows,minLength,blockLength);
                 BlockMatrixOps.setIdentity(Q);
             } else {
-                if( Q.numRows != dataA.numRows || Q.numCols != minLength ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
+                if( Q.numRows != numRows || Q.numCols != minLength ) {
+                    throw new IllegalArgumentException("Unexpected matrix dimension. Found "+Q.numRows+" "+Q.numCols);
                 } else {
                     BlockMatrixOps.setIdentity(Q);
                 }
             }
         } else {
             if( Q == null ) {
-                Q = new BlockMatrix64F(dataA.numRows,dataA.numRows,blockLength);
+                Q = new BlockMatrix64F(numRows,numRows,blockLength);
                 BlockMatrixOps.setIdentity(Q);
             } else {
-                if( Q.numRows != dataA.numRows || Q.numCols != dataA.numRows ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
+                if( Q.numRows != numRows || Q.numCols != numRows ) {
+                    throw new IllegalArgumentException("Unexpected matrix dimension. Found "+Q.numRows+" "+Q.numCols);
                 } else {
                     BlockMatrixOps.setIdentity(Q);
                 }
             }
         }
- 
-        applyQ(Q,true);
-
         return Q;
     }
 
@@ -207,7 +215,7 @@ public class BlockMatrix64HouseholderQR
                 BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
             // Apply the Qi to Q
-            BlockHouseHolder.multTransA(blockLength,Y,subB,WTA);
+            BlockHouseHolder.multTransA_vecCol(blockLength,Y,subB,WTA);
             BlockMultiplication.multPlus(blockLength,W,WTA,subB);
         }
     }

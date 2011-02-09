@@ -628,19 +628,20 @@ public abstract class SimpleBase <T extends SimpleBase> {
 
     /**
      * <p>
-     * Extracts a row or column from this matrix and returns it as a row vector of the appropriate
-     * length.
+     * Extracts a row or column from this matrix. The returned vector will either be a row
+     * or column vector depending on the input type.
      * </p>
      *
      * @param extractRow If true a row will be extracted.
      * @param element The row or column the vector is contained in.
-     * @return Extracted vector in a row.
+     * @return Extracted vector.
      */
     public T extractVector( boolean extractRow , int element )
     {
         int length = extractRow ? mat.numCols : mat.numRows;
 
-        T ret = createMatrix(length,1);
+        T ret = extractRow ? createMatrix(1,length) : createMatrix(length,1);
+
         if( extractRow ) {
             SpecializedOps.subvector(mat,element,0,length,true,0,ret.getMatrix());
         } else {
@@ -845,6 +846,17 @@ public abstract class SimpleBase <T extends SimpleBase> {
         throws IOException
     {
         MatrixIO.save(mat,fileName);
+    }
+
+    /**
+     * Returns true of the specified matrix element is valid element inside this matrix.
+     * 
+     * @param row Row index.
+     * @param col Column index.
+     * @return true if it is a valid element in the matrix.
+     */
+    public boolean isInBounds(int row, int col) {
+        return row >= 0 && col >= 0 && row < mat.numRows && col < mat.numCols;
     }
 
     /**

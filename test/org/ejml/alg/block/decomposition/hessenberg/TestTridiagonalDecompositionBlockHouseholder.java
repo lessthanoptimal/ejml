@@ -24,6 +24,8 @@ import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouse
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.EjmlUnitTests;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -72,6 +74,34 @@ public class TestTridiagonalDecompositionBlockHouseholder {
             for( int i = 0; i < width-1; i++ ) {
                 assertEquals(decomp.getGamma(i+1),decompB.gammas[i],1e-8);
             }
+
+            DenseMatrix64F Q = decomp.getQ(null);
+            BlockMatrix64F Qb = decompB.getQ(null,false);
+
+            EjmlUnitTests.assertEquals(Q,Qb,1e-8);
+        }
+    }
+
+    @Test
+    public void fullTest() {
+        for( int width = 1; width <= r*3; width++ ) {
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createSymmetric(width,-1,1,rand));
+            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+
+            TridiagonalDecompositionBlockHouseholder alg = new TridiagonalDecompositionBlockHouseholder();
+
+            assertTrue(alg.decompose(Ab));
+
+            BlockMatrix64F Qb = alg.getQ(null,false);
+            BlockMatrix64F Tb = alg.getT(null);
+
+            SimpleMatrix Q = new SimpleMatrix(Qb);
+            SimpleMatrix T = new SimpleMatrix(Tb);
+
+            // reconstruct the original matrix
+            SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
+
+            assertTrue(MatrixFeatures.isIdentical(A.getMatrix(),A_found.getMatrix(),1e-8));
         }
     }
 

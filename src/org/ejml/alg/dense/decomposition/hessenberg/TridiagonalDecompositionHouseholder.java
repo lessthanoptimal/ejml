@@ -114,9 +114,11 @@ public class TridiagonalDecompositionHouseholder
             T.set(i,i-1,a);
         }
 
-        T.data[(N-1)*N+N-1] = QT.data[(N-1)*N+N-1];
-        T.data[(N-1)*N+N-2] = QT.data[(N-2)*N+N-1];
-
+        if( N > 1 ) {
+            T.data[(N-1)*N+N-1] = QT.data[(N-1)*N+N-1];
+            T.data[(N-1)*N+N-2] = QT.data[(N-2)*N+N-1];
+        }
+            
         return T;
     }
 

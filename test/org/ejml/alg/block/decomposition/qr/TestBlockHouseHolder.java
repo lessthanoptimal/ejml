@@ -27,7 +27,6 @@ import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
-import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -138,15 +137,18 @@ public class TestBlockHouseHolder {
         double gamma = 2.5;
         A = SimpleMatrix.random(r*2+r-1,r*2+r-1,-1,1,rand);
 
-        SimpleMatrix U = A.extractMatrix(1,2,0,A.numCols()).transpose();
-        U.set(0,0);
-        U.set(1,1);
+        int row = 0;
+        int zeroOffset = 1;
+        SimpleMatrix U = A.extractMatrix(row,row+1,0,A.numCols()).transpose();
+        for( int i = 0; i < row+zeroOffset; i++ )
+            U.set(i,0);
+        U.set(row+zeroOffset,1);
 
         SimpleMatrix expected = A.minus( A.mult(U).mult(U.transpose()).scale(gamma) );
 
         BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
 
-        BlockHouseHolder.rank1UpdateMultL_LeftCol(r,new D1Submatrix64F(Ab),1,1,gamma);
+        BlockHouseHolder.rank1UpdateMultL_LeftCol(r,new D1Submatrix64F(Ab),row,gamma,zeroOffset);
 
         for( int i = r; i < A.numRows(); i++ ) {
             for( int j = 0; j < r; j++ ) {
@@ -194,27 +196,23 @@ public class TestBlockHouseHolder {
         DenseMatrix64F A = RandomMatrices.createRandom(r*3-1,r*2+r-1,-1,1,rand);
         BlockMatrix64F Ab = BlockMatrixOps.convert(A,r);
 
-        int col = 0;
-        int innerRow = 1;
+        int zeroOffset = 1;
         for( int rowBlock = 0; rowBlock < r*2; rowBlock+=r) {
-            int rowA = rowBlock+innerRow;
-            int rowB = rowA+innerRow+1;
-            int heightA = Math.min(r,A.numRows - (rowA-rowA%r));
-            int heightB = Math.min(r,A.numRows - (rowB-rowB%r));
+            int rowA = 2;
+            int rowB = 1;
 
-            DenseMatrix64F v0 = CommonOps.extract(A,rowA,rowA+1,col,A.numRows);
-            DenseMatrix64F v1 = CommonOps.extract(A,rowB,rowB+1,col,A.numRows);
-            for( int j = 0; j < innerRow; j++ ) {
+            DenseMatrix64F v0 = CommonOps.extract(A,rowBlock+rowA,rowBlock+rowA+1,0,A.numCols);
+            DenseMatrix64F v1 = CommonOps.extract(A,rowBlock+rowB,rowBlock+rowB+1,0,A.numCols);
+            for( int j = 0; j < rowA+zeroOffset; j++ ) {
                 v0.set(j,0.0);
             }
-            v0.set(innerRow,1.0);
+            v0.set(rowA+zeroOffset,1.0);
 
             double expected = VectorVectorMult.innerProd(v0,v1);
 
-            D1Submatrix64F subAb = new D1Submatrix64F(Ab,rowBlock,A.numRows,col,A.numCols);
+            D1Submatrix64F subAb = new D1Submatrix64F(Ab,rowBlock,A.numRows,0,A.numCols);
 
-            double found = BlockHouseHolder.innerProdRow(r, rowA-rowBlock, subAb,
-                    rowA-rowBlock,heightA,subAb,rowB-rowBlock,heightB);
+            double found = BlockHouseHolder.innerProdRow(r, subAb,rowA,subAb,rowB,zeroOffset);
 
             assertEquals(expected,found,1e-8);
         }
@@ -236,32 +234,65 @@ public class TestBlockHouseHolder {
     }
 
     @Test
-    public void divideElementsRow() {
+    public void scale_row() {
 
         double div = 1.5;
         int row = 1;
         BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
         BlockMatrix64F A_orig = A.copy();
 
-        BlockHouseHolder.divideElementsRow(r,new D1Submatrix64F(A),row,row+1,div);
+        BlockHouseHolder.scale_row(r,new D1Submatrix64F(A),new D1Submatrix64F(A),row,1,div);
 
-        for( int i = row+1; i < A.numCols; i++ ) {
-            assertEquals(A_orig.get(row,i)/div , A.get(row,i),1e-8);
+        // check the one
+        assertEquals(div,A.get(row,row+1),1e-8);
+        // check the rest
+        for( int i = row+2; i < A.numCols; i++ ) {
+            assertEquals(A_orig.get(row,i)*div , A.get(row,i),1e-8);
         }
     }
 
     @Test
-    public void scaleElementsRow() {
+    public void add_row() {
+        int rowA=0;
+        int rowB=1;
+        int rowC=2;
 
-        double div = 1.5;
-        int row = 1;
-        BlockMatrix64F A = BlockMatrixOps.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
-        BlockMatrix64F A_orig = A.copy();
+        double alpha = 1.5;
+        double beta = -0.7;
 
-        BlockHouseHolder.scaleElementsRow(r,new D1Submatrix64F(A),row,row+1,div);
+        for( int width = 1; width <= 3*r; width++ ) {
+//            System.out.println("width "+width);
+            int end = width;
 
-        for( int i = row+1; i < A.numCols; i++ ) {
-            assertEquals(A_orig.get(row,i)*div , A.get(row,i),1e-8);
+            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
+            SimpleMatrix B = SimpleMatrix.random(r,width,-1,1,rand);
+            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+            BlockMatrix64F Bb = BlockMatrixOps.convert(B.getMatrix(),r);
+            BlockMatrix64F Cb = Ab.copy();
+
+            // turn A into householder vectors
+            for( int i = 0; i < A.numRows(); i++ ) {
+                for( int j = 0; j <= i; j++ ) {
+                    if( A.isInBounds(i,j))
+                        A.set(i,j,0);
+                }
+                if( A.isInBounds(i,i+1) )
+                    A.set(i,i+1,1);
+            }
+
+            SimpleMatrix a = A.extractVector(true,rowA).scale(alpha);
+            SimpleMatrix b = B.extractVector(true,rowB).scale(beta);
+            SimpleMatrix c = a.plus(b);
+
+            BlockHouseHolder.add_row(r,
+                    new D1Submatrix64F(Ab),rowA, alpha,
+                    new D1Submatrix64F(Bb),rowB, beta ,
+                    new D1Submatrix64F(Cb),rowC, 1,end);
+
+            // skip over the zeros
+            for( int j = rowA+1; j < end; j++ ) {
+                assertEquals(c.get(j), Cb.get(rowC,j),1e-8);
+            }
         }
     }
 
@@ -409,8 +440,8 @@ public class TestBlockHouseHolder {
 
         double beta = 2.5;
 
-        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix());
-        BlockMatrix64F Aw = BlockMatrixOps.convert(W.getMatrix());
+        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+        BlockMatrix64F Aw = BlockMatrixOps.convert(W.getMatrix(),r);
 
         // need to extract only the elements in W that are currently being used when
         // computing the expected Z
@@ -470,27 +501,5 @@ public class TestBlockHouseHolder {
             }
             Y.set(j,j,1);
         }
-    }
-
-    @Test
-    public void plusScale_row() {
-        A = SimpleMatrix.random(r*2+r-1,r*2+2,-1,1,rand);
-        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
-
-        // perform the operation manually
-        int row0 = 1;
-        int row1 = 2;
-        int col = 1;
-        double scale = -2.6;
-
-        for( int i = col; i < A.numCols(); i++ ) {
-            double val = A.get(row0,i) + scale*A.get(row1,i);
-            A.set(row0,i,val);
-        }
-
-        BlockHouseHolder.plusScale_row(r,col,scale,new D1Submatrix64F(Ab),row0,
-                new D1Submatrix64F(Ab),row1);
-
-        EjmlUnitTests.assertEquals(A.getMatrix(),Ab,1e-8);
     }
 }

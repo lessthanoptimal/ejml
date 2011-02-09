@@ -19,7 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.MatrixFeatures;
@@ -88,8 +90,10 @@ public class SwitchingEigenDecomposition
         symmetric = MatrixFeatures.isSymmetric(A,tol);
 
         if( symmetric ) {
-            if( symmetricAlg == null )
-                symmetricAlg = new SymmetricQRAlgorithmDecomposition(computeVectors);
+            if( symmetricAlg == null ) {
+                TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(null,orig.numRows);
+                symmetricAlg = new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
+            }
         } else if( generalAlg == null ) {
             generalAlg = new WatchedDoubleStepQRDecomposition(computeVectors);
         }

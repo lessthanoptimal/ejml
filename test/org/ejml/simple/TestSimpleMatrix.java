@@ -535,8 +535,10 @@ public class TestSimpleMatrix {
         SimpleMatrix c = A.extractVector(false,2);
         SimpleMatrix r = A.extractVector(true,2);
 
-        assertEquals(A.numCols(),r.numRows());
+        assertEquals(A.numCols(),r.numCols());
+        assertEquals(1,r.numRows());
         assertEquals(A.numRows(),c.numRows());
+        assertEquals(1,c.numCols());
 
         for( int i = 0; i < A.numCols(); i++ ) {
             assertEquals(A.get(2,i),r.get(i),1e-10);
@@ -556,5 +558,21 @@ public class TestSimpleMatrix {
         double value = A.plus(A_neg).normF();
 
         assertEquals(0,value,1e-8);
+    }
+
+    @Test
+    public void isInBounds() {
+        SimpleMatrix A = new SimpleMatrix(10,15);
+
+        assertTrue(A.isInBounds(0,0));
+        assertTrue(A.isInBounds(9,0));
+        assertTrue(A.isInBounds(0,14));
+        assertTrue(A.isInBounds(3,3));
+
+        assertFalse(A.isInBounds(-1,0));
+        assertFalse(A.isInBounds(0,-1));
+        assertFalse(A.isInBounds(10,0));
+        assertFalse(A.isInBounds(0,15));
+        assertFalse(A.isInBounds(3,1000));
     }
 }

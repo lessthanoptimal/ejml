@@ -123,6 +123,7 @@ public class TridiagonalDecompositionHouseholderOrig {
                 w[i] = QT.get(j,i);
             }
             QrHelperFunctions.rank1UpdateMultR(Q,w,gammas[j+1],j+1,j+1,N,b);
+//            Q.print();
         }
 
         return Q;
@@ -216,6 +217,7 @@ public class TridiagonalDecompositionHouseholderOrig {
                 total += QT.data[i*N+j]*QT.data[startU+j];
             }
             w[i] = -gamma*total;
+//            System.out.println("y["+i+"] = "+w[i]);
         }
         // alpha = -0.5*gamma*u^T*v
         double alpha = 0;

@@ -157,7 +157,7 @@ public class BlockMatrixOps {
     {
         int minLength = Math.min( blockLength , numRows ) * numCols;
         if( tmp.length < minLength ) {
-            throw new IllegalArgumentException("tmp must be at least "+minLength+" long ");
+            throw new IllegalArgumentException("tmp must be at least "+minLength+" long and not "+tmp.length);
         }
 
         for( int i = 0; i < numRows; i += blockLength ) {

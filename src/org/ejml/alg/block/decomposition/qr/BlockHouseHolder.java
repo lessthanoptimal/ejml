@@ -20,6 +20,7 @@
 package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockInnerMultiplication;
+import org.ejml.alg.block.BlockVectorOps;
 import org.ejml.data.D1Submatrix64F;
 
 /**
@@ -133,7 +134,7 @@ public class BlockHouseHolder {
 
             // divide u by u_0
             double u_0 = Y.get(i,i+1) + tau;
-            divideElementsRow(blockLength,Y,i,i+1, u_0 );
+            BlockVectorOps.div_row(blockLength,Y,i,u_0,Y,i,i+1,Y.col1-Y.col0);   
 
             gamma[Y.row0+i] = u_0/tau;
 
@@ -269,9 +270,11 @@ public class BlockHouseHolder {
 
         final double dataA[] = A.original.data;
 
+        int zeroOffset = colStart-row;
+
         for( int i = row+1; i < height; i++ ) {
             // total = U^T * A(i,:)
-            double total = innerProdRow(blockLength, colStart, A, row, height, A , i, height);
+            double total = innerProdRow(blockLength, A, row, A , i, zeroOffset );
 
             total *= gamma;
             // A(i,:) - gamma*U*total
@@ -310,18 +313,17 @@ public class BlockHouseHolder {
      *
      * @param A submatrix that is block aligned
      * @param row The row in A containing 'u'
-     * @param colStart First index in 'u' that the reflector starts at
+     * @param zeroOffset How far off the diagonal is the first element in 'u'
      *
      */
     public static void rank1UpdateMultL_LeftCol( final int blockLength ,
                                                  final D1Submatrix64F A ,
-                                                 final int row , final int colStart , final double gamma )
+                                                 final int row , final double gamma , int zeroOffset )
     {
         final int heightU = Math.min(blockLength,A.row1 - A.row0);
         final int width = Math.min(blockLength,A.col1-A.col0);
 
         final double data[] = A.original.data;
-
 
         for( int blockStart = A.row0+blockLength; blockStart < A.row1; blockStart += blockLength) {
             final int heightA = Math.min(blockLength,A.row1 - blockStart);
@@ -329,21 +331,23 @@ public class BlockHouseHolder {
             for( int i = 0; i < heightA; i++ ) {
 
                 // total = U^T * A(i,:)
-                double total = innerProdRow(blockLength, colStart, A, row, heightU, A, i+(blockStart-A.row0), heightA);
+                double total = innerProdRow(blockLength, A, row, A, i+(blockStart-A.row0), zeroOffset);
 
                 total *= gamma;
+
                 // A(i,:) - gamma*U*total
+//                plusScale_row(blockLength,);
 
                 int indexU = A.row0*A.original.numCols + heightU*A.col0 + row*width;
                 int indexA = blockStart*A.original.numCols + heightA*A.col0 + i*width;
 
                 // skip over zeros and assume first element in U is 1
-                indexU += colStart+1;
-                indexA += colStart;
+                indexU += zeroOffset+1;
+                indexA += zeroOffset;
 
                 data[indexA++] -= total;
 
-                for( int k = colStart+1; k < width; k++ ) {
+                for( int k = zeroOffset+1; k < width; k++ ) {
                     data[ indexA++ ] -= total*data[ indexU++ ];
                 }
 
@@ -370,7 +374,7 @@ public class BlockHouseHolder {
      * @param widthB how wide the column block that colB is inside of.
      * @return dot product of the two vectors.
      */
-    protected static double innerProdCol( int blockLength, D1Submatrix64F A,
+    public static double innerProdCol( int blockLength, D1Submatrix64F A,
                                           int colA, int widthA,
                                           int colB, int widthB ) {
         double total = 0;
@@ -430,64 +434,41 @@ public class BlockHouseHolder {
      * </p>
      *
      * @param blockLength
-     * @param colStart First element in the vectors.
      * @param A block aligned submatrix.
-     * @param rowA Row index inside the sub-matrix of first row vector has zeros and ones.
-     * @param heightA how tall the row block that rowA is inside of.
+     * @param rowA Row index inside the sub-matrix of first row vector has zeros and ones..
      * @param rowB Row index inside the sub-matrix of second row vector.
-     * @param heightB how tall the row block that rowB is inside of.
      * @return dot product of the two vectors.
      */
-    public static double innerProdRow(int blockLength, int colStart,
+    public static double innerProdRow(int blockLength,
                                       D1Submatrix64F A,
-                                      int rowA, int heightA,
+                                      int rowA,
                                       D1Submatrix64F B,
-                                      int rowB, int heightB) {
-        double total = 0;
+                                      int rowB, int zeroOffset ) {
+        int offset = rowA + zeroOffset;
+        if( offset + B.col0 >= B.col1 )
+            return 0;
 
-        final double dataA[] = A.original.data;
-        final double dataB[] = B.original.data;
+        // take in account the one in 'A'
+        double total = B.get(rowB,offset);
 
-        // row index of the block in the original matrix
-        final int rowBlockA = A.row0 + rowA - rowA % blockLength;
-        final int rowBlockB = B.row0 + rowB - rowB % blockLength;
-        rowA = rowA % blockLength;
-        rowB = rowB % blockLength;
-
-        // compute dot product down column vectors
-        final int startJ = A.col0 + colStart - colStart % blockLength;
-        colStart = colStart % blockLength;
-        for( int j = startJ; j < A.col1; j += blockLength ) {
-            int width = Math.min(blockLength,A.col1-j);
-
-            int indexA = rowBlockA*A.original.numCols + heightA*j + rowA*width;
-            int indexB = rowBlockB*B.original.numCols + heightB*j + rowB*width;
-
-            if( j == startJ ) {
-                // skip zeros
-                indexA += colStart+1;
-                indexB += colStart;
-
-                // handle leading one
-                total = dataB[indexB];
-
-                indexB++;
-
-                // standard vector dot product
-                for( int k = colStart+1; k < width; k++) {
-                    total += dataA[indexA++] * dataB[indexB++];
-                }
-            } else {
-                // standard vector dot product
-                for( int k = 0; k < width; k++) {
-                    double aa = dataA[indexA];
-                    double bb = dataB[indexB];
-                    total += dataA[indexA++] * dataB[indexB++];
-                }
-            }
-        }
+        total += BlockVectorOps.dot_row(blockLength,A,rowA,B,rowB,offset+1,A.col1-A.col0);
 
         return total;
+    }
+
+    public static void add_row( final int blockLength ,
+                                D1Submatrix64F A , int rowA , double alpha ,
+                                D1Submatrix64F B , int rowB , double beta ,
+                                D1Submatrix64F C , int rowC ,
+                                int zeroOffset , int end ) {
+        int offset = rowA+zeroOffset;
+
+        if( C.col0 + offset >= C.col1 )
+            return;
+        // handle leading one
+        C.set(rowC,offset,alpha+B.get(rowB,offset)*beta);
+
+        BlockVectorOps.add_row(blockLength,A,rowA,alpha,B,rowB,beta,C,rowC,offset+1,end);
     }
 
     /**
@@ -521,67 +502,33 @@ public class BlockHouseHolder {
         }
     }
 
-    /**
-     * Divides the elements in the specified row starting at element colStart by 'val'.
-     */
-    public static void divideElementsRow( final int blockLength ,
-                                          final D1Submatrix64F Y ,
-                                          final int row , int colStart ,
-                                          final double val ) {
-        final int height = Math.min(blockLength , Y.row1-Y.row0);
-
-        final double dataY[] = Y.original.data;
-
-        int startJ = Y.col0 + colStart - colStart%blockLength;
-        colStart = colStart % blockLength;
-
-        for( int j = startJ; j < Y.col1; j += blockLength ) {
-            int width = Math.min( blockLength , Y.col1 - j );
-
-            int index = Y.row0*Y.original.numCols + height*j + row*width;
-
-            if( j == startJ ) {
-                index += colStart;
-
-                for( int k = colStart; k < width; k++ ) {
-                    dataY[index++] /= val;
-                }
-            } else {
-                for( int k = 0; k < width; k++ ) {
-                    dataY[index++] /= val;
-                }
-            }
-        }
-    }
 
     /**
-     * Scales the elements in the specified row starting at element colStart by 'val'.
+     * Scales the elements in the specified row starting at element colStart by 'val'.<br>
+     * W = val*Y
+     *
+     * Takes in account zeros and leading one automatically.
+     *
+     * @param zeroOffset How far off the diagonal is the first element in the vector.
      */
-    public static void scaleElementsRow( final int blockLength ,
-                                         final D1Submatrix64F Y ,
-                                         final int row , final int colStart ,
-                                         final double val ) {
-        final int height = Math.min(blockLength , Y.row1-Y.row0);
+    public static void scale_row( final int blockLength ,
+                                  final D1Submatrix64F Y ,
+                                  final D1Submatrix64F W ,
+                                  final int row ,
+                                  final int zeroOffset,
+                                  final double val ) {
 
-        final double dataY[] = Y.original.data;
 
-        for( int j = Y.col0; j < Y.col1; j += blockLength ) {
-            int width = Math.min( blockLength , Y.col1 - j );
+        int offset = row+zeroOffset;
 
-            int index = Y.row0*Y.original.numCols + height*j + row*width;
+        if( offset >= W.col1-W.col0 )
+            return;
+        
+        // handle the one
+        W.set(row,offset,val);
 
-            if( j == Y.col0 ) {
-                index += colStart;
-
-                for( int k = colStart; k < width; k++ ) {
-                    dataY[index++] *= val;
-                }
-            } else {
-                for( int k = 0; k < width; k++ ) {
-                    dataY[index++] *= val;
-                }
-            }
-        }
+        // scale rest of the vector
+        BlockVectorOps.scale_row(blockLength,Y,row,val,W,row,offset+1,Y.col1-Y.col0);
     }
 
     /**
@@ -959,42 +906,8 @@ public class BlockHouseHolder {
     {
         final int widthB = Y.col1-Y.col0;
 
-        final double dataY[] = Y.original.data;
-        final int numCols = Y.original.numCols;
-
         for( int j = 0; j < col; j++ ) {
-            double total = 0;
-
-            // multiply each column in Y by V
-            // V is the column in at 'col'
-            for( int i = Y.row0; i < Y.row1; i += blockLength ) {
-                int heightW = Math.min( blockLength , Y.row1 - i );
-
-                int indexY = i*numCols + heightW*Y.col0 + j;
-                int indexV = i*numCols + heightW*Y.col0 + col;
-
-                if( i == Y.row0 ) {
-                    // skip zeros
-                    indexY += widthB*col;
-                    indexV += widthB*col;
-
-                    // the first element in v is going to be 1
-                    total = dataY[indexY];
-
-                    indexY += widthB;
-                    indexV += widthB;
-
-                    for( int k = col+1; k < heightW; k++ , indexV += widthB , indexY += widthB ) {
-                        total += dataY[indexY] * dataY[indexV];
-                    }
-                } else {
-                    for( int k = 0; k < heightW; k++ , indexV += widthB , indexY += widthB ) {
-                        total += dataY[indexY] * dataY[indexV];
-                    }
-                }
-            }
-
-            temp[j] = total;
+            temp[j] = innerProdCol(blockLength,Y,col,widthB,j,widthB);
         }
     }
 
@@ -1062,14 +975,16 @@ public class BlockHouseHolder {
     }
 
     /**
+     * <p>
      * Performs a matrix multiplication on the block aligned submatrices.  A is
-     * assumed to be lower triangular with diagonal elements set to 1.<br>
+     * assumed to be block column vector that is lower triangular with diagonal elements set to 1.<br>
      * <br>
      * C = A^T * B
+     * </p>
      */
-    public static void multTransA( int blockLength ,
-                                   D1Submatrix64F A , D1Submatrix64F B ,
-                                   D1Submatrix64F C )
+    public static void multTransA_vecCol( final int blockLength ,
+                                          D1Submatrix64F A , D1Submatrix64F B ,
+                                          D1Submatrix64F C )
     {
         int widthA = A.col1 - A.col0;
         if( widthA > blockLength )
@@ -1087,7 +1002,7 @@ public class BlockHouseHolder {
                 int indexB = (k-A.row0+B.row0)*B.original.numCols + j*heightA;
 
                 if( k == A.row0 )
-                    multTransABlockSet(A.original.data,B.original.data,C.original.data,
+                    multTransABlockSet_lowerTriag(A.original.data,B.original.data,C.original.data,
                             indexA,indexB,indexC,heightA,widthA,widthB);
                 else
                     BlockInnerMultiplication.blockMultPlusTransA(A.original.data,B.original.data,C.original.data,
@@ -1102,9 +1017,9 @@ public class BlockHouseHolder {
      * <br>
      * C = A^T * B
      */
-    protected static void multTransABlockSet( double[] dataA, double []dataB, double []dataC,
-                                              int indexA, int indexB, int indexC,
-                                              final int heightA, final int widthA, final int widthC) {
+    protected static void multTransABlockSet_lowerTriag( double[] dataA, double []dataB, double []dataC,
+                                                         int indexA, int indexB, int indexC,
+                                                         final int heightA, final int widthA, final int widthC) {
         for( int i = 0; i < widthA; i++ ) {
             for( int j = 0; j < widthC; j++ ) {
                 double val = i < heightA ? dataB[i*widthC + j + indexB] : 0;
@@ -1114,63 +1029,6 @@ public class BlockHouseHolder {
                 }
 
                 dataC[ i*widthC + j + indexC ] = val;
-            }
-        }
-    }
-
-    /**
-     * <p>
-     * Adds two row vectors together after scaling the second.<br>
-     * <br>
-     * a = a + &alpha;b
-     * </p>
-     *
-     * <p>
-     * rowA and rowB must be inside of the first block row.
-     * </p>
-     *
-     * @param blockLength
-     * @param col Which column is the first column
-     * @param A
-     * @param rowA
-     * @param B
-     * @param rowB
-     */
-    public static void plusScale_row( int blockLength ,
-                                      int col,
-                                      double alpha,
-                                      D1Submatrix64F A ,
-                                      int rowA,
-                                      D1Submatrix64F B ,
-                                      int rowB )
-    {
-        final int height = Math.min(blockLength,A.row1-A.row0);
-
-        final int width = A.col1-A.col0;
-
-        double dataA[] = A.original.data;
-        double dataB[] = B.original.data;
-
-        final int startJ = col - col%blockLength;
-        col = col%blockLength;
-
-        for( int j = startJ; j < width; j += blockLength ) {
-            int w = Math.min(blockLength,width-j);
-
-            int indexA = A.row0*A.original.numCols + height*(A.col0+j) + rowA*w;
-            int indexB = B.row0*B.original.numCols + height*(B.col0+j) + rowB*w;
-
-            if( j == startJ ) {
-                indexA += col;
-                indexB += col;
-
-                for( int k = col; k < w; k++ ) {
-                    dataA[indexA++] += alpha*dataB[indexB++];
-                }
-            } else {
-                for( int k = 0; k < w; k++ ) {
-                    dataA[indexA++] += alpha*dataB[indexB++];
-                }
             }
         }
     }

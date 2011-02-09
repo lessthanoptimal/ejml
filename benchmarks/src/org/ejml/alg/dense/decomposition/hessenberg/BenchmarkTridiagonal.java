@@ -19,9 +19,6 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.decomposition.hessenberg.TridiagonalDecompositionBlockHouseholder;
-import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -47,6 +44,8 @@ public class BenchmarkTridiagonal {
                 alg.decompose(orig.<DenseMatrix64F>copy());
             else
                 alg.decompose(orig);
+
+            alg.getQ(null,false);
         }
 
         return System.currentTimeMillis() - prev;
@@ -67,17 +66,18 @@ public class BenchmarkTridiagonal {
 
     public static long block( DenseMatrix64F orig , int numTrials ) {
 
-        BlockMatrix64F A = BlockMatrixOps.convert(orig);
 
-        TridiagonalDecompositionBlockHouseholder alg = new TridiagonalDecompositionBlockHouseholder();
+        TridiagonalDecompositionBlock alg = new TridiagonalDecompositionBlock();
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
             if( alg.inputModified())
-                alg.decompose(A.<BlockMatrix64F>copy());
+                alg.decompose(orig.<DenseMatrix64F>copy());
             else
-                alg.decompose(A);
+                alg.decompose(orig);
+
+            alg.getQ(null,false);
         }
 
         return System.currentTimeMillis() - prev;

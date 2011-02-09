@@ -19,7 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -34,7 +36,8 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(true);
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(null,orig.numRows);
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
 
         alg.setComputeVectorsWithValues(true);
 
@@ -51,7 +54,8 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(true);
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(null,orig.numRows);
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
 
         alg.setComputeVectorsWithValues(false);
 

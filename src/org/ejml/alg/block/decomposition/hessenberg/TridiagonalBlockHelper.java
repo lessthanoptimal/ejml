@@ -19,8 +19,10 @@
 
 package org.ejml.alg.block.decomposition.hessenberg;
 
+import org.ejml.alg.block.BlockVectorOps;
 import org.ejml.alg.block.decomposition.qr.BlockHouseHolder;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.ops.CommonOps;
 
 import static org.ejml.alg.block.decomposition.qr.BlockHouseHolder.computeHouseHolderRow;
 
@@ -40,7 +42,7 @@ public class TridiagonalBlockHelper {
      * Compute 'u' the householder reflector.
      * y(:) = A*u
      * v(i) = y - (1/2)*(y^T*u)*u
-     * a(i+1) = a(i) - u*v^T - v*u^t
+     * a(i+1) = a(i) - u*&gamma;*v^T - v*u^t
      * </p>
      *
      * @param blockLength Size of a block
@@ -76,6 +78,88 @@ public class TridiagonalBlockHelper {
             if( i+1 < applyIndex ) {
                 applyReflectorsToRow( blockLength , A , V , i+1 );
             }
+        }
+    }
+
+    /**
+     * <p>
+     * Computes W from the householder reflectors stored in the columns of the row block
+     * submatrix Y.
+     * </p>
+     *
+     * <p>
+     * Y = v<sup>(1)</sup><br>
+     * W = -&beta;<sub>1</sub>v<sup>(1)</sup><br>
+     * for j=2:r<br>
+     * &nbsp;&nbsp;z = -&beta;(I +WY<sup>T</sup>)v<sup>(j)</sup> <br>
+     * &nbsp;&nbsp;W = [W z]<br>
+     * &nbsp;&nbsp;Y = [Y v<sup>(j)</sup>]<br>
+     * end<br>
+     * <br>
+     * where v<sup>(.)</sup> are the house holder vectors, and r is the block length.  Note that
+     * Y already contains the householder vectors so it does not need to be modified.
+     * </p>
+     *
+     * <p>
+     * Y and W are assumed to have the same number of rows and columns.
+     * </p>
+     */
+    public static void computeW_row( final int blockLength ,
+                                     final D1Submatrix64F Y , final D1Submatrix64F W ,
+                                     final double beta[] , int betaIndex ) {
+
+        final int heightY = Y.row1-Y.row0;
+        CommonOps.set(W.original,0);
+
+        // W = -beta*v(1)
+        BlockHouseHolder.scale_row(blockLength,Y,W,0,1,-beta[betaIndex++]);
+
+        final int min = Math.min(heightY,W.col1-W.col0);
+
+        // set up rest of the rows
+        for( int i = 1; i < min; i++ ) {
+            // w=-beta*(I + W*Y^T)*u
+            double b = -beta[betaIndex++];
+
+            // w = w -beta*W*(Y^T*u)
+            for( int j = 0; j < i; j++ ) {
+                double yv = BlockHouseHolder.innerProdRow(blockLength,Y,i,Y,j,1);
+                BlockVectorOps.add_row(blockLength,W,i,1,W,j,b*yv,W,i,1,Y.col1-Y.col0);
+            }
+
+            //w=w -beta*u + stuff above
+            BlockHouseHolder.add_row(blockLength,Y,i,b,W,i,1,W,i,1,Y.col1-Y.col0);
+        }
+    }
+
+
+    /**
+     * <p>
+     * Given an already computed tridiagonal decomposition, compute the V row block vector.<br>
+     * <br>
+     * y(:) = A*u<br>
+     * v(i) = y - (1/2)*&gamma;*(y^T*u)*u
+     * </p>
+     */
+    public static void computeV_blockVector( final int blockLength ,
+                                             final D1Submatrix64F A ,
+                                             final double gammas[] ,
+                                             final D1Submatrix64F V )
+    {
+        int blockHeight = Math.min(blockLength,A.row1-A.row0);
+        if( blockHeight <= 1 )
+            return;
+        int width = A.col1-A.col0;
+        int num = Math.min(width-1,blockHeight);
+
+        for( int i = 0; i < num; i++ ) {
+            double gamma = gammas[A.row0+i];
+
+            // compute y
+            computeY(blockLength,A,V,i,gamma);
+
+            // compute v from y
+            computeRowOfV(blockLength,A,V,i,gamma);
         }
     }
 
@@ -118,8 +202,8 @@ public class TridiagonalBlockHelper {
             A.set(i,i+1,1);
 
             // grab only the relevant row from A = A + u*v^T + v*u^T
-            BlockHouseHolder.plusScale_row(blockLength,row,u_row,A,row,V,i);
-            BlockHouseHolder.plusScale_row(blockLength,row,v_row,A,row,A,i);
+            BlockVectorOps.add_row(blockLength,A,row,1,V,i,u_row,A,row,row,A.col1-A.col0);
+            BlockVectorOps.add_row(blockLength,A,row,1,A,i,v_row,A,row,row,A.col1-A.col0);
 
             A.set(i,i+1,before);
         }
@@ -149,29 +233,26 @@ public class TridiagonalBlockHelper {
         multA_u(blockLength,A,V,row);
 
         for( int i = 0; i < row; i++ ) {
-            // height of the top block of A and V should be the same
-            int height = Math.min(blockLength,A.row1-A.row0);
-
             // y = y + u_i*v_i^t*u + v_i*u_i^t*u
 
             // v_i^t*u
-            double dot_v_u = BlockHouseHolder.innerProdRow(blockLength, row+1,
-                    A,row,height,V,i,height);
+            double dot_v_u = BlockHouseHolder.innerProdRow(blockLength,A,row,V,i,1);
+
             // u_i^t*u
-            double dot_u_u = BlockHouseHolder.innerProdRow(blockLength, row+1,
-                    A,row,height,A,i,height);
+            double dot_u_u = BlockHouseHolder.innerProdRow(blockLength,A,row,A,i,1);
 
-            // y = y - u_i*(v_i^t*u)
-            // the ones in these 'u' are skipped over since A is only updated 
-            BlockHouseHolder.plusScale_row(blockLength,row+1,dot_v_u,V,row,A,i);
+            // y = y + u_i*(v_i^t*u)
+            // the ones in these 'u' are skipped over since the next submatrix of A
+            // is only updated
+            BlockVectorOps.add_row(blockLength,V,row,1,A,i,dot_v_u,V,row,row+1,A.col1-A.col0);
 
-            // y = y - v_i*(u_i^t*u)
+            // y = y + v_i*(u_i^t*u)
             // the 1 in U is taken account above
-            BlockHouseHolder.plusScale_row(blockLength,row+1,dot_u_u,V,row,V,i);
+            BlockVectorOps.add_row(blockLength,V,row,1,V,i,dot_u_u,V,row,row+1,A.col1-A.col0);
         }
 
-        // y = gamma*y
-        BlockHouseHolder.scaleElementsRow(blockLength,V,row,row+1,-gamma);
+        // y = -gamma*y
+        BlockVectorOps.scale_row(blockLength,V,row,-gamma,V,row,row+1,V.col1-V.col0);
     }
 
     /**
@@ -195,14 +276,38 @@ public class TridiagonalBlockHelper {
     {
         int heightMatA = A.row1-A.row0;
 
-        int heightU = Math.min(blockLength,A.row1-A.row0);
-
         for( int i = row+1; i < heightMatA; i++ ) {
-            int heightA = Math.min(blockLength,heightMatA-(i-i%blockLength));
-            double val = BlockHouseHolder.innerProdRow(blockLength, row+1, A,
-                    row,heightU,A,i,heightA);
+
+            double val = innerProdRowSymm(blockLength,A,row,A,i,1);
 
             V.set(row,i,val);
+        }
+    }
+
+    public static double innerProdRowSymm(int blockLength,
+                                          D1Submatrix64F A,
+                                          int rowA,
+                                          D1Submatrix64F B,
+                                          int rowB, int zeroOffset ) {
+        int offset = rowA + zeroOffset;
+        if( offset + B.col0 >= B.col1 )
+            return 0;
+
+        if( offset < rowB ) {
+            // take in account the one in 'A'
+            double total = B.get(offset,rowB);
+
+            total += BlockVectorOps.dot_row_col(blockLength,A,rowA,B,rowB,offset+1,rowB);
+            total += BlockVectorOps.dot_row(blockLength,A,rowA,B,rowB,rowB,A.col1-A.col0);
+
+            return total;
+        } else {
+            // take in account the one in 'A'
+            double total = B.get(rowB,offset);
+
+            total += BlockVectorOps.dot_row(blockLength,A,rowA,B,rowB,offset+1,A.col1-A.col0);
+
+            return total;
         }
     }
 
@@ -225,18 +330,15 @@ public class TridiagonalBlockHelper {
                                       int row ,
                                       double gamma )
     {
-        int height = Math.min(blockLength,A.row1-A.row0);
-
         // val=(y^T*u)
-        double val = BlockHouseHolder.innerProdRow(blockLength, row+1,
-                A,row,height,V,row,height);
+        double val = BlockHouseHolder.innerProdRow(blockLength,A,row,V,row,1);
 
         // take in account the one
         double before = A.get(row,row+1);
         A.set(row,row+1,1);
 
         // v = y - (1/2)gamma*val * u
-        BlockHouseHolder.plusScale_row(blockLength,row+1,-0.5*gamma*val,V,row,A,row);
+        BlockVectorOps.add_row(blockLength,V,row,1,A,row,-0.5*gamma*val,V,row,row+1,A.col1-A.col0);
 
         A.set(row,row+1,before);
     }

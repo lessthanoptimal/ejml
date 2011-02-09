@@ -79,7 +79,7 @@ public class BidiagonalHelper {
             // apply to the left column block
             // TODO THIS WON'T WORK!!!!!!!!!!!!!
             // Needs the whole matrix to have been updated by the left reflector to compute the correct solution
-            rank1UpdateMultL_LeftCol(blockLength,A,i,i+1,gammasV[A.row0+i]);
+//            rank1UpdateMultL_LeftCol(blockLength,A,i,i+1,gammasV[A.row0+i]);
 
             System.out.println("After row stuff");
             A.original.print();

@@ -19,6 +19,7 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -83,5 +84,9 @@ public class D1Submatrix64F {
         }
 
         return ret;
+    }
+
+    public void print() {
+        MatrixIO.print(System.out,original,"%6.3f",row0,row1,col0,col1);
     }
 }

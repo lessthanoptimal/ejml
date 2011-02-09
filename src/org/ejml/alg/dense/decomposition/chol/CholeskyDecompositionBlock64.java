@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
+import org.ejml.EjmlParameters;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
 import org.ejml.alg.dense.decomposition.BaseDecompositionBlock64;
@@ -37,7 +38,7 @@ public class CholeskyDecompositionBlock64
         extends BaseDecompositionBlock64 implements CholeskyDecomposition<DenseMatrix64F> {
 
     public CholeskyDecompositionBlock64( boolean lower ) {
-        super(new BlockCholeskyOuterForm(lower));
+        super(new BlockCholeskyOuterForm(lower), EjmlParameters.BLOCK_WIDTH);
     }
 
     @Override

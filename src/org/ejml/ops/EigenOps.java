@@ -20,10 +20,12 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.EigenPowerMethod;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
 import org.ejml.alg.dense.decomposition.eig.WatchedDoubleStepQRDecomposition;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.mult.VectorVectorMult;
@@ -319,9 +321,13 @@ public class EigenOps {
      * will run much faster and be more accurate than the general purpose algorithm.
      *
      * @return EVD for symmetric matrices.
+     * @param matrixWidth The number of rows/columns in the matrix.  Used to select the best algorithms.
      * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      */
-    public static EigenDecomposition<DenseMatrix64F> decompositionSymmetric( boolean computeVectors ) {
-        return new SymmetricQRAlgorithmDecomposition(computeVectors);
+    public static EigenDecomposition<DenseMatrix64F> decompositionSymmetric( int matrixWidth ,
+                                                                             boolean computeVectors ) {
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(null,matrixWidth);
+
+        return new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
     }
 }

@@ -19,9 +19,12 @@
 
 package org.ejml.alg.block.decomposition.hessenberg;
 
+import org.ejml.alg.block.BlockMultiplication;
+import org.ejml.alg.block.decomposition.qr.BlockMatrix64HouseholderQR;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
 import static org.ejml.alg.block.BlockInnerMultiplication.blockMultPlusTransA;
@@ -44,30 +47,150 @@ import static org.ejml.alg.block.BlockInnerMultiplication.blockMultPlusTransA;
  *
  * @author Peter Abeles
  */
-// TODO take advantage of symmetry more
 public class TridiagonalDecompositionBlockHouseholder
         implements TridiagonalSimilarDecomposition<BlockMatrix64F> {
 
+    // matrix which is being decomposed
+    // householder vectors are stored along the upper triangle rows
     protected BlockMatrix64F A;
+    // temporary storage for block computations
     protected BlockMatrix64F V = new BlockMatrix64F(1,1);
+    // stores intermediate results in matrix multiplication
+    protected BlockMatrix64F tmp = new BlockMatrix64F(1,1);
     protected double gammas[] = new double[1];
+
+    // temporary storage for zeros and ones in U
+    protected DenseMatrix64F zerosM = new DenseMatrix64F(1,1);
 
     @Override
     public BlockMatrix64F getT(BlockMatrix64F T) {
-        if( T.numRows != A.numRows || T.numCols != A.numCols )
-            throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
+        if( T == null ) {
+            T = new BlockMatrix64F(A.numRows,A.numCols,A.blockLength);
+        } else {
+            if( T.numRows != A.numRows || T.numCols != A.numCols )
+                throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
 
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+            CommonOps.set(T,0);
+        }
+
+        T.set(0,0,A.data[0]);
+        for( int i = 1; i < A.numRows; i++ ) {
+            double d = A.get(i-1,i);
+            T.set(i,i,A.get(i,i));
+            T.set(i-1,i,d);
+            T.set(i,i-1,d);
+        }
+
+        return T;
     }
 
     @Override
     public BlockMatrix64F getQ(BlockMatrix64F Q, boolean transposed) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Q = BlockMatrix64HouseholderQR.initializeQ(Q, A.numRows , A.numCols  , A.blockLength , false);
+
+        int height = Math.min(A.blockLength,A.numRows);
+        V.reshape(height,A.numCols,false);
+        tmp.reshape(height,A.numCols,false);
+
+        D1Submatrix64F subQ = new D1Submatrix64F(Q);
+        D1Submatrix64F subU = new D1Submatrix64F(A);
+        D1Submatrix64F subW = new D1Submatrix64F(V);
+        D1Submatrix64F tmp = new D1Submatrix64F(this.tmp);
+
+
+        int N = A.numRows;
+
+        int start = N - N % A.blockLength;
+        if( start == N )
+            start -= A.blockLength;
+        if( start < 0 )
+            start = 0;
+
+        // (Q1^T * (Q2^T * (Q3^t * A)))
+        for( int i = start; i >= 0; i -= A.blockLength ) {
+            int blockSize = Math.min(A.blockLength,N-i);
+
+            subW.col0 = i;
+            subW.row1 = blockSize;
+            subW.original.reshape(subW.row1,subW.col1,false);
+            CommonOps.set(subW.original,0);
+
+            tmp.col0 = i;
+            tmp.row1 = blockSize;
+            tmp.original.reshape(tmp.row1,tmp.col1,false);
+            CommonOps.set(tmp.original,0);
+            
+            subU.col0 = i;
+            subU.row0 = i;
+            subU.row1 = subU.row0+blockSize;
+
+            // zeros and ones are saved and overwritten in U so that standard matrix multiplication can be used
+            copyZeros(subU);
+
+            // compute W for Q(i) = ( I + W*Y^T)
+            TridiagonalBlockHelper.computeW_row(A.blockLength,subU,subW,gammas,i);
+
+            subQ.col0 = i;
+            subQ.row0 = i;
+
+            // Apply the Qi to Q
+            // Qi = I + W*U^T
+
+            // Note that U and V are really row vectors.  but standard notation assumed they are column vectors.
+            // which is why the functions called don't match the math above
+
+            // (I + W*U^T)*Q
+            // F=U^T*Q(i)
+            BlockMultiplication.mult(A.blockLength,subU,subQ,tmp);
+            // Q(i+1) = Q(i) + W*F
+            BlockMultiplication.multPlusTransA(A.blockLength,subW,tmp,subQ);
+
+            replaceZeros(subU);
+        }
+
+        if( transposed )
+            throw new RuntimeException("support this");
+
+        return Q;
+    }
+
+    private void copyZeros( D1Submatrix64F subU ) {
+        int N = Math.min(A.blockLength,subU.col1-subU.col0);
+        for( int i = 0; i < N; i++ ) {
+            // save the zeros
+            for( int j = 0; j <= i; j++ ) {
+                zerosM.unsafe_set(i,j,subU.get(i,j));
+                subU.set(i,j,0);
+            }
+            // save the one
+            if( subU.col0 + i + 1 < subU.original.numCols ) {
+                zerosM.unsafe_set(i,i+1,subU.get(i,i+1));
+                subU.set(i,i+1,1);
+            }
+        }
+    }
+
+    private void replaceZeros( D1Submatrix64F subU ) {
+        int N = Math.min(A.blockLength,subU.col1-subU.col0);
+        for( int i = 0; i < N; i++ ) {
+            // save the zeros
+            for( int j = 0; j <= i; j++ ) {
+                subU.set(i,j,zerosM.get(i,j));
+            }
+            // save the one
+            if( subU.col0 + i + 1 < subU.original.numCols ) {
+                subU.set(i,i+1,zerosM.get(i,i+1));
+            }
+        }
     }
 
     @Override
     public void getDiagonal(double[] diag, double[] off) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        diag[0] = A.data[0];
+        for( int i = 1; i < A.numRows; i++ ) {
+            diag[i] = A.get(i,i);
+            off[i-1] = A.get(i-1,i);
+        }
     }
 
     @Override
@@ -84,6 +207,7 @@ public class TridiagonalDecompositionBlockHouseholder
         int N = orig.numCols;
 
         for( int i = 0; i < N; i += A.blockLength ) {
+//            System.out.println("-------- triag i "+i);
             int height = Math.min(A.blockLength,A.numRows-i);
 
             subA.col0 = subU.col0 = i;
@@ -93,9 +217,9 @@ public class TridiagonalDecompositionBlockHouseholder
 
             subV.col0 = i;
             subV.row1 = height;
+            subV.original.reshape(subV.row1,subV.col1,false);
 
             // bidiagonalize the top row
-            CommonOps.set(subV.original,0);
             TridiagonalBlockHelper.tridiagUpperRow(A.blockLength,subA,gammas,subV);
 
             // apply Householder reflectors to the lower portion using block multiplication
@@ -128,7 +252,6 @@ public class TridiagonalDecompositionBlockHouseholder
                                        D1Submatrix64F A , D1Submatrix64F B ,
                                        D1Submatrix64F C )
     {
-        // TODO only do upper triangle
         int heightA = Math.min( blockLength , A.row1 - A.row0 );
 
         for( int i = C.row0+blockLength; i < C.row1; i += blockLength ) {
@@ -136,8 +259,7 @@ public class TridiagonalDecompositionBlockHouseholder
 
             int indexA = A.row0*A.original.numCols + (i-C.row0+A.col0)*heightA;
 
-//            for( int j = i; j < C.col1; j += blockLength ) {
-            for( int j = C.col0+blockLength; j < C.col1; j += blockLength ) {
+            for( int j = i; j < C.col1; j += blockLength ) {
                 int widthC = Math.min( blockLength , C.col1 - j );
 
                 int indexC = i*C.original.numCols + j*heightC;
@@ -154,9 +276,12 @@ public class TridiagonalDecompositionBlockHouseholder
 
         int height = Math.min(A.blockLength,A.numRows);
         V.reshape(height,A.numCols,A.blockLength,false);
+        tmp.reshape(height,A.numCols,A.blockLength,false);
 
         if( gammas.length < A.numCols )
             gammas = new double[ A.numCols ];
+
+        zerosM.reshape(A.blockLength,A.blockLength+1,false);
     }
 
     @Override

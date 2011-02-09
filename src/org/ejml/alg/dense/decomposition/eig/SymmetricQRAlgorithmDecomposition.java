@@ -19,10 +19,10 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenHelper;
 import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -76,14 +76,20 @@ public class SymmetricQRAlgorithmDecomposition
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
 
-    public SymmetricQRAlgorithmDecomposition( boolean computeVectors ) {
+    public SymmetricQRAlgorithmDecomposition( TridiagonalSimilarDecomposition<DenseMatrix64F> decomp,
+                                              boolean computeVectors ) {
 
+        this.decomp = decomp;
         this.computeVectors = computeVectors;
 
-        decomp = new TridiagonalDecompositionHouseholder();
         helper = new SymmetricQREigenHelper();
 
         vector = new SymmetricQrAlgorithm(helper);
+    }
+
+    public SymmetricQRAlgorithmDecomposition( boolean computeVectors ) {
+
+        this(DecompositionFactory.tridiagonal(),computeVectors);
     }
 
     public void setComputeVectorsWithValues(boolean computeVectorsWithValues) {
@@ -119,7 +125,7 @@ public class SymmetricQRAlgorithmDecomposition
     }
 
     /**
-     * Decomposes the matrix using the QR algorithm.  Care was taken to minimize unnecisary memory copying
+     * Decomposes the matrix using the QR algorithm.  Care was taken to minimize unnecessary memory copying
      * and cache skipping.
      *
      * @param orig The matrix which is being decomposed.  Not modified.

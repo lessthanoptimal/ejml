@@ -21,6 +21,7 @@ package org.ejml.alg.block.decomposition.hessenberg;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig;
+import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -48,8 +50,8 @@ public class TestTridiagonalBlockHelper {
     @Test
     public void tridiagUpperRow() {
 
-        int offX = r;
-        int offY = r;
+        int offX = 0;
+        int offY = 0;
 
         // test it out on a variety of sizes
         for( int width = 1; width <= 3*r; width++ ) {
@@ -84,6 +86,51 @@ public class TestTridiagonalBlockHelper {
         }
     }
 
+    @Test
+    public void computeW_row() {
+
+        for( int width = r; width <= 3*r; width++ ) {
+//            System.out.println("width!!!  "+width);
+            double betas[] = new double[ r ];
+            for( int i = 0; i < r; i++ )
+                betas[i] = i + 0.5;
+
+            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
+
+            // Compute W directly using SimpleMatrix
+            SimpleMatrix v = A.extractVector(true,0);
+            v.set(0,0);
+            v.set(1,1);
+            SimpleMatrix Y = v;
+            SimpleMatrix W = v.scale(-betas[0]);
+
+            for( int i = 1; i < A.numRows(); i++ ) {
+                v = A.extractVector(true,i);
+
+                for( int j = 0; j <= i; j++ )
+                    v.set(j,0);
+                if( i+1 < A.numCols())
+                    v.set(i+1,1);
+
+                SimpleMatrix z = v.transpose().plus(W.transpose().mult(Y.mult(v.transpose()))).scale(-betas[i]);
+
+                W = W.combine(i,0,z.transpose());
+                Y = Y.combine(i,0,v);
+            }
+
+            // now compute it using the block matrix stuff
+            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+            BlockMatrix64F Wb = new BlockMatrix64F(Ab.numRows,Ab.numCols,r);
+
+            D1Submatrix64F Ab_sub = new D1Submatrix64F(Ab);
+            D1Submatrix64F Wb_sub = new D1Submatrix64F(Wb);
+
+            TridiagonalBlockHelper.computeW_row(r,Ab_sub,Wb_sub,betas,0);
+
+            // see if the result is the same
+            assertTrue(GenericMatrixOps.isEquivalent(Wb,W.getMatrix(),1e-8));
+        }
+    }
 
     @Test
     public void applyReflectorsToRow() {
@@ -103,8 +150,8 @@ public class TestTridiagonalBlockHelper {
 
                 // manually apply "reflectors" to A
                 for( int i = 0; i < row; i++ ) {
-                    SimpleMatrix u = A_orig.extractVector(true,i);
-                    SimpleMatrix v = V.extractVector(true,i);
+                    SimpleMatrix u = A_orig.extractVector(true,i).transpose();
+                    SimpleMatrix v = V.extractVector(true,i).transpose();
 
                     for( int j = 0; j <= i; j++ ) {
                         u.set(j,0.0);
@@ -136,13 +183,15 @@ public class TestTridiagonalBlockHelper {
     @Test
     public void multA_u() {
         SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+        // make a symmetric so that this mult will work
+        A = A.transpose().mult(A);
 
         BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
         BlockMatrix64F V = new BlockMatrix64F(r,Ab.numCols,r);
 
         int row = 1;
 
-        SimpleMatrix u = A.extractVector(true,row);
+        SimpleMatrix u = A.extractVector(true,row).transpose();
         for( int i = 0; i <= row; i++ ) {
             u.set(i,0);
         }
@@ -164,11 +213,12 @@ public class TestTridiagonalBlockHelper {
     @Test
     public void computeY() {
         SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+        A = A.transpose().mult(A); // needs to be symmetric to pass
         SimpleMatrix Vo = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
 
         for( int row = 0; row < r; row++ ) {
             SimpleMatrix AA = A.copy();
-            SimpleMatrix u = A.extractVector(true,row);
+            SimpleMatrix u = A.extractVector(true,row).transpose();
             SimpleMatrix y;
 
             double gamma = 1.3;
@@ -221,8 +271,8 @@ public class TestTridiagonalBlockHelper {
         double gamma = 2.3;
 
         for( int row = 0; row < r; row++ ) {
-            SimpleMatrix u = A.extractVector(true,row);
-            SimpleMatrix y = V.extractVector(true,row);
+            SimpleMatrix u = A.extractVector(true,row).transpose();
+            SimpleMatrix y = V.extractVector(true,row).transpose();
 
             for( int i = 0; i <= row; i++ ) {
                 u.set(i,0);

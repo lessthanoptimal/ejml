@@ -141,6 +141,19 @@ public class MatrixIO {
             out.println();
         }
     }
+    public static void print( PrintStream out , Matrix64F mat , String format ,
+                              int row0 , int row1, int col0 , int col1 ) {
+        out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);
+
+        format += " ";
+
+        for( int y = row0; y < row1; y++ ) {
+            for( int x = col0; x < col1; x++ ) {
+                out.printf(format,mat.get(y,x));
+            }
+            out.println();
+        }
+    }
 
 //    public static void main( String []args ) {
 //        Random rand = new Random(234234);
