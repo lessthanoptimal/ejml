@@ -40,6 +40,7 @@ Date format: year/month/day
 - Pushed SimpleMatrix into its own package.
   * To make it easy to extend, SimpleMatrix now extends SimpleBase
   * Added dot() and isVector() is SimpleMatrix.
+- LinearSolverFactory and DecompositionFactory now take in the matrix's size
 
 ----- Version 0.15
 

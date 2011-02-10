@@ -70,7 +70,7 @@ public class WatchedDoubleStepQREigenvector {
             eigenvectors = new DenseMatrix64F[N];
             eigenvectorTemp = new DenseMatrix64F(N,1);
 
-            solver = LinearSolverFactory.linear();
+            solver = LinearSolverFactory.linear(0);
         } else {
 //            UtilEjml.setnull(eigenvectors);
             eigenvectors = new DenseMatrix64F[N];

@@ -19,11 +19,13 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
-import org.ejml.alg.dense.linsol.qr.SmartSolverQr;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -36,10 +38,15 @@ public class LinearSolverFactory {
 
     /**
      * Creates a general purpose solver.  Use this if you are not sure what you need.
+     *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
      */
-    public static LinearSolver<DenseMatrix64F> general() {
-        // todo create a solver which uses linear or least squares
-        return leastSquares();
+    public static LinearSolver<DenseMatrix64F> general( int numRows , int numCols ) {
+        if( numRows == numCols )
+            return linear(numRows);
+        else
+            return leastSquares(numRows,numCols);
     }
 
     /**
@@ -47,7 +54,7 @@ public class LinearSolverFactory {
      *
      * @return A new linear solver.
      */
-    public static LinearSolver<DenseMatrix64F> linear() {
+    public static LinearSolver<DenseMatrix64F> linear( int matrixSize ) {
         return new LinearSolverLu(new LUDecompositionAlt());
     }
 
@@ -55,10 +62,19 @@ public class LinearSolverFactory {
      * Creates a good general purpose solver for over determined systems and returns the optimal least-squares
      * solution.  The A matrix will have dimensions (m,n) where m &ge; n.
      *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
      * @return A new least-squares solver for over determined systems.
      */
-    public static LinearSolver<DenseMatrix64F> leastSquares() {
-        return new SmartSolverQr();
+    public static LinearSolver<DenseMatrix64F> leastSquares( int numRows , int numCols ) {
+        if(numCols < EjmlParameters.SWITCH_BLOCK64_QR )  {
+            return new LinearSolverQrHouseCol();
+        } else {
+            if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
+                return new LinearSolverQrBlock64();
+            else
+                return new LinearSolverQrHouseCol();
+        }
     }
 
     /**

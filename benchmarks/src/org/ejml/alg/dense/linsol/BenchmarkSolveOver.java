@@ -20,7 +20,6 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
-import org.ejml.alg.dense.linsol.qr.SmartSolverQr;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -82,8 +81,8 @@ public class BenchmarkSolveOver {
 //                new LinearSolverQrHouseTran(),numTrials));
 //        System.out.println("  solve QR Block64      = "+ solveBenchmark(
 //                new LinearSolverQrBlock64(),numTrials));
-        System.out.println("  solve smart QR        = "+ solveBenchmark(
-                new SmartSolverQr(),numTrials));
+        System.out.println("  Selected              = "+ solveBenchmark(
+                LinearSolverFactory.leastSquares(A.numRows,A.numCols),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }

@@ -68,21 +68,26 @@ public class DecompositionFactory {
      * Creates a new instance of a CholeskyDecomposition algorithm.  It selects the best
      * algorithm depending on the size of the largest matrix it might decompose.
      * </p>
-     * @param widthMax The maximum width of a matrix that can be processed.
+     * @param widthWidth The matrix size that the decomposition should be optimized for.
      * @param decomposeOrig Should it decompose the matrix that is passed in or declare a new one?
      * @param lower should a lower or upper triangular matrix be used.
      * @return A new CholeskyDecomposition.
      */
-    public static CholeskyDecomposition<DenseMatrix64F> chol( int widthMax , boolean decomposeOrig, boolean lower )
+    public static CholeskyDecomposition<DenseMatrix64F> chol( int widthWidth , boolean decomposeOrig, boolean lower )
     {
-        if( widthMax < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
+        if( widthWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
             return new CholeskyDecompositionInner(decomposeOrig,lower);
         } else {
             return new CholeskyDecompositionBlock64(lower);
         }
     }
 
-    public static CholeskyDecomposition<DenseMatrix64F> chol() {
+    /**
+     *
+     * @param matrixWidth The matrix size that the decomposition should be optimized for.
+     * @return Cholesky decomposition.
+     */
+    public static CholeskyDecomposition<DenseMatrix64F> chol( int matrixWidth ) {
         return chol(10,false,true);
     }
 
@@ -90,18 +95,20 @@ public class DecompositionFactory {
      * Creates a {@link CholeskyDecompositionLDL} decomposition. Cholesky LDL is a variant of
      * {@link CholeskyDecomposition} that avoids need to compute the square root.
      *
+     * @param matrixWidth The matrix size that the decomposition should be optimized for.
      * @return CholeskyDecompositionLDL
      */
-    public static CholeskyDecompositionLDL cholLDL() {
+    public static CholeskyDecompositionLDL cholLDL( int matrixWidth) {
         return new CholeskyDecompositionLDL();
     }
 
     /**
      * Returns a new instance of the Lower Upper (LU) decomposition.
      *
+     * @parm matrixWidth The matrix size that the decomposition should be optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition<DenseMatrix64F> lu() {
+    public static LUDecomposition<DenseMatrix64F> lu( int matrixWidth ) {
         return new LUDecompositionAlt();
     }
 
@@ -109,9 +116,11 @@ public class DecompositionFactory {
      * Returns a new instance of a SingularValueDecomposition which will compute
      * the full decomposition..
      *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
      * @return SingularValueDecomposition
      */
-    public static SingularValueDecomposition<DenseMatrix64F> svd() {
+    public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols ) {
         return new SvdImplicitQrDecompose(false,true,true);
     }
 
@@ -119,43 +128,49 @@ public class DecompositionFactory {
      * Returns a new instance of a SingularValueDecomposition which can be configured to compute
      * U and V matrices or not, be in compact form.
      *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
      * @param needU Should it compute the U matrix.
      * @param needV Should it compute the V matrix.
      * @param compact Should it compute the SVD in compact form.
      * @return
      */
-    public static SingularValueDecomposition<DenseMatrix64F> svd( boolean needU , boolean needV , boolean compact ) {
+    public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols , boolean needU , boolean needV , boolean compact ) {
         return new SvdImplicitQrDecompose(compact,needU,needV);
     }
 
     /**
      * Returns a new instance of the QR decomposition.
      *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
      * @return QRDecomposition
      */
-    public static QRDecomposition<DenseMatrix64F> qr() {
+    public static QRDecomposition<DenseMatrix64F> qr( int numRows , int numCols ) {
         return new QRDecompositionHouseholderColumn();
     }
 
     /**
      * Returns a new eigenvalue decomposition.  If it is known before hand if the matrix
      * is symmetric or not then a call should be made directly to either {@link org.ejml.ops.EigenOps#decompositionGeneral(boolean)}
-     * or {@link org.ejml.ops.EigenOps#decompositionSymmetric(boolean)}.  That will avoid unnecessary checks.
+     * or {@link org.ejml.ops.EigenOps#decompositionSymmetric(int, boolean)}.  That will avoid unnecessary checks.
      *
+     * @param matrixWidth The matrix size that the decomposition should be optimized for.
      * @return A new EigenDecomposition.
      */
-    public static EigenDecomposition<DenseMatrix64F> eig() {
-        return new SwitchingEigenDecomposition();
+    public static EigenDecomposition<DenseMatrix64F> eig( int matrixWidth ) {
+        return new SwitchingEigenDecomposition(matrixWidth);
     }
 
     /**
-     * Same as {@link #eig()} but can turn on and off computing eigen vectors
+     * Same as {@link #eig(int)} but can turn on and off computing eigen vectors
      *
+     * @param matrixWidth The matrix size that the decomposition should be optimized for.
      * @param needVectors Should eigenvectors be computed or not.
      * @return A new EigenDecomposition
      */
-    public static EigenDecomposition<DenseMatrix64F> eig( boolean needVectors ) {
-        return new SwitchingEigenDecomposition(needVectors,1e-8);
+    public static EigenDecomposition<DenseMatrix64F> eig( int matrixWidth , boolean needVectors ) {
+        return new SwitchingEigenDecomposition(matrixWidth,needVectors,1e-8);
     }
 
     /**

@@ -48,7 +48,7 @@ public class SymmetricEigenStressTest {
         Random localRand = new Random(seed);
         RandomMatrices.createSymmetric(A,-1,1,localRand);
 
-        EigenDecomposition<DenseMatrix64F> decomp = DecompositionFactory.eig();
+        EigenDecomposition<DenseMatrix64F> decomp = DecompositionFactory.eig(A.numRows);
 
         System.out.println("Decomposing...");
 
@@ -80,7 +80,7 @@ public class SymmetricEigenStressTest {
 
     public void checkRandomMatrices( int N ) {
         System.out.println("N = "+N);
-        EigenDecomposition decomp = DecompositionFactory.eig();
+        EigenDecomposition decomp = DecompositionFactory.eig(N);
 
         DenseMatrix64F A = new DenseMatrix64F(N,N);
 

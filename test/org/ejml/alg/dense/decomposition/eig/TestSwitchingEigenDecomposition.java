@@ -29,7 +29,7 @@ import org.junit.Test;
 public class TestSwitchingEigenDecomposition extends GeneralEigenDecompositionCheck {
     @Override
     public EigenDecomposition createDecomposition() {
-        return new SwitchingEigenDecomposition(computeVectors,1e-8);
+        return new SwitchingEigenDecomposition(0,computeVectors,1e-8);
     }
 
     @Test

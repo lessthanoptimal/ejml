@@ -43,7 +43,7 @@ public class TestLinearSolverFactory {
         DenseMatrix64F x = RandomMatrices.createRandom(4,1,rand);
         DenseMatrix64F y = new DenseMatrix64F(5,1);
 
-        LinearSolver solver = LinearSolverFactory.general();
+        LinearSolver solver = LinearSolverFactory.general(A.numRows,A.numCols);
 
         standardTest(A, x, y, solver);
     }
@@ -54,7 +54,7 @@ public class TestLinearSolverFactory {
         DenseMatrix64F x = RandomMatrices.createRandom(4,1,rand);
         DenseMatrix64F y = new DenseMatrix64F(4,1);
 
-        LinearSolver solver = LinearSolverFactory.linear();
+        LinearSolver solver = LinearSolverFactory.linear(A.numRows);
 
         standardTest(A, x, y, solver);
     }
@@ -65,7 +65,7 @@ public class TestLinearSolverFactory {
         DenseMatrix64F x = RandomMatrices.createRandom(4,1,rand);
         DenseMatrix64F y = new DenseMatrix64F(5,1);
 
-        LinearSolver solver = LinearSolverFactory.leastSquares();
+        LinearSolver solver = LinearSolverFactory.leastSquares(A.numRows,A.numCols);
 
         standardTest(A, x, y, solver);
     }

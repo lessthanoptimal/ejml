@@ -131,7 +131,7 @@ public class MatrixFeatures {
         if( !isSquare(A))
            return false;
 
-        EigenDecomposition eig = DecompositionFactory.eig(false);
+        EigenDecomposition eig = DecompositionFactory.eig(A.numCols,false);
         eig.decompose(A);
 
         for( int i = 0; i < A.numRows; i++ ) {
@@ -472,7 +472,7 @@ public class MatrixFeatures {
     public static boolean isRowsLinearIndependent( DenseMatrix64F A )
     {
         // LU decomposition
-        LUDecomposition lu = DecompositionFactory.lu();
+        LUDecomposition lu = DecompositionFactory.lu(A.numRows);
         if( !lu.decompose(A))
             throw new RuntimeException("Decompositon failed?");
 
@@ -621,7 +621,7 @@ public class MatrixFeatures {
      * @return The matrix's rank.
      */
     public static int rank( DenseMatrix64F A , double threshold ) {
-        SingularValueDecomposition svd = DecompositionFactory.svd();
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");
@@ -647,7 +647,7 @@ public class MatrixFeatures {
      * @return The matrix's nullity.
      */
     public static int nullity( DenseMatrix64F A , double threshold ) {
-        SingularValueDecomposition svd = DecompositionFactory.svd();
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");

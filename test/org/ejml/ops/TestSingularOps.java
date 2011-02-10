@@ -238,7 +238,7 @@ public class TestSingularOps {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(true,true,false);
+                SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
@@ -271,7 +271,7 @@ public class TestSingularOps {
     public void rank_and_nullity(){
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.988228951897092, -1.086594333683141, -1.433160736952583, -3.190200029661606, 0.190459703263404, -6.475629910954768, 1.400596416735888, 7.158603907761226, -0.778109120408813);
 
-        SingularValueDecomposition alg = DecompositionFactory.svd();
+        SingularValueDecomposition<DenseMatrix64F> alg = DecompositionFactory.svd(A.numRows,A.numCols);
         assertTrue(alg.decompose(A));
 
         assertEquals(2,SingularOps.rank(alg, UtilEjml.EPS));

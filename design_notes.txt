@@ -8,6 +8,13 @@ Block Size
   * 20 seems to be optimal, 60 slows it down a lot.
 
 
+Matrix Size optimization and Decompositions/Linear Solvers
+---------------------------
+
+Once a new instance of a Linear Solver or Decomposition has been created no more dynamics adjustments should
+happen for the input matrix size.  This is done to simply the code and testing for correctness by reducing
+the number of permutations.
+
 
 Block Cholesky Decomposition
 ---------------------------

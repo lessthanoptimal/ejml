@@ -73,8 +73,6 @@ public class PrincipleComponentAnalysis {
     double mean[];
 
     public PrincipleComponentAnalysis() {
-        // Significant time and memory can be saved by not computing U
-        svd = DecompositionFactory.svd(false,true,false);
     }
 
     /**
@@ -141,7 +139,8 @@ public class PrincipleComponentAnalysis {
             }
         }
 
-        // Compute SVD
+        // Compute SVD and save time by not computing U
+        svd = DecompositionFactory.svd(A.numRows,A.numCols,false,true,false);
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 

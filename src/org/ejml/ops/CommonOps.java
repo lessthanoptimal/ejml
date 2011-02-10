@@ -465,18 +465,10 @@ public class CommonOps {
      */
     public static boolean solve( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F x )
     {
-        LinearSolver solver;
-
-        if( a.numRows == a.numCols ) {
-            solver = LinearSolverFactory.linear();
-        } else if( a.numRows > a.numCols ) {
-            solver = LinearSolverFactory.leastSquares();
-        } else {
-            throw new IllegalArgumentException("Can't solve for under determined systems since there are an infinite number of solutions.");
-        }
+        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.general(a.numRows,a.numCols);
 
         // make sure the inputs 'a' and 'b' are not modified
-        solver = new LinearSolverSafe(solver);
+        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
 
         if( !solver.setA(a) )
             return false;

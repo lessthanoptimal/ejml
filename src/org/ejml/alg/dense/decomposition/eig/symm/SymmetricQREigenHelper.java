@@ -227,11 +227,18 @@ public class SymmetricQREigenHelper {
         int rowA = m*N;
         int rowB = n*N;
 
-        for( int i = 0; i < N; i++ ) {
-            double a = Q.data[rowA+i];
-            double b = Q.data[rowB+i];
-            Q.data[rowA+i] = c*a + s*b;
-            Q.data[rowB+i] = -s*a + c*b;
+//        for( int i = 0; i < N; i++ ) {
+//            double a = Q.data[rowA+i];
+//            double b = Q.data[rowB+i];
+//            Q.data[rowA+i] = c*a + s*b;
+//            Q.data[rowB+i] = -s*a + c*b;
+//        }
+        int endA = rowA + N;
+        while( rowA < endA ) {
+            double a = Q.data[rowA];
+            double b = Q.data[rowB];
+            Q.data[rowA++] = c*a + s*b;
+            Q.data[rowB++] = -s*a + c*b;
         }
     }
 

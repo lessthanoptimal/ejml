@@ -19,11 +19,10 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.EigenDecomposition;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.EigenOps;
 import org.ejml.ops.MatrixFeatures;
 
 
@@ -39,8 +38,8 @@ public class SwitchingEigenDecomposition
     // tolerance used in deciding if a matrix is symmetric or not
     private double tol;
 
-    SymmetricQRAlgorithmDecomposition symmetricAlg;
-    WatchedDoubleStepQRDecomposition generalAlg;
+    EigenDecomposition<DenseMatrix64F> symmetricAlg;
+    EigenDecomposition<DenseMatrix64F> generalAlg;
 
     boolean symmetric;
     // should it compute eigenvectors or just eigenvalues?
@@ -53,13 +52,15 @@ public class SwitchingEigenDecomposition
      * @param computeVectors
      * @param tol Tolerance for a matrix being symmetric
      */
-    public SwitchingEigenDecomposition( boolean computeVectors , double tol ) {
+    public SwitchingEigenDecomposition( int matrixSize , boolean computeVectors , double tol ) {
+        symmetricAlg = EigenOps.decompositionSymmetric(matrixSize,computeVectors);
+        generalAlg = EigenOps.decompositionGeneral(computeVectors);
         this.computeVectors = computeVectors;
         this.tol = tol;
     }
 
-    public SwitchingEigenDecomposition() {
-        this(true,1e-8);
+    public SwitchingEigenDecomposition( int matrixSize ) {
+        this(matrixSize,true,1e-8);
     }
 
     @Override
@@ -88,15 +89,6 @@ public class SwitchingEigenDecomposition
         A.setReshape(orig);
 
         symmetric = MatrixFeatures.isSymmetric(A,tol);
-
-        if( symmetric ) {
-            if( symmetricAlg == null ) {
-                TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(null,orig.numRows);
-                symmetricAlg = new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
-            }
-        } else if( generalAlg == null ) {
-            generalAlg = new WatchedDoubleStepQRDecomposition(computeVectors);
-        }
 
         return symmetric ?
                 symmetricAlg.decompose(A) :

@@ -40,7 +40,7 @@ public class SimpleEVD <T extends SimpleMatrix>
     public SimpleEVD( DenseMatrix64F mat )
     {
         this.mat = mat;
-        eig = DecompositionFactory.eig();
+        eig = DecompositionFactory.eig(mat.numCols);
         if( !eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
     }

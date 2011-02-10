@@ -136,7 +136,7 @@ public class NormOps {
      */
     public static double conditionP2( DenseMatrix64F A )
     {
-        SingularValueDecomposition svd = DecompositionFactory.svd();
+        SingularValueDecomposition svd = DecompositionFactory.svd(A.numRows,A.numCols);
 
         svd.decompose(A);
 
@@ -419,7 +419,7 @@ public class NormOps {
      * @return The norm.
      */
     public static double inducedP2( DenseMatrix64F A ) {
-        SingularValueDecomposition svd = DecompositionFactory.svd(false,false,true);
+        SingularValueDecomposition svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");

@@ -195,7 +195,7 @@ public class EigenPowerMethod {
     public boolean computeShiftInvert( DenseMatrix64F A , double alpha ) {
         initPower(A);
 
-        LinearSolver solver = LinearSolverFactory.linear();
+        LinearSolver solver = LinearSolverFactory.linear(A.numCols);
 
         SpecializedOps.addIdentity(A,B,-alpha);
         solver.setA(B);

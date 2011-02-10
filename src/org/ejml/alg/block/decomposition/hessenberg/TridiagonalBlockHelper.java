@@ -268,7 +268,6 @@ public class TridiagonalBlockHelper {
      * @param V Where resulting 'y' row vectors are stored.
      * @param row row in matrix 'A' that 'u' vector and the row in 'V' that 'y' is stored in.
      */
-    // TODO does not take in account only the upper triangle being valid
     public static void multA_u( final int blockLength ,
                                 final D1Submatrix64F A ,
                                 final D1Submatrix64F V ,

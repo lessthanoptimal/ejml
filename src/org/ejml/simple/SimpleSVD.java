@@ -43,7 +43,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
 
     public SimpleSVD( DenseMatrix64F mat , boolean compact ) {
         this.mat = mat;
-        svd = DecompositionFactory.svd(true,true,compact);
+        svd = DecompositionFactory.svd(mat.numRows,mat.numCols,true,true,compact);
         if( !svd.decompose(mat) )
             throw new RuntimeException("Decomposition failed");
         U = (T)SimpleMatrix.wrap(svd.getU(false));

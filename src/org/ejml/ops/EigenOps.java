@@ -104,7 +104,7 @@ public class EigenOps {
         double prevError = Double.MAX_VALUE;
         boolean hasWorked = false;
 
-        LinearSolver solver = LinearSolverFactory.linear();
+        LinearSolver solver = LinearSolverFactory.linear(M.numRows);
 
         double perp = 0.0001;
 

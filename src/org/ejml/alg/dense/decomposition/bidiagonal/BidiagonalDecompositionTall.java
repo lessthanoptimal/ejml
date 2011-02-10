@@ -55,7 +55,7 @@ public class BidiagonalDecompositionTall
         implements BidiagonalDecomposition<DenseMatrix64F>
 {
     // TODO change to QR with column pivoting so that it can handle singular matrices
-    QRDecomposition<DenseMatrix64F> decompQR = DecompositionFactory.qr();
+    QRDecomposition<DenseMatrix64F> decompQR = DecompositionFactory.qr(500,100); // todo this should be passed in
     BidiagonalDecomposition<DenseMatrix64F> decompBi = new BidiagonalDecompositionRow();
 
     DenseMatrix64F B = new DenseMatrix64F(1,1);

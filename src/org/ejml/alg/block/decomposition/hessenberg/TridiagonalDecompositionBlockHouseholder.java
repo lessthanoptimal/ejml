@@ -113,13 +113,18 @@ public class TridiagonalDecompositionBlockHouseholder
             subW.col0 = i;
             subW.row1 = blockSize;
             subW.original.reshape(subW.row1,subW.col1,false);
-            CommonOps.set(subW.original,0);
 
-            tmp.col0 = i;
-            tmp.row1 = blockSize;
+            if( transposed ) {
+                tmp.row0 = i;
+                tmp.row1 = A.numCols;
+                tmp.col0 = 0;
+                tmp.col1 = blockSize;
+            } else {
+                tmp.col0 = i;
+                tmp.row1 = blockSize;
+            }
             tmp.original.reshape(tmp.row1,tmp.col1,false);
-            CommonOps.set(tmp.original,0);
-            
+
             subU.col0 = i;
             subU.row0 = i;
             subU.row1 = subU.row0+blockSize;
@@ -141,15 +146,18 @@ public class TridiagonalDecompositionBlockHouseholder
 
             // (I + W*U^T)*Q
             // F=U^T*Q(i)
-            BlockMultiplication.mult(A.blockLength,subU,subQ,tmp);
+            if( transposed )
+                BlockMultiplication.multTransB(A.blockLength,subQ,subU,tmp);
+            else
+                BlockMultiplication.mult(A.blockLength,subU,subQ,tmp);
             // Q(i+1) = Q(i) + W*F
-            BlockMultiplication.multPlusTransA(A.blockLength,subW,tmp,subQ);
+            if( transposed )
+                BlockMultiplication.multPlus(A.blockLength,tmp,subW,subQ);
+            else
+                BlockMultiplication.multPlusTransA(A.blockLength,subW,tmp,subQ);
 
             replaceZeros(subU);
         }
-
-        if( transposed )
-            throw new RuntimeException("support this");
 
         return Q;
     }

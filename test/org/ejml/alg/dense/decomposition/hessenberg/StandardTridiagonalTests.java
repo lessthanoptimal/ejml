@@ -60,9 +60,21 @@ public abstract class StandardTridiagonalTests {
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
             assertTrue("width = "+width,MatrixFeatures.isIdentical(A.getMatrix(),A_found.getMatrix(),1e-8));
+        }
+    }
 
-            // extract diagonal elements and compared them against the T matrix
-            // , which has been verified to be correct.
+    @Test
+    public void getDiagonal() {
+        for( int width = 1; width < 20; width += 2 ) {
+
+            DenseMatrix64F A = RandomMatrices.createSymmetric(width,-1,1,rand);
+
+            TridiagonalSimilarDecomposition<DenseMatrix64F> alg = createDecomposition();
+
+            assertTrue(safeDecomposition(alg,A));
+
+            DenseMatrix64F T = alg.getT(null);
+
             double diag[] = new double[width];
             double off[] = new double[width];
 
@@ -71,6 +83,27 @@ public abstract class StandardTridiagonalTests {
             for( int i = 1; i < width; i++ ) {
                 assertEquals(T.get(i,i),diag[i],1e-8);
                 assertEquals(T.get(i-1,i),off[i-1],1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void transposeFlagForQ() {
+        for( int width = 1; width < 20; width += 2 ) {
+
+            DenseMatrix64F A = RandomMatrices.createSymmetric(width,-1,1,rand);
+
+            TridiagonalSimilarDecomposition<DenseMatrix64F> alg = createDecomposition();
+
+            assertTrue(safeDecomposition(alg,A));
+
+            DenseMatrix64F Q = alg.getQ(null,false);
+            DenseMatrix64F Q_t = alg.getQ(null,true);
+
+            for( int i = 0; i < Q.numRows; i++ ) {
+                for( int j = 0; j < Q.numCols; j++ ) {
+                    assertEquals(Q.get(i,j),Q_t.get(j,i),1e-8);
+                }
             }
         }
     }

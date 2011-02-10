@@ -1,6 +1,5 @@
 
 For 0.16 Release
-- Improve QR block memory and add back in to smart solver and decomposition factory.
 - Remove QR-col and replace with QR-tran?
 - Remove QRDecompositionHouseholder?
 - Remove chol-block for dense with chol-block64?
@@ -8,12 +7,6 @@ For 0.16 Release
 - Merge inner triangular solver code
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 - Improve cholesky block inverse by taking advantage of symmetry
-- Clean up decomposition factory and linear solver factory
-  * Have them take a matrix or system as an input and return the solver/decomposer?
-- Why slower performance on Arm processor for element-wise operations?
-
-Ideas for reducing memory requirements:
-  3) Stack W to minimize size
 
 ----------------------------------------------------------
 

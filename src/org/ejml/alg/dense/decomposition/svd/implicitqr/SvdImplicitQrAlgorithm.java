@@ -387,22 +387,22 @@ public class SvdImplicitQrAlgorithm {
         int rowA = m*Q.numCols;
         int rowB = n*Q.numCols;
 
-        for( int i = 0; i < Q.numCols; i++ ) {
-            double a = Q.get(rowA+i);
-            double b = Q.get(rowB+i);
-            Q.set( rowA+i, c*a + s*b);
-            Q.set( rowB+i, -s*a + c*b);
-        }
+//        for( int i = 0; i < Q.numCols; i++ ) {
+//            double a = Q.get(rowA+i);
+//            double b = Q.get(rowB+i);
+//            Q.set( rowA+i, c*a + s*b);
+//            Q.set( rowB+i, -s*a + c*b);
+//        }
 //        System.out.println("------ AFter Update Rotator "+m+" "+n);
 //        Q.print();
 //        System.out.println();
-//        int endA = rowA + Q.numCols;
-//        for( ; rowA != endA; rowA++ , rowB++ ) {
-//            double a = Q.get(rowA);
-//            double b = Q.get(rowB);
-//            Q.set(rowA, c*a + s*b);
-//            Q.set(rowB, -s*a + c*b);
-//        }
+        int endA = rowA + Q.numCols;
+        for( ; rowA != endA; rowA++ , rowB++ ) {
+            double a = Q.get(rowA);
+            double b = Q.get(rowB);
+            Q.set(rowA, c*a + s*b);
+            Q.set(rowB, -s*a + c*b);
+        }
     }
 
     private double computeBulgeScale() {

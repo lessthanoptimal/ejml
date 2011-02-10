@@ -20,9 +20,13 @@
 package org.ejml.alg.dense.decomposition.eig.symm;
 
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
+import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.EigenOps;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -42,7 +46,7 @@ public class BenchmarkSymmetricEigenDecomposition {
         alg.setComputeVectorsWithValues(true);
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -60,7 +64,7 @@ public class BenchmarkSymmetricEigenDecomposition {
         alg.setComputeVectorsWithValues(false);
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -68,17 +72,68 @@ public class BenchmarkSymmetricEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
+    public static long standardTridiag( DenseMatrix64F orig , int numTrials ) {
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionHouseholder();
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
+    public static long blockTridiag( DenseMatrix64F orig , int numTrials ) {
+
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionBlock();
+        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
+    public static long defaultSymm( DenseMatrix64F orig , int numTrials ) {
+
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionBlock();
+        EigenDecomposition<DenseMatrix64F> alg = EigenOps.decompositionSymmetric(orig.numCols,true);
+
+        long prev = System.currentTimeMillis();
+
+        for( long i = 0; i < numTrials; i++ ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
+                throw new RuntimeException("Bad matrix");
+            }
+        }
+
+        return System.currentTimeMillis() - prev;
+    }
+
+
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
-        System.out.println("Together            = "+ symmTogether(mat,numTrials));
-        System.out.println("Separate            = "+ symmSeparate(mat,numTrials));
+//        System.out.println("Together            = "+ symmTogether(mat,numTrials));
+//        System.out.println("Separate            = "+ symmSeparate(mat,numTrials));
+        System.out.println("Standard            = "+ standardTridiag(mat,numTrials));
+        System.out.println("Block               = "+ blockTridiag(mat,numTrials));
+        System.out.println("Default             = "+ defaultSymm(mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(232423);
 
-        int size[] = new int[]{2,4,10,100,200,500,1000,2000};
-        int trials[] = new int[]{2000000,400000,80000,300,40,4,1,1};
+        int size[] = new int[]{2,4,10,100,200,500,1000,2000,5000};
+        int trials[] = new int[]{2000000,400000,80000,300,40,4,1,1,1};
 
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
