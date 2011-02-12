@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
@@ -38,14 +39,17 @@ public class BaseCholeskySolveTests {
 
     Random rand = new Random(0x45);
 
-    public void standardTests( LinearSolver solver ) {
+    public void standardTests( LinearSolver<DenseMatrix64F> solver ) {
+
+        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+
         testSolve(solver);
         testInvert(solver);
         testQuality(solver);
         testQuality_scale(solver);
     }
 
-    public void testSolve( LinearSolver solver ) {
+    public void testSolve( LinearSolver<DenseMatrix64F> solver ) {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
@@ -64,18 +68,19 @@ public class BaseCholeskySolveTests {
         EjmlUnitTests.assertEquals(x_expected,x,1e-6);
     }
 
-    public void testInvert( LinearSolver solver ) {
+    public void testInvert( LinearSolver<DenseMatrix64F> solver ) {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        DenseMatrix64F found = new DenseMatrix64F(A.numRows,A.numCols);
 
         assertTrue(solver.setA(A));
-        solver.invert(A);
+        solver.invert(found);
 
         DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
 
-        EjmlUnitTests.assertEquals(A_inv,A,1e-5);
+        EjmlUnitTests.assertEquals(A_inv,found,1e-5);
     }
 
-    public void testQuality( LinearSolver solver ) {
+    public void testQuality( LinearSolver<DenseMatrix64F> solver ) {
         DenseMatrix64F A = CommonOps.diag(3,2,1);
         DenseMatrix64F B = CommonOps.diag(3,2,0.001);
 
@@ -88,7 +93,7 @@ public class BaseCholeskySolveTests {
         assertTrue(qualityB < qualityA);
     }
 
-    public void testQuality_scale( LinearSolver solver ) {
+    public void testQuality_scale( LinearSolver<DenseMatrix64F> solver ) {
         DenseMatrix64F A = CommonOps.diag(3,2,1);
         DenseMatrix64F B = A.copy();
         CommonOps.scale(0.001,B);

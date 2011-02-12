@@ -49,7 +49,7 @@ class CholeskyBlockHelper {
     }
 
     /**
-     * Decomposes a submatrix.  The results are writen to the submatrix
+     * Decomposes a submatrix.  The results are written to the submatrix
      * and to its internal matrix L.
      *
      * @param mat A matrix which has a submatrix that needs to be inverted

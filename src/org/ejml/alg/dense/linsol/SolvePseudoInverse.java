@@ -19,9 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.data.DenseMatrix64F;
@@ -50,7 +48,7 @@ import org.ejml.ops.CommonOps;
 public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
 
     // linear solver that is used to invert the matrix
-    private LinearSolver inverter;
+    private LinearSolver<DenseMatrix64F> inverter;
 
     // reference to the original matrix
     private DenseMatrix64F A;
@@ -67,8 +65,12 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
      *
      * @param inverter Used to compute an inverse of a matrix.
      */
-    public SolvePseudoInverse( LinearSolver inverter ) {
-        this.inverter = inverter;
+    public SolvePseudoInverse( LinearSolver<DenseMatrix64F> inverter ) {
+
+        if( inverter.modifiesA() )
+            this.inverter = new LinearSolverSafe<DenseMatrix64F>(inverter);
+        else
+            this.inverter = inverter;
     }
 
     /**
@@ -78,14 +80,14 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
      * Better to overestimate than underestimate.
      */
     public SolvePseudoInverse( int maxCols ) {
-        this(new LinearSolverChol((CholeskyDecompositionCommon) DecompositionFactory.chol(maxCols,false,true)));
+        this(new LinearSolverChol((CholeskyDecompositionCommon) DecompositionFactory.chol(maxCols,true)));
     }
 
     /**
      * Creates a new solver using a cholesky decomposition as its default solver.
      */
     public SolvePseudoInverse() {
-        this(new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL)));
+        this(new LinearSolverChol((CholeskyDecompositionCommon) DecompositionFactory.chol(0,true)));
     }
 
     public void setMaxSize( int maxRows , int maxCols ) {

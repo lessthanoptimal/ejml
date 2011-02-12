@@ -55,7 +55,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A_orig = RandomMatrices.createRandom(4,4,rand);
         DenseMatrix64F A = A_orig.copy();
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -71,7 +71,7 @@ public abstract class GenericLinearSolverChecks {
     public void modifiesB() {
         DenseMatrix64F A = RandomMatrices.createRandom(4,4,rand);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -94,7 +94,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A_good = CommonOps.diag(4,3,2,1);
         DenseMatrix64F A_bad = CommonOps.diag(4,3,2,0.1);
 
-        LinearSolver solver = createSolver(A_good);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A_good);
 
         assertTrue(solver.setA(A_good));
         double q_good;
@@ -122,7 +122,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F Asmall = A.copy();
         CommonOps.scale(0.01,Asmall);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         double q;
@@ -148,7 +148,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 18, 21.5, 4.9000);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -169,7 +169,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 8, 33, 15.5);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -183,7 +183,7 @@ public abstract class GenericLinearSolverChecks {
     public void square_singular() {
         DenseMatrix64F A = new DenseMatrix64F(3,3);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
     }
 
@@ -208,7 +208,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A = createPolyA(t,3);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         solver.solve(B,x);
@@ -237,7 +237,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DenseMatrix64F A_inv = RandomMatrices.createRandom(3,3,rand);
 
-        LinearSolver solver = createSolver(A);
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
 
         solver.setA(A);
         solver.invert(A_inv);
@@ -254,6 +254,10 @@ public abstract class GenericLinearSolverChecks {
                     assertEquals(0,I.get(i,j),tol);
             }
         }
+    }
+
+    protected LinearSolver<DenseMatrix64F>  createSafeSolver( DenseMatrix64F A ) {
+        return new LinearSolverSafe<DenseMatrix64F>( createSolver(A));
     }
 
     protected abstract LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A );

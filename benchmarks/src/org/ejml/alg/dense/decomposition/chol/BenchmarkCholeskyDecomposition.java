@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -36,12 +37,12 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyL( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false,true);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(true);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -51,12 +52,12 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyU( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false,false);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -66,13 +67,13 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyL_block( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionBlock alg = new CholeskyDecompositionBlock(false,
+        CholeskyDecompositionBlock alg = new CholeskyDecompositionBlock(
                 EjmlParameters.BLOCK_WIDTH_CHOL);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -88,7 +89,7 @@ public class BenchmarkCholeskyDecomposition {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -103,7 +104,7 @@ public class BenchmarkCholeskyDecomposition {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig)) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -118,7 +119,7 @@ public class BenchmarkCholeskyDecomposition {
         CholeskyDecompositionLDL alg = new CholeskyDecompositionLDL();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+            if( !DecompositionFactory.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -143,10 +144,10 @@ public class BenchmarkCholeskyDecomposition {
         int trials[] = new int[]{(int)2e7,(int)5e6,(int)1e6,1000,40,3,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 6; i < size.length; i++ ) {
+        for( int i = 4; i < size.length; i++ ) {
             int w = size[i];
 
-            System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
+            System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
             DenseMatrix64F symMat = RandomMatrices.createSymmPosDef(w,rand);

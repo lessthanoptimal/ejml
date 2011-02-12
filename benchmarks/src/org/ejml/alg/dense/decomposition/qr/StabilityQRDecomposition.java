@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
@@ -26,6 +27,8 @@ import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
+
+import static org.ejml.alg.dense.decomposition.DecompositionFactory.decomposeSafe;
 
 
 /**
@@ -38,7 +41,7 @@ public class StabilityQRDecomposition {
 
     public static double evaluate( QRDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
-        if( !alg.decompose(orig)) {
+        if( !decomposeSafe(alg,orig)) {
             return Double.NaN;
         }
 
@@ -60,19 +63,24 @@ public class StabilityQRDecomposition {
     }
 
     public static void main( String args [] ) {
+
+        // set the block size so that it will get triggered at a smaller size
+        EjmlParameters.BLOCK_SIZE = 10;
+
         Random rand = new Random(239454923);
 
-        int size = 10;
-        double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
+        for( int size = 5; size <= 15; size += 5 ) {
+            double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
-        System.out.println("Square matrix");
-        DenseMatrix64F orig = RandomMatrices.createRandom(2*size,size,-1,1,rand);
-        DenseMatrix64F mat = orig.copy();
-        // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < scales.length; i++ ) {
-            System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-            CommonOps.scale(scales[i],orig,mat);
-            runAlgorithms(mat);
+            System.out.println("Square matrix");
+            DenseMatrix64F orig = RandomMatrices.createRandom(2*size,size,-1,1,rand);
+            DenseMatrix64F mat = orig.copy();
+            // results vary significantly depending if it starts from a small or large matrix
+            for( int i = 0; i < scales.length; i++ ) {
+                System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
+                CommonOps.scale(scales[i],orig,mat);
+                runAlgorithms(mat);
+            }
         }
 
         System.out.println("  Done.");

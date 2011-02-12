@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
@@ -69,26 +70,18 @@ public class DecompositionFactory {
      * algorithm depending on the size of the largest matrix it might decompose.
      * </p>
      * @param widthWidth The matrix size that the decomposition should be optimized for.
-     * @param decomposeOrig Should it decompose the matrix that is passed in or declare a new one?
      * @param lower should a lower or upper triangular matrix be used.
      * @return A new CholeskyDecomposition.
      */
-    public static CholeskyDecomposition<DenseMatrix64F> chol( int widthWidth , boolean decomposeOrig, boolean lower )
+    public static CholeskyDecomposition<DenseMatrix64F> chol( int widthWidth , boolean lower )
     {
         if( widthWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
-            return new CholeskyDecompositionInner(decomposeOrig,lower);
-        } else {
+            return new CholeskyDecompositionInner(lower);
+        } else if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER ){
             return new CholeskyDecompositionBlock64(lower);
+        } else {
+            return new CholeskyDecompositionBlock(EjmlParameters.BLOCK_WIDTH_CHOL);
         }
-    }
-
-    /**
-     *
-     * @param matrixWidth The matrix size that the decomposition should be optimized for.
-     * @return Cholesky decomposition.
-     */
-    public static CholeskyDecomposition<DenseMatrix64F> chol( int matrixWidth ) {
-        return chol(10,false,true);
     }
 
     /**

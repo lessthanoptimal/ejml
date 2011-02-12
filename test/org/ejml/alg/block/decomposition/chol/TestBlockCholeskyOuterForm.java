@@ -52,7 +52,7 @@ public class TestBlockCholeskyOuterForm {
         for( int N = bl-2; N <= 13; N += 2 ) {
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,false,false);
+            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,false);
             assertTrue(chol.decompose(A));
 
             DenseMatrix64F L = chol.getT(null);
@@ -61,7 +61,7 @@ public class TestBlockCholeskyOuterForm {
 
             BlockCholeskyOuterForm blockChol = new BlockCholeskyOuterForm(false);
 
-            assertTrue(blockChol.decompose(blockA));
+            assertTrue(DecompositionFactory.decomposeSafe(blockChol,blockA));
 
             assertTrue(GenericMatrixOps.isEquivalent(L,blockA,1e-8));
         }
@@ -77,7 +77,7 @@ public class TestBlockCholeskyOuterForm {
 
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,false,true);
+            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,true);
             assertTrue(chol.decompose(A));
 
             DenseMatrix64F L = chol.getT(null);
@@ -86,7 +86,7 @@ public class TestBlockCholeskyOuterForm {
 
             BlockCholeskyOuterForm blockChol = new BlockCholeskyOuterForm(true);
 
-            assertTrue(blockChol.decompose(blockA));
+            assertTrue(DecompositionFactory.decomposeSafe(blockChol,blockA));
 
             assertTrue(GenericMatrixOps.isEquivalent(L,blockA,1e-8));
         }

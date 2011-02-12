@@ -117,6 +117,9 @@ public class LinearSolverChol extends LinearSolverAbstract {
         if( inv.numRows != n || inv.numCols != n ) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
+        if( inv.data == t ) {
+            throw new IllegalArgumentException("Passing in the same matrix that was decomposed.");
+        }
 
         double a[] = inv.data;
 
@@ -131,6 +134,8 @@ public class LinearSolverChol extends LinearSolverAbstract {
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
     public void setToInverseL( double a[] ) {
+        // TODO reorder these operations to avoid cache misses
+        
         // inverts the lower triangular system and saves the result
         // in the upper triangle to minimize cache misses
         for( int i =0; i < n; i++ ) {
@@ -160,7 +165,7 @@ public class LinearSolverChol extends LinearSolverAbstract {
 
     @Override
     public boolean modifiesA() {
-        return false;
+        return decomp.inputModified();
     }
 
     @Override

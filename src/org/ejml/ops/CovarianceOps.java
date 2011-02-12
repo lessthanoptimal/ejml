@@ -21,6 +21,7 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.data.DenseMatrix64F;
 
@@ -95,7 +96,9 @@ public class CovarianceOps {
                 cov_inv.data[0] = 1.0/cov_inv.data[0];
 
         } else {
-            LinearSolver solver = LinearSolverFactory.symmetric();
+            LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.symmetric(cov.numRows);
+            // wrap it to make sure the covariance is not modified.
+            solver = new LinearSolverSafe<DenseMatrix64F>(solver);
             if( !solver.setA(cov) )
                 return false;
             solver.invert(cov_inv);

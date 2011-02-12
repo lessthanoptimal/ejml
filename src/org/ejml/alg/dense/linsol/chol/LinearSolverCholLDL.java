@@ -160,7 +160,7 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
 
     @Override
     public boolean modifiesA() {
-        return false;
+        return decomp.inputModified();
     }
 
     @Override

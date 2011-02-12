@@ -21,6 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
+import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
@@ -39,7 +40,7 @@ public class StabilityCholeksyDecomposition {
 
     public static double evaluate( CholeskyDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
-        if( !alg.decompose(orig)) {
+        if( !DecompositionFactory.decomposeSafe(alg,orig)) {
             return Double.NaN;
         }
 
@@ -57,25 +58,27 @@ public class StabilityCholeksyDecomposition {
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
         System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner(),mat));
-        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL),mat));
+        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
+        System.out.println("block64           = "+ evaluate(new CholeskyDecompositionBlock64(true),mat));
 
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
-        int size = 10;
-        double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-319,1e-320,1e-321,Double.MIN_VALUE};
+        EjmlParameters.BLOCK_SIZE = 5;
 
-        // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < scales.length; i++ ) {
-            System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
+        for( int size = 5; size <= 15; size += 5 ) {
+            double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
-            System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createSymmPosDef(size,rand);
-            CommonOps.scale(scales[i],mat);
-            System.out.println("  Done.");
-            runAlgorithms(mat);
+            // results vary significantly depending if it starts from a small or large matrix
+            for( int i = 0; i < scales.length; i++ ) {
+                System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
+                DenseMatrix64F mat = RandomMatrices.createSymmPosDef(size,rand);
+                CommonOps.scale(scales[i],mat);
+                runAlgorithms(mat);
+            }
         }
+        System.out.println("  Done.");
     }
 }

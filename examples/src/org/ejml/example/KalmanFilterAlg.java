@@ -23,6 +23,7 @@ import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
@@ -56,7 +57,7 @@ public class KalmanFilterAlg implements KalmanFilter{
     private DenseMatrix64F y,S,S_inv,c,d;
     private DenseMatrix64F K;
 
-    private LinearSolver solver;
+    private LinearSolver<DenseMatrix64F> solver;
 
     @Override
     public void configure(DenseMatrix64F F, DenseMatrix64F Q, DenseMatrix64F H) {
@@ -76,9 +77,12 @@ public class KalmanFilterAlg implements KalmanFilter{
         d = new DenseMatrix64F(dimenX,dimenZ);
         K = new DenseMatrix64F(dimenX,dimenZ);
 
-        CholeskyDecomposition chol = DecompositionFactory.chol(dimenX,false,true);
+        CholeskyDecomposition chol = DecompositionFactory.chol(dimenX,true);
 
+        // covariance matrices are symmetric positive semi-definite
         solver = new LinearSolverChol((CholeskyDecompositionCommon)chol);
+        // wrap the solver so that it doesn't modify the input
+        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
 
         x = new DenseMatrix64F(dimenX,1);
         P = new DenseMatrix64F(dimenX,dimenX);

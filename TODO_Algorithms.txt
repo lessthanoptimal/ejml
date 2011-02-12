@@ -1,9 +1,10 @@
 
-For 0.16 Release
+For 0.17 Release
+
 - Remove QR-col and replace with QR-tran?
 - Remove QRDecompositionHouseholder?
 - Remove chol-block for dense with chol-block64?
-  * Only if memory requires of chol-block64 can't be reduced
+  * reduce cache misses in invert and see if its faster
 - Merge inner triangular solver code
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 - Improve cholesky block inverse by taking advantage of symmetry

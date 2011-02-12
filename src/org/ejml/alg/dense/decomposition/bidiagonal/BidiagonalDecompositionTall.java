@@ -121,7 +121,7 @@ public class BidiagonalDecompositionTall
     @Override
     public boolean decompose(DenseMatrix64F orig) {
         if( !decompQR.decompose(orig) ) {
-            throw new RuntimeException("A singular matrix must have been passed in.   Maybe QR with column pivoting instead?");
+            throw new RuntimeException("A singular matrix must have been passed in.   Maybe QR with column pivoting instead?  Wait there isn't one in EJML yet...");
 //            return false;
         }
 

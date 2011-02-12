@@ -20,6 +20,8 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
+import org.ejml.alg.dense.linsol.LinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.EjmlUnitTests;
@@ -40,16 +42,15 @@ public class TestCholeskyDecompositionBlock extends GenericCholeskyTests {
 
     @Test
     public void checkModifyInput() {
-        checkModifiedInput(new CholeskyDecompositionBlock(false,2));
-        checkModifiedInput(new CholeskyDecompositionBlock(true,2));
+        checkModifiedInput(new CholeskyDecompositionBlock(2));
     }
 
     @Override
-    public CholeskyDecomposition create(boolean lower) {
+    public CholeskyDecomposition<DenseMatrix64F> create(boolean lower) {
         if( !lower )
-            throw new IllegalArgumentException("Doesn't suppoer upper form");
+            throw new IllegalArgumentException("Doesn't support upper form");
 
-        return new CholeskyDecompositionBlock(false,1);
+        return new CholeskyDecompositionBlock(1);
     }
 
     /**
@@ -95,13 +96,15 @@ public class TestCholeskyDecompositionBlock extends GenericCholeskyTests {
         DenseMatrix64F A_inv = new DenseMatrix64F(w, w);
         DenseMatrix64F A_inv_block = new DenseMatrix64F(w, w);
 
-        CholeskyDecompositionBlock algBlock = new CholeskyDecompositionBlock(false , b);
-        LinearSolverChol solver = new LinearSolverChol(algBlock);
+        CholeskyDecompositionBlock algBlock = new CholeskyDecompositionBlock(b);
+        LinearSolver<DenseMatrix64F> solver = new LinearSolverChol(algBlock);
+        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv_block);
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false ,true);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(true);
         solver = new LinearSolverChol(alg);
+        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 

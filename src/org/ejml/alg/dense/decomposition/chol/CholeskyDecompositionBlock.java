@@ -39,11 +39,10 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
      * Creates a CholeksyDecomposition capable of decomposing a matrix that is
      * n by n, where n is the width.
      *
-     * @param decomposeOrig Should it decompose the matrix that is passed in or declare a new one?
      * @param blockWidth The width of a block.
      */
-    public CholeskyDecompositionBlock( boolean decomposeOrig , int blockWidth ) {
-        super(decomposeOrig,true);
+    public CholeskyDecompositionBlock( int blockWidth ) {
+        super(true);
 
         this.blockWidth = blockWidth;
 
@@ -99,14 +98,18 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
             B.numCols -= blockWidth;
 
             if( B.numCols > 0 ) {
+                // apply cholesky to the current block
                 if( !chol.decompose(T,(i*blockWidth)* T.numCols + i*blockWidth,blockWidth) )  return false;
 
                 int indexSrc = i*blockWidth* T.numCols + (i+1)*blockWidth;
                 int indexDst = (i+1)*blockWidth* T.numCols + i*blockWidth;
 
+                // B = L^(-1) * B
                 solveL_special(chol.getL().data, T,indexSrc,indexDst,B);
 
                 int indexL = (i+1)*blockWidth*n + (i+1)*blockWidth;
+
+                // c = c - a^T*a
                 symmRankTranA_sub(B, T,indexL);
             } else {
                 int width = remainder > 0 ? remainder : blockWidth;
@@ -205,6 +208,7 @@ public class CholeskyDecompositionBlock extends CholeskyDecompositionCommon {
     public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c ,
                                           int startIndexC )
     {
+        // TODO update so that it doesn't modify/read parts that it shouldn't
         final double dataA[] = a.data;
         final double dataC[] = c.data;
 

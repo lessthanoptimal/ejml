@@ -31,7 +31,7 @@ public class TestLinearSolverChol {
     @Test
     public void standardTests() {
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner( false, true);
+        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(true);
         LinearSolverChol solver = new LinearSolverChol(alg);
 
         BaseCholeskySolveTests tests = new BaseCholeskySolveTests();

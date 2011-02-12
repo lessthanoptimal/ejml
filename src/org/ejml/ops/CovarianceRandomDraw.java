@@ -45,7 +45,7 @@ public class CovarianceRandomDraw {
     public CovarianceRandomDraw( Random rand , DenseMatrix64F cov )
     {
         r = new DenseMatrix64F(cov.numRows,1);
-        CholeskyDecompositionInner choleky = new CholeskyDecompositionInner( false,true);
+        CholeskyDecompositionInner choleky = new CholeskyDecompositionInner( true);
 
         choleky.decompose(cov);
 

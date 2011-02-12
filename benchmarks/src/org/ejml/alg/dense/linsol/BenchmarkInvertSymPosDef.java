@@ -24,7 +24,6 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
-import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CovarianceOps;
 import org.ejml.ops.RandomMatrices;
@@ -52,8 +51,9 @@ public class BenchmarkInvertSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertCholesky( LinearSolver alg , DenseMatrix64F orig , int numTrials ) {
+    public static long invertCholesky( LinearSolver<DenseMatrix64F> alg , DenseMatrix64F orig , int numTrials ) {
 
+        alg = new LinearSolverSafe<DenseMatrix64F>(alg);
         DenseMatrix64F A = new DenseMatrix64F(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
@@ -78,14 +78,14 @@ public class BenchmarkInvertSymPosDef {
 //        System.out.println("invert LU-NR            = "+ invertLU_nr(mat,numTrials));
 //        System.out.println("invert LU-Alt           = "+ invertLU_alt(mat,numTrials));
         System.out.println("invert Cholesky Inner       = "+ invertCholesky(
-                new LinearSolverChol(new CholeskyDecompositionInner( false,true)),
+                new LinearSolverChol(new CholeskyDecompositionInner( true)),
                 mat,numTrials));
         System.out.println("invert Cholesky Block Dense = "+ invertCholesky(
-                new LinearSolverChol(new CholeskyDecompositionBlock(false, EjmlParameters.BLOCK_WIDTH_CHOL)),
+                new LinearSolverChol(new CholeskyDecompositionBlock( EjmlParameters.BLOCK_WIDTH_CHOL)),
                 mat,numTrials));
-        System.out.println("invert smart                = "+ invertCholesky(
-                new SmartSolverChol(),
-                mat,numTrials));
+//        System.out.println("invert default              = "+ invertCholesky(
+//                LinearSolverFactory.symmetric(mat.numRows),
+//                mat,numTrials));
 //        System.out.println("invert CholeskyLDL          = "+ invertCholesky(
 //                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
 //                mat,numTrials));

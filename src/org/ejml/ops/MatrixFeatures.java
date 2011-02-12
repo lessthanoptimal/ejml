@@ -110,7 +110,7 @@ public class MatrixFeatures {
         if( !isSquare(A))
            return false;
 
-        CholeskyDecompositionInner chol = new CholeskyDecompositionInner(false,true);
+        CholeskyDecompositionInner chol = new CholeskyDecompositionInner(true);
         return chol.decompose(A);
     }
 
@@ -131,7 +131,7 @@ public class MatrixFeatures {
         if( !isSquare(A))
            return false;
 
-        EigenDecomposition eig = DecompositionFactory.eig(A.numCols,false);
+        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numCols,false);
         eig.decompose(A);
 
         for( int i = 0; i < A.numRows; i++ ) {
@@ -472,7 +472,7 @@ public class MatrixFeatures {
     public static boolean isRowsLinearIndependent( DenseMatrix64F A )
     {
         // LU decomposition
-        LUDecomposition lu = DecompositionFactory.lu(A.numRows);
+        LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(A.numRows);
         if( !lu.decompose(A))
             throw new RuntimeException("Decompositon failed?");
 

@@ -20,8 +20,11 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.linsol.chol.SmartSolverChol;
+import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
@@ -82,8 +85,18 @@ public class LinearSolverFactory {
      *
      * @return A new solver for symmetric matrices.
      */
-    public static LinearSolver<DenseMatrix64F> symmetric() {
-        return new SmartSolverChol();
+    public static LinearSolver<DenseMatrix64F> symmetric( int matrixWidth ) {
+        if(matrixWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY )  {
+            CholeskyDecompositionCommon decomp = new CholeskyDecompositionInner(true);
+            return new LinearSolverChol(decomp);
+        } else {
+            if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
+                return new LinearSolverCholBlock64();
+            else {
+                CholeskyDecompositionCommon decomp = new CholeskyDecompositionInner(true);
+                return new LinearSolverChol(decomp);
+            }
+        }
     }
 
     /**

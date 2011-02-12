@@ -64,9 +64,6 @@ public abstract class CholeskyDecompositionCommon
     // tempoary variable used by various functions
     protected double vv[];
 
-    // should it store the results from the decompose in the matrix that is passed in?
-    private boolean decomposeOrig;
-
     // is it a lower triangular matrix or an upper triangular matrix
     protected boolean lower;
 
@@ -74,13 +71,10 @@ public abstract class CholeskyDecompositionCommon
      * Creates a CholeksyDecomposition capable of decompositong a matrix that is
      * n by n, where n is the width.
      *
-     * @param decomposeOrig Should it decompose the matrix that is passed in or declare a new one?
      * @param lower should a lower or upper triangular matrix be used.
      */
-    public CholeskyDecompositionCommon(boolean decomposeOrig, boolean lower ) {
+    public CholeskyDecompositionCommon( boolean lower ) {
         this.lower = lower;
-
-        this.decomposeOrig = decomposeOrig;
     }
 
     public void setExpectedMaxSize( int numRows , int numCols ) {
@@ -89,11 +83,6 @@ public abstract class CholeskyDecompositionCommon
         }
 
         this.maxWidth = numCols;
-
-        if( !decomposeOrig ) {
-            this.T = new DenseMatrix64F(maxWidth,maxWidth);
-            this.t = T.data;
-        }
 
         this.vv = new double[maxWidth];
     }
@@ -132,13 +121,8 @@ public abstract class CholeskyDecompositionCommon
 
         n = mat.numRows;
 
-        if( decomposeOrig ) {
-            T = mat;
-            t = T.data;
-        } else {
-//            L.set(mat);
-            T.setReshape(mat);
-        }
+        T = mat;
+        t = T.data;
 
         if(lower) {
             return decomposeLower();
@@ -149,7 +133,7 @@ public abstract class CholeskyDecompositionCommon
 
     @Override
     public boolean inputModified() {
-        return decomposeOrig;
+        return true;
     }
 
     /**

@@ -58,7 +58,7 @@ public class BenchmarkSolveSymPosDef {
     private static void runAlgorithms( DenseMatrix64F A , DenseMatrix64F b ,int numTrials )
     {
         System.out.println("Solve Cholesky         = "+solve(
-                new LinearSolverChol(new CholeskyDecompositionInner(false,true)),
+                new LinearSolverChol(new CholeskyDecompositionInner(true)),
                 A,b,numTrials));
         System.out.println("Solve Cholesky LDL     = "+solve(
                 new LinearSolverCholLDL(new CholeskyDecompositionLDL()),

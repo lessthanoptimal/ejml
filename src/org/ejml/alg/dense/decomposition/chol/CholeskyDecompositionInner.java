@@ -32,11 +32,11 @@ package org.ejml.alg.dense.decomposition.chol;
 public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
 
     public CholeskyDecompositionInner() {
-        super(false,true);
+        super(true);
     }
 
-    public CholeskyDecompositionInner( boolean decomposeOrig, boolean lower) {
-        super(decomposeOrig, lower);
+    public CholeskyDecompositionInner( boolean lower) {
+        super(lower);
     }
 
     @Override
@@ -70,6 +70,7 @@ public class CholeskyDecompositionInner extends CholeskyDecompositionCommon {
                 }
             }
         }
+
         // zero the top right corner.
         for( int i = 0; i < n; i++ ) {
             for( int j = i+1; j < n; j++ ) {
