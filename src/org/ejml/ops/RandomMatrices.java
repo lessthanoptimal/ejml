@@ -107,7 +107,7 @@ public class RandomMatrices {
         DenseMatrix64F B = new DenseMatrix64F(span[0].getNumElements(),1);
 
         for( int i = 0; i < span.length; i++ ) {
-            B.set(span[0]);
+            B.set(span[i]);
             double val = rand.nextDouble()*(max-min)+min;
             CommonOps.scale(val,B);
 

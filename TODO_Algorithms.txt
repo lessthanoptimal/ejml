@@ -1,7 +1,9 @@
 
 For 0.17 Release
-
+- Block SVD
+- Block Hessenberg
 - Remove QR-col and replace with QR-tran?
+- Adapt QR-tran into LQ
 - Remove QRDecompositionHouseholder?
 - Remove chol-block for dense with chol-block64?
   * reduce cache misses in invert and see if its faster

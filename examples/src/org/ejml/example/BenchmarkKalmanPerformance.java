@@ -32,9 +32,9 @@ import java.util.List;
  */
 public class BenchmarkKalmanPerformance {
 
-    private static int NUM_TRIALS = 200;
-    private static int MAX_STEPS = 1000;
-    private static double T = 1.0;
+    private static final int NUM_TRIALS = 200;
+    private static final int MAX_STEPS = 1000;
+    private static final double T = 1.0;
 
     private static int measDOF = 8;
 

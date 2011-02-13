@@ -19,12 +19,8 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.linsol.LinearSolver;
-import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.DenseMatrix64F;
@@ -77,12 +73,12 @@ public class KalmanFilterAlg implements KalmanFilter{
         d = new DenseMatrix64F(dimenX,dimenZ);
         K = new DenseMatrix64F(dimenX,dimenZ);
 
-        CholeskyDecomposition chol = DecompositionFactory.chol(dimenX,true);
-
         // covariance matrices are symmetric positive semi-definite
-        solver = new LinearSolverChol((CholeskyDecompositionCommon)chol);
+        solver = LinearSolverFactory.symmPosDef(dimenX);
         // wrap the solver so that it doesn't modify the input
-        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+//        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+        // A little bit more performance can be gained by letting S be modified.  In some
+        // applications S should not be modified.
 
         x = new DenseMatrix64F(dimenX,1);
         P = new DenseMatrix64F(dimenX,dimenX);
@@ -119,6 +115,7 @@ public class KalmanFilterAlg implements KalmanFilter{
         addEquals(S,R);
 
         // K = PH'S^(-1)
+        // Unless a safe solver is used S might be modified here, but this is faster
         if( !solver.setA(S) ) throw new RuntimeException("Invert failed");
         solver.invert(S_inv);
         MatrixMatrixMult.multTransA_small(H,S_inv,d);

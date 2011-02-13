@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class TestCompareKalmanResults {
 
-    private static double T = 0.5;
+    private static final double T = 0.5;
 
     /**
      * See if all the filters produce the same reslts.

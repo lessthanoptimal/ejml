@@ -96,7 +96,7 @@ public class CovarianceOps {
                 cov_inv.data[0] = 1.0/cov_inv.data[0];
 
         } else {
-            LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.symmetric(cov.numRows);
+            LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.symmPosDef(cov.numRows);
             // wrap it to make sure the covariance is not modified.
             solver = new LinearSolverSafe<DenseMatrix64F>(solver);
             if( !solver.setA(cov) )

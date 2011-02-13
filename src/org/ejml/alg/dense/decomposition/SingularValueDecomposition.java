@@ -36,7 +36,7 @@ import org.ejml.data.Matrix64F;
  * </p>
  *
  * <p>
- *  To create a new instance of SingularValueDecomposition see {@link DecompositionFactory#svd()}
+ *  To create a new instance of SingularValueDecomposition see {@link DecompositionFactory#svd(int, int)}
  * and {@link org.ejml.ops.SingularOps} contains additional helpful SVD related functions.
  * </p>
  *

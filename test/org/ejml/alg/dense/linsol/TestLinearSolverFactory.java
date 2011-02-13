@@ -76,7 +76,7 @@ public class TestLinearSolverFactory {
         DenseMatrix64F x = RandomMatrices.createRandom(5,1,rand);
         DenseMatrix64F y = new DenseMatrix64F(5,1);
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.symmetric(A.numCols);
+        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.symmPosDef(A.numCols);
 
         standardTest(A, x, y, solver);
     }

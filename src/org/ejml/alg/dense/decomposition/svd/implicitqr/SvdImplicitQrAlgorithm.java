@@ -106,7 +106,7 @@ public class SvdImplicitQrAlgorithm {
     // --------- variables for scripted step
     // if following a sequence of steps, this is the point at which it decides its
     // going no where and needs to use a different step
-    private int giveUpOnKnown = 10;
+    private static final int giveUpOnKnown = 10;
     private double values[];
 
     //can it compute singularvalues directly

@@ -31,14 +31,14 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class BenchmarkRectSolve {
-    private static long SEED = 6;
-    private static Random rand = new Random();
+    private static final long SEED = 6;
+    private static final Random rand = new Random();
     private static DenseMatrix64F A;
     private static DenseMatrix64F B;
 
-    private static boolean includeSet = true;
+    private static final boolean includeSet = true;
 
-    public static long solveBenchmark( LinearSolver solver , int numTrials ) {
+    public static long solveBenchmark( LinearSolver<DenseMatrix64F> solver , int numTrials ) {
         rand.setSeed(SEED);
         DenseMatrix64F X = new DenseMatrix64F(A.numCols,B.numCols);
         RandomMatrices.setRandom(A,rand);

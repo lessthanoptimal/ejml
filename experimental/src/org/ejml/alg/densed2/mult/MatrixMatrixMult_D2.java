@@ -29,12 +29,12 @@ import org.ejml.data.DenseD2Matrix64F;
 public class MatrixMatrixMult_D2 {
 
     /**
-     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult(org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_small( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c )
     {
         if( a.numCols != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
@@ -61,12 +61,12 @@ public class MatrixMatrixMult_D2 {
     }
 
     /**
-     * @see org.ejml.ops.CommonOps#mult( org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)
+     * @see org.ejml.ops.CommonOps#mult(org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
      */
     public static void mult_aux( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c , double []aux )
     {
         if( a.numCols != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }

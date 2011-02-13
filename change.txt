@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.16
 
-20XX/XX/XX
+2011/02/12
 
 - Removed SVD code based on NR
 - Fixed bug in BlockMatrix64HouseholderQR.applyQ()

@@ -51,7 +51,6 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
     private LinearSolver<DenseMatrix64F> inverter;
 
     // reference to the original matrix
-    private DenseMatrix64F A;
     private DenseMatrix64F ATA;
     // the results of the pseudo-inverse
     private DenseMatrix64F pinv;
@@ -104,7 +103,6 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
             setMaxSize(A.numRows,A.numCols);
         }
 
-        this.A = A;
         ATA.reshape(A.numCols,A.numCols, false);
 
         // compute the pseudo inverse

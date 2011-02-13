@@ -81,11 +81,11 @@ public class LinearSolverFactory {
     }
 
     /**
-     * Creates a solver for symmetric matrices.
+     * Creates a solver for symmetric positive definite matrices.
      *
-     * @return A new solver for symmetric matrices.
+     * @return A new solver for symmetric positive definite matrices.
      */
-    public static LinearSolver<DenseMatrix64F> symmetric( int matrixWidth ) {
+    public static LinearSolver<DenseMatrix64F> symmPosDef( int matrixWidth ) {
         if(matrixWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY )  {
             CholeskyDecompositionCommon decomp = new CholeskyDecompositionInner(true);
             return new LinearSolverChol(decomp);

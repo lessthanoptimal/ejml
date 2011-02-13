@@ -81,7 +81,7 @@ public class TestRandomMatrices {
         // project the matrix into the span and recreate the original matrix
         for( int i = 0; i < 5; i++ ) {
             double val =  VectorVectorMult.innerProd(span[i],A);
-            assertTrue( Math.abs(val) > 0 );
+            assertTrue( Math.abs(val) > 1e-10 );
 
             CommonOps.scale(val,span[i],tmp);
             CommonOps.add(R,tmp,R);
