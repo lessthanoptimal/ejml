@@ -105,7 +105,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param rowMajor If the data is stored in a row major or column major format.
      * @param data The row-major formatted 1D array. Not modified.
      */
-    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double data[]) {
+    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double ...data) {
         mat = new DenseMatrix64F(numRows,numCols, rowMajor, data);
     }
 
