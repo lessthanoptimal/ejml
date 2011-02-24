@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.16
 
-2011/02/12
+2011/02/23
 
 - Removed SVD code based on NR
 - Fixed bug in BlockMatrix64HouseholderQR.applyQ()
@@ -41,6 +41,7 @@ Date format: year/month/day
   * To make it easy to extend, SimpleMatrix now extends SimpleBase
   * Added dot() and isVector() is SimpleMatrix.
 - LinearSolverFactory and DecompositionFactory now take in the matrix's size
+- SimpleMatrix now accepts variable arguments.
 
 ----- Version 0.15
 
