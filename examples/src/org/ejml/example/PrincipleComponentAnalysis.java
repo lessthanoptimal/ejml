@@ -56,9 +56,6 @@ import org.ejml.ops.SingularOps;
  */
 public class PrincipleComponentAnalysis {
 
-    // decomposition used to compute principle components
-    private SingularValueDecomposition<DenseMatrix64F> svd;
-
     // principle component subspace is stored in the rows
     private DenseMatrix64F V_t;
 
@@ -140,7 +137,8 @@ public class PrincipleComponentAnalysis {
         }
 
         // Compute SVD and save time by not computing U
-        svd = DecompositionFactory.svd(A.numRows,A.numCols,false,true,false);
+        SingularValueDecomposition<DenseMatrix64F> svd =
+                DecompositionFactory.svd(A.numRows, A.numCols, false, true, false);
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 

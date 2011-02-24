@@ -115,7 +115,6 @@ public class KalmanFilterAlg implements KalmanFilter{
         addEquals(S,R);
 
         // K = PH'S^(-1)
-        // Unless a safe solver is used S might be modified here, but this is faster
         if( !solver.setA(S) ) throw new RuntimeException("Invert failed");
         solver.invert(S_inv);
         MatrixMatrixMult.multTransA_small(H,S_inv,d);

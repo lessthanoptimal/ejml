@@ -95,6 +95,10 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
         return Math.sqrt(total);
     }
 
+    /**
+     * Returns a matrix of StatisticsMatrix type so that SimpleMatrix functions create matrices
+     * of the correct type.
+     */
     @Override
     protected StatisticsMatrix createMatrix(int numRows, int numCols) {
         return new StatisticsMatrix(numRows,numCols);

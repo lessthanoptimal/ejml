@@ -1,7 +1,7 @@
                  Efficient Java Matrix Library
 
-                         Version 0.12
-                         2010 June 26
+                         Version 0.17
+                         2011 February 23
 
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
@@ -11,17 +11,19 @@
 ==========================================================================
 ----- Introduction
 
-Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API. EJML is free, written in 100% Java and has been released under an LGPL license.
+Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API.  EJML is free, written in 100% Java and has been released under an LGPL license.
 
-EJML has three distinct ways to interact with it. This allows a programmer to choose between simplicity and efficiency. 1) A simplified interface that allows a more object oriented way of programming. 2) Letting EJML select the best algorithm to use. 3) Directly calling specialized algorithms. In general EJML is one the fastest single threaded pure Java library. See Java Matrix Benchmark for a detailed comparison of different libraries.
+EJML has three distinct ways to interact with it.  This allows a programmer to choose between simplicity and efficiency.  1) A simplified interface that allows a more object oriented way of programming.  2) Procedural interface that provides greater control over memory and speed.  3) Directly calling specialized algorithms.  In general EJML is one the fastest single threaded pure Java library and has additional optimizations for small matrices.  See http://code.google.com/p/java-matrix-benchmark/ for a detailed comparison of different libraries.
 
 The following functionality is provided:
 
-    * Basic operators (addition, multiplication, ... ).
-    * Linear Solvers (batch and incremental).
-    * Decompositions (LU, QR, Cholesky, SVD, Eigenvalue).
-    * Matrix Features (rank, symmetric, definitiveness, ... ).
-    * Random Matrices (covariance, orthogonal, symmetric, ... ). 
+    * Basic operators (addition, multiplication, ...)
+    * Matrix Manipulation (extract, insert, combine, ...)
+    * Linear Solvers (linear, least squares,incremental, ...)
+    * Decompositions (LU, QR, Cholesky, SVD, Eigenvalue, ...)
+    * Matrix Features (rank, symmetric, definitiveness, ...)
+    * Random Matrices (covariance, orthogonal, symmetric, ...)
+    * Different Internal Formats (row-major, block) 
 
 Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
 
@@ -34,7 +36,7 @@ http://code.google.com/p/efficient-java-matrix-library/wiki/EjmlManual
 
 The JavaDoc has also been posted online at:
 
-http://efficient-java-matrix-library.googlecode.com/svn/javadoc/ver0.12/index.html
+http://efficient-java-matrix-library.googlecode.com/svn/javadoc/ver0.17/index.html
 
 ==========================================================================
 ----- Building
@@ -49,7 +51,7 @@ clean:
 
 compile:
     [mkdir] Created dir: ejml/trunk/build/classes
-    [javac] Compiling 93 source files to ejml/trunk/build/classes
+    [javac] Compiling 130 source files to ejml/trunk/build/classes
 
 jar:
     [mkdir] Created dir: ejml/trunk/build/jar
@@ -64,13 +66,13 @@ benchmarks/
 -  contains code for several speed and stability benchmarks that were used during development.
 
 docs/
-- Documentation for this library. This documentation is often out of date and is the best place to get the latest.
+- Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
 
 examples/
-- Contains example code showing how this library can be used to implement a Kalman filter (three different ways) or Levenberg-Marquardt optimization.
+- Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
 
 experimental/
-- Where experimental and most likely buggy code goes that is not ready to be used by most users.
+- Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
 
 src/
 - Source code.
