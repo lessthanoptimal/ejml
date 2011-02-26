@@ -26,7 +26,6 @@ import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.EigenOps;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -40,7 +39,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(null,orig.numRows);
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(orig.numRows);
         SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
 
         alg.setComputeVectorsWithValues(true);
@@ -58,7 +57,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(null,orig.numRows);
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(orig.numRows);
         SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
 
         alg.setComputeVectorsWithValues(false);
@@ -105,8 +104,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
     public static long defaultSymm( DenseMatrix64F orig , int numTrials ) {
 
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionBlock();
-        EigenDecomposition<DenseMatrix64F> alg = EigenOps.decompositionSymmetric(orig.numCols,true);
+        EigenDecomposition<DenseMatrix64F> alg = DecompositionFactory.eigSymm(orig.numCols,true);
 
         long prev = System.currentTimeMillis();
 

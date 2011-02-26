@@ -25,6 +25,8 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
+import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
+import org.ejml.alg.dense.decomposition.eig.WatchedDoubleStepQRDecomposition;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
@@ -145,8 +147,8 @@ public class DecompositionFactory {
 
     /**
      * Returns a new eigenvalue decomposition.  If it is known before hand if the matrix
-     * is symmetric or not then a call should be made directly to either {@link org.ejml.ops.EigenOps#decompositionGeneral(boolean)}
-     * or {@link org.ejml.ops.EigenOps#decompositionSymmetric(int, boolean)}.  That will avoid unnecessary checks.
+     * is symmetric or not then a call should be made directly to either {@link #eigGeneral(int,boolean)}
+     * or {@link #eigSymm(int, boolean)}.  That will avoid unnecessary checks.
      *
      * @param matrixWidth The matrix size that the decomposition should be optimized for.
      * @return A new EigenDecomposition.
@@ -164,6 +166,30 @@ public class DecompositionFactory {
      */
     public static EigenDecomposition<DenseMatrix64F> eig( int matrixWidth , boolean needVectors ) {
         return new SwitchingEigenDecomposition(matrixWidth,needVectors,1e-8);
+    }
+
+    /**
+     * Creates a new EigenDecomposition that will work with any matrix.
+     *
+     * @return EVD for any matrix.
+     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
+     */
+    public static EigenDecomposition<DenseMatrix64F> eigGeneral( int matrixSize , boolean computeVectors ) {
+        return new WatchedDoubleStepQRDecomposition(computeVectors);
+    }
+
+    /**
+     * Creates a new EigenDecomposition that will only work with symmetric matrices.  This
+     * will run much faster and be more accurate than the general purpose algorithm.
+     *
+     * @return EVD for symmetric matrices.
+     * @param matrixWidth The number of rows/columns in the matrix.  Used to select the best algorithms.
+     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
+     */
+    public static EigenDecomposition<DenseMatrix64F> eigSymm( int matrixWidth , boolean computeVectors ) {
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(matrixWidth);
+
+        return new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
     }
 
     /**
@@ -233,33 +259,16 @@ public class DecompositionFactory {
         return error;
     }
 
-    public static TridiagonalSimilarDecomposition<DenseMatrix64F> tridiagonal() {
-        return new TridiagonalDecompositionHouseholder();
-    }
-
     /**
      * Checks to see if the passed in tridiagonal decomposition is of the appropriate type
      * for the matrix of the provided size.  Returns the same instance or a new instance.
      */
-    public static TridiagonalSimilarDecomposition<DenseMatrix64F> tridiagonal( 
-            TridiagonalSimilarDecomposition<DenseMatrix64F> decomp , int matrixWidth ) {
-        if( decomp == null ) {
-            if( matrixWidth >= 1800 ) {
-                return new TridiagonalDecompositionBlock();
-            } else {
-                return new TridiagonalDecompositionHouseholder();
-            }
-        } else if( matrixWidth >= 1800 ) {
-            if( !(decomp instanceof TridiagonalDecompositionBlock)) {
-                return new TridiagonalDecompositionBlock();
-            }
+    public static TridiagonalSimilarDecomposition<DenseMatrix64F> tridiagonal(  int matrixWidth ) {
+        if( matrixWidth >= 1800 ) {
+            return new TridiagonalDecompositionBlock();
         } else {
-            if( !(decomp instanceof TridiagonalDecompositionHouseholder)) {
-                return new TridiagonalDecompositionHouseholder();
-            }
+            return new TridiagonalDecompositionHouseholder();
         }
-
-        return decomp;
     }
 
     /**

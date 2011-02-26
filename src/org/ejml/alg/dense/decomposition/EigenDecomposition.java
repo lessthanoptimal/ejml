@@ -28,7 +28,7 @@ import org.ejml.data.Matrix64F;
  * This is a generic interface for computing the eigenvalues and eigenvectors of a matrix.
  * Eigenvalues and eigenvectors have the following property:<br>
  * <br>
- * Av=&lambda;v<br>
+ * A*v=&lambda;*v<br>
  * <br>
  * where A is a square matrix and v is an eigenvector associated with the eigenvalue &lambda;.
  * </p>
@@ -41,9 +41,9 @@ import org.ejml.data.Matrix64F;
  * </p>
  *
  * <p>
- * To create a new instance of {@link EigenDecomposition} use either {@link DecompositionFactory} or
- * {@link org.ejml.ops.EigenOps}.  {@link org.ejml.ops.EigenOps} contains options that allows customized
- * algorithms to be called, avoided unnecessary computations.
+ * To create a new instance of {@link EigenDecomposition} use {@link DecompositionFactory}. If the matrix
+ * is known to be symmetric be sure to use the symmetric decomposition, which is much faster and more accurate
+ * than the general purpose one.
  * </p>
  * @author Peter Abeles
  */
@@ -59,8 +59,14 @@ public interface EigenDecomposition<MatrixType extends Matrix64F>
 
     /**
      * <p>
-     * Returns the value of an individual eigenvalue.  The eigenvalue maybe a complex number.  It is
-     * a real number of the imaginary component is equal to exactly one.
+     * Returns an eigenvalue as a complex number.  For symmetric matrices the returned eigenvalue will always be a real
+     * number, which means the imaginary component will be equal to zero.
+     * </p>
+     *
+     * <p>
+     * NOTE: The order of the eigenvalues is dependent upon the decomposition algorithm used.  This means that they may
+     * or may not be ordered by magnitude.  For example the QR algorithm will returns results that are partially
+     * ordered by magnitude, but this behavior should not be relied upon.
      * </p>
      * 
      * @param index Index of the eigenvalue eigenvector pair.

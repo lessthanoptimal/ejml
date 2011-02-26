@@ -97,20 +97,39 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static final int END = Integer.MAX_VALUE;
 
     /**
-     * Creates a new matrix with the specified initial value.
+     * <p>
+     * Creates a new matrix which has the same value as the matrix encoded in the
+     * provided array.  The input matrix's format can either be row-major or
+     * column-major.
+     * </p>
      *
-     * @see DenseMatrix64F#DenseMatrix64F(int,int,boolean,double...)
-     *  @param numRows The number of rows.
+     * <p>
+     * Note that 'data' is a variable argument type, so either 1D arrays or a set of numbers can be
+     * passed in:<br>
+     * SimpleMatrix a = new SimpleMatrix(2,2,true,new double[]{1,2,3,4});<br>
+     * SimpleMatrix b = new SimpleMatrix(2,2,true,1,2,3,4);<br>
+     * <br>
+     * Both are equivalent.
+     * </p>
+     *
+     * @see DenseMatrix64F#DenseMatrix64F(int, int, boolean, double...)
+     *
+     * @param numRows The number of rows.
      * @param numCols The number of columns.
-     * @param rowMajor If the data is stored in a row major or column major format.
-     * @param data The row-major formatted 1D array. Not modified.
+     * @param rowMajor If the array is encoded in a row-major or a column-major format.
+     * @param data The formatted 1D array. Not modified.
      */
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double ...data) {
         mat = new DenseMatrix64F(numRows,numCols, rowMajor, data);
     }
 
     /**
-     * Creates a new matrix with the specified initial value.
+     * <p>
+     * Creates a matrix with the values and shape defined by the 2D array 'data'.
+     * It is assumed that 'data' has a row-major formatting:<br>
+     * <br>
+     * data[ row ][ column ]
+     * </p>
      *
      * @see org.ejml.data.DenseMatrix64F#DenseMatrix64F(double[][])
      *

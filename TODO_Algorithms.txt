@@ -10,6 +10,7 @@ For 0.17 Release
 - Merge inner triangular solver code
 - Require LinearSolverFactory to take in a matrix so it can figure out alg to use?
 - Improve cholesky block inverse by taking advantage of symmetry
+- Add a function for sorting eigenvalues.
 
 ----------------------------------------------------------
 

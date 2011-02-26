@@ -89,7 +89,7 @@ public class SymmetricQRAlgorithmDecomposition
 
     public SymmetricQRAlgorithmDecomposition( boolean computeVectors ) {
 
-        this(DecompositionFactory.tridiagonal(),computeVectors);
+        this(DecompositionFactory.tridiagonal(0),computeVectors);
     }
 
     public void setComputeVectorsWithValues(boolean computeVectorsWithValues) {

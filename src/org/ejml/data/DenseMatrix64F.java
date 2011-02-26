@@ -90,7 +90,16 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      * <p>
      * Creates a new matrix which has the same value as the matrix encoded in the
      * provided array.  The input matrix's format can either be row-major or
-     * column-major and is translated to the native row-major format.
+     * column-major.
+     * </p>
+     *
+     * <p>
+     * Note that 'data' is a variable argument type, so either 1D arrays or a set of numbers can be
+     * passed in:<br>
+     * DenseMatrix a = new DenseMatrix(2,2,true,new double[]{1,2,3,4});<br>
+     * DenseMatrix b = new DenseMatrix(2,2,true,1,2,3,4);<br>
+     * <br>
+     * Both are equivalent.
      * </p>
      *
      * @param numRows The number of rows.
@@ -111,7 +120,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     /**
      * <p>
      * Creates a matrix with the values and shape defined by the 2D array 'data'.
-     * The formatting in 'data' is the following:<br>
+     * It is assumed that 'data' has a row-major formatting:<br>
      *  <br>
      * data[ row ][ column ]
      * </p>

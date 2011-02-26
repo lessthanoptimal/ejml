@@ -38,7 +38,7 @@ import java.util.Random;
 public class StabilitySymmEigen {
 
 
-    public static double evaluate( EigenDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( EigenDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
         if( !alg.decompose(orig)) {
             return Double.NaN;
@@ -49,7 +49,7 @@ public class StabilitySymmEigen {
 
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal();
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(0);
         System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition(decomp,true),mat));
     }
 

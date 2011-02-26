@@ -2,6 +2,12 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.17
+
+2011/XX/XX
+
+- Moved general and symmetric EVD to DecompositionFactory from EigenOps 
+
 ----- Version 0.16
 
 2011/02/23
