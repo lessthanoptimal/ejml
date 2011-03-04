@@ -111,4 +111,46 @@ public class SimpleEVD <T extends SimpleMatrix>
     public EigenDecomposition getEVD() {
         return eig;
     }
+
+    /**
+     * Returns the index of the eigenvalue which has the largest magnitude.
+     *
+     * @return index of the largest magnitude eigen value.
+     */
+    public int getIndexMax() {
+        int indexMax = 0;
+        double max = getEigenvalue(0).getMagnitude2();
+
+        final int N = getNumberOfEigenvalues();
+        for( int i = 1; i < N; i++ ) {
+            double m = getEigenvalue(i).getMagnitude2();
+            if( m > max ) {
+                max = m;
+                indexMax = i;
+            }
+        }
+
+        return indexMax;
+    }
+
+    /**
+     * Returns the index of the eigenvalue which has the smallest magnitude.
+     *
+     * @return index of the smallest magnitude eigen value.
+     */
+    public int getIndexMin() {
+        int indexMin = 0;
+        double min = getEigenvalue(0).getMagnitude2();
+
+        final int N = getNumberOfEigenvalues();
+        for( int i = 1; i < N; i++ ) {
+            double m = getEigenvalue(i).getMagnitude2();
+            if( m < min ) {
+                min = m;
+                indexMin = i;
+            }
+        }
+
+        return indexMin;
+    }
 }

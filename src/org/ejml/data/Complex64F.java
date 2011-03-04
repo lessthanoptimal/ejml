@@ -43,6 +43,14 @@ public class Complex64F implements Serializable {
         return real;
     }
 
+    public double getMagnitude() {
+        return Math.sqrt(real*real + imaginary*imaginary);
+    }
+
+    public double getMagnitude2() {
+        return real*real + imaginary*imaginary;
+    }
+
     public void setReal(double real) {
         this.real = real;
     }
