@@ -19,11 +19,8 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.D1Matrix64F;
 import org.ejml.data.Matrix64F;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 
 
@@ -33,36 +30,6 @@ import java.io.*;
  * @author Peter Abeles
  */
 public class MatrixIO {
-
-    /**
-     * Creates a window visually showing the matrix's state.  Block means an element is zero.
-     * Red positive and blue negative.  More intense the color larger the element's absolute value
-     * is.
-     * 
-     * @param A A matrix.
-     * @param title Name of the window.
-     */
-    public static void show( D1Matrix64F A , String title ) {
-        JFrame frame = new JFrame(title);
-
-        int width = 300;
-        int height = 300;
-
-        if( A.numRows > A.numCols) {
-            width = width*A.numCols/A.numRows;
-        } else {
-            height = height*A.numRows/A.numCols;
-        }
-
-        MatrixComponent panel = new MatrixComponent(width,height);
-        panel.setMatrix(A);
-
-        frame.add(panel, BorderLayout.CENTER);
-
-        frame.pack();
-        frame.setVisible(true);
-
-    }
 
     /**
      * Saves a matrix to disk using Java binary serialization.

@@ -44,6 +44,15 @@
         </javac>
     </target>
 
+    <target name="compile nogui">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+            <exclude name="**/MatrixComponent.java"/>    
+            <exclude name="**/MatrixVisualization.java"/>
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
     <target name="compile experimental">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${experimental.src.dir}" destdir="${classes.dir}" includeantruntime="false">
@@ -54,6 +63,11 @@
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
+    </target>
+
+    <target name="nogui" depends="clean,compile nogui">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}-nogui.jar" basedir="${classes.dir}"/>
     </target>
 
     <target name="jar experimental" depends="compile,compile experimental">
