@@ -38,7 +38,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void save( Matrix64F A , String fileName )
+    public static void saveXML( Matrix64F A , String fileName )
         throws IOException
     {
         FileOutputStream fileStream = new FileOutputStream(fileName);
@@ -66,7 +66,7 @@ public class MatrixIO {
      * @return  DenseMatrix64F
      * @throws IOException
      */
-    public static <T extends Matrix64F> T load( String fileName )
+    public static <T extends Matrix64F> T loadXML( String fileName )
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);

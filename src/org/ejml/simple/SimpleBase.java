@@ -22,6 +22,7 @@ package org.ejml.simple;
 import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 import org.ejml.data.MatrixIterator;
 import org.ejml.ops.*;
 
@@ -834,10 +835,10 @@ public abstract class SimpleBase <T extends SimpleBase> {
 
     /**
      * <p>
-     * Saves this matrix to a file.
+     * Saves this matrix to a file as a serialized XML object.
      * </p>
      *
-     * @see MatrixIO#save( org.ejml.data.Matrix64F , String)
+     * @see MatrixIO#saveXML( org.ejml.data.Matrix64F , String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -845,7 +846,31 @@ public abstract class SimpleBase <T extends SimpleBase> {
     public void saveToFile( String fileName )
         throws IOException
     {
-        MatrixIO.save(mat,fileName);
+        MatrixIO.saveXML(mat,fileName);
+    }
+
+    /**
+     * <p>
+     * Loads a new matrix from a serialized XML file.
+     * </p>
+     *
+     * @see MatrixIO#loadXML(String)
+     *
+     * @param fileName File which is to be loaded.
+     * @return The matrix.
+     * @throws IOException
+     */
+    public static SimpleMatrix load( String fileName )
+            throws IOException {
+        Matrix64F mat = MatrixIO.loadXML(fileName);
+
+        // see if its a DenseMatrix64F
+        if( mat instanceof DenseMatrix64F ) {
+            return SimpleMatrix.wrap((DenseMatrix64F)mat);
+        } else {
+            // if not convert it into one and wrap it
+            return SimpleMatrix.wrap( new DenseMatrix64F(mat));
+        }
     }
 
     /**

@@ -211,6 +211,32 @@ public class TestCommonOps {
     }
 
     @Test
+    public void elementDiv_two() {
+        DenseMatrix64F a = RandomMatrices.createRandom(5,4,rand);
+        DenseMatrix64F b = RandomMatrices.createRandom(5,4,rand);
+        DenseMatrix64F a_orig = a.copy();
+
+        CommonOps.elementDiv(a,b);
+
+        for( int i = 0; i < 20; i++ ) {
+            assertEquals(a.get(i),a_orig.get(i)/b.get(i),1e-6);
+        }
+    }
+
+    @Test
+    public void elementDiv_three() {
+        DenseMatrix64F a = RandomMatrices.createRandom(5,4,rand);
+        DenseMatrix64F b = RandomMatrices.createRandom(5,4,rand);
+        DenseMatrix64F c = RandomMatrices.createRandom(5,4,rand);
+
+        CommonOps.elementDiv(a,b,c);
+
+        for( int i = 0; i < 20; i++ ) {
+            assertEquals(c.get(i),a.get(i)/b.get(i),1e-6);
+        }
+    }
+
+    @Test
     public void solve() {
         DenseMatrix64F a = new DenseMatrix64F(2,2, true, 1, 2, 7, -3);
         DenseMatrix64F b = RandomMatrices.createRandom(2,5,rand);

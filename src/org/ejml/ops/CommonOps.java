@@ -1257,6 +1257,50 @@ public class CommonOps {
     }
 
     /**
+     * <p>Performs the an element by element division operation:<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the division operation. Modified.
+     * @param b The right matrix in the division operation. Not modified.
+     */
+    public static void elementDiv( D1Matrix64F a , D1Matrix64F b )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+        }
+
+        int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            a.div(i , b.get(i));
+        }
+    }
+
+    /**
+     * <p>Performs the an element by element division operation:<br>
+     * <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the division operation. Not modified.
+     * @param b The right matrix in the division operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void elementDiv( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numRows != c.numRows || a.numCols != c.numCols ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
+        }
+
+        int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            c.set( i , a.get(i) / b.get(i) );
+        }
+    }
+
+    /**
      * <p>
      * Computes the sum of all the elements in the matrix:<br>
      * <br>

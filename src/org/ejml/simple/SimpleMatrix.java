@@ -23,10 +23,8 @@ import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixIO;
 import org.ejml.ops.RandomMatrices;
 
-import java.io.IOException;
 import java.util.Random;
 
 
@@ -248,30 +246,6 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
         RandomMatrices.setRandom(ret.mat,minValue,maxValue,rand);
         return ret;
-    }
-
-    /**
-     * <p>
-     * Loads a new matrix from a file.
-     * </p>
-     *
-     * @see MatrixIO#load(String)
-     *
-     * @param fileName File which is to be loaded.
-     * @return The matrix.
-     * @throws IOException
-     */
-    public static SimpleMatrix load( String fileName )
-            throws IOException {
-        Matrix64F mat = MatrixIO.load(fileName);
-
-        // see if its a DenseMatrix64F
-        if( mat instanceof DenseMatrix64F ) {
-            return SimpleMatrix.wrap((DenseMatrix64F)mat);
-        } else {
-            // if not convert it into one and wrap it
-            return SimpleMatrix.wrap( new DenseMatrix64F(mat));
-        }
     }
 
     /**

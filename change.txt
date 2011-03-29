@@ -9,6 +9,8 @@ Date format: year/month/day
 - Moved general and symmetric EVD to DecompositionFactory from EigenOps
 - Moved show() from MatrixIO to MatrixVisualization to help with Android development.
   * added "jar nogui" to ant build script which will exclude GUI related files.
+- Added CommonOps.elementDiv()
+  * Thanks to leokury for the suggestion
 
 ----- Version 0.16
 
