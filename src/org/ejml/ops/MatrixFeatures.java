@@ -157,7 +157,8 @@ public class MatrixFeatures {
 
     /**
      * <p>
-     * Returns true if the matrix is symmetric within the tolerance.  Only square matrices can be symetric.
+     * Returns true if the matrix is symmetric within the tolerance.  Only square matrices can be
+     * symmetric.
      * </p>
      * <p>
      * A matrix is symmetric if:<br>
@@ -181,7 +182,7 @@ public class MatrixFeatures {
 
                 double diff = Math.abs(a-b);
 
-                if( diff > tol ) {
+                if( !(diff <= tol) ) {
                     return false;
                 }
             }
@@ -229,7 +230,7 @@ public class MatrixFeatures {
 
                 double diff = Math.abs(a+b);
 
-                if( diff > tol ) {
+                if( !(diff <= tol) ) {
                     return false;
                 }
             }
@@ -259,9 +260,9 @@ public class MatrixFeatures {
                 }
 
                 if( i == j ) {
-                    if( Math.abs(total-1) > tol )
+                    if( !(Math.abs(total-1) <= tol) )
                         return false;
-                } else if( Math.abs(total) > tol )
+                } else if( !(Math.abs(total) <= tol) )
                     return false;
             }
         }
@@ -455,7 +456,7 @@ public class MatrixFeatures {
             for( int j = i+1; j < u.length; j++ ) {
                 double val = VectorVectorMult.innerProd(a,u[j]);
 
-                if( Math.abs(val) > tol)
+                if( !(Math.abs(val) <= tol))
                     return false;
             }
         }
@@ -494,10 +495,10 @@ public class MatrixFeatures {
         for( int i = 0; i < mat.numRows; i++ ) {
             for( int j = 0; j < mat.numCols; j++ ) {
                 if( i == j ) {
-                    if( Math.abs(mat.get(index++)-1) > tol )
+                    if( !(Math.abs(mat.get(index++)-1) <= tol) )
                         return false;
                 } else {
-                    if( Math.abs(mat.get(index++)) > tol )
+                    if( !(Math.abs(mat.get(index++)) <= tol) )
                         return false;
                 }
             }
@@ -520,7 +521,7 @@ public class MatrixFeatures {
         int index = 0;
         for( int i = 0; i < mat.numRows; i++ ) {
             for( int j = 0; j < mat.numCols; j++ ) {
-                if( Math.abs(mat.get(index++)-val) > tol )
+                if( !(Math.abs(mat.get(index++)-val) <= tol) )
                     return false;
 
             }
@@ -567,7 +568,7 @@ public class MatrixFeatures {
         int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            if( Math.abs(a.get(i)+b.get(i)) > tol )
+            if( !(Math.abs(a.get(i)+b.get(i)) <= tol) )
                 return false;
         }
 
@@ -594,7 +595,7 @@ public class MatrixFeatures {
 
         for( int i = hessenberg+1; i < A.numRows; i++ ) {
             for( int j = 0; j < i-hessenberg; j++ ) {
-                if( Math.abs(A.get(i,j)) > tol ) {
+                if( !(Math.abs(A.get(i,j)) <= tol) ) {
                     return false;
                 }
             }

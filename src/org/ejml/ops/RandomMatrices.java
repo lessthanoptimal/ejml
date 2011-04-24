@@ -43,6 +43,10 @@ public class RandomMatrices {
      * to all the ones previously created with reflectors.
      * </p>
      *
+     * <p>
+     * NOTE: This employs a brute force O(N<sup>3</sup>) algorithm.
+     * </p>
+     *
      * @param dimen dimension of the space which the vectors will span.
      * @param numVectors How many vectors it should generate.
      * @param rand Used to create random vectors.

@@ -118,6 +118,9 @@ public class TestMatrixFeatures {
 
         m.set(1,2,50);
         assertTrue(!MatrixFeatures.isSymmetric(m));
+
+        m.set(1,2,Double.NaN);
+        assertTrue(!MatrixFeatures.isSymmetric(m));
     }
 
     @Test
@@ -127,6 +130,9 @@ public class TestMatrixFeatures {
         assertTrue(MatrixFeatures.isSkewSymmetric(m,1e-8));
 
         m.set(1,2,-5);
+        assertTrue(!MatrixFeatures.isSkewSymmetric(m,1e-8));
+
+        m.set(1,2,Double.NaN);
         assertTrue(!MatrixFeatures.isSkewSymmetric(m,1e-8));
     }
 
@@ -238,7 +244,9 @@ public class TestMatrixFeatures {
         assertTrue(MatrixFeatures.isInverse(A,A_inv,1e-10));
 
         A_inv.set(1,2,3);
+        assertFalse(MatrixFeatures.isInverse(A,A_inv,1e-10));
 
+        A_inv.set(1,2,Double.NaN);
         assertFalse(MatrixFeatures.isInverse(A,A_inv,1e-10));
     }
 
@@ -265,6 +273,10 @@ public class TestMatrixFeatures {
         A.set(0,1,495);
 
         assertFalse(MatrixFeatures.isOrthogonal(A,1e-6f));
+
+        A.set(0,1,Double.NaN);
+
+        assertFalse(MatrixFeatures.isOrthogonal(A,1e-6f));
     }
 
     @Test
@@ -286,6 +298,9 @@ public class TestMatrixFeatures {
 
         assertTrue(MatrixFeatures.isConstantVal(a,2.4,1e-8));
         assertFalse(MatrixFeatures.isConstantVal(a,6,1e-8));
+
+        a.set(1,1,Double.NaN);
+        assertFalse(MatrixFeatures.isConstantVal(a,2.4,1e-8));
     }
 
     @Test
@@ -295,7 +310,9 @@ public class TestMatrixFeatures {
         assertTrue(MatrixFeatures.isIdentity(I,1e-8));
 
         I.set(3,2,0.1);
+        assertFalse(MatrixFeatures.isIdentity(I,1e-8));
 
+        I.set(3,2,Double.NaN);
         assertFalse(MatrixFeatures.isIdentity(I,1e-8));
     }
 
@@ -310,6 +327,9 @@ public class TestMatrixFeatures {
 
         // now the negative case
         b.set(2,2,10);
+        assertFalse(MatrixFeatures.isNegative(a,b,1e-8));
+
+        b.set(2,2,Double.NaN);
         assertFalse(MatrixFeatures.isNegative(a,b,1e-8));
     }
 
@@ -336,6 +356,9 @@ public class TestMatrixFeatures {
                 assertFalse(MatrixFeatures.isUpperTriangle(A,i,1e-8));
             }
 
+            // see if it handles NaN well
+            A.set(4,0,Double.NaN);
+            assertFalse(MatrixFeatures.isUpperTriangle(A,0,1e-8));
         }
     }
 }

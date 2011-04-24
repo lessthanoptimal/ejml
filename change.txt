@@ -11,6 +11,8 @@ Date format: year/month/day
   * added "jar nogui" to ant build script which will exclude GUI related files.
 - Added CommonOps.elementDiv()
   * Thanks to leokury for the suggestion
+- Many functions now handle NaN more intelligently in MatrixFeatures
+  * Thanks to kaspar.thommen for pointing out these flaws.
 
 ----- Version 0.16
 
