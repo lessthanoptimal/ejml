@@ -1,20 +1,17 @@
 /*
- * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
+ * Copyright 2011 Peter Abeles
  *
- * This file is part of Efficient Java Matrix Library (EJML).
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * EJML is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * EJML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 
 package org.ejml.ops;
@@ -28,6 +25,8 @@ import java.util.Random;
 
 
 /**
+ * Contains a list of functions for creating random matrices and vectors with different structures.
+ *
  * @author Peter Abeles
  */
 public class RandomMatrices {
@@ -378,7 +377,9 @@ public class RandomMatrices {
     public static DenseMatrix64F createSymmetric(int length, double min, double max, Random rand) {
         DenseMatrix64F A = new DenseMatrix64F(length,length);
 
-        return createSymmetric(A,min,max,rand);
+        createSymmetric(A,min,max,rand);
+
+        return A;
     }
 
     /**
@@ -389,9 +390,8 @@ public class RandomMatrices {
      * @param min Minimum value an element can have.
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
-     * @return A symmetric matrix.
      */
-    public static DenseMatrix64F createSymmetric(DenseMatrix64F A, double min, double max, Random rand) {
+    public static void createSymmetric(DenseMatrix64F A, double min, double max, Random rand) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
 
@@ -406,8 +406,6 @@ public class RandomMatrices {
                 A.set(j,i,val);
             }
         }
-
-        return A;
     }
 
     /**
