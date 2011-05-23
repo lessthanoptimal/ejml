@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>EJML</groupId>
+  <groupId>efficient-java-matrix-library.googlecode.com</groupId>
   <artifactId>ejml</artifactId>
   <packaging>jar</packaging>
   <version>SNAPSHOT</version>
@@ -31,7 +31,38 @@
       </plugin>
     </plugins>
   </build>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <licenses>
+  <license>
+    <name>LGPL</name>
+    <url>http://www.gnu.org/copyleft/lesser.html</url>
+    <distribution>repo</distribution>
+    <comments></comments>
+  </license>
+  </licenses>
+  <scm>
+    <connection>scm:svn:http://efficient-java-matrix-library.googlecode.com/svn/trunk/</connection>
+    <developerConnection>scm:svn:https://efficient-java-matrix-library.googlecode.com/svn/trunk/</developerConnection>
+    <tag>HEAD</tag>
+    <url>http://code.google.com/p/efficient-java-matrix-library/</url>
+  </scm>
+  <developers>
+    <developer>
+      <id>pabeles</id>
+      <name>Peter Abeles</name>
+      <email>peter.abeles@gmail.com</email>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
 </project>
