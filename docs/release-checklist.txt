@@ -1,0 +1,6 @@
+- Update version number in code
+- Create .zip of source code
+  - remove .svn
+- Create jar file
+- Update documentation on website
+- Update Maven central repository

@@ -1345,6 +1345,67 @@ public class CommonOps {
     }
 
     /**
+     * <p>
+     * Computes the sum of each row in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = sum(i=1:n ; |a<sub>ji</sub>|)
+     * </p>
+     *
+     * @param input INput matrix whose rows are summed.
+     * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
+     * @return Vector containing the sum of each row in the input.
+     */
+    public static DenseMatrix64F sumRows( DenseMatrix64F input , DenseMatrix64F output ) {
+        if( output == null ) {
+            output = new DenseMatrix64F(input.numRows,1);
+        } else if( output.getNumElements() != input.numRows )
+            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+
+        for( int row = 0; row < input.numRows; row++ ) {
+            double total = 0;
+
+            int end = (row+1)*input.numCols;
+            for( int index = row*input.numCols; index < end; index++ ) {
+                total += input.data[index];
+            }
+
+            output.set(row,total);
+        }
+        return output;
+    }
+
+    /**
+     * <p>
+     * Computes the sum of each column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = sum(i=1:m ; |a<sub>ij</sub>|)
+     * </p>
+     *
+     * @param input INput matrix whose rows are summed.
+     * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
+     * @return Vector containing the sum of each row in the input.
+     */
+    public static DenseMatrix64F sumCols( DenseMatrix64F input , DenseMatrix64F output ) {
+        if( output == null ) {
+            output = new DenseMatrix64F(1,input.numCols);
+        } else if( output.getNumElements() != input.numCols )
+            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+
+        for( int cols = 0; cols < input.numCols; cols++ ) {
+            double total = 0;
+
+            int index = cols;
+            int end = index + input.numCols*input.numRows;
+            for( ; index < end; index += input.numCols ) {
+                total += input.data[index];
+            }
+
+            output.set(cols,total);
+        }
+        return output;
+    }
+
+    /**
      * <p>Performs the following operation:<br>
      * <br>
      * a = a + b <br>

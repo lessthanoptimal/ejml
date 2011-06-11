@@ -14,7 +14,10 @@ Date format: year/month/day
 - Many functions now handle NaN more intelligently in MatrixFeatures
   * Thanks to kaspar.thommen for pointing out these flaws.
 - Adding Maven support
+  * Can now download from the central repository
   * Requested by soren
+- Added sumRows() and sumCols() to CommonOps
+  * Requested by b.broeksema
 
 ----- Version 0.16
 

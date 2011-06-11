@@ -15,17 +15,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../thirdparty/junit4.9b1/junit-4.9b1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../thirdparty/junit4.9b1/junit-4.9b1-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>

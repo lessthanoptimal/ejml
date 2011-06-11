@@ -815,4 +815,46 @@ public class TestCommonOps {
 
         assertEquals(sum,CommonOps.elementSum(M),1e-8);
     }
+
+    @Test
+    public void sumRows() {
+        DenseMatrix64F input = RandomMatrices.createRandom(4,5,rand);
+        DenseMatrix64F output = new DenseMatrix64F(4,1);
+
+        assertTrue( output == CommonOps.sumRows(input,output));
+
+        for( int i = 0; i < input.numRows; i++ ) {
+            double total = 0;
+            for( int j = 0; j < input.numCols; j++ ) {
+                total += input.get(i,j);
+            }
+            assertEquals( total, output.get(i),1e-8);
+        }
+
+        // check with a null output
+        DenseMatrix64F output2 = CommonOps.sumRows(input,null);
+
+        EjmlUnitTests.assertEquals(output,output2,1e-8);
+    }
+
+    @Test
+    public void sumCols() {
+        DenseMatrix64F input = RandomMatrices.createRandom(4,5,rand);
+        DenseMatrix64F output = new DenseMatrix64F(1,5);
+
+        assertTrue( output == CommonOps.sumCols(input,output));
+
+        for( int i = 0; i < input.numCols; i++ ) {
+            double total = 0;
+            for( int j = 0; j < input.numRows; j++ ) {
+                total += input.get(j,i);
+            }
+            assertEquals( total, output.get(i),1e-8);
+        }
+
+        // check with a null output
+        DenseMatrix64F output2 = CommonOps.sumCols(input,null);
+
+        EjmlUnitTests.assertEquals(output,output2,1e-8);
+    }
 }

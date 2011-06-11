@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>efficient-java-matrix-library.googlecode.com</groupId>
+  <groupId>com.googlecode.efficient-java-matrix-library</groupId>
   <artifactId>ejml</artifactId>
   <packaging>jar</packaging>
-  <version>SNAPSHOT</version>
+  <version>0.17-SNAPSHOT</version>
   <name>Efficient Java Matrix Library</name>
   <url>http://code.google.com/p/efficient-java-matrix-library/</url>
   <description>A fast and easy to use dense matrix linear algebra library written in Java.</description>
@@ -38,6 +38,8 @@
   </parent>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.test.skip>true</maven.test.skip>
+    <maven.test.failure.ignore>true</maven.test.failure.ignore>
   </properties>
   <licenses>
   <license>
