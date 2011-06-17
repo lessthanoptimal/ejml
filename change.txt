@@ -18,6 +18,8 @@ Date format: year/month/day
   * Requested by soren
 - Added sumRows() and sumCols() to CommonOps
   * Requested by b.broeksema
+- Fixed bug in inducedP2 where the max singular value was not always returned
+  * Found by Antonino Freno
 
 ----- Version 0.16
 

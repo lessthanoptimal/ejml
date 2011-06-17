@@ -419,15 +419,21 @@ public class NormOps {
      * @return The norm.
      */
     public static double inducedP2( DenseMatrix64F A ) {
-        SingularValueDecomposition svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");
 
         double[] singularValues = svd.getSingularValues();
 
+        double max = singularValues[0];
+        for( int i = 1; i < singularValues.length; i++ ) {
+            if( max < singularValues[i] )
+                max = singularValues[i];
+        }
+
         // the largest singular value is the induced p2 norm
-        return singularValues[0];
+        return max;
     }
 
     /**
