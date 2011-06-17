@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" afterPath="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" afterPath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
     </list>
     <ignored path="EJML.iws" />
@@ -103,16 +105,16 @@
       <file leaf-file-name="UtilEjml.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="13" selection-start="1033" selection-end="1033" vertical-scroll-proportion="0.0">
+            <state line="74" column="31" selection-start="2086" selection-end="2092" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NormOps.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="NormOps.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="420" column="34" selection-start="12337" selection-end="12346" vertical-scroll-proportion="0.0">
+            <state line="428" column="8" selection-start="12673" selection-end="12673" vertical-scroll-proportion="0.31432194">
               <folding />
             </state>
           </provider>
@@ -127,10 +129,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestNormOps.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TestNormOps.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="211" column="40" selection-start="6009" selection-end="6009" vertical-scroll-proportion="0.5335821">
+            <state line="226" column="48" selection-start="6513" selection-end="6513" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestUtilEjml.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="20" selection-start="1259" selection-end="1259" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -168,9 +179,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveOver.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/SolvePseudoInverse.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/svd/implicitqr/SvdImplicitQrAlgorithm.java" />
         <option value="$PROJECT_DIR$/examples/test/org/ejml/example/TestCompareKalmanResults.java" />
         <option value="$PROJECT_DIR$/experimental/src/org/ejml/alg/densed2/mult/MatrixMatrixMult_D2.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/SingularValueDecomposition.java" />
@@ -182,8 +190,11 @@
         <option value="$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" />
         <option value="$PROJECT_DIR$/change.txt" />
+        <option value="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" />
       </list>
     </option>
   </component>
@@ -404,71 +415,7 @@
       <recent name="org.ejml.alg.block.BlockMatrixOps" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.org.ejml">
-    <configuration default="false" name="TestMatrixFeatures.isUpperTriangle" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.ops.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.ops" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestMatrixFeatures" />
-      <option name="METHOD_NAME" value="isUpperTriangle" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="43021" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestMatrixFeatures" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.ops.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="snapshooter" />
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.ops" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestMatrixFeatures" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="35938" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="JUnit.TestNormOps.inducedP2">
     <configuration default="false" name="TestCommonOps.sumRows" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
@@ -559,6 +506,70 @@
       <envs />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="42548" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestUtilEjml.getMax" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.TestUtilEjml" />
+      <option name="METHOD_NAME" value="getMax" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="56343" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestNormOps.inducedP2" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="snapshooter" />
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.ops" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestNormOps" />
+      <option name="METHOD_NAME" value="inducedP2" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="44236" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
@@ -812,17 +823,17 @@
       <method />
     </configuration>
     <list size="11">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.TestMatrixFeatures.isUpperTriangle" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.TestMatrixFeatures" />
-      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
-      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
-      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
-      <item index="5" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
-      <item index="6" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
-      <item index="7" class="java.lang.String" itemvalue="JUnit.TestLinearSolverChol.standardTests" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.TestCommonOps.sumRows" />
-      <item index="9" class="java.lang.String" itemvalue="JUnit.TestCommonOps.sumCols" />
-      <item index="10" class="java.lang.String" itemvalue="JUnit.org.ejml" />
+      <item index="0" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
+      <item index="1" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
+      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
+      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
+      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.TestLinearSolverChol.standardTests" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.TestCommonOps.sumRows" />
+      <item index="7" class="java.lang.String" itemvalue="JUnit.TestCommonOps.sumCols" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.org.ejml" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.TestUtilEjml.getMax" />
+      <item index="10" class="java.lang.String" itemvalue="JUnit.TestNormOps.inducedP2" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -921,7 +932,7 @@
     <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="- added sumRows() and sumCols() to CommonOps" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Improved unit test for inducedP2 so that it can catch the bug&#10;- Added UtilEjml.getMax()" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -957,6 +968,8 @@
     <MESSAGE value="- Minor tweaks to examples&#10;- Updated README.TXT" />
     <MESSAGE value="- Fixed some bugs in MatrixFeatures where they incorrectly handled NaN&#10;- Added a comment to RandomMatrices" />
     <MESSAGE value="- added sumRows() and sumCols() to CommonOps" />
+    <MESSAGE value="- Fixed bug in inducedP2" />
+    <MESSAGE value="- Improved unit test for inducedP2 so that it can catch the bug&#10;- Added UtilEjml.getMax()" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -974,11 +987,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/examples/src/org/ejml/example/KalmanFilterSimple.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="13" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="210" column="67" selection-start="6295" selection-end="6295" vertical-scroll-proportion="0.0" />
@@ -1038,13 +1046,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="13" selection-start="1033" selection-end="1033" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="21" column="27" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0">
@@ -1052,16 +1053,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="420" column="34" selection-start="12337" selection-end="12346" vertical-scroll-proportion="0.0">
+        <state line="74" column="31" selection-start="2086" selection-end="2092" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="20" selection-start="1259" selection-end="1259" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="211" column="40" selection-start="6009" selection-end="6009" vertical-scroll-proportion="0.5335821">
+        <state line="226" column="48" selection-start="6513" selection-end="6513" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="428" column="8" selection-start="12673" selection-end="12673" vertical-scroll-proportion="0.31432194">
           <folding />
         </state>
       </provider>

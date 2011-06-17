@@ -19,6 +19,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.D1Matrix64F;
@@ -426,14 +427,8 @@ public class NormOps {
 
         double[] singularValues = svd.getSingularValues();
 
-        double max = singularValues[0];
-        for( int i = 1; i < singularValues.length; i++ ) {
-            if( max < singularValues[i] )
-                max = singularValues[i];
-        }
-
         // the largest singular value is the induced p2 norm
-        return max;
+        return UtilEjml.getMax(singularValues,0,singularValues.length);
     }
 
     /**

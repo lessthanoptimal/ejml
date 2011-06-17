@@ -72,6 +72,20 @@ public class UtilEjml {
         }
     }
 
+    public static double getMax( double array[], int start , int length ) {
+        double max = array[start];
+        final int end = start+length;
+
+        for( int i = start+1; i < end; i++ ) {
+            double v = array[i];
+            if( v > max ) {
+                max = v;
+            }
+        }
+
+        return max;
+    }
+
     /**
      * Give a string of numbers it returns a DenseMatrix
      */

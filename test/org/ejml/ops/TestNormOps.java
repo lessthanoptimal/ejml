@@ -20,7 +20,10 @@
 package org.ejml.ops;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
+
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,6 +33,8 @@ import static org.junit.Assert.assertFalse;
  * @author Peter Abeles
  */
 public class TestNormOps {
+
+    Random rand = new Random(234);
 
     DenseMatrix64F zeroMatrix = new DenseMatrix64F(3,4);
     DenseMatrix64F unzeroMatrix = new DenseMatrix64F(3,2, true, 0.2, 1, -2, 3, 6, 5);
@@ -213,6 +218,14 @@ public class TestNormOps {
         assertEquals(7.8645,val,1e-3);
 
         checkUncountable(NormOps.inducedP2(zeroMatrix));
+
+        // make sure the largest singular value is being returned not just the first
+        for( int i = 0; i < 20; i++ ) {
+            SimpleMatrix A = SimpleMatrix.random(5,5,-10,10,rand);
+            double largest = A.svd().getW().get(0);
+
+            assertEquals(largest,NormOps.inducedP2(A.getMatrix()),1e-8);
+        }
     }
 
     @Test

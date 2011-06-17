@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -33,6 +34,15 @@ import static org.junit.Assert.assertEquals;
 public class TestUtilEjml {
 
     Random rand = new Random(23423);
+
+
+    @Test
+    public void getMax() {
+        double a[] = new double[]{-1,2,3,4,5,6,3,4,5,7,8,2,3,-5,-6};
+
+        assertTrue(8==UtilEjml.getMax(a,0,a.length));
+        assertTrue(5==UtilEjml.getMax(a,6,3));
+    }
 
     /**
      * Provide it a couple of different strings to parse.  Then compare
