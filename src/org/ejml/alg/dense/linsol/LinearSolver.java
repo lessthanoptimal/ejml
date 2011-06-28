@@ -81,7 +81,7 @@ public interface LinearSolver< T extends Matrix64F> {
      * is because some decompositions don't detect singular matrices.
      * </p>
      *
-     * @param A The 'A' matrix in the linear equation. Might be modified or have the reference.
+     * @param A The 'A' matrix in the linear equation. Might be modified or save the reference.
      * @return true if it can be processed.
      */
     public boolean setA( T A );

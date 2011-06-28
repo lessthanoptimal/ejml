@@ -4,12 +4,14 @@
     <bookmark url="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderTran.java" line="176" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
+    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="-">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" afterPath="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" afterPath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TODO_Algorithms.txt" afterPath="$PROJECT_DIR$/TODO_Algorithms.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" afterPath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
     </list>
     <ignored path="EJML.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -84,15 +86,6 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CommonOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1360" column="45" selection-start="46871" selection-end="46871" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SingularOps.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -105,25 +98,25 @@
       <file leaf-file-name="UtilEjml.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="31" selection-start="2086" selection-end="2092" vertical-scroll-proportion="0.0">
+            <state line="74" column="28" selection-start="2086" selection-end="2089" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NormOps.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="NormOps.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="428" column="8" selection-start="12673" selection-end="12673" vertical-scroll-proportion="0.31432194">
+            <state line="46" column="91" selection-start="1549" selection-end="1641" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="change.txt" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/change.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="27" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0">
+            <state line="6" column="10" selection-start="80" selection-end="80" vertical-scroll-proportion="0.11406844">
               <folding />
             </state>
           </provider>
@@ -141,7 +134,25 @@
       <file leaf-file-name="TestUtilEjml.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="20" selection-start="1259" selection-end="1259" vertical-scroll-proportion="0.0">
+            <state line="39" column="25" selection-start="1113" selection-end="1113" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TODO_Algorithms.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="8" selection-start="9" selection-end="9" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -179,7 +190,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/examples/test/org/ejml/example/TestCompareKalmanResults.java" />
         <option value="$PROJECT_DIR$/experimental/src/org/ejml/alg/densed2/mult/MatrixMatrixMult_D2.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/SingularValueDecomposition.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" />
@@ -190,11 +200,12 @@
         <option value="$PROJECT_DIR$/src/org/ejml/ops/RandomMatrices.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-        <option value="$PROJECT_DIR$/change.txt" />
         <option value="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/ops/NormOps.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java" />
+        <option value="$PROJECT_DIR$/TODO_Algorithms.txt" />
+        <option value="$PROJECT_DIR$/change.txt" />
       </list>
     </option>
   </component>
@@ -236,8 +247,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -256,123 +267,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ops" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="alg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="alg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dense" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="104" />
-    <property name="project.structure.last.edited" value="Project" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="59" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="34" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="88" />
-    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="options.splitter.main.proportions" value="0.3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
@@ -396,12 +305,12 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="dynamic.classpath" value="false" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
     <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -415,7 +324,7 @@
       <recent name="org.ejml.alg.block.BlockMatrixOps" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TestNormOps.inducedP2">
+  <component name="RunManager" selected="JUnit.org.ejml">
     <configuration default="false" name="TestCommonOps.sumRows" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
@@ -902,7 +811,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32788226" sideWeight="0.52408934" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" sideWeight="0.6627497" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32788226" sideWeight="0.6639248" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32788226" sideWeight="0.47708577" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="100" y="125" width="1080" height="774" />
@@ -987,16 +896,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="210" column="67" selection-start="6295" selection-end="6295" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CovarianceOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="13" selection-start="1183" selection-end="1183" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestMatrixFeatures.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="219" column="13" selection-start="6662" selection-end="6662" vertical-scroll-proportion="0.0" />
@@ -1022,6 +921,31 @@
         <state line="379" column="48" selection-start="13329" selection-end="13344" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1360" column="45" selection-start="46871" selection-end="46871" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="34" selection-start="2429" selection-end="2429" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="28" selection-start="2086" selection-end="2089" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="91" selection-start="1549" selection-end="1641" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="226" column="48" selection-start="6513" selection-end="6513" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="857" column="0" selection-start="26388" selection-end="26388" vertical-scroll-proportion="0.0" />
@@ -1032,51 +956,30 @@
         <state line="130" column="0" selection-start="4252" selection-end="4252" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1360" column="45" selection-start="46871" selection-end="46871" vertical-scroll-proportion="0.0">
+        <state line="39" column="25" selection-start="1113" selection-end="1113" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java">
+    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="34" selection-start="2429" selection-end="2429" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TODO_Algorithms.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="8" selection-start="9" selection-end="9" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="27" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="31" selection-start="2086" selection-end="2092" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/TestUtilEjml.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="20" selection-start="1259" selection-end="1259" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="226" column="48" selection-start="6513" selection-end="6513" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="428" column="8" selection-start="12673" selection-end="12673" vertical-scroll-proportion="0.31432194">
+        <state line="6" column="10" selection-start="80" selection-end="80" vertical-scroll-proportion="0.11406844">
           <folding />
         </state>
       </provider>

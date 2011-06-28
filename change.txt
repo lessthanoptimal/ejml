@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.17
 
-2011/XX/XX
+2011/06/28
 
 - Moved general and symmetric EVD to DecompositionFactory from EigenOps
 - Moved show() from MatrixIO to MatrixVisualization to help with Android development.

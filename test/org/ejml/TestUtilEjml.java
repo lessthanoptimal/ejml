@@ -37,11 +37,11 @@ public class TestUtilEjml {
 
 
     @Test
-    public void getMax() {
+    public void max_array() {
         double a[] = new double[]{-1,2,3,4,5,6,3,4,5,7,8,2,3,-5,-6};
 
-        assertTrue(8==UtilEjml.getMax(a,0,a.length));
-        assertTrue(5==UtilEjml.getMax(a,6,3));
+        assertTrue(8==UtilEjml.max(a,0,a.length));
+        assertTrue(5==UtilEjml.max(a,6,3));
     }
 
     /**

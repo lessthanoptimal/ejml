@@ -1,5 +1,5 @@
 
-For 0.17 Release
+For 0.18 Release
 - Block SVD
 - Block Hessenberg
 - Remove QR-col and replace with QR-tran?

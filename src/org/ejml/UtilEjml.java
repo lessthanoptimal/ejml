@@ -72,7 +72,7 @@ public class UtilEjml {
         }
     }
 
-    public static double getMax( double array[], int start , int length ) {
+    public static double max( double array[], int start , int length ) {
         double max = array[start];
         final int end = start+length;
 

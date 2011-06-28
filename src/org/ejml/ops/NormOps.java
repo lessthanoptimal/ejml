@@ -137,7 +137,7 @@ public class NormOps {
      */
     public static double conditionP2( DenseMatrix64F A )
     {
-        SingularValueDecomposition svd = DecompositionFactory.svd(A.numRows,A.numCols);
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
 
         svd.decompose(A);
 
@@ -428,7 +428,7 @@ public class NormOps {
         double[] singularValues = svd.getSingularValues();
 
         // the largest singular value is the induced p2 norm
-        return UtilEjml.getMax(singularValues,0,singularValues.length);
+        return UtilEjml.max(singularValues,0,singularValues.length);
     }
 
     /**
