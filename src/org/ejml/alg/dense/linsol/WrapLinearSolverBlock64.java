@@ -42,7 +42,6 @@ public class WrapLinearSolverBlock64 implements LinearSolver<DenseMatrix64F> {
     // block matrix copy of X matrix passed into solve
     protected BlockMatrix64F blockX = new BlockMatrix64F(1,1);
 
-
     public WrapLinearSolverBlock64( LinearSolver<BlockMatrix64F> alg ) {
         this.alg = alg;
     }

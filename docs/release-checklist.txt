@@ -1,4 +1,4 @@
-- Update version number in code
+- Update version number in UtilEjml.VERSION
 - Create .zip of source code
   - remove .svn
 - Create jar file
