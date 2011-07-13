@@ -93,7 +93,7 @@ public class UtilEjml {
     {
         String []vals = s.split("(\\s)+");
 
-        // there is the posibility the first element could be empty
+        // there is the possibility the first element could be empty
         int start = vals[0].isEmpty() ? 1 : 0;
 
         // covert it from string to doubles
@@ -110,7 +110,6 @@ public class UtilEjml {
 
         return ret;
     }
-
 
     public static Integer[] sortByIndex( final double []data , int size ) {
         Integer[] idx = new Integer[size];

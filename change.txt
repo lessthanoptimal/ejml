@@ -2,6 +2,11 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.18
+
+- Added support for reading and writing CSV formatted matrices
+  * Requested by various people.
+
 ----- Version 0.17
 
 2011/06/28

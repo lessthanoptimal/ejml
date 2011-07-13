@@ -52,4 +52,21 @@ public class TestMatrixIO {
         assertTrue(f.exists());
         assertTrue(f.delete());
     }
+
+    @Test
+    public void load_save_csv() throws IOException {
+        DenseMatrix64F A = RandomMatrices.createRandom(6,3,rand);
+
+        MatrixIO.saveCSV(A,"temp.csv");
+
+        DenseMatrix64F A_copy = MatrixIO.loadCSV("temp.csv");
+
+        assertTrue(A != A_copy);
+        assertTrue(MatrixFeatures.isEquals(A,A_copy));
+
+        // clean up
+        File f = new File("temp.csv");
+        assertTrue(f.exists());
+        assertTrue(f.delete());
+    }
 }

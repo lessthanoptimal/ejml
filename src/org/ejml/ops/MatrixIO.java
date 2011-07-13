@@ -19,6 +19,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 
 import java.io.*;
@@ -42,7 +43,7 @@ public class MatrixIO {
         throws IOException
     {
         FileOutputStream fileStream = new FileOutputStream(fileName);
-        ObjectOutputStream stream= new ObjectOutputStream(fileStream);
+        ObjectOutputStream stream = new ObjectOutputStream(fileStream);
 
         try {
             stream.writeObject(A);
@@ -84,6 +85,51 @@ public class MatrixIO {
 
         stream.close();
         return (T)ret;
+    }
+
+    /**
+     * Saves a matrix to disk using in a Column Space Value (CSV)
+     * format.
+     *
+     * @param A The matrix being saved.
+     * @param fileName Name of the file its being saved at.
+     * @throws java.io.IOException
+     */
+    public static void saveCSV( Matrix64F A , String fileName )
+        throws IOException
+    {
+        PrintStream fileStream = new PrintStream(fileName);
+
+        fileStream.print(A.getNumRows()+" ");
+        fileStream.println(A.getNumCols());
+        for( int i = 0; i < A.numRows; i++ ) {
+            for( int j = 0; j < A.numCols; j++ ) {
+                fileStream.print(A.get(i,j)+" ");
+            }
+            fileStream.println();
+        }
+        fileStream.close();
+    }
+
+    /**
+     * Reads a matrix in which has been encoded using a Column Space Value (CSV)
+     * file format.
+     *
+     * @param fileName The file being loaded.
+     * @return DenseMatrix64F
+     * @throws IOException
+     */
+    public static DenseMatrix64F loadCSV( String fileName )
+        throws IOException
+    {
+        FileInputStream fileStream = new FileInputStream(fileName);
+        ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
+
+        DenseMatrix64F ret = csv.read();
+
+        fileStream.close();
+
+        return ret;
     }
 
     public static void print( PrintStream out , Matrix64F mat ) {
