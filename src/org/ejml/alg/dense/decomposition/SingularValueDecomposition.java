@@ -79,7 +79,7 @@ public abstract interface SingularValueDecomposition <T extends Matrix64F>
      * </p>
      * <p>
      * Internally the SVD algorithm might compute U transposed or it might not.  To avoid an
-     *  unnecessary double transpose the option is provided to select if the transpose is returned.
+     * unnecessary double transpose the option is provided to select if the transpose is returned.
      * </p>
      *
      * @param transposed If the returned U is transposed.
@@ -94,7 +94,7 @@ public abstract interface SingularValueDecomposition <T extends Matrix64F>
      *
      * <p>
      * Internally the SVD algorithm might compute V transposed or it might not.  To avoid an
-     *  unnecessary double transpose the option is provided to select if the transpose is returned.
+     * unnecessary double transpose the option is provided to select if the transpose is returned.
      * </p>
      *
      * @param transposed If the returned V is transposed.
