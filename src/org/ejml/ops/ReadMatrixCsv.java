@@ -58,10 +58,15 @@ public class ReadMatrixCsv extends ReadCsv {
         if( numRows < 0 || numCols < 0)
             throw new IOException("Invalid number of rows and/or columns: "+numRows+" "+numCols);
 
+        return read(numRows,numCols);
+    }
+
+    public DenseMatrix64F read( int numRows , int numCols ) throws IOException {
+
         DenseMatrix64F A = new DenseMatrix64F(numRows,numCols);
 
         for( int i = 0; i < numRows; i++ ) {
-            words = extractWords();
+            List<String> words = extractWords();
 
             if( words.size() != numCols )
                 throw new IOException("Unexpected number of words in column. Found "+words.size()+" expected "+numCols);
@@ -69,8 +74,6 @@ public class ReadMatrixCsv extends ReadCsv {
                 A.set(i,j,Double.parseDouble(words.get(j)));
             }
         }
-
-
 
         return A;
     }

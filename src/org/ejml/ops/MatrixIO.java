@@ -113,7 +113,7 @@ public class MatrixIO {
 
     /**
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
-     * file format.
+     * file format. The number of rows and columns are read in on the first line.
      *
      * @param fileName The file being loaded.
      * @return DenseMatrix64F
@@ -126,6 +126,29 @@ public class MatrixIO {
         ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
 
         DenseMatrix64F ret = csv.read();
+
+        fileStream.close();
+
+        return ret;
+    }
+
+    /**
+     * Reads a matrix in which has been encoded using a Column Space Value (CSV)
+     * file format.  The matrix's dimension is specified in function parameters.
+     *
+     * @param fileName The file being loaded.
+     * @param numRows number of rows in the matrix.
+     * @param numCols number of columns in the matrix.
+     * @return DenseMatrix64F
+     * @throws IOException
+     */
+    public static DenseMatrix64F loadCSV( String fileName , int numRows , int numCols )
+        throws IOException
+    {
+        FileInputStream fileStream = new FileInputStream(fileName);
+        ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
+
+        DenseMatrix64F ret = csv.read(numRows,numCols);
 
         fileStream.close();
 
