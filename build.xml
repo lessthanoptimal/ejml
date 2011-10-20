@@ -121,11 +121,43 @@
             </packageset>
 
             <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification</h1>]]></doctitle>
-            <bottom><![CDATA[<i>Copyright &#169; 2009-2010 Peter Abeles All Rights Reserved.</i>]]></bottom>
+            <bottom><![CDATA[<i>Copyright &#169; 2009-2011 Peter Abeles All Rights Reserved.</i>]]></bottom>
             <!--<group title="Group 1 Packages" packages="com.dummy.test.a*"/>-->
             <!--<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>-->
             <!--<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>-->
             <!--<link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>-->
+        </javadoc>
+    </target>
+
+    <!-- Generates JavaDOC but with tracking information for google analytics -->
+    <target name="javadoctracking">
+        <javadoc
+                destdir="docs/api"
+                author="true"
+                version="true"
+                use="true"
+                windowtitle="Efficient Java Matrix Library"
+                overview="src/overview.html">
+
+            <packageset dir="src" defaultexcludes="yes">
+                <include name="org/ejml/**"/>
+            </packageset>
+
+            <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169; 2009-2011 Peter Abeles All Rights Reserved.</i>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-10413214-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>]]></bottom>
         </javadoc>
     </target>
 

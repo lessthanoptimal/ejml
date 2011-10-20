@@ -18,7 +18,7 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.7.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
