@@ -59,8 +59,8 @@ public class BenchmarkRectSolve {
     private static void runAlgorithms( int numTrials )
     {
 
-        System.out.println("Pseudo LU       = "+ solveBenchmark(
-                new SolvePseudoInverse(A.numRows),numTrials));
+        System.out.println("Pseudo Inverse  = "+ solveBenchmark(
+                new SolvePseudoInverse(A.numRows,A.numCols),numTrials));
         System.out.println("QR house        = "+ solveBenchmark(
                 new LinearSolverQrHouse(),numTrials));
         System.out.println("QR house Col    = "+ solveBenchmark(

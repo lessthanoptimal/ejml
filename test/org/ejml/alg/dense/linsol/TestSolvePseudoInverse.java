@@ -20,14 +20,41 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 public class TestSolvePseudoInverse extends GenericLinearSolverChecks{
 
+    public TestSolvePseudoInverse() {
+        this.shouldFailSingular = false;
+    }
+
     @Override
-    protected LinearSolver createSolver( DenseMatrix64F A ) {
-        return new SolvePseudoInverse(A.numRows);
+    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
+        return new SolvePseudoInverse(A.numRows,A.numCols);
+    }
+
+    /**
+     * The pseudo inverse should never fail and every matrix has an inverse
+     */
+    @Test
+    public void singularMatrix() {
+        DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,4,5,6);
+        DenseMatrix64F A_pinv = new DenseMatrix64F(3,2);
+        SolvePseudoInverse solver = new SolvePseudoInverse();
+        assertTrue(solver.setA(A));
+
+        solver.invert(A_pinv);
+
+        DenseMatrix64F C = new DenseMatrix64F(2,2);
+        CommonOps.mult(A,A_pinv,C);
+
+        assertTrue(MatrixFeatures.isIdentity(C,1e-8));
     }
 }

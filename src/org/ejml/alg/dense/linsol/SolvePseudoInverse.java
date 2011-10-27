@@ -19,100 +19,94 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
-import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
 
 /**
  * <p>
- * The pseudo-inverse is used to solve an over determined system:<br>
+ * The pseudo-inverse is typically used to solve over determined system for which there is no unique solution.<br>
  * x=inv(A<sup>T</sup>A)A<sup>T</sup>b<br>
  * where A &isin; &real; <sup>m &times; n</sup> and m &ge; n.
  * </p>
- * <p>
- * Thus allowing a linear solver to be used that can only invert square matrices.  The downside of
- * this approach is that the final solution is less precise in some situations.  {@link org.ejml.alg.dense.decomposition.QRDecomposition QRDecomposition}
- * will produce a more accurate solution in these situations.
- * </p>
  *
  * <p>
- * This pseudo-inverse is also known as the Moore-Penrose pseudo-inverse and can be easily derived
- * through matrix algebra.
+ * This class implements the Moore-Penrose pseudo-inverse using SVD and should never fail.  Alternative implementations
+ * can use Cholesky decomposition, but those will fail if the A<sup>T</sup>A matrix is singular.
+ * However the Cholesky implementation is much faster.
  * </p>
  *
  * @author Peter Abeles
  */
 public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
 
-    // linear solver that is used to invert the matrix
-    private LinearSolver<DenseMatrix64F> inverter;
+    // Used to compute pseudo inverse
+    private SingularValueDecomposition<DenseMatrix64F> svd;
 
-    // reference to the original matrix
-    private DenseMatrix64F ATA;
     // the results of the pseudo-inverse
-    private DenseMatrix64F pinv;
-
-    // it can solve a system that has up to this size
-    private int maxRows=-1;
-    private int maxCols=-1;
+    private DenseMatrix64F pinv = new DenseMatrix64F(1,1);
 
     /**
-     * Creates a new solver from an arbitrary linear solver.
+     * Creates a new solver targeted at the specified matrix size.
      *
-     * @param inverter Used to compute an inverse of a matrix.
+     * @param maxRows The expected largest matrix it might have to process.  Can be larger.
+     * @param maxCols The expected largest matrix it might have to process.  Can be larger.
      */
-    public SolvePseudoInverse( LinearSolver<DenseMatrix64F> inverter ) {
+    public SolvePseudoInverse( int maxRows , int maxCols ) {
 
-        if( inverter.modifiesA() )
-            this.inverter = new LinearSolverSafe<DenseMatrix64F>(inverter);
-        else
-            this.inverter = inverter;
+        svd = DecompositionFactory.svd(maxRows,maxCols,true,true,true);
     }
 
     /**
-     * Creates a new solver using a cholesky decomposition as its default solver.
-     *
-     * @param maxCols An estimate of how large of a matrix it might be inverting.
-     * Better to overestimate than underestimate.
-     */
-    public SolvePseudoInverse( int maxCols ) {
-        this(new LinearSolverChol((CholeskyDecompositionCommon) DecompositionFactory.chol(maxCols,true)));
-    }
-
-    /**
-     * Creates a new solver using a cholesky decomposition as its default solver.
+     * Creates a solver targeted at matrices around 100x100
      */
     public SolvePseudoInverse() {
-        this(new LinearSolverChol((CholeskyDecompositionCommon) DecompositionFactory.chol(0,true)));
-    }
-
-    public void setMaxSize( int maxRows , int maxCols ) {
-        this.maxRows = maxRows;
-        this.maxCols = maxCols;
-
-        ATA = new DenseMatrix64F(maxCols,maxCols);
-        pinv = new DenseMatrix64F(maxCols,maxRows);
+        this(100,100);
     }
 
     @Override
     public boolean setA(DenseMatrix64F A) {
-        if( A.numRows > maxRows || A.numCols > maxCols ) {
-            setMaxSize(A.numRows,A.numCols);
-        }
+        pinv.reshape(A.numCols,A.numRows,false);
 
-        ATA.reshape(A.numCols,A.numCols, false);
-
-        // compute the pseudo inverse
-        CommonOps.multTransA(A,A,ATA);
-
-        if( !inverter.setA(ATA) ) {
+        if( !svd.decompose(A) )
             return false;
+
+        DenseMatrix64F U_t = svd.getU(true);
+        DenseMatrix64F V = svd.getV(false);
+        double []S = svd.getSingularValues();
+        int N = Math.min(A.numRows,A.numCols);
+
+        // compute the threshold for singular values which are to be zeroed
+        double maxSingular = 0;
+        for( int i = 0; i < N; i++ ) {
+            if( S[i] > maxSingular )
+                maxSingular = S[i];
         }
-        inverter.invert(ATA);
-        CommonOps.multTransB(ATA,A, pinv);
+
+        double tau = UtilEjml.EPS*Math.max(A.numCols,A.numRows)*maxSingular;
+
+        // computer the pseudo inverse of A
+        for( int i = 0; i < N; i++ ) {
+            double s = S[i];
+            if( s < tau )
+                S[i] = 0;
+            else
+                S[i] = 1.0/S[i];
+        }
+
+        // V*W
+        for( int i = 0; i < V.numRows; i++ ) {
+            int index = i*V.numCols;
+            for( int j = 0; j < V.numCols; j++ ) {
+                V.data[index++] *= S[j];
+            }
+        }
+
+        // V*W*U^T
+        CommonOps.mult(V,U_t, pinv);
 
         return true;
     }
@@ -134,7 +128,7 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
 
     @Override
     public boolean modifiesA() {
-        return false;
+        return svd.inputModified();
     }
 
     @Override
