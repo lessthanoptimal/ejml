@@ -7,7 +7,10 @@ Date format: year/month/day
 - Added support for reading and writing CSV formatted matrices
   * Requested by various people.
 - Changed SolvePseudoInverse to use SVD, making it much more robust and will never fail now.
+  * Same behavior as matlab pinv() function
   * Requested by mwolff.
+  * Updated CommonOps.pinv() to use SolvePseudoInverse
+- Added getSingularValue() to SimpleSVD class.
 
 ----- Version 0.17
 

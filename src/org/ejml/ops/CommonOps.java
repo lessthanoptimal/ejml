@@ -24,6 +24,7 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
+import org.ejml.alg.dense.linsol.SolvePseudoInverse;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.TransposeAlgs;
 import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
@@ -679,31 +680,23 @@ public class CommonOps {
      * pinv(A) = A<sup>T</sup>(AA<sup>T</sup>)<sup>-1</sup><br>
      * </p>
      * <p>
-     * If one needs to solve a system where m != n, then {@link CommonOps#solve solve} should be used instead since it
-     * will produce a more accurate answer faster than using the pinv.
+     * Internally it uses {@link SolvePseudoInverse} to compute the inverse.  For performance reasons, this should only
+     * be used when a matrix is singular or nearly singular.
      * </p>
-     * @param A Non-singular m by n matrix.  Not modified.
+     * @param A  A m by n Matrix.  Not modified.
      * @param invA Where the computed pseudo inverse is stored. n by m.  Modified.
      * @return
      */
-    public static void pinv( DenseMatrix64F A , DenseMatrix64F invA ) {
-        if( A.numRows == A.numCols ) {
-            invert(A,invA);
-        } else if( A.numRows > A.numCols ) {
-            DenseMatrix64F ATA = new DenseMatrix64F(A.numCols,A.numCols);
-            CommonOps.multTransA(A,A,ATA);
-            if( !CommonOps.invert(ATA) )
-                throw new IllegalArgumentException("ATA can't be inverted.");
+    public static void pinv( DenseMatrix64F A , DenseMatrix64F invA )
+    {
+        SolvePseudoInverse solver = new SolvePseudoInverse();
+        if( solver.modifiesA())
+            A = A.copy();
 
-            CommonOps.multTransB(ATA,A,invA);
-        } else {
-            DenseMatrix64F AAT = new DenseMatrix64F(A.numRows,A.numRows);
-            CommonOps.multTransB(A,A, AAT);
-            if( !CommonOps.invert(AAT) )
-                throw new IllegalArgumentException("ATA can't be inverted.");
+        if( !solver.setA(A) )
+            throw new RuntimeException("Invert failed, maybe a bug?");
 
-            CommonOps.multTransA(A,AAT,invA);
-        }
+        solver.invert(invA);
     }
 
     /**

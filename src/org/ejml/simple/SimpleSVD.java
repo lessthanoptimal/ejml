@@ -113,6 +113,16 @@ public class SimpleSVD<T extends SimpleMatrix> {
     }
 
     /**
+     * Returns the specified singular value.
+     *
+     * @param index Which singular value is to be returned.
+     * @return A singular value.
+     */
+    public double getSingleValue( int index ) {
+        return svd.getSingularValues()[index];
+    }
+
+    /**
      * Returns the rank of the decomposed matrix.
      *
      * @return Rank
