@@ -227,6 +227,22 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void pseudoInverse() {
+        // first test it against a non-square zero matrix
+        SimpleMatrix inv = new SimpleMatrix(3,4).pseudoInverse();
+        assertEquals(0,inv.normF(),1e-8);
+
+        // now try it against a more standard matrix
+        SimpleMatrix a = SimpleMatrix.random(3,3, 0, 1, rand);
+        inv = a.pseudoInverse();
+
+        DenseMatrix64F d_inv = new DenseMatrix64F(3,3);
+        CommonOps.invert(a.mat,d_inv);
+
+         EjmlUnitTests.assertEquals(d_inv,inv.mat,1e-8);
+    }
+
+    @Test
     public void solve() {
         SimpleMatrix a = SimpleMatrix.random(3,3, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(3,2, 0, 1, rand);

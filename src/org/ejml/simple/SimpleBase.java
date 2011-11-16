@@ -298,6 +298,19 @@ public abstract class SimpleBase <T extends SimpleBase> {
 
     /**
      * <p>
+     * Computes the Moore-Penrose pseudo-inverse
+     * </p>
+     *
+     * @return inverse computed using the pseudo inverse.
+     */
+    public T pseudoInverse() {
+        T ret = createMatrix(mat.numCols,mat.numRows);
+        CommonOps.pinv(mat,ret.getMatrix());
+        return ret;
+    }
+
+    /**
+     * <p>
      * Solves for X in the following equation:<br>
      * <br>
      * x = a<sup>-1</sup>b<br>

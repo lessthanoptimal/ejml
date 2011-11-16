@@ -10,6 +10,7 @@ Date format: year/month/day
   * Same behavior as matlab pinv() function
   * Requested by mwolff.
   * Updated CommonOps.pinv() to use SolvePseudoInverse
+  * Added pinv() to SimpleMatrix
 - Added getSingularValue() to SimpleSVD class.
 
 ----- Version 0.17
