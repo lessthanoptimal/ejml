@@ -4,12 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderTran.java" line="176" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/src/org/ejml/example/PolynomialRootFinder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/test/org/ejml/example/TestPolynomialRootFinder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.ipr" afterPath="$PROJECT_DIR$/EJML.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
-    </list>
+    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="" />
     <ignored path="EJML.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -105,8 +100,10 @@
       <file leaf-file-name="TestPolynomialRootFinder.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/test/org/ejml/example/TestPolynomialRootFinder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="19" selection-start="1094" selection-end="1094" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="33" column="19" selection-start="1057" selection-end="1057" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -893,7 +890,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added pinv() to simple matrix" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added polynomial root finding example" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -906,7 +903,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="- fixed performance issue on small matrix inversion for SPD matrices" />
     <MESSAGE value="- added solver for QRDecompositionHouseholderTran&#10;- Deleted NR SVD&#10;- Change LinearSolver so that it allows modification of input matrices.&#10; * Added LinearSolverSafe that ensures inputs are not modified.&#10;- Improved some unit tests and other minor changes" />
     <MESSAGE value="- Added EjmlUnitTests&#10;  * Generic unit testing class that should work in any unit testing framework.&#10;  * Changed many of the internal tests to use this class&#10;- toString() support added to DenseMatrix64F and SimpleMatrix&#10;- MatrixIO takes a generic input stream instead of always using System.out&#10;" />
     <MESSAGE value="- triangular solver works on unaligned inputs&#10;- BlockQRSolver does not create a local block aligned copy for solving" />
@@ -931,6 +927,7 @@
     <MESSAGE value="- Changed Pseudo Inverse to use a SVD implementation instead of cholesky" />
     <MESSAGE value="- Update CommonOps.pinv()" />
     <MESSAGE value="- Added pinv() to simple matrix" />
+    <MESSAGE value="- Added polynomial root finding example" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1031,8 +1028,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/test/org/ejml/example/TestPolynomialRootFinder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="19" selection-start="1094" selection-end="1094" vertical-scroll-proportion="0.0">
-          <folding />
+        <state line="33" column="19" selection-start="1057" selection-end="1057" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
