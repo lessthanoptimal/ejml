@@ -40,12 +40,26 @@ public abstract class Matrix64F implements Serializable {
     public int numCols;
 
     /**
-     * Changes the number of rows and columns in a matrix and if possible does not declare new memory.  If saveValues is
-     * true and new memory needs to be declared, the value of the old internal data will be copied over into the new internal data.
+     * <p>
+     * Changes the number of rows and columns in the matrix, allowing its size to grow or shrink.
+     * If the saveValues flag is set to true, then the previous values will be maintained, but
+     * reassigned to new elements in a row-major ordering.  If saveValues is false values will only
+     * be maintained when the requested size is less than or equal to the internal array size.
+     * The primary use for this function is to encourage data reuse and avoid unnecessarily declaring
+     * and initialization of new memory.
+     * </p>
      *
-     * @param numRows The new number of rows the matrix will have.
-     * @param numCols The new number of columns the matrix will have.
-     * @param saveValues If new memory is declared should it copy the old values over?
+     * <p>
+     * Examples:<br>
+     * [ 1 2 ; 3 4 ] -> reshape( 2 , 3 , true ) = [ 1 2 3 ; 4 0 0 ]<br>
+     * [ 1 2 ; 3 4 ] -> reshape( 1 , 2 , true ) = [ 1 2 ]<br>
+     * [ 1 2 ; 3 4 ] -> reshape( 1 , 2 , false ) = [ 1 2 ]<br>
+     * [ 1 2 ; 3 4 ] -> reshape( 2 , 3 , false ) = [ 0 0 0 ; 0 0 0 ]
+     * </p>
+     *
+     * @param numRows The new number of rows in the matrix.
+     * @param numCols The new number of columns in the matrix.
+     * @param saveValues If true then the value of each element will be save using a row-major reordering.  Typically this should be false.
      */
     public abstract void reshape(int numRows, int numCols, boolean saveValues);
 

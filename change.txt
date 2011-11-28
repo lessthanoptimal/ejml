@@ -12,6 +12,11 @@ Date format: year/month/day
   * Updated CommonOps.pinv() to use SolvePseudoInverse
   * Added pinv() to SimpleMatrix
 - Added getSingularValue() to SimpleSVD class.
+- Rewrote JavaDOC for reshape() because it was miss leading
+  * sh10151 pointed this out
+- Removed one of the CommonOps.insert() functions since it was identical to CommonOps.extract()
+- Created optimized versions of CommonOps.extract
+  * Seems to boost performance on small matrices but not large
 
 ----- Version 0.17
 

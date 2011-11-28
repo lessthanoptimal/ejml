@@ -26,9 +26,7 @@ import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.SolvePseudoInverse;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.alg.dense.misc.TransposeAlgs;
-import org.ejml.alg.dense.misc.UnrolledDeterminantFromMinor;
-import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
+import org.ejml.alg.dense.misc.*;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.D1Matrix64F;
@@ -940,7 +938,7 @@ public class CommonOps {
 
     /**
      * <p>
-     * Extracts a submatrix from 'src' and stores it in a submatrix of 'dst'.
+     * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'.
      * </p>
      * <p>
      * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
@@ -977,13 +975,12 @@ public class CommonOps {
         if( dstX0+w > dst.numCols )
             throw new IllegalArgumentException("dst is too small in columns");
 
-         for( int y = 0; y < h; y++ ) {
-             for( int x = 0; x < w; x++ ) {
-                 double v = src.get(y+srcY0,x+srcX0);
-                 dst.set(dstY0+y , dstX0 +x, v);
-             }
-         }
-
+        // interestingly, the performance is only different for small matrices but identical for larger ones
+        if( src instanceof DenseMatrix64F && dst instanceof DenseMatrix64F ) {
+            ImplCommonOps_DenseMatrix64F.extract((DenseMatrix64F)src,srcY0,srcX0,(DenseMatrix64F)dst,dstY0,dstX0, h, w);
+        } else {
+            ImplCommonOps_Matrix64F.extract(src,srcY0,srcX0,dst,dstY0,dstX0, h, w);
+        }
     }
 
     /**
@@ -1004,7 +1001,7 @@ public class CommonOps {
      * @param srcY1 Stop row+1.
      * @return Extracted submatrix.
      */
-    public static DenseMatrix64F extract( Matrix64F src,
+    public static DenseMatrix64F extract( DenseMatrix64F src,
                                           int srcY0, int srcY1,
                                           int srcX0, int srcX1 )
     {
@@ -1018,12 +1015,7 @@ public class CommonOps {
 
         DenseMatrix64F dst = new DenseMatrix64F(h,w);
 
-        for( int y = 0; y < h; y++ ) {
-            for( int x = 0; x < w; x++ ) {
-                double v = src.get(y+srcY0,x+srcX0);
-                dst.set(y , x, v);
-            }
-        }
+        ImplCommonOps_DenseMatrix64F.extract(src,srcY0,srcX0,dst,0,0, h, w);
 
         return dst;
     }
@@ -1048,12 +1040,13 @@ public class CommonOps {
         }
 
         for( int i = 0; i < N; i++ ) {
-            dst.set(i,  src.get(i,i));
+            dst.set( i , src.unsafe_get(i,i) );
         }
     }
 
     /**
      * Inserts matrix 'src' into matrix 'dest' with the (0,0) of src at (row,col) in dest.
+     * This is equivalent to calling extract(src,0,src.numRows,0,src.numCols,dest,destY0,destX0).
      *
      * @param src matrix that is being copied into dest. Not modified.
      * @param dest Where src is being copied into. Modified.
@@ -1061,52 +1054,7 @@ public class CommonOps {
      * @param destX0 Start column for the copy into dest.
      */
     public static void insert( Matrix64F src, Matrix64F dest, int destY0, int destX0) {
-        if( destY0 +src.numRows > dest.numRows)
-            throw new IllegalArgumentException("Inserted matrix would exceed the number of rows");
-
-        if( destX0 +src.numCols > dest.numCols)
-            throw new IllegalArgumentException("Inserted matrix would exceed the number of columns");
-
-        for( int i = destY0; i < destY0 + src.numRows; i++ ) {
-            for( int j = destX0; j < destX0 + src.numCols; j++ ) {
-                dest.set(i,j, src.get(i- destY0,j- destX0));
-            }
-        }
-    }
-
-    /**
-     * <p>
-     * Inserts a submatrix of 'src' into 'dest' at the specified location.
-     * </p>
-     *
-     * @param src The matrix that is to be inserted. Not modified.
-     * @param srcY0 First row in 'src' submatrix.
-     * @param srcY1 Last row in 'src' submatrix.
-     * @param srcX0 First column in 'src' submatrix.
-     * @param srcX1 Last column in 'src' submatrix.
-     * @param dest The matrix which is being written to.  Modified.
-     * @param dstY0 Destination row.
-     * @param dstX0 Destination column.
-     */
-    public static void insert( Matrix64F src,
-                               int srcY0, int srcY1,
-                               int srcX0, int srcX1,
-                               Matrix64F dest,
-                               int dstY0, int dstX0 ) {
-        int h = srcY1-srcY0+1;
-        int w = srcX1-srcX0+1;
-
-        if( dstY0+h > dest.numRows)
-            throw new IllegalArgumentException("Inserted matrix would exceed the number of rows");
-
-        if( dstX0+w> dest.numCols)
-            throw new IllegalArgumentException("Inserted matrix would exceed the number of columns");
-
-        for( int i = dstY0; i < dstY0 + h; i++ ) {
-            for( int j = dstX0; j < dstX0 + w; j++ ) {
-                dest.set(i,j, src.get(i-dstY0+srcY0,j-dstX0+srcX0));
-            }
-        }
+        extract(src,0,src.numRows,0,src.numCols,dest,destY0,destX0);
     }
 
     /**

@@ -220,20 +220,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * <p>
-     * Changes the number of rows and columns in the matrix.  If the requested matrix shape
-     * can be performed with the current data array then nothing is changed but the matrix's
-     * shape.  If the data's length is too small then a new array is declared.
-     * </p>
-     *
-     * <p>
-     * If saveValue is set to true then the data is value each element is guaranteed to not change.
-     * Otherwise the old values will be lost if the matrix needs to grow.
-     * </p>
-     *
-     * @param numRows The new number of rows in the matrix.
-     * @param numCols The new number of columns in the matrix.
-     * @param saveValues If true then the value of each element will not change.  Typically this should be false.
+     * @inheritDoc
      */
     @Override
     public void reshape(int numRows, int numCols, boolean saveValues) {
@@ -249,12 +236,6 @@ public class DenseMatrix64F extends RowD1Matrix64F {
 
         this.numRows = numRows;
         this.numCols = numCols;
-    }
-
-    public void reshape( int length ) {
-        if( data.length < length ) {
-            data = new double[ length ];
-        }
     }
 
     /**

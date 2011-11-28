@@ -520,26 +520,6 @@ public class TestCommonOps {
         }
     }
 
-@Test
-    public void insert_sub() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
-        for( int i = 0; i < A.numRows; i++ ) {
-            for( int j = 0; j < A.numCols; j++ ) {
-                A.set(i,j,i*A.numRows+j);
-            }
-        }
-
-        DenseMatrix64F B = new DenseMatrix64F(8,8);
-
-        CommonOps.insert(A, 1,2,1,3,B, 3,2);
-
-        for( int i = 0; i < 2; i++ ) {
-            for( int j = 0; j < 3; j++ ) {
-                assertEquals(A.get(i+1,j+1),B.get(i+3,j+2),1e-8);
-            }
-        }
-    }
-
    @Test
     public void addEquals() {
         DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
