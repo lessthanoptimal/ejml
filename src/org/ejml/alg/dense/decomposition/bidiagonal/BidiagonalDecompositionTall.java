@@ -20,7 +20,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.QRDecomposition;
+import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
@@ -41,27 +41,26 @@ import org.ejml.ops.CommonOps;
  * </p>
  *
  * <p>
- * WARNING:  Currently can't handle singular matrices.
- * </p>
- *
- * <p>
  * See page 404 in "Fundamentals of Matrix Computations", 2nd by David S. Watkins.
  * </p>
  *
  *
  * @author Peter Abeles
  */
+// TODO optimize this code
 public class BidiagonalDecompositionTall
         implements BidiagonalDecomposition<DenseMatrix64F>
 {
-    // TODO change to QR with column pivoting so that it can handle singular matrices
-    QRDecomposition<DenseMatrix64F> decompQR = DecompositionFactory.qr(500,100); // todo this should be passed in
+    QRPDecomposition<DenseMatrix64F> decompQRP = DecompositionFactory.qrp(500, 100); // todo this should be passed in
     BidiagonalDecomposition<DenseMatrix64F> decompBi = new BidiagonalDecompositionRow();
 
     DenseMatrix64F B = new DenseMatrix64F(1,1);
 
+    // number of rows
     int m;
+    // number of column
     int n;
+    // min(m,n)
     int min;
 
     @Override
@@ -94,12 +93,12 @@ public class BidiagonalDecompositionTall
 
         if( compact ) {
             // U = Q*U1
-            DenseMatrix64F Q1 = decompQR.getQ(null,true);
+            DenseMatrix64F Q1 = decompQRP.getQ(null,true);
             DenseMatrix64F U1 = decompBi.getU(null,false,true);
             CommonOps.mult(Q1,U1,U);
         } else {
            // U = [Q1*U1 Q2]
-            DenseMatrix64F Q = decompQR.getQ(U,false);
+            DenseMatrix64F Q = decompQRP.getQ(U,false);
             DenseMatrix64F U1 = decompBi.getU(null,false,true);
             DenseMatrix64F Q1 = CommonOps.extract(Q,0,Q.numRows,0,min);
             DenseMatrix64F tmp = new DenseMatrix64F(Q1.numRows,U1.numCols);
@@ -120,7 +119,7 @@ public class BidiagonalDecompositionTall
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-        if( !decompQR.decompose(orig) ) {
+        if( !decompQRP.decompose(orig) ) {
             throw new RuntimeException("A singular matrix must have been passed in.   Maybe QR with column pivoting instead?  Wait there isn't one in EJML yet...");
 //            return false;
         }
@@ -130,13 +129,20 @@ public class BidiagonalDecompositionTall
         min = Math.min(m, n);
         B.reshape(min, n,false);
 
-        decompQR.getR(B,true);
+        decompQRP.getR(B,true);
+
+        // apply the column pivots.
+        // TODO this is horribly inefficient
+        DenseMatrix64F result = new DenseMatrix64F(min,n);
+        DenseMatrix64F P = decompQRP.getPivotMatrix(null);
+        CommonOps.multTransB(B, P, result);
+        B.set(result);
 
         return decompBi.decompose(B);
     }
 
     @Override
     public boolean inputModified() {
-        return decompQR.inputModified();
+        return decompQRP.inputModified();
     }
 }

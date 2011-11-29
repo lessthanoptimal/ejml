@@ -17,25 +17,31 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol.qr;
+package org.ejml.alg.dense.decomposition;
 
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
-import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
-
+import org.ejml.data.Matrix64F;
 
 /**
+ * Similar to {@link QRDecomposition} but it can handle the rank deficient case by
+ * performing column pivots during the decomposition.
+ *
+ * A*P=Q*R
+ *
  * @author Peter Abeles
  */
-public class TestLinearSolverQr extends GenericLinearSolverChecks {
+public interface QRPDecomposition <T extends Matrix64F>
+        extends QRDecomposition<T>
+{
+    /**
+     * Returns the rank as determined by the algorithm.  This is dependent upon a fixed threshold
+     * and might not be appropriate for some applications.
+     *
+     * @return Matrix's rank
+     */
+    public int getRank();
 
-    public TestLinearSolverQr() {
-//         shouldFailSingular = false;
-    }
+    public int[] getPivots();
 
-    @Override
-    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQr(new QRDecompositionHouseholderColumn());
-    }
+    public DenseMatrix64F getPivotMatrix( DenseMatrix64F P );
 }

@@ -29,7 +29,7 @@ import org.ejml.data.DenseMatrix64F;
  */
 public class TestLinearSolverQrBlock64 extends GenericLinearSolverChecks {
     @Override
-    protected LinearSolver createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
         return new LinearSolverQrBlock64();
     }
 }

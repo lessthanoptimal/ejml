@@ -17,6 +17,9 @@ Date format: year/month/day
 - Removed one of the CommonOps.insert() functions since it was identical to CommonOps.extract()
 - Created optimized versions of CommonOps.extract
   * Seems to boost performance on small matrices but not large
+- Added QR decomposition with column pivots
+- Added solver which uses QR with column pivots
+- BidiagonalDecompositionTall now passes all of its unit tests
 
 ----- Version 0.17
 

@@ -1359,7 +1359,7 @@ public class CommonOps {
     public static void addEquals( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -1383,7 +1383,7 @@ public class CommonOps {
     public static void addEquals( D1Matrix64F a , double beta, D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();

@@ -53,7 +53,7 @@ public abstract class GenericBidiagonalCheck {
                 for( int tall = 0; tall <= 2; tall++ ) {
                     DenseMatrix64F A = RandomMatrices.createRandom(N+tall,N,rand);
 
-                    assertTrue(decomp.decompose(A.<DenseMatrix64F>copy()));
+                    assertTrue(decomp.decompose(A.copy()));
 
                     checkGeneric(A, decomp);
                 }

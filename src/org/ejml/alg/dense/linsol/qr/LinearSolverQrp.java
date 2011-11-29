@@ -19,84 +19,53 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.QRDecomposition;
+import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.SpecializedOps;
 
-
 /**
  * <p>
- * A solver for a generic QR decomposition algorithm.  This will in general be a bit slower than the
- * specialized once since the full Q and R matrices need to be extracted.
+ * A solver for a generic QR column pivot decomposition algorithm.  This will in general be a bit slower than the
+ * specialized once since the full Q, R, and P matrices need to be extracted.
  * </p>
  * <p>
  * It solve for x by first multiplying b by the transpose of Q then solving for the result.
  * <br>
- * QRx=b<br>
- * Rx=Q^T b<br>
+ * Q*R*P<sup>T</sup>x=b<br>
  * </p>
  *
  * @author Peter Abeles
  */
-public class LinearSolverQr extends LinearSolverAbstract {
+public class LinearSolverQrp extends LinearSolverAbstract {
 
-    private QRDecomposition<DenseMatrix64F> decomposer;
+    QRPDecomposition<DenseMatrix64F> decomposition;
 
-    protected int maxRows = -1;
-    protected int maxCols = -1;
+    DenseMatrix64F Q=new DenseMatrix64F(1,1);
+    DenseMatrix64F R=new DenseMatrix64F(1,1);
 
-    protected DenseMatrix64F Q;
-    protected DenseMatrix64F R;
+    private DenseMatrix64F Y=new DenseMatrix64F(1,1);
+    private DenseMatrix64F Z=new DenseMatrix64F(1,1);
 
-    private DenseMatrix64F Y,Z;
 
-    /**
-     * Creates a linear solver that uses QR decomposition.
-     *
-     */
-    public LinearSolverQr( QRDecomposition<DenseMatrix64F> decomposer ) {
-        this.decomposer = decomposer;
+    public LinearSolverQrp(QRPDecomposition<DenseMatrix64F> decomposition) {
+        this.decomposition = decomposition;
     }
 
-    /**
-     * Changes the size of the matrix it can solve for
-     *
-     * @param maxRows Maximum number of rows in the matrix it will decompose.
-     * @param maxCols Maximum number of columns in the matrix it will decompose.
-     */
-    public void setMaxSize( int maxRows , int maxCols )
-    {
-        this.maxRows = maxRows; this.maxCols = maxCols;
-
-        Q = new DenseMatrix64F(maxRows,maxRows);
-        R = new DenseMatrix64F(maxRows,maxCols);
-
-        Y = new DenseMatrix64F(maxRows,1);
-        Z = new DenseMatrix64F(maxRows,1);
-    }
-
-    /**
-     * Performs QR decomposition on A
-     *
-     * @param A not modified.
-     */
     @Override
     public boolean setA(DenseMatrix64F A) {
-        if( A.numRows > maxRows || A.numCols > maxCols ) {
-            setMaxSize(A.numRows,A.numCols);
-        }
-
         _setA(A);
-        if( !decomposer.decompose(A) )
+        if( !decomposition.decompose(A) )
             return false;
 
-        Q.reshape(numRows,numRows, false);
-        R.reshape(numRows,numCols, false);
-        decomposer.getQ(Q,false);
-        decomposer.getR(R,false);
+
+        Q.reshape(A.numRows, A.numCols,true);
+        R.reshape(A.numCols, A.numCols, false);
+
+        decomposition.getQ(Q, true);
+        decomposition.getR(R, true);
 
         return true;
     }
@@ -106,12 +75,6 @@ public class LinearSolverQr extends LinearSolverAbstract {
         return SpecializedOps.qualityTriangular(true, R);
     }
 
-    /**
-     * Solves for X using the QR decomposition.
-     *
-     * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is written to.  Modified.
-     */
     @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
         if( X.numRows != numCols )
@@ -122,7 +85,16 @@ public class LinearSolverQr extends LinearSolverAbstract {
         int BnumCols = B.numCols;
 
         Y.reshape(numRows,1, false);
-        Z.reshape(numRows,1, false);
+        Z.reshape(numCols,1, false);
+
+        // get the pivots and transpose them
+        int pivotTran[] = new int[ numCols ];
+        int pivots[] = decomposition.getPivots();
+        for( int i = 0; i < numCols; i++ ) {
+            pivotTran[pivots[i]] = i;
+        }
+
+        int rank = decomposition.getRank();
 
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
@@ -134,21 +106,24 @@ public class LinearSolverQr extends LinearSolverAbstract {
 
             // Solve Qa=b
             // a = Q'b
-            CommonOps.multTransA(Q,Y,Z);
+            CommonOps.multTransA(Q, Y, Z);
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R.data,Z.data,numCols);
+            TriangularSolver.solveU(R.data, Z.data, rank);
 
             // save the results
-            for( int i = 0; i < numCols; i++ ) {
-                X.set(i,colB,Z.data[i]);
+            for( int i = 0; i < rank; i++ ) {
+                X.set(i,colB,Z.data[pivotTran[i]]);
+            }
+            for( int i = rank; i < numCols; i++ ) {
+                X.set(i,colB,B.get(pivotTran[i],colB));
             }
         }
     }
 
     @Override
     public boolean modifiesA() {
-        return decomposer.inputModified();
+        return decomposition.inputModified();
     }
 
     @Override

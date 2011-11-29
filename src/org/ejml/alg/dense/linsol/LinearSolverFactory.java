@@ -20,15 +20,18 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrp;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -97,6 +100,30 @@ public class LinearSolverFactory {
                 return new LinearSolverChol(decomp);
             }
         }
+    }
+
+    /**
+     * Creates a solver which can come up with a partial solution for a singular matrix.
+     * The matrix is decomposed using QR with column pivots.  Variables which can't
+     * be solved for because its singular are set to the input.
+     *
+     * @return A new solver which can handle
+     */
+    public static LinearSolver<DenseMatrix64F> solverQrPivot( int matrixWidth ) {
+        QRPDecomposition<DenseMatrix64F> decomposition =
+                new QRColPivDecompositionHouseholderColumn();
+
+        return new LinearSolverQrp(decomposition);
+    }
+
+    /**
+     * Returns a solver which uses the pseudo inverse.  Useful when a matrix
+     * needs to be inverted which is singular.
+     *
+     * @return Solver for singular matrices.
+     */
+    public static LinearSolver<DenseMatrix64F> solverPseudoInverse() {
+        return new SolvePseudoInverse();
     }
 
     /**

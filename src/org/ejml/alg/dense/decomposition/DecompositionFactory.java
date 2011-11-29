@@ -31,6 +31,7 @@ import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
 import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose;
 import org.ejml.data.DenseMatrix64F;
@@ -143,6 +144,21 @@ public class DecompositionFactory {
      */
     public static QRDecomposition<DenseMatrix64F> qr( int numRows , int numCols ) {
         return new QRDecompositionHouseholderColumn();
+    }
+
+    /**
+     * <p>
+     * Returns a new instance of QR decomposition with column pivoting.<br>
+     * A*P = Q*R<br>
+     * where A is the input matrix, and P is the pivot matrix.
+     * </p>
+     *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
+     * @return QRPDecomposition
+     */
+    public static QRPDecomposition<DenseMatrix64F> qrp( int numRows , int numCols ) {
+        return new QRColPivDecompositionHouseholderColumn();
     }
 
     /**

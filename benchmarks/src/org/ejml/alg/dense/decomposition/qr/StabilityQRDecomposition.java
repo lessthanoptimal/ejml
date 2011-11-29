@@ -21,6 +21,7 @@ package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.QRDecomposition;
+import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
@@ -54,10 +55,27 @@ public class StabilityQRDecomposition {
         return A.minus(A_found).normF()/A.normF();
     }
 
+    public static double evaluate( QRPDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
+
+        if( !decomposeSafe(alg,orig)) {
+            return Double.NaN;
+        }
+
+        SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null,true));
+        SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null,true));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivotMatrix(null));
+
+        SimpleMatrix A_found = Q.mult(R);
+        SimpleMatrix A = SimpleMatrix.wrap(orig);
+
+        return A.mult(P).minus(A_found).normF()/A.normF();
+    }
+
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
         System.out.println("qr               = "+ evaluate(new QRDecompositionHouseholder(),mat));
         System.out.println("qr col           = "+ evaluate(new QRDecompositionHouseholderColumn(),mat));
+        System.out.println("qr pivot col     = "+ evaluate(new QRColPivDecompositionHouseholderColumn(),mat));
         System.out.println("qr tran          = "+ evaluate(new QRDecompositionHouseholderTran(),mat));
         System.out.println("qr block         = "+ evaluate(new QRDecompositionBlock64(),mat));
     }

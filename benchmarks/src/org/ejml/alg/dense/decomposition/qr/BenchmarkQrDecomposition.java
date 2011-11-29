@@ -36,7 +36,7 @@ import java.util.Random;
  */
 public class BenchmarkQrDecomposition {
 
-    public static long generic(QRDecomposition alg,  DenseMatrix64F orig , int numTrials ) {
+    public static long generic(QRDecomposition<DenseMatrix64F> alg,  DenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
         DenseMatrix64F B;
@@ -52,7 +52,6 @@ public class BenchmarkQrDecomposition {
 
         return System.currentTimeMillis() - prev;
     }
-
 
     public static long block( DenseMatrix64F orig , int numTrials ) {
 
@@ -81,6 +80,8 @@ public class BenchmarkQrDecomposition {
 //        System.out.println("basic            = "+ generic( new QRDecompositionHouseholder(), mat,numTrials));
         System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn() ,mat,numTrials));
         System.out.println("tran             = "+ generic( new QRDecompositionHouseholderTran() , mat,numTrials));
+        System.out.println("pivot column     = "+ generic( new QRColPivDecompositionHouseholderColumn() , mat,numTrials));
+
 //        System.out.println("block  native    = "+ block(mat,numTrials));
         System.out.println("block wrapper    = "+ generic( new QRDecompositionBlock64() , mat,numTrials));
     }

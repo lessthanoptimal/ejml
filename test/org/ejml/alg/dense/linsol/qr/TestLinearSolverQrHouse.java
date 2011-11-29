@@ -34,7 +34,7 @@ public class TestLinearSolverQrHouse extends GenericLinearSolverChecks {
     }
 
     @Override
-    protected LinearSolver createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
         return new LinearSolverQrHouse();
     }
 }
