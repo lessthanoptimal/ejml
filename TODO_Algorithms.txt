@@ -1,8 +1,7 @@
 
-For 0.18 Release
+For 0.19 Release
 - Block SVD
 - Block Hessenberg
-- Remove QR-col and replace with QR-tran?
 - Adapt QR-tran into LQ
 - Remove QRDecompositionHouseholder?
 - Remove chol-block for dense with chol-block64?
@@ -26,14 +25,6 @@ For 0.18 Release
   * Add condition(), use Hager's method? pg 132
   * Put this new condition into NormOps since it should be much faster
 
-- QR
-  * Replace col with tran variant of QR decomposition?
-    - tran does not use a custom matrix format.
-    - tran seems to be about 10% slower on small matrices.
-
-- QR with column pivoting
-  * Update BidiagonalDecompositionTall to use that then update SvdImplicitQrDecompose.
-
 - SVD
   - Save up rotators, multiply against each other, then multiply against U and V
   - Divide and conquer algorithm
@@ -49,6 +40,7 @@ For 0.18 Release
   - SymmEig
 
 - Fast Matrix Multiply
+
 - hard code cholesky decomposition for small matrices
 
 - Matrix Multiplication:

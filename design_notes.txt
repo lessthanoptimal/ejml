@@ -2,7 +2,7 @@ Block Size
 ---------------------------
 - Transpose
   * Q6600 ran fast at 200 for 10k matrices.  didn't check higher
-  * Pentium-M degrades performance slighly for 2k matrix.
+  * Pentium-M degrades performance slightly for 2k matrix.
   * Selected 60 as a compromise between Q6600 and pentium-m performance.
 - Block Cholesky
   * 20 seems to be optimal, 60 slows it down a lot.
@@ -64,3 +64,17 @@ Combine matrix for DenseMatrix64
 combine() is a function in SimpleMatrix that combines two matrices together and grows if needed.
 No equivalent is directly provided in CommonOps since it is horribly memory inefficient.  Why
 use DenseMatrix64 if you are going to do that.
+
+QR Decomposition: Column Major vs. Transpose
+---------------------------
+Two variants of QR decomposition currently exist in the code.  One converts the input matrix
+into a 2D array in a column major format and the other creates a transposed matrix.  QR
+decomposition has fewer cache misses when internally it reformats matrices like this.
+
+The column major 2D array format is about 10% faster than the transpose algorithm due
+to less array traversal overhead.  However, it requires specialized code and increases
+maintenance overhead.  It will also not benefit from improvements to more common operations.
+
+Deleting the 2D array format was being considered for sake of simplifying the code base.
+However, it is actually an idea format for QR with column pivots and results in simpler
+faster code.  So it was decided to keep both variants.
