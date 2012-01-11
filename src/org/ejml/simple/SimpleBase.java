@@ -848,34 +848,74 @@ public abstract class SimpleBase <T extends SimpleBase> {
 
     /**
      * <p>
-     * Saves this matrix to a file as a serialized XML object.
+     * Saves this matrix to a file as a serialized binary object.
      * </p>
      *
-     * @see MatrixIO#saveXML( org.ejml.data.Matrix64F , String)
+     * @see MatrixIO#saveBin( org.ejml.data.Matrix64F , String)
      *
      * @param fileName
      * @throws java.io.IOException
      */
-    public void saveToFile( String fileName )
+    public void saveToFileBinary( String fileName )
         throws IOException
     {
-        MatrixIO.saveXML(mat,fileName);
+        MatrixIO.saveBin(mat, fileName);
     }
 
     /**
      * <p>
-     * Loads a new matrix from a serialized XML file.
+     * Loads a new matrix from a serialized binary file.
      * </p>
      *
-     * @see MatrixIO#loadXML(String)
+     * @see MatrixIO#loadBin(String)
      *
      * @param fileName File which is to be loaded.
      * @return The matrix.
      * @throws IOException
      */
-    public static SimpleMatrix load( String fileName )
+    public static SimpleMatrix loadBinary( String fileName )
             throws IOException {
-        Matrix64F mat = MatrixIO.loadXML(fileName);
+        Matrix64F mat = MatrixIO.loadBin(fileName);
+
+        // see if its a DenseMatrix64F
+        if( mat instanceof DenseMatrix64F ) {
+            return SimpleMatrix.wrap((DenseMatrix64F)mat);
+        } else {
+            // if not convert it into one and wrap it
+            return SimpleMatrix.wrap( new DenseMatrix64F(mat));
+        }
+    }
+
+    /**
+     * <p>
+     * Saves this matrix to a file in a CSV format.  For the file format see {@link MatrixIO}.
+     * </p>
+     *
+     * @see MatrixIO#saveBin( org.ejml.data.Matrix64F , String)
+     *
+     * @param fileName
+     * @throws java.io.IOException
+     */
+    public void saveToFileCSV( String fileName )
+            throws IOException
+    {
+        MatrixIO.saveCSV(mat, fileName);
+    }
+
+    /**
+     * <p>
+     * Loads a new matrix from a CSV file.  For the file format see {@link MatrixIO}.
+     * </p>
+     *
+     * @see MatrixIO#loadCSV(String)
+     *
+     * @param fileName File which is to be loaded.
+     * @return The matrix.
+     * @throws IOException
+     */
+    public static SimpleMatrix loadCSV( String fileName )
+            throws IOException {
+        Matrix64F mat = MatrixIO.loadCSV(fileName);
 
         // see if its a DenseMatrix64F
         if( mat instanceof DenseMatrix64F ) {

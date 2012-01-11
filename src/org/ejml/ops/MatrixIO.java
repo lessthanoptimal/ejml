@@ -26,7 +26,7 @@ import java.io.*;
 
 
 /**
- * 
+ * Provides simple to use routines for reading and writing matrices to and from files.
  *
  * @author Peter Abeles
  */
@@ -39,7 +39,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveXML( Matrix64F A , String fileName )
+    public static void saveBin(Matrix64F A, String fileName)
         throws IOException
     {
         FileOutputStream fileStream = new FileOutputStream(fileName);
@@ -67,7 +67,7 @@ public class MatrixIO {
      * @return  DenseMatrix64F
      * @throws IOException
      */
-    public static <T extends Matrix64F> T loadXML( String fileName )
+    public static <T extends Matrix64F> T loadBin(String fileName)
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
@@ -88,8 +88,8 @@ public class MatrixIO {
     }
 
     /**
-     * Saves a matrix to disk using in a Column Space Value (CSV)
-     * format.
+     * Saves a matrix to disk using in a Column Space Value (CSV) format. For a 
+     * description of the format see {@link MatrixIO#loadCSV(String)}.
      *
      * @param A The matrix being saved.
      * @param fileName Name of the file its being saved at.
@@ -113,7 +113,8 @@ public class MatrixIO {
 
     /**
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
-     * file format. The number of rows and columns are read in on the first line.
+     * file format. The number of rows and columns are read in on the first line. Then
+     * each row is read in the subsequent lines.
      *
      * @param fileName The file being loaded.
      * @return DenseMatrix64F
@@ -134,7 +135,7 @@ public class MatrixIO {
 
     /**
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
-     * file format.  The matrix's dimension is specified in function parameters.
+     * file format.  For a description of the format see {@link MatrixIO#loadCSV(String)}.
      *
      * @param fileName The file being loaded.
      * @param numRows number of rows in the matrix.

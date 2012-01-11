@@ -40,9 +40,9 @@ public class TestMatrixIO {
     public void load_save_binary() throws IOException {
         DenseMatrix64F A = RandomMatrices.createRandom(6,3,rand);
 
-        MatrixIO.saveXML(A,"temp.mat");
+        MatrixIO.saveBin(A, "temp.mat");
 
-        DenseMatrix64F A_copy = MatrixIO.loadXML("temp.mat");
+        DenseMatrix64F A_copy = MatrixIO.loadBin("temp.mat");
 
         assertTrue(A != A_copy);
         assertTrue(MatrixFeatures.isEquals(A,A_copy));

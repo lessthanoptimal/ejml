@@ -348,6 +348,16 @@
       </item>
     </group>
   </component>
+  <component name="ProjectCodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS">
+      <value>
+        <XML>
+          <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+        </XML>
+      </value>
+    </option>
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ejml.iml" filepath="$PROJECT_DIR$/ejml.iml" />
@@ -383,30 +393,6 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://efficient-java-matrix-library.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://efficient-java-matrix-library.googlecode.com/svn/javadoc">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://efficient-java-matrix-library.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://efficient-java-matrix-library.googlecode.com/svn/wiki">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://efficient-java-matrix-library.googlecode.com/svn/branches" />
@@ -490,6 +476,15 @@
     <Base>
       <setting name="state" value="2" />
     </Base>
+  </component>
+  <component name="libraryTable">
+    <library name="testing">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit-4.10.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
 </project>
 

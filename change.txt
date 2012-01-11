@@ -2,7 +2,16 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.19
+
+2012/??/??
+
+- Added example showing file IO to examples directory
+- Changed MatrixIO.saveXML and MatrixIO.loadXML to saveBin and loadBin because it uses a binary format not XML
+
 ----- Version 0.18
+
+2011/12/04
 
 - Added support for reading and writing CSV formatted matrices
   * Requested by various people.
