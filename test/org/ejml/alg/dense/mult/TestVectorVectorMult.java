@@ -20,7 +20,11 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.*;
+import org.ejml.ops.CommonOps;
+import org.ejml.ops.EjmlUnitTests;
+import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.RandomMatrices;
+import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
 import java.util.Random;
@@ -149,20 +153,40 @@ public class TestVectorVectorMult {
     }
 
     @Test
-    public void rank1UpdateIdenity() {
+    public void rank1Update_two_square() {
+        DenseMatrix64F A = RandomMatrices.createRandom(6,6,rand);
         DenseMatrix64F u = RandomMatrices.createRandom(6,1,rand);
-        DenseMatrix64F x = RandomMatrices.createRandom(6,1,rand);
+        DenseMatrix64F w = RandomMatrices.createRandom(6,1,rand);
+        double gamma = -45;
 
-        NormOps.normalizeF(u);
+        SimpleMatrix _A = SimpleMatrix.wrap(A);
+        SimpleMatrix _u = SimpleMatrix.wrap(u);
+        SimpleMatrix _w = SimpleMatrix.wrap(w);
+        
+        SimpleMatrix expected = _A.plus(_u.mult(_w.transpose()).scale(gamma));
+        DenseMatrix64F found = new DenseMatrix64F(6,6);
 
-        DenseMatrix64F Q = SpecializedOps.createReflector(u);
+        VectorVectorMult.rank1Update(gamma,A,u,w,found);
 
-        DenseMatrix64F expected = new DenseMatrix64F(6,1);
-        DenseMatrix64F found = new DenseMatrix64F(6,1);
+        EjmlUnitTests.assertEquals(expected.getMatrix(),found,1e-8);
+    }
 
-        CommonOps.mult(Q,x,expected);
-        VectorVectorMult.householder(-2.0,u,x,found);
+    @Test
+    public void rank1Update_one_square() {
+        DenseMatrix64F A = RandomMatrices.createRandom(6,6,rand);
+        DenseMatrix64F u = RandomMatrices.createRandom(6,1,rand);
+        DenseMatrix64F w = RandomMatrices.createRandom(6,1,rand);
+        double gamma = -45;
 
-        EjmlUnitTests.assertEquals(expected,found,1e-8);
+        SimpleMatrix _A = SimpleMatrix.wrap(A);
+        SimpleMatrix _u = SimpleMatrix.wrap(u);
+        SimpleMatrix _w = SimpleMatrix.wrap(w);
+
+        SimpleMatrix expected = _A.plus(_u.mult(_w.transpose()).scale(gamma));
+        DenseMatrix64F found = A.copy();
+
+        VectorVectorMult.rank1Update(gamma,found,u,w);
+
+        EjmlUnitTests.assertEquals(expected.getMatrix(),found,1e-8);
     }
 }

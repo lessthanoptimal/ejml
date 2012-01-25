@@ -8,6 +8,9 @@ Date format: year/month/day
 
 - Added example showing file IO to examples directory
 - Changed MatrixIO.saveXML and MatrixIO.loadXML to saveBin and loadBin because it uses a binary format not XML
+- Added save/load CSV to SimpleBase
+- Implemented VectorVectorMult.rank1Update
+  * Before the function did nothing
 
 ----- Version 0.18
 

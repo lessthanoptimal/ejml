@@ -266,7 +266,8 @@ public class VectorVectorMult {
      * B = A + &gamma; u w<sup>T</sup><br>
      * </p>
      * <p>
-     * This is called a rank1 update because the matrix u w<sup>T</sup> has a rank of 1.
+     * This is called a rank1 update because the matrix u w<sup>T</sup> has a rank of 1.  Both A and B
+     * can be the same matrix instance, but there is a special rank1Update for that.
      * </p>
      *
      * @param gamma A scalar.
@@ -280,6 +281,46 @@ public class VectorVectorMult {
                                     DenseMatrix64F u , DenseMatrix64F w ,
                                     DenseMatrix64F B )
     {
-        throw new RuntimeException("Not implemented yet.  is this even usfull?");
+        int n = u.getNumElements();
+
+        int matrixIndex = 0;
+        for( int i = 0; i < n; i++ ) {
+            double elementU = u.data[i];
+
+            for( int j = 0; j < n; j++ , matrixIndex++) {
+                B.data[matrixIndex] = A.data[matrixIndex] + gamma*elementU*w.data[j];
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Performs a rank one update on matrix A using vectors u and w.  The results are stored in A.<br>
+     * <br>
+     * A = A + &gamma; u w<sup>T</sup><br>
+     * </p>
+     * <p>
+     * This is called a rank1 update because the matrix u w<sup>T</sup> has a rank of 1.
+     * </p>
+     *
+     * @param gamma A scalar.
+     * @param A A m by m matrix. Modified.
+     * @param u A vector with m elements.  Not modified.
+     */
+    public static void rank1Update( double gamma,
+                                    DenseMatrix64F A ,
+                                    DenseMatrix64F u ,
+                                    DenseMatrix64F w )
+    {
+        int n = u.getNumElements();
+
+        int matrixIndex = 0;
+        for( int i = 0; i < n; i++ ) {
+            double elementU = u.data[i];
+
+            for( int j = 0; j < n; j++ ) {
+                A.data[matrixIndex++] += gamma*elementU*w.data[j];
+            }
+        }
     }
 }
