@@ -54,7 +54,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
     protected int maxCols = -1;
 
     private double[][] QR; // a column major QR matrix
-    private DenseMatrix64F R;
+    private DenseMatrix64F R = new DenseMatrix64F(1,1);
     private double gammas[];
 
     /**
@@ -71,7 +71,6 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
         this.maxRows = maxRows; this.maxCols = maxCols;
 
         a = new double[ maxRows ];
-        R = new DenseMatrix64F(maxCols,maxCols);
     }
 
     /**
@@ -83,6 +82,8 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
     public boolean setA(DenseMatrix64F A) {
         if( A.numRows > maxRows || A.numCols > maxCols )
             setMaxSize(A.numRows,A.numCols);
+
+        R.reshape(A.numCols,A.numCols,false);
 
         _setA(A);
         if( !decomposer.decompose(A) )

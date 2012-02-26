@@ -11,6 +11,8 @@ Date format: year/month/day
 - Added save/load CSV to SimpleBase
 - Implemented VectorVectorMult.rank1Update
   * Before the function did nothing
+- Fixed bug in LinearSolverQrHouseCol where it was not handled a change in matrix size correctly
+- Added new variant of SingularOps.descendingOrder() which takes an array of singular values as input
 
 ----- Version 0.18
 

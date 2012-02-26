@@ -41,22 +41,35 @@ public class TestSingularOps {
     @Test
     public void descendingOrder() {
         // test different shapes of input matrices
-        testDescendingOrder(3, 4, false);
-        testDescendingOrder(4, 3, false);
-        testDescendingOrder(3, 4, true);
-        testDescendingOrder(4, 3, true);
+        testDescendingOrder(3, 4, false,false);
+        testDescendingOrder(4, 3, false,false);
+        testDescendingOrder(3, 4, true,false);
+        testDescendingOrder(4, 3, true,false);
 
-        testDescendingInputTransposed(4,5,true,true);
+        testDescendingInputTransposed(4,5,true,true,false);
+    }
+
+
+    @Test
+    public void descendingOrder_array() {
+        // test different shapes of input matrices
+        testDescendingOrder(3, 4, false, true);
+        testDescendingOrder(4, 3, false, true);
+        testDescendingOrder(3, 4, true, true);
+        testDescendingOrder(4, 3, true, true);
+
+        testDescendingInputTransposed(4,5,true,true,true);
     }
 
     /**
      * Creates a random SVD that is highly unlikely to be in the correct order.  Adjust its order
      * and see if it produces the same matrix.
      */
-    private void testDescendingOrder(int numRows, int numCols, boolean compact) {
+    private void testDescendingOrder(int numRows, int numCols, boolean compact, boolean testArray ) {
         SimpleMatrix U,W,V;
 
         int minLength = Math.min(numRows,numCols);
+        double singularValues[] = new double[minLength];
 
         if( compact ) {
             U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,minLength,rand));
@@ -71,8 +84,19 @@ public class TestSingularOps {
         // Compute A
         SimpleMatrix A=U.mult(W).mult(V.transpose());
 
-        // put into ascending order
-        SingularOps.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
+        // extract array of singular values
+        for( int i = 0; i < singularValues.length; i++ )
+            singularValues[i] = W.get(i,i);
+        
+        // put into descending order
+        if( testArray ) {
+            SingularOps.descendingOrder(U.getMatrix(),false,singularValues,minLength,V.getMatrix(),false);
+            // put back into W
+            for( int i = 0; i < singularValues.length; i++ )
+                W.set(i,i,singularValues[i]);
+        } else {
+            SingularOps.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
+        }
 
         // see if it changed the results
         SimpleMatrix A_found = U.mult(W).mult(V.transpose());
@@ -80,18 +104,26 @@ public class TestSingularOps {
         assertTrue(A.isIdentical(A_found,1e-8));
 
         // make sure singular values are descending
-        for( int i = 1; i < minLength; i++ ) {
-            assertTrue(W.get(i-1,i-1) >= W.get(i,i));
+        if( testArray ) {
+            for( int i = 1; i < minLength; i++ ) {
+                assertTrue(singularValues[i-1] >= singularValues[i]);
+            }
+        } else {
+            for( int i = 1; i < minLength; i++ ) {
+                assertTrue(W.get(i-1,i-1) >= W.get(i,i));
+            }
         }
     }
 
     /**
      * Use the transpose flags and see what happens
      */
-    private void testDescendingInputTransposed(int numRows, int numCols, boolean tranU , boolean tranV ) {
+    private void testDescendingInputTransposed(int numRows, int numCols,
+                                               boolean tranU , boolean tranV , boolean testArray ) {
         SimpleMatrix U,S,V;
 
         int minLength = Math.min(numRows,numCols);
+        double singularValues[] = new double[minLength];
 
         U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,minLength,rand));
         S = SimpleMatrix.wrap(RandomMatrices.createDiagonal(minLength,minLength,0,1,rand));
@@ -100,11 +132,23 @@ public class TestSingularOps {
         // Compute A
         SimpleMatrix A=U.mult(S).mult(V.transpose());
 
+        // extract array of singular values
+        for( int i = 0; i < singularValues.length; i++ )
+            singularValues[i] = S.get(i,i);
+
         // put into ascending order
         if( tranU ) U = U.transpose();
         if( tranV ) V = V.transpose();
 
-        SingularOps.descendingOrder(U.getMatrix(),tranU,S.getMatrix(),V.getMatrix(),tranV);
+        // put into descending order
+        if( testArray ) {
+            SingularOps.descendingOrder(U.getMatrix(),tranU,singularValues,minLength,V.getMatrix(),tranV);
+            // put back into S
+            for( int i = 0; i < singularValues.length; i++ )
+                S.set(i,i,singularValues[i]);
+        } else {
+            SingularOps.descendingOrder(U.getMatrix(),tranU,S.getMatrix(),V.getMatrix(),tranV);
+        }
 
         // see if it changed the results
         if( tranU ) U = U.transpose();
@@ -114,8 +158,14 @@ public class TestSingularOps {
         assertTrue(A.isIdentical(A_found,1e-8));
 
         // make sure singular values are descending
-        for( int i = 1; i < minLength; i++ ) {
-            assertTrue(S.get(i-1,i-1) >= S.get(i,i));
+        if( testArray ) {
+            for( int i = 1; i < minLength; i++ ) {
+                assertTrue(singularValues[i-1] >= singularValues[i]);
+            }
+        } else {
+            for( int i = 1; i < minLength; i++ ) {
+                assertTrue(S.get(i-1,i-1) >= S.get(i,i));
+            }
         }
     }
 

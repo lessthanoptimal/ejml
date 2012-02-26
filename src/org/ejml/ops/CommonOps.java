@@ -510,7 +510,7 @@ public class CommonOps {
             A_tran = new DenseMatrix64F(A.numCols,A.numRows);
         } else {
             if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
-                throw new RuntimeException("Incompatible matrix dimensions");
+                throw new IllegalArgumentException("Incompatible matrix dimensions");
             }
         }
 
@@ -692,7 +692,7 @@ public class CommonOps {
             A = A.copy();
 
         if( !solver.setA(A) )
-            throw new RuntimeException("Invert failed, maybe a bug?");
+            throw new IllegalArgumentException("Invert failed, maybe a bug?");
 
         solver.invert(invA);
     }
@@ -1164,7 +1164,7 @@ public class CommonOps {
     public static void elementMult( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
         int length = a.getNumElements();
@@ -1187,7 +1187,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1208,7 +1208,7 @@ public class CommonOps {
     public static void elementDiv( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
         int length = a.getNumElements();
@@ -1231,7 +1231,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1359,7 +1359,7 @@ public class CommonOps {
     public static void addEquals( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -1383,7 +1383,7 @@ public class CommonOps {
     public static void addEquals( D1Matrix64F a , double beta, D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -1412,7 +1412,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1442,7 +1442,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1473,7 +1473,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1503,7 +1503,7 @@ public class CommonOps {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new RuntimeException("The matrices are not all the same dimension.");
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1567,7 +1567,7 @@ public class CommonOps {
     public static void subEquals( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
         final int length = a.getNumElements();
@@ -1594,7 +1594,7 @@ public class CommonOps {
     public static void sub( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new RuntimeException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
         }
 
         final int length = a.getNumElements();

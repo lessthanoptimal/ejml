@@ -40,7 +40,7 @@ public class SingularOps {
      * order.  In EJML this is not the case since it is often not needed and some computations can
      * be saved by not doing that.
      * </p>
-
+     *
      * @param U Matrix. Modified.
      * @param tranU is U transposed or not.
      * @param W Diagonal matrix with singular values. Modified.
@@ -82,6 +82,63 @@ public class SingularOps {
             double tmp = W.get(i,i);
             W.set(i,i,bigValue);
             W.set(bigIndex,bigIndex,tmp);
+
+            if( V != null ) {
+                swapRowOrCol(V, tranV, i, bigIndex);
+            }
+
+            if( U != null ) {
+                swapRowOrCol(U, tranU, i, bigIndex);
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Similar to {@link #descendingOrder(org.ejml.data.DenseMatrix64F, boolean, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, boolean)}
+     * but takes in an array of singular values instead.
+     * </p>
+     *
+     * @param U Matrix. Modified.
+     * @param tranU is U transposed or not.
+     * @param singularValues Array of singular values. Modified.
+     * @param numSingularValues Number of elements in singularValues array
+     * @param V Matrix. Modified.
+     * @param tranV is V transposed or not.
+     */
+    public static void descendingOrder( DenseMatrix64F U , boolean tranU ,
+                                        double singularValues[] ,
+                                        int numSingularValues ,
+                                        DenseMatrix64F V , boolean tranV )
+    {
+//        checkSvdMatrixSize(U, tranU, W, V, tranV);
+
+        for( int i = 0; i < numSingularValues; i++ ) {
+            double bigValue=-1;
+            int bigIndex=-1;
+
+            // find the smallest singular value in the submatrix
+            for( int j = i; j < numSingularValues; j++ ) {
+                double v = singularValues[j];
+
+                if( v > bigValue ) {
+                    bigValue = v;
+                    bigIndex = j;
+                }
+            }
+
+            // only swap if the current index is not the smallest
+            if( bigIndex == i)
+                continue;
+
+            if( bigIndex == -1 ) {
+                // there is at least one uncountable singular value.  just stop here
+                break;
+            }
+
+            double tmp = singularValues[i];
+            singularValues[i] = bigValue;
+            singularValues[bigIndex] = tmp;
 
             if( V != null ) {
                 swapRowOrCol(V, tranV, i, bigIndex);

@@ -27,7 +27,14 @@ import org.ejml.ops.SingularOps;
 
 
 /**
- * Wrapper around SVD for simple matrix
+ * <p>
+ * Wrapper around SVD for simple matrix.  See {@link SingularValueDecomposition} for more details.
+ * </p>
+ * <p>
+ * SVD is defined as the following decomposition:<br>
+ * <div align=center> A = U * W * V <sup>T</sup> </div><br>
+ * where A is m by n, and U and V are orthogonal matrices, and  W is a diagonal matrix
+ * </p>
  *
  * @author Peter Abeles
  */

@@ -626,8 +626,7 @@ public abstract class SimpleBase <T extends SimpleBase> {
      * @param y1 Stop row.
      * @return The submatrix.
      */
-    public T extractMatrix(int y0 , int y1,
-                                      int x0 , int x1 ) {
+    public T extractMatrix(int y0 , int y1, int x0 , int x1 ) {
         if( y0 == SimpleMatrix.END ) y0 = mat.numRows;
         if( y1 == SimpleMatrix.END ) y1 = mat.numRows;
         if( x0 == SimpleMatrix.END ) x0 = mat.numCols;
