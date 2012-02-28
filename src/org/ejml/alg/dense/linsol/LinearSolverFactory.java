@@ -109,7 +109,7 @@ public class LinearSolverFactory {
      *
      * @return A new solver which can handle
      */
-    public static LinearSolver<DenseMatrix64F> solverQrPivot( int matrixWidth ) {
+    public static LinearSolver<DenseMatrix64F> leastSquaresQrPivot(int matrixWidth) {
         QRPDecomposition<DenseMatrix64F> decomposition =
                 new QRColPivDecompositionHouseholderColumn();
 
@@ -122,7 +122,7 @@ public class LinearSolverFactory {
      *
      * @return Solver for singular matrices.
      */
-    public static LinearSolver<DenseMatrix64F> solverPseudoInverse() {
+    public static LinearSolver<DenseMatrix64F> pseudoInverse() {
         return new SolvePseudoInverse();
     }
 

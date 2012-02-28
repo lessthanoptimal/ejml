@@ -64,6 +64,16 @@ public abstract class Matrix64F implements Serializable {
     public abstract void reshape(int numRows, int numCols, boolean saveValues);
 
     /**
+     * Equivalent to invoking reshape(numRows,numCols,false);
+     *
+     * @param numRows The new number of rows in the matrix.
+     * @param numCols The new number of columns in the matrix.
+     */
+    public void reshape( int numRows , int numCols ) {
+        reshape(numRows,numCols,false);
+    }
+
+    /**
      * Returns the value of value of the specified matrix element.
      *
      * @param row Matrix element's row index..

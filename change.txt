@@ -13,6 +13,7 @@ Date format: year/month/day
   * Before the function did nothing
 - Fixed bug in LinearSolverQrHouseCol where it was not handled a change in matrix size correctly
 - Added new variant of SingularOps.descendingOrder() which takes an array of singular values as input
+- Added reshape(row,cols) because adding false to reshape(row,cols) all the time was annoying me.
 
 ----- Version 0.18
 
