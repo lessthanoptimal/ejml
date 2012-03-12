@@ -28,6 +28,7 @@ import org.ejml.alg.dense.linsol.SolvePseudoInverse;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.*;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
+import org.ejml.alg.dense.mult.MatrixMultProduct;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
@@ -243,6 +244,57 @@ public class CommonOps {
         } else {
             MatrixMatrixMult.multTransAB(alpha,a,b,c);
         }
+    }
+
+    /**
+     * <p>Computes the matrix multiplication inner product:<br>
+     * <br>
+     * c = a<sup>T</sup> * a <br>
+     * <br>
+     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * a<sub>kj</sub>}
+     * </p>
+     * 
+     * <p>
+     * Is faster than using a generic matrix multiplication by taking advantage of symmetry.  For
+     * vectors there is an even faster option, see {@link org.ejml.alg.dense.mult.VectorVectorMult#innerProd(org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}
+     * </p>
+     *
+     * @param a The matrix being multiplied. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multInner( RowD1Matrix64F a , RowD1Matrix64F c )
+    {
+        if( a.numCols != c.numCols || a.numCols != c.numRows )
+            throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the columns in 'a'");
+        
+        if( a.numCols >= EjmlParameters.MULT_INNER_SWITCH ) {
+            MatrixMultProduct.inner_small(a, c);
+        } else {
+            MatrixMultProduct.inner_reorder(a, c);
+        }
+    }
+
+    /**
+     * <p>Computes the matrix multiplication outer product:<br>
+     * <br>
+     * c = a * a<sup>T</sup> <br>
+     * <br>
+     * c<sub>ij</sub> = &sum;<sub>k=1:m</sub> { a<sub>ik</sub> * a<sub>jk</sub>}
+     * </p>
+     *
+     * <p>
+     * Is faster than using a generic matrix multiplication by taking advantage of symmetry.
+     * </p>
+     *
+     * @param a The matrix being multiplied. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multOuter( RowD1Matrix64F a , RowD1Matrix64F c )
+    {
+        if( a.numRows != c.numCols || a.numRows != c.numRows )
+            throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the rows in 'a'");
+
+        MatrixMultProduct.outer(a, c);
     }
 
     /**

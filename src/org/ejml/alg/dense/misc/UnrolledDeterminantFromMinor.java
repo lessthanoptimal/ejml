@@ -80,15 +80,9 @@ public class UnrolledDeterminantFromMinor {
     {
         double []data = mat.data;
 
-        double  a11 = data[ 5 ];
-        double  a12 = data[ 6 ];
-        double  a13 = data[ 7 ];
-        double  a21 = data[ 9 ];
-        double  a22 = data[ 10 ];
-        double  a23 = data[ 11 ];
-        double  a31 = data[ 13 ];
-        double  a32 = data[ 14 ];
-        double  a33 = data[ 15 ];
+        double  a11 = data[ 5 ]; double  a12 = data[ 6 ]; double  a13 = data[ 7 ];
+        double  a21 = data[ 9 ]; double  a22 = data[ 10 ];double  a23 = data[ 11 ];
+        double  a31 = data[ 13 ];double  a32 = data[ 14 ];double  a33 = data[ 15 ];
 
         double ret = 0;
         ret += data[ 0 ] * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));

@@ -4,11 +4,18 @@
     <bookmark url="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderTran.java" line="176" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
+    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="- Added i">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/mult/BenchmarkMatrixMultProduct.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMultProduct.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMultProduct.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/data/Matrix64F.java" afterPath="$PROJECT_DIR$/src/org/ejml/data/Matrix64F.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" afterPath="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/misc/UnrolledDeterminantFromMinor.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/misc/UnrolledDeterminantFromMinor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/CheckMatrixMultShape.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/CheckMatrixMultShape.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
     </list>
     <ignored path="EJML.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -81,10 +88,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SingularOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java">
+      <file leaf-file-name="CommonOps.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="24" selection-start="1015" selection-end="1026" vertical-scroll-proportion="0.0">
+            <state line="259" column="11" selection-start="10004" selection-end="10004" vertical-scroll-proportion="0.6762402">
+              <folding>
+                <element signature="e#2110#2160#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestCommonOps.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="85" column="65" selection-start="2845" selection-end="2845" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MatrixMultProduct.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMultProduct.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="65" selection-start="1112" selection-end="1112" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -93,25 +120,25 @@
       <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/change.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="27" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0">
+            <state line="17" column="31" selection-start="787" selection-end="787" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Matrix64F.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/data/Matrix64F.java">
+      <file leaf-file-name="CheckMatrixMultShape.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/CheckMatrixMultShape.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="18" selection-start="2925" selection-end="2925" vertical-scroll-proportion="0.8386277">
+            <state line="60" column="69" selection-start="1969" selection-end="1969" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestSingularOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java">
+      <file leaf-file-name="TestMatrixMatrixMult.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="39" selection-start="3524" selection-end="3539" vertical-scroll-proportion="0.0">
+            <state line="214" column="0" selection-start="7597" selection-end="7597" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -131,22 +158,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/TODO_Algorithms.txt" />
-        <option value="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/docs/release-checklist.txt" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/MatrixIO.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/simple/SimpleBase.java" />
-        <option value="$PROJECT_DIR$/examples/src/org/ejml/example/ExampleMatrixIO.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/VectorVectorMult.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouseCol.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/data/Matrix64F.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/misc/UnrolledDeterminantFromMinor.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMatrixMult.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMatrixMultSpecial.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMultSpecial.java" />
+        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/mult/BenchmarkMatrixMatrixMultSpecial.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMultProduct.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMultProduct.java" />
+        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/mult/BenchmarkMatrixMultProduct.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/CheckMatrixMultShape.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
         <option value="$PROJECT_DIR$/change.txt" />
+        <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
       </list>
     </option>
   </component>
@@ -193,6 +220,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -211,59 +239,22 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="benchmarks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="benchmarks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="104" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="59" />
     <property name="project.structure.last.edited" value="Modules" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="59" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="34" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="88" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="88" />
     <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
@@ -287,12 +278,12 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="project.structure.side.proportion" value="0.2" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
-    <property name="options.searchVisible" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -307,14 +298,14 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.org.ejml">
-    <configuration default="false" name="BenchmarkInliningGetSet" type="Application" factoryName="Application" temporary="true">
+    <configuration default="false" name="BenchmarkMatrixMultProduct" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.*" />
+          <option name="PATTERN" value="org.ejml.alg.dense.mult.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="MAIN_CLASS_NAME" value="org.ejml.BenchmarkInliningGetSet" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.mult.BenchmarkMatrixMultProduct" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -333,7 +324,39 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestCommonOps.diag_extract" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="TestMatrixMultProduct.outerProd_small" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.alg.dense.mult.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.alg.dense.mult" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.mult.TestMatrixMultProduct" />
+      <option name="METHOD_NAME" value="outerProd_small" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestCommonOps" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
           <option name="PATTERN" value="org.ejml.ops.*" />
@@ -345,72 +368,40 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.ejml.ops" />
       <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestCommonOps" />
-      <option name="METHOD_NAME" value="diag_extract" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestSingularOps.descendingOrder_array" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.ops.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.ops" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestSingularOps" />
-      <option name="METHOD_NAME" value="descendingOrder_array" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestSingularOps" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" runner="emma">
-        <pattern>
-          <option name="PATTERN" value="org.ejml.ops.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="ejml" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.ops" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestSingularOps" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestCommonOps.checkAllMatrixMults" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="ejml" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.ejml.ops" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestCommonOps" />
+      <option name="METHOD_NAME" value="checkAllMatrixMults" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -702,17 +693,17 @@
       <method />
     </configuration>
     <list size="11">
-      <item index="0" class="java.lang.String" itemvalue="Application.BenchmarkInliningGetSet" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.TestCommonOps.diag_extract" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.TestSingularOps.descendingOrder_array" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.TestSingularOps" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.org.ejml" />
-      <item index="5" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
-      <item index="6" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
-      <item index="7" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
-      <item index="8" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
-      <item index="9" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
-      <item index="10" class="java.lang.String" itemvalue="JUnit.TestLinearSolverChol.standardTests" />
+      <item index="0" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMatrixMult" />
+      <item index="1" class="java.lang.String" itemvalue="Application.BenchmarkCholeskyDecomposition" />
+      <item index="2" class="java.lang.String" itemvalue="Application.BenchmarkInvertSymPosDef" />
+      <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
+      <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.TestLinearSolverChol.standardTests" />
+      <item index="6" class="java.lang.String" itemvalue="Application.BenchmarkMatrixMultProduct" />
+      <item index="7" class="java.lang.String" itemvalue="JUnit.TestMatrixMultProduct.outerProd_small" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.TestCommonOps" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.TestCommonOps.checkAllMatrixMults" />
+      <item index="10" class="java.lang.String" itemvalue="JUnit.org.ejml" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -791,14 +782,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="25" width="1280" height="974" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32566586" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292978" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20768602" sideWeight="0.6627497" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3066453" sideWeight="0.41888618" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.317292" sideWeight="0.622276" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32626426" sideWeight="0.23244552" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32626426" sideWeight="0.622276" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37772396" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -808,10 +800,9 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39709443" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32566586" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" sideWeight="0.6627497" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" sideWeight="0.6627497" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -912,73 +903,26 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java">
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/mult/BenchmarkMatrixMatrixMult.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="161" column="17" selection-start="5060" selection-end="5060" vertical-scroll-proportion="0.0" />
+        <state line="145" column="19" selection-start="4478" selection-end="5421" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/RowD1Matrix64F.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="424" column="9" selection-start="13455" selection-end="13455" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/DenseMatrix64F.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="297" column="0" selection-start="9582" selection-end="9582" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="899" column="7" selection-start="30996" selection-end="30996" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="13" selection-start="1453" selection-end="1453" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouseCol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="35" selection-start="1532" selection-end="1554" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverAbstract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="19" selection-start="1459" selection-end="1459" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/generic/GenericMatrixOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="48" selection-start="1204" selection-end="1204" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMatrixMult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="144" column="31" selection-start="5628" selection-end="5636" vertical-scroll-proportion="0.0" />
+        <state line="26" column="22" selection-start="936" selection-end="936" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/mult/VectorVectorMult.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="297" column="97" selection-start="9534" selection-end="9534" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="0" selection-start="6041" selection-end="6041" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/D1Matrix64F.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="46" selection-start="1189" selection-end="1189" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/SingularOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="24" selection-start="1015" selection-end="1026" vertical-scroll-proportion="0.0">
+        <state line="274" column="67" selection-start="8718" selection-end="8718" vertical-scroll-proportion="0.0">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/misc/UnrolledDeterminantFromMinor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="40" selection-start="3411" selection-end="3411" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java">
@@ -986,17 +930,82 @@
         <state line="97" column="39" selection-start="3524" selection-end="3539" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/change.txt">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/MatrixFeatures.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="27" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0">
+        <state line="402" column="27" selection-start="12390" selection-end="12390" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/data/Matrix64F.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMultProduct.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="18" selection-start="2925" selection-end="2925" vertical-scroll-proportion="0.8386277">
+        <state line="35" column="28" selection-start="1161" selection-end="1161" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/mult/BenchmarkMatrixMultProduct.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="22" selection-start="3196" selection-end="3196" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/EjmlParameters.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="46" selection-start="2175" selection-end="2175" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMatrixMult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="823" column="0" selection-start="31927" selection-end="32037" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestMatrixMatrixMult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="214" column="0" selection-start="7597" selection-end="7597" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/mult/CheckMatrixMultShape.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="69" selection-start="1969" selection-end="1969" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="65" selection-start="2845" selection-end="2845" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/mult/MatrixMultProduct.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="65" selection-start="1112" selection-end="1112" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/change.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="31" selection-start="787" selection-end="787" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="259" column="11" selection-start="10004" selection-end="10004" vertical-scroll-proportion="0.6762402">
+          <folding>
+            <element signature="e#2110#2160#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

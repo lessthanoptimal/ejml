@@ -59,7 +59,8 @@ public class EjmlParameters {
      */
     public static int MULT_COLUMN_SWITCH = 15;
     public static int MULT_TRANAB_COLUMN_SWITCH = 40;
-
+    public static int MULT_INNER_SWITCH = 100;
+    
     /**
      * <p>
      * At which point should it switch to the block cholesky algorithm.

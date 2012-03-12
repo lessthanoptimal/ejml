@@ -64,7 +64,8 @@ public class TestCommonOps {
             String name = method.getName();
 
             // only look at function which perform matrix multiplication
-            if( !name.contains("mult") || name.contains("Element"))
+            if( !name.contains("mult") || name.contains("Element") || 
+                    name.contains("Inner") || name.contains("Outer"))
                 continue;
 
             boolean hasAlpha = method.getGenericParameterTypes().length==4;
@@ -184,6 +185,30 @@ public class TestCommonOps {
         return true;
     }
 
+    @Test
+    public void multInner() {
+        DenseMatrix64F a = RandomMatrices.createRandom(10,4,rand);
+        DenseMatrix64F found = RandomMatrices.createRandom(4,4,rand);
+        DenseMatrix64F expected = RandomMatrices.createRandom(4,4,rand);
+
+        CommonOps.multTransA(a, a, expected);
+        CommonOps.multInner(a,found);
+
+        assertTrue(MatrixFeatures.isIdentical(expected,found,tol));
+    }
+
+    @Test
+    public void multOuter() {
+        DenseMatrix64F a = RandomMatrices.createRandom(10,4,rand);
+        DenseMatrix64F found = RandomMatrices.createRandom(10,10,rand);
+        DenseMatrix64F expected = RandomMatrices.createRandom(10,10,rand);
+
+        CommonOps.multTransB(a, a, expected);
+        CommonOps.multOuter(a, found);
+
+        assertTrue(MatrixFeatures.isIdentical(expected,found,tol));
+    }
+    
     @Test
     public void elementMult_two() {
         DenseMatrix64F a = RandomMatrices.createRandom(5,4,rand);

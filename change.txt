@@ -14,6 +14,8 @@ Date format: year/month/day
 - Fixed bug in LinearSolverQrHouseCol where it was not handled a change in matrix size correctly
 - Added new variant of SingularOps.descendingOrder() which takes an array of singular values as input
 - Added reshape(row,cols) because adding false to reshape(row,cols) all the time was annoying me.
+- Added multInner() and multOuter() for performing inner and outer matrix products.  Faster than
+  using generalized algorithms.
 
 ----- Version 0.18
 

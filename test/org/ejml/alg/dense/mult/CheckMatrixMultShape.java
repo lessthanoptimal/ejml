@@ -57,7 +57,8 @@ public class CheckMatrixMultShape {
             String name = method.getName();
 
             // only look at function which perform matrix multiplcation
-            if( !name.contains("mult") || name.contains("Element"))
+            if( !name.contains("mult") || name.contains("Element") ||
+                    name.contains("Inner") || name.contains("Outer") )
                 continue;
 
             boolean transA = false;
