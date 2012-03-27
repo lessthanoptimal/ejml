@@ -23,10 +23,14 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 
 /**
+ * <p>
  * Similar to {@link QRDecomposition} but it can handle the rank deficient case by
- * performing column pivots during the decomposition.
- *
- * A*P=Q*R
+ * performing column pivots during the decomposition. The final decomposition has the
+ * following structure:<br>
+ * A*P=Q*R<br>
+ * where A is the original matrix, P is a pivot matrix, Q is an orthogonal matrix, and R is
+ * upper triangular.
+ * </p>
  *
  * @author Peter Abeles
  */

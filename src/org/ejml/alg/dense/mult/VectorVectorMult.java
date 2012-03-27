@@ -81,26 +81,23 @@ public class VectorVectorMult {
      * </p>
      *
      * @param x  A vector with n elements. Not modified.
-     * @param A  A matrix with n by n elements.  Not modified.
-     * @param y  A vector with n elements. Not modified.
+     * @param A  A matrix with n by m elements.  Not modified.
+     * @param y  A vector with m elements. Not modified.
      * @return  The results.
      */
-    // TODO better name for this
     public static double innerProdA( D1Matrix64F x, D1Matrix64F A , D1Matrix64F y )
     {
         int n = A.numRows;
-
-        if( n != A.numCols)
-            throw new IllegalArgumentException("A must be square");
+        int m = A.numCols;
 
         if( x.getNumElements() != n )
             throw new IllegalArgumentException("Unexpected number of elements in x");
-        if( y.getNumElements() != n )
+        if( y.getNumElements() != m )
             throw new IllegalArgumentException("Unexpected number of elements in y");
 
         double result = 0;
 
-        for( int i = 0; i < n; i++ ) {
+        for( int i = 0; i < m; i++ ) {
             double total = 0;
 
             for( int j = 0; j < n; j++ ) {

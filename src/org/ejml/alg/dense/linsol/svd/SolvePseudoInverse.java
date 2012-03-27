@@ -17,11 +17,12 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol;
+package org.ejml.alg.dense.linsol.svd;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
+import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 

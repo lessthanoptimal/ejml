@@ -28,7 +28,7 @@ import org.ejml.ops.SpecializedOps;
 
 /**
  * <p>
- * A solver for a generic QR column pivot decomposition algorithm.  This will in general be a bit slower than the
+ * A pseudo inverse solver for a generic QR column pivot decomposition algorithm.  This will in general be a bit slower than the
  * specialized once since the full Q, R, and P matrices need to be extracted.
  * </p>
  * <p>
@@ -37,6 +37,11 @@ import org.ejml.ops.SpecializedOps;
  * Q*R*P<sup>T</sup>x=b<br>
  * </p>
  *
+ * <p>
+ * Implementation of the basic solution for pseudo inverse.  See page 258-259 in
+ * Gene H. Golub and Charles F. Van Loan "Matrix Computations" 3rd Ed, 1996
+ * </p>
+ * 
  * @author Peter Abeles
  */
 public class LinearSolverQrp extends LinearSolverAbstract {
@@ -46,11 +51,19 @@ public class LinearSolverQrp extends LinearSolverAbstract {
     DenseMatrix64F Q=new DenseMatrix64F(1,1);
     DenseMatrix64F R=new DenseMatrix64F(1,1);
 
+    // store an identity matrix for computing the inverse
+    DenseMatrix64F I = new DenseMatrix64F(1,1);
+
+    // stores the upper left square triangle matrix
+    DenseMatrix64F R11 = new DenseMatrix64F(1,1);
+
     private DenseMatrix64F Y=new DenseMatrix64F(1,1);
     private DenseMatrix64F Z=new DenseMatrix64F(1,1);
 
-
     public LinearSolverQrp(QRPDecomposition<DenseMatrix64F> decomposition) {
+        if( decomposition.inputModified() )
+            throw new RuntimeException("Modify this class so that it creates a copy of A");
+
         this.decomposition = decomposition;
     }
 
@@ -60,12 +73,11 @@ public class LinearSolverQrp extends LinearSolverAbstract {
         if( !decomposition.decompose(A) )
             return false;
 
+        Q.reshape(A.numRows, A.numRows);
+        R.reshape(A.numRows, A.numCols);
 
-        Q.reshape(A.numRows, A.numCols,true);
-        R.reshape(A.numCols, A.numCols, false);
-
-        decomposition.getQ(Q, true);
-        decomposition.getR(R, true);
+        decomposition.getQ(Q, false);
+        decomposition.getR(R, false);
 
         return true;
     }
@@ -85,16 +97,14 @@ public class LinearSolverQrp extends LinearSolverAbstract {
         int BnumCols = B.numCols;
 
         Y.reshape(numRows,1, false);
-        Z.reshape(numCols,1, false);
+        Z.reshape(numRows,1, false);
 
         // get the pivots and transpose them
-        int pivotTran[] = new int[ numCols ];
         int pivots[] = decomposition.getPivots();
-        for( int i = 0; i < numCols; i++ ) {
-            pivotTran[pivots[i]] = i;
-        }
 
         int rank = decomposition.getRank();
+        
+        R11.reshape(rank, rank);
 
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
@@ -108,17 +118,31 @@ public class LinearSolverQrp extends LinearSolverAbstract {
             // a = Q'b
             CommonOps.multTransA(Q, Y, Z);
 
+            // extract the r11 triangle sub matrix
+            CommonOps.extract(R,0,rank,0,rank,R11,0,0);
+
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R.data, Z.data, rank);
+            TriangularSolver.solveU(R11.data, Z.data, rank);
 
             // save the results
             for( int i = 0; i < rank; i++ ) {
-                X.set(i,colB,Z.data[pivotTran[i]]);
+                X.set(pivots[i],colB,Z.data[i]);
             }
             for( int i = rank; i < numCols; i++ ) {
-                X.set(i,colB,B.get(pivotTran[i],colB));
+                X.set(pivots[i],colB,0);
             }
         }
+    }
+
+    @Override
+    public void invert(DenseMatrix64F A_inv) {
+        if( A_inv.numCols != A.numRows || A_inv.numRows != A.numCols )
+            throw new IllegalArgumentException("Unexpected dimensions for A_inv");
+        
+        I.reshape(A_inv.numCols, A_inv.numCols);
+        CommonOps.setIdentity(I);
+
+        solve(I, A_inv);
     }
 
     @Override

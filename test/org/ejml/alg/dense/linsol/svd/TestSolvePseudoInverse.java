@@ -17,9 +17,8 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol.qr;
+package org.ejml.alg.dense.linsol.svd;
 
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
@@ -32,16 +31,16 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverQrp extends GenericLinearSolverChecks  {
-    public TestLinearSolverQrp() {
-         shouldFailSingular = false;
+public class TestSolvePseudoInverse extends GenericLinearSolverChecks {
+
+    public TestSolvePseudoInverse() {
+        this.shouldFailSingular = false;
     }
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQrp(new QRColPivDecompositionHouseholderColumn());
+        return new SolvePseudoInverse(A.numRows,A.numCols);
     }
-
 
     /**
      * The solve should never fail and can handle singular matrices
@@ -52,17 +51,17 @@ public class TestLinearSolverQrp extends GenericLinearSolverChecks  {
         DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,2,3,4);
 
         DenseMatrix64F y = new DenseMatrix64F(2,1,true,4,7);
-        LinearSolver<DenseMatrix64F> solver = createSolver(A);
+        SolvePseudoInverse solver = new SolvePseudoInverse();
         assertTrue(solver.setA(A));
 
         DenseMatrix64F x = new DenseMatrix64F(3,1);
         solver.solve(y,x);
-
+        
         DenseMatrix64F found = new DenseMatrix64F(2,1);
-        CommonOps.mult(A,x,found);
+        CommonOps.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
-        assertTrue(MatrixFeatures.isEquals(y,found,1e-8));
+        assertTrue(MatrixFeatures.isEquals(y, found, 1e-8));
     }
 
     /**
@@ -74,7 +73,7 @@ public class TestLinearSolverQrp extends GenericLinearSolverChecks  {
         DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,2,3,4);
 
         DenseMatrix64F y = new DenseMatrix64F(2,1,true,4,7);
-        LinearSolver<DenseMatrix64F> solver = createSolver(A);
+        SolvePseudoInverse solver = new SolvePseudoInverse();
         assertTrue(solver.setA(A));
 
         DenseMatrix64F x = new DenseMatrix64F(3,1);
@@ -87,6 +86,6 @@ public class TestLinearSolverQrp extends GenericLinearSolverChecks  {
 
         CommonOps.mult(A_pinv,y,found);
 
-        assertTrue(MatrixFeatures.isEquals(x, found, 1e-8));
+        assertTrue(MatrixFeatures.isEquals(x, found,1e-8));
     }
 }

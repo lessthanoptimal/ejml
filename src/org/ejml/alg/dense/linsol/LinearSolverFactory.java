@@ -32,6 +32,7 @@ import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrp;
+import org.ejml.alg.dense.linsol.svd.SolvePseudoInverse;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -117,13 +118,21 @@ public class LinearSolverFactory {
     }
 
     /**
+     * <p>
      * Returns a solver which uses the pseudo inverse.  Useful when a matrix
-     * needs to be inverted which is singular.
+     * needs to be inverted which is singular.  Two variants of pseudo inverse are provided.  SVD
+     * will tend to be the most robust but the slowest and QR decomposition with column pivots will
+     * be faster, but less robust.
+     * </p>
      *
+     * @param useSVD If true SVD will be used, otherwise QR with column pivot will be used.
      * @return Solver for singular matrices.
      */
-    public static LinearSolver<DenseMatrix64F> pseudoInverse() {
-        return new SolvePseudoInverse();
+    public static LinearSolver<DenseMatrix64F> pseudoInverse( boolean useSVD ) {
+        if( useSVD )
+            return new SolvePseudoInverse();
+        else
+            return new LinearSolverQrp(new QRColPivDecompositionHouseholderColumn());
     }
 
     /**

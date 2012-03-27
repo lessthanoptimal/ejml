@@ -16,6 +16,9 @@ Date format: year/month/day
 - Added reshape(row,cols) because adding false to reshape(row,cols) all the time was annoying me.
 - Added multInner() and multOuter() for performing inner and outer matrix products.  Faster than
   using generalized algorithms.
+- Changed behavior of VectorVectorMult.innerProdA so that it does not require 'A' to be square
+- Moved package that SolvePseudoInverse is inside of.
+- Modified LinearSolverQrp into a true pseudo inverse algorithm that returns the basic solution
 
 ----- Version 0.18
 

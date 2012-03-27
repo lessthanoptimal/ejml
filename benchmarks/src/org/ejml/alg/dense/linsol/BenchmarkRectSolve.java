@@ -21,6 +21,7 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.svd.SolvePseudoInverse;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 

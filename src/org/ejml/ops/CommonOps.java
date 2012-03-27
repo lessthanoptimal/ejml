@@ -24,8 +24,8 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.alg.dense.linsol.SolvePseudoInverse;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.svd.SolvePseudoInverse;
 import org.ejml.alg.dense.misc.*;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixMultProduct;
@@ -739,7 +739,7 @@ public class CommonOps {
      */
     public static void pinv( DenseMatrix64F A , DenseMatrix64F invA )
     {
-        SolvePseudoInverse solver = new SolvePseudoInverse();
+        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.pseudoInverse(true);
         if( solver.modifiesA())
             A = A.copy();
 
@@ -1014,10 +1014,10 @@ public class CommonOps {
                                 Matrix64F dst ,
                                 int dstY0, int dstX0 )
     {
-        if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
-            throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
-        if( srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols )
-            throw new IllegalArgumentException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+        if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows )
+            throw new IllegalArgumentException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+        if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols )
+            throw new IllegalArgumentException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
 
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;

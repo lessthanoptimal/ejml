@@ -19,7 +19,6 @@
 
 package org.ejml.ops;
 
-import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.mult.CheckMatrixMultShape;
@@ -337,32 +336,36 @@ public class TestCommonOps {
     }
 
     /**
-     * Checked against pinv() computed in octave.
+     * Checked against by computing a solution to the linear system then
+     * seeing if the solution produces the expected output
      */
     @Test
     public void pinv() {
         // check wide matrix
-        DenseMatrix64F A = UtilEjml.parseMatrix("0.210565 0.406457 0.265276 0.464047 "+
-                " 0.980190   0.951951   0.209919   0.068742",4);
+        DenseMatrix64F A = new DenseMatrix64F(2,4,true,1,2,3,4,5,6,7,8);
+        DenseMatrix64F A_inv = new DenseMatrix64F(4,2);
+        DenseMatrix64F b = new DenseMatrix64F(2,1,true,3,4);
+        DenseMatrix64F x = new DenseMatrix64F(4,1);
+        DenseMatrix64F found = new DenseMatrix64F(2,1);
+        
+        CommonOps.pinv(A,A_inv);
 
-        DenseMatrix64F expected = UtilEjml.parseMatrix("-0.54419   0.70506\n" +
-                "   0.26896   0.40131\n" +
-                "   0.75289  -0.15802\n" +
-                "   1.73591  -0.58110",2);
+        CommonOps.mult(A_inv,b,x);
+        CommonOps.mult(A,x,found);
 
-        DenseMatrix64F found = new DenseMatrix64F(4,2);
-
-        CommonOps.pinv(A,found);
-        assertTrue(MatrixFeatures.isIdentical(expected,found,1e-4));
-
+        assertTrue(MatrixFeatures.isIdentical(b,found,1e-4));
 
         // check tall matrix
         CommonOps.transpose(A);
-        CommonOps.transpose(expected);
+        CommonOps.transpose(A_inv);
+        b = new DenseMatrix64F(4,1,true,3,4,5,6);
+        x.reshape(2,1);
+        found.reshape(4,1);
 
-        found = new DenseMatrix64F(2,4);
-        CommonOps.pinv(A,found);
-        assertTrue(MatrixFeatures.isIdentical(expected,found,1e-4));
+        CommonOps.mult(A_inv,b,x);
+        CommonOps.mult(A, x, found);
+
+        assertTrue(MatrixFeatures.isIdentical(b,found,1e-4));
     }
 
     @Test
