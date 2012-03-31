@@ -22,7 +22,6 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol;
 import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp;
-import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -61,16 +60,16 @@ public class BenchmarkSolvePseudoInverse {
 
     private static void runAlgorithms( int numTrials )
     {
-        System.out.println("solve SVD            = "+ solveBenchmark(
-                new SolvePseudoInverseSvd(),numTrials));
+//        System.out.println("solve SVD            = "+ solveBenchmark(
+//                new SolvePseudoInverseSvd(),numTrials));
         System.out.println("solve Gen QRP Basic  = "+ solveBenchmark(
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),true),numTrials));
-        System.out.println("solve Gen QRP        = "+ solveBenchmark(
                 new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),false),numTrials));
+        System.out.println("solve Gen QRP        = "+ solveBenchmark(
+                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),true),numTrials));
         System.out.println("solve QRP Col Basic  = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn(),true),numTrials));
-        System.out.println("solve QRP Col        = "+ solveBenchmark(
                 new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn(),false),numTrials));
+        System.out.println("solve QRP Col        = "+ solveBenchmark(
+                new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn(),true),numTrials));
     }
 
     public static void main( String args [] ) {

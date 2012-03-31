@@ -110,13 +110,14 @@ public class LinearSolverFactory {
      * For singular systems there are multiple correct solutions.  The optimal 2-norm solution is the
      * solution vector with the minimal 2-norm and is unique.  If the optimal solution is not computed
      * then the basic solution is returned.  See {@link org.ejml.alg.dense.linsol.qr.BaseLinearSolverQrp}
-     * for details.
+     * for details.  There is only a runtime difference for small matrices, 2-norm solution is slower.
      * </p>
      *
      * <p>
      * Two different solvers are available.  Compute Q will compute the Q matrix once then use it multiple times.
      * If the solution for a single vector is being found then this should be set to false.  If the pseudo inverse
-     * is being found or the solution matrix has more than one columns then this should be true.
+     * is being found or the solution matrix has more than one columns AND solve is being called numerous multiples
+     * times then this should be set to true.
      * </p>
      *
      * @param computeNorm2 true to compute the minimum 2-norm solution for singular systems.
@@ -140,6 +141,11 @@ public class LinearSolverFactory {
      * will tend to be the most robust but the slowest and QR decomposition with column pivots will
      * be faster, but less robust.
      * </p>
+     * 
+     * <p>
+     * See {@link #leastSquaresQrPivot} for additional options specific to QR decomposition based
+     * pseudo inverse.  These options allow for better runtime performance in different situations.
+     * </p>
      *
      * @param useSVD If true SVD will be used, otherwise QR with column pivot will be used.
      * @return Solver for singular matrices.
@@ -148,9 +154,7 @@ public class LinearSolverFactory {
         if( useSVD )
             return new SolvePseudoInverseSvd();
         else
-            // compute Q because it is 2x slower in the general solve case, but householder is
-            // a TON slower when inverting a matrix
-            return leastSquaresQrPivot(true,true);
+            return leastSquaresQrPivot(true,false);
     }
 
     /**

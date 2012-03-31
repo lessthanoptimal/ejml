@@ -20,6 +20,8 @@ Date format: year/month/day
 - Improved Pseudo Inverse
   * Refactored by changing package and renaming
   * Added QR pivot based pseudo inverse classes
+- Improved QR Pivot so that it has better stability
+  * Normalization is done on a column by column basis instead of by the whole matrix.
 
 ----- Version 0.18
 

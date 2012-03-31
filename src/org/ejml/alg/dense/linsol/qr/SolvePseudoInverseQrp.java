@@ -55,8 +55,7 @@ public class SolvePseudoInverseQrp extends BaseLinearSolverQrp {
     public boolean setA(DenseMatrix64F A) {
         if( !super.setA(A))
             return false;
-        
-        System.out.println("rank = "+rank);
+
         Q.reshape(A.numRows, A.numRows);
 
         decomposition.getQ(Q, false);
@@ -75,9 +74,6 @@ public class SolvePseudoInverseQrp extends BaseLinearSolverQrp {
 
         // get the pivots and transpose them
         int pivots[] = decomposition.getPivots();
-        for( int i = 0; i < pivots.length; i++ )
-            System.out.print(pivots[i]+" ");
-        System.out.println();
         
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {

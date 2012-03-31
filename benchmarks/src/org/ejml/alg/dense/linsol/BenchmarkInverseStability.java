@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -55,8 +56,6 @@ public class BenchmarkInverseStability {
                 }
             }
         }
-        
-        System.out.println("total "+total);
 
         return total;
     }
@@ -76,20 +75,18 @@ public class BenchmarkInverseStability {
 //        names.add("LU B");
 //        solvers.add(new LinearSolverLu(new LUDecompositionAlt(),true));
 //        names.add("LU A Imp");
-//        solvers.add(new LinearSolverQrHouseCol());
-//        names.add("QR");
+        solvers.add(new LinearSolverQrHouseCol());
+        names.add("QR");
 //        solvers.add(new LinearSolverSvdNR(new SvdNumericalRecipes()));
 //        names.add("SVD NR");
-//        solvers.add(new SolvePseudoInverse());
-//        names.add("Pseudo");
 //        solvers.add(new LinearSolverUnrolled());
 //        names.add("Unrolled");
         solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,true));
         names.add("P'QR compute Q");
-//        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,false));
-//        names.add("P'QR householder");
-//        solvers.add(LinearSolverFactory.pseudoInverse(true));
-//        names.add("PINV SVD");
+        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,false));
+        names.add("P'QR householder");
+        solvers.add(LinearSolverFactory.pseudoInverse(true));
+        names.add("PINV SVD");
 
         allTheBreaks(solvers,names);
     }
@@ -101,15 +98,15 @@ public class BenchmarkInverseStability {
             breakNearlySingluar(names.get(i),solvers.get(i));
         }
 
-//        System.out.println("Testing overflow:");
-//        for( int i = 0; i < solvers.size(); i++ ) {
-//            breakOverUnderFlow(names.get(i),solvers.get(i),true);
-//        }
-//
-//        System.out.println("Testing underflow:");
-//        for( int i = 0; i < solvers.size(); i++ ) {
-//            breakOverUnderFlow(names.get(i),solvers.get(i),false);
-//        }
+        System.out.println("Testing overflow:");
+        for( int i = 0; i < solvers.size(); i++ ) {
+            breakOverUnderFlow(names.get(i),solvers.get(i),true);
+        }
+
+        System.out.println("Testing underflow:");
+        for( int i = 0; i < solvers.size(); i++ ) {
+            breakOverUnderFlow(names.get(i),solvers.get(i),false);
+        }
     }
 
     private void breakNearlySingluar( String name , LinearSolver<DenseMatrix64F> alg ) {

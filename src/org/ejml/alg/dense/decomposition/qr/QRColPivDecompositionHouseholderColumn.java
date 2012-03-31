@@ -111,22 +111,6 @@ public class QRColPivDecompositionHouseholderColumn
     }
 
     /**
-     * Returns an upper triangular matrix which is the R in the QR decomposition.
-     *
-     * @param R An upper triangular matrix.
-     * @param compact
-     */
-    @Override
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
-        R = super.getR(R,compact);
-
-        // undo normalization
-        CommonOps.scale(maxAbs,R);
-
-        return R;
-    }
-
-    /**
      * <p>
      * To decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
      * It requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
@@ -144,13 +128,8 @@ public class QRColPivDecompositionHouseholderColumn
 
         convertToColumnMajor(A);
 
-        // normalize to reduce overflow/underflow
-        if( !normalizeEntireMatrix() ) {
-            rank = 0;
-            return true;
-        }
-
         // initialize pivot variables
+        maxAbs = CommonOps.elementMaxAbs(A);
         setupPivotInfo();
 
         // go through each column and perform the decomposition
@@ -177,40 +156,11 @@ public class QRColPivDecompositionHouseholderColumn
             double c[] = dataQR[col];
             double norm = 0;
             for( int row = 0; row < numRows; row++ ) {
-                double element = c[row];
+                double element = c[row]/maxAbs;
                 norm += element*element;
             }
             normsCol[col] = norm;
-            System.out.println("norm[ "+col+" ] = "+norm);
         }
-    }
-
-    /**
-     * Because norm of each column is computed across the matrix perform normalization on
-     * a matrix wide scale instead of a column by column scale.
-     */
-    private boolean normalizeEntireMatrix() {
-        maxAbs = 0;
-        for( int col = 0; col < numCols; col++ ) {
-            double c[] = dataQR[col];
-            for( int row = 0; row < numRows; row++ ) {
-                double element = Math.abs(c[row]);
-                if( element > maxAbs )
-                    maxAbs = element;
-            }
-        }
-        // check for this special case
-        if( maxAbs == 0 )
-            return false;
-
-        for( int col = 0; col < numCols; col++ ) {
-            double c[] = dataQR[col];
-            for( int row = 0; row < numRows; row++ ) {
-                c[row] /= maxAbs;
-            }
-        }
-
-        return true;
     }
 
 
@@ -219,7 +169,7 @@ public class QRColPivDecompositionHouseholderColumn
      */
     private void updateNorms( int j ) {
         for( int col = j; col < numCols; col++ ) {
-            double e = dataQR[col][j-1];
+            double e = dataQR[col][j-1]/maxAbs;
             normsCol[col] -= e*e;
         }
     }
@@ -273,24 +223,26 @@ public class QRColPivDecompositionHouseholderColumn
     {
         final double u[] = dataQR[j];
 
-        // compute tau using precomputed normals
-        tau = Math.sqrt(normsCol[j]);
-        System.out.println("   tau "+tau);
-        
-        // see if it is degenerate
-        if( tau < UtilEjml.EPS || UtilEjml.isUncountable(tau) )
+        // find the largest value in this column
+        // this is used to normalize the column and mitigate overflow/underflow
+        final double max = QrHelperFunctions.findMax(u,j,numRows-j);
+
+        if( Math.abs(max) <= UtilEjml.EPS*maxAbs ) {
+            gamma = 0;
             return false;
+        } else {
+            // computes tau and normalizes u by max
+            tau = QrHelperFunctions.computeTauAndDivide(j, numRows , u, max);
 
-        if( u[j] < 0 )
-            tau = -tau;
+            // divide u by u_0
+            double u_0 = u[j] + tau;
+            QrHelperFunctions.divideElements(j+1,numRows , u, u_0 );
 
-        // divide u by u_0
-        double u_0 = u[j] + tau;
-        QrHelperFunctions.divideElements(j+1,numRows , u, u_0 );
+            gamma = u_0/tau;
+            tau *= max;
 
-        gamma = u_0/tau;
-
-        u[j] = -tau;
+            u[j] = -tau;
+        }
 
         gammas[j] = gamma;
 
