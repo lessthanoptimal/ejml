@@ -25,7 +25,7 @@ import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLuKJI;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
-import org.ejml.alg.dense.linsol.svd.SolvePseudoInverse;
+import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -77,7 +77,7 @@ public class BenchmarkSolveEq {
         System.out.println("solve QR house Col    = "+ solveBenchmark(
                 new LinearSolverQrHouseCol(),numTrials));
         System.out.println("solve PInv            = "+ solveBenchmark(
-                new SolvePseudoInverse(),numTrials));
+                new SolvePseudoInverseSvd(),numTrials));
 //        System.out.println("solve SVD             = "+ solveBenchmark(
 //                new LinearSolverSvd(new SvdNumericalRecipes(A.numRows,A.numCols)),numTrials/8));
     }

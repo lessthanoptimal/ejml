@@ -19,8 +19,9 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol;
+import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
@@ -31,19 +32,19 @@ import java.util.Random;
 /**
  * @author Peter Abeles
  */
-public class BenchmarkRectSolve {
+public class BenchmarkSolvePseudoInverse {
     private static final long SEED = 6;
     private static final Random rand = new Random();
     private static DenseMatrix64F A;
     private static DenseMatrix64F B;
 
-    private static final boolean includeSet = true;
+    private static boolean includeSet = true;
 
     public static long solveBenchmark( LinearSolver<DenseMatrix64F> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DenseMatrix64F X = new DenseMatrix64F(A.numCols,B.numCols);
-        RandomMatrices.setRandom(A,rand);
-        RandomMatrices.setRandom(B,rand);
+        DenseMatrix64F X = new DenseMatrix64F(B.numRows,B.numCols);
+
+        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
 
         if( !includeSet ) solver.setA(A);
 
@@ -51,6 +52,7 @@ public class BenchmarkRectSolve {
 
         for( long i = 0; i < numTrials; i++ ) {
             if(includeSet) solver.setA(A);
+
             solver.solve(B,X);
         }
 
@@ -59,27 +61,35 @@ public class BenchmarkRectSolve {
 
     private static void runAlgorithms( int numTrials )
     {
-
-        System.out.println("Pseudo Inverse  = "+ solveBenchmark(
-                new SolvePseudoInverseSvd(A.numRows,A.numCols),numTrials));
-        System.out.println("QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse(),numTrials));
-        System.out.println("QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol(),numTrials));
+        System.out.println("solve SVD            = "+ solveBenchmark(
+                new SolvePseudoInverseSvd(),numTrials));
+        System.out.println("solve Gen QRP Basic  = "+ solveBenchmark(
+                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),true),numTrials));
+        System.out.println("solve Gen QRP        = "+ solveBenchmark(
+                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),false),numTrials));
+        System.out.println("solve QRP Col Basic  = "+ solveBenchmark(
+                new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn(),true),numTrials));
+        System.out.println("solve QRP Col        = "+ solveBenchmark(
+                new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn(),false),numTrials));
     }
 
     public static void main( String args [] ) {
         int size[] = new int[]{2,4,10,100,1000,2000};
-        int trials[] = new int[]{(int)2e6,(int)8e5,(int)3e5,800,3,1};
-        int trialsX[] = new int[]{(int)1e5,(int)6e4,(int)1e4,(int)5e3,1000,500};
+        int trials[] = new int[]{(int)1e6,(int)5e5,(int)1e5,500,2,1};
+        int trialsX[] = new int[]{(int)5e5,(int)4e5,(int)2e5,(int)7e4,4000,2000};
 
         System.out.println("Increasing matrix A size");
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
 
+            // create a singular matrix
+            double singularValues[] = new double[w];
+            for( int j = 0; j < w-1; j++ )
+                singularValues[j] = 10+w-j;
+
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices.createRandom(w*2,w,rand);
-            B = new DenseMatrix64F(w*2,2);
+            A = RandomMatrices.createSingularValues(w, w, rand, singularValues);
+            B = new DenseMatrix64F(w,2);
 
             runAlgorithms(trials[i]);
         }
@@ -89,8 +99,8 @@ public class BenchmarkRectSolve {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices.createRandom(200,100,rand);
-            B = new DenseMatrix64F(200,w);
+            A = RandomMatrices.createRandom(100,100,rand);
+            B = new DenseMatrix64F(100,w);
 
             runAlgorithms(trialsX[i]/80);
         }

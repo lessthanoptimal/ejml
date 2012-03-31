@@ -25,7 +25,6 @@ import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.alg.dense.linsol.svd.SolvePseudoInverse;
 import org.ejml.alg.dense.misc.*;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixMultProduct;
@@ -730,7 +729,7 @@ public class CommonOps {
      * pinv(A) = A<sup>T</sup>(AA<sup>T</sup>)<sup>-1</sup><br>
      * </p>
      * <p>
-     * Internally it uses {@link SolvePseudoInverse} to compute the inverse.  For performance reasons, this should only
+     * Internally it uses {@link org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd} to compute the inverse.  For performance reasons, this should only
      * be used when a matrix is singular or nearly singular.
      * </p>
      * @param A  A m by n Matrix.  Not modified.
@@ -764,7 +763,6 @@ public class CommonOps {
         } else {
             ret = v;
         }
-
 
         for( int i = 0; i < ret.length; i++ ) {
             if( ret[i] == null ) {

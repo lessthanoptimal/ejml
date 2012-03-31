@@ -20,7 +20,6 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
@@ -28,11 +27,8 @@ import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrp;
-import org.ejml.alg.dense.linsol.svd.SolvePseudoInverse;
+import org.ejml.alg.dense.linsol.qr.*;
+import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -104,17 +100,37 @@ public class LinearSolverFactory {
     }
 
     /**
-     * Creates a solver which can come up with a partial solution for a singular matrix.
-     * The matrix is decomposed using QR with column pivots.  Variables which can't
-     * be solved for because its singular are set to the input.
+     * <p>
+     * Linear solver which uses QR pivot decomposition.  These solvers can handle singular systems
+     * and should never fail.  For singular systems, the solution might not be as accurate as a
+     * pseudo inverse that uses SVD.
+     * </p>
+     * 
+     * <p>
+     * For singular systems there are multiple correct solutions.  The optimal 2-norm solution is the
+     * solution vector with the minimal 2-norm and is unique.  If the optimal solution is not computed
+     * then the basic solution is returned.  See {@link org.ejml.alg.dense.linsol.qr.BaseLinearSolverQrp}
+     * for details.
+     * </p>
      *
-     * @return A new solver which can handle
+     * <p>
+     * Two different solvers are available.  Compute Q will compute the Q matrix once then use it multiple times.
+     * If the solution for a single vector is being found then this should be set to false.  If the pseudo inverse
+     * is being found or the solution matrix has more than one columns then this should be true.
+     * </p>
+     *
+     * @param computeNorm2 true to compute the minimum 2-norm solution for singular systems.
+     * @param computeQ Should it precompute Q or use house holder.
+     * @return Pseudo inverse type solver using QR with column pivots.
      */
-    public static LinearSolver<DenseMatrix64F> leastSquaresQrPivot(int matrixWidth) {
-        QRPDecomposition<DenseMatrix64F> decomposition =
+    public static LinearSolver<DenseMatrix64F> leastSquaresQrPivot( boolean computeNorm2 , boolean computeQ ) {
+        QRColPivDecompositionHouseholderColumn decomposition =
                 new QRColPivDecompositionHouseholderColumn();
 
-        return new LinearSolverQrp(decomposition);
+        if( computeQ )
+            return new SolvePseudoInverseQrp(decomposition,computeNorm2);
+        else
+            return new LinearSolverQrpHouseCol(decomposition,computeNorm2);
     }
 
     /**
@@ -130,9 +146,11 @@ public class LinearSolverFactory {
      */
     public static LinearSolver<DenseMatrix64F> pseudoInverse( boolean useSVD ) {
         if( useSVD )
-            return new SolvePseudoInverse();
+            return new SolvePseudoInverseSvd();
         else
-            return new LinearSolverQrp(new QRColPivDecompositionHouseholderColumn());
+            // compute Q because it is 2x slower in the general solve case, but householder is
+            // a TON slower when inverting a matrix
+            return leastSquaresQrPivot(true,true);
     }
 
     /**

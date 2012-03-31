@@ -42,7 +42,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
+public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
 
     // Used to compute pseudo inverse
     private SingularValueDecomposition<DenseMatrix64F> svd;
@@ -56,7 +56,7 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
      * @param maxRows The expected largest matrix it might have to process.  Can be larger.
      * @param maxCols The expected largest matrix it might have to process.  Can be larger.
      */
-    public SolvePseudoInverse( int maxRows , int maxCols ) {
+    public SolvePseudoInverseSvd(int maxRows, int maxCols) {
 
         svd = DecompositionFactory.svd(maxRows,maxCols,true,true,true);
     }
@@ -64,7 +64,7 @@ public class SolvePseudoInverse implements LinearSolver<DenseMatrix64F> {
     /**
      * Creates a solver targeted at matrices around 100x100
      */
-    public SolvePseudoInverse() {
+    public SolvePseudoInverseSvd() {
         this(100,100);
     }
 

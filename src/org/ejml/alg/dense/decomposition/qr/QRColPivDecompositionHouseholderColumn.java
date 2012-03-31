@@ -181,6 +181,7 @@ public class QRColPivDecompositionHouseholderColumn
                 norm += element*element;
             }
             normsCol[col] = norm;
+            System.out.println("norm[ "+col+" ] = "+norm);
         }
     }
 
@@ -274,6 +275,8 @@ public class QRColPivDecompositionHouseholderColumn
 
         // compute tau using precomputed normals
         tau = Math.sqrt(normsCol[j]);
+        System.out.println("   tau "+tau);
+        
         // see if it is degenerate
         if( tau < UtilEjml.EPS || UtilEjml.isUncountable(tau) )
             return false;

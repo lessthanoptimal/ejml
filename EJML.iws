@@ -4,23 +4,29 @@
     <bookmark url="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRDecompositionHouseholderTran.java" line="176" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/SolvePseudoInverse.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/svd/SolvePseudoInverse.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/TestSolvePseudoInverse.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/svd/TestSolvePseudoInverse.java" />
+    <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="- Added QR pivot solve that uses house holder reflectors&#10;- Tweaked solver factory&#10;- Added benchmarks&#10;  * QR Pivot (both) seem to have issues with matrix inverse">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolvePseudoInverse.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/BaseLinearSolverQrp.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrpHouseCol.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericSolvePseudoInverseChecks.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestSolveLinearSolverQrpHouseCol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrp.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SolvePseudoInverseQrp.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/svd/SolvePseudoInverse.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/svd/SolvePseudoInverseSvd.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestLinearSolverQrp.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestSolvePseudoInverseQrp.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/svd/TestSolvePseudoInverse.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/svd/TestSolvePseudoInverseSvd.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkInverseStability.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkInverseStability.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkRectSolve.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkRectSolve.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ejml.iml" afterPath="$PROJECT_DIR$/ejml.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/QRPDecomposition.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/QRPDecomposition.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/InvertUsingSolve.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/InvertUsingSolve.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/TriangularSolver.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/TriangularSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrp.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/VectorVectorMult.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/VectorVectorMult.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouseCol.java" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouseCol.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestLinearSolverQrp.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestLinearSolverQrp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/SpecializedOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/SpecializedOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestTriangularSolver.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/TestTriangularSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestSpecializedOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestSpecializedOps.java" />
     </list>
     <ignored path="EJML.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,19 +46,6 @@
   <component name="DebuggerManager">
     <line_breakpoints>
       <breakpoint url="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/bidiagonal/BidiagonalDecompositionRow.java" line="263" class="org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow" package="org.ejml.alg.dense.decomposition.bidiagonal">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java" line="83" class="org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn" package="org.ejml.alg.dense.decomposition.qr">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -106,91 +99,60 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="LinearSolverQrp.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrp.java">
+      <file leaf-file-name="BenchmarkInverseStability.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkInverseStability.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="121" column="0" selection-start="3935" selection-end="3935" vertical-scroll-proportion="0.0">
+            <state line="58" column="41" selection-start="1772" selection-end="1772" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#1907#1937#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SolvePseudoInverseQrp.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SolvePseudoInverseQrp.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="34" column="55" selection-start="1269" selection-end="1269" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestLinearSolverQrp.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestLinearSolverQrp.java">
+      <file leaf-file-name="BaseLinearSolverQrp.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/BaseLinearSolverQrp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="34" selection-start="1532" selection-end="1547" vertical-scroll-proportion="0.0">
+            <state line="183" column="24" selection-start="5987" selection-end="5987" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LinearSolver.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolver.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="119" column="16" selection-start="4557" selection-end="4557" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SimpleMatrix.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/simple/SimpleMatrix.java">
+      <file leaf-file-name="QRColPivDecompositionHouseholderColumn.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="40" selection-start="4044" selection-end="4044" vertical-scroll-proportion="0.0">
+            <state line="277" column="40" selection-start="8446" selection-end="8446" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SimpleBase.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/simple/SimpleBase.java">
+      <file leaf-file-name="TriangularSolver.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/TriangularSolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="307" column="0" selection-start="8694" selection-end="8694" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommonOps.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="741" column="84" selection-start="27344" selection-end="27344" vertical-scroll-proportion="0.29518855">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestCommonOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="351" column="20" selection-start="11922" selection-end="11922" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestNormOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="25" selection-start="1924" selection-end="1924" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NormOps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="117" column="25" selection-start="4014" selection-end="4014" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestSimpleMatrix.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/ejml/simple/TestSimpleMatrix.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="231" column="0" selection-start="6807" selection-end="6807" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/change.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="95" selection-start="1032" selection-end="1032" vertical-scroll-proportion="0.0">
+            <state line="225" column="43" selection-start="7065" selection-end="7065" vertical-scroll-proportion="0.21529175">
               <folding />
             </state>
           </provider>
@@ -210,22 +172,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/mult/BenchmarkMatrixMultProduct.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/EjmlParameters.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/CheckMatrixMultShape.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/mult/VectorVectorMult.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/mult/TestVectorVectorMult.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/SolvePseudoInverse.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/svd/SolvePseudoInverse.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/svd/TestSolvePseudoInverse.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestLinearSolverQrp.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/QRPDecomposition.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/InvertUsingSolve.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/TriangularSolver.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SolvePseodoInverseQrp.java" />
+        <option value="$PROJECT_DIR$/examples/src/org/ejml/example/PrincipleComponentAnalysis.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouseCol.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestSolveLinearSolverQrpHouseCol.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestSolvePseudoInverseQrp.java" />
+        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolvePseudoInverse.java" />
         <option value="$PROJECT_DIR$/change.txt" />
-        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrp.java" />
-        <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-        <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrpHouseCol.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java" />
+        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericSolvePseudoInverseChecks.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolver.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SolvePseudoInverseQrp.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/BaseLinearSolverQrp.java" />
+        <option value="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkInverseStability.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java" />
       </list>
     </option>
   </component>
@@ -395,40 +357,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="svd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="alg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dense" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linsol" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="qr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -595,7 +523,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="svd" />
+              <option name="myItemId" value="qr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -606,6 +534,76 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dense" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -628,10 +626,6 @@
               <option name="myItemId" value="linsol" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="qr" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -640,6 +634,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -673,6 +671,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -694,26 +696,52 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="qr" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="benchmarks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alg" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="104" />
-    <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="59" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="34" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="88" />
-    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="options.splitter.main.proportions" value="0.3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
@@ -737,20 +765,20 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="dynamic.classpath" value="false" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
     <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.ejml.alg.dense.linsol" />
+      <recent name="org.ejml.alg.dense.linsol.qr" />
+      <recent name="org.ejml.alg.dense.linsol.svd" />
       <recent name="org.ejml.ops" />
       <recent name="org.ejml.alg.dense.decomposition.hessenberg" />
-      <recent name="org.ejml.alg.dense.linsol.qr" />
-      <recent name="org.ejml.alg.dense.decomposition.chol" />
-      <recent name="org.ejml.alg.block" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="org.ejml.alg.block.BlockMatrixOps" />
@@ -759,8 +787,8 @@
       <recent name="org.ejml.alg.dense.linsol.svd" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.org.ejml">
-    <configuration default="false" name="TestLinearSolverQrp" type="JUnit" factoryName="JUnit" temporary="true">
+  <component name="RunManager" selected="Application.BenchmarkInverseStability">
+    <configuration default="false" name="TestLinearSolverQrHouseCol" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
           <option name="PATTERN" value="org.ejml.alg.dense.linsol.qr.*" />
@@ -771,7 +799,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.ejml.alg.dense.linsol.qr" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.linsol.qr.TestLinearSolverQrp" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.linsol.qr.TestLinearSolverQrHouseCol" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -792,30 +820,24 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestLinearSolverQrp.singularMatrix_inv" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="BenchmarkSolvePseudoInverse" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.alg.dense.linsol.qr.*" />
+          <option name="PATTERN" value="org.ejml.alg.dense.linsol.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <module name="ejml" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.linsol.BenchmarkSolvePseudoInverse" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.alg.dense.linsol.qr" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.linsol.qr.TestLinearSolverQrp" />
-      <option name="METHOD_NAME" value="singularMatrix_inv" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
+      <module name="ejml" />
       <envs />
-      <patterns />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
         <option name="TRANSPORT" value="0" />
@@ -856,30 +878,24 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestCommonOps.pinv" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="BenchmarkInverseStability" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.ops.*" />
+          <option name="PATTERN" value="org.ejml.alg.dense.linsol.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <module name="ejml" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.linsol.BenchmarkInverseStability" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.ops" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.ops.TestCommonOps" />
-      <option name="METHOD_NAME" value="pinv" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
+      <module name="ejml" />
       <envs />
-      <patterns />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
         <option name="TRANSPORT" value="0" />
@@ -888,30 +904,24 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="TestSimpleMatrix.pseudoInverse" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="StabilityQRDecomposition" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
-          <option name="PATTERN" value="org.ejml.*" />
+          <option name="PATTERN" value="org.ejml.alg.dense.decomposition.qr.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <module name="ejml" />
+      <option name="MAIN_CLASS_NAME" value="org.ejml.alg.dense.decomposition.qr.StabilityQRDecomposition" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.ejml.simple" />
-      <option name="MAIN_CLASS_NAME" value="org.ejml.simple.TestSimpleMatrix" />
-      <option name="METHOD_NAME" value="pseudoInverse" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
+      <module name="ejml" />
       <envs />
-      <patterns />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
         <option name="TRANSPORT" value="0" />
@@ -1167,11 +1177,11 @@
       <item index="3" class="java.lang.String" itemvalue="Application.BenchmarkSolveOver" />
       <item index="4" class="java.lang.String" itemvalue="Application.BenchmarkQrDecomposition" />
       <item index="5" class="java.lang.String" itemvalue="JUnit.TestLinearSolverChol.standardTests" />
-      <item index="6" class="java.lang.String" itemvalue="JUnit.TestLinearSolverQrp" />
-      <item index="7" class="java.lang.String" itemvalue="JUnit.TestLinearSolverQrp.singularMatrix_inv" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.TestLinearSolverQrHouseCol" />
+      <item index="7" class="java.lang.String" itemvalue="Application.BenchmarkSolvePseudoInverse" />
       <item index="8" class="java.lang.String" itemvalue="JUnit.org.ejml" />
-      <item index="9" class="java.lang.String" itemvalue="JUnit.TestCommonOps.pinv" />
-      <item index="10" class="java.lang.String" itemvalue="JUnit.TestSimpleMatrix.pseudoInverse" />
+      <item index="9" class="java.lang.String" itemvalue="Application.BenchmarkInverseStability" />
+      <item index="10" class="java.lang.String" itemvalue="Application.StabilityQRDecomposition" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1228,7 +1238,7 @@
     </task>
     <servers />
   </component>
-  <component name="TodoView" selected-index="0">
+  <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
       <are-packages-shown value="false" />
       <are-modules-shown value="false" />
@@ -1252,25 +1262,25 @@
     <frame x="-4" y="25" width="1288" height="977" extended-state="6" />
     <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32448733" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32810616" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20768602" sideWeight="0.6627497" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3968637" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37756333" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32448733" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292978" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29578605" sideWeight="0.23281062" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29578605" sideWeight="0.62243664" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3298217" sideWeight="0.67189384" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37756333" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="100" y="125" width="1080" height="774" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3968637" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" sideWeight="0.6627497" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1315,7 +1325,7 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <option name="CREATE_PATCH_EXPAND_DETAILS_DEFAULT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added inner and outer matrix products to CommonOps" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added QR pivot solve that uses house holder reflectors&#10;- Tweaked solver factory&#10;- Added benchmarks&#10;  * QR Pivot (both) seem to have issues with matrix inverse" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1328,8 +1338,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="- Updated the copyright notice&#10;- Moved SImpleMatrix into its own package and made it easier to extend&#10;- Added an example which extends SimpleMatrix&#10;- probably some other changes" />
-    <MESSAGE value="- partially working block tridiagonalization&#10;- fixed type-o in GeneratorBlockInnerMultiplication&#10;- add dot and isVector to SimpleMatrix&#10;" />
     <MESSAGE value="- working block symmetric eigen value decomposition&#10;- added stuff to SimpleMatrix&#10; * changed behavior of extractVector()&#10;- reorganized block matrix vector operations&#10;- added submatrix printing&#10; * D1Submatrix64F can now print just the submatrix its around&#10;- make getQ() in block QR decomposition more memory efficient.&#10;- BaseDecompositionBlock64 has a parameter for block size&#10;- EigenOps.decompositionSymmetric() now has a parameter for matrix size" />
     <MESSAGE value="- Fixed a nasty bug in LinearSolverSafe where if it was called multiple times the input matrix would not be copied into the local matrix, causing it to produce garbage.  Surprised this just got caught.&#10;- Added more safe calls through out the code for decompositions and linear solving&#10;- Added block rountines to stability benchmarks&#10;- Deleted SmartSolverChol&#10;  * Factories now take in the matrix size for cholesky&#10;- Removed the ability to specify if the input matrix is modified or not from some cholesky decompositions&#10;- Found more &quot;unchecked calls&quot; where a generic was not specified." />
     <MESSAGE value="- Minor tweaks to examples&#10;- Updated README.TXT" />
@@ -1353,6 +1361,8 @@
     <MESSAGE value="- implemented rank1Update" />
     <MESSAGE value="- New descendingOrder() variant&#10;- Fixed bug in LinearSolverQrHouseCol" />
     <MESSAGE value="- Added inner and outer matrix products to CommonOps" />
+    <MESSAGE value="- Moved SolvePseudoInverse into a new package&#10;- Modified LinearSolverQrp so that it is computing a pseudo inverse&#10;- Modified VectorVectorMult.innerProdA so that it can process non-square matrices&#10;- Modified and improved some unit tests" />
+    <MESSAGE value="- Added QR pivot solve that uses house holder reflectors&#10;- Tweaked solver factory&#10;- Added benchmarks&#10;  * QR Pivot (both) seem to have issues with matrix inverse" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1371,114 +1381,121 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrHouseCol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="155" column="59" selection-start="3473" selection-end="4655" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/QRPDecomposition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="17" selection-start="1287" selection-end="1287" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/TriangularSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="172" column="23" selection-start="5215" selection-end="5215" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/InvertUsingSolve.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="0" selection-start="1489" selection-end="1562" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverAbstract.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="19" selection-start="1459" selection-end="1459" vertical-scroll-proportion="0.0">
+        <state line="47" column="45" selection-start="1444" selection-end="1484" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestSolveLinearSolverQrpHouseCol.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="11" selection-start="5236" selection-end="5236" vertical-scroll-proportion="0.0">
+        <state line="44" column="33" selection-start="1667" selection-end="1667" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="13" selection-start="1360" selection-end="1360" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestSolvePseudoInverseQrp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="83" selection-start="1468" selection-end="1506" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="95" selection-start="1032" selection-end="1032" vertical-scroll-proportion="0.0">
+        <state line="21" column="47" selection-start="1004" selection-end="1004" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/qr/TestLinearSolverQrp.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolverFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="34" selection-start="1532" selection-end="1547" vertical-scroll-proportion="0.0">
+        <state line="140" column="33" selection-start="6027" selection-end="6027" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/simple/SimpleMatrix.java">
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericSolvePseudoInverseChecks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="40" selection-start="4044" selection-end="4044" vertical-scroll-proportion="0.0">
+        <state line="119" column="7" selection-start="3909" selection-end="3909" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestNormOps.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrpHouseCol.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="25" selection-start="1924" selection-end="1924" vertical-scroll-proportion="0.0">
+        <state line="64" column="49" selection-start="2457" selection-end="2457" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolvePseudoInverse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="39" selection-start="2446" selection-end="2517" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/NormOps.java">
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/qr/StabilityQRDecomposition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="25" selection-start="4014" selection-end="4014" vertical-scroll-proportion="0.0">
+        <state line="89" column="25" selection-start="3206" selection-end="3206" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/simple/TestSimpleMatrix.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/LinearSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="231" column="0" selection-start="6807" selection-end="6807" vertical-scroll-proportion="0.0">
+        <state line="119" column="16" selection-start="4557" selection-end="4557" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/simple/SimpleBase.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/BaseLinearSolverQrp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="307" column="0" selection-start="8694" selection-end="8694" vertical-scroll-proportion="0.0">
+        <state line="183" column="24" selection-start="5987" selection-end="5987" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkInverseStability.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="41" selection-start="1772" selection-end="1772" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1907#1937#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/SolvePseudoInverseQrp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="55" selection-start="1269" selection-end="1269" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/qr/LinearSolverQrp.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/qr/QRColPivDecompositionHouseholderColumn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="121" column="0" selection-start="3935" selection-end="3935" vertical-scroll-proportion="0.0">
+        <state line="277" column="40" selection-start="8446" selection-end="8446" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/TriangularSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="351" column="20" selection-start="11922" selection-end="11922" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="741" column="84" selection-start="27344" selection-end="27344" vertical-scroll-proportion="0.29518855">
+        <state line="225" column="43" selection-start="7065" selection-end="7065" vertical-scroll-proportion="0.21529175">
           <folding />
         </state>
       </provider>

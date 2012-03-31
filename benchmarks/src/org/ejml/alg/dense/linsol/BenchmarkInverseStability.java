@@ -19,8 +19,6 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLuKJI;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -57,13 +55,15 @@ public class BenchmarkInverseStability {
                 }
             }
         }
+        
+        System.out.println("total "+total);
 
         return total;
     }
 
     public void evaluateAll()
     {
-        List<LinearSolver> solvers = new ArrayList<LinearSolver>();
+        List<LinearSolver<DenseMatrix64F>> solvers = new ArrayList<LinearSolver<DenseMatrix64F>>();
         List<String> names = new ArrayList<String>();
 
 //        solvers.add(new GaussJordanNoPivot());
@@ -72,8 +72,8 @@ public class BenchmarkInverseStability {
 //        names.add("GJ");
 //        solvers.add(new LinearSolverLu(new LUDecompositionAlt()));
 //        names.add("LU A");
-        solvers.add(new LinearSolverLuKJI(new LUDecompositionAlt()));
-        names.add("LU B");
+//        solvers.add(new LinearSolverLuKJI(new LUDecompositionAlt()));
+//        names.add("LU B");
 //        solvers.add(new LinearSolverLu(new LUDecompositionAlt(),true));
 //        names.add("LU A Imp");
 //        solvers.add(new LinearSolverQrHouseCol());
@@ -82,33 +82,41 @@ public class BenchmarkInverseStability {
 //        names.add("SVD NR");
 //        solvers.add(new SolvePseudoInverse());
 //        names.add("Pseudo");
-        solvers.add(new LinearSolverUnrolled());
-        names.add("Unrolled");
+//        solvers.add(new LinearSolverUnrolled());
+//        names.add("Unrolled");
+        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,true));
+        names.add("P'QR compute Q");
+//        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,false));
+//        names.add("P'QR householder");
+//        solvers.add(LinearSolverFactory.pseudoInverse(true));
+//        names.add("PINV SVD");
 
         allTheBreaks(solvers,names);
     }
 
-    private void allTheBreaks( List<LinearSolver> solvers , List<String> names )
+    private void allTheBreaks( List<LinearSolver<DenseMatrix64F>> solvers , List<String> names )
     {
         System.out.println("Testing singular:");
         for( int i = 0; i < solvers.size(); i++ ) {
             breakNearlySingluar(names.get(i),solvers.get(i));
         }
 
-        System.out.println("Testing larger:");
-        for( int i = 0; i < solvers.size(); i++ ) {
-            breakOverUnderFlow(names.get(i),solvers.get(i),true);
-        }
-
-        System.out.println("Testing small:");
-        for( int i = 0; i < solvers.size(); i++ ) {
-            breakOverUnderFlow(names.get(i),solvers.get(i),false);
-        }
+//        System.out.println("Testing overflow:");
+//        for( int i = 0; i < solvers.size(); i++ ) {
+//            breakOverUnderFlow(names.get(i),solvers.get(i),true);
+//        }
+//
+//        System.out.println("Testing underflow:");
+//        for( int i = 0; i < solvers.size(); i++ ) {
+//            breakOverUnderFlow(names.get(i),solvers.get(i),false);
+//        }
     }
 
-    private void breakNearlySingluar( String name , LinearSolver alg ) {
+    private void breakNearlySingluar( String name , LinearSolver<DenseMatrix64F> alg ) {
         double breakDelta = -1;
         int breakW = -1;
+
+        alg = new LinearSolverSafe<DenseMatrix64F>(alg);
 
         escape: for( int i = 0; i < 40; i++ ) {
 //            System.out.println("i = "+i);
@@ -144,7 +152,7 @@ public class BenchmarkInverseStability {
 //        System.out.println(alg.getClass().getSimpleName()+" broke at "+breakDelta+" w = "+breakW);
     }
 
-    private void breakOverUnderFlow( String name , LinearSolver alg , boolean overflow ) {
+    private void breakOverUnderFlow( String name , LinearSolver<DenseMatrix64F> alg , boolean overflow ) {
         boolean madeBad= false;
 
         DenseMatrix64F A_orig = RandomMatrices.createRandom(3,3,new Random(0x14));

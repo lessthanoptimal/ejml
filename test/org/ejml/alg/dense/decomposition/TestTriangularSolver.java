@@ -153,4 +153,43 @@ public class TestTriangularSolver {
 
         assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
     }
+
+    @Test
+    public void solveU_submatrix() {
+
+        // create U and B.  Insert into a larger matrix
+        DenseMatrix64F U_orig = RandomMatrices.createRandom(3,3,rand);
+        for( int i = 0; i < U_orig.numRows; i++ ) {
+            for( int j = 0; j < i; j++ ) {
+                U_orig.set(i,j,0);
+            }
+        }
+        DenseMatrix64F U = new DenseMatrix64F(6,7);
+        CommonOps.insert(U_orig,U,2,3);
+        
+        
+        DenseMatrix64F B_orig = RandomMatrices.createRandom(3,2,rand);
+
+        DenseMatrix64F B = new DenseMatrix64F(4,5);
+        CommonOps.insert(B_orig,B,1,2);
+        
+        // compute expected solution
+        DenseMatrix64F U_inv = U_orig.copy();
+        UnrolledInverseFromMinor.inv(U_inv,U_inv);
+
+        DenseMatrix64F expected = RandomMatrices.createRandom(3,2,rand);
+
+        int startU = 2*U.numCols+3;
+        int strideU = U.numCols;
+        int widthU = U_orig.numCols;
+        int startB = 1*B.numCols+2;
+        int strideB = B.numCols;
+        int widthB = B_orig.numCols;
+        TriangularSolver.solveU(U.data,startU,strideU,widthU,B.data,startB,strideB,widthB);
+
+        DenseMatrix64F found = CommonOps.extract(B,1,4,2,4);
+        CommonOps.mult(U_inv,B_orig,expected);
+
+        assertTrue(MatrixFeatures.isIdentical(expected,found,1e-8));
+    }
 }

@@ -251,4 +251,14 @@ public class TestSpecializedOps {
 
         assertEquals(6,found,1e-8);
     }
+    
+    @Test
+    public void elementSumSq() {
+        DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,4,5,6);
+        
+        double expected = 1+4+9+16+25+36;
+        double found = SpecializedOps.elementSumSq(A);
+        
+        assertEquals(expected,found,1e-8);
+    }
 }

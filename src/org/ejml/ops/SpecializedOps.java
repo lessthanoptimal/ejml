@@ -400,4 +400,23 @@ public class SpecializedOps {
 
         return Math.abs(quality);
     }
+
+    /**
+     * Sums up the square of each element in the matrix.  This is equivalent to the
+     * Frobenius norm squared.
+     *
+     * @param m Matrix.
+     * @return Sum of elements squared.
+     */
+    public static double elementSumSq( D1Matrix64F m  ) {
+        double total = 0;
+        
+        int N = m.getNumElements();
+        for( int i = 0; i < N; i++ ) {
+            double d = m.data[i];
+            total += d*d;
+        }
+
+        return total;
+    }
 }

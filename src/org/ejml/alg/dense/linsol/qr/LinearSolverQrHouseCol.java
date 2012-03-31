@@ -21,6 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
@@ -48,7 +49,8 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
 
     private QRDecompositionHouseholderColumn decomposer;
 
-    private double []a;
+    private DenseMatrix64F a = new DenseMatrix64F(1,1);
+    private DenseMatrix64F temp = new DenseMatrix64F(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
@@ -62,15 +64,11 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
      */
     public LinearSolverQrHouseCol() {
         decomposer = new QRDecompositionHouseholderColumn();
-
-
     }
 
     public void setMaxSize( int maxRows , int maxCols )
     {
         this.maxRows = maxRows; this.maxCols = maxCols;
-
-        a = new double[ maxRows ];
     }
 
     /**
@@ -83,7 +81,9 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
         if( A.numRows > maxRows || A.numCols > maxCols )
             setMaxSize(A.numRows,A.numCols);
 
-        R.reshape(A.numCols,A.numCols,false);
+        R.reshape(A.numCols,A.numCols);
+        a.reshape(A.numRows,1);
+        temp.reshape(A.numRows,1);
 
         _setA(A);
         if( !decomposer.decompose(A) )
@@ -114,13 +114,13 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
             throw new IllegalArgumentException("Unexpected dimensions for B");
 
         int BnumCols = B.numCols;
-
+        
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                a[i] = B.data[i*BnumCols + colB];
+                a.data[i] = B.data[i*BnumCols + colB];
             }
 
             // Solve Qa=b
@@ -131,27 +131,18 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
             for( int n = 0; n < numCols; n++ ) {
                 double []u = QR[n];
 
-                double ub = a[n];
-                // U^T*b
-                for( int i = n+1; i < numRows; i++ ) {
-                    ub += u[i]*a[i];
-                }
-
-                // gamma*U^T*b
-                ub *= gammas[n];
-
-                a[n] -= ub;
-                for( int i = n+1; i < numRows; i++ ) {
-                    a[i] -= u[i]*ub;
-                }
+                double vv = u[n];
+                u[n] = 1;
+                QrHelperFunctions.rank1UpdateMultR(a, u, gammas[n], 0, n, numRows, temp.data);
+                u[n] = vv;
             }
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R.data,a,numCols);
+            TriangularSolver.solveU(R.data,a.data,numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
-                X.data[i*X.numCols+colB] = a[i];
+                X.data[i*X.numCols+colB] = a.data[i];
             }
         }
     }

@@ -207,4 +207,39 @@ public class TriangularSolver {
             b[i] = sum/U[i*sideLength+i];
         }
     }
+
+    /**
+     * <p>
+     * This is a forward substitution solver for non-singular upper triangular matrices which are
+     * a sub-matrix inside a larger.  The columns of 'b' are solved for individually
+     * <br>
+     * b = U<sup>-1</sup>b<br>
+     * <br>
+     * where b is a matrix, U is an n by n matrix.<br>
+     * </p>
+     *
+     * @param U Matrix containing the upper triangle system
+     * @param startU Index of the first element in U
+     * @param strideU stride between rows
+     * @param widthU How wide the square matrix is
+     * @param b Matrix containing the solution to the system.  Overwritten with the solution.
+     * @param startB Index of the first element in B
+     * @param strideB stride between rows
+     * @param widthB How wide the matrix is.  Length is the same as U's width
+     */
+    public static void solveU( double []U , int startU , int strideU , int widthU ,
+                               double []b , int startB , int strideB , int widthB )
+    {
+        for( int colB = 0; colB < widthB; colB++ ) {
+            for( int i =widthU-1; i>=0; i-- ) {
+                double sum = b[startB + i*strideB + colB];
+                for( int j = i+1; j <widthU; j++ ) {
+                    sum -= U[startU + i*strideU+j]* b[startB + j*strideB + colB ];
+                }
+                b[startB + i*strideB + colB] = sum/U[ startU + i*strideU + i ];
+            }
+        }
+
+        // todo comment out the above and optimize it
+    }
 }
