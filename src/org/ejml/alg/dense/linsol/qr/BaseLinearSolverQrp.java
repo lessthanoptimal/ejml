@@ -77,7 +77,6 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
     
     // stores sub-matrices inside the R matrix
     protected DenseMatrix64F R11 = new DenseMatrix64F(1,1);
-    protected DenseMatrix64F R12 = new DenseMatrix64F(1,1);
     
     // store an identity matrix for computing the inverse
     protected DenseMatrix64F I = new DenseMatrix64F(1,1);
@@ -117,9 +116,24 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
         CommonOps.extract(R, 0, rank, 0, rank, R11, 0, 0);
 
         if( norm2Solution) {
-            W.reshape(rank, numCols - rank);
-            R12.reshape(rank,numCols - rank);
-            CommonOps.extract(R,0,rank,rank,numCols,R12,0,0);
+            // extract the R12 sub-matrix
+            W.reshape(rank,numCols - rank);
+            CommonOps.extract(R,0,rank,rank,numCols,W,0,0);
+
+            // W=inv(R11)*R12
+            TriangularSolver.solveU(R11.data, 0, R11.numCols, R11.numCols, W.data, 0, W.numCols, W.numCols);
+
+            // set the identity matrix in the upper portion
+            W.reshape(numCols, W.numCols,true);
+
+            for( int i = 0; i < numCols-rank; i++ ) {
+                for( int j = 0; j < numCols-rank; j++ ) {
+                    if( i == j )
+                        W.set(i+rank,j,-1);
+                    else
+                        W.set(i+rank,j,0);
+                }
+            }
         }
 
         return true;
@@ -148,20 +162,6 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
     protected void upgradeSolution( DenseMatrix64F X ) {
         DenseMatrix64F z = Y; // recycle Y
 
-        // W=inv(R11)*R12
-        TriangularSolver.solveU(R11.data, 0, R11.numCols, R11.numCols, W.data, 0, W.numCols, W.numCols);
-
-        // set the identity matrix in the upper portion
-        W.reshape(numCols, W.numCols,true);
-        for( int i = 0; i < numCols-rank; i++ ) {
-            for( int j = 0; j < numCols-rank; j++ ) {
-                if( i == j )
-                    W.set(i+rank,j,-1);
-                else
-                    W.set(i+rank,j,0);
-            }
-        }
-
         // compute the z which will minimize the 2-norm of X
         // because of the identity matrix tacked onto the end 'A' should never be singular
         if( !internalSolver.setA(W) )
@@ -178,7 +178,7 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
         if( A_inv.numCols != numRows || A_inv.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for A_inv");
 
-        I.reshape(A_inv.numCols, A_inv.numRows);
+        I.reshape(numRows, numRows);
         CommonOps.setIdentity(I);
 
         solve(I, A_inv);

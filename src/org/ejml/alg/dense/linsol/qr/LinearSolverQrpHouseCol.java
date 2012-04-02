@@ -62,10 +62,9 @@ public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
         double qr[][] = decomposition.getQR();
         double gammas[] = decomposition.getGammas();
 
-        x_basic.reshape(Math.max(numRows,numCols), 1);
-
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
+            x_basic.reshape(numRows, 1);
             Y.reshape(numRows,1);
 
             // make a copy of this column in the vector
@@ -88,6 +87,7 @@ public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
             TriangularSolver.solveU(R11.data, x_basic.data, rank);
 
             // finish the basic solution by filling in zeros
+            x_basic.reshape(numCols, 1, true);
             for( int i = rank; i < numCols; i++)
                 x_basic.data[i] = 0;
 

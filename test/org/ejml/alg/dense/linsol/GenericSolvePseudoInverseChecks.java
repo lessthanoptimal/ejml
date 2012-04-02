@@ -43,8 +43,9 @@ public class GenericSolvePseudoInverseChecks {
     }
 
     public void all() {
-        underDetermined_solve();
-        underDetermined_inv();
+        underDetermined_wide_solve();
+        underDetermined_wide_inv();
+        underDetermined_tall_solve();
         singular_solve();
         singular_inv();
     }
@@ -52,7 +53,7 @@ public class GenericSolvePseudoInverseChecks {
     /**
      * Compute a solution for a system with more variables than equations
      */
-    public void underDetermined_solve() {
+    public void underDetermined_wide_solve() {
         // create a matrix where two rows are linearly dependent
         DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,2,3,4);
 
@@ -72,7 +73,7 @@ public class GenericSolvePseudoInverseChecks {
     /**
      * Compute the pseudo inverse a system with more variables than equations
      */
-    public void underDetermined_inv() {
+    public void underDetermined_wide_inv() {
         // create a matrix where two rows are linearly dependent
         DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,2,3,4);
 
@@ -90,6 +91,26 @@ public class GenericSolvePseudoInverseChecks {
         CommonOps.mult(A_pinv,y,found);
 
         assertTrue(MatrixFeatures.isEquals(x, found,1e-8));
+    }
+
+    /**
+     * Compute a solution for a system with more variables than equations
+     */
+    public void underDetermined_tall_solve() {
+        // create a matrix where two rows are linearly dependent
+        DenseMatrix64F A = new DenseMatrix64F(3,2,true,1,2,1,2,2,4);
+
+        DenseMatrix64F y = new DenseMatrix64F(3,1,true,4,4,8);
+        assertTrue(solver.setA(A));
+
+        DenseMatrix64F x = new DenseMatrix64F(2,1);
+        solver.solve(y,x);
+
+        DenseMatrix64F found = new DenseMatrix64F(3,1);
+        CommonOps.mult(A, x, found);
+
+        // there are multiple 'x' which will generate the same solution, see if this is one of them
+        assertTrue(MatrixFeatures.isEquals(y, found, 1e-8));
     }
 
     /**

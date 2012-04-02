@@ -22,6 +22,8 @@ Date format: year/month/day
   * Added QR pivot based pseudo inverse classes
 - Improved QR Pivot so that it has better stability
   * Normalization is done on a column by column basis instead of by the whole matrix.
+- QR decomposition using extracted columns now invokes more generalized code for householder operations
+  * Should improve performance for larger matrices, and slightly degrade for small
 
 ----- Version 0.18
 
