@@ -62,86 +62,86 @@ public class QrHelperFunctions {
 
     public static void divideElements(final int j, final int numRows ,
                                       final double[] u, final double u_0 ) {
-        double div_u = 1.0/u_0;
-
-        if( Double.isInfinite(div_u)) {
+//        double div_u = 1.0/u_0;
+//
+//        if( Double.isInfinite(div_u)) {
             for( int i = j; i < numRows; i++ ) {
                 u[i] /= u_0;
             }
-        } else {
-            for( int i = j; i < numRows; i++ ) {
-                u[i] *= div_u;
-            }
-        }
+//        } else {
+//            for( int i = j; i < numRows; i++ ) {
+//                u[i] *= div_u;
+//            }
+//        }
     }
 
     public static void divideElements(int j, int numRows , double[] u, int startU , double u_0 ) {
-        double div_u = 1.0/u_0;
-
-        if( Double.isInfinite(div_u)) {
+//        double div_u = 1.0/u_0;
+//
+//        if( Double.isInfinite(div_u)) {
             for( int i = j; i < numRows; i++ ) {
                 u[i+startU] /= u_0;
             }
-        } else {
-            for( int i = j; i < numRows; i++ ) {
-                u[i+startU] *= div_u;
-            }
-        }
+//        } else {
+//            for( int i = j; i < numRows; i++ ) {
+//                u[i+startU] *= div_u;
+//            }
+//        }
     }
 
     public static void divideElements_Brow(int j, int numRows , double[] u,
                                              double b[] , int startB ,
                                              double u_0 ) {
-        double div_u = 1.0/u_0;
-
-        if( Double.isInfinite(div_u)) {
+//        double div_u = 1.0/u_0;
+//
+//        if( Double.isInfinite(div_u)) {
             for( int i = j; i < numRows; i++ ) {
                 u[i] = b[i+startB] /= u_0;
             }
-        } else {
-            for( int i = j; i < numRows; i++ ) {
-                u[i] = b[i+startB] *= div_u;
-            }
-        }
+//        } else {
+//            for( int i = j; i < numRows; i++ ) {
+//                u[i] = b[i+startB] *= div_u;
+//            }
+//        }
     }
 
     public static void divideElements_Bcol(int j, int numRows , int numCols ,
                                              double[] u,
                                              double b[] , int startB ,
                                              double u_0 ) {
-        double div_u = 1.0/u_0;
-
-        if( Double.isInfinite(div_u)) {
+//        double div_u = 1.0/u_0;
+//
+//        if( Double.isInfinite(div_u)) {
             int indexB = j*numCols+startB;
             for( int i = j; i < numRows; i++ , indexB += numCols ) {
                 b[indexB] = u[i] /= u_0;
             }
-        } else {
-            int indexB = j*numCols+startB;
-            for( int i = j; i < numRows; i++ , indexB += numCols ) {
-                b[indexB] = u[i] *= div_u;
-            }
-        }
+//        } else {
+//            int indexB = j*numCols+startB;
+//            for( int i = j; i < numRows; i++ , indexB += numCols ) {
+//                b[indexB] = u[i] *= div_u;
+//            }
+//        }
     }
 
     public static double computeTauAndDivide(int j, int numRows , double[] u, int startU , double max) {
         // compute the norm2 of the matrix, with each element
         // normalized by the max value to avoid overflow problems
         double tau = 0;
-        double div_max = 1.0/max;
-        if( Double.isInfinite(div_max)) {
+//        double div_max = 1.0/max;
+//        if( Double.isInfinite(div_max)) {
             // more accurate
             for( int i = j; i < numRows; i++ ) {
                 double d = u[startU+i] /= max;
                 tau += d*d;
             }
-        } else {
-            // faster
-            for( int i = j; i < numRows; i++ ) {
-                double d = u[startU+i] *= div_max;
-                tau += d*d;
-            }
-        }
+//        } else {
+//            // faster
+//            for( int i = j; i < numRows; i++ ) {
+//                double d = u[startU+i] *= div_max;
+//                tau += d*d;
+//            }
+//        }
         tau = Math.sqrt(tau);
 
         if( u[startU+j] < 0 )
@@ -174,18 +174,18 @@ public class QrHelperFunctions {
     public static double computeTauAndDivide(final int j, final int numRows ,
                                              final double[] u , final double max) {
         double tau = 0;
-        double div_max = 1.0/max;
-        if( Double.isInfinite(div_max)) {
+//        double div_max = 1.0/max;
+//        if( Double.isInfinite(div_max)) {
             for( int i = j; i < numRows; i++ ) {
                 double d = u[i] /= max;
                 tau += d*d;
             }
-        } else {
-            for( int i = j; i < numRows; i++ ) {
-                double d = u[i] *= div_max;
-                tau += d*d;
-            }
-        }
+//        } else {
+//            for( int i = j; i < numRows; i++ ) {
+//                double d = u[i] *= div_max;
+//                tau += d*d;
+//            }
+//        }
         tau = Math.sqrt(tau);
 
         if( u[j] < 0 )

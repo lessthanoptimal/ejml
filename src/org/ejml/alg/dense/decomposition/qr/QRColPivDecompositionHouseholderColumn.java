@@ -47,16 +47,33 @@ public class QRColPivDecompositionHouseholderColumn
         extends QRDecompositionHouseholderColumn
         implements QRPDecomposition<DenseMatrix64F>
 {
-    // the ordering of each column
+    // the ordering of each column, the current column i is the original column pivots[i]
     protected int pivots[];
     // F-norm  squared for each column
     protected double normsCol[];
 
-    // the size of the largest element
+    // value of the maximum abs element
     protected double maxAbs;
+    
+    // threshold used to determine when a column is considered to be singular
+    // Threshold is relative to the maxAbs
+    protected double singularThreshold;
 
     // the matrix's rank
     protected int rank;
+
+    /**
+     * Configure parameters.
+     *
+     * @param singularThreshold Specify the threshold that selects if column is singular or not.  Typically around EPS
+     */
+    public QRColPivDecompositionHouseholderColumn(double singularThreshold) {
+        this.singularThreshold = singularThreshold;
+    }
+
+    public QRColPivDecompositionHouseholderColumn() {
+        this(UtilEjml.EPS);
+    }
 
     @Override
     public void setExpectedMaxSize( int numRows , int numCols ) {
@@ -128,8 +145,8 @@ public class QRColPivDecompositionHouseholderColumn
 
         convertToColumnMajor(A);
 
-        // initialize pivot variables
         maxAbs = CommonOps.elementMaxAbs(A);
+        // initialize pivot variables
         setupPivotInfo();
 
         // go through each column and perform the decomposition
@@ -156,7 +173,7 @@ public class QRColPivDecompositionHouseholderColumn
             double c[] = dataQR[col];
             double norm = 0;
             for( int row = 0; row < numRows; row++ ) {
-                double element = c[row]/maxAbs;
+                double element = c[row];
                 norm += element*element;
             }
             normsCol[col] = norm;
@@ -165,12 +182,32 @@ public class QRColPivDecompositionHouseholderColumn
 
 
     /**
-     * Performs an efficient update of each matrix's norm
+     * Performs an efficient update of each columns' norm
      */
     private void updateNorms( int j ) {
+        boolean foundNegative = false;
         for( int col = j; col < numCols; col++ ) {
-            double e = dataQR[col][j-1]/maxAbs;
+            double e = dataQR[col][j-1];
             normsCol[col] -= e*e;
+
+            if( normsCol[col] < 0 ) {
+                foundNegative = true;
+                break;
+            }
+        }
+
+        // if a negative sum has been found then clearly too much precision has been last
+        // and it should recompute the column norms from scratch
+        if( foundNegative ) {
+            for( int col = j; col < numCols; col++ ) {
+                double u[] = dataQR[col];
+                double actual = 0;
+                for( int i=j; i < numRows; i++ ) {
+                    double v = u[i];
+                    actual += v*v;
+                }
+                normsCol[col] = actual;
+            }
         }
     }
 
@@ -201,7 +238,6 @@ public class QRColPivDecompositionHouseholderColumn
         int tempP = pivots[j];
         pivots[j] = pivots[largestIndex];
         pivots[largestIndex] = tempP;
-
     }
 
     /**
@@ -227,13 +263,12 @@ public class QRColPivDecompositionHouseholderColumn
         // this is used to normalize the column and mitigate overflow/underflow
         final double max = QrHelperFunctions.findMax(u,j,numRows-j);
 
-        if( Math.abs(max) <= UtilEjml.EPS*maxAbs ) {
-            gamma = 0;
+        if( max <= 0 ) {
             return false;
         } else {
             // computes tau and normalizes u by max
             tau = QrHelperFunctions.computeTauAndDivide(j, numRows , u, max);
-
+            
             // divide u by u_0
             double u_0 = u[j] + tau;
             QrHelperFunctions.divideElements(j+1,numRows , u, u_0 );
@@ -242,6 +277,10 @@ public class QRColPivDecompositionHouseholderColumn
             tau *= max;
 
             u[j] = -tau;
+
+            if( Math.abs(tau) <= singularThreshold*maxAbs ) {
+                return false;
+            }
         }
 
         gammas[j] = gamma;

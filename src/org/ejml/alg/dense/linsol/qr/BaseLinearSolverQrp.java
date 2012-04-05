@@ -24,6 +24,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.alg.dense.linsol.LinearSolverFactory;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.SpecializedOps;
@@ -81,7 +82,7 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
     // store an identity matrix for computing the inverse
     protected DenseMatrix64F I = new DenseMatrix64F(1,1);
 
-    // rank of the matrix
+    // rank of the system matrix
     protected int rank;
 
     protected LinearSolver<DenseMatrix64F> internalSolver = LinearSolverFactory.leastSquares(1, 1);
@@ -89,14 +90,20 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
     // used to compute optimal 2-norm solution
     private DenseMatrix64F W = new DenseMatrix64F(1,1);
 
+    /**
+     * Configures internal parameters.
+     *
+     * @param decomposition Used to solve the linear system.
+     * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
+     */
     protected BaseLinearSolverQrp(QRPDecomposition<DenseMatrix64F> decomposition,
                                   boolean norm2Solution)
     {
-        if( decomposition.inputModified() )
-            throw new RuntimeException("Modify this class so that it creates a copy of A");
-
         this.decomposition = decomposition;
         this.norm2Solution = norm2Solution;
+
+        if( internalSolver.modifiesA() )
+            internalSolver = new LinearSolverSafe<DenseMatrix64F>(internalSolver);
     }
 
     @Override
@@ -115,7 +122,7 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
         R11.reshape(rank, rank);
         CommonOps.extract(R, 0, rank, 0, rank, R11, 0, 0);
 
-        if( norm2Solution) {
+        if( norm2Solution && rank < numCols ) {
             // extract the R12 sub-matrix
             W.reshape(rank,numCols - rank);
             CommonOps.extract(R,0,rank,rank,numCols,W,0,0);
