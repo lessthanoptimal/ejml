@@ -472,6 +472,40 @@ public abstract class SimpleBase <T extends SimpleBase> {
     }
 
     /**
+     * <p>
+     * Assigns consecutive elements inside a row to the provided array.<br>
+     * <br>
+     * A(row,offset:(offset + values.length)) = values
+     * </p>
+     *
+     * @param row The row that the array is to be written to.
+     * @param offset The initial column that the array is written to.
+     * @param values Values which are to be written to the row in a matrix.
+     */
+    public void setRow( int row , int offset , double ...values ) {
+        for( int i = 0; i < values.length; i++ ) {
+            mat.set(row,offset+i,values[i]);
+        }
+    }
+
+    /**
+     * <p>
+     * Assigns consecutive elements inside a column to the provided array.<br>
+     * <br>
+     * A(offset:(offset + values.length),column) = values
+     * </p>
+     *
+     * @param column The column that the array is to be written to.
+     * @param offset The initial column that the array is written to.
+     * @param values Values which are to be written to the row in a matrix.
+     */
+    public void setColumn( int column , int offset , double ...values ) {
+        for( int i = 0; i < values.length; i++ ) {
+            mat.set(offset+i,column,values[i]);
+        }
+    }
+
+    /**
      * Returns the value of the specified matrix element.  Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *

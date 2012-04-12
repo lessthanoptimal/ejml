@@ -350,6 +350,24 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void setRow() {
+        SimpleMatrix a = SimpleMatrix.random(3,3, 0, 1, rand);
+        a.setRow(2,1,2,3);
+
+        assertEquals(2,a.get(2,1),1e-6);
+        assertEquals(3,a.get(2,2),1e-6);
+    }
+
+    @Test
+    public void setColumn() {
+        SimpleMatrix a = SimpleMatrix.random(3,3, 0, 1, rand);
+        a.setColumn(2,1,2,3);
+
+        assertEquals(2,a.get(1,2),1e-6);
+        assertEquals(3,a.get(2,2),1e-6);
+    }
+
+    @Test
     public void get_2d() {
         SimpleMatrix a = SimpleMatrix.random(3,3, 0, 1, rand);
 

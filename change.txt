@@ -24,6 +24,8 @@ Date format: year/month/day
   * Normalization is done on a column by column basis instead of by the whole matrix.
 - QR decomposition using extracted columns now invokes more generalized code for householder operations
   * Should improve performance for larger matrices, and slightly degrade for small
+- Added SimpleMatrix.setRow() SimpleMatrix.setColumn()
+  * Writes elements in an array to a row/column.
 
 ----- Version 0.18
 

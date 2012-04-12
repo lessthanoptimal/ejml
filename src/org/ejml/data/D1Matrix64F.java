@@ -44,6 +44,13 @@ public abstract class D1Matrix64F extends Matrix64F {
         return data;
     }
 
+	/**
+	 * Changes the internal array reference.
+	 */
+	public void setData( double[] data ) {
+		this.data = data;
+	}
+
     /**
      * Returns the internal array index for the specified row and column.
      *
