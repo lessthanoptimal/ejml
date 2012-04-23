@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.19
 
-2012/??/??
+2012/04/23
 
 - Added example showing file IO to examples directory
 - Changed MatrixIO.saveXML and MatrixIO.loadXML to saveBin and loadBin because it uses a binary format not XML
