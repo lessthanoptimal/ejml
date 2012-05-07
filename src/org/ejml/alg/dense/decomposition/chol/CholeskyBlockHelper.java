@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2011, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2012, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
