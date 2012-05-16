@@ -116,7 +116,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
      */
     public SimpleMatrix nullSpace() {
         // TODO take advantage of the singular values being ordered already
-        return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
+        return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null,UtilEjml.EPS));
     }
 
     /**

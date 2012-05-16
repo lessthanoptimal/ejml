@@ -2,6 +2,17 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.20
+
+2012/
+
+- Fixed bug in SingularOps.nullity where it did not handle wide matrices correctly. 
+  * Thanks arnavkumar for pointing out the bug
+- Reworked null-space
+  * SingularOps.nullSpace() is now nullVector()
+  * SingularOps.nullSpace now returns the entire null space not just one vector
+  * Thanks arnavkumar for pointing out the non-standard implementation
+
 ----- Version 0.19
 
 2012/04/23

@@ -279,8 +279,7 @@ public class TestSingularOps {
     }
 
     @Test
-    public void nullSpace() {
-
+    public void nullVector() {
         for( int numRows = 2; numRows < 5; numRows++ ) {
             for( int numCols = 2; numCols < 5; numCols++ ) {
 
@@ -302,7 +301,7 @@ public class TestSingularOps {
                 A=U.mult(S).mult(Vt);
 
                 // now find the null space
-                SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullSpace(svd,null));
+                SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullVector(svd, null));
 
                 // see if the returned vector really is the null space
                 SimpleMatrix ns = A.mult(v);
@@ -314,18 +313,71 @@ public class TestSingularOps {
         }
     }
 
+    @Test
+    public void nullSpace() {
+        for( int numRows = 2; numRows < 5; numRows++ ) {
+            for( int numCols = 2; numCols < 5; numCols++ ) {
+
+                // construct a matrix with a null space by decomposition a random matrix
+                // and setting one of its singular values to zero
+                SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
+
+                SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows(), A.numCols(),true,true,false);
+                assertTrue(svd.decompose(A.getMatrix()));
+
+                SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
+                SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
+                SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
+
+                // pick an element inconveniently in the middle to be the null space
+                S.set(1,1,0);
+                svd.getSingularValues()[1] = 0;
+
+                A=U.mult(S).mult(Vt);
+
+                // now find the null space
+                SimpleMatrix ns = SimpleMatrix.wrap(SingularOps.nullSpace(svd,null,1e-15));
+
+                // make sure the null space is not all zero
+                assertTrue( Math.abs(CommonOps.elementMaxAbs(ns.getMatrix())) > 0 );
+
+                // check the null space's size
+                assertEquals(ns.numRows(),A.numCols());
+                assertEquals(ns.numCols(),1+Math.max(numCols-numRows,0));
+
+                // see if the results are null
+                SimpleMatrix found = A.mult(ns);
+                assertTrue( Math.abs(CommonOps.elementMaxAbs(found.getMatrix())) <= 1e-15 );
+            }
+        }
+    }
+
     /**
      * Decompose a singular matrix and see if it produces the expected result
      */
     @Test
     public void rank_and_nullity(){
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.988228951897092, -1.086594333683141, -1.433160736952583, -3.190200029661606, 0.190459703263404, -6.475629910954768, 1.400596416735888, 7.158603907761226, -0.778109120408813);
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true,
+                -0.988228951897092, -1.086594333683141, -1.433160736952583,
+                -3.190200029661606, 0.190459703263404, -6.475629910954768,
+                1.400596416735888, 7.158603907761226, -0.778109120408813);
+        rank_and_nullity(A,2,1);
 
+        //wide matrix
+        A = new DenseMatrix64F(1,3,true,1,0,0);
+        rank_and_nullity(A,1,2);
+
+        // tall matrix
+        A = new DenseMatrix64F(3,1,true,1,0,0);
+        rank_and_nullity(A,1,0);
+    }
+
+    public void rank_and_nullity( DenseMatrix64F A , int rank , int nullity ) {
         SingularValueDecomposition<DenseMatrix64F> alg = DecompositionFactory.svd(A.numRows,A.numCols);
         assertTrue(alg.decompose(A));
 
-        assertEquals(2,SingularOps.rank(alg, UtilEjml.EPS));
-        assertEquals(1,SingularOps.nullity(alg, UtilEjml.EPS));
+        assertEquals(rank,SingularOps.rank(alg, UtilEjml.EPS));
+        assertEquals(nullity,SingularOps.nullity(alg, UtilEjml.EPS));
     }
 
 }
