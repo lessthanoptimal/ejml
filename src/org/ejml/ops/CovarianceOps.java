@@ -39,8 +39,10 @@ public class CovarianceOps {
 
     /**
      * This is a fairly light weight check to see of a covariance matrix is valid.
-     * It checks to see if the diagonal elements are all postive, which they should be
+     * It checks to see if the diagonal elements are all positive, which they should be
      * if it is valid.  Not all invalid covariance matrices will be caught by this method.
+	 *
+	 * @return true if valid and false if invalid
      */
     public static boolean isValidFast( DenseMatrix64F cov ) {
         return MatrixFeatures.isDiagonalPositive(cov);

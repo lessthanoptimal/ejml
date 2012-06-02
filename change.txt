@@ -12,6 +12,7 @@ Date format: year/month/day
   * SingularOps.nullSpace() is now nullVector()
   * SingularOps.nullSpace now returns the entire null space not just one vector
   * Thanks arnavkumar for pointing out the non-standard implementation
+- Changed behavior of MatrixFeatures.isDiagonalPositive() so that it will return false if NaN is found
 
 ----- Version 0.19
 

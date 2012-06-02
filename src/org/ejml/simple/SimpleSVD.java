@@ -132,7 +132,9 @@ public class SimpleSVD<T extends SimpleMatrix> {
     /**
      * Returns the rank of the decomposed matrix.
      *
-     * @return Rank
+     * @see SingularOps#rank(org.ejml.alg.dense.decomposition.SingularValueDecomposition, double)
+     *
+     * @return The matrix's rank
      */
     public int rank() {
         return SingularOps.rank(svd,10.0* UtilEjml.EPS);
@@ -141,7 +143,9 @@ public class SimpleSVD<T extends SimpleMatrix> {
     /**
      * The nullity of the decomposed matrix.
      *
-     * @return Nullity
+     * @see SingularOps#nullity(org.ejml.alg.dense.decomposition.SingularValueDecomposition, double)
+     *
+     * @return The matrix's nullity
      */
     public int nullity() {
         return SingularOps.nullity(svd,10.0*UtilEjml.EPS);

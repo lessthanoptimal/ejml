@@ -538,7 +538,7 @@ public class MatrixFeatures {
      */
     public static boolean isDiagonalPositive( DenseMatrix64F a ) {
         for( int i = 0; i < a.numRows; i++ ) {
-            if( a.get(i,i) < 0 )
+            if( !(a.get(i,i) >= 0) )
                 return false;
         }
         return true;

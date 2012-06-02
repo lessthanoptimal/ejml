@@ -108,6 +108,9 @@ public class TestMatrixFeatures {
 
         m.set(1,1,-1);
         assertFalse(MatrixFeatures.isDiagonalPositive(m));
+
+        m.set(1,1,Double.NaN);
+        assertFalse(MatrixFeatures.isDiagonalPositive(m));
     }
 
     @Test
