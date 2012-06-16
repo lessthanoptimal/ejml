@@ -19,8 +19,8 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.alg.dense.decomposition.LUDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LUDecomposition;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;

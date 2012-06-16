@@ -19,10 +19,10 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
 
 /**
  * <p>
@@ -67,7 +67,7 @@ public class PolynomialRootFinder {
         }
 
         // use generalized eigenvalue decomposition to find the roots
-        EigenDecomposition<DenseMatrix64F> evd =  DecompositionFactory.eigGeneral(N, false);
+        EigenDecomposition<DenseMatrix64F> evd =  DecompositionFactory.eig(N,false);
 
         evd.decompose(c);
 

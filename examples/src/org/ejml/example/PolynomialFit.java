@@ -20,8 +20,8 @@
 package org.ejml.example;
 
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
-import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolverFactory;
 
 /**
  * <p>

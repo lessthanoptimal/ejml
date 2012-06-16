@@ -21,8 +21,6 @@ package org.ejml.ops;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.linsol.LinearSolver;
-import org.ejml.alg.dense.linsol.LinearSolverFactory;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.*;
@@ -33,6 +31,8 @@ import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 import org.ejml.data.RowD1Matrix64F;
+import org.ejml.factory.LinearSolver;
+import org.ejml.factory.LinearSolverFactory;
 
 
 /**

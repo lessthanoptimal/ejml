@@ -23,10 +23,11 @@ import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 
 
 /**
- * Wrapper that allows {@link LinearSolver<BlockMatrix64F>} to implements {@link LinearSolver}.  It works
+ * Wrapper that allows {@link org.ejml.factory.LinearSolver <BlockMatrix64F>} to implements {@link org.ejml.factory.LinearSolver}.  It works
  * by converting {@link DenseMatrix64F} into {@link BlockMatrix64F} and calling the equivalent
  * functions.  Since a local copy is made all input matrices are never modified.
  *

@@ -22,9 +22,9 @@ package org.ejml.alg.block.linsol.chol;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.SpecializedOps;
 
 

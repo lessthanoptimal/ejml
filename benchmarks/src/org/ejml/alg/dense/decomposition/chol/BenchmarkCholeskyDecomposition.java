@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;

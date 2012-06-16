@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
-import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.QRDecomposition;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;

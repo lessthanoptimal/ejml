@@ -20,11 +20,11 @@
 package org.ejml.alg.block.decomposition.chol;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.CholeskyDecomposition;
+import org.ejml.factory.DecompositionFactory;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 

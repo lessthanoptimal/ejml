@@ -19,9 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.QRPDecomposition;
 import org.ejml.ops.CommonOps;
 
 
@@ -120,8 +120,7 @@ public class BidiagonalDecompositionTall
     @Override
     public boolean decompose(DenseMatrix64F orig) {
         if( !decompQRP.decompose(orig) ) {
-            throw new RuntimeException("A singular matrix must have been passed in.   Maybe QR with column pivoting instead?  Wait there isn't one in EJML yet...");
-//            return false;
+            return false;
         }
 
         m = orig.numRows;

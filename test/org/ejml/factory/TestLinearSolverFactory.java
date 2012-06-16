@@ -17,8 +17,10 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol;
+package org.ejml.factory;
 
+import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
@@ -43,7 +45,7 @@ public class TestLinearSolverFactory {
         DenseMatrix64F x = RandomMatrices.createRandom(4,1,rand);
         DenseMatrix64F y = new DenseMatrix64F(5,1);
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.general(A.numRows,A.numCols);
+        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.general(A.numRows, A.numCols);
 
         standardTest(A, x, y, solver);
     }

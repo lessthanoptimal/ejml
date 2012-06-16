@@ -19,13 +19,13 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
+import org.ejml.factory.SingularValueDecomposition;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -161,7 +161,8 @@ public class TestRandomMatrices {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
                 DenseMatrix64F A = RandomMatrices.createSingularValues(numRows,numCols, rand, sv);
 
-                SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
+                SingularValueDecomposition<DenseMatrix64F> svd =
+                        DecompositionFactory.svd(A.numRows,A.numCols,true,true,false);
                 assertTrue(svd.decompose(A));
 
                 int o = Math.min(numRows,numCols);
@@ -173,7 +174,8 @@ public class TestRandomMatrices {
         // see if it fills in zeros when it is smaller than the dimension
         DenseMatrix64F A = RandomMatrices.createSingularValues(5,5, rand, sv);
 
-        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
+        SingularValueDecomposition<DenseMatrix64F> svd =
+                DecompositionFactory.svd(A.numRows,A.numCols,true,true,false);
         assertTrue(svd.decompose(A));
 
         UtilTestMatrix.checkSameElements(1e-8,sv.length,sv,svd.getSingularValues());
@@ -188,7 +190,7 @@ public class TestRandomMatrices {
         assertTrue(MatrixFeatures.isSymmetric(A,1e-10));
 
         // decompose the matrix and extract its eigenvalues
-        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numRows);
+        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numRows,true);
         assertTrue(eig.decompose(A));
 
         double ev[] = new double[5];

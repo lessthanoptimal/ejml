@@ -19,9 +19,9 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;

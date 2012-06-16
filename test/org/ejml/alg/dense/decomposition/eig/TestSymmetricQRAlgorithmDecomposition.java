@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
+import org.ejml.factory.EigenDecomposition;
 import org.junit.Test;
 
 

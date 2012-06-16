@@ -20,16 +20,16 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.QRDecomposition;
-import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.QRDecomposition;
+import org.ejml.factory.QRPDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-import static org.ejml.alg.dense.decomposition.DecompositionFactory.decomposeSafe;
+import static org.ejml.factory.DecompositionFactory.decomposeSafe;
 
 
 /**

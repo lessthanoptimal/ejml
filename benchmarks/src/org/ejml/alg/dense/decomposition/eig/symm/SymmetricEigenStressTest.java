@@ -20,10 +20,10 @@
 package org.ejml.alg.dense.decomposition.eig.symm;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.ops.SpecializedOps;
@@ -48,7 +48,7 @@ public class SymmetricEigenStressTest {
         Random localRand = new Random(seed);
         RandomMatrices.createSymmetric(A,-1,1,localRand);
 
-        EigenDecomposition<DenseMatrix64F> decomp = DecompositionFactory.eig(A.numRows);
+        EigenDecomposition<DenseMatrix64F> decomp = DecompositionFactory.eig(A.numRows,true);
 
         System.out.println("Decomposing...");
 
@@ -80,7 +80,7 @@ public class SymmetricEigenStressTest {
 
     public void checkRandomMatrices( int N ) {
         System.out.println("N = "+N);
-        EigenDecomposition decomp = DecompositionFactory.eig(N);
+        EigenDecomposition decomp = DecompositionFactory.eig(N,true);
 
         DenseMatrix64F A = new DenseMatrix64F(N,N);
 

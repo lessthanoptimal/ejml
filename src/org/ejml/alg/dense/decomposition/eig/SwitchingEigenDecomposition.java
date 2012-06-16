@@ -19,10 +19,10 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
 import org.ejml.ops.MatrixFeatures;
 
 
@@ -53,8 +53,8 @@ public class SwitchingEigenDecomposition
      * @param tol Tolerance for a matrix being symmetric
      */
     public SwitchingEigenDecomposition( int matrixSize , boolean computeVectors , double tol ) {
-        symmetricAlg = DecompositionFactory.eigSymm(matrixSize,computeVectors);
-        generalAlg = DecompositionFactory.eigGeneral(matrixSize,computeVectors);
+        symmetricAlg = DecompositionFactory.eig(matrixSize,computeVectors,true);
+        generalAlg = DecompositionFactory.eig(matrixSize,computeVectors,false);
         this.computeVectors = computeVectors;
         this.tol = tol;
     }

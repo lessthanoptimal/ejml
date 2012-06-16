@@ -20,9 +20,9 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.SingularValueDecomposition;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -373,7 +373,7 @@ public class TestSingularOps {
     }
 
     public void rank_and_nullity( DenseMatrix64F A , int rank , int nullity ) {
-        SingularValueDecomposition<DenseMatrix64F> alg = DecompositionFactory.svd(A.numRows,A.numCols);
+        SingularValueDecomposition<DenseMatrix64F> alg = DecompositionFactory.svd(A.numRows,A.numCols,true,true,false);
         assertTrue(alg.decompose(A));
 
         assertEquals(rank,SingularOps.rank(alg, UtilEjml.EPS));

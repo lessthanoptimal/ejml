@@ -19,9 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.alg.dense.mult.SubmatrixOps;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.QRDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;

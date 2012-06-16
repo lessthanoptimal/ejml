@@ -21,6 +21,8 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
+import org.ejml.factory.LinearSolverFactory;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -82,7 +84,7 @@ public class BenchmarkSolveOver {
 //        System.out.println("  solve QR Block64      = "+ solveBenchmark(
 //                new LinearSolverQrBlock64(),numTrials));
         System.out.println("  Selected              = "+ solveBenchmark(
-                LinearSolverFactory.leastSquares(A.numRows,A.numCols),numTrials));
+                LinearSolverFactory.leastSquares(A.numRows, A.numCols),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }

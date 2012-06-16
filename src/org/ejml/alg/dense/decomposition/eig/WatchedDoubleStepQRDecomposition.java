@@ -19,12 +19,12 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalue;
 import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvector;
 import org.ejml.alg.dense.decomposition.hessenberg.HessenbergSimilarDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.EigenDecomposition;
 
 
 /**

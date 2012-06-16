@@ -20,9 +20,9 @@
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.SingularValueDecomposition;
 import org.ejml.ops.SingularOps;
 
 
@@ -132,7 +132,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
     /**
      * Returns the rank of the decomposed matrix.
      *
-     * @see SingularOps#rank(org.ejml.alg.dense.decomposition.SingularValueDecomposition, double)
+     * @see SingularOps#rank(org.ejml.factory.SingularValueDecomposition, double)
      *
      * @return The matrix's rank
      */
@@ -143,7 +143,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
     /**
      * The nullity of the decomposed matrix.
      *
-     * @see SingularOps#nullity(org.ejml.alg.dense.decomposition.SingularValueDecomposition, double)
+     * @see SingularOps#nullity(org.ejml.factory.SingularValueDecomposition, double)
      *
      * @return The matrix's nullity
      */

@@ -19,8 +19,8 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.alg.dense.decomposition.DecompositionInterface;
 import org.ejml.data.Matrix64F;
+import org.ejml.factory.DecompositionInterface;
 
 
 /**

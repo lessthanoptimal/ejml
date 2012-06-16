@@ -17,7 +17,7 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.factory;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
@@ -43,13 +43,10 @@ import org.ejml.simple.SimpleMatrix;
 
 /**
  * <p>
- * Contains operations related to creating and evaluating the quality of common matrix decompositions.
- * </p>
- *
- * <p>
- * In general this is the best place to create matrix decompositions from since directly calling the
- * algorithm is error prone since it require in depth knowledge of how the algorithm operators.  The exact
- * implementations created is subject to change as newer, faster and more accurate implementations are added.
+ * Contains operations related to creating and evaluating the quality of common matrix decompositions.  Except
+ * in specialized situations, matrix decompositions should be instantiated from this factory instead of being
+ * directly constructed.  Low level implementations are more prone to changes and new algorithms will be
+ * automatically placed here.
  * </p>
  *
  * <p>
@@ -65,20 +62,17 @@ import org.ejml.simple.SimpleMatrix;
 public class DecompositionFactory {
 
     /**
-     * <p> If you don't know which Cholesky algorithm to use, call this function to select what
-     * is most likely the best one for you.
-     * </p>
      * <p>
-     * Creates a new instance of a CholeskyDecomposition algorithm.  It selects the best
-     * algorithm depending on the size of the largest matrix it might decompose.
+     * Returns a {@link CholeskyDecomposition} that has been optimized for the specified matrix size.
      * </p>
-     * @param widthWidth The matrix size that the decomposition should be optimized for.
-     * @param lower should a lower or upper triangular matrix be used.
+     *
+     * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
+     * @param lower should a lower or upper triangular matrix be used. If not sure set to true.
      * @return A new CholeskyDecomposition.
      */
-    public static CholeskyDecomposition<DenseMatrix64F> chol( int widthWidth , boolean lower )
+    public static CholeskyDecomposition<DenseMatrix64F> chol( int matrixSize , boolean lower )
     {
-        if( widthWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
+        if( matrixSize < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
             return new CholeskyDecompositionInner(lower);
         } else if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER ){
             return new CholeskyDecompositionBlock64(lower);
@@ -88,58 +82,54 @@ public class DecompositionFactory {
     }
 
     /**
-     * Creates a {@link CholeskyDecompositionLDL} decomposition. Cholesky LDL is a variant of
-     * {@link CholeskyDecomposition} that avoids need to compute the square root.
+     * <p>
+     * Returns a {@link CholeskyDecompositionLDL} that has been optimized for the specified matrix size.
+     * </p>
      *
-     * @param matrixWidth The matrix size that the decomposition should be optimized for.
+     * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      * @return CholeskyDecompositionLDL
      */
-    public static CholeskyDecompositionLDL cholLDL( int matrixWidth) {
+    public static CholeskyDecompositionLDL cholLDL( int matrixSize ) {
         return new CholeskyDecompositionLDL();
     }
 
     /**
-     * Returns a new instance of the Lower Upper (LU) decomposition.
+     * <p>
+     * Returns a {@link LUDecomposition} that has been optimized for the specified matrix size.
+     * </p>
      *
      * @parm matrixWidth The matrix size that the decomposition should be optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition<DenseMatrix64F> lu( int matrixWidth ) {
+    public static LUDecomposition<DenseMatrix64F> lu( int numRows , int numCol ) {
         return new LUDecompositionAlt();
     }
 
     /**
-     * Returns a new instance of a SingularValueDecomposition which will compute
-     * the full decomposition..
+     * <p>
+     * Returns a {@link SingularValueDecomposition} that has been optimized for the specified matrix size.
+     * For improved performance only the portion of the decomposition that the user requests will be computed.
+     * </p>
      *
-     * @param numRows The number of rows that the decomposition is optimized for.
-     * @param numCols The number of columns that the decomposition is optimized for.
-     * @return SingularValueDecomposition
-     */
-    public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols ) {
-        return new SvdImplicitQrDecompose(false,true,true);
-    }
-
-    /**
-     * Returns a new instance of a SingularValueDecomposition which can be configured to compute
-     * U and V matrices or not, be in compact form.
-     *
-     * @param numRows The number of rows that the decomposition is optimized for.
-     * @param numCols The number of columns that the decomposition is optimized for.
-     * @param needU Should it compute the U matrix.
-     * @param needV Should it compute the V matrix.
-     * @param compact Should it compute the SVD in compact form.
+     * @param numRows Number of rows the returned decomposition is optimized for.
+     * @param numCols Number of columns that the returned decomposition is optimized for.
+     * @param needU Should it compute the U matrix. If not sure set to true.
+     * @param needV Should it compute the V matrix. If not sure set to true.
+     * @param compact Should it compute the SVD in compact form.  If not sure set to false.
      * @return
      */
-    public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols , boolean needU , boolean needV , boolean compact ) {
+    public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols , 
+                                                                  boolean needU , boolean needV , boolean compact ) {
         return new SvdImplicitQrDecompose(compact,needU,needV);
     }
 
     /**
-     * Returns a new instance of the QR decomposition.
+     * <p>
+     * Returns a {@link QRDecomposition} that has been optimized for the specified matrix size.
+     * </p>
      *
-     * @param numRows The number of rows that the decomposition is optimized for.
-     * @param numCols The number of columns that the decomposition is optimized for.
+     * @param numRows Number of rows the returned decomposition is optimized for.
+     * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRDecomposition
      */
     public static QRDecomposition<DenseMatrix64F> qr( int numRows , int numCols ) {
@@ -148,13 +138,11 @@ public class DecompositionFactory {
 
     /**
      * <p>
-     * Returns a new instance of QR decomposition with column pivoting.<br>
-     * A*P = Q*R<br>
-     * where A is the input matrix, and P is the pivot matrix.
+     * Returns a {@link QRPDecomposition} that has been optimized for the specified matrix size.
      * </p>
      *
-     * @param numRows The number of rows that the decomposition is optimized for.
-     * @param numCols The number of columns that the decomposition is optimized for.
+     * @param numRows Number of rows the returned decomposition is optimized for.
+     * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRPDecomposition
      */
     public static QRPDecomposition<DenseMatrix64F> qrp( int numRows , int numCols ) {
@@ -162,50 +150,38 @@ public class DecompositionFactory {
     }
 
     /**
-     * Returns a new eigenvalue decomposition.  If it is known before hand if the matrix
-     * is symmetric or not then a call should be made directly to either {@link #eigGeneral(int,boolean)}
-     * or {@link #eigSymm(int, boolean)}.  That will avoid unnecessary checks.
+     * <p>
+     * Returns an {@link EigenDecomposition} that has been optimized for the specified matrix size.
+     * If the input matrix is symmetric within tolerance then the symmetric algorithm will be used, otherwise
+     * a general purpose eigenvalue decomposition is used.
+     * </p>
      *
-     * @param matrixWidth The matrix size that the decomposition should be optimized for.
-     * @return A new EigenDecomposition.
-     */
-    public static EigenDecomposition<DenseMatrix64F> eig( int matrixWidth ) {
-        return new SwitchingEigenDecomposition(matrixWidth);
-    }
-
-    /**
-     * Same as {@link #eig(int)} but can turn on and off computing eigen vectors
-     *
-     * @param matrixWidth The matrix size that the decomposition should be optimized for.
-     * @param needVectors Should eigenvectors be computed or not.
+     * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
+     * @param needVectors Should eigenvectors be computed or not.  If not sure set to true.
      * @return A new EigenDecomposition
      */
-    public static EigenDecomposition<DenseMatrix64F> eig( int matrixWidth , boolean needVectors ) {
-        return new SwitchingEigenDecomposition(matrixWidth,needVectors,1e-8);
+    public static EigenDecomposition<DenseMatrix64F> eig( int matrixSize , boolean needVectors ) {
+        return new SwitchingEigenDecomposition(matrixSize,needVectors,1e-8);
     }
 
     /**
-     * Creates a new EigenDecomposition that will work with any matrix.
+     * <p>
+     * Returns an {@link EigenDecomposition} which is specialized for symmetric matrices or the general problem.
+     * </p>
      *
+     * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
+     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
+     * @param isSymmetric If true then the returned algorithm is specialized only for symmetric matrices, if false
+     *                    then a general purpose algorithm is returned.
      * @return EVD for any matrix.
-     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      */
-    public static EigenDecomposition<DenseMatrix64F> eigGeneral( int matrixSize , boolean computeVectors ) {
-        return new WatchedDoubleStepQRDecomposition(computeVectors);
-    }
-
-    /**
-     * Creates a new EigenDecomposition that will only work with symmetric matrices.  This
-     * will run much faster and be more accurate than the general purpose algorithm.
-     *
-     * @return EVD for symmetric matrices.
-     * @param matrixWidth The number of rows/columns in the matrix.  Used to select the best algorithms.
-     * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
-     */
-    public static EigenDecomposition<DenseMatrix64F> eigSymm( int matrixWidth , boolean computeVectors ) {
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(matrixWidth);
-
-        return new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
+    public static EigenDecomposition<DenseMatrix64F> eig( int matrixSize , boolean computeVectors ,
+                                                          boolean isSymmetric ) {
+        if( isSymmetric ) {
+            TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(matrixSize);
+            return new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
+        } else
+            return new WatchedDoubleStepQRDecomposition(computeVectors);
     }
 
     /**
@@ -278,9 +254,11 @@ public class DecompositionFactory {
     /**
      * Checks to see if the passed in tridiagonal decomposition is of the appropriate type
      * for the matrix of the provided size.  Returns the same instance or a new instance.
+     *
+     * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      */
-    public static TridiagonalSimilarDecomposition<DenseMatrix64F> tridiagonal(  int matrixWidth ) {
-        if( matrixWidth >= 1800 ) {
+    public static TridiagonalSimilarDecomposition<DenseMatrix64F> tridiagonal(  int matrixSize ) {
+        if( matrixSize >= 1800 ) {
             return new TridiagonalDecompositionBlock();
         } else {
             return new TridiagonalDecompositionHouseholder();
@@ -288,12 +266,13 @@ public class DecompositionFactory {
     }
 
     /**
-     * Makes sure the decomposed matrix is not modified.
+     * A simple convinience function that decomposes the matrix but automatically checks the input ti make
+     * sure is not being modified.
      *
-     * @param decomp
-     * @param M
-     * @param <T>
-     * @return
+     * @param decomp Decomposition which is being wrapped
+     * @param M THe matrix being decomposed.
+     * @param <T> Matrix type.
+     * @return If the decomposition was successful or not.
      */
     public static <T extends Matrix64F> boolean decomposeSafe( DecompositionInterface<T> decomp, T M ) {
         if( decomp.inputModified() ) {

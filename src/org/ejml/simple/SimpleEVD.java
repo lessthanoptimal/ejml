@@ -19,10 +19,10 @@
 
 package org.ejml.simple;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
 
 
 /**
@@ -40,7 +40,7 @@ public class SimpleEVD <T extends SimpleMatrix>
     public SimpleEVD( DenseMatrix64F mat )
     {
         this.mat = mat;
-        eig = DecompositionFactory.eig(mat.numCols);
+        eig = DecompositionFactory.eig(mat.numCols,true);
         if( !eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
     }

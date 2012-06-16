@@ -19,11 +19,11 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 

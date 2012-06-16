@@ -17,7 +17,7 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.factory;
 
 import org.ejml.data.Complex64F;
 import org.ejml.data.Matrix64F;

@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
-import org.ejml.alg.dense.decomposition.LUDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LUDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;

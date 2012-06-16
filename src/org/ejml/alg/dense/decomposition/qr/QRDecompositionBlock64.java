@@ -23,9 +23,9 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.decomposition.qr.BlockMatrix64HouseholderQR;
 import org.ejml.alg.dense.decomposition.BaseDecompositionBlock64;
-import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.QRDecomposition;
 import org.ejml.ops.CommonOps;
 
 

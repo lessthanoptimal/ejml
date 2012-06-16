@@ -21,6 +21,8 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
+import org.ejml.factory.LinearSolverFactory;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -81,7 +83,7 @@ public class BenchmarkInverseStability {
 //        names.add("SVD NR");
 //        solvers.add(new LinearSolverUnrolled());
 //        names.add("Unrolled");
-        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,true));
+        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true, true));
         names.add("P'QR compute Q");
         solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,false));
         names.add("P'QR householder");

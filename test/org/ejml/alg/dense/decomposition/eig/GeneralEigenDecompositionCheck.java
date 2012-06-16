@@ -20,10 +20,10 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Eigenpair;
+import org.ejml.factory.EigenDecomposition;
 import org.ejml.ops.*;
 
 import java.util.Random;

@@ -19,9 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.alg.dense.decomposition.DecompositionInterface;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionInterface;
 import org.ejml.ops.CommonOps;
 
 /**

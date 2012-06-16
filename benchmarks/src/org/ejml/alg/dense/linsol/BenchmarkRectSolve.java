@@ -23,6 +23,7 @@ import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;

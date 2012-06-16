@@ -19,11 +19,11 @@
 
 package org.ejml.simple;
 
-import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 import org.ejml.data.MatrixIterator;
+import org.ejml.factory.SingularMatrixException;
 import org.ejml.ops.*;
 
 import java.io.ByteArrayOutputStream;
@@ -284,7 +284,7 @@ public abstract class SimpleBase <T extends SimpleBase> {
      *
      * @see CommonOps#invert(DenseMatrix64F, DenseMatrix64F)
      *
-     * @throws org.ejml.alg.dense.decomposition.SingularMatrixException
+     * @throws org.ejml.factory.SingularMatrixException
      *
      * @return The inverse of this matrix.
      */

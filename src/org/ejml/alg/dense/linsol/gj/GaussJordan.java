@@ -19,10 +19,10 @@
 
 package org.ejml.alg.dense.linsol.gj;
 
-import org.ejml.alg.dense.decomposition.SingularMatrixException;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
+import org.ejml.factory.SingularMatrixException;
 
 
 /**

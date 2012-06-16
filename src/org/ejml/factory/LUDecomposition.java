@@ -17,7 +17,7 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.factory;
 
 import org.ejml.data.Matrix64F;
 
@@ -59,7 +59,7 @@ public interface LUDecomposition <T extends Matrix64F>
      * a new matrix is created.
      * </p>
      *
-     * @param lower If not null then the L matrix is written here.  Modified.
+     * @param lower Storage for T matrix. If null then a new matrix is returned.  Modified.
      * @return The L matrix.
      */
     public T getLower( T lower );
@@ -76,7 +76,7 @@ public interface LUDecomposition <T extends Matrix64F>
      * a new matrix is created.
      * </p>
      *
-     * @param upper If not null then the U matrix is written here.  Modified.
+     * @param upper Storage for U matrix. If null then a new matrix is returned. Modified.
      * @return The U matrix.
      */
     public T getUpper( T upper );
@@ -85,6 +85,9 @@ public interface LUDecomposition <T extends Matrix64F>
      * <p>
      * For numerical stability there are often row interchanges.  This computes
      * a pivot matrix that will undo those changes.
+     *
+     * @param pivot Storage for the pivot matrix. If null then a new matrix is returned. Modified.
+     * @return The pivot matrix.
      */
     public T getPivot( T pivot );
 
@@ -94,6 +97,7 @@ public interface LUDecomposition <T extends Matrix64F>
      *
      * @return True if the matrix is singular and false if it is not.
      */
+    // TODO Remove?  If singular decomposition will fail.
     public boolean isSingular();
 
     /**

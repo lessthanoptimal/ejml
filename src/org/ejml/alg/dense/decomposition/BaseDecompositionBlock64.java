@@ -22,6 +22,7 @@ package org.ejml.alg.dense.decomposition;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionInterface;
 
 
 /**

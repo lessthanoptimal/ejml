@@ -20,13 +20,14 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 
 /**
  * In many situations solutions to linear systems that share many of the same data points are needed.
  * This can happen when solving using the most recent data or when rejecting outliers.  In these situations
  * it is possible to solve these related systems much faster than solving the entire data set again.
  *
- * @see LinearSolver
+ * @see org.ejml.factory.LinearSolver
  *
  * @author Peter Abeles
  */

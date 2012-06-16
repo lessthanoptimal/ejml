@@ -17,7 +17,7 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol;
+package org.ejml.factory;
 
 import org.ejml.data.Matrix64F;
 
@@ -60,7 +60,7 @@ import org.ejml.data.Matrix64F;
  * <b>IMPORTANT:</b> Depending upon the implementation, input matrices might be overwritten by
  * the solver.  This
  * reduces memory and computational requirements and give more control to the programmer.  If
- * the input matrices need to be not modified then {@link LinearSolverSafe} can be used.  The
+ * the input matrices need to be not modified then {@link org.ejml.alg.dense.linsol.LinearSolverSafe} can be used.  The
  * functions {@link #modifiesA()} and {@link #modifiesB()} specify which input matrices are being
  * modified.
  * </p>

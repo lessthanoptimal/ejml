@@ -21,8 +21,8 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 
 
 /**

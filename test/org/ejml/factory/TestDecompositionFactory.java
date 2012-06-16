@@ -17,7 +17,7 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition;
+package org.ejml.factory;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
@@ -40,7 +40,7 @@ public class TestDecompositionFactory {
         // I'm assuming it can process this matrix with no problems
         DenseMatrix64F A = RandomMatrices.createSymmetric(5,-1,1,rand);
 
-        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numRows);
+        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numRows,true);
 
         assertTrue(eig.decompose(A));
 
@@ -60,7 +60,7 @@ public class TestDecompositionFactory {
         // I'm assuming it can process this matrix with no problems
         DenseMatrix64F A = RandomMatrices.createRandom(4,5,rand);
 
-        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols,true,true,false);
 
         assertTrue(svd.decompose(A));
 

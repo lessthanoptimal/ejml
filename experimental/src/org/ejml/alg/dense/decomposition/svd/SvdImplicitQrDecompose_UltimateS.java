@@ -19,10 +19,10 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow;
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.SingularValueDecomposition;
 import org.ejml.ops.CommonOps;
 
 

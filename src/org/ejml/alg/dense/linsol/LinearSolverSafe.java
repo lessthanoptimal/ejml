@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.Matrix64F;
+import org.ejml.factory.LinearSolver;
 
 
 /**

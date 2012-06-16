@@ -1,3 +1,6 @@
+- Make sure using BidiagonalDecompositionTall does NOT degrade stability when the input matrix is singular
+- Do not use a relative threshold inside of QRP
+- REmove LUDecomposition.isSingular() ?
 
 For 0.19 Release
 - Block SVD

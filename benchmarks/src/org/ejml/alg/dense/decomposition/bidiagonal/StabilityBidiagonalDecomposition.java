@@ -37,7 +37,7 @@ public class StabilityBidiagonalDecomposition {
 
     public static double evaluate( BidiagonalDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
-        if( !alg.decompose(orig.<DenseMatrix64F>copy())) {
+        if( !alg.decompose(orig.copy())) {
             return Double.NaN;
         }
 
@@ -66,15 +66,31 @@ public class StabilityBidiagonalDecomposition {
         int size = 10;
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
-        System.out.println("Square matrix");
+        System.out.println("Square matrix: Scale");
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
 
-            System.out.print("* Creating matrix ");
             DenseMatrix64F mat = RandomMatrices.createRandom(size,size,-1,1,rand);
             CommonOps.scale(scales[i],mat);
-            System.out.println("  Done.");
+            runAlgorithms(mat);
+        }
+
+        System.out.println("Square Matrix: Singular");
+
+        double sv[] = new double[size];
+        for( int i = 0; i < size; i++ )
+            sv[i] = 2*i+5;
+
+        for( int i = 0; i < 10; i++ ) {
+            sv[0] = (9.0-i)/10.0;
+
+            System.out.printf("Decomposition size %3d for %e singular\n",size,sv[0]);
+
+//            System.out.print("* Creating matrix ");
+            DenseMatrix64F mat = RandomMatrices.createSingularValues(size,size,rand,sv);
+            CommonOps.scale(scales[i],mat);
+//            System.out.println("  Done.");
             runAlgorithms(mat);
         }
     }

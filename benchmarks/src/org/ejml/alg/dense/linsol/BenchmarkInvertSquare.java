@@ -24,6 +24,7 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 

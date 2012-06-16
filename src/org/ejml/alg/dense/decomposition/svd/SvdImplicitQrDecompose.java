@@ -19,11 +19,12 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecomposition;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow;
+import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionTall;
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.SingularValueDecomposition;
 import org.ejml.ops.CommonOps;
 
 
@@ -258,18 +259,17 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
         }
 
         // if it is a tall matrix and U is not needed then there is faster decomposition algorithm
-//        if( numRows > numCols * 2 && !computeU ) {
-//            if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall) ) {
-        // TODO once tall can handle singular matrices put it back in
-//                bidiag = new BidiagonalDecompositionTall();
-//            }
-//        } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow) ) {
+        if( numRows > numCols * 2 && !computeU ) {
+            if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall) ) {
+                bidiag = new BidiagonalDecompositionTall();
+            }
+        } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow) ) {
             bidiag = new BidiagonalDecompositionRow();
-//        }
+        }
     }
 
     /**
-     * With the QR algorithm it is possible for the found singular values to be native.  This
+     * With the QR algorithm it is possible for the found singular values to be negative.  This
      * makes them all positive by multiplying it by a diagonal matrix that has
      */
     private void makeSingularPositive() {

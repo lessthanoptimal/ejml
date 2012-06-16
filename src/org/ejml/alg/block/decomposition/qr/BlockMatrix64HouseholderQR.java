@@ -21,9 +21,9 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockMultiplication;
-import org.ejml.alg.dense.decomposition.QRDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.factory.QRDecomposition;
 
 
 /**

@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionInterface;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 

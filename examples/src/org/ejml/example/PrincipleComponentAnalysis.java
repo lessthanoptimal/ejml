@@ -19,9 +19,9 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.SingularValueDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
 import org.ejml.ops.SingularOps;
@@ -38,7 +38,7 @@ import org.ejml.ops.SingularOps;
  * to maximize information.
  * </p>
  * <p>
- * PCA is typically derived as an eigenvalue problem.  However in this implementation {@link org.ejml.alg.dense.decomposition.SingularValueDecomposition SVD}
+ * PCA is typically derived as an eigenvalue problem.  However in this implementation {@link org.ejml.factory.SingularValueDecomposition SVD}
  * is used instead because it will produce a more numerically stable solution.  Computation using EVD requires explicitly
  * computing the variance of each sample set. The variance is computed by squaring the residual, which can
  * cause loss of precision.

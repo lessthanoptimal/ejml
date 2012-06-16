@@ -19,9 +19,9 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
+import org.ejml.factory.SingularValueDecomposition;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;

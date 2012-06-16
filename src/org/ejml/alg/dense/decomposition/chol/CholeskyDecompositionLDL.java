@@ -19,8 +19,8 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.alg.dense.decomposition.DecompositionInterface;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionInterface;
 
 
 /**

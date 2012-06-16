@@ -13,6 +13,12 @@ Date format: year/month/day
   * SingularOps.nullSpace now returns the entire null space not just one vector
   * Thanks arnavkumar for pointing out the non-standard implementation
 - Changed behavior of MatrixFeatures.isDiagonalPositive() so that it will return false if NaN is found
+- Under certain conditions SvdImplicitQrDecompose will use BidiagonalDecompositionTall instead of the default
+  algorithm.
+- Moved factories and related interfaces into their own package outside of the "alg" package, which was intended for
+  specific implementations.
+- DecompositionFactory has been cleaned up by reducing the number of functions, making input parameters more consistent,
+  and improved JavaDoc
 
 ----- Version 0.19
 
@@ -38,6 +44,8 @@ Date format: year/month/day
   * Should improve performance for larger matrices, and slightly degrade for small
 - Added SimpleMatrix.setRow() SimpleMatrix.setColumn()
   * Writes elements in an array to a row/column.
+- Moved decomposition and linear solver factories and interfaces into a factories package.
+  * Was placed in alg.dense package, which is for specific implementations
 
 ----- Version 0.18
 

@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.QRPDecomposition;
 import org.ejml.ops.CommonOps;
 
 /**

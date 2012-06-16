@@ -19,13 +19,13 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -104,7 +104,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
     public static long defaultSymm( DenseMatrix64F orig , int numTrials ) {
 
-        EigenDecomposition<DenseMatrix64F> alg = DecompositionFactory.eigSymm(orig.numCols,true);
+        EigenDecomposition<DenseMatrix64F> alg = DecompositionFactory.eig(orig.numCols, true, true);
 
         long prev = System.currentTimeMillis();
 

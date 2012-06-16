@@ -21,8 +21,8 @@ package org.ejml.alg.dense.linsol.svd;
 
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.alg.dense.linsol.GenericSolvePseudoInverseChecks;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.junit.Test;
 
 /**

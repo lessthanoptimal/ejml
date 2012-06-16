@@ -22,9 +22,9 @@ package org.ejml.alg.block.linsol.qr;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.qr.BlockMatrix64HouseholderQR;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.SpecializedOps;
 
 

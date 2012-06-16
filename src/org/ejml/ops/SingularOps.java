@@ -19,8 +19,8 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.SingularValueDecomposition;
 
 
 /**
@@ -151,7 +151,7 @@ public class SingularOps {
     }
 
     /**
-     * Checks to see if all the provided matrices are the expected size for an SVD.  If an error is encounted
+     * Checks to see if all the provided matrices are the expected size for an SVD.  If an error is encountered
      * then an exception is thrown.  This automatically handles compact and non-compact formats
      */
     public static void checkSvdMatrixSize(DenseMatrix64F U, boolean tranU, DenseMatrix64F W, DenseMatrix64F V, boolean tranV ) {

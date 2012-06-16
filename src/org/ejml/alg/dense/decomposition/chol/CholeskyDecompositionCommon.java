@@ -20,8 +20,8 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.CholeskyDecomposition;
 import org.ejml.ops.CommonOps;
 
 

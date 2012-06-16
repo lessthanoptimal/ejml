@@ -20,16 +20,16 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.DecompositionFactory;
-import org.ejml.alg.dense.decomposition.EigenDecomposition;
-import org.ejml.alg.dense.decomposition.LUDecomposition;
-import org.ejml.alg.dense.decomposition.SingularValueDecomposition;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.EigenDecomposition;
+import org.ejml.factory.LUDecomposition;
+import org.ejml.factory.SingularValueDecomposition;
 
 
 /**
@@ -473,7 +473,7 @@ public class MatrixFeatures {
     public static boolean isRowsLinearIndependent( DenseMatrix64F A )
     {
         // LU decomposition
-        LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(A.numRows);
+        LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(A.numRows,A.numCols);
         if( !lu.decompose(A))
             throw new RuntimeException("Decompositon failed?");
 
@@ -622,7 +622,7 @@ public class MatrixFeatures {
      * @return The matrix's rank.
      */
     public static int rank( DenseMatrix64F A , double threshold ) {
-        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");
@@ -648,7 +648,7 @@ public class MatrixFeatures {
      * @return The matrix's nullity.
      */
     public static int nullity( DenseMatrix64F A , double threshold ) {
-        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols);
+        SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");

@@ -22,9 +22,9 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.alg.block.BlockInnerRankUpdate;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.factory.CholeskyDecomposition;
 
 
 /**

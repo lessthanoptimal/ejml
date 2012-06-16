@@ -23,6 +23,7 @@ import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol;
 import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;

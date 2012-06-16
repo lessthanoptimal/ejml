@@ -23,9 +23,9 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
 import org.ejml.alg.dense.decomposition.BaseDecompositionBlock64;
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.CholeskyDecomposition;
 
 
 /**

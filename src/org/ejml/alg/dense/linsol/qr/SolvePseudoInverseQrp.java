@@ -19,9 +19,9 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.QRPDecomposition;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.QRPDecomposition;
 import org.ejml.ops.CommonOps;
 
 /**

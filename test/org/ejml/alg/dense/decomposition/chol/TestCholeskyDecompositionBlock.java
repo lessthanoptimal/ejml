@@ -19,11 +19,11 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.alg.dense.decomposition.CholeskyDecomposition;
-import org.ejml.alg.dense.linsol.LinearSolver;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.CholeskyDecomposition;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 

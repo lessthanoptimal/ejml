@@ -17,13 +17,14 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol;
+package org.ejml.factory;
 
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
+import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;

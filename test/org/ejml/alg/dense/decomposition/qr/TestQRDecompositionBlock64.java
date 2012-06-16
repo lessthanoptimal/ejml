@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.alg.dense.decomposition.QRDecomposition;
+import org.ejml.factory.QRDecomposition;
 
 
 /**

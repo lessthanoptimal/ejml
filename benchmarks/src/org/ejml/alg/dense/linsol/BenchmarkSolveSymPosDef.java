@@ -24,6 +24,7 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolver;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 
