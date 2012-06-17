@@ -36,13 +36,13 @@ import java.util.Random;
 public class StabilitySvdlDecomposition {
 
 
-    public static double evaluate( SingularValueDecomposition alg , DenseMatrix64F orig ) {
+    public static double evaluate( SingularValueDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
         if( !alg.decompose(orig)) {
             return Double.NaN;
         }
 
-        return DecompositionFactory.quality(orig,alg);
+        return DecompositionFactory.quality(orig, alg);
     }
 
     private static void runAlgorithms( DenseMatrix64F mat  )

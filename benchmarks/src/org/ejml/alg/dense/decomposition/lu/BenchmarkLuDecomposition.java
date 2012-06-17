@@ -34,7 +34,7 @@ import java.util.Random;
 public class BenchmarkLuDecomposition {
 
 
-    public static void benchmark( LUDecomposition lu , DenseMatrix64F orig , int numTrials ) {
+    public static void benchmark( LUDecomposition<DenseMatrix64F> lu , DenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
         for( long i = 0; i < numTrials; i++ ) {
