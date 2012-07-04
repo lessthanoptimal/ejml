@@ -159,7 +159,7 @@ public abstract class CholeskyDecompositionCommon
             if( T.numRows != n || T.numCols != n )
                 throw new IllegalArgumentException("Unexpected matrix dimension for T.");
 
-            CommonOps.set(T,0);
+            CommonOps.fill(T, 0);
         }
 
         // write the values to T

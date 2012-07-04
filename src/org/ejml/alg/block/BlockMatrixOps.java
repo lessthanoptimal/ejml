@@ -520,7 +520,7 @@ public class BlockMatrixOps {
      * @param value The value each element will have.
      */
     public static void set( BlockMatrix64F A , double value ) {
-        CommonOps.set(A,value);
+        CommonOps.fill(A, value);
     }
 
     /**
@@ -532,7 +532,7 @@ public class BlockMatrixOps {
     {
         int minLength = Math.min(A.numRows,A.numCols);
 
-        CommonOps.set(A,0);
+        CommonOps.fill(A, 0);
 
         int blockLength = A.blockLength;
 

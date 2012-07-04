@@ -70,7 +70,7 @@ public class TridiagonalDecompositionBlockHouseholder
             if( T.numRows != A.numRows || T.numCols != A.numCols )
                 throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
 
-            CommonOps.set(T,0);
+            CommonOps.fill(T, 0);
         }
 
         T.set(0,0,A.data[0]);

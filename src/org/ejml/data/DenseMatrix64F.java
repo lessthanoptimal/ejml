@@ -396,7 +396,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      * Sets all elements equal to zero.
      */
     public void zero() {
-        CommonOps.set(this,0.0);
+        CommonOps.fill(this, 0.0);
     }
 
     /**

@@ -232,9 +232,9 @@ public class TestMatrixFeatures {
 
     private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
         DenseMatrix64F A = new DenseMatrix64F(2,2);
-        CommonOps.set(A,valA);
+        CommonOps.fill(A, valA);
         DenseMatrix64F B = new DenseMatrix64F(2,2);
-        CommonOps.set(B,valB);
+        CommonOps.fill(B, valB);
 
         assertEquals(expected,MatrixFeatures.isIdentical(A,B,tol));
     }
@@ -299,7 +299,7 @@ public class TestMatrixFeatures {
     public void isConstantVal() {
         DenseMatrix64F a = new DenseMatrix64F(3,4);
 
-        CommonOps.set(a,2.4);
+        CommonOps.fill(a, 2.4);
 
         assertTrue(MatrixFeatures.isConstantVal(a,2.4,1e-8));
         assertFalse(MatrixFeatures.isConstantVal(a,6,1e-8));

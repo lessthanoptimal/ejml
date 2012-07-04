@@ -214,7 +214,7 @@ public class TestRandomMatrices {
     public void addRandom() {
         DenseMatrix64F A = new DenseMatrix64F(3,4);
 
-        CommonOps.set(A,-2.0);
+        CommonOps.fill(A, -2.0);
 
         RandomMatrices.addRandom(A,1,2,rand);
 

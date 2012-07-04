@@ -908,7 +908,7 @@ public class CommonOps {
             if( ret.numRows != width || ret.numCols != width )
                 throw new IllegalArgumentException("Unexpected matrix size");
 
-            CommonOps.set(ret,0);
+            CommonOps.fill(ret, 0);
         }
 
         for( int i = 0; i < width; i++ ) {
@@ -1766,7 +1766,7 @@ public class CommonOps {
      * @param a A matrix whose elements are about to be set. Modified.
      * @param value The value each element will have.
      */
-    public static void set( D1Matrix64F a , double value )
+    public static void fill(D1Matrix64F a, double value)
     {
         final int size = a.getNumElements();
 

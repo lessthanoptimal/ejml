@@ -102,7 +102,7 @@ public class TestSpecializedOps {
                 assertTrue(MatrixFeatures.isEqualsTriangle(A,B, true, 1e-8));
                 assertFalse(MatrixFeatures.isEquals(A,B,1e-8));
 
-                CommonOps.set(B,0);
+                CommonOps.fill(B, 0);
                 SpecializedOps.copyTriangle(A,B,false);
                 assertTrue(MatrixFeatures.isEqualsTriangle(A,B, false, 1e-8));
                 assertFalse(MatrixFeatures.isEquals(A,B,1e-8));

@@ -735,11 +735,11 @@ public class TestCommonOps {
     }
 
     @Test
-    public void set() {
+    public void fill() {
         double d[] = new double[]{10,12.5,-2,5.5};
         DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
 
-        CommonOps.set(mat,1);
+        CommonOps.fill(mat, 1);
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
             assertEquals(1,mat.get(i),1e-8);

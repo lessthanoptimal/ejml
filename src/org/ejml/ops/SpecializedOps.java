@@ -338,7 +338,7 @@ public class SpecializedOps {
         } else {
             if( ret.numCols != numPivots || ret.numRows != numPivots )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.set(ret,0);
+            CommonOps.fill(ret, 0);
         }
 
         if( transposed ) {

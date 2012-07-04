@@ -100,7 +100,7 @@ public abstract class LUDecompositionBase
         } else {
             if( lower.numCols != numCols || lower.numRows != numRows )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.set(lower,0);
+            CommonOps.fill(lower, 0);
         }
 
         for( int i = 0; i < numCols; i++ ) {
@@ -137,7 +137,7 @@ public abstract class LUDecompositionBase
         } else {
             if( upper.numCols != numCols || upper.numRows != numRows )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.set(upper,0);
+            CommonOps.fill(upper, 0);
         }
 
         for( int i = 0; i < numRows; i++ ) {

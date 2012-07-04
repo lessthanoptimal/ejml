@@ -52,7 +52,7 @@ public class TridiagonalDecompositionBlock
         if( T == null ) {
             T = new DenseMatrix64F(N,N);
         } else {
-            CommonOps.set(T,0);
+            CommonOps.fill(T, 0);
         }
 
         double[] diag = new double[ N ];

@@ -415,7 +415,7 @@ public class TestBlockMatrixOps {
                     }
                 }
 
-                CommonOps.set(B,0);
+                CommonOps.fill(B, 0);
                 BlockMatrixOps.copyTriangle(false,A,B);
                 
                 for( int i = 0; i < numRows; i++) {
@@ -434,7 +434,7 @@ public class TestBlockMatrixOps {
         for( int numRows = 4; numRows <= 6; numRows += 1 ){
             for( int numCols = 4; numCols <= 6; numCols += 1 ){
                 BlockMatrix64F A = BlockMatrixOps.createRandom(numRows,numCols,-1,1,rand,r);
-                CommonOps.set(B,0);
+                CommonOps.fill(B, 0);
 
                 BlockMatrixOps.copyTriangle(true,A,B);
 
@@ -447,7 +447,7 @@ public class TestBlockMatrixOps {
                     }
                 }
 
-                CommonOps.set(B,0);
+                CommonOps.fill(B, 0);
                 BlockMatrixOps.copyTriangle(false,A,B);
 
                 for( int i = 0; i < B.numRows; i++) {

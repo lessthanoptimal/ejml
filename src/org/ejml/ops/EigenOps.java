@@ -86,7 +86,7 @@ public class EigenOps {
         DenseMatrix64F x = new DenseMatrix64F(A.numRows,1);
         DenseMatrix64F b = new DenseMatrix64F(A.numRows,1);
 
-        CommonOps.set(b,1);
+        CommonOps.fill(b, 1);
         
         // perturb the eigenvalue slightly so that its not an exact solution the first time
 //        eigenvalue -= eigenvalue*UtilEjml.EPS*10;

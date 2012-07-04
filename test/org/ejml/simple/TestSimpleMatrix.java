@@ -275,7 +275,7 @@ public class TestSimpleMatrix {
         a.set(16.0);
 
         DenseMatrix64F d = new DenseMatrix64F(3,3);
-        CommonOps.set(d,16.0);
+        CommonOps.fill(d, 16.0);
 
         EjmlUnitTests.assertEquals(d,a.mat,1e-8);
     }

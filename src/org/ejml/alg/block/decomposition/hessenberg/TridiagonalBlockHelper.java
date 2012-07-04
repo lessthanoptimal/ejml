@@ -109,7 +109,7 @@ public class TridiagonalBlockHelper {
                                      final double beta[] , int betaIndex ) {
 
         final int heightY = Y.row1-Y.row0;
-        CommonOps.set(W.original,0);
+        CommonOps.fill(W.original, 0);
 
         // W = -beta*v(1)
         BlockHouseHolder.scale_row(blockLength,Y,W,0,1,-beta[betaIndex++]);

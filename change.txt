@@ -19,6 +19,7 @@ Date format: year/month/day
   specific implementations.
 - DecompositionFactory has been cleaned up by reducing the number of functions, making input parameters more consistent,
   and improved JavaDoc
+- Changed CommonOps.set(matrix,value) to CommonOps.fill(matrix,value)
 
 ----- Version 0.19
 

@@ -359,18 +359,18 @@ public abstract class SimpleBase <T extends SimpleBase> {
      * a<sub>ij</sub> = val<br>
      * </p>
      *
-     * @see CommonOps#set(org.ejml.data.D1Matrix64F , double)
+     * @see CommonOps#fill(org.ejml.data.D1Matrix64F , double)
      *
      * @param val The value each element is set to.
      */
     public void set( double val ) {
-        CommonOps.set(mat,val);
+        CommonOps.fill(mat, val);
     }
 
     /**
      * Sets all the elements in the matrix equal to zero.
      *
-     * @see CommonOps#set(org.ejml.data.D1Matrix64F , double)
+     * @see CommonOps#fill(org.ejml.data.D1Matrix64F , double)
      */
     public void zero() {
         mat.zero();
