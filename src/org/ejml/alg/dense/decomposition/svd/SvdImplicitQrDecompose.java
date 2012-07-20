@@ -53,6 +53,11 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
     private int numRowsT;
     private int numColsT;
 
+    // if true then it can use the special Bidiagonal decomposition
+    private boolean canUseTallBidiagonal;
+
+    // If U is not being computed and the input matrix is 'tall' then a special bidiagonal decomposition
+    // can be used which is faster.
     private BidiagonalDecomposition<DenseMatrix64F> bidiag;
     private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
 
@@ -82,10 +87,21 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
     // Either a copy of the input matrix or a copy of it transposed
     private DenseMatrix64F A_mod = new DenseMatrix64F(1,1);
 
-    public SvdImplicitQrDecompose(boolean compact, boolean computeU, boolean computeV) {
+    /**
+     * Configures the class
+     *
+     * @param compact Compute a compact SVD
+     * @param computeU If true it will compute the U matrix
+     * @param computeV If true it will compute the V matrix
+     * @param canUseTallBidiagonal If true then it can choose to use a tall Bidiagonal decomposition to improve runtime performance.
+     */
+    public SvdImplicitQrDecompose(boolean compact, boolean computeU, boolean computeV,
+                                  boolean canUseTallBidiagonal )
+    {
         this.compact = compact;
         this.prefComputeU = computeU;
         this.prefComputeV = computeV;
+        this.canUseTallBidiagonal = canUseTallBidiagonal;
     }
 
     @Override
@@ -152,13 +168,8 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
     public boolean decompose(DenseMatrix64F orig) {
          setup(orig);
 
-//        long before = System.currentTimeMillis();
-
         if (bidiagonalization(orig))
             return false;
-
-//        long after = System.currentTimeMillis();
-//        System.out.println("  bidiag time = "+(after-before));
 
         if( computeUWV() )
             return false;
@@ -259,7 +270,7 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
         }
 
         // if it is a tall matrix and U is not needed then there is faster decomposition algorithm
-        if( numRows > numCols * 2 && !computeU ) {
+        if( canUseTallBidiagonal && numRows > numCols * 2 && !computeU ) {
             if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall) ) {
                 bidiag = new BidiagonalDecompositionTall();
             }

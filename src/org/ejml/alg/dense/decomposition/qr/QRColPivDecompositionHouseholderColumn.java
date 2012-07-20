@@ -19,7 +19,6 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.QRPDecomposition;
 import org.ejml.ops.CommonOps;
@@ -51,13 +50,10 @@ public class QRColPivDecompositionHouseholderColumn
     protected int pivots[];
     // F-norm  squared for each column
     protected double normsCol[];
-
-    // value of the maximum abs element
-    protected double maxAbs;
     
     // threshold used to determine when a column is considered to be singular
     // Threshold is relative to the maxAbs
-    protected double singularThreshold;
+    protected double singularThreshold = 1e-100;
 
     // the matrix's rank
     protected int rank;
@@ -65,14 +61,18 @@ public class QRColPivDecompositionHouseholderColumn
     /**
      * Configure parameters.
      *
-     * @param singularThreshold Specify the threshold that selects if column is singular or not.  Typically around EPS
+     * @param singularThreshold The singular threshold.
      */
     public QRColPivDecompositionHouseholderColumn(double singularThreshold) {
         this.singularThreshold = singularThreshold;
     }
 
     public QRColPivDecompositionHouseholderColumn() {
-        this(UtilEjml.EPS);
+    }
+
+    @Override
+    public void setSingularThreshold( double threshold ) {
+        this.singularThreshold = threshold;
     }
 
     @Override
@@ -145,7 +145,6 @@ public class QRColPivDecompositionHouseholderColumn
 
         convertToColumnMajor(A);
 
-        maxAbs = CommonOps.elementMaxAbs(A);
         // initialize pivot variables
         setupPivotInfo();
 
@@ -278,7 +277,7 @@ public class QRColPivDecompositionHouseholderColumn
 
             u[j] = -tau;
 
-            if( Math.abs(tau) <= singularThreshold*maxAbs ) {
+            if( Math.abs(tau) <= singularThreshold ) {
                 return false;
             }
         }

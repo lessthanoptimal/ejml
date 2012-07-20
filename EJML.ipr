@@ -107,7 +107,7 @@
       <option name="myLocal" value="true" />
     </copyright>
     <module2copyright>
-      <element module="EJML Code" copyright="EJML LGPL" />
+      <element module="Project Files" copyright="EJML LGPL" />
     </module2copyright>
     <LanguageOptions name="HTML">
       <option name="fileTypeOverride" value="1" />

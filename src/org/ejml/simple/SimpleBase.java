@@ -29,6 +29,7 @@ import org.ejml.ops.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
 
 
 /**
@@ -39,7 +40,7 @@ import java.io.PrintStream;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public abstract class SimpleBase <T extends SimpleBase> {
+public abstract class SimpleBase <T extends SimpleBase> implements Serializable {
 
     /**
      * Internal matrix which this is a wrapper around.

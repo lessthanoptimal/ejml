@@ -20,6 +20,14 @@ Date format: year/month/day
 - DecompositionFactory has been cleaned up by reducing the number of functions, making input parameters more consistent,
   and improved JavaDoc
 - Changed CommonOps.set(matrix,value) to CommonOps.fill(matrix,value)
+- Added function QRPDecomposition.setSingularThreshold() so that the user has more control over this important threshold
+  * The singular threshold in QRP is now absolute and not automatically relative.
+  * To replicate the original behavior do the following:
+       decomp.setSingularThreshold( CommonOps.elementMaxAbs(A)*UtilEjml.EPS )
+- SvdImplicitQrDecompose now takes in a parameter which specifies if tall bidiagonal decomposition can be used over
+  concerns of its stability.  These concerns are mostly theoretical since a few simple tests show the stability to be
+  almost the same.
+- SimpleBase now implements Serializable
 
 ----- Version 0.19
 

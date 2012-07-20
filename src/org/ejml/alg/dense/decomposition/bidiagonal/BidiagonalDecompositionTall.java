@@ -19,6 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.factory.QRPDecomposition;
@@ -38,6 +39,13 @@ import org.ejml.ops.CommonOps;
  * U=[Q<sub>1</sub>*U1 Q<sub>2</sub>]<br>
  * B=[B1;0]<br>
  * A = U*B*V<sup>T</sup>
+ * </p>
+ *
+ * <p>
+ * A QRP decomposition is used internally.  That decomposition relies an a fixed threshold for selecting singular
+ * values and is known to be less stable than SVD.  There is the potential for a degregation of stability
+ * by using BidiagonalDecompositionTall instead of BidiagonalDecomposition. A few simple tests have shown
+ * that loss in stability to be insignificant.
  * </p>
  *
  * <p>
@@ -119,6 +127,8 @@ public class BidiagonalDecompositionTall
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
+
+        decompQRP.setSingularThreshold(CommonOps.elementMaxAbs(orig)* UtilEjml.EPS);
         if( !decompQRP.decompose(orig) ) {
             return false;
         }

@@ -40,7 +40,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
 
     @Override
     public SingularValueDecomposition createSvd() {
-        return new SvdImplicitQrDecompose(compact,needU,needV);
+        return new SvdImplicitQrDecompose(compact,needU,needV,false);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
             for( int k = 0; k < 2; k++ ) {
                 compact = k == 0;
 
-                SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,true,true);
+                SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,true,true,false);
 
                 DenseMatrix64F A;
 
@@ -99,7 +99,7 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
                     A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
                 }
 
-                assertTrue(alg.decompose(A.<DenseMatrix64F>copy()));
+                assertTrue(alg.decompose(A.copy()));
 
                 DenseMatrix64F origU = alg.getU(false);
                 double sv[] = alg.getSingularValues();
@@ -123,9 +123,9 @@ public class TestSvdImplicitQrDecompose extends StandardSvdChecks {
                              DenseMatrix64F V ,
                              boolean checkU , boolean checkV )
     {
-        SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,checkU,checkV);
+        SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose(compact,checkU,checkV,false);
 
-        assertTrue(alg.decompose(A.<DenseMatrix64F>copy()));
+        assertTrue(alg.decompose(A.copy()));
 
         UtilTestMatrix.checkSameElements(1e-10,sv.length,sv,alg.getSingularValues());
 

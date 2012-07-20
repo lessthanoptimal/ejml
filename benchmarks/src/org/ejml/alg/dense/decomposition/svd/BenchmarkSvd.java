@@ -52,7 +52,7 @@ public class BenchmarkSvd {
     {
 //        mat.print("%f");
         if( numTrials <= 0 ) return;
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));
+        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true,true),mat,numTrials));
 //        System.out.println("qr smart         = "+ evaluate(new SvdImplicitQrDecompose_UltimateS(true,true,true),mat,numTrials));
         System.out.println("qr separate      = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(true,true,true),mat,numTrials));
 //        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));

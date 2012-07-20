@@ -20,6 +20,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.EjmlParameters;
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.QRDecomposition;
 import org.ejml.factory.QRPDecomposition;
@@ -56,6 +57,9 @@ public class StabilityQRDecomposition {
     }
 
     public static double evaluate( QRPDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
+
+        double maxValue = CommonOps.elementMaxAbs(orig);
+        alg.setSingularThreshold(maxValue* UtilEjml.EPS);
 
         if( !decomposeSafe(alg,orig)) {
             return Double.NaN;

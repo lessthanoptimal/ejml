@@ -1,9 +1,4 @@
-- Make sure using BidiagonalDecompositionTall does NOT degrade stability when the input matrix is singular
-- Do not use a relative threshold inside of QRP
-- REmove LUDecomposition.isSingular() ?
-- SimpleMatrix serializable
-
-For 0.19 Release
+For 0.20 Release
 - Block SVD
 - Block Hessenberg
 - Adapt QR-tran into LQ
