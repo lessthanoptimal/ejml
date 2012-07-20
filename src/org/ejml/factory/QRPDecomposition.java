@@ -32,11 +32,27 @@ import org.ejml.data.Matrix64F;
  * upper triangular.
  * </p>
  *
+ * <p>
+ * WARNING: You should always call {@link #setSingularThreshold(double)} before {@link #decompose(org.ejml.data.Matrix64F)}.
+ * </p>
+ *
  * @author Peter Abeles
  */
 public interface QRPDecomposition <T extends Matrix64F>
         extends QRDecomposition<T>
 {
+    /**
+     * <p>
+     * Specifies the threshold used to flag a column as being singular.  The optimal threshold (if one exists)
+     * varies by the matrix being processed.  A reasonable value would be the maximum absolute value of the
+     * matrix's elements multiplied by EPS:<br>
+     * decomposition.setSingularThreshold(CommonOps.elementMaxAbs(A)*UtilEjml.EPS)
+     * </p>
+     *
+     * @param threshold Singular threshold.
+     */
+    public void setSingularThreshold( double threshold );
+
     /**
      * Returns the rank as determined by the algorithm.  This is dependent upon a fixed threshold
      * and might not be appropriate for some applications.
@@ -45,7 +61,18 @@ public interface QRPDecomposition <T extends Matrix64F>
      */
     public int getRank();
 
+    /**
+     * Ordering of each column after pivoting.   The current column i was original at column pivot[i].
+     *
+     * @return Order of columns.
+     */
     public int[] getPivots();
 
+    /**
+     * Creates the pivot matrix.
+     *
+     * @param P Storage for pivot matrix.  If null a new matrix will be created.
+     * @return The pivot matrix.
+     */
     public DenseMatrix64F getPivotMatrix( DenseMatrix64F P );
 }

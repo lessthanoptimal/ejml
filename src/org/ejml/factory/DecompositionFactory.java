@@ -120,7 +120,8 @@ public class DecompositionFactory {
      */
     public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols , 
                                                                   boolean needU , boolean needV , boolean compact ) {
-        return new SvdImplicitQrDecompose(compact,needU,needV);
+        // Don't allow the tall decomposition by default since it *might* be less stable
+        return new SvdImplicitQrDecompose(compact,needU,needV,false);
     }
 
     /**
