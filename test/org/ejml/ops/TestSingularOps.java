@@ -290,9 +290,9 @@ public class TestSingularOps {
                 SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
-                SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
+                SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
-                SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
+                SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(null,true));
 
                 // pick an element inconveniently in the middle to be the null space
                 S.set(1,1,0);
@@ -325,9 +325,9 @@ public class TestSingularOps {
                 SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.getMatrix()));
 
-                SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
+                SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
-                SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
+                SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(null,true));
 
                 // pick an element inconveniently in the middle to be the null space
                 S.set(1,1,0);

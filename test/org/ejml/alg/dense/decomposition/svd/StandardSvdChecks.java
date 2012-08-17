@@ -31,8 +31,7 @@ import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -50,8 +49,11 @@ public abstract class StandardSvdChecks {
         testDecompositionOfTrivial();
         testWide();
         testTall();
-        checkGetU();
-        checkGetV();
+        checkGetU_Transpose();
+        checkGetU_Storage();
+        checkGetV_Transpose();
+        checkGetV_Storage();
+
         if( !omitVerySmallValues )
             testVerySmallValue();
         testZero();
@@ -169,14 +171,14 @@ public abstract class StandardSvdChecks {
     /**
      * Makes sure transposed flag is correctly handled.
      */
-    public void checkGetU() {
-        DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
+    public void checkGetU_Transpose() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5, 7, -1, 1, rand);
 
         SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
-        DenseMatrix64F U = alg.getU(false);
-        DenseMatrix64F Ut = alg.getU(true);
+        DenseMatrix64F U = alg.getU(null,false);
+        DenseMatrix64F Ut = alg.getU(null,true);
 
         DenseMatrix64F found = new DenseMatrix64F(U.numCols,U.numRows);
 
@@ -186,22 +188,90 @@ public abstract class StandardSvdChecks {
     }
 
     /**
-     * Makes sure transposed flag is correctly handled.
+     * Makes sure the optional storage parameter is handled correctly
      */
-    public void checkGetV() {
+    public void checkGetU_Storage() {
         DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
 
         SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
-        DenseMatrix64F V = alg.getV(false);
-        DenseMatrix64F Vt = alg.getV(true);
+        // test positive cases
+        DenseMatrix64F U = alg.getU(null,false);
+        DenseMatrix64F storage = new DenseMatrix64F(U.numRows,U.numCols);
+
+        alg.getU(storage,false);
+
+        assertTrue( MatrixFeatures.isEquals(U,storage));
+
+        U = alg.getU(null,true);
+        storage = new DenseMatrix64F(U.numRows,U.numCols);
+
+        alg.getU(storage,true);
+        assertTrue( MatrixFeatures.isEquals(U,storage));
+
+        // give it an incorrect sign
+        try {
+            alg.getU(new DenseMatrix64F(10,20),true);
+            fail("Exception should have been thrown");
+        } catch( RuntimeException e ){}
+        try {
+            alg.getU(new DenseMatrix64F(10,20),false);
+            fail("Exception should have been thrown");
+        } catch( RuntimeException e ){}
+    }
+
+    /**
+     * Makes sure transposed flag is correctly handled.
+     */
+    public void checkGetV_Transpose() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
+
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
+        assertTrue(alg.decompose(A));
+
+        DenseMatrix64F V = alg.getV(null,false);
+        DenseMatrix64F Vt = alg.getV(null,true);
 
         DenseMatrix64F found = new DenseMatrix64F(V.numCols,V.numRows);
 
         CommonOps.transpose(V,found);
 
         assertTrue( MatrixFeatures.isEquals(Vt,found));
+    }
+
+    /**
+     * Makes sure the optional storage parameter is handled correctly
+     */
+    public void checkGetV_Storage() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,7,-1,1,rand);
+
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
+        assertTrue(alg.decompose(A));
+
+        // test positive cases
+        DenseMatrix64F V = alg.getV(null, false);
+        DenseMatrix64F storage = new DenseMatrix64F(V.numRows,V.numCols);
+
+        alg.getV(storage, false);
+
+        assertTrue(MatrixFeatures.isEquals(V, storage));
+
+        V = alg.getV(null, true);
+        storage = new DenseMatrix64F(V.numRows,V.numCols);
+
+        alg.getV(storage, true);
+        assertTrue( MatrixFeatures.isEquals(V,storage));
+
+        // give it an incorrect sign
+        try {
+            alg.getV(new DenseMatrix64F(10, 20), true);
+            fail("Exception should have been thrown");
+        } catch( RuntimeException e ){}
+        try {
+            alg.getV(new DenseMatrix64F(10, 20), false);
+            fail("Exception should have been thrown");
+        } catch( RuntimeException e ){}
     }
 
     /**
@@ -236,8 +306,8 @@ public abstract class StandardSvdChecks {
 
     private void checkComponents( SingularValueDecomposition<DenseMatrix64F> svd , DenseMatrix64F expected )
     {
-        SimpleMatrix U = SimpleMatrix.wrap(svd.getU(false));
-        SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(true));
+        SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
+        SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(null,true));
         SimpleMatrix W = SimpleMatrix.wrap(svd.getW(null));
 
         assertTrue( !U.hasUncountable() );

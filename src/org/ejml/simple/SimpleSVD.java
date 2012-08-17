@@ -53,9 +53,9 @@ public class SimpleSVD<T extends SimpleMatrix> {
         svd = DecompositionFactory.svd(mat.numRows,mat.numCols,true,true,compact);
         if( !svd.decompose(mat) )
             throw new RuntimeException("Decomposition failed");
-        U = (T)SimpleMatrix.wrap(svd.getU(false));
+        U = (T)SimpleMatrix.wrap(svd.getU(null,false));
         W = (T)SimpleMatrix.wrap(svd.getW(null));
-        V = (T)SimpleMatrix.wrap(svd.getV(false));
+        V = (T)SimpleMatrix.wrap(svd.getV(null,false));
 
         // order singular values from largest to smallest
         SingularOps.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);

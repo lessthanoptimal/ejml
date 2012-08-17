@@ -142,7 +142,7 @@ public class PrincipleComponentAnalysis {
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 
-        V_t = svd.getV(true);
+        V_t = svd.getV(null,true);
         DenseMatrix64F W = svd.getW(null);
 
         // Singular values are in an arbitrary order initially

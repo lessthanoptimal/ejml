@@ -204,7 +204,7 @@ public class DecompositionFactory {
      */
     public static double quality( DenseMatrix64F orig , SingularValueDecomposition<DenseMatrix64F> svd )
     {
-        return quality(orig,svd.getU(false),svd.getW(null),svd.getV(true));
+        return quality(orig,svd.getU(null,false),svd.getW(null),svd.getV(null,true));
     }
 
     public static double quality( DenseMatrix64F orig , DenseMatrix64F U , DenseMatrix64F W , DenseMatrix64F Vt )

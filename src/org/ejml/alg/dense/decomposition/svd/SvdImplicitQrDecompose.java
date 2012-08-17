@@ -120,27 +120,46 @@ public class SvdImplicitQrDecompose implements SingularValueDecomposition<DenseM
     }
 
     @Override
-    public DenseMatrix64F getU(boolean transpose) {
+    public DenseMatrix64F getU( DenseMatrix64F U , boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
-        if( transpose )
-            return Ut;
+        if( transpose ) {
+            if( U == null )
+                return Ut;
+            else if( U.numRows != Ut.numRows || U.numCols != Ut.numCols )
+                throw new IllegalArgumentException("Unexpected shape of U");
 
-        DenseMatrix64F U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
-        CommonOps.transpose(Ut,U);
+            U.set(Ut);
+        } else {
+            if( U == null )
+                U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
+            else if( U.numRows != Ut.numCols || U.numCols != Ut.numRows )
+                throw new IllegalArgumentException("Unexpected shape of U");
+
+            CommonOps.transpose(Ut,U);
+        }
 
         return U;
     }
 
     @Override
-    public DenseMatrix64F getV( boolean transpose ) {
+    public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
-        if( transpose )
-            return Vt;
+        if( transpose ) {
+            if( V == null )
+                return Vt;
+            else if( V.numRows != Vt.numRows || V.numCols != Vt.numCols )
+                throw new IllegalArgumentException("Unexpected shape of V");
 
-        DenseMatrix64F V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
-        CommonOps.transpose(Vt,V);
+            V.set(Vt);
+        } else {
+            if( V == null )
+                V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
+            else if( V.numRows != Vt.numCols || V.numCols != Vt.numRows )
+                throw new IllegalArgumentException("Unexpected shape of V");
+            CommonOps.transpose(Vt,V);
+        }
 
         return V;
     }

@@ -28,6 +28,7 @@ Date format: year/month/day
   concerns of its stability.  These concerns are mostly theoretical since a few simple tests show the stability to be
   almost the same.
 - SimpleBase now implements Serializable
+- Accessors in SingularValueDecomposition now can take in an optional storage matrix.
 
 ----- Version 0.19
 

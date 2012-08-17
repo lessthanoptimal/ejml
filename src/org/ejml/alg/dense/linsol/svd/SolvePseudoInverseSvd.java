@@ -75,8 +75,8 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
         if( !svd.decompose(A) )
             return false;
 
-        DenseMatrix64F U_t = svd.getU(true);
-        DenseMatrix64F V = svd.getV(false);
+        DenseMatrix64F U_t = svd.getU(null,true);
+        DenseMatrix64F V = svd.getV(null,false);
         double []S = svd.getSingularValues();
         int N = Math.min(A.numRows,A.numCols);
 

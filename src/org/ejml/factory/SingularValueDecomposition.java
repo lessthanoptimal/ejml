@@ -32,11 +32,18 @@ import org.ejml.data.Matrix64F;
  *
  * <p>
  * The dimension of U,W,V depends if it is a compact SVD or not.  If not compact then U  is m by m, W is  m by n, V is n by n.
- *  If compact then let s be the number of singular values, U is m by s, W is s by s, and V is n by s.
+ * If compact then let s be the number of singular values, U is m by s, W is s by s, and V is n by s.
  * </p>
  *
  * <p>
- *  To create a new instance of SingularValueDecomposition see {@link DecompositionFactory#svd(int, int)}
+ * Accessor functions for decomposed matrices can return an internally constructed matrix if null is passed in for the
+ * optional storage parameter.  The exact behavior is implementation specific.  If an internally maintained matrix is
+ * returned then on the next call to decompose the matrix will be modified.  The advantage of this approach is reduced
+ * memory overhead.
+ * </p>
+ *
+ * <p>
+ * To create a new instance of SingularValueDecomposition see {@link DecompositionFactory#svd(int, int, boolean, boolean, boolean)}
  * and {@link org.ejml.ops.SingularOps} contains additional helpful SVD related functions.
  * </p>
  *
@@ -82,10 +89,11 @@ public abstract interface SingularValueDecomposition <T extends Matrix64F>
      * unnecessary double transpose the option is provided to select if the transpose is returned.
      * </p>
      *
+     * @param U Optional storage for U. If null a new instance or internally maintained matrix is returned.  Modified.
      * @param transposed If the returned U is transposed.
      * @return An orthogonal matrix.
      */
-    public T getU( boolean transposed );
+    public T getU( T U , boolean transposed );
 
     /**
      * <p>
@@ -97,17 +105,18 @@ public abstract interface SingularValueDecomposition <T extends Matrix64F>
      * unnecessary double transpose the option is provided to select if the transpose is returned.
      * </p>
      *
+     * @param V Optional storage for v. If null a new instance or internally maintained matrix is returned.  Modified.
      * @param transposed If the returned V is transposed.
      * @return An orthogonal matrix.
      */
-    public T getV( boolean transposed );
+    public T getV( T V , boolean transposed );
 
     /**
      * Returns a diagonal matrix with the singular values.  Order of the singular values
      * is not guaranteed.
      *
+     * @param W Optional storage for W. If null a new instance or internally maintained matrix is returned.  Modified.
      * @return Diagonal matrix with singular values along the diagonal.
-     * @param W If not null then the W matrix is written to it.  Modified.
      */
     public T getW( T W );
 

@@ -71,7 +71,7 @@ public interface QRPDecomposition <T extends Matrix64F>
     /**
      * Creates the pivot matrix.
      *
-     * @param P Storage for pivot matrix.  If null a new matrix will be created.
+     * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
      * @return The pivot matrix.
      */
     public DenseMatrix64F getPivotMatrix( DenseMatrix64F P );

@@ -53,9 +53,9 @@ public class StabilitySvdlDecomposition {
 
         W = alg.getW(null);
         if( computeU )
-            U = alg.getU(false).copy();
+            U = alg.getU(null,false).copy();
         if( computeV )
-            Vt = alg.getV(true).copy();
+            Vt = alg.getV(null,true).copy();
 
         // I'm not sure how to test quality of U or V is not computed.
 

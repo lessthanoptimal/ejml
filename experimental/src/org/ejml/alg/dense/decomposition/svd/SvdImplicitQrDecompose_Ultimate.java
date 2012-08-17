@@ -97,26 +97,26 @@ public class SvdImplicitQrDecompose_Ultimate
     }
 
     @Override
-    public DenseMatrix64F getU(boolean transpose) {
+    public DenseMatrix64F getU(DenseMatrix64F U , boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
         if( transpose )
             return Ut;
 
-        DenseMatrix64F U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
+        U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
         CommonOps.transpose(Ut,U);
 
         return U;
     }
 
     @Override
-    public DenseMatrix64F getV( boolean transpose ) {
+    public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
         if( transpose )
             return Vt;
 
-        DenseMatrix64F V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
+        V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
         CommonOps.transpose(Vt,V);
 
         return V;

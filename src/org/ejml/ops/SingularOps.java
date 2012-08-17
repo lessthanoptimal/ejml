@@ -225,7 +225,7 @@ public class SingularOps {
         int N = svd.numberOfSingularValues();
         double s[] = svd.getSingularValues();
 
-        DenseMatrix64F V = svd.getV(true);
+        DenseMatrix64F V = svd.getV(null,true);
 
         if( V.numRows != svd.numCols() ) {
             throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");
@@ -279,7 +279,7 @@ public class SingularOps {
         int N = svd.numberOfSingularValues();
         double s[] = svd.getSingularValues();
 
-        DenseMatrix64F V = svd.getV(true);
+        DenseMatrix64F V = svd.getV(null,true);
 
         if( V.numRows != svd.numCols() ) {
             throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");

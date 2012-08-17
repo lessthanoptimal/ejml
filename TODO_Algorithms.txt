@@ -1,4 +1,6 @@
-For 0.20 Release
+- scalar setRow() setColumn()?
+
+For some future Release
 - Block SVD
 - Block Hessenberg
 - Adapt QR-tran into LQ
