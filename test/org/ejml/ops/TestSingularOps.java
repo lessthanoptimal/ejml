@@ -379,5 +379,4 @@ public class TestSingularOps {
         assertEquals(rank,SingularOps.rank(alg, UtilEjml.EPS));
         assertEquals(nullity,SingularOps.nullity(alg, UtilEjml.EPS));
     }
-
 }

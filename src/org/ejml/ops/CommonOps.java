@@ -20,6 +20,7 @@
 package org.ejml.ops;
 
 import org.ejml.EjmlParameters;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
@@ -31,6 +32,8 @@ import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 import org.ejml.data.RowD1Matrix64F;
+import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.GjPivotDecomposition;
 import org.ejml.factory.LinearSolver;
 import org.ejml.factory.LinearSolverFactory;
 
@@ -1773,5 +1776,33 @@ public class CommonOps {
         for( int i = 0; i < size; i++ ) {
             a.set( i , value );
         }
+    }
+
+    /**
+     * Returns reduced echelon form of the matrix.  For a square matrix this will be an identity matrix.
+     * For wide matrices the first M columns will be an identify matrix with the rest having other values.
+     *
+     * @param A Input matrix.  Unmodified.
+     * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
+     * @return Reduced echelon form of A
+     */
+    public static DenseMatrix64F rref( DenseMatrix64F A , DenseMatrix64F reduced ) {
+        if( reduced == null ) {
+            reduced = new DenseMatrix64F(A.numRows,A.numCols);
+        } else if( reduced.numCols != A.numCols || reduced.numRows != A.numRows )
+            throw new IllegalArgumentException("'re' must have the same shape as the original input matrix");
+
+        GjPivotDecomposition<DenseMatrix64F> decomp = DecompositionFactory.gaussJordan(A.numRows,A.numCols);
+
+        decomp.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*A.numRows);
+        if( decomp.inputModified() ) {
+            reduced.set(A);
+            decomp.decompose(reduced);
+        } else
+            decomp.decompose(A);
+
+        SpecializedOps.gaussJordanToReducedEchelon(decomp.getDecomposition(),decomp.getRowPivots(),reduced);
+
+        return reduced;
     }
 }

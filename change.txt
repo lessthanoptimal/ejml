@@ -29,6 +29,9 @@ Date format: year/month/day
   almost the same.
 - SimpleBase now implements Serializable
 - Accessors in SingularValueDecomposition now can take in an optional storage matrix.
+- Gauss-Jordan elimination/decomposition
+  * Redesigned Gauss-Jordan solvers
+  * Added CommonOps.rref()
 
 ----- Version 0.19
 

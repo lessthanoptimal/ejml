@@ -85,6 +85,7 @@ public interface LUDecomposition <T extends Matrix64F>
      * <p>
      * For numerical stability there are often row interchanges.  This computes
      * a pivot matrix that will undo those changes.
+     * </p>
      *
      * @param pivot Storage for the pivot matrix. If null then a new matrix is returned. Modified.
      * @return The pivot matrix.

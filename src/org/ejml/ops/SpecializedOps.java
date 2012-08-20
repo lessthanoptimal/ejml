@@ -419,4 +419,70 @@ public class SpecializedOps {
 
         return total;
     }
+
+    /**
+     * <p>
+     * Converts the Gauss-Jordan decomposition with row pivots into reduced echelon form.
+     * </p>
+     *
+     * <p>
+     * NOTE: decomp and reduced can be the same instance.
+     * </p>
+     *
+     * @param decomp Matrix decomposed using Gauss-Jordan decomposition. Not modified.
+     * @param pivots Order of row pivots
+     * @param reduced Where the results are written to. Modified.
+     */
+    public static void gaussJordanToReducedEchelon( DenseMatrix64F decomp , int pivots[] , DenseMatrix64F reduced ) {
+        int max = Math.min(decomp.numCols,decomp.numRows);
+
+        for( int row = 0; row < reduced.numRows; row++ ) {
+            for( int i = 0; i < max; i++ ) {
+                reduced.data[row*reduced.numCols + i ] = 0;
+            }
+            System.arraycopy(decomp.data, row * decomp.numCols + max, reduced.data, row * reduced.numCols + max, reduced.numCols - max);
+        }
+
+        // only copy the values if they are not the same instance
+        if( reduced != decomp ) {
+            for( int row = 0; row < reduced.numRows; row++ ) {
+                System.arraycopy(decomp.data, row * decomp.numCols + max, reduced.data, row * reduced.numCols + max, reduced.numCols - max);
+            }
+        }
+
+        for( int col = 0; col < max; col++ ) {
+            int row = pivots[col];
+            reduced.data[row*reduced.numCols + col ] = 1;
+        }
+    }
+
+    /**
+     * Given the results of Gauss-Jordan elimination, reconstruct the original system.  Primarily used for
+     * testing and evaluation purposes.
+     *
+     * @param A Input: Matrix decomposed using Gauss-Jordan decomposition. Output: Reconstructed of original.
+     * @param pivots Order of row pivots
+     */
+    public static void gaussJordanReconstruct( DenseMatrix64F A , int pivots[] ) {
+        int max = Math.min(A.numRows,A.numCols);
+
+        for( int i = max-1; i >= 0; i-- ) {
+            int row = pivots[i];
+
+            double alpha = A.get(row,i);
+            for( int j = i+1; j < A.numCols; j++ ) {
+                A.data[row*A.numCols+j] *= alpha;
+            }
+
+            for( int w = 0; w < A.numRows; w++ ) {
+                if( w == row ) continue;
+
+                alpha = A.get(w,i);
+                A.set(w,i,A.get(row,i)*alpha);
+                for( int j = i+1; j < A.numCols; j++ ) {
+                    A.data[w*A.numCols+j] += A.data[row*A.numCols+j]*alpha;
+                }
+            }
+        }
+    }
 }
