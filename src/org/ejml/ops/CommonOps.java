@@ -32,10 +32,9 @@ import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix64F;
 import org.ejml.data.RowD1Matrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.GjPivotDecomposition;
 import org.ejml.factory.LinearSolver;
 import org.ejml.factory.LinearSolverFactory;
+import org.ejml.factory.ReducedRowEchelonForm;
 
 
 /**
@@ -1779,29 +1778,37 @@ public class CommonOps {
     }
 
     /**
-     * Returns reduced echelon form of the matrix.  For a square matrix this will be an identity matrix.
-     * For wide matrices the first M columns will be an identify matrix with the rest having other values.
+     * <p>
+     * Puts the augmented system matrix into reduced row echelon form (RREF).  A matrix is said to be in
+     * RREF is the following conditions are true:
+     * </p>
+     *
+     * <ol>
+     *     <li>If a row has non-zero entries, then the first non-zero entry is 1.  This is known as the leading one.</li>
+     *     <li>If a column contains a leading one then all other entries in that column are zero.</li>
+     *     <li>If a row contains a leading 1, then each row above contains a leading 1 further to the left.</li>
+     * </ol>
+     *
+     * <p>
+     * [1] Page 19 in, Otter Bretscherm "Linear Algebra with Applications" Prentice-Hall Inc, 1997
+     * </p>
      *
      * @param A Input matrix.  Unmodified.
+     * @param numCoefficient Number of coefficients in the system matrix or the number of columns that are reduced.
      * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
      * @return Reduced echelon form of A
      */
-    public static DenseMatrix64F rref( DenseMatrix64F A , DenseMatrix64F reduced ) {
+    public static DenseMatrix64F rref( DenseMatrix64F A , int numCoefficient, DenseMatrix64F reduced ) {
         if( reduced == null ) {
             reduced = new DenseMatrix64F(A.numRows,A.numCols);
         } else if( reduced.numCols != A.numCols || reduced.numRows != A.numRows )
             throw new IllegalArgumentException("'re' must have the same shape as the original input matrix");
 
-        GjPivotDecomposition<DenseMatrix64F> decomp = DecompositionFactory.gaussJordan(A.numRows,A.numCols);
+        ReducedRowEchelonForm alg = new RrefGaussJordanRowPivot();
+        alg.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*Math.max(A.numRows,A.numCols));
 
-        decomp.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*A.numRows);
-        if( decomp.inputModified() ) {
-            reduced.set(A);
-            decomp.decompose(reduced);
-        } else
-            decomp.decompose(A);
-
-        SpecializedOps.gaussJordanToReducedEchelon(decomp.getDecomposition(),decomp.getRowPivots(),reduced);
+        reduced.set(A);
+        alg.reduce(reduced, numCoefficient);
 
         return reduced;
     }

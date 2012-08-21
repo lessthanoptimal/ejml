@@ -26,8 +26,6 @@ import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
 import org.ejml.data.UtilTestMatrix;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.GjPivotDecomposition;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -870,13 +868,20 @@ public class TestCommonOps {
 
     @Test
     public void rref() {
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,2,3,4,5,6,7);
-        DenseMatrix64F found = CommonOps.rref(A, null);
+        DenseMatrix64F A = new DenseMatrix64F(4,6,true,
+                0,0,1,-1,-1,4,
+                2,4,2,4,2,4,
+                2,4,3,3,3,4,
+                3,6,6,3,6,6);
 
-        GjPivotDecomposition<DenseMatrix64F> decomp = DecompositionFactory.gaussJordan(3,3);
-        assertTrue(decomp.decompose(A));
-        DenseMatrix64F expected = new DenseMatrix64F(2,3);
-        SpecializedOps.gaussJordanToReducedEchelon(decomp.getDecomposition(),decomp.getRowPivots(),expected);
+        DenseMatrix64F expected = new DenseMatrix64F(4,6,true,
+                1,2,0,3,0,2,
+                0,0,1,-1,0,2,
+                0,0,0,0,1,-2,
+                0,0,0,0,0,0);
+
+        DenseMatrix64F found = CommonOps.rref(A,5, null);
+
 
         assertTrue(MatrixFeatures.isEquals(found,expected));
     }

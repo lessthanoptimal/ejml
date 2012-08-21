@@ -189,7 +189,7 @@ public abstract class GenericLinearSolverChecks {
     }
 
     /**
-     * Have it solve for the coeffients in a polynomial
+     * Have it solve for the coefficients in a polynomial
      */
     @Test
     public void rectangular() {

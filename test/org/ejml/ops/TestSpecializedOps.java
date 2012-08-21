@@ -21,8 +21,6 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.GjPivotDecomposition;
 import org.junit.Test;
 
 import java.util.Random;
@@ -262,74 +260,5 @@ public class TestSpecializedOps {
         double found = SpecializedOps.elementSumSq(A);
         
         assertEquals(expected,found,1e-8);
-    }
-
-    @Test
-    public void gaussJordanToReducedEchelon_square() {
-        GjPivotDecomposition<DenseMatrix64F> decomp = DecompositionFactory.gaussJordan(3,3);
-        DenseMatrix64F A = new DenseMatrix64F(3,3,true,2,3,4,4,5,6,10,2,7);
-
-        assertTrue(decomp.decompose(A));
-
-        DenseMatrix64F reduced = new DenseMatrix64F(3,3);
-        SpecializedOps.gaussJordanToReducedEchelon(decomp.getDecomposition(),decomp.getRowPivots(),reduced);
-
-        DenseMatrix64F expected = new DenseMatrix64F(3,3,true,1,0,0,0,1,0,0,0,1);
-
-        checkReducedEchelon(A, reduced, expected, decomp.getRowPivots());
-    }
-
-    @Test
-    public void gaussJordanToReducedEchelon_wide() {
-        GjPivotDecomposition<DenseMatrix64F> decomp = DecompositionFactory.gaussJordan(3,3);
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,2,3,4,4,5,6);
-
-        assertTrue(decomp.decompose(A));
-
-        DenseMatrix64F reduced = new DenseMatrix64F(2,3);
-        SpecializedOps.gaussJordanToReducedEchelon(decomp.getDecomposition(),decomp.getRowPivots(),reduced);
-
-        DenseMatrix64F expected = new DenseMatrix64F(2,3,true,1,0,-1,0,1,2);
-
-        checkReducedEchelon(A, reduced, expected, decomp.getRowPivots());
-    }
-
-    @Test
-    public void gaussJordanToReducedEchelon_tall() {
-        GjPivotDecomposition<DenseMatrix64F> decomp = DecompositionFactory.gaussJordan(3,3);
-        DenseMatrix64F A = new DenseMatrix64F(3,2,true,2,3,4,5,10,2);
-
-        assertTrue(decomp.decompose(A));
-
-        DenseMatrix64F reduced = new DenseMatrix64F(3,2);
-        SpecializedOps.gaussJordanToReducedEchelon(decomp.getDecomposition(),decomp.getRowPivots(),reduced);
-
-        DenseMatrix64F expected = new DenseMatrix64F(3,2,true,1,0,0,1,0,0);
-
-        checkReducedEchelon(A, reduced, expected, decomp.getRowPivots());
-    }
-
-    /**
-     * Checks the solution while taking in account pivots
-     */
-    private void checkReducedEchelon(DenseMatrix64F a, DenseMatrix64F reduced, DenseMatrix64F expected, int[] pivots) {
-        for( int i = 0; i < a.numRows; i++ ) {
-            int row = pivots[i];
-
-            for( int j = 0; j < a.numCols; j++ ) {
-                assertEquals(expected.get(row,j),reduced.get(i,j),1e-8);
-            }
-        }
-    }
-
-    @Test
-    public void gaussJordanReconstruct() {
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,2,3,4,4,5,6);
-        // hand computed Gauss-Jordan
-        DenseMatrix64F A_gj = new DenseMatrix64F(2,3,true,2,-1.5,-1,2,-1,2);
-
-        SpecializedOps.gaussJordanReconstruct(A_gj, new int[]{0, 1});
-
-        assertTrue(MatrixFeatures.isIdentical(A, A_gj, 1e-8));
     }
 }

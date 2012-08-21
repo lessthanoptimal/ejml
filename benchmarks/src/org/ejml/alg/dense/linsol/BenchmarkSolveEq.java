@@ -20,7 +20,6 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.linsol.gj.GaussJordan;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLuKJI;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
@@ -65,10 +64,6 @@ public class BenchmarkSolveEq {
 
     private static void runAlgorithms( int numTrials )
     {
-//        System.out.println("solve GJ No Pivot     = "+ solveBenchmark(
-//                new GaussJordanNoPivot(),numTrials));
-        System.out.println("solve GJ              = "+ solveBenchmark(
-                new GaussJordan(A.numRows),numTrials));
         System.out.println("solve LU A            = "+ solveBenchmark(
                 new LinearSolverLu(new LUDecompositionAlt()),numTrials));
         System.out.println("solve LU B            = "+ solveBenchmark(

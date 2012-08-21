@@ -27,7 +27,6 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
 import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
 import org.ejml.alg.dense.decomposition.eig.WatchedDoubleStepQRDecomposition;
-import org.ejml.alg.dense.decomposition.gj.GjDecompositionRowPivot;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
@@ -282,17 +281,5 @@ public class DecompositionFactory {
         } else {
             return decomp.decompose(M);
         }
-    }
-
-    /**
-     * Gauss-Jordan decomposition with row pivots.  Can be used to compute reduced row echelon form.  Not recommended
-     * for solving linear systems since LU is faster.
-     *
-     * @param numRows Tune performance to matrix of this size
-     * @param numCols Tune performance to matrix of this size
-     * @return Gauss-Jordan decomposition
-     */
-    public static GjPivotDecomposition<DenseMatrix64F> gaussJordan( int numRows , int numCols ) {
-        return new GjDecompositionRowPivot();
     }
 }

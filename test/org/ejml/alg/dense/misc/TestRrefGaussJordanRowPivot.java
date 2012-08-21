@@ -17,25 +17,13 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.linsol.gj;
-
-import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
-
+package org.ejml.alg.dense.misc;
 
 /**
  * @author Peter Abeles
  */
-public class TestGaussJordan extends GenericLinearSolverChecks {
-
-    public TestGaussJordan() {
-        shouldWorkRectangle = false;
-        shouldFailSingular = false;
-    }
-
-    @Override
-    protected LinearSolver createSolver( DenseMatrix64F A ) {
-        return new GaussJordan(A.numRows);
+public class TestRrefGaussJordanRowPivot extends GeneralReducedRowEchelonFormChecks {
+    public TestRrefGaussJordanRowPivot() {
+        super(new RrefGaussJordanRowPivot());
     }
 }
