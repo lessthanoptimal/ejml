@@ -4,7 +4,7 @@
   <groupId>com.googlecode.efficient-java-matrix-library</groupId>
   <artifactId>ejml</artifactId>
   <packaging>jar</packaging>
-  <version>0.19</version>
+  <version>0.20</version>
   <name>Efficient Java Matrix Library</name>
   <url>http://code.google.com/p/efficient-java-matrix-library/</url>
   <description>A fast and easy to use dense matrix linear algebra library written in Java.</description>

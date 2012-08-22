@@ -35,7 +35,7 @@ public class UtilEjml {
     /**
      * Version string used to indicate which version of EJML is being used.
      */
-    public static String VERSION = "0.19";
+    public static String VERSION = "0.20";
 
     /**
      * Default tolerance.

@@ -5,35 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="2aa233b3-7f86-43d1-b24a-257582ab2f2d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/alg/dense/misc/RrefGaussJordanRowPivot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/ejml/factory/ReducedRowEchelonForm.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/misc/GeneralReducedRowEchelonFormChecks.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/misc/TestRrefGaussJordanRowPivot.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/gj/BenchmarkGJDecomposition.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/gj/GjDecompositionRowPivot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/gj/GaussJordan.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/gj/GaussJordanNoPivot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/gj/LinearSolverGaussJordanPivot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/factory/GjPivotDecomposition.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/gj/TestGJDecompositionRowPivot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestGaussJordan.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestGaussJordanNoPivot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestLinearSolverGaussJordanPivot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/gj" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/gj" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/gj" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/gj" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.ipr" afterPath="$PROJECT_DIR$/EJML.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EJML.iws" afterPath="$PROJECT_DIR$/EJML.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java" afterPath="$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/change.txt" afterPath="$PROJECT_DIR$/change.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/factory/DecompositionFactory.java" afterPath="$PROJECT_DIR$/src/org/ejml/factory/DecompositionFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/ops/SpecializedOps.java" afterPath="$PROJECT_DIR$/src/org/ejml/ops/SpecializedOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" afterPath="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/org/ejml/ops/TestSpecializedOps.java" afterPath="$PROJECT_DIR$/test/org/ejml/ops/TestSpecializedOps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" afterPath="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
     </list>
     <list id="d918aade-e83e-48be-9f66-488275b6223a" name="Failed commit: Default" comment="" />
     <ignored path="EJML.iws" />
@@ -107,13 +82,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="RrefGaussJordanRowPivot.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="RrefGaussJordanRowPivot.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/misc/RrefGaussJordanRowPivot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="65" column="31" selection-start="2160" selection-end="2160" vertical-scroll-proportion="0.6271777">
+            <state line="57" column="45" selection-start="1999" selection-end="1999" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UtilEjml.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="37" column="40" selection-start="1177" selection-end="1177" vertical-scroll-proportion="0.52">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -140,9 +124,7 @@
         <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="1780" column="0" selection-start="59847" selection-end="60523" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -151,9 +133,7 @@
         <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="883" column="0" selection-start="27376" selection-end="27376" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -170,7 +150,7 @@
       <file leaf-file-name="change.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/change.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="53" selection-start="2034" selection-end="2034" vertical-scroll-proportion="0.0">
+            <state line="35" column="53" selection-start="2066" selection-end="2066" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -189,9 +169,7 @@
         <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="65" column="5" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -206,7 +184,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestLinearSolverGaussJordan.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java" />
         <option value="$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java" />
         <option value="$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/GeneralGaussJordanChecks.java" />
@@ -222,6 +199,7 @@
         <option value="$PROJECT_DIR$/change.txt" />
         <option value="$PROJECT_DIR$/design_notes.txt" />
         <option value="$PROJECT_DIR$/src/org/ejml/alg/dense/misc/RrefGaussJordanRowPivot.java" />
+        <option value="$PROJECT_DIR$/src/org/ejml/UtilEjml.java" />
       </list>
     </option>
   </component>
@@ -273,30 +251,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EJML" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ejml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -315,6 +269,44 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EJML" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ejml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Favorites" />
@@ -322,14 +314,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="104" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="59" />
     <property name="project.structure.last.edited" value="Project" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="59" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="34" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="88" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="88" />
     <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
@@ -348,18 +340,18 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="910" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/test/org/ejml/alg/dense/misc" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="options.lastSelected" value="fileTemplates" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="project.structure.side.proportion" value="0.2" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
-    <property name="options.searchVisible" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -379,135 +371,6 @@
       <recent name="org.ejml.factories" />
       <recent name="org.ejml.alg.dense.linsol.svd" />
     </key>
-  </component>
-  <component name="RestoreUpdateTree">
-    <UpdateInfo date="Moments ago" ActionInfo="_Update">
-      <UpdatedFiles>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated from server" />
-          <option name="myStatusName" value="Changed on server" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CHANGED_ON_SERVER" />
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Updated" />
-            <option name="myStatusName" value="Changed" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="false" />
-            <option name="myId" value="UPDATED" />
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/test/org/ejml/ops/TestSingularOps.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/test/org/ejml/ops/TestSpecializedOps.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/ops/SpecializedOps.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/InvertUsingSolve.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/factory/DecompositionFactory.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/factory/LUDecomposition.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/change.txt</PATH>
-          </FILE-GROUP>
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Created" />
-            <option name="myStatusName" value="Created" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="false" />
-            <option name="myId" value="CREATED" />
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/gj/TestLinearSolverGaussJordanPivot.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/gj</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/test/org/ejml/alg/dense/decomposition/gj/TestGJDecompositionRowPivot.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/alg/dense/linsol/gj/LinearSolverGaussJordanPivot.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/gj</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/alg/dense/decomposition/gj/GjDecompositionRowPivot.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/src/org/ejml/factory/GjPivotDecomposition.java</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/gj</PATH>
-            <PATH vcs="svn" revision="406">$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/decomposition/gj/BenchmarkGJDecomposition.java</PATH>
-          </FILE-GROUP>
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Deleted" />
-            <option name="myStatusName" value="Deleted" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="true" />
-            <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          </FILE-GROUP>
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Restored" />
-            <option name="myStatusName" value="Will be restored" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="false" />
-            <option name="myId" value="RESTORED" />
-          </FILE-GROUP>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Modified" />
-          <option name="myStatusName" value="Modified" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MODIFIED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Skipped" />
-          <option name="myStatusName" value="Skipped" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="SKIPPED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with conflicts" />
-          <option name="myStatusName" value="Will be merged with conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_CONFLICTS" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with tree conflicts" />
-          <option name="myStatusName" value="Merged with tree conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged" />
-          <option name="myStatusName" value="Will be merged" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Not in repository" />
-          <option name="myStatusName" value="Not in repository" />
-          <option name="mySupportsDeletion" value="true" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UNKNOWN" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Locally added" />
-          <option name="myStatusName" value="Locally added" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="LOCALLY_ADDED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Locally removed" />
-          <option name="myStatusName" value="Locally removed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="LOCALLY_REMOVED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Switched" />
-          <option name="myStatusName" value="Switched" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="SWITCHED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with property conflicts" />
-          <option name="myStatusName" value="Will be merged with property conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-        </FILE-GROUP>
-      </UpdatedFiles>
-    </UpdateInfo>
   </component>
   <component name="RunManager" selected="JUnit.org.ejml">
     <configuration default="false" name="GeneralReducedRowEchelonFormChecks.testSingular" type="JUnit" factoryName="JUnit" temporary="true">
@@ -988,7 +851,11 @@
       <created>1342746661152</created>
       <updated>1342746661152</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="- Removed Gauss-Jordan linear solver&#10;- Created ReducedRowEchelonForm interface&#10;  * Added GJ implementation&#10;  * better testing for RREF">
+      <created>1345551562103</created>
+      <updated>1345551562103</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -1013,32 +880,32 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="0" width="1926" height="1057" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39537445" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20768602" sideWeight="0.6627497" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.50770926" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.50770926" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32268724" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32810616" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.244373" sideWeight="0.53645265" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" sideWeight="0.6627497" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29082176" sideWeight="0.49229074" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2905983" sideWeight="0.49229074" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="100" y="125" width="1080" height="774" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39537445" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -1177,102 +1044,79 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/org/ejml/factory/DecompositionFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="283" column="5" selection-start="12012" selection-end="12012" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="283" column="5" selection-start="12012" selection-end="12012" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/SpecializedOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="420" column="5" selection-start="14083" selection-end="14083" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="420" column="5" selection-start="14083" selection-end="14083" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestSpecializedOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="263" column="5" selection-start="7616" selection-end="7616" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="263" column="5" selection-start="7616" selection-end="7616" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/linsol/GenericLinearSolverChecks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="0" selection-start="5559" selection-end="5559" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="883" column="0" selection-start="27376" selection-end="27376" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1780" column="0" selection-start="59847" selection-end="60523" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
+        <state line="187" column="0" selection-start="5559" selection-end="5559" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/misc/TestRrefGaussJordanRowPivot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="23" selection-start="1000" selection-end="1000" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="26" column="23" selection-start="1000" selection-end="1000" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java">
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/factory/ReducedRowEchelonForm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="5" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="26" column="25" selection-start="971" selection-end="971" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/ops/CommonOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1780" column="0" selection-start="59847" selection-end="60523" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/ejml/ops/TestCommonOps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="883" column="0" selection-start="27376" selection-end="27376" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/ejml/alg/dense/misc/GeneralReducedRowEchelonFormChecks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="23" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="22" column="23" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/change.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="53" selection-start="2034" selection-end="2034" vertical-scroll-proportion="0.0">
+        <state line="35" column="53" selection-start="2066" selection-end="2066" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/design_notes.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="54" selection-start="3971" selection-end="3971" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="79" column="54" selection-start="3971" selection-end="3971" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/ejml/factory/ReducedRowEchelonForm.java">
+    <entry file="file://$PROJECT_DIR$/benchmarks/src/org/ejml/alg/dense/linsol/BenchmarkSolveEq.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="25" selection-start="971" selection-end="971" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="65" column="5" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/ejml/alg/dense/misc/RrefGaussJordanRowPivot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="31" selection-start="2160" selection-end="2160" vertical-scroll-proportion="0.6271777">
+        <state line="57" column="45" selection-start="1999" selection-end="1999" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/ejml/UtilEjml.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="40" selection-start="1177" selection-end="1177" vertical-scroll-proportion="0.52">
+          <folding />
         </state>
       </provider>
     </entry>
