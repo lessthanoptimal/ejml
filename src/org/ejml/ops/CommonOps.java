@@ -1794,21 +1794,25 @@ public class CommonOps {
      * </p>
      *
      * @param A Input matrix.  Unmodified.
-     * @param numCoefficient Number of coefficients in the system matrix or the number of columns that are reduced.
+     * @param numUnknowns Number of unknowns/columns that are reduced. Set to -1 to default to
+     *                       Math.min(A.numRows,A.numCols), which works for most systems.
      * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
      * @return Reduced echelon form of A
      */
-    public static DenseMatrix64F rref( DenseMatrix64F A , int numCoefficient, DenseMatrix64F reduced ) {
+    public static DenseMatrix64F rref( DenseMatrix64F A , int numUnknowns, DenseMatrix64F reduced ) {
         if( reduced == null ) {
             reduced = new DenseMatrix64F(A.numRows,A.numCols);
         } else if( reduced.numCols != A.numCols || reduced.numRows != A.numRows )
             throw new IllegalArgumentException("'re' must have the same shape as the original input matrix");
 
+        if( numUnknowns <= 0 )
+            numUnknowns = Math.min(A.numCols,A.numRows);
+
         ReducedRowEchelonForm alg = new RrefGaussJordanRowPivot();
         alg.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*Math.max(A.numRows,A.numCols));
 
         reduced.set(A);
-        alg.reduce(reduced, numCoefficient);
+        alg.reduce(reduced, numUnknowns);
 
         return reduced;
     }

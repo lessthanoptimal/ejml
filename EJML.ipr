@@ -362,6 +362,7 @@
     <dictionary name="pja">
       <words>
         <w>abeles</w>
+        <w>kalman</w>
       </words>
     </dictionary>
   </component>

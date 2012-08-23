@@ -27,7 +27,7 @@ import org.ejml.simple.SimpleMatrix;
  * read and write, but the performance is degraded due to excessive creation/destruction of
  * memory and the use of more generic algorithms.  This also demonstrates how code can be
  * seamlessly implemented using both SimpleMatrix and DenseMatrix64F.  This allows code
- * to be quickly prototyped or to be writen either by novices or experts.
+ * to be quickly prototyped or to be written either by novices or experts.
  *
  * @author Peter Abeles
  */
