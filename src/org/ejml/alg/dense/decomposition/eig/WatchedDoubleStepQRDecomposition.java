@@ -65,7 +65,8 @@ public class WatchedDoubleStepQRDecomposition
     @Override
     public boolean decompose(DenseMatrix64F A) {
 
-        hessenberg.decompose(A);
+        if( !hessenberg.decompose(A) )
+            return false;
 
         H = hessenberg.getH(null);
 

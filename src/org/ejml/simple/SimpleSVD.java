@@ -126,7 +126,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
      * @return A singular value.
      */
     public double getSingleValue( int index ) {
-        return svd.getSingularValues()[index];
+        return W.get(index,index);
     }
 
     /**

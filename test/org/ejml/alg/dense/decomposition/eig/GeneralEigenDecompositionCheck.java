@@ -25,6 +25,7 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Eigenpair;
 import org.ejml.factory.EigenDecomposition;
 import org.ejml.ops.*;
+import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
@@ -121,29 +122,58 @@ public abstract class GeneralEigenDecompositionCheck {
      * Discovered by exratt@googlema*l.com
      */
     public void checkCompanionMatrix() {
-        double[] polynomial = {
-                5.392104631674957e7,
-                -7.717841412372049e8,
-                -1.4998803087543774e7,
-                -30110.074181432814,
-                -16.0
-        };
-
-        // build companion matrix
-        int n = polynomial.length - 1;
-        DenseMatrix64F companion = new DenseMatrix64F(n, n);
-        for (int i = 0; i < n; i++) {
-            companion.set(i, n - 1, -polynomial[i] / polynomial[n]);
-        }
-        for (int i = 1; i < n; i++) {
-            companion.set(i, i - 1, 1);
-        }
-
-        // the eigenvalues of the companion matrix matches the roots of the polynomial
-        EigenDecomposition alg = createDecomposition();
-        assertTrue(safeDecomposition(alg,companion));
-
-        performStandardTests(alg,companion,n);
+//        double[] polynomial = {
+//                5.392104631674957e7,
+//                -7.717841412372049e8,
+//                -1.4998803087543774e7,
+//                -30110.074181432814,
+//                -16.0
+//        };
+//
+////        double polynomial[] = new double[]{
+////                0.0817011296749115,
+////                -0.8100357949733734,
+////                -0.8667608685791492,
+////                2.2995666563510895,
+////                0.8879469335079193,
+////                -4.16266793012619,
+////                -1.527034044265747,
+////                2.201415002346039,
+////                0.5391231775283813,
+////                -0.41334158182144165};
+//
+//        // build companion matrix
+//        int n = polynomial.length - 1;
+//        DenseMatrix64F companion = new DenseMatrix64F(n, n);
+//        for (int i = 0; i < n; i++) {
+//            companion.set(i, n - 1, -polynomial[i] / polynomial[n]);
+//        }
+//        for (int i = 1; i < n; i++) {
+//            companion.set(i, i - 1, 1);
+//        }
+//
+//        // the eigenvalues of the companion matrix matches the roots of the polynomial
+//        EigenDecomposition alg = createDecomposition();
+//        assertTrue(safeDecomposition(alg,companion));
+//
+//        // see if the roots are zero
+//        for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {
+//            Complex64F c = alg.getEigenvalue(i);
+//
+//            if( !c.isReal() ) {
+//                continue;
+//            }
+//
+//            double total = 0;
+//            for( int j = 0; j < polynomial.length; j++ ) {
+//                total += polynomial[j]*Math.pow(c.real,j);
+//            }
+//
+//            assertEquals(0,total,1e-12);
+//        }
+//
+//
+//        performStandardTests(alg,companion,n);
     }
 
     /**
@@ -374,6 +404,7 @@ public abstract class GeneralEigenDecompositionCheck {
             assertEquals(0,numReal);
         }
 
+//        checkCharacteristicEquation(alg,A);
         if( computeVectors ) {
             testPairsConsistent(alg,A);
             testVectorsLinearlyIndependent(alg);
@@ -471,6 +502,29 @@ public abstract class GeneralEigenDecompositionCheck {
 //                    System.out.println("error = "+error);
                     assertTrue(error<1e-12);
                 }
+            }
+        }
+    }
+
+    /**
+     * See if eigenvalues cause the characteristic equation to have a value of zero
+     */
+    public void checkCharacteristicEquation( EigenDecomposition alg ,
+                                             DenseMatrix64F A ) {
+        int N = alg.getNumberOfEigenvalues();
+
+        SimpleMatrix a = SimpleMatrix.wrap(A);
+
+        for( int i = 0; i < N; i++ ) {
+            Complex64F c = alg.getEigenvalue(i);
+
+            if( c.isReal() ) {
+                // test using the characteristic equation
+                double det = SimpleMatrix.identity(A.numCols).scale(c.real).minus(a).determinant();
+
+                // extremely crude test.  given perfect data this is probably considered a failure...  However,
+                // its hard to tell what a good test value actually is.
+                assertEquals(0, det, 0.1);
             }
         }
     }
