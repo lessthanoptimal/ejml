@@ -280,9 +280,8 @@ public class TestSingularOps {
 
     @Test
     public void nullVector() {
-        for( int numRows = 2; numRows < 5; numRows++ ) {
-            for( int numCols = 2; numCols < 5; numCols++ ) {
-
+        for( int numRows = 2; numRows < 10; numRows++ ) {
+            for( int numCols = 2; numCols < 10; numCols++ ) {
                 // construct a matrix with a null space by decomposition a random matrix
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createRandom(numRows,numCols,rand));
@@ -300,14 +299,24 @@ public class TestSingularOps {
 
                 A=U.mult(S).mult(Vt);
 
-                // now find the null space
-                SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullVector(svd, null));
+                // Find the right null space
+                SimpleMatrix v = SimpleMatrix.wrap(SingularOps.nullVector(svd, true , null));
 
                 // see if the returned vector really is the null space
                 SimpleMatrix ns = A.mult(v);
 
                 for( int i = 0; i < ns.numRows(); i++ ) {
-                    assertEquals(0,ns.get(i,0),1e-8);
+                    assertEquals(0,ns.get(i),1e-8);
+                }
+
+                // Find the left null space
+                v = SimpleMatrix.wrap(SingularOps.nullVector(svd, false , null));
+
+                // see if the returned vector really is the null space
+                ns = v.transpose().mult(A);
+
+                for( int i = 0; i < ns.numRows(); i++ ) {
+                    assertEquals(0,ns.get(i),1e-8);
                 }
             }
         }

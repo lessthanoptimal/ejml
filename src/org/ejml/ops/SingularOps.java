@@ -265,33 +265,52 @@ public class SingularOps {
 
     /**
      * <p>
-     * If a singular matrix is passed in then a non-zero vector from the null-space is returned.  This vector is found
-     * by returning the column in V associated with the smallest singular value.  Useful when it can be assumed that
-     * the matrix is singular and a vector in the null space is needed.
+     * The vector associated will the smallest singular value is returned as the null space
+     * of the decomposed system.  A right null space is returned if 'isRight' is set to true,
+     * and a left null space if false.
      * </p>
      *
      * @param svd A precomputed decomposition.  Not modified.
-     * @param nullVector Storage for a vector from the null space.  Modified.
+     * @param isRight true for right null space and false for left null space.  Right is more commonly used.
+     * @param nullVector Optional storage for a vector for the null space.  Modified.
      * @return Vector in V associated with smallest singular value..
      */
-    public static DenseMatrix64F nullVector( SingularValueDecomposition<DenseMatrix64F> svd , DenseMatrix64F nullVector )
+    public static DenseMatrix64F nullVector( SingularValueDecomposition<DenseMatrix64F> svd ,
+                                             boolean isRight ,
+                                             DenseMatrix64F nullVector )
     {
         int N = svd.numberOfSingularValues();
         double s[] = svd.getSingularValues();
 
-        DenseMatrix64F V = svd.getV(null,true);
+        DenseMatrix64F A = isRight ? svd.getV(null,true) : svd.getU(null,false);
 
-        if( V.numRows != svd.numCols() ) {
-            throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");
+        if( isRight ) {
+            if( A.numRows != svd.numCols() ) {
+                throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");
+            }
+
+            if( nullVector == null ) {
+                nullVector = new DenseMatrix64F(svd.numCols(),1);
+            }
+        } else {
+            if( A.numCols != svd.numRows() ) {
+                throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");
+            }
+
+            if( nullVector == null ) {
+                nullVector = new DenseMatrix64F(svd.numRows(),1);
+            }
         }
 
-        if( nullVector == null ) {
-            nullVector = new DenseMatrix64F(svd.numCols(),1);
-        }
+
         int smallestIndex = -1;
 
-        // find the smallest singular value
-        if( N == svd.numCols() ) {
+        if( isRight && svd.numCols() > svd.numRows() )
+            smallestIndex = svd.numCols()-1;
+        else if( !isRight && svd.numCols() < svd.numRows() )
+            smallestIndex = svd.numRows()-1;
+        else {
+            // find the smallest singular value
             double smallestValue = Double.MAX_VALUE;
 
             for( int i = 0; i < N; i++ ) {
@@ -300,12 +319,13 @@ public class SingularOps {
                     smallestIndex = i;
                 }
             }
-        } else {
-            smallestIndex = svd.numCols()-1;
         }
 
-        // copy the column from v
-        SpecializedOps.subvector(V,smallestIndex,0,V.numRows,true,0,nullVector);
+        // extract the null space
+        if( isRight )
+            SpecializedOps.subvector(A,smallestIndex,0,A.numRows,true,0,nullVector);
+        else
+            SpecializedOps.subvector(A,0,smallestIndex,A.numRows,false,0,nullVector);
 
         return nullVector;
     }
