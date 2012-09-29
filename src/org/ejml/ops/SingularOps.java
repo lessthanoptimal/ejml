@@ -302,7 +302,6 @@ public class SingularOps {
             }
         }
 
-
         int smallestIndex = -1;
 
         if( isRight && svd.numCols() > svd.numRows() )

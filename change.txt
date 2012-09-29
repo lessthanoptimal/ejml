@@ -10,6 +10,7 @@ Date format: year/month/day
 - Changed behavior of CommonOps.rref() so that numUnknowns <= 0 causes it to be set to a reasonable default
 - Fixed bug in SimpleSVD where getSingularValue() did not return ordered singular values
 - SingularOps.nullVector() now lets you specify if it is the left or right null space
+- Added SafeSvd, which is a wrapper class that ensures that the input to SVD is not modified
 
 ----- Version 0.20
 
