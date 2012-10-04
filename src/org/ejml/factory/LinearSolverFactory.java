@@ -121,8 +121,8 @@ public class LinearSolverFactory {
      * times then this should be set to true.
      * </p>
      *
-     * @param computeNorm2 true to compute the minimum 2-norm solution for singular systems.
-     * @param computeQ Should it precompute Q or use house holder.
+     * @param computeNorm2 true to compute the minimum 2-norm solution for singular systems. Try true.
+     * @param computeQ Should it precompute Q or use house holder.  Try false;
      * @return Pseudo inverse type solver using QR with column pivots.
      */
     public static LinearSolver<DenseMatrix64F> leastSquaresQrPivot( boolean computeNorm2 , boolean computeQ ) {
