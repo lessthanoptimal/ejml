@@ -25,10 +25,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static junit.framework.Assert.assertEquals;
 import static org.ejml.UtilEjml.parseMatrix;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**

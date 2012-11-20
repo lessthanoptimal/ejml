@@ -434,7 +434,7 @@
   <component name="libraryTable">
     <library name="testing">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/junit-4.10.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/junit-4.11.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
