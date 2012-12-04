@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.21
 
-2012/
+2012/12/04
 
 - Removed Android build option from ant because there is no need for such an option
 - Changed behavior of CommonOps.rref() so that numUnknowns <= 0 causes it to be set to a reasonable default

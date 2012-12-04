@@ -1,4 +1,5 @@
 - Update version number in UtilEjml.VERSION
+- Update change.txt
 - Update version in pom.xml
 - check ant build
   * ant clean
