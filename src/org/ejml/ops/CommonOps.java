@@ -1808,7 +1808,7 @@ public class CommonOps {
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);
 
-        ReducedRowEchelonForm alg = new RrefGaussJordanRowPivot();
+        ReducedRowEchelonForm<DenseMatrix64F> alg = new RrefGaussJordanRowPivot();
         alg.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*Math.max(A.numRows,A.numCols));
 
         reduced.set(A);

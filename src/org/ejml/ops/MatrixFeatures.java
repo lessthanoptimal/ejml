@@ -111,6 +111,9 @@ public class MatrixFeatures {
            return false;
 
         CholeskyDecompositionInner chol = new CholeskyDecompositionInner(true);
+        if( chol.inputModified() )
+            A = A.copy();
+
         return chol.decompose(A);
     }
 
@@ -132,6 +135,8 @@ public class MatrixFeatures {
            return false;
 
         EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numCols,false);
+        if( eig.inputModified() )
+            A = A.copy();
         eig.decompose(A);
 
         for( int i = 0; i < A.numRows; i++ ) {
@@ -474,6 +479,9 @@ public class MatrixFeatures {
     {
         // LU decomposition
         LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(A.numRows,A.numCols);
+        if( lu.inputModified() )
+            A = A.copy();
+
         if( !lu.decompose(A))
             throw new RuntimeException("Decompositon failed?");
 
@@ -610,7 +618,6 @@ public class MatrixFeatures {
      * @return The matrix's rank.
      */
     public static int rank( DenseMatrix64F A ) {
-
         return rank(A, UtilEjml.EPS*100);
     }
 
@@ -623,6 +630,9 @@ public class MatrixFeatures {
      */
     public static int rank( DenseMatrix64F A , double threshold ) {
         SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
+
+        if( svd.inputModified() )
+            A = A.copy();
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");
@@ -649,6 +659,9 @@ public class MatrixFeatures {
      */
     public static int nullity( DenseMatrix64F A , double threshold ) {
         SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(A.numRows,A.numCols,false,false,true);
+
+        if( svd.inputModified() )
+            A = A.copy();
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");

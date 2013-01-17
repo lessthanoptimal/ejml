@@ -2,6 +2,16 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.22
+
+2013/
+
+- Fixed bug in MatrixFeatures.isPositiveDefinite() where the input was being modified
+  * Added a check for isModified() flag in this and several other functions
+  * Thanks Eriklan Dodinh for reporting the bug
+- MatrixIO.loadCSV() now will throw IOException() if an incorrect matrix size is specified
+  * Thanks Ioannis P. for reporting this bug
+
 ----- Version 0.21
 
 2012/12/04

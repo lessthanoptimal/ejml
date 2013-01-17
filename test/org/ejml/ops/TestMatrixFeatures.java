@@ -69,24 +69,32 @@ public class TestMatrixFeatures {
      */
     @Test
     public void isPositiveDefinite() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("1 0 0 1",2);
+        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
         DenseMatrix64F b = UtilEjml.parseMatrix("0 1 1 0",2);
         DenseMatrix64F c = UtilEjml.parseMatrix("0 0 0 0",2);
 
         assertTrue(MatrixFeatures.isPositiveDefinite(a));
         assertFalse(MatrixFeatures.isPositiveDefinite(b));
         assertFalse(MatrixFeatures.isPositiveDefinite(c));
+
+        // make sure the input isn't modified
+        assertEquals(2,a.get(0,0),1e-8);
+        assertEquals(2,a.get(1,1),1e-8);
     }
 
     @Test
     public void isPositiveSemidefinite() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("1 0 0 1",2);
+        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
         DenseMatrix64F b = UtilEjml.parseMatrix("0 1 1 0",2);
         DenseMatrix64F c = UtilEjml.parseMatrix("0 0 0 0",2);
 
         assertTrue(MatrixFeatures.isPositiveSemidefinite(a));
         assertFalse(MatrixFeatures.isPositiveSemidefinite(b));
         assertTrue(MatrixFeatures.isPositiveSemidefinite(c));
+
+        // make sure the input isn't modified
+        assertEquals(2,a.get(0,0),1e-8);
+        assertEquals(2,a.get(1,1),1e-8);
     }
 
     @Test
@@ -253,6 +261,22 @@ public class TestMatrixFeatures {
         assertFalse(MatrixFeatures.isInverse(A,A_inv,1e-10));
     }
 
+    /**
+     * Makes sure it isn't modifying the input
+     */
+    @Test
+    public void isInverse_nomodify() {
+        DenseMatrix64F A = RandomMatrices.createRandom(3,3,-1,1,rand);
+        DenseMatrix64F B = RandomMatrices.createRandom(3,3,-1,1,rand);
+        DenseMatrix64F A_copy = A.copy();
+        DenseMatrix64F B_copy = B.copy();
+
+        MatrixFeatures.isInverse(A,B,1e-10);
+
+        assertTrue(MatrixFeatures.isIdentical(A,A_copy,1e-8));
+        assertTrue(MatrixFeatures.isIdentical(B,B_copy,1e-8));
+    }
+
     @Test
     public void hasNaN() {
         DenseMatrix64F m = new DenseMatrix64F(3,3);
@@ -287,6 +311,10 @@ public class TestMatrixFeatures {
         // test a positive case
         DenseMatrix64F A = new DenseMatrix64F(2,3, true, 1, 2, 3, 2, 3, 4);
         assertTrue(MatrixFeatures.isRowsLinearIndependent(A));
+
+        // make sure the input wasn't modified
+        DenseMatrix64F A_copy = new DenseMatrix64F(2,3, true, 1, 2, 3, 2, 3, 4);
+        assertTrue(MatrixFeatures.isIdentical(A,A_copy,1e-8));
 
         // test negative case
         A = new DenseMatrix64F(2,3, true, 1, 2, 3, 1, 2, 3);
@@ -363,5 +391,65 @@ public class TestMatrixFeatures {
             A.set(4,0,Double.NaN);
             assertFalse(MatrixFeatures.isUpperTriangle(A,0,1e-8));
         }
+    }
+
+    @Test
+    public void rank() {
+        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a_copy = a.copy();
+
+        assertEquals(2,MatrixFeatures.rank(a));
+        // make sure the input wasn't modified
+        assertTrue(MatrixFeatures.isIdentical(a,a_copy,1e-8));
+
+        a = UtilEjml.parseMatrix("2 0 0 0",2);
+        assertEquals(1,MatrixFeatures.rank(a));
+    }
+
+    @Test
+    public void rank_threshold() {
+        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a_copy = a.copy();
+
+        assertEquals(2,MatrixFeatures.rank(a,1e-14));
+        // make sure the input wasn't modified
+        assertTrue(MatrixFeatures.isIdentical(a,a_copy,1e-8));
+
+        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        assertEquals(1,MatrixFeatures.rank(a,1e-14));
+
+        // make sure it's using the threshold parameter
+        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        assertEquals(2,MatrixFeatures.rank(a,1e-200));
+    }
+
+    @Test
+    public void nullity() {
+        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a_copy = a.copy();
+
+        assertEquals(0,MatrixFeatures.nullity(a));
+        // make sure the input wasn't modified
+        assertTrue(MatrixFeatures.isIdentical(a,a_copy,1e-8));
+
+        a = UtilEjml.parseMatrix("2 0 0 0",2);
+        assertEquals(1,MatrixFeatures.nullity(a));
+    }
+
+    @Test
+    public void nullity_threshold() {
+        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a_copy = a.copy();
+
+        assertEquals(0,MatrixFeatures.nullity(a, 1e-14));
+        // make sure the input wasn't modified
+        assertTrue(MatrixFeatures.isIdentical(a,a_copy,1e-8));
+
+        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        assertEquals(1,MatrixFeatures.nullity(a, 1e-14));
+
+        // make sure it's using the threshold parameter
+        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        assertEquals(0,MatrixFeatures.nullity(a, 1e-200));
     }
 }

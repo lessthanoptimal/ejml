@@ -67,6 +67,8 @@ public class ReadMatrixCsv extends ReadCsv {
 
         for( int i = 0; i < numRows; i++ ) {
             List<String> words = extractWords();
+            if( words == null )
+                throw new IOException("Too few rows found. expected "+numRows+" actual "+i);
 
             if( words.size() != numCols )
                 throw new IOException("Unexpected number of words in column. Found "+words.size()+" expected "+numCols);
