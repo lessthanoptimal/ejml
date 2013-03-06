@@ -11,6 +11,11 @@ Date format: year/month/day
   * Thanks Eriklan Dodinh for reporting the bug
 - MatrixIO.loadCSV() now will throw IOException() if an incorrect matrix size is specified
   * Thanks Ioannis P. for reporting this bug
+- LUDecompositionNR now returns false for singular matrices.
+  * Thanks Luke Nezda for reporting the bug
+- Moved LUDecompositionNR into experimental directory since its use is not recommended, but is still a good algorithm.
+- Clarified ordering of coefficients in polynomial root example
+  * Thanks Rahul for getting confused by the lack of documentation
 
 ----- Version 0.21
 

@@ -38,6 +38,10 @@ import org.ejml.factory.EigenDecomposition;
  * to see if the eigenvalues are real or complex.
  * </p>
  *
+ * <p>
+ * For more algorithms and robust solution for finding polynomial roots check out http://ddogleg.org
+ * </p>
+ *
  * @author Peter Abeles
  */
 public class PolynomialRootFinder {
@@ -47,6 +51,10 @@ public class PolynomialRootFinder {
      * Given a set of polynomial coefficients, compute the roots of the polynomial.  Depending on
      * the polynomial being considered the roots may contain complex number.  When complex numbers are
      * present they will come in pairs of complex conjugates.
+     * </p>
+     *
+     * <p>
+     * Coefficients are ordered from least to most significant, e.g: y = c[0] + x*c[1] + x*x*c[2].
      * </p>
      *
      * @param coefficients Coefficients of the polynomial.

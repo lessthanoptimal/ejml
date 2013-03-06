@@ -77,8 +77,8 @@ public class LUDecompositionNR extends LUDecompositionBase {
 
             // see if it is singular
             if( imax < 0 ) {
-                // TODO flag as singular
                 indx[k] = -1;
+                return true;
             } else {
                 // check to see if rows need to be interchanged
                 if( k != imax ) {

@@ -17,7 +17,11 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.decomposition.lu;
+package org.ejml.alg.dense.decompose.lu;
+
+import org.ejml.alg.dense.decomposition.lu.GeneralLuDecompositionChecks;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR;
 
 import java.util.Random;
 
@@ -26,8 +30,6 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class TestLUDecompositionNR extends GeneralLuDecompositionChecks {
-    Random rand = new Random(0x3344);
-
     @Override
     public LUDecompositionBase create(int numRows, int numCols) {
         return new LUDecompositionNR();
