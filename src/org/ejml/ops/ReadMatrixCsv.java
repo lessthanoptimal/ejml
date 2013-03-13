@@ -61,6 +61,14 @@ public class ReadMatrixCsv extends ReadCsv {
         return read(numRows,numCols);
     }
 
+    /**
+     * Reads in a DenseMatrix64F from the IO stream where the user specifies the matrix dimensions.
+     *
+     * @param numRows Number of rows in the matrix
+     * @param numCols Number of columns in the matrix
+     * @return DenseMatrix64F
+     * @throws IOException
+     */
     public DenseMatrix64F read( int numRows , int numCols ) throws IOException {
 
         DenseMatrix64F A = new DenseMatrix64F(numRows,numCols);
