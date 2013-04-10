@@ -72,7 +72,9 @@ public class BenchmarkInverseStability {
 //        solvers.add(new GaussJordan(3));
 //        names.add("GJ");
 //        solvers.add(new LinearSolverLu(new LUDecompositionAlt()));
-//        names.add("LU A");
+//        names.add("LU ALT");
+//        solvers.add(new LinearSolverLu(new LUDecompositionNR()));
+//        names.add("LU NR");
 //        solvers.add(new LinearSolverLuKJI(new LUDecompositionAlt()));
 //        names.add("LU B");
 //        solvers.add(new LinearSolverLu(new LUDecompositionAlt(),true));

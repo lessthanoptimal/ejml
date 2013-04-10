@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.22
 
-2013/
+2013/04/09
 
 - Fixed bug in MatrixFeatures.isPositiveDefinite() where the input was being modified
   * Added a check for isModified() flag in this and several other functions
