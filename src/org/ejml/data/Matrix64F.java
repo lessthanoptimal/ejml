@@ -152,6 +152,24 @@ public abstract class Matrix64F implements Serializable {
     }
 
     /**
+     * Sets the number of rows.
+     *
+     * @param numRows Number of rows
+     */
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
+    }
+
+    /**
+     * Sets the number of columns.
+     *
+     * @param numCols Number of columns
+     */
+    public void setNumCols(int numCols) {
+        this.numCols = numCols;
+    }
+
+    /**
      * Returns the number of elements in this matrix, which is the number of rows
      * times the number of columns.
      *

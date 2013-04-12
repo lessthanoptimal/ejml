@@ -2,6 +2,12 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.22.1
+
+2013/
+
+- Modified Matrix64F so that it can be serialized using beans.  Added setNumRows() and setNumCols()
+
 ----- Version 0.22
 
 2013/04/09
