@@ -7,6 +7,7 @@ Date format: year/month/day
 2013/
 
 - Modified Matrix64F so that it can be serialized using beans.  Added setNumRows() and setNumCols()
+- Added user configurable threshold in SolvePseudoInverseSvd
 
 ----- Version 0.22
 

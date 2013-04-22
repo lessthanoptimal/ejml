@@ -50,6 +50,9 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
     // the results of the pseudo-inverse
     private DenseMatrix64F pinv = new DenseMatrix64F(1,1);
 
+    // relative threshold used to select singular values
+    private double threshold = UtilEjml.EPS;
+
     /**
      * Creates a new solver targeted at the specified matrix size.
      *
@@ -87,7 +90,7 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
                 maxSingular = S[i];
         }
 
-        double tau = UtilEjml.EPS*Math.max(A.numCols,A.numRows)*maxSingular;
+        double tau = threshold*Math.max(A.numCols,A.numRows)*maxSingular;
 
         // computer the pseudo inverse of A
         for( int i = 0; i < N; i++ ) {
@@ -135,5 +138,13 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    /**
+     * Specify the relative threshold used to select singular values.  By default it's UtilEjml.EPS.
+     * @param threshold The singular value threshold
+     */
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 }
