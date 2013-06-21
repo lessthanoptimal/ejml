@@ -2,9 +2,9 @@ Change log for EJML
 
 Date format: year/month/day
 
------ Version 0.22.1
+----- Version 0.23
 
-2013/
+2013/06/21
 
 - Modified Matrix64F so that it can be serialized using beans.  Added setNumRows() and setNumCols()
 - Added user configurable threshold in SolvePseudoInverseSvd
