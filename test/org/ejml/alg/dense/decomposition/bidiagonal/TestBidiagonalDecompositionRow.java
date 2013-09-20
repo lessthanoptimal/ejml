@@ -191,7 +191,7 @@ public class TestBidiagonalDecompositionRow extends GenericBidiagonalCheck {
 
 
         public DebugBidiagonal( DenseMatrix64F A ) {
-            init(A.<DenseMatrix64F>copy());
+            init(A.copy());
         }
 
         @Override

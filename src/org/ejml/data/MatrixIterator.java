@@ -31,7 +31,7 @@ import java.util.Iterator;
  */
 public class MatrixIterator implements Iterator<Double> {
     // the matrix which is being iterated through
-    private Matrix64F a;
+    private ReshapeMatrix64F a;
 
     // should it iterate through by row or by column
     private boolean rowMajor;
@@ -64,7 +64,7 @@ public class MatrixIterator implements Iterator<Double> {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator(Matrix64F a, boolean rowMajor,
+    public MatrixIterator(ReshapeMatrix64F a, boolean rowMajor,
                           int minRow, int minCol, int maxRow, int maxCol
     ) {
         if( maxCol < minCol )

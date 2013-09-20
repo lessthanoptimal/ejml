@@ -8,6 +8,11 @@ Date format: year/month/day
 
 - Modified Matrix64F so that it can be serialized using beans.  Added setNumRows() and setNumCols()
 - Added user configurable threshold in SolvePseudoInverseSvd
+- Added fixed sized square matrices and vectors
+  * Auto code generator for standard operations
+  * Matrix 2x2, 3x3, 4x4
+  * Vector 1, 2 , 3
+- Created an interface for Matrix64F and renamed the old one into ReshapeMatrix64F
 
 ----- Version 0.22
 

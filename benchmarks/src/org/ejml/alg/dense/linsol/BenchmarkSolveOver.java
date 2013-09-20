@@ -49,7 +49,7 @@ public class BenchmarkSolveOver {
 
         if( !includeSet ) solver.setA(A);
 
-        DenseMatrix64F A_copy = solver.modifiesA() ? A.<DenseMatrix64F>copy() : A;
+        DenseMatrix64F A_copy = solver.modifiesA() ? A.copy() : A;
 
         long prev = System.currentTimeMillis();
 

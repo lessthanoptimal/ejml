@@ -191,7 +191,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      *
      * @param mat Matrix whose values will be copied.  Not modified.
      */
-    public DenseMatrix64F(Matrix64F mat) {
+    public DenseMatrix64F(ReshapeMatrix64F mat) {
         this(mat.numRows,mat.numCols);
         for( int i = 0; i < numRows; i++ ) {
             for( int j = 0; j < numCols; j++ ) {

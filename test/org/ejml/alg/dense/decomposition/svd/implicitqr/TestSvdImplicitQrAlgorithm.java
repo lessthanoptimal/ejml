@@ -209,7 +209,7 @@ public class TestSvdImplicitQrAlgorithm {
 
     public static SvdImplicitQrAlgorithm createHelper( DenseMatrix64F a ) {
         BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
-        assertTrue(bidiag.decompose(a.<DenseMatrix64F>copy()));
+        assertTrue(bidiag.decompose(a.copy()));
         double diag[] = new double[a.numRows];
         double off[] = new double[ diag.length-1 ];
         bidiag.getDiagonal(diag,off);

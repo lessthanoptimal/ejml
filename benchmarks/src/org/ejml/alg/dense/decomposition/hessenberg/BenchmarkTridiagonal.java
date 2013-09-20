@@ -41,7 +41,7 @@ public class BenchmarkTridiagonal {
 
         for( long i = 0; i < numTrials; i++ ) {
             if( alg.inputModified())
-                alg.decompose(orig.<DenseMatrix64F>copy());
+                alg.decompose(orig.copy());
             else
                 alg.decompose(orig);
 
@@ -73,7 +73,7 @@ public class BenchmarkTridiagonal {
 
         for( long i = 0; i < numTrials; i++ ) {
             if( alg.inputModified())
-                alg.decompose(orig.<DenseMatrix64F>copy());
+                alg.decompose(orig.copy());
             else
                 alg.decompose(orig);
 

@@ -19,7 +19,7 @@
 
 package org.ejml.alg.generic;
 
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 
 import java.util.Random;
 
@@ -36,7 +36,7 @@ public class GenericMatrixOps {
 //        return ret;
 //    }
 
-    public static boolean isEquivalent( Matrix64F a , Matrix64F b , double tol )
+    public static boolean isEquivalent( ReshapeMatrix64F a , ReshapeMatrix64F b , double tol )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             return false;
@@ -61,7 +61,7 @@ public class GenericMatrixOps {
      * @param tol How close to zero or one each element needs to be.
      * @return If it is within tolerance to an identity matrix.
      */
-    public static boolean isIdentity( Matrix64F a , double tol )
+    public static boolean isIdentity( ReshapeMatrix64F a , double tol )
     {
         for( int i = 0; i < a.numRows; i++ ) {
             for( int j = 0; j < a.numCols; j++ ) {
@@ -77,7 +77,7 @@ public class GenericMatrixOps {
         return true;
     }
 
-    public static boolean isEquivalentTriangle( boolean upper , Matrix64F a , Matrix64F b , double tol )
+    public static boolean isEquivalentTriangle( boolean upper , ReshapeMatrix64F a , ReshapeMatrix64F b , double tol )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             return false;
@@ -105,7 +105,7 @@ public class GenericMatrixOps {
         return true;
     }
 
-    public static void copy( Matrix64F from , Matrix64F to )
+    public static void copy( ReshapeMatrix64F from , ReshapeMatrix64F to )
     {
         int numCols = from.getNumCols();
         int numRows = from.getNumRows();
@@ -117,7 +117,7 @@ public class GenericMatrixOps {
         }
     }
 
-    public static void setRandom( Matrix64F a , double min , double max , Random rand )
+    public static void setRandom( ReshapeMatrix64F a , double min , double max , Random rand )
     {
         for( int i = 0; i < a.numRows; i++ ) {
             for( int j = 0; j < a.numCols; j++ ) {

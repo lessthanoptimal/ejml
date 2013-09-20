@@ -19,7 +19,7 @@
 
 package org.ejml.factory;
 
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 
 
 /**
@@ -50,12 +50,12 @@ import org.ejml.data.Matrix64F;
  *
  * @author Peter Abeles
  */
-public interface QRDecomposition <T extends Matrix64F>
+public interface QRDecomposition <T extends ReshapeMatrix64F>
         extends DecompositionInterface<T> {
     /**
      * <p>
      * Returns the Q matrix from the decomposition.  Should only
-     * be called after {@link #decompose(org.ejml.data.Matrix64F)} has
+     * be called after {@link #decompose(org.ejml.data.ReshapeMatrix64F)} has
      * been called.
      * </p>
      *
@@ -73,7 +73,7 @@ public interface QRDecomposition <T extends Matrix64F>
     /**
      * <p>
      * Returns the R matrix from the decomposition.  Should only be
-     * called after {@link #decompose(org.ejml.data.Matrix64F)} has been.
+     * called after {@link #decompose(org.ejml.data.ReshapeMatrix64F)} has been.
      * </p>
      * <p>
      * If setZeros is true then an n &times; m matrix is required and all the elements are set.

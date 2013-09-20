@@ -30,7 +30,7 @@ import org.ejml.alg.dense.mult.MatrixMultProduct;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
 import org.ejml.factory.LinearSolver;
 import org.ejml.factory.LinearSolverFactory;
@@ -1008,10 +1008,10 @@ public class CommonOps {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract( Matrix64F src,
+    public static void extract( ReshapeMatrix64F src,
                                 int srcY0, int srcY1,
                                 int srcX0, int srcX1,
-                                Matrix64F dst ,
+                                ReshapeMatrix64F dst ,
                                 int dstY0, int dstX0 )
     {
         if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows )
@@ -1105,7 +1105,7 @@ public class CommonOps {
      * @param destY0 Start row for the copy into dest.
      * @param destX0 Start column for the copy into dest.
      */
-    public static void insert( Matrix64F src, Matrix64F dest, int destY0, int destX0) {
+    public static void insert( ReshapeMatrix64F src, ReshapeMatrix64F dest, int destY0, int destX0) {
         extract(src,0,src.numRows,0,src.numCols,dest,destY0,destX0);
     }
 
@@ -1116,7 +1116,7 @@ public class CommonOps {
      * Max{ a<sub>ij</sub> } for all i and j<br>
      * </p>
      *
-     * @param a A matrix.
+     * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
     public static double elementMax( D1Matrix64F a ) {
@@ -1140,8 +1140,8 @@ public class CommonOps {
      * Max{ |a<sub>ij</sub>| } for all i and j<br>
      * </p>
      *
-     * @param a A matrix.
-     * @return The max element value of the matrix.
+     * @param a A matrix. Not modified.
+     * @return The max abs element value of the matrix.
      */
     public static double elementMaxAbs( D1Matrix64F a ) {
         final int size = a.getNumElements();
@@ -1164,7 +1164,7 @@ public class CommonOps {
      * Min{ a<sub>ij</sub> } for all i and j<br>
      * </p>
      *
-     * @param a A matrix.
+     * @param a A matrix. Not modified.
      * @return The value of element in the matrix with the minimum value.
      */
     public static double elementMin( D1Matrix64F a ) {
@@ -1188,7 +1188,7 @@ public class CommonOps {
      * Min{ |a<sub>ij</sub>| } for all i and j<br>
      * </p>
      *
-     * @param a A matrix.
+     * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
     public static double elementMinAbs( D1Matrix64F a ) {
@@ -1684,8 +1684,9 @@ public class CommonOps {
      * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
+     * @param a The matrix that is to be scaled.  Not modified.
+     * @param b Where the scaled matrix is stored. Modified.
      */
     public static void scale( double alpha , D1Matrix64F a , D1Matrix64F b)
     {
@@ -1725,8 +1726,9 @@ public class CommonOps {
      * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
      * </p>
      *
-     * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
+     * @param a The matrix whose elements are to be divided.  Not modified.
+     * @param b Where the results are stored. Modified.
      */
     public static void divide( double alpha , D1Matrix64F a , D1Matrix64F b)
     {

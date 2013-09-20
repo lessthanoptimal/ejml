@@ -25,7 +25,7 @@ import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.factory.EigenDecomposition;
 import org.ejml.factory.LUDecomposition;
@@ -329,7 +329,7 @@ public class MatrixFeatures {
      * @param tol How close to being identical each element needs to be.
      * @return true if equals and false otherwise.
      */
-    public static boolean isEqualsTriangle(Matrix64F a, Matrix64F b, boolean upper, double tol)
+    public static boolean isEqualsTriangle(ReshapeMatrix64F a, ReshapeMatrix64F b, boolean upper, double tol)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;

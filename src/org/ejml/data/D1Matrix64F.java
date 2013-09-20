@@ -29,7 +29,7 @@ import org.ejml.alg.dense.mult.MatrixDimensionException;
  *
  * @author Peter Abeles
  */
-public abstract class D1Matrix64F extends Matrix64F {
+public abstract class D1Matrix64F extends ReshapeMatrix64F {
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.
      */

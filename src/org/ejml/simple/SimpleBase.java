@@ -21,8 +21,8 @@ package org.ejml.simple;
 
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
 import org.ejml.data.MatrixIterator;
+import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.factory.SingularMatrixException;
 import org.ejml.ops.*;
 
@@ -441,7 +441,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,false).
      * </p>
      *
-     * @see org.ejml.data.Matrix64F#reshape(int,int,boolean)
+     * @see org.ejml.data.ReshapeMatrix64F#reshape(int,int,boolean)
      *
      * @param numRows The new number of rows in the matrix.
      * @param numCols The new number of columns in the matrix.
@@ -627,7 +627,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.Matrix64F)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.ReshapeMatrix64F)}.
      * </p>
      *
      * @return String representation of the matrix.
@@ -885,7 +885,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Saves this matrix to a file as a serialized binary object.
      * </p>
      *
-     * @see MatrixIO#saveBin( org.ejml.data.Matrix64F , String)
+     * @see MatrixIO#saveBin( org.ejml.data.ReshapeMatrix64F, String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -909,7 +909,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public static SimpleMatrix loadBinary( String fileName )
             throws IOException {
-        Matrix64F mat = MatrixIO.loadBin(fileName);
+        ReshapeMatrix64F mat = MatrixIO.loadBin(fileName);
 
         // see if its a DenseMatrix64F
         if( mat instanceof DenseMatrix64F ) {
@@ -925,7 +925,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Saves this matrix to a file in a CSV format.  For the file format see {@link MatrixIO}.
      * </p>
      *
-     * @see MatrixIO#saveBin( org.ejml.data.Matrix64F , String)
+     * @see MatrixIO#saveBin( org.ejml.data.ReshapeMatrix64F, String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -949,7 +949,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public static SimpleMatrix loadCSV( String fileName )
             throws IOException {
-        Matrix64F mat = MatrixIO.loadCSV(fileName);
+        ReshapeMatrix64F mat = MatrixIO.loadCSV(fileName);
 
         // see if its a DenseMatrix64F
         if( mat instanceof DenseMatrix64F ) {

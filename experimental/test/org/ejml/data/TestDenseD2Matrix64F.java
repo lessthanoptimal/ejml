@@ -31,7 +31,7 @@ public class TestDenseD2Matrix64F {
     public void testGeneric() {
         GenericTestsMatrix64F g;
         g = new GenericTestsMatrix64F() {
-            protected Matrix64F createMatrix(int numRows, int numCols) {
+            protected ReshapeMatrix64F createMatrix(int numRows, int numCols) {
                 return new DenseD2Matrix64F(numRows,numCols);
             }
         };

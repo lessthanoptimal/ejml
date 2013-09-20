@@ -20,7 +20,7 @@
 package org.ejml.factory;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 
 /**
  * <p>
@@ -33,12 +33,12 @@ import org.ejml.data.Matrix64F;
  * </p>
  *
  * <p>
- * WARNING: You should always call {@link #setSingularThreshold(double)} before {@link #decompose(org.ejml.data.Matrix64F)}.
+ * WARNING: You should always call {@link #setSingularThreshold(double)} before {@link #decompose(org.ejml.data.ReshapeMatrix64F)}.
  * </p>
  *
  * @author Peter Abeles
  */
-public interface QRPDecomposition <T extends Matrix64F>
+public interface QRPDecomposition <T extends ReshapeMatrix64F>
         extends QRDecomposition<T>
 {
     /**

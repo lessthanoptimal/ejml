@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.factory.LinearSolver;
 
 
@@ -30,7 +30,7 @@ import org.ejml.factory.LinearSolver;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public class LinearSolverSafe<T extends Matrix64F> implements LinearSolver<T> {
+public class LinearSolverSafe<T extends ReshapeMatrix64F> implements LinearSolver<T> {
 
     // the solver it is wrapped around
     private LinearSolver<T> alg;

@@ -28,7 +28,7 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
-public class BlockD3Matrix64F extends Matrix64F {
+public class BlockD3Matrix64F extends ReshapeMatrix64F {
     public int blockLength;
     public double[][][] blocks;
 

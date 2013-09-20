@@ -19,7 +19,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.data.Matrix64F;
+import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.factory.DecompositionInterface;
 
 
@@ -34,7 +34,7 @@ import org.ejml.factory.DecompositionInterface;
  *
  * @author Peter Abeles
  */
-public interface TridiagonalSimilarDecomposition<MatrixType extends Matrix64F>
+public interface TridiagonalSimilarDecomposition<MatrixType extends ReshapeMatrix64F>
         extends DecompositionInterface<MatrixType> {
 
     /**

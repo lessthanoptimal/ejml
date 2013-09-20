@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
  */
 public abstract class GenericTestsMatrix64F {
 
-    protected abstract Matrix64F createMatrix( int numRows , int numCols );
+    protected abstract ReshapeMatrix64F createMatrix( int numRows , int numCols );
 
     public void allTests() {
         testGetNumRows();
@@ -37,13 +37,13 @@ public abstract class GenericTestsMatrix64F {
     }
 
     public void testGetNumRows() {
-        Matrix64F mat = createMatrix(2,3);
+        ReshapeMatrix64F mat = createMatrix(2,3);
 
         assertEquals(2,mat.getNumRows());
     }
 
     public void testGetNumCols() {
-        Matrix64F mat = createMatrix(2,3);
+        ReshapeMatrix64F mat = createMatrix(2,3);
 
         assertEquals(3,mat.getNumCols());
     }
@@ -60,7 +60,7 @@ public abstract class GenericTestsMatrix64F {
     }
 
     private void checkSetAndGet(int m, int n) {
-        Matrix64F mat = createMatrix(m, n);
+        ReshapeMatrix64F mat = createMatrix(m, n);
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {
@@ -89,7 +89,7 @@ public abstract class GenericTestsMatrix64F {
     }
 
     private void checkSetAndGet_unsafe(int m, int n) {
-        Matrix64F mat = createMatrix(m, n);
+        ReshapeMatrix64F mat = createMatrix(m, n);
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {

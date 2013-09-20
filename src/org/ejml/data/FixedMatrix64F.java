@@ -17,28 +17,12 @@
  * License along with EJML.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ejml.alg.dense.misc;
-
-import org.ejml.data.ReshapeMatrix64F;
+package org.ejml.data;
 
 /**
- * Implementations of common ops routines for {@link org.ejml.data.DenseMatrix64F}.  In general
- * there is no need to directly invoke these functions.
+ * Interface which all fixed sized matrices must implement
  *
  * @author Peter Abeles
  */
-public class ImplCommonOps_Matrix64F {
-    public static void extract(ReshapeMatrix64F src,
-                               int srcY0, int srcX0,
-                               ReshapeMatrix64F dst,
-                               int dstY0, int dstX0,
-                               int numRows, int numCols )
-    {
-        for( int y = 0; y < numRows; y++ ) {
-            for( int x = 0; x < numCols; x++ ) {
-                double v = src.get(y+srcY0,x+srcX0);
-                dst.set(dstY0+y , dstX0 +x, v);
-            }
-        }
-    }
+public interface FixedMatrix64F extends Matrix64F {
 }
