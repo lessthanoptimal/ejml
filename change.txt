@@ -2,17 +2,23 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.24
+
+- CHANGED LICENSE FROM LGPL to Apache 2.0
+  * Don't agree with Free Software Foundation's interpretation for how the LGPL applies to Java jars.
+  * Even if it did behave the way I wanted it to, it wouldn't do much other than scare some people away.
+- Added fixed sized square matrices and vectors
+  * Auto code generator for standard operations
+  * Matrix 2x2, 3x3, 4x4, 5x5
+  * Vector 2, 3, 4, 5
+- Created an interface for Matrix64F and renamed the old one into ReshapeMatrix64F
+
 ----- Version 0.23
 
 2013/06/21
 
 - Modified Matrix64F so that it can be serialized using beans.  Added setNumRows() and setNumCols()
 - Added user configurable threshold in SolvePseudoInverseSvd
-- Added fixed sized square matrices and vectors
-  * Auto code generator for standard operations
-  * Matrix 2x2, 3x3, 4x4
-  * Vector 1, 2 , 3
-- Created an interface for Matrix64F and renamed the old one into ReshapeMatrix64F
 
 ----- Version 0.22
 

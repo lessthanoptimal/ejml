@@ -1,7 +1,7 @@
                  Efficient Java Matrix Library
 
-                         Version 0.17
-                         2011 February 23
+                         Version 0.24
+                         2013 ?? ??
 
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
@@ -11,7 +11,7 @@
 ==========================================================================
 ----- Introduction
 
-Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API.  EJML is free, written in 100% Java and has been released under an LGPL license.
+Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API.  EJML is free, written in 100% Java and has been released under the Apache v2.0 open source license.
 
 EJML has three distinct ways to interact with it.  This allows a programmer to choose between simplicity and efficiency.  1) A simplified interface that allows a more object oriented way of programming.  2) Procedural interface that provides greater control over memory and speed.  3) Directly calling specialized algorithms.  In general EJML is one the fastest single threaded pure Java library and has additional optimizations for small matrices.  See http://code.google.com/p/java-matrix-benchmark/ for a detailed comparison of different libraries.
 
@@ -107,4 +107,4 @@ implementation issues.
 ==========================================================================
 ----- License
 
-EJML is released under the LGPL Version 3
+EJML is released under the Apache v2.0 open source license
