@@ -21,27 +21,31 @@ package org.ejml.data;
 import org.ejml.ops.MatrixIO;
 
 /**
- * Fixed sized vector with 3 elements.  Can represent a a 3 x 1 or 1 x 3 matrix, context dependent.
+ * Fixed sized vector with 5 elements.  Can represent a a 5 x 1 or 1 x 5 matrix, context dependent.
  *
  * @author Peter Abeles
  */
-public class FixedMatrix3_64F implements FixedMatrix64F {
-    public double a1,a2,a3;
+public class FixedMatrix5_64F implements FixedMatrix64F {
+    public double a1,a2,a3,a4,a5;
 
-    public FixedMatrix3_64F() {
+    public FixedMatrix5_64F() {
     }
 
-    public FixedMatrix3_64F(double a1,double a2,double a3)
+    public FixedMatrix5_64F(double a1,double a2,double a3,double a4,double a5)
     {
         this.a1 = a1;
         this.a2 = a2;
         this.a3 = a3;
+        this.a4 = a4;
+        this.a5 = a5;
     }
 
-    public FixedMatrix3_64F(FixedMatrix3_64F o) {
+    public FixedMatrix5_64F(FixedMatrix5_64F o) {
         this.a1 = o.a1;
         this.a2 = o.a2;
         this.a3 = o.a3;
+        this.a4 = o.a4;
+        this.a5 = o.a5;
     }
 
     @Override
@@ -62,6 +66,10 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
             return a2;
         } else if( w == 2 ) {
             return a3;
+        } else if( w == 3 ) {
+            return a4;
+        } else if( w == 4 ) {
+            return a5;
         } else {
             throw new IllegalArgumentException("Out of range.  "+w);
         }
@@ -85,6 +93,10 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
             a2 = val;
         } else if( w == 2 ) {
             a3 = val;
+        } else if( w == 3 ) {
+            a4 = val;
+        } else if( w == 4 ) {
+            a5 = val;
         } else {
             throw new IllegalArgumentException("Out of range.  "+w);
         }
@@ -92,7 +104,7 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
 
     @Override
     public int getNumRows() {
-        return 3;
+        return 5;
     }
 
     @Override
@@ -102,12 +114,12 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
 
     @Override
     public int getNumElements() {
-        return 3;
+        return 5;
     }
 
     @Override
     public <T extends Matrix64F> T copy() {
-        return (T)new FixedMatrix3_64F(this);
+        return (T)new FixedMatrix5_64F(this);
     }
 
     @Override

@@ -21,27 +21,25 @@ package org.ejml.data;
 import org.ejml.ops.MatrixIO;
 
 /**
- * Fixed sized vector with 3 elements.  Can represent a a 3 x 1 or 1 x 3 matrix, context dependent.
+ * Fixed sized vector with 2 elements.  Can represent a a 2 x 1 or 1 x 2 matrix, context dependent.
  *
  * @author Peter Abeles
  */
-public class FixedMatrix3_64F implements FixedMatrix64F {
-    public double a1,a2,a3;
+public class FixedMatrix2_64F implements FixedMatrix64F {
+    public double a1,a2;
 
-    public FixedMatrix3_64F() {
+    public FixedMatrix2_64F() {
     }
 
-    public FixedMatrix3_64F(double a1,double a2,double a3)
+    public FixedMatrix2_64F(double a1,double a2)
     {
         this.a1 = a1;
         this.a2 = a2;
-        this.a3 = a3;
     }
 
-    public FixedMatrix3_64F(FixedMatrix3_64F o) {
+    public FixedMatrix2_64F(FixedMatrix2_64F o) {
         this.a1 = o.a1;
         this.a2 = o.a2;
-        this.a3 = o.a3;
     }
 
     @Override
@@ -60,8 +58,6 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
             return a1;
         } else if( w == 1 ) {
             return a2;
-        } else if( w == 2 ) {
-            return a3;
         } else {
             throw new IllegalArgumentException("Out of range.  "+w);
         }
@@ -83,8 +79,6 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
             a1 = val;
         } else if( w == 1 ) {
             a2 = val;
-        } else if( w == 2 ) {
-            a3 = val;
         } else {
             throw new IllegalArgumentException("Out of range.  "+w);
         }
@@ -92,7 +86,7 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
 
     @Override
     public int getNumRows() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -102,12 +96,12 @@ public class FixedMatrix3_64F implements FixedMatrix64F {
 
     @Override
     public int getNumElements() {
-        return 3;
+        return 2;
     }
 
     @Override
     public <T extends Matrix64F> T copy() {
-        return (T)new FixedMatrix3_64F(this);
+        return (T)new FixedMatrix2_64F(this);
     }
 
     @Override

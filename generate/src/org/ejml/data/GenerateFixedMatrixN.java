@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 /**
  * @author Peter Abeles
  */
-public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
+public class GenerateFixedMatrixN extends CodeGeneratorBase{
 
     String classPreamble = "FixedMatrix";
 
@@ -37,31 +37,32 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
     }
 
     public void print( int dimen ) throws FileNotFoundException {
-        String className = classPreamble +dimen+"x"+dimen+"_64F";
+        String className = classPreamble +dimen+"_64F";
 
         setOutputFile(className);
 
-        out.println("import org.ejml.ops.MatrixIO;\n\n"+
+        out.print("import org.ejml.ops.MatrixIO;\n" +
+                "\n" +
                 "/**\n" +
-                " * Fixed sized "+dimen+" by "+className+" matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the\n" +
-                " * value of row = X and column = Y.\n" +
+                " * Fixed sized vector with "+dimen+" elements.  Can represent a a "+dimen+" x 1 or 1 x "+dimen+" matrix, context dependent.\n" +
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
                 "public class "+className+" implements FixedMatrix64F {\n");
         printClassParam(dimen);
-                out.print("\n" +
+        out.print("\n" +
                 "    public "+className+"() {\n" +
                 "    }\n" +
                 "\n" +
-                "    public "+className);
+                "    public "+className+"(");
         printFunctionParam(dimen);
-        out.print("    {\n");
-        printSetFromParam(dimen, "");
+        out.print(")\n" +
+                "    {\n");
+        printSetFromParam(dimen,"");
         out.print("    }\n" +
                 "\n" +
-                "    public " + className + "( " + className + " o ) {\n");
-        printSetFromParam(dimen, "o.");
+                "    public "+className+"("+className+" o) {\n");
+        printSetFromParam(dimen,"o.");
         out.print("    }\n" +
                 "\n" +
                 "    @Override\n" +
@@ -70,9 +71,16 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
-                "    public double unsafe_get(int row, int col) {\n");
+                "    public double unsafe_get(int row, int col) {\n" +
+                "        if( row != 0 && col != 0 )\n" +
+                "            throw new IllegalArgumentException(\"Row or column must be zero since this is a vector\");\n" +
+                "\n" +
+                "        int w = Math.max(row,col);\n" +
+                "\n");
         setGetter(dimen);
-        out.print("        throw new IllegalArgumentException(\"Row and/or column out of range. \"+row+\" \"+col);\n" +
+        out.print("        } else {\n" +
+                "            throw new IllegalArgumentException(\"Out of range.  \"+w);\n" +
+                "        }\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
@@ -81,9 +89,16 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
-                "    public void unsafe_set(int row, int col, double val) {\n");
+                "    public void unsafe_set(int row, int col, double val) {\n" +
+                "        if( row != 0 && col != 0 )\n" +
+                "            throw new IllegalArgumentException(\"Row or column must be zero since this is a vector\");\n" +
+                "\n" +
+                "        int w = Math.max(row,col);\n" +
+                "\n");
         setSetter(dimen);
-        out.print("        throw new IllegalArgumentException(\"Row and/or column out of range. \"+row+\" \"+col);\n" +
+        out.print("        } else {\n" +
+                "            throw new IllegalArgumentException(\"Out of range.  \"+w);\n" +
+                "        }\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
@@ -93,12 +108,12 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "\n" +
                 "    @Override\n" +
                 "    public int getNumCols() {\n" +
-                "        return "+dimen+";\n" +
+                "        return 1;\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
                 "    public int getNumElements() {\n" +
-                "        return "+(dimen*dimen)+";\n" +
+                "        return "+dimen+";\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
@@ -114,82 +129,52 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
     }
 
     private void printClassParam( int dimen ) {
-        for( int y = 1; y <= dimen; y++ ) {
-            out.print("    public double ");
-            for( int x = 1; x <= dimen; x++ ) {
-                out.print("a"+y+""+x);
-                if( x != dimen )
-                    out.print(",");
-                else
-                    out.println(";");
-            }
+        out.print("    public double ");
+        for( int i = 1; i <= dimen; i++ ) {
+           out.print("a"+i);
+            if( i < dimen )
+                out.print(",");
+            else
+                out.print(";\n");
         }
     }
 
     private void printFunctionParam( int dimen ) {
-        for( int y = 1; y <= dimen; y++ ) {
-            if( y == 1 )
-                out.print("( ");
-            else
-                out.print("                              ");
-            for( int x = 1; x <= dimen; x++ ) {
-                out.print("double a"+y+""+x);
-                if( x != dimen )
-                    out.print(",");
-                else if( y != dimen )
-                    out.println(",");
-                else
-                    out.println(")");
-            }
+        for( int i = 1; i <= dimen; i++ ) {
+            out.print("double a"+i);
+            if( i < dimen )
+                out.print(",");
         }
     }
 
     private void printSetFromParam(int dimen, String prefix) {
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ ) {
-                out.println("        this.a"+y+""+x+" = "+prefix+"a"+y+""+x+";");
-            }
+        for( int i = 1; i <= dimen; i++ ) {
+            out.println("        this.a"+i+" = "+prefix+"a"+i+";");
         }
     }
 
     private void setGetter(int dimen) {
-        for( int y = 1; y <= dimen; y++ ) {
-            if( y == 1 )
-                out.print("        if( row == 0 ) {\n");
+        for( int i = 0; i < dimen; i++ ) {
+            if( i == 0 )
+                out.print("        if( w == 0 ) {\n");
             else
-                out.print("        } else if( row == "+(y-1)+" ) {\n");
-            for( int x = 1; x <= dimen; x++ ) {
-                if( x == 1 )
-                    out.print("            if( col == 0 ) {\n");
-                else
-                    out.print("            } else if( col == "+(x-1)+" ) {\n");
-                out.print("                return a"+y+""+x+";\n");
-            }
-            out.print("            }\n");
+                out.print("        } else if( w == "+i+" ) {\n");
+            out.print("            return a"+(i+1)+";\n");
         }
-        out.print("        }\n");
     }
 
     private void setSetter(int dimen ) {
-        for( int y = 1; y <= dimen; y++ ) {
-            if( y == 1 )
-                out.print("        if( row == 0 ) {\n");
+        for( int i = 0; i < dimen; i++ ) {
+            if( i == 0 )
+                out.print("        if( w == 0 ) {\n");
             else
-                out.print("        } else if( row == "+(y-1)+" ) {\n");
-            for( int x = 1; x <= dimen; x++ ) {
-                if( x == 1 )
-                    out.print("            if( col == 0 ) {\n");
-                else
-                    out.print("            } else if( col == "+(x-1)+" ) {\n");
-                out.print("                a"+y+""+x+" = val; return;\n");
-            }
-            out.print("            }\n");
+                out.print("        } else if( w == "+i+" ) {\n");
+            out.print("            a"+(i+1)+" = val;\n");
         }
-        out.print("        }\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        GenerateFixedMatrixNxN app = new GenerateFixedMatrixNxN();
+        GenerateFixedMatrixN app = new GenerateFixedMatrixN();
 
         app.generate();
     }

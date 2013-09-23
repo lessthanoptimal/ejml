@@ -19,9 +19,14 @@
 package org.ejml.ops;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.data.*;
+import org.ejml.data.BlockMatrix64F;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.FixedMatrix64F;
+import org.ejml.data.Matrix64F;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -45,56 +50,79 @@ public class TestConvertMatrixType {
     }
 
     @Test
-    public void Fixed3x3_to_DM() {
-        FixedMatrix3x3_64F a = new FixedMatrix3x3_64F(1,2,3,4,5,6,7,8,9);
-        DenseMatrix64F b = new DenseMatrix64F(3,3);
+    public void checkAll_Fixed_to_DM() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        Method[] methods = ConvertMatrixType.class.getMethods();
 
-        ConvertMatrixType.convert(a,b);
+        int numFound = 0;
 
-        checkIdentical(a,b);
+        for( Method m : methods ) {
+            if( !m.getName().equals("convert") )
+                continue;
+            Class[]param = m.getParameterTypes();
+
+            if( !FixedMatrix64F.class.isAssignableFrom(param[0]) ) {
+                continue;
+            }
+
+            FixedMatrix64F a = (FixedMatrix64F)param[0].newInstance();
+            DenseMatrix64F b = new DenseMatrix64F(a.getNumRows(),a.getNumCols());
+
+            for( int i = 0; i < b.numRows; i++ ) {
+                for( int j = 0; j < b.numCols; j++ ) {
+                    a.set(i, j, rand.nextDouble());
+                }
+            }
+
+            Object[] input = new Object[param.length];
+            input[0] = a;
+            input[1] = b;
+
+            m.invoke(null,input);
+
+            checkIdentical(a,b);
+
+            numFound++;
+        }
+
+        assertEquals(4+4,numFound);
     }
 
     @Test
-    public void DM_to_Fixed3x3() {
-        DenseMatrix64F a = new DenseMatrix64F(3,3,true,1,2,3,4,5,6,7,8,9);
-        FixedMatrix3x3_64F b = new FixedMatrix3x3_64F();
+    public void checkAll_DM_to_Fixed() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        Method[] methods = ConvertMatrixType.class.getMethods();
 
-        ConvertMatrixType.convert(a,b);
+        int numFound = 0;
 
-        checkIdentical(a,b);
-    }
+        for( Method m : methods ) {
+            if( !m.getName().equals("convert") )
+                continue;
+            Class[]param = m.getParameterTypes();
 
-    @Test
-    public void Fixed3_to_DM() {
-        FixedMatrix3_64F a = new FixedMatrix3_64F(1,2,3);
-        DenseMatrix64F b = new DenseMatrix64F(3,1);
+            if( !FixedMatrix64F.class.isAssignableFrom(param[1]) ) {
+                continue;
+            }
 
-        ConvertMatrixType.convert(a,b);
+            FixedMatrix64F b = (FixedMatrix64F)param[1].newInstance();
+            DenseMatrix64F a = new DenseMatrix64F(b.getNumRows(),b.getNumCols());
 
-        checkIdenticalV(a,b);
+            for( int i = 0; i < a.numRows; i++ ) {
+                for( int j = 0; j < a.numCols; j++ ) {
+                    a.set(i, j, rand.nextDouble());
+                }
+            }
 
-        b = new DenseMatrix64F(1,3);
+            Object[] input = new Object[param.length];
+            input[0] = a;
+            input[1] = b;
 
-        ConvertMatrixType.convert(a,b);
+            m.invoke(null,input);
 
-        checkIdenticalV(a,b);
-    }
+            checkIdentical(a,b);
 
-    @Test
-    public void DM_to_Fixed3() {
-        DenseMatrix64F a = new DenseMatrix64F(3,1,true,1,2,3);
-        FixedMatrix3_64F b = new FixedMatrix3_64F();
+            numFound++;
+        }
 
-        ConvertMatrixType.convert(a,b);
-
-        checkIdenticalV(a,b);
-
-        a = new DenseMatrix64F(1,3,true,2,3,4);
-        b = new FixedMatrix3_64F();
-
-        ConvertMatrixType.convert(a,b);
-
-        checkIdenticalV(a,b);
+        assertEquals(4+4,numFound);
     }
 
     @Test
