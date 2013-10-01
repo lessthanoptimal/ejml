@@ -18,26 +18,24 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.*;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.ConvertMatrixType;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.data.FixedMatrix3_64F;
+import org.ejml.data.FixedMatrix3x3_64F;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
-public class TestFixedOps3 {
+public class TestFixedOps3 extends CompareFixedToCommonOps {
 
     Random rand = new Random(234);
+
+    public TestFixedOps3() {
+        super(FixedOps3.class);
+    }
 
     @Test
     public void dot() {
@@ -61,180 +59,6 @@ public class TestFixedOps3 {
         assertEquals(9,found.a3,1e-8);
     }
 
-    /**
-     * Compares equivalent functions in FixedOps to CommonOps.  Inputs are randomly generated
-     */
-    @Test
-    public void compareToCommonOps() {
-        Method[] methods = FixedOps3.class.getMethods();
 
-        int numNotMatched = 0;
-        int numPassed = 0;
-        int numFailed = 0;
-
-        for( Method fixedM : methods ) {
-            if( !isValid(fixedM))
-                continue;
-
-            Method commonM = null;
-            for( Method m : CommonOps.class.getMethods()) {
-                if( isMatch(fixedM,m)) {
-                    commonM = m;
-                    break;
-                }
-            }
-
-            if( commonM == null ) {
-//                System.out.println("not matched: "+fixedM.getName());
-                numNotMatched++;
-                continue;
-            }
-
-            if( compareToCommon(fixedM,commonM) ) {
-                numPassed++;
-            } else {
-                numFailed++;
-                System.out.println("Failed comparision to common: "+fixedM);
-            }
-        }
-
-        assertEquals(0,numFailed);
-        assertEquals(2,numNotMatched);
-        assertEquals(28,numPassed);
-    }
-
-    /**
-     * Checks to see if it is a valid Method which can be checked
-     */
-    private boolean isValid( Method m ) {
-        Class[] types = m.getParameterTypes();
-
-        for( Class c : types ) {
-            if(FixedMatrix64F.class.isAssignableFrom(c))
-                return true;
-        }
-        return false;
-    }
-
-    private boolean isMatch( Method fixed , Method common ) {
-        if( fixed.getName().compareTo(common.getName()) != 0 )
-            return false;
-
-        Class[] typesFixed = fixed.getParameterTypes();
-        Class[] typesCommon = common.getParameterTypes();
-
-        if( typesFixed.length != typesCommon.length )
-            return false;
-
-        Class returnFixed = fixed.getReturnType();
-        Class returnCommon = common.getReturnType();
-
-        if( returnFixed == returnCommon )
-            return true;
-
-        if( Matrix64F.class.isAssignableFrom(returnFixed) &&
-                Matrix64F.class.isAssignableFrom(returnCommon) )
-            return true;
-
-        return false;
-    }
-
-    private boolean compareToCommon( Method fixed , Method common ) {
-        Class[] typesFixed = fixed.getParameterTypes();
-        Object[] inputsFixed = new Object[ typesFixed.length ];
-        Object[] inputsCommon = new Object[ typesFixed.length ];
-
-        if( !handleSpecialCase(fixed.getName(),typesFixed,inputsFixed,inputsCommon) )
-            declareParamStandard(typesFixed, inputsFixed, inputsCommon);
-
-        try {
-            Object retFixed = fixed.invoke(null,inputsFixed);
-            Object retCommon = common.invoke(null,inputsCommon);
-
-            checkEquivalent(retFixed,retCommon);
-
-            for( int i = 0; i < inputsFixed.length; i++ ) {
-                if( !checkEquivalent(inputsFixed[i],inputsCommon[i]) )
-                    return false;
-            }
-
-        } catch (IllegalAccessException e) {
-            fail("IllegalAccessException");
-        } catch (InvocationTargetException e) {
-            fail("InvocationTargetException");
-        }
-
-        return true;
-    }
-
-    private void declareParamStandard(Class[] typesFixed, Object[] inputsFixed, Object[] inputsCommon) {
-        for( int i = 0; i < typesFixed.length; i++ ) {
-            if(FixedMatrix3x3_64F.class == typesFixed[i]) {
-                DenseMatrix64F m = RandomMatrices.createRandom(3, 3, rand);
-                FixedMatrix3x3_64F f = new FixedMatrix3x3_64F();
-
-                inputsFixed[i] = ConvertMatrixType.convert(m, f);
-                inputsCommon[i] = m;
-            } else if(FixedMatrix3_64F.class == typesFixed[i]) {
-                DenseMatrix64F m = RandomMatrices.createRandom(3,1,rand);
-                FixedMatrix3_64F f = new FixedMatrix3_64F();
-
-                inputsFixed[i] = ConvertMatrixType.convert(m,f);
-                inputsCommon[i] = m;
-            } else if( double.class == typesFixed[i] ) {
-                inputsFixed[i] = 2.5;
-                inputsCommon[i] = 2.5;
-            }
-        }
-    }
-
-    private boolean handleSpecialCase( String name , Class[] typesFixed , Object[] inputsFixed, Object[] inputsCommon ) {
-        if( "mult".compareTo(name) == 0 ) {
-            if( FixedMatrix3_64F.class == typesFixed[0] ) {
-                // swap the type of vector
-
-                declareParamStandard(typesFixed,inputsFixed,inputsCommon);
-                DenseMatrix64F a = (DenseMatrix64F)inputsCommon[0];
-                DenseMatrix64F b = (DenseMatrix64F)inputsCommon[2];
-
-                a.numRows=1; a.numCols=3;
-                b.numRows=1; b.numCols=3;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkEquivalent( Object a , Object b ) {
-        if( a == null ) {
-            return b == null;
-        } else if( Double.class == a.getClass() ) {
-            double valA = ((Double)a).doubleValue();
-            double valB = ((Double)b).doubleValue();
-
-            return Math.abs(valA-valB) < 1e-8;
-        } else if(FixedMatrix3x3_64F.class == a.getClass() ) {
-            FixedMatrix3x3_64F f = (FixedMatrix3x3_64F)a;
-            DenseMatrix64F m = new DenseMatrix64F(3,3);
-            ConvertMatrixType.convert(f,m);
-
-            return MatrixFeatures.isIdentical(m,(DenseMatrix64F)b,1e-8);
-
-        } else if(FixedMatrix3_64F.class == a.getClass()) {
-            DenseMatrix64F bb = (DenseMatrix64F)b;
-
-            FixedMatrix3_64F f = (FixedMatrix3_64F)a;
-            DenseMatrix64F m = new DenseMatrix64F(bb.numRows,bb.numCols);
-            ConvertMatrixType.convert(f,m);
-
-            return MatrixFeatures.isIdentical(m,bb,1e-8);
-        } else if( Boolean.class == a.getClass() ) {
-            return ((Boolean)a).booleanValue()  == ((Boolean)b).booleanValue();
-        } else {
-            fail("Not sure what this is");
-        }
-        return true;
-    }
 
 }

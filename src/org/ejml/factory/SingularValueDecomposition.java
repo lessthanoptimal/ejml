@@ -18,7 +18,7 @@
 
 package org.ejml.factory;
 
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -53,7 +53,7 @@ import org.ejml.data.ReshapeMatrix64F;
  *
  * @author Peter Abeles
  */
-public abstract interface SingularValueDecomposition <T extends ReshapeMatrix64F>
+public abstract interface SingularValueDecomposition <T extends Matrix64F>
         extends DecompositionInterface<T> {
 
     /**

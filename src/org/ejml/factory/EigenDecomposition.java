@@ -19,7 +19,7 @@
 package org.ejml.factory;
 
 import org.ejml.data.Complex64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -46,7 +46,7 @@ import org.ejml.data.ReshapeMatrix64F;
  * </p>
  * @author Peter Abeles
  */
-public interface EigenDecomposition<MatrixType extends ReshapeMatrix64F>
+public interface EigenDecomposition<MatrixType extends Matrix64F>
         extends DecompositionInterface<MatrixType> {
 
     /**

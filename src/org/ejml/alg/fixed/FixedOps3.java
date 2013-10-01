@@ -26,10 +26,6 @@ import org.ejml.data.FixedMatrix3x3_64F;
  *
  * @author Peter Abeles
  */
-// TODO finish writing
-// TODO unit test
-// TODO check in
-// TODO write automatic code generator
 public class FixedOps3 {
 
     /**

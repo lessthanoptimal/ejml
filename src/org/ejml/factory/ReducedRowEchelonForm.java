@@ -18,7 +18,7 @@
 
 package org.ejml.factory;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix64F;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface ReducedRowEchelonForm<T extends DenseMatrix64F> {
+public interface ReducedRowEchelonForm<T extends Matrix64F> {
 
     /**
      * Puts the augmented matrix into RREF.  The coefficient matrix is stored in

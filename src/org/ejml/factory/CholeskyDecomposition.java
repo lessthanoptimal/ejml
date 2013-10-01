@@ -19,7 +19,7 @@
 package org.ejml.factory;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.Matrix64F;
 
 
 /**
@@ -43,7 +43,7 @@ import org.ejml.data.ReshapeMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface CholeskyDecomposition <MatrixType extends ReshapeMatrix64F>
+public interface CholeskyDecomposition <MatrixType extends Matrix64F>
         extends DecompositionInterface<MatrixType> {
 
     /**
