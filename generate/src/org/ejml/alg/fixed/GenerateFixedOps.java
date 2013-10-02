@@ -54,6 +54,9 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             mult_v_m_v(dimension);
             dot(dimension);
             setIdentity(dimension);
+            invert(dimension);
+            trace(dimension);
+            det(dimension);
 
             out.println("}\n");
 
@@ -75,6 +78,8 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "\n" +
                 "/**\n" +
                 " * Common matrix operations for fixed sized matrices which are "+dimen+" x "+dimen+" or "+dimen+" element vectors.\n" +
+                " * <p></p>\n" +
+                " * DO NOT MODIFY.  Automaticall generated code created by GenerateFixedOps\n" +
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
@@ -295,18 +300,100 @@ public class GenerateFixedOps extends CodeGeneratorBase {
     }
 
     private void mult_m_v_v( int dimen ){
+        out.print("    /**\n" +
+                "     * <p>Performs matrix to vector multiplication:<br>\n" +
+                "     * <br>\n" +
+                "     * c = a * b <br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>i</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>k</sub>}\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b The right vector in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void mult( "+nameMatrix+" a , "+nameVector+" b , "+nameVector+" c) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        c.a"+y+" = ");
+            for( int x = 1; x <= dimen; x++ ) {
+                out.print("a.a"+y+""+x+"*b.a"+x);
+                if( x < dimen )
+                    out.print(" + ");
+                else
+                    out.print(";\n");
+            }
+        }
+        out.printf("    }\n\n");
 
     }
 
     private void mult_v_m_v( int dimen ){
+        out.print("    /**\n" +
+                "     * <p>Performs vector to matrix multiplication:<br>\n" +
+                "     * <br>\n" +
+                "     * c = a * b <br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>j</sub> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>kj</sub> }\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The left vector in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void mult( "+nameVector+" a , "+nameMatrix+" b , "+nameVector+" c) {\n");
+
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        c.a"+y+" = ");
+            for( int x = 1; x <= dimen; x++ ) {
+                out.print("a.a"+x+"*b.a"+x+""+y);
+                if( x < dimen )
+                    out.print(" + ");
+                else
+                    out.print(";\n");
+            }
+        }
+        out.print("    }\n\n");
 
     }
 
     private void dot( int dimen ){
-
+        out.print("    /**\n" +
+                "     * <p>Performs the vector dot product:<br>\n" +
+                "     * <br>\n" +
+                "     * c = a * b <br>\n" +
+                "     * <br>\n" +
+                "     * c> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The left vector in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @return The dot product\n" +
+                "     */\n" +
+                "    public static double dot( "+nameVector+" a , "+nameVector+" b ) {\n");
+        out.print("        return ");
+        for( int i = 1; i <= dimen; i++ ) {
+            out.print("a.a"+i+"*b.a"+i);
+            if( i < dimen )
+                out.print(" + ");
+            else
+                out.print(";\n");
+        }
+        out.print("    }\n\n");
     }
 
     private void setIdentity( int dimen ){
+
+    }
+
+    private void invert( int dimen ){
+
+    }
+
+    private void trace( int dimen ){
+
+    }
+
+    private void det( int dimen ){
 
     }
 

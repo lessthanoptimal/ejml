@@ -12,6 +12,7 @@ Date format: year/month/day
   * Matrix 2x2, 3x3, 4x4, 5x5
   * Vector 2, 3, 4, 5
 - Created an interface for Matrix64F and renamed the old one into ReshapeMatrix64F
+- CommonOps:  Added checks which ensure the input matrix is not modified for det() and inv()
 
 ----- Version 0.23
 

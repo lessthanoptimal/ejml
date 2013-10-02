@@ -18,6 +18,11 @@
 
 package org.ejml.alg.fixed;
 
+import org.ejml.data.FixedMatrix4_64F;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Peter Abeles
  */
@@ -27,16 +32,16 @@ public class TestFixedOps4 extends CompareFixedToCommonOps {
         super(FixedOps4.class);
     }
 
-//    @Test
-//    public void dot() {
-//        FixedMatrix3_64F a = new FixedMatrix3_64F(1,2,3);
-//        FixedMatrix3_64F b = new FixedMatrix3_64F(2,3,4);
-//
-//        double found = FixedOps3.dot(a,b);
-//
-//        assertEquals(2+6+12,found,1e-8);
-//    }
-//
+    @Test
+    public void dot() {
+        FixedMatrix4_64F a = new FixedMatrix4_64F(1,2,3,4);
+        FixedMatrix4_64F b = new FixedMatrix4_64F(2,3,4,5);
+
+        double found = FixedOps4.dot(a,b);
+
+        assertEquals(2+6+12+20,found,1e-8);
+    }
+
 //    @Test
 //    public void diag() {
 //        FixedMatrix3x3_64F m = new FixedMatrix3x3_64F(1,2,3,4,5,6,7,8,9);

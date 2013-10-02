@@ -18,10 +18,13 @@
 
 package org.ejml.alg.fixed;
 
+import org.ejml.data.FixedMatrix4_64F;
 import org.ejml.data.FixedMatrix4x4_64F;
 
 /**
  * Common matrix operations for fixed sized matrices which are 4 x 4 or 4 element vectors.
+ * <p></p>
+ * DO NOT MODIFY.  Automaticall generated code created by GenerateFixedOps
  *
  * @author Peter Abeles
  */
@@ -263,6 +266,60 @@ public class FixedOps4 {
         c.a42 = a.a41*b.a21 + a.a42*b.a22 + a.a43*b.a23 + a.a44*b.a24;
         c.a43 = a.a41*b.a31 + a.a42*b.a32 + a.a43*b.a33 + a.a44*b.a34;
         c.a44 = a.a41*b.a41 + a.a42*b.a42 + a.a43*b.a43 + a.a44*b.a44;
+    }
+
+    /**
+     * <p>Performs matrix to vector multiplication:<br>
+     * <br>
+     * c = a * b <br>
+     * <br>
+     * c<sub>i</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>k</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right vector in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void mult( FixedMatrix4x4_64F a , FixedMatrix4_64F b , FixedMatrix4_64F c) {
+        c.a1 = a.a11*b.a1 + a.a12*b.a2 + a.a13*b.a3 + a.a14*b.a4;
+        c.a2 = a.a21*b.a1 + a.a22*b.a2 + a.a23*b.a3 + a.a24*b.a4;
+        c.a3 = a.a31*b.a1 + a.a32*b.a2 + a.a33*b.a3 + a.a34*b.a4;
+        c.a4 = a.a41*b.a1 + a.a42*b.a2 + a.a43*b.a3 + a.a44*b.a4;
+    }
+
+    /**
+     * <p>Performs vector to matrix multiplication:<br>
+     * <br>
+     * c = a * b <br>
+     * <br>
+     * c<sub>j</sub> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>kj</sub> }
+     * </p>
+     *
+     * @param a The left vector in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void mult( FixedMatrix4_64F a , FixedMatrix4x4_64F b , FixedMatrix4_64F c) {
+        c.a1 = a.a1*b.a11 + a.a2*b.a21 + a.a3*b.a31 + a.a4*b.a41;
+        c.a2 = a.a1*b.a12 + a.a2*b.a22 + a.a3*b.a32 + a.a4*b.a42;
+        c.a3 = a.a1*b.a13 + a.a2*b.a23 + a.a3*b.a33 + a.a4*b.a43;
+        c.a4 = a.a1*b.a14 + a.a2*b.a24 + a.a3*b.a34 + a.a4*b.a44;
+    }
+
+    /**
+     * <p>Performs the vector dot product:<br>
+     * <br>
+     * c = a * b <br>
+     * <br>
+     * c> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }
+     * </p>
+     *
+     * @param a The left vector in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @return The dot product
+     */
+    public static double dot( FixedMatrix4_64F a , FixedMatrix4_64F b ) {
+        return a.a1*b.a1 + a.a2*b.a2 + a.a3*b.a3 + a.a4*b.a4;
     }
 
 }

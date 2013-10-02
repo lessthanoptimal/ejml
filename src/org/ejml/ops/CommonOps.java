@@ -630,6 +630,11 @@ public class CommonOps {
             }
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();
+
+            if( alg.inputModified() ) {
+                mat = mat.copy();
+            }
+
             if( !alg.decompose(mat) )
                 return 0.0;
             return alg.computeDeterminant();
@@ -713,6 +718,9 @@ public class CommonOps {
         } else {
             LUDecompositionAlt alg = new LUDecompositionAlt();
             LinearSolverLu solver = new LinearSolverLu(alg);
+
+            if( solver.modifiesA() )
+                mat = mat.copy();
 
             if( !solver.setA(mat))
                 return false;
