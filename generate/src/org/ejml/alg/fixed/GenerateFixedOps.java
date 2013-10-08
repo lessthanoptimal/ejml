@@ -19,6 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.CodeGeneratorBase;
+import org.ejml.alg.dense.misc.GenerateDeterminantFromMinor;
+import org.ejml.alg.dense.misc.GenerateInverseFromMinor;
 
 import java.io.FileNotFoundException;
 
@@ -57,6 +59,9 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             invert(dimension);
             trace(dimension);
             det(dimension);
+            diag(dimension);
+            elementMax(dimension);
+            elementMaxAbs(dimension);
 
             out.println("}\n");
 
@@ -79,7 +84,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "/**\n" +
                 " * Common matrix operations for fixed sized matrices which are "+dimen+" x "+dimen+" or "+dimen+" element vectors.\n" +
                 " * <p></p>\n" +
-                " * DO NOT MODIFY.  Automaticall generated code created by GenerateFixedOps\n" +
+                " * DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"\n" +
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
@@ -382,19 +387,203 @@ public class GenerateFixedOps extends CodeGeneratorBase {
     }
 
     private void setIdentity( int dimen ){
-
+        out.print("    /**\n" +
+                "     * Sets all the diagonal elements equal to one and everything else equal to zero.\n" +
+                "     * If this is a square matrix then it will be an identity matrix.\n" +
+                "     *\n" +
+                "     * @param a A matrix.\n" +
+                "     */\n" +
+                "    public static void setIdentity( "+nameMatrix+" a ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                int val = x==y?1:0;
+                out.print("a.a"+x+""+y+" = "+val+";");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.print("\n");
+            }
+        }
+        out.print("    }\n\n");
     }
 
     private void invert( int dimen ){
+        out.print("    /**\n" +
+                "     * Inverts matrix 'a' using minor matrices and stores the results in 'inv'.  Scaling is applied to improve\n" +
+                "     * stability against overflow and underflow.\n" +
+                "     *\n" +
+                "     * WARNING: Potentially less stable than using LU decomposition.\n" +
+                "     *\n" +
+                "     * @param a Input matrix. Not modified.\n" +
+                "     * @param inv Inverted output matrix.  Modified.\n" +
+                "     * @return true if it was successful or false if it failed.  Not always reliable.\n" +
+                "     */\n" +
+                "    public static boolean invert( "+nameMatrix+" a , "+nameMatrix+" inv ) {\n" +
+                "\n" +
+                "        double scale = 1.0/elementMaxAbs(a);\n" +
+                "\n");
+
+        int matrix[] = new int[dimen*dimen];
+        int index = 0;
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ , index++) {
+                matrix[index] = index;
+                String coor = y+""+x;
+                out.print("        double a"+coor+" = a.a"+coor+"*scale;\n");
+            }
+        }
+        out.println();
+
+        try {
+            GenerateInverseFromMinor gen = new GenerateInverseFromMinor(false);
+            gen.printMinors(matrix,dimen, out);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        out.println();
+
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                String coor0 = y+""+x;
+                String coor1 = x+""+y;
+                out.print("        inv.a"+coor0+" = m"+coor1+"/det;\n");
+            }
+        }
+        out.println();
+        out.print("        return !Double.isNaN(det) && !Double.isInfinite(det);\n");
+        out.print("    }\n\n");
 
     }
 
     private void trace( int dimen ){
-
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * This computes the trace of the matrix:<br>\n" +
+                "     * <br>\n" +
+                "     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }\n" +
+                "     * </p>\n" +
+                "     * <p>\n" +
+                "     * The trace is only defined for square matrices.\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A square matrix.  Not modified.\n" +
+                "     */\n" +
+                "    public static double trace( "+nameMatrix+" a ) {\n");
+        out.print("        return ");
+        for( int i = 1; i <= dimen; i++ ) {
+            out.print("a.a"+i+""+1);
+            if( i < dimen )
+                out.print(" + ");
+            else
+                out.println(";");
+        }
+        out.print("    }\n\n");
     }
 
     private void det( int dimen ){
+        out.print("    /**\n" +
+                "     * Computes the determinant using minor matrices.\n" +
+                "     * <p></p>\n" +
+                "     * WARNING: Potentially less stable than using LU decomposition.\n" +
+                "     *\n" +
+                "     * @param mat Input matrix.  Not modified.\n" +
+                "     * @return The determinant.\n" +
+                "     */\n" +
+                "    public static double det( "+nameMatrix+" mat ) {\n" +
+                "\n");
+        if( dimen == 2 ) {
+            out.print("        return mat.a11*mat.a22 - mat.a12*mat.a21\n");
+        } else if( dimen == 3 ) {
+            out.print( "        double a = mat.a11*(mat.a22*mat.a33 - mat.a23*mat.a32);\n" +
+                    "        double b = mat.a12*(mat.a21*mat.a33 - mat.a23*mat.a31);\n" +
+                    "        double c = mat.a13*(mat.a21*mat.a32 - mat.a31*mat.a22);\n" +
+                    "\n" +
+                    "        return a-b+c;\n");
+        } else {
+            GenerateDeterminantFromMinor helper = new GenerateDeterminantFromMinor(out) {
+                @Override
+                protected String getInputValue(int element) {
+                    int row = element/(N+1) + 1;
+                    int col = element%(N+1) + 1;
+                    return "mat.a"+row+""+col;
+                }
+            };
+            helper.printFunctionInner(dimen);
+            out.print("\n        return ret;\n");
+        }
 
+        out.print("    }\n\n");
+    }
+
+    private void diag( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Extracts all diagonal elements from 'input' and places them inside the 'out' vector. Elements\n" +
+                "     * are in sequential order.\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     *\n" +
+                "     * @param input Matrix.  Not modified.\n" +
+                "     * @param out Vector containing diagonal elements.  Modified.\n" +
+                "     */\n" +
+                "    public static void diag( "+nameMatrix+" input , "+nameVector+" out ) {\n");
+        for( int i = 1; i <= dimen; i++ ) {
+            out.print("        out.a"+i+" = input.a"+i+""+i+";\n");
+        }
+        out.print("    }\n\n");
+    }
+
+    private void elementMax( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the value of the element in the matrix that has the largest value.<br>\n" +
+                "     * <br>\n" +
+                "     * Max{ a<sub>ij</sub> } for all i and j<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The max element value of the matrix.\n" +
+                "     */\n" +
+                "    public static double elementMax( "+nameMatrix+" a ) {\n");
+
+        out.print("        double max = a.a11;\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                if( y == 1 && x == 1 )
+                    continue;
+                out.print("        max = Math.max(max,a.a"+y+""+x+");\n");
+            }
+        }
+        out.print("\n" +
+                "        return max;\n" +
+                "    }\n\n");
+    }
+
+    private void elementMaxAbs( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>\n" +
+                "     * <br>\n" +
+                "     * Max{ |a<sub>ij</sub>| } for all i and j<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The max abs element value of the matrix.\n" +
+                "     */\n" +
+                "    public static double elementMaxAbs( "+nameMatrix+" a ) {\n");
+
+        out.print("        double max = a.a11;\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                if( y == 1 && x == 1 )
+                    continue;
+                out.print("        max = Math.max(max,Math.abs(a.a"+y+""+x+"));\n");
+            }
+        }
+        out.print("\n" +
+                "        return max;\n" +
+                "    }\n\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {

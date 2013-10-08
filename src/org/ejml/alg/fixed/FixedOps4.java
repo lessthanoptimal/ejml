@@ -24,7 +24,7 @@ import org.ejml.data.FixedMatrix4x4_64F;
 /**
  * Common matrix operations for fixed sized matrices which are 4 x 4 or 4 element vectors.
  * <p></p>
- * DO NOT MODIFY.  Automaticall generated code created by GenerateFixedOps
+ * DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps
  *
  * @author Peter Abeles
  */
@@ -320,6 +320,222 @@ public class FixedOps4 {
      */
     public static double dot( FixedMatrix4_64F a , FixedMatrix4_64F b ) {
         return a.a1*b.a1 + a.a2*b.a2 + a.a3*b.a3 + a.a4*b.a4;
+    }
+
+    /**
+     * Sets all the diagonal elements equal to one and everything else equal to zero.
+     * If this is a square matrix then it will be an identity matrix.
+     *
+     * @param a A matrix.
+     */
+    public static void setIdentity( FixedMatrix4x4_64F a ) {
+        a.a11 = 1; a.a21 = 0; a.a31 = 0; a.a41 = 0;
+        a.a12 = 0; a.a22 = 1; a.a32 = 0; a.a42 = 0;
+        a.a13 = 0; a.a23 = 0; a.a33 = 1; a.a43 = 0;
+        a.a14 = 0; a.a24 = 0; a.a34 = 0; a.a44 = 1;
+    }
+
+    /**
+     * Inverts matrix 'a' using minor matrices and stores the results in 'inv'.  Scaling is applied to improve
+     * stability against overflow and underflow.
+     *
+     * WARNING: Potentially less stable than using LU decomposition.
+     *
+     * @param a Input matrix. Not modified.
+     * @param inv Inverted output matrix.  Modified.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean invert( FixedMatrix4x4_64F a , FixedMatrix4x4_64F inv ) {
+
+        double scale = 1.0/elementMaxAbs(a);
+
+        double a11 = a.a11*scale;
+        double a12 = a.a12*scale;
+        double a13 = a.a13*scale;
+        double a14 = a.a14*scale;
+        double a21 = a.a21*scale;
+        double a22 = a.a22*scale;
+        double a23 = a.a23*scale;
+        double a24 = a.a24*scale;
+        double a31 = a.a31*scale;
+        double a32 = a.a32*scale;
+        double a33 = a.a33*scale;
+        double a34 = a.a34*scale;
+        double a41 = a.a41*scale;
+        double a42 = a.a42*scale;
+        double a43 = a.a43*scale;
+        double a44 = a.a44*scale;
+
+        double m11 =  + a22*(a33*a44 - a34*a43) - a23*(a32*a44 - a34*a42) + a24*(a32*a43 - a33*a42);
+        double m12 = -(  + a21*(a33*a44 - a34*a43) - a23*(a31*a44 - a34*a41) + a24*(a31*a43 - a33*a41));
+        double m13 =  + a21*(a32*a44 - a34*a42) - a22*(a31*a44 - a34*a41) + a24*(a31*a42 - a32*a41);
+        double m14 = -(  + a21*(a32*a43 - a33*a42) - a22*(a31*a43 - a33*a41) + a23*(a31*a42 - a32*a41));
+        double m21 = -(  + a12*(a33*a44 - a34*a43) - a13*(a32*a44 - a34*a42) + a14*(a32*a43 - a33*a42));
+        double m22 =  + a11*(a33*a44 - a34*a43) - a13*(a31*a44 - a34*a41) + a14*(a31*a43 - a33*a41);
+        double m23 = -(  + a11*(a32*a44 - a34*a42) - a12*(a31*a44 - a34*a41) + a14*(a31*a42 - a32*a41));
+        double m24 =  + a11*(a32*a43 - a33*a42) - a12*(a31*a43 - a33*a41) + a13*(a31*a42 - a32*a41);
+        double m31 =  + a12*(a23*a44 - a24*a43) - a13*(a22*a44 - a24*a42) + a14*(a22*a43 - a23*a42);
+        double m32 = -(  + a11*(a23*a44 - a24*a43) - a13*(a21*a44 - a24*a41) + a14*(a21*a43 - a23*a41));
+        double m33 =  + a11*(a22*a44 - a24*a42) - a12*(a21*a44 - a24*a41) + a14*(a21*a42 - a22*a41);
+        double m34 = -(  + a11*(a22*a43 - a23*a42) - a12*(a21*a43 - a23*a41) + a13*(a21*a42 - a22*a41));
+        double m41 = -(  + a12*(a23*a34 - a24*a33) - a13*(a22*a34 - a24*a32) + a14*(a22*a33 - a23*a32));
+        double m42 =  + a11*(a23*a34 - a24*a33) - a13*(a21*a34 - a24*a31) + a14*(a21*a33 - a23*a31);
+        double m43 = -(  + a11*(a22*a34 - a24*a32) - a12*(a21*a34 - a24*a31) + a14*(a21*a32 - a22*a31));
+        double m44 =  + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31);
+
+        double det = (a11*m11 + a12*m12 + a13*m13 + a14*m14)/scale;
+
+        inv.a11 = m11/det;
+        inv.a12 = m21/det;
+        inv.a13 = m31/det;
+        inv.a14 = m41/det;
+        inv.a21 = m12/det;
+        inv.a22 = m22/det;
+        inv.a23 = m32/det;
+        inv.a24 = m42/det;
+        inv.a31 = m13/det;
+        inv.a32 = m23/det;
+        inv.a33 = m33/det;
+        inv.a34 = m43/det;
+        inv.a41 = m14/det;
+        inv.a42 = m24/det;
+        inv.a43 = m34/det;
+        inv.a44 = m44/det;
+
+        return !Double.isNaN(det) && !Double.isInfinite(det);
+    }
+
+    /**
+     * <p>
+     * This computes the trace of the matrix:<br>
+     * <br>
+     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }
+     * </p>
+     * <p>
+     * The trace is only defined for square matrices.
+     * </p>
+     *
+     * @param a A square matrix.  Not modified.
+     */
+    public static double trace( FixedMatrix4x4_64F a ) {
+        return a.a11 + a.a21 + a.a31 + a.a41;
+    }
+
+    /**
+     * Computes the determinant using minor matrices.
+     * <p></p>
+     * WARNING: Potentially less stable than using LU decomposition.
+     *
+     * @param mat Input matrix.  Not modified.
+     * @return The determinant.
+     */
+    public static double det( FixedMatrix4x4_64F mat ) {
+
+        double  a11 = mat.a22;
+        double  a12 = mat.a23;
+        double  a13 = mat.a24;
+        double  a21 = mat.a32;
+        double  a22 = mat.a33;
+        double  a23 = mat.a34;
+        double  a31 = mat.a42;
+        double  a32 = mat.a43;
+        double  a33 = mat.a44;
+
+        double ret = 0;
+        ret += mat.a11 * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));
+        a11 = mat.a21;
+        a21 = mat.a31;
+        a31 = mat.a41;
+        ret -= mat.a12 * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));
+        a12 = mat.a22;
+        a22 = mat.a32;
+        a32 = mat.a42;
+        ret += mat.a13 * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));
+        a13 = mat.a23;
+        a23 = mat.a33;
+        a33 = mat.a43;
+        ret -= mat.a14 * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Extracts all diagonal elements from 'input' and places them inside the 'out' vector. Elements
+     * are in sequential order.
+     * </p>
+     *
+     *
+     * @param input Matrix.  Not modified.
+     * @param out Vector containing diagonal elements.  Modified.
+     */
+    public static void diag( FixedMatrix4x4_64F input , FixedMatrix4_64F out ) {
+        out.a1 = input.a11;
+        out.a2 = input.a22;
+        out.a3 = input.a33;
+        out.a4 = input.a44;
+    }
+
+    /**
+     * <p>
+     * Returns the value of the element in the matrix that has the largest value.<br>
+     * <br>
+     * Max{ a<sub>ij</sub> } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMax( FixedMatrix4x4_64F a ) {
+        double max = a.a11;
+        max = Math.max(max,a.a12);
+        max = Math.max(max,a.a13);
+        max = Math.max(max,a.a14);
+        max = Math.max(max,a.a21);
+        max = Math.max(max,a.a22);
+        max = Math.max(max,a.a23);
+        max = Math.max(max,a.a24);
+        max = Math.max(max,a.a31);
+        max = Math.max(max,a.a32);
+        max = Math.max(max,a.a33);
+        max = Math.max(max,a.a34);
+        max = Math.max(max,a.a41);
+        max = Math.max(max,a.a42);
+        max = Math.max(max,a.a43);
+        max = Math.max(max,a.a44);
+
+        return max;
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
+     * <br>
+     * Max{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max abs element value of the matrix.
+     */
+    public static double elementMaxAbs( FixedMatrix4x4_64F a ) {
+        double max = a.a11;
+        max = Math.max(max,Math.abs(a.a12));
+        max = Math.max(max,Math.abs(a.a13));
+        max = Math.max(max,Math.abs(a.a14));
+        max = Math.max(max,Math.abs(a.a21));
+        max = Math.max(max,Math.abs(a.a22));
+        max = Math.max(max,Math.abs(a.a23));
+        max = Math.max(max,Math.abs(a.a24));
+        max = Math.max(max,Math.abs(a.a31));
+        max = Math.max(max,Math.abs(a.a32));
+        max = Math.max(max,Math.abs(a.a33));
+        max = Math.max(max,Math.abs(a.a34));
+        max = Math.max(max,Math.abs(a.a41));
+        max = Math.max(max,Math.abs(a.a42));
+        max = Math.max(max,Math.abs(a.a43));
+        max = Math.max(max,Math.abs(a.a44));
+
+        return max;
     }
 
 }

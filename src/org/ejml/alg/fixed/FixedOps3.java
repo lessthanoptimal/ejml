@@ -360,7 +360,7 @@ public class FixedOps3 {
 
     /**
      * Computes the determinant using minor matrices.
-     *
+     * <p></p>
      * WARNING: Potentially less stable than using LU decomposition.
      *
      * @param mat Input matrix.  Not modified.

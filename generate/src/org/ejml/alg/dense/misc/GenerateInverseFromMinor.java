@@ -40,8 +40,9 @@ public class GenerateInverseFromMinor {
     PrintStream stream;
     int N;
 
-    public GenerateInverseFromMinor() throws FileNotFoundException {
-        stream = new PrintStream(className +".java");
+    public GenerateInverseFromMinor( boolean createStream ) throws FileNotFoundException {
+        if( createStream )
+            stream = new PrintStream(className +".java");
     }
 
     public void createClass(int N) {
@@ -110,20 +111,45 @@ public class GenerateInverseFromMinor {
                 "\n");
 
 
-        // extracts the first minor
         this.N = N;
+
+        // extracts the first minor
         int matrix[] = new int[N*N];
         int index = 0;
         for( int i = 1; i <= N; i++ ) {
             for( int j = 1; j <= N; j++ , index++) {
                 matrix[index] = index;
-                stream.print("        double "+a(index)+" = data[ "+index+" ]*scale;\n");
+                stream.print("        double "+a(index)+" = "+"data[ "+index+" ]*scale;\n");
             }
         }
         stream.println();
 
-        // compute all the minors
+        printMinors(matrix, N, stream);
+
+        stream.println();
+        stream.print("        data = inv.data;\n");
+
         index = 0;
+        for( int i = 1; i <= N; i++ ) {
+            for( int j = 1; j <= N; j++ , index++) {
+                stream.print("        "+"data["+index+"] = m"+j+""+i+" / det;\n");
+            }
+        }
+
+        stream.println();
+        stream.print("    }\n");
+        stream.print("\n");
+    }
+
+    /**
+     * Put the core auto-code algorithm here so an external class can call it
+     */
+    public void printMinors(int matrix[], int N, PrintStream stream) {
+        this.N = N;
+        this.stream = stream;
+
+        // compute all the minors
+        int index = 0;
         for( int i = 1; i <= N; i++ ) {
             for( int j = 1; j <= N; j++ , index++) {
                 stream.print("        double m"+i+""+j+" = ");
@@ -143,18 +169,7 @@ public class GenerateInverseFromMinor {
             stream.print(" + "+a(i-1)+"*m"+1+""+i);
         }
         stream.println(")/scale;");
-        stream.println();
-        stream.print("        data = inv.data;\n");
 
-        index = 0;
-        for( int i = 1; i <= N; i++ ) {
-            for( int j = 1; j <= N; j++ , index++) {
-                stream.print("        data["+index+"] = m"+j+""+i+" / det;\n");
-            }
-        }
-        stream.println();
-        stream.print("    }\n");
-        stream.print("\n");
     }
 
     private void printTopMinor( int m[] , int row , int col , int N )
@@ -218,7 +233,7 @@ public class GenerateInverseFromMinor {
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        GenerateInverseFromMinor gen = new GenerateInverseFromMinor();
+        GenerateInverseFromMinor gen = new GenerateInverseFromMinor(true);
 
         gen.createClass(5);
     }

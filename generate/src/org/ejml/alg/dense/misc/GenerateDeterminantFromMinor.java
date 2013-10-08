@@ -33,11 +33,15 @@ import java.io.PrintStream;
  */
 public class GenerateDeterminantFromMinor {
 
-    PrintStream stream;
-    int N;
+    protected PrintStream stream;
+    protected int N;
 
     public GenerateDeterminantFromMinor( String fileName ) throws FileNotFoundException {
         stream = new PrintStream(fileName);
+    }
+
+    public GenerateDeterminantFromMinor(PrintStream stream) {
+        this.stream = stream;
     }
 
     public void createClass(int N) {
@@ -122,11 +126,23 @@ public class GenerateDeterminantFromMinor {
                 "    }\n\n");
     }
 
+    protected String getInputValue( int element ) {
+        return "mat.get( "+element+" )";
+    }
+
     private void printFunction( int N )
     {
         stream.print("    public static double det"+N+"( RowD1Matrix64F mat )\n" +
                 "    {\n");
 
+        printFunctionInner(N);
+
+        stream.print("        return ret;\n");
+        stream.print("    }\n");
+        stream.print("\n");
+    }
+
+    public void printFunctionInner( int N ) {
         // extracts the first minor
         int M = N-1;
         this.N = M;
@@ -136,37 +152,33 @@ public class GenerateDeterminantFromMinor {
             int origIndex = i*N+1;
             for( int j = 1; j <= M; j++ , origIndex++,index++) {
                 matrix[index] = index;
-                stream.print("        double  "+a(index)+" = mat.get( "+origIndex+" );\n");
+                stream.print("        double  "+a(index)+" = "+getInputValue(origIndex)+";\n");
             }
         }
 
         stream.print("\n");
         stream.print("        double ret = 0;\n");
-        stream.print("        ret += mat.get( 0 ) * (");
-        minor(matrix,0,M);
+        stream.print("        ret += "+getInputValue(0)+" * (");
+        minor(matrix, 0, M);
         stream.print(");\n");
-        
+
         for( int minor = 2; minor <= N; minor++ ) {
             for( int i = 1; i <= M; i++ ) {
                 index = (minor-2)+(i-1)*M;
                 int origIndex = minor-2+i*N;
-                stream.print("        "+a(index)+" = mat.get( "+origIndex+" );\n");
+                stream.print("        "+a(index)+" = "+getInputValue(origIndex)+";\n");
             }
 
             if( minor % 2 == 0 ) {
-               stream.print("        ret -= ");
+                stream.print("        ret -= ");
             } else {
-               stream.print("        ret += ");
+                stream.print("        ret += ");
             }
-            stream.print("mat.get( "+(minor-1)+" ) * (");
+            stream.print(getInputValue(minor-1)+" * (");
             minor(matrix,0,M);
             stream.print(");\n");
         }
-        stream.print("        return ret;\n");
-        stream.print("    }\n");
-        stream.print("\n");
     }
-
 
     private void minor( int m[] , int row , int N )
     {
