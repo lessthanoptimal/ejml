@@ -36,12 +36,12 @@ public class GenerateFixedOps extends CodeGeneratorBase {
     String nameMatrix;
     String nameVector;
 
+    // The maximize size it will do inverse on
+    public static int maxInverseSize = 5;
+
     @Override
     public void generate() throws FileNotFoundException {
-        for( int dimension = 2; dimension <= 5; dimension++ ){
-
-            dimension = 4;
-
+        for( int dimension = 2; dimension <= 6; dimension++ ){
             printPreable(dimension);
 
             printAdd(dimension);
@@ -56,16 +56,28 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             mult_v_m_v(dimension);
             dot(dimension);
             setIdentity(dimension);
-            invert(dimension);
+            if( dimension <= maxInverseSize ) {
+                invert(dimension);
+                det(dimension);
+            }
             trace(dimension);
-            det(dimension);
             diag(dimension);
             elementMax(dimension);
             elementMaxAbs(dimension);
+            elementMin(dimension);
+            elementMinAbs(dimension);
+            elementMult_two(dimension);
+            elementMult_three(dimension);
+            elementDiv_two(dimension);
+            elementDiv_three(dimension);
+            scale_two(dimension);
+            scale_three(dimension);
+            divide_two(dimension);
+            divide_three(dimension);
+            changeSign(dimension);
+            fill(dimension);
 
             out.println("}\n");
-
-            dimension = 10;
         }
     }
 
@@ -82,9 +94,8 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "import org.ejml.data."+nameMatrix+";\n" +
                 "\n" +
                 "/**\n" +
-                " * Common matrix operations for fixed sized matrices which are "+dimen+" x "+dimen+" or "+dimen+" element vectors.\n" +
-                " * <p></p>\n" +
-                " * DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"\n" +
+                " * <p>Common matrix operations for fixed sized matrices which are "+dimen+" x "+dimen+" or "+dimen+" element vectors.</p>\n" +
+                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
@@ -493,7 +504,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "    public static double det( "+nameMatrix+" mat ) {\n" +
                 "\n");
         if( dimen == 2 ) {
-            out.print("        return mat.a11*mat.a22 - mat.a12*mat.a21\n");
+            out.print("        return mat.a11*mat.a22 - mat.a12*mat.a21;\n");
         } else if( dimen == 3 ) {
             out.print( "        double a = mat.a11*(mat.a22*mat.a33 - mat.a23*mat.a32);\n" +
                     "        double b = mat.a12*(mat.a21*mat.a33 - mat.a23*mat.a31);\n" +
@@ -584,6 +595,313 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("\n" +
                 "        return max;\n" +
                 "    }\n\n");
+    }
+
+    private void elementMin( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the value of the element in the matrix that has the minimum value.<br>\n" +
+                "     * <br>\n" +
+                "     * Min{ a<sub>ij</sub> } for all i and j<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The value of element in the matrix with the minimum value.\n" +
+                "     */\n" +
+                "    public static double elementMin( "+nameMatrix+" a ) {\n");
+
+        out.print("        double min = a.a11;\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                if( y == 1 && x == 1 )
+                    continue;
+                out.print("        min = Math.min(min,a.a"+y+""+x+");\n");
+            }
+        }
+        out.print("\n" +
+                "        return min;\n" +
+                "    }\n\n");
+    }
+
+    private void elementMinAbs( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the absolute value of the element in the matrix that has the smallest absolute value.<br>\n" +
+                "     * <br>\n" +
+                "     * Min{ |a<sub>ij</sub>| } for all i and j<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The max element value of the matrix.\n" +
+                "     */\n" +
+                "    public static double elementMinAbs( "+nameMatrix+" a ) {\n");
+
+        out.print("        double min = a.a11;\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                if( y == 1 && x == 1 )
+                    continue;
+                out.print("        min = Math.min(min,Math.abs(a.a"+y+""+x+"));\n");
+            }
+        }
+        out.print("\n" +
+                "        return min;\n" +
+                "    }\n\n");
+    }
+
+    private void elementMult_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the an element by element multiplication operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left matrix in the multiplication operation. Modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     */\n" +
+                "    public static void elementMult( "+nameMatrix+" a , "+nameMatrix+" b) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("a."+w+" *= b."+w+";");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void elementMult_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the an element by element multiplication operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void elementMult( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("c."+w+" = a."+w+"*b."+w+";");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void elementDiv_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the an element by element division operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left matrix in the division operation. Modified.\n" +
+                "     * @param b The right matrix in the division operation. Not modified.\n" +
+                "     */\n" +
+                "    public static void elementDiv( "+nameMatrix+" a , "+nameMatrix+" b) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("a."+w+" /= b."+w+";");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void elementDiv_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the an element by element division operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left matrix in the division operation. Not modified.\n" +
+                "     * @param b The right matrix in the division operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void elementDiv( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("c."+w+" = a."+w+"/b."+w+";");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void scale_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an in-place element by element scalar multiplication.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The matrix that is to be scaled.  Modified.\n" +
+                "     * @param alpha the amount each element is multiplied by.\n" +
+                "     */\n" +
+                "    public static void scale( double alpha , "+nameMatrix+" a ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("a."+w+" *= alpha;");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void scale_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an element by element scalar multiplication.<br>\n" +
+                "     * <br>\n" +
+                "     * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha the amount each element is multiplied by.\n" +
+                "     * @param a The matrix that is to be scaled.  Not modified.\n" +
+                "     * @param b Where the scaled matrix is stored. Modified.\n" +
+                "     */\n" +
+                "    public static void scale( double alpha , "+nameMatrix+" a , "+nameMatrix+" b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("b."+w+" = a."+w+"*alpha;");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void divide_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an in-place element by element scalar division.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The matrix whose elements are to be divided.  Modified.\n" +
+                "     * @param alpha the amount each element is divided by.\n" +
+                "     */\n" +
+                "    public static void divide( double alpha , "+nameMatrix+" a ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("a."+w+" /= alpha;");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");    }
+
+    private void divide_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an element by element scalar division.<br>\n" +
+                "     * <br>\n" +
+                "     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha the amount each element is divided by.\n" +
+                "     * @param a The matrix whose elements are to be divided.  Not modified.\n" +
+                "     * @param b Where the results are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void divide( double alpha , "+nameMatrix+" a , "+nameMatrix+" b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("b."+w+" = a."+w+"/alpha;");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void changeSign( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Changes the sign of every element in the matrix.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = -a<sub>ij</sub>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Modified.\n" +
+                "     */\n" +
+                "    public static void changeSign( "+nameMatrix+" a )\n" +
+                "    {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("a."+w+" = -a."+w+";");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void fill( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Sets every element in the matrix to the specified value.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = value\n" +
+                "     * <p>\n" +
+                "     *\n" +
+                "     * @param a A matrix whose elements are about to be set. Modified.\n" +
+                "     * @param v The value each element will have.\n" +
+                "     */\n" +
+                "    public static void fill( "+nameMatrix+" a , double v  ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        ");
+            for( int x = 1; x <= dimen; x++ ) {
+                String w = "a"+y+""+x;
+                out.print("a."+w+" = v;");
+                if( x < dimen )
+                    out.print(" ");
+                else
+                    out.println();
+            }
+        }
+                out.print("    }\n\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {

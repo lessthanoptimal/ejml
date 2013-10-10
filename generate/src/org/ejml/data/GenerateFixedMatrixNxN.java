@@ -31,7 +31,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
 
     @Override
     public void generate() throws FileNotFoundException {
-        for( int dimension = 2; dimension <= 5; dimension++ ){
+        for( int dimension = 2; dimension <= 6; dimension++ ){
             print(dimension);
         }
     }

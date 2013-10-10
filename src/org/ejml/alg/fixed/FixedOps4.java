@@ -22,9 +22,8 @@ import org.ejml.data.FixedMatrix4_64F;
 import org.ejml.data.FixedMatrix4x4_64F;
 
 /**
- * Common matrix operations for fixed sized matrices which are 4 x 4 or 4 element vectors.
- * <p></p>
- * DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps
+ * <p>Common matrix operations for fixed sized matrices which are 4 x 4 or 4 element vectors.</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps</p>
  *
  * @author Peter Abeles
  */
@@ -406,22 +405,6 @@ public class FixedOps4 {
     }
 
     /**
-     * <p>
-     * This computes the trace of the matrix:<br>
-     * <br>
-     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }
-     * </p>
-     * <p>
-     * The trace is only defined for square matrices.
-     * </p>
-     *
-     * @param a A square matrix.  Not modified.
-     */
-    public static double trace( FixedMatrix4x4_64F a ) {
-        return a.a11 + a.a21 + a.a31 + a.a41;
-    }
-
-    /**
      * Computes the determinant using minor matrices.
      * <p></p>
      * WARNING: Potentially less stable than using LU decomposition.
@@ -457,6 +440,22 @@ public class FixedOps4 {
         ret -= mat.a14 * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));
 
         return ret;
+    }
+
+    /**
+     * <p>
+     * This computes the trace of the matrix:<br>
+     * <br>
+     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }
+     * </p>
+     * <p>
+     * The trace is only defined for square matrices.
+     * </p>
+     *
+     * @param a A square matrix.  Not modified.
+     */
+    public static double trace( FixedMatrix4x4_64F a ) {
+        return a.a11 + a.a21 + a.a31 + a.a41;
     }
 
     /**
@@ -536,6 +535,234 @@ public class FixedOps4 {
         max = Math.max(max,Math.abs(a.a44));
 
         return max;
+    }
+
+    /**
+     * <p>
+     * Returns the value of the element in the matrix that has the minimum value.<br>
+     * <br>
+     * Min{ a<sub>ij</sub> } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The value of element in the matrix with the minimum value.
+     */
+    public static double elementMin( FixedMatrix4x4_64F a ) {
+        double min = a.a11;
+        min = Math.min(min,a.a12);
+        min = Math.min(min,a.a13);
+        min = Math.min(min,a.a14);
+        min = Math.min(min,a.a21);
+        min = Math.min(min,a.a22);
+        min = Math.min(min,a.a23);
+        min = Math.min(min,a.a24);
+        min = Math.min(min,a.a31);
+        min = Math.min(min,a.a32);
+        min = Math.min(min,a.a33);
+        min = Math.min(min,a.a34);
+        min = Math.min(min,a.a41);
+        min = Math.min(min,a.a42);
+        min = Math.min(min,a.a43);
+        min = Math.min(min,a.a44);
+
+        return min;
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the smallest absolute value.<br>
+     * <br>
+     * Min{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMinAbs( FixedMatrix4x4_64F a ) {
+        double min = a.a11;
+        min = Math.min(min,Math.abs(a.a12));
+        min = Math.min(min,Math.abs(a.a13));
+        min = Math.min(min,Math.abs(a.a14));
+        min = Math.min(min,Math.abs(a.a21));
+        min = Math.min(min,Math.abs(a.a22));
+        min = Math.min(min,Math.abs(a.a23));
+        min = Math.min(min,Math.abs(a.a24));
+        min = Math.min(min,Math.abs(a.a31));
+        min = Math.min(min,Math.abs(a.a32));
+        min = Math.min(min,Math.abs(a.a33));
+        min = Math.min(min,Math.abs(a.a34));
+        min = Math.min(min,Math.abs(a.a41));
+        min = Math.min(min,Math.abs(a.a42));
+        min = Math.min(min,Math.abs(a.a43));
+        min = Math.min(min,Math.abs(a.a44));
+
+        return min;
+    }
+
+    /**
+     * <p>Performs the an element by element multiplication operation:<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the multiplication operation. Modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     */
+    public static void elementMult( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b) {
+        a.a11 *= b.a11; a.a12 *= b.a12; a.a13 *= b.a13; a.a14 *= b.a14;
+        a.a21 *= b.a21; a.a22 *= b.a22; a.a23 *= b.a23; a.a24 *= b.a24;
+        a.a31 *= b.a31; a.a32 *= b.a32; a.a33 *= b.a33; a.a34 *= b.a34;
+        a.a41 *= b.a41; a.a42 *= b.a42; a.a43 *= b.a43; a.a44 *= b.a44;
+    }
+
+    /**
+     * <p>Performs the an element by element multiplication operation:<br>
+     * <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void elementMult( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c ) {
+        c.a11 = a.a11*b.a11; c.a12 = a.a12*b.a12; c.a13 = a.a13*b.a13; c.a14 = a.a14*b.a14;
+        c.a21 = a.a21*b.a21; c.a22 = a.a22*b.a22; c.a23 = a.a23*b.a23; c.a24 = a.a24*b.a24;
+        c.a31 = a.a31*b.a31; c.a32 = a.a32*b.a32; c.a33 = a.a33*b.a33; c.a34 = a.a34*b.a34;
+        c.a41 = a.a41*b.a41; c.a42 = a.a42*b.a42; c.a43 = a.a43*b.a43; c.a44 = a.a44*b.a44;
+    }
+
+    /**
+     * <p>Performs the an element by element division operation:<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the division operation. Modified.
+     * @param b The right matrix in the division operation. Not modified.
+     */
+    public static void elementDiv( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b) {
+        a.a11 /= b.a11; a.a12 /= b.a12; a.a13 /= b.a13; a.a14 /= b.a14;
+        a.a21 /= b.a21; a.a22 /= b.a22; a.a23 /= b.a23; a.a24 /= b.a24;
+        a.a31 /= b.a31; a.a32 /= b.a32; a.a33 /= b.a33; a.a34 /= b.a34;
+        a.a41 /= b.a41; a.a42 /= b.a42; a.a43 /= b.a43; a.a44 /= b.a44;
+    }
+
+    /**
+     * <p>Performs the an element by element division operation:<br>
+     * <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
+     * </p>
+     * @param a The left matrix in the division operation. Not modified.
+     * @param b The right matrix in the division operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void elementDiv( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c ) {
+        c.a11 = a.a11/b.a11; c.a12 = a.a12/b.a12; c.a13 = a.a13/b.a13; c.a14 = a.a14/b.a14;
+        c.a21 = a.a21/b.a21; c.a22 = a.a22/b.a22; c.a23 = a.a23/b.a23; c.a24 = a.a24/b.a24;
+        c.a31 = a.a31/b.a31; c.a32 = a.a32/b.a32; c.a33 = a.a33/b.a33; c.a34 = a.a34/b.a34;
+        c.a41 = a.a41/b.a41; c.a42 = a.a42/b.a42; c.a43 = a.a43/b.a43; c.a44 = a.a44/b.a44;
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar multiplication.<br>
+     * <br>
+     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param a The matrix that is to be scaled.  Modified.
+     * @param alpha the amount each element is multiplied by.
+     */
+    public static void scale( double alpha , FixedMatrix4x4_64F a ) {
+        a.a11 *= alpha; a.a12 *= alpha; a.a13 *= alpha; a.a14 *= alpha;
+        a.a21 *= alpha; a.a22 *= alpha; a.a23 *= alpha; a.a24 *= alpha;
+        a.a31 *= alpha; a.a32 *= alpha; a.a33 *= alpha; a.a34 *= alpha;
+        a.a41 *= alpha; a.a42 *= alpha; a.a43 *= alpha; a.a44 *= alpha;
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar multiplication.<br>
+     * <br>
+     * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param alpha the amount each element is multiplied by.
+     * @param a The matrix that is to be scaled.  Not modified.
+     * @param b Where the scaled matrix is stored. Modified.
+     */
+    public static void scale( double alpha , FixedMatrix4x4_64F a , FixedMatrix4x4_64F b ) {
+        b.a11 = a.a11*alpha; b.a12 = a.a12*alpha; b.a13 = a.a13*alpha; b.a14 = a.a14*alpha;
+        b.a21 = a.a21*alpha; b.a22 = a.a22*alpha; b.a23 = a.a23*alpha; b.a24 = a.a24*alpha;
+        b.a31 = a.a31*alpha; b.a32 = a.a32*alpha; b.a33 = a.a33*alpha; b.a34 = a.a34*alpha;
+        b.a41 = a.a41*alpha; b.a42 = a.a42*alpha; b.a43 = a.a43*alpha; b.a44 = a.a44*alpha;
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar division.<br>
+     * <br>
+     * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
+     * </p>
+     *
+     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param alpha the amount each element is divided by.
+     */
+    public static void divide( double alpha , FixedMatrix4x4_64F a ) {
+        a.a11 /= alpha; a.a12 /= alpha; a.a13 /= alpha; a.a14 /= alpha;
+        a.a21 /= alpha; a.a22 /= alpha; a.a23 /= alpha; a.a24 /= alpha;
+        a.a31 /= alpha; a.a32 /= alpha; a.a33 /= alpha; a.a34 /= alpha;
+        a.a41 /= alpha; a.a42 /= alpha; a.a43 /= alpha; a.a44 /= alpha;
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar division.<br>
+     * <br>
+     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
+     * </p>
+     *
+     * @param alpha the amount each element is divided by.
+     * @param a The matrix whose elements are to be divided.  Not modified.
+     * @param b Where the results are stored. Modified.
+     */
+    public static void divide( double alpha , FixedMatrix4x4_64F a , FixedMatrix4x4_64F b ) {
+        b.a11 = a.a11/alpha; b.a12 = a.a12/alpha; b.a13 = a.a13/alpha; b.a14 = a.a14/alpha;
+        b.a21 = a.a21/alpha; b.a22 = a.a22/alpha; b.a23 = a.a23/alpha; b.a24 = a.a24/alpha;
+        b.a31 = a.a31/alpha; b.a32 = a.a32/alpha; b.a33 = a.a33/alpha; b.a34 = a.a34/alpha;
+        b.a41 = a.a41/alpha; b.a42 = a.a42/alpha; b.a43 = a.a43/alpha; b.a44 = a.a44/alpha;
+    }
+
+    /**
+     * <p>
+     * Changes the sign of every element in the matrix.<br>
+     * <br>
+     * a<sub>ij</sub> = -a<sub>ij</sub>
+     * </p>
+     *
+     * @param a A matrix. Modified.
+     */
+    public static void changeSign( FixedMatrix4x4_64F a )
+    {
+        a.a11 = -a.a11; a.a12 = -a.a12; a.a13 = -a.a13; a.a14 = -a.a14;
+        a.a21 = -a.a21; a.a22 = -a.a22; a.a23 = -a.a23; a.a24 = -a.a24;
+        a.a31 = -a.a31; a.a32 = -a.a32; a.a33 = -a.a33; a.a34 = -a.a34;
+        a.a41 = -a.a41; a.a42 = -a.a42; a.a43 = -a.a43; a.a44 = -a.a44;
+    }
+
+    /**
+     * <p>
+     * Sets every element in the matrix to the specified value.<br>
+     * <br>
+     * a<sub>ij</sub> = value
+     * <p>
+     *
+     * @param a A matrix whose elements are about to be set. Modified.
+     * @param v The value each element will have.
+     */
+    public static void fill( FixedMatrix4x4_64F a , double v  ) {
+        a.a11 = v; a.a12 = v; a.a13 = v; a.a14 = v;
+        a.a21 = v; a.a22 = v; a.a23 = v; a.a24 = v;
+        a.a31 = v; a.a32 = v; a.a33 = v; a.a34 = v;
+        a.a41 = v; a.a42 = v; a.a43 = v; a.a44 = v;
     }
 
 }

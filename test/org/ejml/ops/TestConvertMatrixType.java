@@ -84,7 +84,7 @@ public class TestConvertMatrixType {
             numFound++;
         }
 
-        assertEquals(4+4,numFound);
+        assertEquals(5+5,numFound);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class TestConvertMatrixType {
             numFound++;
         }
 
-        assertEquals(4+4,numFound);
+        assertEquals(5+5,numFound);
     }
 
     @Test

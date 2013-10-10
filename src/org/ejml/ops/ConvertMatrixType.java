@@ -110,7 +110,7 @@ public class ConvertMatrixType {
      */
     public static DenseMatrix64F convert( FixedMatrix4x4_64F input , DenseMatrix64F output ) {
         if( output == null)
-            output = new DenseMatrix64F(3,3);
+            output = new DenseMatrix64F(4,4);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -146,7 +146,7 @@ public class ConvertMatrixType {
      */
     public static DenseMatrix64F convert( FixedMatrix5x5_64F input , DenseMatrix64F output ) {
         if( output == null)
-            output = new DenseMatrix64F(3,3);
+            output = new DenseMatrix64F(5,5);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -178,6 +178,62 @@ public class ConvertMatrixType {
         output.data[22] = input.a53;
         output.data[23] = input.a54;
         output.data[24] = input.a55;
+
+        return output;
+    }
+
+    /**
+     * Converts {@link FixedMatrix6x6_64F} into {@link DenseMatrix64F}.
+     *
+     * @param input Input matrix.
+     * @param output Output matrix.  If null a new matrix will be declared.
+     * @return Converted matrix.
+     */
+    public static DenseMatrix64F convert( FixedMatrix6x6_64F input , DenseMatrix64F output ) {
+        if( output == null)
+            output = new DenseMatrix64F(6,6);
+
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        output.data[0] = input.a11;
+        output.data[1] = input.a12;
+        output.data[2] = input.a13;
+        output.data[3] = input.a14;
+        output.data[4] = input.a15;
+        output.data[5] = input.a16;
+        output.data[6] = input.a21;
+        output.data[7] = input.a22;
+        output.data[8] = input.a23;
+        output.data[9] = input.a24;
+        output.data[10] = input.a25;
+        output.data[11] = input.a26;
+        output.data[12] = input.a31;
+        output.data[13] = input.a32;
+        output.data[14] = input.a33;
+        output.data[15] = input.a34;
+        output.data[16] = input.a35;
+        output.data[17] = input.a36;
+        output.data[18] = input.a41;
+        output.data[19] = input.a42;
+        output.data[20] = input.a43;
+        output.data[21] = input.a44;
+        output.data[22] = input.a45;
+        output.data[23] = input.a46;
+        output.data[24] = input.a51;
+        output.data[25] = input.a52;
+        output.data[26] = input.a53;
+        output.data[27] = input.a54;
+        output.data[28] = input.a55;
+        output.data[29] = input.a56;
+        output.data[30] = input.a61;
+        output.data[31] = input.a62;
+        output.data[32] = input.a63;
+        output.data[33] = input.a64;
+        output.data[34] = input.a65;
+        output.data[35] = input.a66;
 
         return output;
     }
@@ -317,6 +373,62 @@ public class ConvertMatrixType {
     }
 
     /**
+     * Converts {@link DenseMatrix64F} into {@link FixedMatrix6x6_64F}
+     *
+     * @param input Input matrix.
+     * @param output Output matrix.  If null a new matrix will be declared.
+     * @return Converted matrix.
+     */
+    public static FixedMatrix6x6_64F convert( DenseMatrix64F input , FixedMatrix6x6_64F output ) {
+        if( output == null)
+            output = new FixedMatrix6x6_64F();
+
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        output.a11 = input.data[0];
+        output.a12 = input.data[1];
+        output.a13 = input.data[2];
+        output.a14 = input.data[3];
+        output.a15 = input.data[4];
+        output.a16 = input.data[5];
+        output.a21 = input.data[6];
+        output.a22 = input.data[7];
+        output.a23 = input.data[8];
+        output.a24 = input.data[9];
+        output.a25 = input.data[10];
+        output.a26 = input.data[11];
+        output.a31 = input.data[12];
+        output.a32 = input.data[13];
+        output.a33 = input.data[14];
+        output.a34 = input.data[15];
+        output.a35 = input.data[16];
+        output.a36 = input.data[17];
+        output.a41 = input.data[18];
+        output.a42 = input.data[19];
+        output.a43 = input.data[20];
+        output.a44 = input.data[21];
+        output.a45 = input.data[22];
+        output.a46 = input.data[23];
+        output.a51 = input.data[24];
+        output.a52 = input.data[25];
+        output.a53 = input.data[26];
+        output.a54 = input.data[27];
+        output.a55 = input.data[28];
+        output.a56 = input.data[29];
+        output.a61 = input.data[30];
+        output.a62 = input.data[31];
+        output.a63 = input.data[32];
+        output.a64 = input.data[33];
+        output.a65 = input.data[34];
+        output.a66 = input.data[35];
+
+        return output;
+    }
+
+    /**
      * Converts {@link FixedMatrix2_64F} into {@link DenseMatrix64F}.
      *
      * @param input Input matrix.
@@ -415,6 +527,33 @@ public class ConvertMatrixType {
     }
 
     /**
+     * Converts {@link FixedMatrix6_64F} into {@link DenseMatrix64F}.
+     *
+     * @param input Input matrix.
+     * @param output Output matrix.  If null a new matrix will be declared.
+     * @return Converted matrix.
+     */
+    public static DenseMatrix64F convert( FixedMatrix6_64F input , DenseMatrix64F output ) {
+        if( output == null)
+            output = new DenseMatrix64F(6,1);
+
+        if( output.getNumRows() != 1 && output.getNumCols() != 1 )
+            throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
+        int length = Math.max(output.getNumRows(),output.getNumCols());
+        if( length != 6 )
+            throw new IllegalArgumentException("Length of input vector is not 6.  It is "+length);
+
+        output.data[0] = input.a1;
+        output.data[1] = input.a2;
+        output.data[2] = input.a3;
+        output.data[3] = input.a4;
+        output.data[4] = input.a5;
+        output.data[5] = input.a6;
+
+        return output;
+    }
+
+    /**
      * Converts {@link DenseMatrix64F} into {@link FixedMatrix2_64F}
      *
      * @param input Input matrix.
@@ -508,6 +647,33 @@ public class ConvertMatrixType {
         output.a3 = input.data[2];
         output.a4 = input.data[3];
         output.a5 = input.data[4];
+
+        return output;
+    }
+
+    /**
+     * Converts {@link DenseMatrix64F} into {@link FixedMatrix6_64F}
+     *
+     * @param input Input matrix.
+     * @param output Output matrix.  If null a new matrix will be declared.
+     * @return Converted matrix.
+     */
+    public static FixedMatrix6_64F convert( DenseMatrix64F input , FixedMatrix6_64F output ) {
+        if( output == null)
+            output = new FixedMatrix6_64F();
+
+        if( input.getNumRows() != 1 && input.getNumCols() != 1 )
+            throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
+        int length = Math.max(input.getNumRows(),input.getNumCols());
+        if( length != 6 )
+            throw new IllegalArgumentException("Length of input vector is not 6.  It is "+length);
+
+        output.a1 = input.data[0];
+        output.a2 = input.data[1];
+        output.a3 = input.data[2];
+        output.a4 = input.data[3];
+        output.a5 = input.data[4];
+        output.a6 = input.data[5];
 
         return output;
     }

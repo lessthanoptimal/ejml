@@ -42,9 +42,12 @@ public abstract class CompareFixedToCommonOps {
     Random rand = new Random(234);
 
     Class classFixed;
+    int N;
 
     public CompareFixedToCommonOps(Class classFixed) {
         this.classFixed = classFixed;
+
+        N = Integer.parseInt(classFixed.getSimpleName().charAt(8)+"");
     }
 
     /**
@@ -84,9 +87,14 @@ public abstract class CompareFixedToCommonOps {
             }
         }
 
+        int numExpected = 28;
+        if( N > GenerateFixedOps.maxInverseSize ) {
+            numExpected -= 2;
+        }
+
         assertEquals(0,numFailed);
         assertEquals(2,numNotMatched);
-        assertEquals(28,numPassed);
+        assertEquals(numExpected,numPassed);
     }
 
     /**
