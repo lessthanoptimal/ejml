@@ -93,6 +93,14 @@
         </junitreport>
     </target>
 
+    <!-- Creates a jar file with the project's source code -->
+    <target name="srcjar">
+      <mkdir dir="${jar.dir}"/>
+      <jar destfile="${jar.dir}/${ant.project.name}-src.jar">
+	<fileset dir="${src.dir}" includes="**/*.java"/>
+      </jar>
+    </target>
+
     <target name="javadoc">
         <javadoc
                 destdir="docs/api"
