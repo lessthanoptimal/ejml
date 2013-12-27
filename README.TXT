@@ -1,7 +1,7 @@
                  Efficient Java Matrix Library
 
                          Version 0.24
-                         2013 ?? ??
+                         2013 12 26
 
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
