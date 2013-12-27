@@ -43,10 +43,9 @@
   </properties>
   <licenses>
   <license>
-    <name>LGPL</name>
-    <url>http://www.gnu.org/copyleft/lesser.html</url>
+    <name>Apache License, Version 2.0</name>
+    <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
     <distribution>repo</distribution>
-    <comments></comments>
   </license>
   </licenses>
   <scm>
