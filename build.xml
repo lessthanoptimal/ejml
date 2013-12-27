@@ -8,6 +8,7 @@
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="generate.dir"   value="generate/src"/>
     <property name="testbuild.dir"   value="build/test"/>
     <property name="testclasses.dir"   value="${testbuild.dir}/classes"/>
     <property name="testreport.dir"  value="${testbuild.dir}/report"/>
@@ -66,8 +67,10 @@
         <mkdir dir="${testreport.dir}"/>
         <mkdir dir="${testclasses.dir}"/>
 
-        <javac srcdir="${test.dir}" destdir="${testclasses.dir}" includeantruntime="false">
-           <classpath>
+        <javac destdir="${testclasses.dir}" includeantruntime="false">
+            <src path="${generate.dir}"/>
+            <src path="${test.dir}"/>
+            <classpath>
                 <path refid="test.classpath"/>
             </classpath>
         </javac>

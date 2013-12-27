@@ -4,6 +4,8 @@ Date format: year/month/day
 
 ----- Version 0.24
 
+2013/12/26
+
 - CHANGED LICENSE FROM LGPL to Apache 2.0
   * Don't agree with Free Software Foundation's interpretation for how the LGPL applies to Java jars.
   * Even if it did behave the way I wanted it to, it wouldn't do much other than scare some people away.

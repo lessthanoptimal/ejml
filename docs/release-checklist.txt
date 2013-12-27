@@ -4,6 +4,7 @@
 - check ant build
   * ant clean
   * ant
+  * ant test
 - commit and tag release
   svn copy trunk/ tags/VERSION
 - Create .zip of source code
