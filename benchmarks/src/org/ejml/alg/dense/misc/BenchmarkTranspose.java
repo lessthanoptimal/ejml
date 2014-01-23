@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -104,6 +104,7 @@ public class BenchmarkTranspose {
         System.out.println("Block 15  : "+block(A, n, 15));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));
+        System.out.println("Block 50  : "+block(A, n, 50));
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
         System.out.println();
@@ -112,6 +113,7 @@ public class BenchmarkTranspose {
         System.out.println("Block     : "+block(A, n,EjmlParameters.BLOCK_WIDTH));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));
+        System.out.println("Block 50  : "+block(A, n, 50));
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
         System.out.println("---------- Wide ----------------");
@@ -119,6 +121,7 @@ public class BenchmarkTranspose {
         System.out.println("Block     : "+block(A, n, EjmlParameters.BLOCK_WIDTH));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));
+        System.out.println("Block 50  : "+block(A, n, 50));
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -529,8 +529,13 @@ public class CommonOps {
     }
 
     /**
-     * Performs an in-place transpose.  This algorithm is only efficient for square
-     * matrices.
+     * <p>Performs an "in-place" transpose.</p>
+     *
+     * <p>
+     * For square matrices the transpose is truly in-place and does not require
+     * additional memory.  For non-square matrices, internally a temporary matrix is declared and
+     * {@link #transpose(org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F)} is invoked.
+     * </p>
      *
      * @param mat The matrix that is to be transposed. Modified.
      */

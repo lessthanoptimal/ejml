@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,15 +22,16 @@ import org.ejml.data.RowD1Matrix64F;
 
 
 /**
- * Low level transpose algorithms.  No sanity checks are performed.
+ * Low level transpose algorithms.  No sanity checks are performed.    Take a look at BenchmarkTranspose to
+ * see which one is faster on your computer.
  *
  * @author Peter Abeles
  */
 public class TransposeAlgs {
 
     /**
-     * In-place transpose for a square matrix.  The most efficient algorithm but can
-     * only be used on square matrices.
+     * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
+     * algorithm, but on most modern computers it's slower than block transpose.
      *
      * @param mat The matrix that is transposed in-place.  Modified.
      */
