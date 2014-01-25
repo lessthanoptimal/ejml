@@ -2,6 +2,13 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.25
+
+2014/
+
+- Fixed bug in CovarianceRandomDraw where it was modifying the input matrix
+  * Thanks Alexandre Bouchard for finding this bug
+
 ----- Version 0.24
 
 2013/12/26

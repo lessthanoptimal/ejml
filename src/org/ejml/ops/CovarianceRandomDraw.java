@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,7 +46,10 @@ public class CovarianceRandomDraw {
         r = new DenseMatrix64F(cov.numRows,1);
         CholeskyDecompositionInner choleky = new CholeskyDecompositionInner( true);
 
-        choleky.decompose(cov);
+        if( choleky.inputModified() )
+            cov = cov.copy();
+        if( !choleky.decompose(cov) )
+            throw new RuntimeException("Decomposition failed!");
 
         A = choleky.getT();
         this.rand = rand;

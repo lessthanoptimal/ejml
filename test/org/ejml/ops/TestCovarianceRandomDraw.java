@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestCovarianceRandomDraw
@@ -78,6 +79,19 @@ public class TestCovarianceRandomDraw
         CommonOps.scale(1.0/N,comp_P);
 
         MatrixFeatures.isIdentical(comp_P,orig_P,0.3);
+    }
+
+    /**
+     * Make sure the input is not modified.
+     */
+    @Test
+    public void modifyInput() {
+        DenseMatrix64F orig_P = new DenseMatrix64F(new double[][]{{6,-2},{-2,10}});
+        DenseMatrix64F input = orig_P.copy();
+
+        CovarianceRandomDraw dist = new CovarianceRandomDraw(new Random(0xfeed),input);
+
+        assertTrue(MatrixFeatures.isIdentical(input,orig_P,1e-8));
     }
 
 }
