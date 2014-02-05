@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -44,7 +44,7 @@ public class CovarianceRandomDraw {
     public CovarianceRandomDraw( Random rand , DenseMatrix64F cov )
     {
         r = new DenseMatrix64F(cov.numRows,1);
-        CholeskyDecompositionInner choleky = new CholeskyDecompositionInner( true);
+        CholeskyDecompositionInner_D64 choleky = new CholeskyDecompositionInner_D64( true);
 
         if( choleky.inputModified() )
             cov = cov.copy();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,7 +32,7 @@ public class BenchmarkEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        WatchedDoubleStepQRDecomposition alg = new WatchedDoubleStepQRDecomposition(true);
+        WatchedDoubleStepQRDecomposition_D64 alg = new WatchedDoubleStepQRDecomposition_D64(true);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.junit.Test;
 
@@ -107,7 +107,7 @@ public class TestSymmetricQrAlgorithm {
     public void multipleEigenvalues() {
         DenseMatrix64F A = new DenseMatrix64F(5,5, true, 2.191140, -0.098491, -0.397037, 0.367426, -0.208338, -0.098491, 2.776741, 0.623341, 0.624798, 0.401906, -0.397037, 0.623341, 3.571302, -0.239631, -0.264573, 0.367426, 0.624798, -0.239631, 3.625034, -0.162896, -0.208338, 0.401906, -0.264573, -0.162896, 3.835783);
 
-        TridiagonalDecompositionHouseholder tridiag = new TridiagonalDecompositionHouseholder();
+        TridiagonalDecompositionHouseholder_D64 tridiag = new TridiagonalDecompositionHouseholder_D64();
         tridiag.decompose(A);
 
         double diag[] = new double[5];

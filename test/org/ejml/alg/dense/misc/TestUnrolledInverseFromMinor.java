@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.EjmlUnitTests;
@@ -50,7 +50,7 @@ public class TestUnrolledInverseFromMinor {
             DenseMatrix64F found = new DenseMatrix64F(N,N);
 
             // first compute inverse by LU
-            LUDecompositionAlt alg = new LUDecompositionAlt();
+            LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
             LinearSolverLu solver = new LinearSolverLu(alg);
 
             assertTrue( solver.setA(A));

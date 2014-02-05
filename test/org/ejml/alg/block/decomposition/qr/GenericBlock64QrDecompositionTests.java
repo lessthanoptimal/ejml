@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
@@ -43,9 +43,9 @@ public class GenericBlock64QrDecompositionTests {
 
     int r = 3;
 
-    BlockMatrix64HouseholderQR alg;
+    QRDecompositionHouseholder_B64 alg;
 
-    public GenericBlock64QrDecompositionTests(BlockMatrix64HouseholderQR alg) {
+    public GenericBlock64QrDecompositionTests(QRDecompositionHouseholder_B64 alg) {
         this.alg = alg;
     }
 
@@ -123,7 +123,7 @@ public class GenericBlock64QrDecompositionTests {
         DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
         BlockMatrix64F Ab = BlockMatrixOps.convert(A,r);
 
-        QRDecompositionHouseholderTran algCheck = new QRDecompositionHouseholderTran();
+        QRDecompositionHouseholderTran_D64 algCheck = new QRDecompositionHouseholderTran_D64();
         assertTrue(algCheck.decompose(A));
 
         assertTrue(alg.decompose(Ab));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,16 +18,16 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow;
+import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.SingularValueDecomposition;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.CommonOps;
 
 
 /**
  * <p>
- * Similar to {@link SvdImplicitQrDecompose} but it employs the
+ * Similar to {@link SvdImplicitQrDecompose_D64} but it employs the
  * ultimate shift strategy.  Ultimate shift involves first computing singular values then uses those
  * to quickly compute the U and W matrices.  For EVD this strategy seems to work very well, but for
  * this problem it needs to have little benefit and makes the code more complex.
@@ -44,7 +44,7 @@ public class SvdImplicitQrDecompose_UltimateS
     private int numCols;
     private int smallSide;
 
-    private BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
+    private BidiagonalDecompositionRow_D64 bidiag = new BidiagonalDecompositionRow_D64();
     private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithmSmart();
 
     private double diag[];

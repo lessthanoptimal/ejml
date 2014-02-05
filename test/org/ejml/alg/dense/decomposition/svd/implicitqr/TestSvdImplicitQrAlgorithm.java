@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd.implicitqr;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow;
+import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.simple.SimpleMatrix;
@@ -207,7 +207,7 @@ public class TestSvdImplicitQrAlgorithm {
     }
 
     public static SvdImplicitQrAlgorithm createHelper( DenseMatrix64F a ) {
-        BidiagonalDecompositionRow bidiag = new BidiagonalDecompositionRow();
+        BidiagonalDecompositionRow_D64 bidiag = new BidiagonalDecompositionRow_D64();
         assertTrue(bidiag.decompose(a.copy()));
         double diag[] = new double[a.numRows];
         double off[] = new double[ diag.length-1 ];

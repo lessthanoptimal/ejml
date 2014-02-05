@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,10 +20,10 @@ package org.ejml.alg.block.linsol.chol;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
-import org.ejml.alg.block.decomposition.chol.BlockCholeskyOuterForm;
+import org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -49,7 +49,7 @@ import org.ejml.ops.SpecializedOps;
 public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     // cholesky decomposition
-    private BlockCholeskyOuterForm chol = new BlockCholeskyOuterForm(true);
+    private CholeskyOuterForm_B64 chol = new CholeskyOuterForm_B64(true);
 
     // size of a block take from input matrix
     private int blockLength;

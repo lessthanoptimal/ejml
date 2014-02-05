@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -51,8 +52,8 @@ public class BenchmarkBidiagonalDecomposition {
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
         if( numTrials <= 0 ) return;
-        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow(),mat,numTrials));
-        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall(),mat,numTrials));
+        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_D64(),mat,numTrials));
+        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_D64(),mat,numTrials));
     }
 
     public static void main( String args [] ) {

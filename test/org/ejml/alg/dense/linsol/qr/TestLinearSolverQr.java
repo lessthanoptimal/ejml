@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,10 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
@@ -35,6 +35,6 @@ public class TestLinearSolverQr extends GenericLinearSolverChecks {
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQr(new QRDecompositionHouseholderColumn());
+        return new LinearSolverQr(new QRDecompositionHouseholderColumn_D64());
     }
 }

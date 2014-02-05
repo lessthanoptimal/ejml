@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.SingularValueDecomposition;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -51,7 +51,7 @@ public class BenchmarkSvd {
     {
 //        mat.print("%f");
         if( numTrials <= 0 ) return;
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true,true),mat,numTrials));
+        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_D64(true,true,true,true),mat,numTrials));
 //        System.out.println("qr smart         = "+ evaluate(new SvdImplicitQrDecompose_UltimateS(true,true,true),mat,numTrials));
         System.out.println("qr separate      = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(true,true,true),mat,numTrials));
 //        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));

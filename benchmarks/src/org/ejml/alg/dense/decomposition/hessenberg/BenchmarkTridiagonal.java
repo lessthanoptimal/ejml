@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ public class BenchmarkTridiagonal {
 
     public static long basic( DenseMatrix64F orig , int numTrials ) {
 
-        TridiagonalDecompositionHouseholder alg = new TridiagonalDecompositionHouseholder();
+        TridiagonalDecompositionHouseholder_D64 alg = new TridiagonalDecompositionHouseholder_D64();
 
         long prev = System.currentTimeMillis();
 
@@ -52,7 +52,7 @@ public class BenchmarkTridiagonal {
 
     public static long alt( DenseMatrix64F orig , int numTrials ) {
 
-        TridiagonalDecompositionHouseholderOrig alg = new TridiagonalDecompositionHouseholderOrig();
+        TridiagonalDecompositionHouseholderOrig_D64 alg = new TridiagonalDecompositionHouseholderOrig_D64();
 
         long prev = System.currentTimeMillis();
 
@@ -66,7 +66,7 @@ public class BenchmarkTridiagonal {
     public static long block( DenseMatrix64F orig , int numTrials ) {
 
 
-        TridiagonalDecompositionBlock alg = new TridiagonalDecompositionBlock();
+        TridiagonalDecomposition_B64_to_D64 alg = new TridiagonalDecomposition_B64_to_D64();
 
         long prev = System.currentTimeMillis();
 

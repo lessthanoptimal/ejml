@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,10 @@
 package org.ejml.factory;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon_D64;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
@@ -30,6 +30,7 @@ import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.qr.*;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
@@ -58,7 +59,7 @@ public class LinearSolverFactory {
      * @return A new linear solver.
      */
     public static LinearSolver<DenseMatrix64F> linear( int matrixSize ) {
-        return new LinearSolverLu(new LUDecompositionAlt());
+        return new LinearSolverLu(new LUDecompositionAlt_D64());
     }
 
     /**
@@ -87,13 +88,13 @@ public class LinearSolverFactory {
      */
     public static LinearSolver<DenseMatrix64F> symmPosDef( int matrixWidth ) {
         if(matrixWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY )  {
-            CholeskyDecompositionCommon decomp = new CholeskyDecompositionInner(true);
+            CholeskyDecompositionCommon_D64 decomp = new CholeskyDecompositionInner_D64(true);
             return new LinearSolverChol(decomp);
         } else {
             if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
                 return new LinearSolverCholBlock64();
             else {
-                CholeskyDecompositionCommon decomp = new CholeskyDecompositionInner(true);
+                CholeskyDecompositionCommon_D64 decomp = new CholeskyDecompositionInner_D64(true);
                 return new LinearSolverChol(decomp);
             }
         }
@@ -125,8 +126,8 @@ public class LinearSolverFactory {
      * @return Pseudo inverse type solver using QR with column pivots.
      */
     public static LinearSolver<DenseMatrix64F> leastSquaresQrPivot( boolean computeNorm2 , boolean computeQ ) {
-        QRColPivDecompositionHouseholderColumn decomposition =
-                new QRColPivDecompositionHouseholderColumn();
+        QRColPivDecompositionHouseholderColumn_D64 decomposition =
+                new QRColPivDecompositionHouseholderColumn_D64();
 
         if( computeQ )
             return new SolvePseudoInverseQrp(decomposition,computeNorm2);

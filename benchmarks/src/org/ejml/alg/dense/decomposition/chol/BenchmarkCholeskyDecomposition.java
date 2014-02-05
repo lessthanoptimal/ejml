@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyL( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(true);
+        CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
 
         long prev = System.currentTimeMillis();
 
@@ -51,7 +51,7 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyU( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(false);
+        CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(false);
 
         long prev = System.currentTimeMillis();
 
@@ -66,7 +66,7 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyL_block( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionBlock alg = new CholeskyDecompositionBlock(
+        CholeskyDecompositionBlock_D64 alg = new CholeskyDecompositionBlock_D64(
                 EjmlParameters.BLOCK_WIDTH_CHOL);
 
         long prev = System.currentTimeMillis();
@@ -83,7 +83,7 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyBlockU( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionBlock64 alg = new CholeskyDecompositionBlock64(false);
+        CholeskyDecomposition_B64_to_D64 alg = new CholeskyDecomposition_B64_to_D64(false);
 
         long prev = System.currentTimeMillis();
 
@@ -98,7 +98,7 @@ public class BenchmarkCholeskyDecomposition {
 
     public static long choleskyBlockL( DenseMatrix64F orig , int numTrials ) {
 
-        CholeskyDecompositionBlock64 alg = new CholeskyDecompositionBlock64(true);
+        CholeskyDecomposition_B64_to_D64 alg = new CholeskyDecomposition_B64_to_D64(true);
 
         long prev = System.currentTimeMillis();
 
@@ -115,7 +115,7 @@ public class BenchmarkCholeskyDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        CholeskyDecompositionLDL alg = new CholeskyDecompositionLDL();
+        CholeskyDecompositionLDL_D64 alg = new CholeskyDecompositionLDL_D64();
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !DecompositionFactory.decomposeSafe(alg,orig) ) {

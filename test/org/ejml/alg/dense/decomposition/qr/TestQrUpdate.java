@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.alg.dense.mult.SubmatrixOps;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.QRDecomposition;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -75,7 +75,7 @@ public class TestQrUpdate {
         SubmatrixOps.setSubMatrix(A,A_e,0,0,0,0,remove,n);
         SubmatrixOps.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
-        QRDecomposition decomp = new QRDecompositionHouseholderColumn();
+        QRDecomposition decomp = new QRDecompositionHouseholderColumn_D64();
 
         // now compute the results by removing elements from A
         decomp.decompose(A);
@@ -111,7 +111,7 @@ public class TestQrUpdate {
         System.arraycopy(row, 0, A_e.data, insert * n, n);
         SubmatrixOps.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
 
-        QRDecomposition decomp = new QRDecompositionHouseholderColumn();
+        QRDecomposition decomp = new QRDecompositionHouseholderColumn_D64();
 
         decomp.decompose(A);
         Q.reshape(m,m, false);

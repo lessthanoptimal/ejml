@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,11 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
+import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.EigenDecomposition;
+import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 
@@ -49,7 +49,7 @@ public class StabilitySymmEigen {
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
         TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(0);
-        System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition(decomp,true),mat));
+        System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition_D64(decomp,true),mat));
     }
 
     public static void main( String args [] ) {

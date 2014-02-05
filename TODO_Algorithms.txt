@@ -1,4 +1,9 @@
-- scalar setRow() setColumn()?
+
+More consistent naming scheme for block matrix algorithms
+Improve naming of wrapper classes
+ALGORITHMNAME_MATRIXTYPE?
+D64
+B64
 
 For some future Release
 - Block SVD

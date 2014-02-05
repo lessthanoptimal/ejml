@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.SingularValueDecomposition;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 
@@ -63,7 +63,7 @@ public class StabilitySvdlDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat )
     {
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(compact,computeU,computeV,false),mat));
+        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_D64(compact,computeU,computeV,false),mat));
         System.out.println("qr ult           = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(compact,computeU,computeV),mat));
     }
 

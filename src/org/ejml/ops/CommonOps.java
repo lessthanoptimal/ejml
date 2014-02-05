@@ -20,7 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.EjmlParameters;
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.misc.*;
@@ -31,9 +31,9 @@ import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
-import org.ejml.factory.LinearSolver;
 import org.ejml.factory.LinearSolverFactory;
-import org.ejml.factory.ReducedRowEchelonForm;
+import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.ReducedRowEchelonForm;
 
 
 /**
@@ -610,7 +610,7 @@ public class CommonOps {
 
     /**
      * Returns the determinant of the matrix.  If the inverse of the matrix is also
-     * needed, then using {@link org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt} directly (or any
+     * needed, then using {@link org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64} directly (or any
      * similar algorithm) can be more efficient.
      *
      * @param mat The matrix whose determinant is to be computed.  Not modified.
@@ -634,7 +634,7 @@ public class CommonOps {
                 return mat.get(0);
             }
         } else {
-            LUDecompositionAlt alg = new LUDecompositionAlt();
+            LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
 
             if( alg.inputModified() ) {
                 mat = mat.copy();
@@ -675,7 +675,7 @@ public class CommonOps {
                 mat.set(0, 1.0/mat.get(0));
             }
         } else {
-            LUDecompositionAlt alg = new LUDecompositionAlt();
+            LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
             LinearSolverLu solver = new LinearSolverLu(alg);
             if( solver.setA(mat) ) {
                 solver.invert(mat);
@@ -721,7 +721,7 @@ public class CommonOps {
                 result.set(0,  1.0/mat.get(0));
             }
         } else {
-            LUDecompositionAlt alg = new LUDecompositionAlt();
+            LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
             LinearSolverLu solver = new LinearSolverLu(alg);
 
             if( solver.modifiesA() )

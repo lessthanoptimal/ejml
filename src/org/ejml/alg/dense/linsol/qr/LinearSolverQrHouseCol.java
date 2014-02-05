@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
@@ -46,7 +46,7 @@ import org.ejml.ops.SpecializedOps;
  */
 public class LinearSolverQrHouseCol extends LinearSolverAbstract {
 
-    private QRDecompositionHouseholderColumn decomposer;
+    private QRDecompositionHouseholderColumn_D64 decomposer;
 
     private DenseMatrix64F a = new DenseMatrix64F(1,1);
     private DenseMatrix64F temp = new DenseMatrix64F(1,1);
@@ -62,7 +62,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
      * Creates a linear solver that uses QR decomposition.
      */
     public LinearSolverQrHouseCol() {
-        decomposer = new QRDecompositionHouseholderColumn();
+        decomposer = new QRDecompositionHouseholderColumn_D64();
     }
 
     public void setMaxSize( int maxRows , int maxCols )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ public class BenchmarkHessenberg {
 
     public static long basic( DenseMatrix64F orig , int numTrials ) {
 
-        HessenbergSimilarDecomposition alg = new HessenbergSimilarDecomposition();
+        HessenbergSimilarDecomposition_D64 alg = new HessenbergSimilarDecomposition_D64();
 
         long prev = System.currentTimeMillis();
 

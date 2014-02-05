@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,14 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLuKJI;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -64,9 +64,9 @@ public class BenchmarkSolveEq {
     private static void runAlgorithms( int numTrials )
     {
         System.out.println("solve LU A            = "+ solveBenchmark(
-                new LinearSolverLu(new LUDecompositionAlt()),numTrials));
+                new LinearSolverLu(new LUDecompositionAlt_D64()),numTrials));
         System.out.println("solve LU B            = "+ solveBenchmark(
-                new LinearSolverLuKJI(new LUDecompositionAlt()),numTrials));
+                new LinearSolverLuKJI(new LUDecompositionAlt_D64()),numTrials));
         System.out.println("solve QR house        = "+ solveBenchmark(
                 new LinearSolverQrHouse(),numTrials));
         System.out.println("solve QR house Col    = "+ solveBenchmark(

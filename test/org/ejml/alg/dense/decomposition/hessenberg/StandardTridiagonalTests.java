@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;

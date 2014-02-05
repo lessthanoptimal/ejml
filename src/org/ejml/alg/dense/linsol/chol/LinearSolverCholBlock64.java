@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,17 +20,17 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
-import org.ejml.alg.dense.linsol.WrapLinearSolverBlock64;
+import org.ejml.alg.dense.linsol.LinearSolver_B64_to_D64;
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
- * A wrapper around {@link org.ejml.factory.CholeskyDecomposition}(BlockMatrix64F) that allows
+ * A wrapper around {@link org.ejml.interfaces.decomposition.CholeskyDecomposition}(BlockMatrix64F) that allows
  * it to be easily used with {@link org.ejml.data.DenseMatrix64F}.
  *
  * @author Peter Abeles
  */
-public class LinearSolverCholBlock64 extends WrapLinearSolverBlock64 {
+public class LinearSolverCholBlock64 extends LinearSolver_B64_to_D64 {
 
     public LinearSolverCholBlock64() {
         super(new BlockCholeskyOuterSolver());

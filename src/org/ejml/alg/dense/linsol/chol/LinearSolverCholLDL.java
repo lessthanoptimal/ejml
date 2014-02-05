@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
@@ -30,18 +30,18 @@ import org.ejml.ops.SpecializedOps;
  */
 public class LinearSolverCholLDL extends LinearSolverAbstract {
 
-    private CholeskyDecompositionLDL decomp;
+    private CholeskyDecompositionLDL_D64 decomp;
     private int n;
     private double vv[];
     private double el[];
     private double d[];
 
-    public LinearSolverCholLDL( CholeskyDecompositionLDL decomp ) {
+    public LinearSolverCholLDL( CholeskyDecompositionLDL_D64 decomp ) {
         this.decomp = decomp;
     }
 
     public LinearSolverCholLDL() {
-        this.decomp = new CholeskyDecompositionLDL();
+        this.decomp = new CholeskyDecompositionLDL_D64();
     }
 
     @Override

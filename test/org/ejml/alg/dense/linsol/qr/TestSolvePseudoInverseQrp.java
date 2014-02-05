@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,11 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.alg.dense.linsol.GenericSolvePseudoInverseChecks;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
 /**
@@ -35,13 +35,13 @@ public class TestSolvePseudoInverseQrp extends GenericLinearSolverChecks  {
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),true);
+        return new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),true);
     }
 
     @Test
     public void checkSingularBasic() {
         LinearSolver<DenseMatrix64F> solver =
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),true);
+                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),true);
         GenericSolvePseudoInverseChecks checks = new GenericSolvePseudoInverseChecks(solver);
 
         checks.all();
@@ -50,7 +50,7 @@ public class TestSolvePseudoInverseQrp extends GenericLinearSolverChecks  {
     @Test
     public void checkSingularFull() {
         LinearSolver<DenseMatrix64F> solver =
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn(),false);
+                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),false);
         GenericSolvePseudoInverseChecks checks = new GenericSolvePseudoInverseChecks(solver);
 
         checks.all();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.BlockMatrix64F;
@@ -53,7 +53,7 @@ public class TestBlockHouseHolder {
         DenseMatrix64F A = RandomMatrices.createRandom(r*2+r-1,r,-1,1,rand);
         BlockMatrix64F Ab = BlockMatrixOps.convert(A,r);
 
-        QRDecompositionHouseholderTran algTest = new QRDecompositionHouseholderTran();
+        QRDecompositionHouseholderTran_D64 algTest = new QRDecompositionHouseholderTran_D64();
         assertTrue(algTest.decompose(A));
 
         double gammas[] = new double[A.numCols];

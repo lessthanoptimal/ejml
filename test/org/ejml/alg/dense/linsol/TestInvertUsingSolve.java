@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,10 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class TestInvertUsingSolve {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DenseMatrix64F A_inv = RandomMatrices.createRandom(3,3,rand);
 
-        LUDecompositionAlt decomp = new LUDecompositionAlt();
+        LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
         LinearSolver solver = new LinearSolverLu(decomp);
 
         solver.setA(A);

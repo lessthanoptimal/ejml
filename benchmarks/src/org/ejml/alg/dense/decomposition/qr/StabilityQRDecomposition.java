@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decomposition.qr;
 import org.ejml.EjmlParameters;
 import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.QRDecomposition;
-import org.ejml.factory.QRPDecomposition;
+import org.ejml.interfaces.decomposition.QRDecomposition;
+import org.ejml.interfaces.decomposition.QRPDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
@@ -76,11 +76,11 @@ public class StabilityQRDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
-        System.out.println("qr               = "+ evaluate(new QRDecompositionHouseholder(),mat));
-        System.out.println("qr col           = "+ evaluate(new QRDecompositionHouseholderColumn(),mat));
-        System.out.println("qr pivot col     = "+ evaluate(new QRColPivDecompositionHouseholderColumn(),mat));
-        System.out.println("qr tran          = "+ evaluate(new QRDecompositionHouseholderTran(),mat));
-        System.out.println("qr block         = "+ evaluate(new QRDecompositionBlock64(),mat));
+        System.out.println("qr               = "+ evaluate(new QRDecompositionHouseholder_D64(),mat));
+        System.out.println("qr col           = "+ evaluate(new QRDecompositionHouseholderColumn_D64(),mat));
+        System.out.println("qr pivot col     = "+ evaluate(new QRColPivDecompositionHouseholderColumn_D64(),mat));
+        System.out.println("qr tran          = "+ evaluate(new QRDecompositionHouseholderTran_D64(),mat));
+        System.out.println("qr block         = "+ evaluate(new QRDecomposition_B64_to_D64(),mat));
     }
 
     public static void main( String args [] ) {

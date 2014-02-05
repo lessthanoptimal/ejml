@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,13 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
+import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_D64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_D64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecomposition_B64_to_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.EigenDecomposition;
+import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -39,7 +39,7 @@ public class BenchmarkSymmetricEigenDecomposition {
         long prev = System.currentTimeMillis();
 
         TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(orig.numRows);
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
+        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         alg.setComputeVectorsWithValues(true);
 
@@ -57,7 +57,7 @@ public class BenchmarkSymmetricEigenDecomposition {
         long prev = System.currentTimeMillis();
 
         TridiagonalSimilarDecomposition<DenseMatrix64F> decomp =  DecompositionFactory.tridiagonal(orig.numRows);
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
+        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         alg.setComputeVectorsWithValues(false);
 
@@ -71,8 +71,8 @@ public class BenchmarkSymmetricEigenDecomposition {
     }
 
     public static long standardTridiag( DenseMatrix64F orig , int numTrials ) {
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionHouseholder();
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionHouseholder_D64();
+        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         long prev = System.currentTimeMillis();
 
@@ -87,8 +87,8 @@ public class BenchmarkSymmetricEigenDecomposition {
 
     public static long blockTridiag( DenseMatrix64F orig , int numTrials ) {
 
-        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecompositionBlock();
-        SymmetricQRAlgorithmDecomposition alg = new SymmetricQRAlgorithmDecomposition(decomp,true);
+        TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = new TridiagonalDecomposition_B64_to_D64();
+        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         long prev = System.currentTimeMillis();
 

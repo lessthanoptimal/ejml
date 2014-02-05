@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,8 +42,17 @@ public class D1Submatrix64F {
     public D1Submatrix64F() {
     }
 
+    public D1Submatrix64F(D1Matrix64F original) {
+        set(original);
+    }
+
     public D1Submatrix64F(D1Matrix64F original,
                           int row0, int row1, int col0, int col1) {
+        set(original,row0,row1,col0,col1);
+    }
+
+    public void set(D1Matrix64F original,
+                    int row0, int row1, int col0, int col1) {
         this.original = original;
         this.row0 = row0;
         this.col0 = col0;
@@ -51,7 +60,7 @@ public class D1Submatrix64F {
         this.col1 = col1;
     }
 
-    public D1Submatrix64F(D1Matrix64F original) {
+    public void set(D1Matrix64F original) {
         this.original = original;
         row1 = original.numRows;
         col1 = original.numCols;

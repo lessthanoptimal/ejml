@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,22 +19,22 @@
 package org.ejml.factory;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock64;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock_D64;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecomposition_B64_to_D64;
 import org.ejml.alg.dense.decomposition.eig.SwitchingEigenDecomposition;
-import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition;
-import org.ejml.alg.dense.decomposition.eig.WatchedDoubleStepQRDecomposition;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionBlock;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalSimilarDecomposition;
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn;
-import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose;
+import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_D64;
+import org.ejml.alg.dense.decomposition.eig.WatchedDoubleStepQRDecomposition_D64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_D64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecomposition_B64_to_D64;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
+import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.interfaces.decomposition.*;
 import org.ejml.ops.EigenOps;
 import org.ejml.ops.SpecializedOps;
 import org.ejml.simple.SimpleMatrix;
@@ -72,36 +72,36 @@ public class DecompositionFactory {
     public static CholeskyDecomposition<DenseMatrix64F> chol( int matrixSize , boolean lower )
     {
         if( matrixSize < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
-            return new CholeskyDecompositionInner(lower);
+            return new CholeskyDecompositionInner_D64(lower);
         } else if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER ){
-            return new CholeskyDecompositionBlock64(lower);
+            return new CholeskyDecomposition_B64_to_D64(lower);
         } else {
-            return new CholeskyDecompositionBlock(EjmlParameters.BLOCK_WIDTH_CHOL);
+            return new CholeskyDecompositionBlock_D64(EjmlParameters.BLOCK_WIDTH_CHOL);
         }
     }
 
     /**
      * <p>
-     * Returns a {@link CholeskyDecompositionLDL} that has been optimized for the specified matrix size.
+     * Returns a {@link org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64} that has been optimized for the specified matrix size.
      * </p>
      *
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      * @return CholeskyDecompositionLDL
      */
-    public static CholeskyDecompositionLDL cholLDL( int matrixSize ) {
-        return new CholeskyDecompositionLDL();
+    public static CholeskyDecompositionLDL_D64 cholLDL( int matrixSize ) {
+        return new CholeskyDecompositionLDL_D64();
     }
 
     /**
      * <p>
-     * Returns a {@link LUDecomposition} that has been optimized for the specified matrix size.
+     * Returns a {@link org.ejml.interfaces.decomposition.LUDecomposition} that has been optimized for the specified matrix size.
      * </p>
      *
      * @parm matrixWidth The matrix size that the decomposition should be optimized for.
      * @return LUDecomposition
      */
     public static LUDecomposition<DenseMatrix64F> lu( int numRows , int numCol ) {
-        return new LUDecompositionAlt();
+        return new LUDecompositionAlt_D64();
     }
 
     /**
@@ -120,12 +120,12 @@ public class DecompositionFactory {
     public static SingularValueDecomposition<DenseMatrix64F> svd( int numRows , int numCols , 
                                                                   boolean needU , boolean needV , boolean compact ) {
         // Don't allow the tall decomposition by default since it *might* be less stable
-        return new SvdImplicitQrDecompose(compact,needU,needV,false);
+        return new SvdImplicitQrDecompose_D64(compact,needU,needV,false);
     }
 
     /**
      * <p>
-     * Returns a {@link QRDecomposition} that has been optimized for the specified matrix size.
+     * Returns a {@link org.ejml.interfaces.decomposition.QRDecomposition} that has been optimized for the specified matrix size.
      * </p>
      *
      * @param numRows Number of rows the returned decomposition is optimized for.
@@ -133,12 +133,12 @@ public class DecompositionFactory {
      * @return QRDecomposition
      */
     public static QRDecomposition<DenseMatrix64F> qr( int numRows , int numCols ) {
-        return new QRDecompositionHouseholderColumn();
+        return new QRDecompositionHouseholderColumn_D64();
     }
 
     /**
      * <p>
-     * Returns a {@link QRPDecomposition} that has been optimized for the specified matrix size.
+     * Returns a {@link org.ejml.interfaces.decomposition.QRPDecomposition} that has been optimized for the specified matrix size.
      * </p>
      *
      * @param numRows Number of rows the returned decomposition is optimized for.
@@ -146,7 +146,7 @@ public class DecompositionFactory {
      * @return QRPDecomposition
      */
     public static QRPDecomposition<DenseMatrix64F> qrp( int numRows , int numCols ) {
-        return new QRColPivDecompositionHouseholderColumn();
+        return new QRColPivDecompositionHouseholderColumn_D64();
     }
 
     /**
@@ -179,9 +179,9 @@ public class DecompositionFactory {
                                                           boolean isSymmetric ) {
         if( isSymmetric ) {
             TridiagonalSimilarDecomposition<DenseMatrix64F> decomp = DecompositionFactory.tridiagonal(matrixSize);
-            return new SymmetricQRAlgorithmDecomposition(decomp,computeVectors);
+            return new SymmetricQRAlgorithmDecomposition_D64(decomp,computeVectors);
         } else
-            return new WatchedDoubleStepQRDecomposition(computeVectors);
+            return new WatchedDoubleStepQRDecomposition_D64(computeVectors);
     }
 
     /**
@@ -259,9 +259,9 @@ public class DecompositionFactory {
      */
     public static TridiagonalSimilarDecomposition<DenseMatrix64F> tridiagonal(  int matrixSize ) {
         if( matrixSize >= 1800 ) {
-            return new TridiagonalDecompositionBlock();
+            return new TridiagonalDecomposition_B64_to_D64();
         } else {
-            return new TridiagonalDecompositionHouseholder();
+            return new TridiagonalDecompositionHouseholder_D64();
         }
     }
 

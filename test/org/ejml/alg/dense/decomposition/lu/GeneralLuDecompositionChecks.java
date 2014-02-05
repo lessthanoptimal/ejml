@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LUDecomposition;
+import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,16 +19,16 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.EigenDecomposition;
-import org.ejml.factory.LUDecomposition;
-import org.ejml.factory.SingularValueDecomposition;
+import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.interfaces.decomposition.LUDecomposition;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 
 
 /**
@@ -109,7 +109,7 @@ public class MatrixFeatures {
         if( !isSquare(A))
            return false;
 
-        CholeskyDecompositionInner chol = new CholeskyDecompositionInner(true);
+        CholeskyDecompositionInner_D64 chol = new CholeskyDecompositionInner_D64(true);
         if( chol.inputModified() )
             A = A.copy();
 

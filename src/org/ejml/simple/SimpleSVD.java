@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.simple;
 import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.SingularValueDecomposition;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.SingularOps;
 
 
@@ -131,7 +131,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
     /**
      * Returns the rank of the decomposed matrix.
      *
-     * @see SingularOps#rank(org.ejml.factory.SingularValueDecomposition, double)
+     * @see SingularOps#rank(org.ejml.interfaces.decomposition.SingularValueDecomposition, double)
      *
      * @return The matrix's rank
      */
@@ -142,7 +142,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
     /**
      * The nullity of the decomposed matrix.
      *
-     * @see SingularOps#nullity(org.ejml.factory.SingularValueDecomposition, double)
+     * @see SingularOps#nullity(org.ejml.interfaces.decomposition.SingularValueDecomposition, double)
      *
      * @return The matrix's nullity
      */

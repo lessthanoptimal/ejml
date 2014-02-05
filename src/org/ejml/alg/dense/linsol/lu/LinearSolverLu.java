@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol.lu;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_D64;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -32,11 +32,11 @@ public class LinearSolverLu extends LinearSolverLuBase {
 
     boolean doImprove = false;
 
-    public LinearSolverLu( LUDecompositionBase decomp ) {
+    public LinearSolverLu( LUDecompositionBase_D64 decomp ) {
         super(decomp);
     }
 
-    public LinearSolverLu( LUDecompositionBase decomp , boolean doImprove ) {
+    public LinearSolverLu( LUDecompositionBase_D64 decomp , boolean doImprove ) {
         super(decomp);
         this.doImprove = doImprove;
     }

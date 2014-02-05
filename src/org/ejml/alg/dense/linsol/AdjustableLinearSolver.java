@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,14 +19,14 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
  * In many situations solutions to linear systems that share many of the same data points are needed.
  * This can happen when solving using the most recent data or when rejecting outliers.  In these situations
  * it is possible to solve these related systems much faster than solving the entire data set again.
  *
- * @see org.ejml.factory.LinearSolver
+ * @see org.ejml.interfaces.linsol.LinearSolver
  *
  * @author Peter Abeles
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol.lu;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
 
@@ -35,7 +35,7 @@ public class LinearSolverLuKJI extends LinearSolverLuBase {
     private double []dataLU;
     private int[] pivot;
 
-    public LinearSolverLuKJI( LUDecompositionBase decomp ) {
+    public LinearSolverLuKJI( LUDecompositionBase_D64 decomp ) {
         super(decomp);
 
     }

@@ -8,6 +8,11 @@ Date format: year/month/day
 
 - Fixed bug in CovarianceRandomDraw where it was modifying the input matrix
   * Thanks Alexandre Bouchard for finding this bug
+- Added suffix to low level implementations so that you can tell by looking at the class name the type
+  of matrix it takes in as input
+  * D64 = DenseMatrix64F
+  * B64 = BlockMatrix64F
+- Moved interfaces into their own package.  Before they resided in dense.
 
 ----- Version 0.24
 
@@ -18,8 +23,8 @@ Date format: year/month/day
   * Even if it did behave the way I wanted it to, it wouldn't do much other than scare some people away.
 - Added fixed sized square matrices and vectors
   * Auto code generator for standard operations
-  * Matrix 2x2, 3x3, 4x4, 5x5
-  * Vector 2, 3, 4, 5
+  * Matrix 2x2, 3x3, 4x4, 5x5, 6x6
+  * Vector 2, 3, 4, 5, 6
 - Created an interface for Matrix64F and renamed the old one into ReshapeMatrix64F
 - CommonOps:  Added checks which ensure the input matrix is not modified for det() and inv()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,13 +19,13 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
 import org.ejml.data.DenseMatrix64F;
 
 /**
  * <p>
- * Performs a pseudo inverse solver using the {@link QRColPivDecompositionHouseholderColumn} decomposition
+ * Performs a pseudo inverse solver using the {@link org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64} decomposition
  * directly.  For details on how the pseudo inverse is computed see {@link BaseLinearSolverQrp}.
  * </p>
  * 
@@ -34,12 +34,12 @@ import org.ejml.data.DenseMatrix64F;
 public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
 
     // Computes the QR decomposition
-    private QRColPivDecompositionHouseholderColumn decomposition;
+    private QRColPivDecompositionHouseholderColumn_D64 decomposition;
 
     // storage for basic solution
     private DenseMatrix64F x_basic = new DenseMatrix64F(1,1);
 
-    public LinearSolverQrpHouseCol(QRColPivDecompositionHouseholderColumn decomposition,
+    public LinearSolverQrpHouseCol(QRColPivDecompositionHouseholderColumn_D64 decomposition,
                                    boolean norm2Solution)
     {
         super(decomposition,norm2Solution);

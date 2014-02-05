@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.CholeskyDecomposition;
 import org.ejml.factory.DecompositionFactory;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
@@ -56,9 +56,9 @@ public class StabilityCholeksyDecomposition {
 
     private static void runAlgorithms( DenseMatrix64F mat  )
     {
-        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner(),mat));
-        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
-        System.out.println("block64           = "+ evaluate(new CholeskyDecompositionBlock64(true),mat));
+        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner_D64(),mat));
+        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock_D64(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
+        System.out.println("block64           = "+ evaluate(new CholeskyDecomposition_B64_to_D64(true),mat));
 
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices;
 
@@ -93,7 +93,7 @@ public class BenchmarkDeterminant {
     {
         long before = System.currentTimeMillis();
 
-        LUDecompositionAlt alg = new LUDecompositionAlt();
+        LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
 
         double total = 0;
 

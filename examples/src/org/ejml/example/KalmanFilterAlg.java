@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,17 +21,17 @@ package org.ejml.example;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolver;
 import org.ejml.factory.LinearSolverFactory;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 import static org.ejml.ops.CommonOps.*;
 
 /**
  * The difference between this and {@link KalmanFilterOps} is that it takes advantage of
  * the covariance matrix being a symetric positive semi-definite matrix.  This allows
- * it to be decomposed using {@link org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner}.  There are two advantages here,
+ * it to be decomposed using {@link org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64}.  There are two advantages here,
  * 1) all memory is predeclared and 2) CholeksyDecomposition is more efficient than the more
- * generic {@link org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt LUDecomposition}.  It also makes
+ * generic {@link org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64 LUDecomposition}.  It also makes
  * calls to matrix vector multiplcation operations, which has a slight performance advantage.
  *
  * @author Peter Abeles

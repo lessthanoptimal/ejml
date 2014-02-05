@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,16 +20,16 @@ package org.ejml.alg.block.linsol.qr;
 
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
-import org.ejml.alg.block.decomposition.qr.BlockMatrix64HouseholderQR;
+import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
-import org.ejml.factory.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.SpecializedOps;
 
 
 /**
  * <p>
- * A solver for {@link BlockMatrix64HouseholderQR}.  Systems are solved for using the standard
+ * A solver for {@link org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64}.  Systems are solved for using the standard
  * QR decomposition method, sketched below.
  * </p>
  *
@@ -48,7 +48,7 @@ import org.ejml.ops.SpecializedOps;
 public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
     // QR decomposition algorithm
-    protected BlockMatrix64HouseholderQR decomp = new BlockMatrix64HouseholderQR();
+    protected QRDecompositionHouseholder_B64 decomp = new QRDecompositionHouseholder_B64();
 
     // the input matrix which has been decomposed
     protected BlockMatrix64F QR;

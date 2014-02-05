@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.mult.CheckMatrixMultShape;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
@@ -267,7 +267,7 @@ public class TestCommonOps {
         DenseMatrix64F c_exp = RandomMatrices.createRandom(2,5,rand);
 
         assertTrue(CommonOps.solve(a,b,c));
-        LUDecompositionAlt alg = new LUDecompositionAlt();
+        LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
         LinearSolverLu solver = new LinearSolverLu(alg);
         assertTrue(solver.setA(a));
 
@@ -318,7 +318,7 @@ public class TestCommonOps {
         for( int i = 1; i <= 10; i++ ) {
             DenseMatrix64F a = RandomMatrices.createRandom(i,i,rand);
 
-            LUDecompositionAlt lu = new LUDecompositionAlt();
+            LUDecompositionAlt_D64 lu = new LUDecompositionAlt_D64();
             LinearSolverLu solver = new LinearSolverLu(lu);
             assertTrue(solver.setA(a));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner;
+import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
 import org.junit.Test;
 
 
@@ -30,7 +30,7 @@ public class TestLinearSolverChol {
     @Test
     public void standardTests() {
 
-        CholeskyDecompositionInner alg = new CholeskyDecompositionInner(true);
+        CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
         LinearSolverChol solver = new LinearSolverChol(alg);
 
         BaseCholeskySolveTests tests = new BaseCholeskySolveTests();
