@@ -13,6 +13,8 @@ Date format: year/month/day
   * D64 = DenseMatrix64F
   * B64 = BlockMatrix64F
 - Moved interfaces into their own package.  Before they resided in dense.
+- Updated comment in DenseMatrix64F constructor
+  * Thanks Tingfan Wu for the suggestion
 
 ----- Version 0.24
 

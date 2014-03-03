@@ -181,7 +181,9 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * Default constructor where nothing is assigned.  In general this should not be used.
+     * Default constructor in which nothing is configured. This is provided for use in serialization.  In general,
+     * this constructor should not be used and any attempt to use the resulting matrix is likely to result in
+     * a null pointer exception being thrown because the matrix's data is null.
      */
     public DenseMatrix64F(){}
 
