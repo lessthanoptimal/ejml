@@ -13,8 +13,9 @@ Date format: year/month/day
   * D64 = DenseMatrix64F
   * B64 = BlockMatrix64F
 - Moved interfaces into their own package.  Before they resided in dense.
-- Updated comment in DenseMatrix64F constructor
-  * Thanks Tingfan Wu for the suggestion
+- Changed/created no argument constructors for DenseMatrix64F and SimpleMatrix to be protected so that no one will try
+  to use them.
+  * Thanks Tingfan Wu for raising this issue
 
 ----- Version 0.24
 

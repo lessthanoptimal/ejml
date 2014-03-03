@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -181,11 +181,9 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * Default constructor in which nothing is configured. This is provided for use in serialization.  In general,
-     * this constructor should not be used and any attempt to use the resulting matrix is likely to result in
-     * a null pointer exception being thrown because the matrix's data is null.
+     * Default constructor in which nothing is configured.  For internal use only.
      */
-    public DenseMatrix64F(){}
+    protected DenseMatrix64F(){}
 
     /**
      * Creates a new DenseMatrix64F which contains the same information as the provided Matrix64F.
