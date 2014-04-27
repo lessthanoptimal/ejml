@@ -41,6 +41,9 @@ public class LinearSolverChol extends LinearSolverAbstract {
 
     @Override
     public boolean setA(DenseMatrix64F A) {
+        if( A.numRows != A.numCols )
+            throw new IllegalArgumentException("Matrix must be square");
+
         _setA(A);
 
         if( decomp.decompose(A) ){
@@ -75,7 +78,7 @@ public class LinearSolverChol extends LinearSolverAbstract {
      */
     @Override
     public void solve( DenseMatrix64F B , DenseMatrix64F X ) {
-        if( B.numCols != X.numCols && B.numRows != n && X.numRows != n) {
+        if( B.numCols != X.numCols || B.numRows != n || X.numRows != n) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
 
