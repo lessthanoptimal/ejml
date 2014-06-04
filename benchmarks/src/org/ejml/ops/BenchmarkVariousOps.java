@@ -20,6 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.data.DenseMatrix64F;
 
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -125,6 +126,32 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
+    public static long fillManual( DenseMatrix64F mat , int numTrials) {
+        long prev = System.currentTimeMillis();
+
+        for( int i = 0; i < numTrials; i++ ) {
+            final int size = mat.getNumElements();
+
+            for( int j = 0; j < size; j++ ) {
+                mat.set( j , 2 );
+            }
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
+    public static long fillArrays( DenseMatrix64F mat , int numTrials) {
+        long prev = System.currentTimeMillis();
+
+        for( int i = 0; i < numTrials; i++ ) {
+            Arrays.fill(mat.data,0,mat.getNumElements(),2);
+        }
+
+        long curr = System.currentTimeMillis();
+        return curr-prev;
+    }
+
 //    public static long normMtj( DenseMatrix64F orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
@@ -144,25 +171,33 @@ public class BenchmarkVariousOps {
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));
-        System.out.printf("Scale:             eml = %10d\n",
-                scale(mat,TRIALS_SCALE));
-        System.out.printf("Scale2:            eml = %10d\n",
-                scale2(mat,TRIALS_SCALE));
+//        System.out.printf("Scale:             eml = %10d\n",
+//                scale(mat,TRIALS_SCALE));
+//        System.out.printf("Scale2:            eml = %10d\n",
+//                scale2(mat,TRIALS_SCALE));
 //        System.out.printf("Norm:              eml = %10d\n",
 //                normEml(mat,TRIALS_NORM));
 //        System.out.printf("Determinant:       eml = %10d\n",
 //                determinant(mat,TRIALS_DETERMINANT));
+        System.out.printf("FillManual:        eml = %10d\n",
+                fillManual(mat,TRIALS_SCALE));
+        System.out.printf("FillArrays:        eml = %10d\n",
+                fillArrays(mat,TRIALS_SCALE));
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
         mat = RandomMatrices.createRandom(2000,2000,rand);
-        System.out.printf("Transpose:         eml = %10d\n",
-                transposeEml(mat,100));
+//        System.out.printf("Transpose:         eml = %10d\n",
+//                transposeEml(mat,100));
 //        System.out.printf("Scale:             eml = %10d\n",
 //                scaleEml(mat,100));
 //        System.out.printf("Norm:              eml = %10d\n",
 //                normEml(mat,100));
 //        System.out.printf("Determinant:       eml = %10d\n",
 //                determinant(mat,1));
+        System.out.printf("FillManual:        eml = %10d\n",
+                fillManual(mat,1000));
+        System.out.printf("FillArrays:        eml = %10d\n",
+                fillArrays(mat,1000));
     }
 }

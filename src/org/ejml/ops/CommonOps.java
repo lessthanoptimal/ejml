@@ -35,6 +35,7 @@ import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm;
 
+import java.util.Arrays;
 
 /**
  * <p>
@@ -841,15 +842,11 @@ public class CommonOps {
     {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
-        int length = mat.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            mat.set(i , 0 );
-        }
+        Arrays.fill(mat.data,0,mat.getNumElements(),0);
 
         int index = 0;
         for( int i = 0; i < width; i++ , index += mat.numCols + 1) {
-            mat.set( index , 1 );
+            mat.data[index] = 1;
         }
     }
 
@@ -1228,7 +1225,7 @@ public class CommonOps {
     public static void elementMult( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1272,7 +1269,7 @@ public class CommonOps {
     public static void elementDiv( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1614,7 +1611,7 @@ public class CommonOps {
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set( i , a.get(i) + val);
+            c.data[i] = a.data[i] + val;
         }
     }
 
@@ -1631,13 +1628,13 @@ public class CommonOps {
     public static void subEquals( D1Matrix64F a , D1Matrix64F b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            a.minus( i , b.get(i) );
+            a.data[i] -= b.data[i];
         }
     }
 
@@ -1658,13 +1655,13 @@ public class CommonOps {
     public static void sub( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatable dimensions");
+            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set( i , a.get(i) - b.get(i));
+            c.data[i] = a.data[i] - b.data[i];
         }
     }
 
@@ -1685,7 +1682,7 @@ public class CommonOps {
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            a.times( i , alpha );
+            a.data[i] *= alpha;
         }
     }
 
@@ -1708,7 +1705,7 @@ public class CommonOps {
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            b.set( i , a.get(i)*alpha );
+            b.data[i] = a.data[i]*alpha;
         }
     }
 
@@ -1727,7 +1724,7 @@ public class CommonOps {
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            a.div( i , alpha );
+            a.data[i] /= alpha;
         }
     }
 
@@ -1750,7 +1747,7 @@ public class CommonOps {
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            b.set( i , a.get(i)/alpha );
+            b.data[i] = a.data[i]/alpha;
         }
     }
 
@@ -1768,7 +1765,7 @@ public class CommonOps {
         final int size = a.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            a.set( i , - a.get(i) );
+            a.data[i] = -a.data[i];
         }
     }
 
@@ -1784,11 +1781,7 @@ public class CommonOps {
      */
     public static void fill(D1Matrix64F a, double value)
     {
-        final int size = a.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            a.set( i , value );
-        }
+        Arrays.fill(a.data,0,a.getNumElements(),value);
     }
 
     /**

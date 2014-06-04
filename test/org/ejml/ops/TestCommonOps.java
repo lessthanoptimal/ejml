@@ -22,6 +22,7 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
 import org.ejml.alg.dense.mult.CheckMatrixMultShape;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
 import org.ejml.data.UtilTestMatrix;
@@ -734,7 +735,7 @@ public class TestCommonOps {
     }
 
     @Test
-    public void fill() {
+    public void fill_dense() {
         double d[] = new double[]{10,12.5,-2,5.5};
         DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
 
@@ -742,6 +743,18 @@ public class TestCommonOps {
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
             assertEquals(1,mat.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void fill_block() {
+        // pick the size such that it doesn't nicely line up along blocks
+        BlockMatrix64F mat = new BlockMatrix64F(10,14,3);
+
+        CommonOps.fill(mat, 1.5);
+
+        for( int i = 0; i < mat.getNumElements(); i++ ) {
+            assertEquals(1.5,mat.get(i),1e-8);
         }
     }
 

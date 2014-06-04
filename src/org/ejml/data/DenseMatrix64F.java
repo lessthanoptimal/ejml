@@ -181,9 +181,10 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * Default constructor in which nothing is configured.  For internal use only.
+     * Default constructor in which nothing is configured.  THIS IS ONLY PUBLICLY ACCESSIBLE SO THAT THIS
+     * CLASS CAN BE A JAVA BEAN. DON'T USE IT UNLESS YOU REALLY KNOW WHAT YOU'RE DOING!
      */
-    protected DenseMatrix64F(){}
+    public DenseMatrix64F(){}
 
     /**
      * Creates a new DenseMatrix64F which contains the same information as the provided Matrix64F.
