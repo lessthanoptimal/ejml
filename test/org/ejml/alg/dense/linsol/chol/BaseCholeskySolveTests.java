@@ -24,31 +24,83 @@ import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
+import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
  * @author Peter Abeles
  */
-public class BaseCholeskySolveTests {
+public abstract class BaseCholeskySolveTests {
 
     Random rand = new Random(0x45);
 
-    public void standardTests( LinearSolver<DenseMatrix64F> solver ) {
+    public void standardTests() {
 
-        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
-
-        testSolve(solver);
-        testInvert(solver);
-        testQuality(solver);
-        testQuality_scale(solver);
+        solve_dimensionCheck();
+        testSolve();
+        testInvert();
+        testQuality();
+        testQuality_scale();
     }
 
-    public void testSolve( LinearSolver<DenseMatrix64F> solver ) {
+    public abstract LinearSolver<DenseMatrix64F> createSolver();
+
+    public LinearSolver<DenseMatrix64F> createSafeSolver() {
+        LinearSolver<DenseMatrix64F> solver = createSolver();
+        return new LinearSolverSafe<DenseMatrix64F>(solver);
+    }
+
+    @Test
+    public void setA_dimensionCheck() {
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+
+        try {
+            DenseMatrix64F A = RandomMatrices.createRandom(4,5,rand);
+            assertTrue(solver.setA(A));
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+    }
+
+    @Test
+    public void solve_dimensionCheck() {
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+
+        DenseMatrix64F A = RandomMatrices.createSymmPosDef(4, rand);
+        assertTrue(solver.setA(A));
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(4,3,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(4,2,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(5,2,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(4,2,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(5,2,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(5,2,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+    }
+
+    @Test
+    public void testSolve() {
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
@@ -67,7 +119,11 @@ public class BaseCholeskySolveTests {
         EjmlUnitTests.assertEquals(x_expected,x,1e-6);
     }
 
-    public void testInvert( LinearSolver<DenseMatrix64F> solver ) {
+    @Test
+    public void testInvert() {
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DenseMatrix64F found = new DenseMatrix64F(A.numRows,A.numCols);
 
@@ -79,7 +135,11 @@ public class BaseCholeskySolveTests {
         EjmlUnitTests.assertEquals(A_inv,found,1e-5);
     }
 
-    public void testQuality( LinearSolver<DenseMatrix64F> solver ) {
+    @Test
+    public void testQuality() {
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+
         DenseMatrix64F A = CommonOps.diag(3,2,1);
         DenseMatrix64F B = CommonOps.diag(3,2,0.001);
 
@@ -92,7 +152,11 @@ public class BaseCholeskySolveTests {
         assertTrue(qualityB < qualityA);
     }
 
-    public void testQuality_scale( LinearSolver<DenseMatrix64F> solver ) {
+    @Test
+    public void testQuality_scale() {
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+
         DenseMatrix64F A = CommonOps.diag(3,2,1);
         DenseMatrix64F B = A.copy();
         CommonOps.scale(0.001,B);

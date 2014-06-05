@@ -16,6 +16,9 @@ Date format: year/month/day
 - Changed/created no argument constructors for DenseMatrix64F and SimpleMatrix to be protected so that no one will try
   to use them.
   * Thanks Tingfan Wu for raising this issue
+- Fixed bad matrix dimension check in LinearSolverChol
+  * Added unit tests which can catch the error
+  * Thanks Illya Kokshenev for finding and reporting
 
 ----- Version 0.24
 

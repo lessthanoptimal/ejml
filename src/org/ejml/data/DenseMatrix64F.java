@@ -171,7 +171,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * This declares an array that can store a matrix up to the specified length.  This is usefull
+     * This declares an array that can store a matrix up to the specified length.  This is use full
      * when a matrix's size will be growing and it is desirable to avoid reallocating memory.
      *
      * @param length The size of the matrice's data array.

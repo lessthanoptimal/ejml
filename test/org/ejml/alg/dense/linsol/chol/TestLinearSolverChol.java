@@ -19,22 +19,19 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
-import org.junit.Test;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverChol {
+public class TestLinearSolverChol extends BaseCholeskySolveTests{
 
-    @Test
-    public void standardTests() {
-
+    @Override
+    public LinearSolver<DenseMatrix64F> createSolver() {
         CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
-        LinearSolverChol solver = new LinearSolverChol(alg);
-
-        BaseCholeskySolveTests tests = new BaseCholeskySolveTests();
-        tests.standardTests(solver);
+        return new LinearSolverChol(alg);
     }
 
 }

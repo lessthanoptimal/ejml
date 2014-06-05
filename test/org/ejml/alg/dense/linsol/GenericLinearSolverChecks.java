@@ -28,8 +28,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -46,6 +45,43 @@ public abstract class GenericLinearSolverChecks {
     protected boolean shouldWorkRectangle = true;
 
     protected double tol = 1e-8;
+
+    @Test
+    public void solve_dimensionCheck() {
+        DenseMatrix64F A = RandomMatrices.createRandom(10,4,rand);
+
+        LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
+        assertTrue(solver.setA(A));
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(4,2,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(9,2,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(4,3,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(10,2,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(5,2,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(10,2,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+
+        try {
+            DenseMatrix64F x = RandomMatrices.createRandom(4,2,rand);
+            DenseMatrix64F b = RandomMatrices.createRandom(10,1,rand);
+            solver.solve(b,x);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+    }
 
     /**
      * Checks to see if the modifyA() flag is set correctly
