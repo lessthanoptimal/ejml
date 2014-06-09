@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,4 +28,11 @@ package org.ejml.factory;
  * @author Peter Abeles
  */
 public class SingularMatrixException extends RuntimeException {
+
+    public SingularMatrixException() {
+    }
+
+    public SingularMatrixException(String message) {
+        super(message);
+    }
 }

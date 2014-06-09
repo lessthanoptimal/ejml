@@ -19,6 +19,8 @@ Date format: year/month/day
 - Fixed bad matrix dimension check in LinearSolverChol
   * Added unit tests which can catch the error
   * Thanks Illya Kokshenev for finding and reporting
+- SimpleMatrix
+  * inverse and solve now check to see if output contains uncountable numbers
 
 ----- Version 0.24
 

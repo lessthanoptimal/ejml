@@ -18,18 +18,17 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolver_B64_to_D64 {
+public class TestLinearSolver_B64_to_D64 extends GenericLinearSolverChecks{
 
-    @Test
-    public void stuff() {
-        fail("Implement");
+    @Override
+    protected LinearSolver<DenseMatrix64F> createSolver(DenseMatrix64F A) {
+        return null;
     }
 
 }

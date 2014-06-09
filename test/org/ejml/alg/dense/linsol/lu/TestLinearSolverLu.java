@@ -35,7 +35,7 @@ public class TestLinearSolverLu extends GenericLinearSolverChecks {
     }
 
     @Override
-    protected LinearSolver createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
         LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
 
         return new LinearSolverLu(decomp);

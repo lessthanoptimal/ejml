@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -293,6 +293,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         if( !CommonOps.invert(mat,ret.getMatrix()) ) {
             throw new SingularMatrixException();
         }
+        if( MatrixFeatures.hasUncountable(ret.getMatrix()))
+            throw new SingularMatrixException("Solution has uncountable numbers");
         return ret;
     }
 
@@ -336,6 +338,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         if( !CommonOps.solve(mat,b.getMatrix(),x.getMatrix()) )
             throw new SingularMatrixException();
+
+        if( MatrixFeatures.hasUncountable(x.getMatrix()) )
+            throw new SingularMatrixException("Solution contains uncountable numbers");
 
         return x;
     }
@@ -626,7 +631,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.ReshapeMatrix64F)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.Matrix64F)}.
      * </p>
      *
      * @return String representation of the matrix.

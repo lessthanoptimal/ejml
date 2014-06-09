@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -206,10 +206,10 @@ public class TestSimpleMatrix {
     public void plus_beta() {
         SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(3,2, 0, 1, rand);
-        SimpleMatrix c = a.plus(2.5,b);
+        SimpleMatrix c = a.plus(2.5, b);
 
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
-        CommonOps.add(a.mat,2.5,b.mat,c_dense);
+        CommonOps.add(a.mat, 2.5, b.mat, c_dense);
 
         EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
@@ -222,7 +222,23 @@ public class TestSimpleMatrix {
         DenseMatrix64F d_inv = new DenseMatrix64F(3,3);
         CommonOps.invert(a.mat,d_inv);
 
-         EjmlUnitTests.assertEquals(d_inv,inv.mat,1e-8);
+        EjmlUnitTests.assertEquals(d_inv,inv.mat,1e-8);
+    }
+
+    @Test
+    public void invert_NaN_INFINITY() {
+        SimpleMatrix a = new SimpleMatrix(3,3);
+        try {
+            a.set(Double.NaN);
+            a.invert();
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+        try {
+            a.set(Double.POSITIVE_INFINITY);
+            a.invert();
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
     }
 
     @Test
@@ -238,7 +254,7 @@ public class TestSimpleMatrix {
         DenseMatrix64F d_inv = new DenseMatrix64F(3,3);
         CommonOps.invert(a.mat,d_inv);
 
-         EjmlUnitTests.assertEquals(d_inv,inv.mat,1e-8);
+        EjmlUnitTests.assertEquals(d_inv,inv.mat,1e-8);
     }
 
     @Test
@@ -251,6 +267,23 @@ public class TestSimpleMatrix {
         CommonOps.solve(a.mat,b.mat,c_dense);
 
         EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
+    }
+
+    @Test
+    public void solve_NaN_INFINITY() {
+        SimpleMatrix a = new SimpleMatrix(3,3);
+        SimpleMatrix b = SimpleMatrix.random(3,2, 0, 1, rand);
+        try {
+            a.set(Double.NaN);
+            a.solve(b);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
+
+        try {
+            a.set(Double.POSITIVE_INFINITY);
+            a.solve(b);
+            fail("Should have thrown an exception");
+        } catch( RuntimeException ignore ) {}
     }
 
     /**
