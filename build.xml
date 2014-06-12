@@ -145,8 +145,7 @@
             </packageset>
 
             <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification:</h1>]]></doctitle>
-            <header><![CDATA[
-<script type="text/javascript"><!--
+            <header><![CDATA[<script type="text/javascript"><!--
 google_ad_client = "ca-pub-0419821832107208";
 /* boofcv javadoc banner */
 google_ad_slot = "3257872658";
@@ -165,7 +164,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-10413214-1', 'google.com');
+  ga('create', 'UA-10413214-7', 'ejml.org');
   ga('send', 'pageview');
 
 </script>
