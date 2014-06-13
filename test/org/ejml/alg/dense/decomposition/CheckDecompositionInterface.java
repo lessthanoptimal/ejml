@@ -58,6 +58,6 @@ public class CheckDecompositionInterface {
 
         boolean modified = !MatrixFeatures.isEquals(A,A_orig);
 
-        assertTrue(decomp.inputModified()==modified);
+        assertTrue(modified+" "+decomp.inputModified(),decomp.inputModified()==modified);
     }
 }

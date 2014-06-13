@@ -18,6 +18,7 @@
 
 package org.ejml.simple;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.MatrixIterator;
@@ -418,7 +419,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The determinant.
      */
     public double determinant() {
-        return CommonOps.det(mat);
+        double ret = CommonOps.det(mat);
+        // if the decomposition silently failed then the matrix is most likely singular
+        if(UtilEjml.isUncountable(ret))
+            return 0;
+        return ret;
     }
 
     /**

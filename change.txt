@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.25
 
-2014/
+2014/6/13
 
 - Fixed bug in CovarianceRandomDraw where it was modifying the input matrix
   * Thanks Alexandre Bouchard for finding this bug
@@ -13,14 +13,12 @@ Date format: year/month/day
   * D64 = DenseMatrix64F
   * B64 = BlockMatrix64F
 - Moved interfaces into their own package.  Before they resided in dense.
-- Changed/created no argument constructors for DenseMatrix64F and SimpleMatrix to be protected so that no one will try
-  to use them.
-  * Thanks Tingfan Wu for raising this issue
 - Fixed bad matrix dimension check in LinearSolverChol
   * Added unit tests which can catch the error
   * Thanks Illya Kokshenev for finding and reporting
 - SimpleMatrix
-  * inverse and solve now check to see if output contains uncountable numbers
+  * inverse and solve now check to see if output contains uncountable numbers.
+  * Thanks sylvain.rouard for the suggestion
 
 ----- Version 0.24
 

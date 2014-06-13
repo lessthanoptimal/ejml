@@ -180,7 +180,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * Constructor for internal library use only.  Nothing is configured and is intended for serialization.
      */
-    protected SimpleMatrix(){}
+    public SimpleMatrix(){}
 
     /**
      * Creates a new SimpleMatrix with the specified DenseMatrix64F used as its internal matrix.  This means

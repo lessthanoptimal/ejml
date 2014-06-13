@@ -18,17 +18,24 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.alg.block.linsol.qr.BlockQrHouseHolderSolver;
+import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
+ * Test the wrapper by running it through the usual linear solver checks
+ *
  * @author Peter Abeles
  */
-public class TestLinearSolver_B64_to_D64 extends GenericLinearSolverChecks{
+public class TestLinearSolver_B64_to_D64 extends GenericLinearSolverChecks {
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver(DenseMatrix64F A) {
-        return null;
+
+        LinearSolver<BlockMatrix64F> solver = new BlockQrHouseHolderSolver();
+
+        return new LinearSolver_B64_to_D64(solver);
     }
 
 }
