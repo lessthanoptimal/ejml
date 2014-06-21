@@ -187,6 +187,9 @@
         <inspection_tool class="PointlessArithmeticExpression" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="m_ignoreExpressionsContainingConstants" value="false" />
         </inspection_tool>
+        <inspection_tool class="PointlessBooleanExpression" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="m_ignoreExpressionsContainingConstants" value="false" />
+        </inspection_tool>
         <inspection_tool class="SimplifiableIfStatement" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="UnnecessaryLocalVariable" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="m_ignoreImmediatelyReturnedVariables" value="false" />
@@ -364,6 +367,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/code/Equation/Equation.iml" filepath="$PROJECT_DIR$/code/Equation/Equation.iml" />
       <module fileurl="file://$PROJECT_DIR$/ejml.iml" filepath="$PROJECT_DIR$/ejml.iml" />
     </modules>
   </component>

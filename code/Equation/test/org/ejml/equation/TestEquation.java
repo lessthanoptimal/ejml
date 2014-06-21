@@ -25,25 +25,41 @@ import static org.junit.Assert.fail;
 /**
  * @author Peter Abeles
  */
-public class TestOperation {
+public class TestEquation {
 
     @Test
-    public void mMult() {
+    public void compile() {
         fail("Implement");
     }
 
     @Test
-    public void mAdd() {
+    public void parseOperations() {
         fail("Implement");
     }
 
     @Test
-    public void mSub() {
+    public void createOp() {
         fail("Implement");
     }
 
     @Test
-    public void copy() {
+    public void lookupVariable() {
         fail("Implement");
     }
+
+    @Test
+    public void extractTokens() {
+        fail("Implement");
+    }
+
+    @Test
+    public void isTargetOp() {
+        fail("Implement");
+    }
+
+    @Test
+    public void isLetter() {
+        fail("Implement");
+    }
+
 }

@@ -18,11 +18,22 @@
 
 package org.ejml.equation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Peter Abeles
  */
 public class Sequence {
-    public void perform() {
+    List<Operation> operations = new ArrayList<Operation>();
 
+    public void addOperation( Operation operation ) {
+        operations.add(operation);
+    }
+
+    public void perform() {
+        for (int i = 0; i < operations.size(); i++) {
+            operations.get(i).process();
+        }
     }
 }
