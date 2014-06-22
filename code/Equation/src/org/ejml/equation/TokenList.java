@@ -87,6 +87,16 @@ public class TokenList {
         original.next = original.previous = null;
     }
 
+    public String toString() {
+        String ret = "";
+        Token t = first;
+        while( t != null ) {
+            ret += t +" ";
+            t = t.next;
+        }
+        return ret;
+    }
+
     public Token getFirst() {
         return first;
     }
@@ -124,6 +134,14 @@ public class TokenList {
 
         public char getSymbol() {
             return symbol;
+        }
+
+        public String toString() {
+            if( variable == null ) {
+                return ""+symbol;
+            } else {
+                return variable.toString();
+            }
         }
     }
 }

@@ -18,21 +18,18 @@
 
 package org.ejml.equation;
 
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+
 /**
  * @author Peter Abeles
  */
-public class Variable {
-    public VariableType type;
+public class TestSequence {
 
-    protected Variable(VariableType type) {
-        this.type = type;
+    @Test
+    public void stuff() {
+        fail("Implement");
     }
 
-    public VariableType getType() {
-        return type;
-    }
-
-    public String toString() {
-        return "Var"  + type;
-    }
 }

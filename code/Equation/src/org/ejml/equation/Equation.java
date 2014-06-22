@@ -70,10 +70,10 @@ public class Equation {
             throw new RuntimeException("Too few tokens");
 
         TokenList.Token t0 = tokens.getFirst();
-        TokenList.Token t1 = tokens.getFirst();
+        TokenList.Token t1 = t0.next;
 
         if( t1.isVariable() || t1.symbol != '=')
-            throw new RuntimeException("Expected = symbol not "+t1);
+            throw new RuntimeException("Expected '=' symbol not "+t1);
 
         // Get the results variable
         if( !t0.isVariable())
@@ -104,7 +104,15 @@ public class Equation {
         return sequence;
     }
 
-    private void parseOperations( TokenList.Token token , char ops[] , TokenList tokens, Sequence sequence ) {
+    /**
+     * Parses all tokens after input 'token' and adds operations to sequence.
+     *
+     * @param token First token in the sequence which it should parse
+     * @param ops List of operations which should be parsed
+     * @param tokens List of all the tokens
+     * @param sequence List of operation sequence
+     */
+    protected void parseOperations( TokenList.Token token , char ops[] , TokenList tokens, Sequence sequence ) {
 
         if( !token.isVariable() )
             throw new RuntimeException("The first token in an equation needs to be a variable");
@@ -131,8 +139,12 @@ public class Equation {
         }
     }
 
-    private TokenList.Token createOp( TokenList.Token tvar0 , TokenList.Token op , TokenList.Token tvar1 ,
-                                TokenList tokens , Sequence sequence ) {
+    /**
+     * Adds a new operation to the list from the operation and two variables.  The inputs are removed
+     * from the token list and replaced by their output.
+     */
+    protected TokenList.Token createOp( TokenList.Token tvar0 , TokenList.Token op , TokenList.Token tvar1 ,
+                                      TokenList tokens , Sequence sequence ) {
         VariableMatrix var0 = (VariableMatrix)tvar0.getVariable();
         VariableMatrix var1 = (VariableMatrix)tvar1.getVariable();
 
@@ -163,7 +175,10 @@ public class Equation {
 
     }
 
-    private Variable lookupVariable(String token) {
+    /**
+     * Looks up a variable given its name
+     */
+    protected Variable lookupVariable(String token) {
         Variable result = variables.get(token);
         if( result == null )
             throw new RuntimeException("Unknown variable "+token);
@@ -205,11 +220,14 @@ public class Equation {
                 }
             }
         }
+        if( word ) {
+            tokens.add( lookupVariable(new String(storage,0,length)));
+        }
 
         return tokens;
     }
 
-    private static boolean isTargetOp( TokenList.Token token , char[] ops ) {
+    protected static boolean isTargetOp( TokenList.Token token , char[] ops ) {
         char c = token.symbol;
         for (int i = 0; i < ops.length; i++) {
             if( c == ops[i])
@@ -218,7 +236,7 @@ public class Equation {
         return false;
     }
 
-    private static boolean isLetter( char c ) {
+    protected static boolean isLetter( char c ) {
         return !(c == '*' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == ' ' || c == '\t' || c == '\n');
     }
 
