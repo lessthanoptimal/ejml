@@ -27,6 +27,20 @@ public class TokenList {
     Token last;
     int size = 0;
 
+    public TokenList() {
+    }
+
+    public TokenList(Token first, Token last) {
+        this.first = first;
+        this.last = last;
+
+        Token t = first;
+        while( t != null ) {
+            size++;
+            t = t.next;
+        }
+    }
+
     public Token add( Variable variable ) {
         Token t = new Token(variable);
         push( t );
@@ -45,10 +59,41 @@ public class TokenList {
         if( first == null ) {
             first = token;
             last = token;
+            token.previous = null;
+            token.next = null;
         } else {
             last.next = token;
             token.previous = last;
+            token.next = null;
             last = token;
+        }
+    }
+
+    /**
+     * Inserts 'token' after 'where'.  if where is null then it is inserted to the beginning of the list.
+     * @param where Where 'token' should be inserted after.  if null the put at it at the beginning
+     * @param token The token that is to be inserted
+     */
+    public void insert( Token where , Token token ) {
+        if( where == null ) {
+            // put at the front of the list
+            if( size == 0 )
+                push(token);
+            else {
+                first.previous = token;
+                token.previous = null;
+                token.next = first;
+                first = token;
+                size++;
+            }
+        } else if( where == last || null == last ) {
+            push(token);
+        } else {
+            token.next = where.next;
+            token.previous = where;
+            where.next.previous = token;
+            where.next = token;
+            size++;
         }
     }
 
@@ -85,6 +130,39 @@ public class TokenList {
             original.previous.next = target;
 
         original.next = original.previous = null;
+    }
+
+    /**
+     * Removes elements from begin to end from the list, inclusive.  Returns a new list which
+     * is composed of the removed elements
+     * @param begin
+     * @param end
+     * @return
+     */
+    public TokenList extractSubList( Token begin , Token end ) {
+        if( begin == end ) {
+            remove(begin);
+            return new TokenList(begin,begin);
+        } else {
+            if( first == begin ) {
+                first = end.next;
+            }
+            if( last == end ) {
+                last = begin.previous;
+            }
+            if( begin.previous != null ) {
+                begin.previous.next = end.next;
+            }
+            if( end.next != null ) {
+                end.next.previous = begin.previous;
+            }
+            begin.previous = null;
+            end.next = null;
+
+            TokenList ret = new TokenList(begin,end);
+            size -= ret.size();
+            return ret;
+        }
     }
 
     public String toString() {

@@ -20,6 +20,7 @@ package org.ejml.equation;
 
 import org.junit.Test;
 
+import static org.ejml.equation.TokenList.Token;
 import static org.junit.Assert.*;
 
 /**
@@ -36,20 +37,20 @@ public class TestTokenList {
         assertEquals(0,list.size());
 
         list.add('a');
-        TokenList.Token a = list.getFirst();
+        Token a = list.getFirst();
         assertTrue(null!=a);
         assertTrue(a==list.getLast());
         assertEquals(1,list.size());
 
 
         list.add('b');
-        TokenList.Token b = list.getLast();
+        Token b = list.getLast();
         assertTrue(a!=b);
         assertTrue(b!=list.getFirst());
         assertEquals(2,list.size());
 
         list.add('c');
-        TokenList.Token c = list.getLast();
+        Token c = list.getLast();
         assertTrue(a!=c);
         assertTrue(b!=c);
         assertTrue(c!=list.getFirst());
@@ -57,9 +58,35 @@ public class TestTokenList {
     }
 
     @Test
+    public void insert() {
+        TokenList list = new TokenList();
+
+        list.insert(null,new Token('a'));
+        assertEquals(1,list.size());
+        assertTrue(list.first == list.last && list.first != null);
+
+        list.insert(null,new Token('b'));
+        assertEquals(2, list.size());
+        assertEquals('b',list.first.getSymbol());
+        assertEquals('a', list.first.next.getSymbol());
+
+        list.insert(list.last,new Token('c'));
+        assertEquals(3,list.size());
+        assertEquals('b',list.first.getSymbol());
+        assertEquals('a',list.first.next.getSymbol());
+        assertEquals('c',list.last.getSymbol());
+
+        list.insert(list.first.next,new Token('d'));
+        assertEquals(4,list.size());
+        assertEquals('a', list.first.next.getSymbol());
+        assertEquals('d', list.first.next.next.getSymbol());
+        assertEquals('c', list.first.next.next.next.getSymbol());
+    }
+
+    @Test
     public void remove() {
         TokenList list = new TokenList();
-        TokenList.Token A,B,C;
+        Token A,B,C;
 
         list.add('a');
         list.remove(list.first);
@@ -100,10 +127,10 @@ public class TestTokenList {
     @Test
     public void replace() {
         TokenList list = new TokenList();
-        TokenList.Token A,B,C,D;
+        Token A,B,C,D;
 
         A = list.add('a');
-        B = new TokenList.Token('b');
+        B = new Token('b');
         list.replace(A, B);
         assertEquals(1,list.size);
         assertTrue(B==list.getFirst());
@@ -113,7 +140,7 @@ public class TestTokenList {
 
         A = list.add('a');
         B = list.add('b');
-        C = new TokenList.Token('c');
+        C = new Token('c');
 
         list.replace(A, C);
         assertEquals(2, list.size);
@@ -128,7 +155,7 @@ public class TestTokenList {
         A=list.add('a');
         B=list.add('b');
         C=list.add('c');
-        D=new TokenList.Token('d');
+        D=new Token('d');
 
         list.replace(B,D);
         assertEquals(3, list.size);
@@ -141,8 +168,47 @@ public class TestTokenList {
     }
 
     @Test
+    public void extractSubList() {
+
+        // Check when the input list has a size of 1
+        TokenList list = new TokenList();
+        list.add('a');
+
+        TokenList found = list.extractSubList(list.first,list.first);
+        assertEquals(0, list.size);
+        assertEquals(1, found.size);
+        assertTrue(null == list.first && null == list.last);
+        assertTrue(found.first==found.last && found.first != null);
+
+        // Remove entire thing
+        list = new TokenList();
+        list.add('a');
+        list.add('b');
+        list.add('c');
+        found = list.extractSubList(list.first,list.last);
+        assertEquals(0,list.size);
+        assertEquals(3,found.size);
+        assertEquals('a',found.first.getSymbol());
+        assertEquals('c',found.last.getSymbol());
+
+        // Remove stuff in the middle
+        list = new TokenList();
+        list.add('a');
+        list.add('b');
+        list.add('c');
+        list.add('d');
+        found = list.extractSubList(list.first.next,list.last.previous);
+        assertEquals(2,list.size);
+        assertEquals(2,found.size);
+        assertEquals('a',list.first.getSymbol());
+        assertEquals('d',list.last.getSymbol());
+        assertEquals('b',found.first.getSymbol());
+        assertEquals('c',found.last.getSymbol());
+    }
+
+    @Test
     public void Token_isVariable() {
-        assertTrue(new TokenList.Token(new VariableMatrix(null)).isVariable());
-        assertFalse(new TokenList.Token('a').isVariable());
+        assertTrue(new Token(new VariableMatrix(null)).isVariable());
+        assertFalse(new Token('a').isVariable());
     }
 }

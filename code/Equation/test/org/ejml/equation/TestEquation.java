@@ -77,7 +77,27 @@ public class TestEquation {
 
     @Test
     public void compile_parentheses() {
-        fail("Implement");
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix R = new SimpleMatrix(6, 6);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+        eq.alias(C.getMatrix(), "C");
+        eq.alias(R.getMatrix(), "R");
+
+        Sequence sequence = eq.compile("R=A*(B+C)");
+        SimpleMatrix expected = A.mult(B.plus(C));
+        sequence.perform();
+        assertTrue(expected.isIdentical(R, 1e-15));
+
+        // try again with pointless ones
+        sequence = eq.compile("R=(A*((B+(C))))");
+        sequence.perform();
+        assertTrue(expected.isIdentical(R,1e-15));
     }
 
     @Test
@@ -101,6 +121,38 @@ public class TestEquation {
     }
 
     @Test
+    public void handleParentheses() {
+        Equation eq = new Equation();
+
+        eq.alias(new DenseMatrix64F(1, 1), "A");
+        eq.alias(new DenseMatrix64F(1, 1), "B");
+        eq.alias(new DenseMatrix64F(1, 1), "C");
+
+        // handle empty case
+        Sequence sequence = new Sequence();
+        TokenList tokens = eq.extractTokens("((()))()");
+        eq.handleParentheses(tokens,sequence);
+        assertEquals(0,sequence.operations.size());
+        assertEquals(0,tokens.size);
+
+        // embedded with just one variable
+        sequence = new Sequence();
+        tokens = eq.extractTokens("(((A)))");
+        eq.handleParentheses(tokens,sequence);
+        assertEquals(0,sequence.operations.size());
+        assertEquals(1,tokens.size);
+        assertTrue(tokens.first.isVariable());
+
+        // pointless
+        sequence = new Sequence();
+        tokens = eq.extractTokens("(A)*(B)+(C)");
+        eq.handleParentheses(tokens,sequence);
+        assertEquals(2,sequence.operations.size());
+        assertEquals(1,tokens.size);
+        assertTrue(tokens.first.isVariable());
+    }
+
+    @Test
     public void parseOperations() {
         Equation eq = new Equation();
 
@@ -108,23 +160,32 @@ public class TestEquation {
         eq.alias(new DenseMatrix64F(1, 1), "B");
         eq.alias(new DenseMatrix64F(1, 1), "C");
 
-        TokenList tokens = eq.extractTokens("A=B+B-A*B*A");
+        // give it an empty list
+        TokenList tokens = eq.extractTokens("");
         Sequence sequence = new Sequence();
 
-        eq.parseOperations(tokens.first.next.next,new char[]{'*'},tokens,sequence);
+        eq.parseOperations(new char[]{'*'},tokens,sequence);
+        assertEquals(0,sequence.operations.size());
+        assertEquals(0,tokens.size);
+
+        // other cases
+        tokens = eq.extractTokens("B+B-A*B*A");
+        sequence = new Sequence();
+
+        eq.parseOperations(new char[]{'*'},tokens,sequence);
 
         assertEquals(2,sequence.operations.size());
-        assertEquals(7,tokens.size);
+        assertEquals(5,tokens.size);
         assertTrue(tokens.last.isVariable());
         assertTrue('-'==tokens.last.previous.getSymbol());
 
-        tokens = eq.extractTokens("A=B+B*B*A-B");
+        tokens = eq.extractTokens("B+B*B*A-B");
         sequence = new Sequence();
 
-        eq.parseOperations(tokens.first.next.next,new char[]{'+','-'},tokens,sequence);
+        eq.parseOperations(new char[]{'+','-'},tokens,sequence);
 
         assertEquals(2,sequence.operations.size());
-        assertEquals(7,tokens.size);
+        assertEquals(5,tokens.size);
         assertTrue(tokens.last.isVariable());
         assertTrue('*'==tokens.last.previous.getSymbol());
         assertTrue('*' == tokens.first.next.next.next.getSymbol());

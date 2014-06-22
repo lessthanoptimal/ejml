@@ -20,7 +20,9 @@ package org.ejml.equation;
 
 import org.ejml.data.DenseMatrix64F;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -59,10 +61,11 @@ public class Equation {
      * @param equation String in simple equation format.
      * @return Sequence of operations on the variables
      */
-    // TODO handle ( and ) correctly
     // TODO handle transpose
+    // TODO handle negative
+    // TODO handle scalars
     // TODO handle functions
-    // TODO instead make the output be assigned the value of sequence
+    // TODO handle two character (element-wise) operators
     public Sequence compile( String equation ) {
         TokenList tokens = extractTokens(equation);
 
@@ -81,41 +84,112 @@ public class Equation {
 
         Variable result = t0.getVariable();
 
-        // the last token should be a variable
-        if( !tokens.getLast().isVariable())
-            throw new RuntimeException("Equation didn't end in a variable name");
-
         // now it gets interesting
-
         Sequence sequence = new Sequence();
 
-        // search for operations based on their priority
-        parseOperations(t1.next,new char[]{'*'},tokens,sequence);
-        parseOperations(t1.next,new char[]{'+','-'},tokens,sequence);
+        TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
+        handleParentheses( tokensRight ,sequence);
 
-        if( tokens.size() != 3 )
-            throw new RuntimeException("BUG 3 symbols must be left at this point");
-        if( !tokens.getLast().isVariable() )
+        // see if it needs to be parsed more
+        if( tokensRight.size() != 1 )
+            throw new RuntimeException("BUG");
+        if( !tokensRight.getLast().isVariable() )
             throw new RuntimeException("BUG the last token must be a variable");
 
         // copy the results into the output
-        sequence.addOperation(Operation.copy((VariableMatrix)tokens.getLast().getVariable(),(VariableMatrix)result));
+        sequence.addOperation(Operation.copy((VariableMatrix)tokensRight.getFirst().getVariable(),(VariableMatrix)result));
 
         return sequence;
     }
 
     /**
+     * Searches for pairs of parentheses and processes blocks inside of them.  Embedded parentheses are handled
+     * with no problem.  On output only a single token should be in tokens.
+     * @param tokens List of parsed tokens
+     * @param sequence Sequence of operators
+     */
+    protected void handleParentheses( TokenList tokens, Sequence sequence ) {
+        List<TokenList.Token> left = new ArrayList<TokenList.Token>();
+        List<TokenList.Token> right = new ArrayList<TokenList.Token>();
+
+        // find all of them
+        TokenList.Token t = tokens.first;
+        while( t != null ) {
+            if( !t.isVariable() ) {
+                if( t.getSymbol() == '(' )
+                    left.add(t);
+                else if( t.getSymbol() == ')' )
+                    right.add(t);
+            }
+            t = t.next;
+
+            if( left.size() >= 1 && left.size() == right.size() ) {
+                // handle the code inside the one or more embedded parentheses
+
+                // process from last to first
+                for (int i = left.size()-1; i >= 0; i--) {
+                    TokenList.Token a = left.get(i);
+                    TokenList.Token b = right.get(left.size()-1-i);
+
+                    // remember the element before so the new one can be inserted afterwards
+                    TokenList.Token before = a.previous;
+
+                    TokenList sublist = tokens.extractSubList(a,b);
+                    // remove parentheses
+                    sublist.remove(sublist.first);
+                    sublist.remove(sublist.last);
+
+                    TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
+                    // if null then it was empty inside
+                    if( output != null)
+                        tokens.insert(before,output);
+                }
+
+                // reset and look for the next set
+                left.clear();
+                right.clear();
+            }
+        }
+
+        if( !left.isEmpty() || !right.isEmpty() )
+            throw new RuntimeException("Dangling parentheses");
+
+        if( tokens.size() > 1 ) {
+            parseBlockNoParentheses(tokens,sequence);
+        }
+    }
+
+    /**
+     * Parses a code block with no parentheses.  After it is done there should be a single token left, which
+     * is returned.
+     */
+    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence) {
+        // process operators depending on their priority
+        parseOperations(new char[]{'*'},tokens,sequence);
+        parseOperations(new char[]{'+','-'},tokens,sequence);
+
+        if( tokens.size() > 1 )
+            throw new RuntimeException("BUG in parser.  There should only be a single token left");
+
+        return tokens.first;
+    }
+
+    /**
      * Parses all tokens after input 'token' and adds operations to sequence.
      *
-     * @param token First token in the sequence which it should parse
      * @param ops List of operations which should be parsed
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperations( TokenList.Token token , char ops[] , TokenList tokens, Sequence sequence ) {
+    protected void parseOperations( char ops[] , TokenList tokens, Sequence sequence ) {
+
+        if( tokens.size == 0 )
+            return;
+
+        TokenList.Token token = tokens.first;
 
         if( !token.isVariable() )
-            throw new RuntimeException("The first token in an equation needs to be a variable");
+            throw new RuntimeException("The first token in an equation needs to be a variable and not "+token);
 
         boolean hasLeft = false;
         while( token != null ) {
