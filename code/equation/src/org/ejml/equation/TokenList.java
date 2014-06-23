@@ -19,9 +19,11 @@
 package org.ejml.equation;
 
 /**
+ * Linked-list of tokens parsed from the equations string.
+ *
  * @author Peter Abeles
  */
-public class TokenList {
+class TokenList {
 
     Token first;
     Token last;
@@ -30,6 +32,12 @@ public class TokenList {
     public TokenList() {
     }
 
+    /**
+     * Creates a list from the two given tokens.  These tokens are assumed to form a linked list starting at 'first'
+     * and ending at 'last'
+     * @param first First element in the new list
+     * @param last Last element in the new list
+     */
     public TokenList(Token first, Token last) {
         this.first = first;
         this.last = last;
@@ -41,25 +49,42 @@ public class TokenList {
         }
     }
 
-    public Token add( Function variable ) {
-        Token t = new Token(variable);
+    /**
+     * Adds a function to the end of the token list
+     * @param function Function which is to be added
+     * @return The new Token created around function
+     */
+    public Token add( Function function ) {
+        Token t = new Token(function);
         push( t );
         return t;
     }
 
+    /**
+     * Adds a variable to the end of the token list
+     * @param variable Variable which is to be added
+     * @return The new Token created around variable
+     */
     public Token add( Variable variable ) {
         Token t = new Token(variable);
         push( t );
         return t;
     }
 
-    public Token add( char symbol ) {
+    /**
+     * Adds a symbol to the end of the token list
+     * @param symbol Symbol which is to be added
+     * @return The new Token created around symbol
+     */
+    public Token add( Symbol symbol ) {
         Token t = new Token(symbol);
         push( t );
         return t;
     }
 
-
+    /**
+     * Adds a new Token to the end of the linked list
+     */
     public void push( Token token ) {
         size++;
         if( first == null ) {
@@ -103,6 +128,10 @@ public class TokenList {
         }
     }
 
+    /**
+     * Removes the token from the list
+     * @param token Token which is to be removed
+     */
     public void remove( Token token ) {
         if( token == first ) {
             first = first.next;
@@ -121,6 +150,9 @@ public class TokenList {
         size--;
     }
 
+    /**
+     * Removes 'original' and places 'target' at the same location
+     */
     public void replace( Token original , Token target  ) {
         if( first == original )
             first = target;
@@ -141,9 +173,6 @@ public class TokenList {
     /**
      * Removes elements from begin to end from the list, inclusive.  Returns a new list which
      * is composed of the removed elements
-     * @param begin
-     * @param end
-     * @return
      */
     public TokenList extractSubList( Token begin , Token end ) {
         if( begin == end ) {
@@ -171,6 +200,9 @@ public class TokenList {
         }
     }
 
+    /**
+     * Prints the list of tokens
+     */
     public String toString() {
         String ret = "";
         Token t = first;
@@ -181,25 +213,44 @@ public class TokenList {
         return ret;
     }
 
+    /**
+     * First token in the list
+     */
     public Token getFirst() {
         return first;
     }
 
+    /**
+     * Last token in the list
+     */
     public Token getLast() {
         return last;
     }
 
+    /**
+     * Number of tokens in the list
+     */
     public int size() {
         return size;
     }
 
+    /**
+     * The token class contains a reference to parsed data (e.g. function, variable, or symbol) and reference
+     * to list elements before and after it.
+     */
     public static class Token {
+        /**
+         * Next element in the list.  If null then it's at the end of the list
+         */
         public Token next;
+        /**
+         * Previous element in the list.  If null then it's the first element in the list
+         */
         public Token previous;
 
         public Function function;
         public Variable variable;
-        public char symbol;
+        public Symbol symbol;
 
         public Token(Function function) {
             this.function = function;
@@ -209,7 +260,7 @@ public class TokenList {
             this.variable = variable;
         }
 
-        public Token(char symbol) {
+        public Token(Symbol symbol) {
             this.symbol = symbol;
         }
 
@@ -230,7 +281,7 @@ public class TokenList {
             return function;
         }
 
-        public char getSymbol() {
+        public Symbol getSymbol() {
             return symbol;
         }
 
@@ -247,6 +298,9 @@ public class TokenList {
         }
     }
 
+    /**
+     * Specifies the type of data stored in a Token.
+     */
     public static enum Type
     {
         FUNCTION,

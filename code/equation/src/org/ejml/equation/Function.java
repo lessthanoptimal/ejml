@@ -19,9 +19,14 @@
 package org.ejml.equation;
 
 /**
+ * A function is an operator with the following syntax "<Name>( Input )"
+ *
  * @author Peter Abeles
  */
-public class Function {
+class Function {
+    /**
+     * Name of operator and the string it looks for when parsing
+     */
     public String name;
 
     public Function(String name) {

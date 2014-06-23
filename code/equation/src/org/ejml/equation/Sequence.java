@@ -22,15 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Contains a sequence of operations.  This is the final result of compiling the equation.  Once created it can
+ * be invoked an arbitrary number of times by invoking {@link #perform()}.
+ *
  * @author Peter Abeles
  */
 public class Sequence {
+    // List of in sequence operations which the equation string described
     List<Operation> operations = new ArrayList<Operation>();
 
     public void addOperation( Operation operation ) {
         operations.add(operation);
     }
 
+    /**
+     * Executes the sequence of operations
+     */
     public void perform() {
         for (int i = 0; i < operations.size(); i++) {
             operations.get(i).process();

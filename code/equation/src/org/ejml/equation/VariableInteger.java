@@ -19,9 +19,11 @@
 package org.ejml.equation;
 
 /**
+ * Variable which stores an instance of int.
+ *
  * @author Peter Abeles
  */
-public class VariableInteger extends VariableScalar {
+class VariableInteger extends VariableScalar {
     public int value;
 
     public VariableInteger(int value) {

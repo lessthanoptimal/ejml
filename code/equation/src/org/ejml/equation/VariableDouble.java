@@ -19,9 +19,11 @@
 package org.ejml.equation;
 
 /**
+ * Variable which stores an instance of double.
+ *
  * @author Peter Abeles
  */
-public class VariableDouble extends VariableScalar {
+class VariableDouble extends VariableScalar {
     public double value;
 
     public VariableDouble(double value) {

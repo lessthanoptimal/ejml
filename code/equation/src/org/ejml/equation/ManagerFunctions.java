@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Centralized place to create new instances of operations and functions.  Must call
+ * {@link #setManagerTemp} before any other functions.
+ *
  * @author Peter Abeles
  */
 public class ManagerFunctions {
@@ -30,6 +33,7 @@ public class ManagerFunctions {
     Map<String,Input1> input1 = new HashMap<String,Input1>();
     Map<String,Input2> input2 = new HashMap<String,Input2>();
 
+    // Reference to temporary variable manager
     protected ManagerTempVariables managerTemp;
 
     public ManagerFunctions() {
@@ -48,6 +52,12 @@ public class ManagerFunctions {
         return false;
     }
 
+    /**
+     * Create a new instance of single input functions
+     * @param name function name
+     * @param var0 Input variable
+     * @return Resulting operation
+     */
     public Operation.Info create( String name , Variable var0 ) {
         Input1 func = input1.get(name);
         if( func == null )
@@ -55,6 +65,12 @@ public class ManagerFunctions {
         return func.create(var0);
     }
 
+    /**
+     * Create a new instance of a single input function from an operator character
+     * @param op Which operation
+     * @param input Input variable
+     * @return Resulting operation
+     */
     public Operation.Info create( char op , Variable input ) {
         switch( op ) {
             case '\'':
@@ -65,18 +81,25 @@ public class ManagerFunctions {
         }
     }
 
-    public Operation.Info create( char op , Variable left , Variable right ) {
+    /**
+     * Create a new instance of a two input function from an operator character
+     * @param op Which operation
+     * @param left Input variable on left
+     * @param right Input variable on right
+     * @return Resulting operation
+     */
+    public Operation.Info create( Symbol op , Variable left , Variable right ) {
         switch( op ) {
-            case '+':
+            case PLUS:
                 return Operation.mAdd(left, right, managerTemp);
 
-            case '-':
+            case MINUS:
                 return Operation.mSub(left, right, managerTemp);
 
-            case '*':
+            case TIMES:
                 return Operation.mMult(left, right, managerTemp);
 
-            case '/':
+            case DIVIDE:
                 return Operation.mDiv(left, right, managerTemp);
 
             default:
@@ -84,14 +107,29 @@ public class ManagerFunctions {
         }
     }
 
+    /**
+     *
+     * @param managerTemp
+     */
+
     public void setManagerTemp(ManagerTempVariables managerTemp) {
         this.managerTemp = managerTemp;
     }
 
+    /**
+     * Adds a function, with a single input, to the list
+     * @param name Name of function
+     * @param function Function factory
+     */
     public void add( String name , Input1 function ) {
        input1.put(name, function);
     }
 
+    /**
+     * Adds a function, with a two inputs, to the list
+     * @param name Name of function
+     * @param function Function factory
+     */
     public void add( String name , Input2 function ) {
         input2.put(name,function);
     }
@@ -110,7 +148,7 @@ public class ManagerFunctions {
         input1.put("pinv",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
-                return Operation.inv(A,managerTemp);
+                return Operation.pinv(A, managerTemp);
             }
         });
 
@@ -143,10 +181,16 @@ public class ManagerFunctions {
         });
     }
 
+    /**
+     * Creates new instances of functions from a single variable
+     */
     public static interface Input1 {
         Operation.Info create( Variable A );
     }
 
+    /**
+     * Creates a new instance of functions from two variables
+     */
     public static interface Input2 {
         Operation.Info create( Variable A , Variable B );
     }

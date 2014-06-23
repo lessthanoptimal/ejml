@@ -23,16 +23,26 @@ import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
 
 /**
+ * Performs math operations.
+ *
  * @author Peter Abeles
  */
 // TODO sum
+// TODO max,maxAbs
 // TODO pow
-// TODO dot
+// TODO dot <-- requires two inputs
 // TODO solve ? or should that be kept outside since it would be the only function on the line?
-public abstract class Operation {
+abstract class Operation {
 
     public abstract void process();
 
+    /**
+     * If the variable is a local temporary variable it will be resized so that the operation can complete.  If not
+     * temporary then it will not be reshaped
+     * @param mat Variable containing the matrix
+     * @param numRows Desired number of rows
+     * @param numCols Desired number of columns
+     */
     protected void resize( VariableMatrix mat , int numRows , int numCols ) {
         if( mat.isTemp() ) {
             mat.matrix.reshape(numRows,numCols);
@@ -246,6 +256,52 @@ public abstract class Operation {
                     }
                 };
             }
+        }
+
+        return ret;
+    }
+
+    public static Info elementMult( final Variable A , final Variable B , ManagerTempVariables manager ) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableMatrix mA = (VariableMatrix)A;
+                    VariableMatrix mB = (VariableMatrix)B;
+
+                    resize(output,mA.matrix.numRows,mA.matrix.numCols);
+                    CommonOps.elementMult(mA.matrix, mB.matrix, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Both inputs must be matrices for element wise multiplication");
+        }
+
+        return ret;
+    }
+
+    public static Info elementDivision( final Variable A , final Variable B , ManagerTempVariables manager ) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableMatrix mA = (VariableMatrix)A;
+                    VariableMatrix mB = (VariableMatrix)B;
+
+                    resize(output,mA.matrix.numRows,mA.matrix.numCols);
+                    CommonOps.elementMult(mA.matrix, mB.matrix, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Both inputs must be matrices for element wise multiplication");
         }
 
         return ret;

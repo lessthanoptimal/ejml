@@ -21,15 +21,12 @@ package org.ejml.equation;
 import org.ejml.data.DenseMatrix64F;
 
 /**
+ * Storage for {@link org.ejml.data.DenseMatrix64F matrix} type variables.
+ *
  * @author Peter Abeles
  */
-public class VariableMatrix extends Variable {
+class VariableMatrix extends Variable {
     public DenseMatrix64F matrix;
-    /**
-     * If a variable is a reference then assignment will make it's matrix point another matrix.  If false
-     * then the value of the other matrix will be copied.
-     */
-    public boolean reference;
 
     /**
      * If true then the matrix is dynamically resized to match the output of a function
@@ -44,7 +41,6 @@ public class VariableMatrix extends Variable {
     public VariableMatrix(DenseMatrix64F matrix) {
         super(VariableType.MATRIX);
         this.matrix = matrix;
-        this.reference = matrix == null;
     }
 
     public static VariableMatrix createTemp() {

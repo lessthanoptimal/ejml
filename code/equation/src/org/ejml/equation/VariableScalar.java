@@ -19,9 +19,11 @@
 package org.ejml.equation;
 
 /**
+ * Variable for storing primitive scalar data types, e.g. int and double.
+ *
  * @author Peter Abeles
  */
-public abstract class VariableScalar extends Variable {
+abstract class VariableScalar extends Variable {
 
     public VariableScalar() {
         super(VariableType.SCALAR);

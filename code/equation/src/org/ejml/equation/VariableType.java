@@ -19,9 +19,11 @@
 package org.ejml.equation;
 
 /**
+ * List of the types of variables.
+ *
  * @author Peter Abeles
  */
-public enum VariableType {
+enum VariableType {
     MATRIX,
     SCALAR
 }

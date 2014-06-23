@@ -53,7 +53,7 @@ import static org.ejml.equation.TokenList.Type;
  * eq.process("x = F*x");
  * eq.process("P = F*P*F' + Q");
  * </pre>
- * Which will modify the matrices 'x' amd 'P'.  To precompile one of the above lines, do the following instead:
+ * Which will modify the matrices 'x' amd 'P'.  To pre-compile one of the above lines, do the following instead:
  * <pre>
  * Sequence predictX = eq.compile("x = F*x");
  * predictX.perform();
@@ -83,8 +83,11 @@ import static org.ejml.equation.TokenList.Type;
  * '+'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) addition
  * '-'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) subtraction
  * '/'        (Matrix-Scalar, Scalar-Scalar) division
+ * '.*'       (Matrix-Matrix) element wise multiplication
+ * './'       (Matrix-Matrix) element wise division
  * '''        Matrix transpose
  * '='        (Matrix-Matrix, Scalar-Scalar) assignment by value
+ * '(' ')'    The usual parentheses.
  * </pre>
  * Order of operations:  ' precedes * / precedes + -
  * </p>
@@ -97,12 +100,11 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
+// TODO Floats in exponential notation
 // TODO Recycle temporary variables
-// TODO handle two character (element-wise) operators
 // TODO handle functions with 2+ inputs
 // TODO reference sub-matrices
 // TODO intelligently handle identity matrices
-// TODO Floats in exponential notation
 public class Equation {
     HashMap<String,Variable> variables = new HashMap<String, Variable>();
 
@@ -162,7 +164,7 @@ public class Equation {
         TokenList.Token t0 = tokens.getFirst();
         TokenList.Token t1 = t0.next;
 
-        if( t1.getType() != Type.SYMBOL || t1.symbol != '=')
+        if( t1.getType() != Type.SYMBOL || t1.symbol != Symbol.ASSIGN )
             throw new RuntimeException("Expected '=' symbol not "+t1);
 
         // Get the results variable
@@ -203,9 +205,9 @@ public class Equation {
         TokenList.Token t = tokens.first;
         while( t != null ) {
             if( t.getType() == Type.SYMBOL ) {
-                if( t.getSymbol() == '(' )
+                if( t.getSymbol() == Symbol.PAREN_LEFT )
                     left.add(t);
-                else if( t.getSymbol() == ')' )
+                else if( t.getSymbol() == Symbol.PAREN_RIGHT )
                     right.add(t);
             }
             t = t.next;
@@ -261,8 +263,8 @@ public class Equation {
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
         // process operators depending on their priority
-        parseOperations(new char[]{'*','/'},tokens,sequence);
-        parseOperations(new char[]{'+','-'},tokens,sequence);
+        parseOperations(new Symbol[]{Symbol.TIMES,Symbol.DIVIDE},tokens,sequence);
+        parseOperations(new Symbol[]{Symbol.PLUS,Symbol.MINUS},tokens,sequence);
 
         if( tokens.size() > 1 )
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
@@ -277,7 +279,7 @@ public class Equation {
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperations( char ops[] , TokenList tokens, Sequence sequence) {
+    protected void parseOperations( Symbol ops[] , TokenList tokens, Sequence sequence) {
 
         if( tokens.size == 0 )
             return;
@@ -294,7 +296,7 @@ public class Equation {
             } else if( token.getType() == Type.VARIABLE ) {
                 // look ahead to see if the variable is transposed and if so transpose it
                 if( token.next != null ) {
-                    if( token.next.getSymbol() == '\'') {
+                    if( token.next.getSymbol() == Symbol.TRANSPOSE) {
                         token = insertTranspose(token,tokens,sequence);
                     }
                 }
@@ -418,7 +420,7 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     // if it's a special character add it.  If whitespace ignore it
                     if (isOperator(c)) {
-                        tokens.add(c);
+                        tokens.add(Symbol.lookup(c));
                     }
                 }
             } else if( type == TokenType.INTEGER ) {
@@ -433,7 +435,7 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     // if it's a special character add it.  If whitespace ignore it
                     if (isOperator(c)) {
-                        tokens.add(c);
+                        tokens.add(Symbol.lookup(c));
                     }
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an integer "+c);
@@ -449,14 +451,22 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     // if it's a special character add it.  If whitespace ignore it
                     if (isOperator(c)) {
-                        tokens.add(c);
+                        tokens.add(Symbol.lookup(c));
                     }
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an float "+c);
                 }
             } else {
                 if( isOperator(c) ) {
-                    tokens.add(c);
+                    TokenList.Token t = tokens.add(Symbol.lookup(c));
+                    if( t.previous != null && t.previous.getType() == Type.SYMBOL ) {
+                        // there should only be two symbols in a row if its an element-wise operation
+                        if( t.previous.getSymbol() == Symbol.PERIOD ) {
+                            tokens.remove(t.previous);
+                            tokens.remove(t);
+                            tokens.add(Symbol.lookupElementWise(c));
+                        }
+                    }
                 } else if( Character.isWhitespace(c) ) {
                     continue;// ignore white space
                 } else {
@@ -490,8 +500,14 @@ public class Equation {
         UNKNOWN
     }
 
-    protected static boolean isTargetOp( TokenList.Token token , char[] ops ) {
-        char c = token.symbol;
+    /**
+     * Checks to see if the token is in the list of allowed character operations.  Used to apply order of operations
+     * @param token Token being checked
+     * @param ops List of allowed character operations
+     * @return true for it being in the list and false for it not being in the list
+     */
+    protected static boolean isTargetOp( TokenList.Token token , Symbol[] ops ) {
+        Symbol c = token.symbol;
         for (int i = 0; i < ops.length; i++) {
             if( c == ops[i])
                 return true;
@@ -500,7 +516,7 @@ public class Equation {
     }
 
     protected static boolean isOperator( char c ) {
-        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == '\'';
+        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == '\'' || c == '.';
     }
 
     /**

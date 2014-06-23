@@ -33,6 +33,11 @@ public class TestOperation {
     }
 
     @Test
+    public void mDiv() {
+        fail("Implement");
+    }
+
+    @Test
     public void mAdd() {
         fail("Implement");
     }
@@ -44,6 +49,41 @@ public class TestOperation {
 
     @Test
     public void copy() {
+        fail("Implement");
+    }
+
+    @Test
+    public void transpose() {
+        fail("Implement");
+    }
+
+    @Test
+    public void inv() {
+        fail("Implement");
+    }
+
+    @Test
+    public void pinv() {
+        fail("Implement");
+    }
+
+    @Test
+    public void det() {
+        fail("Implement");
+    }
+
+    @Test
+    public void trace() {
+        fail("Implement");
+    }
+
+    @Test
+    public void normF() {
+        fail("Implement");
+    }
+
+    @Test
+    public void eye() {
         fail("Implement");
     }
 }

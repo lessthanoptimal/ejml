@@ -37,20 +37,20 @@ public class TestTokenList {
         assertTrue(null==list.getLast());
         assertEquals(0,list.size());
 
-        list.add('a');
+        list.add(Symbol.MINUS);
         Token a = list.getFirst();
         assertTrue(null!=a);
         assertTrue(a==list.getLast());
         assertEquals(1,list.size());
 
 
-        list.add('b');
+        list.add(Symbol.PAREN_LEFT);
         Token b = list.getLast();
         assertTrue(a!=b);
         assertTrue(b!=list.getFirst());
         assertEquals(2,list.size());
 
-        list.add('c');
+        list.add(Symbol.PAREN_RIGHT);
         Token c = list.getLast();
         assertTrue(a!=c);
         assertTrue(b!=c);
@@ -62,26 +62,26 @@ public class TestTokenList {
     public void insert() {
         TokenList list = new TokenList();
 
-        list.insert(null,new Token('a'));
-        assertEquals(1,list.size());
+        list.insert(null,new Token(Symbol.MINUS));
+        assertEquals(1, list.size());
         assertTrue(list.first == list.last && list.first != null);
 
-        list.insert(null,new Token('b'));
+        list.insert(null,new Token(Symbol.PLUS));
         assertEquals(2, list.size());
-        assertEquals('b',list.first.getSymbol());
-        assertEquals('a', list.first.next.getSymbol());
+        assertEquals(Symbol.PLUS,list.first.getSymbol());
+        assertEquals(Symbol.MINUS, list.first.next.getSymbol());
 
-        list.insert(list.last,new Token('c'));
-        assertEquals(3,list.size());
-        assertEquals('b',list.first.getSymbol());
-        assertEquals('a',list.first.next.getSymbol());
-        assertEquals('c',list.last.getSymbol());
+        list.insert(list.last,new Token(Symbol.TIMES));
+        assertEquals(3, list.size());
+        assertEquals(Symbol.PLUS,list.first.getSymbol());
+        assertEquals(Symbol.MINUS,list.first.next.getSymbol());
+        assertEquals(Symbol.TIMES,list.last.getSymbol());
 
-        list.insert(list.first.next,new Token('d'));
-        assertEquals(4,list.size());
-        assertEquals('a', list.first.next.getSymbol());
-        assertEquals('d', list.first.next.next.getSymbol());
-        assertEquals('c', list.first.next.next.next.getSymbol());
+        list.insert(list.first.next,new Token(Symbol.ASSIGN));
+        assertEquals(4, list.size());
+        assertEquals(Symbol.MINUS, list.first.next.getSymbol());
+        assertEquals(Symbol.ASSIGN, list.first.next.next.getSymbol());
+        assertEquals(Symbol.TIMES, list.first.next.next.next.getSymbol());
     }
 
     @Test
@@ -89,21 +89,21 @@ public class TestTokenList {
         TokenList list = new TokenList();
         Token A,B,C;
 
-        list.add('a');
+        list.add(Symbol.MINUS);
         list.remove(list.first);
         assertEquals(0,list.size);
         assertTrue(null==list.getFirst());
         assertTrue(null==list.getLast());
 
-        A = list.add('a');
-        list.add('b');
+        A = list.add(Symbol.MINUS);
+        list.add(Symbol.PLUS);
         list.remove(list.last);
         assertEquals(1, list.size);
         assertTrue(A == list.getFirst());
         assertTrue(A==list.getLast());
         assertTrue(A.next==null);
         assertTrue(A.previous==null);
-        B = list.add('b');
+        B = list.add(Symbol.PLUS);
         list.remove(list.first);
         assertEquals(1, list.size);
         assertTrue(B == list.getFirst());
@@ -113,9 +113,9 @@ public class TestTokenList {
 
 
         list.remove(list.first);
-        A = list.add('a');
-        B = list.add('b');
-        C = list.add('c');
+        A = list.add(Symbol.MINUS);
+        B = list.add(Symbol.PLUS);
+        C = list.add(Symbol.TIMES);
         list.remove(list.first.next);
         assertEquals(2, list.size);
         assertTrue(A == list.getFirst());
@@ -130,8 +130,8 @@ public class TestTokenList {
         TokenList list = new TokenList();
         Token A,B,C,D;
 
-        A = list.add('a');
-        B = new Token('b');
+        A = list.add(Symbol.MINUS);
+        B = new Token(Symbol.PLUS);
         list.replace(A, B);
         assertEquals(1,list.size);
         assertTrue(B==list.getFirst());
@@ -139,9 +139,9 @@ public class TestTokenList {
 
         list.remove(B);
 
-        A = list.add('a');
-        B = list.add('b');
-        C = new Token('c');
+        A = list.add(Symbol.MINUS);
+        B = list.add(Symbol.PLUS);
+        C = new Token(Symbol.TIMES);
 
         list.replace(A, C);
         assertEquals(2, list.size);
@@ -153,10 +153,10 @@ public class TestTokenList {
         assertTrue(B.next==null);
 
         list = new TokenList();
-        A=list.add('a');
-        B=list.add('b');
-        C=list.add('c');
-        D=new Token('d');
+        A=list.add(Symbol.MINUS);
+        B=list.add(Symbol.PLUS);
+        C=list.add(Symbol.TIMES);
+        D=new Token(Symbol.DIVIDE);
 
         list.replace(B,D);
         assertEquals(3, list.size);
@@ -173,7 +173,7 @@ public class TestTokenList {
 
         // Check when the input list has a size of 1
         TokenList list = new TokenList();
-        list.add('a');
+        list.add(Symbol.MINUS);
 
         TokenList found = list.extractSubList(list.first,list.first);
         assertEquals(0, list.size);
@@ -183,34 +183,34 @@ public class TestTokenList {
 
         // Remove entire thing
         list = new TokenList();
-        list.add('a');
-        list.add('b');
-        list.add('c');
+        list.add(Symbol.MINUS);
+        list.add(Symbol.PLUS);
+        list.add(Symbol.DIVIDE);
         found = list.extractSubList(list.first,list.last);
         assertEquals(0,list.size);
         assertEquals(3,found.size);
-        assertEquals('a',found.first.getSymbol());
-        assertEquals('c',found.last.getSymbol());
+        assertEquals(Symbol.MINUS,found.first.getSymbol());
+        assertEquals(Symbol.DIVIDE,found.last.getSymbol());
 
         // Remove stuff in the middle
         list = new TokenList();
-        list.add('a');
-        list.add('b');
-        list.add('c');
-        list.add('d');
+        list.add(Symbol.MINUS);
+        list.add(Symbol.PLUS);
+        list.add(Symbol.DIVIDE);
+        list.add(Symbol.TIMES);
         found = list.extractSubList(list.first.next,list.last.previous);
         assertEquals(2,list.size);
         assertEquals(2,found.size);
-        assertEquals('a',list.first.getSymbol());
-        assertEquals('d',list.last.getSymbol());
-        assertEquals('b',found.first.getSymbol());
-        assertEquals('c',found.last.getSymbol());
+        assertEquals(Symbol.MINUS,list.first.getSymbol());
+        assertEquals(Symbol.TIMES,list.last.getSymbol());
+        assertEquals(Symbol.PLUS,found.first.getSymbol());
+        assertEquals(Symbol.DIVIDE,found.last.getSymbol());
     }
 
     @Test
     public void Token_getType() {
         assertTrue(new Token(new VariableMatrix(null)).getType() == TokenList.Type.VARIABLE);
-        assertTrue(new Token('a').getType() == TokenList.Type.SYMBOL);
+        assertTrue(new Token(Symbol.PLUS).getType() == TokenList.Type.SYMBOL);
         assertTrue(new Token(new Function("foo")).getType() == TokenList.Type.FUNCTION);
     }
 }
