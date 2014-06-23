@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':code:main')
+}
+
+idea {
+    module {
+        name = "equation"
+    }
+}

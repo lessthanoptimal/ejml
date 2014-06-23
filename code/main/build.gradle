@@ -1,0 +1,9 @@
+dependencies {
+
+}
+
+idea {
+    module {
+        name = "main"
+    }
+}

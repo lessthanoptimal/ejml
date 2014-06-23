@@ -1,0 +1,147 @@
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    group = 'com.googlecode.efficient-java-matrix-library'
+    version = '0.26-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'osgi'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
+    sourceCompatibility = 1.6
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        maven {
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src'
+            }
+            resources {
+                srcDir 'resources/src'
+            }
+        }
+
+        test {
+            java {
+                srcDir 'test'
+                srcDir 'generate'
+                srcDir 'benchmark'
+            }
+            resources {
+                srcDir 'resources/test'
+            }
+        }
+    }
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+    }
+
+    jar {
+        manifest { // the manifest of the default jar is of type OsgiManifest
+            instruction 'Bundle-Vendor', 'EJML'
+//            instruction 'Bundle-Description', 'EJML'
+            instruction 'Bundle-DocURL', 'http://code.google.com/p/efficient-java-matrix-library/'
+        }
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    // if Maven central isn't setup in gradle.properties skip all of this
+    if( project.hasProperty('ossrhUsername') ) {
+        signing {
+            sign configurations.archives
+        }
+
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
+
+                    snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
+
+                    pom.project {
+                        name 'EJML'
+                        packaging 'pom'
+                        // optionally artifactId can be defined here
+                        description 'A fast and easy to use dense matrix linear algebra library written in Java.'
+                        url 'http://code.google.com/p/efficient-java-matrix-library/'
+
+                        scm {
+                            connection 'git@github.com:lessthanoptimal/ejml.git'
+                            developerConnection 'git@github.com:lessthanoptimal/ejml.git'
+                            url 'https://github.com/lessthanoptimal/ejml'
+                        }
+
+                        licenses {
+                            license {
+                                name 'The Apache Software License, Version 2.0'
+                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id 'pabeles'
+                                name 'Peter Abeles'
+                                email 'peter.abeles@gmail.com'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+idea {
+    project {
+        jdkName = '1.6 (64bit)'
+        languageLevel = '1.6'
+    }
+}
+
+// Disable the creation of jars for distribution.  If you don't do this it will crash
+[':code',':examples'].each {String a ->
+    project(a) {
+        if( project.hasProperty('ossrhUsername') ) {
+            signArchives.enabled = false
+        }
+        sourcesJar.enabled = false
+        javadocJar.enabled = false
+        jar.enabled = false
+        uploadArchives.enabled = false
+    }
+}
+
+
