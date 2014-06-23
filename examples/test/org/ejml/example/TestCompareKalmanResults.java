@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,6 +45,7 @@ public class TestCompareKalmanResults {
         List<KalmanFilter> all = new ArrayList<KalmanFilter>();
         all.add( new KalmanFilterOps() );
         all.add( new KalmanFilterAlg() );
+        all.add( new KalmanFilterEquation() );
         all.add( simple );
 
         DenseMatrix64F priorX = new DenseMatrix64F(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);

@@ -21,6 +21,7 @@ package org.ejml.equation;
 /**
  * @author Peter Abeles
  */
+// TODO add function to purge temporary variables.  basicaly resize and redeclare their array to size 1
 public class ManagerTempVariables {
 
     public VariableMatrix createMatrix() {
@@ -29,5 +30,13 @@ public class ManagerTempVariables {
 
     public VariableDouble createDouble() {
         return new VariableDouble(0);
+    }
+
+    public VariableDouble createDouble( double value ) {
+        return new VariableDouble(value);
+    }
+
+    public VariableInteger createInteger( int value ) {
+        return new VariableInteger(value);
     }
 }

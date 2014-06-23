@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ejml" pattern="src:*..*||test:*..*" />
+</component>

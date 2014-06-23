@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,11 +38,11 @@ public class KalmanFilterOps implements KalmanFilter{
     private DenseMatrix64F Q;
     private DenseMatrix64F H;
 
-    // sytem state estimate
+    // system state estimate
     private DenseMatrix64F x;
     private DenseMatrix64F P;
 
-    // these are predeclared for efficency reasons
+    // these are predeclared for efficiency reasons
     private DenseMatrix64F a,b;
     private DenseMatrix64F y,S,S_inv,c,d;
     private DenseMatrix64F K;

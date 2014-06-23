@@ -235,11 +235,15 @@ public class TokenList {
         }
 
         public String toString() {
-            if( variable == null ) {
-                return ""+symbol;
-            } else {
-                return variable.toString();
+            switch( getType() ) {
+                case FUNCTION:
+                    return "Func:"+function.getName();
+                case SYMBOL:
+                    return ""+symbol;
+                case VARIABLE:
+                    return variable.toString();
             }
+            throw new RuntimeException("Unknown type");
         }
     }
 

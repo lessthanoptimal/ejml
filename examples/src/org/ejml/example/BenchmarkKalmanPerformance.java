@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -164,6 +164,7 @@ public class BenchmarkKalmanPerformance {
         benchmark.filters.add( new KalmanFilterAlg() );
         benchmark.filters.add( new KalmanFilterOps());
         benchmark.filters.add( new KalmanFilterSimple());
+        benchmark.filters.add( new KalmanFilterEquation());
 
 
         benchmark.run();

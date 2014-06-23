@@ -18,17 +18,18 @@
 
 package org.ejml.equation;
 
+import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
 
 /**
  * @author Peter Abeles
  */
-// TODO pinv
+// TODO sum
+// TODO pow
+// TODO dot
 // TODO solve ? or should that be kept outside since it would be the only function on the line?
 public abstract class Operation {
-
-    public static String functionNames[] = new String[]{"inv","det","normF","trace"};
 
     public abstract void process();
 
@@ -270,6 +271,26 @@ public abstract class Operation {
         }
     }
 
+    public static Info transpose( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableMatrix mA = (VariableMatrix)A;
+                    output.matrix.reshape(mA.matrix.numCols,mA.matrix.numRows);
+                    CommonOps.transpose(mA.matrix,output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Transpose only makes sense for two matrices");
+        }
+        return ret;
+    }
+
     /**
      * Matrix inverse
      */
@@ -284,7 +305,40 @@ public abstract class Operation {
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
                     output.matrix.reshape(mA.matrix.numRows,mA.matrix.numCols);
-                    CommonOps.invert(mA.matrix,output.matrix);
+                    if( !CommonOps.invert(mA.matrix,output.matrix) )
+                        throw new RuntimeException("Inverse failed!");
+                }
+            };
+        } else {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableScalar mA = (VariableScalar)A;
+                    output.value = 1.0/mA.getDouble();
+                }
+            };
+        }
+
+        return ret;
+    }
+
+    /**
+     * Matrix pseudo-inverse
+     */
+    public static Info pinv( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableMatrix mA = (VariableMatrix)A;
+                    output.matrix.reshape(mA.matrix.numRows,mA.matrix.numCols);
+                    CommonOps.pinv(mA.matrix,output.matrix);
                 }
             };
         } else {
@@ -379,6 +433,39 @@ public abstract class Operation {
                     output.value = Math.abs(mA.getDouble());
                 }
             };
+        }
+
+        return ret;
+    }
+
+    /**
+     * Returns an identity matrix
+     */
+    public static Info eye( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableMatrix ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    DenseMatrix64F mA = ((VariableMatrix)A).matrix;
+                    output.matrix.reshape(mA.numRows,mA.numCols);
+                    CommonOps.setIdentity(output.matrix);
+                }
+            };
+        } else if( A instanceof VariableInteger ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    int N = ((VariableInteger)A).value;
+                    output.matrix.reshape(N,N);
+                    CommonOps.setIdentity(output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Unsupported variable type "+A);
         }
 
         return ret;

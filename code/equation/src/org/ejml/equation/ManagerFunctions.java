@@ -55,6 +55,16 @@ public class ManagerFunctions {
         return func.create(var0);
     }
 
+    public Operation.Info create( char op , Variable input ) {
+        switch( op ) {
+            case '\'':
+                return Operation.transpose(input, managerTemp);
+
+            default:
+                throw new RuntimeException("Unknown operation " + op);
+        }
+    }
+
     public Operation.Info create( char op , Variable left , Variable right ) {
         switch( op ) {
             case '+':
@@ -94,6 +104,20 @@ public class ManagerFunctions {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.inv(A,managerTemp);
+            }
+        });
+
+        input1.put("pinv",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.inv(A,managerTemp);
+            }
+        });
+
+        input1.put("eye",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.eye(A, managerTemp);
             }
         });
 
