@@ -37,7 +37,8 @@ subprojects {
             java {
                 srcDir 'test'
                 srcDir 'generate'
-                srcDir 'benchmark'
+                srcDir 'benchmarks/src'
+                srcDir 'benchmarks/test'
             }
             resources {
                 srcDir 'resources/test'
