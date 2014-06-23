@@ -2,6 +2,15 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.26
+
+2014/
+
+- Switched most of the build system over to Gradle
+- Added equations as a symbolic way of inputting equations similar to Matlab/Octave
+- SimpleMatrix
+  * Added plus( double )
+
 ----- Version 0.25
 
 2014/6/13

@@ -24,6 +24,8 @@ import org.ejml.ops.NormOps;
 /**
  * @author Peter Abeles
  */
+// TODO pinv
+// TODO solve ? or should that be kept outside since it would be the only function on the line?
 public abstract class Operation {
 
     public static String functionNames[] = new String[]{"inv","det","normF","trace"};
@@ -96,7 +98,7 @@ public abstract class Operation {
         Info ret = new Info();
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
-            throw new RuntimeException("matrix division not supported.  use inv() explicitly");
+            throw new RuntimeException("matrix division not supported.  use solve() or inv() explicitly.  solve is typically better");
         } else if( A instanceof VariableMatrix ) {
             final VariableMatrix output = manager.createMatrix();
             final VariableMatrix m = (VariableMatrix)A;

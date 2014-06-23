@@ -202,7 +202,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( double beta ) {
         T ret = createMatrix(numRows(),numCols());
 
-        CommonOps.add(ret.getMatrix(), beta, ret.getMatrix());
+        CommonOps.add(getMatrix(), beta, ret.getMatrix());
 
         return ret;
     }
