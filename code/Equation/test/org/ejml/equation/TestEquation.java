@@ -111,8 +111,34 @@ public class TestEquation {
     }
 
     @Test
-    public void compile_scalar() {
-        fail("Implement");
+    public void compile_double() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(6, 6, -1, 1, rand);
+        double C = 2.5;
+        double D = 1.7;
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+        eq.alias(C, "C");
+        eq.alias(D, "D");
+        eq.alias(0, "E");
+
+        VariableDouble E = eq.lookupVariable("E");
+
+        Sequence sequence = eq.compile("A=C*B");
+        SimpleMatrix expected = B.scale(C);
+        sequence.perform();
+        assertTrue(expected.isIdentical(A, 1e-15));
+
+        sequence = eq.compile("A=B*C");
+        sequence.perform();
+        assertTrue(expected.isIdentical(A, 1e-15));
+
+        sequence = eq.compile("E=C*D");
+        sequence.perform();
+        assertEquals(C * D, E.scalar, 1e-8);
     }
 
     @Test
@@ -123,6 +149,7 @@ public class TestEquation {
     @Test
     public void handleParentheses() {
         Equation eq = new Equation();
+        ManagerTempVariables managerTemp = new ManagerTempVariables();
 
         eq.alias(new DenseMatrix64F(1, 1), "A");
         eq.alias(new DenseMatrix64F(1, 1), "B");
@@ -131,14 +158,14 @@ public class TestEquation {
         // handle empty case
         Sequence sequence = new Sequence();
         TokenList tokens = eq.extractTokens("((()))()");
-        eq.handleParentheses(tokens,sequence);
+        eq.handleParentheses(tokens,sequence,managerTemp);
         assertEquals(0,sequence.operations.size());
         assertEquals(0,tokens.size);
 
         // embedded with just one variable
         sequence = new Sequence();
         tokens = eq.extractTokens("(((A)))");
-        eq.handleParentheses(tokens,sequence);
+        eq.handleParentheses(tokens,sequence,managerTemp);
         assertEquals(0,sequence.operations.size());
         assertEquals(1,tokens.size);
         assertTrue(tokens.first.isVariable());
@@ -146,7 +173,7 @@ public class TestEquation {
         // pointless
         sequence = new Sequence();
         tokens = eq.extractTokens("(A)*(B)+(C)");
-        eq.handleParentheses(tokens,sequence);
+        eq.handleParentheses(tokens,sequence,managerTemp);
         assertEquals(2,sequence.operations.size());
         assertEquals(1,tokens.size);
         assertTrue(tokens.first.isVariable());
@@ -155,6 +182,7 @@ public class TestEquation {
     @Test
     public void parseOperations() {
         Equation eq = new Equation();
+        ManagerTempVariables managerTemp = new ManagerTempVariables();
 
         eq.alias(new DenseMatrix64F(1, 1), "A");
         eq.alias(new DenseMatrix64F(1, 1), "B");
@@ -164,7 +192,7 @@ public class TestEquation {
         TokenList tokens = eq.extractTokens("");
         Sequence sequence = new Sequence();
 
-        eq.parseOperations(new char[]{'*'},tokens,sequence);
+        eq.parseOperations(new char[]{'*'},tokens,sequence,managerTemp);
         assertEquals(0,sequence.operations.size());
         assertEquals(0,tokens.size);
 
@@ -172,7 +200,7 @@ public class TestEquation {
         tokens = eq.extractTokens("B+B-A*B*A");
         sequence = new Sequence();
 
-        eq.parseOperations(new char[]{'*'},tokens,sequence);
+        eq.parseOperations(new char[]{'*'},tokens,sequence,managerTemp);
 
         assertEquals(2,sequence.operations.size());
         assertEquals(5,tokens.size);
@@ -182,7 +210,7 @@ public class TestEquation {
         tokens = eq.extractTokens("B+B*B*A-B");
         sequence = new Sequence();
 
-        eq.parseOperations(new char[]{'+','-'},tokens,sequence);
+        eq.parseOperations(new char[]{'+','-'},tokens,sequence,managerTemp);
 
         assertEquals(2,sequence.operations.size());
         assertEquals(5,tokens.size);
@@ -194,6 +222,7 @@ public class TestEquation {
     @Test
     public void createOp() {
         Equation eq = new Equation();
+        ManagerTempVariables managerTemp = new ManagerTempVariables();
 
         eq.alias(new DenseMatrix64F(1, 1), "A");
         eq.alias(new DenseMatrix64F(1, 1), "B");
@@ -206,7 +235,7 @@ public class TestEquation {
 
         Sequence sequence = new Sequence();
 
-        TokenList.Token found = eq.createOp(t0,t1,t2,tokens,sequence);
+        TokenList.Token found = eq.createOp(t0,t1,t2,tokens,sequence,managerTemp);
         assertTrue(found.isVariable());
         assertEquals(3, tokens.size);
         assertTrue('=' == tokens.first.next.getSymbol());

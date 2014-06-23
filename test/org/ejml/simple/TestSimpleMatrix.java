@@ -168,6 +168,18 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void plus_scalar() {
+        SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
+        double b = 2.5;
+        SimpleMatrix c = a.plus(b);
+
+        DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
+        CommonOps.add(a.mat,b,c_dense);
+
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
+    }
+
+    @Test
     public void dot() {
         SimpleMatrix a = SimpleMatrix.random(10,1,-1,1,rand);
         SimpleMatrix b = SimpleMatrix.random(10,1,-1,1,rand);

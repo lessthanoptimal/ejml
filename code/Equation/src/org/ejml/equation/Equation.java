@@ -39,8 +39,6 @@ import java.util.List;
  *
  * @author Peter Abeles
  */
-// TODO plus, minus, times, transpose
-// TODO support for scalar
 // TODO Recycle temporary variables
 public class Equation {
     HashMap<String,Variable> variables = new HashMap<String, Variable>();
@@ -57,16 +55,25 @@ public class Equation {
     }
 
     /**
+     * Adds a new floating point variable
+     * @param value Value of the number
+     * @param name Name in code
+     */
+    public void alias( double value , String name ) {
+        variables.put(name,new VariableDouble(value));
+    }
+
+    /**
      * Parses the equation and compiles it into a sequence which can be executed later on
      * @param equation String in simple equation format.
      * @return Sequence of operations on the variables
      */
+    // TODO handle functions single output
     // TODO handle transpose
     // TODO handle negative
-    // TODO handle scalars
-    // TODO handle functions
     // TODO handle two character (element-wise) operators
     public Sequence compile( String equation ) {
+        ManagerTempVariables managerTemp = new ManagerTempVariables();
         TokenList tokens = extractTokens(equation);
 
         if( tokens.size() < 3 )
@@ -88,7 +95,7 @@ public class Equation {
         Sequence sequence = new Sequence();
 
         TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
-        handleParentheses( tokensRight ,sequence);
+        handleParentheses( tokensRight ,sequence,managerTemp);
 
         // see if it needs to be parsed more
         if( tokensRight.size() != 1 )
@@ -97,7 +104,7 @@ public class Equation {
             throw new RuntimeException("BUG the last token must be a variable");
 
         // copy the results into the output
-        sequence.addOperation(Operation.copy((VariableMatrix)tokensRight.getFirst().getVariable(),(VariableMatrix)result));
+        sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result));
 
         return sequence;
     }
@@ -108,7 +115,7 @@ public class Equation {
      * @param tokens List of parsed tokens
      * @param sequence Sequence of operators
      */
-    protected void handleParentheses( TokenList tokens, Sequence sequence ) {
+    protected void handleParentheses( TokenList tokens, Sequence sequence , ManagerTempVariables managerTemp) {
         List<TokenList.Token> left = new ArrayList<TokenList.Token>();
         List<TokenList.Token> right = new ArrayList<TokenList.Token>();
 
@@ -139,7 +146,7 @@ public class Equation {
                     sublist.remove(sublist.first);
                     sublist.remove(sublist.last);
 
-                    TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
+                    TokenList.Token output = parseBlockNoParentheses(sublist,sequence,managerTemp);
                     // if null then it was empty inside
                     if( output != null)
                         tokens.insert(before,output);
@@ -155,7 +162,7 @@ public class Equation {
             throw new RuntimeException("Dangling parentheses");
 
         if( tokens.size() > 1 ) {
-            parseBlockNoParentheses(tokens,sequence);
+            parseBlockNoParentheses(tokens,sequence,managerTemp);
         }
     }
 
@@ -163,10 +170,11 @@ public class Equation {
      * Parses a code block with no parentheses.  After it is done there should be a single token left, which
      * is returned.
      */
-    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence) {
+    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence,
+                                                      ManagerTempVariables managerTemp) {
         // process operators depending on their priority
-        parseOperations(new char[]{'*'},tokens,sequence);
-        parseOperations(new char[]{'+','-'},tokens,sequence);
+        parseOperations(new char[]{'*','/'},tokens,sequence,managerTemp);
+        parseOperations(new char[]{'+','-'},tokens,sequence,managerTemp);
 
         if( tokens.size() > 1 )
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
@@ -181,7 +189,8 @@ public class Equation {
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperations( char ops[] , TokenList tokens, Sequence sequence ) {
+    protected void parseOperations( char ops[] , TokenList tokens, Sequence sequence ,
+                                    ManagerTempVariables managerTemp) {
 
         if( tokens.size == 0 )
             return;
@@ -199,7 +208,7 @@ public class Equation {
                         throw new RuntimeException("Two variables next to each other");
                     }
                     if( isTargetOp(token.previous,ops)) {
-                        token = createOp(token.previous.previous,token.previous,token,tokens,sequence);
+                        token = createOp(token.previous.previous,token.previous,token,tokens,sequence,managerTemp);
                     }
                 } else {
                     hasLeft = true;
@@ -218,30 +227,37 @@ public class Equation {
      * from the token list and replaced by their output.
      */
     protected TokenList.Token createOp( TokenList.Token tvar0 , TokenList.Token op , TokenList.Token tvar1 ,
-                                      TokenList tokens , Sequence sequence ) {
-        VariableMatrix var0 = (VariableMatrix)tvar0.getVariable();
-        VariableMatrix var1 = (VariableMatrix)tvar1.getVariable();
+                                      TokenList tokens , Sequence sequence ,
+                                      ManagerTempVariables managerTemp) {
+        Variable var0 = tvar0.getVariable();
+        Variable var1 = tvar1.getVariable();
 
-        VariableMatrix output = VariableMatrix.createTemp();
+        Operation.Info info;
 
         switch( op.symbol ) {
             case '+':
-                sequence.addOperation(Operation.mAdd(var0,var1,output));
+                info = Operation.mAdd(var0,var1,managerTemp);
                 break;
 
             case '-':
-                sequence.addOperation(Operation.mSub(var0,var1,output));
+                info = Operation.mSub(var0,var1,managerTemp);
                 break;
 
             case '*':
-                sequence.addOperation(Operation.mMult(var0,var1,output));
+                info = Operation.mMult(var0,var1,managerTemp);
+                break;
+
+            case '/':
+                info = Operation.mDiv(var0,var1,managerTemp);
                 break;
 
             default: throw new RuntimeException("Unknown operation "+op.symbol);
         }
 
+        sequence.addOperation(info.op);
+
         // replace the symbols with their output
-        TokenList.Token t = new TokenList.Token(output);
+        TokenList.Token t = new TokenList.Token(info.output);
         tokens.remove(tvar0);
         tokens.remove(tvar1);
         tokens.replace(op,t);
@@ -252,11 +268,11 @@ public class Equation {
     /**
      * Looks up a variable given its name
      */
-    protected Variable lookupVariable(String token) {
+    protected <T extends Variable> T lookupVariable(String token) {
         Variable result = variables.get(token);
         if( result == null )
             throw new RuntimeException("Unknown variable "+token);
-        return result;
+        return (T)result;
     }
 
     /**
@@ -277,12 +293,12 @@ public class Equation {
                     tokens.add( lookupVariable(new String(storage,0,length)));
                     word = false;
                     // if it's a special character add it.  If whitespace ignore it
-                    if( c == '*' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=') {
+                    if( c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=') {
                         tokens.add(c);
                     }
                 }
             } else {
-                if( c == '*' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=') {
+                if( c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=') {
                     tokens.add(c);
                 } else if( c == ' ' || c == '\t' || c =='\n') {
                     continue;// ignore white space
@@ -311,7 +327,7 @@ public class Equation {
     }
 
     protected static boolean isLetter( char c ) {
-        return !(c == '*' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == ' ' || c == '\t' || c == '\n');
+        return !(c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == ' ' || c == '\t' || c == '\n');
     }
 
     /**

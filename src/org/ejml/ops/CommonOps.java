@@ -1732,7 +1732,7 @@ public class CommonOps {
      * <p>
      * Performs an element by element scalar division.<br>
      * <br>
-     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
+     * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;
      * </p>
      *
      * @param alpha the amount each element is divided by.

@@ -186,6 +186,28 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
     /**
      * <p>
+     * Performs a element-wise scale operation.<br>
+     * <br>
+     * c = &beta;*a <br>
+     * <br>
+     * where c is the returned matrix, a is this matrix.
+     * </p>
+     *
+     * @see CommonOps#add( org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F)
+     *
+     * @param beta Double value
+     *
+     * @return A matrix that contains the results.
+     */
+    public T plus( double beta ) {
+        T ret = createMatrix(numRows(),numCols());
+
+        CommonOps.add(ret.getMatrix(), beta, ret.getMatrix());
+
+        return ret;
+    }
+    /**
+     * <p>
      * Performs a matrix addition and scale operation.<br>
      * <br>
      * c = a + &beta;*b <br>

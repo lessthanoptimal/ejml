@@ -18,15 +18,13 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.DenseMatrix64F;
-
 /**
  * @author Peter Abeles
  */
-public class VariableScalar extends Variable {
+public class VariableDouble extends Variable {
     public double scalar;
 
-    public VariableScalar(double scalar) {
+    public VariableDouble(double scalar) {
         super(VariableType.SCALAR);
         this.scalar = scalar;
     }
