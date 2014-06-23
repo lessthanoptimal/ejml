@@ -41,6 +41,12 @@ public class TokenList {
         }
     }
 
+    public Token add( Function variable ) {
+        Token t = new Token(variable);
+        push( t );
+        return t;
+    }
+
     public Token add( Variable variable ) {
         Token t = new Token(variable);
         push( t );
@@ -191,8 +197,13 @@ public class TokenList {
         public Token next;
         public Token previous;
 
+        public Function function;
         public Variable variable;
         public char symbol;
+
+        public Token(Function function) {
+            this.function = function;
+        }
 
         public Token(Variable variable) {
             this.variable = variable;
@@ -202,12 +213,21 @@ public class TokenList {
             this.symbol = symbol;
         }
 
-        public boolean isVariable() {
-            return variable != null;
+        public Type getType() {
+            if( function != null )
+                return Type.FUNCTION;
+            else if( variable != null )
+                return Type.VARIABLE;
+            else
+                return Type.SYMBOL;
         }
 
         public Variable getVariable() {
             return variable;
+        }
+
+        public Function getFunction() {
+            return function;
         }
 
         public char getSymbol() {
@@ -221,5 +241,12 @@ public class TokenList {
                 return variable.toString();
             }
         }
+    }
+
+    public static enum Type
+    {
+        FUNCTION,
+        VARIABLE,
+        SYMBOL
     }
 }

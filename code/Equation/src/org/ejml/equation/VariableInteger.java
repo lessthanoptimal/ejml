@@ -21,10 +21,10 @@ package org.ejml.equation;
 /**
  * @author Peter Abeles
  */
-public class VariableDouble extends VariableScalar {
-    public double value;
+public class VariableInteger extends VariableScalar {
+    public int value;
 
-    public VariableDouble(double value) {
+    public VariableInteger(int value) {
         this.value = value;
     }
 

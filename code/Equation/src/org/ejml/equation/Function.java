@@ -21,15 +21,21 @@ package org.ejml.equation;
 /**
  * @author Peter Abeles
  */
-public class VariableDouble extends VariableScalar {
-    public double value;
+public class Function {
+    public String name;
 
-    public VariableDouble(double value) {
-        this.value = value;
+    public Function(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
-    public double getDouble() {
-        return value;
+    public String toString() {
+        return "Function{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

@@ -21,7 +21,8 @@ package org.ejml.equation;
 import org.junit.Test;
 
 import static org.ejml.equation.TokenList.Token;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -207,8 +208,9 @@ public class TestTokenList {
     }
 
     @Test
-    public void Token_isVariable() {
-        assertTrue(new Token(new VariableMatrix(null)).isVariable());
-        assertFalse(new Token('a').isVariable());
+    public void Token_getType() {
+        assertTrue(new Token(new VariableMatrix(null)).getType() == TokenList.Type.VARIABLE);
+        assertTrue(new Token('a').getType() == TokenList.Type.SYMBOL);
+        assertTrue(new Token(new Function("foo")).getType() == TokenList.Type.FUNCTION);
     }
 }

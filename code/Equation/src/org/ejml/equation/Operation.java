@@ -53,37 +53,37 @@ public abstract class Operation {
                     CommonOps.mult(mA.matrix,mB.matrix,output.matrix);
                 }
             };
-        } else if( A instanceof VariableDouble && B instanceof VariableDouble ) {
+        } else if( A instanceof VariableScalar && B instanceof VariableScalar ) {
             final VariableDouble output = manager.createDouble();
             ret.output = output;
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    VariableDouble mB = (VariableDouble)B;
+                    VariableScalar mA = (VariableScalar)A;
+                    VariableScalar mB = (VariableScalar)B;
 
-                    output.scalar = mA.scalar*mB.scalar;
+                    output.value = mA.getDouble()*mB.getDouble();
                 }
             };
         } else {
             final VariableMatrix output = manager.createMatrix();
             ret.output = output;
             final VariableMatrix m;
-            final VariableDouble s;
+            final VariableScalar s;
 
             if( A instanceof VariableMatrix ) {
                 m = (VariableMatrix)A;
-                s = (VariableDouble)B;
+                s = (VariableScalar)B;
             } else {
                 m = (VariableMatrix)B;
-                s = (VariableDouble)A;
+                s = (VariableScalar)A;
             }
 
             ret.op = new Operation() {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps.scale(s.scalar,m.matrix,output.matrix);
+                    CommonOps.scale(s.getDouble(),m.matrix,output.matrix);
                 }
             };
         }
@@ -100,13 +100,13 @@ public abstract class Operation {
         } else if( A instanceof VariableMatrix ) {
             final VariableMatrix output = manager.createMatrix();
             final VariableMatrix m = (VariableMatrix)A;
-            final VariableDouble s = (VariableDouble)B;
+            final VariableScalar s = (VariableScalar)B;
             ret.output = output;
             ret.op = new Operation() {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps.divide(s.scalar,m.matrix,output.matrix);
+                    CommonOps.divide(s.getDouble(),m.matrix,output.matrix);
                 }
             };
         } else if( A instanceof VariableMatrix ) {
@@ -120,7 +120,7 @@ public abstract class Operation {
                     VariableDouble mA = (VariableDouble)A;
                     VariableDouble mB = (VariableDouble)B;
 
-                    output.scalar = mA.scalar/mB.scalar;
+                    output.value = mA.value/mB.value;
                 }
             };
         }
@@ -150,31 +150,31 @@ public abstract class Operation {
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    VariableDouble mB = (VariableDouble)B;
+                    VariableScalar mA = (VariableScalar)A;
+                    VariableScalar mB = (VariableScalar)B;
 
-                    output.scalar = mA.scalar + mB.scalar;
+                    output.value = mA.getDouble() + mB.getDouble();
                 }
             };
         } else {
             final VariableMatrix output = manager.createMatrix();
             ret.output = output;
             final VariableMatrix m;
-            final VariableDouble s;
+            final VariableScalar s;
 
             if( A instanceof VariableMatrix ) {
                 m = (VariableMatrix)A;
-                s = (VariableDouble)B;
+                s = (VariableScalar)B;
             } else {
                 m = (VariableMatrix)B;
-                s = (VariableDouble)A;
+                s = (VariableScalar)A;
             }
 
             ret.op = new Operation() {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps.add(m.matrix, s.scalar, output.matrix);
+                    CommonOps.add(m.matrix, s.getDouble(), output.matrix);
                 }
             };
         }
@@ -198,40 +198,40 @@ public abstract class Operation {
                     CommonOps.sub(mA.matrix, mB.matrix, output.matrix);
                 }
             };
-        } else if( A instanceof VariableDouble && B instanceof VariableDouble ) {
+        } else if( A instanceof VariableScalar && B instanceof VariableScalar ) {
             final VariableDouble output = manager.createDouble();
             ret.output = output;
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    VariableDouble mB = (VariableDouble)B;
+                    VariableScalar mA = (VariableScalar)A;
+                    VariableScalar mB = (VariableScalar)B;
 
-                    output.scalar = mA.scalar - mB.scalar;
+                    output.value = mA.getDouble() - mB.getDouble();
                 }
             };
         } else {
             final VariableMatrix output = manager.createMatrix();
             ret.output = output;
             final VariableMatrix m;
-            final VariableDouble s;
+            final VariableScalar s;
 
             if( A instanceof VariableMatrix ) {
                 // matrix - value
                 m = (VariableMatrix)A;
-                s = (VariableDouble)B;
+                s = (VariableScalar)B;
 
                 ret.op = new Operation() {
                     @Override
                     public void process() {
                         output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                        CommonOps.add(m.matrix, -s.scalar, output.matrix);
+                        CommonOps.add(m.matrix, -s.getDouble(), output.matrix);
                     }
                 };
             } else {
                 // value - matrix
                 m = (VariableMatrix)B;
-                s = (VariableDouble)A;
+                s = (VariableScalar)A;
 
                 ret.op = new Operation() {
                     @Override
@@ -239,7 +239,7 @@ public abstract class Operation {
                         output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
                         output.matrix.set(m.matrix);
                         CommonOps.changeSign(output.matrix);
-                        CommonOps.add(output.matrix,s.scalar);
+                        CommonOps.add(output.matrix,s.getDouble());
                     }
                 };
             }
@@ -256,11 +256,11 @@ public abstract class Operation {
                     ((VariableMatrix)dst).matrix.set(((VariableMatrix)src).matrix);
                 }
             };
-        } else if( src instanceof VariableDouble && dst instanceof VariableDouble ) {
+        } else if( src instanceof VariableScalar && dst instanceof VariableDouble ) {
             return new Operation() {
                 @Override
                 public void process() {
-                    ((VariableDouble)dst).scalar = ((VariableDouble)src).scalar;
+                    ((VariableDouble)dst).value = ((VariableScalar)src).getDouble();
                 }
             };
         } else {
@@ -291,8 +291,8 @@ public abstract class Operation {
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    output.scalar = 1.0/mA.scalar;
+                    VariableScalar mA = (VariableScalar)A;
+                    output.value = 1.0/mA.getDouble();
                 }
             };
         }
@@ -306,25 +306,23 @@ public abstract class Operation {
     public static Info det( final Variable A , ManagerTempVariables manager) {
         Info ret = new Info();
 
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
         if( A instanceof VariableMatrix ) {
-            final VariableMatrix output = manager.createMatrix();
-            ret.output = output;
             ret.op = new Operation() {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.matrix.reshape(mA.matrix.numRows,mA.matrix.numCols);
-                    CommonOps.invert(mA.matrix,output.matrix);
+                    output.value = CommonOps.det(mA.matrix);
                 }
             };
         } else {
-            final VariableDouble output = manager.createDouble();
-            ret.output = output;
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    output.scalar = 1.0/mA.scalar;
+                    VariableScalar mA = (VariableScalar)A;
+                    output.value = mA.getDouble();
                 }
             };
         }
@@ -342,15 +340,15 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.scalar=CommonOps.trace(mA.matrix);
+                    output.value=CommonOps.trace(mA.matrix);
                 }
             };
         } else {
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    output.scalar = mA.scalar;
+                    VariableScalar mA = (VariableScalar)A;
+                    output.value = mA.getDouble();
                 }
             };
         }
@@ -368,15 +366,15 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.scalar= NormOps.normF(mA.matrix);
+                    output.value= NormOps.normF(mA.matrix);
                 }
             };
         } else {
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    output.scalar = mA.scalar;
+                    VariableScalar mA = (VariableScalar)A;
+                    output.value = Math.abs(mA.getDouble());
                 }
             };
         }

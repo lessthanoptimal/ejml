@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.ejml.equation.TokenList.Type;
+
 /**
  *
  *
@@ -45,12 +47,16 @@ public class Equation {
 
     char storage[] = new char[1024];
 
+    ManagerFunctions functions = new ManagerFunctions();
+
     /**
      * Adds a new Matrix variable
      * @param variable Matrix which is to be assigned to name
      * @param name The name of the variable
      */
     public void alias( DenseMatrix64F variable , String name ) {
+        if( isReserved(name))
+            throw new RuntimeException("Reserved word or contains a reserved character");
         variables.put(name,new VariableMatrix(variable));
     }
 
@@ -60,6 +66,8 @@ public class Equation {
      * @param name Name in code
      */
     public void alias( double value , String name ) {
+        if( isReserved(name))
+            throw new RuntimeException("Reserved word or contains a reserved character");
         variables.put(name,new VariableDouble(value));
     }
 
@@ -68,12 +76,16 @@ public class Equation {
      * @param equation String in simple equation format.
      * @return Sequence of operations on the variables
      */
-    // TODO handle functions single output
     // TODO handle transpose
-    // TODO handle negative
+    // TODO tokenize integers
+    // TODO tokenize floats
     // TODO handle two character (element-wise) operators
+    // TODO handle functions with 2+ inputs
+    // TODO reference sub-matrices
     public Sequence compile( String equation ) {
         ManagerTempVariables managerTemp = new ManagerTempVariables();
+        functions.setManagerTemp(managerTemp);
+
         TokenList tokens = extractTokens(equation);
 
         if( tokens.size() < 3 )
@@ -82,11 +94,11 @@ public class Equation {
         TokenList.Token t0 = tokens.getFirst();
         TokenList.Token t1 = t0.next;
 
-        if( t1.isVariable() || t1.symbol != '=')
+        if( t1.getType() != Type.SYMBOL || t1.symbol != '=')
             throw new RuntimeException("Expected '=' symbol not "+t1);
 
         // Get the results variable
-        if( !t0.isVariable())
+        if( t0.getType() != Type.VARIABLE)
             throw new RuntimeException("Expected variable name first.  Not "+t0);
 
         Variable result = t0.getVariable();
@@ -95,12 +107,12 @@ public class Equation {
         Sequence sequence = new Sequence();
 
         TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
-        handleParentheses( tokensRight ,sequence,managerTemp);
+        handleParentheses( tokensRight ,sequence);
 
         // see if it needs to be parsed more
         if( tokensRight.size() != 1 )
             throw new RuntimeException("BUG");
-        if( !tokensRight.getLast().isVariable() )
+        if( tokensRight.getLast().getType() != Type.VARIABLE )
             throw new RuntimeException("BUG the last token must be a variable");
 
         // copy the results into the output
@@ -115,14 +127,14 @@ public class Equation {
      * @param tokens List of parsed tokens
      * @param sequence Sequence of operators
      */
-    protected void handleParentheses( TokenList tokens, Sequence sequence , ManagerTempVariables managerTemp) {
+    protected void handleParentheses( TokenList tokens, Sequence sequence ) {
         List<TokenList.Token> left = new ArrayList<TokenList.Token>();
         List<TokenList.Token> right = new ArrayList<TokenList.Token>();
 
         // find all of them
         TokenList.Token t = tokens.first;
         while( t != null ) {
-            if( !t.isVariable() ) {
+            if( t.getType() == Type.SYMBOL ) {
                 if( t.getSymbol() == '(' )
                     left.add(t);
                 else if( t.getSymbol() == ')' )
@@ -146,10 +158,19 @@ public class Equation {
                     sublist.remove(sublist.first);
                     sublist.remove(sublist.last);
 
-                    TokenList.Token output = parseBlockNoParentheses(sublist,sequence,managerTemp);
-                    // if null then it was empty inside
-                    if( output != null)
-                        tokens.insert(before,output);
+                    TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
+                    // if its a function before () then the () indicates its an input to a function
+                    if( before != null && before.getType() == Type.FUNCTION ) {
+                        if( output == null )
+                            throw new RuntimeException("Empty function input parameters");
+                        else {
+                            createFunction(before,output,tokens,sequence);
+                        }
+                    } else {
+                        // if null then it was empty inside
+                        if (output != null)
+                            tokens.insert(before, output);
+                    }
                 }
 
                 // reset and look for the next set
@@ -162,7 +183,7 @@ public class Equation {
             throw new RuntimeException("Dangling parentheses");
 
         if( tokens.size() > 1 ) {
-            parseBlockNoParentheses(tokens,sequence,managerTemp);
+            parseBlockNoParentheses(tokens,sequence);
         }
     }
 
@@ -170,11 +191,10 @@ public class Equation {
      * Parses a code block with no parentheses.  After it is done there should be a single token left, which
      * is returned.
      */
-    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence,
-                                                      ManagerTempVariables managerTemp) {
+    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
         // process operators depending on their priority
-        parseOperations(new char[]{'*','/'},tokens,sequence,managerTemp);
-        parseOperations(new char[]{'+','-'},tokens,sequence,managerTemp);
+        parseOperations(new char[]{'*','/'},tokens,sequence);
+        parseOperations(new char[]{'+','-'},tokens,sequence);
 
         if( tokens.size() > 1 )
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
@@ -189,32 +209,33 @@ public class Equation {
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperations( char ops[] , TokenList tokens, Sequence sequence ,
-                                    ManagerTempVariables managerTemp) {
+    protected void parseOperations( char ops[] , TokenList tokens, Sequence sequence) {
 
         if( tokens.size == 0 )
             return;
 
         TokenList.Token token = tokens.first;
 
-        if( !token.isVariable() )
+        if( token.getType() != Type.VARIABLE )
             throw new RuntimeException("The first token in an equation needs to be a variable and not "+token);
 
         boolean hasLeft = false;
         while( token != null ) {
-            if( token.isVariable() ) {
+            if( token.getType() == Type.FUNCTION ) {
+                throw new RuntimeException("Function encountered with no parentheses");
+            } else if( token.getType() == Type.VARIABLE ) {
                 if( hasLeft ) {
-                    if( token.previous.isVariable() ) {
+                    if( token.previous.getType() == Type.VARIABLE ) {
                         throw new RuntimeException("Two variables next to each other");
                     }
                     if( isTargetOp(token.previous,ops)) {
-                        token = createOp(token.previous.previous,token.previous,token,tokens,sequence,managerTemp);
+                        token = createOp(token.previous.previous,token.previous,token,tokens,sequence);
                     }
                 } else {
                     hasLeft = true;
                 }
             } else {
-                if( !token.previous.isVariable() ) {
+                if( token.previous.getType() == Type.SYMBOL ) {
                     throw new RuntimeException("Two symbols next to each other");
                 }
             }
@@ -226,52 +247,48 @@ public class Equation {
      * Adds a new operation to the list from the operation and two variables.  The inputs are removed
      * from the token list and replaced by their output.
      */
-    protected TokenList.Token createOp( TokenList.Token tvar0 , TokenList.Token op , TokenList.Token tvar1 ,
-                                      TokenList tokens , Sequence sequence ,
-                                      ManagerTempVariables managerTemp) {
-        Variable var0 = tvar0.getVariable();
-        Variable var1 = tvar1.getVariable();
-
-        Operation.Info info;
-
-        switch( op.symbol ) {
-            case '+':
-                info = Operation.mAdd(var0,var1,managerTemp);
-                break;
-
-            case '-':
-                info = Operation.mSub(var0,var1,managerTemp);
-                break;
-
-            case '*':
-                info = Operation.mMult(var0,var1,managerTemp);
-                break;
-
-            case '/':
-                info = Operation.mDiv(var0,var1,managerTemp);
-                break;
-
-            default: throw new RuntimeException("Unknown operation "+op.symbol);
-        }
+    protected TokenList.Token createOp( TokenList.Token left , TokenList.Token op , TokenList.Token right ,
+                                      TokenList tokens , Sequence sequence )
+    {
+        Operation.Info info = functions.create(op.symbol, left.getVariable(), right.getVariable());
 
         sequence.addOperation(info.op);
 
         // replace the symbols with their output
         TokenList.Token t = new TokenList.Token(info.output);
-        tokens.remove(tvar0);
-        tokens.remove(tvar1);
+        tokens.remove(left);
+        tokens.remove(right);
         tokens.replace(op,t);
         return t;
 
     }
 
     /**
-     * Looks up a variable given its name
+     * Adds a new operation to the list from the operation and two variables.  The inputs are removed
+     * from the token list and replaced by their output.
+     */
+    protected TokenList.Token createFunction( TokenList.Token name , TokenList.Token input , TokenList tokens , Sequence sequence )
+    {
+        Operation.Info info = functions.create(name.getFunction().getName(),input.getVariable());
+
+        sequence.addOperation(info.op);
+
+        // just a sanity check and reminder/comment
+        if( name.next == input )
+            throw new RuntimeException("BUG:  I assumed that input had not been added to the list yet");
+
+        // replace the symbols with the function's output
+        TokenList.Token t = new TokenList.Token(info.output);
+        tokens.replace(name, t);
+        return t;
+
+    }
+
+    /**
+     * Looks up a variable given its name.  If none is found then return null.
      */
     protected <T extends Variable> T lookupVariable(String token) {
         Variable result = variables.get(token);
-        if( result == null )
-            throw new RuntimeException("Unknown variable "+token);
         return (T)result;
     }
 
@@ -290,15 +307,26 @@ public class Equation {
                     storage[length++] = c;
                 } else {
                     // add the variable/function name to token list
-                    tokens.add( lookupVariable(new String(storage,0,length)));
+                    String name = new String(storage,0,length);
+                    Variable v = lookupVariable(name);
+                    if( v == null ) {
+                        if( functions.isFunctionName(name)) {
+                            tokens.add(new Function(name));
+                        } else {
+                            throw new RuntimeException("word '"+name+"' is neither a variable or function");
+                        }
+                    } else {
+                        tokens.add(v);
+                    }
+
                     word = false;
                     // if it's a special character add it.  If whitespace ignore it
-                    if( c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=') {
+                    if( isOperator(c) ) {
                         tokens.add(c);
                     }
                 }
             } else {
-                if( c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=') {
+                if( isOperator(c) ) {
                     tokens.add(c);
                 } else if( c == ' ' || c == '\t' || c =='\n') {
                     continue;// ignore white space
@@ -326,8 +354,24 @@ public class Equation {
         return false;
     }
 
+    protected static boolean isOperator( char c ) {
+        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == '\'';
+    }
+
     protected static boolean isLetter( char c ) {
-        return !(c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == ' ' || c == '\t' || c == '\n');
+        return !(isOperator(c) || c == ' ' || c == '\t' || c == '\n');
+    }
+
+    protected static boolean isReserved( String name ) {
+        for( String s : Operation.functionNames ) {
+            if( name.equals(s))
+                return true;
+        }
+        for (int i = 0; i < name.length(); i++) {
+            if( !isLetter(name.charAt(i)) )
+                return true;
+        }
+        return false;
     }
 
     /**

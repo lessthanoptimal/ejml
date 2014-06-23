@@ -21,15 +21,11 @@ package org.ejml.equation;
 /**
  * @author Peter Abeles
  */
-public class VariableDouble extends VariableScalar {
-    public double value;
+public abstract class VariableScalar extends Variable {
 
-    public VariableDouble(double value) {
-        this.value = value;
+    public VariableScalar() {
+        super(VariableType.SCALAR);
     }
 
-    @Override
-    public double getDouble() {
-        return value;
-    }
+    public abstract double getDouble();
 }
