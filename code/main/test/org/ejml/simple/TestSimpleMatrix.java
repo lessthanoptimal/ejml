@@ -579,6 +579,22 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void elementDiv() {
+        SimpleMatrix A = SimpleMatrix.random(4,5,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random(4,5,-1,1,rand);
+
+        SimpleMatrix C = A.elementDiv(B);
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            for( int j = 0; j < A.numCols(); j++ ) {
+                double expected = A.get(i,j)/B.get(i,j);
+
+                assertTrue(expected == C.get(i,j));
+            }
+        }
+    }
+
+    @Test
     public void extractMatrix() {
         SimpleMatrix a = SimpleMatrix.random(7,5, 0, 1, rand);
 

@@ -49,7 +49,7 @@ abstract class Operation {
         }
     }
 
-    public static Info mMult( final Variable A , final Variable B , ManagerTempVariables manager ) {
+    public static Info multiply(final Variable A, final Variable B, ManagerTempVariables manager) {
 
         Info ret = new Info();
 
@@ -104,7 +104,7 @@ abstract class Operation {
         return ret;
     }
 
-    public static Info mDiv( final Variable A , final Variable B , ManagerTempVariables manager ) {
+    public static Info divide(final Variable A, final Variable B, ManagerTempVariables manager) {
 
         Info ret = new Info();
 
@@ -141,7 +141,7 @@ abstract class Operation {
         return ret;
     }
 
-    public static Info mAdd( final Variable A , final Variable B , ManagerTempVariables manager ) {
+    public static Info add(final Variable A, final Variable B, ManagerTempVariables manager) {
         Info ret = new Info();
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
@@ -195,7 +195,7 @@ abstract class Operation {
         return ret;
     }
 
-    public static Info mSub( final Variable A , final Variable B , ManagerTempVariables manager ) {
+    public static Info subtract(final Variable A, final Variable B, ManagerTempVariables manager) {
         Info ret = new Info();
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
@@ -297,7 +297,7 @@ abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output,mA.matrix.numRows,mA.matrix.numCols);
-                    CommonOps.elementMult(mA.matrix, mB.matrix, output.matrix);
+                    CommonOps.elementDiv(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else {

@@ -122,6 +122,26 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_elementWise() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix R = new SimpleMatrix(6, 6);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+        eq.alias(C.getMatrix(), "C");
+        eq.alias(R.getMatrix(), "R");
+
+        Sequence sequence = eq.compile("R=A.*(B./C)");
+        SimpleMatrix expected = A.elementMult(B.elementDiv(C));
+        sequence.perform();
+        assertTrue(expected.isIdentical(R, 1e-15));
+    }
+
+    @Test
     public void compile_double() {
         Equation eq = new Equation();
 
@@ -149,6 +169,11 @@ public class TestEquation {
         sequence = eq.compile("E=2.5*D");
         sequence.perform();
         assertEquals(C * D, E.value, 1e-8);
+
+        // try exponential formats
+        sequence = eq.compile("E=2.001e-6*1e3");
+        sequence.perform();
+        assertEquals(2.001e-6*1e3, E.value, 1e-8);
     }
 
     /**

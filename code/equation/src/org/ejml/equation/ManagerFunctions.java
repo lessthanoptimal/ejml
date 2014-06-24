@@ -91,16 +91,22 @@ public class ManagerFunctions {
     public Operation.Info create( Symbol op , Variable left , Variable right ) {
         switch( op ) {
             case PLUS:
-                return Operation.mAdd(left, right, managerTemp);
+                return Operation.add(left, right, managerTemp);
 
             case MINUS:
-                return Operation.mSub(left, right, managerTemp);
+                return Operation.subtract(left, right, managerTemp);
 
             case TIMES:
-                return Operation.mMult(left, right, managerTemp);
+                return Operation.multiply(left, right, managerTemp);
 
             case DIVIDE:
-                return Operation.mDiv(left, right, managerTemp);
+                return Operation.divide(left, right, managerTemp);
+
+            case ELEMENT_DIVIDE:
+                return Operation.elementDivision(left, right, managerTemp);
+
+            case ELEMENT_TIMES:
+                return Operation.elementMult(left, right, managerTemp);
 
             default:
                 throw new RuntimeException("Unknown operation " + op);

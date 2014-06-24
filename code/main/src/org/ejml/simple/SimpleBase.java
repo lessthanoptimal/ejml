@@ -898,6 +898,24 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
     /**
      * <p>
+     * Returns a matrix which is the result of an element by element division of 'this' and 'b':
+     * c<sub>i,j</sub> = a<sub>i,j</sub>/b<sub>i,j</sub>
+     * </p>
+     *
+     * @param b A simple matrix.
+     * @return The element by element division of 'this' and 'b'.
+     */
+    public T elementDiv( T b )
+    {
+        T c = createMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementDiv(mat, b.getMatrix(), c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
      * Returns a new matrix whose elements are the negative of 'this' matrix's elements.<br>
      * <br>
      * b<sub>ij</sub> = -a<sub>ij</sub>

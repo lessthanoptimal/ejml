@@ -89,7 +89,7 @@ import static org.ejml.equation.TokenList.Type;
  * '='        (Matrix-Matrix, Scalar-Scalar) assignment by value
  * '(' ')'    The usual parentheses.
  * </pre>
- * Order of operations:  ' precedes * / precedes + -
+ * Order of operations:  [ ' ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
  * </p>
  *
  * <p>
@@ -100,7 +100,6 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
-// TODO Floats in exponential notation
 // TODO Recycle temporary variables
 // TODO handle functions with 2+ inputs
 // TODO reference sub-matrices
@@ -263,7 +262,7 @@ public class Equation {
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
         // process operators depending on their priority
-        parseOperations(new Symbol[]{Symbol.TIMES,Symbol.DIVIDE},tokens,sequence);
+        parseOperations(new Symbol[]{Symbol.TIMES,Symbol.DIVIDE,Symbol.ELEMENT_TIMES,Symbol.ELEMENT_DIVIDE},tokens,sequence);
         parseOperations(new Symbol[]{Symbol.PLUS,Symbol.MINUS},tokens,sequence);
 
         if( tokens.size() > 1 )
@@ -423,9 +422,12 @@ public class Equation {
                         tokens.add(Symbol.lookup(c));
                     }
                 }
-            } else if( type == TokenType.INTEGER ) {
+            } else if( type == TokenType.INTEGER ) { // Handle integer numbers.  Until proven to be a float
                 if( c == '.' ) {
                     type = TokenType.FLOAT;
+                    storage[length++] = c;
+                } else if( c == 'e' || c == 'E' ) {
+                    type = TokenType.FLOAT_EXP;
                     storage[length++] = c;
                 } else if( Character.isDigit(c) ) {
                     storage[length++] = c;
@@ -440,9 +442,12 @@ public class Equation {
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an integer "+c);
                 }
-            } else if( type == TokenType.FLOAT ) {
+            } else if( type == TokenType.FLOAT ) { // Handle floating point numbers
                 if( c == '.') {
-                   throw new RuntimeException("Unexpected '.' in a float");
+                    throw new RuntimeException("Unexpected '.' in a float");
+                } else if( c == 'e' || c == 'E' ) {
+                    storage[length++] = c;
+                    type = TokenType.FLOAT_EXP;
                 } else if( Character.isDigit(c) ) {
                     storage[length++] = c;
                 } else if( isOperator(c) || Character.isWhitespace(c) ) {
@@ -455,6 +460,32 @@ public class Equation {
                     }
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an float "+c);
+                }
+            } else if( type == TokenType.FLOAT_EXP ) { // Handle floating point numbers in exponential format
+                boolean end = false;
+                if( c == '-' ) {
+                    char p = storage[length-1];
+                    if( p == 'e' || p == 'E') {
+                        storage[length++] = c;
+                    } else {
+                        end = true;
+                    }
+                } else if( Character.isDigit(c) ) {
+                    storage[length++] = c;
+                } else if( isOperator(c) || Character.isWhitespace(c) ) {
+                    end = true;
+                } else {
+                    throw new RuntimeException("Unexpected character at the end of an float "+c);
+                }
+
+                if( end ) {
+                    double value = Double.parseDouble( new String(storage, 0, length));
+                    tokens.add(managerTemp.createDouble(value));
+                    type = TokenType.UNKNOWN;
+                    // if it's a special character add it.  If whitespace ignore it
+                    if (isOperator(c)) {
+                        tokens.add(Symbol.lookup(c));
+                    }
                 }
             } else {
                 if( isOperator(c) ) {
@@ -485,7 +516,7 @@ public class Equation {
             tokens.add( lookupVariable(new String(storage,0,length)));
         } else if( type == TokenType.INTEGER ) {
             tokens.add(managerTemp.createInteger(Integer.parseInt( new String(storage, 0, length))));
-        } else if( type == TokenType.FLOAT ) {
+        } else if( type == TokenType.FLOAT || type == TokenType.FLOAT_EXP ) {
             tokens.add(managerTemp.createDouble(Double.parseDouble( new String(storage, 0, length))));
         }
 
@@ -497,6 +528,7 @@ public class Equation {
         WORD,
         INTEGER,
         FLOAT,
+        FLOAT_EXP,
         UNKNOWN
     }
 
