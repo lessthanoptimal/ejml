@@ -94,14 +94,15 @@ import static org.ejml.equation.TokenList.Type;
  *
  * <p>
  * <pre>
- * [1] It is not compiled into Java byte-code, but into a straight forward sequence of operations stored in a list.
+ * [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a regular List.
  * </pre>
  * </p>
  *
  * @author Peter Abeles
  */
-// TODO Recycle temporary variables
 // TODO handle functions with 2+ inputs
+// TODO Change parsing so that operations specify a pattern.
+// TODO Recycle temporary variables
 // TODO reference sub-matrices
 // TODO intelligently handle identity matrices
 public class Equation {
@@ -198,58 +199,49 @@ public class Equation {
      */
     protected void handleParentheses( TokenList tokens, Sequence sequence ) {
         List<TokenList.Token> left = new ArrayList<TokenList.Token>();
-        List<TokenList.Token> right = new ArrayList<TokenList.Token>();
 
         // find all of them
         TokenList.Token t = tokens.first;
         while( t != null ) {
+            TokenList.Token next = t.next;
             if( t.getType() == Type.SYMBOL ) {
                 if( t.getSymbol() == Symbol.PAREN_LEFT )
                     left.add(t);
-                else if( t.getSymbol() == Symbol.PAREN_RIGHT )
-                    right.add(t);
-            }
-            t = t.next;
+                else if( t.getSymbol() == Symbol.PAREN_RIGHT ) {
+                    if( left.isEmpty() )
+                        throw new RuntimeException(") found with no matching (");
 
-            if( left.size() >= 1 && left.size() == right.size() ) {
-                // handle the code inside the one or more embedded parentheses
-
-                // process from last to first
-                for (int i = left.size()-1; i >= 0; i--) {
-                    TokenList.Token a = left.get(i);
-                    TokenList.Token b = right.get(left.size()-1-i);
+                    TokenList.Token a = left.remove(left.size()-1);
 
                     // remember the element before so the new one can be inserted afterwards
                     TokenList.Token before = a.previous;
 
-                    TokenList sublist = tokens.extractSubList(a,b);
+                    TokenList sublist = tokens.extractSubList(a,t);
                     // remove parentheses
                     sublist.remove(sublist.first);
                     sublist.remove(sublist.last);
 
-                    TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
                     // if its a function before () then the () indicates its an input to a function
                     if( before != null && before.getType() == Type.FUNCTION ) {
-                        if( output == null )
+                        List<TokenList.Token> inputs = parseParameterCommaBlock(sublist, sequence);
+                        if( inputs.isEmpty() )
                             throw new RuntimeException("Empty function input parameters");
                         else {
-                            createFunction(before, output, tokens, sequence);
+                            createFunction(before, inputs, tokens, sequence);
                         }
                     } else {
                         // if null then it was empty inside
+                        TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
                         if (output != null)
                             tokens.insert(before, output);
                     }
                 }
-
-                // reset and look for the next set
-                left.clear();
-                right.clear();
             }
+            t = next;
         }
 
-        if( !left.isEmpty() || !right.isEmpty() )
-            throw new RuntimeException("Dangling parentheses");
+        if( !left.isEmpty())
+            throw new RuntimeException("Dangling ( parentheses");
 
         if( tokens.size() > 1 ) {
             parseBlockNoParentheses(tokens,sequence);
@@ -257,13 +249,59 @@ public class Equation {
     }
 
     /**
-     * Parses a code block with no parentheses.  After it is done there should be a single token left, which
-     * is returned.
+     * Searches for commas in the set of tokens.  Used for inputs to functions
+     *
+     * @return List of output tokens between the commas
+     */
+    protected List<TokenList.Token> parseParameterCommaBlock( TokenList tokens, Sequence sequence ) {
+        // find all the comma tokens
+        List<TokenList.Token> commas = new ArrayList<TokenList.Token>();
+        TokenList.Token token = tokens.first;
+
+        while( token != null ) {
+            if( token.getType() == Type.SYMBOL && token.getSymbol() == Symbol.COMMA ) {
+                commas.add(token);
+            }
+            token = token.next;
+        }
+
+        List<TokenList.Token> output = new ArrayList<TokenList.Token>();
+        if( commas.isEmpty() ) {
+            output.add(parseBlockNoParentheses(tokens, sequence));
+        } else {
+            TokenList.Token before = tokens.first;
+            for (int i = 0; i < commas.size(); i++) {
+                TokenList.Token after = commas.get(i);
+                if( before == after )
+                    throw new RuntimeException("No empty function inputs allowed!");
+                TokenList.Token tmp = after.next;
+                TokenList sublist = tokens.extractSubList(before,after);
+                sublist.remove(after);// remove the comma
+                output.add(parseBlockNoParentheses(sublist, sequence));
+                before = tmp;
+            }
+
+            // if the last character is a comma then after.next above will be null and thus before is null
+            if( before == null )
+                throw new RuntimeException("No empty function inputs allowed!");
+
+            TokenList.Token after = tokens.last;
+            TokenList sublist = tokens.extractSubList(before, after);
+            output.add(parseBlockNoParentheses(sublist, sequence));
+        }
+
+        return output;
+    }
+
+    /**
+     * Parses a code block with no parentheses and no commas.  After it is done there should be a single token left,
+     * which is returned.
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
         // process operators depending on their priority
-        parseOperations(new Symbol[]{Symbol.TIMES,Symbol.DIVIDE,Symbol.ELEMENT_TIMES,Symbol.ELEMENT_DIVIDE},tokens,sequence);
-        parseOperations(new Symbol[]{Symbol.PLUS,Symbol.MINUS},tokens,sequence);
+        parseOperationsL(tokens,sequence);
+        parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.DIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
+        parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
         if( tokens.size() > 1 )
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
@@ -272,13 +310,43 @@ public class Equation {
     }
 
     /**
-     * Parses all tokens after input 'token' and adds operations to sequence.
+     * Parses operations where the input comes from variables to its left only.  Hard coded to only look
+     * for transpose for now
+     *
+     * @param tokens List of all the tokens
+     * @param sequence List of operation sequence
+     */
+    protected void parseOperationsL(TokenList tokens, Sequence sequence) {
+
+        if( tokens.size == 0 )
+            return;
+
+        TokenList.Token token = tokens.first;
+
+        if( token.getType() != Type.VARIABLE )
+            throw new RuntimeException("The first token in an equation needs to be a variable and not "+token);
+
+        while( token != null ) {
+            if( token.getType() == Type.FUNCTION ) {
+                throw new RuntimeException("Function encountered with no parentheses");
+            } else if( token.getType() == Type.SYMBOL && token.getSymbol() == Symbol.TRANSPOSE) {
+                if( token.previous.getType() == Type.VARIABLE )
+                    token = insertTranspose(token.previous,tokens,sequence);
+                else
+                    throw new RuntimeException("Expected variable before tranpose");
+            }
+            token = token.next;
+        }
+    }
+
+    /**
+     * Parses operations where the input comes from variables to its left and right
      *
      * @param ops List of operations which should be parsed
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperations( Symbol ops[] , TokenList tokens, Sequence sequence) {
+    protected void parseOperationsLR(Symbol ops[], TokenList tokens, Sequence sequence) {
 
         if( tokens.size == 0 )
             return;
@@ -293,13 +361,6 @@ public class Equation {
             if( token.getType() == Type.FUNCTION ) {
                 throw new RuntimeException("Function encountered with no parentheses");
             } else if( token.getType() == Type.VARIABLE ) {
-                // look ahead to see if the variable is transposed and if so transpose it
-                if( token.next != null ) {
-                    if( token.next.getSymbol() == Symbol.TRANSPOSE) {
-                        token = insertTranspose(token,tokens,sequence);
-                    }
-                }
-
                 if( hasLeft ) {
                     if( token.previous.getType() == Type.VARIABLE ) {
                         throw new RuntimeException("Two variables next to each other");
@@ -312,7 +373,7 @@ public class Equation {
                 }
             } else {
                 if( token.previous.getType() == Type.SYMBOL ) {
-                    throw new RuntimeException("Two symbols next to each other");
+                    throw new RuntimeException("Two symbols next to each other. "+token.previous+" and "+token);
                 }
             }
             token = token.next;
@@ -364,15 +425,20 @@ public class Equation {
      * Adds a new operation to the list from the operation and two variables.  The inputs are removed
      * from the token list and replaced by their output.
      */
-    protected TokenList.Token createFunction( TokenList.Token name , TokenList.Token input , TokenList tokens , Sequence sequence )
+    protected TokenList.Token createFunction( TokenList.Token name , List<TokenList.Token> inputs , TokenList tokens , Sequence sequence )
     {
-        Operation.Info info = functions.create(name.getFunction().getName(),input.getVariable());
+        Operation.Info info;
+        if( inputs.size() == 1 )
+            info = functions.create(name.getFunction().getName(),inputs.get(0).getVariable());
+        else {
+            List<Variable> vars = new ArrayList<Variable>();
+            for (int i = 0; i < inputs.size(); i++) {
+                vars.add(inputs.get(i).getVariable());
+            }
+            info = functions.create(name.getFunction().getName(), vars );
+        }
 
         sequence.addOperation(info.op);
-
-        // just a sanity check and reminder/comment
-        if( name.next == input )
-            throw new RuntimeException("BUG:  I assumed that input had not been added to the list yet");
 
         // replace the symbols with the function's output
         TokenList.Token t = new TokenList.Token(info.output);
@@ -548,7 +614,7 @@ public class Equation {
     }
 
     protected static boolean isOperator( char c ) {
-        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == '\'' || c == '.';
+        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == '\'' || c == '.' || c == ',';
     }
 
     /**

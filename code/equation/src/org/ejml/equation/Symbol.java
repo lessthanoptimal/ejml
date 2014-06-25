@@ -34,11 +34,13 @@ public enum Symbol {
     ASSIGN,
     PAREN_LEFT,
     PAREN_RIGHT,
+    COMMA,
     TRANSPOSE;
 
     public static Symbol lookup( char c ) {
         switch( c ) {
             case '.': return PERIOD;
+            case ',': return COMMA;
             case '\'': return TRANSPOSE;
             case '+': return PLUS;
             case '-': return MINUS;

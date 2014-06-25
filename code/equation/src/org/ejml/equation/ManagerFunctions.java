@@ -19,6 +19,7 @@
 package org.ejml.equation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public class ManagerFunctions {
 
     // List of functions which take in N inputs
     Map<String,Input1> input1 = new HashMap<String,Input1>();
-    Map<String,Input2> input2 = new HashMap<String,Input2>();
+    Map<String,InputN> inputN = new HashMap<String,InputN>();
 
     // Reference to temporary variable manager
     protected ManagerTempVariables managerTemp;
@@ -46,7 +47,7 @@ public class ManagerFunctions {
     public boolean isFunctionName( String s ) {
         if( input1.containsKey(s))
             return true;
-        if( input2.containsKey(s))
+        if( inputN.containsKey(s))
             return true;
 
         return false;
@@ -63,6 +64,19 @@ public class ManagerFunctions {
         if( func == null )
             return null;
         return func.create(var0);
+    }
+
+    /**
+     * Create a new instance of single input functions
+     * @param name function name
+     * @param vars Input variables
+     * @return Resulting operation
+     */
+    public Operation.Info create( String name , List<Variable> vars ) {
+        InputN func = inputN.get(name);
+        if( func == null )
+            return null;
+        return func.create(vars);
     }
 
     /**
@@ -136,8 +150,8 @@ public class ManagerFunctions {
      * @param name Name of function
      * @param function Function factory
      */
-    public void add( String name , Input2 function ) {
-        input2.put(name,function);
+    public void add( String name , InputN function ) {
+        inputN.put(name,function);
     }
 
     /**
@@ -185,6 +199,14 @@ public class ManagerFunctions {
                 return Operation.trace(A, managerTemp);
             }
         });
+
+        inputN.put("kron",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.kron(inputs.get(0),inputs.get(1),managerTemp);
+            }
+        });
     }
 
     /**
@@ -197,7 +219,7 @@ public class ManagerFunctions {
     /**
      * Creates a new instance of functions from two variables
      */
-    public static interface Input2 {
-        Operation.Info create( Variable A , Variable B );
+    public static interface InputN {
+        Operation.Info create( List<Variable> inputs );
     }
 }

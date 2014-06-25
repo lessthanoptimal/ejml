@@ -342,7 +342,7 @@ abstract class Operation {
                 }
             };
         } else {
-            throw new RuntimeException("Transpose only makes sense for two matrices");
+            throw new RuntimeException("Transpose only makes sense for a matrix");
         }
         return ret;
     }
@@ -522,6 +522,31 @@ abstract class Operation {
             };
         } else {
             throw new RuntimeException("Unsupported variable type "+A);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Kronecker product
+     */
+    public static Info kron( final Variable A , final Variable B, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    DenseMatrix64F mA = ((VariableMatrix)A).matrix;
+                    DenseMatrix64F mB = ((VariableMatrix)B).matrix;
+                    output.matrix.reshape(mA.numRows * mB.numRows, mA.numCols * mB.numCols);
+                    CommonOps.kron(mA, mB, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Both inputs must be matrices ");
         }
 
         return ret;

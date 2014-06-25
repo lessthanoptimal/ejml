@@ -212,6 +212,32 @@ public class TestEquation {
         } catch( RuntimeException ignore ){}
     }
 
+    /**
+     * Function with two input
+     */
+    @Test
+    public void compile_function_N() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(4, 5, -1, 1, rand);
+        SimpleMatrix R = new SimpleMatrix(12, 20);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+        eq.alias(R.getMatrix(), "R");
+
+        Sequence sequence = eq.compile("R=kron(A,B)");
+        SimpleMatrix expected = A.kron(B);
+        sequence.perform();
+        assertTrue(expected.isIdentical(R, 1e-15));
+
+        sequence = eq.compile("R=kron(A+(A')',(B+B))");
+        expected = A.plus(A).kron(B.plus(B));
+        sequence.perform();
+        assertTrue(expected.isIdentical(R, 1e-15));
+    }
+
     @Test
     public void handleParentheses() {
         Equation eq = new Equation();
@@ -239,7 +265,7 @@ public class TestEquation {
 
         // pointless
         sequence = new Sequence();
-        tokens = eq.extractTokens("(A)*(B)+(C)",managerTemp);
+        tokens = eq.extractTokens("((A)*(B)+(C))",managerTemp);
         eq.handleParentheses(tokens,sequence);
         assertEquals(2,sequence.operations.size());
         assertEquals(1,tokens.size);
@@ -260,7 +286,7 @@ public class TestEquation {
         TokenList tokens = eq.extractTokens("",managerTemp);
         Sequence sequence = new Sequence();
 
-        eq.parseOperations(new Symbol[]{Symbol.TIMES},tokens,sequence);
+        eq.parseOperationsLR(new Symbol[]{Symbol.TIMES}, tokens, sequence);
         assertEquals(0,sequence.operations.size());
         assertEquals(0,tokens.size);
 
@@ -268,7 +294,7 @@ public class TestEquation {
         tokens = eq.extractTokens("B+B-A*B*A",managerTemp);
         sequence = new Sequence();
 
-        eq.parseOperations(new Symbol[]{Symbol.TIMES},tokens,sequence);
+        eq.parseOperationsLR(new Symbol[]{Symbol.TIMES}, tokens, sequence);
 
         assertEquals(2,sequence.operations.size());
         assertEquals(5,tokens.size);
@@ -278,7 +304,7 @@ public class TestEquation {
         tokens = eq.extractTokens("B+B*B*A-B",managerTemp);
         sequence = new Sequence();
 
-        eq.parseOperations(new Symbol[]{Symbol.PLUS,Symbol.MINUS},tokens,sequence);
+        eq.parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
         assertEquals(2,sequence.operations.size());
         assertEquals(5,tokens.size);
