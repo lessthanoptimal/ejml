@@ -10,6 +10,7 @@ Date format: year/month/day
 - Added equations as a symbolic way of inputting equations similar to Matlab/Octave
 - SimpleMatrix
   * Added plus( double )
+  * Added elementDiv()
 
 ----- Version 0.25
 

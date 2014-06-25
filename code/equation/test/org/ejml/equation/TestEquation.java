@@ -227,15 +227,43 @@ public class TestEquation {
         eq.alias(B.getMatrix(), "B");
         eq.alias(R.getMatrix(), "R");
 
-        Sequence sequence = eq.compile("R=kron(A,B)");
+        eq.process("R=kron(A,B)");
         SimpleMatrix expected = A.kron(B);
-        sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
 
-        sequence = eq.compile("R=kron(A+(A')',(B+B))");
+        eq.process("R=kron(A+(A')',(B+B))");
         expected = A.plus(A).kron(B.plus(B));
-        sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
+    }
+
+    /**
+     * Test concatenate functions
+     */
+    @Test
+    public void compile_concat() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(1, 1, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(2, 1, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random(3, 1, -1, 1, rand);
+        SimpleMatrix V = new SimpleMatrix(6,1);
+        SimpleMatrix H = new SimpleMatrix(1,6);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+        eq.alias(C.getMatrix(), "C");
+        eq.alias(V.getMatrix(), "V");
+        eq.alias(H.getMatrix(), "H");
+
+        eq.process("H=catH(A',B',C')");
+        assertEquals(A.get(0, 0), H.get(0, 0), 1e-8);
+        assertEquals(B.get(0,0),H.get(0,1),1e-8);
+        assertEquals(C.get(0,0),H.get(0,3),1e-8);
+
+        eq.process("V=catV(A,B,C)");
+        assertEquals(A.get(0,0),H.get(0,0),1e-8);
+        assertEquals(B.get(0, 0), H.get(0, 1), 1e-8);
+        assertEquals(C.get(0, 0), H.get(0, 3), 1e-8);
     }
 
     @Test

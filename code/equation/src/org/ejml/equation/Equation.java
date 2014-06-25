@@ -73,6 +73,9 @@ import static org.ejml.equation.TokenList.Type;
  * inv(A)     Inverse of a matrix
  * pinv(A)    Pseudo-inverse of a matrix
  * trace(A)   Trace of the matrix
+ * kron(A,B)  Kronecker product
+ * catV(...)  Vertically concatenates 1 or more matrices. e.g. catV(A,B,C)
+ * catH(...)  Horizontally concatenates 1 or more matrices. e.g. catH(A,B,C)
  * </pre>
  * </p>
  *
@@ -100,7 +103,6 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
-// TODO handle functions with 2+ inputs
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO reference sub-matrices
@@ -614,7 +616,8 @@ public class Equation {
     }
 
     protected static boolean isOperator( char c ) {
-        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '=' || c == '\'' || c == '.' || c == ',';
+        return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '[' || c == ']' ||
+               c == '=' || c == '\'' || c == '.' || c == ',';
     }
 
     /**

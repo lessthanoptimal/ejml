@@ -34,6 +34,8 @@ public enum Symbol {
     ASSIGN,
     PAREN_LEFT,
     PAREN_RIGHT,
+    BRACKET_LEFT,
+    BRACKET_RIGHT,
     COMMA,
     TRANSPOSE;
 
@@ -49,6 +51,8 @@ public enum Symbol {
             case '=': return ASSIGN;
             case '(': return PAREN_LEFT;
             case ')': return PAREN_RIGHT;
+            case '[': return BRACKET_LEFT;
+            case ']': return BRACKET_RIGHT;
         }
         throw new RuntimeException("Unknown type "+c);
     }

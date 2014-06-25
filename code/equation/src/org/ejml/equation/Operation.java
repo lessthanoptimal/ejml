@@ -22,6 +22,8 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.NormOps;
 
+import java.util.List;
+
 /**
  * Performs math operations.
  *
@@ -548,6 +550,84 @@ abstract class Operation {
         } else {
             throw new RuntimeException("Both inputs must be matrices ");
         }
+
+        return ret;
+    }
+
+    public static Info catV( final List<Variable> inputs, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if (inputs.size() == 0)
+            throw new RuntimeException("There must be at least one input to catV");
+
+        for (int i = 0; i < inputs.size(); i++) {
+            if (!(inputs.get(i) instanceof VariableMatrix))
+                throw new RuntimeException("All inputs to catV must be a matrix");
+        }
+
+        ret.op = new Operation() {
+            @Override
+            public void process() {
+                int numRows = 0, numCols;
+
+                numCols = ((VariableMatrix) inputs.get(0)).matrix.numCols;
+
+                for (int i = 0; i < inputs.size(); i++) {
+                    DenseMatrix64F m = ((VariableMatrix) inputs.get(i)).matrix;
+                    numRows += m.numRows;
+                }
+
+                output.matrix.reshape(numRows, numCols);
+
+                int y = 0;
+                for (int i = 0; i < inputs.size(); i++) {
+                    DenseMatrix64F m = ((VariableMatrix) inputs.get(i)).matrix;
+                    CommonOps.insert(m,output.matrix, y, 0);
+                    y += m.numRows;
+                }
+            }
+        };
+        return ret;
+    }
+
+
+    public static Info catH( final List<Variable> inputs, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( inputs.size() == 0 )
+            throw new RuntimeException("There must be at least one input to catH");
+
+        for (int i = 0; i < inputs.size(); i++) {
+            if( !(inputs.get(i) instanceof VariableMatrix) )
+                throw new RuntimeException("All inputs to catH must be a matrix");
+        }
+
+        ret.op = new Operation() {
+            @Override
+            public void process() {
+                int numRows,numCols=0;
+
+                numRows = ((VariableMatrix)inputs.get(0)).matrix.numRows;
+
+                for (int i = 0; i < inputs.size(); i++) {
+                    DenseMatrix64F m = ((VariableMatrix)inputs.get(i)).matrix;
+                    numCols += m.numCols;
+                }
+
+                output.matrix.reshape(numRows,numCols);
+
+                int x = 0;
+                for (int i = 0; i < inputs.size(); i++) {
+                    DenseMatrix64F m = ((VariableMatrix)inputs.get(i)).matrix;
+                    CommonOps.insert(m,output.matrix,0,x);
+                    x += m.numCols;
+                }
+            }
+        };
 
         return ret;
     }

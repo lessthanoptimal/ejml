@@ -207,6 +207,19 @@ public class ManagerFunctions {
                 return Operation.kron(inputs.get(0),inputs.get(1),managerTemp);
             }
         });
+
+        inputN.put("catV",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                return Operation.catV(inputs, managerTemp);
+            }
+        });
+        inputN.put("catH",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                return Operation.catH(inputs, managerTemp);
+            }
+        });
     }
 
     /**
