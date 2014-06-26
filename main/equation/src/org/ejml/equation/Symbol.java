@@ -37,7 +37,8 @@ public enum Symbol {
     BRACKET_LEFT,
     BRACKET_RIGHT,
     COMMA,
-    TRANSPOSE;
+    TRANSPOSE,
+    COLON;
 
     public static Symbol lookup( char c ) {
         switch( c ) {
@@ -53,6 +54,7 @@ public enum Symbol {
             case ')': return PAREN_RIGHT;
             case '[': return BRACKET_LEFT;
             case ']': return BRACKET_RIGHT;
+            case ':': return COLON;
         }
         throw new RuntimeException("Unknown type "+c);
     }

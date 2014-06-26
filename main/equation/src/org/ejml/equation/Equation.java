@@ -617,7 +617,7 @@ public class Equation {
 
     protected static boolean isOperator( char c ) {
         return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '[' || c == ']' ||
-               c == '=' || c == '\'' || c == '.' || c == ',';
+               c == '=' || c == '\'' || c == '.' || c == ',' || c == ':';
     }
 
     /**

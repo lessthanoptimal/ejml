@@ -4,6 +4,6 @@ dependencies {
 
 idea {
     module {
-        name = "main"
+        name = "EJML Core"
     }
 }

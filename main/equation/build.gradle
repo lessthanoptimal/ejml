@@ -1,10 +1,9 @@
 dependencies {
     compile project(':main:core')
-    compile project(':main:equation')
 }
 
 idea {
     module {
-        name = "Examples"
+        name = "EJML Equation"
     }
 }
