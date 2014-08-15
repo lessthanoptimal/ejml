@@ -220,6 +220,12 @@ public class ManagerFunctions {
                 return Operation.catH(inputs, managerTemp);
             }
         });
+        inputN.put("extract",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                return Operation.extract(inputs, managerTemp);
+            }
+        });
     }
 
     /**

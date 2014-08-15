@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,7 +76,7 @@ public class NaiveDeterminant {
      * <p>
      * A simple and inefficient algorithm for computing the determinant. This should never be used.
      * It is at least two orders of magnitude slower than {@link DeterminantFromMinor}. This is included
-     * to provide a point of comparision for other algorithms.
+     * to provide a point of comparison for other algorithms.
      * </p>
      * @param mat The matrix that the determinant is to be computed from
      * @return The determinant.

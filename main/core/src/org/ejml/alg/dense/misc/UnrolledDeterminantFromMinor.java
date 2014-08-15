@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,19 +32,14 @@ public class UnrolledDeterminantFromMinor {
     public static final int MAX = 6;
     
     public static double det( RowD1Matrix64F mat ) {
-        if( mat.numRows == 2 ) {
-            return det2(mat);
-        } else if( mat.numRows == 3 ) {
-            return det3(mat);            
-        } else if( mat.numRows == 4 ) {
-            return det4(mat);            
-        } else if( mat.numRows == 5 ) {
-            return det5(mat);            
-        } else if( mat.numRows == 6 ) {
-            return det6(mat);            
+        switch( mat.numRows ) {
+            case 2: return det2(mat);
+            case 3: return det3(mat);
+            case 4: return det4(mat);
+            case 5: return det5(mat);
+            case 6: return det6(mat);
+            default: throw new IllegalArgumentException("Not supported");
         }
-        
-        throw new IllegalArgumentException("Not supported");
     }
 
     public static double det2( RowD1Matrix64F mat )

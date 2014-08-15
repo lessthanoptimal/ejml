@@ -102,6 +102,36 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_parentheses_extract() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(8, 8, -1, 1, rand);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+
+        Sequence sequence = eq.compile("A=B(2:7,1:6)");
+        sequence.perform();
+        assertTrue(A.isIdentical(B.extractMatrix(2,8,1,7), 1e-15));
+
+        // get single values now
+        A = SimpleMatrix.random(6, 1, -1, 1, rand);
+        eq.alias(A.getMatrix(), "A");
+        sequence = eq.compile("A=B(2:7,3)");
+        sequence.perform();
+        assertTrue(A.isIdentical(B.extractMatrix(2,8,3,4), 1e-15));
+
+        // multiple in a row
+        A = SimpleMatrix.random(1, 2, -1, 1, rand);
+        eq.alias(A.getMatrix(), "A");
+        sequence = eq.compile("A=(B(2:7,3:6))(0:0,1:2)");
+        sequence.perform();
+        assertTrue(A.isIdentical(B.extractMatrix(2,3,4,6), 1e-15));
+
+    }
+
+    @Test
     public void compile_transpose() {
         Equation eq = new Equation();
 

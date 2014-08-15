@@ -43,9 +43,9 @@ public class TransposeAlgs {
              i++ , index += i+1 , indexEnd += mat.numCols ) {
             int indexOther = (i+1)*mat.numCols + i;
             for( ; index < indexEnd; index++, indexOther += mat.numCols) {
-                double val = mat.get( index );
-                mat.set( index , mat.get( indexOther ));
-                mat.set( indexOther , val );
+                double val = mat.data[ index ];
+                mat.data[ index ] = mat.data[ indexOther ];
+                mat.data[indexOther] = val;
             }
         }
     }
@@ -86,7 +86,7 @@ public class TransposeAlgs {
 //                    for( int k = 0; k < blockHeight; k++ , rowSrc += A.numCols ) {
                     for( ; rowDst < end; rowSrc += A.numCols ) {
                         // faster to write in sequence than to read in sequence
-                        A_tran.set( rowDst++ , A.get( rowSrc ));
+                        A_tran.data[ rowDst++ ] = A.data[ rowSrc ];
                     }
                     indexDst += A_tran.numCols;
                 }
@@ -108,7 +108,7 @@ public class TransposeAlgs {
 
             int end = index + A_tran.numCols;
             while( index < end ) {
-                A_tran.set( index++ , A.get( index2 ));
+                A_tran.data[index++ ] = A.data[ index2 ];
                 index2 += A.numCols;
             }
         }

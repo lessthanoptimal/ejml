@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,16 +40,12 @@ public class UnrolledInverseFromMinor {
             if( a > max ) max = a;
         }
 
-        if( mat.numRows == 2 ) {
-            inv2(mat,inv,1.0/max);
-        } else if( mat.numRows == 3 ) {
-            inv3(mat,inv,1.0/max);            
-        } else if( mat.numRows == 4 ) {
-            inv4(mat,inv,1.0/max);            
-        } else if( mat.numRows == 5 ) {
-            inv5(mat,inv,1.0/max);            
-        } else {
-            throw new IllegalArgumentException("Not supported");
+        switch( mat.numRows ) {
+            case 2: inv2(mat,inv,1.0/max); break;
+            case 3: inv3(mat,inv,1.0/max); break;
+            case 4: inv4(mat,inv,1.0/max); break;
+            case 5: inv5(mat,inv,1.0/max); break;
+            default: throw new IllegalArgumentException("Not supported");
         }
     }
 

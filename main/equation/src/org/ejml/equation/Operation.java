@@ -632,6 +632,41 @@ abstract class Operation {
         return ret;
     }
 
+    public static Info extract( final List<Variable> inputs, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( inputs.size() != 5 )
+            throw new RuntimeException("Five inputs expected for sub");
+
+        if(  !(inputs.get(0) instanceof VariableMatrix))
+            throw new RuntimeException("First parameter must be a matrix.");
+
+        for (int i = 1; i < inputs.size(); i++) {
+            if( !(inputs.get(i) instanceof VariableInteger) )
+                throw new RuntimeException("Last 4 parameters must be integers for sub");
+        }
+
+        ret.op = new Operation() {
+            @Override
+            public void process() {
+
+                DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
+
+                int row0 = ((VariableInteger)inputs.get(1)).value;
+                int row1 = ((VariableInteger)inputs.get(2)).value+1;
+                int col0 = ((VariableInteger)inputs.get(3)).value;
+                int col1 = ((VariableInteger)inputs.get(4)).value+1;
+
+                output.matrix.reshape(row1-row0,col1-col0);
+                CommonOps.extract(A,row0,row1,col0,col1,output.matrix,0,0);
+            }
+        };
+
+        return ret;
+    }
+
     public static class Info
     {
         public Operation op;

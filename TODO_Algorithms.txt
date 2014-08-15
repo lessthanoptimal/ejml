@@ -1,9 +1,6 @@
-
-More consistent naming scheme for block matrix algorithms
-Improve naming of wrapper classes
-ALGORITHMNAME_MATRIXTYPE?
-D64
-B64
+- Add to CommonOps invertSPD()
+- Unroll symmetric inverse by minor
+- Unroll multiplication for square matrices
 
 For some future Release
 - Block SVD
@@ -48,6 +45,7 @@ For some future Release
 - Fast Matrix Multiply
 
 - hard code cholesky decomposition for small matrices
+- hard code symmetric inverse for small matrices
 
 - Matrix Multiplication:
   - Try a variant on mult_aux that does the vector mult up to block size then goes down a row.

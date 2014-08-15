@@ -66,16 +66,17 @@ import static org.ejml.equation.TokenList.Type;
  * <p>
  * Supported functions:
  * <pre>
- * eye(N)     Create an identity matrix which is N by N.
- * eye(A)     Create an identity matrix which is A.numRows by A.numCols
- * normF(A)   Frobenius normal of the matrix.
- * det(A)     Determinant of the matrix
- * inv(A)     Inverse of a matrix
- * pinv(A)    Pseudo-inverse of a matrix
- * trace(A)   Trace of the matrix
- * kron(A,B)  Kronecker product
- * catV(...)  Vertically concatenates 1 or more matrices. e.g. catV(A,B,C)
- * catH(...)  Horizontally concatenates 1 or more matrices. e.g. catH(A,B,C)
+ * eye(N)       Create an identity matrix which is N by N.
+ * eye(A)       Create an identity matrix which is A.numRows by A.numCols
+ * normF(A)     Frobenius normal of the matrix.
+ * det(A)       Determinant of the matrix
+ * inv(A)       Inverse of a matrix
+ * pinv(A)      Pseudo-inverse of a matrix
+ * trace(A)     Trace of the matrix
+ * kron(A,B)    Kronecker product
+ * catV(...)    Vertically concatenates 1 or more matrices. e.g. catV(A,B,C)
+ * catH(...)    Horizontally concatenates 1 or more matrices. e.g. catH(A,B,C)
+ * extract(A,r0,r1,c0,c1) Extracts submatrix of A from rows r0 to r1-1 and columns c0 to c1-1
  * </pre>
  * </p>
  *
@@ -91,18 +92,33 @@ import static org.ejml.equation.TokenList.Type;
  * '''        Matrix transpose
  * '='        (Matrix-Matrix, Scalar-Scalar) assignment by value
  * '(' ')'    The usual parentheses.
+ * '[' ']'    Used to specify a matrix
  * </pre>
  * Order of operations:  [ ' ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
  * </p>
  *
  * <p>
+ * Specialized submatrix syntax:
  * <pre>
- * [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a regular List.
+ * A(1:10,3)       Extracts a sub-matrix from A with rows 1 to 10 (inclusive) and column 3.
+ * [A,B;C]         Will concat A and B along their columns and then concat the result with
+ *                 C along their rows.
+ * [1 2; 3 4; 4 5] Defines a 3x2 matrix.
+ * A(1:3,4:8) = B  Will assign the sub-matrix in A to B.
+ * </pre>
+ * </p>
+ *
+ * <p>
+ * Footnotes:
+ * <pre>
+ * [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a List.
  * </pre>
  * </p>
  *
  * @author Peter Abeles
  */
+// TODO Assign to sub-matrix
+// TODO Create matrix with brackets
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO reference sub-matrices
@@ -207,13 +223,16 @@ public class Equation {
         while( t != null ) {
             TokenList.Token next = t.next;
             if( t.getType() == Type.SYMBOL ) {
-                if( t.getSymbol() == Symbol.PAREN_LEFT )
+                if( t.getSymbol() == Symbol.PAREN_LEFT || t.getSymbol() == Symbol.BRACKET_LEFT )
                     left.add(t);
                 else if( t.getSymbol() == Symbol.PAREN_RIGHT ) {
                     if( left.isEmpty() )
                         throw new RuntimeException(") found with no matching (");
 
                     TokenList.Token a = left.remove(left.size()-1);
+
+                    if( a.getSymbol() != Symbol.PAREN_LEFT )
+                        throw new RuntimeException("Expected ( not "+a.getSymbol());
 
                     // remember the element before so the new one can be inserted afterwards
                     TokenList.Token before = a.previous;
@@ -226,11 +245,17 @@ public class Equation {
                     // if its a function before () then the () indicates its an input to a function
                     if( before != null && before.getType() == Type.FUNCTION ) {
                         List<TokenList.Token> inputs = parseParameterCommaBlock(sublist, sequence);
-                        if( inputs.isEmpty() )
+                        if (inputs.isEmpty())
                             throw new RuntimeException("Empty function input parameters");
                         else {
                             createFunction(before, inputs, tokens, sequence);
                         }
+                    } else if( before != null && before.getType() == Type.VARIABLE ) {
+                        // if it's a variable then that says it's a sub-matrix
+                        TokenList.Token extract = parseSubmatrixToExtract(before,sublist, sequence);
+                        // put in the extract operation
+                        tokens.insert(before,extract);
+                        tokens.remove(before);
                     } else {
                         // if null then it was empty inside
                         TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
@@ -246,7 +271,7 @@ public class Equation {
             throw new RuntimeException("Dangling ( parentheses");
 
         if( tokens.size() > 1 ) {
-            parseBlockNoParentheses(tokens,sequence);
+            parseBlockNoParentheses(tokens, sequence);
         }
     }
 
@@ -296,10 +321,71 @@ public class Equation {
     }
 
     /**
+     * Converts a submatrix into an extract matrix operation
+     * @param leftVariable The variable on the left of the block
+     */
+    protected TokenList.Token parseSubmatrixToExtract(TokenList.Token leftVariable,
+                                                      TokenList tokens, Sequence sequence) {
+        TokenList.Token comma = tokens.first;
+        while( comma != null && comma.getSymbol() != Symbol.COMMA )
+            comma = comma.next;
+
+        if( comma == null )
+            throw new RuntimeException("Can't find comma inside submatrix");
+
+        TokenList listLeft = tokens.extractSubList(tokens.first,comma.previous);
+        TokenList listRight = tokens.extractSubList(comma.next,tokens.last);
+
+        List<Variable> variables = new ArrayList<Variable>();
+        variables.add(leftVariable.getVariable());
+        parseValueRange(listLeft,sequence,variables); // rows
+        parseValueRange(listRight,sequence,variables); // columns
+
+        Operation.Info info = functions.create("extract",variables);
+
+        sequence.addOperation(info.op);
+
+        return new TokenList.Token(info.output);
+    }
+
+    /**
+     * Parse a range written like 0:10 in which two numbers are separated by a colon.
+     */
+    protected void parseValueRange( TokenList tokens, Sequence sequence , List<Variable> variables ) {
+
+        TokenList.Token[] t = new TokenList.Token[2];
+
+        // range of values are specified with a colon
+        TokenList.Token colon = tokens.first;
+        while( colon != null && colon.getSymbol() != Symbol.COLON ) {
+            colon = colon.next;
+        }
+        if( colon == null ) {
+            // no range, just a single value
+            t[0] = t[1] = parseBlockNoParentheses(tokens,sequence);
+        } else {
+            TokenList listRow0 = tokens.extractSubList(tokens.first,colon.previous);
+            TokenList listRow1 = tokens.extractSubList(colon.next,tokens.last);
+            t[0] = parseBlockNoParentheses(listRow0,sequence);
+            t[1] = parseBlockNoParentheses(listRow1,sequence);
+        }
+
+        for (int i = 0; i < 2; i++) {
+           if( t[i].getType() != Type.VARIABLE ) {
+               throw new RuntimeException("Expected variable inside of range");
+           }
+            variables.add(t[i].getVariable());
+        }
+    }
+
+    /**
      * Parses a code block with no parentheses and no commas.  After it is done there should be a single token left,
      * which is returned.
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
+        // search for matrix bracket operations
+//        parseBracketMatrices(tokens,sequence);
+
         // process operators depending on their priority
         parseOperationsL(tokens,sequence);
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.DIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
@@ -617,7 +703,7 @@ public class Equation {
 
     protected static boolean isOperator( char c ) {
         return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '[' || c == ']' ||
-               c == '=' || c == '\'' || c == '.' || c == ',' || c == ':';
+               c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';';
     }
 
     /**

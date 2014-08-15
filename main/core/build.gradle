@@ -1,5 +1,5 @@
 dependencies {
-
+    testCompile project(':main:experimental')
 }
 
 idea {
