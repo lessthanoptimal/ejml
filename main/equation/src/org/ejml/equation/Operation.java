@@ -332,23 +332,42 @@ abstract class Operation {
     public static Operation copy( final Variable src , final Variable dst , final List<Variable> range ) {
         if( src instanceof VariableMatrix && dst instanceof VariableMatrix ) {
             return new Operation() {
+                Extents extents = new Extents();
+
                 @Override
                 public void process() {
 
-                    int row0 = ((VariableInteger)range.get(0)).value;
-                    int row1 = ((VariableInteger)range.get(1)).value+1;
-                    int col0 = ((VariableInteger)range.get(2)).value;
-                    int col1 = ((VariableInteger)range.get(3)).value+1;
+                    DenseMatrix64F msrc = ((VariableMatrix) src).matrix;
+                    DenseMatrix64F mdst = ((VariableMatrix) dst).matrix;
 
-                    DenseMatrix64F msrc = ((VariableMatrix)src).matrix;
-                    DenseMatrix64F mdst = ((VariableMatrix)dst).matrix;
+                    findExtents(mdst, range, 0, extents);
 
-                    if( col1-col0 != msrc.numCols )
+                    if (extents.col1 - extents.col0 != msrc.numCols)
                         throw new RuntimeException("Columns don't match");
-                    if( row1-row0 != msrc.numRows )
+                    if (extents.row1 - extents.row0 != msrc.numRows)
                         throw new RuntimeException("Rows don't match");
 
-                    CommonOps.insert(msrc, mdst, row0, col0);
+                    CommonOps.insert(msrc, mdst, extents.row0, extents.col0);
+                }
+            };
+        } else if( src instanceof VariableScalar && dst instanceof VariableMatrix ) {
+            return new Operation() {
+                Extents extents = new Extents();
+
+                @Override
+                public void process() {
+
+                    double msrc = ((VariableScalar)src).getDouble();
+                    DenseMatrix64F mdst = ((VariableMatrix)dst).matrix;
+
+                    findExtents(mdst,range,0,extents);
+
+                    if( extents.col1-extents.col0 != 1 )
+                        throw new RuntimeException("Columns don't match");
+                    if( extents.row1-extents.row0 != 1 )
+                        throw new RuntimeException("Rows don't match");
+
+                    mdst.set(extents.row0, extents.col0, msrc);
                 }
             };
         } else {
@@ -664,34 +683,64 @@ abstract class Operation {
         final VariableMatrix output = manager.createMatrix();
         ret.output = output;
 
-        if( inputs.size() != 5 )
-            throw new RuntimeException("Five inputs expected for sub");
-
         if(  !(inputs.get(0) instanceof VariableMatrix))
             throw new RuntimeException("First parameter must be a matrix.");
 
         for (int i = 1; i < inputs.size(); i++) {
-            if( !(inputs.get(i) instanceof VariableInteger) )
-                throw new RuntimeException("Last 4 parameters must be integers for sub");
+            if( !(inputs.get(i) instanceof VariableInteger) && !(inputs.get(i) instanceof VariableSpecial) )
+                throw new RuntimeException("Last parameters must be integers or special for sub");
         }
 
         ret.op = new Operation() {
+
+            Extents extents = new Extents();
+
             @Override
             public void process() {
 
                 DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
 
-                int row0 = ((VariableInteger)inputs.get(1)).value;
-                int row1 = ((VariableInteger)inputs.get(2)).value+1;
-                int col0 = ((VariableInteger)inputs.get(3)).value;
-                int col1 = ((VariableInteger)inputs.get(4)).value+1;
+                findExtents(A,inputs,1,extents);
 
-                output.matrix.reshape(row1-row0,col1-col0);
-                CommonOps.extract(A,row0,row1,col0,col1,output.matrix,0,0);
+                output.matrix.reshape(extents.row1-extents.row0,extents.col1-extents.col0);
+                CommonOps.extract(A,extents.row0,extents.row1,extents.col0,extents.col1,output.matrix,0,0);
             }
         };
 
         return ret;
+    }
+
+    /**
+     * Parses the inputs to figure out the range of a sub-matrix.  Special variables are handled to set
+     * relative values
+     */
+    protected static void findExtents( DenseMatrix64F A, List<Variable> inputs , int where ,Extents e ) {
+        if( inputs.get(where).getType() == VariableType.SPECIAL ) {
+            e.row0 = 0; e.row1 = A.numRows; where++;
+        } else {
+            e.row0 = ((VariableInteger)inputs.get(where++)).value;
+            if( inputs.get(where).getType() == VariableType.SPECIAL ) {
+                e.row1 = A.numRows;
+            } else {
+                e.row1 = ((VariableInteger)inputs.get(where)).value+1;
+            }
+            where++;
+        }
+
+        if( inputs.get(where).getType() == VariableType.SPECIAL ) {
+            e.col0 = 0; e.col1 = A.numCols; where++;
+        } else {
+            e.col0 = ((VariableInteger)inputs.get(where++)).value;
+            if( inputs.get(where).getType() == VariableType.SPECIAL ) {
+                e.col1 = A.numCols;
+            } else {
+                e.col1 = ((VariableInteger)inputs.get(where)).value+1;
+            }
+            where++;
+        }
+
+        if( where != inputs.size())
+            throw new RuntimeException("Unexpected number of inputs");
     }
 
     public static Info matrixConstructor( final MatrixConstructor m ) {
@@ -707,6 +756,12 @@ abstract class Operation {
         };
 
         return ret;
+    }
+
+    public static class Extents
+    {
+        int row0,row1;
+        int col0,col1;
     }
 
     public static class Info

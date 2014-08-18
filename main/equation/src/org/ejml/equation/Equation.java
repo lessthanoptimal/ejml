@@ -53,7 +53,16 @@ import static org.ejml.equation.TokenList.Type;
  * eq.process("x = F*x");
  * eq.process("P = F*P*F' + Q");
  * </pre>
- * Which will modify the matrices 'x' amd 'P'.  To pre-compile one of the above lines, do the following instead:
+ * Which will modify the matrices 'x' amd 'P'.  Sub-matrices and inline matrix construction is also
+ * supported.
+ * <pre>
+ * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");
+ * eq.process("x(1:3,5:9) = [a ; b]*2");
+ * </pre>
+ * </p>
+ *
+ * <p>
+ * To pre-compile one of the above lines, do the following instead:
  * <pre>
  * Sequence predictX = eq.compile("x = F*x");
  * predictX.perform();
@@ -64,7 +73,7 @@ import static org.ejml.equation.TokenList.Type;
  * </p>
  *
  * <p>
- * Supported functions:
+ * <h2>Supported functions</h2>
  * <pre>
  * eye(N)       Create an identity matrix which is N by N.
  * eye(A)       Create an identity matrix which is A.numRows by A.numCols
@@ -81,7 +90,7 @@ import static org.ejml.equation.TokenList.Type;
  * </p>
  *
  * <p>
- * Supported operator
+ * <h2>Supported operations</h2>
  * <pre>
  * '*'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) multiplication
  * '+'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) addition
@@ -98,13 +107,20 @@ import static org.ejml.equation.TokenList.Type;
  * </p>
  *
  * <p>
- * Specialized submatrix syntax:
+ * <h2>Specialized submatrix and matrix construction syntax</h2>
  * <pre>
- * A(1:10,3)       Extracts a sub-matrix from A with rows 1 to 10 (inclusive) and column 3.
- * [A,B;C]         Will concat A and B along their columns and then concat the result with
- *                 C along their rows.
- * [1 2; 3 4; 4 5] Defines a 3x2 matrix.
- * A(1:3,4:8) = B  Will assign the sub-matrix in A to B.
+ * Extracts a sub-matrix from A with rows 1 to 10 (inclusive) and column 3.
+ *               A(1:10,3)
+ * Extracts a sub-matrix from A with rows 2 to numRows-1 (inclusive) and all the columns.
+ *               A(2:,:)
+ * Will concat A and B along their columns and then concat the result with  C along their rows.
+ *                [A,B;C]
+ * Defines a 3x2 matrix.
+ *            [1 2; 3 4; 4 5]
+ * You can also perform operations inside:
+ *            [[2 3 4]';[4 5 6]']
+ * Will assign B to the sub-matrix in A.
+ *             A(1:3,4:8) = B
  * </pre>
  * </p>
  *
@@ -120,7 +136,6 @@ import static org.ejml.equation.TokenList.Type;
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
-// TODO Add support for range of :
 public class Equation {
     HashMap<String,Variable> variables = new HashMap<String, Variable>();
 
@@ -164,11 +179,54 @@ public class Equation {
     }
 
     /**
+     * Adds a new integer variable. If one already has the same name it is written over.
+     * @param value Value of the number
+     * @param name Name in code
+     */
+    public void alias( int value , String name ) {
+        if( isReserved(name))
+            throw new RuntimeException("Reserved word or contains a reserved character");
+
+        VariableInteger old = (VariableInteger)variables.get(name);
+        if( old == null ) {
+            variables.put(name, new VariableInteger(value));
+        }else {
+            old.value = value;
+        }
+    }
+
+    /**
+     * Creates multiple aliases at once.
+     */
+    public void alias( Object ...args ) {
+        if( args.length % 2 == 1 )
+            throw new RuntimeException("Even number of arguments expected");
+
+        for (int i = 0; i < args.length; i += 2) {
+            if( args[i].getClass() == Integer.class ) {
+                alias(((Integer)args[i]).intValue(),(String)args[i+1]);
+            } else if( args[i].getClass() == Double.class ) {
+                alias(((Double)args[i]).doubleValue(),(String)args[i+1]);
+            } else if( args[i].getClass() == DenseMatrix64F.class ) {
+                alias((DenseMatrix64F)args[i],(String)args[i+1]);
+            } else {
+                throw new RuntimeException("Unknown value type "+args[i]);
+            }
+        }
+    }
+
+    public Sequence compile( String equation ) {
+        return compile(equation,false);
+    }
+
+    /**
      * Parses the equation and compiles it into a sequence which can be executed later on
      * @param equation String in simple equation format.
+     * @param debug if true it will print out debugging information
      * @return Sequence of operations on the variables
      */
-    public Sequence compile( String equation ) {
+    public Sequence compile( String equation , boolean debug ) {
+
         ManagerTempVariables managerTemp = new ManagerTempVariables();
         functions.setManagerTemp(managerTemp);
 
@@ -177,6 +235,11 @@ public class Equation {
 
         if( tokens.size() < 3 )
             throw new RuntimeException("Too few tokens");
+
+        if( debug ) {
+            System.out.println("Parsed tokens:");
+            tokens.print();
+        }
 
         TokenList.Token t0 = tokens.getFirst();
 
@@ -191,7 +254,6 @@ public class Equation {
         TokenList.Token t1 = t0.next;
         if( t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN )
             throw new RuntimeException("Expected assign next");
-
 
         Variable result = t0.getVariable();
 
@@ -427,13 +489,25 @@ public class Equation {
             // no range, just a single value
             t[0] = t[1] = parseBlockNoParentheses(tokens,sequence);
         } else {
-            TokenList listRow0 = tokens.extractSubList(tokens.first,colon.previous);
-            TokenList listRow1 = tokens.extractSubList(colon.next,tokens.last);
-            t[0] = parseBlockNoParentheses(listRow0,sequence);
-            t[1] = parseBlockNoParentheses(listRow1,sequence);
+            if( colon.previous == null && colon.next == null) {
+                t[0] = new TokenList.Token(VariableSpecial.Special.ALL);
+            } else if( colon.next == null ) {
+                TokenList listRow0 = tokens.extractSubList(tokens.first,colon.previous);
+                t[0] = parseBlockNoParentheses(listRow0,sequence);
+                t[1] = new TokenList.Token(VariableSpecial.Special.END);
+            } else if( colon.previous == null ) {
+                throw new RuntimeException(":<int> not allowed");
+            } else {
+                TokenList listRow0 = tokens.extractSubList(tokens.first, colon.previous);
+                TokenList listRow1 = tokens.extractSubList(colon.next, tokens.last);
+                t[0] = parseBlockNoParentheses(listRow0, sequence);
+                t[1] = parseBlockNoParentheses(listRow1, sequence);
+            }
         }
 
         for (int i = 0; i < 2; i++) {
+           if(t[i] == null)
+               continue;
            if( t[i].getType() != Type.VARIABLE ) {
                throw new RuntimeException("Expected variable inside of range");
            }
@@ -788,13 +862,25 @@ public class Equation {
                 }
             } else {
                 if( isOperator(c) ) {
-                    TokenList.Token t = tokens.add(Symbol.lookup(c));
-                    if( t.previous != null && t.previous.getType() == Type.SYMBOL ) {
-                        // there should only be two symbols in a row if its an element-wise operation
-                        if( t.previous.getSymbol() == Symbol.PERIOD ) {
-                            tokens.remove(t.previous);
-                            tokens.remove(t);
-                            tokens.add(Symbol.lookupElementWise(c));
+                    boolean special = false;
+                    if( c == '-' ) {
+                        // need to handle minus symbols carefully since it can be part of a number of a minus operator
+                        if( i+1 < equation.length() && Character.isDigit(equation.charAt(i+1))) {
+                            type = TokenType.INTEGER;
+                            storage[0] = c;
+                            length = 1;
+                            special = true;
+                        }
+                    }
+                    if( !special ) {
+                        TokenList.Token t = tokens.add(Symbol.lookup(c));
+                        if (t.previous != null && t.previous.getType() == Type.SYMBOL) {
+                            // there should only be two symbols in a row if its an element-wise operation
+                            if (t.previous.getSymbol() == Symbol.PERIOD) {
+                                tokens.remove(t.previous);
+                                tokens.remove(t);
+                                tokens.add(Symbol.lookupElementWise(c));
+                            }
                         }
                     }
                 } else if( Character.isWhitespace(c) ) {
@@ -812,7 +898,11 @@ public class Equation {
             }
         }
         if( type == TokenType.WORD ) {
-            tokens.add( lookupVariable(new String(storage,0,length)));
+            String word = new String(storage,0,length);
+            Variable v = lookupVariable(word);
+            if( v == null )
+                throw new RuntimeException("Unknown variable "+word);
+            tokens.add( v );
         } else if( type == TokenType.INTEGER ) {
             tokens.add(managerTemp.createInteger(Integer.parseInt( new String(storage, 0, length))));
         } else if( type == TokenType.FLOAT || type == TokenType.FLOAT_EXP ) {
@@ -880,5 +970,14 @@ public class Equation {
      */
     public void process( String equation ) {
         compile(equation).perform();
+    }
+
+    /**
+     * Compiles and performs the provided equation.
+     *
+     * @param equation String in simple equation format
+     */
+    public void process( String equation , boolean debug ) {
+        compile(equation,debug).perform();
     }
 }

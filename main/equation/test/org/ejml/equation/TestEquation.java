@@ -106,6 +106,45 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_assign_submatrix_special() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(4, 5, -1, 1, rand);
+
+        SimpleMatrix A_orig = A.copy();
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+
+        eq.process("A(2:,:)=B");
+
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < 5; x++) {
+                if( y >= 2 ) {
+                    assertTrue(A.get(y,x) == B.get(y-2,x));
+                } else {
+                    assertTrue(x+" "+y,A.get(y,x) == A_orig.get(y,x));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void compile_assign_submatrix_scalar() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(A.getMatrix(), "A");
+
+        eq.process("A(1,2)=0.5");
+
+        assertEquals(A.get(1, 2), 0.5, 1e-8);
+    }
+
+
+    @Test
     public void compile_parentheses() {
         Equation eq = new Equation();
 
@@ -157,6 +196,25 @@ public class TestEquation {
         sequence = eq.compile("A=(B(2:7,3:6))(0:0,1:2)");
         sequence.perform();
         assertTrue(A.isIdentical(B.extractMatrix(2,3,4,6), 1e-15));
+    }
+
+    @Test
+    public void compile_parentheses_extractSpecial() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(8, 8, -1, 1, rand);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+
+        eq.process("A=B(2:,:)");
+        assertTrue(A.isIdentical(B.extractMatrix(2,8,0,8), 1e-15));
+
+        B = SimpleMatrix.random(6, 10, -1, 1, rand);
+        eq.alias(B.getMatrix(), "B");
+        eq.process("A=B(:,2:)");
+        assertTrue(A.isIdentical(B.extractMatrix(0,6,2,10), 1e-15));
     }
 
     @Test
@@ -273,7 +331,7 @@ public class TestEquation {
         eq.alias(A.getMatrix(), "A");
         eq.alias(B.getMatrix(), "B");
         eq.alias(D, "D");
-        eq.alias(0, "E");
+        eq.alias(0.0, "E");
 
         VariableDouble E = eq.lookupVariable("E");
 
@@ -612,7 +670,21 @@ public class TestEquation {
         assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
         assertTrue(v1==t.getVariable()); t = t.next;
         assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(5.1==((VariableDouble)t.getVariable()).value); t = t.next;
+        assertTrue(5.1==((VariableDouble)t.getVariable()).value);
+        assertTrue(t.next == null);
+
+        // See if it handles minus signs and doubles correctly
+        list = eq.extractTokens("- 1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
+        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
+        list = eq.extractTokens("-1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
     }
 
     @Test

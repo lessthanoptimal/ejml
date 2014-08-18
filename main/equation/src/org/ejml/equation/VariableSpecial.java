@@ -19,12 +19,27 @@
 package org.ejml.equation;
 
 /**
- * List of the types of variables.
+ * Variables which have special meanings depending on other matrices
  *
  * @author Peter Abeles
  */
-enum VariableType {
-    MATRIX,
-    SCALAR,
-    SPECIAL
+public class VariableSpecial extends Variable {
+
+    Special type;
+
+    protected VariableSpecial( Special special) {
+        super(VariableType.SPECIAL);
+        this.type = special;
+    }
+
+    public Special getValue() {
+        return type;
+    }
+
+    public static enum Special {
+        /** Maximum possible value */
+        END,
+        /** All values */
+        ALL
+    }
 }
