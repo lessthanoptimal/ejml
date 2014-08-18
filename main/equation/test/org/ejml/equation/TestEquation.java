@@ -128,7 +128,68 @@ public class TestEquation {
         sequence = eq.compile("A=(B(2:7,3:6))(0:0,1:2)");
         sequence.perform();
         assertTrue(A.isIdentical(B.extractMatrix(2,3,4,6), 1e-15));
+    }
 
+    @Test
+    public void compile_constructMatrix_scalars() {
+        Equation eq = new Equation();
+
+        SimpleMatrix expected = new SimpleMatrix(new double[][]{{0,1,2,3},{4,5,6,7},{8,1,1,1}});
+        SimpleMatrix A = new SimpleMatrix(3,4);
+
+        eq.alias(A.getMatrix(), "A");
+        Sequence sequence = eq.compile("A=[0 1 2 3; 4 5 6 7;8 1 1 1]");
+        sequence.perform();
+        assertTrue(A.isIdentical(expected,1e-8));
+    }
+
+    @Test
+    public void compile_constructMatrix_MatrixAndScalar() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = new SimpleMatrix(new double[][]{{0,1,2,3}});
+        SimpleMatrix found = new SimpleMatrix(1,5);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(found.getMatrix(), "found");
+        Sequence sequence = eq.compile("found=[A 4]");
+        sequence.perform();
+        for (int i = 0; i < 5; i++) {
+            assertEquals(found.get(0,i),i,1e-4);
+        }
+    }
+
+    @Test
+    public void compile_constructMatrix_Operations() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = new SimpleMatrix(new double[][]{{0,1,2,3}});
+        SimpleMatrix found = new SimpleMatrix(5,1);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(found.getMatrix(), "found");
+        Sequence sequence = eq.compile("found=[A' ; 4]");
+        sequence.perform();
+        for (int i = 0; i < 5; i++) {
+            assertEquals(found.get(i,0),i,1e-4);
+        }
+    }
+
+    @Test
+    public void compile_constructMatrix_Inner() {
+        Equation eq = new Equation();
+
+        SimpleMatrix found = new SimpleMatrix(3,2);
+
+        eq.alias(found.getMatrix(), "found");
+        Sequence sequence = eq.compile("found=[[1 2 3]' [4 5 [6]]']");
+        sequence.perform();
+        int index = 1;
+        for (int x = 0; x < 2; x++) {
+            for (int y = 0; y < 3; y++) {
+                assertEquals(x+" "+y,found.get(y,x),index++,1e-8);
+            }
+        }
     }
 
     @Test

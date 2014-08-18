@@ -118,7 +118,6 @@ import static org.ejml.equation.TokenList.Type;
  * @author Peter Abeles
  */
 // TODO Assign to sub-matrix
-// TODO Create matrix with brackets
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO reference sub-matrices
@@ -223,7 +222,7 @@ public class Equation {
         while( t != null ) {
             TokenList.Token next = t.next;
             if( t.getType() == Type.SYMBOL ) {
-                if( t.getSymbol() == Symbol.PAREN_LEFT || t.getSymbol() == Symbol.BRACKET_LEFT )
+                if( t.getSymbol() == Symbol.PAREN_LEFT  )
                     left.add(t);
                 else if( t.getSymbol() == Symbol.PAREN_RIGHT ) {
                     if( left.isEmpty() )
@@ -384,7 +383,7 @@ public class Equation {
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
         // search for matrix bracket operations
-//        parseBracketMatrices(tokens,sequence);
+        parseBracketCreateMatrix(tokens, sequence);
 
         // process operators depending on their priority
         parseOperationsL(tokens,sequence);
@@ -395,6 +394,88 @@ public class Equation {
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
 
         return tokens.first;
+    }
+
+    /**
+     * Searches for brackets which are only used to construct new matrices by concatenating
+     * 1 or more matrices together
+     */
+    protected void parseBracketCreateMatrix(TokenList tokens, Sequence sequence) {
+        List<TokenList.Token> left = new ArrayList<TokenList.Token>();
+
+        TokenList.Token t = tokens.getFirst();
+
+        while( t != null ) {
+            TokenList.Token next = t.next;
+            if( t.getSymbol() == Symbol.BRACKET_LEFT ) {
+                left.add(t);
+            } else if( t.getSymbol() == Symbol.BRACKET_RIGHT ) {
+                if( left.isEmpty() )
+                    throw new RuntimeException("No matching left bracket for right");
+
+                TokenList.Token start = left.remove(left.size() - 1);
+                TokenList.Token i = start.next;
+
+                // define the constructor
+                MatrixConstructor constructor = new MatrixConstructor(functions.getManagerTemp());
+
+                TokenList.Token opStart = null;
+
+                while( true ) {
+                    if( i.getType() == Type.VARIABLE ) {
+                        innerMatrixConstructorOp(tokens, sequence, constructor, opStart, i.previous);
+                        opStart = i;
+                    } else if( i.getType() == Type.SYMBOL ) {
+                        boolean finished = false;
+                        boolean ignore = true; // ignore if it's part of an inner expression
+                        if( i.getSymbol() == Symbol.SEMICOLON ) {
+                            ignore = false;
+                        } else if( i.getSymbol() == Symbol.BRACKET_RIGHT ) {
+                            finished = true;
+                            ignore = false;
+                        }
+                        if( !ignore ) {
+                            innerMatrixConstructorOp(tokens, sequence, constructor, opStart, i.previous);
+                            constructor.endRow();
+                            opStart = null;
+
+                            if (finished)
+                                break;
+                        }
+                    } else {
+                        throw new RuntimeException("Unexpected token "+i);
+                    }
+                    i = i.next;
+                }
+
+                Operation.Info info = Operation.matrixConstructor(constructor);
+                sequence.addOperation(info.op);
+
+                // add the new variable to the tokens list
+                tokens.insert(t,new TokenList.Token(info.output));
+
+                // remove used tokens
+                tokens.extractSubList(start,t);
+            }
+
+            t = next;
+        }
+
+        if( !left.isEmpty() )
+            throw new RuntimeException("Dangling [");
+    }
+
+    private void innerMatrixConstructorOp(TokenList tokens, Sequence sequence, MatrixConstructor constructor,
+                                          TokenList.Token opStart, TokenList.Token opEnd) {
+        if( opStart == null )
+            return;
+        if( opStart != opEnd) {
+            TokenList opList = tokens.extractSubList(opStart,opEnd);
+            TokenList.Token var = parseBlockNoParentheses(opList,sequence);
+            constructor.addToRow(var.getVariable());
+        } else {
+            constructor.addToRow(opStart.getVariable());
+        }
     }
 
     /**

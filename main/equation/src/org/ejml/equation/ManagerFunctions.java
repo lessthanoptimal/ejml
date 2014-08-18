@@ -228,6 +228,10 @@ public class ManagerFunctions {
         });
     }
 
+    public ManagerTempVariables getManagerTemp() {
+        return managerTemp;
+    }
+
     /**
      * Creates new instances of functions from a single variable
      */

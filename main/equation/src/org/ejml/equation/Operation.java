@@ -667,6 +667,21 @@ abstract class Operation {
         return ret;
     }
 
+    public static Info matrixConstructor( final MatrixConstructor m ) {
+        Info ret = new Info();
+        ret.output = m.getOutput();
+
+        ret.op = new Operation() {
+
+            @Override
+            public void process() {
+                m.construct();
+            }
+        };
+
+        return ret;
+    }
+
     public static class Info
     {
         public Operation op;
