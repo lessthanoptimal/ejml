@@ -76,6 +76,35 @@ public class TestEquation {
         assertTrue(expected.isIdentical(A,1e-15));
     }
 
+    /**
+     * Results are assigned to a sub-matrix
+     */
+    @Test
+    public void compile_assign_submatrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(2, 5, -1, 1, rand);
+
+        SimpleMatrix A_orig = A.copy();
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+
+        Sequence sequence = eq.compile("A(2:3,0:4)=B");
+        sequence.perform();
+
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < 6; x++) {
+                if( x < 5 && y >= 2 && y <= 3 ) {
+                    assertTrue(A.get(y,x) == B.get(y-2,x));
+                } else {
+                    assertTrue(x+" "+y,A.get(y,x) == A_orig.get(y,x));
+                }
+            }
+        }
+    }
+
     @Test
     public void compile_parentheses() {
         Equation eq = new Equation();

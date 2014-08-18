@@ -298,6 +298,14 @@ class TokenList {
         }
     }
 
+    public void print() {
+        Token t = first;
+        while( t != null ) {
+            System.out.println(t);
+            t = t.next;
+        }
+    }
+
     /**
      * Specifies the type of data stored in a Token.
      */

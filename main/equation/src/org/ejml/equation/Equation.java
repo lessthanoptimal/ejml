@@ -117,11 +117,10 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
-// TODO Assign to sub-matrix
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
-// TODO reference sub-matrices
 // TODO intelligently handle identity matrices
+// TODO Add support for range of :
 public class Equation {
     HashMap<String,Variable> variables = new HashMap<String, Variable>();
 
@@ -173,26 +172,30 @@ public class Equation {
         ManagerTempVariables managerTemp = new ManagerTempVariables();
         functions.setManagerTemp(managerTemp);
 
+        Sequence sequence = new Sequence();
         TokenList tokens = extractTokens(equation,managerTemp);
 
         if( tokens.size() < 3 )
             throw new RuntimeException("Too few tokens");
 
         TokenList.Token t0 = tokens.getFirst();
-        TokenList.Token t1 = t0.next;
 
-        if( t1.getType() != Type.SYMBOL || t1.symbol != Symbol.ASSIGN )
-            throw new RuntimeException("Expected '=' symbol not "+t1);
 
         // Get the results variable
         if( t0.getType() != Type.VARIABLE)
             throw new RuntimeException("Expected variable name first.  Not "+t0);
 
+        // see if it is assign or a range
+        List<Variable> range = parseAssignRange(sequence, tokens, t0);
+
+        TokenList.Token t1 = t0.next;
+        if( t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN )
+            throw new RuntimeException("Expected assign next");
+
+
         Variable result = t0.getVariable();
 
-        // now it gets interesting
-        Sequence sequence = new Sequence();
-
+        // Parse the right side of the equation
         TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
         handleParentheses( tokensRight ,sequence);
 
@@ -203,9 +206,57 @@ public class Equation {
             throw new RuntimeException("BUG the last token must be a variable");
 
         // copy the results into the output
-        sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result));
+        if( range == null)
+            sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result));
+        else {
+            sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result,range));
+        }
 
         return sequence;
+    }
+
+    /**
+     * See if a range for assignment is specified.  If so return the range, otherwise return null
+     */
+    private List<Variable> parseAssignRange(Sequence sequence, TokenList tokens, TokenList.Token t0) {
+        List<Variable> range;
+        TokenList.Token t1 = t0.next;
+        if( t1.getType() == Type.SYMBOL ) {
+            if( t1.symbol == Symbol.ASSIGN ) {
+                range = null; // copy into the entire matrix
+            } else if( t1.symbol == Symbol.PAREN_LEFT ) {
+                // copy into a specific area
+                range = new ArrayList<Variable>();
+
+                // find the right parentheses
+                TokenList.Token t2 = t1.next;
+                while( t2 != null && t2.symbol != Symbol.PAREN_RIGHT ) {
+                    t2 = t2.next;
+                }
+
+                if( t2 == null )
+                    throw new RuntimeException("Could not find closing )");
+
+                TokenList.Token n = t2.next;
+                TokenList sublist = tokens.extractSubList(t1,t2);
+
+                // remove parentheses
+                sublist.remove(sublist.first);
+                sublist.remove(sublist.last);
+
+                // parse the range
+                parseSubmatrixRange(sublist, sequence, range);
+
+                t1 = n;
+                if( t1.symbol != Symbol.ASSIGN )
+                    throw new RuntimeException("Expected assign after sub-matrix");
+            } else {
+                throw new RuntimeException("Expected assign or submatrix");
+            }
+        } else {
+            throw new RuntimeException("Expecting symbol after first variable");
+        }
+        return range;
     }
 
     /**
@@ -229,9 +280,6 @@ public class Equation {
                         throw new RuntimeException(") found with no matching (");
 
                     TokenList.Token a = left.remove(left.size()-1);
-
-                    if( a.getSymbol() != Symbol.PAREN_LEFT )
-                        throw new RuntimeException("Expected ( not "+a.getSymbol());
 
                     // remember the element before so the new one can be inserted afterwards
                     TokenList.Token before = a.previous;
@@ -320,11 +368,35 @@ public class Equation {
     }
 
     /**
-     * Converts a submatrix into an extract matrix operation
-     * @param leftVariable The variable on the left of the block
+     * Converts a submatrix into an extract matrix operation.
+     * @param variableTarget The variable in which the submatrix is extracted from
      */
-    protected TokenList.Token parseSubmatrixToExtract(TokenList.Token leftVariable,
+    protected TokenList.Token parseSubmatrixToExtract(TokenList.Token variableTarget,
                                                       TokenList tokens, Sequence sequence) {
+
+        List<Variable> variables = new ArrayList<Variable>();
+        variables.add(variableTarget.getVariable());
+
+        parseSubmatrixRange(tokens, sequence, variables);
+
+        // first parameter is the matrix it will be extracted from.  rest specify range
+        Operation.Info info = functions.create("extract",variables);
+
+        sequence.addOperation(info.op);
+
+        return new TokenList.Token(info.output);
+    }
+
+    /**
+     * Parses the range for a sub-matrix and puts the results into variables. List
+     * should be everything inside the parentheses.
+     *
+     * e.g. 1,2 or 2:10,4 or 2:10,3:13
+     *
+     * @param variables Variables which describe the selected range
+     */
+    private void parseSubmatrixRange(TokenList tokens, Sequence sequence,
+                                     List<Variable> variables) {
         TokenList.Token comma = tokens.first;
         while( comma != null && comma.getSymbol() != Symbol.COMMA )
             comma = comma.next;
@@ -335,16 +407,8 @@ public class Equation {
         TokenList listLeft = tokens.extractSubList(tokens.first,comma.previous);
         TokenList listRight = tokens.extractSubList(comma.next,tokens.last);
 
-        List<Variable> variables = new ArrayList<Variable>();
-        variables.add(leftVariable.getVariable());
         parseValueRange(listLeft,sequence,variables); // rows
         parseValueRange(listRight,sequence,variables); // columns
-
-        Operation.Info info = functions.create("extract",variables);
-
-        sequence.addOperation(info.op);
-
-        return new TokenList.Token(info.output);
     }
 
     /**

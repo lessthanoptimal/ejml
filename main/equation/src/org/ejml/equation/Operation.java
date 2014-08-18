@@ -329,6 +329,33 @@ abstract class Operation {
         }
     }
 
+    public static Operation copy( final Variable src , final Variable dst , final List<Variable> range ) {
+        if( src instanceof VariableMatrix && dst instanceof VariableMatrix ) {
+            return new Operation() {
+                @Override
+                public void process() {
+
+                    int row0 = ((VariableInteger)range.get(0)).value;
+                    int row1 = ((VariableInteger)range.get(1)).value+1;
+                    int col0 = ((VariableInteger)range.get(2)).value;
+                    int col1 = ((VariableInteger)range.get(3)).value+1;
+
+                    DenseMatrix64F msrc = ((VariableMatrix)src).matrix;
+                    DenseMatrix64F mdst = ((VariableMatrix)dst).matrix;
+
+                    if( col1-col0 != msrc.numCols )
+                        throw new RuntimeException("Columns don't match");
+                    if( row1-row0 != msrc.numRows )
+                        throw new RuntimeException("Rows don't match");
+
+                    CommonOps.insert(msrc, mdst, row0, col0);
+                }
+            };
+        } else {
+            throw new RuntimeException("Both variables must be of type VariableMatrix");
+        }
+    }
+
     public static Info transpose( final Variable A , ManagerTempVariables manager) {
         Info ret = new Info();
 
