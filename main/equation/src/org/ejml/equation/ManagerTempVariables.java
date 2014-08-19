@@ -39,6 +39,10 @@ public class ManagerTempVariables {
         return new VariableDouble(value);
     }
 
+    public VariableInteger createInteger() {
+        return createInteger(0);
+    }
+
     public VariableInteger createInteger( int value ) {
         return new VariableInteger(value);
     }

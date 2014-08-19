@@ -22,6 +22,7 @@ import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol;
 import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.RandomMatrices;
 
@@ -70,6 +71,8 @@ public class BenchmarkSolvePseudoInverse {
                 new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
                 new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
+        System.out.println("solve QRP Col        = "+ solveBenchmark(
+                LinearSolverFactory.leastSquaresQrPivot(true,false),numTrials));
     }
 
     public static void main( String args [] ) {
@@ -78,7 +81,7 @@ public class BenchmarkSolvePseudoInverse {
         int trialsX[] = new int[]{(int)5e5,(int)4e5,(int)2e5,(int)7e4,4000,2000};
 
         System.out.println("Increasing matrix A size");
-        for( int i = 0; i < size.length; i++ ) {
+        for( int i = 3; i < size.length; i++ ) {
             int w = size[i];
 
             // create a singular matrix

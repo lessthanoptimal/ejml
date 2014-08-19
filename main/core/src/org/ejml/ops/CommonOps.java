@@ -509,9 +509,9 @@ public class CommonOps {
      * It is ok for 'b' and 'x' to be the same matrix.
      * </p>
      *
-     * @param a A matrix that is m by m. Not modified.
-     * @param b A matrix that is m by n. Not modified.
-     * @param x A matrix that is m by n. Modified.
+     * @param a A matrix that is m by n. Not modified.
+     * @param b A matrix that is n by k. Not modified.
+     * @param x A matrix that is m by k. Modified.
      *
      * @return true if it could invert the matrix false if it could not.
      */
@@ -923,7 +923,7 @@ public class CommonOps {
         }
 
         for( int i = 0; i < width; i++ ) {
-            ret.set(i,i,diagEl[i]);
+            ret.unsafe_set(i, i, diagEl[i]);
         }
 
         return ret;

@@ -18,7 +18,10 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -74,14 +77,14 @@ public class BenchmarkSolveOver {
 
     private static void runAlgorithms( int numTrials )
     {
-//        System.out.println("  solve QR house        = "+ solveBenchmark(
-//                new LinearSolverQrHouse(),numTrials));
+        System.out.println("  solve QR house        = "+ solveBenchmark(
+                new LinearSolverQrHouse(),numTrials));
         System.out.println("  solve QR house Col    = "+ solveBenchmark(
                 new LinearSolverQrHouseCol(),numTrials));
-//        System.out.println("  solve QR tran        = "+ solveBenchmark(
-//                new LinearSolverQrHouseTran(),numTrials));
-//        System.out.println("  solve QR Block64      = "+ solveBenchmark(
-//                new LinearSolverQrBlock64(),numTrials));
+        System.out.println("  solve QR tran        = "+ solveBenchmark(
+                new LinearSolverQrHouseTran(),numTrials));
+        System.out.println("  solve QR Block64      = "+ solveBenchmark(
+                new LinearSolverQrBlock64(),numTrials));
         System.out.println("  Selected              = "+ solveBenchmark(
                 LinearSolverFactory.leastSquares(A.numRows, A.numCols),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(

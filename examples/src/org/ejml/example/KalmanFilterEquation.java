@@ -66,7 +66,7 @@ public class KalmanFilterEquation implements KalmanFilter{
         predictP = eq.compile("P = F*P*F' + Q");
 
         updateY = eq.compile("y = z - H*x");
-        updateK = eq.compile("K = P*H'*inv( H*P*H' + R )");
+        updateK = eq.compile("K = P*H'/( H*P*H' + R )");
         updateX = eq.compile("x = x + K*y");
         updateP = eq.compile("P = P-K*(H*P)");
     }

@@ -74,7 +74,7 @@ public class QRExampleEquation {
 
             if( maxV > 0 && v.getNumElements() > 1 ) {
                 // normalize to reduce overflow issues
-                CommonOps.divide(maxV,v);
+                eq.process("v=v/maxV");
 
                 // compute the magnitude of the vector
                 double tau = NormOps.normF(v);

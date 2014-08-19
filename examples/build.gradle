@@ -5,6 +5,6 @@ dependencies {
 
 idea {
     module {
-        name = "Examples"
+        name = "EJML Examples"
     }
 }

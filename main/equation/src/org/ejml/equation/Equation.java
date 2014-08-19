@@ -48,7 +48,7 @@ import static org.ejml.equation.TokenList.Type;
  * Usage example:
  * <pre>
  * Equation eq = new Equation();
- * eq.alias(x,"x");eq.alias(P,"P");eq.alias(Q,"Q");
+ * eq.alias(x,"x", P,"P", Q,"Q");
  *
  * eq.process("x = F*x");
  * eq.process("P = F*P*F' + Q");
@@ -83,6 +83,11 @@ import static org.ejml.equation.TokenList.Type;
  * pinv(A)      Pseudo-inverse of a matrix
  * trace(A)     Trace of the matrix
  * zeros(A,B)   Matrix full of zeros with A rows and B columns.
+ * ones(A,B)    Matrix full of ones with A rows and B columns.
+ * diag(A)      If a vector then returns a square matrix with diagonal elements filled with vector
+ * diag(A)      If a matrix then it returns the diagonal elements as a column vector
+ * dot(A,B)     Returns the dot product of two vectors as a double.  Does not work on general matrices.
+ * solve(A,B)   Returns the solution X from A*X = B.
  * kron(A,B)    Kronecker product
  * </pre>
  * </p>
@@ -90,16 +95,15 @@ import static org.ejml.equation.TokenList.Type;
  * <p>
  * <h2>Supported operations</h2>
  * <pre>
- * '*'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) multiplication
- * '+'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) addition
- * '-'        (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar) subtraction
- * '/'        (Matrix-Scalar, Scalar-Scalar) division
- * '.*'       (Matrix-Matrix) element wise multiplication
- * './'       (Matrix-Matrix) element wise division
- * '''        Matrix transpose
- * '='        (Matrix-Matrix, Scalar-Scalar) assignment by value
- * '(' ')'    The usual parentheses.
- * '[' ']'    Used to specify a matrix
+ * '*'        multiplication (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
+ * '+'        addition (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
+ * '-'        subtraction (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
+ * '/'        division (Matrix-Scalar, Scalar-Scalar)
+ * '/'        matrix solve "x=b/A" is equivalent to x=solve(A,b) (Matrix-Matrix)
+ * '.*'       element-wise multiplication (Matrix-Matrix)
+ * './'       element-wise division (Matrix-Matrix)
+ * '''        matrix transpose
+ * '='        assignment by value (Matrix-Matrix, Scalar-Scalar)
  * </pre>
  * Order of operations:  [ ' ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
  * </p>
@@ -131,7 +135,9 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
-// TODO Add dot() ones() diag()
+// TODO max, abs
+// TODO Lazy declare output
+// TODO Lazy resize output
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -444,7 +450,7 @@ public class Equation {
         parseSubmatrixRange(tokens, sequence, variables);
 
         // first parameter is the matrix it will be extracted from.  rest specify range
-        Operation.Info info = functions.create("extract",variables);
+        Operation.Info info = functions.create("extract", variables);
 
         sequence.addOperation(info.op);
 
@@ -762,6 +768,18 @@ public class Equation {
     protected <T extends Variable> T lookupVariable(String token) {
         Variable result = variables.get(token);
         return (T)result;
+    }
+
+    public DenseMatrix64F lookupMatrix(String token) {
+        return ((VariableMatrix)variables.get(token)).matrix;
+    }
+
+    public int lookupInteger(String token) {
+        return ((VariableInteger)variables.get(token)).value;
+    }
+
+    public double lookupScalar(String token) {
+        return ((VariableScalar)variables.get(token)).getDouble();
     }
 
     /**

@@ -200,6 +200,13 @@ public class ManagerFunctions {
             }
         });
 
+        input1.put("diag",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.diag(A, managerTemp);
+            }
+        });
+
         inputN.put("zeros",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs) {
@@ -208,11 +215,35 @@ public class ManagerFunctions {
             }
         });
 
+        inputN.put("ones",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.ones(inputs.get(0), inputs.get(1), managerTemp);
+            }
+        });
+
         inputN.put("kron",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
                 return Operation.kron(inputs.get(0),inputs.get(1),managerTemp);
+            }
+        });
+
+        inputN.put("dot",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.dot(inputs.get(0),inputs.get(1),managerTemp);
+            }
+        });
+
+        inputN.put("solve",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.solve(inputs.get(0), inputs.get(1), managerTemp);
             }
         });
 

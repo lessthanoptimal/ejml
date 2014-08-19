@@ -27,7 +27,7 @@ import static org.ejml.ops.CommonOps.multAdd;
 
 /**
  * Generates random vectors based on a zero mean multivariate Gaussian distribution.  The covariance
- * matrix is provided in the contructor.
+ * matrix is provided in the constructor.
  */
 public class CovarianceRandomDraw {
     private DenseMatrix64F A;
@@ -39,19 +39,19 @@ public class CovarianceRandomDraw {
      * to the variables are not saved, their value are copied.
      *
      * @param rand Used to create the random numbers for the draw. Reference is saved.
-     * @param cov The covariance of the stribution.  Not modified.
+     * @param cov The covariance of the distribution.  Not modified.
      */
     public CovarianceRandomDraw( Random rand , DenseMatrix64F cov )
     {
         r = new DenseMatrix64F(cov.numRows,1);
-        CholeskyDecompositionInner_D64 choleky = new CholeskyDecompositionInner_D64( true);
+        CholeskyDecompositionInner_D64 cholesky = new CholeskyDecompositionInner_D64( true);
 
-        if( choleky.inputModified() )
+        if( cholesky.inputModified() )
             cov = cov.copy();
-        if( !choleky.decompose(cov) )
+        if( !cholesky.decompose(cov) )
             throw new RuntimeException("Decomposition failed!");
 
-        A = choleky.getT();
+        A = cholesky.getT();
         this.rand = rand;
     }
 

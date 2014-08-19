@@ -18,8 +18,12 @@
 
 package org.ejml.equation;
 
+import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.factory.LinearSolverFactory;
+import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.NormOps;
 
 import java.util.List;
@@ -29,11 +33,6 @@ import java.util.List;
  *
  * @author Peter Abeles
  */
-// TODO sum
-// TODO max,maxAbs
-// TODO pow
-// TODO dot <-- requires two inputs
-// TODO solve ? or should that be kept outside since it would be the only function on the line?
 abstract class Operation {
 
     public abstract void process();
@@ -66,6 +65,18 @@ abstract class Operation {
 
                     resize(output,mA.matrix.numRows,mB.matrix.numCols);
                     CommonOps.mult(mA.matrix,mB.matrix,output.matrix);
+                }
+            };
+        } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableInteger mA = (VariableInteger)A;
+                    VariableInteger mB = (VariableInteger)B;
+
+                    output.value = mA.value*mB.value;
                 }
             };
         } else if( A instanceof VariableScalar && B instanceof VariableScalar ) {
@@ -111,8 +122,8 @@ abstract class Operation {
         Info ret = new Info();
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
-            throw new RuntimeException("matrix division not supported.  use solve() or inv() explicitly.  solve is typically better");
-        } else if( A instanceof VariableMatrix ) {
+            return solve(B,A,manager);
+        } else if( A instanceof VariableMatrix && B instanceof VariableScalar ) {
             final VariableMatrix output = manager.createMatrix();
             final VariableMatrix m = (VariableMatrix)A;
             final VariableScalar s = (VariableScalar)B;
@@ -124,18 +135,28 @@ abstract class Operation {
                     CommonOps.divide(s.getDouble(),m.matrix,output.matrix);
                 }
             };
-        } else if( A instanceof VariableMatrix ) {
-            throw new RuntimeException("scalar divided by Matrix is undefined");
+        } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableInteger mA = (VariableInteger)A;
+                    VariableInteger mB = (VariableInteger)B;
+
+                    output.value = mA.value/mB.value;
+                }
+            };
         } else {
             final VariableDouble output = manager.createDouble();
             ret.output = output;
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableDouble mA = (VariableDouble)A;
-                    VariableDouble mB = (VariableDouble)B;
+                    VariableScalar mA = (VariableScalar)A;
+                    VariableScalar mB = (VariableScalar)B;
 
-                    output.value = mA.value/mB.value;
+                    output.value = mA.getDouble()/mB.getDouble();
                 }
             };
         }
@@ -341,6 +362,13 @@ abstract class Operation {
                     ((VariableMatrix)dst).matrix.set(((VariableMatrix)src).matrix);
                 }
             };
+        } else if( src instanceof VariableInteger && dst instanceof VariableInteger ) {
+            return new Operation() {
+                @Override
+                public void process() {
+                    ((VariableInteger)dst).value = ((VariableInteger)src).value;
+                }
+            };
         } else if( src instanceof VariableScalar && dst instanceof VariableDouble ) {
             return new Operation() {
                 @Override
@@ -349,7 +377,7 @@ abstract class Operation {
                 }
             };
         } else {
-            throw new RuntimeException("Both variables must be the same type. "+src.getClass().getSimpleName()+" "+dst.getClass().getSimpleName());
+            throw new RuntimeException("Copy type miss-match src = "+src.getClass().getSimpleName()+" dst = "+dst.getClass().getSimpleName());
         }
     }
 
@@ -604,6 +632,36 @@ abstract class Operation {
         return ret;
     }
 
+    public static Info diag( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    DenseMatrix64F mA = ((VariableMatrix)A).matrix;
+
+                    if(MatrixFeatures.isVector(mA)) {
+                        int N = mA.getNumElements();
+                        output.matrix.reshape(N,N);
+                        CommonOps.diag(output.matrix,N,mA.data);
+                    } else {
+                        int N = Math.min(mA.numCols,mA.numRows);
+                        output.matrix.reshape(N,1);
+                        for (int i = 0; i < N; i++) {
+                            output.matrix.data[i] = mA.unsafe_get(i,i);
+                        }
+                    }
+                }
+            };
+        } else {
+            throw new RuntimeException("diag requires a matrix as input");
+        }
+        return ret;
+    }
+
     /**
      * Returns a matrix full of zeros
      */
@@ -620,6 +678,32 @@ abstract class Operation {
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows,numCols);
                     CommonOps.fill(output.matrix,0);
+                    //not sure if this is necessary.  Can its value every be modified?
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected two integers got "+A+" "+B);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Returns a matrix full of ones
+     */
+    public static Info ones( final Variable A , final Variable B , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    int numRows = ((VariableInteger)A).value;
+                    int numCols = ((VariableInteger)B).value;
+                    output.matrix.reshape(numRows,numCols);
+                    CommonOps.fill(output.matrix,1);
                 }
             };
         } else {
@@ -649,6 +733,69 @@ abstract class Operation {
             };
         } else {
             throw new RuntimeException("Both inputs must be matrices ");
+        }
+
+        return ret;
+    }
+
+    /**
+     * If input is two vectors then it returns the dot product as a double.
+     */
+    public static Info dot( final Variable A , final Variable B , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    DenseMatrix64F b = ((VariableMatrix)B).matrix;
+
+                    if( !MatrixFeatures.isVector(a) || !MatrixFeatures.isVector(b))
+                        throw new RuntimeException("Both inputs to dot() must be vectors");
+
+                    output.value = VectorVectorMult.innerProd(a,b);
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected two matrices got "+A+" "+B);
+        }
+
+        return ret;
+    }
+
+    /**
+     * If input is two vectors then it returns the dot product as a double.
+     */
+    public static Info solve( final Variable A , final Variable B , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
+            ret.op = new Operation() {
+                LinearSolver<DenseMatrix64F> solver;
+                @Override
+                public void process() {
+
+                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    DenseMatrix64F b = ((VariableMatrix)B).matrix;
+
+                    if( solver == null ) {
+                        solver = LinearSolverFactory.leastSquares(a.numRows,a.numCols);
+                    }
+
+                    if( !solver.setA(a))
+                        throw new RuntimeException("Solver failed!");
+
+                    output.matrix.reshape(a.numCols,b.numCols);
+                    solver.solve(b,output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected two matrices got "+A+" "+B);
         }
 
         return ret;
