@@ -192,4 +192,8 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
 
         solve(I, A_inv);
     }
+
+    public QRPDecomposition<DenseMatrix64F> getDecomposition() {
+        return decomposition;
+    }
 }

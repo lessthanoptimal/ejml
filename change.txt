@@ -11,6 +11,10 @@ Date format: year/month/day
 - SimpleMatrix
   * Added plus( double )
   * Added elementDiv()
+- Linear Solvers
+  * Exposed inner decomposition algorithms and some data structures
+- Equations
+  * Symbolic way to perform linear algebra
 
 ----- Version 0.25
 

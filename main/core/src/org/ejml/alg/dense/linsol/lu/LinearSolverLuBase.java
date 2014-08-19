@@ -122,4 +122,8 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
     public boolean modifiesB() {
         return false;
     }
+
+    public LUDecompositionBase_D64 getDecomposer() {
+        return decomp;
+    }
 }

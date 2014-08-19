@@ -154,4 +154,16 @@ public class LinearSolverQr extends LinearSolverAbstract {
     public boolean modifiesB() {
         return false;
     }
+
+    public QRDecomposition<DenseMatrix64F> getDecomposer() {
+        return decomposer;
+    }
+
+    public DenseMatrix64F getQ() {
+        return Q;
+    }
+
+    public DenseMatrix64F getR() {
+        return R;
+    }
 }

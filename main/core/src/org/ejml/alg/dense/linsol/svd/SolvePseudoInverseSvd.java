@@ -146,4 +146,8 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
     public void setThreshold(double threshold) {
         this.threshold = threshold;
     }
+
+    public SingularValueDecomposition<DenseMatrix64F> getDecomposer() {
+        return svd;
+    }
 }
