@@ -54,10 +54,7 @@ public class KalmanFilterEquation implements KalmanFilter{
 
         // Provide aliases between the symbolic variables and matrices we normally interact with
         // The names do not have to be the same.
-        eq.alias(x,"x");eq.alias(P,"P");
-        eq.alias(y,"y");eq.alias(Q,"Q");
-        eq.alias(F,"F");eq.alias(H,"H");
-        eq.alias(K,"K");
+        eq.alias(x,"x",P,"P",y,"y",Q,"Q",F,"F",H,"H",K,"K");
 
         // Dummy matrix place holder to avoid compiler errors.  Will be replaced later on
         eq.alias(new DenseMatrix64F(1,1),"z");
@@ -90,8 +87,7 @@ public class KalmanFilterEquation implements KalmanFilter{
     public void update(DenseMatrix64F z, DenseMatrix64F R) {
 
         // Alias will overwrite the reference to the previous matrices with the same name
-        eq.alias(z,"z");
-        eq.alias(R,"R");
+        eq.alias(z,"z"); eq.alias(R,"R");
 
         updateY.perform();
         updateK.perform();

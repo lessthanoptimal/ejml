@@ -200,6 +200,14 @@ public class ManagerFunctions {
             }
         });
 
+        inputN.put("zeros",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.zeros(inputs.get(0), inputs.get(1), managerTemp);
+            }
+        });
+
         inputN.put("kron",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs) {
@@ -208,18 +216,6 @@ public class ManagerFunctions {
             }
         });
 
-        inputN.put("catV",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs) {
-                return Operation.catV(inputs, managerTemp);
-            }
-        });
-        inputN.put("catH",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs) {
-                return Operation.catH(inputs, managerTemp);
-            }
-        });
         inputN.put("extract",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs) {

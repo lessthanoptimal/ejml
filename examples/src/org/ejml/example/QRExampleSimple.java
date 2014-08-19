@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -97,8 +97,7 @@ public class QRExampleSimple {
 
         int N = Math.min(QR.numCols(),QR.numRows());
 
-        // compute Q by first extracting the householder vectors from the
-        // columns of QR and then applying it to Q
+        // compute Q by first extracting the householder vectors from the columns of QR and then applying it to Q
         for( int j = N-1; j>= 0; j-- ) {
             SimpleMatrix u = new SimpleMatrix(QR.numRows(),1);
             u.insertIntoThis(j,0,QR.extractMatrix(j, END,j,j+1));

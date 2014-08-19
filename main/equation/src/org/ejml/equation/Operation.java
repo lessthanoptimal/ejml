@@ -159,7 +159,19 @@ abstract class Operation {
                     CommonOps.add(mA.matrix, mB.matrix, output.matrix);
                 }
             };
-        } else if( A instanceof VariableDouble && B instanceof VariableDouble ) {
+        } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger(0);
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableInteger mA = (VariableInteger)A;
+                    VariableInteger mB = (VariableInteger)B;
+
+                    output.value = mA.value + mB.value;
+                }
+            };
+        } else if( A instanceof VariableScalar && B instanceof VariableScalar ) {
             final VariableDouble output = manager.createDouble();
             ret.output = output;
             ret.op = new Operation() {
@@ -211,6 +223,18 @@ abstract class Operation {
 
                     resize(output,mA.matrix.numRows,mA.matrix.numCols);
                     CommonOps.sub(mA.matrix, mB.matrix, output.matrix);
+                }
+            };
+        } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger(0);
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    VariableInteger mA = (VariableInteger)A;
+                    VariableInteger mB = (VariableInteger)B;
+
+                    output.value = mA.value - mB.value;
                 }
             };
         } else if( A instanceof VariableScalar && B instanceof VariableScalar ) {
@@ -362,12 +386,17 @@ abstract class Operation {
 
                     findExtents(mdst,range,0,extents);
 
-                    if( extents.col1-extents.col0 != 1 )
-                        throw new RuntimeException("Columns don't match");
-                    if( extents.row1-extents.row0 != 1 )
-                        throw new RuntimeException("Rows don't match");
+                    if( !mdst.isInBounds(extents.col0,extents.row0))
+                        throw new RuntimeException("Submatrix out of bounds. Lower extent");
+                    if( !mdst.isInBounds(extents.col1-1,extents.row1-1))
+                        throw new RuntimeException("Submatrix out of bounds. Upper extent");
 
-                    mdst.set(extents.row0, extents.col0, msrc);
+                    for (int i = extents.row0; i < extents.row1; i++) {
+                        int index = i*mdst.numCols + extents.col0;
+                        for (int j = extents.col0; j < extents.col1; j++) {
+                            mdst.data[index++] = msrc;
+                        }
+                    }
                 }
             };
         } else {
@@ -576,6 +605,31 @@ abstract class Operation {
     }
 
     /**
+     * Returns a matrix full of zeros
+     */
+    public static Info zeros( final Variable A , final Variable B , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    int numRows = ((VariableInteger)A).value;
+                    int numCols = ((VariableInteger)B).value;
+                    output.matrix.reshape(numRows,numCols);
+                    CommonOps.fill(output.matrix,0);
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected two integers got "+A+" "+B);
+        }
+
+        return ret;
+    }
+
+    /**
      * Kronecker product
      */
     public static Info kron( final Variable A , final Variable B, ManagerTempVariables manager) {
@@ -596,84 +650,6 @@ abstract class Operation {
         } else {
             throw new RuntimeException("Both inputs must be matrices ");
         }
-
-        return ret;
-    }
-
-    public static Info catV( final List<Variable> inputs, ManagerTempVariables manager) {
-        Info ret = new Info();
-        final VariableMatrix output = manager.createMatrix();
-        ret.output = output;
-
-        if (inputs.size() == 0)
-            throw new RuntimeException("There must be at least one input to catV");
-
-        for (int i = 0; i < inputs.size(); i++) {
-            if (!(inputs.get(i) instanceof VariableMatrix))
-                throw new RuntimeException("All inputs to catV must be a matrix");
-        }
-
-        ret.op = new Operation() {
-            @Override
-            public void process() {
-                int numRows = 0, numCols;
-
-                numCols = ((VariableMatrix) inputs.get(0)).matrix.numCols;
-
-                for (int i = 0; i < inputs.size(); i++) {
-                    DenseMatrix64F m = ((VariableMatrix) inputs.get(i)).matrix;
-                    numRows += m.numRows;
-                }
-
-                output.matrix.reshape(numRows, numCols);
-
-                int y = 0;
-                for (int i = 0; i < inputs.size(); i++) {
-                    DenseMatrix64F m = ((VariableMatrix) inputs.get(i)).matrix;
-                    CommonOps.insert(m,output.matrix, y, 0);
-                    y += m.numRows;
-                }
-            }
-        };
-        return ret;
-    }
-
-
-    public static Info catH( final List<Variable> inputs, ManagerTempVariables manager) {
-        Info ret = new Info();
-        final VariableMatrix output = manager.createMatrix();
-        ret.output = output;
-
-        if( inputs.size() == 0 )
-            throw new RuntimeException("There must be at least one input to catH");
-
-        for (int i = 0; i < inputs.size(); i++) {
-            if( !(inputs.get(i) instanceof VariableMatrix) )
-                throw new RuntimeException("All inputs to catH must be a matrix");
-        }
-
-        ret.op = new Operation() {
-            @Override
-            public void process() {
-                int numRows,numCols=0;
-
-                numRows = ((VariableMatrix)inputs.get(0)).matrix.numRows;
-
-                for (int i = 0; i < inputs.size(); i++) {
-                    DenseMatrix64F m = ((VariableMatrix)inputs.get(i)).matrix;
-                    numCols += m.numCols;
-                }
-
-                output.matrix.reshape(numRows,numCols);
-
-                int x = 0;
-                for (int i = 0; i < inputs.size(); i++) {
-                    DenseMatrix64F m = ((VariableMatrix)inputs.get(i)).matrix;
-                    CommonOps.insert(m,output.matrix,0,x);
-                    x += m.numCols;
-                }
-            }
-        };
 
         return ret;
     }

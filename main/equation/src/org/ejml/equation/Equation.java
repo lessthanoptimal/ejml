@@ -82,10 +82,8 @@ import static org.ejml.equation.TokenList.Type;
  * inv(A)       Inverse of a matrix
  * pinv(A)      Pseudo-inverse of a matrix
  * trace(A)     Trace of the matrix
+ * zeros(A,B)   Matrix full of zeros with A rows and B columns.
  * kron(A,B)    Kronecker product
- * catV(...)    Vertically concatenates 1 or more matrices. e.g. catV(A,B,C)
- * catH(...)    Horizontally concatenates 1 or more matrices. e.g. catH(A,B,C)
- * extract(A,r0,r1,c0,c1) Extracts submatrix of A from rows r0 to r1-1 and columns c0 to c1-1
  * </pre>
  * </p>
  *
@@ -133,6 +131,7 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
+// TODO Add dot() ones() diag()
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -146,6 +145,9 @@ public class Equation {
 
     /**
      * Adds a new Matrix variable.  If one already has the same name it is written over.
+     *
+     * While more verbose for multiple variables, this function doesn't require new memory be declared
+     * each time it's called.
      *
      * @param variable Matrix which is to be assigned to name
      * @param name The name of the variable
@@ -769,8 +771,10 @@ public class Equation {
         TokenList tokens = new TokenList();
 
         int length = 0;
+        boolean again; // process the same character twice
         TokenType type = TokenType.UNKNOWN;
         for( int i = 0; i < equation.length(); i++ ) {
+            again = false;
             char c = equation.charAt(i);
             if( type == TokenType.WORD ) {
                 if (isLetter(c)) {
@@ -790,10 +794,7 @@ public class Equation {
                     }
 
                     type = TokenType.UNKNOWN;
-                    // if it's a special character add it.  If whitespace ignore it
-                    if (isOperator(c)) {
-                        tokens.add(Symbol.lookup(c));
-                    }
+                    again = true; // process unexpected character a second time
                 }
             } else if( type == TokenType.INTEGER ) { // Handle integer numbers.  Until proven to be a float
                 if( c == '.' ) {
@@ -804,14 +805,11 @@ public class Equation {
                     storage[length++] = c;
                 } else if( Character.isDigit(c) ) {
                     storage[length++] = c;
-                } else if( isOperator(c) || Character.isWhitespace(c) ) {
+                } else if( isSymbol(c) || Character.isWhitespace(c) ) {
                     int value = Integer.parseInt( new String(storage, 0, length));
                     tokens.add(managerTemp.createInteger(value));
                     type = TokenType.UNKNOWN;
-                    // if it's a special character add it.  If whitespace ignore it
-                    if (isOperator(c)) {
-                        tokens.add(Symbol.lookup(c));
-                    }
+                    again = true; // process unexpected character a second time
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an integer "+c);
                 }
@@ -823,14 +821,11 @@ public class Equation {
                     type = TokenType.FLOAT_EXP;
                 } else if( Character.isDigit(c) ) {
                     storage[length++] = c;
-                } else if( isOperator(c) || Character.isWhitespace(c) ) {
+                } else if( isSymbol(c) || Character.isWhitespace(c) ) {
                     double value = Double.parseDouble( new String(storage, 0, length));
                     tokens.add(managerTemp.createDouble(value));
                     type = TokenType.UNKNOWN;
-                    // if it's a special character add it.  If whitespace ignore it
-                    if (isOperator(c)) {
-                        tokens.add(Symbol.lookup(c));
-                    }
+                    again = true; // process unexpected character a second time
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an float "+c);
                 }
@@ -845,7 +840,7 @@ public class Equation {
                     }
                 } else if( Character.isDigit(c) ) {
                     storage[length++] = c;
-                } else if( isOperator(c) || Character.isWhitespace(c) ) {
+                } else if( isSymbol(c) || Character.isWhitespace(c) ) {
                     end = true;
                 } else {
                     throw new RuntimeException("Unexpected character at the end of an float "+c);
@@ -855,17 +850,17 @@ public class Equation {
                     double value = Double.parseDouble( new String(storage, 0, length));
                     tokens.add(managerTemp.createDouble(value));
                     type = TokenType.UNKNOWN;
-                    // if it's a special character add it.  If whitespace ignore it
-                    if (isOperator(c)) {
-                        tokens.add(Symbol.lookup(c));
-                    }
+                    again = true; // process the current character again since it was unexpected
                 }
             } else {
-                if( isOperator(c) ) {
+                if( isSymbol(c) ) {
                     boolean special = false;
                     if( c == '-' ) {
                         // need to handle minus symbols carefully since it can be part of a number of a minus operator
-                        if( i+1 < equation.length() && Character.isDigit(equation.charAt(i+1))) {
+                        // if next to a number it should be negative sign, unless there is no operator to its left
+                        // then its a minus sign.
+                        if( i+1 < equation.length() && Character.isDigit(equation.charAt(i+1)) &&
+                                (tokens.last == null || isOperatorLR(tokens.last.getSymbol()))) {
                             type = TokenType.INTEGER;
                             storage[0] = c;
                             length = 1;
@@ -896,6 +891,9 @@ public class Equation {
                     length = 1;
                 }
             }
+            // see if it should process the same character again
+            if( again )
+                i--;
         }
         if( type == TokenType.WORD ) {
             String word = new String(storage,0,length);
@@ -936,16 +934,36 @@ public class Equation {
         return false;
     }
 
-    protected static boolean isOperator( char c ) {
+    protected static boolean isSymbol(char c) {
         return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '[' || c == ']' ||
                c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';';
+    }
+
+    /**
+     * Operators which affect the variables to its left and right
+     */
+    protected static boolean isOperatorLR( Symbol s ) {
+        if( s == null )
+            return false;
+
+        switch( s ) {
+            case ELEMENT_DIVIDE:
+            case ELEMENT_TIMES:
+            case DIVIDE:
+            case TIMES:
+            case PLUS:
+            case MINUS:
+            case ASSIGN:
+                return true;
+        }
+        return false;
     }
 
     /**
      * Returns true if the character is a valid letter for use in a variable name
      */
     protected static boolean isLetter( char c ) {
-        return !(isOperator(c) || Character.isWhitespace(c));
+        return !(isSymbol(c) || Character.isWhitespace(c));
     }
 
     /**

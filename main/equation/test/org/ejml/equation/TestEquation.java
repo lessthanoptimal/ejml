@@ -19,6 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -138,9 +139,35 @@ public class TestEquation {
 
         eq.alias(A.getMatrix(), "A");
 
+        // single element
         eq.process("A(1,2)=0.5");
 
         assertEquals(A.get(1, 2), 0.5, 1e-8);
+
+        // multiple elements
+        eq.process("A(1:2,2:4)=0.5");
+
+        for (int i = 1; i <= 2; i++) {
+            for (int j = 2; j <= 4; j++) {
+                assertEquals(A.get(i, j), 0.5, 1e-8);
+            }
+        }
+    }
+
+    /**
+     * Lazily declare a variable.  Which means it is not explicitly aliased
+     */
+    @Test
+    public void assign_lazy() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        eq.alias(A.getMatrix(), "A");
+        eq.process("B=A");
+
+        DenseMatrix64F B = ((VariableMatrix)eq.lookupVariable("B")).matrix;
+        assertTrue(A.getMatrix()!=B);
+        assertTrue(MatrixFeatures.isEquals(A.getMatrix(),B));
     }
 
 
@@ -227,7 +254,7 @@ public class TestEquation {
         eq.alias(A.getMatrix(), "A");
         Sequence sequence = eq.compile("A=[0 1 2 3; 4 5 6 7;8 1 1 1]");
         sequence.perform();
-        assertTrue(A.isIdentical(expected,1e-8));
+        assertTrue(A.isIdentical(expected, 1e-8));
     }
 
     @Test
@@ -412,36 +439,6 @@ public class TestEquation {
         eq.process("R=kron(A+(A')',(B+B))");
         expected = A.plus(A).kron(B.plus(B));
         assertTrue(expected.isIdentical(R, 1e-15));
-    }
-
-    /**
-     * Test concatenate functions
-     */
-    @Test
-    public void compile_concat() {
-        Equation eq = new Equation();
-
-        SimpleMatrix A = SimpleMatrix.random(1, 1, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random(2, 1, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random(3, 1, -1, 1, rand);
-        SimpleMatrix V = new SimpleMatrix(6,1);
-        SimpleMatrix H = new SimpleMatrix(1,6);
-
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(C.getMatrix(), "C");
-        eq.alias(V.getMatrix(), "V");
-        eq.alias(H.getMatrix(), "H");
-
-        eq.process("H=catH(A',B',C')");
-        assertEquals(A.get(0, 0), H.get(0, 0), 1e-8);
-        assertEquals(B.get(0,0),H.get(0,1),1e-8);
-        assertEquals(C.get(0,0),H.get(0,3),1e-8);
-
-        eq.process("V=catV(A,B,C)");
-        assertEquals(A.get(0,0),H.get(0,0),1e-8);
-        assertEquals(B.get(0, 0), H.get(0, 1), 1e-8);
-        assertEquals(C.get(0, 0), H.get(0, 3), 1e-8);
     }
 
     @Test
@@ -672,10 +669,18 @@ public class TestEquation {
         assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
         assertTrue(5.1==((VariableDouble)t.getVariable()).value);
         assertTrue(t.next == null);
+    }
 
-        // See if it handles minus signs and doubles correctly
-        list = eq.extractTokens("- 1.2",managerTemp);
-        t = list.getFirst();
+    /**
+     * See if the minus symbol is handled correctly.  It's meaning can very depending on the situation.
+     */
+    @Test
+    public void extractTokens_minus() {
+        Equation eq = new Equation();
+        ManagerTempVariables managerTemp = new ManagerTempVariables();
+
+        TokenList list = eq.extractTokens("- 1.2",managerTemp);
+        TokenList.Token t = list.getFirst();
         assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
         assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
         assertTrue(t.next==null);
@@ -685,6 +690,49 @@ public class TestEquation {
         assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
         assertTrue(t.next==null);
 
+        list = eq.extractTokens("2.1-1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
+        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
+        list = eq.extractTokens("2.1 -1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
+        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
+        list = eq.extractTokens("2.1 - -1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
+        assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
+        list = eq.extractTokens("inv(2.1) -1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(t.getFunction().getName().equals("inv")); t = t.next;
+        assertTrue(Symbol.PAREN_LEFT==t.getSymbol()); t = t.next;
+        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
+        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
+        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
+        list = eq.extractTokens("= -1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
+        assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
+
+        list = eq.extractTokens("= - 1.2",managerTemp);
+        t = list.getFirst();
+        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
+        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
+        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
+        assertTrue(t.next==null);
     }
 
     @Test
