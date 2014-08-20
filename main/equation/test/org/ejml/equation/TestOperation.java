@@ -402,18 +402,62 @@ public class TestOperation {
     }
 
     @Test
-    public void transpose() {
-        fail("Implement");
+    public void transpose_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=a'");
+
+        assertTrue(a.transpose().isIdentical(b, 1e-8));
     }
 
     @Test
-    public void inv() {
-        fail("Implement");
+    public void inv_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,3,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=inv(a)");
+
+        assertTrue(a.invert().isIdentical(b, 1e-8));
     }
 
     @Test
-    public void pinv() {
-        fail("Implement");
+    public void inv_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(2.2,"a",3.3,"b");
+        eq.process("b=inv(a)");
+
+        assertEquals(1.0/2.2,eq.lookupScalar("b"),1e-8);
+    }
+
+    @Test
+    public void pinv_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(4,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(1,1,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=pinv(a)");
+
+        assertTrue(a.pseudoInverse().isIdentical(b, 1e-8));
+    }
+
+    @Test
+    public void pinv_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(2.2,"a",3.3,"b");
+        eq.process("b=pinv(a)");
+
+        assertEquals(1.0/2.2,eq.lookupScalar("b"),1e-8);
     }
 
     @Test

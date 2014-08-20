@@ -76,6 +76,45 @@ import static org.ejml.equation.TokenList.Type;
  * </p>
  *
  * <p>
+ * Variables can also be lazily declared and their type inferred under certain conditions.  For example:
+ * <pre>
+ * eq.alias(A,"A", B,"B");
+ * eq.process("C = A*B");
+ * DenseMatrix64F C = eq.lookupMatrix("C");
+ * </pre>
+ * In this case 'C' was lazily declared.  To access the variable, or any others, you can use one of the lookup*()
+ * functions.
+ * </p>
+ *
+ * <p>
+ * Sometimes you don't get the results you expect and it can be helpful to print out the tokens and which operations
+ * the compiler selected.  To do this set the second parameter to eq.compile() or eq.process() to true:
+ * <pre>
+ * Code:
+ * eq.process("C=2.1*B'*A",true);
+ *
+ * Output:
+ * Parsed tokens:
+ * ------------
+ * Word:C
+ * ASSIGN
+ * VarSCALAR
+ * TIMES
+ * VarMATRIX
+ * TRANSPOSE
+ * TIMES
+ * VarMATRIX
+ *
+ * Operations:
+ * ------------
+ * transpose-m
+ * multiply-ms
+ * multiply-mm
+ * copy-mm
+ * </pre>
+ * </p>
+ *
+ * <p>
  * <h2>Built in Constants</h2>
  * <pre>
  * pi = Math.PI
@@ -157,7 +196,6 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
-// TODO Lazy declare output
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -283,9 +321,8 @@ public class Equation {
 
         TokenList.Token t0 = tokens.getFirst();
 
-
         // Get the results variable
-        if( t0.getType() != Type.VARIABLE)
+        if( t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD )
             throw new RuntimeException("Expected variable name first.  Not "+t0);
 
         // see if it is assign or a range
@@ -295,10 +332,9 @@ public class Equation {
         if( t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN )
             throw new RuntimeException("Expected assign next");
 
-        Variable result = t0.getVariable();
-
         // Parse the right side of the equation
         TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
+        checkForUnknownVariables(tokensRight);
         handleParentheses( tokensRight ,sequence);
 
         // see if it needs to be parsed more
@@ -308,10 +344,17 @@ public class Equation {
             throw new RuntimeException("BUG the last token must be a variable");
 
         // copy the results into the output
-        if( range == null)
-            sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result));
-        else {
-            sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result,range));
+        Variable variableRight = tokensRight.getFirst().getVariable();
+        if( range == null) {
+            // no range, so copy results into the entire output matrix
+            Variable output = createVariableInferred(t0, variableRight);
+            sequence.addOperation(Operation.copy(variableRight, output));
+        } else {
+            // a sub-matrix range is specified.  Copy into that inner part
+            if( t0.getType() == Type.WORD ) {
+                throw new RuntimeException("Can't do lazy variable initialization with submatrices. "+t0.getWord());
+            }
+            sequence.addOperation(Operation.copy(variableRight, t0.getVariable(),range));
         }
 
         if( debug ) {
@@ -322,6 +365,50 @@ public class Equation {
         }
 
         return sequence;
+    }
+
+    /**
+     * Examines the list of variables for any unknown variables and throws an exception if one is found
+     */
+    private void checkForUnknownVariables(TokenList tokens) {
+        TokenList.Token t = tokens.getFirst();
+        while( t != null ) {
+            if( t.getType() == Type.WORD )
+                throw new RuntimeException("Unknown variable on right side. "+t.getWord());
+            t = t.next;
+        }
+    }
+
+    /**
+     * Infer the type of and create a new output variable using the results from the right side of the equation.
+     * If the type is already known just return that.
+     */
+    private Variable createVariableInferred(TokenList.Token t0, Variable variableRight) {
+        Variable result;
+
+        if( t0.getType() == Type.WORD ) {
+            switch( variableRight.getType()) {
+                case MATRIX:
+                    alias(new DenseMatrix64F(1,1),t0.getWord());
+                    break;
+
+                case SCALAR:
+                    if( variableRight instanceof VariableInteger) {
+                        alias(0,t0.getWord());
+                    } else {
+                        alias(1.0,t0.getWord());
+                    }
+                    break;
+
+                default:
+                    throw new RuntimeException("Unknown type");
+            }
+
+            result = variables.get(t0.getWord());
+        } else {
+            result = t0.getVariable();
+        }
+        return result;
     }
 
     /**
@@ -884,7 +971,8 @@ public class Equation {
                         if (functions.isFunctionName(name)) {
                             tokens.add(new Function(name));
                         } else {
-                            throw new RuntimeException("word '" + name + "' is neither a variable or function");
+                            // see if it's type can be inferred later on
+                            tokens.add(name);
                         }
                     } else {
                         tokens.add(v);

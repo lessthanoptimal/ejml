@@ -83,6 +83,17 @@ class TokenList {
     }
 
     /**
+     * Adds a word to the end of the token list
+     * @param word word which is to be added
+     * @return The new Token created around symbol
+     */
+    public Token add( String word ) {
+        Token t = new Token(word);
+        push( t );
+        return t;
+    }
+
+    /**
      * Adds a new Token to the end of the linked list
      */
     public void push( Token token ) {
@@ -251,6 +262,7 @@ class TokenList {
         public Function function;
         public Variable variable;
         public Symbol symbol;
+        public String word;
 
         public Token(Function function) {
             this.function = function;
@@ -268,11 +280,17 @@ class TokenList {
             this.symbol = symbol;
         }
 
+        public Token(String word) {
+            this.word = word;
+        }
+
         public Type getType() {
             if( function != null )
                 return Type.FUNCTION;
             else if( variable != null )
                 return Type.VARIABLE;
+            else if( word != null )
+                return Type.WORD;
             else
                 return Type.SYMBOL;
         }
@@ -289,6 +307,10 @@ class TokenList {
             return symbol;
         }
 
+        public String getWord() {
+            return word;
+        }
+
         public String toString() {
             switch( getType() ) {
                 case FUNCTION:
@@ -297,6 +319,8 @@ class TokenList {
                     return ""+symbol;
                 case VARIABLE:
                     return variable.toString();
+                case WORD:
+                    return "Word:"+word;
             }
             throw new RuntimeException("Unknown type");
         }
@@ -317,6 +341,7 @@ class TokenList {
     {
         FUNCTION,
         VARIABLE,
-        SYMBOL
+        SYMBOL,
+        WORD
     }
 }

@@ -708,7 +708,7 @@ abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.matrix.reshape(mA.matrix.numRows,mA.matrix.numCols);
+                    output.matrix.reshape(mA.matrix.numCols,mA.matrix.numRows);
                     CommonOps.pinv(mA.matrix,output.matrix);
                 }
             };

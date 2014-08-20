@@ -56,18 +56,16 @@ public class QRExampleEquation {
 
         gammas = new double[ A.numCols ];
 
-        DenseMatrix64F v = new DenseMatrix64F(A.numRows,1);
-
         for( int i = 0; i < N; i++ ) {
             // reshape temporary variables
             int Ni = QR.numRows-i;
-            v.reshape(Ni,1,false);
 
-            eq.alias(Ni,"Ni",v,"v",QR,"QR",i,"i");
+            eq.alias(Ni,"Ni",QR,"QR",i,"i");
 
             // Place the column that should be zeroed into v
-            eq.process("v=QR(i:,i)"); // TODO make reshape default assignment op?
-                                      // TODO declare variable if it doesn't exist?
+            eq.process("v=QR(i:,i)");
+            // Note that v is lazily created above.  Need direct access to it, which is done below.
+            DenseMatrix64F v = eq.lookupMatrix("v");
 
             double maxV = CommonOps.elementMaxAbs(v);
             eq.alias(maxV,"maxV");

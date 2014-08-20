@@ -42,10 +42,6 @@ public class KalmanFilterEquation implements KalmanFilter{
     @Override
     public void configure(DenseMatrix64F F, DenseMatrix64F Q, DenseMatrix64F H) {
         int dimenX = F.numCols;
-        int dimenZ = H.numRows;
-
-        DenseMatrix64F y = new DenseMatrix64F(dimenZ,1);
-        DenseMatrix64F K = new DenseMatrix64F(dimenX,dimenZ);
 
         x = new DenseMatrix64F(dimenX,1);
         P = new DenseMatrix64F(dimenX,dimenX);
@@ -54,7 +50,7 @@ public class KalmanFilterEquation implements KalmanFilter{
 
         // Provide aliases between the symbolic variables and matrices we normally interact with
         // The names do not have to be the same.
-        eq.alias(x,"x",P,"P",y,"y",Q,"Q",F,"F",H,"H",K,"K");
+        eq.alias(x,"x",P,"P",Q,"Q",F,"F",H,"H");
 
         // Dummy matrix place holder to avoid compiler errors.  Will be replaced later on
         eq.alias(new DenseMatrix64F(1,1),"z");

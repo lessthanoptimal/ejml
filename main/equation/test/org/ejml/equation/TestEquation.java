@@ -47,10 +47,10 @@ public class TestEquation {
         SimpleMatrix C = SimpleMatrix.random(5, 4, -1, 1, rand);
         SimpleMatrix D = SimpleMatrix.random(4, 6, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(C.getMatrix(), "C");
-        eq.alias(D.getMatrix(), "D");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(C, "C");
+        eq.alias(D, "D");
 
         Sequence sequence = eq.compile("A=B+C*D-B");
         SimpleMatrix expected = C.mult(D);
@@ -68,8 +68,8 @@ public class TestEquation {
         SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(6, 6, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         Sequence sequence = eq.compile("A=A*B");
         SimpleMatrix expected = A.mult(B);
@@ -89,8 +89,8 @@ public class TestEquation {
 
         SimpleMatrix A_orig = A.copy();
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         Sequence sequence = eq.compile("A(2:3,0:4)=B");
         sequence.perform();
@@ -115,8 +115,8 @@ public class TestEquation {
 
         SimpleMatrix A_orig = A.copy();
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         eq.process("A(2:,:)=B");
 
@@ -137,7 +137,7 @@ public class TestEquation {
 
         SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
 
         // single element
         eq.process("A(1,2)=0.5");
@@ -162,12 +162,20 @@ public class TestEquation {
         Equation eq = new Equation();
 
         SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
         eq.process("B=A");
 
         DenseMatrix64F B = eq.lookupMatrix("B");
         assertTrue(A.getMatrix()!=B);
         assertTrue(MatrixFeatures.isEquals(A.getMatrix(),B));
+    }
+
+    /**
+     * Place an unknown variable on the right and see if it blows up
+     */
+    @Test(expected = RuntimeException.class)
+    public void assign_lazy_right() {
+        new Equation().process("B=A");
     }
 
     /**
@@ -179,8 +187,8 @@ public class TestEquation {
 
         SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(2, 3, -1, 1, rand);
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
         eq.process("B=A");
 
         assertTrue(A.isIdentical(B,1e-8));
@@ -195,10 +203,10 @@ public class TestEquation {
         SimpleMatrix C = SimpleMatrix.random(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(C.getMatrix(), "C");
-        eq.alias(R.getMatrix(), "R");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(C, "C");
+        eq.alias(R, "R");
 
         eq.process("R=A*(B+C)");
         SimpleMatrix expected = A.mult(B.plus(C));
@@ -216,8 +224,8 @@ public class TestEquation {
         SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(8, 8, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         Sequence sequence = eq.compile("A=B(2:7,1:6)");
         sequence.perform();
@@ -225,14 +233,14 @@ public class TestEquation {
 
         // get single values now
         A = SimpleMatrix.random(6, 1, -1, 1, rand);
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
         sequence = eq.compile("A=B(2:7,3)");
         sequence.perform();
         assertTrue(A.isIdentical(B.extractMatrix(2,8,3,4), 1e-15));
 
         // multiple in a row
         A = SimpleMatrix.random(1, 2, -1, 1, rand);
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
         sequence = eq.compile("A=(B(2:7,3:6))(0:0,1:2)");
         sequence.perform();
         assertTrue(A.isIdentical(B.extractMatrix(2,3,4,6), 1e-15));
@@ -245,14 +253,14 @@ public class TestEquation {
         SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(8, 8, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         eq.process("A=B(2:,:)");
         assertTrue(A.isIdentical(B.extractMatrix(2,8,0,8), 1e-15));
 
         B = SimpleMatrix.random(6, 10, -1, 1, rand);
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(B, "B");
         eq.process("A=B(:,2:)");
         assertTrue(A.isIdentical(B.extractMatrix(0,6,2,10), 1e-15));
     }
@@ -283,7 +291,7 @@ public class TestEquation {
         SimpleMatrix expected = new SimpleMatrix(new double[][]{{0,1,2,3},{4,5,6,7},{8,1,1,1}});
         SimpleMatrix A = new SimpleMatrix(3,4);
 
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
         Sequence sequence = eq.compile("A=[0 1 2 3; 4 5 6 7;8 1 1 1]");
         sequence.perform();
         assertTrue(A.isIdentical(expected, 1e-8));
@@ -296,8 +304,8 @@ public class TestEquation {
         SimpleMatrix A = new SimpleMatrix(new double[][]{{0,1,2,3}});
         SimpleMatrix found = new SimpleMatrix(1,5);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(found.getMatrix(), "found");
+        eq.alias(A, "A");
+        eq.alias(found, "found");
         Sequence sequence = eq.compile("found=[A 4]");
         sequence.perform();
         for (int i = 0; i < 5; i++) {
@@ -312,8 +320,8 @@ public class TestEquation {
         SimpleMatrix A = new SimpleMatrix(new double[][]{{0,1,2,3}});
         SimpleMatrix found = new SimpleMatrix(5,1);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(found.getMatrix(), "found");
+        eq.alias(A, "A");
+        eq.alias(found, "found");
         Sequence sequence = eq.compile("found=[A' ; 4]");
         sequence.perform();
         for (int i = 0; i < 5; i++) {
@@ -327,7 +335,7 @@ public class TestEquation {
 
         SimpleMatrix found = new SimpleMatrix(3,2);
 
-        eq.alias(found.getMatrix(), "found");
+        eq.alias(found, "found");
         Sequence sequence = eq.compile("found=[[1 2 3]' [4 5 [6]]']");
         sequence.perform();
         int index = 1;
@@ -347,10 +355,10 @@ public class TestEquation {
         SimpleMatrix C = SimpleMatrix.random(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(C.getMatrix(), "C");
-        eq.alias(R.getMatrix(), "R");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(C, "C");
+        eq.alias(R, "R");
 
         Sequence sequence = eq.compile("R=A'*(B'+C)'+inv(B)'");
         SimpleMatrix expected = A.transpose().mult(B.transpose().plus(C).transpose()).plus(B.invert().transpose());
@@ -367,10 +375,10 @@ public class TestEquation {
         SimpleMatrix C = SimpleMatrix.random(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(C.getMatrix(), "C");
-        eq.alias(R.getMatrix(), "R");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(C, "C");
+        eq.alias(R, "R");
 
         Sequence sequence = eq.compile("R=A.*(B./C)");
         SimpleMatrix expected = A.elementMult(B.elementDiv(C));
@@ -387,8 +395,8 @@ public class TestEquation {
         double C = 2.5;
         double D = 1.7;
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
         eq.alias(D, "D");
         eq.alias(0.0, "E");
 
@@ -425,10 +433,10 @@ public class TestEquation {
         SimpleMatrix C = SimpleMatrix.random(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(C.getMatrix(), "C");
-        eq.alias(R.getMatrix(), "R");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(C, "C");
+        eq.alias(R, "R");
 
         // easy case
         Sequence sequence = eq.compile("R=inv(A)");
@@ -460,9 +468,9 @@ public class TestEquation {
         SimpleMatrix B = SimpleMatrix.random(4, 5, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(12, 20);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
-        eq.alias(R.getMatrix(), "R");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(R, "R");
 
         eq.process("R=kron(A,B)");
         SimpleMatrix expected = A.kron(B);
