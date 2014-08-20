@@ -1771,6 +1771,27 @@ public class CommonOps {
 
     /**
      * <p>
+     * Changes the sign of every element in the matrix.<br>
+     * <br>
+     * output<sub>ij</sub> = -input<sub>ij</sub>
+     * </p>
+     *
+     * @param input A matrix. Modified.
+     */
+    public static void changeSign( D1Matrix64F input , D1Matrix64F output)
+    {
+        if( input.numRows != output.numRows || input.numCols != output.numCols )
+            throw new IllegalArgumentException("Matrices must have the same shape");
+
+        final int size = input.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            output.data[i] = -input.data[i];
+        }
+    }
+
+    /**
+     * <p>
      * Sets every element in the matrix to the specified value.<br>
      * <br>
      * a<sub>ij</sub> = value

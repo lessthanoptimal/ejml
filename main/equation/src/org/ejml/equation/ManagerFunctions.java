@@ -289,6 +289,14 @@ public class ManagerFunctions {
             }
         });
 
+        inputN.put("atan2",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.atan2(inputs.get(0), inputs.get(1), managerTemp);
+            }
+        });
+
         inputN.put("solve",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs) {

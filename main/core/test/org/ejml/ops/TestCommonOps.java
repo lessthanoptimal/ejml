@@ -735,6 +735,30 @@ public class TestCommonOps {
     }
 
     @Test
+    public void changeSign_one() {
+        DenseMatrix64F A = RandomMatrices.createRandom(2,3,rand);
+        DenseMatrix64F A_orig = A.copy();
+
+        CommonOps.changeSign(A);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            assertEquals(-A.get(i),A_orig.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void changeSign_two() {
+        DenseMatrix64F A = RandomMatrices.createRandom(2,3,rand);
+        DenseMatrix64F B = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.changeSign(A,B);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            assertEquals(A.get(i),-B.get(i),1e-8);
+        }
+    }
+
+    @Test
     public void fill_dense() {
         double d[] = new double[]{10,12.5,-2,5.5};
         DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);

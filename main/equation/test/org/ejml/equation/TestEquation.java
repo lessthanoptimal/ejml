@@ -200,14 +200,12 @@ public class TestEquation {
         eq.alias(C.getMatrix(), "C");
         eq.alias(R.getMatrix(), "R");
 
-        Sequence sequence = eq.compile("R=A*(B+C)");
+        eq.process("R=A*(B+C)");
         SimpleMatrix expected = A.mult(B.plus(C));
-        sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
 
         // try again with pointless ones
-        sequence = eq.compile("R=(A*((B+(C))))");
-        sequence.perform();
+        eq.process("R=(A*((B+(C))))");
         assertTrue(expected.isIdentical(R,1e-15));
     }
 
@@ -257,6 +255,25 @@ public class TestEquation {
         eq.alias(B.getMatrix(), "B");
         eq.process("A=B(:,2:)");
         assertTrue(A.isIdentical(B.extractMatrix(0,6,2,10), 1e-15));
+    }
+
+    @Test
+    public void compile_neg() {
+        Equation eq = new Equation();
+
+        eq.alias(1, "A",2, "B");
+
+        eq.process("A=-B");
+        assertEquals(-2, eq.lookupInteger("A"));
+
+        eq.process("A=B--B");
+        assertEquals(4, eq.lookupInteger("A"));
+        eq.process("A=B+-B");
+        assertEquals(0,eq.lookupInteger("A"));
+        eq.process("A=B---5");
+        assertEquals(2-5,eq.lookupInteger("A"));
+        eq.process("A=B--5");
+        assertEquals(2+5,eq.lookupInteger("A"));
     }
 
     @Test

@@ -41,8 +41,8 @@ public class TestOperation {
         SimpleMatrix b = SimpleMatrix.random(5, 3, -1, 1, rand);
 
         eq.alias(2.5, "A");
-        eq.alias(b.getMatrix(), "b");
-        eq.alias(x.getMatrix(), "x");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
 
         eq.process("x=b/A");
 
@@ -87,9 +87,9 @@ public class TestOperation {
         SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(b.getMatrix(), "b");
-        eq.alias(x.getMatrix(), "x");
+        eq.alias(A, "A");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
 
         eq.process("x=b/A");
 
@@ -104,9 +104,9 @@ public class TestOperation {
         SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(b.getMatrix(), "b");
-        eq.alias(x.getMatrix(), "x");
+        eq.alias(A, "A");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
 
         eq.process("x=A\\b");
 
@@ -121,13 +121,13 @@ public class TestOperation {
         SimpleMatrix b = SimpleMatrix.random(5, 3, -1, 1, rand);
 
         eq.alias(2.5, "A");
-        eq.alias(b.getMatrix(), "b");
-        eq.alias(x.getMatrix(), "x");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
 
         eq.process("x=b*A");
         assertTrue(b.scale(2.5).isIdentical(x,1e-8));
         eq.process("x=A*b");
-        assertTrue(b.scale(2.5).isIdentical(x,1e-8));
+        assertTrue(b.scale(2.5).isIdentical(x, 1e-8));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class TestOperation {
 
         int found = eq.lookupInteger("x");
 
-        assertEquals(13*4,found,1e-8);
+        assertEquals(13 * 4, found, 1e-8);
     }
 
     @Test
@@ -157,7 +157,7 @@ public class TestOperation {
 
         double found = eq.lookupScalar("x");
 
-        assertEquals(4.2*5.0,found,1e-8);
+        assertEquals(4.2 * 5.0, found, 1e-8);
     }
 
     @Test
@@ -168,9 +168,9 @@ public class TestOperation {
         SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(b.getMatrix(), "b");
-        eq.alias(x.getMatrix(), "x");
+        eq.alias(A, "A");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
 
         eq.process("b=A*x");
 
@@ -195,6 +195,55 @@ public class TestOperation {
         eq.process("a=2^4");
 
         assertEquals(Math.pow(2,4),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void atan2_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=atan2(1.1,0.5)");
+
+        assertEquals(Math.atan2(1.1, 0.5), eq.lookupScalar("a"), 1e-8);
+    }
+
+    @Test
+    public void neg_int() {
+        Equation eq = new Equation();
+
+        eq.alias(2,"a");
+        eq.alias(3,"b");
+        eq.process("a=-b");
+
+        assertEquals(-3, eq.lookupInteger("a"));
+    }
+
+    @Test
+    public void neg_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(2.1,"a");
+        eq.alias(3.1,"b");
+        eq.process("a=-b");
+
+        assertEquals(-3.1, eq.lookupScalar("a"), 1e-8);
+    }
+
+    @Test
+    public void neg_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(1, 1, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(5, 3, -1, 1, rand);
+
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+
+        eq.process("A=-B");
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            assertEquals(-A.get(i),B.get(i),1e-8);
+        }
     }
 
     @Test
@@ -224,7 +273,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=atan(2.1)");
 
-        assertEquals(Math.atan(2.1),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.atan(2.1), eq.lookupScalar("a"), 1e-8);
     }
 
     @Test
@@ -248,13 +297,103 @@ public class TestOperation {
     }
 
     @Test
-    public void mAdd() {
-        fail("Implement");
+    public void add_int_int() {
+        Equation eq = new Equation();
+
+        eq.alias(1,"a");
+        eq.process("a=2 + 3");
+
+        assertEquals(5,eq.lookupInteger("a"),1e-8);
     }
 
     @Test
-    public void mSub() {
-        fail("Implement");
+    public void add_scalar_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(1.2,"a");
+        eq.process("a= 2.3 + 3");
+
+        assertEquals(5.3, eq.lookupScalar("a"), 1e-8);
+    }
+
+    @Test
+    public void add_matrix_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix c = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+        eq.process("a=b+c");
+
+        assertTrue(b.plus(c).isIdentical(a, 1e-8));
+    }
+
+    @Test
+    public void add_matrix_scalar() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+
+        eq.process("a=b+2.2");
+        assertTrue(b.plus(2.2).isIdentical(a,1e-8));
+
+        eq.process("a=2.2+b");
+        assertTrue(b.plus(2.2).isIdentical(a, 1e-8));
+    }
+
+    @Test
+    public void subtract_int_int() {
+        Equation eq = new Equation();
+
+        eq.alias(1,"a");
+        eq.process("a=2 - 3");
+
+        assertEquals(-1,eq.lookupInteger("a"),1e-8);
+    }
+
+    @Test
+    public void subtract_scalar_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(1.2,"a");
+        eq.process("a= 2.3 - 3");
+
+        assertEquals(2.3 - 3.0, eq.lookupScalar("a"), 1e-8);
+    }
+
+    @Test
+    public void subtract_matrix_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix c = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b", c, "c");
+        eq.process("a=b-c");
+
+        assertTrue(b.minus(c).isIdentical(a,1e-8));
+    }
+
+    @Test
+    public void subtract_matrix_scalar() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+
+        eq.process("a=b-2.2");
+        assertTrue(b.plus(-2.2).isIdentical(a,1e-8));
+
+        eq.process("a=2.2-b");
+        assertTrue(b.plus(-2.2).isIdentical(a, 1e-8));
     }
 
     @Test
@@ -304,8 +443,8 @@ public class TestOperation {
         SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(6, 5, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         eq.process("B=abs(A)");
 
@@ -348,7 +487,7 @@ public class TestOperation {
 
         SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
         eq.alias(1.0, "B");
 
         eq.process("B=max(A)");
@@ -390,7 +529,7 @@ public class TestOperation {
 
         SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
 
         eq.process("A=zeros(6,8)");
 
@@ -407,7 +546,7 @@ public class TestOperation {
 
         SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
+        eq.alias(A, "A");
 
         eq.process("A=ones(6,8)");
 
@@ -426,8 +565,8 @@ public class TestOperation {
         SimpleMatrix B = SimpleMatrix.random(6, 1, -1, 1, rand);
 
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         eq.process("A=diag(B)");
 
@@ -448,8 +587,8 @@ public class TestOperation {
         SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(6, 1, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
 
         eq.process("B=diag(A)");
 
@@ -468,8 +607,8 @@ public class TestOperation {
         SimpleMatrix A = SimpleMatrix.random(6, 1, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random(6, 1, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(B.getMatrix(), "B");
+        eq.alias(A, "A");
+        eq.alias(B, "B");
         eq.alias(1.0, "found");
 
         eq.process("found=dot(A,B)");
@@ -487,9 +626,9 @@ public class TestOperation {
         SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
 
-        eq.alias(A.getMatrix(), "A");
-        eq.alias(b.getMatrix(), "b");
-        eq.alias(x.getMatrix(), "x");
+        eq.alias(A, "A");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
 
         eq.process("x=solve(A,b)");
 

@@ -19,6 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,6 +106,7 @@ import static org.ejml.equation.TokenList.Type;
  * sin(a)       Math.sin(a) for scalars only
  * cos(a)       Math.cos(a) for scalars only
  * atan(a)      Math.atan(a) for scalars only
+ * atan2(a,b)   Math.atan2(a,b) for scalars only
  * exp(a)       Math.exp(a) for scalars only
  * log(a)       Math.log(a) for scalars only
  * </pre>
@@ -156,10 +158,6 @@ import static org.ejml.equation.TokenList.Type;
  * @author Peter Abeles
  */
 // TODO Lazy declare output
-// TODO Lazy resize output
-// TODO Negative operator on matrices, e.g. -A
-// TODO Scalar: atan2, log
-// TODO Constants: pi, e
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -194,6 +192,10 @@ public class Equation {
         }else {
             old.matrix = variable;
         }
+    }
+
+    public void alias( SimpleMatrix variable , String name ) {
+        alias(variable.getMatrix(),name);
     }
 
     /**
@@ -244,6 +246,8 @@ public class Equation {
                 alias(((Double)args[i]).doubleValue(),(String)args[i+1]);
             } else if( args[i].getClass() == DenseMatrix64F.class ) {
                 alias((DenseMatrix64F)args[i],(String)args[i+1]);
+            } else if( args[i].getClass() == SimpleMatrix.class ) {
+                alias((SimpleMatrix)args[i],(String)args[i+1]);
             } else {
                 throw new RuntimeException("Unknown value type "+args[i]);
             }
@@ -272,8 +276,9 @@ public class Equation {
             throw new RuntimeException("Too few tokens");
 
         if( debug ) {
-            System.out.println("Parsed tokens:");
+            System.out.println("Parsed tokens:\n------------");
             tokens.print();
+            System.out.println();
         }
 
         TokenList.Token t0 = tokens.getFirst();
@@ -307,6 +312,13 @@ public class Equation {
             sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result));
         else {
             sequence.addOperation(Operation.copy(tokensRight.getFirst().getVariable(),result,range));
+        }
+
+        if( debug ) {
+            System.out.println("Operations:\n------------");
+            for (int i = 0; i < sequence.operations.size(); i++) {
+                System.out.println(sequence.operations.get(i).name());
+            }
         }
 
         return sequence;
@@ -559,6 +571,7 @@ public class Equation {
         parseBracketCreateMatrix(tokens, sequence);
 
         // process operators depending on their priority
+        parseNegOp(tokens,sequence);
         parseOperationsL(tokens,sequence);
         parseOperationsLR(new Symbol[]{Symbol.POWER}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
@@ -651,6 +664,44 @@ public class Equation {
             constructor.addToRow(opStart.getVariable());
         }
     }
+
+    /**
+     * Searches for cases where a minus sign means negative operator.  That happens when there is a minus
+     * sign with a variable to its right and no variable to its left
+     */
+    protected void parseNegOp(TokenList tokens, Sequence sequence) {
+        if( tokens.size == 0 )
+            return;
+
+        TokenList.Token token = tokens.first;
+
+        while( token != null ) {
+            TokenList.Token next = token.next;
+            escape:
+            if( token.getSymbol() == Symbol.MINUS ) {
+                if( token.previous != null && token.previous.getType() != Type.SYMBOL)
+                    break escape;
+                if( token.next == null || token.next.getType() == Type.SYMBOL)
+                    break escape;
+
+                if( token.next.getType() != Type.VARIABLE )
+                    throw new RuntimeException("Crap bug rethink this function");
+
+                // create the operation
+                Operation.Info info = Operation.neg(token.next.getVariable(),functions.getManagerTemp());
+                // add the operation to the sequence
+                sequence.addOperation(info.op);
+                // update the token list
+                TokenList.Token t = new TokenList.Token(info.output);
+                tokens.insert(token.next,t);
+                tokens.remove(token.next);
+                tokens.remove(token);
+                next = t;
+            }
+            token = next;
+        }
+    }
+
 
     /**
      * Parses operations where the input comes from variables to its left only.  Hard coded to only look
