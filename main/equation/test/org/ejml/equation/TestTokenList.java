@@ -156,7 +156,7 @@ public class TestTokenList {
         A=list.add(Symbol.MINUS);
         B=list.add(Symbol.PLUS);
         C=list.add(Symbol.TIMES);
-        D=new Token(Symbol.DIVIDE);
+        D=new Token(Symbol.RDIVIDE);
 
         list.replace(B,D);
         assertEquals(3, list.size);
@@ -185,18 +185,18 @@ public class TestTokenList {
         list = new TokenList();
         list.add(Symbol.MINUS);
         list.add(Symbol.PLUS);
-        list.add(Symbol.DIVIDE);
+        list.add(Symbol.RDIVIDE);
         found = list.extractSubList(list.first,list.last);
         assertEquals(0,list.size);
         assertEquals(3,found.size);
         assertEquals(Symbol.MINUS,found.first.getSymbol());
-        assertEquals(Symbol.DIVIDE,found.last.getSymbol());
+        assertEquals(Symbol.RDIVIDE,found.last.getSymbol());
 
         // Remove stuff in the middle
         list = new TokenList();
         list.add(Symbol.MINUS);
         list.add(Symbol.PLUS);
-        list.add(Symbol.DIVIDE);
+        list.add(Symbol.RDIVIDE);
         list.add(Symbol.TIMES);
         found = list.extractSubList(list.first.next,list.last.previous);
         assertEquals(2,list.size);
@@ -204,7 +204,7 @@ public class TestTokenList {
         assertEquals(Symbol.MINUS,list.first.getSymbol());
         assertEquals(Symbol.TIMES,list.last.getSymbol());
         assertEquals(Symbol.PLUS,found.first.getSymbol());
-        assertEquals(Symbol.DIVIDE,found.last.getSymbol());
+        assertEquals(Symbol.RDIVIDE,found.last.getSymbol());
     }
 
     @Test

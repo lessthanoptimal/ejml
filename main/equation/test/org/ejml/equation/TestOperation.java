@@ -18,6 +18,7 @@
 
 package org.ejml.equation;
 
+import org.ejml.ops.CommonOps;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -96,6 +97,23 @@ public class TestOperation {
     }
 
     @Test
+    public void ldivide_matrix_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(b.getMatrix(), "b");
+        eq.alias(x.getMatrix(), "x");
+
+        eq.process("x=A\\b");
+
+        assertTrue(A.solve(b).isIdentical(x, 1e-8));
+    }
+
+    @Test
     public void multiply_matrix_scalar() {
         Equation eq = new Equation();
 
@@ -160,6 +178,76 @@ public class TestOperation {
     }
 
     @Test
+    public void power_double_double() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=2.3^4.2");
+
+        assertEquals(Math.pow(2.3,4.2),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void power_int_int() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=2^4");
+
+        assertEquals(Math.pow(2,4),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void sin() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=sin(2.1)");
+
+        assertEquals(Math.sin(2.1),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void cos() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=cos(2.1)");
+
+        assertEquals(Math.cos(2.1),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void atan() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=atan(2.1)");
+
+        assertEquals(Math.atan(2.1),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void exp() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=exp(2.1)");
+
+        assertEquals(Math.exp(2.1),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
+    public void log() {
+        Equation eq = new Equation();
+
+        eq.alias(1.1,"a");
+        eq.process("a=log(2.1)");
+
+        assertEquals(Math.log(2.1),eq.lookupScalar("a"),1e-8);
+    }
+
+    @Test
     public void mAdd() {
         fail("Implement");
     }
@@ -207,6 +295,93 @@ public class TestOperation {
     @Test
     public void eye() {
         fail("Implement");
+    }
+
+    @Test
+    public void abs_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+
+        eq.process("B=abs(A)");
+
+        for (int i = 0; i < A.numRows(); i++) {
+            for (int j = 0; j < A.numCols(); j++) {
+                assertTrue(B.get(i,j)==Math.abs(A.get(i,j)));
+            }
+        }
+    }
+
+    @Test
+    public void abs_int() {
+        Equation eq = new Equation();
+
+        eq.alias(-4, "A");
+        eq.alias(1, "B");
+
+        eq.process("B=abs(A)");
+
+        int found = eq.lookupInteger("B");
+        assertEquals(4,found,1e-8);
+    }
+
+    @Test
+    public void abs_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(-4.6, "A");
+        eq.alias(1.1, "B");
+
+        eq.process("B=abs(A)");
+
+        double found = eq.lookupScalar("B");
+        assertEquals(4.6,found,1e-8);
+    }
+
+    @Test
+    public void max_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(1.0, "B");
+
+        eq.process("B=max(A)");
+
+        double found = eq.lookupScalar("B");
+        double expected = CommonOps.elementMax(A.getMatrix());
+        assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void max_int() {
+        Equation eq = new Equation();
+
+        eq.alias(4, "A");
+        eq.alias(1, "B");
+
+        eq.process("B=max(A)");
+
+        int found = eq.lookupInteger("B");
+        assertEquals(4,found,1e-8);
+    }
+
+    @Test
+    public void max_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(4.6, "A");
+        eq.alias(1.1, "B");
+
+        eq.process("B=max(A)");
+
+        double found = eq.lookupScalar("B");
+        assertEquals(4.6,found,1e-8);
     }
 
     @Test

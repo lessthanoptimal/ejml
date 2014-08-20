@@ -164,6 +164,149 @@ abstract class Operation {
         return ret;
     }
 
+    public static Info pow(final Variable A, final Variable B, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar && B instanceof VariableScalar ) {
+
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    double a = ((VariableScalar)A).getDouble();
+                    double b = ((VariableScalar)B).getDouble();
+
+                    output.value = Math.pow(a,b);
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalar to scalar power supported");
+        }
+
+        return ret;
+    }
+
+    public static Info sqrt(final Variable A, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar  ) {
+
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    double a = ((VariableScalar)A).getDouble();
+
+                    output.value = Math.sqrt(a);
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalars are supported");
+        }
+
+        return ret;
+    }
+
+    public static Info sin(final Variable A, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar  ) {
+
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.sin(((VariableScalar) A).getDouble());
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalars are supported");
+        }
+
+        return ret;
+    }
+
+    public static Info cos(final Variable A, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar  ) {
+
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.cos(((VariableScalar) A).getDouble());
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalars are supported");
+        }
+
+        return ret;
+    }
+
+    public static Info atan(final Variable A, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar  ) {
+
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.atan(((VariableScalar) A).getDouble());
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalars are supported");
+        }
+
+        return ret;
+    }
+
+    public static Info exp(final Variable A, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar  ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.exp(((VariableScalar) A).getDouble());
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalars are supported");
+        }
+
+        return ret;
+    }
+
+    public static Info log(final Variable A, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( A instanceof VariableScalar  ) {
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.log(((VariableScalar) A).getDouble());
+                }
+            };
+        } else {
+            throw new RuntimeException("Only scalars are supported");
+        }
+
+        return ret;
+    }
+
     public static Info add(final Variable A, final Variable B, ManagerTempVariables manager) {
         Info ret = new Info();
 
@@ -359,7 +502,10 @@ abstract class Operation {
             return new Operation() {
                 @Override
                 public void process() {
-                    ((VariableMatrix)dst).matrix.set(((VariableMatrix)src).matrix);
+                    DenseMatrix64F d = ((VariableMatrix)dst).matrix;
+                    DenseMatrix64F s = ((VariableMatrix)src).matrix;
+                    d.reshape(s.numRows,s.numCols);
+                    d.set(((VariableMatrix) src).matrix);
                 }
             };
         } else if( src instanceof VariableInteger && dst instanceof VariableInteger ) {
@@ -582,16 +728,90 @@ abstract class Operation {
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableMatrix mA = (VariableMatrix)A;
-                    output.value= NormOps.normF(mA.matrix);
+                    output.value= NormOps.normF(((VariableMatrix)A).matrix);
                 }
             };
         } else {
             ret.op = new Operation() {
                 @Override
                 public void process() {
-                    VariableScalar mA = (VariableScalar)A;
-                    output.value = Math.abs(mA.getDouble());
+                    output.value = Math.abs(((VariableScalar) A).getDouble());
+                }
+            };
+        }
+
+        return ret;
+    }
+
+
+    public static Info max( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = CommonOps.elementMax(((VariableMatrix) A).matrix);
+                }
+            };
+        } else if( A instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = ((VariableInteger)A).value;
+                }
+            };
+        } else if( A instanceof VariableScalar ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = ((VariableDouble)A).getDouble();
+                }
+            };
+        }
+
+        return ret;
+    }
+
+    public static Info abs( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    output.matrix.reshape(a.numRows,a.numCols);
+                    int N = a.getNumElements();
+                    for (int i = 0; i < N; i++) {
+                        output.matrix.data[i] = Math.abs(a.data[i]);
+                    }
+                }
+            };
+        } else if( A instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.abs(((VariableInteger)A).value);
+                }
+            };
+        } else if( A instanceof VariableScalar ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation() {
+                @Override
+                public void process() {
+                    output.value = Math.abs((((VariableDouble)A).getDouble()));
                 }
             };
         }

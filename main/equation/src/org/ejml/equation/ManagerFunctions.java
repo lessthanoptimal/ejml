@@ -113,8 +113,14 @@ public class ManagerFunctions {
             case TIMES:
                 return Operation.multiply(left, right, managerTemp);
 
-            case DIVIDE:
+            case RDIVIDE:
                 return Operation.divide(left, right, managerTemp);
+
+            case LDIVIDE:
+                return Operation.divide(right, left, managerTemp);
+
+            case POWER:
+                return Operation.pow(left, right, managerTemp);
 
             case ELEMENT_DIVIDE:
                 return Operation.elementDivision(left, right, managerTemp);
@@ -164,46 +170,82 @@ public class ManagerFunctions {
                 return Operation.inv(A,managerTemp);
             }
         });
-
         input1.put("pinv",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.pinv(A, managerTemp);
             }
         });
-
         input1.put("eye",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.eye(A, managerTemp);
             }
         });
-
         input1.put("det",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.det(A, managerTemp);
             }
         });
-
         input1.put("normF",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.normF(A, managerTemp);
             }
         });
-
         input1.put("trace",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.trace(A, managerTemp);
             }
         });
-
         input1.put("diag",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.diag(A, managerTemp);
+            }
+        });
+        input1.put("max",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.max(A, managerTemp);
+            }
+        });
+        input1.put("abs",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.abs(A, managerTemp);
+            }
+        });
+        input1.put("sin",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.sin(A, managerTemp);
+            }
+        });
+        input1.put("cos",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.cos(A, managerTemp);
+            }
+        });
+        input1.put("atan",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.atan(A, managerTemp);
+            }
+        });
+        input1.put("exp",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.exp(A, managerTemp);
+            }
+        });
+        input1.put("log",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.log(A, managerTemp);
             }
         });
 
@@ -227,7 +269,7 @@ public class ManagerFunctions {
             @Override
             public Operation.Info create(List<Variable> inputs) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.kron(inputs.get(0),inputs.get(1),managerTemp);
+                return Operation.kron(inputs.get(0), inputs.get(1), managerTemp);
             }
         });
 
@@ -235,7 +277,15 @@ public class ManagerFunctions {
             @Override
             public Operation.Info create(List<Variable> inputs) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.dot(inputs.get(0),inputs.get(1),managerTemp);
+                return Operation.dot(inputs.get(0), inputs.get(1), managerTemp);
+            }
+        });
+
+        inputN.put("pow",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.pow(inputs.get(0), inputs.get(1), managerTemp);
             }
         });
 

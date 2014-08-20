@@ -31,15 +31,17 @@ import static org.ejml.equation.TokenList.Type;
  * Equation allows the user to manipulate matrices in a more compact symbolic way, similar to Matlab and Octave.
  * Aliases are made to Matrices and scalar values which can then be manipulated by specifying an equation in a string.
  * These equations can either be "pre-compiled" [1] into a sequence of operations or immediately executed.  While the
- * former is more verbose, it is significantly faster and runs close to the speed of normal hand written code.
+ * former is more verbose, when dealing with small matrices it significantly faster and runs close to the speed of
+ * normal hand written code.
  * </p>
  * <p>
  * Each string represents a single line and must have one and only one assignment '=' operator.  Temporary variables
  * are handled transparently to the user.  Temporary variables are declared at compile time, but resized at runtime.
- * If the inputs are not resized and the code is precompiled, then no new memory will be declared.
+ * If the inputs are not resized and the code is precompiled, then no new memory will be declared.  When a matrix
+ * is assigned the results of an operation it is resized so that it can store the results.
  * </p>
  * <p>
- * The compiler produces simplistic code.  For example, if it encounters the following equation "a = b*c' it
+ * The compiler currently produces simplistic code.  For example, if it encounters the following equation "a = b*c' it
  * will not invoke multTransB(b,c,a), but will explicitly transpose c and then call mult().  In the future it
  * will recognize such short cuts.
  * </p>
@@ -73,6 +75,14 @@ import static org.ejml.equation.TokenList.Type;
  * </p>
  *
  * <p>
+ * <h2>Built in Constants</h2>
+ * <pre>
+ * pi = Math.PI
+ * e  = Math.E
+ * </pre>
+ * </p>
+ *
+ * <p>
  * <h2>Supported functions</h2>
  * <pre>
  * eye(N)       Create an identity matrix which is N by N.
@@ -82,13 +92,21 @@ import static org.ejml.equation.TokenList.Type;
  * inv(A)       Inverse of a matrix
  * pinv(A)      Pseudo-inverse of a matrix
  * trace(A)     Trace of the matrix
- * zeros(A,B)   Matrix full of zeros with A rows and B columns.
- * ones(A,B)    Matrix full of ones with A rows and B columns.
+ * zeros(r,c)   Matrix full of zeros with r rows and c columns.
+ * ones(r,c)    Matrix full of ones with r rows and c columns.
  * diag(A)      If a vector then returns a square matrix with diagonal elements filled with vector
  * diag(A)      If a matrix then it returns the diagonal elements as a column vector
  * dot(A,B)     Returns the dot product of two vectors as a double.  Does not work on general matrices.
  * solve(A,B)   Returns the solution X from A*X = B.
  * kron(A,B)    Kronecker product
+ * abs(A)       Absolute value of A.
+ * max(A)       Element with the largest value in A.
+ * pow(a,b)     Computes a to the power of b.  Can also be invoked with "a^b" scalars only.
+ * sin(a)       Math.sin(a) for scalars only
+ * cos(a)       Math.cos(a) for scalars only
+ * atan(a)      Math.atan(a) for scalars only
+ * exp(a)       Math.exp(a) for scalars only
+ * log(a)       Math.log(a) for scalars only
  * </pre>
  * </p>
  *
@@ -98,14 +116,16 @@ import static org.ejml.equation.TokenList.Type;
  * '*'        multiplication (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
  * '+'        addition (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
  * '-'        subtraction (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
- * '/'        division (Matrix-Scalar, Scalar-Scalar)
+ * '/'        divide (Matrix-Scalar, Scalar-Scalar)
  * '/'        matrix solve "x=b/A" is equivalent to x=solve(A,b) (Matrix-Matrix)
+ * '\'        left-divide.  Same as divide but reversed.  e.g. x=A\b is x=solve(A,b)
  * '.*'       element-wise multiplication (Matrix-Matrix)
  * './'       element-wise division (Matrix-Matrix)
+ * '^'        Scalar power.  a^b is a to the power of b.
  * '''        matrix transpose
  * '='        assignment by value (Matrix-Matrix, Scalar-Scalar)
  * </pre>
- * Order of operations:  [ ' ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
+ * Order of operations:  [ ' ] precedes [ ^ ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
  * </p>
  *
  * <p>
@@ -135,9 +155,11 @@ import static org.ejml.equation.TokenList.Type;
  *
  * @author Peter Abeles
  */
-// TODO max, abs
 // TODO Lazy declare output
 // TODO Lazy resize output
+// TODO Negative operator on matrices, e.g. -A
+// TODO Scalar: atan2, log
+// TODO Constants: pi, e
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -148,6 +170,11 @@ public class Equation {
     char storage[] = new char[1024];
 
     ManagerFunctions functions = new ManagerFunctions();
+
+    public Equation() {
+        alias(Math.PI,"pi");
+        alias(Math.E,"e");
+    }
 
     /**
      * Adds a new Matrix variable.  If one already has the same name it is written over.
@@ -533,7 +560,8 @@ public class Equation {
 
         // process operators depending on their priority
         parseOperationsL(tokens,sequence);
-        parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.DIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
+        parseOperationsLR(new Symbol[]{Symbol.POWER}, tokens, sequence);
+        parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
         if( tokens.size() > 1 )
@@ -954,7 +982,7 @@ public class Equation {
 
     protected static boolean isSymbol(char c) {
         return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '[' || c == ']' ||
-               c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';';
+               c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';' || c == '\\' || c == '^';
     }
 
     /**
@@ -967,8 +995,10 @@ public class Equation {
         switch( s ) {
             case ELEMENT_DIVIDE:
             case ELEMENT_TIMES:
-            case DIVIDE:
+            case RDIVIDE:
+            case LDIVIDE:
             case TIMES:
+            case POWER:
             case PLUS:
             case MINUS:
             case ASSIGN:

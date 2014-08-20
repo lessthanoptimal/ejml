@@ -165,11 +165,26 @@ public class TestEquation {
         eq.alias(A.getMatrix(), "A");
         eq.process("B=A");
 
-        DenseMatrix64F B = ((VariableMatrix)eq.lookupVariable("B")).matrix;
+        DenseMatrix64F B = eq.lookupMatrix("B");
         assertTrue(A.getMatrix()!=B);
         assertTrue(MatrixFeatures.isEquals(A.getMatrix(),B));
     }
 
+    /**
+     * See if matrices are automatically resized when assinged a value
+     */
+    @Test
+    public void assign_resize_lazy() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random(2, 3, -1, 1, rand);
+        eq.alias(A.getMatrix(), "A");
+        eq.alias(B.getMatrix(), "B");
+        eq.process("B=A");
+
+        assertTrue(A.isIdentical(B,1e-8));
+    }
 
     @Test
     public void compile_parentheses() {
@@ -739,7 +754,7 @@ public class TestEquation {
     public void isTargetOp() {
         Symbol[] targets = new Symbol[]{Symbol.PERIOD,Symbol.TIMES,Symbol.TRANSPOSE};
         assertTrue(Equation.isTargetOp(new TokenList.Token(Symbol.TIMES),targets));
-        assertFalse(Equation.isTargetOp(new TokenList.Token(Symbol.DIVIDE), targets));
+        assertFalse(Equation.isTargetOp(new TokenList.Token(Symbol.RDIVIDE), targets));
     }
 
     @Test

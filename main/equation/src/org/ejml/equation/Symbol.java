@@ -27,7 +27,9 @@ public enum Symbol {
     PLUS,
     MINUS,
     TIMES,
-    DIVIDE,
+    LDIVIDE,
+    RDIVIDE,
+    POWER,
     PERIOD,
     ELEMENT_TIMES,
     ELEMENT_DIVIDE,
@@ -49,7 +51,9 @@ public enum Symbol {
             case '+': return PLUS;
             case '-': return MINUS;
             case '*': return TIMES;
-            case '/': return DIVIDE;
+            case '\\': return LDIVIDE;
+            case '/': return RDIVIDE;
+            case '^': return POWER;
             case '=': return ASSIGN;
             case '(': return PAREN_LEFT;
             case ')': return PAREN_RIGHT;
