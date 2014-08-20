@@ -126,8 +126,9 @@ subprojects {
 }
 
 def allModules = [
-        ':code:equation',
-        ':code:main',
+        ':main:equation',
+        ':main:core',
+        ':main:experimental'
 ]
 
 
@@ -170,7 +171,7 @@ idea {
         javadocJar.enabled = false
         jar.enabled = false
         uploadArchives.enabled = false
-        install.enabeled = false
+        install.enabled = false
     }
 }
 
