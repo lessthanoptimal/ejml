@@ -309,9 +309,17 @@ public class TestCommonOps {
     public void trace() {
         DenseMatrix64F mat = new DenseMatrix64F(3,3, true, 0, 1, 2, 3, 4, 5, 6, 7, 8);
 
-        double val = CommonOps.trace(mat);
+        assertEquals(12,CommonOps.trace(mat),1e-6);
 
-        assertEquals(12,val,1e-6);
+        // non square
+        DenseMatrix64F B = RandomMatrices.createRandom(4,3,rand);
+        CommonOps.insert(mat,B,0,0);
+        assertEquals(12,CommonOps.trace(B),1e-6);
+
+        B = RandomMatrices.createRandom(3,4,rand);
+        CommonOps.insert(mat,B,0,0);
+        assertEquals(12,CommonOps.trace(B),1e-6);
+
     }
 
     @Test

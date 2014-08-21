@@ -15,6 +15,9 @@ Date format: year/month/day
   * Exposed inner decomposition algorithms and some data structures
 - Equations
   * Symbolic way to perform linear algebra
+- CommonOps
+  * Trace will now work on non-square matrices
+  * changeSign() has a two argument version
 
 ----- Version 0.25
 

@@ -586,22 +586,17 @@ public class CommonOps {
      * <p>
      * This computes the trace of the matrix:<br>
      * <br>
-     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }
-     * </p>
-     * <p>
-     * The trace is only defined for square matrices.
+     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }<br>
+     * where n = min(numRows,numCols)
      * </p>
      *
      * @param a A square matrix.  Not modified.
      */
     public static double trace( RowD1Matrix64F a ) {
-        if( a.numRows != a.numCols ) {
-            throw new IllegalArgumentException("The matrix must be square");
-        }
-
+        int N = Math.min(a.numRows,a.numCols);
         double sum = 0;
         int index = 0;
-        for( int i = 0; i < a.numRows; i++ ) {
+        for( int i = 0; i < N; i++ ) {
             sum += a.get(index);
             index += 1 + a.numCols;
         }
@@ -1807,8 +1802,8 @@ public class CommonOps {
 
     /**
      * <p>
-     * Puts the augmented system matrix into reduced row echelon form (RREF).  A matrix is said to be in
-     * RREF is the following conditions are true:
+     * Puts the augmented system matrix into reduced row echelon form (RREF) using Gauss-Jordan
+     * elimination with row (partial) pivots.  A matrix is said to be in RREF is the following conditions are true:
      * </p>
      *
      * <ol>
@@ -1820,6 +1815,8 @@ public class CommonOps {
      * <p>
      * [1] Page 19 in, Otter Bretscherm "Linear Algebra with Applications" Prentice-Hall Inc, 1997
      * </p>
+     *
+     * @see RrefGaussJordanRowPivot
      *
      * @param A Input matrix.  Unmodified.
      * @param numUnknowns Number of unknowns/columns that are reduced. Set to -1 to default to

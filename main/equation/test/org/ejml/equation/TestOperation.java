@@ -18,13 +18,16 @@
 
 package org.ejml.equation;
 
+import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -61,7 +64,7 @@ public class TestOperation {
 
         int found = eq.lookupInteger("x");
 
-        assertEquals(13/4,found,1e-8);
+        assertEquals(13 / 4, found, 1e-8);
     }
 
     @Test
@@ -125,7 +128,7 @@ public class TestOperation {
         eq.alias(x, "x");
 
         eq.process("x=b*A");
-        assertTrue(b.scale(2.5).isIdentical(x,1e-8));
+        assertTrue(b.scale(2.5).isIdentical(x, 1e-8));
         eq.process("x=A*b");
         assertTrue(b.scale(2.5).isIdentical(x, 1e-8));
     }
@@ -174,7 +177,52 @@ public class TestOperation {
 
         eq.process("b=A*x");
 
-        assertTrue(A.mult(x).isIdentical(b,1e-8));
+        assertTrue(A.mult(x).isIdentical(b, 1e-8));
+    }
+
+    @Test
+    public void elementMult_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+
+        eq.process("c=a.*b");
+
+        assertTrue(a.elementMult(b).isIdentical(c, 1e-8));
+    }
+
+    @Test
+    public void elementDivide_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+
+        eq.process("c=a./b");
+
+        assertTrue(a.elementDiv(b).isIdentical(c, 1e-8));
+    }
+
+    @Test
+    public void kron_matrix_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(2, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random(3, 2, -1, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+
+        eq.process("c=kron(a,b)");
+
+        assertTrue(a.kron(b).isIdentical(c, 1e-8));
     }
 
     @Test
@@ -184,7 +232,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=2.3^4.2");
 
-        assertEquals(Math.pow(2.3,4.2),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.pow(2.3, 4.2), eq.lookupScalar("a"), 1e-8);
     }
 
     @Test
@@ -253,7 +301,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=sin(2.1)");
 
-        assertEquals(Math.sin(2.1),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.sin(2.1), eq.lookupScalar("a"), 1e-8);
     }
 
     @Test
@@ -340,7 +388,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
 
         eq.process("a=b+2.2");
-        assertTrue(b.plus(2.2).isIdentical(a,1e-8));
+        assertTrue(b.plus(2.2).isIdentical(a, 1e-8));
 
         eq.process("a=2.2+b");
         assertTrue(b.plus(2.2).isIdentical(a, 1e-8));
@@ -353,7 +401,7 @@ public class TestOperation {
         eq.alias(1,"a");
         eq.process("a=2 - 3");
 
-        assertEquals(-1,eq.lookupInteger("a"),1e-8);
+        assertEquals(-1, eq.lookupInteger("a"), 1e-8);
     }
 
     @Test
@@ -377,7 +425,7 @@ public class TestOperation {
         eq.alias(a, "a", b, "b", c, "c");
         eq.process("a=b-c");
 
-        assertTrue(b.minus(c).isIdentical(a,1e-8));
+        assertTrue(b.minus(c).isIdentical(a, 1e-8));
     }
 
     @Test
@@ -390,15 +438,36 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
 
         eq.process("a=b-2.2");
-        assertTrue(b.plus(-2.2).isIdentical(a,1e-8));
+        assertTrue(b.plus(-2.2).isIdentical(a, 1e-8));
 
         eq.process("a=2.2-b");
         assertTrue(b.plus(-2.2).isIdentical(a, 1e-8));
     }
 
     @Test
-    public void copy() {
-        fail("Implement");
+    public void copy_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=a");
+
+        assertTrue(a.isIdentical(b, 1e-8));
+    }
+
+    @Test
+    public void copy_region() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(2,2,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b(1:2,2:3)=a");
+
+        assertTrue(a.isIdentical(b.extractMatrix(1, 3, 2, 4), 1e-8));
     }
 
     @Test
@@ -434,7 +503,7 @@ public class TestOperation {
         eq.alias(2.2,"a",3.3,"b");
         eq.process("b=inv(a)");
 
-        assertEquals(1.0/2.2,eq.lookupScalar("b"),1e-8);
+        assertEquals(1.0 / 2.2, eq.lookupScalar("b"), 1e-8);
     }
 
     @Test
@@ -457,27 +526,103 @@ public class TestOperation {
         eq.alias(2.2,"a",3.3,"b");
         eq.process("b=pinv(a)");
 
-        assertEquals(1.0/2.2,eq.lookupScalar("b"),1e-8);
+        assertEquals(1.0 / 2.2, eq.lookupScalar("b"), 1e-8);
     }
 
     @Test
-    public void det() {
-        fail("Implement");
+    public void rref_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(4,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(1,1,-1,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=rref(a)");
+
+        DenseMatrix64F expected = new DenseMatrix64F(4,3);
+        CommonOps.rref(a.getMatrix(),-1,expected);
+
+        assertTrue(MatrixFeatures.isIdentical(expected,b.getMatrix(),1e-8));
     }
 
     @Test
-    public void trace() {
-        fail("Implement");
+    public void rref_scalar() {
+        Equation eq = new Equation();
+
+        eq.process("a=rref(2.3)");
+        assertEquals(1,eq.lookupScalar("a"),1e-8);
+
+        eq.process("a=rref(0)");
+        assertEquals(0,eq.lookupScalar("a"),1e-8);
+
+        eq.process("a=rref(-1.2)");
+        assertEquals(1,eq.lookupScalar("a"),1e-8);
     }
 
     @Test
-    public void normF() {
-        fail("Implement");
+    public void det_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(4,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=det(a)");
+
+        assertEquals(a.determinant(),eq.lookupScalar("b"),1e-8);
+    }
+
+    @Test
+    public void det_scalar() {
+        Equation eq = new Equation();
+
+        eq.process("b=det(5.6)");
+
+        assertEquals(5.6, eq.lookupScalar("b"), 1e-8);
+    }
+
+    @Test
+    public void trace_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=trace(a)");
+
+        assertEquals(a.trace(), eq.lookupScalar("b"), 1e-8);
+    }
+
+    @Test
+    public void normF_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=normF(a)");
+
+        assertEquals(a.normF(), eq.lookupScalar("b"), 1e-8);
+    }
+
+    @Test
+    public void normF_scalar() {
+        Equation eq = new Equation();
+
+        eq.process("b=normF(5.6)");
+
+        assertEquals(5.6, eq.lookupScalar("b"), 1e-8);
     }
 
     @Test
     public void eye() {
-        fail("Implement");
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("a=eye(3)");
+
+        assertTrue(SimpleMatrix.identity(3).isIdentical(a, 1e-8));
     }
 
     @Test
@@ -562,6 +707,48 @@ public class TestOperation {
         eq.alias(1.1, "B");
 
         eq.process("B=max(A)");
+
+        double found = eq.lookupScalar("B");
+        assertEquals(4.6,found,1e-8);
+    }
+
+    @Test
+    public void min_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+
+        eq.alias(A, "A");
+        eq.alias(1.0, "B");
+
+        eq.process("B=min(A)");
+
+        double found = eq.lookupScalar("B");
+        double expected = CommonOps.elementMin(A.getMatrix());
+        assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void min_int() {
+        Equation eq = new Equation();
+
+        eq.alias(4, "A");
+        eq.alias(1, "B");
+
+        eq.process("B=min(A)");
+
+        int found = eq.lookupInteger("B");
+        assertEquals(4,found,1e-8);
+    }
+
+    @Test
+    public void min_scalar() {
+        Equation eq = new Equation();
+
+        eq.alias(4.6, "A");
+        eq.alias(1.1, "B");
+
+        eq.process("B=min(A)");
 
         double found = eq.lookupScalar("B");
         assertEquals(4.6,found,1e-8);

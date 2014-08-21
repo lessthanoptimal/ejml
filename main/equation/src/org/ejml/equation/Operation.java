@@ -727,6 +727,35 @@ abstract class Operation {
         return ret;
     }
 
+    public static Info rref( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation("rref-m") {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    output.matrix.reshape(a.numRows,a.numCols);
+                    CommonOps.rref(a, -1, output.matrix);
+                }
+            };
+        } else {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation("rref-s") {
+                @Override
+                public void process() {
+                    double a = ((VariableScalar)A).getDouble();
+                    output.value = a == 0 ? 0 : 1;
+                }
+            };
+        }
+
+        return ret;
+    }
+
     /**
      * Matrix determinant
      */
@@ -833,6 +862,41 @@ abstract class Operation {
             final VariableDouble output = manager.createDouble();
             ret.output = output;
             ret.op = new Operation("max-s") {
+                @Override
+                public void process() {
+                    output.value = ((VariableDouble)A).getDouble();
+                }
+            };
+        }
+
+        return ret;
+    }
+
+    public static Info min( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+
+        if( A instanceof VariableMatrix ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation("min-m") {
+                @Override
+                public void process() {
+                    output.value = CommonOps.elementMin(((VariableMatrix) A).matrix);
+                }
+            };
+        } else if( A instanceof VariableInteger ) {
+            final VariableInteger output = manager.createInteger();
+            ret.output = output;
+            ret.op = new Operation("min-i") {
+                @Override
+                public void process() {
+                    output.value = ((VariableInteger)A).value;
+                }
+            };
+        } else if( A instanceof VariableScalar ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+            ret.op = new Operation("min-s") {
                 @Override
                 public void process() {
                     output.value = ((VariableDouble)A).getDouble();

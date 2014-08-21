@@ -686,10 +686,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * or column in the matrix.
      * </p>
      *
-     * @param x0 Start column.
-     * @param x1 Stop column.
      * @param y0 Start row.
-     * @param y1 Stop row.
+     * @param y1 Stop row + 1.
+     * @param x0 Start column.
+     * @param x1 Stop column + 1.
      * @return The submatrix.
      */
     public T extractMatrix(int y0 , int y1, int x0 , int x1 ) {

@@ -131,6 +131,7 @@ import static org.ejml.equation.TokenList.Type;
  * det(A)       Determinant of the matrix
  * inv(A)       Inverse of a matrix
  * pinv(A)      Pseudo-inverse of a matrix
+ * rref(A)      Reduced row echelon form of A
  * trace(A)     Trace of the matrix
  * zeros(r,c)   Matrix full of zeros with r rows and c columns.
  * ones(r,c)    Matrix full of ones with r rows and c columns.
@@ -141,6 +142,7 @@ import static org.ejml.equation.TokenList.Type;
  * kron(A,B)    Kronecker product
  * abs(A)       Absolute value of A.
  * max(A)       Element with the largest value in A.
+ * min(A)       Element with the smallest value in A.
  * pow(a,b)     Computes a to the power of b.  Can also be invoked with "a^b" scalars only.
  * sin(a)       Math.sin(a) for scalars only
  * cos(a)       Math.cos(a) for scalars only

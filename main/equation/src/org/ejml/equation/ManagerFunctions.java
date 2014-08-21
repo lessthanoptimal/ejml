@@ -176,6 +176,12 @@ public class ManagerFunctions {
                 return Operation.pinv(A, managerTemp);
             }
         });
+        input1.put("rref",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.rref(A, managerTemp);
+            }
+        });
         input1.put("eye",new Input1() {
             @Override
             public Operation.Info create(Variable A) {
@@ -204,6 +210,12 @@ public class ManagerFunctions {
             @Override
             public Operation.Info create(Variable A) {
                 return Operation.diag(A, managerTemp);
+            }
+        });
+        input1.put("min",new Input1() {
+            @Override
+            public Operation.Info create(Variable A) {
+                return Operation.min(A, managerTemp);
             }
         });
         input1.put("max",new Input1() {
