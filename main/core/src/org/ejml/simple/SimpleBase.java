@@ -280,7 +280,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * b<sub>i,j</sub> = a<sub>i,j</sub>/val
      * </p>
      *
-     * @see CommonOps#divide(double, org.ejml.data.D1Matrix64F)
+     * @see CommonOps#divide(org.ejml.data.D1Matrix64F,double)
      *
      * @param val Divisor.
      * @return Matrix with its elements divided by the specified value.
@@ -288,7 +288,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T divide( double val ) {
         T ret = copy();
 
-        CommonOps.divide(val,ret.getMatrix());
+        CommonOps.divide(ret.getMatrix(),val);
 
         return ret;
     }

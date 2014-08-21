@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix5_64F;
@@ -853,7 +852,7 @@ public class FixedOps5 {
 
     /**
      * <p>
-     * Performs an in-place element by element scalar division.<br>
+     * Performs an in-place element by element scalar division. Scalar denominator.<br>
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
      * </p>
@@ -861,7 +860,7 @@ public class FixedOps5 {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( double alpha , FixedMatrix5x5_64F a ) {
+    public static void divide( FixedMatrix5x5_64F a , double alpha ) {
         a.a11 /= alpha; a.a12 /= alpha; a.a13 /= alpha; a.a14 /= alpha; a.a15 /= alpha;
         a.a21 /= alpha; a.a22 /= alpha; a.a23 /= alpha; a.a24 /= alpha; a.a25 /= alpha;
         a.a31 /= alpha; a.a32 /= alpha; a.a33 /= alpha; a.a34 /= alpha; a.a35 /= alpha;
@@ -871,7 +870,7 @@ public class FixedOps5 {
 
     /**
      * <p>
-     * Performs an element by element scalar division.<br>
+     * Performs an element by element scalar division.  Scalar denominator.<br>
      * <br>
      * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
      * </p>
@@ -880,7 +879,7 @@ public class FixedOps5 {
      * @param a The matrix whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( double alpha , FixedMatrix5x5_64F a , FixedMatrix5x5_64F b ) {
+    public static void divide( FixedMatrix5x5_64F a , double alpha , FixedMatrix5x5_64F b ) {
         b.a11 = a.a11/alpha; b.a12 = a.a12/alpha; b.a13 = a.a13/alpha; b.a14 = a.a14/alpha; b.a15 = a.a15/alpha;
         b.a21 = a.a21/alpha; b.a22 = a.a22/alpha; b.a23 = a.a23/alpha; b.a24 = a.a24/alpha; b.a25 = a.a25/alpha;
         b.a31 = a.a31/alpha; b.a32 = a.a32/alpha; b.a33 = a.a33/alpha; b.a34 = a.a34/alpha; b.a35 = a.a35/alpha;

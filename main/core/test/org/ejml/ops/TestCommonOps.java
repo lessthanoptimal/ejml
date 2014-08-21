@@ -709,21 +709,55 @@ public class TestCommonOps {
     }
 
     @Test
-    public void div() {
+    public void div_scalar_mat() {
         double s = 2.5;
         double d[] = new double[]{10,12.5,-2,5.5};
         DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
 
         CommonOps.divide(s,mat);
 
-        assertEquals(d[0]/s,mat.get(0,0),1e-8);
-        assertEquals(d[1]/s,mat.get(0,1),1e-8);
-        assertEquals(d[2]/s,mat.get(1,0),1e-8);
-        assertEquals(d[3]/s,mat.get(1,1),1e-8);
+        assertEquals(s/d[0],mat.get(0,0),1e-8);
+        assertEquals(s/d[1],mat.get(0,1),1e-8);
+        assertEquals(s/d[2],mat.get(1,0),1e-8);
+        assertEquals(s/d[3],mat.get(1,1),1e-8);
     }
 
     @Test
-    public void div_two_input() {
+    public void div_mat_scalar() {
+        double s = 2.5;
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.divide(mat,s);
+
+        assertEquals(mat.get(0,0),d[0]/s,1e-8);
+        assertEquals(mat.get(0,1),d[1]/s,1e-8);
+        assertEquals(mat.get(1,0),d[2]/s,1e-8);
+        assertEquals(mat.get(1,1),d[3]/s,1e-8);
+    }
+
+    @Test
+    public void div_mat_scalar_out() {
+        double s = 2.5;
+        double d[] = new double[]{10,12.5,-2,5.5};
+        DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
+        DenseMatrix64F r = new DenseMatrix64F(2,2, true, d);
+
+        CommonOps.divide(mat,s,r);
+
+        assertEquals(d[0],mat.get(0,0),1e-8);
+        assertEquals(d[1],mat.get(0,1),1e-8);
+        assertEquals(d[2],mat.get(1,0),1e-8);
+        assertEquals(d[3],mat.get(1,1),1e-8);
+
+        assertEquals(d[0]/s,r.get(0,0),1e-8);
+        assertEquals(d[1]/s,r.get(0,1),1e-8);
+        assertEquals(d[2]/s,r.get(1,0),1e-8);
+        assertEquals(d[3]/s,r.get(1,1),1e-8);
+    }
+
+    @Test
+    public void div_scalar_mat_out() {
         double s = 2.5;
         double d[] = new double[]{10,12.5,-2,5.5};
         DenseMatrix64F mat = new DenseMatrix64F(2,2, true, d);
@@ -736,10 +770,10 @@ public class TestCommonOps {
         assertEquals(d[2],mat.get(1,0),1e-8);
         assertEquals(d[3],mat.get(1,1),1e-8);
 
-        assertEquals(d[0]/s,r.get(0,0),1e-8);
-        assertEquals(d[1]/s,r.get(0,1),1e-8);
-        assertEquals(d[2]/s,r.get(1,0),1e-8);
-        assertEquals(d[3]/s,r.get(1,1),1e-8);
+        assertEquals(s/d[0],r.get(0,0),1e-8);
+        assertEquals(s/d[1],r.get(0,1),1e-8);
+        assertEquals(s/d[2],r.get(1,0),1e-8);
+        assertEquals(s/d[3],r.get(1,1),1e-8);
     }
 
     @Test

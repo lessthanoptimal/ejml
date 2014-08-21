@@ -1706,7 +1706,26 @@ public class CommonOps {
 
     /**
      * <p>
-     * Performs an in-place element by element scalar division.<br>
+     * Performs an in-place element by element scalar division with the scalar on top.<br>
+     * <br>
+     * a<sub>ij</sub> = &alpha/a<sub>ij</sub>;
+     * </p>
+     *
+     * @param a The matrix whose elements are divide the scalar.  Modified.
+     * @param alpha top value in division
+     */
+    public static void divide( double alpha , D1Matrix64F a )
+    {
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            a.data[i] = alpha/a.data[i];
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar division with the scalar on bottom.<br>
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
      * </p>
@@ -1714,7 +1733,7 @@ public class CommonOps {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( double alpha , D1Matrix64F a )
+    public static void divide( D1Matrix64F a , double alpha)
     {
         final int size = a.getNumElements();
 
@@ -1725,16 +1744,39 @@ public class CommonOps {
 
     /**
      * <p>
-     * Performs an element by element scalar division.<br>
+     * Performs an element by element scalar division with the scalar on top.<br>
+     * <br>
+     * b<sub>ij</sub> = &alpha/a<sub>ij</sub>;
+     * </p>
+     *
+     * @param alpha The numerator.
+     * @param a The matrix whose elements are the divisor.  Not modified.
+     * @param b Where the results are stored. Modified.
+     */
+    public static void divide( double alpha , D1Matrix64F a , D1Matrix64F b)
+    {
+        if( a.numRows != b.numRows || a.numCols != b.numCols )
+            throw new IllegalArgumentException("Matrices must have the same shape");
+
+        final int size = a.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            b.data[i] = alpha/a.data[i];
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar division with the scalar on botton.<br>
      * <br>
      * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;
      * </p>
      *
-     * @param alpha the amount each element is divided by.
      * @param a The matrix whose elements are to be divided.  Not modified.
+     * @param alpha the amount each element is divided by.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( double alpha , D1Matrix64F a , D1Matrix64F b)
+    public static void divide( D1Matrix64F a , double alpha  , D1Matrix64F b)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrices must have the same shape");

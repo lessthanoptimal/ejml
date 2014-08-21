@@ -18,6 +18,8 @@ Date format: year/month/day
 - CommonOps
   * Trace will now work on non-square matrices
   * changeSign() has a two argument version
+  * left and right scalar-matrix division.
+      *** WARNING **** The meaning of CommonOps.divide(scalar,Matrix) and similar has changed
 
 ----- Version 0.25
 

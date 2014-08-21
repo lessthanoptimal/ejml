@@ -803,7 +803,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
     private void divide_two( int dimen ) {
         out.print("    /**\n" +
                 "     * <p>\n" +
-                "     * Performs an in-place element by element scalar division.<br>\n" +
+                "     * Performs an in-place element by element scalar division. Scalar denominator.<br>\n" +
                 "     * <br>\n" +
                 "     * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;\n" +
                 "     * </p>\n" +
@@ -811,7 +811,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param a The matrix whose elements are to be divided.  Modified.\n" +
                 "     * @param alpha the amount each element is divided by.\n" +
                 "     */\n" +
-                "    public static void divide( double alpha , "+nameMatrix+" a ) {\n");
+                "    public static void divide( "+nameMatrix+" a , double alpha ) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             out.print("        ");
             for( int x = 1; x <= dimen; x++ ) {
@@ -828,7 +828,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
     private void divide_three( int dimen ) {
         out.print("    /**\n" +
                 "     * <p>\n" +
-                "     * Performs an element by element scalar division.<br>\n" +
+                "     * Performs an element by element scalar division.  Scalar denominator.<br>\n" +
                 "     * <br>\n" +
                 "     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;\n" +
                 "     * </p>\n" +
@@ -837,7 +837,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param a The matrix whose elements are to be divided.  Not modified.\n" +
                 "     * @param b Where the results are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void divide( double alpha , "+nameMatrix+" a , "+nameMatrix+" b ) {\n");
+                "    public static void divide( "+nameMatrix+" a , double alpha , "+nameMatrix+" b ) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             out.print("        ");
             for( int x = 1; x <= dimen; x++ ) {

@@ -138,7 +138,19 @@ abstract class Operation {
             final VariableMatrix m = (VariableMatrix)A;
             final VariableScalar s = (VariableScalar)B;
             ret.output = output;
-            ret.op = new Operation("divide-mm") {
+            ret.op = new Operation("divide-ma") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
+                    CommonOps.divide(m.matrix,s.getDouble(),output.matrix);
+                }
+            };
+        } else if( A instanceof VariableScalar && B instanceof VariableMatrix ) {
+            final VariableMatrix output = manager.createMatrix();
+            final VariableMatrix m = (VariableMatrix)B;
+            final VariableScalar s = (VariableScalar)A;
+            ret.output = output;
+            ret.op = new Operation("divide-ma") {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);

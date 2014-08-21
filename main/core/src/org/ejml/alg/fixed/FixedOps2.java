@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix2_64F;
@@ -480,7 +479,7 @@ public class FixedOps2 {
 
     /**
      * <p>
-     * Performs an in-place element by element scalar division.<br>
+     * Performs an in-place element by element scalar division. Scalar denominator.<br>
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
      * </p>
@@ -488,14 +487,14 @@ public class FixedOps2 {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( double alpha , FixedMatrix2x2_64F a ) {
+    public static void divide( FixedMatrix2x2_64F a , double alpha ) {
         a.a11 /= alpha; a.a12 /= alpha;
         a.a21 /= alpha; a.a22 /= alpha;
     }
 
     /**
      * <p>
-     * Performs an element by element scalar division.<br>
+     * Performs an element by element scalar division.  Scalar denominator.<br>
      * <br>
      * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
      * </p>
@@ -504,7 +503,7 @@ public class FixedOps2 {
      * @param a The matrix whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( double alpha , FixedMatrix2x2_64F a , FixedMatrix2x2_64F b ) {
+    public static void divide( FixedMatrix2x2_64F a , double alpha , FixedMatrix2x2_64F b ) {
         b.a11 = a.a11/alpha; b.a12 = a.a12/alpha;
         b.a21 = a.a21/alpha; b.a22 = a.a22/alpha;
     }

@@ -53,6 +53,25 @@ public class TestOperation {
     }
 
     @Test
+    public void divide_scalar_matrix() {
+        Equation eq = new Equation();
+
+        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random(5, 3, -1, 1, rand);
+
+        eq.alias(2.5, "A");
+        eq.alias(b, "b");
+        eq.alias(x, "x");
+
+        eq.process("x=A/b");
+
+        DenseMatrix64F tmp = new DenseMatrix64F(5,3);
+        CommonOps.divide(2.5,b.getMatrix(),tmp);
+
+        assertTrue(MatrixFeatures.isIdentical(tmp, x.getMatrix(), 1e-8));
+    }
+
+    @Test
     public void divide_int_int() {
         Equation eq = new Equation();
 

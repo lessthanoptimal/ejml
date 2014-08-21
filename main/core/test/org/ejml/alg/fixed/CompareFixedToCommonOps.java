@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -119,6 +119,14 @@ public abstract class CompareFixedToCommonOps {
 
         if( typesFixed.length != typesCommon.length )
             return false;
+
+        for (int i = 0; i < typesFixed.length; i++) {
+            if( Matrix64F.class.isAssignableFrom(typesFixed[i]) ) {
+                if( !Matrix64F.class.isAssignableFrom(typesCommon[i]) ) {
+                    return false;
+                }
+            }
+        }
 
         Class returnFixed = fixed.getReturnType();
         Class returnCommon = common.getReturnType();

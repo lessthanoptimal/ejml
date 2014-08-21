@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,16 +22,12 @@ import org.ejml.data.FixedMatrix2_64F;
 import org.ejml.data.FixedMatrix2x2_64F;
 import org.junit.Test;
 
-import java.util.Random;
-
 import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Abeles
  */
 public class TestFixedOps2 extends CompareFixedToCommonOps {
-
-    Random rand = new Random(234);
 
     public TestFixedOps2() {
         super(FixedOps2.class);

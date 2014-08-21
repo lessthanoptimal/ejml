@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -90,7 +90,7 @@ public class RandomMatrices {
                 double val = NormOps.normF(r);
                 if( val == 0 || Double.isNaN(val) || Double.isInfinite(val))
                     throw new RuntimeException("Failed sanity check");
-                CommonOps.divide(val,r);
+                CommonOps.divide(r,val);
             }
 
             u[i] = r;
