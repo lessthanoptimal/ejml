@@ -23,7 +23,7 @@ package org.ejml.equation;
  *
  * @author Peter Abeles
  */
-enum VariableType {
+public enum VariableType {
     MATRIX,
     SCALAR,
     SPECIAL

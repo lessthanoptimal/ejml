@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author Peter Abeles
  */
-abstract class Operation {
+public abstract class Operation {
 
     String name;
 

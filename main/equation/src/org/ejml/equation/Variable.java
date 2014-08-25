@@ -23,7 +23,7 @@ package org.ejml.equation;
  *
  * @author Peter Abeles
  */
-class Variable {
+public class Variable {
     public VariableType type;
 
     protected Variable(VariableType type) {

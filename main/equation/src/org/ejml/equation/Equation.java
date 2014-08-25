@@ -1187,4 +1187,11 @@ public class Equation {
     public void process( String equation , boolean debug ) {
         compile(equation,debug).perform();
     }
+
+    /**
+     * Returns the functions manager
+     */
+    public ManagerFunctions getFunctions() {
+        return functions;
+    }
 }

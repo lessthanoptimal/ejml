@@ -63,7 +63,7 @@ public class ManagerFunctions {
         Input1 func = input1.get(name);
         if( func == null )
             return null;
-        return func.create(var0);
+        return func.create(var0,managerTemp);
     }
 
     /**
@@ -76,7 +76,7 @@ public class ManagerFunctions {
         InputN func = inputN.get(name);
         if( func == null )
             return null;
-        return func.create(vars);
+        return func.create(vars,managerTemp);
     }
 
     /**
@@ -166,161 +166,161 @@ public class ManagerFunctions {
     private void addBuiltIn( ) {
         input1.put("inv",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.inv(A,managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.inv(A,manager);
             }
         });
         input1.put("pinv",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.pinv(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.pinv(A, manager);
             }
         });
         input1.put("rref",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.rref(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.rref(A, manager);
             }
         });
         input1.put("eye",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.eye(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.eye(A, manager);
             }
         });
         input1.put("det",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.det(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.det(A, manager);
             }
         });
         input1.put("normF",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.normF(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.normF(A, manager);
             }
         });
         input1.put("trace",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.trace(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.trace(A, manager);
             }
         });
         input1.put("diag",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.diag(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.diag(A, manager);
             }
         });
         input1.put("min",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.min(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.min(A, manager);
             }
         });
         input1.put("max",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.max(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.max(A, manager);
             }
         });
         input1.put("abs",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.abs(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.abs(A, manager);
             }
         });
         input1.put("sin",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.sin(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.sin(A, manager);
             }
         });
         input1.put("cos",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.cos(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.cos(A, manager);
             }
         });
         input1.put("atan",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.atan(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.atan(A, manager);
             }
         });
         input1.put("exp",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.exp(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.exp(A, manager);
             }
         });
         input1.put("log",new Input1() {
             @Override
-            public Operation.Info create(Variable A) {
-                return Operation.log(A, managerTemp);
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.log(A, manager);
             }
         });
 
         inputN.put("zeros",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.zeros(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.zeros(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("ones",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.ones(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.ones(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("kron",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.kron(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.kron(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("dot",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.dot(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.dot(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("pow",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.pow(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.pow(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("atan2",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.atan2(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.atan2(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("solve",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
                 if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.solve(inputs.get(0), inputs.get(1), managerTemp);
+                return Operation.solve(inputs.get(0), inputs.get(1), manager);
             }
         });
 
         inputN.put("extract",new InputN() {
             @Override
-            public Operation.Info create(List<Variable> inputs) {
-                return Operation.extract(inputs, managerTemp);
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
+                return Operation.extract(inputs, manager);
             }
         });
     }
@@ -333,13 +333,13 @@ public class ManagerFunctions {
      * Creates new instances of functions from a single variable
      */
     public static interface Input1 {
-        Operation.Info create( Variable A );
+        Operation.Info create( Variable A , ManagerTempVariables manager );
     }
 
     /**
      * Creates a new instance of functions from two variables
      */
     public static interface InputN {
-        Operation.Info create( List<Variable> inputs );
+        Operation.Info create( List<Variable> inputs , ManagerTempVariables manager );
     }
 }

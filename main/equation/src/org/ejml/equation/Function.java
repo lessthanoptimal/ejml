@@ -23,7 +23,7 @@ package org.ejml.equation;
  *
  * @author Peter Abeles
  */
-class Function {
+public class Function {
     /**
      * Name of operator and the string it looks for when parsing
      */
