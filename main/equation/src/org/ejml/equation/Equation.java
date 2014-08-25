@@ -933,7 +933,7 @@ public class Equation {
     /**
      * Looks up a variable given its name.  If none is found then return null.
      */
-    protected <T extends Variable> T lookupVariable(String token) {
+    public <T extends Variable> T lookupVariable(String token) {
         Variable result = variables.get(token);
         return (T)result;
     }
@@ -946,7 +946,7 @@ public class Equation {
         return ((VariableInteger)variables.get(token)).value;
     }
 
-    public double lookupScalar(String token) {
+    public double lookupDouble(String token) {
         return ((VariableScalar)variables.get(token)).getDouble();
     }
 

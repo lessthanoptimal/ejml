@@ -25,7 +25,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-class VariableMatrix extends Variable {
+public class VariableMatrix extends Variable {
     public DenseMatrix64F matrix;
 
     /**

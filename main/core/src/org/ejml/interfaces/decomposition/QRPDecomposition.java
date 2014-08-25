@@ -31,10 +31,6 @@ import org.ejml.data.Matrix64F;
  * upper triangular.
  * </p>
  *
- * <p>
- * WARNING: You should always call {@link #setSingularThreshold(double)} before {@link #decompose(org.ejml.data.Matrix64F)}.
- * </p>
- *
  * @author Peter Abeles
  */
 public interface QRPDecomposition <T extends Matrix64F>
@@ -42,10 +38,8 @@ public interface QRPDecomposition <T extends Matrix64F>
 {
     /**
      * <p>
-     * Specifies the threshold used to flag a column as being singular.  The optimal threshold (if one exists)
-     * varies by the matrix being processed.  A reasonable value would be the maximum absolute value of the
-     * matrix's elements multiplied by EPS:<br>
-     * decomposition.setSingularThreshold(CommonOps.elementMaxAbs(A)*UtilEjml.EPS)
+     * Specifies the threshold used to flag a column as being singular.  The specified threshold is relative
+     * and will very depending on the system.  The default value is UtilEJML.EPS.
      * </p>
      *
      * @param threshold Singular threshold.

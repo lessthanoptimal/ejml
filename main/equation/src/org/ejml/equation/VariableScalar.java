@@ -23,7 +23,7 @@ package org.ejml.equation;
  *
  * @author Peter Abeles
  */
-abstract class VariableScalar extends Variable {
+public abstract class VariableScalar extends Variable {
 
     public VariableScalar() {
         super(VariableType.SCALAR);

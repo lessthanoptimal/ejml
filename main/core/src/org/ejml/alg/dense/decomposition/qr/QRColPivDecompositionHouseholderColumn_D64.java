@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRPDecomposition;
 import org.ejml.ops.CommonOps;
@@ -49,10 +50,13 @@ public class QRColPivDecompositionHouseholderColumn_D64
     protected int pivots[];
     // F-norm  squared for each column
     protected double normsCol[];
-    
+
+    // value of the maximum abs element
+    protected double maxAbs;
+
     // threshold used to determine when a column is considered to be singular
     // Threshold is relative to the maxAbs
-    protected double singularThreshold = 1e-100;
+    protected double singularThreshold = UtilEjml.EPS;
 
     // the matrix's rank
     protected int rank;
@@ -144,6 +148,7 @@ public class QRColPivDecompositionHouseholderColumn_D64
 
         convertToColumnMajor(A);
 
+        maxAbs = CommonOps.elementMaxAbs(A);
         // initialize pivot variables
         setupPivotInfo();
 

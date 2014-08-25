@@ -23,7 +23,7 @@ package org.ejml.equation;
  *
  * @author Peter Abeles
  */
-class VariableInteger extends VariableScalar {
+public class VariableInteger extends VariableScalar {
     public int value;
 
     public VariableInteger(int value) {

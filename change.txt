@@ -20,6 +20,8 @@ Date format: year/month/day
   * changeSign() has a two argument version
   * left and right scalar-matrix division.
       *** WARNING **** The meaning of CommonOps.divide(scalar,Matrix) and similar has changed
+- QRP yet again uses a relative threshold.  No idea why it was set to a global one
+- TODO Make QrUpdate more friendly and accessible
 
 ----- Version 0.25
 

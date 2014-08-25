@@ -96,7 +96,7 @@ public class TestOperation {
 
         eq.process("x=b/A");
 
-        double found = eq.lookupScalar("x");
+        double found = eq.lookupDouble("x");
 
         assertEquals(4.2 / 5.0, found, 1e-8);
     }
@@ -177,7 +177,7 @@ public class TestOperation {
 
         eq.process("x=b*A");
 
-        double found = eq.lookupScalar("x");
+        double found = eq.lookupDouble("x");
 
         assertEquals(4.2 * 5.0, found, 1e-8);
     }
@@ -251,7 +251,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=2.3^4.2");
 
-        assertEquals(Math.pow(2.3, 4.2), eq.lookupScalar("a"), 1e-8);
+        assertEquals(Math.pow(2.3, 4.2), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -261,7 +261,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=2^4");
 
-        assertEquals(Math.pow(2,4),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.pow(2,4),eq.lookupDouble("a"),1e-8);
     }
 
     @Test
@@ -271,7 +271,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=atan2(1.1,0.5)");
 
-        assertEquals(Math.atan2(1.1, 0.5), eq.lookupScalar("a"), 1e-8);
+        assertEquals(Math.atan2(1.1, 0.5), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -293,7 +293,7 @@ public class TestOperation {
         eq.alias(3.1,"b");
         eq.process("a=-b");
 
-        assertEquals(-3.1, eq.lookupScalar("a"), 1e-8);
+        assertEquals(-3.1, eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -320,7 +320,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=sin(2.1)");
 
-        assertEquals(Math.sin(2.1), eq.lookupScalar("a"), 1e-8);
+        assertEquals(Math.sin(2.1), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -330,7 +330,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=cos(2.1)");
 
-        assertEquals(Math.cos(2.1),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.cos(2.1),eq.lookupDouble("a"),1e-8);
     }
 
     @Test
@@ -340,7 +340,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=atan(2.1)");
 
-        assertEquals(Math.atan(2.1), eq.lookupScalar("a"), 1e-8);
+        assertEquals(Math.atan(2.1), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -350,7 +350,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=exp(2.1)");
 
-        assertEquals(Math.exp(2.1),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.exp(2.1),eq.lookupDouble("a"),1e-8);
     }
 
     @Test
@@ -360,7 +360,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=log(2.1)");
 
-        assertEquals(Math.log(2.1),eq.lookupScalar("a"),1e-8);
+        assertEquals(Math.log(2.1),eq.lookupDouble("a"),1e-8);
     }
 
     @Test
@@ -380,7 +380,7 @@ public class TestOperation {
         eq.alias(1.2,"a");
         eq.process("a= 2.3 + 3");
 
-        assertEquals(5.3, eq.lookupScalar("a"), 1e-8);
+        assertEquals(5.3, eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -430,7 +430,7 @@ public class TestOperation {
         eq.alias(1.2,"a");
         eq.process("a= 2.3 - 3");
 
-        assertEquals(2.3 - 3.0, eq.lookupScalar("a"), 1e-8);
+        assertEquals(2.3 - 3.0, eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -522,7 +522,7 @@ public class TestOperation {
         eq.alias(2.2,"a",3.3,"b");
         eq.process("b=inv(a)");
 
-        assertEquals(1.0 / 2.2, eq.lookupScalar("b"), 1e-8);
+        assertEquals(1.0 / 2.2, eq.lookupDouble("b"), 1e-8);
     }
 
     @Test
@@ -545,7 +545,7 @@ public class TestOperation {
         eq.alias(2.2,"a",3.3,"b");
         eq.process("b=pinv(a)");
 
-        assertEquals(1.0 / 2.2, eq.lookupScalar("b"), 1e-8);
+        assertEquals(1.0 / 2.2, eq.lookupDouble("b"), 1e-8);
     }
 
     @Test
@@ -569,13 +569,13 @@ public class TestOperation {
         Equation eq = new Equation();
 
         eq.process("a=rref(2.3)");
-        assertEquals(1,eq.lookupScalar("a"),1e-8);
+        assertEquals(1,eq.lookupDouble("a"),1e-8);
 
         eq.process("a=rref(0)");
-        assertEquals(0,eq.lookupScalar("a"),1e-8);
+        assertEquals(0,eq.lookupDouble("a"),1e-8);
 
         eq.process("a=rref(-1.2)");
-        assertEquals(1,eq.lookupScalar("a"),1e-8);
+        assertEquals(1,eq.lookupDouble("a"),1e-8);
     }
 
     @Test
@@ -587,7 +587,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("b=det(a)");
 
-        assertEquals(a.determinant(),eq.lookupScalar("b"),1e-8);
+        assertEquals(a.determinant(),eq.lookupDouble("b"),1e-8);
     }
 
     @Test
@@ -596,7 +596,7 @@ public class TestOperation {
 
         eq.process("b=det(5.6)");
 
-        assertEquals(5.6, eq.lookupScalar("b"), 1e-8);
+        assertEquals(5.6, eq.lookupDouble("b"), 1e-8);
     }
 
     @Test
@@ -608,7 +608,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("b=trace(a)");
 
-        assertEquals(a.trace(), eq.lookupScalar("b"), 1e-8);
+        assertEquals(a.trace(), eq.lookupDouble("b"), 1e-8);
     }
 
     @Test
@@ -620,7 +620,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("b=normF(a)");
 
-        assertEquals(a.normF(), eq.lookupScalar("b"), 1e-8);
+        assertEquals(a.normF(), eq.lookupDouble("b"), 1e-8);
     }
 
     @Test
@@ -629,7 +629,7 @@ public class TestOperation {
 
         eq.process("b=normF(5.6)");
 
-        assertEquals(5.6, eq.lookupScalar("b"), 1e-8);
+        assertEquals(5.6, eq.lookupDouble("b"), 1e-8);
     }
 
     @Test
@@ -685,7 +685,7 @@ public class TestOperation {
 
         eq.process("B=abs(A)");
 
-        double found = eq.lookupScalar("B");
+        double found = eq.lookupDouble("B");
         assertEquals(4.6,found,1e-8);
     }
 
@@ -700,7 +700,7 @@ public class TestOperation {
 
         eq.process("B=max(A)");
 
-        double found = eq.lookupScalar("B");
+        double found = eq.lookupDouble("B");
         double expected = CommonOps.elementMax(A.getMatrix());
         assertEquals(expected,found,1e-8);
     }
@@ -727,7 +727,7 @@ public class TestOperation {
 
         eq.process("B=max(A)");
 
-        double found = eq.lookupScalar("B");
+        double found = eq.lookupDouble("B");
         assertEquals(4.6,found,1e-8);
     }
 
@@ -742,7 +742,7 @@ public class TestOperation {
 
         eq.process("B=min(A)");
 
-        double found = eq.lookupScalar("B");
+        double found = eq.lookupDouble("B");
         double expected = CommonOps.elementMin(A.getMatrix());
         assertEquals(expected,found,1e-8);
     }
@@ -769,7 +769,7 @@ public class TestOperation {
 
         eq.process("B=min(A)");
 
-        double found = eq.lookupScalar("B");
+        double found = eq.lookupDouble("B");
         assertEquals(4.6,found,1e-8);
     }
 

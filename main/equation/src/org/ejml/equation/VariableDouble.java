@@ -23,7 +23,7 @@ package org.ejml.equation;
  *
  * @author Peter Abeles
  */
-class VariableDouble extends VariableScalar {
+public class VariableDouble extends VariableScalar {
     public double value;
 
     public VariableDouble(double value) {

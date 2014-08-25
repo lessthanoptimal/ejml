@@ -18,7 +18,6 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
@@ -128,7 +127,6 @@ public class BidiagonalDecompositionTall_D64
     @Override
     public boolean decompose(DenseMatrix64F orig) {
 
-        decompQRP.setSingularThreshold(CommonOps.elementMaxAbs(orig)* UtilEjml.EPS);
         if( !decompQRP.decompose(orig) ) {
             return false;
         }

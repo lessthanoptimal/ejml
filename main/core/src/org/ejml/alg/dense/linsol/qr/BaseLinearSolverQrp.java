@@ -18,7 +18,6 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
@@ -109,8 +108,6 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
     @Override
     public boolean setA(DenseMatrix64F A) {
         _setA(A);
-
-        decomposition.setSingularThreshold(CommonOps.elementMaxAbs(A)* UtilEjml.EPS );
 
         if( !decomposition.decompose(A) )
             return false;
