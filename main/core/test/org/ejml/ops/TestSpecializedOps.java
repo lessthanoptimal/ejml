@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -115,7 +115,7 @@ public class TestSpecializedOps {
         DenseMatrix64F b = RandomMatrices.createRandom(3,2,rand);
         DenseMatrix64F c = RandomMatrices.createRandom(3,2,rand);
 
-        CommonOps.sub(a,b,c);
+        CommonOps.subtract(a, b, c);
         double expectedNorm = NormOps.fastNormF(c);
         double foundNorm = SpecializedOps.diffNormF(a,b);
 
@@ -128,7 +128,7 @@ public class TestSpecializedOps {
         DenseMatrix64F b = RandomMatrices.createRandom(3,2,rand);
         DenseMatrix64F c = RandomMatrices.createRandom(3,2,rand);
 
-        CommonOps.sub(a,b,c);
+        CommonOps.subtract(a, b, c);
         double expectedNorm = 0;
         for( int i = 0; i < c.getNumElements(); i++ ) {
             expectedNorm += Math.abs(c.get(i));
@@ -144,7 +144,7 @@ public class TestSpecializedOps {
         DenseMatrix64F A = M.copy();
 
         SpecializedOps.addIdentity(A,A,2.0);
-        CommonOps.subEquals(A,M);
+        CommonOps.subtractEquals(A, M);
 
         double total = CommonOps.elementSum(A);
 

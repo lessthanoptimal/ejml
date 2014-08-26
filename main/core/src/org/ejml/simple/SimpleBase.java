@@ -170,7 +170,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#sub(org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
+     * @see CommonOps#subtract(org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -179,7 +179,30 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T minus( T b ) {
         T ret = copy();
 
-        CommonOps.subEquals(ret.getMatrix(),b.getMatrix());
+        CommonOps.subtract(getMatrix(), b.getMatrix(), ret.getMatrix());
+
+        return ret;
+    }
+
+    /**
+     * <p>
+     * Returns the result of matrix-double subtraction:<br>
+     * <br>
+     * c = a - b <br>
+     * <br>
+     * where c is the returned matrix, a is this matrix, and b is the passed in double.
+     * </p>
+     *
+     * @see CommonOps#subtract(org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F)
+     *
+     * @param b Value subtracted from each element
+     *
+     * @return The results of this operation.
+     */
+    public T minus( double b ) {
+        T ret = copy();
+
+        CommonOps.subtract(getMatrix(), b, ret.getMatrix());
 
         return ret;
     }
@@ -206,6 +229,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         return ret;
     }
+
     /**
      * <p>
      * Performs a matrix addition and scale operation.<br>

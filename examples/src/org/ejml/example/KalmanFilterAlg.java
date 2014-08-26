@@ -106,7 +106,7 @@ public class KalmanFilterAlg implements KalmanFilter{
     public void update(DenseMatrix64F z, DenseMatrix64F R) {
         // y = z - H x
         MatrixVectorMult.mult(H,x,y);
-        sub(z,y,y);
+        subtract(z, y, y);
 
         // S = H P H' + R
         MatrixMatrixMult.mult_small(H,P,c);
@@ -126,7 +126,7 @@ public class KalmanFilterAlg implements KalmanFilter{
         // P = (I-kH)P = P - (KH)P = P-K(HP)
         MatrixMatrixMult.mult_small(H,P,c);
         MatrixMatrixMult.mult_small(K,c,b);
-        subEquals(P,b);
+        subtractEquals(P, b);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class EquationCustomFunction {
 
         SimpleMatrix A = new SimpleMatrix(1,1); // will be resized
         SimpleMatrix B = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix C = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random(3,4,-1,1,rand);
 
         eq.alias(A,"A",B,"B",C,"C");
 
@@ -71,6 +71,8 @@ public class EquationCustomFunction {
                 Operation.Info ret = new Operation.Info();
 
                 if( varA instanceof VariableMatrix && varB instanceof VariableMatrix ) {
+
+                    // The output matrix or scalar variable must be created with the provided manager
                     final VariableMatrix output = manager.createMatrix();
                     ret.output = output;
                     ret.op = new Operation("multTransA-mm") {

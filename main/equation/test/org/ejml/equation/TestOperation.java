@@ -460,7 +460,10 @@ public class TestOperation {
         assertTrue(b.plus(-2.2).isIdentical(a, 1e-8));
 
         eq.process("a=2.2-b");
-        assertTrue(b.plus(-2.2).isIdentical(a, 1e-8));
+
+        DenseMatrix64F expected = new DenseMatrix64F(3,4);
+        CommonOps.subtract(2.2,b.getMatrix(),expected);
+        assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, 1e-8));
     }
 
     @Test

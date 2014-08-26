@@ -655,23 +655,45 @@ public class TestCommonOps {
         DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
         DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 5, 5, 5, 5, 5);
 
-        CommonOps.subEquals(a,b);
+        CommonOps.subtractEquals(a, b);
 
         UtilTestMatrix.checkMat(a,-5,-4,-3,-2,-1,0);
         UtilTestMatrix.checkMat(b,5,5,5,5,5,5);
     }
 
     @Test
-    public void sub() {
+    public void subtract_matrix_matrix() {
         DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
         DenseMatrix64F b = new DenseMatrix64F(2,3, true, 5, 5, 5, 5, 5, 5);
         DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
 
-        CommonOps.sub(a,b,c);
+        CommonOps.subtract(a, b, c);
 
         UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
         UtilTestMatrix.checkMat(b,5,5,5,5,5,5);
         UtilTestMatrix.checkMat(c,-5,-4,-3,-2,-1,0);
+    }
+
+    @Test
+    public void subtract_matrix_double() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.subtract(a, 2, c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(c,-2,-1,0,1,2,3);
+    }
+
+    @Test
+    public void subtract_double_matrix() {
+        DenseMatrix64F a = new DenseMatrix64F(2,3, true, 0, 1, 2, 3, 4, 5);
+        DenseMatrix64F c = RandomMatrices.createRandom(2,3,rand);
+
+        CommonOps.subtract(2, a, c);
+
+        UtilTestMatrix.checkMat(a,0,1,2,3,4,5);
+        UtilTestMatrix.checkMat(c,2,1,0,-1,-2,-3);
     }
 
     @Test

@@ -473,7 +473,7 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output,mA.matrix.numRows,mA.matrix.numCols);
-                    CommonOps.sub(mA.matrix, mB.matrix, output.matrix);
+                    CommonOps.subtract(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -503,25 +503,28 @@ public abstract class Operation {
         } else {
             final VariableMatrix output = manager.createMatrix();
             ret.output = output;
-            final VariableMatrix m;
-            final VariableScalar s;
 
-            if (A instanceof VariableMatrix) {
-                // matrix - value
-                m = (VariableMatrix) A;
-                s = (VariableScalar) B;
+            if( A instanceof VariableMatrix ) {
+                ret.op = new Operation("subtract-ms") {
+                    @Override
+                    public void process() {
+                        DenseMatrix64F m = ((VariableMatrix)A).matrix;
+                        double v = ((VariableScalar)B).getDouble();
+                        output.matrix.reshape(m.numRows, m.numCols);
+                        CommonOps.subtract(m, v, output.matrix);
+                    }
+                };
             } else {
-                m = (VariableMatrix) B;
-                s = (VariableScalar) A;
+                ret.op = new Operation("subtract-sm") {
+                    @Override
+                    public void process() {
+                        DenseMatrix64F m = ((VariableMatrix)B).matrix;
+                        double v = ((VariableScalar)A).getDouble();
+                        output.matrix.reshape(m.numRows, m.numCols);
+                        CommonOps.subtract(v, m, output.matrix);
+                    }
+                };
             }
-
-            ret.op = new Operation("subtract-ms") {
-                @Override
-                public void process() {
-                    output.matrix.reshape(m.matrix.numRows, m.matrix.numCols);
-                    CommonOps.add(m.matrix, -s.getDouble(), output.matrix);
-                }
-            };
         }
 
         return ret;

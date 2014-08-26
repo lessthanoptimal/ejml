@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -170,7 +170,7 @@ public class LevenbergMarquardt {
                     return false;
                 }
                 // compute the candidate parameters
-                sub(param,negDelta,tempParam);
+                subtract(param, negDelta, tempParam);
 
                 double cost = cost(tempParam,X,Y);
                 if( cost < prevCost ) {
@@ -236,7 +236,7 @@ public class LevenbergMarquardt {
     private void computeDandH( DenseMatrix64F param , DenseMatrix64F x , DenseMatrix64F y )
     {
         func.compute(param,x, tempDH);
-        subEquals(tempDH,y);
+        subtractEquals(tempDH, y);
 
         computeNumericalJacobian(param,x,jacobian);
 

@@ -202,17 +202,28 @@ public class TestSimpleMatrix {
     }
 
     @Test
-    public void minus() {
+    public void minus_matrix_matrix() {
         SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random(3,2, 0, 1, rand);
         SimpleMatrix c = a.minus(b);
 
         DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
-        CommonOps.sub(a.mat,b.mat,c_dense);
+        CommonOps.subtract(a.mat, b.mat, c_dense);
 
         EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
     }
 
+    @Test
+    public void minus_matrix_scalar() {
+        SimpleMatrix a = SimpleMatrix.random(3,2, 0, 1, rand);
+        double b = 0.14;
+        SimpleMatrix c = a.minus(b);
+
+        DenseMatrix64F c_dense = new DenseMatrix64F(3,2);
+        CommonOps.subtract(a.mat, b, c_dense);
+
+        EjmlUnitTests.assertEquals(c_dense,c.mat,1e-8);
+    }
 
     @Test
     public void plus_beta() {

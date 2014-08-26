@@ -181,7 +181,7 @@ public class PrincipleComponentAnalysis {
         DenseMatrix64F s = new DenseMatrix64F(A.getNumCols(),1,true,sampleData);
         DenseMatrix64F r = new DenseMatrix64F(numComponents,1);
 
-        CommonOps.sub(s,mean,s);
+        CommonOps.subtract(s, mean, s);
 
         CommonOps.mult(V_t,s,r);
 

@@ -1611,6 +1611,52 @@ public class CommonOps {
     }
 
     /**
+     * <p>Performs matrix scalar subtraction:<br>
+     * <br>
+     * c = a - val<br>
+     * c<sub>ij</sub> = a<sub>ij</sub> - val<br>
+     * </p>
+     *
+     * @param a (input) A matrix. Not modified.
+     * @param val (input) The value that's subtracted to each element.
+     * @param c (Output) A matrix. Modified.
+     */
+    public static void subtract( D1Matrix64F a , double val , D1Matrix64F c ) {
+        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
+            throw new IllegalArgumentException("Dimensions of a and c do not match.");
+        }
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            c.data[i] = a.data[i] - val;
+        }
+    }
+
+    /**
+     * <p>Performs matrix scalar subtraction:<br>
+     * <br>
+     * c = val - a<br>
+     * c<sub>ij</sub> = val - a<sub>ij</sub><br>
+     * </p>
+     *
+     * @param val (input) The value that's subtracted to each element.
+     * @param a (input) A matrix. Not modified.
+     * @param c (Output) A matrix. Modified.
+     */
+    public static void subtract( double val , D1Matrix64F a , D1Matrix64F c ) {
+        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
+            throw new IllegalArgumentException("Dimensions of a and c do not match.");
+        }
+
+        final int length = a.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            c.data[i] = val - a.data[i];
+        }
+    }
+
+    /**
      * <p>Performs the following subtraction operation:<br>
      * <br>
      * a = a - b  <br>
@@ -1620,7 +1666,7 @@ public class CommonOps {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void subEquals( D1Matrix64F a , D1Matrix64F b )
+    public static void subtractEquals(D1Matrix64F a, D1Matrix64F b)
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
@@ -1647,7 +1693,7 @@ public class CommonOps {
      * @param b A Matrix. Not modified.
      * @param c A Matrix. Modified.
      */
-    public static void sub( D1Matrix64F a , D1Matrix64F b , D1Matrix64F c )
+    public static void subtract(D1Matrix64F a, D1Matrix64F b, D1Matrix64F c)
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");

@@ -237,7 +237,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.subEquals(results,matA);
+            CommonOps.subtractEquals(results, matA);
         }
 
         long curr = System.currentTimeMillis();
@@ -250,7 +250,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.sub(matA,matB,results);
+            CommonOps.subtract(matA, matB, results);
         }
 
         long curr = System.currentTimeMillis();

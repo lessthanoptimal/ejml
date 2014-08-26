@@ -92,7 +92,7 @@ public class KalmanFilterOps implements KalmanFilter{
     public void update(DenseMatrix64F z, DenseMatrix64F R) {
         // y = z - H x
         mult(H,x,y);
-        sub(z,y,y);
+        subtract(z, y, y);
 
         // S = H P H' + R
         mult(H,P,c);
@@ -111,7 +111,7 @@ public class KalmanFilterOps implements KalmanFilter{
         // P = (I-kH)P = P - (KH)P = P-K(HP)
         mult(H,P,c);
         mult(K,c,b);
-        subEquals(P,b);
+        subtractEquals(P, b);
     }
 
     @Override
