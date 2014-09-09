@@ -82,6 +82,23 @@ public class MatrixFeatures {
     }
 
     /**
+     * Checks to see all the elements in the matrix are zeros
+     *
+     * @param m A matrix. Not modified.
+     * @return True if all elements are zeros or false if not
+     */
+    public static boolean isZeros( D1Matrix64F m , double tol )
+    {
+        int length = m.getNumElements();
+
+        for( int i = 0; i < length; i++ ) {
+            if( Math.abs(m.get(i)) > tol )
+                return false;
+        }
+        return true;
+    }
+
+    /**
      * Checks to see if the matrix is a vector or not.
      *
      * @param mat A matrix. Not modified.

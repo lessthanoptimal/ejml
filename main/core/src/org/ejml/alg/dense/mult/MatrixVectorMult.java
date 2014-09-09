@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.alg.dense.mult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
+import org.ejml.ops.CommonOps;
 
 
 /**
@@ -54,41 +55,46 @@ public class MatrixVectorMult {
      * where A is a matrix, b is a column or transposed row vector, and c is a column vector.
      * </p>
      *
-     * @param a A matrix that is m by n. Not modified.
-     * @param b A vector that has length n. Not modified.
-     * @param c A column vector that has length m. Modified.
+     * @param A A matrix that is m by n. Not modified.
+     * @param B A vector that has length n. Not modified.
+     * @param C A column vector that has length m. Modified.
      */
-    public static void mult( RowD1Matrix64F a, D1Matrix64F b, D1Matrix64F c)
+    public static void mult( RowD1Matrix64F A, D1Matrix64F B, D1Matrix64F C)
     {
-        if( c.numCols != 1 ) {
+        if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
-        } else if( c.numRows != a.numRows ) {
+        } else if( C.numRows != A.numRows ) {
             throw new MatrixDimensionException("C is not the expected length");
         }
         
-        if( b.numRows == 1 ) {
-            if( a.numCols != b.numCols ) {
+        if( B.numRows == 1 ) {
+            if( A.numCols != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
             }
-        } else if( b.numCols == 1 ) {
-            if( a.numCols != b.numRows ) {
+        } else if( B.numCols == 1 ) {
+            if( A.numCols != B.numRows ) {
                 throw new MatrixDimensionException("A and B are not compatible");
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
 
+        if( A.numCols == 0 ) {
+            CommonOps.fill(C,0);
+            return;
+        }
+
         int indexA = 0;
         int cIndex = 0;
-        double b0 = b.get(0);
-        for( int i = 0; i < a.numRows; i++ ) {
-            double total = a.get(indexA++) * b0;
+        double b0 = B.get(0);
+        for( int i = 0; i < A.numRows; i++ ) {
+            double total = A.get(indexA++) * b0;
 
-            for( int j = 1; j < a.numCols; j++ ) {
-                total += a.get(indexA++) * b.get(j);
+            for( int j = 1; j < A.numCols; j++ ) {
+                total += A.get(indexA++) * B.get(j);
             }
 
-            c.set(cIndex++ , total);
+            C.set(cIndex++, total);
         }
     }
 
@@ -127,6 +133,10 @@ public class MatrixVectorMult {
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
+        }
+
+        if( A.numCols == 0 ) {
+            return;
         }
 
         int indexA = 0;
@@ -225,6 +235,11 @@ public class MatrixVectorMult {
             throw new MatrixDimensionException("B is not a vector");
         }
 
+        if( A.numRows == 0 ) {
+            CommonOps.fill(C,0);
+            return;
+        }
+
         double B_val = B.get(0);
         for( int i = 0; i < A.numCols; i++ ) {
             C.set( i , A.get(i) * B_val );
@@ -318,6 +333,10 @@ public class MatrixVectorMult {
             }
         } else {
             throw new MatrixDimensionException("B is not a vector");
+        }
+
+        if( A.numRows == 0 ) {
+            return;
         }
 
         int indexA = 0;

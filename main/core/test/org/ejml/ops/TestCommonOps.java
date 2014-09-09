@@ -98,6 +98,49 @@ public class TestCommonOps {
         assertEquals(16,numChecked);
         assertTrue(!oneFailed);
     }
+    /**
+     * See if zeros in rows and columns are handled correctly.
+     */
+    @Test
+    public void checkAllMatrixMult_Zeros() {
+        int numChecked = 0;
+        Method methods[] = CommonOps.class.getMethods();
+
+        boolean oneFailed = false;
+
+        for( Method method : methods ) {
+            String name = method.getName();
+
+            // only look at function which perform matrix multiplication
+            if( !name.contains("mult") || name.contains("Element") ||
+                    name.contains("Inner") || name.contains("Outer"))
+                continue;
+
+            try {
+
+                boolean failed = !checkMultMethod(method,6,0,0,5);
+                failed |= !checkMultMethod(method,0,5,5,0);
+                failed |= !checkMultMethod(method,1,0,0,5);
+                failed |= !checkMultMethod(method,6,0,0,1);
+                failed |= !checkMultMethod(method,0,1,1,5);
+                failed |= !checkMultMethod(method,5,1,1,0);
+                failed |= !checkMultMethod(method,0,0,0,0);
+
+                if( failed ) {
+                    System.out.println("Failed: Function = "+name);
+                    oneFailed = true;
+                }
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            numChecked++;
+        }
+        assertEquals(16,numChecked);
+        assertTrue(!oneFailed);
+    }
+
 
     private Method findCheck( String name , boolean hasAlpha ) {
         Method checkMethod;
@@ -181,6 +224,59 @@ public class TestCommonOps {
             if( !MatrixFeatures.isIdentical(c_alt,c,tol))
                 return false;
         }
+
+        // check length zero rows and columns
+        DenseMatrix64F a = tranA ? new DenseMatrix64F(0,5) : new DenseMatrix64F(5,0);
+        DenseMatrix64F b = tranB ? new DenseMatrix64F(6,0) : new DenseMatrix64F(0,6);
+
+        DenseMatrix64F c = RandomMatrices.createRandom(5,6,rand);
+        if( hasAlpha ) {
+            method.invoke(null,2.0,a,b,c);
+        } else {
+            method.invoke(null,a,b,c);
+        }
+        assertTrue(MatrixFeatures.isZeros(c,1e-8));
+
+        return true;
+    }
+
+    private boolean checkMultMethod(Method method, int rowsA , int colsA , int rowsB , int colsB ) throws InvocationTargetException, IllegalAccessException {
+
+        String name = method.getName();
+
+        boolean tranA = false;
+        boolean tranB = false;
+        if( name.contains("TransAB")) {
+            tranA = true;
+            tranB = true;
+        } else if( name.contains("TransA")) {
+            tranA = true;
+        } else if( name.contains("TransB")) {
+            tranB = true;
+        }
+
+        boolean add = name.contains("Add");
+        boolean hasAlpha = method.getGenericParameterTypes().length==4;
+
+        // check length zero rows and columns
+        DenseMatrix64F a = tranA ? new DenseMatrix64F(colsA,rowsA) : new DenseMatrix64F(rowsA,colsA);
+        DenseMatrix64F b = tranB ? new DenseMatrix64F(colsB,rowsB) : new DenseMatrix64F(rowsB,colsB);
+
+        DenseMatrix64F c = RandomMatrices.createRandom(rowsA,colsB,rand);
+
+        if( hasAlpha ) {
+            method.invoke(null,2.0,a,b,c);
+        } else {
+            method.invoke(null,a,b,c);
+        }
+
+        if( add ) {
+            DenseMatrix64F corig = c.copy();
+            assertTrue(MatrixFeatures.isIdentical(corig, c, 1e-8));
+        } else {
+            assertTrue(MatrixFeatures.isZeros(c, 1e-8));
+        }
+
         return true;
     }
 

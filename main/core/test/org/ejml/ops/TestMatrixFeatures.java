@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,6 +48,16 @@ public class TestMatrixFeatures {
 
         a.set(2,2,Double.POSITIVE_INFINITY);
         assertTrue(MatrixFeatures.hasUncountable(a));
+    }
+
+    @Test
+    public void isZeros() {
+        DenseMatrix64F a = new DenseMatrix64F(4,4);
+        a.set(0,0,1);
+
+        assertFalse(MatrixFeatures.isZeros(a,0.1));
+        assertTrue(MatrixFeatures.isZeros(a,2));
+
     }
 
     @Test

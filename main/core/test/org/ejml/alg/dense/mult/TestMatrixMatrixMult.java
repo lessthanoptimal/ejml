@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.alg.dense.mult;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.EjmlUnitTests;
+import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -44,6 +45,12 @@ public class TestMatrixMatrixMult {
     public void checkShapesOfInput() {
         CheckMatrixMultShape check = new CheckMatrixMultShape(MatrixMatrixMult.class);
         check.checkAll();
+    }
+
+    @Test
+    public void checkZeroRowsColumns() throws InvocationTargetException, IllegalAccessException {
+        checkZeros(5,0,0,6);
+        checkZeros(0,5,5,0);
     }
 
     /**
@@ -183,6 +190,57 @@ public class TestMatrixMatrixMult {
             invoke(method,alpha,a,b,c);
 
             EjmlUnitTests.assertEquals(expected,c,1e-12);
+            numChecked++;
+        }
+
+        assertEquals(numChecked,32);
+    }
+
+    /**
+     * Sees if all the matrix multiplications produce the expected results against the provided
+     * known solution.
+     */
+    private void checkZeros( int rowsA , int colsA , int rowsB , int colsB )
+            throws InvocationTargetException, IllegalAccessException
+    {
+
+        double alpha = 2.5;
+
+        int numChecked = 0;
+        Method methods[] = MatrixMatrixMult.class.getMethods();
+
+        for( Method method : methods ) {
+            String name = method.getName();
+
+            // only look at function which perform matrix multiplications
+            if( !name.contains("mult") )
+                continue;
+
+//            System.out.println(name);
+
+            DenseMatrix64F a = new DenseMatrix64F(rowsA,colsA);
+            DenseMatrix64F b = new DenseMatrix64F(rowsB,colsB);
+            DenseMatrix64F c = RandomMatrices.createRandom(rowsA,colsB,rand);
+
+            boolean add = name.contains("multAdd");
+
+            if( name.contains("TransAB")) {
+                transpose(a);
+                transpose(b);
+            } else if( name.contains("TransA")) {
+                transpose(a);
+            } else if( name.contains("TransB")) {
+                transpose(b);
+            }
+
+            DenseMatrix64F original = c.copy();
+            invoke(method,alpha,a,b,c);
+
+            if( add ) {
+                assertTrue(MatrixFeatures.isEquals(original, c));
+            } else {
+                assertTrue(MatrixFeatures.isZeros(c, 1e-8));
+            }
             numChecked++;
         }
 

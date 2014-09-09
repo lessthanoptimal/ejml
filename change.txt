@@ -22,6 +22,7 @@ Date format: year/month/day
       *** WARNING **** The meaning of CommonOps.divide(scalar,Matrix) and similar has changed
   * Added subtract() matrix-double and double-matrix
 - QRP yet again uses a relative threshold.  No idea why it was set to a global one
+- Matrix Multiplication now fully supports multiplcation by rows or columns with zero
 - TODO Make QrUpdate more friendly and accessible
 
 ----- Version 0.25

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,6 +50,7 @@ public class GeneratorMatrixMatrixMult {
                 "package org.ejml.alg.dense.mult;\n" +
                 "\n" +
                 "import org.ejml.data.RowD1Matrix64F;\n"+
+                "import org.ejml.ops.CommonOps;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
@@ -81,9 +82,7 @@ public class GeneratorMatrixMatrixMult {
                 " * \n" +
                 " * <p>\n" +
                 " * <center>******** IMPORTANT **********</center>\n" +
-                " * This class was auto generated using {@link org.ejml.alg.dense.mult.CodeGeneratorMatrixMatrixMult}\n" +
-                " * If this code needs to be modified, please modify {@link org.ejml.alg.dense.mult.CodeGeneratorMatrixMatrixMult} instead\n" +
-                " * and regenerate the code by running that.\n" +
+                " * This class was auto generated using {@link "+getClass().getName()+"}\n" +
                 " * </p>\n" +
                 " * \n" +
                 " * @author Peter Abeles\n" +
@@ -138,6 +137,18 @@ public class GeneratorMatrixMatrixMult {
             ret += "        if( aux == null ) aux = new double[ "+auxLength+" ];\n\n";
         }
 
+        return ret;
+    }
+
+    private String handleZeros( boolean add ) {
+
+        String fill = add ? "" : "            CommonOps.fill(c,0);\n";
+
+        String ret =
+                "        if( a.numCols == 0 || a.numRows == 0 ) {\n" +
+                fill +
+                "            return;\n" +
+                "        }\n";
         return ret;
     }
 
@@ -202,7 +213,7 @@ public class GeneratorMatrixMatrixMult {
         String assignment = add ? "plus" : "set";
 
         String foo =
-                header + makeBoundsCheck(false,false, null)+
+                header + makeBoundsCheck(false,false, null)+handleZeros(add) +
                         "        double valA;\n"+
                         "        int indexCbase= 0;\n" +
                         "        int endOfKLoop = b.numRows*b.numCols;\n"+
@@ -327,7 +338,7 @@ public class GeneratorMatrixMatrixMult {
         }
 
         String foo =
-                header + makeBoundsCheck(true,false, null)+
+                header + makeBoundsCheck(true,false, null)+handleZeros(add)+
                         "        double valA;\n" +
                         "\n" +
                         "        for( int i = 0; i < a.numCols; i++ ) {\n" +
@@ -484,7 +495,7 @@ public class GeneratorMatrixMatrixMult {
         }
 
         String foo =
-                header + makeBoundsCheck(true,true, "a.numRows")+
+                header + makeBoundsCheck(true,true, "a.numRows")+handleZeros(add)+
                         "        int indexC = 0;\n" +
                         "        for( int i = 0; i < a.numCols; i++ ) {\n" +
                         "            for( int k = 0; k < b.numCols; k++ ) {\n" +

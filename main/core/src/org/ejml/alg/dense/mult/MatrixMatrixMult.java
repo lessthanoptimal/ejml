@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowD1Matrix64F;
+import org.ejml.ops.CommonOps;
 
 /**
  * <p>
@@ -50,9 +51,7 @@ import org.ejml.data.RowD1Matrix64F;
  * 
  * <p>
  * <center>******** IMPORTANT **********</center>
- * This class was auto generated using {@link GeneratorMatrixMatrixMult}
- * If this code needs to be modified, please modify {@link GeneratorMatrixMatrixMult} instead
- * and regenerate the code by running that.
+ * This class was auto generated using {@link org.ejml.alg.dense.mult.GeneratorMatrixMatrixMult}
  * </p>
  * 
  * @author Peter Abeles
@@ -71,6 +70,10 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CommonOps.fill(c,0);
+            return;
+        }
         double valA;
         int indexCbase= 0;
         int endOfKLoop = b.numRows*b.numCols;
@@ -183,6 +186,10 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CommonOps.fill(c,0);
+            return;
+        }
         double valA;
 
         for( int i = 0; i < a.numCols; i++ ) {
@@ -291,6 +298,10 @@ public class MatrixMatrixMult {
 
         if( aux == null ) aux = new double[ a.numRows ];
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CommonOps.fill(c,0);
+            return;
+        }
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
@@ -355,6 +366,9 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
         double valA;
         int indexCbase= 0;
         int endOfKLoop = b.numRows*b.numCols;
@@ -467,6 +481,9 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
         double valA;
 
         for( int i = 0; i < a.numCols; i++ ) {
@@ -575,6 +592,9 @@ public class MatrixMatrixMult {
 
         if( aux == null ) aux = new double[ a.numRows ];
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
@@ -639,6 +659,10 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CommonOps.fill(c,0);
+            return;
+        }
         double valA;
         int indexCbase= 0;
         int endOfKLoop = b.numRows*b.numCols;
@@ -751,6 +775,10 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CommonOps.fill(c,0);
+            return;
+        }
         double valA;
 
         for( int i = 0; i < a.numCols; i++ ) {
@@ -859,6 +887,10 @@ public class MatrixMatrixMult {
 
         if( aux == null ) aux = new double[ a.numRows ];
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CommonOps.fill(c,0);
+            return;
+        }
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
@@ -923,6 +955,9 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
         double valA;
         int indexCbase= 0;
         int endOfKLoop = b.numRows*b.numCols;
@@ -1035,6 +1070,9 @@ public class MatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
         double valA;
 
         for( int i = 0; i < a.numCols; i++ ) {
@@ -1143,6 +1181,9 @@ public class MatrixMatrixMult {
 
         if( aux == null ) aux = new double[ a.numRows ];
 
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
         int indexC = 0;
         for( int i = 0; i < a.numCols; i++ ) {
             for( int k = 0; k < b.numCols; k++ ) {
