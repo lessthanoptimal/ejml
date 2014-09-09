@@ -230,6 +230,69 @@ public class TestOperation {
     }
 
     @Test
+    public void elementPower_mm() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random(6, 5, 0, 1, rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+
+        eq.process("c=a.^b");
+
+        assertTrue(a.elementPower(b).isIdentical(c, 1e-8));
+    }
+
+    @Test
+    public void elementPower_ms() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(6, 5, 0, 1, rand);
+        double b = 1.1;
+        SimpleMatrix c = SimpleMatrix.random(6, 5, 0, 1, rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+
+        eq.process("c=a.^b");
+
+        assertTrue(a.elementPower(b).isIdentical(c, 1e-8));
+    }
+
+    @Test
+    public void elementPower_sm() {
+        Equation eq = new Equation();
+
+        double a = 1.1;
+        SimpleMatrix b = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random(6, 5, 0, 1, rand);
+
+        eq.alias(a,"a",b,"b",c,"c");
+
+        eq.process("c=a.^b");
+
+        SimpleMatrix expected = new SimpleMatrix(6,5);
+        CommonOps.elementPower(a,b.getMatrix(),expected.getMatrix());
+        assertTrue(expected.isIdentical(c, 1e-8));
+    }
+
+    @Test
+    public void elementPower_ss() {
+        Equation eq = new Equation();
+
+        double a = 1.1;
+        double b = 0.7;
+
+        eq.alias(a,"a",b,"b");
+
+        eq.process("c=a.^b");
+
+        double found = eq.lookupDouble("c");
+
+        assertEquals(Math.pow(a,b),found,1e-8);
+    }
+
+    @Test
     public void kron_matrix_matrix() {
         Equation eq = new Equation();
 
@@ -344,7 +407,7 @@ public class TestOperation {
     }
 
     @Test
-    public void exp() {
+    public void exp_s() {
         Equation eq = new Equation();
 
         eq.alias(1.1,"a");
@@ -354,13 +417,43 @@ public class TestOperation {
     }
 
     @Test
-    public void log() {
+    public void exp_m() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,0,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,0,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=exp(a)");
+
+        SimpleMatrix expected = a.elementExp();
+
+        assertTrue(expected.isIdentical(b,1e-8));
+    }
+
+    @Test
+    public void log_s() {
         Equation eq = new Equation();
 
         eq.alias(1.1,"a");
         eq.process("a=log(2.1)");
 
         assertEquals(Math.log(2.1),eq.lookupDouble("a"),1e-8);
+    }
+
+    @Test
+    public void log_m() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,4,0,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,0,1,rand);
+
+        eq.alias(a,"a",b,"b");
+        eq.process("b=log(a)");
+
+        SimpleMatrix expected = a.elementLog();
+
+        assertTrue(expected.isIdentical(b,1e-8));
     }
 
     @Test

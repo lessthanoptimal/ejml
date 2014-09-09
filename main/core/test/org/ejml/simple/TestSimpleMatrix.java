@@ -606,6 +606,68 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void elementPower_m() {
+        SimpleMatrix A = SimpleMatrix.random(4,5,0,1,rand);
+        SimpleMatrix B = SimpleMatrix.random(4,5,0,1,rand);
+
+        SimpleMatrix C = A.elementPower(B);
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            for( int j = 0; j < A.numCols(); j++ ) {
+                double expected = Math.pow(A.get(i,j),B.get(i,j));
+
+                assertTrue(expected == C.get(i,j));
+            }
+        }
+    }
+
+    @Test
+    public void elementPower_s() {
+        SimpleMatrix A = SimpleMatrix.random(4,5,0,1,rand);
+        double b = 1.1;
+
+        SimpleMatrix C = A.elementPower(b);
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            for( int j = 0; j < A.numCols(); j++ ) {
+                double expected = Math.pow(A.get(i,j),b);
+
+                assertTrue(expected == C.get(i,j));
+            }
+        }
+    }
+
+    @Test
+    public void elementLog() {
+        SimpleMatrix A = SimpleMatrix.random(4,5,0,1,rand);
+
+        SimpleMatrix C = A.elementLog();
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            for( int j = 0; j < A.numCols(); j++ ) {
+                double expected = Math.log(A.get(i, j));
+
+                assertTrue(expected == C.get(i,j));
+            }
+        }
+    }
+
+    @Test
+    public void elementExp() {
+        SimpleMatrix A = SimpleMatrix.random(4,5,0,1,rand);
+
+        SimpleMatrix C = A.elementExp();
+
+        for( int i = 0; i < A.numRows(); i++ ) {
+            for( int j = 0; j < A.numCols(); j++ ) {
+                double expected = Math.exp(A.get(i, j));
+
+                assertTrue(expected == C.get(i,j));
+            }
+        }
+    }
+
+    @Test
     public void extractMatrix() {
         SimpleMatrix a = SimpleMatrix.random(7,5, 0, 1, rand);
 

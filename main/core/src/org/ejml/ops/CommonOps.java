@@ -1343,6 +1343,115 @@ public class CommonOps {
 
     /**
      * <p>
+     * Element-wise power operation  <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> ^ b<sub>ij</sub>
+     * <p>
+     *
+     * @param A left side
+     * @param B right side
+     * @param C output (modified)
+     */
+    public static void elementPower( D1Matrix64F A , D1Matrix64F B , D1Matrix64F C ) {
+
+        if( A.numRows != B.numRows || A.numRows != C.numRows ||
+                A.numCols != B.numCols || A.numCols != C.numCols ) {
+            throw new IllegalArgumentException("All matrices must be the same shape");
+        }
+
+        int size = A.getNumElements();
+        for( int i = 0; i < size; i++ ) {
+            C.data[i] = Math.pow(A.data[i],B.data[i]);
+        }
+    }
+
+    /**
+     * <p>
+     * Element-wise power operation  <br>
+     * c<sub>ij</sub> = a ^ b<sub>ij</sub>
+     * <p>
+     *
+     * @param a left scalar
+     * @param B right side
+     * @param C output (modified)
+     */
+    public static void elementPower( double a , D1Matrix64F B , D1Matrix64F C ) {
+
+        if( B.numRows != C.numRows || B.numCols != C.numCols ) {
+            throw new IllegalArgumentException("All matrices must be the same shape");
+        }
+
+        int size = B.getNumElements();
+        for( int i = 0; i < size; i++ ) {
+            C.data[i] = Math.pow(a,B.data[i]);
+        }
+    }
+
+    /**
+     * <p>
+     * Element-wise power operation  <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> ^ b
+     * <p>
+     *
+     * @param A left side
+     * @param b right scalar
+     * @param C output (modified)
+     */
+    public static void elementPower( D1Matrix64F A , double b, D1Matrix64F C ) {
+
+        if( A.numRows != C.numRows || A.numCols != C.numCols ) {
+            throw new IllegalArgumentException("All matrices must be the same shape");
+        }
+
+        int size = A.getNumElements();
+        for( int i = 0; i < size; i++ ) {
+            C.data[i] = Math.pow(A.data[i],b);
+        }
+    }
+
+    /**
+     * <p>
+     * Element-wise log operation  <br>
+     * c<sub>ij</sub> = Math.log(a<sub>ij</sub>)
+     * <p>
+     *
+     * @param A input
+     * @param C output (modified)
+     */
+    public static void elementLog( D1Matrix64F A , D1Matrix64F C ) {
+
+        if( A.numCols != C.numCols || A.numRows != C.numRows ) {
+            throw new IllegalArgumentException("All matrices must be the same shape");
+        }
+
+        int size = A.getNumElements();
+        for( int i = 0; i < size; i++ ) {
+            C.data[i] = Math.log(A.data[i]);
+        }
+    }
+
+    /**
+     * <p>
+     * Element-wise exp operation  <br>
+     * c<sub>ij</sub> = Math.log(a<sub>ij</sub>)
+     * <p>
+     *
+     * @param A input
+     * @param C output (modified)
+     */
+    public static void elementExp( D1Matrix64F A , D1Matrix64F C ) {
+
+        if( A.numCols != C.numCols || A.numRows != C.numRows ) {
+            throw new IllegalArgumentException("All matrices must be the same shape");
+        }
+
+        int size = A.getNumElements();
+        for( int i = 0; i < size; i++ ) {
+            C.data[i] = Math.exp(A.data[i]);
+        }
+    }
+
+    /**
+     * <p>
      * Computes the sum of each row in the input matrix and returns the results in a vector:<br>
      * <br>
      * b<sub>j</sub> = sum(i=1:n ; |a<sub>ji</sub>|)

@@ -268,7 +268,7 @@ public abstract class Operation {
                 }
             };
         } else {
-            throw new RuntimeException("Only scalar to scalar power supported");
+            throw new RuntimeException("Only scalar to scalar atan2 supported");
         }
 
         return ret;
@@ -357,15 +357,28 @@ public abstract class Operation {
     }
 
     public static Info exp(final Variable A, ManagerTempVariables manager) {
-        Info ret = new Info();
-        final VariableDouble output = manager.createDouble();
-        ret.output = output;
+        final Info ret = new Info();
+
 
         if( A instanceof VariableScalar  ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
             ret.op = new Operation("exp-s") {
                 @Override
                 public void process() {
                     output.value = Math.exp(((VariableScalar) A).getDouble());
+                }
+            };
+        } else if( A instanceof VariableMatrix  ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation("exp-m") {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    DenseMatrix64F out = ((VariableMatrix)ret.output).matrix;
+                    out.reshape(a.numRows,a.numCols);
+                    CommonOps.elementExp(a, out);
                 }
             };
         } else {
@@ -376,15 +389,27 @@ public abstract class Operation {
     }
 
     public static Info log(final Variable A, ManagerTempVariables manager) {
-        Info ret = new Info();
-        final VariableDouble output = manager.createDouble();
-        ret.output = output;
+        final Info ret = new Info();
 
         if( A instanceof VariableScalar  ) {
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
             ret.op = new Operation("log-s") {
                 @Override
                 public void process() {
                     output.value = Math.log(((VariableScalar) A).getDouble());
+                }
+            };
+        } else if( A instanceof VariableMatrix  ) {
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+            ret.op = new Operation("log-m") {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    DenseMatrix64F out = ((VariableMatrix)ret.output).matrix;
+                    out.reshape(a.numRows,a.numCols);
+                    CommonOps.elementLog(a,out);
                 }
             };
         } else {
@@ -406,7 +431,7 @@ public abstract class Operation {
                     VariableMatrix mA = (VariableMatrix)A;
                     VariableMatrix mB = (VariableMatrix)B;
 
-                    resize(output,mA.matrix.numRows,mA.matrix.numCols);
+                    resize(output, mA.matrix.numRows, mA.matrix.numCols);
                     CommonOps.add(mA.matrix, mB.matrix, output.matrix);
                 }
             };
@@ -472,7 +497,7 @@ public abstract class Operation {
                     VariableMatrix mA = (VariableMatrix)A;
                     VariableMatrix mB = (VariableMatrix)B;
 
-                    resize(output,mA.matrix.numRows,mA.matrix.numCols);
+                    resize(output, mA.matrix.numRows, mA.matrix.numCols);
                     CommonOps.subtract(mA.matrix, mB.matrix, output.matrix);
                 }
             };
@@ -565,12 +590,82 @@ public abstract class Operation {
                     VariableMatrix mA = (VariableMatrix)A;
                     VariableMatrix mB = (VariableMatrix)B;
 
-                    resize(output,mA.matrix.numRows,mA.matrix.numCols);
+                    resize(output, mA.matrix.numRows, mA.matrix.numCols);
                     CommonOps.elementDiv(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else {
             throw new RuntimeException("Both inputs must be matrices for element wise multiplication");
+        }
+
+        return ret;
+    }
+
+    public static Info elementPow(final Variable A, final Variable B, ManagerTempVariables manager) {
+        Info ret = new Info();
+
+
+        if( A instanceof VariableScalar && B instanceof VariableScalar ) {
+
+            final VariableDouble output = manager.createDouble();
+            ret.output = output;
+
+            ret.op = new Operation("elementPow-ss") {
+                @Override
+                public void process() {
+                    double a = ((VariableScalar) A).getDouble();
+                    double b = ((VariableScalar) B).getDouble();
+
+                    output.value = Math.pow(a, b);
+                }
+            };
+        } else if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
+
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+
+            ret.op = new Operation("elementPow-mm") {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix) A).matrix;
+                    DenseMatrix64F b = ((VariableMatrix) B).matrix;
+
+                    resize(output, a.numRows, a.numCols);
+                    CommonOps.elementPower(a, b, output.matrix);
+                }
+            };
+        } else if( A instanceof VariableMatrix && B instanceof VariableScalar ) {
+
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+
+            ret.op = new Operation("elementPow-ms") {
+                @Override
+                public void process() {
+                    DenseMatrix64F a = ((VariableMatrix) A).matrix;
+                    double b = ((VariableScalar) B).getDouble();
+
+                    resize(output, a.numRows, a.numCols);
+                    CommonOps.elementPower(a, b, output.matrix);
+                }
+            };
+        } else if( A instanceof VariableScalar && B instanceof VariableMatrix ) {
+
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+
+            ret.op = new Operation("elementPow-sm") {
+                @Override
+                public void process() {
+                    double a = ((VariableScalar) A).getDouble();
+                    DenseMatrix64F b = ((VariableMatrix) B).matrix;
+
+                    resize(output, b.numRows, b.numCols);
+                    CommonOps.elementPower(a, b, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("Unsupport element-wise power input types");
         }
 
         return ret;
@@ -723,8 +818,8 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.matrix.reshape(mA.matrix.numCols,mA.matrix.numRows);
-                    CommonOps.pinv(mA.matrix,output.matrix);
+                    output.matrix.reshape(mA.matrix.numCols, mA.matrix.numRows);
+                    CommonOps.pinv(mA.matrix, output.matrix);
                 }
             };
         } else {
@@ -1154,7 +1249,7 @@ public abstract class Operation {
                         throw new RuntimeException("Solver failed!");
 
                     output.matrix.reshape(a.numCols,b.numCols);
-                    solver.solve(b,output.matrix);
+                    solver.solve(b, output.matrix);
                 }
             };
         } else {

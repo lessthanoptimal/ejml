@@ -940,6 +940,76 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
     /**
      * <p>
+     * Returns a matrix which is the result of an element by element power of 'this' and 'b':
+     * c<sub>i,j</sub> = a<sub>i,j</sub> ^ b<sub>i,j</sub>
+     * </p>
+     *
+     * @param b A simple matrix.
+     * @return The element by element power of 'this' and 'b'.
+     */
+    public T elementPower( T b )
+    {
+        T c = createMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementPower(mat, b.getMatrix(), c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
+     * Returns a matrix which is the result of an element by element power of 'this' and 'b':
+     * c<sub>i,j</sub> = a<sub>i,j</sub> ^ b
+     * </p>
+     *
+     * @param b Scalar
+     * @return The element by element power of 'this' and 'b'.
+     */
+    public T elementPower( double b )
+    {
+        T c = createMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementPower(mat, b, c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
+     * Returns a matrix which is the result of an element by element exp of 'this'
+     * c<sub>i,j</sub> = Math.exp(a<sub>i,j</sub>)
+     * </p>
+     *
+     * @return The element by element power of 'this' and 'b'.
+     */
+    public T elementExp()
+    {
+        T c = createMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementExp(mat, c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
+     * Returns a matrix which is the result of an element by element exp of 'this'
+     * c<sub>i,j</sub> = Math.log(a<sub>i,j</sub>)
+     * </p>
+     *
+     * @return The element by element power of 'this' and 'b'.
+     */
+    public T elementLog()
+    {
+        T c = createMatrix(mat.numRows,mat.numCols);
+
+        CommonOps.elementLog(mat, c.getMatrix());
+
+        return c;
+    }
+
+    /**
+     * <p>
      * Returns a new matrix whose elements are the negative of 'this' matrix's elements.<br>
      * <br>
      * b<sub>ij</sub> = -a<sub>ij</sub>

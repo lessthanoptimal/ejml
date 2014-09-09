@@ -225,18 +225,6 @@ public class TestCommonOps {
                 return false;
         }
 
-        // check length zero rows and columns
-        DenseMatrix64F a = tranA ? new DenseMatrix64F(0,5) : new DenseMatrix64F(5,0);
-        DenseMatrix64F b = tranB ? new DenseMatrix64F(6,0) : new DenseMatrix64F(0,6);
-
-        DenseMatrix64F c = RandomMatrices.createRandom(5,6,rand);
-        if( hasAlpha ) {
-            method.invoke(null,2.0,a,b,c);
-        } else {
-            method.invoke(null,a,b,c);
-        }
-        assertTrue(MatrixFeatures.isZeros(c,1e-8));
-
         return true;
     }
 
@@ -1018,6 +1006,74 @@ public class TestCommonOps {
         }
 
         assertEquals(sum,CommonOps.elementSum(M),1e-8);
+    }
+
+    @Test
+    public void elementPower_mm() {
+        DenseMatrix64F A = RandomMatrices.createRandom(4, 5, rand);
+        DenseMatrix64F B = RandomMatrices.createRandom(4, 5, rand);
+        DenseMatrix64F C = RandomMatrices.createRandom(4, 5, rand);
+
+        CommonOps.elementPower(A, B, C);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            double expected = Math.pow( A.get(i) , B.get(i));
+            assertEquals(expected,C.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void elementPower_ms() {
+        double a = 1.3;
+        DenseMatrix64F B = RandomMatrices.createRandom(4, 5, rand);
+        DenseMatrix64F C = RandomMatrices.createRandom(4, 5, rand);
+
+        CommonOps.elementPower(a,B,C);
+
+        for (int i = 0; i < C.getNumElements(); i++) {
+            double expected = Math.pow( a , B.get(i));
+            assertEquals(expected,C.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void elementPower_sm() {
+        DenseMatrix64F A = RandomMatrices.createRandom(4, 5, rand);
+        double b = 1.1;
+        DenseMatrix64F C = RandomMatrices.createRandom(4, 5, rand);
+
+        CommonOps.elementPower(A,b,C);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            double expected = Math.pow( A.get(i) , b);
+            assertEquals(expected,C.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void elementLog() {
+        DenseMatrix64F A = RandomMatrices.createRandom(4, 5, rand);
+        DenseMatrix64F C = RandomMatrices.createRandom(4, 5, rand);
+
+        CommonOps.elementLog(A, C);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            double expected = Math.log(A.get(i));
+            assertEquals(expected,C.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void elementExp() {
+        DenseMatrix64F A = RandomMatrices.createRandom(4, 5, rand);
+        DenseMatrix64F C = RandomMatrices.createRandom(4, 5, rand);
+
+        CommonOps.elementExp(A, C);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            double expected = Math.exp(A.get(i));
+            assertEquals(expected,C.get(i),1e-8);
+        }
     }
 
     @Test

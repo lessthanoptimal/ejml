@@ -33,6 +33,7 @@ public enum Symbol {
     PERIOD,
     ELEMENT_TIMES,
     ELEMENT_DIVIDE,
+    ELEMENT_POWER,
     ASSIGN,
     PAREN_LEFT,
     PAREN_RIGHT,
@@ -69,6 +70,7 @@ public enum Symbol {
         switch( c ) {
             case '*': return ELEMENT_TIMES;
             case '/': return ELEMENT_DIVIDE;
+            case '^': return ELEMENT_POWER;
         }
         throw new RuntimeException("Unknown element-wise type "+c);
     }

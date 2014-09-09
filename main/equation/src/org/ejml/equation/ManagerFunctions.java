@@ -128,6 +128,9 @@ public class ManagerFunctions {
             case ELEMENT_TIMES:
                 return Operation.elementMult(left, right, managerTemp);
 
+            case ELEMENT_POWER:
+                return Operation.elementPow(left, right, managerTemp);
+
             default:
                 throw new RuntimeException("Unknown operation " + op);
         }

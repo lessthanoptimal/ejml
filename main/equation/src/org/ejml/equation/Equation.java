@@ -148,8 +148,8 @@ import static org.ejml.equation.TokenList.Type;
  * cos(a)       Math.cos(a) for scalars only
  * atan(a)      Math.atan(a) for scalars only
  * atan2(a,b)   Math.atan2(a,b) for scalars only
- * exp(a)       Math.exp(a) for scalars only
- * log(a)       Math.log(a) for scalars only
+ * exp(a)       Math.exp(a) for scalars and element-wise matrices
+ * log(a)       Math.log(a) for scalars and element-wise matrices
  * </pre>
  * </p>
  *
@@ -161,14 +161,15 @@ import static org.ejml.equation.TokenList.Type;
  * '-'        subtraction (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
  * '/'        divide (Matrix-Scalar, Scalar-Scalar)
  * '/'        matrix solve "x=b/A" is equivalent to x=solve(A,b) (Matrix-Matrix)
+ * '^'        Scalar power.  a^b is a to the power of b.
  * '\'        left-divide.  Same as divide but reversed.  e.g. x=A\b is x=solve(A,b)
  * '.*'       element-wise multiplication (Matrix-Matrix)
  * './'       element-wise division (Matrix-Matrix)
- * '^'        Scalar power.  a^b is a to the power of b.
+ * '.^'       element-wise power. (scalar-scalar) (matrix-matrix) (scalar-matrix) (matrix-scalar)
  * '''        matrix transpose
  * '='        assignment by value (Matrix-Matrix, Scalar-Scalar)
  * </pre>
- * Order of operations:  [ ' ] precedes [ ^ ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
+ * Order of operations:  [ ' ] precedes [ ^ .^ ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
  * </p>
  *
  * <p>
@@ -662,7 +663,7 @@ public class Equation {
         // process operators depending on their priority
         parseNegOp(tokens,sequence);
         parseOperationsL(tokens,sequence);
-        parseOperationsLR(new Symbol[]{Symbol.POWER}, tokens, sequence);
+        parseOperationsLR(new Symbol[]{Symbol.POWER,Symbol.ELEMENT_POWER}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
@@ -1136,6 +1137,7 @@ public class Equation {
         switch( s ) {
             case ELEMENT_DIVIDE:
             case ELEMENT_TIMES:
+            case ELEMENT_POWER:
             case RDIVIDE:
             case LDIVIDE:
             case TIMES:
