@@ -134,6 +134,8 @@ public class SymmetricQRAlgorithmDecomposition_D64
     public boolean decompose(DenseMatrix64F orig) {
         if( orig.numCols != orig.numRows )
             throw new IllegalArgumentException("Matrix must be square.");
+        if( orig.numCols <= 0 )
+            return false;
 
         int N = orig.numRows;
 

@@ -184,7 +184,8 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-         setup(orig);
+        if( !setup(orig) )
+            return false;
 
         if (bidiagonalization(orig))
             return false;
@@ -263,7 +264,7 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
         return ret;
     }
 
-    private void setup(DenseMatrix64F orig) {
+    private boolean setup(DenseMatrix64F orig) {
         transposed = orig.numCols > orig.numRows;
 
         // flag what should be computed and what should not be computed
@@ -282,6 +283,9 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
         numRows = orig.numRows;
         numCols = orig.numCols;
 
+        if( numRows == 0 || numCols == 0 )
+            return false;
+
         if( diag == null || diag.length < numColsT ) {
             diag = new double[ numColsT ];
             off = new double[ numColsT-1 ];
@@ -295,6 +299,8 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
         } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow_D64) ) {
             bidiag = new BidiagonalDecompositionRow_D64();
         }
+
+        return true;
     }
 
     /**

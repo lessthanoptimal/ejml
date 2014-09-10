@@ -24,7 +24,8 @@ Date format: year/month/day
 - QRP yet again uses a relative threshold.  No idea why it was set to a global one
 - Matrix Multiplication now fully supports multiplcation by rows or columns with zero
 - element-wise pow, exp, log to CommonOps and SimpleMatrix
-- TODO Make QrUpdate more friendly and accessible
+- Fixed case where SolvePseudoInverseSvd would blow up if input matrix was zero
+- SVD and EVD can gracefully handle matrix with size 0
 
 ----- Version 0.25
 

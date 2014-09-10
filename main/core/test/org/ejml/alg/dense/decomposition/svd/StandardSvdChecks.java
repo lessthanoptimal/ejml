@@ -45,6 +45,7 @@ public abstract class StandardSvdChecks {
     boolean omitVerySmallValues = false;
 
     public void allTests() {
+        testSizeZero();
         testDecompositionOfTrivial();
         testWide();
         testTall();
@@ -60,6 +61,14 @@ public abstract class StandardSvdChecks {
         testIdentity();
         testLarger();
         testLots();
+    }
+
+    public void testSizeZero() {
+        SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
+
+        assertFalse(alg.decompose(new DenseMatrix64F(0, 0)));
+        assertFalse(alg.decompose(new DenseMatrix64F(0,2)));
+        assertFalse(alg.decompose(new DenseMatrix64F(2,0)));
     }
 
     public void testDecompositionOfTrivial()
@@ -109,12 +118,11 @@ public abstract class StandardSvdChecks {
 
                 int min = Math.min(i,j);
 
-                assertEquals(min,checkOccurrence(0,alg.getSingularValues(),min),1e-5);
+                assertEquals(min,checkOccurrence(0,alg.getSingularValues(),min),UtilEjml.EPS);
 
                 checkComponents(alg,A);
             }
         }
-
     }
 
     public void testIdentity() {

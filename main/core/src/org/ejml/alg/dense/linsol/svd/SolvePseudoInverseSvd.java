@@ -92,12 +92,14 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
         double tau = threshold*Math.max(A.numCols,A.numRows)*maxSingular;
 
         // computer the pseudo inverse of A
-        for( int i = 0; i < N; i++ ) {
-            double s = S[i];
-            if( s < tau )
-                S[i] = 0;
-            else
-                S[i] = 1.0/S[i];
+        if( maxSingular != 0.0 ) {
+            for (int i = 0; i < N; i++) {
+                double s = S[i];
+                if (s < tau)
+                    S[i] = 0;
+                else
+                    S[i] = 1.0 / S[i];
+            }
         }
 
         // V*W

@@ -31,7 +31,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestSymmetricQrAlgorithm {
 
-
     /**
      * There should no need to do anything in this case.
      */
