@@ -19,7 +19,8 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.DecompositionInterface;
+import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition;
+import org.ejml.ops.CommonOps;
 
 
 /**
@@ -41,7 +42,7 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
  * @author Peter Abeles
  */
 public class CholeskyDecompositionLDL_D64
-        implements DecompositionInterface<DenseMatrix64F> {
+        implements CholeskyLDLDecomposition<DenseMatrix64F> {
 
     // it can decompose a matrix up to this width
     private int maxWidth;
@@ -137,7 +138,8 @@ public class CholeskyDecompositionLDL_D64
      *
      * @return diagonal elements of D
      */
-    public double[] getD() {
+    @Override
+    public double[] getDiagonal() {
         return d;
     }
 
@@ -153,5 +155,21 @@ public class CholeskyDecompositionLDL_D64
 
     public double[] _getVV() {
         return vv;
+    }
+
+    @Override
+    public DenseMatrix64F getL(DenseMatrix64F L) {
+        if( L == null ) {
+            L = this.L.copy();
+        } else {
+            L.set(this.L);
+        }
+
+        return L;
+    }
+
+    @Override
+    public DenseMatrix64F getD(DenseMatrix64F D) {
+        return CommonOps.diag(D,L.numCols,d);
     }
 }

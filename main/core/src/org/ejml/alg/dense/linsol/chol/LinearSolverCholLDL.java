@@ -52,7 +52,7 @@ public class LinearSolverCholLDL extends LinearSolverAbstract {
             n = A.numCols;
             vv = decomp._getVV();
             el = decomp.getL().data;
-            d = decomp.getD();
+            d = decomp.getDiagonal();
             return true;
         } else {
             return false;

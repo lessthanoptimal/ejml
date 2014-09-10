@@ -39,7 +39,6 @@ import org.ejml.data.Matrix64F;
  *
  * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64
  * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock_D64
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64
  *
  * @author Peter Abeles
  */

@@ -86,9 +86,9 @@ public class DecompositionFactory {
      * </p>
      *
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
-     * @return CholeskyDecompositionLDL
+     * @return CholeskyLDLDecomposition
      */
-    public static CholeskyDecompositionLDL_D64 cholLDL( int matrixSize ) {
+    public static CholeskyLDLDecomposition<DenseMatrix64F> cholLDL( int matrixSize ) {
         return new CholeskyDecompositionLDL_D64();
     }
 

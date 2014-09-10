@@ -56,7 +56,7 @@ public class TestCholeskyDecompositionLDL_D64 {
 
         EjmlUnitTests.assertEquals(L,foundL,1e-8);
         for( int i = 0; i < D.length; i++ ) {
-            assertEquals(D[i],cholesky.getD()[i],1e-8);
+            assertEquals(D[i],cholesky.getDiagonal()[i],1e-8);
         }
     }
 

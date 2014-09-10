@@ -906,6 +906,9 @@ public class CommonOps {
         return diag(null,diagEl.length,diagEl);
     }
 
+    /**
+     * @see #diag(double...)
+     */
     public static DenseMatrix64F diag( DenseMatrix64F ret , int width , double ...diagEl )
     {
         if( ret == null ) {
