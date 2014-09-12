@@ -27,6 +27,8 @@ Date format: year/month/day
 - High level interface for LDL
 - Renamed Principle to Principal in PCA
   * Thanks sergei.skarupo for being the first person to point out this error
+- Fixed case where SolvePseudoInverseSvd would blow up if input matrix was zero
+- SVD and EVD can gracefully handle matrix with size 0
 
 ----- Version 0.25
 
