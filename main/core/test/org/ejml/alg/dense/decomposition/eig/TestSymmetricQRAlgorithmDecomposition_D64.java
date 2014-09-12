@@ -42,6 +42,7 @@ public class TestSymmetricQRAlgorithmDecomposition_D64 extends GeneralEigenDecom
         together = false;
         computeVectors = true;
 
+        checkSizeZero();
         checkRandomSymmetric();
         checkIdentity();
         checkAllZeros();
@@ -59,6 +60,7 @@ public class TestSymmetricQRAlgorithmDecomposition_D64 extends GeneralEigenDecom
         together = true;
         computeVectors = true;
 
+        checkSizeZero();
         checkRandomSymmetric();
         checkIdentity();
         checkAllZeros();

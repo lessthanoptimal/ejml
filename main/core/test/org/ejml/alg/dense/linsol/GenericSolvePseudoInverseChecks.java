@@ -25,6 +25,7 @@ import org.ejml.ops.MatrixFeatures;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -43,11 +44,27 @@ public class GenericSolvePseudoInverseChecks {
     }
 
     public void all() {
+        zeroMatrix();
         underDetermined_wide_solve();
         underDetermined_wide_inv();
         underDetermined_tall_solve();
         singular_solve();
         singular_inv();
+    }
+
+    /**
+     * Shouldn't blow if it the input matrix is zero.  But there is no solution...
+     */
+    public void zeroMatrix() {
+        DenseMatrix64F A = new DenseMatrix64F(3,3);
+        DenseMatrix64F y = new DenseMatrix64F(3,1,true,4,7,8);
+
+        assertTrue(solver.setA(A));
+
+        DenseMatrix64F x = new DenseMatrix64F(3,1);
+        solver.solve(y, x);
+
+        assertFalse(MatrixFeatures.hasUncountable(x));
     }
 
     /**

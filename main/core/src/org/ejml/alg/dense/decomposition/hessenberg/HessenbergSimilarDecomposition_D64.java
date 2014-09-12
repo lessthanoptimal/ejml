@@ -85,6 +85,8 @@ public class HessenbergSimilarDecomposition_D64
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be square.");
+        if( A.numRows <= 0 )
+            return false;
 
         QH = A;
 

@@ -46,6 +46,7 @@ public abstract class GeneralEigenDecompositionCheck {
     public void allTests() {
         computeVectors = true;
 
+        checkSizeZero();
         checkRandom();
         checkKnownReal();
         checkKnownComplex();
@@ -72,6 +73,12 @@ public abstract class GeneralEigenDecompositionCheck {
         checkKnownReal_JustValue();
         checkKnownSymmetric_JustValue();
         checkCompanionMatrix();
+    }
+
+    public void checkSizeZero() {
+        EigenDecomposition alg = createDecomposition();
+
+        assertFalse(alg.decompose(new DenseMatrix64F(0,0)));
     }
 
     /**
