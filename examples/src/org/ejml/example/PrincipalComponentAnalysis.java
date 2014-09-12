@@ -27,7 +27,7 @@ import org.ejml.ops.SingularOps;
 
 /**
  * <p>
- * The following is a simple example of how to perform basic principle component analysis in EJML.
+ * The following is a simple example of how to perform basic principal component analysis in EJML.
  * </p>
  *
  * <p>
@@ -53,12 +53,12 @@ import org.ejml.ops.SingularOps;
  *
  * @author Peter Abeles
  */
-public class PrincipleComponentAnalysis {
+public class PrincipalComponentAnalysis {
 
-    // principle component subspace is stored in the rows
+    // principal component subspace is stored in the rows
     private DenseMatrix64F V_t;
 
-    // how many principle components are used
+    // how many principal components are used
     private int numComponents;
 
     // where the data is stored
@@ -68,7 +68,7 @@ public class PrincipleComponentAnalysis {
     // mean values of each element across all the samples
     double mean[];
 
-    public PrincipleComponentAnalysis() {
+    public PrincipalComponentAnalysis() {
     }
 
     /**
@@ -103,7 +103,7 @@ public class PrincipleComponentAnalysis {
     }
 
     /**
-     * Computes a basis (the principle components) from the most dominant eigenvectors.
+     * Computes a basis (the principal components) from the most dominant eigenvectors.
      *
      * @param numComponents Number of vectors it will use to describe the data.  Typically much
      * smaller than the number of elements in the input vector.

@@ -24,7 +24,9 @@ Date format: year/month/day
 - QRP yet again uses a relative threshold.  No idea why it was set to a global one
 - Matrix Multiplication now fully supports multiplcation by rows or columns with zero
 - element-wise pow, exp, log to CommonOps and SimpleMatrix
-- TODO Make QrUpdate more friendly and accessible
+- High level interface for LDL
+- Renamed Principle to Principal in PCA
+  * Thanks sergei.skarupo for being the first person to point out this error
 
 ----- Version 0.25
 

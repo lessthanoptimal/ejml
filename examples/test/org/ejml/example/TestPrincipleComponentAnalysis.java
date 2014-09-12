@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,7 +43,7 @@ public class TestPrincipleComponentAnalysis {
 
         double obs[][] = new double[M][];
 
-        PrincipleComponentAnalysis pca = new PrincipleComponentAnalysis();
+        PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 
         // add observations
         pca.setup(M,N);
@@ -66,7 +66,7 @@ public class TestPrincipleComponentAnalysis {
         }
     }
 
-    private double computeError(PrincipleComponentAnalysis pca, double[][] obs ) {
+    private double computeError(PrincipalComponentAnalysis pca, double[][] obs ) {
         double error = 0;
         for (double[] o : obs) {
             error += pca.errorMembership(o);
@@ -85,7 +85,7 @@ public class TestPrincipleComponentAnalysis {
 
         double obs[][] = new double[M][];
 
-        PrincipleComponentAnalysis pca = new PrincipleComponentAnalysis();
+        PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 
         // add observations
         pca.setup(M,N);
@@ -126,7 +126,7 @@ public class TestPrincipleComponentAnalysis {
 
         double obs[][] = new double[M][];
 
-        PrincipleComponentAnalysis pca = new PrincipleComponentAnalysis();
+        PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 
         // add observations
         pca.setup(M,N);
