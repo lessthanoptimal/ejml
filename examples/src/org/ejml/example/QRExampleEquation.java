@@ -57,10 +57,8 @@ public class QRExampleEquation {
         gammas = new double[ A.numCols ];
 
         for( int i = 0; i < N; i++ ) {
-            // reshape temporary variables
-            int Ni = QR.numRows-i;
-
-            eq.alias(Ni,"Ni",QR,"QR",i,"i");
+            // update temporary variables
+            eq.alias(QR.numRows-i,"Ni",QR,"QR",i,"i");
 
             // Place the column that should be zeroed into v
             eq.process("v=QR(i:,i)");
