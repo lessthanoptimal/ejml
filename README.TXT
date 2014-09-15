@@ -1,7 +1,7 @@
                  Efficient Java Matrix Library
 
-                         Version 0.24
-                         2013 12 26
+                         Version 0.26
+                         September 15, 2014
 
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
@@ -13,7 +13,7 @@
 
 Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API.  EJML is free, written in 100% Java and has been released under the Apache v2.0 open source license.
 
-EJML has three distinct ways to interact with it.  This allows a programmer to choose between simplicity and efficiency.  1) A simplified interface that allows a more object oriented way of programming.  2) Procedural interface that provides greater control over memory and speed.  3) Directly calling specialized algorithms.  In general EJML is one the fastest single threaded pure Java library and has additional optimizations for small matrices.  See http://code.google.com/p/java-matrix-benchmark/ for a detailed comparison of different libraries.
+EJML has three distinct ways to interact with it. This allows a programmer to choose between simplicity and efficiency. 1) A simplified interface that allows a more object oriented way of programming. 2) Procedural interface that provides complete control over memory, speed, and specific algorithms. 3) Equations which provide a way to integrate symbolic equations similar to Matlab and other Compute Algebra Systems (CAS). In general EJML is one the fastest single threaded pure Java library and has additional optimizations for small matrices. See Java Matrix Benchmark for a detailed comparison of different libraries.
 
 The following functionality is provided:
 
@@ -23,7 +23,8 @@ The following functionality is provided:
     * Decompositions (LU, QR, Cholesky, SVD, Eigenvalue, ...)
     * Matrix Features (rank, symmetric, definitiveness, ...)
     * Random Matrices (covariance, orthogonal, symmetric, ...)
-    * Different Internal Formats (row-major, block) 
+    * Different Internal Formats (row-major, block)
+    * Unit Testing
 
 Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
 
@@ -36,34 +37,33 @@ http://code.google.com/p/efficient-java-matrix-library/wiki/EjmlManual
 
 The JavaDoc has also been posted online at:
 
-http://efficient-java-matrix-library.googlecode.com/svn/javadoc/ver0.17/index.html
+http://ejml.org/javadoc/
+
+==========================================================================
+----- Central Repository
+
+Instead of including EJML's jars directly you can reference them using Maven's central repository.
+
+If using Maven:
+
+<groupId>com.googlecode.efficient-java-matrix-library</groupId>
+<artifactId>MODULE</artifactId>
+<version>0.25</version>
+where MODULE is 'core' or 'equation'
+
+If using Gradle:
+
+compile group: 'com.googlecode.efficient-java-matrix-library', name: 'core', version: '0.26'
+compile group: 'com.googlecode.efficient-java-matrix-library', name: 'equation', version: '0.26'
 
 ==========================================================================
 ----- Building
 
-The provided ant script is the easiest way to build an EJML jar. In linux it can be built using a command line by changing into the EJML directory and typing "ant". Then you should see text like:
-
-
-Buildfile: build.xml
-
-clean:
-   [delete] Deleting directory ejml/trunk/build
-
-compile:
-    [mkdir] Created dir: ejml/trunk/build/classes
-    [javac] Compiling 130 source files to ejml/trunk/build/classes
-
-jar:
-    [mkdir] Created dir: ejml/trunk/build/jar
-      [jar] Building jar: ejml/trunk/build/jar/EJML.jar
-
-To create the JavaDoc simply type "ant javadoc" and "ant test" to run unit tests.
+Gradle build scripts are provided for building EJML.  If Gradle is installed, then type "gradle createLibraryDirectory" to build the jar files.  They can be found in the ejml/libraries directory.
 
 ==========================================================================
 ----- File System
 
-benchmarks/
--  contains code for several speed and stability benchmarks that were used during development.
 
 docs/
 - Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
@@ -71,14 +71,14 @@ docs/
 examples/
 - Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
 
-experimental/
+main/core
+- Contains all the essential source code for EJML
+
+main/equation
+- Contains source code for Equations API
+
+main/experimental/
 - Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
-
-src/
-- Source code.
-
-test/
-- Unit tests for source code.
 
 change.txt
 - History of what changed between each version.
