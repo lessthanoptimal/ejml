@@ -161,8 +161,7 @@ public class BenchmarkKalmanPerformance {
     public static void main( String args[] ) {
         BenchmarkKalmanPerformance benchmark = new BenchmarkKalmanPerformance();
 
-        benchmark.filters.add( new KalmanFilterAlg() );
-        benchmark.filters.add( new KalmanFilterOps());
+        benchmark.filters.add( new KalmanFilterOperations());
         benchmark.filters.add( new KalmanFilterSimple());
         benchmark.filters.add( new KalmanFilterEquation());
 

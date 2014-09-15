@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,7 +46,7 @@ public class TestQRExampleOps {
     private void checkMatrix( int numRows , int numCols ) {
         DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
 
-        QRExampleOps alg = new QRExampleOps();
+        QRExampleOperations alg = new QRExampleOperations();
 
         alg.decompose(A);
 

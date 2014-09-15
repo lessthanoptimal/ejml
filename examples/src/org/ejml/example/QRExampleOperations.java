@@ -32,7 +32,7 @@ import org.ejml.ops.NormOps;
  *
  * @author Peter Abeles
  */
-public class QRExampleOps {
+public class QRExampleOperations {
 
     // where the QR decomposition is stored
     private DenseMatrix64F QR;
