@@ -6,21 +6,11 @@
   - remove .svn
 - Create jar file "gradle createLibraryDirectory"
 - Update documentation on website
-- gradle uploadArchives
 
 -----
-Maven
+Push to central:
 
-https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
-
-- change version in pom.xml
-- rm -rf target
-- mvn package
-- mvn javadoc:jar
-- mvn source:jar
-- mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/ejml-XX.jar
-- mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/ejml-XX-sources.jar -Dclassifier=sources
-- mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/ejml-XX-javadoc.jar -Dclassifier=javadoc
+- gradle uploadArchives
 - Then go to the website  https://oss.sonatype.org/
   * click close button
   * double check the files
