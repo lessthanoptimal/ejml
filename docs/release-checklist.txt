@@ -1,17 +1,12 @@
 - Update version number in UtilEjml.VERSION
 - Update change.txt
-- Update version in pom.xml
-- check ant build
-  * ant clean
-  * ant
-  * ant test
-- commit and tag release
-  svn copy trunk/ tags/VERSION
+- Update version in build.gradle
+- Commit and tag release
 - Create .zip of source code
   - remove .svn
-- Create jar file
+- Create jar file "gradle createLibraryDirectory"
 - Update documentation on website
-- Update Maven central repository
+- gradle uploadArchives
 
 -----
 Maven

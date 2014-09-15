@@ -3,7 +3,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'com.googlecode.efficient-java-matrix-library'
-    version = '0.26-SNAPSHOT'
+    version = '0.26'
 }
 
 subprojects {
