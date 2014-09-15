@@ -161,6 +161,25 @@ idea {
     }
 }
 
+def javadocProjects = [
+        ':main:core',
+        ':main:experimental',
+]
+task alljavadoc(type: Javadoc) {
+    // only include source code in src directory to avoid including 3rd party code which some projects do as a hack
+    source = javadocProjects.collect { project(it).fileTree('src').include('**/*.java') }
+//    source = javadocProjects.collect { project(it).sourceSets.main.allJava }
+    classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
+
+    destinationDir = file("${buildDir}/docs/javadoc")
+    configure(options) {
+        docTitle = "Efficient Java Matrix Library (EJML) v$project.version"
+        links = [ 'http://docs.oracle.com/javase/7/docs/api/' ]
+        header = file('docs/header.txt').text
+        bottom = file('docs/bottom.txt').text // the quotes messes up javadoc still create bug report
+    }
+}
+
 // Disable the creation of jars for distribution.  If you don't do this it will crash
 [':main',':examples'].each {String a ->
     project(a) {

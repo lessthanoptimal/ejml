@@ -48,7 +48,7 @@ If using Maven:
 
 <groupId>com.googlecode.efficient-java-matrix-library</groupId>
 <artifactId>MODULE</artifactId>
-<version>0.25</version>
+<version>0.26</version>
 where MODULE is 'core' or 'equation'
 
 If using Gradle:

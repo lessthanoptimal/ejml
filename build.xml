@@ -115,7 +115,10 @@
 
             <link offline="false" href="http://docs.oracle.com/javase/7/docs/api/" packagelistloc="package-list" />
 
-            <packageset dir="src" defaultexcludes="yes">
+            <packageset dir="main/core/src" defaultexcludes="yes">
+                <include name="org/ejml/**"/>
+            </packageset>
+            <packageset dir="main/equation/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
 
@@ -140,7 +143,10 @@
 
             <link offline="false" href="http://docs.oracle.com/javase/7/docs/api/" packagelistloc="package-list" />
 
-            <packageset dir="src" defaultexcludes="yes">
+            <packageset dir="main/core/src" defaultexcludes="yes">
+                <include name="org/ejml/**"/>
+            </packageset>
+            <packageset dir="main/equation/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
 
