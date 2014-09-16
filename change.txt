@@ -7,23 +7,23 @@ Date format: year/month/day
 2014/9/14
 
 - Switched most of the build system over to Gradle
-- Added equations as a symbolic way of inputting equations similar to Matlab/Octave
+- Equations
+  * Symbolic way to perform linear algebra
+  * Similar to Matlab/Octave
 - SimpleMatrix
   * Added plus( double )
   * Added elementDiv()
 - Linear Solvers
   * Exposed inner decomposition algorithms and some data structures
-- Equations
-  * Symbolic way to perform linear algebra
 - CommonOps
   * Trace will now work on non-square matrices
   * changeSign() has a two argument version
-  * left and right scalar-matrix division.
-      *** WARNING **** The meaning of CommonOps.divide(scalar,Matrix) and similar has changed
+  * left and right double-matrix division.
+      *** WARNING **** The meaning of CommonOps.divide(double,Matrix) and similar has changed
   * Added subtract() matrix-double and double-matrix
 - QRP yet again uses a relative threshold.  No idea why it was set to a global one
-- Matrix Multiplication now fully supports multiplcation by rows or columns with zero
-- element-wise pow, exp, log to CommonOps and SimpleMatrix
+- Matrix Multiplication now fully supports multiplication by rows or columns with zero
+- Element-wise pow, exp, log to CommonOps and SimpleMatrix
 - High level interface for LDL
 - Renamed Principle to Principal in PCA
   * Thanks sergei.skarupo for being the first person to point out this error
