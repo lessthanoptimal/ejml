@@ -39,6 +39,28 @@ public class TestSimpleMatrix {
     Random rand = new Random(76343);
 
     @Test
+    public void randomNormal() {
+        SimpleMatrix Q = SimpleMatrix.diag(5,3,12);
+        Q.set(0,1,0.5);
+        Q.set(1,0,0.5);
+
+        int N = 200;
+        double sum[] = new double[3];
+        for (int i = 0; i < N; i++) {
+            SimpleMatrix x = SimpleMatrix.randomNormal(Q,rand);
+
+            for (int j = 0; j < x.getNumElements(); j++) {
+                sum[j] += x.get(j);
+            }
+        }
+        for (int i = 0; i < sum.length; i++) {
+            sum[i] /= N;
+            assertTrue(sum[i]!=0);
+            assertEquals(0,sum[i],0.3);
+        }
+    }
+
+    @Test
     public void constructor_1d_array() {
         double d[] = new double[]{2,5,3,9,-2,6,7,4};
         SimpleMatrix s = new SimpleMatrix(3,2, true, d);

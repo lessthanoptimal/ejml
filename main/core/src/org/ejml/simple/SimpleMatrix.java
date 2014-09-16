@@ -22,6 +22,7 @@ import org.ejml.alg.generic.GenericMatrixOps;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.ops.CommonOps;
+import org.ejml.ops.CovarianceRandomDraw;
 import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
@@ -248,6 +249,26 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
         RandomMatrices.setRandom(ret.mat,minValue,maxValue,rand);
         return ret;
+    }
+
+    /**
+     * <p>
+     * Creates a new vector which is drawn from a multivariate normal distribution with zero mean
+     * and the provided covariance.
+     * </p>
+     *
+     * @see CovarianceRandomDraw
+     *
+     * @param covariance Covariance of the multivariate normal distribution
+     * @return Vector randomly drawn from the distribution
+     */
+    public static SimpleMatrix randomNormal( SimpleMatrix covariance , Random random ) {
+        CovarianceRandomDraw draw = new CovarianceRandomDraw(random,covariance.getMatrix());
+
+        SimpleMatrix found = new SimpleMatrix(covariance.numRows(),1);
+        draw.next(found.getMatrix());
+
+        return found;
     }
 
     /**
