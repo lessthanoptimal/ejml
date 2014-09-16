@@ -2,6 +2,12 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.27
+
+2014
+
+- Added SimpleMatrix.randomNormal() for drawing numbers from a normal distribution with zero mean
+
 ----- Version 0.26
 
 2014/9/14
