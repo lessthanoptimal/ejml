@@ -163,6 +163,7 @@ idea {
 
 def javadocProjects = [
         ':main:core',
+        ':main:equation'
         ':main:experimental',
 ]
 task alljavadoc(type: Javadoc) {
