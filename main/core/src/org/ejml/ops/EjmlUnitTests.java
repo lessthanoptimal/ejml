@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.simple.SimpleMatrix;
 
 
 /**
@@ -34,13 +35,23 @@ public class EjmlUnitTests {
      *
      * @param A Matrix
      */
-    public static void assertCountable(  ReshapeMatrix64F A ) {
+    public static void assertCountable( ReshapeMatrix64F A ) {
         for( int i = 0; i < A.numRows; i++ ){
             for( int j = 0; j < A.numCols; j++ ) {
                 assertTrue(  !Double.isNaN(A.get(i,j)) , "NaN found at "+i+" "+j );
                 assertTrue(  !Double.isInfinite(A.get(i,j)) , "Infinite found at "+i+" "+j );
             }
         }
+    }
+
+    /**
+     * Checks to see if every element in A is countable.  A doesn't have any element with
+     * a value of NaN or infinite.
+     *
+     * @param A Matrix
+     */
+    public static void assertCountable( SimpleMatrix A ) {
+        assertCountable(A.getMatrix());
     }
 
     /**
@@ -54,6 +65,18 @@ public class EjmlUnitTests {
     public static void assertShape( ReshapeMatrix64F A , ReshapeMatrix64F B ) {
         assertTrue(  A.numRows == B.numRows , "Number of rows do not match");
         assertTrue(  A.numCols == B.numCols , "Number of columns do not match");
+    }
+
+    /**
+     * <p>
+     * Checks to see if A and B have the same shape.
+     * </p>
+     *
+     * @param A Matrix
+     * @param B Matrix
+     */
+    public static void assertShape( SimpleMatrix A , SimpleMatrix B ) {
+        assertShape(A.getMatrix(),B.getMatrix());
     }
 
     /**
@@ -110,6 +133,28 @@ public class EjmlUnitTests {
 
     /**
      * <p>
+     * Checks to see if each element in the matrix is within tolerance of each other:
+     * </p>
+     *
+     * <p>
+     * The two matrices are identical with in tolerance if:<br>
+     * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol
+     * </p>
+     *
+     * <p>
+     * In addition if an element is NaN or infinite in one matrix it must be the same in the other.
+     * </p>
+     *
+     * @param A Matrix A
+     * @param B Matrix B
+     * @param tol Tolerance
+     */
+    public static void assertEqualsUncountable( SimpleMatrix A , SimpleMatrix B , double tol ) {
+        assertEqualsUncountable(A.getMatrix(),B.getMatrix(),tol);
+    }
+
+    /**
+     * <p>
      * Checks to see if each element in the matrices are within tolerance of each other and countable:
      * </p>
      *
@@ -139,6 +184,28 @@ public class EjmlUnitTests {
                 assertTrue(Math.abs( valA-valB) <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
             }
         }
+    }
+
+    /**
+     * <p>
+     * Checks to see if each element in the matrices are within tolerance of each other and countable:
+     * </p>
+     *
+     * <p>
+     * The two matrices are identical with in tolerance if:<br>
+     * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol
+     * </p>
+     *
+     * <p>
+     * The test will fail if any element in either matrix is NaN or infinite.
+     * </p>
+     *
+     * @param A Matrix A
+     * @param B Matrix B
+     * @param tol Tolerance
+     */
+    public static void assertEquals( SimpleMatrix A , SimpleMatrix B , double tol ) {
+        assertEquals(A.getMatrix(),B.getMatrix(),tol);
     }
 
     /**

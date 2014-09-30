@@ -47,7 +47,6 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     protected DenseMatrix64F mat;
 
-
     public SimpleBase( int numRows , int numCols ) {
         mat = new DenseMatrix64F(numRows, numCols);
     }

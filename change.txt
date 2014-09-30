@@ -7,6 +7,7 @@ Date format: year/month/day
 2014
 
 - Added SimpleMatrix.randomNormal() for drawing numbers from a normal distribution with zero mean
+- Added EjmlUnitTests.assertEquals() and similar for SimpleMatrix
 
 ----- Version 0.26
 

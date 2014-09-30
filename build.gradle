@@ -163,8 +163,8 @@ idea {
 
 def javadocProjects = [
         ':main:core',
-        ':main:equation'
-        ':main:experimental',
+        ':main:equation',
+        ':main:experimental'
 ]
 task alljavadoc(type: Javadoc) {
     // only include source code in src directory to avoid including 3rd party code which some projects do as a hack
