@@ -27,7 +27,7 @@ import java.util.Random;
 
 
 /**
- * Contains a list of functions for creating random matrices and vectors with different structures.
+ * Contains a list of functions for creating random dense real matrices and vectors with different structures.
  *
  * @author Peter Abeles
  */

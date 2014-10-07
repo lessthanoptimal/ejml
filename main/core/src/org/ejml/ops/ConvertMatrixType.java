@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ public class ConvertMatrixType {
      * @param input Input matrix.
      * @param output Output matrix.
      */
-    public static void convert( Matrix64F input , Matrix64F output ) {
+    public static void convert( RealMatrix64F input , RealMatrix64F output ) {
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
         if( input.getNumCols() != output.getNumCols() )

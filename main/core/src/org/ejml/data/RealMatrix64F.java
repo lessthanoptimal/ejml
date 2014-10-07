@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,12 @@
 
 package org.ejml.data;
 
-import java.io.Serializable;
-
 /**
  * Interface for all 64 bit floating point rectangular matrices.
  *
  * @author Peter Abeles
  */
-public interface Matrix64F extends Serializable {
+public interface RealMatrix64F extends Matrix {
 
     /**
      * Returns the value of value of the specified matrix element.
@@ -34,7 +32,7 @@ public interface Matrix64F extends Serializable {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double get( int row , int col );
+    public double get(int row, int col);
 
     /**
      * Same as {@link #get} but does not perform bounds check on input parameters.  This results in about a 25%
@@ -46,16 +44,16 @@ public interface Matrix64F extends Serializable {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double unsafe_get( int row , int col );
+    public double unsafe_get(int row, int col);
 
     /**
      * Sets the value of the specified matrix element.
      *
      * @param row Matrix element's row index..
      * @param col Matrix element's column index.
-     * @param val  The element's new value.
+     * @param val The element's new value.
      */
-    public void set( int row , int col , double val );
+    public void set(int row, int col, double val);
 
 
     /**
@@ -66,23 +64,9 @@ public interface Matrix64F extends Serializable {
      *
      * @param row Matrix element's row index..
      * @param col Matrix element's column index.
-     * @param val  The element's new value.
+     * @param val The element's new value.
      */
-    public void unsafe_set( int row , int col , double val );
-
-    /**
-     * Returns the number of rows in this matrix.
-     *
-     * @return Number of rows.
-     */
-    public int getNumRows();
-
-    /**
-     * Returns the number of columns in this matrix.
-     *
-     * @return Number of columns.
-     */
-    public int getNumCols();
+    public void unsafe_set(int row, int col, double val);
 
     /**
      * Returns the number of elements in this matrix, which is the number of rows
@@ -91,9 +75,4 @@ public interface Matrix64F extends Serializable {
      * @return Number of elements in this matrix.
      */
     public int getNumElements();
-
-
-    public <T extends Matrix64F> T copy();
-
-    public void print();
 }

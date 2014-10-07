@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public abstract class ReshapeMatrix64F implements Matrix64F {
+public abstract class ReshapeMatrix64F implements RealMatrix64F {
 
     private static final long serialVersionUID = 423423451942L;
     

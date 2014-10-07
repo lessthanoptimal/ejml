@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 
 /**
  * Implementations of common ops routines for {@link org.ejml.data.DenseMatrix64F}.  In general
@@ -27,9 +27,9 @@ import org.ejml.data.Matrix64F;
  * @author Peter Abeles
  */
 public class ImplCommonOps_Matrix64F {
-    public static void extract(Matrix64F src,
+    public static void extract(RealMatrix64F src,
                                int srcY0, int srcX0,
-                               Matrix64F dst,
+                               RealMatrix64F dst,
                                int dstY0, int dstX0,
                                int numRows, int numCols )
     {

@@ -19,7 +19,7 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 
 
 /**
@@ -42,7 +42,7 @@ import org.ejml.data.Matrix64F;
  *
  * @author Peter Abeles
  */
-public interface CholeskyDecomposition <MatrixType extends Matrix64F>
+public interface CholeskyDecomposition <MatrixType extends RealMatrix64F>
         extends DecompositionInterface<MatrixType> {
 
     /**

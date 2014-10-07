@@ -19,7 +19,7 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ import org.ejml.data.Matrix64F;
  *
  * @author Peter Abeles
  */
-public interface QRPDecomposition <T extends Matrix64F>
+public interface QRPDecomposition <T extends RealMatrix64F>
         extends QRDecomposition<T>
 {
     /**

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.data.ReshapeMatrix64F;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.junit.Test;
@@ -81,7 +81,7 @@ public class TestSafeSvd {
 
     protected static class Dummy implements SingularValueDecomposition {
 
-        Matrix64F passedInMatrix;
+        RealMatrix64F passedInMatrix;
 
         boolean compact;
         double singular[];
@@ -119,19 +119,19 @@ public class TestSafeSvd {
         }
 
         @Override
-        public ReshapeMatrix64F getU(Matrix64F U, boolean transposed) {
+        public ReshapeMatrix64F getU(RealMatrix64F U, boolean transposed) {
             getU_called = true;
             return null;
         }
 
         @Override
-        public ReshapeMatrix64F getV(Matrix64F V, boolean transposed) {
+        public ReshapeMatrix64F getV(RealMatrix64F V, boolean transposed) {
             getV_called = true;
             return null;
         }
 
         @Override
-        public ReshapeMatrix64F getW(Matrix64F W) {
+        public ReshapeMatrix64F getW(RealMatrix64F W) {
             getW_called = true;
             return null;
         }
@@ -147,7 +147,7 @@ public class TestSafeSvd {
         }
 
         @Override
-        public boolean decompose(Matrix64F orig) {
+        public boolean decompose(RealMatrix64F orig) {
             this.passedInMatrix = orig;
             return true;
         }

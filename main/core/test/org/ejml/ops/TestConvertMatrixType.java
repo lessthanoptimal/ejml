@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.FixedMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,7 +44,7 @@ public class TestConvertMatrixType {
         DenseMatrix64F a = new DenseMatrix64F(2,3,true,1,2,3,4,5,6);
         DenseMatrix64F b = new DenseMatrix64F(2,3);
 
-        ConvertMatrixType.convert((Matrix64F)a,(Matrix64F)b);
+        ConvertMatrixType.convert((RealMatrix64F)a,(RealMatrix64F)b);
 
         assertTrue(MatrixFeatures.isIdentical(a,b,1e-12));
     }
@@ -154,7 +154,7 @@ public class TestConvertMatrixType {
     }
 
 
-    private void checkIdentical( Matrix64F a , Matrix64F b ) {
+    private void checkIdentical( RealMatrix64F a , RealMatrix64F b ) {
         for( int i = 0; i < a.getNumRows(); i++  ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
                 assertEquals(a.get(i,j),b.get(i,j),1e-8);
@@ -162,7 +162,7 @@ public class TestConvertMatrixType {
         }
     }
 
-    private void checkIdenticalV( Matrix64F a , Matrix64F b ) {
+    private void checkIdenticalV( RealMatrix64F a , RealMatrix64F b ) {
         boolean columnVectorA = a.getNumRows() > a.getNumCols();
         boolean columnVectorB = b.getNumRows() > b.getNumCols();
 

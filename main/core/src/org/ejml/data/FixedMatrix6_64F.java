@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -124,8 +124,8 @@ public class FixedMatrix6_64F implements FixedMatrix64F {
     }
 
     @Override
-    public <T extends Matrix64F> T copy() {
-        return (T)new FixedMatrix6_64F(this);
+    public FixedMatrix6_64F copy() {
+        return new FixedMatrix6_64F(this);
     }
 
     @Override

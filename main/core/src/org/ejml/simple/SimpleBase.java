@@ -681,7 +681,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.Matrix64F)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, org.ejml.data.RealMatrix64F)}.
      * </p>
      *
      * @return String representation of the matrix.

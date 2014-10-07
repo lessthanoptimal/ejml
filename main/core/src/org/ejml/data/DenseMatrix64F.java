@@ -333,7 +333,6 @@ public class DenseMatrix64F extends RowD1Matrix64F {
         return numRows*numCols;
     }
 
-
     /**
      * <p>
      * Sets the value and shape of this matrix to be identical to the specified matrix. The width and height are
@@ -367,10 +366,10 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      * Sets this matrix equal to the matrix encoded in the array.
      *
      * @param numRows The number of rows.
-	 * @param numCols The number of columns.
-	 * @param rowMajor If the array is encoded in a row-major or a column-major format.
-	 * @param data The formatted 1D array. Not modified.
-	 */
+     * @param numCols The number of columns.
+     * @param rowMajor If the array is encoded in a row-major or a column-major format.
+     * @param data The formatted 1D array. Not modified.
+     */
     public void set(int numRows, int numCols, boolean rowMajor, double ...data)
     {
         int length = numRows*numCols;
@@ -433,7 +432,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix64F)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, RealMatrix64F)}.
      * </p>
      *
      * @return String representation of the matrix.

@@ -20,7 +20,7 @@ package org.ejml.alg.fixed;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.FixedMatrix64F;
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.ConvertMatrixType;
 import org.ejml.ops.MatrixFeatures;
@@ -121,8 +121,8 @@ public abstract class CompareFixedToCommonOps {
             return false;
 
         for (int i = 0; i < typesFixed.length; i++) {
-            if( Matrix64F.class.isAssignableFrom(typesFixed[i]) ) {
-                if( !Matrix64F.class.isAssignableFrom(typesCommon[i]) ) {
+            if( RealMatrix64F.class.isAssignableFrom(typesFixed[i]) ) {
+                if( !RealMatrix64F.class.isAssignableFrom(typesCommon[i]) ) {
                     return false;
                 }
             }
@@ -134,8 +134,8 @@ public abstract class CompareFixedToCommonOps {
         if( returnFixed == returnCommon )
             return true;
 
-        if( Matrix64F.class.isAssignableFrom(returnFixed) &&
-                Matrix64F.class.isAssignableFrom(returnCommon) )
+        if( RealMatrix64F.class.isAssignableFrom(returnFixed) &&
+                RealMatrix64F.class.isAssignableFrom(returnCommon) )
             return true;
 
         return false;

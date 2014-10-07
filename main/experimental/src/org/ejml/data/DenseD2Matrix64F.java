@@ -88,7 +88,7 @@ public class DenseD2Matrix64F extends ReshapeMatrix64F implements Serializable {
     }
 
     @Override
-    public <T extends Matrix64F> T copy() {
+    public <T extends Matrix> T copy() {
         return null;
     }
 }

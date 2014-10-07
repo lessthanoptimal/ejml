@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,5 +23,5 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public interface FixedMatrix64F extends Matrix64F {
+public interface FixedMatrix64F extends RealMatrix64F {
 }

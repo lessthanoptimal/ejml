@@ -1,1 +1,1 @@
-include 'main:equation','main:core','main:experimental','examples'
+include 'main:equation','main:core','main:experimental','main:complex','examples'

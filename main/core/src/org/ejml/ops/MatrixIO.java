@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Matrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.*;
 
 import java.io.*;
 
@@ -156,17 +154,17 @@ public class MatrixIO {
         return ret;
     }
 
-    public static void print( PrintStream out , Matrix64F mat ) {
+    public static void print( PrintStream out , RealMatrix64F mat ) {
         print(out,mat,6,3);
     }
 
-    public static void print(PrintStream out, Matrix64F mat , int numChar , int precision ) {
+    public static void print(PrintStream out, RealMatrix64F mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f ";
 
         print(out, mat,format);
     }
 
-    public static void print(PrintStream out , Matrix64F mat , String format ) {
+    public static void print(PrintStream out , RealMatrix64F mat , String format ) {
 
         String type = ReshapeMatrix64F.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
 
@@ -191,6 +189,34 @@ public class MatrixIO {
         for( int y = row0; y < row1; y++ ) {
             for( int x = col0; x < col1; x++ ) {
                 out.printf(format,mat.get(y,x));
+            }
+            out.println();
+        }
+    }
+
+    public static void print( PrintStream out , ComplexMatrix64F mat ) {
+        print(out,mat,6,3);
+    }
+
+    public static void print(PrintStream out, ComplexMatrix64F mat , int numChar , int precision ) {
+        String format = "[ %"+numChar+"."+precision+"f %"+numChar+"."+precision+"fi ] ";
+
+        print(out, mat,format);
+    }
+
+    public static void print(PrintStream out , ComplexMatrix64F mat , String format ) {
+
+        String type = "Dense";
+
+        out.println("Type = Complex "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+
+        format += " ";
+
+        Complex64F c = new Complex64F();
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            for( int x = 0; x < mat.getNumCols(); x++ ) {
+                mat.get(y,x,c);
+                out.printf(format,c.real,c.imaginary);
             }
             out.println();
         }

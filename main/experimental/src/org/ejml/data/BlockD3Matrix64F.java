@@ -131,7 +131,7 @@ public class BlockD3Matrix64F extends ReshapeMatrix64F {
     }
 
     @Override
-    public <T extends Matrix64F> T copy() {
+    public <T extends Matrix> T copy() {
         return null;
     }
 }

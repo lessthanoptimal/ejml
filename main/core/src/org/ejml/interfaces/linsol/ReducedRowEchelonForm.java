@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.linsol;
 
-import org.ejml.data.Matrix64F;
+import org.ejml.data.RealMatrix64F;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import org.ejml.data.Matrix64F;
  *
  * @author Peter Abeles
  */
-public interface ReducedRowEchelonForm<T extends Matrix64F> {
+public interface ReducedRowEchelonForm<T extends RealMatrix64F> {
 
     /**
      * Puts the augmented matrix into RREF.  The coefficient matrix is stored in
