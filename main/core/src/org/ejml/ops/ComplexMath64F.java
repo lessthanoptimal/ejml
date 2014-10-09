@@ -129,7 +129,7 @@ public class ComplexMath64F
 	 * @param b Complex number in polar notation. Not modified.
 	 * @param result Storage for output.
 	 */
-	public static void mult( ComplexPolar64F a , ComplexPolar64F b , ComplexPolar64F result )
+	public static void multiply(ComplexPolar64F a, ComplexPolar64F b, ComplexPolar64F result)
 	{
 		result.r = a.r*b.r;
 		result.theta = a.theta + b.theta;
@@ -142,7 +142,7 @@ public class ComplexMath64F
 	 * @param b Complex number in polar notation. Not modified.
 	 * @param result Storage for output.
 	 */
-	public static void div( ComplexPolar64F a , ComplexPolar64F b , ComplexPolar64F result )
+	public static void divide(ComplexPolar64F a, ComplexPolar64F b, ComplexPolar64F result)
 	{
 		result.r = a.r/b.r;
 		result.theta = a.theta - b.theta;

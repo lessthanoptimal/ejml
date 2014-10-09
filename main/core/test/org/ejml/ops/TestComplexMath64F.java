@@ -116,7 +116,7 @@ public class TestComplexMath64F
 		ComplexPolar64F pb = new ComplexPolar64F(b);
 		ComplexPolar64F pc = new ComplexPolar64F();
 
-		ComplexMath64F.mult(pa, pb, pc);
+		ComplexMath64F.multiply(pa, pb, pc);
 
 		Complex64F found = pc.toStandard();
 
@@ -136,7 +136,7 @@ public class TestComplexMath64F
 		ComplexPolar64F pb = new ComplexPolar64F(b);
 		ComplexPolar64F pc = new ComplexPolar64F();
 
-		ComplexMath64F.div(pa, pb, pc);
+		ComplexMath64F.divide(pa, pb, pc);
 
 		Complex64F found = pc.toStandard();
 
@@ -150,8 +150,8 @@ public class TestComplexMath64F
 		ComplexPolar64F expected = new ComplexPolar64F();
 		ComplexPolar64F found = new ComplexPolar64F();
 
-		ComplexMath64F.mult(a, a, expected);
-		ComplexMath64F.mult(a, expected, expected);
+		ComplexMath64F.multiply(a, a, expected);
+		ComplexMath64F.multiply(a, expected, expected);
 
 		ComplexMath64F.pow(a, 3, found);
 
@@ -170,7 +170,7 @@ public class TestComplexMath64F
 		for( int i = 0; i < 2; i++ ) {
 			ComplexMath64F.root(expected, 2, 0, root);
 
-			ComplexMath64F.mult(root, root, found);
+			ComplexMath64F.multiply(root, root, found);
 
 			Complex64F e = expected.toStandard();
 			Complex64F f = found.toStandard();

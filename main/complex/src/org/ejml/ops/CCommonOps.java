@@ -21,7 +21,9 @@ package org.ejml.ops;
 import org.ejml.data.CD1Matrix64F;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.D1Matrix64F;
+
+import java.util.Arrays;
 
 /**
  * Common operations on complex numbers
@@ -30,30 +32,144 @@ import org.ejml.data.DenseMatrix64F;
  */
 public class CCommonOps {
 
-    public static void convert( DenseMatrix64F input , CDenseMatrix64F output ) {
+    /**
+     * Converts the real matrix into a complex matrix.
+     *
+     * @param input Real matrix. Not modified.
+     * @param output Complex matrix. Modified.
+     */
+    public static void convert( D1Matrix64F input , CD1Matrix64F output ) {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
 
+        Arrays.fill(output.data, 0, output.getDataLength(), 0);
+
+        final int length = output.getDataLength();
+
+        for( int i = 0; i < length; i += 2 ) {
+            output.data[i] = input.data[i/2];
+        }
     }
 
-    public static void stripReal( CDenseMatrix64F input , DenseMatrix64F output ) {
+    /**
+     * Places the real component of the input matrix into the output matrix.
+     *
+     * @param input Complex matrix. Not modified.
+     * @param output real matrix. Modified.
+     */
+    public static void stripReal( CD1Matrix64F input , D1Matrix64F output ) {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
 
+        final int length = input.getDataLength();
+
+        for( int i = 0; i < length; i += 2 ) {
+            output.data[i/2] = input.data[i];
+        }
     }
 
-    public static void stripImaginary( CDenseMatrix64F input , DenseMatrix64F output ) {
+    /**
+     * Places the imaginary component of the input matrix into the output matrix.
+     *
+     * @param input Complex matrix. Not modified.
+     * @param output real matrix. Modified.
+     */
+    public static void stripImaginary( CD1Matrix64F input , D1Matrix64F output ) {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
 
+        final int length = input.getDataLength();
+
+        for( int i = 1; i < length; i += 2 ) {
+            output.data[i/2] = input.data[i];
+        }
     }
 
-    public static void magnitude( CDenseMatrix64F input , DenseMatrix64F output ) {
+    /**
+     * <p>
+     * Computes the magnitude of the complex number in the input matrix and stores the results in the output
+     * matrix.
+     * </p>
+     *
+     * magnitude = sqrt(real^2 + imaginary^2)
+     *
+     * @param input Complex matrix. Not modified.
+     * @param output real matrix. Modified.
+     */
+    public static void magnitude( CD1Matrix64F input , D1Matrix64F output ) {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
 
+        final int length = input.getDataLength();
+
+        for( int i = 0; i < length; i += 2 ) {
+            double real = input.data[i];
+            double imaginary = input.data[i+1];
+
+            output.data[i/2] = Math.sqrt(real*real + imaginary*imaginary);
+        }
     }
 
-    public static void add( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a + b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void add( CD1Matrix64F a , CD1Matrix64F b , CD1Matrix64F c )
     {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
 
+        final int length = a.getDataLength();
+
+        for( int i = 0; i < length; i++ ) {
+            c.data[i] = a.data[i]+b.data[i];
+        }
     }
 
-    public static void subtract( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a - b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void subtract( CD1Matrix64F a , CD1Matrix64F b , CD1Matrix64F c )
     {
+        if( a.numCols != b.numCols || a.numRows != b.numRows
+                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
 
+        final int length = a.getDataLength();
+
+        for( int i = 0; i < length; i++ ) {
+            c.data[i] = a.data[i]-b.data[i];
+        }
     }
 
     public static void multiply( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
@@ -71,7 +187,7 @@ public class CCommonOps {
         return false;
     }
 
-    public static boolean solve( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F x )
+    public static boolean invert( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F x )
     {
         return false;
     }
@@ -81,14 +197,86 @@ public class CCommonOps {
         return false;
     }
 
-    public static void elementMultiply( CDenseMatrix64F a , double real , double imaginary, CDenseMatrix64F c )
+    /**
+     * <p>Performs  element by element multiplication operation with a complex numbert<br>
+     * <br>
+     * output<sub>ij</sub> = input<sub>ij</sub> * (real + imaginary*i) <br>
+     * </p>
+     * @param input The left matrix in the multiplication operation. Not modified.
+     * @param real Real component of the number it is multiplied by
+     * @param imaginary Imaginary component of the number it is multiplied by
+     * @param output Where the results of the operation are stored. Modified.
+     */
+    public static void elementMultiply( CD1Matrix64F input , double real , double imaginary, CD1Matrix64F output )
     {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
+        }
 
+        int N = input.getDataLength();
+        for (int i = 0; i < N; i += 2 ) {
+            double inReal = input.data[i];
+            double intImag = input.data[i+1];
+
+            output.data[i] = inReal*real - intImag*imaginary;
+            output.data[i+1] = inReal*imaginary + intImag*real;
+        }
     }
 
-    public static void elementDivide( CDenseMatrix64F a , double real , double imaginary, CDenseMatrix64F c )
+    /**
+     * <p>Performs  element by element division operation with a complex number on the right<br>
+     * <br>
+     * output<sub>ij</sub> = input<sub>ij</sub> / (real + imaginary*i) <br>
+     * </p>
+     * @param input The left matrix in the multiplication operation. Not modified.
+     * @param real Real component of the number it is multiplied by
+     * @param imaginary Imaginary component of the number it is multiplied by
+     * @param output Where the results of the operation are stored. Modified.
+     */
+    public static void elementDivide( CD1Matrix64F input , double real , double imaginary, CD1Matrix64F output )
     {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
+        }
 
+        double norm = real*real + imaginary*imaginary;
+
+        int N = input.getDataLength();
+        for (int i = 0; i < N; i += 2 ) {
+            double inReal = input.data[i];
+            double inImag = input.data[i+1];
+
+            output.data[i]   = (inReal*real + inImag*imaginary)/norm;
+            output.data[i+1] = (inImag*real - inReal*imaginary)/norm;
+        }
+    }
+
+    /**
+     * <p>Performs  element by element division operation with a complex number on the right<br>
+     * <br>
+     * output<sub>ij</sub> = (real + imaginary*i) / input<sub>ij</sub> <br>
+     * </p>
+     * @param real Real component of the number it is multiplied by
+     * @param imaginary Imaginary component of the number it is multiplied by
+     * @param input The right matrix in the multiplication operation. Not modified.
+     * @param output Where the results of the operation are stored. Modified.
+     */
+    public static void elementDivide( double real , double imaginary, CD1Matrix64F input , CD1Matrix64F output )
+    {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
+        }
+
+        int N = input.getDataLength();
+        for (int i = 0; i < N; i += 2 ) {
+            double inReal = input.data[i];
+            double inImag = input.data[i+1];
+
+            double norm = inReal*inReal + inImag*inImag;
+
+            output.data[i]   = (real*inReal + imaginary*inImag)/norm;
+            output.data[i+1] = (imaginary*inReal - real*inImag)/norm;
+        }
     }
 
     /**

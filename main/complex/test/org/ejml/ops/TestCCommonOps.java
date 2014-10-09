@@ -19,14 +19,249 @@
 package org.ejml.ops;
 
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
+import org.ejml.data.DenseMatrix64F;
 import org.junit.Test;
 
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
 public class TestCCommonOps {
+
+    Random rand = new Random(234);
+
+    @Test
+    public void convert() {
+        DenseMatrix64F input = RandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F output = new CDenseMatrix64F(5,7);
+
+        Complex64F a = new Complex64F();
+
+        CCommonOps.convert(input, output);
+
+        for (int i = 0; i < input.numRows; i++) {
+            for (int j = 0; j < input.numCols; j++) {
+                output.get(i,j,a);
+
+                assertEquals(input.get(i,j),a.getReal(),1e-8);
+                assertEquals(0,a.getImaginary(),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void stripReal() {
+        CDenseMatrix64F input = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        DenseMatrix64F output = new DenseMatrix64F(5,7);
+
+        Complex64F a = new Complex64F();
+
+        CCommonOps.stripReal(input, output);
+
+        for (int i = 0; i < input.numRows; i++) {
+            for (int j = 0; j < input.numCols; j++) {
+                input.get(i,j,a);
+
+                assertEquals(a.getReal(),output.get(i,j),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void stripImaginary() {
+        CDenseMatrix64F input = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        DenseMatrix64F output = new DenseMatrix64F(5,7);
+
+        Complex64F a = new Complex64F();
+
+        CCommonOps.stripImaginary(input, output);
+
+        for (int i = 0; i < input.numRows; i++) {
+            for (int j = 0; j < input.numCols; j++) {
+                input.get(i,j,a);
+
+                assertEquals(a.getImaginary(),output.get(i,j),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void magnitude() {
+        CDenseMatrix64F input = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        DenseMatrix64F output = new DenseMatrix64F(5,7);
+
+        Complex64F a = new Complex64F();
+
+        CCommonOps.magnitude(input,output);
+
+        for (int i = 0; i < input.numRows; i++) {
+            for (int j = 0; j < input.numCols; j++) {
+                input.get(i,j,a);
+
+                assertEquals(a.getMagnitude(),output.get(i,j),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void add() {
+        CDenseMatrix64F matrixA = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F matrixB = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F out = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        Complex64F a = new Complex64F();
+        Complex64F b = new Complex64F();
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        CCommonOps.add(matrixA, matrixB, out);
+
+        for (int i = 0; i < matrixA.numRows; i++) {
+            for (int j = 0; j < matrixA.numCols; j++) {
+                matrixA.get(i,j,a);
+                matrixB.get(i,j,b);
+                out.get(i,j,found);
+
+                ComplexMath64F.plus(a, b, expected);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void subtract() {
+        CDenseMatrix64F matrixA = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F matrixB = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F out = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        Complex64F a = new Complex64F();
+        Complex64F b = new Complex64F();
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        CCommonOps.subtract(matrixA, matrixB, out);
+
+        for (int i = 0; i < matrixA.numRows; i++) {
+            for (int j = 0; j < matrixA.numCols; j++) {
+                matrixA.get(i,j,a);
+                matrixB.get(i,j,b);
+                out.get(i,j,found);
+
+                ComplexMath64F.minus(a, b, expected);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void multiply() {
+        fail("implement");
+    }
+
+    @Test
+    public void transpose() {
+        fail("implement");
+    }
+
+    @Test
+    public void invert_2() {
+        fail("implement");
+    }
+
+    @Test
+    public void invert_3() {
+        fail("implement");
+    }
+
+    @Test
+    public void det() {
+        fail("implement");
+    }
+
+    @Test
+    public void elementMultiply() {
+        CDenseMatrix64F in = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F out = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        Complex64F a = new Complex64F(1.2,-0.3);
+        Complex64F b = new Complex64F();
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        CCommonOps.elementMultiply(in,a.real,a.imaginary,out);
+
+        for (int i = 0; i < in.numRows; i++) {
+            for (int j = 0; j < in.numCols; j++) {
+                in.get(i,j,b);
+                out.get(i,j,found);
+
+                ComplexMath64F.multiply(a,b,expected);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void elementDivide_right() {
+        CDenseMatrix64F in = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F out = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        Complex64F a = new Complex64F();
+        Complex64F b = new Complex64F(1.2,-0.3);
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        CCommonOps.elementDivide(in,b.real,b.imaginary,out);
+
+        for (int i = 0; i < in.numRows; i++) {
+            for (int j = 0; j < in.numCols; j++) {
+                in.get(i,j,a);
+                out.get(i,j,found);
+
+                ComplexMath64F.divide(a,b,expected);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void elementDivide_left() {
+        CDenseMatrix64F in = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F out = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        Complex64F a = new Complex64F(1.2,-0.3);
+        Complex64F b = new Complex64F();
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        CCommonOps.elementDivide(a.real,a.imaginary,in,out);
+
+        for (int i = 0; i < in.numRows; i++) {
+            for (int j = 0; j < in.numCols; j++) {
+                in.get(i,j,b);
+                out.get(i,j,found);
+
+                ComplexMath64F.divide(a,b,expected);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
     @Test
     public void elementMinReal() {
         CDenseMatrix64F m = new CDenseMatrix64F(3,4);

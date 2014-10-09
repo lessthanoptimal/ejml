@@ -68,36 +68,36 @@ public class CDenseMatrix64F extends CD1Matrix64F {
 
     @Override
     public void get(int row, int col, Complex64F output) {
-        int index = row*col*2 + col*2;
+        int index = row*numCols*2 + col*2;
         output.real = data[index];
         output.imaginary = data[index+1];
     }
 
     @Override
     public void set(int row, int col, double real, double imaginary) {
-        int index = row*col*2 + col*2;
+        int index = row*numCols*2 + col*2;
         data[index] = real;
         data[index+1] = imaginary;
     }
 
     @Override
     public double getReal(int row, int col) {
-        return data[row*col*2 + col*2];
+        return data[row*numCols*2 + col*2];
     }
 
     @Override
     public void setReal(int row, int col, double val) {
-        data[row*col*2 + col*2] = val;
+        data[row*numCols*2 + col*2] = val;
     }
 
     @Override
     public double getImaginary(int row, int col) {
-        return data[row*col*2 + col*2 + 1];
+        return data[row*numCols*2 + col*2 + 1];
     }
 
     @Override
     public void setImaginary(int row, int col, double val) {
-        data[row*col*2 + col*2 + 1] = val;
+        data[row*numCols*2 + col*2 + 1] = val;
     }
 
     @Override
