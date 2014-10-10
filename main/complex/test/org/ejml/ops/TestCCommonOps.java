@@ -97,7 +97,7 @@ public class TestCCommonOps {
 
         Complex64F a = new Complex64F();
 
-        CCommonOps.magnitude(input,output);
+        CCommonOps.magnitude(input, output);
 
         for (int i = 0; i < input.numRows; i++) {
             for (int j = 0; j < input.numCols; j++) {
@@ -168,8 +168,47 @@ public class TestCCommonOps {
     }
 
     @Test
-    public void transpose() {
-        fail("implement");
+    public void transpose_one() {
+
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,4,-1,1,rand);
+        CDenseMatrix64F b = a.copy();
+
+        CCommonOps.transpose(b);
+
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                a.get(i,j,expected);
+                b.get(j,i,found);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void transpose_two() {
+
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(5,4,-1,1,rand);
+
+        CCommonOps.transpose(a, b);
+
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                a.get(i,j,expected);
+                b.get(j,i,found);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
     }
 
     @Test

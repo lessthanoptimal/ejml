@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.misc.CTransposeAlgs;
 import org.ejml.data.CD1Matrix64F;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
@@ -177,9 +178,51 @@ public class CCommonOps {
 
     }
 
-    public static void transpose( CDenseMatrix64F input , CDenseMatrix64F output )
-    {
+    /**
+     * <p>Performs an "in-place" transpose.</p>
+     *
+     * <p>
+     * For square matrices the transpose is truly in-place and does not require
+     * additional memory.  For non-square matrices, internally a temporary matrix is declared and
+     * {@link #transpose(org.ejml.data.CDenseMatrix64F, org.ejml.data.CDenseMatrix64F)} is invoked.
+     * </p>
+     *
+     * @param mat The matrix that is to be transposed. Modified.
+     */
+    public static void transpose( CDenseMatrix64F mat ) {
+        if( mat.numCols == mat.numRows ){
+            CTransposeAlgs.square(mat);
+        } else {
+            CDenseMatrix64F b = new CDenseMatrix64F(mat.numCols,mat.numRows);
+            transpose(mat, b);
+            mat.reshape(b.numRows, b.numCols);
+            mat.set(b);
+        }
+    }
 
+    /**
+     * <p>
+     * Transposes input matrix 'a' and stores the results in output matrix 'b':<br>
+     * <br>
+     * b<sub>ij</sub> = a<sub>ji</sub><br>
+     * where 'b' is the transpose of 'a'.
+     * </p>
+     *
+     * @param input The original matrix.  Not modified.
+     * @param output Where the transpose is stored. If null a new matrix is created. Modified.
+     * @return The transposed matrix.
+     */
+    public static CDenseMatrix64F transpose( CDenseMatrix64F input , CDenseMatrix64F output )
+    {
+        if( output == null ) {
+            output = new CDenseMatrix64F(input.numCols,input.numRows);
+        } else if( input.numCols != output.numRows || input.numRows != output.numCols ) {
+            throw new IllegalArgumentException("Input and output shapes are not compatible");
+        }
+
+        CTransposeAlgs.standard(input,output);
+
+        return output;
     }
 
     public static boolean invert( CDenseMatrix64F input , CDenseMatrix64F output )
