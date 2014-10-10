@@ -160,7 +160,7 @@ public abstract class LUDecompositionBase_D64
         m = a.numRows;
         n = a.numCols;
 
-        LU.setReshape(a);
+        LU.set(a);
         for (int i = 0; i < m; i++) {
             pivot[i] = i;
         }
@@ -203,7 +203,7 @@ public abstract class LUDecompositionBase_D64
     }
 
     public double quality() {
-        return SpecializedOps.qualityTriangular(true, LU);
+        return SpecializedOps.qualityTriangular(LU);
     }
 
     /**

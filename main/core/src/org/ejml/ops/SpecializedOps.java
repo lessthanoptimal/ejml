@@ -372,22 +372,45 @@ public class SpecializedOps {
     }
 
     /**
+     * <p>
+     * Returns the absolute value of the digonal element in the matrix that has the largest absolute value.<br>
+     * <br>
+     * Max{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max abs element value of the matrix.
+     */
+    public static double elementDiagonalMaxAbs( D1Matrix64F a ) {
+        final int size = Math.min(a.numRows,a.numCols);
+
+        double max = 0;
+        for( int i = 0; i < size; i++ ) {
+            double val = Math.abs(a.get( i,i ));
+            if( val > max ) {
+                max = val;
+            }
+        }
+
+        return max;
+    }
+
+    /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
      * is defined in {@link org.ejml.interfaces.linsol.LinearSolver#quality()}.  In
      * this situation the quality os the absolute value of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.
      *
-     * @param upper if it is upper triangular or not.
      * @param T A matrix.  @return product of the diagonal elements.
      * @return the quality of the system.
      */
-    public static double qualityTriangular(boolean upper, D1Matrix64F T)
+    public static double qualityTriangular(D1Matrix64F T)
     {
         int N = Math.min(T.numRows,T.numCols);
 
         // TODO make faster by just checking the upper triangular portion
-        double max = CommonOps.elementMaxAbs(T);
+        double max = elementDiagonalMaxAbs(T);
 
         if( max == 0.0d )
             return 0.0d;

@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.Matrix;
 
 
 /**
@@ -43,13 +43,13 @@ import org.ejml.data.RealMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface LUDecomposition <T extends RealMatrix64F>
+public interface LUDecomposition <T extends Matrix>
         extends DecompositionInterface<T> {
 
     /**
      * <p>
      * Returns the L matrix from the decomposition.  Should only
-     * be called after {@link #decompose(org.ejml.data.RealMatrix64F)} has
+     * be called after {@link #decompose(org.ejml.data.Matrix)} has
      * been called.
      * </p>
      *
@@ -66,7 +66,7 @@ public interface LUDecomposition <T extends RealMatrix64F>
     /**
      * <p>
      * Returns the U matrix from the decomposition.  Should only
-     * be called after {@link #decompose(org.ejml.data.RealMatrix64F)}  has
+     * be called after {@link #decompose(org.ejml.data.Matrix)}  has
      * been called.
      * </p>
      *

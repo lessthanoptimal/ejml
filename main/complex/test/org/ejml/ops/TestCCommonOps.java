@@ -109,6 +109,11 @@ public class TestCCommonOps {
     }
 
     @Test
+    public void fill() {
+        fail("Implement");
+    }
+
+    @Test
     public void add() {
         CDenseMatrix64F matrixA = CRandomMatrices.createRandom(5,7,-1,1,rand);
         CDenseMatrix64F matrixB = CRandomMatrices.createRandom(5,7,-1,1,rand);
@@ -339,6 +344,11 @@ public class TestCCommonOps {
         }
 
         assertEquals(-5 + 11 * 2, CCommonOps.elementMaxImaginary(m), 1e-8);
+    }
+
+    @Test
+    public void elementMaxMagnitude2() {
+        fail("Implement");
     }
 
 }

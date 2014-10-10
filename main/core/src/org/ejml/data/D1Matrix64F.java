@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -17,9 +17,6 @@
  */
 
 package org.ejml.data;
-
-import org.ejml.alg.dense.mult.MatrixDimensionException;
-
 
 /**
  * A generic abstract class for matrices whose data is stored in a single 1D array of doubles.  The
@@ -70,9 +67,7 @@ public abstract class D1Matrix64F extends ReshapeMatrix64F {
      */
     public void set( D1Matrix64F b )
     {
-        if( numRows != b.numRows || numCols != b.numCols ) {
-            throw new MatrixDimensionException("The two matrices do not have compatible shapes.");
-        }
+        this.reshape(b.numRows,b.numCols);
 
         int dataLength = b.getNumElements();
 

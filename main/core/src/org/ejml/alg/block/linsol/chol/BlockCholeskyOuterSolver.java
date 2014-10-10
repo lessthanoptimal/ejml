@@ -76,7 +76,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(false,chol.getT(null));
+        return SpecializedOps.qualityTriangular(chol.getT(null));
     }
 
     /**

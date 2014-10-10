@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.Matrix;
 
 
 /**
@@ -32,7 +32,7 @@ import org.ejml.data.ReshapeMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface TridiagonalSimilarDecomposition<MatrixType extends ReshapeMatrix64F>
+public interface TridiagonalSimilarDecomposition<MatrixType extends Matrix>
         extends DecompositionInterface<MatrixType> {
 
     /**

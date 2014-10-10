@@ -147,7 +147,7 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(true, R);
+        return SpecializedOps.qualityTriangular(R);
     }
 
     /**

@@ -334,35 +334,6 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * <p>
-     * Sets the value and shape of this matrix to be identical to the specified matrix. The width and height are
-     * changed to match the matrix that has been provided.  If more memory is needed then a new data array is
-     * declared.<br>
-     * <br>
-     * a.numRows = b.numRows<br>
-     * a.numCols = b.numCols<br>
-     * <br>
-     * a<sub>ij</sub> = b<sub>ij</sub><br>
-     * <br>
-     *
-     * <p>
-     * @param b The matrix that this matrix is to be set equal to.
-     */
-    public void setReshape( DenseMatrix64F b)
-    {
-        int dataLength = b.getNumElements();
-
-        if( data.length < dataLength ) {
-            data = new double[ dataLength ];
-        }
-
-        this.numRows = b.numRows;
-        this.numCols = b.numCols;
-
-        System.arraycopy(b.data, 0, this.data, 0, dataLength);
-    }
-
-    /**
      * Sets this matrix equal to the matrix encoded in the array.
      *
      * @param numRows The number of rows.

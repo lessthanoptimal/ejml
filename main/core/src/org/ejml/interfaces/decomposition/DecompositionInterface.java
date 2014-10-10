@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.Matrix;
 
 
 /**
@@ -40,7 +40,7 @@ import org.ejml.data.RealMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface DecompositionInterface <T extends RealMatrix64F> {
+public interface DecompositionInterface <T extends Matrix> {
 
     /**
      * Computes the decomposition of the input matrix.  Depending on the implementation
@@ -54,7 +54,7 @@ public interface DecompositionInterface <T extends RealMatrix64F> {
     public boolean decompose( T orig );
 
     /**
-     * Is the input matrix to {@link #decompose(org.ejml.data.RealMatrix64F)} is modified during
+     * Is the input matrix to {@link #decompose(org.ejml.data.Matrix)} is modified during
      * the decomposition process.
      *
      * @return true if the input matrix to decompose() is modified.

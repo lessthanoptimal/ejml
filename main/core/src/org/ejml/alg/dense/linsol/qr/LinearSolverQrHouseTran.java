@@ -91,7 +91,7 @@ public class LinearSolverQrHouseTran extends LinearSolverAbstract {
     public double quality() {
         // even those it is transposed the diagonal elements are at the same
         // elements
-        return SpecializedOps.qualityTriangular(true, QR);
+        return SpecializedOps.qualityTriangular(QR);
     }
 
     /**

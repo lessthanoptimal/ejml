@@ -94,7 +94,7 @@ public class CholeskyDecompositionLDL_D64
         }
         n = mat.numRows;
 
-        L.setReshape(mat);
+        L.set(mat);
 
         double d_inv=0;
         for( int i = 0; i < n; i++ ) {

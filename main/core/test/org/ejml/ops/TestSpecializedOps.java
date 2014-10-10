@@ -250,6 +250,16 @@ public class TestSpecializedOps {
 
         assertEquals(6,found,1e-8);
     }
+
+    @Test
+    public void elementDiagonalMaxAbs() {
+        fail("Implement");
+    }
+
+    @Test
+    public void qualityTriangular() {
+        fail("Implement");
+    }
     
     @Test
     public void elementSumSq() {

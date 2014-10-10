@@ -19,7 +19,7 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Complex64F;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.Matrix;
 
 
 /**
@@ -46,7 +46,7 @@ import org.ejml.data.RealMatrix64F;
  * </p>
  * @author Peter Abeles
  */
-public interface EigenDecomposition<MatrixType extends RealMatrix64F>
+public interface EigenDecomposition<MatrixType extends Matrix>
         extends DecompositionInterface<MatrixType> {
 
     /**

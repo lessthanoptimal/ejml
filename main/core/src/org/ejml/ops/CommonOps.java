@@ -546,7 +546,7 @@ public class CommonOps {
         } else {
             DenseMatrix64F b = new DenseMatrix64F(mat.numCols,mat.numRows);
             transpose(mat,b);
-            mat.setReshape(b);
+            mat.set(b);
         }
     }
 

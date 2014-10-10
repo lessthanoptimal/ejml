@@ -8,6 +8,9 @@ Date format: year/month/day
 
 - Added SimpleMatrix.randomNormal() for drawing numbers from a normal distribution with zero mean
 - Added EjmlUnitTests.assertEquals() and similar for SimpleMatrix
+- Removed DenseMatrix64F.setReshape()
+- Matrix.set(matrix) will now reshape the matrix that's being assigned
+- Triangle quality now just uses diagonal elements to scale results
 
 ----- Version 0.26
 

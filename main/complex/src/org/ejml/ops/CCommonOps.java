@@ -116,6 +116,26 @@ public class CCommonOps {
     }
 
     /**
+     * <p>
+     * Sets every element in the matrix to the specified value.<br>
+     * <br>
+     * a<sub>ij</sub> = value
+     * <p>
+     *
+     * @param a A matrix whose elements are about to be set. Modified.
+     * @param real The real component
+     * @param imaginary The imaginary component
+     */
+    public static void fill(CD1Matrix64F a, double real, double imaginary)
+    {
+        int N = a.getDataLength();
+        for (int i = 0; i < N; i += 2) {
+            a.data[i] = real;
+            a.data[i+1] = imaginary;
+        }
+    }
+
+    /**
      * <p>Performs the following operation:<br>
      * <br>
      * c = a + b <br>
@@ -412,6 +432,34 @@ public class CCommonOps {
             double val = a.data[i];
             if( val > max ) {
                 max = val;
+            }
+        }
+
+        return max;
+    }
+
+    /**
+     * <p>
+     * Returns the magnitude squared of the complex element with the largest magnitude<br>
+     * <br>
+     * Max{ |a<sub>ij</sub>|^2 } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max magnitude squared
+     */
+    public static double elementMaxMagnitude2( CD1Matrix64F a ) {
+        final int size = a.getDataLength();
+
+        double max = 0;
+        for( int i = 0; i < size; ) {
+            double real = a.data[i++];
+            double imaginary = a.data[i++];
+
+            double m = real*real + imaginary*imaginary;
+
+            if( m > max ) {
+                max = m;
             }
         }
 

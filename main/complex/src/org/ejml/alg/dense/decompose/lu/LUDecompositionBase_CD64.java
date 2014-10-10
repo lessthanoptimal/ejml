@@ -19,11 +19,11 @@
 package org.ejml.alg.dense.decompose.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decompose.CTriangularSolver;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CSpecializedOps;
 
 
 /**
@@ -33,9 +33,9 @@ import org.ejml.ops.SpecializedOps;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_CD64
-        implements LUDecomposition<DenseMatrix64F> {
+        implements LUDecomposition<CDenseMatrix64F> {
     // the decomposed matrix
-    protected DenseMatrix64F LU;
+    protected CDenseMatrix64F LU;
 
     // it can decompose a matrix up to this size
     protected int maxWidth=-1;
@@ -56,7 +56,7 @@ public abstract class LUDecompositionBase_CD64
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
-        LU = new DenseMatrix64F(numRows,numCols);
+        LU = new CDenseMatrix64F(numRows,numCols);
 
         this.dataLU = LU.data;
         maxWidth = Math.max(numRows,numCols);
@@ -66,7 +66,7 @@ public abstract class LUDecompositionBase_CD64
         pivot = new int[ maxWidth ];
     }
 
-    public DenseMatrix64F getLU() {
+    public CDenseMatrix64F getLU() {
         return LU;
     }
 
@@ -86,34 +86,48 @@ public abstract class LUDecompositionBase_CD64
     /**
      * Writes the lower triangular matrix into the specified matrix.
      *
-     * @param lower Where the lower triangular matrix is writen to.
+     * @param lower Where the lower triangular matrix is written to.
      */
     @Override
-    public DenseMatrix64F getLower( DenseMatrix64F lower )
+    public CDenseMatrix64F getLower( CDenseMatrix64F lower )
     {
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
 
         if( lower == null ) {
-            lower = new DenseMatrix64F(numRows,numCols);
+            lower = new CDenseMatrix64F(numRows,numCols);
         } else {
             if( lower.numCols != numCols || lower.numRows != numRows )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.fill(lower, 0);
+            CCommonOps.fill(lower,0, 0);
         }
 
         for( int i = 0; i < numCols; i++ ) {
-            lower.set(i,i,1.0);
+            lower.set(i,i,1.0,0.0);
 
             for( int j = 0; j < i; j++ ) {
-                lower.set(i,j, LU.get(i,j));
+                int indexLU = LU.getIndex(i,j);
+                int indexL = lower.getIndex(i,j);
+
+                double real = LU.data[indexLU];
+                double imaginary = LU.data[indexLU+1];
+
+                lower.data[indexL] = real;
+                lower.data[indexL+1] = imaginary;
             }
         }
 
         if( numRows > numCols ) {
             for( int i = numCols; i < numRows; i++ ) {
                 for( int j = 0; j < numCols; j++ ) {
-                    lower.set(i,j, LU.get(i,j));
+                    int indexLU = LU.getIndex(i,j);
+                    int indexL = lower.getIndex(i,j);
+
+                    double real = LU.data[indexLU];
+                    double imaginary = LU.data[indexLU+1];
+
+                    lower.data[indexL] = real;
+                    lower.data[indexL+1] = imaginary;
                 }
             }
         }
@@ -126,33 +140,40 @@ public abstract class LUDecompositionBase_CD64
      * @param upper Where the upper triangular matrix is writen to.
      */
     @Override
-    public DenseMatrix64F getUpper( DenseMatrix64F upper )
+    public CDenseMatrix64F getUpper( CDenseMatrix64F upper )
     {
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
 
         if( upper == null ) {
-            upper = new DenseMatrix64F(numRows, numCols);
+            upper = new CDenseMatrix64F(numRows, numCols);
         } else {
             if( upper.numCols != numCols || upper.numRows != numRows )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.fill(upper, 0);
+            CCommonOps.fill(upper, 0,0);
         }
 
         for( int i = 0; i < numRows; i++ ) {
             for( int j = i; j < numCols; j++ ) {
-                upper.set(i,j, LU.get(i,j));
+                int indexLU = LU.getIndex(i,j);
+                int indexU = upper.getIndex(i,j);
+
+                double real = LU.data[indexLU];
+                double imaginary = LU.data[indexLU+1];
+
+                upper.data[indexU] = real;
+                upper.data[indexU+1] = imaginary;
             }
         }
 
         return upper;
     }
 
-    public DenseMatrix64F getPivot( DenseMatrix64F pivot ) {
-        return SpecializedOps.pivotMatrix(pivot, this.pivot, LU.numRows, false);
+    public CDenseMatrix64F getPivot( CDenseMatrix64F pivot ) {
+        return CSpecializedOps.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
-    protected void decomposeCommonInit(DenseMatrix64F a) {
+    protected void decomposeCommonInit(CDenseMatrix64F a) {
         if( a.numRows > maxWidth || a.numCols > maxWidth ) {
             setExpectedMaxSize(a.numRows,a.numCols);
         }
@@ -160,7 +181,7 @@ public abstract class LUDecompositionBase_CD64
         m = a.numRows;
         n = a.numCols;
 
-        LU.setReshape(a);
+        LU.set(a);
         for (int i = 0; i < m; i++) {
             pivot[i] = i;
         }
@@ -175,6 +196,7 @@ public abstract class LUDecompositionBase_CD64
      */
     @Override
     public boolean isSingular() {
+        // TODO update for complex
         for( int i = 0; i < m; i++ ) {
             if( Math.abs(dataLU[i* n +i]) < UtilEjml.EPS )
                 return true;
@@ -189,6 +211,7 @@ public abstract class LUDecompositionBase_CD64
      */
     @Override
     public double computeDeterminant() {
+        // TODO update for complex
         if( m != n )
             throw new IllegalArgumentException("Must be a square matrix.");
 
@@ -203,7 +226,7 @@ public abstract class LUDecompositionBase_CD64
     }
 
     public double quality() {
-        return SpecializedOps.qualityTriangular(true, LU);
+        return CSpecializedOps.qualityTriangular(LU);
     }
 
     /**
@@ -211,6 +234,7 @@ public abstract class LUDecompositionBase_CD64
      */
     public void _solveVectorInternal( double []vv )
     {
+        // TODO update for complex
         // Solve L*Y = B
         int ii = 0;
 
@@ -231,7 +255,7 @@ public abstract class LUDecompositionBase_CD64
         }
 
         // Solve U*X = Y;
-        TriangularSolver.solveU(dataLU,vv,n);
+        CTriangularSolver.solveU(dataLU, vv, n);
     }
 
     public double[] _getVV() {

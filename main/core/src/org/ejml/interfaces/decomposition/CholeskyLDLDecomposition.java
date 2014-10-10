@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.Matrix;
 
 
 /**
@@ -38,7 +38,7 @@ import org.ejml.data.RealMatrix64F;
  *
  * @author Peter Abeles
  */
-public interface CholeskyLDLDecomposition<MatrixType extends RealMatrix64F>
+public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
         extends DecompositionInterface<MatrixType> {
 
 

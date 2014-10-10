@@ -250,7 +250,7 @@ public class TestMatrixMatrixMult {
     private void transpose( DenseMatrix64F a ) {
         DenseMatrix64F b = new DenseMatrix64F(a.numCols,a.numRows);
         CommonOps.transpose(a,b);
-        a.setReshape(b);
+        a.set(b);
     }
 
     public static void invoke(Method func,

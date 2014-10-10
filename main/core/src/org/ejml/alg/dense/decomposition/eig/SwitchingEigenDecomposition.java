@@ -85,7 +85,7 @@ public class SwitchingEigenDecomposition
 
     @Override
     public boolean decompose(DenseMatrix64F orig) {
-        A.setReshape(orig);
+        A.set(orig);
 
         symmetric = MatrixFeatures.isSymmetric(A,tol);
 

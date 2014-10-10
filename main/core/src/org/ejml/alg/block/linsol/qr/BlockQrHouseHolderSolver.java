@@ -85,7 +85,7 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
      */
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(true,decomp.getQR());
+        return SpecializedOps.qualityTriangular(decomp.getQR());
     }
 
     @Override
