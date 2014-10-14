@@ -18,8 +18,16 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+
 /**
  * @author Peter Abeles
  */
-public class MatrixMatrixMultComplex {
+public class TestCMatrixMatrixMult {
+    @Test
+    public void stuff() {
+        fail("Implement");
+    }
 }
