@@ -18,7 +18,9 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.misc.CTransposeAlgs;
+import org.ejml.alg.dense.mult.CMatrixMatrixMult;
 import org.ejml.data.CD1Matrix64F;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
@@ -31,6 +33,9 @@ import java.util.Arrays;
  *
  * @author Peter Abeles
  */
+// TODO multiply scale
+// TODO multiply add
+// TODO multiply scale add
 public class CCommonOps {
 
     /**
@@ -193,9 +198,25 @@ public class CCommonOps {
         }
     }
 
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a * b <br>
+     * <br>
+     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { * a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
     public static void multiply( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
-
+        if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
+            CMatrixMatrixMult.mult_reorder(a, b, c);
+        } else {
+            CMatrixMatrixMult.mult_small(a, b, c);
+        }
     }
 
     /**

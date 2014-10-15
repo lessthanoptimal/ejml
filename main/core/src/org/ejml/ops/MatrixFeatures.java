@@ -21,10 +21,7 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
 import org.ejml.alg.dense.mult.VectorVectorMult;
-import org.ejml.data.Complex64F;
-import org.ejml.data.D1Matrix64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.*;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.LUDecomposition;
@@ -105,8 +102,8 @@ public class MatrixFeatures {
      *
      * @return True if it is a vector and false if it is not.
      */
-    public static boolean isVector( D1Matrix64F mat ) {
-        return (mat.numCols == 1 || mat.numRows == 1);
+    public static boolean isVector( Matrix mat ) {
+        return (mat.getNumCols() == 1 || mat.getNumRows() == 1);
     }
 
     /**

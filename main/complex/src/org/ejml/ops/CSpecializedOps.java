@@ -52,11 +52,11 @@ public class CSpecializedOps {
 
         if( transposed ) {
             for( int i = 0; i < numPivots; i++ ) {
-                ret.set(pivots[i],i,1,1);
+                ret.set(pivots[i],i,1,0);
             }
         } else {
             for( int i = 0; i < numPivots; i++ ) {
-                ret.set(i,pivots[i],1,1);
+                ret.set(i,pivots[i],1,0);
             }
         }
 
@@ -78,11 +78,11 @@ public class CSpecializedOps {
 
         int rowStride = a.getRowStride();
         double max = 0;
-        for( int i = 0; i < size; ) {
+        for( int i = 0; i < size; i++ ) {
             int index = i*rowStride + i*2;
 
             double real = a.data[index];
-            double imaginary = a.data[index];
+            double imaginary = a.data[index+1];
 
             double m = real*real + imaginary*imaginary;
 

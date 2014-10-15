@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -65,6 +65,11 @@ public class Complex64F implements Serializable {
     public void set(double real, double imaginary) {
         this.real = real;
         this.imaginary = imaginary;
+    }
+
+    public void set(Complex64F a) {
+        this.real = a.real;
+        this.imaginary = a.imaginary;
     }
 
     public boolean isReal() {

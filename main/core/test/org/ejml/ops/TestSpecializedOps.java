@@ -253,12 +253,31 @@ public class TestSpecializedOps {
 
     @Test
     public void elementDiagonalMaxAbs() {
-        fail("Implement");
+        DenseMatrix64F A = RandomMatrices.createRandom(4,5,rand);
+
+        double expected = 0;
+        for (int i = 0; i < 4; i++) {
+            double a = A.get(i,i);
+            if( Math.abs(a) > expected )
+                expected = Math.abs(a);
+        }
+
+        double found = SpecializedOps.elementDiagonalMaxAbs(A);
+        assertEquals(expected,found,1e-8);
     }
 
     @Test
     public void qualityTriangular() {
-        fail("Implement");
+        DenseMatrix64F A = RandomMatrices.createRandom(4,4,rand);
+
+        double max = SpecializedOps.elementDiagonalMaxAbs(A);
+        double expected = 1.0;
+        for (int i = 0; i < 4; i++) {
+            expected *= A.get(i,i)/max;
+        }
+
+        double found = SpecializedOps.qualityTriangular(A);
+        assertEquals(expected,found,1e-8);
     }
     
     @Test

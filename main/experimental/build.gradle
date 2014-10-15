@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main:core')
+    compile project(':main:complex')
     compile project(':main:equation')
 }
 

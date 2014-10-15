@@ -18,6 +18,8 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.mult.CMatrixMatrixMult;
+import org.ejml.alg.dense.mult.TestCMatrixMatrixMult;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
@@ -25,8 +27,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -110,7 +111,17 @@ public class TestCCommonOps {
 
     @Test
     public void fill() {
-        fail("Implement");
+        CDenseMatrix64F matrix = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        CCommonOps.fill(matrix,2,-1);
+
+        for (int i = 0; i < matrix.getDataLength(); i += 2) {
+            double real = matrix.data[i];
+            double img = matrix.data[i+1];
+
+            assertEquals(2,real,1e-8);
+            assertEquals(-1,img,1e-8);
+        }
     }
 
     @Test
@@ -169,7 +180,20 @@ public class TestCCommonOps {
 
     @Test
     public void multiply() {
-        fail("implement");
+        for (int i = 1; i < 10; i++) {
+            for (int j = 1; j < 10; j++) {
+                CDenseMatrix64F A = CRandomMatrices.createRandom(i,j,-1,1,rand);
+                for (int k = 1; k < 10; k++) {
+                    CDenseMatrix64F B = CRandomMatrices.createRandom(j, k, -1, 1, rand);
+                    CDenseMatrix64F found = CRandomMatrices.createRandom(i, k, -1, 1, rand);
+                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B);
+
+                    CMatrixMatrixMult.mult_reorder(A, B, found);
+
+                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected, found, 1e-8));
+                }
+            }
+        }
     }
 
     @Test
@@ -348,7 +372,17 @@ public class TestCCommonOps {
 
     @Test
     public void elementMaxMagnitude2() {
-        fail("Implement");
+        CDenseMatrix64F m = CRandomMatrices.createRandom(4,5,-2,2,rand);
+        DenseMatrix64F a = new DenseMatrix64F(m.numRows,m.numCols);
+
+        CCommonOps.magnitude(m,a);
+
+        double expected = CommonOps.elementMaxAbs(a);
+        expected *= expected;
+
+        double found = CCommonOps.elementMaxMagnitude2(m);
+
+        assertEquals(expected,found,1e-8);
     }
 
 }
