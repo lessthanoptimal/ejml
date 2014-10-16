@@ -44,7 +44,7 @@ public class TestUnrolledDeterminantFromMinor {
             double unrolled = UnrolledDeterminantFromMinor.det(A);
             LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
             assertTrue( alg.decompose(A) );
-            double expected = alg.computeDeterminant();
+            double expected = alg.computeDeterminant().real;
 
             assertEquals(expected,unrolled,1e-8);
         }

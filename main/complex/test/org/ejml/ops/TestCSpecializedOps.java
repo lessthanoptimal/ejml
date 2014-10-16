@@ -45,7 +45,7 @@ public class TestCSpecializedOps {
         CDenseMatrix64F B = new CDenseMatrix64F(4,4);
 
         // see if it swapped the rows
-        CCommonOps.multiply(P, A, B);
+        CCommonOps.mult(P, A, B);
 
         for( int i = 0; i < 4; i++ ) {
             int index = pivots[i];

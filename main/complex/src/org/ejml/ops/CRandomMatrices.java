@@ -32,6 +32,21 @@ public class CRandomMatrices {
     /**
      * <p>
      * Returns a matrix where all the elements are selected independently from
+     * a uniform distribution between -1 and 1 inclusive.
+     * </p>
+     *
+     * @param numRow Number of rows in the new matrix.
+     * @param numCol Number of columns in the new matrix.
+     * @param rand Random number generator used to fill the matrix.
+     * @return The randomly generated matrix.
+     */
+    public static CDenseMatrix64F createRandom( int numRow , int numCol , Random rand ) {
+        return createRandom(numRow,numCol,-1,1,rand);
+    }
+
+    /**
+     * <p>
+     * Returns a matrix where all the elements are selected independently from
      * a uniform distribution between 'min' and 'max' inclusive.
      * </p>
      *

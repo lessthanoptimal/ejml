@@ -57,13 +57,29 @@ public class CTriangularSolver {
 //            }
 //            b[i] = sum/U[i*n+i];
 //        }
+        int stride = n*2;
         for( int i =n-1; i>=0; i-- ) {
-            double sum = b[i];
-            int indexU = i*n+i+1;
+            double sumReal = b[i*2];
+            double sumImg = b[i*2+1];
+            int indexU = i*stride+i*2+2;
             for( int j = i+1; j <n; j++ ) {
-                sum -= U[indexU++]* b[j];
+                double realB = b[j*2];
+                double imgB = b[j*2+1];
+
+                double realU = U[indexU++];
+                double imgU = U[indexU++];
+
+                sumReal -= realB*realU - imgB*imgU;
+                sumImg -= realB*imgU + imgB*realU;
             }
-            b[i] = sum/U[i*n+i];
+
+            // b = sum/U
+            double realU = U[i*stride+i*2];
+            double imgU = U[i*stride+i*2+1];
+
+            double normU = realU*realU + imgU*imgU;
+            b[i*2] = (sumReal*realU + sumImg*imgU)/normU;
+            b[i*2+1] = (sumImg*realU - sumReal*imgU)/normU;
         }
     }
 }

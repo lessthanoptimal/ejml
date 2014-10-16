@@ -21,6 +21,7 @@ package org.ejml.alg.dense.decompose.lu;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.CTriangularSolver;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CSpecializedOps;
@@ -41,7 +42,7 @@ public abstract class LUDecompositionBase_CD64
     protected int maxWidth=-1;
 
     // the shape of the matrix
-    protected int m,n;
+    protected int m,n,stride;
     // data in the matrix
     protected double dataLU[];
 
@@ -53,6 +54,7 @@ public abstract class LUDecompositionBase_CD64
 
     // used by determinant
     protected double pivsign;
+    protected Complex64F det = new Complex64F();
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
@@ -61,7 +63,7 @@ public abstract class LUDecompositionBase_CD64
         this.dataLU = LU.data;
         maxWidth = Math.max(numRows,numCols);
 
-        vv = new double[ maxWidth ];
+        vv = new double[ maxWidth*2 ];
         indx = new int[ maxWidth ];
         pivot = new int[ maxWidth ];
     }
@@ -180,6 +182,7 @@ public abstract class LUDecompositionBase_CD64
 
         m = a.numRows;
         n = a.numCols;
+        stride = n*2;
 
         LU.set(a);
         for (int i = 0; i < m; i++) {
@@ -196,9 +199,14 @@ public abstract class LUDecompositionBase_CD64
      */
     @Override
     public boolean isSingular() {
-        // TODO update for complex
+
         for( int i = 0; i < m; i++ ) {
-            if( Math.abs(dataLU[i* n +i]) < UtilEjml.EPS )
+            double real = dataLU[i*stride+i*2];
+            double imaginary = dataLU[i*stride+i*2+1];
+
+            double mag2 = real*real + imaginary*imaginary;
+
+            if( mag2 < UtilEjml.EPS*UtilEjml.EPS )
                 return true;
         }
         return false;
@@ -210,19 +218,27 @@ public abstract class LUDecompositionBase_CD64
      * @return The matrix's determinant.
      */
     @Override
-    public double computeDeterminant() {
-        // TODO update for complex
+    public Complex64F computeDeterminant() {
         if( m != n )
             throw new IllegalArgumentException("Must be a square matrix.");
 
-        double ret = pivsign;
+        double realRet = pivsign;
+        double realImg = 0;
 
-        int total = m*n;
-        for( int i = 0; i < total; i += n + 1 ) {
-            ret *= dataLU[i];
+        int total = m*stride;
+        for( int i = 0; i < total; i += stride + 2 ) {
+            double real = dataLU[i];
+            double imaginary = dataLU[i+1];
+
+            double r = realRet*real - realImg*imaginary;
+            double t = realRet*imaginary + realImg*real;
+
+            realRet = r;
+            realImg = t;
         }
 
-        return ret;
+        det.set(realRet,realImg);
+        return det;
     }
 
     public double quality() {
@@ -234,28 +250,49 @@ public abstract class LUDecompositionBase_CD64
      */
     public void _solveVectorInternal( double []vv )
     {
-        // TODO update for complex
         // Solve L*Y = B
+        solveL(vv);
+
+        // Solve U*X = Y;
+        CTriangularSolver.solveU(dataLU, vv, n);
+    }
+
+    /**
+     * Solve the using the lower triangular matrix in LU.  Diagonal elements are assumed
+     * to be 1
+     */
+    protected void solveL(double[] vv) {
+
         int ii = 0;
 
         for( int i = 0; i < n; i++ ) {
             int ip = indx[i];
-            double sum = vv[ip];
-            vv[ip] = vv[i];
+            double sumReal = vv[ip*2];
+            double sumImg = vv[ip*2+1];
+
+            vv[ip*2] = vv[i*2];
+            vv[ip*2+1] = vv[i*2+1];
+
             if( ii != 0 ) {
 //                for( int j = ii-1; j < i; j++ )
 //                    sum -= dataLU[i* n +j]*vv[j];
-                int index = i*n + ii-1;
-                for( int j = ii-1; j < i; j++ )
-                    sum -= dataLU[index++]*vv[j];
-            } else if( sum != 0.0 ) {
+                int index = i*stride + (ii-1)*2;
+                for( int j = ii-1; j < i; j++ ){
+                    double luReal = dataLU[index++];
+                    double luImg  = dataLU[index++];
+
+                    double vvReal = vv[j*2];
+                    double vvImg  = vv[j*2+1];
+
+                    sumReal -= luReal*vvReal - luImg*vvImg;
+                    sumImg  -= luReal*vvImg  + luImg*vvReal;
+                }
+            } else if( sumReal*sumReal + sumImg*sumImg != 0.0 ) {
                 ii=i+1;
             }
-            vv[i] = sum;
+            vv[i*2] = sumReal;
+            vv[i*2+1] = sumImg;
         }
-
-        // Solve U*X = Y;
-        CTriangularSolver.solveU(dataLU, vv, n);
     }
 
     public double[] _getVV() {

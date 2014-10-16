@@ -18,16 +18,39 @@
 
 package org.ejml.alg.dense.decompose;
 
+import org.ejml.data.CDenseMatrix64F;
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import java.util.Random;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 public class TestCTriangularSolver {
+
+    Random rand = new Random(234);
+
     @Test
     public void solveU() {
-        fail("Implement");
+        CDenseMatrix64F U = CRandomMatrices.createRandom(3, 3, -1 ,1 ,rand);
+        for( int i = 0; i < U.numRows; i++ ) {
+            for( int j = 0; j < i; j++ ) {
+                U.set(i,j,0,0);
+            }
+        }
+
+        CDenseMatrix64F X = CRandomMatrices.createRandom(3, 1, -1 ,1 ,rand);
+        CDenseMatrix64F B = new CDenseMatrix64F(3,1);
+
+        CCommonOps.mult(U, X, B);
+
+        CTriangularSolver.solveU(U.data,B.data,3);
+
+        assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
     }
 }

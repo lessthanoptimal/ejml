@@ -343,10 +343,9 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      */
     public void set(int numRows, int numCols, boolean rowMajor, double ...data)
     {
+        reshape(numRows,numCols);
         int length = numRows*numCols;
 
-        if( numRows != this.numRows || numCols != this.numCols)
-            throw new IllegalArgumentException("Unexpected matrix shape.");
         if( length > this.data.length )
             throw new IllegalArgumentException("The length of this matrix's data array is too small.");
 

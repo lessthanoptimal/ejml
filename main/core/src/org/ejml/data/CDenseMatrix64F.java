@@ -28,6 +28,15 @@ import org.ejml.ops.MatrixIO;
  */
 public class CDenseMatrix64F extends CD1Matrix64F {
 
+    public CDenseMatrix64F(int numRows, int numCols, boolean rowMajor, double... data) {
+        this.data = new double[ numRows * numCols * 2 ];
+
+        this.numRows = numRows;
+        this.numCols = numCols;
+
+        set(numRows,numCols, rowMajor, data);
+    }
+
     /**
      * Creates a new {@link org.ejml.data.CDenseMatrix64F} which is a copy of the passed in matrix.
      * @param original Matrix which is to be copied
@@ -129,5 +138,32 @@ public class CDenseMatrix64F extends CD1Matrix64F {
      */
     public int getRowStride() {
         return numCols*2;
+    }
+
+    /**
+     * Sets this matrix equal to the matrix encoded in the array.
+     *
+     * @param numRows The number of rows.
+     * @param numCols The number of columns.
+     * @param rowMajor If the array is encoded in a row-major or a column-major format.
+     * @param data The formatted 1D array. Not modified.
+     */
+    public void set(int numRows, int numCols, boolean rowMajor, double ...data)
+    {
+        reshape(numRows,numCols);
+        int length = numRows*numCols*2;
+
+        if( rowMajor ) {
+            System.arraycopy(data,0,this.data,0,length);
+        } else {
+            int index = 0;
+            int stride = numRows*2;
+            for( int i = 0; i < numRows; i++ ) {
+                for( int j = 0; j < numCols; j++ ) {
+                    this.data[index++] = data[j*stride+i*2];
+                    this.data[index++] = data[j*stride+i*2+1];
+                }
+            }
+        }
     }
 }

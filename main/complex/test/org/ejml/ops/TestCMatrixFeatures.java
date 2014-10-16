@@ -33,6 +33,30 @@ public class TestCMatrixFeatures {
     Random rand = new Random(234);
 
     @Test
+    public void hasUncountable() {
+        CDenseMatrix64F a = new CDenseMatrix64F(4,4);
+
+        // check a negative case first
+        assertFalse(CMatrixFeatures.hasUncountable(a));
+
+        // check two positve cases with different types of uncountables
+        a.set(2,2,Double.NaN,0);
+        assertTrue(CMatrixFeatures.hasUncountable(a));
+
+        a.set(2,2,Double.POSITIVE_INFINITY,0);
+        assertTrue(CMatrixFeatures.hasUncountable(a));
+    }
+
+    @Test
+    public void hasNaN() {
+        CDenseMatrix64F m = new CDenseMatrix64F(3,3);
+        assertFalse(CMatrixFeatures.hasNaN(m));
+
+        m.set(1,2,-Double.NaN,0);
+        assertTrue(CMatrixFeatures.hasNaN(m));
+    }
+
+    @Test
     public void isEquals() {
         CDenseMatrix64F m = CRandomMatrices.createRandom(3,4,-1,1,rand);
         CDenseMatrix64F n = m.copy();

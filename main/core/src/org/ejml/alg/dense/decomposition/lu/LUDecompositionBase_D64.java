@@ -20,6 +20,7 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.CommonOps;
@@ -53,6 +54,8 @@ public abstract class LUDecompositionBase_D64
 
     // used by determinant
     protected double pivsign;
+
+    Complex64F det = new Complex64F();
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
@@ -188,7 +191,7 @@ public abstract class LUDecompositionBase_D64
      * @return The matrix's determinant.
      */
     @Override
-    public double computeDeterminant() {
+    public Complex64F computeDeterminant() {
         if( m != n )
             throw new IllegalArgumentException("Must be a square matrix.");
 
@@ -199,7 +202,10 @@ public abstract class LUDecompositionBase_D64
             ret *= dataLU[i];
         }
 
-        return ret;
+        det.real = ret;
+        det.imaginary = 0;
+
+        return det;
     }
 
     public double quality() {

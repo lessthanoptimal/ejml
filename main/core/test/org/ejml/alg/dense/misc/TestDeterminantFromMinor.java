@@ -91,7 +91,7 @@ public class TestDeterminantFromMinor {
             LUDecompositionAlt_D64 lu = new LUDecompositionAlt_D64();
             lu.decompose(A);
 
-            double luVal = lu.computeDeterminant();
+            double luVal = lu.computeDeterminant().real;
 
             DeterminantFromMinor minor = new DeterminantFromMinor(width);
             double minorVal = minor.compute(new DenseMatrix64F(width,width, true, A.data));

@@ -99,7 +99,7 @@ public class BenchmarkDeterminant {
 
         for( int i = 0; i < numTrials; i++ ) {
             alg.decompose(mat);
-            total += alg.computeDeterminant();
+            total += alg.computeDeterminant().real;
         }
 
 //        System.out.println("   total = "+total);

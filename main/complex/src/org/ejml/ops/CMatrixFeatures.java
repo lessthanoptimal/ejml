@@ -28,6 +28,42 @@ import org.ejml.data.CD1Matrix64F;
  * @author Peter Abeles
  */
 public class CMatrixFeatures {
+
+    /**
+     * Checks to see if any element in the matrix is NaN.
+     *
+     * @param m A matrix. Not modified.
+     * @return True if any element in the matrix is NaN.
+     */
+    public static boolean hasNaN( CD1Matrix64F m )
+    {
+        int length = m.getDataLength();
+
+        for( int i = 0; i < length; i++ ) {
+            if( Double.isNaN(m.data[i]))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks to see if any element in the matrix is NaN of Infinite.
+     *
+     * @param m A matrix. Not modified.
+     * @return True if any element in the matrix is NaN of Infinite.
+     */
+    public static boolean hasUncountable( CD1Matrix64F m )
+    {
+        int length = m.getDataLength();
+
+        for( int i = 0; i < length; i++ ) {
+            double a = m.data[i];
+            if( Double.isNaN(a) || Double.isInfinite(a))
+                return true;
+        }
+        return false;
+    }
+
     /**
      * <p>
      * Checks to see if each element in the two matrices are equal:

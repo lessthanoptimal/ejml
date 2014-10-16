@@ -18,9 +18,9 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.misc.DeterminantFromMinor;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.junit.Test;
 
@@ -53,7 +53,7 @@ public class TestLUDecompositionBase_D64 {
 
         LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
         alg.decompose(A);
-        double luVal = alg.computeDeterminant();
+        double luVal = alg.computeDeterminant().real;
 
         assertEquals(minorVal,luVal,1e-6);
     }
@@ -63,21 +63,40 @@ public class TestLUDecompositionBase_D64 {
         int width = 10;
         DenseMatrix64F LU = RandomMatrices.createRandom(width,width,rand);
 
-        double a[] = new double[]{1,2,3,4,5,6,7,8,9,10};
-        double b[] = new double[]{1,2,3,4,5,6,7,8,9,10};
-        for( int i = 0; i < width; i++ ) LU.set(i,i,1);
+        DenseMatrix64F L = new DenseMatrix64F(width,width);
+        DenseMatrix64F U = new DenseMatrix64F(width,width);
 
-        TriangularSolver.solveL(LU.data,a,width);
-        TriangularSolver.solveU(LU.data,a,width);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < width; j++) {
+                double real = LU.get(i, j);
+                if( j <= i ) {
+                    if( j == i )
+                        L.set(i,j,1);
+                    else
+                        L.set(i,j,real);
+                }
+                if( i <= j ) {
+                    U.set(i,j,real);
+                }
+            }
+        }
+
+        DenseMatrix64F x = RandomMatrices.createRandom(width, 1, -1, 1, rand);
+        DenseMatrix64F tmp = new DenseMatrix64F(width,1);
+        DenseMatrix64F b = new DenseMatrix64F(width,1);
+
+        CommonOps.mult(U, x, tmp);
+        CommonOps.mult(L,tmp,b);
+
 
         DebugDecompose alg = new DebugDecompose(width);
         for( int i = 0; i < width; i++ ) alg.getIndx()[i] = i;
         alg.setLU(LU);
-        
-        alg._solveVectorInternal(b);
+
+        alg._solveVectorInternal(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(a[i],b[i],1e-6);
+            assertEquals(x.data[i],b.data[i],1e-6);
         }
     }
 

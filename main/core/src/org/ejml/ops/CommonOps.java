@@ -638,7 +638,7 @@ public class CommonOps {
 
             if( !alg.decompose(mat) )
                 return 0.0;
-            return alg.computeDeterminant();
+            return alg.computeDeterminant().real;
         }
     }
 

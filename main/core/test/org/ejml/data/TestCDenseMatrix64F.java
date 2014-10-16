@@ -18,7 +18,12 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
 import org.junit.Test;
+
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +32,9 @@ import static org.junit.Assert.assertTrue;
  * @author Peter Abeles
  */
 public class TestCDenseMatrix64F {
+
+    Random rand = new Random(234);
+
     @Test
     public void constructor_cmatrix() {
         CDenseMatrix64F a = new CDenseMatrix64F(3,4);
@@ -166,5 +174,22 @@ public class TestCDenseMatrix64F {
     public void getRowStride() {
         CDenseMatrix64F a = new CDenseMatrix64F(3,4);
         assertEquals(4*2,a.getRowStride());
+    }
+
+    @Test
+    public void set_array() {
+        CDenseMatrix64F A = CRandomMatrices.createRandom(3,4,rand);
+
+        CDenseMatrix64F B = new CDenseMatrix64F(1,1);
+        B.set(3,4,true,A.data);
+
+        assertTrue(CMatrixFeatures.isEquals(A,B));
+
+        CDenseMatrix64F A_tran = new CDenseMatrix64F(4,3);
+        CCommonOps.transpose(A,A_tran);
+
+        B.set(3,4,false,A_tran.data);
+
+        assertTrue(CMatrixFeatures.isEquals(A,B));
     }
 }

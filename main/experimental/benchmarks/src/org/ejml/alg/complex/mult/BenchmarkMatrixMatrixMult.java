@@ -52,7 +52,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CCommonOps.multiply(matA, matB, matResult);
+            CCommonOps.mult(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();

@@ -18,6 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
+import org.ejml.data.Complex64F;
 import org.ejml.data.Matrix;
 
 
@@ -105,5 +106,5 @@ public interface LUDecomposition <T extends Matrix>
      *
      * @return The determinant.
      */
-    public double computeDeterminant();
+    public Complex64F computeDeterminant();
 }

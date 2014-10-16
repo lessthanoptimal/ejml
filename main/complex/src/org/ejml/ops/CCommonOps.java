@@ -210,7 +210,7 @@ public class CCommonOps {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multiply( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void mult(CDenseMatrix64F a, CDenseMatrix64F b, CDenseMatrix64F c)
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             CMatrixMatrixMult.mult_reorder(a, b, c);

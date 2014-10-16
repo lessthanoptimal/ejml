@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  */
 public class TestDenseMatrix64F {
 
-	Random rand = new Random(23432);
+    Random rand = new Random(23432);
 
     @Test
     public void testGeneric() {
@@ -164,28 +164,28 @@ public class TestDenseMatrix64F {
         EjmlUnitTests.assertEquals(mat,mat2,1e-10);
     }
 
-	@Test
-	public void set_ColumnMajor() {
-		DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
+    @Test
+    public void set_ColumnMajor() {
+        DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
 
-		DenseMatrix64F Atran = A.copy();
-		CommonOps.transpose(Atran);
-		DenseMatrix64F Afound = new DenseMatrix64F(3,5);
-		Afound.set(3,5, false, Atran.data);
+        DenseMatrix64F Atran = A.copy();
+        CommonOps.transpose(Atran);
+        DenseMatrix64F Afound = new DenseMatrix64F(3,5);
+        Afound.set(3,5, false, Atran.data);
 
-		assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
-	}
+        assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
+    }
 
-	@Test
-	public void set_RowMajor() {
-		DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
+    @Test
+    public void set_RowMajor() {
+        DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
 
-		DenseMatrix64F Afound = new DenseMatrix64F(3,5);
-		Afound.set(3,5, true, A.data);
+        DenseMatrix64F Afound = new DenseMatrix64F(3,5);
+        Afound.set(3,5, true, A.data);
 
-		assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
-		assertTrue(A.data != Afound.data);
-	}
+        assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
+        assertTrue(A.data != Afound.data);
+    }
 
     @Test
     public void testset_Matrix() {
