@@ -25,6 +25,8 @@ import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -201,6 +203,40 @@ public class TestCCommonOps {
                 assertEquals(expected.imaginary,found.imaginary,1e-8);
             }
         }
+    }
+
+    /**
+     * Make sure the multiplication methods here have the same behavior as the ones in MatrixMatrixMult.
+     */
+    @Test
+    public void checkAllMatrixMult() {
+        int numChecked = 0;
+        Method methods[] = CCommonOps.class.getMethods();
+
+        for (Method method : methods) {
+            String name = method.getName();
+
+            if( !name.startsWith("mult"))
+                continue;
+
+            //            System.out.println(name);
+
+            Class[] params = method.getParameterTypes();
+
+            boolean add = name.contains("Add");
+            boolean hasAlpha = double.class == params[0];
+
+            try {
+                TestCMatrixMatrixMult.check(method, add, hasAlpha);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            numChecked++;
+        }
+
+        assertEquals(4,numChecked);
     }
 
     @Test

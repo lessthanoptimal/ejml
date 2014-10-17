@@ -257,6 +257,75 @@ public class CCommonOps {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = &alpha; * a * b <br>
+     * <br>
+     * c<sub>ij</sub> = &alpha; &sum;<sub>k=1:n</sub> { * a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param realAlpha real component of scaling factor.
+     * @param imgAlpha imaginary component of scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void mult( double realAlpha , double imgAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
+            CMatrixMatrixMult.mult_reorder(realAlpha,imgAlpha,a,b,c);
+        } else {
+            CMatrixMatrixMult.mult_small(realAlpha,imgAlpha,a,b,c);
+        }
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a * b<br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
+            CMatrixMatrixMult.multAdd_reorder(a, b, c);
+        } else {
+            CMatrixMatrixMult.multAdd_small(a,b,c);
+        }
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a * b<br>
+     * c<sub>ij</sub> = c<sub>ij</sub> +  &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param realAlpha real component of scaling factor.
+     * @param imgAlpha imaginary component of scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( double realAlpha , double imgAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
+            CMatrixMatrixMult.multAdd_reorder(realAlpha,imgAlpha,a,b,c);
+        } else {
+            CMatrixMatrixMult.multAdd_small(realAlpha,imgAlpha,a,b,c);
+        }
+    }
+
+
+
+    /**
      * <p>Performs an "in-place" transpose.</p>
      *
      * <p>

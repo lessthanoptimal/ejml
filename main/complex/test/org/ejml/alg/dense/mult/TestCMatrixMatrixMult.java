@@ -20,13 +20,17 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
+import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
 import org.ejml.ops.ComplexMath64F;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -34,40 +38,87 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestCMatrixMatrixMult {
 
-    Random rand = new Random(234);
-
     @Test
-    public void mult_reorder() {
-        for (int i = 1; i < 10; i++) {
-            for (int j = 1; j < 10; j++) {
-                CDenseMatrix64F A = CRandomMatrices.createRandom(i,j,-1,1,rand);
-                for (int k = 1; k < 10; k++) {
-                    CDenseMatrix64F B = CRandomMatrices.createRandom(j, k, -1, 1, rand);
-                    CDenseMatrix64F found = CRandomMatrices.createRandom(i, k, -1, 1, rand);
-                    CDenseMatrix64F expected = multiply(A, B);
+    public void generalChecks() {
 
-                    CMatrixMatrixMult.mult_reorder(A, B, found);
+        int numChecked = 0;
+        Method methods[] = CMatrixMatrixMult.class.getMethods();
 
-                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected, found, 1e-8));
+        for( Method method : methods ) {
+            String name = method.getName();
+
+            // only look at function which perform matrix multiplications
+            if (!name.contains("mult"))
+                continue;
+
+//            System.out.println(name);
+
+            Class[] params = method.getParameterTypes();
+
+            boolean add = name.contains("Add");
+            boolean hasAlpha = double.class == params[0];
+
+            try {
+                check(method,add,hasAlpha);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            numChecked++;
+        }
+
+        assertEquals(8,numChecked);
+    }
+
+    public static void check( Method method , boolean isAdd , boolean hasAlpha ) throws InvocationTargetException, IllegalAccessException {
+        Random rand = new Random(234);
+
+        double realAlpha = 2.3;
+        double imgAlpha = 1.3;
+
+        for (int i = 1; i <= 4; i++) {
+            for (int j = 1; j <= 4; j++) {
+                for (int k = 1; k <= 4; k++) {
+                    CDenseMatrix64F A = CRandomMatrices.createRandom(i,j,-1,1,rand);
+                    CDenseMatrix64F B = CRandomMatrices.createRandom(j,k,-1,1,rand);
+                    CDenseMatrix64F C = CRandomMatrices.createRandom(i,k,-1,1,rand);
+
+                    CDenseMatrix64F AB = multiply(A,B);
+                    CDenseMatrix64F expected = new CDenseMatrix64F(i,k);
+
+                    if( hasAlpha ) {
+                        CCommonOps.elementMultiply(AB,realAlpha,imgAlpha,AB);
+                    }
+
+                    if( isAdd ) {
+                        CCommonOps.add(C,AB,expected);
+                    } else {
+                        expected.set(AB);
+                    }
+
+                    invoke(method,realAlpha,imgAlpha,A,B,C);
+
+                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected,C,1e-8));
                 }
             }
         }
     }
 
-    @Test
-    public void mult_small() {
-        for (int i = 1; i < 10; i++) {
-            for (int j = 1; j < 10; j++) {
-                CDenseMatrix64F A = CRandomMatrices.createRandom(i,j,-1,1,rand);
-                for (int k = 1; k < 10; k++) {
-                    CDenseMatrix64F B = CRandomMatrices.createRandom(j, k, -1, 1, rand);
-                    CDenseMatrix64F found = CRandomMatrices.createRandom(i, k, -1, 1, rand);
-                    CDenseMatrix64F expected = multiply(A, B);
-
-                    CMatrixMatrixMult.mult_small(A, B, found);
-
-                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected, found, 1e-8));
-                }
+    public static void invoke(Method func,
+                              double realAlpha, double imgAlpha,
+                              CDenseMatrix64F a, CDenseMatrix64F b, CDenseMatrix64F c)
+            throws IllegalAccessException, InvocationTargetException {
+        if( func.getParameterTypes().length == 3 ) {
+            func.invoke(null, a, b, c);
+        } else {
+            if( func.getParameterTypes()[0] == double.class ) {
+                if( func.getParameterTypes().length == 5 )
+                    func.invoke(null,realAlpha, imgAlpha, a, b, c);
+                else
+                    func.invoke(null,realAlpha, imgAlpha, a, b, c,null);
+            } else {
+                func.invoke(null, a, b, c,null);
             }
         }
     }
