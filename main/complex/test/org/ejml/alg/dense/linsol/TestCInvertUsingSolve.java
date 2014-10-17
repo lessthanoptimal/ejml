@@ -18,18 +18,18 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -45,27 +45,19 @@ public class TestCInvertUsingSolve {
      */
     @Test
     public void invert() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DenseMatrix64F A_inv = RandomMatrices.createRandom(3,3,rand);
+        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
+        CDenseMatrix64F A_inv = CRandomMatrices.createRandom(3, 3, rand);
 
-        LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
-        LinearSolver solver = new LinearSolverLu(decomp);
+        LUDecompositionAlt_CD64 decomp = new LUDecompositionAlt_CD64();
+        LinearSolver<CDenseMatrix64F> solver = new LinearSolverLu_CD64(decomp);
 
         solver.setA(A);
-        InvertUsingSolve.invert(solver,A,A_inv);
+        CInvertUsingSolve.invert(solver,A,A_inv);
 
-        DenseMatrix64F I = RandomMatrices.createRandom(3,3,rand);
+        CDenseMatrix64F I = CRandomMatrices.createRandom(3,3,rand);
 
-        CommonOps.mult(A,A_inv,I);
+        CCommonOps.mult(A, A_inv, I);
 
-        for( int i = 0; i < I.numRows; i++ ) {
-            for( int j = 0; j < I.numCols; j++ ) {
-                if( i == j )
-                    assertEquals(1,I.get(i,j),tol);
-                else
-                    assertEquals(0,I.get(i,j),tol);
-            }
-        }
-        fail("Update");
+        assertTrue(CMatrixFeatures.isIdentity(I,tol));
     }
 }

@@ -22,7 +22,7 @@ import org.ejml.EjmlParameters;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
 import org.ejml.alg.dense.misc.*;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixMultProduct;
@@ -672,7 +672,7 @@ public class CommonOps {
             }
         } else {
             LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
-            LinearSolverLu solver = new LinearSolverLu(alg);
+            LinearSolverLu_D64 solver = new LinearSolverLu_D64(alg);
             if( solver.setA(mat) ) {
                 solver.invert(mat);
             } else {
@@ -718,7 +718,7 @@ public class CommonOps {
             }
         } else {
             LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
-            LinearSolverLu solver = new LinearSolverLu(alg);
+            LinearSolverLu_D64 solver = new LinearSolverLu_D64(alg);
 
             if( solver.modifiesA() )
                 mat = mat.copy();

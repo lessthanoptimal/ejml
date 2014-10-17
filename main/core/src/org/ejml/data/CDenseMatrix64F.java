@@ -22,7 +22,8 @@ import org.ejml.ops.MatrixIO;
 
 /**
  * Dense matrix for complex numbers.  Internally it stores its data in a single row-major array with the real
- * and imaginary components interlaces.  The total number of elements in the array will be numRows*numColumns*2.
+ * and imaginary components interlaces, in that order.  The total number of elements in the array will be
+ * numRows*numColumns*2.
  *
  * @author Peter Abeles
  */
@@ -167,6 +168,9 @@ public class CDenseMatrix64F extends CD1Matrix64F {
     {
         reshape(numRows,numCols);
         int length = numRows*numCols*2;
+
+        if( length > data.length )
+            throw new RuntimeException("Passed in array not long enough");
 
         if( rowMajor ) {
             System.arraycopy(data,0,this.data,0,length);

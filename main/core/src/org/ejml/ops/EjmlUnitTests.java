@@ -198,15 +198,15 @@ public class EjmlUnitTests {
         for( int i = 0; i < A.getNumRows(); i++ ){
             for( int j = 0; j < A.getNumCols(); j++ ) {
                 A.get(i, j, a);
-                B.get(i,j,b);
+                B.get(i, j, b);
 
-                assertTrue(!Double.isNaN(a.real) && !Double.isNaN(b.real) ,"At ("+i+","+j+") A = "+a.real+" B = "+b.real);
-                assertTrue(!Double.isInfinite(a.real) && !Double.isInfinite(b.real) ,"At ("+i+","+j+") A = "+a.real+" B = "+b.real);
-                assertTrue(Math.abs( a.real-b.real) <= tol,"At ("+i+","+j+") A = "+a.real+" B = "+b.real);
+                assertTrue(!Double.isNaN(a.real) && !Double.isNaN(b.real) ,"Real At ("+i+","+j+") A = "+a.real+" B = "+b.real);
+                assertTrue(!Double.isInfinite(a.real) && !Double.isInfinite(b.real) ,"Real At ("+i+","+j+") A = "+a.real+" B = "+b.real);
+                assertTrue(Math.abs( a.real-b.real) <= tol,"Real At ("+i+","+j+") A = "+a.real+" B = "+b.real);
 
-                assertTrue(!Double.isNaN(a.imaginary) && !Double.isNaN(b.imaginary) ,"At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
-                assertTrue(!Double.isInfinite(a.imaginary) && !Double.isInfinite(b.imaginary) ,"At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
-                assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
+                assertTrue(!Double.isNaN(a.imaginary) && !Double.isNaN(b.imaginary) ,"Img At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
+                assertTrue(!Double.isInfinite(a.imaginary) && !Double.isInfinite(b.imaginary) ,"Img At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
+                assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"Img At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
 
             }
         }

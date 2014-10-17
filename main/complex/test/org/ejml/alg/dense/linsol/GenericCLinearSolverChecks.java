@@ -81,8 +81,6 @@ public abstract class GenericCLinearSolverChecks {
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
-
-        fail("Update for complex");
     }
 
     /**
@@ -100,8 +98,6 @@ public abstract class GenericCLinearSolverChecks {
         boolean modified = !CMatrixFeatures.isEquals(A_orig,A);
 
         assertTrue(modified == solver.modifiesA());
-
-        fail("Update for complex");
     }
 
     /**
@@ -124,8 +120,6 @@ public abstract class GenericCLinearSolverChecks {
         boolean modified = !CMatrixFeatures.isEquals(B_orig,B);
 
         assertTrue(modified == solver.modifiesB());
-
-        fail("Update for complex");
     }
 
     /**
@@ -133,8 +127,8 @@ public abstract class GenericCLinearSolverChecks {
      */
     @Test
     public void checkQuality() {
-        CDenseMatrix64F A_good = CCommonOps.diag(4,3,2,1);
-        CDenseMatrix64F A_bad = CCommonOps.diag(4,3,2,0.1);
+        CDenseMatrix64F A_good = CCommonOps.diag(4,0,3,0,2,0,1,0);
+        CDenseMatrix64F A_bad = CCommonOps.diag(4,0,3,0,2,0,0.1,0);
 
         LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A_good);
 
@@ -153,8 +147,6 @@ public abstract class GenericCLinearSolverChecks {
         assertTrue(q_bad < q_good);
 
         assertEquals(q_bad*10.0,q_good,1e-8);
-
-        fail("Update for complex");
     }
 
     /**
@@ -162,7 +154,7 @@ public abstract class GenericCLinearSolverChecks {
      */
     @Test
     public void checkQuality_scale() {
-        CDenseMatrix64F A = CCommonOps.diag(4,3,2,1);
+        CDenseMatrix64F A = CCommonOps.diag(4,0,3,0,2,0,10,0);
         CDenseMatrix64F Asmall = A.copy();
         CCommonOps.elementMultiply(Asmall, 0.01, 0, Asmall);
 
@@ -181,8 +173,6 @@ public abstract class GenericCLinearSolverChecks {
         double q_small = solver.quality();
 
         assertEquals(q_small,q,1e-8);
-
-        fail("Update for complex");
     }
 
     /**
@@ -190,20 +180,20 @@ public abstract class GenericCLinearSolverChecks {
      */
     @Test
     public void square_trivial() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
-        CDenseMatrix64F b = new CDenseMatrix64F(3,1, true, 18, 21.5, 4.9000);
+        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
+        CDenseMatrix64F b = new CDenseMatrix64F(3,1, true, 18,0, 21.5,0, 4.9000,0);
         CDenseMatrix64F x = CRandomMatrices.createRandom(3,1,rand);
 
         LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
+        CDenseMatrix64F found = new CDenseMatrix64F(3,1);
+        CCommonOps.mult(A,x,found);
 
-        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1, 2, 3);
+        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1,0, 2,0, 3,0);
 
         EjmlUnitTests.assertEquals(x_expected,x,1e-8);
-
-        fail("Update for complex");
     }
 
     /**
@@ -213,20 +203,17 @@ public abstract class GenericCLinearSolverChecks {
      */
     @Test
     public void square_pivot() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        CDenseMatrix64F b = new CDenseMatrix64F(3,1, true, 8, 33, 15.5);
+        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
+        CDenseMatrix64F b = new CDenseMatrix64F(3,1, true, 8,0, 33,0, 15.5,0);
         CDenseMatrix64F x = CRandomMatrices.createRandom(3,1,rand);
 
         LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
-
-        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1, 2, 3);
+        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1,0, 2,0, 3,0);
 
         EjmlUnitTests.assertEquals(x_expected,x,1e-8);
-
-        fail("Update for complex");
     }
 
     @Test
@@ -235,8 +222,6 @@ public abstract class GenericCLinearSolverChecks {
 
         LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
-
-        fail("Update for complex");
     }
 
     /**
@@ -265,11 +250,12 @@ public abstract class GenericCLinearSolverChecks {
 
         solver.solve(B,x);
 
-//        assertEquals(a,x.get(0,0),tol);
-//        assertEquals(b,x.get(1,0),tol);
-//        assertEquals(c,x.get(2,0),tol);
-
-        fail("Update for complex");
+        assertEquals(a,x.getReal(0, 0),tol);
+        assertEquals(0,x.getImaginary(0, 0),tol);
+        assertEquals(b,x.getReal(1, 0),tol);
+        assertEquals(0,x.getImaginary(1, 0),tol);
+        assertEquals(c,x.getReal(2, 0),tol);
+        assertEquals(0,x.getImaginary(2, 0),tol);
     }
 
     private CDenseMatrix64F createPolyA( double t[] , int dof ) {
@@ -279,38 +265,30 @@ public abstract class GenericCLinearSolverChecks {
             double val = t[j];
 
             for( int i = 0; i < dof; i++ ) {
-//                A.set(j,i,Math.pow(val,i));
+                A.set(j,i,Math.pow(val,i),0);
             }
         }
-        fail("update");
 
         return A;
     }
 
     @Test
     public void inverse() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        CDenseMatrix64F A_inv = CRandomMatrices.createRandom(3,3,rand);
+        for (int i = 2; i < 10; i++) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,rand);
+            CDenseMatrix64F A_inv = CRandomMatrices.createRandom(i,i,rand);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+            LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
 
-        solver.setA(A);
-        solver.invert(A_inv);
+            solver.setA(A);
+            solver.invert(A_inv);
 
-        CDenseMatrix64F I = CRandomMatrices.createRandom(3,3,rand);
+            CDenseMatrix64F I = CRandomMatrices.createRandom(i,i,rand);
 
-        CCommonOps.mult(A, A_inv, I);
+            CCommonOps.mult(A, A_inv, I);
 
-//        for( int i = 0; i < I.numRows; i++ ) {
-//            for( int j = 0; j < I.numCols; j++ ) {
-//                if( i == j )
-//                    assertEquals(1,I.get(i,j),tol);
-//                else
-//                    assertEquals(0,I.get(i,j),tol);
-//            }
-//        }
-
-        fail("Update for complex");
+            assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+        }
     }
 
     protected LinearSolver<CDenseMatrix64F>  createSafeSolver( CDenseMatrix64F A ) {

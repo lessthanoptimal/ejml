@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps;
@@ -48,7 +48,7 @@ public class TestInvertUsingSolve {
         DenseMatrix64F A_inv = RandomMatrices.createRandom(3,3,rand);
 
         LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
-        LinearSolver solver = new LinearSolverLu(decomp);
+        LinearSolver solver = new LinearSolverLu_D64(decomp);
 
         solver.setA(A);
         InvertUsingSolve.invert(solver,A,A_inv);

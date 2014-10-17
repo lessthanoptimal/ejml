@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
 import org.ejml.alg.dense.mult.CheckMatrixMultShape;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.data.BlockMatrix64F;
@@ -353,7 +353,7 @@ public class TestCommonOps {
 
         assertTrue(CommonOps.solve(a,b,c));
         LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
-        LinearSolverLu solver = new LinearSolverLu(alg);
+        LinearSolverLu_D64 solver = new LinearSolverLu_D64(alg);
         assertTrue(solver.setA(a));
 
         solver.solve(b,c_exp);
@@ -412,7 +412,7 @@ public class TestCommonOps {
             DenseMatrix64F a = RandomMatrices.createRandom(i,i,rand);
 
             LUDecompositionAlt_D64 lu = new LUDecompositionAlt_D64();
-            LinearSolverLu solver = new LinearSolverLu(lu);
+            LinearSolverLu_D64 solver = new LinearSolverLu_D64(lu);
             assertTrue(solver.setA(a));
 
             DenseMatrix64F a_inv = new DenseMatrix64F(i,i);

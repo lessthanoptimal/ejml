@@ -77,7 +77,6 @@ public class LUDecompositionAlt_CD64 extends LUDecompositionBase_CD64 {
                 dataLU[rowIndex+j*2+1] = LUcolj[i*2+1] -= imgS;
             }
 
-            // todo update from this point down
             // Find pivot and exchange if necessary.
             int p = j;
             double max = mag(LUcolj, p * 2);
@@ -116,7 +115,7 @@ public class LUDecompositionAlt_CD64 extends LUDecompositionBase_CD64 {
 
                 double magLujj = realLujj*realLujj + imgLujj*imgLujj;
 
-                if( realLujj != 0 && imgLujj != 0) {
+                if( realLujj != 0 || imgLujj != 0) {
                     for (int i = j+1; i < m; i++) {
 
                         double realLU = dataLU[i*stride+j*2];

@@ -19,6 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.data.CD1Matrix64F;
+import org.ejml.data.Complex64F;
+import org.ejml.data.ComplexMatrix64F;
 
 /**
  * <p>
@@ -176,6 +178,37 @@ public class CMatrixFeatures {
                 return valA == valB;
             } else {
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks to see if the provided matrix is within tolerance to an identity matrix.
+     *
+     * @param mat Matrix being examined.  Not modified.
+     * @param tol Tolerance.
+     * @return True if it is within tolerance to an identify matrix.
+     */
+    public static boolean isIdentity( ComplexMatrix64F mat , double tol )
+    {
+        // see if the result is an identity matrix
+        Complex64F c = new Complex64F();
+        for( int i = 0; i < mat.getNumRows(); i++ ) {
+            for( int j = 0; j < mat.getNumCols(); j++ ) {
+                mat.get(i,j,c);
+                if( i == j ) {
+                    if( !(Math.abs(c.real-1) <= tol) )
+                        return false;
+                    if( !(Math.abs(c.imaginary) <= tol) )
+                        return false;
+                } else {
+                    if( !(Math.abs(c.real) <= tol) )
+                        return false;
+                    if( !(Math.abs(c.imaginary) <= tol) )
+                        return false;
+                }
             }
         }
 

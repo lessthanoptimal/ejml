@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.RandomMatrices;
@@ -51,7 +51,7 @@ public class TestUnrolledInverseFromMinor {
 
             // first compute inverse by LU
             LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
-            LinearSolverLu solver = new LinearSolverLu(alg);
+            LinearSolverLu_D64 solver = new LinearSolverLu_D64(alg);
 
             assertTrue( solver.setA(A));
             solver.invert(expected);

@@ -27,7 +27,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -265,18 +266,82 @@ public class TestCCommonOps {
     }
 
     @Test
-    public void invert_2() {
-        fail("implement");
+    public void invert_1() {
+        for (int i = 0; i < 10; i++) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,rand);
+            CDenseMatrix64F A_orig = A.copy();
+
+            CDenseMatrix64F I = CRandomMatrices.createRandom(i,i,rand);
+
+            CCommonOps.invert(A);
+            CCommonOps.mult(A_orig,A,I);
+
+            assertTrue(CMatrixFeatures.isIdentity(I, 1e-8));
+        }
+
     }
 
     @Test
-    public void invert_3() {
-        fail("implement");
+    public void invert_2() {
+        for (int i = 0; i < 10; i++) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i, i, rand);
+            CDenseMatrix64F A_orig = A.copy();
+            CDenseMatrix64F A_inv = new CDenseMatrix64F(i, i);
+
+            CDenseMatrix64F I = CRandomMatrices.createRandom(i, i, rand);
+
+            CCommonOps.invert(A, A_inv);
+            CCommonOps.mult(A, A_inv, I);
+
+            assertTrue(CMatrixFeatures.isIdentity(I, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentical(A, A_orig, 0));
+        }
+    }
+
+    @Test
+    public void solve() {
+        // square
+        for (int i = 0; i < 10; i++) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i, i, rand);
+            CDenseMatrix64F B = CRandomMatrices.createRandom(i, 1, rand);
+
+            CDenseMatrix64F A_orig = A.copy();
+            CDenseMatrix64F B_orig = B.copy();
+
+            CDenseMatrix64F X = new CDenseMatrix64F(i, 1);
+
+            CCommonOps.solve(A, B, X);
+
+            CDenseMatrix64F found = new CDenseMatrix64F(i, 1);
+
+            CCommonOps.mult(A, X, found);
+
+            assertTrue(CMatrixFeatures.isIdentical(B, found, 1e-8));
+
+            assertTrue(CMatrixFeatures.isIdentical(A, A_orig, 0));
+            assertTrue(CMatrixFeatures.isIdentical(B, B_orig, 0));
+        }
+
+        // TODO solve rectangular
     }
 
     @Test
     public void det() {
-        fail("implement");
+        CDenseMatrix64F A = new CDenseMatrix64F(3,3,true,
+                0.854634 , 0.445620,  0.082836 , 0.212460 , 0.623783 , 0.037631,
+                0.585408 , 0.768956 , 0.771067 , 0.897763 , 0.125793 , 0.432187,
+                0.303789 , 0.044497 , 0.151182 , 0.034471 , 0.526770 , 0.570333);
+
+        CDenseMatrix64F A_orig = A.copy();
+
+        Complex64F found = CCommonOps.det(A);
+        // from octave
+        Complex64F expected = new Complex64F(-0.40548 , 0.54188);
+
+        assertEquals(expected.real,found.real,1e-3);
+        assertEquals(expected.imaginary,found.imaginary,1e-3);
+
+        assertTrue(CMatrixFeatures.isIdentical(A,A_orig,0));
     }
 
     @Test

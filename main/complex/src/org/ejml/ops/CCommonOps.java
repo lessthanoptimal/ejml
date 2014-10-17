@@ -19,12 +19,15 @@
 package org.ejml.ops;
 
 import org.ejml.EjmlParameters;
+import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
+import org.ejml.alg.dense.linsol.LinearSolverSafe;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
 import org.ejml.alg.dense.misc.CTransposeAlgs;
 import org.ejml.alg.dense.mult.CMatrixMatrixMult;
-import org.ejml.data.CD1Matrix64F;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
-import org.ejml.data.D1Matrix64F;
+import org.ejml.data.*;
+import org.ejml.factory.CLinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Arrays;
 
@@ -92,8 +95,10 @@ public class CCommonOps {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static void stripReal( CD1Matrix64F input , D1Matrix64F output ) {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+    public static DenseMatrix64F stripReal( CD1Matrix64F input , DenseMatrix64F output ) {
+        if( output == null ) {
+            output = new DenseMatrix64F(input.numRows,input.numCols);
+        } else if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
@@ -102,6 +107,7 @@ public class CCommonOps {
         for( int i = 0; i < length; i += 2 ) {
             output.data[i/2] = input.data[i];
         }
+        return output;
     }
 
     /**
@@ -110,8 +116,10 @@ public class CCommonOps {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static void stripImaginary( CD1Matrix64F input , D1Matrix64F output ) {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+    public static DenseMatrix64F stripImaginary( CD1Matrix64F input , DenseMatrix64F output ) {
+        if( output == null ) {
+            output = new DenseMatrix64F(input.numRows,input.numCols);
+        } else if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
@@ -120,6 +128,7 @@ public class CCommonOps {
         for( int i = 1; i < length; i += 2 ) {
             output.data[i/2] = input.data[i];
         }
+        return output;
     }
 
     /**
@@ -294,19 +303,135 @@ public class CCommonOps {
         return output;
     }
 
+    /**
+     * <p>
+     * Performs a matrix inversion operation on the specified matrix and stores the results
+     * in the same matrix.<br>
+     * <br>
+     * a = a<sup>-1<sup>
+     * </p>
+     *
+     * <p>
+     * If the algorithm could not invert the matrix then false is returned.  If it returns true
+     * that just means the algorithm finished.  The results could still be bad
+     * because the matrix is singular or nearly singular.
+     * </p>
+     *
+     * @param A The matrix that is to be inverted.  Results are stored here.  Modified.
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean invert( CDenseMatrix64F A )
+    {
+        LUDecompositionAlt_CD64 alg = new LUDecompositionAlt_CD64();
+        LinearSolverLu_CD64 solver = new LinearSolverLu_CD64(alg);
+        if( solver.setA(A) ) {
+            solver.invert(A);
+        } else {
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * <p>
+     * Performs a matrix inversion operation that does not modify the original
+     * and stores the results in another matrix.  The two matrices must have the
+     * same dimension.<br>
+     * <br>
+     * b = a<sup>-1<sup>
+     * </p>
+     *
+     * <p>
+     * If the algorithm could not invert the matrix then false is returned.  If it returns true
+     * that just means the algorithm finished.  The results could still be bad
+     * because the matrix is singular or nearly singular.
+     * </p>
+     *
+     * <p>
+     * For medium to large matrices there might be a slight performance boost to using
+     * {@link LinearSolverFactory} instead.
+     * </p>
+     *
+     * @param input The matrix that is to be inverted. Not modified.
+     * @param output Where the inverse matrix is stored.  Modified.
+     * @return true if it could invert the matrix false if it could not.
+     */
     public static boolean invert( CDenseMatrix64F input , CDenseMatrix64F output )
     {
-        return false;
+        LUDecompositionAlt_CD64 alg = new LUDecompositionAlt_CD64();
+        LinearSolverLu_CD64 solver = new LinearSolverLu_CD64(alg);
+
+        if( solver.modifiesA() )
+            input = input.copy();
+
+        if( !solver.setA(input))
+            return false;
+        solver.invert(output);
+        return true;
     }
 
-    public static boolean invert( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F x )
+    /**
+     * <p>WARNING: Only supports square systems for now!</p>
+     * <p>
+     * Solves for x in the following equation:<br>
+     * <br>
+     * A*x = b
+     * </p>
+     *
+     * <p>
+     * If the system could not be solved then false is returned.  If it returns true
+     * that just means the algorithm finished operating, but the results could still be bad
+     * because 'A' is singular or nearly singular.
+     * </p>
+     *
+     * <p>
+     * If repeat calls to solve are being made then one should consider using {@link CLinearSolverFactory}
+     * instead.
+     * </p>
+     *
+     * <p>
+     * It is ok for 'b' and 'x' to be the same matrix.
+     * </p>
+     *
+     * @param a A matrix that is m by n. Not modified.
+     * @param b A matrix that is n by k. Not modified.
+     * @param x A matrix that is m by k. Modified.
+     *
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean solve( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F x )
     {
-        return false;
+        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.linear(a.numRows);
+
+        // make sure the inputs 'a' and 'b' are not modified
+        solver = new LinearSolverSafe<CDenseMatrix64F>(solver);
+
+        if( !solver.setA(a) )
+            return false;
+
+        solver.solve(b,x);
+        return true;
     }
 
-    public static boolean det( CDenseMatrix64F input , Complex64F output )
+    /**
+     * Returns the determinant of the matrix.  If the inverse of the matrix is also
+     * needed, then using {@link org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64} directly (or any
+     * similar algorithm) can be more efficient.
+     *
+     * @param mat The matrix whose determinant is to be computed.  Not modified.
+     * @return The determinant.
+     */
+    public static Complex64F det( CDenseMatrix64F mat  )
     {
-        return false;
+        LUDecompositionAlt_CD64 alg = new LUDecompositionAlt_CD64();
+
+        if( alg.inputModified() ) {
+            mat = mat.copy();
+        }
+
+        if( !alg.decompose(mat) )
+            return new Complex64F();
+        return alg.computeDeterminant();
     }
 
     /**

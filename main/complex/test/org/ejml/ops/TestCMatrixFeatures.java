@@ -126,4 +126,28 @@ public class TestCMatrixFeatures {
 
         assertEquals(expected,CMatrixFeatures.isIdentical(A,B,tol));
     }
+
+    @Test
+    public void isIdentity() {
+        CDenseMatrix64F m = CCommonOps.diag(1,0,1,0,1,0);
+
+        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+
+        m.setImaginary(0,0,1e-12);
+        assertTrue(CMatrixFeatures.isIdentity(m, 1e-8));
+        m.setReal(0, 0, 1 + 1e-12);
+        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+
+        assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
+        assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
+
+        m.setImaginary(1,0,1e-12);
+        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+        m.setReal(1,0,1e-12);
+        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+
+        assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
+        assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
+
+    }
 }

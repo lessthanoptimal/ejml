@@ -53,26 +53,27 @@ public abstract class LinearSolverLuBase_CD64 extends CLinearSolverAbstract {
     public void invert(CDenseMatrix64F A_inv) {
         double []vv = decomp._getVV();
         CDenseMatrix64F LU = decomp.getLU();
-        
+
         if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
             throw new IllegalArgumentException("Unexpected matrix dimension");
 
         int n = A.numCols;
 
         double dataInv[] = A_inv.data;
+        int strideAinv = A_inv.getRowStride();
 
         for( int j = 0; j < n; j++ ) {
             // don't need to change inv into an identity matrix before hand
-            Arrays.fill(vv,0,n,0);
+            Arrays.fill(vv,0,n*2,0);
             vv[j*2] = 1;
             vv[j*2+1] = 0;
 
             decomp._solveVectorInternal(vv);
 //            for( int i = 0; i < n; i++ ) dataInv[i* n +j] = vv[i];
-            int index = j;
-            for( int i = 0; i < n; i++ , index += stride) {
-                dataInv[index] = vv[i];
-                dataInv[index+1] = vv[i+1];
+            int index = j*2;
+            for( int i = 0; i < n; i++ , index += strideAinv) {
+                dataInv[index] = vv[i*2];
+                dataInv[index+1] = vv[i*2+1];
             }
         }
     }

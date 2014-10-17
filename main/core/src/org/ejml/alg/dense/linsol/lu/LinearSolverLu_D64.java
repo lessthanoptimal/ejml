@@ -28,15 +28,15 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class LinearSolverLu extends LinearSolverLuBase {
+public class LinearSolverLu_D64 extends LinearSolverLuBase_D64 {
 
     boolean doImprove = false;
 
-    public LinearSolverLu( LUDecompositionBase_D64 decomp ) {
+    public LinearSolverLu_D64(LUDecompositionBase_D64 decomp) {
         super(decomp);
     }
 
-    public LinearSolverLu( LUDecompositionBase_D64 decomp , boolean doImprove ) {
+    public LinearSolverLu_D64(LUDecompositionBase_D64 decomp, boolean doImprove) {
         super(decomp);
         this.doImprove = doImprove;
     }

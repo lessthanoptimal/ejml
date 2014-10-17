@@ -53,30 +53,80 @@ public abstract class GeneralCLuDecompositionChecks {
     }
 
     @Test
+    public void testAllReal()
+    {
+        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
+
+        LUDecomposition<CDenseMatrix64F> alg = create(3,3);
+        assertTrue(alg.decompose(A.copy()));
+
+        assertFalse(alg.isSingular());
+
+        CDenseMatrix64F L = alg.getLower(null);
+        CDenseMatrix64F U = alg.getUpper(null);
+        CDenseMatrix64F P = alg.getPivot(null);
+
+        CDenseMatrix64F P_tran = new CDenseMatrix64F(P.numCols,P.numRows);
+        CDenseMatrix64F PL = new CDenseMatrix64F(P.numRows,P.numCols);
+        CDenseMatrix64F A_found = new CDenseMatrix64F(A.numRows,A.numCols);
+
+        CCommonOps.transpose(P,P_tran);
+        CCommonOps.mult(P_tran, L, PL);
+        CCommonOps.mult(PL, U, A_found);
+
+        assertTrue(CMatrixFeatures.isIdentical(A_found,A,1e-8));
+    }
+
+    @Test
+    public void testDecomposition_square_real()
+    {
+        for( int i = 2; i <= 20; i++ ) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,-1,1,rand);
+
+            for (int j = 1; j < A.getDataLength(); j += 2) {
+                A.data[j] = 0;
+            }
+
+            checkDecomposition(A);
+        }
+    }
+
+    @Test
+    public void testDecomposition_square_imaginary()
+    {
+        for( int i = 2; i <= 20; i++ ) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,-1,1,rand);
+
+            for (int j = 0; j < A.getDataLength(); j += 2) {
+                A.data[j] = 0;
+            }
+
+            checkDecomposition(A);
+        }
+    }
+
+    @Test
     public void testDecomposition_square()
     {
         for( int i = 2; i <= 20; i++ ) {
             CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,-1,1,rand);
 
-            LUDecomposition<CDenseMatrix64F> alg = create(i,i);
-            assertTrue(alg.decompose(A));
-
-            assertFalse(alg.isSingular());
-
-            CDenseMatrix64F L = alg.getLower(null);
-            CDenseMatrix64F U = alg.getUpper(null);
-            CDenseMatrix64F P = alg.getPivot(null);
-
-            CDenseMatrix64F P_tran = new CDenseMatrix64F(P.numCols,P.numRows);
-            CDenseMatrix64F PL = new CDenseMatrix64F(P.numRows,P.numCols);
-            CDenseMatrix64F A_found = new CDenseMatrix64F(A.numRows,A.numCols);
-
-            CCommonOps.transpose(P,P_tran);
-            CCommonOps.mult(P_tran, L, PL);
-            CCommonOps.mult(PL, U, A_found);
-
-            assertTrue(CMatrixFeatures.isIdentical(A_found,A,1e-8));
+            checkDecomposition(A);
         }
+    }
+
+    @Test
+    public void testFat() {
+        CDenseMatrix64F A = CRandomMatrices.createRandom(2,3,-1,1,rand);
+
+        checkDecomposition(A);
+    }
+
+    @Test
+    public void testTall() {
+        CDenseMatrix64F A = CRandomMatrices.createRandom(3,2,rand);
+
+        checkDecomposition(A);
     }
 
     @Test
@@ -141,38 +191,12 @@ public abstract class GeneralCLuDecompositionChecks {
         assertTrue(CMatrixFeatures.isEquals(U_provided,U_ret));
     }
 
-    @Test
-    public void testFat() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(2,3,-1,1,rand);
+    private void checkDecomposition(CDenseMatrix64F a) {
+        LUDecomposition<CDenseMatrix64F> alg = create(a.numRows, a.numCols);
+        assertTrue(alg.decompose(a.copy()));
 
-        LUDecomposition<CDenseMatrix64F> alg = create(2,3);
-
-        assertTrue(alg.decompose(A));
-//        assertFalse(alg.isSingular());
-
-        CDenseMatrix64F L = alg.getLower(null);
-        CDenseMatrix64F U = alg.getUpper(null);
-        CDenseMatrix64F P = alg.getPivot(null);
-
-        CDenseMatrix64F P_tran = new CDenseMatrix64F(P.numCols,P.numRows);
-        CDenseMatrix64F PL = new CDenseMatrix64F(P.numRows,P.numCols);
-        CDenseMatrix64F A_found = new CDenseMatrix64F(A.numRows,A.numCols);
-
-        CCommonOps.transpose(P,P_tran);
-        CCommonOps.mult(P_tran, L, PL);
-        CCommonOps.mult(PL, U, A_found);
-
-        assertTrue(CMatrixFeatures.isIdentical(A_found,A,1e-8));
-    }
-
-    @Test
-    public void testTall() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(3,2,rand);
-
-        LUDecomposition<CDenseMatrix64F> alg = create(3,2);
-
-        assertTrue(alg.decompose(A));
-//        assertFalse(alg.isSingular());
+        if( a.numRows <= a.numCols)
+            assertFalse(alg.isSingular());
 
         CDenseMatrix64F L = alg.getLower(null);
         CDenseMatrix64F U = alg.getUpper(null);
@@ -180,12 +204,12 @@ public abstract class GeneralCLuDecompositionChecks {
 
         CDenseMatrix64F P_tran = new CDenseMatrix64F(P.numCols,P.numRows);
         CDenseMatrix64F PL = new CDenseMatrix64F(P_tran.numRows,L.numCols);
-        CDenseMatrix64F A_found = new CDenseMatrix64F(A.numRows,A.numCols);
+        CDenseMatrix64F A_found = new CDenseMatrix64F(a.numRows, a.numCols);
 
-        CCommonOps.transpose(P,P_tran);
+        CCommonOps.transpose(P, P_tran);
         CCommonOps.mult(P_tran, L, PL);
         CCommonOps.mult(PL, U, A_found);
 
-        assertTrue(CMatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(A_found, a, 1e-8));
     }
 }

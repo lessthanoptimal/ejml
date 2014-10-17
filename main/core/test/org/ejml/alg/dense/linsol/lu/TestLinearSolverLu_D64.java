@@ -27,9 +27,9 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverLu extends GenericLinearSolverChecks {
+public class TestLinearSolverLu_D64 extends GenericLinearSolverChecks {
 
-    public TestLinearSolverLu() {
+    public TestLinearSolverLu_D64() {
         shouldWorkRectangle = false;
         shouldFailSingular = false;
     }
@@ -38,6 +38,6 @@ public class TestLinearSolverLu extends GenericLinearSolverChecks {
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
         LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
 
-        return new LinearSolverLu(decomp);
+        return new LinearSolverLu_D64(decomp);
     }
 }

@@ -25,17 +25,17 @@ import org.ejml.ops.SpecializedOps;
 
 /**
  * To avoid cpu cache issues the order in which the arrays are traversed have been changed.
- * There seems to be no performance benit relative to {@link LinearSolverLu} in this approach
+ * There seems to be no performance benit relative to {@link LinearSolverLu_D64} in this approach
  * and b and x can't be the same instance, which means it has slightly less functionality.
  *
  * @author Peter Abeles
  */
-public class LinearSolverLuKJI extends LinearSolverLuBase {
+public class LinearSolverLuKJI_D64 extends LinearSolverLuBase_D64 {
 
     private double []dataLU;
     private int[] pivot;
 
-    public LinearSolverLuKJI( LUDecompositionBase_D64 decomp ) {
+    public LinearSolverLuKJI_D64(LUDecompositionBase_D64 decomp) {
         super(decomp);
 
     }

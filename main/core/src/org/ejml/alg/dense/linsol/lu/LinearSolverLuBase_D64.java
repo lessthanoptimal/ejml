@@ -26,11 +26,11 @@ import org.ejml.data.DenseMatrix64F;
 /**
  * @author Peter Abeles
  */
-public abstract class LinearSolverLuBase extends LinearSolverAbstract {
+public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract {
 
     protected LUDecompositionBase_D64 decomp;
 
-    public LinearSolverLuBase( LUDecompositionBase_D64 decomp ) {
+    public LinearSolverLuBase_D64(LUDecompositionBase_D64 decomp) {
         this.decomp = decomp;
 
     }
@@ -51,7 +51,7 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
     public void invert(DenseMatrix64F A_inv) {
         double []vv = decomp._getVV();
         DenseMatrix64F LU = decomp.getLU();
-        
+
         if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
             throw new IllegalArgumentException("Unexpected matrix dimension");
 
@@ -91,7 +91,6 @@ public abstract class LinearSolverLuBase extends LinearSolverAbstract {
         final int n = b.numCols;
 
         double []vv = decomp._getVV();
-        DenseMatrix64F LU = decomp.getLU();
 
 //        BigDecimal sdp = new BigDecimal(0);
         for( int k = 0; k < nc; k++ ) {

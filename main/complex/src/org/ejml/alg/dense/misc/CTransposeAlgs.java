@@ -69,9 +69,8 @@ public class CTransposeAlgs {
 
             int end = index + rowStrideTran;
             while( index < end ) {
-                A_tran.data[index] = A.data[ index2 ];
-                A_tran.data[index+1] = A.data[ index2+1 ];
-                index += 2;
+                A_tran.data[index++] = A.data[ index2 ];
+                A_tran.data[index++] = A.data[ index2+1 ];
                 index2 += rowStride;
             }
         }

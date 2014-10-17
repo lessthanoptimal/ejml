@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverLuBase {
+public class TestLinearSolverLuBase_D64 {
 
     Random rand = new Random(0x334);
 
@@ -51,7 +51,7 @@ public class TestLinearSolverLuBase {
 
         x_improved.set(x);
 
-        LinearSolverLu solver = new LinearSolverLu(alg);
+        LinearSolverLu_D64 solver = new LinearSolverLu_D64(alg);
         assertTrue(solver.setA(A));
         solver.solve(x,b);
         solver.improveSol(x_improved,b);

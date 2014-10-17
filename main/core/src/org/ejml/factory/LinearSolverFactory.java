@@ -26,7 +26,7 @@ import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu;
+import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
 import org.ejml.alg.dense.linsol.qr.*;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
@@ -59,7 +59,7 @@ public class LinearSolverFactory {
      * @return A new linear solver.
      */
     public static LinearSolver<DenseMatrix64F> linear( int matrixSize ) {
-        return new LinearSolverLu(new LUDecompositionAlt_D64());
+        return new LinearSolverLu_D64(new LUDecompositionAlt_D64());
     }
 
     /**
