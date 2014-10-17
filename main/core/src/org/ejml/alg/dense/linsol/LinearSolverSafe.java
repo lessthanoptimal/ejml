@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.ReshapeMatrix;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -29,7 +29,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public class LinearSolverSafe<T extends ReshapeMatrix64F> implements LinearSolver<T> {
+public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolver<T> {
 
     // the solver it is wrapped around
     private LinearSolver<T> alg;
@@ -53,8 +53,8 @@ public class LinearSolverSafe<T extends ReshapeMatrix64F> implements LinearSolve
             if( this.A == null ) {
                 this.A = (T)A.copy();
             } else {
-                if( this.A.numRows != A.numRows || this.A.numCols != A.numCols ) {
-                    this.A.reshape(A.numRows,A.numCols,false);
+                if( this.A.getNumRows() != A.getNumRows() || this.A.getNumCols() != A.getNumCols() ) {
+                    this.A.reshape(A.getNumRows(),A.getNumCols());
                 }
                 this.A.set(A);
             }
@@ -75,8 +75,8 @@ public class LinearSolverSafe<T extends ReshapeMatrix64F> implements LinearSolve
             if( this.B == null ) {
                 this.B = (T)B.copy();
             } else {
-                if( this.B.numRows != B.numRows || this.B.numCols != B.numCols ) {
-                    this.B.reshape(A.numRows,B.numCols,false);
+                if( this.B.getNumRows() != B.getNumRows() || this.B.getNumCols() != B.getNumCols() ) {
+                    this.B.reshape(A.getNumRows(),B.getNumCols());
                 }
                 this.B.set(B);
             }

@@ -15,13 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
 
 /**
- * Fixed sized vector with 2 elements.  Can represent a a 2 x 1 or 1 x 2 matrix, context dependent.
+ * Fixed sized vector with 2 elements.  Can represent a 2 x 1 or 1 x 2 matrix, context dependent.
  *
  * @author Peter Abeles
  */
@@ -85,6 +84,21 @@ public class FixedMatrix2_64F implements FixedMatrix64F {
     }
 
     @Override
+    public void set(Matrix original) {
+        RealMatrix64F m = (RealMatrix64F)original;
+
+        if( m.getNumCols() == 1 && m.getNumRows() == 2 ) {
+            a1 = m.get(0,0);
+            a2 = m.get(1,0);
+        } else if( m.getNumRows() == 1 && m.getNumCols() == 2 ){
+            a1 = m.get(0,0);
+            a2 = m.get(0,1);
+        } else {
+            throw new IllegalArgumentException("Incompatible shape");
+        }
+    }
+
+    @Override
     public int getNumRows() {
         return 2;
     }
@@ -100,8 +114,8 @@ public class FixedMatrix2_64F implements FixedMatrix64F {
     }
 
     @Override
-    public FixedMatrix2_64F copy() {
-        return new FixedMatrix2_64F(this);
+    public <T extends Matrix> T copy() {
+        return (T)new FixedMatrix2_64F(this);
     }
 
     @Override

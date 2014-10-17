@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.MatrixIterator;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.factory.SingularMatrixException;
 import org.ejml.ops.*;
 
@@ -495,7 +495,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,false).
      * </p>
      *
-     * @see org.ejml.data.ReshapeMatrix64F#reshape(int,int,boolean)
+     * @see org.ejml.data.DenseMatrix64F#reshape(int,int,boolean)
      *
      * @param numRows The new number of rows in the matrix.
      * @param numCols The new number of columns in the matrix.
@@ -1027,7 +1027,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Saves this matrix to a file as a serialized binary object.
      * </p>
      *
-     * @see MatrixIO#saveBin( org.ejml.data.ReshapeMatrix64F, String)
+     * @see MatrixIO#saveBin( org.ejml.data.RealMatrix64F, String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -1051,7 +1051,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public static SimpleMatrix loadBinary( String fileName )
             throws IOException {
-        ReshapeMatrix64F mat = MatrixIO.loadBin(fileName);
+        RealMatrix64F mat = MatrixIO.loadBin(fileName);
 
         // see if its a DenseMatrix64F
         if( mat instanceof DenseMatrix64F ) {
@@ -1067,7 +1067,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Saves this matrix to a file in a CSV format.  For the file format see {@link MatrixIO}.
      * </p>
      *
-     * @see MatrixIO#saveBin( org.ejml.data.ReshapeMatrix64F, String)
+     * @see MatrixIO#saveBin( org.ejml.data.RealMatrix64F, String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -1091,7 +1091,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public static SimpleMatrix loadCSV( String fileName )
             throws IOException {
-        ReshapeMatrix64F mat = MatrixIO.loadCSV(fileName);
+        RealMatrix64F mat = MatrixIO.loadCSV(fileName);
 
         // see if its a DenseMatrix64F
         if( mat instanceof DenseMatrix64F ) {

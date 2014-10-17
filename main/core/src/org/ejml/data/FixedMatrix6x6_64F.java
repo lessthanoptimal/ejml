@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -313,6 +312,50 @@ public class FixedMatrix6x6_64F implements FixedMatrix64F {
     }
 
     @Override
+    public void set(Matrix original) {
+        if( original.getNumCols() != 6 || original.getNumRows() != 6 )
+            throw new IllegalArgumentException("Rows and/or columns do not match");
+        RealMatrix64F m = (RealMatrix64F)original;
+        
+        a11 = m.get(0,0);
+        a12 = m.get(0,1);
+        a13 = m.get(0,2);
+        a14 = m.get(0,3);
+        a15 = m.get(0,4);
+        a16 = m.get(0,5);
+        a21 = m.get(1,0);
+        a22 = m.get(1,1);
+        a23 = m.get(1,2);
+        a24 = m.get(1,3);
+        a25 = m.get(1,4);
+        a26 = m.get(1,5);
+        a31 = m.get(2,0);
+        a32 = m.get(2,1);
+        a33 = m.get(2,2);
+        a34 = m.get(2,3);
+        a35 = m.get(2,4);
+        a36 = m.get(2,5);
+        a41 = m.get(3,0);
+        a42 = m.get(3,1);
+        a43 = m.get(3,2);
+        a44 = m.get(3,3);
+        a45 = m.get(3,4);
+        a46 = m.get(3,5);
+        a51 = m.get(4,0);
+        a52 = m.get(4,1);
+        a53 = m.get(4,2);
+        a54 = m.get(4,3);
+        a55 = m.get(4,4);
+        a56 = m.get(4,5);
+        a61 = m.get(5,0);
+        a62 = m.get(5,1);
+        a63 = m.get(5,2);
+        a64 = m.get(5,3);
+        a65 = m.get(5,4);
+        a66 = m.get(5,5);
+    }
+
+    @Override
     public int getNumRows() {
         return 6;
     }
@@ -328,8 +371,8 @@ public class FixedMatrix6x6_64F implements FixedMatrix64F {
     }
 
     @Override
-    public FixedMatrix6x6_64F copy() {
-        return new FixedMatrix6x6_64F(this);
+    public <T extends Matrix> T copy() {
+        return (T)new FixedMatrix6x6_64F(this);
     }
 
     @Override

@@ -342,22 +342,22 @@ public class MatrixFeatures {
      * @param tol How close to being identical each element needs to be.
      * @return true if equals and false otherwise.
      */
-    public static boolean isEqualsTriangle(ReshapeMatrix64F a, ReshapeMatrix64F b, boolean upper, double tol)
+    public static boolean isEqualsTriangle(RealMatrix64F a, RealMatrix64F b, boolean upper, double tol)
     {
-        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
             return false;
         }
 
         if( upper ) {
-            for( int i = 0; i < a.numRows; i++ ) {
-                for( int j = i; j < a.numCols; j++ ) {
+            for( int i = 0; i < a.getNumRows(); i++ ) {
+                for( int j = i; j < a.getNumCols(); j++ ) {
                     if( Math.abs(a.get(i,j)-b.get(i,j)) > tol )
                         return false;
                 }
             }
         } else {
-            for( int i = 0; i < a.numRows; i++ ) {
-                int end = Math.min(i,a.numCols-1);
+            for( int i = 0; i < a.getNumRows(); i++ ) {
+                int end = Math.min(i,a.getNumCols()-1);
 
                 for( int j = 0; j <= end; j++ ) {
                     if( Math.abs(a.get(i,j)-b.get(i,j)) > tol )

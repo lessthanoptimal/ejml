@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.generic;
 
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.RealMatrix64F;
 
 import java.util.Random;
 
@@ -28,20 +28,20 @@ import java.util.Random;
 public class GenericMatrixOps {
 
 //    public static DenseD2Matrix64F convertToD2( DenseMatrix64F orig ) {
-//        DenseD2Matrix64F ret = new DenseD2Matrix64F(orig.numRows,orig.numCols);
+//        DenseD2Matrix64F ret = new DenseD2Matrix64F(orig.getNumRows(),orig.getNumCols());
 //
 //        copy(orig,ret);
 //
 //        return ret;
 //    }
 
-    public static boolean isEquivalent( ReshapeMatrix64F a , ReshapeMatrix64F b , double tol )
+    public static boolean isEquivalent( RealMatrix64F a , RealMatrix64F b , double tol )
     {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
+        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
             return false;
 
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < a.numCols; j++ ) {
+        for( int i = 0; i < a.getNumRows(); i++ ) {
+            for( int j = 0; j < a.getNumCols(); j++ ) {
                 double diff = Math.abs(a.get(i,j) - b.get(i,j));
 
                 if( diff > tol )
@@ -60,10 +60,10 @@ public class GenericMatrixOps {
      * @param tol How close to zero or one each element needs to be.
      * @return If it is within tolerance to an identity matrix.
      */
-    public static boolean isIdentity( ReshapeMatrix64F a , double tol )
+    public static boolean isIdentity( RealMatrix64F a , double tol )
     {
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < a.numCols; j++ ) {
+        for( int i = 0; i < a.getNumRows(); i++ ) {
+            for( int j = 0; j < a.getNumCols(); j++ ) {
                 if( i == j ) {
                     if( Math.abs(a.get(i,j)-1.0) > tol )
                         return false;
@@ -76,14 +76,14 @@ public class GenericMatrixOps {
         return true;
     }
 
-    public static boolean isEquivalentTriangle( boolean upper , ReshapeMatrix64F a , ReshapeMatrix64F b , double tol )
+    public static boolean isEquivalentTriangle( boolean upper , RealMatrix64F a , RealMatrix64F b , double tol )
     {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
+        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
             return false;
 
         if( upper ) {
-            for( int i = 0; i < a.numRows; i++ ) {
-                for( int j = i; j < a.numCols; j++ ) {
+            for( int i = 0; i < a.getNumRows(); i++ ) {
+                for( int j = i; j < a.getNumCols(); j++ ) {
                     double diff = Math.abs(a.get(i,j) - b.get(i,j));
 
                     if( diff > tol )
@@ -91,8 +91,8 @@ public class GenericMatrixOps {
                 }
             }
         } else {
-            for( int j = 0; j < a.numCols; j++ ) {
-                for( int i = j; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.getNumCols(); j++ ) {
+                for( int i = j; i < a.getNumRows(); i++ ) {
                     double diff = Math.abs(a.get(i,j) - b.get(i,j));
 
                     if( diff > tol )
@@ -104,7 +104,7 @@ public class GenericMatrixOps {
         return true;
     }
 
-    public static void copy( ReshapeMatrix64F from , ReshapeMatrix64F to )
+    public static void copy( RealMatrix64F from , RealMatrix64F to )
     {
         int numCols = from.getNumCols();
         int numRows = from.getNumRows();
@@ -116,10 +116,10 @@ public class GenericMatrixOps {
         }
     }
 
-    public static void setRandom( ReshapeMatrix64F a , double min , double max , Random rand )
+    public static void setRandom( RealMatrix64F a , double min , double max , Random rand )
     {
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < a.numCols; j++ ) {
+        for( int i = 0; i < a.getNumRows(); i++ ) {
+            for( int j = 0; j < a.getNumCols(); j++ ) {
                 double val = rand.nextDouble()*(max-min)+min;
                 a.set(i,j,val);
             }

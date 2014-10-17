@@ -21,7 +21,7 @@ package org.ejml;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.ops.CommonOps;
 
 
@@ -36,14 +36,14 @@ public class BenchmarkInstanceOf {
 
     public interface Stuff
     {
-        public void process( Stuff a, ReshapeMatrix64F M );
+        public void process( Stuff a, RealMatrix64F M );
     }
 
     public static class StuffA implements Stuff
     {
 
         @Override
-        public void process(Stuff a, ReshapeMatrix64F M) {
+        public void process(Stuff a, RealMatrix64F M) {
 
             if( M instanceof BlockMatrix64F) {
                 CommonOps.scale(1.0,(BlockMatrix64F)M);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
  */
 public abstract class GenericTestsMatrix64F {
 
-    protected abstract ReshapeMatrix64F createMatrix( int numRows , int numCols );
+    protected abstract RealMatrix64F createMatrix( int numRows , int numCols );
 
     public void allTests() {
         testGetNumRows();
@@ -36,13 +36,13 @@ public abstract class GenericTestsMatrix64F {
     }
 
     public void testGetNumRows() {
-        ReshapeMatrix64F mat = createMatrix(2,3);
+        RealMatrix64F mat = createMatrix(2,3);
 
         assertEquals(2,mat.getNumRows());
     }
 
     public void testGetNumCols() {
-        ReshapeMatrix64F mat = createMatrix(2,3);
+        RealMatrix64F mat = createMatrix(2,3);
 
         assertEquals(3,mat.getNumCols());
     }
@@ -59,7 +59,7 @@ public abstract class GenericTestsMatrix64F {
     }
 
     private void checkSetAndGet(int m, int n) {
-        ReshapeMatrix64F mat = createMatrix(m, n);
+        RealMatrix64F mat = createMatrix(m, n);
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {
@@ -88,7 +88,7 @@ public abstract class GenericTestsMatrix64F {
     }
 
     private void checkSetAndGet_unsafe(int m, int n) {
-        ReshapeMatrix64F mat = createMatrix(m, n);
+        RealMatrix64F mat = createMatrix(m, n);
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {

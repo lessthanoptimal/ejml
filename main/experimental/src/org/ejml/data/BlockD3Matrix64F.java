@@ -27,15 +27,24 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
-public class BlockD3Matrix64F extends ReshapeMatrix64F {
+public class BlockD3Matrix64F implements ReshapeMatrix, RealMatrix64F {
     public int blockLength;
     public double[][][] blocks;
+
+    /**
+     * Number of rows in the matrix.
+     */
+    public int numRows;
+    /**
+     * Number of columns in the matrix.
+     */
+    public int numCols;
 
     public BlockD3Matrix64F( int numRows , int numCols , int blockLength)
     {
         this.blockLength = blockLength;
 
-        reshape(numRows,numCols,false);
+        reshape(numRows,numCols);
     }
 
     public BlockD3Matrix64F( int numRows , int numCols )
@@ -49,7 +58,7 @@ public class BlockD3Matrix64F extends ReshapeMatrix64F {
     }
 
     @Override
-    public void reshape(int numRows, int numCols, boolean saveValues)
+    public void reshape(int numRows, int numCols )
     {
         this.numRows = numRows;
         this.numCols = numCols;
@@ -133,5 +142,10 @@ public class BlockD3Matrix64F extends ReshapeMatrix64F {
     @Override
     public <T extends Matrix> T copy() {
         return null;
+    }
+
+    @Override
+    public void set(Matrix original) {
+        throw new RuntimeException("Not supported yet");
     }
 }

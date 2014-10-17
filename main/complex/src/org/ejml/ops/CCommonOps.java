@@ -39,6 +39,34 @@ import java.util.Arrays;
 public class CCommonOps {
 
     /**
+     * <p>
+     * Creates a new square matrix whose diagonal elements are specified by data and all
+     * the other elements are zero.<br>
+     * <br>
+     * a<sub>ij</sub> = 0         if i &le; j<br>
+     * a<sub>ij</sub> = diag[i]   if i = j<br>
+     * </p>
+     *
+     * @param data Contains the values of the diagonal elements of the resulting matrix.
+     * @return A new complex matrix.
+     */
+    public static CDenseMatrix64F diag( double... data ) {
+        if( data.length%2 == 1 )
+            throw new IllegalArgumentException("must be an even number of arguments");
+
+        int N = data.length/2;
+
+        CDenseMatrix64F m = new CDenseMatrix64F(N,N);
+
+        int index = 0;
+        for (int i = 0; i < N; i++) {
+            m.set(i,i,data[index++],data[index++]);
+        }
+
+        return m;
+    }
+
+    /**
      * Converts the real matrix into a complex matrix.
      *
      * @param input Real matrix. Not modified.
@@ -485,6 +513,26 @@ public class CCommonOps {
         }
 
         return max;
+    }
+
+    /**
+     * Sets all the diagonal elements equal to one and everything else equal to zero.
+     * If this is a square matrix then it will be an identity matrix.
+     *
+     * @param mat A square matrix.
+     */
+    public static void setIdentity( CDenseMatrix64F mat )
+    {
+        int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
+
+        Arrays.fill(mat.data,0,mat.getDataLength(),0);
+
+        int index = 0;
+        int stride = mat.getRowStride();
+
+        for( int i = 0; i < width; i++ , index += stride + 2) {
+            mat.data[index] = 1;
+        }
     }
 
 }

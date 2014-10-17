@@ -129,6 +129,21 @@ public class CDenseMatrix64F extends CD1Matrix64F {
     }
 
     @Override
+    public void set(Matrix original) {
+        reshape(original.getNumRows(),original.getNumCols());
+
+        ComplexMatrix64F n = (ComplexMatrix64F)original;
+
+        Complex64F c = new Complex64F();
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                n.get(i,j,c);
+                set(i,j,c.real,c.imaginary);
+            }
+        }
+    }
+
+    @Override
     public void print() {
         MatrixIO.print(System.out, this);
     }

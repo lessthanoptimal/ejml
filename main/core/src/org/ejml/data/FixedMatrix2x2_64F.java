@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -97,6 +96,18 @@ public class FixedMatrix2x2_64F implements FixedMatrix64F {
     }
 
     @Override
+    public void set(Matrix original) {
+        if( original.getNumCols() != 2 || original.getNumRows() != 2 )
+            throw new IllegalArgumentException("Rows and/or columns do not match");
+        RealMatrix64F m = (RealMatrix64F)original;
+        
+        a11 = m.get(0,0);
+        a12 = m.get(0,1);
+        a21 = m.get(1,0);
+        a22 = m.get(1,1);
+    }
+
+    @Override
     public int getNumRows() {
         return 2;
     }
@@ -112,8 +123,8 @@ public class FixedMatrix2x2_64F implements FixedMatrix64F {
     }
 
     @Override
-    public FixedMatrix2x2_64F copy() {
-        return new FixedMatrix2x2_64F(this);
+    public <T extends Matrix> T copy() {
+        return (T)new FixedMatrix2x2_64F(this);
     }
 
     @Override

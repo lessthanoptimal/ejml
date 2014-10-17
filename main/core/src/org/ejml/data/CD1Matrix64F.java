@@ -28,7 +28,7 @@ import org.ejml.alg.dense.mult.MatrixDimensionException;
  *
  * @author Peter Abeles
  */
-public abstract class CD1Matrix64F implements ComplexMatrix64F {
+public abstract class CD1Matrix64F implements ComplexMatrix64F, ReshapeMatrix{
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.
      */
@@ -121,13 +121,4 @@ public abstract class CD1Matrix64F implements ComplexMatrix64F {
     public void setNumCols(int numCols) {
         this.numCols = numCols;
     }
-
-    /**
-     * Change's the matrix shape.  If the new size is larger than the inner array size then a new array is created.
-     *
-     *
-     * @param numRows The new number of rows in the matrix.
-     * @param numCols The new number of columns in the matrix.
-     */
-    public abstract void reshape( int numRows , int numCols );
 }

@@ -191,8 +191,8 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      *
      * @param mat Matrix whose values will be copied.  Not modified.
      */
-    public DenseMatrix64F(ReshapeMatrix64F mat) {
-        this(mat.numRows,mat.numCols);
+    public DenseMatrix64F(RealMatrix64F mat) {
+        this(mat.getNumRows(),mat.getNumCols());
         for( int i = 0; i < numRows; i++ ) {
             for( int j = 0; j < numCols; j++ ) {
                 set(i,j, mat.get(i,j));
@@ -376,6 +376,20 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     @SuppressWarnings({"unchecked"})
     public DenseMatrix64F copy() {
         return new DenseMatrix64F(this);
+    }
+
+    @Override
+    public void set(Matrix original) {
+        RealMatrix64F m = (RealMatrix64F)original;
+
+        reshape(original.getNumRows(),original.getNumCols());
+
+        int index = 0;
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                data[index++] = m.get(i,j);
+            }
+        }
     }
 
     /**

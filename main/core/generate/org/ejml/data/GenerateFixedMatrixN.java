@@ -100,8 +100,9 @@ public class GenerateFixedMatrixN extends CodeGeneratorBase{
                 "            throw new IllegalArgumentException(\"Out of range.  \"+w);\n" +
                 "        }\n" +
                 "    }\n" +
-                "\n" +
-                "    @Override\n" +
+                "\n");
+        printSetMatrix(dimen);
+        out.print("    @Override\n" +
                 "    public int getNumRows() {\n" +
                 "        return "+dimen+";\n" +
                 "    }\n" +
@@ -117,7 +118,7 @@ public class GenerateFixedMatrixN extends CodeGeneratorBase{
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
-                "    public <T extends Matrix64F> T copy() {\n" +
+                "    public <T extends Matrix> T copy() {\n" +
                 "        return (T)new "+className+"(this);\n" +
                 "    }\n" +
                 "\n" +
@@ -151,6 +152,25 @@ public class GenerateFixedMatrixN extends CodeGeneratorBase{
         for( int i = 1; i <= dimen; i++ ) {
             out.println("        this.a"+i+" = "+prefix+"a"+i+";");
         }
+    }
+
+    private void printSetMatrix(int dimen) {
+        out.print("    @Override\n" +
+                "    public void set(Matrix original) {\n" +
+                "        RealMatrix64F m = (RealMatrix64F)original;\n" +
+                "\n" +
+                "        if( m.getNumCols() == 1 && m.getNumRows() == "+dimen+" ) {\n");
+        for (int i = 0; i < dimen; i++) {
+            out.print("            a"+(i+1)+" = m.get("+i+",0);\n");
+        }
+        out.print("        } else if( m.getNumRows() == 1 && m.getNumCols() == "+dimen+" ){\n");
+        for (int i = 0; i < dimen; i++) {
+            out.print("            a"+(i+1)+" = m.get(0,"+i+");\n");
+        }
+        out.print("        } else {\n" +
+                "            throw new IllegalArgumentException(\"Incompatible shape\");\n" +
+                "        }\n" +
+                "    }\n\n");
     }
 
     private void setGetter(int dimen) {

@@ -37,7 +37,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveBin(ReshapeMatrix64F A, String fileName)
+    public static void saveBin(RealMatrix64F A, String fileName)
         throws IOException
     {
         FileOutputStream fileStream = new FileOutputStream(fileName);
@@ -65,7 +65,7 @@ public class MatrixIO {
      * @return  DenseMatrix64F
      * @throws IOException
      */
-    public static <T extends ReshapeMatrix64F> T loadBin(String fileName)
+    public static <T extends RealMatrix64F> T loadBin(String fileName)
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
@@ -93,15 +93,15 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveCSV( ReshapeMatrix64F A , String fileName )
+    public static void saveCSV( RealMatrix64F A , String fileName )
         throws IOException
     {
         PrintStream fileStream = new PrintStream(fileName);
 
         fileStream.print(A.getNumRows()+" ");
         fileStream.println(A.getNumCols());
-        for( int i = 0; i < A.numRows; i++ ) {
-            for( int j = 0; j < A.numCols; j++ ) {
+        for( int i = 0; i < A.getNumRows(); i++ ) {
+            for( int j = 0; j < A.getNumCols(); j++ ) {
                 fileStream.print(A.get(i,j)+" ");
             }
             fileStream.println();
@@ -166,7 +166,7 @@ public class MatrixIO {
 
     public static void print(PrintStream out , RealMatrix64F mat , String format ) {
 
-        String type = ReshapeMatrix64F.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
+        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
 
         out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
@@ -180,7 +180,7 @@ public class MatrixIO {
         }
     }
 
-    public static void print( PrintStream out , ReshapeMatrix64F mat , String format ,
+    public static void print( PrintStream out , RealMatrix64F mat , String format ,
                               int row0 , int row1, int col0 , int col1 ) {
         out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);
 

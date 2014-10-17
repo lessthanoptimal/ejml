@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import java.util.Iterator;
  */
 public class MatrixIterator implements Iterator<Double> {
     // the matrix which is being iterated through
-    private ReshapeMatrix64F a;
+    private D1Matrix64F a;
 
     // should it iterate through by row or by column
     private boolean rowMajor;
@@ -63,7 +63,7 @@ public class MatrixIterator implements Iterator<Double> {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator(ReshapeMatrix64F a, boolean rowMajor,
+    public MatrixIterator(D1Matrix64F a, boolean rowMajor,
                           int minRow, int minCol, int maxRow, int maxCol
     ) {
         if( maxCol < minCol )

@@ -15,13 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
 
 /**
- * Fixed sized vector with 5 elements.  Can represent a a 5 x 1 or 1 x 5 matrix, context dependent.
+ * Fixed sized vector with 5 elements.  Can represent a 5 x 1 or 1 x 5 matrix, context dependent.
  *
  * @author Peter Abeles
  */
@@ -103,6 +102,27 @@ public class FixedMatrix5_64F implements FixedMatrix64F {
     }
 
     @Override
+    public void set(Matrix original) {
+        RealMatrix64F m = (RealMatrix64F)original;
+
+        if( m.getNumCols() == 1 && m.getNumRows() == 5 ) {
+            a1 = m.get(0,0);
+            a2 = m.get(1,0);
+            a3 = m.get(2,0);
+            a4 = m.get(3,0);
+            a5 = m.get(4,0);
+        } else if( m.getNumRows() == 1 && m.getNumCols() == 5 ){
+            a1 = m.get(0,0);
+            a2 = m.get(0,1);
+            a3 = m.get(0,2);
+            a4 = m.get(0,3);
+            a5 = m.get(0,4);
+        } else {
+            throw new IllegalArgumentException("Incompatible shape");
+        }
+    }
+
+    @Override
     public int getNumRows() {
         return 5;
     }
@@ -118,8 +138,8 @@ public class FixedMatrix5_64F implements FixedMatrix64F {
     }
 
     @Override
-    public FixedMatrix5_64F copy() {
-        return new FixedMatrix5_64F(this);
+    public <T extends Matrix> T copy() {
+        return (T)new FixedMatrix5_64F(this);
     }
 
     @Override

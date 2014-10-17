@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -241,6 +240,39 @@ public class FixedMatrix5x5_64F implements FixedMatrix64F {
     }
 
     @Override
+    public void set(Matrix original) {
+        if( original.getNumCols() != 5 || original.getNumRows() != 5 )
+            throw new IllegalArgumentException("Rows and/or columns do not match");
+        RealMatrix64F m = (RealMatrix64F)original;
+        
+        a11 = m.get(0,0);
+        a12 = m.get(0,1);
+        a13 = m.get(0,2);
+        a14 = m.get(0,3);
+        a15 = m.get(0,4);
+        a21 = m.get(1,0);
+        a22 = m.get(1,1);
+        a23 = m.get(1,2);
+        a24 = m.get(1,3);
+        a25 = m.get(1,4);
+        a31 = m.get(2,0);
+        a32 = m.get(2,1);
+        a33 = m.get(2,2);
+        a34 = m.get(2,3);
+        a35 = m.get(2,4);
+        a41 = m.get(3,0);
+        a42 = m.get(3,1);
+        a43 = m.get(3,2);
+        a44 = m.get(3,3);
+        a45 = m.get(3,4);
+        a51 = m.get(4,0);
+        a52 = m.get(4,1);
+        a53 = m.get(4,2);
+        a54 = m.get(4,3);
+        a55 = m.get(4,4);
+    }
+
+    @Override
     public int getNumRows() {
         return 5;
     }
@@ -256,8 +288,8 @@ public class FixedMatrix5x5_64F implements FixedMatrix64F {
     }
 
     @Override
-    public FixedMatrix5x5_64F copy() {
-        return new FixedMatrix5x5_64F(this);
+    public <T extends Matrix> T copy() {
+        return (T)new FixedMatrix5x5_64F(this);
     }
 
     @Override

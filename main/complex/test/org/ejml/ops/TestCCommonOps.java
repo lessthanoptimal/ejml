@@ -37,6 +37,30 @@ public class TestCCommonOps {
     Random rand = new Random(234);
 
     @Test
+    public void diag() {
+        CDenseMatrix64F m = CCommonOps.diag(1,2,3,4,5,6);
+
+        assertEquals(3,m.numRows);
+        assertEquals(3,m.numCols);
+
+        Complex64F a = new Complex64F();
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                m.get(i,j,a);
+
+                if( i == j ) {
+                    assertEquals(2*i+1,a.real,1e-8);
+                    assertEquals(2*i+2,a.imaginary,1e-8);
+                } else {
+                    assertEquals(0,a.real,1e-8);
+                    assertEquals(0,a.imaginary,1e-8);
+                }
+            }
+        }
+    }
+
+    @Test
     public void convert() {
         DenseMatrix64F input = RandomMatrices.createRandom(5,7,-1,1,rand);
         CDenseMatrix64F output = new CDenseMatrix64F(5,7);
@@ -383,6 +407,27 @@ public class TestCCommonOps {
         double found = CCommonOps.elementMaxMagnitude2(m);
 
         assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void setIdentity() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-2,2,rand);
+
+        CCommonOps.setIdentity(a);
+
+        Complex64F c = new Complex64F();
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < a.numCols; j++) {
+                a.get(i,j,c);
+                if( i == j ) {
+                    assertEquals(1,c.real,1e-8);
+                    assertEquals(0,c.imaginary,1e-8);
+                } else {
+                    assertEquals(0,c.real,1e-8);
+                    assertEquals(0,c.imaginary,1e-8);
+                }
+            }
+        }
     }
 
 }

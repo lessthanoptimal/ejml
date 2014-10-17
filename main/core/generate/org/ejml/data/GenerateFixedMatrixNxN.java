@@ -85,8 +85,9 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
         setSetter(dimen);
         out.print("        throw new IllegalArgumentException(\"Row and/or column out of range. \"+row+\" \"+col);\n" +
                 "    }\n" +
-                "\n" +
-                "    @Override\n" +
+                "\n");
+        printSetMatrix(dimen);
+        out.print("    @Override\n" +
                 "    public int getNumRows() {\n" +
                 "        return "+dimen+";\n" +
                 "    }\n" +
@@ -102,7 +103,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
-                "    public <T extends Matrix64F> T copy() {\n" +
+                "    public <T extends Matrix> T copy() {\n" +
                 "        return (T)new "+className+"(this);\n" +
                 "    }\n" +
                 "\n" +
@@ -186,6 +187,21 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
             out.print("            }\n");
         }
         out.print("        }\n");
+    }
+
+    private void printSetMatrix( int dimen ) {
+        out.print("    @Override\n" +
+                "    public void set(Matrix original) {\n" +
+                "        if( original.getNumCols() != "+dimen+" || original.getNumRows() != "+dimen+" )\n" +
+                "            throw new IllegalArgumentException(\"Rows and/or columns do not match\");\n" +
+                "        RealMatrix64F m = (RealMatrix64F)original;\n" +
+                "        \n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                out.print("        a"+y+""+x+" = m.get("+(y-1)+","+(x-1)+");\n");
+            }
+        }
+        out.print("    }\n\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {

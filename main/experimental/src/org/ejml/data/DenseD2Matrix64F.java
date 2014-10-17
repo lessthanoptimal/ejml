@@ -26,12 +26,21 @@ import java.io.Serializable;
  *
  * @author Peter Abeles
  */
-public class DenseD2Matrix64F extends ReshapeMatrix64F implements Serializable {
+public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, RealMatrix64F {
 
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.
      */
     public double[][] data;
+
+    /**
+     * Number of rows in the matrix.
+     */
+    public int numRows;
+    /**
+     * Number of columns in the matrix.
+     */
+    public int numCols;
 
     public DenseD2Matrix64F( int numRows , int numCols ) {
         data = new double[ numRows ][numCols];
@@ -44,7 +53,7 @@ public class DenseD2Matrix64F extends ReshapeMatrix64F implements Serializable {
 //    }
 
     @Override
-    public void reshape(int numRows, int numCols, boolean saveValues) {
+    public void reshape(int numRows, int numCols ) {
         if( numRows <= data.length ) {
             this.numRows = numRows;
         } else {
@@ -84,11 +93,26 @@ public class DenseD2Matrix64F extends ReshapeMatrix64F implements Serializable {
     }
 
     @Override
+    public int getNumRows() {
+        return numRows;
+    }
+
+    @Override
+    public int getNumCols() {
+        return numCols;
+    }
+
+    @Override
     public void print() {
     }
 
     @Override
     public <T extends Matrix> T copy() {
         return null;
+    }
+
+    @Override
+    public void set(Matrix original) {
+        throw new RuntimeException("Not yet supported");
     }
 }

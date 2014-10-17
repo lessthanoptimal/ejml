@@ -16,37 +16,28 @@
  * limitations under the License.
  */
 
-package org.ejml.data;
+package org.ejml.alg.dense.linsol.lu;
 
-import java.io.Serializable;
+import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
+import org.ejml.alg.dense.linsol.GenericCLinearSolverChecks;
+import org.ejml.data.CDenseMatrix64F;
+import org.ejml.interfaces.linsol.LinearSolver;
+
 
 /**
- * Base interface for all rectangular matrices
- *
  * @author Peter Abeles
  */
-public interface Matrix extends Serializable {
-    /**
-     * Returns the number of rows in this matrix.
-     *
-     * @return Number of rows.
-     */
-    public int getNumRows();
+public class TestLinearSolverLu_CD64 extends GenericCLinearSolverChecks {
 
-    /**
-     * Returns the number of columns in this matrix.
-     *
-     * @return Number of columns.
-     */
-    public int getNumCols();
+    public TestLinearSolverLu_CD64() {
+        shouldWorkRectangle = false;
+        shouldFailSingular = false;
+    }
 
+    @Override
+    protected LinearSolver<CDenseMatrix64F> createSolver( CDenseMatrix64F A ) {
+        LUDecompositionAlt_CD64 decomp = new LUDecompositionAlt_CD64();
 
-    public <T extends Matrix> T copy();
-
-    /**
-     * Sets this matrix to be identical to the 'original' matrix passed in.
-     */
-    public void set( Matrix original );
-
-    public void print();
+        return new LinearSolverLu_CD64(decomp);
+    }
 }

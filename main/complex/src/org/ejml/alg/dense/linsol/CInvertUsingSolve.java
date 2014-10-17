@@ -18,10 +18,9 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CCommonOps;
 
 
 /**
@@ -31,26 +30,26 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class InvertUsingSolve {
+public class CInvertUsingSolve {
 
-    public static void invert( LinearSolver<DenseMatrix64F> solver , RowD1Matrix64F A , DenseMatrix64F A_inv , DenseMatrix64F storage) {
+    public static void invert( LinearSolver<CDenseMatrix64F> solver , CDenseMatrix64F A , CDenseMatrix64F A_inv , CDenseMatrix64F storage) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
         }
 
-        CommonOps.setIdentity(storage);
+        CCommonOps.setIdentity(storage);
 
         solver.solve(storage,A_inv);
     }
 
-    public static void invert( LinearSolver<DenseMatrix64F> solver , RowD1Matrix64F A , DenseMatrix64F A_inv ) {
+    public static void invert( LinearSolver<CDenseMatrix64F> solver , CDenseMatrix64F A , CDenseMatrix64F A_inv ) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
         }
 
-        CommonOps.setIdentity(A_inv);
+        CCommonOps.setIdentity(A_inv);
 
         solver.solve(A_inv,A_inv);
     }

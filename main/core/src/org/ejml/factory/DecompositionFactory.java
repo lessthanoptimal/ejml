@@ -33,7 +33,7 @@ import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.interfaces.decomposition.*;
 import org.ejml.ops.EigenOps;
 import org.ejml.ops.SpecializedOps;
@@ -274,7 +274,7 @@ public class DecompositionFactory {
      * @param <T> Matrix type.
      * @return If the decomposition was successful or not.
      */
-    public static <T extends ReshapeMatrix64F> boolean decomposeSafe( DecompositionInterface<T> decomp, T M ) {
+    public static <T extends RealMatrix64F> boolean decomposeSafe( DecompositionInterface<T> decomp, T M ) {
         if( decomp.inputModified() ) {
             return decomp.decompose(M.<T>copy());
         } else {

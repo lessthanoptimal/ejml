@@ -29,7 +29,7 @@ import org.ejml.alg.dense.mult.MatrixMultProduct;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.data.RowD1Matrix64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -1015,23 +1015,23 @@ public class CommonOps {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract( ReshapeMatrix64F src,
+    public static void extract( RealMatrix64F src,
                                 int srcY0, int srcY1,
                                 int srcX0, int srcX1,
-                                ReshapeMatrix64F dst ,
+                                RealMatrix64F dst ,
                                 int dstY0, int dstX0 )
     {
-        if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows )
+        if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
             throw new IllegalArgumentException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
-        if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols )
+        if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols() )
             throw new IllegalArgumentException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
 
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
 
-        if( dstY0+h > dst.numRows )
+        if( dstY0+h > dst.getNumRows() )
             throw new IllegalArgumentException("dst is too small in rows");
-        if( dstX0+w > dst.numCols )
+        if( dstX0+w > dst.getNumCols() )
             throw new IllegalArgumentException("dst is too small in columns");
 
         // interestingly, the performance is only different for small matrices but identical for larger ones
@@ -1112,8 +1112,8 @@ public class CommonOps {
      * @param destY0 Start row for the copy into dest.
      * @param destX0 Start column for the copy into dest.
      */
-    public static void insert( ReshapeMatrix64F src, ReshapeMatrix64F dest, int destY0, int destX0) {
-        extract(src,0,src.numRows,0,src.numCols,dest,destY0,destX0);
+    public static void insert( RealMatrix64F src, RealMatrix64F dest, int destY0, int destX0) {
+        extract(src,0,src.getNumRows(),0,src.getNumCols(),dest,destY0,destX0);
     }
 
     /**

@@ -55,7 +55,6 @@ public interface RealMatrix64F extends Matrix {
      */
     public void set(int row, int col, double val);
 
-
     /**
      * Same as {@link #set} but does not perform bounds check on input parameters.  This results in about a 25%
      * speed increase but potentially sacrifices stability and makes it more difficult to track down simple errors.

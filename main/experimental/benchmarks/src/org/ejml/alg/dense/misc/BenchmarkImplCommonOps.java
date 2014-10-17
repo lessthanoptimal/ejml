@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 
@@ -43,12 +43,12 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Matrix64F( ReshapeMatrix64F src ,  ReshapeMatrix64F dst , int numTrials) {
+    public static long extract_Matrix64F( RealMatrix64F src ,  RealMatrix64F dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            ImplCommonOps_Matrix64F.extract(src,0,0,dst,0,0, src.numRows, src.numCols);
+            ImplCommonOps_Matrix64F.extract(src,0,0,dst,0,0, src.getNumRows(), src.getNumCols());
         }
         long curr = System.currentTimeMillis();
 

@@ -18,7 +18,10 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.ReshapeMatrix64F;
+import org.ejml.data.Complex64F;
+import org.ejml.data.ComplexMatrix64F;
+import org.ejml.data.Matrix;
+import org.ejml.data.RealMatrix64F;
 import org.ejml.simple.SimpleMatrix;
 
 
@@ -35,9 +38,9 @@ public class EjmlUnitTests {
      *
      * @param A Matrix
      */
-    public static void assertCountable( ReshapeMatrix64F A ) {
-        for( int i = 0; i < A.numRows; i++ ){
-            for( int j = 0; j < A.numCols; j++ ) {
+    public static void assertCountable( RealMatrix64F A ) {
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
                 assertTrue(  !Double.isNaN(A.get(i,j)) , "NaN found at "+i+" "+j );
                 assertTrue(  !Double.isInfinite(A.get(i,j)) , "Infinite found at "+i+" "+j );
             }
@@ -62,9 +65,9 @@ public class EjmlUnitTests {
      * @param A Matrix
      * @param B Matrix
      */
-    public static void assertShape( ReshapeMatrix64F A , ReshapeMatrix64F B ) {
-        assertTrue(  A.numRows == B.numRows , "Number of rows do not match");
-        assertTrue(  A.numCols == B.numCols , "Number of columns do not match");
+    public static void assertShape( Matrix A , Matrix B ) {
+        assertTrue(  A.getNumRows() == B.getNumRows() , "Number of rows do not match");
+        assertTrue(  A.getNumCols() == B.getNumCols() , "Number of columns do not match");
     }
 
     /**
@@ -88,9 +91,9 @@ public class EjmlUnitTests {
      * @param numRows expected number of rows in the matrix
      * @param numCols expected number of columns in the matrix
      */
-    public static void assertShape( ReshapeMatrix64F A , int numRows , int numCols ) {
-        assertTrue(  A.numRows == numRows , "Unexpected number of rows.");
-        assertTrue(  A.numCols == numCols , "Unexpected number of columns.");
+    public static void assertShape( RealMatrix64F A , int numRows , int numCols ) {
+        assertTrue(  A.getNumRows() == numRows , "Unexpected number of rows.");
+        assertTrue(  A.getNumCols() == numCols , "Unexpected number of columns.");
     }
 
     /**
@@ -111,11 +114,11 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEqualsUncountable( ReshapeMatrix64F A , ReshapeMatrix64F B , double tol ) {
+    public static void assertEqualsUncountable( RealMatrix64F A , RealMatrix64F B , double tol ) {
         assertShape(A,B);
 
-        for( int i = 0; i < A.numRows; i++ ){
-            for( int j = 0; j < A.numCols; j++ ) {
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
                 double valA = A.get(i,j);
                 double valB = B.get(i,j);
 
@@ -171,17 +174,40 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEquals( ReshapeMatrix64F A , ReshapeMatrix64F B , double tol ) {
+    public static void assertEquals( RealMatrix64F A , RealMatrix64F B , double tol ) {
         assertShape(A,B);
 
-        for( int i = 0; i < A.numRows; i++ ){
-            for( int j = 0; j < A.numCols; j++ ) {
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
                 double valA = A.get(i,j);
                 double valB = B.get(i,j);
 
                 assertTrue(!Double.isNaN(valA) && !Double.isNaN(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 assertTrue(!Double.isInfinite(valA) && !Double.isInfinite(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 assertTrue(Math.abs( valA-valB) <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+            }
+        }
+    }
+
+    public static void assertEquals( ComplexMatrix64F A , ComplexMatrix64F B , double tol ) {
+        assertShape(A,B);
+
+        Complex64F a = new Complex64F();
+        Complex64F b = new Complex64F();
+
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
+                A.get(i, j, a);
+                B.get(i,j,b);
+
+                assertTrue(!Double.isNaN(a.real) && !Double.isNaN(b.real) ,"At ("+i+","+j+") A = "+a.real+" B = "+b.real);
+                assertTrue(!Double.isInfinite(a.real) && !Double.isInfinite(b.real) ,"At ("+i+","+j+") A = "+a.real+" B = "+b.real);
+                assertTrue(Math.abs( a.real-b.real) <= tol,"At ("+i+","+j+") A = "+a.real+" B = "+b.real);
+
+                assertTrue(!Double.isNaN(a.imaginary) && !Double.isNaN(b.imaginary) ,"At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
+                assertTrue(!Double.isInfinite(a.imaginary) && !Double.isInfinite(b.imaginary) ,"At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
+                assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
+
             }
         }
     }
@@ -225,11 +251,11 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEqualsTrans( ReshapeMatrix64F A , ReshapeMatrix64F B , double tol ) {
-        assertShape(A,B.numCols,B.numRows);
+    public static void assertEqualsTrans( RealMatrix64F A , RealMatrix64F B , double tol ) {
+        assertShape(A,B.getNumCols(),B.getNumRows());
 
-        for( int i = 0; i < A.numRows; i++ ){
-            for( int j = 0; j < A.numCols; j++ ) {
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
                 double valA = A.get(i,j);
                 double valB = B.get(j,i);
 

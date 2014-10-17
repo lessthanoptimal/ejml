@@ -18,35 +18,17 @@
 
 package org.ejml.data;
 
-import java.io.Serializable;
-
 /**
- * Base interface for all rectangular matrices
+ * Matrix which can be reshaped
  *
  * @author Peter Abeles
  */
-public interface Matrix extends Serializable {
+public interface ReshapeMatrix extends Matrix{
     /**
-     * Returns the number of rows in this matrix.
+     * Equivalent to invoking reshape(numRows,numCols,false);
      *
-     * @return Number of rows.
+     * @param numRows The new number of rows in the matrix.
+     * @param numCols The new number of columns in the matrix.
      */
-    public int getNumRows();
-
-    /**
-     * Returns the number of columns in this matrix.
-     *
-     * @return Number of columns.
-     */
-    public int getNumCols();
-
-
-    public <T extends Matrix> T copy();
-
-    /**
-     * Sets this matrix to be identical to the 'original' matrix passed in.
-     */
-    public void set( Matrix original );
-
-    public void print();
+    public void reshape( int numRows , int numCols );
 }
