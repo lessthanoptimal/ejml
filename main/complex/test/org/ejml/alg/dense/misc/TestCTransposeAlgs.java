@@ -56,6 +56,27 @@ public class TestCTransposeAlgs {
     }
 
     @Test
+    public void squareConjugate() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,4,-1,1,rand);
+        CDenseMatrix64F b = a.copy();
+
+        CTransposeAlgs.squareConjugate(b);
+
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                a.get(j,i,expected);
+                b.get(i,j,found);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(-expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
     public void standard() {
         CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
         CDenseMatrix64F b = CRandomMatrices.createRandom(5, 4, -1, 1, rand);
@@ -72,6 +93,27 @@ public class TestCTransposeAlgs {
 
                 assertEquals(expected.real,found.real,1e-8);
                 assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void standardConjugate() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(5, 4, -1, 1, rand);
+
+        CTransposeAlgs.standardConjugate(a, b);
+
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                a.get(i,j,expected);
+                b.get(j,i,found);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(-expected.imaginary,found.imaginary,1e-8);
             }
         }
     }

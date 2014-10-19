@@ -159,6 +159,30 @@ public class CCommonOps {
 
     /**
      * <p>
+     * Computes the complex conjugate of the input matrix.<br>
+     * <br>
+     * real<sub>i,j</sub> = real<sub>i,j</sub><br>
+     * imaginary<sub>i,j</sub> = -1*imaginary<sub>i,j</sub><br>
+     * </p>
+     *
+     * @param input Input matrix.  Not modified.
+     * @param output The complex conjugate of the input matrix.  Modified.
+     */
+    public static void conjugate( CD1Matrix64F input , CD1Matrix64F output ) {
+        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+        }
+
+        final int length = input.getDataLength();
+
+        for( int i = 0; i < length; i += 2 ) {
+            output.data[i] = input.data[i];
+            output.data[i+1] = -input.data[i+1];
+        }
+    }
+
+    /**
+     * <p>
      * Sets every element in the matrix to the specified value.<br>
      * <br>
      * a<sub>ij</sub> = value
@@ -348,6 +372,24 @@ public class CCommonOps {
     }
 
     /**
+     * <p>Performs an "in-place" conjugate transpose.</p>
+     *
+     * @see #transpose(org.ejml.data.CDenseMatrix64F)
+     *
+     * @param mat The matrix that is to be transposed. Modified.
+     */
+    public static void transposeConjugate( CDenseMatrix64F mat ) {
+        if( mat.numCols == mat.numRows ){
+            CTransposeAlgs.squareConjugate(mat);
+        } else {
+            CDenseMatrix64F b = new CDenseMatrix64F(mat.numCols,mat.numRows);
+            transposeConjugate(mat, b);
+            mat.reshape(b.numRows, b.numCols);
+            mat.set(b);
+        }
+    }
+
+    /**
      * <p>
      * Transposes input matrix 'a' and stores the results in output matrix 'b':<br>
      * <br>
@@ -368,6 +410,32 @@ public class CCommonOps {
         }
 
         CTransposeAlgs.standard(input,output);
+
+        return output;
+    }
+
+    /**
+     * <p>
+     * Conjugate transposes input matrix 'a' and stores the results in output matrix 'b':<br>
+     * <br>
+     * b-real<sub>i,j</sub> = a-real<sub>j,i</sub><br>
+     * b-imaginary<sub>i,j</sub> = -1*a-imaginary<sub>j,i</sub><br>
+     * where 'b' is the transpose of 'a'.
+     * </p>
+     *
+     * @param input The original matrix.  Not modified.
+     * @param output Where the transpose is stored. If null a new matrix is created. Modified.
+     * @return The transposed matrix.
+     */
+    public static CDenseMatrix64F transposeConjugate( CDenseMatrix64F input , CDenseMatrix64F output )
+    {
+        if( output == null ) {
+            output = new CDenseMatrix64F(input.numCols,input.numRows);
+        } else if( input.numCols != output.numRows || input.numRows != output.numCols ) {
+            throw new IllegalArgumentException("Input and output shapes are not compatible");
+        }
+
+        CTransposeAlgs.standardConjugate(input, output);
 
         return output;
     }

@@ -137,6 +137,22 @@ public class TestCCommonOps {
     }
 
     @Test
+    public void conjugate() {
+        CDenseMatrix64F matrix = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F found = CRandomMatrices.createRandom(5,7,-1,1,rand);
+
+        CCommonOps.conjugate(matrix,found);
+
+        for (int i = 0; i < matrix.getDataLength(); i += 2) {
+            double real = matrix.data[i];
+            double img = matrix.data[i+1];
+
+            assertEquals(real, found.data[i],1e-8);
+            assertEquals(img, -found.data[i+1],1e-8);
+        }
+    }
+
+    @Test
     public void fill() {
         CDenseMatrix64F matrix = CRandomMatrices.createRandom(5,7,-1,1,rand);
 
@@ -280,6 +296,28 @@ public class TestCCommonOps {
     }
 
     @Test
+    public void transposeConjugate_one() {
+
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,4,-1,1,rand);
+        CDenseMatrix64F b = a.copy();
+
+        CCommonOps.transposeConjugate(b);
+
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                a.get(i,j,expected);
+                b.get(j,i,found);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(-expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
     public void transpose_two() {
 
         CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
@@ -297,6 +335,28 @@ public class TestCCommonOps {
 
                 assertEquals(expected.real,found.real,1e-8);
                 assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void transposeConjugate_two() {
+
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(5,4,-1,1,rand);
+
+        CCommonOps.transposeConjugate(a, b);
+
+        Complex64F found = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                a.get(i,j,expected);
+                b.get(j,i,found);
+
+                assertEquals(expected.real,found.real,1e-8);
+                assertEquals(-expected.imaginary,found.imaginary,1e-8);
             }
         }
     }
