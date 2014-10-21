@@ -466,7 +466,7 @@ public class CCommonOps {
         } else {
             return false;
         }
-        return false;
+        return true;
     }
 
     /**

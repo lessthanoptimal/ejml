@@ -363,30 +363,29 @@ public class TestCCommonOps {
 
     @Test
     public void invert_1() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,rand);
             CDenseMatrix64F A_orig = A.copy();
 
             CDenseMatrix64F I = CRandomMatrices.createRandom(i,i,rand);
 
-            CCommonOps.invert(A);
+            assertTrue(CCommonOps.invert(A));
             CCommonOps.mult(A_orig,A,I);
 
             assertTrue(CMatrixFeatures.isIdentity(I, 1e-8));
         }
-
     }
 
     @Test
     public void invert_2() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             CDenseMatrix64F A = CRandomMatrices.createRandom(i, i, rand);
             CDenseMatrix64F A_orig = A.copy();
             CDenseMatrix64F A_inv = new CDenseMatrix64F(i, i);
 
             CDenseMatrix64F I = CRandomMatrices.createRandom(i, i, rand);
 
-            CCommonOps.invert(A, A_inv);
+            assertTrue(CCommonOps.invert(A, A_inv));
             CCommonOps.mult(A, A_inv, I);
 
             assertTrue(CMatrixFeatures.isIdentity(I, 1e-8));

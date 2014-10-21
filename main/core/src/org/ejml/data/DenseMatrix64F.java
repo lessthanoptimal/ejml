@@ -384,10 +384,15 @@ public class DenseMatrix64F extends RowD1Matrix64F {
 
         reshape(original.getNumRows(),original.getNumCols());
 
-        int index = 0;
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
-                data[index++] = m.get(i,j);
+        if( original instanceof DenseMatrix64F ) {
+            // do a faster copy if its of type DenseMatrix64F
+            System.arraycopy(((DenseMatrix64F)m).data,0,data,0,numRows*numCols);
+        } else {
+            int index = 0;
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    data[index++] = m.get(i, j);
+                }
             }
         }
     }
