@@ -36,10 +36,28 @@ import java.util.Arrays;
  *
  * @author Peter Abeles
  */
-// TODO multiply scale
-// TODO multiply add
-// TODO multiply scale add
 public class CCommonOps {
+
+    /**
+     * <p>
+     * Creates an identity matrix of the specified size.<br>
+     * <br>
+     * a<sub>ij</sub> = 0+0i   if i &ne; j<br>
+     * a<sub>ij</sub> = 1+0i   if i = j<br>
+     * </p>
+     *
+     * @param width The width and height of the identity matrix.
+     * @return A new instance of an identity matrix.
+     */
+    public static CDenseMatrix64F identity( int width ) {
+        CDenseMatrix64F A = new CDenseMatrix64F(width,width);
+
+        for (int i = 0; i < width; i++) {
+            A.set(i,i,1,0);
+        }
+
+        return A;
+    }
 
     /**
      * <p>

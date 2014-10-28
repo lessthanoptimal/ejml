@@ -12,6 +12,7 @@ Date format: year/month/day
   * Matrix.set(matrix) will now reshape the matrix that's being assigned
 - Triangle quality now just uses diagonal elements to scale results
 - Support for complex matrices
+  * Thanks IHMC (http://ihmc.us) for funding this addition
   * Most basic operations (e.g. multiplication, addition, ... etc)
   * LU Decomposition
   * Square Matrices: inverse, solve, determinant

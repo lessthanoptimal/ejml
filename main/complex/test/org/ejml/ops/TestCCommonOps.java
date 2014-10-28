@@ -39,6 +39,14 @@ public class TestCCommonOps {
 
     Random rand = new Random(234);
 
+    public void identity() {
+        CDenseMatrix64F I = CCommonOps.identity(4);
+        assertEquals(4,I.numRows);
+        assertEquals(4,I.numCols);
+
+        assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+    }
+
     @Test
     public void diag() {
         CDenseMatrix64F m = CCommonOps.diag(1,2,3,4,5,6);
@@ -396,7 +404,7 @@ public class TestCCommonOps {
     @Test
     public void solve() {
         // square
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             CDenseMatrix64F A = CRandomMatrices.createRandom(i, i, rand);
             CDenseMatrix64F B = CRandomMatrices.createRandom(i, 1, rand);
 
@@ -405,7 +413,7 @@ public class TestCCommonOps {
 
             CDenseMatrix64F X = new CDenseMatrix64F(i, 1);
 
-            CCommonOps.solve(A, B, X);
+            assertTrue(CCommonOps.solve(A, B, X));
 
             CDenseMatrix64F found = new CDenseMatrix64F(i, 1);
 

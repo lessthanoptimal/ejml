@@ -199,7 +199,7 @@ public class MatrixIO {
     }
 
     public static void print(PrintStream out, ComplexMatrix64F mat , int numChar , int precision ) {
-        String format = "[ %"+numChar+"."+precision+"f %"+numChar+"."+precision+"fi ] ";
+        String format = "%"+numChar+"."+precision+"f + %"+numChar+"."+precision+"fi";
 
         print(out, mat,format);
     }
@@ -217,6 +217,9 @@ public class MatrixIO {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
                 mat.get(y,x,c);
                 out.printf(format,c.real,c.imaginary);
+                if( x < mat.getNumCols()-1 ) {
+                    out.print(" , ");
+                }
             }
             out.println();
         }
