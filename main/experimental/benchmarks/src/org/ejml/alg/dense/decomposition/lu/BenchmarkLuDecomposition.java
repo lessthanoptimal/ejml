@@ -50,7 +50,7 @@ public class BenchmarkLuDecomposition {
     private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
     {
         benchmark(new LUDecompositionAlt_D64(),mat,numTrials);
-        benchmark(new LUDecompositionNR(),mat,numTrials);
+        benchmark(new LUDecompositionNR_D64(),mat,numTrials);
     }
 
     public static void main( String args [] ) {

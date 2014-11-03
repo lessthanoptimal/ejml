@@ -18,17 +18,14 @@
 
 package org.ejml.alg.dense.decompose.lu;
 
-import org.ejml.alg.dense.decomposition.lu.GeneralLuDecompositionChecks;
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_D64;
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR;
-
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR_CD64;
 
 /**
  * @author Peter Abeles
  */
-public class TestLUDecompositionNR extends GeneralLuDecompositionChecks {
+public class TestLUDecompositionNR_CD64 extends GeneralCLuDecompositionChecks {
     @Override
-    public LUDecompositionBase_D64 create(int numRows, int numCols) {
-        return new LUDecompositionNR();
+    public LUDecompositionBase_CD64 create(int numRows, int numCols) {
+        return new LUDecompositionNR_CD64();
     }
 }
