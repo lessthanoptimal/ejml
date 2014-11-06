@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 
@@ -329,7 +330,32 @@ public class SingularOps {
     }
 
     /**
+     * Returns a reasonable threshold for singular values.<br><br>
+     *
+     * tol = max (size (A)) * largest sigma * eps;
+     *
+     * @param svd A precomputed decomposition.  Not modified.
+     * @return threshold for singular values
+     */
+    public static double singularThreshold( SingularValueDecomposition svd ) {
+        double largest = 0;
+        double w[]= svd.getSingularValues();
+
+        int N = svd.numberOfSingularValues();
+
+        for( int j = 0; j < N; j++ ) {
+            if( w[j] > largest)
+                largest = w[j];
+        }
+
+        int M = Math.max(svd.numCols(),svd.numRows());
+        return M*largest* UtilEjml.EPS;
+    }
+
+    /**
      * Extracts the rank of a matrix using a preexisting decomposition.
+     *
+     * @see #singularThreshold(org.ejml.interfaces.decomposition.SingularValueDecomposition)
      *
      * @param svd A precomputed decomposition.  Not modified.
      * @param threshold Tolerance used to determine of a singular value is singular.

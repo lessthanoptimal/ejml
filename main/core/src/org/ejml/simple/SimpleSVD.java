@@ -35,6 +35,12 @@ import org.ejml.ops.SingularOps;
  * where A is m by n, and U and V are orthogonal matrices, and  W is a diagonal matrix
  * </p>
  *
+ * <p>
+ * Tolerance for singular values is
+ * Math.max(mat.numRows,mat.numCols) * W.get(0,0) * UtilEjml.EPS;
+ * where W.get(0,0) is the largest singular value.
+ * </p>
+ *
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
@@ -47,6 +53,9 @@ public class SimpleSVD<T extends SimpleMatrix> {
 
     private DenseMatrix64F mat;
 
+    // tolerance for singular values
+    double tol;
+
     public SimpleSVD( DenseMatrix64F mat , boolean compact ) {
         this.mat = mat;
         svd = DecompositionFactory.svd(mat.numRows,mat.numCols,true,true,compact);
@@ -58,6 +67,9 @@ public class SimpleSVD<T extends SimpleMatrix> {
 
         // order singular values from largest to smallest
         SingularOps.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
+
+        tol = SingularOps.singularThreshold(svd);
+
     }
 
     /**
@@ -115,7 +127,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
      */
     public SimpleMatrix nullSpace() {
         // TODO take advantage of the singular values being ordered already
-        return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null,UtilEjml.EPS));
+        return SimpleMatrix.wrap(SingularOps.nullSpace(svd,null,tol));
     }
 
     /**
@@ -136,7 +148,7 @@ public class SimpleSVD<T extends SimpleMatrix> {
      * @return The matrix's rank
      */
     public int rank() {
-        return SingularOps.rank(svd,10.0* UtilEjml.EPS);
+        return SingularOps.rank(svd,tol);
     }
 
     /**
