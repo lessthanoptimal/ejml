@@ -77,6 +77,8 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
      */
     @Override
     public boolean setA(DenseMatrix64F A) {
+        if( A.numRows < A.numCols )
+            throw new IllegalArgumentException("Can't solve for wide systems.  More variables than equations.");
         if( A.numRows > maxRows || A.numCols > maxCols )
             setMaxSize(A.numRows,A.numCols);
 

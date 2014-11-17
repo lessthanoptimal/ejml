@@ -132,10 +132,11 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
     }
 
     /**
-     * Returns an upper triangular matrix which is the R in the QR decomposition.
+     * Returns an upper triangular matrix which is the R in the QR decomposition.  If compact then the input
+     * expected to be size = [min(rows,cols) , numCols] otherwise size = [numRows,numCols].
      *
-     * @param R An upper triangular matrix.
-     * @param compact
+     * @param R Storage for upper triangular matrix.
+     * @param compact If true then a compact matrix is expected.
      */
     @Override
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
