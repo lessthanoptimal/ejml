@@ -353,6 +353,19 @@ public class SingularOps {
     }
 
     /**
+     * Extracts the rank of a matrix using a preexisting decomposition and default threshold.
+     *
+     * @see #singularThreshold(org.ejml.interfaces.decomposition.SingularValueDecomposition)
+     *
+     * @param svd A precomputed decomposition.  Not modified.
+     * @return The rank of the decomposed matrix.
+     */
+    public static int rank( SingularValueDecomposition svd ) {
+        double threshold = singularThreshold(svd);
+        return rank(svd,threshold);
+    }
+
+    /**
      * Extracts the rank of a matrix using a preexisting decomposition.
      *
      * @see #singularThreshold(org.ejml.interfaces.decomposition.SingularValueDecomposition)
@@ -377,7 +390,22 @@ public class SingularOps {
     }
 
     /**
+     * Extracts the nullity of a matrix using a preexisting decomposition and default threshold.
+     *
+     * @see #singularThreshold(org.ejml.interfaces.decomposition.SingularValueDecomposition)
+     *
+     * @param svd A precomputed decomposition.  Not modified.
+     * @return The nullity of the decomposed matrix.
+     */
+    public static int nullity( SingularValueDecomposition svd  ) {
+        double threshold = singularThreshold(svd);
+        return nullity(svd, threshold);
+    }
+
+    /**
      * Extracts the nullity of a matrix using a preexisting decomposition.
+     *
+     * @see #singularThreshold(org.ejml.interfaces.decomposition.SingularValueDecomposition)
      *
      * @param svd A precomputed decomposition.  Not modified.
      * @param threshold Tolerance used to determine of a singular value is singular.

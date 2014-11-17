@@ -105,7 +105,7 @@ public abstract class GenericLinearSolverChecks {
      */
     @Test
     public void modifiesB() {
-        DenseMatrix64F A = RandomMatrices.createRandom(4,4,rand);
+        DenseMatrix64F A = RandomMatrices.createRandom(4, 4, rand);
 
         LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
 
@@ -115,7 +115,7 @@ public abstract class GenericLinearSolverChecks {
         DenseMatrix64F B_orig = B.copy();
         DenseMatrix64F X = new DenseMatrix64F(A.numRows,B.numCols);
 
-        solver.solve(B,X);
+        solver.solve(B, X);
 
         boolean modified = !MatrixFeatures.isEquals(B_orig,B);
 
@@ -128,7 +128,7 @@ public abstract class GenericLinearSolverChecks {
     @Test
     public void checkQuality() {
         DenseMatrix64F A_good = CommonOps.diag(4,3,2,1);
-        DenseMatrix64F A_bad = CommonOps.diag(4,3,2,0.1);
+        DenseMatrix64F A_bad = CommonOps.diag(4, 3, 2, 0.1);
 
         LinearSolver<DenseMatrix64F> solver = createSafeSolver(A_good);
 
@@ -172,7 +172,7 @@ public abstract class GenericLinearSolverChecks {
         assertTrue(solver.setA(Asmall));
         double q_small = solver.quality();
 
-        assertEquals(q_small,q,1e-8);
+        assertEquals(q_small, q, 1e-8);
     }
 
     /**
@@ -212,7 +212,7 @@ public abstract class GenericLinearSolverChecks {
 
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        EjmlUnitTests.assertEquals(x_expected,x,1e-8);
+        EjmlUnitTests.assertEquals(x_expected, x, 1e-8);
     }
 
     @Test
@@ -271,11 +271,11 @@ public abstract class GenericLinearSolverChecks {
     @Test
     public void inverse() {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DenseMatrix64F A_inv = RandomMatrices.createRandom(3,3,rand);
+        DenseMatrix64F A_inv = RandomMatrices.createRandom(3, 3, rand);
 
         LinearSolver<DenseMatrix64F> solver = createSafeSolver(A);
 
-        solver.setA(A);
+        assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
         DenseMatrix64F I = RandomMatrices.createRandom(3,3,rand);

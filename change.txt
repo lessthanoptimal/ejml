@@ -20,6 +20,7 @@ Date format: year/month/day
 - Added RandomMatrices setGaussian() and createGaussian()
 - Changed how SimpleMatrix computes its threshold for singular values
 - Added SingularOps.singularThreshold()
+- Added no argument rank and nullity for SVD using default threshold.
 
 ----- Version 0.26
 

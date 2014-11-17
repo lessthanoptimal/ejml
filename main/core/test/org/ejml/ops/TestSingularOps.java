@@ -387,4 +387,32 @@ public class TestSingularOps {
         assertEquals(rank,SingularOps.rank(alg, UtilEjml.EPS));
         assertEquals(nullity,SingularOps.nullity(alg, UtilEjml.EPS));
     }
+
+    /**
+     * Decompose a singular matrix and see if it produces the expected result
+     */
+    @Test
+    public void rank_and_nullity_noArgument(){
+        DenseMatrix64F A = new DenseMatrix64F(3,3, true,
+                -0.988228951897092, -1.086594333683141, -1.433160736952583,
+                -3.190200029661606, 0.190459703263404, -6.475629910954768,
+                1.400596416735888, 7.158603907761226, -0.778109120408813);
+        rank_and_nullity_noArgument(A, 2, 1);
+
+        //wide matrix
+        A = new DenseMatrix64F(1,3,true,1,0,0);
+        rank_and_nullity_noArgument(A,1,2);
+
+        // tall matrix
+        A = new DenseMatrix64F(3,1,true,1,0,0);
+        rank_and_nullity_noArgument(A,1,0);
+    }
+
+    public void rank_and_nullity_noArgument( DenseMatrix64F A , int rank , int nullity ) {
+        SingularValueDecomposition<DenseMatrix64F> alg = DecompositionFactory.svd(A.numRows,A.numCols,true,true,false);
+        assertTrue(alg.decompose(A));
+
+        assertEquals(rank,SingularOps.rank(alg));
+        assertEquals(nullity,SingularOps.nullity(alg));
+    }
 }
