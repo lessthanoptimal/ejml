@@ -183,6 +183,12 @@ task alljavadoc(type: Javadoc) {
     }
 }
 
+task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJava" }) {
+    baseName = 'EJML'
+
+    from files(javadocProjects.collect { project(it).sourceSets.main.output })
+}
+
 // Disable the creation of jars for distribution.  If you don't do this it will crash
 [':main',':examples'].each {String a ->
     project(a) {

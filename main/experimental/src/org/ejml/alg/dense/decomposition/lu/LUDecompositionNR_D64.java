@@ -26,7 +26,7 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class LUDecompositionNR extends LUDecompositionBase_D64 {
+public class LUDecompositionNR_D64 extends LUDecompositionBase_D64 {
 
     private static final double TINY = 1.0e-40;
 
@@ -42,6 +42,7 @@ public class LUDecompositionNR extends LUDecompositionBase_D64 {
      * @return true If the matrix can be decomposed and false if it can not.  It can
      * return true and still be singular.
      */
+    @Override
     public boolean decompose( DenseMatrix64F orig ) {
 //        if( orig.numCols != orig.numRows )
 //            throw new RuntimeException("Must be square");
