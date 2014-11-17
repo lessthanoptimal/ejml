@@ -342,6 +342,47 @@ public class RandomMatrices {
     }
 
     /**
+     * <p>
+     * Sets each element in the matrix to a value drawn from an Gaussian distribution with the specified mean and
+     * standard deviation
+     * </p>
+     *
+     *
+     * @param numRow Number of rows in the new matrix.
+     * @param numCol Number of columns in the new matrix.
+     * @param mean Mean value in the distribution
+     * @param stdev Standard deviation in the distribution
+     * @param rand Random number generator used to fill the matrix.
+     */
+    public static DenseMatrix64F createGaussian( int numRow , int numCol , double mean , double stdev , Random rand )
+    {
+        DenseMatrix64F m = new DenseMatrix64F(numRow,numCol);
+        setGaussian(m,mean,stdev,rand);
+        return m;
+    }
+
+    /**
+     * <p>
+     * Sets each element in the matrix to a value drawn from an Gaussian distribution with the specified mean and
+     * standard deviation
+     * </p>
+     *
+     * @param mat The matrix who is to be randomized. Modified.
+     * @param mean Mean value in the distribution
+     * @param stdev Standard deviation in the distribution
+     * @param rand Random number generator used to fill the matrix.
+     */
+    public static void setGaussian( D1Matrix64F mat , double mean , double stdev , Random rand )
+    {
+        double d[] = mat.getData();
+        int size = mat.getNumElements();
+
+        for( int i = 0; i < size; i++ ) {
+            d[i] = mean + stdev*rand.nextGaussian();
+        }
+    }
+
+    /**
      * Creates a random symmetric positive definite matrix.
      *
      * @param width The width of the square matrix it returns.

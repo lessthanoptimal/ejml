@@ -296,6 +296,50 @@ public class TestRandomMatrices {
     }
 
     @Test
+    public void createGaussian() {
+        DenseMatrix64F A = RandomMatrices.createGaussian(30, 20, 2, 0.5, rand);
+
+        checkGaussian(A);
+    }
+
+    @Test
+    public void setGaussian() {
+        DenseMatrix64F A = new DenseMatrix64F(30,20);
+
+        RandomMatrices.setGaussian(A, 2, 0.5, rand);
+
+        checkGaussian(A);
+    }
+
+    private void checkGaussian(DenseMatrix64F a) {
+        assertEquals(30, a.numRows);
+        assertEquals(20, a.numCols);
+
+        int numNeg = 0;
+        int numPos = 0;
+        double mean = 0;
+        for( int i = 0; i < a.numRows; i++ ) {
+            for( int j = 0; j < a.numCols; j++ ) {
+                double val = a.get(i,j);
+
+                if( val-2 < 0 )
+                    numNeg++;
+                else
+                    numPos++;
+
+                mean += val;
+            }
+        }
+
+        mean /= a.numRows*a.numCols;
+
+        assertEquals(mean,2,0.01);
+
+        assertTrue(numNeg>0);
+        assertTrue(numPos>0);
+    }
+
+    @Test
     public void createSymmPosDef() {
         for( int i = 0; i < 10; i++ ) {
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(6+i,rand);

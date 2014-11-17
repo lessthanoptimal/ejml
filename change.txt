@@ -17,6 +17,7 @@ Date format: year/month/day
   * LU Decomposition
   * Square Matrices: inverse, solve, determinant
 - Tweaked matrix inheritance to better support the addition of complex matrices
+- Added RandomMatrices setGaussian() and createGaussian()
 
 ----- Version 0.26
 
