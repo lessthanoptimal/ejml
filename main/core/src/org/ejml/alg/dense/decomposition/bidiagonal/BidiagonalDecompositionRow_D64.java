@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
 import org.ejml.ops.CommonOps;
@@ -191,9 +191,9 @@ public class BidiagonalDecompositionRow_D64
                 u[i] = UBV.get(i,j);
             }
             if( transpose )
-                QrHelperFunctions.rank1UpdateMultL(U,u,gammasU[j],j,j,m);
+                QrHelperFunctions_D64.rank1UpdateMultL(U, u, gammasU[j], j, j, m);
             else
-                QrHelperFunctions.rank1UpdateMultR(U,u,gammasU[j],j,j,m,this.b);
+                QrHelperFunctions_D64.rank1UpdateMultR(U, u, gammasU[j], j, j, m, this.b);
         }
 
         return U;
@@ -245,9 +245,9 @@ public class BidiagonalDecompositionRow_D64
                 u[i] = UBV.get(j,i);
             }
             if( transpose )
-                QrHelperFunctions.rank1UpdateMultL(V,u,gammasV[j],j+1,j+1,n);
+                QrHelperFunctions_D64.rank1UpdateMultL(V, u, gammasV[j], j + 1, j + 1, n);
             else
-                QrHelperFunctions.rank1UpdateMultR(V,u,gammasV[j],j+1,j+1,n,this.b);
+                QrHelperFunctions_D64.rank1UpdateMultR(V, u, gammasV[j], j + 1, j + 1, n, this.b);
         }
 
         return V;
@@ -314,19 +314,19 @@ public class BidiagonalDecompositionRow_D64
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
-            double tau = QrHelperFunctions.computeTauAndDivide(k,m,u ,max);
+            double tau = QrHelperFunctions_D64.computeTauAndDivide(k, m, u, max);
 
             // write the reflector into the lower left column of the matrix
             // while dividing u by nu
             double nu = u[k] + tau;
-            QrHelperFunctions.divideElements_Bcol(k+1,m,n,u,b,k,nu);
+            QrHelperFunctions_D64.divideElements_Bcol(k + 1, m, n, u, b, k, nu);
             u[k] = 1.0;
 
             double gamma = nu/tau;
             gammasU[k] = gamma;
 
             // ---------- multiply on the left by Q_k
-            QrHelperFunctions.rank1UpdateMultR(UBV,u,gamma,k+1,k,m,this.b);
+            QrHelperFunctions_D64.rank1UpdateMultR(UBV, u, gamma, k + 1, k, m, this.b);
 
             b[k*n+k] = -tau*max;
         } else {
@@ -341,16 +341,16 @@ public class BidiagonalDecompositionRow_D64
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
-        double max = QrHelperFunctions.findMax(b,row+k+1,n-k-1);
+        double max = QrHelperFunctions_D64.findMax(b, row + k + 1, n - k - 1);
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
 
-            double tau = QrHelperFunctions.computeTauAndDivide(k+1,n,b,row,max);
+            double tau = QrHelperFunctions_D64.computeTauAndDivide(k + 1, n, b, row, max);
 
             // write the reflector into the lower left column of the matrix
             double nu = b[row+k+1] + tau;
-            QrHelperFunctions.divideElements_Brow(k+2,n,u,b,row,nu);
+            QrHelperFunctions_D64.divideElements_Brow(k + 2, n, u, b, row, nu);
 
             u[k+1] = 1.0;
 
@@ -360,7 +360,7 @@ public class BidiagonalDecompositionRow_D64
             // writing to u could be avoided by working directly with b.
             // requires writing a custom rank1Update function
             // ---------- multiply on the left by Q_k
-            QrHelperFunctions.rank1UpdateMultL(UBV,u,gamma,k+1,k+1,n);
+            QrHelperFunctions_D64.rank1UpdateMultL(UBV, u, gamma, k + 1, k + 1, n);
 
             b[row+k+1] = -tau*max;
         } else {

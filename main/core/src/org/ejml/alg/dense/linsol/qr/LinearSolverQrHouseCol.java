@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
@@ -134,7 +134,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
 
                 double vv = u[n];
                 u[n] = 1;
-                QrHelperFunctions.rank1UpdateMultR(a, u, gammas[n], 0, n, numRows, temp.data);
+                QrHelperFunctions_D64.rank1UpdateMultR(a, u, gammas[n], 0, n, numRows, temp.data);
                 u[n] = vv;
             }
 

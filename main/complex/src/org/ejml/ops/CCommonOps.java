@@ -61,6 +61,29 @@ public class CCommonOps {
 
     /**
      * <p>
+     * Creates a matrix with diagonal elements set to 1 and the rest 0.<br>
+     * <br>
+     * a<sub>ij</sub> = 0+0i   if i &ne; j<br>
+     * a<sub>ij</sub> = 1+0i   if i = j<br>
+     * </p>
+     *
+     * @param width The width of the identity matrix.
+     * @param height The height of the identity matrix.
+     * @return A new instance of an identity matrix.
+     */
+    public static CDenseMatrix64F identity( int width , int height) {
+        CDenseMatrix64F A = new CDenseMatrix64F(width,height);
+
+        int m = Math.min(width,height);
+        for (int i = 0; i < m; i++) {
+            A.set(i,i,1,0);
+        }
+
+        return A;
+    }
+
+    /**
+     * <p>
      * Creates a new square matrix whose diagonal elements are specified by data and all
      * the other elements are zero.<br>
      * <br>
@@ -812,6 +835,79 @@ public class CCommonOps {
 
         for( int i = 0; i < width; i++ , index += stride + 2) {
             mat.data[index] = 1;
+        }
+    }
+
+    /**
+     * <p>
+     * Creates a new matrix which is the specified submatrix of 'src'
+     * </p>
+     * <p>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * <br>
+     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
+     * original matrix.
+     * </p>
+     *
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param srcX0 Start column.
+     * @param srcX1 Stop column+1.
+     * @param srcY0 Start row.
+     * @param srcY1 Stop row+1.
+     * @return Extracted submatrix.
+     */
+    public static CDenseMatrix64F extract( CDenseMatrix64F src,
+                                          int srcY0, int srcY1,
+                                          int srcX0, int srcX1 )
+    {
+        if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
+            throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+        if( srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols )
+            throw new IllegalArgumentException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+
+        int w = srcX1-srcX0;
+        int h = srcY1-srcY0;
+
+        CDenseMatrix64F dst = new CDenseMatrix64F(h,w);
+
+        extract(src, srcY0, srcY1, srcX0, srcX1, dst, 0, 0);
+
+        return dst;
+    }
+
+    /**
+     * <p>
+     * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'.
+     * </p>
+     * <p>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * <br>
+     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
+     * original matrix.
+     * </p>
+     *
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param srcX0 Start column.
+     * @param srcX1 Stop column+1.
+     * @param srcY0 Start row.
+     * @param srcY1 Stop row+1.
+     * @param dst Where the submatrix are stored.  Modified.
+     * @param dstY0 Start row in dst.
+     * @param dstX0 start column in dst.
+     */
+    public static void extract(CDenseMatrix64F src,
+                               int srcY0, int srcY1,
+                               int srcX0, int srcX1,
+                               CDenseMatrix64F dst,
+                               int dstY0, int dstX0 )
+    {
+        int numRows = srcY1 - srcY0;
+        int stride = (srcX1 - srcX0)*2;
+
+        for( int y = 0; y < numRows; y++ ) {
+            int indexSrc = src.getIndex(y+srcY0,srcX0);
+            int indexDst = dst.getIndex(y+dstY0,dstX0);
+            System.arraycopy(src.data,indexSrc,dst.data,indexDst, stride);
         }
     }
 

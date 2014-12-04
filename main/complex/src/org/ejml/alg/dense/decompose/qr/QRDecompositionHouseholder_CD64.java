@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.qr;
+package org.ejml.alg.dense.decompose.qr;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CCommonOps;
 
 
 /**
@@ -48,14 +48,14 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatrix64F> {
+public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMatrix64F> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
      * upper triangular portion and Q on the lower bit.  Lower columns
      * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
      */
-    protected DenseMatrix64F QR;
+    protected CDenseMatrix64F QR;
 
     // used internally to store temporary data
     protected double u[],v[];
@@ -85,12 +85,12 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
         int maxLength = Math.max(numRows,numCols);
 
         if( QR == null ) {
-            QR = new DenseMatrix64F(numRows,numCols);
+            QR = new CDenseMatrix64F(numRows,numCols);
             u = new double[ maxLength ];
             v = new double[ maxLength ];
             gammas = new double[ minLength ];
         } else {
-            QR.reshape(numRows,numCols,false);
+            QR.reshape(numRows,numCols);
         }
 
         dataQR = QR.data;
@@ -111,36 +111,36 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
      *
      * @return The combined Q R matrix.
      */
-    public DenseMatrix64F getQR() {
+    public CDenseMatrix64F getQR() {
         return QR;
     }
 
     /**
-     * Computes the Q matrix from the imformation stored in the QR matrix.  This
+     * Computes the Q matrix from the information stored in the QR matrix.  This
      * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
+    public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows,minLength);
+                Q = CCommonOps.identity(numRows,minLength);
             } else {
                 if( Q.numRows != numRows || Q.numCols != minLength ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
-                    CommonOps.setIdentity(Q);
+                    CCommonOps.setIdentity(Q);
                 }
             }
         } else {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows);
+                Q = CCommonOps.identity(numRows);
             } else {
                 if( Q.numRows != numRows || Q.numCols != numRows ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
-                    CommonOps.setIdentity(Q);
+                    CCommonOps.setIdentity(Q);
                 }
             }
         }
@@ -148,9 +148,9 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
         for( int j = minLength-1; j >= 0; j-- ) {
             u[j] = 1;
             for( int i = j+1; i < numRows; i++ ) {
-                u[i] = QR.get(i,j);
+//                u[i] = QR.get(i,j); TODO update
             }
-            QrHelperFunctions_D64.rank1UpdateMultR(Q, u, gammas[j], j, j, numRows, v);
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,gammas[j],j,j,numRows,v);
         }
 
         return Q;
@@ -163,12 +163,12 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
      * @param compact
      */
     @Override
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
+    public CDenseMatrix64F getR(CDenseMatrix64F R, boolean compact) {
         if( R == null ) {
             if( compact ) {
-                R = new DenseMatrix64F(minLength,numCols);
+                R = new CDenseMatrix64F(minLength,numCols);
             } else
-                R = new DenseMatrix64F(numRows,numCols);
+                R = new CDenseMatrix64F(numRows,numCols);
         } else {
             if( compact ) {
                 if( R.numCols != numCols || R.numRows != minLength )
@@ -181,15 +181,15 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
             for( int i = 0; i < R.numRows; i++ ) {
                 int min = Math.min(i,R.numCols);
                 for( int j = 0; j < min; j++ ) {
-                    R.set(i,j,0);
+                    R.set(i,j,0,0);
                 }
             }
         }
 
         for( int i = 0; i < minLength; i++ ) {
             for( int j = i; j < numCols; j++ ) {
-                double val = QR.get(i,j);
-                R.set(i,j,val);
+//                double val = QR.get(i,j); TODO write
+//                R.set(i,j,val);
             }
         }
 
@@ -209,7 +209,7 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
      * </p>
      */
     @Override
-    public boolean decompose( DenseMatrix64F A ) {
+    public boolean decompose( CDenseMatrix64F A ) {
         commonSetup(A);
 
         for( int j = 0; j < minLength; j++ ) {
@@ -354,7 +354,7 @@ public class QRDecompositionHouseholder_D64 implements QRDecomposition<DenseMatr
      *
      * @param A
      */
-    protected void commonSetup(DenseMatrix64F A) {
+    protected void commonSetup(CDenseMatrix64F A) {
         setExpectedMaxSize(A.numRows,A.numCols);
 
         QR.set(A);

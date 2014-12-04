@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions;
+import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
@@ -121,7 +121,7 @@ public class TridiagonalDecompositionHouseholderOrig_D64 {
             for( int i = j+2; i < N; i++ ) {
                 w[i] = QT.get(j,i);
             }
-            QrHelperFunctions.rank1UpdateMultR(Q,w,gammas[j+1],j+1,j+1,N,b);
+            QrHelperFunctions_D64.rank1UpdateMultR(Q, w, gammas[j + 1], j + 1, j + 1, N, b);
 //            Q.print();
         }
 

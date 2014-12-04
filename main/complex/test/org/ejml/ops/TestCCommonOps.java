@@ -39,9 +39,25 @@ public class TestCCommonOps {
 
     Random rand = new Random(234);
 
-    public void identity() {
+    @Test
+    public void identity_one() {
         CDenseMatrix64F I = CCommonOps.identity(4);
         assertEquals(4,I.numRows);
+        assertEquals(4,I.numCols);
+
+        assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+    }
+
+    @Test
+    public void identity_two() {
+        CDenseMatrix64F I = CCommonOps.identity(4,5);
+        assertEquals(4,I.numRows);
+        assertEquals(5,I.numCols);
+
+        assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+
+        I = CCommonOps.identity(5,4);
+        assertEquals(5,I.numRows);
         assertEquals(4,I.numCols);
 
         assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
@@ -594,6 +610,46 @@ public class TestCCommonOps {
                     assertEquals(0,c.real,1e-8);
                     assertEquals(0,c.imaginary,1e-8);
                 }
+            }
+        }
+    }
+
+    @Test
+    public void extract_simplified() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(10,12,-2,2,rand);
+        CDenseMatrix64F b = CCommonOps.extract(a,2,5,3,8);
+
+        Complex64F ca = new Complex64F();
+        Complex64F cb = new Complex64F();
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 5; j++) {
+                a.get(2+i,j+3,ca);
+                b.get(  i,j  , cb);
+
+                assertEquals(ca.real,cb.real,1e-8);
+                assertEquals(ca.imaginary,cb.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void extract_complex() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(10,12,-2,2,rand);
+        CDenseMatrix64F b = new CDenseMatrix64F(6,7);
+
+        Complex64F ca = new Complex64F();
+        Complex64F cb = new Complex64F();
+
+        CCommonOps.extract(a,2,5,3,7,b,1,2);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                a.get(2+i,j+3,ca);
+                b.get(1 + i, j + 2, cb);
+
+                assertEquals(ca.real,cb.real,1e-8);
+                assertEquals(ca.imaginary,cb.imaginary,1e-8);
             }
         }
     }

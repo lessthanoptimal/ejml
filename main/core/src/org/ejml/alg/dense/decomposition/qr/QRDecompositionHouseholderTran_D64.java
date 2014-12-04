@@ -126,7 +126,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
             int diagIndex = j*numRows+j;
             double before = QR.data[diagIndex];
             QR.data[diagIndex] = 1;
-            QrHelperFunctions.rank1UpdateMultR(Q,QR.data,j*numRows,gammas[j],j,j,numRows,v);
+            QrHelperFunctions_D64.rank1UpdateMultR(Q, QR.data, j * numRows, gammas[j], j, j, numRows, v);
             QR.data[diagIndex] = before;
         }
 
@@ -146,7 +146,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
             int diagIndex = j*numRows+j;
             double before = QR.data[diagIndex];
             QR.data[diagIndex] = 1;
-            QrHelperFunctions.rank1UpdateMultR(A,QR.data,j*numRows,gammas[j],0,j,numRows,v);
+            QrHelperFunctions_D64.rank1UpdateMultR(A, QR.data, j * numRows, gammas[j], 0, j, numRows, v);
             QR.data[diagIndex] = before;
         }
     }
@@ -161,7 +161,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
             int diagIndex = j*numRows+j;
             double before = QR.data[diagIndex];
             QR.data[diagIndex] = 1;
-            QrHelperFunctions.rank1UpdateMultR(A,QR.data,j*numRows,gammas[j],0,j,numRows,v);
+            QrHelperFunctions_D64.rank1UpdateMultR(A, QR.data, j * numRows, gammas[j], 0, j, numRows, v);
             QR.data[diagIndex] = before;
         }
     }
@@ -260,18 +260,18 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
         int endQR = startQR+numRows;
         startQR += j;
 
-        final double max = QrHelperFunctions.findMax(QR.data,startQR,numRows-j);
+        final double max = QrHelperFunctions_D64.findMax(QR.data, startQR, numRows - j);
 
         if( max == 0.0 ) {
             gamma = 0;
             error = true;
         } else {
             // computes tau and normalizes u by max
-            tau = QrHelperFunctions.computeTauAndDivide(startQR, endQR , QR.data, max);
+            tau = QrHelperFunctions_D64.computeTauAndDivide(startQR, endQR, QR.data, max);
 
             // divide u by u_0
             double u_0 = QR.data[startQR] + tau;
-            QrHelperFunctions.divideElements(startQR+1,endQR , QR.data, u_0 );
+            QrHelperFunctions_D64.divideElements(startQR + 1, endQR, QR.data, u_0);
 
             gamma = u_0/tau;
             tau *= max;

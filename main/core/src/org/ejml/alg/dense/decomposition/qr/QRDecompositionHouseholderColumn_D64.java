@@ -124,7 +124,7 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
 
             double vv = u[j];
             u[j] = 1;
-            QrHelperFunctions.rank1UpdateMultR(Q,u,gammas[j],j,j,numRows,v);
+            QrHelperFunctions_D64.rank1UpdateMultR(Q, u, gammas[j], j, j, numRows, v);
             u[j] = vv;
         }
 
@@ -244,18 +244,18 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
-        final double max = QrHelperFunctions.findMax(u,j,numRows-j);
+        final double max = QrHelperFunctions_D64.findMax(u, j, numRows - j);
 
         if( max == 0.0 ) {
             gamma = 0;
             error = true;
         } else {
             // computes tau and normalizes u by max
-            tau = QrHelperFunctions.computeTauAndDivide(j, numRows , u, max);
+            tau = QrHelperFunctions_D64.computeTauAndDivide(j, numRows, u, max);
 
             // divide u by u_0
             double u_0 = u[j] + tau;
-            QrHelperFunctions.divideElements(j+1,numRows , u, u_0 );
+            QrHelperFunctions_D64.divideElements(j + 1, numRows, u, u_0);
 
             gamma = u_0/tau;
             tau *= max;

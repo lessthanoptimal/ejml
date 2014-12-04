@@ -19,6 +19,7 @@ Date format: year/month/day
 - Tweaked matrix inheritance to better support the addition of complex matrices
 - Added RandomMatrices setGaussian() and createGaussian()
 - Changed how SimpleMatrix computes its threshold for singular values
+  * Farley Lai noticed this issue
 - Added SingularOps.singularThreshold()
 - Added no argument rank and nullity for SVD using default threshold.
 
