@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.qr;
+package org.ejml.alg.dense.decompose.qr;
 
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.RandomMatrices;
@@ -26,25 +27,24 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64 {
+public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
 
     Random rand = new Random(0xff);
 
 
     @Override
-    protected QRDecomposition createQRDecomposition() {
-        return new QRDecompositionHouseholderColumn_D64();
+    protected QRDecomposition<CDenseMatrix64F> createQRDecomposition() {
+        return new QRDecompositionHouseholder_CD64();
     }
 
     /**
-     * Internal several householder operations are performed.  This
+     * Internall several house holder operations are performed.  This
      * checks to see if the householder operations and the expected result for all the
      * submatrices.
      */
@@ -55,6 +55,7 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
         for( int i = 0; i < width; i++ ) {
             checkSubHouse(i , width);
         }
+        fail("update");
     }
 
     private void checkSubHouse(int w , int width) {
@@ -65,8 +66,8 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
 
         qr.householder(w,A.getMatrix());
 
-        SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getQR()[w]).extractMatrix(w,width,0,1);
-        U.set(0,0,1); // this is not explicity set and is assumed to be 1
+        SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU()).extractMatrix(w,width,0,1);
+
         SimpleMatrix I = SimpleMatrix.identity(width-w);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
@@ -92,6 +93,7 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
 
         for( int i = 0; i < width; i++ )
             checkSubMatrix(width,i);
+        fail("update");
     }
 
     private void checkSubMatrix(int width , int w ) {
@@ -106,60 +108,61 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
         RandomMatrices.setRandom(U.getMatrix(),rand);
         RandomMatrices.setRandom(A.getMatrix(),rand);
 
-        qr.convertToColumnMajor(A.getMatrix());
+        qr.getQR().set(A.getMatrix());
 
         // compute the results using standard matrix operations
         SimpleMatrix I = SimpleMatrix.identity(width-w);
 
         SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
-        u_sub.set(0,0,1);// assumed to be 1 in the algorithm
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
         qr.updateA(w,U.getMatrix().getData(),gamma,tau);
 
-        double[][] found = qr.getQR();
+        CDenseMatrix64F found = qr.getQR();
 
-        for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found[w][i],1e-8);
-        }
+//        assertEquals(-tau,found.get(w,w),1e-8);
+//
+//        for( int i = w+1; i < width; i++ ) {
+//            assertEquals(U.get(i,0),found.get(i,w),1e-8);
+//        }
 
-        // the right should be the same
-        for( int i = w; i < width; i++ ) {
-            for( int j = w+1; j < width; j++ ) {
-                double a = expected.get(i-w,j-w);
-                double b = found[j][i];
-
-                assertEquals(a,b,1e-6);
-            }
-        }
+//        // the right should be the same
+//        for( int i = w; i < width; i++ ) {
+//            for( int j = w+1; j < width; j++ ) {
+//                double a = expected.get(i-w,j-w);
+//                double b = found.get(i,j);
+//
+//                assertEquals(a,b,1e-6);
+//            }
+//        }
     }
 
-    private static class DebugQR extends QRDecompositionHouseholderColumn_D64
+    private static class DebugQR extends QRDecompositionHouseholder_CD64
     {
 
-        public DebugQR( int numRows , int numCols ) {
+        public DebugQR(int numRows, int numCols) {
             setExpectedMaxSize(numRows,numCols);
-            this.numCols = numCols;
             this.numRows = numRows;
+            this.numCols = numCols;
         }
 
         public void householder( int j , DenseMatrix64F A ) {
-            convertToColumnMajor(A);
+            this.QR.set(A);
 
             super.householder(j);
         }
 
-        protected void convertToColumnMajor(DenseMatrix64F A) {
-            super.convertToColumnMajor(A);
-        }
-
         public void updateA( int w , double u[] , double gamma , double tau ) {
-            System.arraycopy(u,0,this.dataQR[w],0,u.length);
+            System.arraycopy(u,0,this.u,0,this.u.length);
             this.gamma = gamma;
             this.tau = tau;
 
             super.updateA(w);
+        }
+
+        public double[] getU() {
+            return u;
         }
 
         public double getGamma() {

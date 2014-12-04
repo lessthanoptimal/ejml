@@ -18,7 +18,9 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CD1Matrix64F;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.data.ComplexMatrix64F;
 
@@ -209,6 +211,39 @@ public class CMatrixFeatures {
                     if( !(Math.abs(c.imaginary) <= tol) )
                         return false;
                 }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if a matrix is orthogonal or isometric.
+     * </p>
+     *
+     * @param Q The matrix being tested. Not modified.
+     * @param tol Tolerance.
+     * @return True if it passes the test.
+     */
+    public static boolean isOrthogonal( CDenseMatrix64F Q , double tol )
+    {
+        if( Q.numRows < Q.numCols ) {
+            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
+        }
+
+        Complex64F prod = new Complex64F();
+
+        CDenseMatrix64F u[] = CCommonOps.columnsToVector(Q, null);
+
+        for( int i = 0; i < u.length; i++ ) {
+            CDenseMatrix64F a = u[i];
+
+            for( int j = i+1; j < u.length; j++ ) {
+                CVectorVectorMult.innerProd(a, u[j], prod);
+
+                if( !(prod.getMagnitude2() <= tol))
+                    return false;
             }
         }
 

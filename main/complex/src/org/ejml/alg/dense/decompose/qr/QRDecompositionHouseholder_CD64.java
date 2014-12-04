@@ -25,7 +25,7 @@ import org.ejml.ops.CCommonOps;
 
 /**
  * <p>
- * This variation of QR decomposition uses reflections to compute the Q matrix.
+ * This variation of complex QR decomposition uses reflections to compute the Q matrix.
  * Each reflection uses a householder operations, hence its name.  To provide a meaningful solution
  * the original matrix must have full rank.  This is intended for processing of small to medium matrices.
  * </p>
@@ -40,7 +40,8 @@ import org.ejml.ops.CCommonOps;
  * </p>
  *
  * <p>
- * For the most part this is a straight forward implementation.  To improve performance on large matrices a column is writen to an array and the order
+ * For the most part this is a straight forward implementation.  To improve performance on large matrices a column is
+ * written to an array and the order
  * of some of the loops has been changed.  This will degrade performance noticeably on small matrices.  Since
  * it is unlikely that the QR decomposition would be a bottle neck when small matrices are involved only
  * one implementation is provided.
@@ -86,8 +87,8 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
         if( QR == null ) {
             QR = new CDenseMatrix64F(numRows,numCols);
-            u = new double[ maxLength ];
-            v = new double[ maxLength ];
+            u = new double[ maxLength*2 ];
+            v = new double[ maxLength*2 ];
             gammas = new double[ minLength ];
         } else {
             QR.reshape(numRows,numCols);
@@ -95,13 +96,13 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
         dataQR = QR.data;
 
-        if( u.length < maxLength ) {
-            u = new double[ maxLength ];
-            v = new double[ maxLength ];
+        if( u.length < maxLength*2 ) {
+            u = new double[ maxLength*2 ];
+            v = new double[ maxLength*2 ];
         }
 
-        if( gammas.length < minLength ) {
-            gammas = new double[ minLength ];
+        if( gammas.length < minLength*2 ) {
+            gammas = new double[ minLength*2 ];
         }
     }
 
@@ -148,9 +149,13 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
         for( int j = minLength-1; j >= 0; j-- ) {
             u[j] = 1;
             for( int i = j+1; i < numRows; i++ ) {
-//                u[i] = QR.get(i,j); TODO update
+                int indexQR = QR.getIndex(i,j);
+                u[i*2] = QR.data[indexQR];
+                u[i*2+1] = QR.data[indexQR+1];
             }
-            QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,gammas[j],j,j,numRows,v);
+            double gammaR = gammas[j*2];
+            double gammaI = gammas[j*2+1];
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,0,gammaR,gammaI,j,j,numRows,v);
         }
 
         return Q;
@@ -188,8 +193,11 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
         for( int i = 0; i < minLength; i++ ) {
             for( int j = i; j < numCols; j++ ) {
-//                double val = QR.get(i,j); TODO write
-//                R.set(i,j,val);
+                int indexQR = QR.getIndex(i,j);
+                double realQR = QR.data[indexQR];
+                double imagQR = QR.data[indexQR+1];
+
+                R.set(i,j,realQR,imagQR);
             }
         }
 

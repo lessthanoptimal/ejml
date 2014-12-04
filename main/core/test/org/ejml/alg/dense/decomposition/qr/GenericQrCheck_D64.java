@@ -36,7 +36,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericQrCheck {
+public abstract class GenericQrCheck_D64 {
     Random rand = new Random(0xff);
 
     abstract protected QRDecomposition<DenseMatrix64F> createQRDecomposition();

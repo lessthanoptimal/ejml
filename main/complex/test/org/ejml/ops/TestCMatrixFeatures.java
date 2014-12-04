@@ -148,6 +148,25 @@ public class TestCMatrixFeatures {
 
         assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
         assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
+    }
 
+    @Test
+    public void isOrthogonal() {
+        // rotation matrices are orthogonal
+        double c = Math.cos(0.1);
+        double s = Math.sin(0.1);
+
+        CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{c,c,s,s},{-s,-s,c,c}});
+
+        assertTrue(CMatrixFeatures.isOrthogonal(A,1e-6f));
+
+        // try a negative case now
+        A.set(0,1,495,400);
+
+        assertFalse(CMatrixFeatures.isOrthogonal(A,1e-6f));
+
+        A.set(0,1,Double.NaN,Double.NaN);
+
+        assertFalse(CMatrixFeatures.isOrthogonal(A,1e-6f));
     }
 }

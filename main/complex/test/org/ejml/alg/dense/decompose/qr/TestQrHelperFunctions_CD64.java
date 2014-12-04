@@ -95,12 +95,53 @@ public class TestQrHelperFunctions_CD64 {
 
     @Test
     public void rank1UpdateMultR() {
-        fail("Implement");
+        double u[] = new double[12*2];
+        double uoff[] = new double[12*2+2];
+        double subU[] = new double[12*2];
+        double _temp[] = new double[u.length];
+        Complex64F gamma = new Complex64F(0.5,-0.2);
+
+        for (int i = 0; i < u.length; i++) {
+            u[i] = uoff[i+2] = (rand.nextDouble()*0.5-1.0)*2;
+        }
+
+        for (int i = 1; i < 12; i++) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,rand);
+
+            for (int j = 1; j <= i; j += 2) {
+                CDenseMatrix64F subA = CCommonOps.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                System.arraycopy(u,(A.numRows-j)*2,subU,0,j*2);
+                CDenseMatrix64F expected = rank1UpdateMultR(subA, gamma,subU);
+
+                CDenseMatrix64F found = A.copy();
+                QrHelperFunctions_CD64.rank1UpdateMultR(found, uoff, 1, gamma.real, gamma.imaginary,
+                        A.numRows - j, A.numRows - j, A.numRows, _temp);
+
+                CDenseMatrix64F subFound = CCommonOps.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+
+                outsideIdentical(A, found, j);
+                EjmlUnitTests.assertEquals(expected,subFound,1e-8);
+            }
+        }
     }
 
-    @Test
-    public void rank1UpdateMultR_offsetU() {
-        fail("Implement");
+    private CDenseMatrix64F rank1UpdateMultR( CDenseMatrix64F A , Complex64F gamma,  double u[] ) {
+        CDenseMatrix64F U = new CDenseMatrix64F(A.numCols,1);
+        U.data = u;
+        CDenseMatrix64F Ut = new CDenseMatrix64F(1,A.numCols);
+        Ut.data = u;
+
+        CDenseMatrix64F UUt = new CDenseMatrix64F(A.numCols,A.numCols);
+        CCommonOps.mult(gamma.real,gamma.imaginary,U,Ut,UUt);
+
+        CDenseMatrix64F I = CCommonOps.identity(A.numCols);
+        CDenseMatrix64F inner = new CDenseMatrix64F(A.numCols,A.numCols);
+        CDenseMatrix64F expected = new CDenseMatrix64F(A.numCols,A.numCols);
+
+        CCommonOps.subtract(I,UUt,inner);
+        CCommonOps.mult(inner,A,expected);
+
+        return expected;
     }
 
     @Test

@@ -189,6 +189,16 @@ public class EjmlUnitTests {
         }
     }
 
+    public static void assertEquals( Complex64F a , Complex64F b , double tol ) {
+        assertTrue(!Double.isNaN(a.real) && !Double.isNaN(b.real) ,"real a = "+a.real+" b = "+b.real);
+        assertTrue(!Double.isInfinite(a.real) && !Double.isInfinite(b.real) ,"real a = "+a.real+" b = "+b.real);
+        assertTrue(Math.abs( a.real-b.real) <= tol,"real a = "+a.real+" b = "+b.real);
+
+        assertTrue(!Double.isNaN(a.imaginary) && !Double.isNaN(b.imaginary) ,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
+        assertTrue(!Double.isInfinite(a.imaginary) && !Double.isInfinite(b.imaginary) ,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
+        assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
+    }
+
     public static void assertEquals( ComplexMatrix64F A , ComplexMatrix64F B , double tol ) {
         assertShape(A,B);
 

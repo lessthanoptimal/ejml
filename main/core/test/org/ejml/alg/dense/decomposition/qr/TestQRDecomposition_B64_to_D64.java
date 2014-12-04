@@ -24,7 +24,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 /**
  * @author Peter Abeles
  */
-public class TestQRDecomposition_B64_to_D64 extends GenericQrCheck {
+public class TestQRDecomposition_B64_to_D64 extends GenericQrCheck_D64 {
 
     @Override
     protected QRDecomposition createQRDecomposition() {

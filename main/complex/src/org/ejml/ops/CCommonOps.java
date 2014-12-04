@@ -911,4 +911,40 @@ public class CCommonOps {
         }
     }
 
+    /**
+     * Converts the columns in a matrix into a set of vectors.
+     *
+     * @param A Matrix.  Not modified.
+     * @param v Optional storage for columns.
+     * @return An array of vectors.
+     */
+    public static CDenseMatrix64F[] columnsToVector(CDenseMatrix64F A, CDenseMatrix64F[] v)
+    {
+        CDenseMatrix64F []ret;
+        if( v == null || v.length < A.numCols ) {
+            ret = new CDenseMatrix64F[ A.numCols ];
+        } else {
+            ret = v;
+        }
+
+        for( int i = 0; i < ret.length; i++ ) {
+            if( ret[i] == null ) {
+                ret[i] = new CDenseMatrix64F(A.numRows,1);
+            } else {
+                ret[i].reshape(A.numRows,1);
+            }
+
+            CDenseMatrix64F u = ret[i];
+
+            int indexU = 0;
+            for( int j = 0; j < A.numRows; j++ ) {
+                int indexA = A.getIndex(j,i);
+                u.data[indexU++] = A.data[indexA++];
+                u.data[indexU++] = A.data[indexA];
+            }
+        }
+
+        return ret;
+    }
+
 }

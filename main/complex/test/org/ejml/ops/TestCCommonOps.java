@@ -654,4 +654,27 @@ public class TestCCommonOps {
         }
     }
 
+    @Test
+    public void columnsToVector() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(10,12,-2,2,rand);
+        CDenseMatrix64F v[] = CCommonOps.columnsToVector(a,null);
+
+        Complex64F ca = new Complex64F();
+        Complex64F cc = new Complex64F();
+
+        for (int i = 0; i < a.numCols; i++) {
+            CDenseMatrix64F c = v[i];
+
+            assertEquals(c.numRows,a.numRows);
+            assertEquals(1,c.numCols);
+
+            for (int j = 0; j < a.numRows; j++) {
+                a.get(j,i,ca);
+                c.get(j,0,cc);
+
+                EjmlUnitTests.assertEquals(ca,cc,1e-8);
+            }
+        }
+    }
+
 }

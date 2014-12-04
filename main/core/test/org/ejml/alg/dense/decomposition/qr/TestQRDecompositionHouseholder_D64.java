@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck {
+public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
 
     Random rand = new Random(0xff);
 
