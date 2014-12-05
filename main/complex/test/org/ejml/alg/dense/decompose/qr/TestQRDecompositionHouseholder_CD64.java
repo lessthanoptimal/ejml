@@ -19,8 +19,11 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -53,33 +56,54 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
         int width = 5;
 
         for( int i = 0; i < width; i++ ) {
-            checkSubHouse(i , width);
+            System.out.println("     i = "+i);
+            checkSubHouse(i, width);
         }
-        fail("update");
     }
 
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
+        CDenseMatrix64F A = CRandomMatrices.createRandom(width,width,rand);
+//        for (int i = 1; i < A.data.length; i+=2) {
+//            A.data[i] = 0;
+//        }
 
-        qr.householder(w,A.getMatrix());
+        qr.householder(w,A);
 
-        SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU()).extractMatrix(w,width,0,1);
+        CDenseMatrix64F U = new CDenseMatrix64F(width-w,1);
+        System.arraycopy(qr.getU(),w*2,U.data,0,(width-w)*2);
+        CDenseMatrix64F Ut = CCommonOps.transpose(U,null);
 
-        SimpleMatrix I = SimpleMatrix.identity(width-w);
-        SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
+        CDenseMatrix64F I = CCommonOps.identity(width-w);
+        CDenseMatrix64F UUt = new CDenseMatrix64F(I.numRows,I.numCols);
+        CDenseMatrix64F gamma_UUt = new CDenseMatrix64F(I.numRows,I.numCols);
+        CDenseMatrix64F Q = new CDenseMatrix64F(I.numRows,I.numCols);
+        CDenseMatrix64F Q_inv = new CDenseMatrix64F(I.numRows,I.numCols);
 
+        U.print();
+        // Q = I - gamma*u*u'
+        CCommonOps.mult(U, Ut, UUt);
+        CCommonOps.elementMultiply(UUt, qr.getRealGamma(), qr.getImagGamma(), gamma_UUt);
+        CCommonOps.subtract(I,gamma_UUt,Q);
 
         // check the expected properties of Q
-        assertTrue(Q.isIdentical(Q.transpose(),1e-6));
-        assertTrue(Q.isIdentical(Q.invert(),1e-6));
+        assertTrue(CMatrixFeatures.isIdentical(Q,CCommonOps.transpose(Q,null),1e-6));
+        CCommonOps.invert(Q, Q_inv);
+        assertTrue(CMatrixFeatures.isIdentical(Q, Q_inv, 1e-6));
 
-        SimpleMatrix result = Q.mult(A.extractMatrix(w,width,w,width));
+        CDenseMatrix64F result = new CDenseMatrix64F(I.numRows,I.numCols);
+        CDenseMatrix64F Asub = CCommonOps.extract(A,w,width,w,width);
+        CCommonOps.mult(Q,Asub,result);
 
+        System.out.println("-----");
+        Asub.print();
+        result.print();
+
+        Complex64F a = new Complex64F();
         for( int i = 1; i < width-w; i++ ) {
-            assertEquals(0,result.get(i,0),1e-5);
+            result.get(i,0,a);
+            assertEquals(0, a.getMagnitude2(),1e-5);
         }
     }
 
@@ -117,7 +141,7 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,U.getMatrix().getData(),gamma,tau);
+        qr.updateA(w,U.getMatrix().getData(),gamma,999999,tau);
 
         CDenseMatrix64F found = qr.getQR();
 
@@ -147,15 +171,17 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
             this.numCols = numCols;
         }
 
-        public void householder( int j , DenseMatrix64F A ) {
+        public void householder( int j , CDenseMatrix64F A ) {
             this.QR.set(A);
 
             super.householder(j);
         }
 
-        public void updateA( int w , double u[] , double gamma , double tau ) {
+        public void updateA( int w , double u[] ,
+                             double realGamma, double imagGamma , double tau ) {
             System.arraycopy(u,0,this.u,0,this.u.length);
-            this.gamma = gamma;
+            this.realGamma = realGamma;
+            this.imagGamma = imagGamma;
             this.tau = tau;
 
             super.updateA(w);
@@ -165,8 +191,11 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
             return u;
         }
 
-        public double getGamma() {
-            return gamma;
+        public double getRealGamma() {
+            return realGamma;
+        }
+        public double getImagGamma() {
+            return imagGamma;
         }
     }
 }

@@ -71,7 +71,8 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     // the computed gamma for Q_k matrix
     protected double gammas[];
     // local variables
-    protected double gamma;
+    protected double realGamma;
+    protected double imagGamma;
     protected double tau;
 
     // did it encounter an error?
@@ -251,47 +252,66 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     protected void householder( int j )
     {
         // find the element with the largest absolute value in the column and make a copy
-        int index = j+j*numCols;
+        int indexQR = 2*(j+j*numCols);
+        int indexU = 2*j;
         double max = 0;
         for( int i = j; i < numRows; i++ ) {
 
-            double d = u[i] = dataQR[index];
+            double realD = u[indexU++] = dataQR[indexQR];
+            double imagD = u[indexU++] = dataQR[indexQR+1];
 
             // absolute value of d
-            if( d < 0 ) d = -d;
-            if( max < d ) {
-                max = d;
+            double magD = realD*realD + imagD*imagD;
+            if( max < magD ) {
+                max = magD;
             }
-            index += numCols;
+            indexQR += numCols*2;
         }
+        max = Math.sqrt(max);
 
         if( max == 0.0 ) {
-            gamma = 0;
+            realGamma = 0;
+            imagGamma = 0;
             error = true;
         } else {
-            // compute the norm2 of the matrix, with each element
+            // compute the norm2 of the vector, with each element
             // normalized by the max value to avoid overflow problems
             tau = 0;
+            indexU = 2*j;
             for( int i = j; i < numRows; i++ ) {
-                u[i] /= max;
-                double d = u[i];
-                tau += d*d;
+                double realD = u[indexU++] /= max;
+                double imagD = u[indexU++] /= max;
+
+                tau += realD*realD + imagD*imagD;
             }
             tau = Math.sqrt(tau);
 
-            if( u[j] < 0 )
+            if( u[2*j] < 0 )
                 tau = -tau;
 
-            double u_0 = u[j] + tau;
-            gamma = u_0/tau;
+            double real_u_0 = u[2*j] + tau;
+            double imag_u_0 = u[2*j+1];
+            double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
+
+            realGamma = real_u_0/tau;
+            imagGamma = imag_u_0/tau;
+
+            indexU = (j+1)*2;
             for( int i = j+1; i < numRows; i++ ) {
-                u[i] /= u_0;
+                double realU = u[indexU];
+                double imagU = u[indexU+1];
+
+                u[indexU++] = (realU*real_u_0 + imagU*imag_u_0)/norm_u_0;
+                u[indexU++] = (imagU*real_u_0 - realU*imag_u_0)/norm_u_0;
             }
-            u[j] = 1;
+            u[2*j  ] = 1;
+            u[2*j+1] = 0;
+
             tau *= max;
         }
 
-        gammas[j] = gamma;
+        gammas[2*j  ] = realGamma;
+        gammas[2*j+1] = imagGamma;
     }
 
     /**
@@ -332,7 +352,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
         }
 
         for( int i = w+1; i < numCols; i++ ) {
-            v[i] *= gamma;
+            v[i] *= realGamma;
         }
 
         // end of reordered code
