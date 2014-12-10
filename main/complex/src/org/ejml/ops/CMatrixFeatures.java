@@ -249,4 +249,76 @@ public class CMatrixFeatures {
 
         return true;
     }
+
+    /**
+     * Hermitian matrix is a square matrix with complex entries that is equal to its own conjugate transpose.
+     *
+     * @param Q The matrix being tested. Not modified.
+     * @param tol Tolerance.
+     * @return True if it passes the test.
+     */
+    public static boolean isHermitian( CDenseMatrix64F Q , double tol ) {
+        if( Q.numCols != Q.numRows )
+            return false;
+
+        Complex64F a = new Complex64F();
+        Complex64F b = new Complex64F();
+
+
+        for( int i = 0; i < Q.numCols; i++ ) {
+            for( int j = i+1; j < Q.numCols; j++ ) {
+                Q.get(i,j,a);
+                Q.get(j,i,b);
+
+                if( Math.abs(a.real-b.real)>tol)
+                    return false;
+                if( Math.abs(a.imaginary+b.imaginary)>tol)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Unitary matrices have the following properties:<br><br>
+     *
+     * Q*Q<sup>CT</sup> = I
+     *
+     * @param Q The matrix being tested. Not modified.
+     * @param tol Tolerance.
+     * @return True if it passes the test.
+     */
+    public static boolean isUnitary( CDenseMatrix64F Q , double tol ) {
+        if( Q.numCols != Q.numRows )
+            return false;
+
+        CDenseMatrix64F Qt = new CDenseMatrix64F(Q.numRows,Q.numCols);
+        CDenseMatrix64F QQt = new CDenseMatrix64F(Q.numRows,Q.numCols);
+
+        CCommonOps.transposeConjugate(Q, Qt);
+        CCommonOps.mult(Q,Qt,QQt);
+
+        QQt.print();
+
+        Complex64F a = new Complex64F();
+
+        for( int i = 0; i < Q.numCols; i++ ) {
+            for( int j = 0; j < Q.numCols; j++ ) {
+                QQt.get(i,j,a);
+
+                if( i == j ) {
+                    if( Math.abs(a.real-1)>tol)
+                        return false;
+                } else {
+                    if( Math.abs(a.real)>tol)
+                        return false;
+                }
+                if( Math.abs(a.imaginary)>tol)
+                    return false;
+            }
+        }
+
+        return true;
+    }
 }

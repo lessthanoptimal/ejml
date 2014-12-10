@@ -91,7 +91,7 @@ public interface LinearSolver< T extends Matrix> {
      * be invariant to the scale of the matrix and always be positive, with larger values
      * indicating it is less singular.  If not supported by the solver then the runtime
      * exception IllegalArgumentException is thrown.  This is NOT the matrix's condition.
-     * <p>
+     * </p>
      *
      * <p>
      * How this function is implemented is not specified.  One possible implementation is the following:

@@ -169,4 +169,20 @@ public class TestCMatrixFeatures {
 
         assertFalse(CMatrixFeatures.isOrthogonal(A,1e-6f));
     }
+
+    @Test
+    public void isHermitian() {
+        CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{1,1.1,2,2.1},{2,-2.1,3,3.1}});
+
+        assertTrue(CMatrixFeatures.isHermitian(A, 1e-8));
+
+        A.set(0,1,5,6);
+
+        assertFalse(CMatrixFeatures.isHermitian(A, 1e-8));
+    }
+
+    @Test
+    public void isUnitary() {
+        fail("Implement");
+    }
 }

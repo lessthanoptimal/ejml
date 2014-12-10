@@ -31,7 +31,7 @@ import org.ejml.ops.CCommonOps;
  * </p>
  * <p>
  * Both Q and R are stored in the same m by n matrix.  Q is not stored directly, instead the u from
- * Q<sub>k</sub>=(I-&gamma;*u*u<sup>T</sup>) is stored.  Decomposition requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
+ * Q<sub>k</sub>=(I-&gamma;*u*u<sup>CT</sup>) is stored.  Decomposition requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
  * </p>
  *
  * <p>
@@ -241,7 +241,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      * overflow and underflow.
      * </p>
      * <p>
-     * Q = I - &gamma;uu<sup>T</sup>
+     * Q = I - &gamma;uu<sup>CT</sup>
      * </p>
      * <p>
      * This function finds the values of 'u' and '&gamma;'.
@@ -289,7 +289,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             if( u[2*j] < 0 )
                 tau = -tau;
 
-            double real_u_0 = u[2*j] + tau;
+            double real_u_0 = u[2*j  ] + tau;
             double imag_u_0 = u[2*j+1];
             double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
 
@@ -309,6 +309,20 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
             tau *= max;
         }
+
+        // In your Matlab code, you write q1 = eye(3) - (1 + conj(v1'*a1)/(v1'*a1)) * v1*v1' instead of q1 = eye(3) - 2*v1*v1' and it should work.
+        realGamma = 1;
+        imagGamma = 0;
+        indexU = (j+1)*2;
+        for( int i = j+1; i < numRows; i++ ) {
+            double realU = u[indexU];
+            double imagU = u[indexU+1];
+
+            realGamma += realU*realU + imagU*imagU;
+        }
+
+        realGamma = 2/realGamma;
+        imagGamma = 0;
 
         gammas[2*j  ] = realGamma;
         gammas[2*j+1] = imagGamma;

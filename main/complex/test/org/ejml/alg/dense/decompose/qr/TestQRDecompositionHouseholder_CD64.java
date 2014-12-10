@@ -68,18 +68,20 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
 //        for (int i = 1; i < A.data.length; i+=2) {
 //            A.data[i] = 0;
 //        }
+        for (int i = 0; i < width; i++) {
+            A.set(i,0,i+1,-(i+3));
+        }
 
         qr.householder(w,A);
 
         CDenseMatrix64F U = new CDenseMatrix64F(width-w,1);
         System.arraycopy(qr.getU(),w*2,U.data,0,(width-w)*2);
-        CDenseMatrix64F Ut = CCommonOps.transpose(U,null);
+        CDenseMatrix64F Ut = CCommonOps.transposeConjugate(U,null);
 
         CDenseMatrix64F I = CCommonOps.identity(width-w);
         CDenseMatrix64F UUt = new CDenseMatrix64F(I.numRows,I.numCols);
         CDenseMatrix64F gamma_UUt = new CDenseMatrix64F(I.numRows,I.numCols);
         CDenseMatrix64F Q = new CDenseMatrix64F(I.numRows,I.numCols);
-        CDenseMatrix64F Q_inv = new CDenseMatrix64F(I.numRows,I.numCols);
 
         U.print();
         // Q = I - gamma*u*u'
@@ -87,10 +89,11 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
         CCommonOps.elementMultiply(UUt, qr.getRealGamma(), qr.getImagGamma(), gamma_UUt);
         CCommonOps.subtract(I,gamma_UUt,Q);
 
+        Q.print();
+
         // check the expected properties of Q
-        assertTrue(CMatrixFeatures.isIdentical(Q,CCommonOps.transpose(Q,null),1e-6));
-        CCommonOps.invert(Q, Q_inv);
-        assertTrue(CMatrixFeatures.isIdentical(Q, Q_inv, 1e-6));
+        assertTrue(CMatrixFeatures.isHermitian(Q, 1e-6));
+        assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
 
         CDenseMatrix64F result = new CDenseMatrix64F(I.numRows,I.numCols);
         CDenseMatrix64F Asub = CCommonOps.extract(A,w,width,w,width);
