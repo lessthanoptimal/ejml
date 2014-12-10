@@ -1089,17 +1089,20 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The matrix.
      * @throws IOException
      */
-    public static SimpleMatrix loadCSV( String fileName )
+    public T loadCSV( String fileName )
             throws IOException {
         RealMatrix64F mat = MatrixIO.loadCSV(fileName);
 
+        T ret = createMatrix(1,1);
+
         // see if its a DenseMatrix64F
         if( mat instanceof DenseMatrix64F ) {
-            return SimpleMatrix.wrap((DenseMatrix64F)mat);
+            ret.mat = (DenseMatrix64F)mat;
         } else {
             // if not convert it into one and wrap it
-            return SimpleMatrix.wrap( new DenseMatrix64F(mat));
+            ret.mat = new DenseMatrix64F(mat);
         }
+        return ret;
     }
 
     /**
