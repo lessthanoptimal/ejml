@@ -71,8 +71,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     // the computed gamma for Q_k matrix
     protected double gammas[];
     // local variables
-    protected double realGamma;
-    protected double imagGamma;
+    protected double realGamma; // gamma is always real
     protected double tau;
 
     // did it encounter an error?
@@ -102,8 +101,8 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             v = new double[ maxLength*2 ];
         }
 
-        if( gammas.length < minLength*2 ) {
-            gammas = new double[ minLength*2 ];
+        if( gammas.length < minLength ) {
+            gammas = new double[ minLength ];
         }
     }
 
@@ -271,7 +270,6 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
         if( max == 0.0 ) {
             realGamma = 0;
-            imagGamma = 0;
             error = true;
         } else {
             // compute the norm2 of the vector, with each element
@@ -286,15 +284,13 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             }
             tau = Math.sqrt(tau);
 
-            if( u[2*j] < 0 )
-                tau = -tau;
+            double real_x0 = u[2*j];
+            double imag_x0 = u[2*j+1];
+            double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
 
-            double real_u_0 = u[2*j  ] + tau;
-            double imag_u_0 = u[2*j+1];
+            double real_u_0 = real_x0 + real_x0/mag_x0*tau;
+            double imag_u_0 = imag_x0 + imag_x0/mag_x0*tau;
             double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
-
-            realGamma = real_u_0/tau;
-            imagGamma = imag_u_0/tau;
 
             indexU = (j+1)*2;
             for( int i = j+1; i < numRows; i++ ) {
@@ -310,22 +306,17 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             tau *= max;
         }
 
-        // In your Matlab code, you write q1 = eye(3) - (1 + conj(v1'*a1)/(v1'*a1)) * v1*v1' instead of q1 = eye(3) - 2*v1*v1' and it should work.
+        // calculations can be reduced
         realGamma = 1;
-        imagGamma = 0;
         indexU = (j+1)*2;
         for( int i = j+1; i < numRows; i++ ) {
-            double realU = u[indexU];
-            double imagU = u[indexU+1];
+            double realU = u[indexU++];
+            double imagU = u[indexU++];
 
             realGamma += realU*realU + imagU*imagU;
         }
 
-        realGamma = 2/realGamma;
-        imagGamma = 0;
-
-        gammas[2*j  ] = realGamma;
-        gammas[2*j+1] = imagGamma;
+        gammas[j] = realGamma = 2/realGamma;
     }
 
     /**

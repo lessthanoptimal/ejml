@@ -299,8 +299,6 @@ public class CMatrixFeatures {
         CCommonOps.transposeConjugate(Q, Qt);
         CCommonOps.mult(Q,Qt,QQt);
 
-        QQt.print();
-
         Complex64F a = new Complex64F();
 
         for( int i = 0; i < Q.numCols; i++ ) {
