@@ -268,6 +268,8 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
         }
         max = Math.sqrt(max);
 
+        double tmp = 0;
+
         if( max == 0.0 ) {
             realGamma = 0;
             error = true;
@@ -303,20 +305,16 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             u[2*j  ] = 1;
             u[2*j+1] = 0;
 
+
+            double top = tau*tau + tau*mag_x0;
+            double bottom = mag_x0*mag_x0 + 2.0*tau*mag_x0 + tau*tau;
+
+            realGamma = bottom/top;
+
             tau *= max;
         }
 
-        // calculations can be reduced
-        realGamma = 1;
-        indexU = (j+1)*2;
-        for( int i = j+1; i < numRows; i++ ) {
-            double realU = u[indexU++];
-            double imagU = u[indexU++];
-
-            realGamma += realU*realU + imagU*imagU;
-        }
-
-        gammas[j] = realGamma = 2/realGamma;
+        gammas[j] = realGamma;
     }
 
     /**

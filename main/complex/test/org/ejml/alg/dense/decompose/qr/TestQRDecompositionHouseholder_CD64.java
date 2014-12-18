@@ -47,13 +47,13 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
     }
 
     /**
-     * Internall several house holder operations are performed.  This
+     * Internally several house holder operations are performed.  This
      * checks to see if the householder operations and the expected result for all the
      * submatrices.
      */
     @Test
     public void householder() {
-        int width = 5;
+        int width = 6;
 
         for( int i = 0; i < width; i++ ) {
             checkSubHouse(i, width);
@@ -64,9 +64,6 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
         DebugQR qr = new DebugQR(width,width);
 
         CDenseMatrix64F A = CRandomMatrices.createRandom(width,width,rand);
-        for (int i = 1; i < A.data.length; i+=2) {
-            A.data[i] = 0;
-        }
 
         qr.householder(w,A);
 
