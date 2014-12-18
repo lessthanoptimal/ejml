@@ -18,7 +18,9 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.junit.Test;
 
 import java.util.Random;
@@ -150,25 +152,7 @@ public class TestCMatrixFeatures {
         assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
     }
 
-    @Test
-    public void isOrthogonal() {
-        // rotation matrices are orthogonal
-        double c = Math.cos(0.1);
-        double s = Math.sin(0.1);
 
-        CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{c,c,s,s},{-s,-s,c,c}});
-
-        assertTrue(CMatrixFeatures.isOrthogonal(A,1e-6f));
-
-        // try a negative case now
-        A.set(0,1,495,400);
-
-        assertFalse(CMatrixFeatures.isOrthogonal(A,1e-6f));
-
-        A.set(0,1,Double.NaN,Double.NaN);
-
-        assertFalse(CMatrixFeatures.isOrthogonal(A,1e-6f));
-    }
 
     @Test
     public void isHermitian() {
@@ -183,6 +167,22 @@ public class TestCMatrixFeatures {
 
     @Test
     public void isUnitary() {
-        fail("Implement");
+        // create a reflector since it's unitary
+        CDenseMatrix64F u = CRandomMatrices.createRandom(5,1,rand);
+        Complex64F dot = new Complex64F();
+        CVectorVectorMult.innerProdH(u, u,dot);
+        double gamma = 2.0/dot.real;
+        CDenseMatrix64F A = CSpecializedOps.householder(u,gamma);
+
+        assertTrue(CMatrixFeatures.isUnitary(A, 1e-6f));
+
+        // try a negative case now
+        A.set(0,1,495,400);
+
+        assertFalse(CMatrixFeatures.isUnitary(A, 1e-6f));
+
+        A.set(0,1,Double.NaN,Double.NaN);
+
+        assertFalse(CMatrixFeatures.isUnitary(A, 1e-6f));
     }
 }

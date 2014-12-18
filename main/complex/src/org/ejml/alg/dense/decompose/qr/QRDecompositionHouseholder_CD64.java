@@ -72,7 +72,8 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     protected double gammas[];
     // local variables
     protected double realGamma; // gamma is always real
-    protected double tau;
+    protected double realTau,imagTau;
+
 
     // did it encounter an error?
     protected boolean error;
@@ -147,15 +148,15 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
         }
 
         for( int j = minLength-1; j >= 0; j-- ) {
-            u[j] = 1;
+            u[2*j]   = 1;
+            u[2*j+1] = 0;
+
             for( int i = j+1; i < numRows; i++ ) {
                 int indexQR = QR.getIndex(i,j);
                 u[i*2] = QR.data[indexQR];
                 u[i*2+1] = QR.data[indexQR+1];
             }
-            double gammaR = gammas[j*2];
-            double gammaI = gammas[j*2+1];
-            QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,0,gammaR,gammaI,j,j,numRows,v);
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,0,gammas[j],j,j,numRows,v);
         }
 
         return Q;
@@ -240,7 +241,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      * overflow and underflow.
      * </p>
      * <p>
-     * Q = I - &gamma;uu<sup>CT</sup>
+     * Q = I - &gamma;uu<sup>H</sup>
      * </p>
      * <p>
      * This function finds the values of 'u' and '&gamma;'.
@@ -268,30 +269,34 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
         }
         max = Math.sqrt(max);
 
-        double tmp = 0;
-
         if( max == 0.0 ) {
             realGamma = 0;
             error = true;
         } else {
             // compute the norm2 of the vector, with each element
             // normalized by the max value to avoid overflow problems
-            tau = 0;
+            double nx = 0;
             indexU = 2*j;
+
             for( int i = j; i < numRows; i++ ) {
                 double realD = u[indexU++] /= max;
                 double imagD = u[indexU++] /= max;
 
-                tau += realD*realD + imagD*imagD;
+                nx += realD*realD + imagD*imagD;
             }
-            tau = Math.sqrt(tau);
+            nx = Math.sqrt(nx);
+
+            // todo add sign selection back
 
             double real_x0 = u[2*j];
             double imag_x0 = u[2*j+1];
             double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
 
-            double real_u_0 = real_x0 + real_x0/mag_x0*tau;
-            double imag_u_0 = imag_x0 + imag_x0/mag_x0*tau;
+            realTau = real_x0/mag_x0* nx;
+            imagTau = imag_x0/mag_x0* nx;
+
+            double real_u_0 = real_x0 + realTau;
+            double imag_u_0 = imag_x0 + imagTau;
             double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
 
             indexU = (j+1)*2;
@@ -305,13 +310,13 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             u[2*j  ] = 1;
             u[2*j+1] = 0;
 
-
-            double top = tau*tau + tau*mag_x0;
-            double bottom = mag_x0*mag_x0 + 2.0*tau*mag_x0 + tau*tau;
+            double top = nx * nx + nx *mag_x0;
+            double bottom = mag_x0*mag_x0 + 2.0* nx *mag_x0 + nx * nx;
 
             realGamma = bottom/top;
 
-            tau *= max;
+            realTau *= max;
+            imagTau *= max;
         }
 
         gammas[j] = realGamma;
@@ -321,7 +326,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      * <p>
      * Takes the results from the householder computation and updates the 'A' matrix.<br>
      * <br>
-     * A = (I - &gamma;*u*u<sup>T</sup>)A
+     * A = (I - &gamma;*u*u<sup>H</sup>)A
      * </p>
      *
      * @param w The submatrix.
@@ -342,41 +347,67 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
         // This is functionally the same as the above code but the order has been changed
         // to avoid jumping the cpu cache
+
+        int stride = numCols*2;
+        double realU = u[w*2];
+        double imagU = -u[w*2+1];
+
+        int indexQR = w*stride+(w+1)*2;
         for( int i = w+1; i < numCols; i++ ) {
-            v[i] = u[w]*dataQR[w*numCols +i];
+
+            double realQR = dataQR[indexQR++];
+            double imagQR = dataQR[indexQR++];
+
+            v[i*2]   = realU*realQR - imagU*imagQR;
+            v[i*2+1] = realU*imagQR + imagU*realQR;
         }
 
         for( int k = w+1; k < numRows; k++ ) {
-            int indexQR = k*numCols+w+1;
+            realU = u[k*2];
+            imagU = -u[k*2+1];
+
+            indexQR = k*stride+(w+1)*2;
             for( int i = w+1; i < numCols; i++ ) {
+                double realQR = dataQR[indexQR++];
+                double imagQR = dataQR[indexQR++];
+
 //                v[i] += u[k]*dataQR[k*numCols +i];
-                v[i] += u[k]*dataQR[indexQR++];
+                v[i*2]   += realU*realQR - imagU*imagQR;
+                v[i*2+1] += realU*imagQR + imagU*realQR;
             }
         }
 
         for( int i = w+1; i < numCols; i++ ) {
-            v[i] *= realGamma;
+            v[i*2] *= realGamma;
+            v[i*2+1] *= realGamma;
         }
 
         // end of reordered code
 
         for( int i = w; i < numRows; i++ ) {
-            double valU = u[i];
+            double realI = u[i*2];
+            double imagI = u[i*2+1];
 
-            int indexQR = i*numCols+w+1;
+            indexQR = i*stride+(w+1)*2;
             for( int j = w+1; j < numCols; j++ ) {
+                double realJ = v[j*2];
+                double imagJ = v[j*2+1];
+
 //                dataQR[i*numCols+j] -= valU*v[j];
-                dataQR[indexQR++] -= valU*v[j];
+                dataQR[indexQR++] -= realI*realJ - imagI*imagJ;
+                dataQR[indexQR++] -= realI*imagJ + imagI*realJ;
             }
         }
 
         if( w < numCols ) {
-            dataQR[w+w*numCols] = -tau;
+            dataQR[2*w+w*stride] = -realTau;
+            dataQR[2*w+w*stride+1] = -imagTau;
         }
 
         // save the Q matrix in the lower portion of QR
         for( int i = w+1; i < numRows; i++ ) {
-            dataQR[w+i*numCols] = u[i];
+            dataQR[2*w+i*stride]     = u[i*2];
+            dataQR[2*w+i*stride + 1] = u[i*2 + 1];
         }
     }
 

@@ -18,7 +18,6 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
-import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CCommonOps;
@@ -29,8 +28,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -43,7 +41,16 @@ public abstract class GenericQrCheck_CD64 {
 
     @Test
     public void testModifiedInput() {
-        CheckDecompositionInterface.checkModifiedInput(createQRDecomposition());
+        QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
+
+        CDenseMatrix64F A = CRandomMatrices.createRandom(6, 4, rand);
+        CDenseMatrix64F A_orig = A.copy();
+
+        assertTrue(alg.decompose(A));
+
+        boolean modified = !CMatrixFeatures.isEquals(A,A_orig);
+
+        assertTrue(modified + " " + alg.inputModified(), alg.inputModified() == modified);
     }
 
     /**
@@ -73,13 +80,8 @@ public abstract class GenericQrCheck_CD64 {
         CDenseMatrix64F R = new CDenseMatrix64F(compact ? minStride : height,width);
         alg.getR(R, compact);
 
-
         // see if Q has the expected properties
-        assertTrue(CMatrixFeatures.isOrthogonal(Q, 1e-6));
-
-//        UtilEjml.print(alg.getQR());
-//        Q.print();
-//        R.print();
+        assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
 
         // see if it has the expected properties
         CDenseMatrix64F A_found = new CDenseMatrix64F(Q.numRows,R.numCols);
@@ -87,7 +89,7 @@ public abstract class GenericQrCheck_CD64 {
 
         EjmlUnitTests.assertEquals(A,A_found,1e-6);
         CDenseMatrix64F R_found = new CDenseMatrix64F(R.numRows,R.numCols);
-        CCommonOps.transpose(Q);
+        CCommonOps.transposeConjugate(Q);
         CCommonOps.mult(Q, A, R_found);
     }
 
@@ -176,7 +178,9 @@ public abstract class GenericQrCheck_CD64 {
         alg.getQ(Q, true);
 
         // see if Q has the expected properties
-        assertTrue(CMatrixFeatures.isOrthogonal(Q,1e-6));
+        assertEquals(height,Q.numRows);
+        assertEquals(width,Q.numCols);
+        assertTrue(CMatrixFeatures.isUnitary(Q,1e-6));
 
         // try to extract it with the wrong dimensions
         Q = new CDenseMatrix64F(height,height);

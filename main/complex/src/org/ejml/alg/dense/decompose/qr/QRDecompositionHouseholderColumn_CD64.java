@@ -127,11 +127,9 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
 
             u[j*2]   = 1;
             u[j*2+1] = 0;
-            double gammaReal = gammas[j*2];
-            double gammaImag = gammas[j*2+1];
+            double gammaReal = gammas[j];
 
-            QrHelperFunctions_CD64.rank1UpdateMultR(Q, u,0, gammaReal,gammaImag,
-                    j, j, numRows, v);
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q, u,0, gammaReal,j, j, numRows, v);
 
             u[j*2]   = vvReal;
             u[j*2+1] = vvImag;

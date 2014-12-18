@@ -50,4 +50,52 @@ public class TestCVectorVectorMult {
 
         EjmlUnitTests.assertEquals(expected,found,1e-8);
     }
+
+    @Test
+    public void innerProdH() {
+
+        CDenseMatrix64F a = CRandomMatrices.createRandom(1,6,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(6,1,rand);
+
+        Complex64F found = CVectorVectorMult.innerProdH(a, b, null);
+
+        CDenseMatrix64F c = new CDenseMatrix64F(1,1);
+
+        CCommonOps.conjugate(b,b);
+        CCommonOps.mult(a,b,c);
+
+        Complex64F expected = new Complex64F();
+        c.get(0,0,expected);
+
+        EjmlUnitTests.assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void outerProd() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(6,1,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(1,6,rand);
+
+        CDenseMatrix64F expected = new CDenseMatrix64F(6,6);
+        CDenseMatrix64F found = new CDenseMatrix64F(6,6);
+
+        CCommonOps.mult(a,b,expected);
+        CVectorVectorMult.outerProd(a,b,found);
+
+        EjmlUnitTests.assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void outerProdH() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(6,1,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(1,6,rand);
+
+        CDenseMatrix64F expected = new CDenseMatrix64F(6,6);
+        CDenseMatrix64F found = new CDenseMatrix64F(6,6);
+
+        CVectorVectorMult.outerProdH(a, b, found);
+        CCommonOps.conjugate(b,b);
+        CCommonOps.mult(a, b, expected);
+
+        EjmlUnitTests.assertEquals(expected,found,1e-8);
+    }
 }

@@ -24,13 +24,13 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.RandomMatrices;
-import org.ejml.simple.SimpleMatrix;
+import org.ejml.ops.CSpecializedOps;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -69,28 +69,24 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
 
         CDenseMatrix64F U = new CDenseMatrix64F(width-w,1);
         System.arraycopy(qr.getU(),w*2,U.data,0,(width-w)*2);
-        CDenseMatrix64F Ut = CCommonOps.transposeConjugate(U,null);
-
-        CDenseMatrix64F I = CCommonOps.identity(width-w);
-        CDenseMatrix64F UUt = new CDenseMatrix64F(I.numRows,I.numCols);
-        CDenseMatrix64F gamma_UUt = new CDenseMatrix64F(I.numRows,I.numCols);
-        CDenseMatrix64F Q = new CDenseMatrix64F(I.numRows,I.numCols);
 
         // Q = I - gamma*u*u'
-        CCommonOps.mult(U, Ut, UUt);
-        CCommonOps.elementMultiply(UUt, qr.getRealGamma(), 0, gamma_UUt);
-        CCommonOps.subtract(I,gamma_UUt,Q);
+        CDenseMatrix64F Q = CSpecializedOps.householder(U,qr.getGamma());
 
         // check the expected properties of Q
         assertTrue(CMatrixFeatures.isHermitian(Q, 1e-6));
         assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
 
-        CDenseMatrix64F result = new CDenseMatrix64F(I.numRows,I.numCols);
+        CDenseMatrix64F result = new CDenseMatrix64F(Q.numRows,Q.numCols);
         CDenseMatrix64F Asub = CCommonOps.extract(A,w,width,w,width);
-        CCommonOps.mult(Q,Asub,result);
+        CCommonOps.mult(Q, Asub, result);
 
         Complex64F a = new Complex64F();
-        for( int i = 1; i < width-w; i++ ) {
+        result.get(0,0,a);
+        assertEquals(-qr.realTau, a.real, 1e-8);
+        assertEquals(-qr.imagTau,a.imaginary,1e-8);
+
+        for( int i = 1; i < result.numRows; i++ ) {
             result.get(i,0,a);
             assertEquals(0, a.getMagnitude2(),1e-5);
         }
@@ -106,49 +102,59 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
 
         for( int i = 0; i < width; i++ )
             checkSubMatrix(width,i);
-        fail("update");
     }
 
     private void checkSubMatrix(int width , int w ) {
         DebugQR qr = new DebugQR(width,width);
 
         double gamma = 0.2;
-        double tau = 0.75;
+        double realTau = 0.75;
+        double imagTau = -0.6;
 
-        SimpleMatrix U = new SimpleMatrix(width,1);
-        SimpleMatrix A = new SimpleMatrix(width,width);
+        CDenseMatrix64F U = CRandomMatrices.createRandom(width, 1,rand);
+        CDenseMatrix64F A = CRandomMatrices.createRandom(width,width,rand);
 
-        RandomMatrices.setRandom(U.getMatrix(),rand);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
-
-        qr.getQR().set(A.getMatrix());
+        qr.getQR().set(A);
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w);
+        CDenseMatrix64F u_sub = CCommonOps.extract(U, w, width, 0, 1);
+        CDenseMatrix64F A_sub = CCommonOps.extract(A, w, width, w, width);
+        CDenseMatrix64F expected = new CDenseMatrix64F(u_sub.numRows,u_sub.numRows);
 
-        SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
-        SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
-        SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
+        // Q = I - gamma*u*u'
+        CDenseMatrix64F Q = CSpecializedOps.householder(u_sub,gamma);
 
-        qr.updateA(w,U.getMatrix().getData(),gamma,999999,tau);
+        CCommonOps.mult(Q,A_sub,expected);
+
+        qr.updateA(w,U.getData(),gamma,realTau,imagTau);
 
         CDenseMatrix64F found = qr.getQR();
 
-//        assertEquals(-tau,found.get(w,w),1e-8);
-//
-//        for( int i = w+1; i < width; i++ ) {
-//            assertEquals(U.get(i,0),found.get(i,w),1e-8);
-//        }
+        Complex64F a = new Complex64F();
+        Complex64F b = new Complex64F();
+        found.get(w,w,a);
 
-//        // the right should be the same
-//        for( int i = w; i < width; i++ ) {
-//            for( int j = w+1; j < width; j++ ) {
-//                double a = expected.get(i-w,j-w);
-//                double b = found.get(i,j);
-//
-//                assertEquals(a,b,1e-6);
-//            }
-//        }
+        assertEquals(-realTau,a.real,1e-8);
+        assertEquals(-imagTau,a.imaginary,1e-8);
+
+        for( int i = w+1; i < width; i++ ) {
+            U.get(i,0,a);
+            found.get(i,w,b);
+
+            assertEquals(a.real, b.real, 1e-8);
+            assertEquals(a.imaginary,b.imaginary,1e-8);
+        }
+
+        // the right should be the same
+        for( int i = w; i < width; i++ ) {
+            for( int j = w+1; j < width; j++ ) {
+                expected.get(i-w,j-w,a);
+                found.get(i,j,b);
+
+                assertEquals(a.real, b.real, 1e-6);
+                assertEquals(a.imaginary,b.imaginary,1e-6);
+            }
+        }
     }
 
     private static class DebugQR extends QRDecompositionHouseholder_CD64
@@ -167,10 +173,12 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
         }
 
         public void updateA( int w , double u[] ,
-                             double realGamma, double imagGamma , double tau ) {
+                             double realGamma, double realTau, double imagTau ) {
             System.arraycopy(u,0,this.u,0,this.u.length);
             this.realGamma = realGamma;
-            this.tau = tau;
+            this.realTau = realTau;
+            this.imagTau = imagTau;
+
 
             super.updateA(w);
         }
@@ -179,7 +187,7 @@ public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
             return u;
         }
 
-        public double getRealGamma() {
+        public double getGamma() {
             return realGamma;
         }
     }

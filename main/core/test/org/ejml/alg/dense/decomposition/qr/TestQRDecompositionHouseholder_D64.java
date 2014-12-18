@@ -77,6 +77,7 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
 
         SimpleMatrix result = Q.mult(A.extractMatrix(w,width,w,width));
 
+        assertEquals(-qr.tau,result.get(0,0),1e-8);
         for( int i = 1; i < width-w; i++ ) {
             assertEquals(0,result.get(i,0),1e-5);
         }

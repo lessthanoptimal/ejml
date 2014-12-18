@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.junit.Test;
@@ -103,5 +104,24 @@ public class TestCSpecializedOps {
 
         double found = CSpecializedOps.qualityTriangular(A);
         assertEquals(expected,found,1e-8);
+    }
+
+    @Test
+    public void householder() {
+        CDenseMatrix64F U = CRandomMatrices.createRandom(6,1,rand);
+        double gamma = 1.6;
+
+        // Q = I - gamma*U*U^H
+        CDenseMatrix64F I = CCommonOps.identity(6);
+        CDenseMatrix64F UUt = new CDenseMatrix64F(6,6);
+        CDenseMatrix64F expected = new CDenseMatrix64F(6,6);
+
+        CVectorVectorMult.outerProdH(U, U, UUt);
+        CCommonOps.elementMultiply(UUt,gamma,0,UUt);
+        CCommonOps.subtract(I,UUt,expected);
+
+        CDenseMatrix64F found = CSpecializedOps.householder(U,gamma);
+
+        assertTrue(CMatrixFeatures.isIdentical(expected,found,1e-8));
     }
 }

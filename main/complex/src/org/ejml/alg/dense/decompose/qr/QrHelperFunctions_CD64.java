@@ -205,12 +205,16 @@ public class QrHelperFunctions_CD64 {
     }
 
     /**
+     * <p>
+     * Performs a rank-1 update operation on the submatrix specified by w with the multiply on the right.<br>
+     * <br>
+     * A = (I - &gamma;*u*u<sup>H</sup>)*A<br>
+     * </p>
      *
      * @param A matrix
      * @param u vector
      * @param offsetU offset added to w0 when indexing u.  Multiplied by 2 since complex.
      * @param gammaR real component of gamma
-     * @param gammaI imaginary component of gamma
      * @param colA0 first column in A sub-matrix.
      * @param w0 first index in sub-array in u and row sub-matrix in A
      * @param w1 last index + 1 in sub-array in u and row sub-matrix in A
@@ -218,7 +222,7 @@ public class QrHelperFunctions_CD64 {
      */
     public static void rank1UpdateMultR(CDenseMatrix64F A,
                                         double u[], int offsetU,
-                                        double gammaR , double gammaI ,
+                                        double gammaR ,
                                         int colA0,
                                         int w0, int w1,
                                         double _temp[])
@@ -235,7 +239,7 @@ public class QrHelperFunctions_CD64 {
         // reordered to reduce cpu cache issues
         int indexU = (w0+offsetU)*2;
         double realU = u[indexU];
-        double imagU = u[indexU+1];
+        double imagU = -u[indexU+1];
 
         int indexA = w0*A.numCols*2 + colA0*2;
         int indexTmp = colA0*2;
@@ -254,7 +258,7 @@ public class QrHelperFunctions_CD64 {
             indexTmp = colA0*2;
 
             realU = u[indexU];
-            imagU = u[indexU+1];
+            imagU = -u[indexU+1];
 
             for( int i = colA0; i < A.numCols; i++ ) {
                 double realA = A.data[indexA++];
@@ -270,8 +274,8 @@ public class QrHelperFunctions_CD64 {
             double realTmp = _temp[indexTmp];
             double imagTmp = _temp[indexTmp+1];
 
-            _temp[indexTmp++] = gammaR*realTmp - gammaI*imagTmp;
-            _temp[indexTmp++] = gammaR*imagTmp + gammaI*realTmp;
+            _temp[indexTmp++] = gammaR*realTmp;
+            _temp[indexTmp++] = gammaR*imagTmp;
         }
 
         // end of reorder
@@ -298,7 +302,7 @@ public class QrHelperFunctions_CD64 {
      * <p>
      * Performs a rank-1 update operation on the submatrix specified by w with the multiply on the left.<br>
      * <br>
-     * A = A(I - &gamma;*u*u<sup>T</sup>)<br>
+     * A = A(I - &gamma;*u*u<sup>H</sup>)<br>
      * </p>
      * <p>
      * The order that matrix multiplies are performed has been carefully selected
@@ -337,7 +341,7 @@ public class QrHelperFunctions_CD64 {
             indexU = w0*2;
             for( int j = w0; j < w1; j++ ) {
                 double realU = u[indexU++];
-                double imagU = u[indexU++];
+                double imagU = -u[indexU++];
 
                 A.data[rowIndex++] += realTmp*realU - imagTmp*imagU;
                 A.data[rowIndex++] += realTmp*imagU + imagTmp*realU;

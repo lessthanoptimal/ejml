@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CDenseMatrix64F;
 
 /**
@@ -132,5 +133,25 @@ public class CSpecializedOps {
         }
 
         return Math.sqrt(qualityR*qualityR + qualityI*qualityI);
+    }
+
+    /**
+     * Q = I - gamma*u*u<sup>H</sup>
+     */
+    public static CDenseMatrix64F householder( CDenseMatrix64F u , double gamma ) {
+        int N = u.getDataLength()/2;
+        // u*u^H
+        CDenseMatrix64F uut = new CDenseMatrix64F(N,N);
+        CVectorVectorMult.outerProdH(u, u, uut);
+        // foo = -gamma*u*u^H
+        CCommonOps.elementMultiply(uut,-gamma,0,uut);
+
+        // I + foo
+        for (int i = 0; i < N; i++) {
+            int index = (i*uut.numCols+i)*2;
+            uut.data[index]   = 1 + uut.data[index];
+        }
+
+        return uut;
     }
 }
