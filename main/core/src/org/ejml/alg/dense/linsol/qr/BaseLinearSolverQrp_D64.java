@@ -65,7 +65,7 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
+public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract {
 
     QRPDecomposition<DenseMatrix64F> decomposition;
 
@@ -95,8 +95,8 @@ public abstract class BaseLinearSolverQrp extends LinearSolverAbstract {
      * @param decomposition Used to solve the linear system.
      * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
      */
-    protected BaseLinearSolverQrp(QRPDecomposition<DenseMatrix64F> decomposition,
-                                  boolean norm2Solution)
+    protected BaseLinearSolverQrp_D64(QRPDecomposition<DenseMatrix64F> decomposition,
+                                      boolean norm2Solution)
     {
         this.decomposition = decomposition;
         this.norm2Solution = norm2Solution;

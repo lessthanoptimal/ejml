@@ -35,7 +35,7 @@ import org.ejml.ops.SpecializedOps;
  * It solve for x by first multiplying b by the transpose of Q then solving for the result.
  * <br>
  * QRx=b<br>
- * Rx=Q^T b<br>
+ * Rx=Q^H b<br>
  * </p>
  *
  * <p>
@@ -44,7 +44,7 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public class LinearSolverQrHouseCol extends LinearSolverAbstract {
+public class LinearSolverQrHouseCol_CD64 extends LinearSolverAbstract {
 
     private QRDecompositionHouseholderColumn_D64 decomposer;
 
@@ -61,7 +61,7 @@ public class LinearSolverQrHouseCol extends LinearSolverAbstract {
     /**
      * Creates a linear solver that uses QR decomposition.
      */
-    public LinearSolverQrHouseCol() {
+    public LinearSolverQrHouseCol_CD64() {
         decomposer = new QRDecompositionHouseholderColumn_D64();
     }
 

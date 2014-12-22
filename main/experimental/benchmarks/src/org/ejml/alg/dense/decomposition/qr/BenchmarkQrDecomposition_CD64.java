@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CD64;
+import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderTran_CD64;
+import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholder_CD64;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CRandomMatrices;
 
 import java.util.Random;
 
@@ -33,12 +33,12 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class BenchmarkQrDecomposition {
+public class BenchmarkQrDecomposition_CD64 {
 
-    public static long generic(QRDecomposition<DenseMatrix64F> alg,  DenseMatrix64F orig , int numTrials ) {
+    public static long generic(QRDecomposition<CDenseMatrix64F> alg,  CDenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
-        DenseMatrix64F B;
+        CDenseMatrix64F B;
         for( long i = 0; i < numTrials; i++ ) {
             if( alg.inputModified())
                 B = orig.copy();
@@ -52,49 +52,27 @@ public class BenchmarkQrDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long block( DenseMatrix64F orig , int numTrials ) {
-
-        BlockMatrix64F A = BlockMatrixOps.convert(orig);
-        QRDecompositionHouseholder_B64 alg = new QRDecompositionHouseholder_B64();
-
-        BlockMatrix64F B;
-
-        long prev = System.currentTimeMillis();
-
-        for( long i = 0; i < numTrials; i++ ) {
-            if( alg.inputModified())
-                B = A.copy();
-            else
-                B = A;
-            if( !alg.decompose(B) ) {
-                throw new RuntimeException("Bad matrix");
-            }
-        }
-
-        return System.currentTimeMillis() - prev;
-    }
-
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms( CDenseMatrix64F mat , int numTrials )
     {
-//        System.out.println("basic            = "+ generic( new QRDecompositionHouseholder(), mat,numTrials));
-        System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn_D64() ,mat,numTrials));
-        System.out.println("tran             = "+ generic( new QRDecompositionHouseholderTran_D64() , mat,numTrials));
-        System.out.println("pivot column     = "+ generic( new QRColPivDecompositionHouseholderColumn_D64() , mat,numTrials));
+        System.out.println("basic            = "+ generic( new QRDecompositionHouseholder_CD64(), mat,numTrials));
+        System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn_CD64() ,mat,numTrials));
+        System.out.println("tran             = "+ generic( new QRDecompositionHouseholderTran_CD64() , mat,numTrials));
+//        System.out.println("pivot column     = "+ generic( new QRColPivDecompositionHouseholderColumn_CD64() , mat,numTrials));
 
 //        System.out.println("block  native    = "+ block(mat,numTrials));
-        System.out.println("block wrapper    = "+ generic( new QRDecomposition_B64_to_D64() , mat,numTrials));
+//        System.out.println("block wrapper    = "+ generic( new QRDecomposition_B64_to_D64() , mat,numTrials));
     }
 
     public static void main( String args [] ) {
         Random rand = new Random(23423);
 
         int size[] = new int[]{2,4,10,100,500,1000,2000,4000};
-        int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e5,400,5,1,1,1,1};
+        int trials[] = new int[]{(int)2e6,(int)5e5,(int)1e4,200,2,1,1,1,1};
 
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
-            DenseMatrix64F mat = RandomMatrices.createRandom(w*4,w/1,rand);
+            CDenseMatrix64F mat = CRandomMatrices.createRandom(w * 4, w / 1, rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);
             runAlgorithms(mat,trials[i]);
         }

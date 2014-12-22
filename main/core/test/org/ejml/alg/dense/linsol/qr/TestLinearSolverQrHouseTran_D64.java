@@ -26,14 +26,14 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverQrHouseTran extends GenericLinearSolverChecks {
+public class TestLinearSolverQrHouseTran_D64 extends GenericLinearSolverChecks {
 
-    public TestLinearSolverQrHouseTran() {
+    public TestLinearSolverQrHouseTran_D64() {
 //         shouldFailSingular = false;
     }
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQrHouseTran();
+        return new LinearSolverQrHouseTran_CD64();
     }
 }

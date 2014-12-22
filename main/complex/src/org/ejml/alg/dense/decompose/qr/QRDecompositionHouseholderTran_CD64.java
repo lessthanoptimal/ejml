@@ -35,8 +35,7 @@ import org.ejml.ops.CCommonOps;
  *
  * @author Peter Abeles
  */
-// TODO remove QR Col and replace with this one?
-// -- On small matrices col seems to be about 10% faster
+// TODO figure out why this is significantly slower than col
 public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDenseMatrix64F> {
 
     /**
@@ -241,7 +240,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
     public boolean decompose( CDenseMatrix64F A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
-        CCommonOps.transpose(A,QR);
+        CCommonOps.transpose(A, QR);
 
         error = false;
 
@@ -315,7 +314,6 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      */
     protected void updateA( final int w )
     {
-        // TODO Update
 //        int rowW = w*numRows;
 //        int rowJ = rowW + numRows;
 //
@@ -336,20 +334,23 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
 //        }
 
         final double data[] = QR.data;
-        final int rowW = w*numRows + w + 1;
+        int rowW = w*numRows + w + 1;
         int rowJ = rowW + numRows;
-        final int rowJEnd = rowJ + (numCols-w-1)*numRows;
-        final int indexWEnd = rowW + numRows - w - 1;
+        final int rowJEnd = 2*(rowJ + (numCols-w-1)*numRows);
+        final int indexWEnd = 2*(rowW + numRows - w - 1);
 
-        for( ; rowJEnd != rowJ; rowJ += numRows) {
+        rowJ = 2*rowJ;
+        rowW = 2*rowW;
+
+        for( ; rowJEnd != rowJ; rowJ += numRows*2) {
             // assume the first element in u is 1
-            double realVal = data[2*(rowJ - 1)];
-            double imagVal = data[2*(rowJ - 1)+1];
+            double realVal = data[rowJ - 2];
+            double imagVal = data[rowJ - 1];
 
-            int indexW = rowW*2;
-            int indexJ = rowJ*2;
+            int indexW = rowW;
+            int indexJ = rowJ;
 
-            while( indexW != indexWEnd*2 ) {
+            while( indexW != indexWEnd ) {
                 double realW = data[indexW++];
                 double imagW = -data[indexW++];
 
@@ -362,12 +363,12 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
             realVal *= gamma;
             imagVal *= gamma;
 
-            data[2*(rowJ - 1)]   -= realVal;
-            data[2*(rowJ - 1)+1] -= imagVal;
+            data[rowJ - 2] -= realVal;
+            data[rowJ - 1] -= imagVal;
 
-            indexW = rowW*2;
-            indexJ = rowJ*2;
-            while( indexW != indexWEnd*2 ) {
+            indexW = rowW;
+            indexJ = rowJ;
+            while( indexW != indexWEnd ) {
                 double realW = data[indexW++];
                 double imagW = data[indexW++];
 

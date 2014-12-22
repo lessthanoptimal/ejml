@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestAdjLinearSolverQr extends GenericLinearSolverChecks {
+public class TestAdjLinearSolverQr_D64 extends GenericLinearSolverChecks {
 
 
     @Test
@@ -59,7 +59,7 @@ public class TestAdjLinearSolverQr extends GenericLinearSolverChecks {
 
         // create the solver from A then add a A.  The solver
         // should be equivalent to one created from A_e
-        AdjustableLinearSolver adjSolver = new AdjLinearSolverQr();
+        AdjustableLinearSolver adjSolver = new AdjLinearSolverQr_D64();
 
         assertTrue(adjSolver.setA(A));
         adjSolver.addRowToA(row,insert);
@@ -91,7 +91,7 @@ public class TestAdjLinearSolverQr extends GenericLinearSolverChecks {
         CommonOps.mult(A_e,X,Y);
 
         // create the solver from the original system then modify it
-        AdjustableLinearSolver adjSolver = new AdjLinearSolverQr();
+        AdjustableLinearSolver adjSolver = new AdjLinearSolverQr_D64();
 
         adjSolver.setA(A);
         adjSolver.removeRowFromA(remove);
@@ -108,6 +108,6 @@ public class TestAdjLinearSolverQr extends GenericLinearSolverChecks {
 
     @Override
     protected LinearSolver createSolver( DenseMatrix64F A ) {
-        return new AdjLinearSolverQr();
+        return new AdjLinearSolverQr_D64();
     }
 }

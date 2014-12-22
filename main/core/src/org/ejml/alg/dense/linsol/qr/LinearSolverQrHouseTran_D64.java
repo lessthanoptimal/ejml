@@ -43,7 +43,7 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public class LinearSolverQrHouseTran extends LinearSolverAbstract {
+public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract {
 
     private QRDecompositionHouseholderTran_D64 decomposer;
 
@@ -58,7 +58,7 @@ public class LinearSolverQrHouseTran extends LinearSolverAbstract {
     /**
      * Creates a linear solver that uses QR decomposition.
      */
-    public LinearSolverQrHouseTran() {
+    public LinearSolverQrHouseTran_D64() {
         decomposer = new QRDecompositionHouseholderTran_D64();
     }
 

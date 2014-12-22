@@ -28,9 +28,9 @@ import org.ejml.alg.dense.linsol.LinearSolver_B64_to_D64;
  *
  * @author Peter Abeles
  */
-public class LinearSolverQrBlock64 extends LinearSolver_B64_to_D64 {
+public class LinearSolverQrBlock64_D64 extends LinearSolver_B64_to_D64 {
 
-    public LinearSolverQrBlock64() {
+    public LinearSolverQrBlock64_D64() {
         super(new BlockQrHouseHolderSolver());
     }
 }

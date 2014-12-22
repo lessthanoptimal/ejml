@@ -18,7 +18,6 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -27,14 +26,14 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverQr extends GenericLinearSolverChecks {
+public class TestLinearSolverQrHouse_D64 extends GenericLinearSolverChecks {
 
-    public TestLinearSolverQr() {
+    public TestLinearSolverQrHouse_D64() {
 //         shouldFailSingular = false;
     }
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQr(new QRDecompositionHouseholderColumn_D64());
+        return new LinearSolverQrHouse_CD64();
     }
 }

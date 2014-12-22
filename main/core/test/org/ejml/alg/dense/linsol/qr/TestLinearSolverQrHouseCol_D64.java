@@ -26,9 +26,14 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverQrBlock64 extends GenericLinearSolverChecks {
+public class TestLinearSolverQrHouseCol_D64 extends GenericLinearSolverChecks {
+
+    public TestLinearSolverQrHouseCol_D64() {
+//         shouldFailSingular = false;
+    }
+
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQrBlock64();
+        return new LinearSolverQrHouseCol_CD64();
     }
 }

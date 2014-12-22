@@ -28,20 +28,20 @@ import org.junit.Test;
 /**
  * @author Peter Abeles
  */
-public class TestSolvePseudoInverseQrp extends GenericLinearSolverChecks  {
-    public TestSolvePseudoInverseQrp() {
+public class TestSolvePseudoInverseQrp_D64 extends GenericLinearSolverChecks  {
+    public TestSolvePseudoInverseQrp_D64() {
          shouldFailSingular = false;
     }
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),true);
+        return new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),true);
     }
 
     @Test
     public void checkSingularBasic() {
         LinearSolver<DenseMatrix64F> solver =
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),true);
+                new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),true);
         GenericSolvePseudoInverseChecks checks = new GenericSolvePseudoInverseChecks(solver);
 
         checks.all();
@@ -50,7 +50,7 @@ public class TestSolvePseudoInverseQrp extends GenericLinearSolverChecks  {
     @Test
     public void checkSingularFull() {
         LinearSolver<DenseMatrix64F> solver =
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),false);
+                new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),false);
         GenericSolvePseudoInverseChecks checks = new GenericSolvePseudoInverseChecks(solver);
 
         checks.all();

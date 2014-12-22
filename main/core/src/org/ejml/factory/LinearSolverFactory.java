@@ -72,12 +72,12 @@ public class LinearSolverFactory {
      */
     public static LinearSolver<DenseMatrix64F> leastSquares( int numRows , int numCols ) {
         if(numCols < EjmlParameters.SWITCH_BLOCK64_QR )  {
-            return new LinearSolverQrHouseCol();
+            return new LinearSolverQrHouseCol_D64();
         } else {
             if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER )
-                return new LinearSolverQrBlock64();
+                return new LinearSolverQrBlock64_D64();
             else
-                return new LinearSolverQrHouseCol();
+                return new LinearSolverQrHouseCol_D64();
         }
     }
 
@@ -110,7 +110,7 @@ public class LinearSolverFactory {
      * <p>
      * For singular systems there are multiple correct solutions.  The optimal 2-norm solution is the
      * solution vector with the minimal 2-norm and is unique.  If the optimal solution is not computed
-     * then the basic solution is returned.  See {@link org.ejml.alg.dense.linsol.qr.BaseLinearSolverQrp}
+     * then the basic solution is returned.  See {@link org.ejml.alg.dense.linsol.qr.BaseLinearSolverQrp_D64}
      * for details.  There is only a runtime difference for small matrices, 2-norm solution is slower.
      * </p>
      *
@@ -130,9 +130,9 @@ public class LinearSolverFactory {
                 new QRColPivDecompositionHouseholderColumn_D64();
 
         if( computeQ )
-            return new SolvePseudoInverseQrp(decomposition,computeNorm2);
+            return new SolvePseudoInverseQrp_D64(decomposition,computeNorm2);
         else
-            return new LinearSolverQrpHouseCol(decomposition,computeNorm2);
+            return new LinearSolverQrpHouseCol_D64(decomposition,computeNorm2);
     }
 
     /**
@@ -163,6 +163,6 @@ public class LinearSolverFactory {
      * everything from scratch.
      */
     public static AdjustableLinearSolver adjustable() {
-        return new AdjLinearSolverQr();
+        return new AdjLinearSolverQr_D64();
     }
 }

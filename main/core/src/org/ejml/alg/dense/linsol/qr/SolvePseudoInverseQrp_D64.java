@@ -19,31 +19,47 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.QRPDecomposition;
+import org.ejml.ops.CommonOps;
 
 /**
  * <p>
- * Performs a pseudo inverse solver using the {@link org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64} decomposition
- * directly.  For details on how the pseudo inverse is computed see {@link BaseLinearSolverQrp}.
+ * A pseudo inverse solver for a generic QR column pivot decomposition algorithm.  See
+ * {@link BaseLinearSolverQrp_D64} for technical details on the algorithm.
  * </p>
- * 
+ *
  * @author Peter Abeles
  */
-public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
+public class SolvePseudoInverseQrp_D64 extends BaseLinearSolverQrp_D64 {
 
-    // Computes the QR decomposition
-    private QRColPivDecompositionHouseholderColumn_D64 decomposition;
+    // stores the orthogonal Q matrix from QR decomposition
+    private DenseMatrix64F Q=new DenseMatrix64F(1,1);
 
     // storage for basic solution
-    private DenseMatrix64F x_basic = new DenseMatrix64F(1,1);
+    private DenseMatrix64F x_basic =new DenseMatrix64F(1,1);
 
-    public LinearSolverQrpHouseCol(QRColPivDecompositionHouseholderColumn_D64 decomposition,
-                                   boolean norm2Solution)
-    {
+    /**
+     * Configure and provide decomposition
+     *
+     * @param decomposition Decomposition used.
+     * @param norm2Solution If true the basic solution will be returned, false the minimal 2-norm solution.
+     */
+    public SolvePseudoInverseQrp_D64(QRPDecomposition<DenseMatrix64F> decomposition,
+                                     boolean norm2Solution) {
         super(decomposition,norm2Solution);
-        this.decomposition = decomposition;
+    }
+
+    @Override
+    public boolean setA(DenseMatrix64F A) {
+        if( !super.setA(A))
+            return false;
+
+        Q.reshape(A.numRows, A.numRows);
+
+        decomposition.getQ(Q, false);
+
+        return true;
     }
 
     @Override
@@ -58,9 +74,6 @@ public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
         // get the pivots and transpose them
         int pivots[] = decomposition.getPivots();
         
-        double qr[][] = decomposition.getQR();
-        double gammas[] = decomposition.getGammas();
-
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
             x_basic.reshape(numRows, 1);
@@ -68,19 +81,11 @@ public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                x_basic.data[i] = B.get(i,colB);
+                Y.data[i] = B.get(i,colB);
             }
 
-            // Solve Q*x=b => x = Q'*b
-            // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
-            for( int i = 0; i < rank; i++ ) {
-                double u[] = qr[i];
-
-                double vv = u[i];
-                u[i] = 1;
-                QrHelperFunctions_D64.rank1UpdateMultR(x_basic, u, gammas[i], 0, i, numRows, Y.data);
-                u[i] = vv;
-            }
+            // Solve Q*a=b => a = Q'*b
+            CommonOps.multTransA(Q, Y, x_basic);
 
             // solve for Rx = b using the standard upper triangular solver
             TriangularSolver.solveU(R11.data, x_basic.data, rank);
@@ -89,10 +94,10 @@ public class LinearSolverQrpHouseCol extends BaseLinearSolverQrp {
             x_basic.reshape(numCols, 1, true);
             for( int i = rank; i < numCols; i++)
                 x_basic.data[i] = 0;
-
+            
             if( norm2Solution && rank < numCols )
                 upgradeSolution(x_basic);
-
+            
             // save the results
             for( int i = 0; i < numCols; i++ ) {
                 X.set(pivots[i],colB,x_basic.data[i]);

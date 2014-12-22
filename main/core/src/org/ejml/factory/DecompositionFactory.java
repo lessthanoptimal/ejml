@@ -55,7 +55,6 @@ import org.ejml.simple.SimpleMatrix;
  * machine precision.
  * </p>
  *
- *
  * @author Peter Abeles
  */
 public class DecompositionFactory {

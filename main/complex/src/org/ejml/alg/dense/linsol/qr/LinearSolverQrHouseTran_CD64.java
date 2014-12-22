@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_D64;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
@@ -34,36 +34,39 @@ import org.ejml.ops.SpecializedOps;
  * It solve for x by first multiplying b by the transpose of Q then solving for the result.
  * <br>
  * QRx=b<br>
- * Rx=Q^T b<br>
+ * Rx=Q^H b<br>
  * </p>
+ *
+ * <p>
+ * A column major decomposition is used in this solver.
+ * <p>
  *
  * @author Peter Abeles
  */
-public class LinearSolverQrHouse extends LinearSolverAbstract {
+public class LinearSolverQrHouseTran_CD64 extends LinearSolverAbstract {
 
-    private QRDecompositionHouseholder_D64 decomposer;
+    private QRDecompositionHouseholderTran_D64 decomposer;
 
-    private double []a,u;
+    private double []a;
 
-    private int maxRows = -1;
+    protected int maxRows = -1;
+    protected int maxCols = -1;
 
-    private DenseMatrix64F QR;
-    private double gammas[];
+    private DenseMatrix64F QR; // a column major QR matrix
+    private DenseMatrix64F U;
 
     /**
      * Creates a linear solver that uses QR decomposition.
      */
-    public LinearSolverQrHouse() {
-        decomposer = new QRDecompositionHouseholder_D64();
-
-
+    public LinearSolverQrHouseTran_CD64() {
+        decomposer = new QRDecompositionHouseholderTran_D64();
     }
 
-    public void setMaxSize( int maxRows ) {
-        this.maxRows = maxRows;
+    public void setMaxSize( int maxRows , int maxCols )
+    {
+        this.maxRows = maxRows; this.maxCols = maxCols;
 
         a = new double[ maxRows ];
-        u = new double[ maxRows ];
     }
 
     /**
@@ -73,22 +76,21 @@ public class LinearSolverQrHouse extends LinearSolverAbstract {
      */
     @Override
     public boolean setA(DenseMatrix64F A) {
-        if( A.numRows > maxRows ) {
-            setMaxSize(A.numRows);
-        }
+        if( A.numRows > maxRows || A.numCols > maxCols )
+            setMaxSize(A.numRows,A.numCols);
 
         _setA(A);
         if( !decomposer.decompose(A) )
             return false;
-        
-        gammas = decomposer.getGammas();
-        QR = decomposer.getQR();
 
+        QR = decomposer.getQR();
         return true;
     }
 
     @Override
     public double quality() {
+        // even those it is transposed the diagonal elements are at the same
+        // elements
         return SpecializedOps.qualityTriangular(QR);
     }
 
@@ -96,16 +98,20 @@ public class LinearSolverQrHouse extends LinearSolverAbstract {
      * Solves for X using the QR decomposition.
      *
      * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is writen to.  Modified.
+     * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
         if( X.numRows != numCols )
-            throw new IllegalArgumentException("Unexpected dimensions for X");
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
         else if( B.numRows != numRows || B.numCols != X.numCols )
             throw new IllegalArgumentException("Unexpected dimensions for B");
 
-        int BnumCols = B.numCols;
+        U = decomposer.getR(U,true);
+        final double gammas[] = decomposer.getGammas();
+        final double dataQR[] = QR.data;
+
+        final int BnumCols = B.numCols;
 
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
@@ -121,23 +127,26 @@ public class LinearSolverQrHouse extends LinearSolverAbstract {
             //
             // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
             for( int n = 0; n < numCols; n++ ) {
-                u[n] = 1;
+                int indexU = n*numRows + n + 1;
+
                 double ub = a[n];
                 // U^T*b
-                for( int i = n+1; i < numRows; i++ ) {
-                    ub += (u[i] = QR.unsafe_get(i,n))*a[i];
+                for( int i = n+1; i < numRows; i++ , indexU++ ) {
+                    ub += dataQR[indexU]*a[i];
                 }
 
                 // gamma*U^T*b
                 ub *= gammas[n];
- 
-                for( int i = n; i < numRows; i++ ) {
-                    a[i] -= u[i]*ub;
+
+                a[n] -= ub;
+                indexU = n*numRows + n + 1;
+                for( int i = n+1; i < numRows; i++ , indexU++) {
+                    a[i] -= dataQR[indexU]*ub;
                 }
             }
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(QR.data,a,numCols);
+            TriangularSolver.solveU(U.data,a,numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
@@ -148,7 +157,7 @@ public class LinearSolverQrHouse extends LinearSolverAbstract {
 
     @Override
     public boolean modifiesA() {
-        return false;
+        return decomposer.inputModified();
     }
 
     @Override

@@ -31,13 +31,13 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class AdjLinearSolverQr extends LinearSolverQr implements AdjustableLinearSolver {
+public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements AdjustableLinearSolver {
 
     private QrUpdate update;
 
     private DenseMatrix64F A;
 
-    public AdjLinearSolverQr() {
+    public AdjLinearSolverQr_D64() {
         super( new QRDecompositionHouseholderColumn_D64() );
     }
 
