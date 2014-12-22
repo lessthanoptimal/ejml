@@ -165,20 +165,20 @@ public class QrHelperFunctions_CD64 {
      * </pre>
      * Note that u is not explicitly computed here.
      *
-     * @param j Element in 'u' that it starts at.
-     * @param numRows Element in 'u' that it stops at.
+     * @param start Element in 'u' that it starts at.
+     * @param stop Element in 'u' that it stops at.
      * @param x Array
      * @param max Max value in 'u' that is used to normalize it.
      * @param tau Storage for tau
      * @return Returns gamma
      */
-    public static double computeTauGammaAndDivide(final int j, final int numRows,
+    public static double computeTauGammaAndDivide(final int start, final int stop,
                                                   final double[] x, final double max,
                                                   Complex64F tau) {
 
-        int index = j*2;
+        int index = start*2;
         double nx = 0;
-        for (int i = j; i < numRows; i++) {
+        for (int i = start; i < stop; i++) {
             double realX = x[index++] /= max;
             double imagX = x[index++] /= max;
 
@@ -187,8 +187,8 @@ public class QrHelperFunctions_CD64 {
 
         nx = Math.sqrt(nx);
 
-        double real_x0 = x[2*j];
-        double imag_x0 = x[2*j+1];
+        double real_x0 = x[2*start];
+        double imag_x0 = x[2*start+1];
         double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
 
         tau.real = real_x0/mag_x0*nx;

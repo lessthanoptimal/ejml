@@ -18,9 +18,8 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CCommonOps;
 
@@ -58,7 +57,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
     protected double gammas[];
     // local variables
     protected double gamma;
-    protected double tau;
+    protected Complex64F tau = new Complex64F();
 
     // did it encounter an error?
     protected boolean error;
@@ -71,14 +70,14 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
 
         if( QR == null ) {
             QR = new CDenseMatrix64F(numCols,numRows);
-            v = new double[ maxLength ];
+            v = new double[ maxLength*2 ];
             gammas = new double[ minLength ];
         } else {
             QR.reshape(numCols,numRows);
         }
 
-        if( v.length < maxLength ) {
-            v = new double[ maxLength ];
+        if( v.length < maxLength*2 ) {
+            v = new double[ maxLength*2 ];
         }
         if( gammas.length < minLength ) {
             gammas = new double[ minLength ];
@@ -125,11 +124,17 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
         // Unlike applyQ() this takes advantage of zeros in the identity matrix
         // by not multiplying across all rows.
         for( int j = minLength-1; j >= 0; j-- ) {
-            int diagIndex = j*numRows+j;
-            double before = QR.data[diagIndex];
+            int diagIndex = (j*numRows+j)*2;
+            double realBefore = QR.data[diagIndex];
+            double imagBefore = QR.data[diagIndex+1];
+
             QR.data[diagIndex] = 1;
-//            QrHelperFunctions_D64.rank1UpdateMultR(Q, QR.data, j * numRows, gammas[j], j, j, numRows, v);
-            QR.data[diagIndex] = before;
+            QR.data[diagIndex+1] = 0;
+
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q, QR.data, j * numRows, gammas[j], j, j, numRows, v);
+
+            QR.data[diagIndex] = realBefore;
+            QR.data[diagIndex+1] = imagBefore;
         }
 
         return Q;
@@ -140,31 +145,43 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      *
      * @param A Matrix that is being multiplied by Q.  Is modified.
      */
-    public void applyQ( DenseMatrix64F A ) {
+    public void applyQ( CDenseMatrix64F A ) {
         if( A.numRows != numRows )
             throw new IllegalArgumentException("A must have at least "+numRows+" rows.");
 
         for( int j = minLength-1; j >= 0; j-- ) {
-            int diagIndex = j*numRows+j;
-            double before = QR.data[diagIndex];
+            int diagIndex = (j*numRows+j)*2;
+            double realBefore = QR.data[diagIndex];
+            double imagBefore = QR.data[diagIndex+1];
+
             QR.data[diagIndex] = 1;
-            QrHelperFunctions_D64.rank1UpdateMultR(A, QR.data, j * numRows, gammas[j], 0, j, numRows, v);
-            QR.data[diagIndex] = before;
+            QR.data[diagIndex+1] = 0;
+
+            QrHelperFunctions_CD64.rank1UpdateMultR(A, QR.data, j * numRows, gammas[j], 0, j, numRows, v);
+
+            QR.data[diagIndex] = realBefore;
+            QR.data[diagIndex+1] = imagBefore;
         }
     }
 
     /**
-     * A = Q<sup>T</sup>*A
+     * A = Q<sup>H</sup>*A
      *
      * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
      */
-    public void applyTranQ( DenseMatrix64F A ) {
+    public void applyTranQ( CDenseMatrix64F A ) {
         for( int j = 0; j < minLength; j++ ) {
-            int diagIndex = j*numRows+j;
-            double before = QR.data[diagIndex];
+            int diagIndex = (j*numRows+j)*2;
+            double realBefore = QR.data[diagIndex];
+            double imagBefore = QR.data[diagIndex+1];
+
             QR.data[diagIndex] = 1;
-            QrHelperFunctions_D64.rank1UpdateMultR(A, QR.data, j * numRows, gammas[j], 0, j, numRows, v);
-            QR.data[diagIndex] = before;
+            QR.data[diagIndex+1] = 0;
+
+            QrHelperFunctions_CD64.rank1UpdateMultR(A, QR.data, j * numRows, gammas[j], 0, j, numRows, v);
+
+            QR.data[diagIndex] = realBefore;
+            QR.data[diagIndex+1] = imagBefore;
         }
     }
 
@@ -200,10 +217,10 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
 
         for( int i = 0; i < R.numRows; i++ ) {
             for( int j = i; j < R.numCols; j++ ) {
-//                R.set(i,j,QR.unsafe_get(j,i));
+                int index = QR.getIndex(j,i);
+                R.set(i,j,QR.data[index],QR.data[index+1]);
             }
         }
-
 
         return R;
     }
@@ -248,7 +265,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      * overflow and underflow.
      * </p>
      * <p>
-     * Q = I - &gamma;uu<sup>T</sup>
+     * Q = I - &gamma;uu<sup>H</sup>
      * </p>
      * <p>
      * This function finds the values of 'u' and '&gamma;'.
@@ -262,23 +279,26 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
         int endQR = startQR+numRows;
         startQR += j;
 
-        final double max = QrHelperFunctions_CD64.findMax(QR.data, startQR, numRows - j);
+        final double max = QrHelperFunctions_CD64.findMax(QR.data, startQR*2, numRows - j);
 
         if( max == 0.0 ) {
             gamma = 0;
             error = true;
         } else {
             // computes tau and normalizes u by max
-//            tau = QrHelperFunctions_CD64.computeTauAndDivide(startQR, endQR, QR.data, max);
+            gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(startQR, endQR, QR.data, max,tau);
 
             // divide u by u_0
-            double u_0 = QR.data[startQR] + tau;
-            QrHelperFunctions_CD64.divideElements(startQR + 1, endQR, QR.data,0,99999, u_0);
+            double realU0 = QR.data[startQR*2] + tau.real;
+            double imagU0 = QR.data[startQR*2+1] + tau.imaginary;
 
-            gamma = u_0/tau;
-            tau *= max;
+            QrHelperFunctions_CD64.divideElements(startQR + 1, endQR, QR.data,0,realU0, imagU0);
 
-            QR.data[startQR] = -tau;
+            tau.real *= max;
+            tau.imaginary *= max;
+
+            QR.data[startQR*2] = -tau.real;
+            QR.data[startQR*2+1] = -tau.imaginary;
         }
 
         gammas[j] = gamma;
@@ -288,13 +308,14 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      * <p>
      * Takes the results from the householder computation and updates the 'A' matrix.<br>
      * <br>
-     * A = (I - &gamma;*u*u<sup>T</sup>)A
+     * A = (I - &gamma;*u*u<sup>H</sup>)A
      * </p>
      *
      * @param w The submatrix.
      */
     protected void updateA( final int w )
     {
+        // TODO Update
 //        int rowW = w*numRows;
 //        int rowJ = rowW + numRows;
 //
@@ -322,21 +343,36 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
 
         for( ; rowJEnd != rowJ; rowJ += numRows) {
             // assume the first element in u is 1
-            double val = data[rowJ - 1];
+            double realVal = data[2*(rowJ - 1)];
+            double imagVal = data[2*(rowJ - 1)+1];
 
-            int indexW = rowW;
-            int indexJ = rowJ;
+            int indexW = rowW*2;
+            int indexJ = rowJ*2;
 
-            while( indexW != indexWEnd ) {
-                val += data[indexW++]*data[indexJ++];
+            while( indexW != indexWEnd*2 ) {
+                double realW = data[indexW++];
+                double imagW = -data[indexW++];
+
+                double realJ = data[indexJ++];
+                double imagJ = data[indexJ++];
+
+                realVal += realW*realJ - imagW*imagJ;
+                imagVal += realW*imagJ + imagW*realJ;
             }
-            val *= gamma;
+            realVal *= gamma;
+            imagVal *= gamma;
 
-            data[rowJ - 1] -= val;
-            indexW = rowW;
-            indexJ = rowJ;
-            while( indexW != indexWEnd ) {
-                data[indexJ++] -= data[indexW++]*val;
+            data[2*(rowJ - 1)]   -= realVal;
+            data[2*(rowJ - 1)+1] -= imagVal;
+
+            indexW = rowW*2;
+            indexJ = rowJ*2;
+            while( indexW != indexWEnd*2 ) {
+                double realW = data[indexW++];
+                double imagW = data[indexW++];
+
+                data[indexJ++] -= realW*realVal - imagW*imagVal;
+                data[indexJ++] -= realW*imagVal + imagW*realVal;
             }
         }
     }

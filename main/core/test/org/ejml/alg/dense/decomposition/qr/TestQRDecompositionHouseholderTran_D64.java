@@ -40,7 +40,7 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
     Random rand = new Random(0xff);
 
     @Override
-    protected QRDecomposition createQRDecomposition() {
+    protected QRDecomposition<DenseMatrix64F> createQRDecomposition() {
         return new QRDecompositionHouseholderTran_D64();
     }
 

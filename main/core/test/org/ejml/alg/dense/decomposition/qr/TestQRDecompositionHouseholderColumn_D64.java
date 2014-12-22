@@ -39,7 +39,7 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
 
 
     @Override
-    protected QRDecomposition createQRDecomposition() {
+    protected QRDecomposition<DenseMatrix64F> createQRDecomposition() {
         return new QRDecompositionHouseholderColumn_D64();
     }
 
