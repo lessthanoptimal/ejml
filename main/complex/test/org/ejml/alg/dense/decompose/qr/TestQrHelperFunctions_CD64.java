@@ -22,6 +22,7 @@ import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.ComplexMath64F;
 import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
@@ -64,13 +65,38 @@ public class TestQrHelperFunctions_CD64 {
     }
 
     @Test
-    public void divideElements() {
-        fail("Implement");
-    }
-
-    @Test
     public void divideElements_startU() {
-        fail("Implement");
+        double u[] = new double[12*2];
+        for (int i = 0; i < u.length; i++ ) {
+            u[i] = (rand.nextDouble()*0.5-1.0)*2;
+        }
+        double found[] = u.clone();
+
+        Complex64F A = new Complex64F(rand.nextDouble(),rand.nextDouble());
+        Complex64F U = new Complex64F();
+        Complex64F expected = new Complex64F();
+
+        int j = 3;
+        int numRows = 8;
+        int startU = 2;
+
+        QrHelperFunctions_CD64.divideElements(j,numRows,found,startU,A.real,A.imaginary);
+
+        for (int i = 0; i < 12; i++) {
+            int index = i * 2;
+
+            if( i >= j+startU && i < numRows+startU ) {
+                U.real = u[index];
+                U.imaginary = u[index + 1];
+                ComplexMath64F.divide(U, A, expected);
+
+                assertEquals(expected.real, found[index], 1e-8);
+                assertEquals(expected.imaginary, found[index + 1], 1e-8);
+            } else {
+                assertEquals(u[index],found[index],1e-8);
+                assertEquals(u[index+1],found[index+1],1e-8);
+            }
+        }
     }
 
     @Test
@@ -84,8 +110,66 @@ public class TestQrHelperFunctions_CD64 {
     }
 
     @Test
-    public void computeTauAndDivide() {
-        fail("Implement");
+    public void computeTauGammaAndDivide() {
+        double u[] = new double[12*2];
+        for (int i = 0; i < u.length; i++ ) {
+            u[i] = (rand.nextDouble()*0.5-1.0)*2;
+        }
+
+        double max = 2.0;
+        int j = 2;
+        int numRows = 6;
+
+        Complex64F expectedTau = new Complex64F();
+        double expectedGamma = 0;
+        double[] expectedU = u.clone();
+
+        for (int i = j; i < numRows; i++) {
+            Complex64F U = new Complex64F(u[i*2],u[i*2+1]);
+            Complex64F div = new Complex64F();
+            ComplexMath64F.divide(U,new Complex64F(max,0),div);
+
+            expectedU[i*2] = div.real;
+            expectedU[i*2+1] = div.imaginary;
+        }
+        double normX = 0;
+        for (int i = j; i < numRows; i++) {
+            normX += expectedU[i*2]*expectedU[i*2] + expectedU[i*2+1]*expectedU[i*2+1];
+        }
+        normX = Math.sqrt(normX);
+        double realX0 = expectedU[j*2];
+        double imagX0 = expectedU[j*2+1];
+
+        double magX0 = Math.sqrt(realX0*realX0 + imagX0*imagX0);
+        expectedTau.real      = realX0*normX/magX0;
+        expectedTau.imaginary = imagX0*normX/magX0;
+
+        double realU0 = realX0 + expectedTau.real;
+        double imagU0 = imagX0 + expectedTau.imaginary;
+
+        //
+        double normU = 1;
+        Complex64F B = new Complex64F(realU0,imagU0);
+        for (int i = j+1; i < numRows; i++) {
+            Complex64F A = new Complex64F( expectedU[i*2], expectedU[i*2+1]);
+            Complex64F result = new Complex64F();
+            ComplexMath64F.divide(A,B,result);
+            normU += result.getMagnitude2();
+        }
+        expectedGamma = 2.0/normU;
+
+        Complex64F foundTau = new Complex64F();
+        double[] foundU = u.clone();
+        double foundGamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(j,numRows,foundU,max,foundTau);
+
+        for (int i = 0; i < expectedU.length; i++) {
+            assertEquals(expectedU[i],foundU[i],1e-8);
+        }
+
+        assertEquals(expectedTau.real,foundTau.real,1e-8);
+        assertEquals(expectedTau.imaginary,foundTau.imaginary,1e-8);
+
+        assertEquals(expectedGamma,foundGamma,1e-8);
     }
 
     @Test

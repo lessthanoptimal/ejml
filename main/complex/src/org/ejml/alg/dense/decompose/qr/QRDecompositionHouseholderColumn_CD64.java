@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CCommonOps;
 
@@ -55,7 +56,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
     protected double gammas[];
     // local variables
     protected double gamma;
-    protected double tau;
+    protected Complex64F tau = new Complex64F();
 
     // did it encounter an error?
     protected boolean error;
@@ -75,8 +76,8 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
         if( v.length < maxLength*2 ) {
             v = new double[ maxLength*2 ];
         }
-        if( gammas.length < minLength*2 ) {
-            gammas = new double[ minLength*2 ];
+        if( gammas.length < minLength ) {
+            gammas = new double[ minLength ];
         }
     }
 
@@ -225,8 +226,9 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
             double colQ[] = dataQR[x];
             int indexCol = 0;
             for( int y = 0; y < numRows; y++ ) {
-                colQ[indexCol++] = A.data[y*numCols+x];
-                colQ[indexCol++] = A.data[y*numCols+x+1];
+                int index = (y*numCols+x)*2;
+                colQ[indexCol++] = A.data[index];
+                colQ[indexCol++] = A.data[index+1];
             }
         }
     }
@@ -247,7 +249,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
      * @param j Which submatrix to work off of.
      */
     protected void householder( int j )
-    {   // TODO Update
+    {
         final double u[] = dataQR[j];
 
         // find the largest value in this column
@@ -258,17 +260,20 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
             gamma = 0;
             error = true;
         } else {
-            // computes tau and normalizes u by max
-            tau = QrHelperFunctions_CD64.computeTauAndDivide(j, numRows, u, max);
+            // computes tau and gamma, and normalizes u by max
+            gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(j, numRows, u, max, tau);
 
             // divide u by u_0
-            double u_0 = u[j] + tau;
-            QrHelperFunctions_CD64.divideElements(j + 1, numRows, u, u_0);
+//            double u_0 = u[j] + tau;
+            double real_u_0 = u[j*2] + tau.real;
+            double imag_u_0 = u[j*2+1] + tau.imaginary;
+            QrHelperFunctions_CD64.divideElements(j + 1, numRows, u, 0, real_u_0,imag_u_0 );
 
-            gamma = u_0/tau;
-            tau *= max;
+            tau.real *= max;
+            tau.imaginary *= max;
 
-            u[j] = -tau;
+            u[j*2]   = -tau.real;
+            u[j*2+1] = -tau.imaginary;
         }
 
         gammas[j] = gamma;
@@ -278,29 +283,44 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
      * <p>
      * Takes the results from the householder computation and updates the 'A' matrix.<br>
      * <br>
-     * A = (I - &gamma;*u*u<sup>T</sup>)A
+     * A = (I - &gamma;*u*u<sup>H</sup>)A
      * </p>
      *
      * @param w The submatrix.
      */
     protected void updateA( int w )
     {
-        // TODO Update
         final double u[] = dataQR[w];
 
         for( int j = w+1; j < numCols; j++ ) {
 
             final double colQ[] = dataQR[j];
-            double val = colQ[w];
+            // first element in u is assumed to be 1.0 + 0*i
+            double realSum = colQ[w*2];
+            double imagSum = colQ[w*2+1];
 
             for( int k = w+1; k < numRows; k++ ) {
-                val += u[k]*colQ[k];
-            }
-            val *= gamma;
+                double realU = u[k*2];
+                double imagU = -u[k*2+1];
 
-            colQ[w] -= val;
+                double realQ = colQ[k*2];
+                double imagQ = colQ[k*2+1];
+
+                realSum += realU*realQ - imagU*imagQ;
+                imagSum += imagU*realQ + realU*imagQ;
+            }
+            realSum *= gamma;
+            imagSum *= gamma;
+
+            colQ[w*2  ] -= realSum;
+            colQ[w*2+1] -= imagSum;
+
             for( int i = w+1; i < numRows; i++ ) {
-                colQ[i] -= u[i]*val;
+                double realU = u[i*2];
+                double imagU = u[i*2+1];
+
+                colQ[i*2]  -= realU*realSum - imagU*imagSum;
+                colQ[i*2+1]-= imagU*realSum + realU*imagSum;
             }
         }
     }

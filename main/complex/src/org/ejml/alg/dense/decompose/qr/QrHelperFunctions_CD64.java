@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 
 
 /**
@@ -70,33 +71,27 @@ public class QrHelperFunctions_CD64 {
         return Math.sqrt(max);
     }
 
-    public static void divideElements(final int j, final int numRows ,
-                                      final double[] u, final double u_0 ) {
-//        double div_u = 1.0/u_0;
-//
-//        if( Double.isInfinite(div_u)) {
-            for( int i = j; i < numRows; i++ ) {
-                u[i] /= u_0;
-            }
-//        } else {
-//            for( int i = j; i < numRows; i++ ) {
-//                u[i] *= div_u;
-//            }
-//        }
-    }
+    /**
+     * Performs the following operation:<br>
+     * u[(startU+j):(startU+numRows)] /= A<br>
+     * were u and A are a complex
+     */
+    public static void divideElements(final int j, final int numRows , final double[] u,
+                                      final int startU ,
+                                      final double realA, final double imagA ) {
 
-    public static void divideElements(int j, int numRows , double[] u, int startU , double u_0 ) {
-//        double div_u = 1.0/u_0;
-//
-//        if( Double.isInfinite(div_u)) {
-            for( int i = j; i < numRows; i++ ) {
-                u[i+startU] /= u_0;
-            }
-//        } else {
-//            for( int i = j; i < numRows; i++ ) {
-//                u[i+startU] *= div_u;
-//            }
-//        }
+        double mag2 = realA*realA + imagA*imagA;
+
+        int index = (j+startU)*2;
+
+        for( int i = j; i < numRows; i++ ) {
+            double realU = u[index];
+            double imagU = u[index+1];
+
+            // u[i+startU] /= u_0;
+            u[index++] = (realU*realA + imagU*imagA)/mag2;
+            u[index++] = (imagU*realA - realU*imagA)/mag2;
+        }
     }
 
     public static void divideElements_Brow(int j, int numRows , double[] u,
@@ -161,47 +156,58 @@ public class QrHelperFunctions_CD64 {
     }
 
     /**
-     * Normalizes elements in 'u' by dividing by max and computes the norm2 of the normalized
-     * array u.  Adjust the sign of the returned value depending on the size of the first
-     * element in 'u'. Normalization is done to avoid overflow.
-     *
+     * Performs the following operations:
      * <pre>
-     * for i=j:numRows
-     *   u[i] = u[i] / max
-     *   tau = tau + u[i]*u[i]
-     * end
-     * tau = sqrt(tau)
-     * if( u[j] < 0 )
-     *    tau = -tau;
+     * x = x / max
+     * tau = x0*|x|/|xo|   adjust sign to avoid cancelation
+     * u = x; u0 = x0 + tau; u = u/u0  (x is not divided by x0)
+     * gamma = 2/|u|^2
      * </pre>
+     * Note that u is not explicitly computed here.
      *
      * @param j Element in 'u' that it starts at.
      * @param numRows Element in 'u' that it stops at.
-     * @param u Array
+     * @param x Array
      * @param max Max value in 'u' that is used to normalize it.
-     * @return norm2 of 'u'
+     * @param tau Storage for tau
+     * @return Returns gamma
      */
-    public static double computeTauAndDivide(final int j, final int numRows ,
-                                             final double[] u , final double max) {
-        double tau = 0;
-//        double div_max = 1.0/max;
-//        if( Double.isInfinite(div_max)) {
+    public static double computeTauGammaAndDivide(final int j, final int numRows,
+                                                  final double[] x, final double max,
+                                                  Complex64F tau) {
+
+        int index = j*2;
+        double nx = 0;
         for (int i = j; i < numRows; i++) {
-            double d = u[i] /= max;
-            tau += d * d;
+            double realX = x[index++] /= max;
+            double imagX = x[index++] /= max;
+
+            nx += realX * realX + imagX * imagX;
         }
-//        } else {
-//            for( int i = j; i < numRows; i++ ) {
-//                double d = u[i] *= div_max;
-//                tau += d*d;
-//            }
-//        }
-        tau = Math.sqrt(tau);
 
-        if (u[j] < 0)
-            tau = -tau;
+        nx = Math.sqrt(nx);
 
-        return tau;
+        double real_x0 = x[2*j];
+        double imag_x0 = x[2*j+1];
+        double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
+
+        tau.real = real_x0/mag_x0*nx;
+        tau.imaginary = imag_x0/mag_x0*nx;
+
+        double top,bottom;
+
+        // if there is a chance they can cancel swap the sign
+        if ( real_x0*tau.real<0) {
+            tau.real = -tau.real;
+            tau.imaginary = -tau.imaginary;
+            top = nx * nx - nx *mag_x0;
+            bottom = mag_x0*mag_x0 - 2.0* nx *mag_x0 + nx * nx;
+        } else {
+            top = nx * nx + nx *mag_x0;
+            bottom = mag_x0*mag_x0 + 2.0* nx *mag_x0 + nx * nx;
+        }
+
+        return bottom/top; // gamma
     }
 
     /**

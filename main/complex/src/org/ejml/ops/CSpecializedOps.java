@@ -20,6 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 
 /**
  * @author Peter Abeles
@@ -149,9 +150,39 @@ public class CSpecializedOps {
         // I + foo
         for (int i = 0; i < N; i++) {
             int index = (i*uut.numCols+i)*2;
-            uut.data[index]   = 1 + uut.data[index];
+            uut.data[index] = 1 + uut.data[index];
         }
 
         return uut;
+    }
+
+    /**
+     * Computes the householder vector used in QR decomposition.
+     *
+     * u = x / max(x)
+     * u(0) = u(0) + |u|
+     * u = u / u(0)
+     *
+     * @param x Input vector.  Unmodified.
+     * @return The found householder reflector vector
+     */
+    public static CDenseMatrix64F householderVector( CDenseMatrix64F x ) {
+        CDenseMatrix64F u = x.copy();
+
+        double max = CCommonOps.elementMaxAbs(u);
+
+        CCommonOps.elementDivide(u, max, 0, u);
+
+        double nx = CNormOps.normF(u);
+        Complex64F c = new Complex64F();
+        u.get(0,0,c);
+
+        double realTau = c.real/c.getMagnitude()*nx;
+        double imagTau = c.imaginary/c.getMagnitude()*nx;
+
+        u.set(0,0,c.real + realTau,c.imaginary + imagTau);
+        CCommonOps.elementDivide(u,u.getReal(0,0),u.getImaginary(0,0),u);
+
+        return u;
     }
 }

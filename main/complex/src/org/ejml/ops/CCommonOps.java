@@ -947,4 +947,31 @@ public class CCommonOps {
         return ret;
     }
 
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
+     * <br>
+     * Max{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max abs element value of the matrix.
+     */
+    public static double elementMaxAbs( CDenseMatrix64F a ) {
+        final int size = a.getDataLength();
+
+        double max = 0;
+        for( int i = 0; i < size; i += 2 ) {
+            double real = a.data[i];
+            double imag = a.data[i+1];
+
+            double val = real*real + imag*imag;
+
+            if( val > max ) {
+                max = val;
+            }
+        }
+
+        return Math.sqrt(max);
+    }
 }

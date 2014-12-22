@@ -677,4 +677,13 @@ public class TestCCommonOps {
         }
     }
 
+    @Test
+    public void elementMaxAbs() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(10,12,-2,2,rand);
+        a.set(5,6,10,12);
+
+        double expected = Math.sqrt(10*10 + 12*12);
+        double found = CCommonOps.elementMaxAbs(a);
+        assertEquals(expected,found,1e-8);
+    }
 }

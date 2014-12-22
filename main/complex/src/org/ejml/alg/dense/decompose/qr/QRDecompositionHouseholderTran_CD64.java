@@ -269,11 +269,11 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
             error = true;
         } else {
             // computes tau and normalizes u by max
-            tau = QrHelperFunctions_CD64.computeTauAndDivide(startQR, endQR, QR.data, max);
+//            tau = QrHelperFunctions_CD64.computeTauAndDivide(startQR, endQR, QR.data, max);
 
             // divide u by u_0
             double u_0 = QR.data[startQR] + tau;
-            QrHelperFunctions_CD64.divideElements(startQR + 1, endQR, QR.data, u_0);
+            QrHelperFunctions_CD64.divideElements(startQR + 1, endQR, QR.data,0,99999, u_0);
 
             gamma = u_0/tau;
             tau *= max;

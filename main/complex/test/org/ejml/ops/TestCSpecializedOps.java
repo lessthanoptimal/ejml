@@ -124,4 +124,36 @@ public class TestCSpecializedOps {
 
         assertTrue(CMatrixFeatures.isIdentical(expected,found,1e-8));
     }
+
+    @Test
+    public void householderVector() {
+        CDenseMatrix64F x = CRandomMatrices.createRandom(6, 1, rand);
+
+        CDenseMatrix64F u = CSpecializedOps.householderVector(x);
+        double gamma = 2.0/Math.pow(CNormOps.normF(u), 2.0);
+
+
+        // Q = I - gamma*U*U^H
+        CDenseMatrix64F I = CCommonOps.identity(6);
+        CDenseMatrix64F UUt = new CDenseMatrix64F(6,6);
+        CDenseMatrix64F Q = new CDenseMatrix64F(6,6);
+
+        CVectorVectorMult.outerProdH(u, u, UUt);
+        CCommonOps.elementMultiply(UUt,gamma,0,UUt);
+        CCommonOps.subtract(I,UUt,Q);
+
+        CDenseMatrix64F found = new CDenseMatrix64F(x.numRows,x.numCols);
+        CCommonOps.mult(Q,x,found);
+
+        Complex64F c = new Complex64F();
+        found.get(0,0,c);
+        assertTrue(c.real != 0);
+        assertTrue(c.imaginary != 0 );
+
+        for (int i = 1; i < found.numRows; i++) {
+            found.get(i,0,c);
+            assertEquals(0,c.real, 1e-8);
+            assertEquals(0,c.imaginary,1e-8);
+        }
+    }
 }

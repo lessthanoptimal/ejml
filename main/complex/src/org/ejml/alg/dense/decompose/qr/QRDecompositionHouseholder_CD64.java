@@ -31,7 +31,7 @@ import org.ejml.ops.CCommonOps;
  * </p>
  * <p>
  * Both Q and R are stored in the same m by n matrix.  Q is not stored directly, instead the u from
- * Q<sub>k</sub>=(I-&gamma;*u*u<sup>CT</sup>) is stored.  Decomposition requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
+ * Q<sub>k</sub>=(I-&gamma;*u*u<sup>H</sup>) is stored.  Decomposition requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
  * </p>
  *
  * <p>
@@ -54,7 +54,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     /**
      * Where the Q and R matrices are stored.  R is stored in the
      * upper triangular portion and Q on the lower bit.  Lower columns
-     * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
+     * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^H).
      */
     protected CDenseMatrix64F QR;
 
@@ -295,6 +295,21 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             realTau = real_x0/mag_x0* nx;
             imagTau = imag_x0/mag_x0* nx;
 
+            double top,bottom;
+
+            // if there is a chance they can cancel swap the sign
+            if ( real_x0*realTau<0) {
+                realTau = -realTau;
+                imagTau = -imagTau;
+                top = nx * nx - nx *mag_x0;
+                bottom = mag_x0*mag_x0 - 2.0* nx *mag_x0 + nx * nx;
+            } else {
+                top = nx * nx + nx *mag_x0;
+                bottom = mag_x0*mag_x0 + 2.0* nx *mag_x0 + nx * nx;
+            }
+
+            realGamma = bottom/top;
+
             double real_u_0 = real_x0 + realTau;
             double imag_u_0 = imag_x0 + imagTau;
             double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
@@ -309,11 +324,6 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             }
             u[2*j  ] = 1;
             u[2*j+1] = 0;
-
-            double top = nx * nx + nx *mag_x0;
-            double bottom = mag_x0*mag_x0 + 2.0* nx *mag_x0 + nx * nx;
-
-            realGamma = bottom/top;
 
             realTau *= max;
             imagTau *= max;
