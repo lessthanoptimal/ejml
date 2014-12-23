@@ -28,7 +28,7 @@ import java.util.Iterator;
  *
  * @author Peter Abeles
  */
-public class MatrixIterator implements Iterator<Double> {
+public class MatrixIterator64F implements Iterator<Double> {
     // the matrix which is being iterated through
     private D1Matrix64F a;
 
@@ -63,8 +63,8 @@ public class MatrixIterator implements Iterator<Double> {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator(D1Matrix64F a, boolean rowMajor,
-                          int minRow, int minCol, int maxRow, int maxCol
+    public MatrixIterator64F(D1Matrix64F a, boolean rowMajor,
+                             int minRow, int minCol, int maxRow, int maxCol
     ) {
         if( maxCol < minCol )
             throw new IllegalArgumentException("maxCol has to be more than or equal to minCol");

@@ -19,17 +19,17 @@
 package org.ejml.data;
 
 /**
- * A generic abstract class for matrices whose data is stored in a single 1D array of doubles.  The
+ * A generic abstract class for matrices whose data is stored in a single 1D array of floats.  The
  * format of the elements in this array is not specified.  For example row major, column major,
  * and block row major are all common formats.
  *
  * @author Peter Abeles
  */
-public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
+public abstract class D1Matrix32F implements ReshapeMatrix, RealMatrix32F {
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.
      */
-    public double[] data;
+    public float[] data;
 
     /**
      * Number of rows in the matrix.
@@ -45,14 +45,14 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      *
      * @return Reference to the matrix's data.
      */
-    public double[] getData() {
+    public float[] getData() {
         return data;
     }
 
 	/**
 	 * Changes the internal array reference.
 	 */
-	public void setData( double[] data ) {
+	public void setData( float[] data ) {
 		this.data = data;
 	}
 
@@ -74,7 +74,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      *
      * @param b The matrix that this matrix is to be set equal to.
      */
-    public void set( D1Matrix64F b )
+    public void set( D1Matrix32F b )
     {
         this.reshape(b.numRows,b.numCols);
 
@@ -90,7 +90,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param index Internal array index.
      * @return Value at the specified index.
      */
-    public double get( int index ) {
+    public float get( int index ) {
         return data[index];
     }
 
@@ -101,7 +101,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param index Index of element that is to be set.
      * @param val The new value of the index.
      */
-    public double set( int index , double val ) {
+    public float set( int index , float val ) {
         // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
         return data[index] = val;
     }
@@ -121,7 +121,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being added.
      */
-    public double plus( int index , double val ) {
+    public float plus( int index , float val ) {
         // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
         return data[index] += val;
     }
@@ -141,7 +141,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being subtracted.
      */
-    public double minus( int index , double val ) {
+    public float minus( int index , float val ) {
         // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
         return data[index] -= val;
     }
@@ -161,7 +161,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being multiplied.
      */
-    public double times( int index , double val ) {
+    public float times( int index , float val ) {
         // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
         return data[index] *= val;
     }
@@ -181,7 +181,7 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param index The index which is being modified.
      * @param val The value that is being divided.
      */
-    public double div( int index , double val ) {
+    public float div( int index , float val ) {
         // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
         return data[index] /= val;
     }
@@ -233,9 +233,9 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator64F iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public MatrixIterator32F iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator64F(this,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new MatrixIterator32F(this,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

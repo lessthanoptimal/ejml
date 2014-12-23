@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,11 +25,11 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class Eigenpair {
+public class Eigenpair64F {
     public double value;
     public DenseMatrix64F vector;
 
-    public Eigenpair( double value , DenseMatrix64F vector ) {
+    public Eigenpair64F(double value, DenseMatrix64F vector) {
         this.value = value;
         this.vector = vector;
     }

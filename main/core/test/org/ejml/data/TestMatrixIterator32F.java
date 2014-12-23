@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.RandomMatrices;
+import org.ejml.EjmlParameters;
 import org.junit.Test;
 
 import java.util.Random;
@@ -30,20 +30,20 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestMatrixIterator {
+public class TestMatrixIterator32F {
 
     Random rand = new Random(234234);
 
     @Test
     public void allRow() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix32F A = UtilTestMatrix.random32(3, 6, -1, 1, rand);
 
-        MatrixIterator iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
+        MatrixIterator32F iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
 
         for( int i = 0; i < A.numRows; i++ ) {
             for( int j = 0; j < A.numCols; j++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(),EjmlParameters.TOL32);
             }
         }
         assertTrue(!iter.hasNext());
@@ -51,14 +51,14 @@ public class TestMatrixIterator {
 
     @Test
     public void allCol() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix32F A = UtilTestMatrix.random32(3, 6,-1,1, rand);
 
-        MatrixIterator iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
+        MatrixIterator32F iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
 
         for( int j = 0; j < A.numCols; j++ ) {
             for( int i = 0; i < A.numRows; i++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(),EjmlParameters.TOL32);
             }
         }
         assertTrue(!iter.hasNext());
@@ -66,14 +66,14 @@ public class TestMatrixIterator {
 
     @Test
     public void subRow() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix32F A = UtilTestMatrix.random32(3, 6, -1,1,rand);
 
-        MatrixIterator iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
+        MatrixIterator32F iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
 
         for( int i = 1; i < A.numRows-1; i++ ) {
             for( int j = 2; j < A.numCols; j++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(),EjmlParameters.TOL32);
             }
         }
         assertTrue(!iter.hasNext());
@@ -82,14 +82,14 @@ public class TestMatrixIterator {
 
     @Test
     public void subCol() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix32F A = UtilTestMatrix.random32(3, 6,-1,1,rand);
 
-        MatrixIterator iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
+        MatrixIterator32F iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
 
         for( int j = 2; j < A.numCols; j++ ) {
             for( int i = 1; i < A.numRows-1; i++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(), EjmlParameters.TOL32);
             }
         }
         assertTrue(!iter.hasNext());

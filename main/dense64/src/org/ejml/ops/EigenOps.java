@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decomposition.eig.EigenPowerMethod;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Eigenpair;
+import org.ejml.data.Eigenpair64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -75,7 +75,7 @@ public class EigenOps {
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
-    public static Eigenpair computeEigenVector( DenseMatrix64F A , double eigenvalue )
+    public static Eigenpair64F computeEigenVector( DenseMatrix64F A , double eigenvalue )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Must be a square matrix.");
@@ -130,7 +130,7 @@ public class EigenOps {
                 } else {
                     // otherwise assume that it was so accurate that the matrix was singular
                     // and return that result
-                    return new Eigenpair(eigenvalue,b);
+                    return new Eigenpair64F(eigenvalue,b);
                 }
             } else {
                 hasWorked = true;
@@ -153,7 +153,7 @@ public class EigenOps {
                 } else {
                     // see if it has converged
                     if(error <= threshold || Math.abs(prevError-error) <= UtilEjml.EPS)
-                        return new Eigenpair(eigenvalue,b);
+                        return new Eigenpair64F(eigenvalue,b);
 
                     // update everything
                     prevError = error;
@@ -182,7 +182,7 @@ public class EigenOps {
      * @param A A matrix.  Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
-    public static Eigenpair dominantEigenpair( DenseMatrix64F A ) {
+    public static Eigenpair64F dominantEigenpair( DenseMatrix64F A ) {
 
         EigenPowerMethod power = new EigenPowerMethod(A.numRows);
 

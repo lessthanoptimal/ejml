@@ -18,10 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.Complex64F;
-import org.ejml.data.ComplexMatrix64F;
-import org.ejml.data.Matrix;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.*;
 
 
 /**
@@ -139,6 +136,21 @@ public class EjmlUnitTests {
 
                 assertTrue(!Double.isNaN(valA) && !Double.isNaN(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 assertTrue(!Double.isInfinite(valA) && !Double.isInfinite(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+                assertTrue(Math.abs( valA-valB) <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+            }
+        }
+    }
+
+    public static void assertEquals( RealMatrix32F A , RealMatrix32F B , float tol ) {
+        assertShape(A,B);
+
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
+                float valA = A.get(i,j);
+                float valB = B.get(i,j);
+
+                assertTrue(!Float.isNaN(valA) && !Float.isNaN(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+                assertTrue(!Float.isInfinite(valA) && !Float.isInfinite(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 assertTrue(Math.abs( valA-valB) <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
             }
         }

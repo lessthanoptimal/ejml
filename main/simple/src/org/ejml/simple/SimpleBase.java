@@ -21,7 +21,7 @@ package org.ejml.simple;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.MatrixIterator;
+import org.ejml.data.MatrixIterator64F;
 import org.ejml.data.RealMatrix64F;
 import org.ejml.factory.SingularMatrixException;
 import org.ejml.ops.*;
@@ -609,9 +609,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public MatrixIterator64F iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator(mat,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new MatrixIterator64F(mat,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

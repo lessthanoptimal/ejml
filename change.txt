@@ -25,9 +25,8 @@ Date format: year/month/day
 - Added SingularOps.singularThreshold()
 - Added no argument rank and nullity for SVD using default threshold.
 - SimpleMatrix.loadCSV() now supports derived types
+- Added primitive 32bit data structures to make adding 32bit support in the future smoother
 
-- TODO complex QR solve
-- TODO rename packages denseC64, dense64, coreh
 ----- Version 0.26
 
 2014/9/14

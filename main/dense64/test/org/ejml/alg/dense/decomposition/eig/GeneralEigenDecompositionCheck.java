@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.eig;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Eigenpair;
+import org.ejml.data.Eigenpair64F;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.ops.*;
 import org.ejml.simple.SimpleMatrix;
@@ -460,7 +460,7 @@ public abstract class GeneralEigenDecompositionCheck {
                     System.out.println("Original matrix:");
                     A.print();
                     System.out.println("Eigenvalue = "+c.real);
-                    Eigenpair p = EigenOps.computeEigenVector(A,c.real);
+                    Eigenpair64F p = EigenOps.computeEigenVector(A,c.real);
                     p.vector.print();
                     v.print();
 
@@ -499,7 +499,7 @@ public abstract class GeneralEigenDecompositionCheck {
             Complex64F c = alg.getEigenvalue(i);
 
             if( c.isReal() ) {
-                Eigenpair p = EigenOps.computeEigenVector(A,c.getReal());
+                Eigenpair64F p = EigenOps.computeEigenVector(A,c.getReal());
 
                 if( p != null ) {
                     CommonOps.mult(A,p.vector,AV);

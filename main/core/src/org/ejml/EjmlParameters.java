@@ -27,6 +27,10 @@ package org.ejml;
  */
 public class EjmlParameters {
 
+    public static final float TOL32 = 1e-4f;
+    public static final double TOL64 = 1e-8;
+
+
     /**
      * Used to adjust which algorithms are used.  Often there is a trade off between memory usage
      * and speed.
