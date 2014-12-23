@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,6 @@ package org.ejml.data;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
-import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
 import java.util.Random;
@@ -63,10 +62,10 @@ public class TestD1Submatrix64F {
 
         D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
 
-        SimpleMatrix M = S.extract();
+        DenseMatrix64F M = S.extract();
 
         DenseMatrix64F E = CommonOps.extract(A,2,4,1,10);
 
-        assertTrue(MatrixFeatures.isEquals(E,M.getMatrix()));
+        assertTrue(MatrixFeatures.isEquals(E,M));
     }
 }

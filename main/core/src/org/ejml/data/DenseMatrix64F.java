@@ -19,11 +19,11 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixIO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 
 /**
@@ -32,13 +32,6 @@ import java.io.PrintStream;
  * is the fundamental data structure in linear algebra.  Unlike a sparse matrix, there is no
  * compression in a dense matrix and every element is stored in memory.  This allows for fast
  * reads and writes to the matrix.
- * </p>
- *
- * <p>
- * To keep the code manageable and the library easier to use only basic functions for accessing and editing elements
- * are provided in this class.  The numerous operations which can be performed on DenseMatrix64F
- * are contained in various other classes, where the most common operations can be found in
- * the {@link org.ejml.ops.CommonOps} and {@link org.ejml.ops.SpecializedOps} classes.
  * </p>
  *
  * <p>
@@ -69,17 +62,6 @@ import java.io.PrintStream;
  * </tr>
  * </table>
  * </p>
- *
- *
- * <p>
- * An alternative to working directly with DenseMatrix64 is {@link org.ejml.simple.SimpleMatrix}.
- * SimpleMatrix is a wrapper around DenseMatrix64F that provides an easier to use object oriented way of manipulating
- * matrices, at the cost of efficiency.
- * </p>
- *
- * @see org.ejml.ops.CommonOps
- * @see org.ejml.ops.SpecializedOps
- * @see org.ejml.simple.SimpleMatrix
  *
  * @author Peter Abeles
  */
@@ -365,7 +347,7 @@ public class DenseMatrix64F extends RowD1Matrix64F {
      * Sets all elements equal to zero.
      */
     public void zero() {
-        CommonOps.fill(this, 0.0);
+        Arrays.fill(data, 0, getNumElements(), 0.0);
     }
 
     /**

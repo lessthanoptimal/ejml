@@ -128,7 +128,8 @@ subprojects {
 }
 
 def allModules = [
-        ':main:complex',
+        ':main:denseC64',
+        ':main:dense64',
         ':main:equation',
         ':main:core',
         ':main:experimental'
@@ -165,7 +166,8 @@ idea {
 }
 
 def javadocProjects = [
-        ':main:complex',
+        ':main:denseC64',
+        ':main:dense64',
         ':main:core',
         ':main:equation',
         ':main:experimental'

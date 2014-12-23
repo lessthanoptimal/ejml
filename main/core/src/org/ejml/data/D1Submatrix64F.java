@@ -19,7 +19,6 @@
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
-import org.ejml.simple.SimpleMatrix;
 
 /**
  * <p>
@@ -82,11 +81,11 @@ public class D1Submatrix64F {
         original.set(row+row0,col+col0,value);
     }
 
-    public SimpleMatrix extract() {
-        SimpleMatrix ret = new SimpleMatrix(row1-row0,col1-col0);
+    public DenseMatrix64F extract() {
+        DenseMatrix64F ret = new DenseMatrix64F(row1-row0,col1-col0);
 
-        for( int i = 0; i < ret.numRows(); i++ ) {
-            for( int j = 0; j < ret.numCols(); j++ ) {
+        for( int i = 0; i < ret.numRows; i++ ) {
+            for( int j = 0; j < ret.numCols; j++ ) {
                 ret.set(i,j,get(i,j));
             }
         }
