@@ -55,6 +55,9 @@ public class CDenseMatrix64F extends CD1Matrix64F {
     }
 
     public CDenseMatrix64F(int numRows, int numCols, boolean rowMajor, double... data) {
+        if( data.length != numRows*numCols*2 )
+            throw new RuntimeException("Unexpected length for data");
+
         this.data = new double[ numRows * numCols * 2 ];
 
         this.numRows = numRows;

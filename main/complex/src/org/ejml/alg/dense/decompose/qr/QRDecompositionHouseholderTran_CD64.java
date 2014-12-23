@@ -278,7 +278,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
         int endQR = startQR+numRows;
         startQR += j;
 
-        final double max = QrHelperFunctions_CD64.findMax(QR.data, startQR*2, numRows - j);
+        final double max = QrHelperFunctions_CD64.findMax(QR.data, startQR, numRows - j);
 
         if( max == 0.0 ) {
             gamma = 0;

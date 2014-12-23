@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon_D64;
-import org.ejml.alg.dense.linsol.LinearSolverAbstract;
+import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
 
@@ -28,7 +28,7 @@ import org.ejml.ops.SpecializedOps;
 /**
  * @author Peter Abeles
  */
-public class LinearSolverChol extends LinearSolverAbstract {
+public class LinearSolverChol extends LinearSolverAbstract_D64 {
 
     CholeskyDecompositionCommon_D64 decomp;
     int n;

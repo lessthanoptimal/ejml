@@ -441,7 +441,25 @@ public class TestCCommonOps {
             assertTrue(CMatrixFeatures.isIdentical(B, B_orig, 0));
         }
 
-        // TODO solve rectangular
+        // rectangular
+        for (int i = 1; i < 10; i++) {
+            CDenseMatrix64F A = CRandomMatrices.createRandom(2*i, i, rand);
+            CDenseMatrix64F X = CRandomMatrices.createRandom(i, 1, rand);
+            CDenseMatrix64F B = new CDenseMatrix64F(2*i,1);
+
+            CCommonOps.mult(A,X,B);
+
+            CDenseMatrix64F A_orig = A.copy();
+            CDenseMatrix64F B_orig = B.copy();
+            CDenseMatrix64F X_expected = X.copy();
+
+            assertTrue(CCommonOps.solve(A, B, X));
+
+            assertTrue(CMatrixFeatures.isIdentical(X, X_expected, 1e-8));
+
+            assertTrue(CMatrixFeatures.isIdentical(B, B_orig, 0));
+            assertTrue(CMatrixFeatures.isIdentical(A, A_orig, 0));
+        }
     }
 
     @Test

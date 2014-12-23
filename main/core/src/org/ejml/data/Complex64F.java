@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.ComplexMath64F;
+
 import java.io.Serializable;
 
 /**
@@ -82,5 +84,29 @@ public class Complex64F implements Serializable {
         } else {
             return real+" "+imaginary+"i";
         }
+    }
+
+    public Complex64F plus( Complex64F a ) {
+        Complex64F ret = new Complex64F();
+        ComplexMath64F.plus(this,a,ret);
+        return ret;
+    }
+
+    public Complex64F minus( Complex64F a ) {
+        Complex64F ret = new Complex64F();
+        ComplexMath64F.minus(this, a, ret);
+        return ret;
+    }
+
+    public Complex64F times( Complex64F a ) {
+        Complex64F ret = new Complex64F();
+        ComplexMath64F.multiply(this,a,ret);
+        return ret;
+    }
+
+    public Complex64F divide( Complex64F a ) {
+        Complex64F ret = new Complex64F();
+        ComplexMath64F.divide(this,a,ret);
+        return ret;
     }
 }

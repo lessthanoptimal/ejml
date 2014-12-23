@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,7 +53,7 @@ public class TestLinearSolverAbstract {
         assertTrue(solver.solveCalled);
     }
 
-    private static class MySolver extends LinearSolverAbstract
+    private static class MySolver extends LinearSolverAbstract_D64
     {
         boolean solveCalled = false;
 

@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.linsol.LinearSolverAbstract;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decompose.CTriangularSolver;
+import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CSpecializedOps;
 
 
 /**
@@ -40,23 +40,24 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public class LinearSolverQr_CD64 extends LinearSolverAbstract {
+public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
 
-    private QRDecomposition<DenseMatrix64F> decomposer;
+    private QRDecomposition<CDenseMatrix64F> decomposer;
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
-    protected DenseMatrix64F Q;
-    protected DenseMatrix64F R;
+    protected CDenseMatrix64F Q;
+    protected CDenseMatrix64F Qt;
+    protected CDenseMatrix64F R;
 
-    private DenseMatrix64F Y,Z;
+    private CDenseMatrix64F Y,Z;
 
     /**
      * Creates a linear solver that uses QR decomposition.
      *
      */
-    public LinearSolverQr_CD64(QRDecomposition<DenseMatrix64F> decomposer) {
+    public LinearSolverQr_CD64(QRDecomposition<CDenseMatrix64F> decomposer) {
         this.decomposer = decomposer;
     }
 
@@ -70,11 +71,12 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract {
     {
         this.maxRows = maxRows; this.maxCols = maxCols;
 
-        Q = new DenseMatrix64F(maxRows,maxRows);
-        R = new DenseMatrix64F(maxRows,maxCols);
+        Q = new CDenseMatrix64F(maxRows,maxRows);
+        Qt = new CDenseMatrix64F(maxRows,maxRows);
+        R = new CDenseMatrix64F(maxRows,maxCols);
 
-        Y = new DenseMatrix64F(maxRows,1);
-        Z = new DenseMatrix64F(maxRows,1);
+        Y = new CDenseMatrix64F(maxRows,1);
+        Z = new CDenseMatrix64F(maxRows,1);
     }
 
     /**
@@ -83,7 +85,7 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract {
      * @param A not modified.
      */
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(CDenseMatrix64F A) {
         if( A.numRows > maxRows || A.numCols > maxCols ) {
             setMaxSize(A.numRows,A.numCols);
         }
@@ -92,17 +94,18 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract {
         if( !decomposer.decompose(A) )
             return false;
 
-        Q.reshape(numRows,numRows, false);
-        R.reshape(numRows,numCols, false);
+        Q.reshape(numRows,numRows);
+        R.reshape(numRows,numCols);
         decomposer.getQ(Q,false);
         decomposer.getR(R,false);
+        CCommonOps.transposeConjugate(Q,Qt);
 
         return true;
     }
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(R);
+        return CSpecializedOps.qualityTriangular(R);
     }
 
     /**
@@ -112,7 +115,7 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(CDenseMatrix64F B, CDenseMatrix64F X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -120,27 +123,29 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract {
 
         int BnumCols = B.numCols;
 
-        Y.reshape(numRows,1, false);
-        Z.reshape(numRows,1, false);
+        Y.reshape(numRows,1);
+        Z.reshape(numRows,1);
 
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                Y.data[i] = B.get(i,colB);
+                int indexB = B.getIndex(i,colB);
+                Y.data[i*2]   = B.data[indexB];
+                Y.data[i*2+1] = B.data[indexB+1];
             }
 
             // Solve Qa=b
             // a = Q'b
-            CommonOps.multTransA(Q,Y,Z);
+            CCommonOps.mult(Qt, Y, Z);
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R.data,Z.data,numCols);
+            CTriangularSolver.solveU(R.data, Z.data, numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
-                X.set(i,colB,Z.data[i]);
+                X.set(i,colB,Z.data[i*2],Z.data[i*2+1]);
             }
         }
     }
@@ -155,15 +160,15 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract {
         return false;
     }
 
-    public QRDecomposition<DenseMatrix64F> getDecomposer() {
+    public QRDecomposition<CDenseMatrix64F> getDecomposer() {
         return decomposer;
     }
 
-    public DenseMatrix64F getQ() {
+    public CDenseMatrix64F getQ() {
         return Q;
     }
 
-    public DenseMatrix64F getR() {
+    public CDenseMatrix64F getR() {
         return R;
     }
 }

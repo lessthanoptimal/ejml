@@ -286,14 +286,19 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             }
             nx = Math.sqrt(nx);
 
-            // todo add sign selection back
-
             double real_x0 = u[2*j];
             double imag_x0 = u[2*j+1];
             double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
 
-            realTau = real_x0/mag_x0* nx;
-            imagTau = imag_x0/mag_x0* nx;
+            // TODO Could stability be improved by computing theta so that this
+            // special case doesn't need to be handled?
+            if( mag_x0 == 0 ) {
+                realTau = nx;
+                imagTau = 0;
+            } else {
+                realTau = real_x0 / mag_x0 * nx;
+                imagTau = imag_x0 / mag_x0 * nx;
+            }
 
             double top,bottom;
 

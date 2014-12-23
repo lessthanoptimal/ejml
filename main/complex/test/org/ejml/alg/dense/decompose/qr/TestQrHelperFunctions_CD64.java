@@ -46,13 +46,13 @@ public class TestQrHelperFunctions_CD64 {
             u[i] = (rand.nextDouble()-0.5)*20;
         }
 
-        int offset = 8;
+        int offset = 4;
         int length = 5;
 
         double max = 0;
         for (int i = 0; i < length; i++) {
-            double real = u[i*2+offset];
-            double img = u[i*2+offset+1];
+            double real = u[i*2+offset*2];
+            double img = u[i*2+offset*2+1];
 
             if( real*real + img*img > max ) {
                 max = real*real + img*img;

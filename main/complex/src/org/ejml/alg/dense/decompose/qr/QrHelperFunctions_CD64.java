@@ -55,8 +55,8 @@ public class QrHelperFunctions_CD64 {
     public static double findMax( double[] u, int startU , int length ) {
         double max = -1;
 
-        int index = startU;
-        int stopIndex = startU + length*2;
+        int index = startU*2;
+        int stopIndex = (startU + length)*2;
         for( ; index < stopIndex;) {
             double real = u[index++];
             double img = u[index++];
@@ -191,8 +191,15 @@ public class QrHelperFunctions_CD64 {
         double imag_x0 = x[2*start+1];
         double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
 
-        tau.real = real_x0/mag_x0*nx;
-        tau.imaginary = imag_x0/mag_x0*nx;
+        // TODO Could stability be improved by computing theta so that this
+        // special case doesn't need to be handled?
+        if( mag_x0 == 0 ) {
+            tau.real = nx;
+            tau.imaginary = 0;
+        } else {
+            tau.real = real_x0 / mag_x0 * nx;
+            tau.imaginary = imag_x0 / mag_x0 * nx;
+        }
 
         double top,bottom;
 

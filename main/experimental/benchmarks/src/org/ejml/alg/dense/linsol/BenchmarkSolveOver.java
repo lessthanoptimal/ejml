@@ -19,9 +19,9 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64_D64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_CD64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_CD64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_CD64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_D64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -78,11 +78,11 @@ public class BenchmarkSolveOver {
     private static void runAlgorithms( int numTrials )
     {
         System.out.println("  solve QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse_CD64(),numTrials));
+                new LinearSolverQrHouse_D64(),numTrials));
         System.out.println("  solve QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol_CD64(),numTrials));
+                new LinearSolverQrHouseCol_D64(),numTrials));
         System.out.println("  solve QR tran        = "+ solveBenchmark(
-                new LinearSolverQrHouseTran_CD64(),numTrials));
+                new LinearSolverQrHouseTran_D64(),numTrials));
         System.out.println("  solve QR Block64      = "+ solveBenchmark(
                 new LinearSolverQrBlock64_D64(),numTrials));
         System.out.println("  Selected              = "+ solveBenchmark(

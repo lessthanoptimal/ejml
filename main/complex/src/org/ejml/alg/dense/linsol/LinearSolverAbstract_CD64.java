@@ -35,7 +35,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * 
  * @author Peter Abeles
  */
-public abstract class CLinearSolverAbstract implements LinearSolver<CDenseMatrix64F> {
+public abstract class LinearSolverAbstract_CD64 implements LinearSolver<CDenseMatrix64F> {
 
     protected CDenseMatrix64F A;
     protected int numRows;

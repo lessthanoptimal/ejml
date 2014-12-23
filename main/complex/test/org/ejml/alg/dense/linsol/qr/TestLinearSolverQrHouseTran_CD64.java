@@ -18,22 +18,22 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.linsol.GenericCLinearSolverChecks;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverQrHouseTran_D64 extends GenericLinearSolverChecks {
+public class TestLinearSolverQrHouseTran_CD64 extends GenericCLinearSolverChecks {
 
-    public TestLinearSolverQrHouseTran_D64() {
+    public TestLinearSolverQrHouseTran_CD64() {
 //         shouldFailSingular = false;
     }
 
     @Override
-    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQrHouseTran_D64();
+    protected LinearSolver<CDenseMatrix64F> createSolver( CDenseMatrix64F A ) {
+        return new LinearSolverQrHouseTran_CD64();
     }
 }

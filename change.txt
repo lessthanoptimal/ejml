@@ -26,6 +26,8 @@ Date format: year/month/day
 - Added no argument rank and nullity for SVD using default threshold.
 - SimpleMatrix.loadCSV() now supports derived types
 
+- TODO complex QR solve
+- TODO rename packages denseC64, dense64, coreh
 ----- Version 0.26
 
 2014/9/14

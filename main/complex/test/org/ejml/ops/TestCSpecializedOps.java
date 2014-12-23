@@ -129,9 +129,10 @@ public class TestCSpecializedOps {
     public void householderVector() {
         CDenseMatrix64F x = CRandomMatrices.createRandom(6, 1, rand);
 
+//        x.set(0,0,0,0);
+
         CDenseMatrix64F u = CSpecializedOps.householderVector(x);
         double gamma = 2.0/Math.pow(CNormOps.normF(u), 2.0);
-
 
         // Q = I - gamma*U*U^H
         CDenseMatrix64F I = CCommonOps.identity(6);

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decompose.lu.LUDecompositionBase_CD64;
-import org.ejml.alg.dense.linsol.CLinearSolverAbstract;
+import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
 import org.ejml.data.CDenseMatrix64F;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 /**
  * @author Peter Abeles
  */
-public abstract class LinearSolverLuBase_CD64 extends CLinearSolverAbstract {
+public abstract class LinearSolverLuBase_CD64 extends LinearSolverAbstract_CD64 {
 
     protected LUDecompositionBase_CD64 decomp;
 

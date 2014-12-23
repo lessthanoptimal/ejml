@@ -177,8 +177,15 @@ public class CSpecializedOps {
         Complex64F c = new Complex64F();
         u.get(0,0,c);
 
-        double realTau = c.real/c.getMagnitude()*nx;
-        double imagTau = c.imaginary/c.getMagnitude()*nx;
+        double realTau,imagTau;
+
+        if( c.getMagnitude() == 0 ) {
+            realTau = nx;
+            imagTau = 0;
+        } else {
+            realTau = c.real/c.getMagnitude()*nx;
+            imagTau = c.imaginary/c.getMagnitude()*nx;
+        }
 
         u.set(0,0,c.real + realTau,c.imaginary + imagTau);
         CCommonOps.elementDivide(u,u.getReal(0,0),u.getImaginary(0,0),u);

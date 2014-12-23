@@ -21,7 +21,6 @@ package org.ejml.ops;
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
 import org.ejml.alg.dense.misc.CTransposeAlgs;
 import org.ejml.alg.dense.mult.CMatrixMatrixMult;
 import org.ejml.data.*;
@@ -500,8 +499,8 @@ public class CCommonOps {
      */
     public static boolean invert( CDenseMatrix64F A )
     {
-        LUDecompositionAlt_CD64 alg = new LUDecompositionAlt_CD64();
-        LinearSolverLu_CD64 solver = new LinearSolverLu_CD64(alg);
+        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.linear(A.numRows);
+
         if( solver.setA(A) ) {
             solver.invert(A);
         } else {
@@ -536,8 +535,7 @@ public class CCommonOps {
      */
     public static boolean invert( CDenseMatrix64F input , CDenseMatrix64F output )
     {
-        LUDecompositionAlt_CD64 alg = new LUDecompositionAlt_CD64();
-        LinearSolverLu_CD64 solver = new LinearSolverLu_CD64(alg);
+        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.linear(input.numRows);
 
         if( solver.modifiesA() )
             input = input.copy();
@@ -549,7 +547,6 @@ public class CCommonOps {
     }
 
     /**
-     * <p>WARNING: Only supports square systems for now!</p>
      * <p>
      * Solves for x in the following equation:<br>
      * <br>
@@ -579,7 +576,12 @@ public class CCommonOps {
      */
     public static boolean solve( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F x )
     {
-        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.linear(a.numRows);
+        LinearSolver<CDenseMatrix64F> solver;
+        if( a.numCols == a.numRows ) {
+            solver = CLinearSolverFactory.linear(a.numRows);
+        } else {
+            solver = CLinearSolverFactory.leastSquares(a.numRows,a.numCols);
+        }
 
         // make sure the inputs 'a' and 'b' are not modified
         solver = new LinearSolverSafe<CDenseMatrix64F>(solver);

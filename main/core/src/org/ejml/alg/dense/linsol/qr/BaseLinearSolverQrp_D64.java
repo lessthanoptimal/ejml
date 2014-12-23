@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.linsol.LinearSolverAbstract;
+import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.LinearSolverFactory;
@@ -65,7 +65,7 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract {
+public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
 
     QRPDecomposition<DenseMatrix64F> decomposition;
 

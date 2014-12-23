@@ -20,6 +20,7 @@ package org.ejml.factory;
 
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 
@@ -36,5 +37,17 @@ public class CLinearSolverFactory {
      */
     public static LinearSolver<CDenseMatrix64F> linear( int matrixSize ) {
         return new LinearSolverLu_CD64(new LUDecompositionAlt_CD64());
+    }
+
+    /**
+     * Creates a good general purpose solver for over determined systems and returns the optimal least-squares
+     * solution.  The A matrix will have dimensions (m,n) where m &ge; n.
+     *
+     * @param numRows The number of rows that the decomposition is optimized for.
+     * @param numCols The number of columns that the decomposition is optimized for.
+     * @return A new least-squares solver for over determined systems.
+     */
+    public static LinearSolver<CDenseMatrix64F> leastSquares( int numRows , int numCols ) {
+        return new LinearSolverQrHouseCol_CD64();
     }
 }

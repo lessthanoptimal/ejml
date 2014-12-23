@@ -18,11 +18,11 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_D64;
-import org.ejml.alg.dense.linsol.LinearSolverAbstract;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.alg.dense.decompose.CTriangularSolver;
+import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholder_CD64;
+import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
+import org.ejml.data.CDenseMatrix64F;
+import org.ejml.ops.CSpecializedOps;
 
 
 /**
@@ -39,22 +39,22 @@ import org.ejml.ops.SpecializedOps;
  *
  * @author Peter Abeles
  */
-public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract {
+public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract_CD64 {
 
-    private QRDecompositionHouseholder_D64 decomposer;
+    private QRDecompositionHouseholder_CD64 decomposer;
 
     private double []a,u;
 
     private int maxRows = -1;
 
-    private DenseMatrix64F QR;
+    private CDenseMatrix64F QR;
     private double gammas[];
 
     /**
      * Creates a linear solver that uses QR decomposition.
      */
     public LinearSolverQrHouse_CD64() {
-        decomposer = new QRDecompositionHouseholder_D64();
+        decomposer = new QRDecompositionHouseholder_CD64();
 
 
     }
@@ -62,8 +62,8 @@ public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract {
     public void setMaxSize( int maxRows ) {
         this.maxRows = maxRows;
 
-        a = new double[ maxRows ];
-        u = new double[ maxRows ];
+        a = new double[ maxRows*2 ];
+        u = new double[ maxRows*2 ];
     }
 
     /**
@@ -72,7 +72,7 @@ public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract {
      * @param A not modified.
      */
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(CDenseMatrix64F A) {
         if( A.numRows > maxRows ) {
             setMaxSize(A.numRows);
         }
@@ -89,7 +89,7 @@ public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract {
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(QR);
+        return CSpecializedOps.qualityTriangular(QR);
     }
 
     /**
@@ -99,7 +99,7 @@ public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(CDenseMatrix64F B, CDenseMatrix64F X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -112,36 +112,57 @@ public class LinearSolverQrHouse_CD64 extends LinearSolverAbstract {
 
             // make a copy of this column in the vector
             for( int i = 0; i < numRows; i++ ) {
-                a[i] = B.data[i*BnumCols + colB];
+                int indexB = (i*BnumCols + colB)*2;
+                a[i*2]   = B.data[indexB];
+                a[i*2+1] = B.data[indexB+1];
             }
 
             // Solve Qa=b
             // a = Q'b
             // a = Q_{n-1}...Q_2*Q_1*b
             //
-            // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
+            // Q_n*b = (I-gamma*u*u^H)*b = b - u*(gamma*U^H*b)
             for( int n = 0; n < numCols; n++ ) {
-                u[n] = 1;
-                double ub = a[n];
-                // U^T*b
+                u[n*2] = 1;
+                u[n*2+1] = 0;
+
+                double realUb = a[2*n];
+                double imagUb = a[2*n+1];
+                // U^H*b
                 for( int i = n+1; i < numRows; i++ ) {
-                    ub += (u[i] = QR.unsafe_get(i,n))*a[i];
+                    int indexQR = (i*QR.numCols+n)*2;
+                    double realU = u[i*2]   = QR.data[indexQR];
+                    double imagU = u[i*2+1] = QR.data[indexQR+1];
+
+                    double realB = a[i*2];
+                    double imagB = a[i*2+1];
+
+                    realUb += realU*realB + imagU*imagB;
+                    imagUb += realU*imagB - imagU*realB;
                 }
 
-                // gamma*U^T*b
-                ub *= gammas[n];
- 
+                // gamma*U^H*b
+                realUb *= gammas[n];
+                imagUb *= gammas[n];
+
                 for( int i = n; i < numRows; i++ ) {
-                    a[i] -= u[i]*ub;
+                    double realU = u[i*2];
+                    double imagU = u[i*2+1];
+
+                    a[i*2  ] -= realU*realUb - imagU*imagUb;
+                    a[i*2+1] -= realU*imagUb + imagU*realUb;
                 }
             }
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(QR.data,a,numCols);
+            CTriangularSolver.solveU(QR.data, a, numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {
-                X.data[i*X.numCols+colB] = a[i];
+                int indexX = (i*X.numCols+colB)*2;
+
+                X.data[indexX]   = a[i*2];
+                X.data[indexX+1] = a[i*2+1];
             }
         }
     }

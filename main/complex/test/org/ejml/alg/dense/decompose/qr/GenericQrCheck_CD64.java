@@ -94,6 +94,40 @@ public abstract class GenericQrCheck_CD64 {
     }
 
     /**
+     * Test a pathological case for computing tau
+     */
+    @Test
+    public void checkZeroInFirstElement() {
+        int width = 4,height = 5;
+
+        QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
+
+        CDenseMatrix64F A = CRandomMatrices.createRandom(height,width,rand);
+
+        // cause the pathological situation
+        A.set(0,0,0,0);
+
+        assertTrue(alg.decompose(A.copy()));
+
+        CDenseMatrix64F Q = new CDenseMatrix64F(height,height);
+        alg.getQ(Q, false);
+        CDenseMatrix64F R = new CDenseMatrix64F(height,width);
+        alg.getR(R, false);
+
+        // see if Q has the expected properties
+        assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
+
+        // see if it has the expected properties
+        CDenseMatrix64F A_found = new CDenseMatrix64F(Q.numRows,R.numCols);
+        CCommonOps.mult(Q,R,A_found);
+
+        EjmlUnitTests.assertEquals(A,A_found,1e-6);
+        CDenseMatrix64F R_found = new CDenseMatrix64F(R.numRows,R.numCols);
+        CCommonOps.transposeConjugate(Q);
+        CCommonOps.mult(Q, A, R_found);
+    }
+
+    /**
      * See if passing in a matrix or not providing one to getQ and getR functions
      * has the same result
      */

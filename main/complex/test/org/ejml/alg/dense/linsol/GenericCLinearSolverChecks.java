@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
@@ -204,14 +205,15 @@ public abstract class GenericCLinearSolverChecks {
     @Test
     public void square_pivot() {
         CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
-        CDenseMatrix64F b = new CDenseMatrix64F(3,1, true, 8,0, 33,0, 15.5,0);
+        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 8,-2, 33,1.6, 15.5,-5.7);
         CDenseMatrix64F x = CRandomMatrices.createRandom(3,1,rand);
+        CDenseMatrix64F b = CRandomMatrices.createRandom(3,1,rand);
+
+        CCommonOps.mult(A,x_expected,b);
 
         LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
-
-        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1,0, 2,0, 3,0);
 
         EjmlUnitTests.assertEquals(x_expected,x,1e-8);
     }
@@ -234,14 +236,27 @@ public abstract class GenericCLinearSolverChecks {
             return;
         }
 
-        double t[] = new double[]{-1,-0.75,-0.5,0,0.25,0.5,0.75};
-        double vals[] = new double[7];
-        double a=1,b=1.5,c=1.7;
-        for( int i = 0; i < t.length; i++ ) {
-            vals[i] = a + b*t[i] + c*t[i]*t[i];
+        double t[] = new double[7*2];
+
+        for (int i = 0; i < t.length; i++) {
+            t[i] = rand.nextDouble()*2-1.0;
         }
 
-        CDenseMatrix64F B = new CDenseMatrix64F(7,1, true, vals);
+        double vals[] = new double[t.length];
+        Complex64F a = new Complex64F(1,-1);
+        Complex64F b = new Complex64F(2,-0.4);
+        Complex64F c = new Complex64F(3,0.9);
+
+        for( int i = 0; i < t.length; i+= 2 ) {
+            Complex64F T = new Complex64F(t[i],t[i+1]);
+
+            Complex64F result = a.plus( b.times(T) ).plus( c.times(T.times(T)));
+
+            vals[i] = result.real;
+            vals[i+1] = result.imaginary;
+        }
+
+        CDenseMatrix64F B = new CDenseMatrix64F(t.length/2,1, true, vals);
         CDenseMatrix64F A = createPolyA(t,3);
         CDenseMatrix64F x = CRandomMatrices.createRandom(3,1,rand);
 
@@ -250,22 +265,27 @@ public abstract class GenericCLinearSolverChecks {
 
         solver.solve(B,x);
 
-        assertEquals(a,x.getReal(0, 0),tol);
-        assertEquals(0,x.getImaginary(0, 0),tol);
-        assertEquals(b,x.getReal(1, 0),tol);
-        assertEquals(0,x.getImaginary(1, 0),tol);
-        assertEquals(c,x.getReal(2, 0),tol);
-        assertEquals(0,x.getImaginary(2, 0),tol);
+        assertEquals(a.real,     x.getReal(0, 0),tol);
+        assertEquals(a.imaginary,x.getImaginary(0, 0),tol);
+        assertEquals(b.real,     x.getReal(1, 0),tol);
+        assertEquals(b.imaginary,x.getImaginary(1, 0),tol);
+        assertEquals(c.real,     x.getReal(2, 0),tol);
+        assertEquals(c.imaginary,x.getImaginary(2, 0),tol);
     }
 
     private CDenseMatrix64F createPolyA( double t[] , int dof ) {
-        CDenseMatrix64F A = new CDenseMatrix64F(t.length,3);
+        CDenseMatrix64F A = new CDenseMatrix64F(t.length/2,dof);
 
-        for( int j = 0; j < t.length; j++ ) {
-            double val = t[j];
+        Complex64F power = new Complex64F();
+        Complex64F T = new Complex64F();
+
+        for( int j = 0; j < A.numRows; j++ ) {
+            T.set(t[j*2],t[j*2+1]);
+            power.set(1,0);
 
             for( int i = 0; i < dof; i++ ) {
-                A.set(j,i,Math.pow(val,i),0);
+                A.set(j,i,power.real,power.imaginary);
+                power = power.times(T);
             }
         }
 
@@ -280,7 +300,7 @@ public abstract class GenericCLinearSolverChecks {
 
             LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
 
-            solver.setA(A);
+            assertTrue(solver.setA(A));
             solver.invert(A_inv);
 
             CDenseMatrix64F I = CRandomMatrices.createRandom(i,i,rand);

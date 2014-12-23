@@ -35,6 +35,6 @@ public class TestLinearSolverQr_D64 extends GenericLinearSolverChecks {
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
-        return new LinearSolverQr_CD64(new QRDecompositionHouseholderColumn_D64());
+        return new LinearSolverQr_D64(new QRDecompositionHouseholderColumn_D64());
     }
 }

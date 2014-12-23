@@ -35,7 +35,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract implements LinearSolver<DenseMatrix64F> {
+public abstract class LinearSolverAbstract_D64 implements LinearSolver<DenseMatrix64F> {
 
     protected DenseMatrix64F A;
     protected int numRows;

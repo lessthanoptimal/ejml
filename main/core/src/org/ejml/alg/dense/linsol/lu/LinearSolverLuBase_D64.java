@@ -19,14 +19,14 @@
 package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_D64;
-import org.ejml.alg.dense.linsol.LinearSolverAbstract;
+import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
  * @author Peter Abeles
  */
-public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract {
+public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract_D64 {
 
     protected LUDecompositionBase_D64 decomp;
 
