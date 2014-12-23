@@ -25,6 +25,7 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
+import org.ejml.simple.UtilSimpleMatrix;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -486,7 +487,7 @@ public class TestBlockMatrixOps {
     public void convertSimple() {
         BlockMatrix64F A = BlockMatrixOps.createRandom(4,6,-1,1,rand,3);
 
-        SimpleMatrix S = BlockMatrixOps.convertSimple(A);
+        SimpleMatrix S = UtilSimpleMatrix.convertSimple(A);
 
         assertEquals(A.numRows,S.numRows());
         assertEquals(A.numCols,S.numCols());

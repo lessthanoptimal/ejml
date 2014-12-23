@@ -22,7 +22,6 @@ import org.ejml.data.Complex64F;
 import org.ejml.data.ComplexMatrix64F;
 import org.ejml.data.Matrix;
 import org.ejml.data.RealMatrix64F;
-import org.ejml.simple.SimpleMatrix;
 
 
 /**
@@ -48,16 +47,6 @@ public class EjmlUnitTests {
     }
 
     /**
-     * Checks to see if every element in A is countable.  A doesn't have any element with
-     * a value of NaN or infinite.
-     *
-     * @param A Matrix
-     */
-    public static void assertCountable( SimpleMatrix A ) {
-        assertCountable(A.getMatrix());
-    }
-
-    /**
      * <p>
      * Checks to see if A and B have the same shape.
      * </p>
@@ -68,18 +57,6 @@ public class EjmlUnitTests {
     public static void assertShape( Matrix A , Matrix B ) {
         assertTrue(  A.getNumRows() == B.getNumRows() , "Number of rows do not match");
         assertTrue(  A.getNumCols() == B.getNumCols() , "Number of columns do not match");
-    }
-
-    /**
-     * <p>
-     * Checks to see if A and B have the same shape.
-     * </p>
-     *
-     * @param A Matrix
-     * @param B Matrix
-     */
-    public static void assertShape( SimpleMatrix A , SimpleMatrix B ) {
-        assertShape(A.getMatrix(),B.getMatrix());
     }
 
     /**
@@ -115,45 +92,23 @@ public class EjmlUnitTests {
      * @param tol Tolerance
      */
     public static void assertEqualsUncountable( RealMatrix64F A , RealMatrix64F B , double tol ) {
-        assertShape(A,B);
+        assertShape(A, B);
 
-        for( int i = 0; i < A.getNumRows(); i++ ){
-            for( int j = 0; j < A.getNumCols(); j++ ) {
-                double valA = A.get(i,j);
-                double valB = B.get(i,j);
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
+                double valA = A.get(i, j);
+                double valB = B.get(i, j);
 
-                if( Double.isNaN(valA) ) {
-                    assertTrue(Double.isNaN(valB),"At ("+i+","+j+") A = "+valA+" B = "+valB);
-                } else if( Double.isInfinite(valA) ) {
-                    assertTrue(Double.isInfinite(valB),"At ("+i+","+j+") A = "+valA+" B = "+valB);
+                if (Double.isNaN(valA)) {
+                    assertTrue(Double.isNaN(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
+                } else if (Double.isInfinite(valA)) {
+                    assertTrue(Double.isInfinite(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
                 } else {
-                    double diff = Math.abs( valA-valB);
-                    assertTrue(diff <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+                    double diff = Math.abs(valA - valB);
+                    assertTrue(diff <= tol, "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
                 }
             }
         }
-    }
-
-    /**
-     * <p>
-     * Checks to see if each element in the matrix is within tolerance of each other:
-     * </p>
-     *
-     * <p>
-     * The two matrices are identical with in tolerance if:<br>
-     * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol
-     * </p>
-     *
-     * <p>
-     * In addition if an element is NaN or infinite in one matrix it must be the same in the other.
-     * </p>
-     *
-     * @param A Matrix A
-     * @param B Matrix B
-     * @param tol Tolerance
-     */
-    public static void assertEqualsUncountable( SimpleMatrix A , SimpleMatrix B , double tol ) {
-        assertEqualsUncountable(A.getMatrix(),B.getMatrix(),tol);
     }
 
     /**
@@ -220,28 +175,6 @@ public class EjmlUnitTests {
 
             }
         }
-    }
-
-    /**
-     * <p>
-     * Checks to see if each element in the matrices are within tolerance of each other and countable:
-     * </p>
-     *
-     * <p>
-     * The two matrices are identical with in tolerance if:<br>
-     * |a<sub>ij</sub> - b<sub>ij</sub>| &le; tol
-     * </p>
-     *
-     * <p>
-     * The test will fail if any element in either matrix is NaN or infinite.
-     * </p>
-     *
-     * @param A Matrix A
-     * @param B Matrix B
-     * @param tol Tolerance
-     */
-    public static void assertEquals( SimpleMatrix A , SimpleMatrix B , double tol ) {
-        assertEquals(A.getMatrix(),B.getMatrix(),tol);
     }
 
     /**

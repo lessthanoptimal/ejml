@@ -21,7 +21,6 @@ package org.ejml.alg.dense.decomposition.svd.implicitqr;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenvalueSmall;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
@@ -767,50 +766,14 @@ public class SvdImplicitQrAlgorithm {
      */
     public void exceptionShift() {
         numExceptional++;
-        double mag = 0.05*numExceptional;
-        if( mag > 1.0 ) mag = 1.0;
+        double mag = 0.05 * numExceptional;
+        if (mag > 1.0) mag = 1.0;
 
-        double angle = 2.0*Math.PI*(rand.nextDouble()-0.5)*mag;
-        performImplicitSingleStep(0,angle,true);
+        double angle = 2.0 * Math.PI * (rand.nextDouble() - 0.5) * mag;
+        performImplicitSingleStep(0, angle, true);
 
         // allow more convergence time
-        nextExceptional = steps+exceptionalThresh;  // (numExceptional+1)*
-    }
-
-    /**
-     * Creates a Q matrix for debugging purposes.
-     */
-    private SimpleMatrix createQ(int x1, double c, double s , boolean transposed ) {
-        return createQ(x1,x1+1,c,s,transposed);
-    }
-
-    /**
-     * Creates a Q matrix for debugging purposes.
-     */
-    private SimpleMatrix createQ(int x1, int x2 , double c, double s , boolean transposed ) {
-        SimpleMatrix Q = SimpleMatrix.identity(N);
-        Q.set(x1,x1,c);
-        if( transposed ) {
-            Q.set(x1,x2,s);
-            Q.set(x2,x1,-s);
-        } else {
-            Q.set(x1,x2,-s);
-            Q.set(x2,x1,s);
-        }
-        Q.set(x2,x2,c);
-        return Q;
-    }
-
-    private SimpleMatrix createB() {
-        SimpleMatrix B = new SimpleMatrix(N,N);
-
-        for( int i = 0; i < N-1; i++ ) {
-            B.set(i,i,diag[i]);
-            B.set(i,i+1,off[i]);
-        }
-        B.set(N-1,N-1,diag[N-1]);
-
-        return B;
+        nextExceptional = steps + exceptionalThresh;  // (numExceptional+1)*
     }
 
     public void printMatrix() {

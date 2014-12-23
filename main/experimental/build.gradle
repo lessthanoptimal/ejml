@@ -2,7 +2,11 @@ dependencies {
     compile project(':main:core')
     compile project(':main:dense64')
     compile project(':main:denseC64')
+    compile project(':main:simple')
     compile project(':main:equation')
+
+    testCompile project(':main:dense64').sourceSets.test.output
+    testCompile project(':main:denseC64').sourceSets.test.output
 }
 
 idea {

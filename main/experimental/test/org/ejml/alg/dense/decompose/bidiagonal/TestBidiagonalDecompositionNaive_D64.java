@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.bidiagonal;
+package org.ejml.alg.dense.decompose.bidiagonal;
 
+import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionNaive_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -67,7 +68,7 @@ public class TestBidiagonalDecompositionNaive_D64 {
 //        A.print();
 //        foundA.print();
 
-        assertTrue(MatrixFeatures.isIdentical(A.getMatrix(),foundA,1e-8));
+        assertTrue(MatrixFeatures.isIdentical(A.getMatrix(), foundA, 1e-8));
     }
 
 }

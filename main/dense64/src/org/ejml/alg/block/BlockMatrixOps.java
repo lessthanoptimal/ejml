@@ -25,7 +25,6 @@ import org.ejml.ops.CommonOps;
 import org.ejml.ops.ConvertMatrixType;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
-import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
@@ -505,18 +504,6 @@ public class BlockMatrixOps {
                 A.data[index + k*w + k ] = 1;
             }
         }
-    }
-
-    /**
-     * <p>Converts the block matrix into a SimpleMatrix.</p>
-     *
-     * @param A Block matrix that is being converted.  Not modified.
-     * @return Equivalent SimpleMatrix.
-     */
-    public static SimpleMatrix convertSimple( BlockMatrix64F A ) {
-        DenseMatrix64F B = convert(A,null);
-
-        return SimpleMatrix.wrap(B);
     }
 
     /**
