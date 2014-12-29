@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests {
+public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests_D64 {
 
     public TestCholeskyDecompositionBlock_D64(){
         canR = false;

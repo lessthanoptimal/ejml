@@ -28,7 +28,7 @@ import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.check
 /**
  * @author Peter Abeles
  */
-public class TestCholeskyDecompositionInner_D64 extends GenericCholeskyTests {
+public class TestCholeskyDecompositionInner_D64 extends GenericCholeskyTests_D64 {
 
     @Override
     public CholeskyDecomposition<DenseMatrix64F> create(boolean lower) {

@@ -16,27 +16,18 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.chol;
+package org.ejml.alg.dense.decompose.chol;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.junit.Test;
 
-import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
-
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
-public class TestCholeskyDecomposition_B64_to_D64 extends GenericCholeskyTests_D64 {
+public class TestCholeskyDecompositionCommon_CD64 {
     @Test
-    public void checkModifyInput() {
-        checkModifiedInput(new CholeskyDecomposition_B64_to_D64(true));
-        checkModifiedInput(new CholeskyDecomposition_B64_to_D64(false));
-    }
-
-    @Override
-    public CholeskyDecomposition<DenseMatrix64F> create(boolean lower) {
-        return new CholeskyDecomposition_B64_to_D64(lower);
+    public void getT() {
+        fail("Implement");
     }
 }

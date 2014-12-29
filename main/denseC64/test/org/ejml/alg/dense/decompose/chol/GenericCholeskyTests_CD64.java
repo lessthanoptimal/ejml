@@ -16,13 +16,15 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.chol;
+package org.ejml.alg.dense.decompose.chol;
 
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
 import org.ejml.ops.EjmlUnitTests;
-import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -36,13 +38,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericCholeskyTests {
+public abstract class GenericCholeskyTests_CD64 {
     Random rand = new Random(0x45478);
 
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition<DenseMatrix64F> create( boolean lower );
+    public abstract CholeskyDecomposition<CDenseMatrix64F> create( boolean lower );
 
     @Test
     public void testDecomposeL() {
@@ -52,10 +54,10 @@ public abstract class GenericCholeskyTests {
 
         DenseMatrix64F L = new DenseMatrix64F(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
 
-        CholeskyDecomposition<DenseMatrix64F> cholesky = create(true);
+        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(true);
         assertTrue(cholesky.decompose(A));
 
-        DenseMatrix64F foundL = cholesky.getT(null);
+        CDenseMatrix64F foundL = cholesky.getT(null);
 
         EjmlUnitTests.assertEquals(L,foundL,1e-8);
     }
@@ -68,7 +70,7 @@ public abstract class GenericCholeskyTests {
 
         DenseMatrix64F R = new DenseMatrix64F(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
 
-        CholeskyDecomposition<DenseMatrix64F> cholesky = create(false);
+        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(false);
         assertTrue(cholesky.decompose(A));
 
         DenseMatrix64F foundR = cholesky.getT(null);
@@ -95,15 +97,15 @@ public abstract class GenericCholeskyTests {
     public void getT() {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        CholeskyDecomposition<DenseMatrix64F> cholesky = create(true);
+        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(true);
 
         assertTrue(cholesky.decompose(A));
 
-        DenseMatrix64F L_null = cholesky.getT(null);
-        DenseMatrix64F L_provided = RandomMatrices.createRandom(3,3,rand);
+        CDenseMatrix64F L_null = cholesky.getT(null);
+        CDenseMatrix64F L_provided = CRandomMatrices.createRandom(3, 3, rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
-        assertTrue(MatrixFeatures.isEquals(L_null,L_provided));
+        assertTrue(CMatrixFeatures.isEquals(L_null, L_provided));
     }
 
     /**

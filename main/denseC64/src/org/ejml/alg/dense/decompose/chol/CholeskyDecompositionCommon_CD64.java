@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.chol;
+package org.ejml.alg.dense.decompose.chol;
 
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CCommonOps;
 
 
 /**
@@ -34,8 +34,8 @@ import org.ejml.ops.CommonOps;
  * @see org.ejml.interfaces.decomposition.CholeskyDecomposition
  * @author Peter Abeles
  */
-public abstract class CholeskyDecompositionCommon_D64
-        implements CholeskyDecomposition<DenseMatrix64F> {
+public abstract class CholeskyDecompositionCommon_CD64
+        implements CholeskyDecomposition<CDenseMatrix64F> {
 
     // it can decompose a matrix up to this width
     protected int maxWidth=-1;
@@ -44,7 +44,7 @@ public abstract class CholeskyDecompositionCommon_D64
     protected int n;
 
     // the decomposed matrix
-    protected DenseMatrix64F T;
+    protected CDenseMatrix64F T;
     protected double[] t;
 
     // tempoary variable used by various functions
@@ -58,7 +58,7 @@ public abstract class CholeskyDecompositionCommon_D64
      *
      * @param lower should a lower or upper triangular matrix be used.
      */
-    public CholeskyDecompositionCommon_D64(boolean lower) {
+    public CholeskyDecompositionCommon_CD64(boolean lower) {
         this.lower = lower;
     }
 
@@ -73,10 +73,7 @@ public abstract class CholeskyDecompositionCommon_D64
     }
 
     /**
-     * If true the decomposition was for a lower triangular matrix.
-     * If false it was for an upper triangular matrix.
-     *
-     * @return True if lower, false if upper.
+     * {@inheritDoc}
      */
     @Override
     public boolean isLower() {
@@ -84,20 +81,10 @@ public abstract class CholeskyDecompositionCommon_D64
     }
 
     /**
-     * <p>
-     * Performs Choleksy decomposition on the provided matrix.
-     * </p>
-     *
-     * <p>
-     * If the matrix is not positive definite then this function will return
-     * false since it can't complete its computations.  Not all errors will be
-     * found.  This is an efficient way to check for positive definiteness.
-     * </p>
-     * @param mat A symmetric positive definite matrix with n <= widthMax.
-     * @return True if it was able to finish the decomposition.
+     * {@inheritDoc}
      */
     @Override
-    public boolean decompose( DenseMatrix64F mat ) {
+    public boolean decompose( CDenseMatrix64F mat ) {
         if( mat.numRows > maxWidth ) {
             setExpectedMaxSize(mat.numRows,mat.numCols);
         } else if( mat.numRows != mat.numCols ) {
@@ -136,28 +123,36 @@ public abstract class CholeskyDecompositionCommon_D64
     protected abstract boolean decomposeUpper();
 
     @Override
-    public DenseMatrix64F getT( DenseMatrix64F T ) {
+    public CDenseMatrix64F getT( CDenseMatrix64F T ) {
         // see if it needs to declare a new matrix or not
         if( T == null ) {
-            T = new DenseMatrix64F(n,n);
+            T = new CDenseMatrix64F(n,n);
         } else {
             if( T.numRows != n || T.numCols != n )
                 throw new IllegalArgumentException("Unexpected matrix dimension for T.");
 
-            CommonOps.fill(T, 0);
+            CCommonOps.fill(T, 0,0);
         }
 
         // write the values to T
         if( lower ) {
             for( int i = 0; i < n; i++ ) {
+                int index = i*n*2;
                 for( int j = 0; j <= i; j++ ) {
-                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
+                    T.data[index] = this.T.data[index];
+                    index++;
+                    T.data[index] = this.T.data[index];
+                    index++;
                 }
             }
         } else {
             for( int i = 0; i < n; i++ ) {
+                int index = (i*n + i)*2;
                 for( int j = i; j < n; j++ ) {
-                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
+                    T.data[index] = this.T.data[index];
+                    index++;
+                    T.data[index] = this.T.data[index];
+                    index++;
                 }
             }
         }
@@ -170,7 +165,7 @@ public abstract class CholeskyDecompositionCommon_D64
      *
      * @return A lower or upper triangular matrix.
      */
-    public DenseMatrix64F getT() {
+    public CDenseMatrix64F getT() {
         return T;
     }
 
