@@ -26,8 +26,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -560,7 +559,7 @@ public class TestOperation {
     }
 
     @Test
-    public void copy_matrix() {
+    public void copy_matrix_matrix() {
         Equation eq = new Equation();
 
         SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
@@ -570,6 +569,55 @@ public class TestOperation {
         eq.process("b=a");
 
         assertTrue(a.isIdentical(b, 1e-8));
+    }
+
+    @Test
+    public void copy_double_matrix() {
+        Equation eq = new Equation();
+
+        DenseMatrix64F src = new DenseMatrix64F(1,1,true,2.5);
+        eq.alias(1.2,"a");
+        eq.alias(src,"b");
+
+        eq.process("a=b");
+
+        assertEquals(2.5, eq.lookupDouble("a"), 1e-8);
+
+        // pass in a none 1x1 matrix
+        eq.alias(new DenseMatrix64F(2,1),"b");
+        try {
+            eq.process("a=b");
+            fail("Exception should have been thrown");
+        } catch( RuntimeException e ){}
+    }
+
+    @Test
+    public void copy_int_int() {
+        Equation eq = new Equation();
+
+        eq.alias(2,"a");
+        eq.alias(3,"b");
+
+        eq.process("a=b");
+
+        assertEquals(3, eq.lookupInteger("a"));
+    }
+
+    @Test
+    public void copy_double_scalar() {
+        Equation eq = new Equation();
+
+        // int to double
+        eq.alias(2.2,"a");
+        eq.alias(3,"b");
+
+        eq.process("a=b");
+        assertEquals(3, eq.lookupDouble("a"),1e-8);
+
+        // double to double
+        eq.alias(3.5,"c");
+        eq.process("a=c");
+        assertEquals(3.5, eq.lookupDouble("a"),1e-8);
     }
 
     @Test
