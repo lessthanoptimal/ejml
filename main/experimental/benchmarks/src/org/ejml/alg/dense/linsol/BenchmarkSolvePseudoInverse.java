@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol;
-import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol_D64;
+import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -64,13 +64,13 @@ public class BenchmarkSolvePseudoInverse {
 //        System.out.println("solve SVD            = "+ solveBenchmark(
 //                new SolvePseudoInverseSvd(),numTrials));
         System.out.println("solve Gen QRP Basic  = "+ solveBenchmark(
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
+                new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
         System.out.println("solve Gen QRP        = "+ solveBenchmark(
-                new SolvePseudoInverseQrp(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
+                new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
         System.out.println("solve QRP Col Basic  = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
+                new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
+                new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
                 LinearSolverFactory.leastSquaresQrPivot(true,false),numTrials));
     }

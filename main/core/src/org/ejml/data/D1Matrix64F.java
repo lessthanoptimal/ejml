@@ -233,9 +233,9 @@ public abstract class D1Matrix64F implements ReshapeMatrix, RealMatrix64F {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public MatrixIterator64F iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator(this,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new MatrixIterator64F(this,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

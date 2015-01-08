@@ -12,15 +12,22 @@ Date format: year/month/day
   * Matrix.set(matrix) will now reshape the matrix that's being assigned
 - Triangle quality now just uses diagonal elements to scale results
 - Support for complex matrices
-  * Thanks IHMC (http://ihmc.us) for funding this addition
+  * Thanks IHMC (http://ihmc.us) for funding parts of this addition
   * Most basic operations (e.g. multiplication, addition, ... etc)
   * LU Decomposition
+  * QR Decomposition
   * Square Matrices: inverse, solve, determinant
+  * Overdetermined: solve
 - Tweaked matrix inheritance to better support the addition of complex matrices
 - Added RandomMatrices setGaussian() and createGaussian()
 - Changed how SimpleMatrix computes its threshold for singular values
+  * Farley Lai noticed this issue
 - Added SingularOps.singularThreshold()
 - Added no argument rank and nullity for SVD using default threshold.
+- SimpleMatrix.loadCSV() now supports derived types
+- Added primitive 32bit data structures to make adding 32bit support in the future smoother
+- Equation
+  * 1x1 matrix can be assigned to a double scalar
 
 ----- Version 0.26
 

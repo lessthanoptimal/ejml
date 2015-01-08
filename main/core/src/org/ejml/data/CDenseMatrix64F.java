@@ -29,7 +29,35 @@ import org.ejml.ops.MatrixIO;
  */
 public class CDenseMatrix64F extends CD1Matrix64F {
 
+    /**
+     * <p>
+     * Creates a matrix with the values and shape defined by the 2D array 'data'.
+     * It is assumed that 'data' has a row-major formatting:<br>
+     *  <br>
+     * data[ row ][ column ]
+     * </p>
+     * @param data 2D array representation of the matrix. Not modified.
+     */
+    public CDenseMatrix64F( double data[][] ) {
+
+        this.numRows = data.length;
+        this.numCols = data[0].length/2;
+
+        this.data = new double[ numRows * numCols * 2 ];
+
+        for (int i = 0; i < numRows; i++) {
+            double[] row = data[i];
+            if( row.length != numCols*2 )
+                throw new IllegalArgumentException("Unexpected row size in input data at row "+i);
+
+            System.arraycopy(row,0,this.data,i*numCols*2,row.length);
+        }
+    }
+
     public CDenseMatrix64F(int numRows, int numCols, boolean rowMajor, double... data) {
+        if( data.length != numRows*numCols*2 )
+            throw new RuntimeException("Unexpected length for data");
+
         this.data = new double[ numRows * numCols * 2 ];
 
         this.numRows = numRows;

@@ -672,33 +672,49 @@ public abstract class Operation {
     }
 
     public static Operation copy( final Variable src , final Variable dst ) {
-        if( src instanceof VariableMatrix && dst instanceof VariableMatrix ) {
-            return new Operation("copy-mm") {
-                @Override
-                public void process() {
-                    DenseMatrix64F d = ((VariableMatrix)dst).matrix;
-                    DenseMatrix64F s = ((VariableMatrix)src).matrix;
-                    d.reshape(s.numRows,s.numCols);
-                    d.set(((VariableMatrix) src).matrix);
-                }
-            };
-        } else if( src instanceof VariableInteger && dst instanceof VariableInteger ) {
+
+        if( src instanceof VariableMatrix  ) {
+            if( dst instanceof VariableMatrix ) {
+                return new Operation("copy-mm") {
+                    @Override
+                    public void process() {
+                        DenseMatrix64F d = ((VariableMatrix) dst).matrix;
+                        DenseMatrix64F s = ((VariableMatrix) src).matrix;
+                        d.reshape(s.numRows, s.numCols);
+                        d.set(((VariableMatrix) src).matrix);
+                    }
+                };
+            } else if( dst instanceof VariableDouble ) {
+                return new Operation("copy-sm1") {
+                    @Override
+                    public void process() {
+                        DenseMatrix64F s = ((VariableMatrix) src).matrix;
+                        if( s.numRows != 1 || s.numCols != 1 ) {
+                            throw new RuntimeException("Attempting to assign a non 1x1 matrix to a double");
+                        }
+                        ((VariableDouble) dst).value = s.unsafe_get(0,0);
+
+                    }
+                };
+            }
+        }
+        if( src instanceof VariableInteger && dst instanceof VariableInteger ) {
             return new Operation("copy-ii") {
                 @Override
                 public void process() {
                     ((VariableInteger)dst).value = ((VariableInteger)src).value;
                 }
             };
-        } else if( src instanceof VariableScalar && dst instanceof VariableDouble ) {
+        }
+        if( src instanceof VariableScalar && dst instanceof VariableDouble ) {
             return new Operation("copy-ss") {
                 @Override
                 public void process() {
                     ((VariableDouble)dst).value = ((VariableScalar)src).getDouble();
                 }
             };
-        } else {
-            throw new RuntimeException("Copy type miss-match src = "+src.getClass().getSimpleName()+" dst = "+dst.getClass().getSimpleName());
         }
+        throw new RuntimeException("Copy type miss-match src = "+src.getClass().getSimpleName()+" dst = "+dst.getClass().getSimpleName());
     }
 
     public static Operation copy( final Variable src , final Variable dst , final List<Variable> range ) {
@@ -931,7 +947,7 @@ public abstract class Operation {
             ret.op = new Operation("normF-m") {
                 @Override
                 public void process() {
-                    output.value= NormOps.normF(((VariableMatrix)A).matrix);
+                    output.value= NormOps.normF(((VariableMatrix) A).matrix);
                 }
             };
         } else {
@@ -1049,7 +1065,7 @@ public abstract class Operation {
             ret.op = new Operation("abs-s") {
                 @Override
                 public void process() {
-                    output.value = Math.abs((((VariableDouble)A).getDouble()));
+                    output.value = Math.abs((((VariableDouble) A).getDouble()));
                 }
             };
         }

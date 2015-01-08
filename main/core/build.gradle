@@ -1,5 +1,6 @@
 dependencies {
-    testCompile project(':main:complex')
+    testCompile project(':main:dense64')
+    testCompile project(':main:denseC64')
     testCompile project(':main:experimental')
 }
 

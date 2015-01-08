@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -78,7 +78,7 @@ public class BenchmarkInverseStability {
 //        names.add("LU B");
 //        solvers.add(new LinearSolverLu(new LUDecompositionAlt(),true));
 //        names.add("LU A Imp");
-        solvers.add(new LinearSolverQrHouseCol());
+        solvers.add(new LinearSolverQrHouseCol_D64());
         names.add("QR");
 //        solvers.add(new LinearSolverSvdNR(new SvdNumericalRecipes()));
 //        names.add("SVD NR");

@@ -1,9 +1,0 @@
-dependencies {
-    compile project(':main:core')
-}
-
-idea {
-    module {
-        name = "EJML Complex"
-    }
-}

@@ -21,6 +21,7 @@ package org.ejml.data;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
@@ -34,6 +35,14 @@ import static org.junit.Assert.assertTrue;
 public class TestCDenseMatrix64F {
 
     Random rand = new Random(234);
+
+    @Test
+    public void constructor_darray() {
+        CDenseMatrix64F a = new CDenseMatrix64F(new double[][]{{1,2,3,4},{5,6,7,8},{5,6,7,8}});
+        CDenseMatrix64F b = new CDenseMatrix64F(3,2,true,1,2,3,4,5,6,7,8,5,6,7,8);
+
+        EjmlUnitTests.assertEquals(a, b, 1e-8);
+    }
 
     @Test
     public void constructor_cmatrix() {

@@ -33,7 +33,7 @@ import org.ejml.data.Matrix;
  * <ul>
  * <li> Can decompose rectangular matrices. </li>
  * <li> Numerically stable solutions to least-squares problem, but not as stable as SVD </li>
- * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr} </li>
+ * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr_D64} </li>
  * </ul>
  * </p>
  * <p>

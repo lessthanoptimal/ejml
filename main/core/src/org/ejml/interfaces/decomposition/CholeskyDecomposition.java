@@ -24,21 +24,15 @@ import org.ejml.data.Matrix;
 
 /**
  * <p>
- * Cholesky decomposition for {@link DenseMatrix64F}.
- * <p>
- * <p>
- * A Cholesky decomposition decomposes positive-definite symmetric matrices into either upper or
- * lower triangles:<br>
+ * Cholesky decomposition for {@link DenseMatrix64F}.  It decomposes positive-definite symmetric matrices
+ * into either upper or lower triangles:<br>
  * <br>
- * L*L<sup>T</sup>=A<br>
- * R<sup>T</sup>*R=A<br>
+ * L*L<sup>H</sup>=A<br>
+ * R<sup>H</sup>*R=A<br>
  * <br>
  * where L is a lower triangular matrix and R is an upper triangular matrix.  This is typically 
  * used to invert matrices, such as a covariance matrix.<br>
  * </p>
- *
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock_D64
  *
  * @author Peter Abeles
  */

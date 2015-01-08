@@ -1,1 +1,1 @@
-include 'main:equation','main:core','main:experimental','main:complex','examples'
+include 'main:equation','main:core','main:experimental','main:dense64','main:denseC64','main:simple','examples'

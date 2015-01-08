@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':main:core')
+    testCompile project(':main:experimental')
+}
+
+idea {
+    module {
+        name = "EJML Dense 64"
+    }
+}

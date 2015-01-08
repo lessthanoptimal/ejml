@@ -180,6 +180,32 @@ public class MatrixIO {
         }
     }
 
+    public static void print( PrintStream out , RealMatrix32F mat ) {
+        print(out,mat,6,3);
+    }
+
+    public static void print(PrintStream out, RealMatrix32F mat , int numChar , int precision ) {
+        String format = "%"+numChar+"."+precision+"f ";
+
+        print(out, mat,format);
+    }
+
+    public static void print(PrintStream out , RealMatrix32F mat , String format ) {
+
+        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
+
+        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+
+        format += " ";
+
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            for( int x = 0; x < mat.getNumCols(); x++ ) {
+                out.printf(format,mat.get(y,x));
+            }
+            out.println();
+        }
+    }
+
     public static void print( PrintStream out , RealMatrix64F mat , String format ,
                               int row0 , int row1, int col0 , int col1 ) {
         out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);

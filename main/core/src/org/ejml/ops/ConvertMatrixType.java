@@ -18,7 +18,6 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.data.*;
 
 /**
@@ -683,21 +682,63 @@ public class ConvertMatrixType {
      *
      * Can't handle null output matrix since block size needs to be specified.
      *
-     * @param input Input matrix.
-     * @param output Output matrix.
+     * @param src Input matrix.
+     * @param dst Output matrix.
      */
-    public static void convert( DenseMatrix64F input , BlockMatrix64F output ) {
-        BlockMatrixOps.convert(input,output);
+    public static void convert( DenseMatrix64F src , BlockMatrix64F dst ) {
+        if( src.numRows != dst.numRows || src.numCols != dst.numCols )
+            throw new IllegalArgumentException("Must be the same size.");
+
+        for( int i = 0; i < dst.numRows; i += dst.blockLength ) {
+            int blockHeight = Math.min( dst.blockLength , dst.numRows - i);
+
+            for( int j = 0; j < dst.numCols; j += dst.blockLength ) {
+                int blockWidth = Math.min( dst.blockLength , dst.numCols - j);
+
+                int indexDst = i*dst.numCols + blockHeight*j;
+                int indexSrcRow = i*dst.numCols + j;
+
+                for( int k = 0; k < blockHeight; k++ ) {
+                    System.arraycopy(src.data,indexSrcRow,dst.data,indexDst,blockWidth);
+                    indexDst += blockWidth;
+                    indexSrcRow += dst.numCols;
+                }
+            }
+        }
     }
 
     /**
      * Converts {@link BlockMatrix64F} into {@link DenseMatrix64F}
      *
-     * @param input Input matrix.
-     * @param output Output matrix.  If null a new matrix will be declared.
+     * @param src Input matrix.
+     * @param dst Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix64F convert( BlockMatrix64F input , DenseMatrix64F output ) {
-        return BlockMatrixOps.convert(input,output);
+    public static DenseMatrix64F convert( BlockMatrix64F src , DenseMatrix64F dst ) {
+        if( dst != null ) {
+            if( dst.numRows != src.numRows || dst.numCols != src.numCols )
+                throw new IllegalArgumentException("Must be the same size.");
+        } else {
+            dst = new DenseMatrix64F(src.numRows,src.numCols);
+        }
+
+        for( int i = 0; i < src.numRows; i += src.blockLength ) {
+            int blockHeight = Math.min( src.blockLength , src.numRows - i);
+
+            for( int j = 0; j < src.numCols; j += src.blockLength ) {
+                int blockWidth = Math.min( src.blockLength , src.numCols - j);
+
+                int indexSrc = i*src.numCols + blockHeight*j;
+                int indexDstRow = i*dst.numCols + j;
+
+                for( int k = 0; k < blockHeight; k++ ) {
+                    System.arraycopy(src.data,indexSrc,dst.data,indexDstRow,blockWidth);
+                    indexSrc += blockWidth;
+                    indexDstRow += dst.numCols;
+                }
+            }
+        }
+
+        return dst;
     }
 }

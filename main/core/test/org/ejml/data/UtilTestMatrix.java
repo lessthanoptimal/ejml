@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.data;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -66,6 +67,54 @@ public class UtilTestMatrix {
         }
 
         assertEquals(expected,numFound);
+    }
+
+    /**
+     * <p>
+     * Sets each element in the matrix to a value drawn from an uniform distribution from 'min' to 'max' inclusive.
+     * </p>
+     *
+     * @param min The minimum value each element can be.
+     * @param max The maximum value each element can be.
+     * @param rand Random number generator used to fill the matrix.
+     */
+    public static DenseMatrix64F random64( int numRows , int numCols , double min , double max , Random rand )
+    {
+        DenseMatrix64F mat = new DenseMatrix64F(numRows,numCols);
+        double d[] = mat.getData();
+        int size = mat.getNumElements();
+
+        double r = max-min;
+
+        for( int i = 0; i < size; i++ ) {
+            d[i] = r*rand.nextDouble()+min;
+        }
+
+        return mat;
+    }
+
+    /**
+     * <p>
+     * Sets each element in the matrix to a value drawn from an uniform distribution from 'min' to 'max' inclusive.
+     * </p>
+     *
+     * @param min The minimum value each element can be.
+     * @param max The maximum value each element can be.
+     * @param rand Random number generator used to fill the matrix.
+     */
+    public static DenseMatrix32F random32( int numRows , int numCols , float min , float max , Random rand )
+    {
+        DenseMatrix32F mat = new DenseMatrix32F(numRows,numCols);
+        float d[] = mat.getData();
+        int size = mat.getNumElements();
+
+        float r = max-min;
+
+        for( int i = 0; i < size; i++ ) {
+            d[i] = r*rand.nextFloat()+min;
+        }
+
+        return mat;
     }
 
     

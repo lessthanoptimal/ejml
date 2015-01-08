@@ -18,8 +18,8 @@
 
 package org.ejml.alg.densed2.mult;
 
-import org.ejml.alg.dense.mult.MatrixDimensionException;
 import org.ejml.data.DenseD2Matrix64F;
+import org.ejml.ops.MatrixDimensionException;
 
 
 /**

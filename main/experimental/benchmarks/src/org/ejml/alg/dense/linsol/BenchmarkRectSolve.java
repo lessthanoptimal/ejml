@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -63,9 +63,9 @@ public class BenchmarkRectSolve {
         System.out.println("Pseudo Inverse  = "+ solveBenchmark(
                 new SolvePseudoInverseSvd(A.numRows,A.numCols),numTrials));
         System.out.println("QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse(),numTrials));
+                new LinearSolverQrHouse_D64(),numTrials));
         System.out.println("QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol(),numTrials));
+                new LinearSolverQrHouseCol_D64(),numTrials));
     }
 
     public static void main( String args [] ) {

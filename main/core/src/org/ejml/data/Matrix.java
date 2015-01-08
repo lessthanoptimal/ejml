@@ -40,7 +40,9 @@ public interface Matrix extends Serializable {
      */
     public int getNumCols();
 
-
+    /**
+     * Creates an exact copy of the matrix
+     */
     public <T extends Matrix> T copy();
 
     /**
@@ -48,5 +50,8 @@ public interface Matrix extends Serializable {
      */
     public void set( Matrix original );
 
+    /**
+     * Prints the matrix to standard out.
+     */
     public void print();
 }
