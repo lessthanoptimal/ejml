@@ -221,7 +221,7 @@ public abstract class CompareFixedToCommonOps {
         return false;
     }
 
-    private boolean checkEquivalent( Object a , Object b ) {
+    protected boolean checkEquivalent( Object a , Object b ) {
         if( a == null ) {
             return b == null;
         } else if( Double.class == a.getClass() ) {

@@ -23,6 +23,7 @@ import org.ejml.data.FixedMatrix4x4_64F;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -56,6 +57,27 @@ public class TestFixedOps4 extends CompareFixedToCommonOps {
         assertEquals(16,found.a4,1e-8);
     }
 
+    @Test
+    public void minus() {
+        FixedMatrix4x4_64F a = new FixedMatrix4x4_64F(
+                5, 5, 5, 5,
+                5, 5, 5, 5,
+                5, 5, 5, 5,
+                5, 5, 5, 5);
+        FixedMatrix4x4_64F b = new FixedMatrix4x4_64F(
+                1, 1, 1, 1,
+                1, 1, 1, 1,
+                1, 1, 1, 1,
+                1, 1, 1, 1);
+        FixedMatrix4x4_64F c = new FixedMatrix4x4_64F();
 
+        FixedOps4.minus(a, b, c);
+
+        assertTrue(c.equals(new FixedMatrix4x4_64F(
+                4, 4, 4, 4,
+                4, 4, 4, 4,
+                4, 4, 4, 4,
+                4, 4, 4, 4)));
+    }
 
 }

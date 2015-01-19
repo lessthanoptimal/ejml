@@ -172,5 +172,19 @@ public class FixedMatrix3x3_64F implements FixedMatrix64F {
     public void print() {
         MatrixIO.print(System.out, this);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        FixedMatrix3x3_64F o = (FixedMatrix3x3_64F)other;
+        return o.a11 == this.a11
+                && o.a12 == this.a12
+                && o.a13 == this.a13
+                && o.a21 == this.a21
+                && o.a22 == this.a22
+                && o.a23 == this.a23;
+    }
 }
 

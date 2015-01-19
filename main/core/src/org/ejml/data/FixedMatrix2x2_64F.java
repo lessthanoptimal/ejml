@@ -131,5 +131,17 @@ public class FixedMatrix2x2_64F implements FixedMatrix64F {
     public void print() {
         MatrixIO.print(System.out, this);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        FixedMatrix2x2_64F o = (FixedMatrix2x2_64F)other;
+        return o.a11 == this.a11
+                && o.a12 == this.a12
+                && o.a21 == this.a21
+                && o.a22 == this.a22;
+    }
 }
 

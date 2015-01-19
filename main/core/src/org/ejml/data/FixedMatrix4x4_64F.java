@@ -227,5 +227,29 @@ public class FixedMatrix4x4_64F implements FixedMatrix64F {
     public void print() {
         MatrixIO.print(System.out, this);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        FixedMatrix4x4_64F o = (FixedMatrix4x4_64F)other;
+        return o.a11 == this.a11
+                && o.a12 == this.a12
+                && o.a13 == this.a13
+                && o.a14 == this.a14
+                && o.a21 == this.a21
+                && o.a22 == this.a22
+                && o.a23 == this.a23
+                && o.a24 == this.a24
+                && o.a31 == this.a31
+                && o.a32 == this.a32
+                && o.a33 == this.a33
+                && o.a34 == this.a34
+                && o.a41 == this.a41
+                && o.a42 == this.a42
+                && o.a43 == this.a43
+                && o.a44 == this.a44;
+    }
 }
 

@@ -1,2 +1,5 @@
 *.iml
 *.idea
+libraries/
+.gradle
+build/

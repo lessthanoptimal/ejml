@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -59,6 +60,15 @@ public class TestFixedOps3 extends CompareFixedToCommonOps {
         assertEquals(9,found.a3,1e-8);
     }
 
+    @Test
+    public void minus() {
+        FixedMatrix3x3_64F a = new FixedMatrix3x3_64F(5, 5, 5, 5, 5, 5, 5, 5, 5);
+        FixedMatrix3x3_64F b = new FixedMatrix3x3_64F(1, 1, 1, 1, 1, 1, 1, 1, 1);
+        FixedMatrix3x3_64F c = new FixedMatrix3x3_64F();
 
+        FixedOps3.minus(a, b, c);
+
+        assertTrue(c.equals(new FixedMatrix3x3_64F(4, 4, 4, 4, 4, 4, 4, 4, 4)));
+    }
 
 }
