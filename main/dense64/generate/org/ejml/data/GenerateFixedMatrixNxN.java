@@ -112,7 +112,9 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "    public void print() {\n" +
                 "        MatrixIO.print(System.out, this);\n" +
                 "    }\n" +
-                "}\n\n");
+                "\n");
+        printEquals(dimen);
+        out.print("}\n\n");
     }
 
     private void printClassParam( int dimen ) {
@@ -203,6 +205,22 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
             }
         }
         out.print("    }\n\n");
+    }
+
+    private void printEquals( int dimen ) {
+        out.print("    @Override\n" +
+                "    public boolean equals(Object other) {\n" +
+                "        if (other.getClass() != this.getClass()) {\n" +
+                "            return false;\n" +
+                "        }\n" +
+                "        " + className + " o = (" + className + ")other;\n" +
+                "        return o.a11 == this.a11\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = (y==1) ? 2 : 1; x <= dimen; x++ ) {
+                out.print("            && o.a"+y+""+x+" == this.a"+y+x+((y==dimen&&x==dimen)?";":"\n"));
+            }
+        }
+        out.print("\n    }\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
