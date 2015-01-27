@@ -7,3 +7,4 @@ script:
   - gradle main:core:build
   - gradle main:core:check
   - gradle main:core:test
+
