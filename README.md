@@ -10,7 +10,7 @@
   Project Website: http://code.google.com/p/efficient-java-matrix-library/
 
 ==========================================================================
------ Introduction
+## Introduction
 
 Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API.  EJML is free, written in 100% Java and has been released under the Apache v2.0 open source license.
 
@@ -30,7 +30,7 @@ The following functionality is provided:
 Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
 
 ==========================================================================
------ Documentation
+## Documentation
 
 For a more detailed explanation of how to use the library see:
 
@@ -41,29 +41,30 @@ The JavaDoc has also been posted online at:
 http://ejml.org/javadoc/
 
 ==========================================================================
------ Central Repository
+## Central Repository
 
 Instead of including EJML's jars directly you can reference them using Maven's central repository.
 
 If using Maven:
-
+```
 <groupId>com.googlecode.efficient-java-matrix-library</groupId>
 <artifactId>MODULE</artifactId>
 <version>0.26</version>
+```
 where MODULE is 'core' or 'equation'
 
 If using Gradle:
-
+```
 compile group: 'com.googlecode.efficient-java-matrix-library', name: 'core', version: '0.26'
 compile group: 'com.googlecode.efficient-java-matrix-library', name: 'equation', version: '0.26'
-
+```
 ==========================================================================
------ Building
+## Building
 
 Gradle build scripts are provided for building EJML.  If Gradle is installed, then type "gradle createLibraryDirectory" to build the jar files.  They can be found in the ejml/libraries directory.
 
 ==========================================================================
------ File System
+## File System
 
 
 docs/
@@ -88,7 +89,7 @@ TODO_Algorithms.txt
 - Contains a list of what needs to be added to this library.
 
 ==========================================================================
------ Questions and Comments 
+## Questions and Comments 
 
 A public message board has been created for asking questions and making comments:
 
@@ -99,13 +100,13 @@ Bugs can either be posted on that message board or at:
 http://code.google.com/p/efficient-java-matrix-library/issues/list
 
 ==========================================================================
------ Acknowledgements
+## Acknowledgements
 
 I would like to thank all the people have made various comments, suggestions, and reported bugs.  Also David Watkins
 for writing "Fundamentals of Matrix Computations", which clearly explains algorithms and yet addresses important
 implementation issues.
 
 ==========================================================================
------ License
+## License
 
 EJML is released under the Apache v2.0 open source license
