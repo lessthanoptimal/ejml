@@ -163,6 +163,14 @@ public class FixedMatrix3x3_64F implements FixedMatrix64F {
         return 9;
     }
 
+    public FixedMatrix3_64F getRow(int r) {
+        FixedMatrix3_64F row = new FixedMatrix3_64F();
+        row.set(r, 1, this.get(r, 1));
+        row.set(r, 2, this.get(r, 2));
+        row.set(r, 3, this.get(r, 3));
+        return row;
+    }
+
     @Override
     public <T extends Matrix> T copy() {
         return (T)new FixedMatrix3x3_64F(this);
@@ -171,6 +179,20 @@ public class FixedMatrix3x3_64F implements FixedMatrix64F {
     @Override
     public void print() {
         MatrixIO.print(System.out, this);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        FixedMatrix3x3_64F o = (FixedMatrix3x3_64F)other;
+        return o.a11 == this.a11
+                && o.a12 == this.a12
+                && o.a13 == this.a13
+                && o.a21 == this.a21
+                && o.a22 == this.a22
+                && o.a23 == this.a23;
     }
 }
 

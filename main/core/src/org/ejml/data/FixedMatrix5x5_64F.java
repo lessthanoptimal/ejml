@@ -287,6 +287,16 @@ public class FixedMatrix5x5_64F implements FixedMatrix64F {
         return 25;
     }
 
+    public FixedMatrix5_64F getRow(int r) {
+        FixedMatrix5_64F row = new FixedMatrix5_64F();
+        row.set(r, 1, this.get(r, 1));
+        row.set(r, 2, this.get(r, 2));
+        row.set(r, 3, this.get(r, 3));
+        row.set(r, 4, this.get(r, 4));
+        row.set(r, 5, this.get(r, 5));
+        return row;
+    }
+
     @Override
     public <T extends Matrix> T copy() {
         return (T)new FixedMatrix5x5_64F(this);
@@ -295,6 +305,39 @@ public class FixedMatrix5x5_64F implements FixedMatrix64F {
     @Override
     public void print() {
         MatrixIO.print(System.out, this);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        FixedMatrix5x5_64F o = (FixedMatrix5x5_64F)other;
+        return o.a11 == this.a11
+                && o.a12 == this.a12
+                && o.a13 == this.a13
+                && o.a14 == this.a14
+                && o.a15 == this.a15
+                && o.a21 == this.a21
+                && o.a22 == this.a22
+                && o.a23 == this.a23
+                && o.a24 == this.a24
+                && o.a25 == this.a25
+                && o.a31 == this.a31
+                && o.a32 == this.a32
+                && o.a33 == this.a33
+                && o.a34 == this.a34
+                && o.a35 == this.a35
+                && o.a41 == this.a41
+                && o.a42 == this.a42
+                && o.a43 == this.a43
+                && o.a44 == this.a44
+                && o.a45 == this.a45
+                && o.a51 == this.a51
+                && o.a52 == this.a52
+                && o.a53 == this.a53
+                && o.a54 == this.a54
+                && o.a55 == this.a55;
     }
 }
 

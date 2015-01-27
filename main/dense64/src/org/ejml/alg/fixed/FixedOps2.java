@@ -68,6 +68,45 @@ public class FixedOps2 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a - b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void minus( FixedMatrix2x2_64F a , FixedMatrix2x2_64F b , FixedMatrix2x2_64F c ) {
+        c.a11 = a.a11 - b.a11;
+        c.a12 = a.a12 - b.a12;
+        c.a21 = a.a21 - b.a21;
+        c.a22 = a.a22 - b.a22;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a - b <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param a A Matrix. Modified.
+     * @param b A Matrix. Not modified.
+     */
+    public static void minusEquals( FixedMatrix2x2_64F a , FixedMatrix2x2_64F b ) {
+        a.a11 -= b.a11;
+        a.a12 -= b.a12;
+        a.a21 -= b.a21;
+        a.a22 -= b.a22;
+    }
+
+    /**
      * Performs an in-place transpose.  This algorithm is only efficient for square
      * matrices.
      *

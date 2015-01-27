@@ -42,10 +42,12 @@ public class GenerateFixedOps extends CodeGeneratorBase {
     @Override
     public void generate() throws FileNotFoundException {
         for( int dimension = 2; dimension <= 6; dimension++ ){
-            printPreable(dimension);
+            printPreamble(dimension);
 
             printAdd(dimension);
             addEquals(dimension);
+            printMinus(dimension);
+            minusEquals(dimension);
             transpose_one(dimension);
             transpose_two(dimension);
             mult(dimension);
@@ -81,7 +83,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         }
     }
 
-    public void printPreable( int dimen ) throws FileNotFoundException {
+    public void printPreamble(int dimen) throws FileNotFoundException {
 
         String className = classPreamble+dimen;
 
@@ -144,6 +146,53 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             for( int x = 1; x <= dimen; x++ ) {
                 String n = y+""+x;
                 out.print("        a.a"+n+" += b.a"+n+";\n");
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void printMinus( int dimen ){
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c = a - b <br>\n" +
+                "     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * <p>\n" +
+                "     * Matrix C can be the same instance as Matrix A and/or B.\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A Matrix. Not modified.\n" +
+                "     * @param b A Matrix. Not modified.\n" +
+                "     * @param c A Matrix where the results are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void minus( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                String n = y+""+x;
+                out.print("        c.a"+n+" = a.a"+n+" - b.a"+n+";\n");
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void minusEquals( int dimen ){
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a = a - b <br>\n" +
+                "     * a<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A Matrix. Modified.\n" +
+                "     * @param b A Matrix. Not modified.\n" +
+                "     */\n" +
+                "    public static void minusEquals( "+nameMatrix+" a , "+nameMatrix+" b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                String n = y+""+x;
+                out.print("        a.a"+n+" -= b.a"+n+";\n");
             }
         }
         out.print("    }\n\n");

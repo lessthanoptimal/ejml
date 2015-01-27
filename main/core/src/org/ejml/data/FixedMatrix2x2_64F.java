@@ -122,6 +122,13 @@ public class FixedMatrix2x2_64F implements FixedMatrix64F {
         return 4;
     }
 
+    public FixedMatrix2_64F getRow(int r) {
+        FixedMatrix2_64F row = new FixedMatrix2_64F();
+        row.set(r, 1, this.get(r, 1));
+        row.set(r, 2, this.get(r, 2));
+        return row;
+    }
+
     @Override
     public <T extends Matrix> T copy() {
         return (T)new FixedMatrix2x2_64F(this);
@@ -130,6 +137,18 @@ public class FixedMatrix2x2_64F implements FixedMatrix64F {
     @Override
     public void print() {
         MatrixIO.print(System.out, this);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        FixedMatrix2x2_64F o = (FixedMatrix2x2_64F)other;
+        return o.a11 == this.a11
+                && o.a12 == this.a12
+                && o.a21 == this.a21
+                && o.a22 == this.a22;
     }
 }
 

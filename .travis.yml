@@ -1,0 +1,13 @@
+language: java
+jdk:
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+script:
+  - ./gradlew main:core:build
+  - ./gradlew main:core:check
+  - ./gradlew main:core:test
+  - ./gradlew main:equation:build
+  - ./gradlew main:equation:check
+  - ./gradlew main:equation:test
+
