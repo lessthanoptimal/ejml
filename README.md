@@ -1,5 +1,5 @@
 [![Build Status](https://api.travis-ci.org/nknize/ejml.png?branch=master)](https://travis-ci.org/nknize/ejml)
-# ->Efficient Java Matrix Library<-
+# Efficient Java Matrix Library
 
                             Version 0.26
                          September 15, 2014
@@ -7,7 +7,7 @@
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
 
-  Project Website: http://code.google.com/p/efficient-java-matrix-library/
+                    Project Website: http://code.google.com/p/efficient-java-matrix-library/
 
 ==========================================================================
 ## Introduction
