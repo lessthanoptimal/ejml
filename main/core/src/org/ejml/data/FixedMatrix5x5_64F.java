@@ -287,6 +287,16 @@ public class FixedMatrix5x5_64F implements FixedMatrix64F {
         return 25;
     }
 
+    public FixedMatrix5_64F getRow(int r) {
+        FixedMatrix5_64F row = new FixedMatrix5_64F();
+        row.set(r, 1, this.get(r, 1));
+        row.set(r, 2, this.get(r, 2));
+        row.set(r, 3, this.get(r, 3));
+        row.set(r, 4, this.get(r, 4));
+        row.set(r, 5, this.get(r, 5));
+        return row;
+    }
+
     @Override
     public <T extends Matrix> T copy() {
         return (T)new FixedMatrix5x5_64F(this);

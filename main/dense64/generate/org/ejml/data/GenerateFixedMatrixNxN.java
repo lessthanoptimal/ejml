@@ -102,8 +102,9 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "    public int getNumElements() {\n" +
                 "        return "+(dimen*dimen)+";\n" +
                 "    }\n" +
-                "\n" +
-                "    @Override\n" +
+                "\n");
+        printGetRow(dimen);
+        out.print("    @Override\n" +
                 "    public <T extends Matrix> T copy() {\n" +
                 "        return (T)new "+className+"(this);\n" +
                 "    }\n" +
@@ -137,7 +138,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
             else
                 out.print("                              ");
             for( int x = 1; x <= dimen; x++ ) {
-                out.print("double a"+y+""+x);
+                out.print("double a" + y + "" + x);
                 if( x != dimen )
                     out.print(",");
                 else if( y != dimen )
@@ -222,6 +223,17 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
         }
         out.print("\n    }\n");
     }
+
+  private void printGetRow( int dimen ) {
+    out.print("    public " + classPreamble + dimen + "_64F getRow(int r) {\n" +
+            "        " + classPreamble + dimen + "_64F row = new " + classPreamble + dimen + "_64F();\n");
+    for (int x = 1; x <= dimen; ++x) {
+      out.print("        row.set(r, " + x + ", this.get(r, " + x + "));\n");
+    }
+    out.print("        return row;\n" +
+            "    }\n" +
+            "\n");
+  }
 
     public static void main( String args[] ) throws FileNotFoundException {
         GenerateFixedMatrixNxN app = new GenerateFixedMatrixNxN();
