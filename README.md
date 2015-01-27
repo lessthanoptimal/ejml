@@ -61,25 +61,25 @@ Gradle build scripts are provided for building EJML.  If Gradle is installed, th
 
 ## File System
 
-```docs/```
+docs/
 - Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
 
-```examples/```
+examples/
 - Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
 
-```main/core```
+main/core
 - Contains all the essential source code for EJML
 
-```main/equation```
+main/equation
 - Contains source code for Equations API
 
-```main/experimental/```
+main/experimental/
 - Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
 
-```change.txt```
+change.txt
 - History of what changed between each version.
 
-```TODO_Algorithms.txt```
+TODO_Algorithms.txt
 - Contains a list of what needs to be added to this library.
 
 ## Questions and Comments 
