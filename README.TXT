@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/nknize/ejml.svg?branch=master)](https://travis-ci.org/nknize/ejml)
                  Efficient Java Matrix Library
 
                          Version 0.26

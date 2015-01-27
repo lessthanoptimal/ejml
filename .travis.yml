@@ -4,7 +4,10 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 script:
-  - gradle main:core:build
-  - gradle main:core:check
-  - gradle main:core:test
+  - ./gradlew main:core:build
+  - ./gradlew main:core:check
+  - ./gradlew main:core:test
+  - ./gradlew main:equation:build
+  - ./gradlew main:equation:check
+  - ./gradlew main:equation:test
 
