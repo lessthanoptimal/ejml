@@ -7,7 +7,7 @@
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
 
-### Project Website: http://code.google.com/p/efficient-java-matrix-library/
+##### Project Website: http://code.google.com/p/efficient-java-matrix-library/
 
 ==========================================================================
 ## Introduction
