@@ -370,6 +370,17 @@ public class FixedMatrix6x6_64F implements FixedMatrix64F {
         return 36;
     }
 
+    public FixedMatrix6_64F getRow(int r) {
+        FixedMatrix6_64F row = new FixedMatrix6_64F();
+        row.set(r, 1, this.get(r, 1));
+        row.set(r, 2, this.get(r, 2));
+        row.set(r, 3, this.get(r, 3));
+        row.set(r, 4, this.get(r, 4));
+        row.set(r, 5, this.get(r, 5));
+        row.set(r, 6, this.get(r, 6));
+        return row;
+    }
+
     @Override
     public <T extends Matrix> T copy() {
         return (T)new FixedMatrix6x6_64F(this);
