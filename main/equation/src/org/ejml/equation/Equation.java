@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -144,6 +144,7 @@ import static org.ejml.equation.TokenList.Type;
  * max(A)       Element with the largest value in A.
  * min(A)       Element with the smallest value in A.
  * pow(a,b)     Computes a to the power of b.  Can also be invoked with "a^b" scalars only.
+ * sqrt(a)      Computes the square root of a.
  * sin(a)       Math.sin(a) for scalars only
  * cos(a)       Math.cos(a) for scalars only
  * atan(a)      Math.atan(a) for scalars only

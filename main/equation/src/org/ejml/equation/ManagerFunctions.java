@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -261,6 +261,12 @@ public class ManagerFunctions {
             @Override
             public Operation.Info create(Variable A, ManagerTempVariables manager) {
                 return Operation.log(A, manager);
+            }
+        });
+        input1.put("sqrt",new Input1() {
+            @Override
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.sqrt(A, manager);
             }
         });
 

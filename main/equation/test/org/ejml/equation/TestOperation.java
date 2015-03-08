@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -325,6 +325,25 @@ public class TestOperation {
 
         assertEquals(Math.pow(2,4),eq.lookupDouble("a"),1e-8);
     }
+
+    @Test
+    public void sqrt_int() {
+        Equation eq = new Equation();
+
+        eq.process("a=sqrt(5)");
+
+        assertEquals(Math.sqrt(5),eq.lookupDouble("a"),1e-8);
+    }
+
+    @Test
+    public void sqrt_double() {
+        Equation eq = new Equation();
+
+        eq.process("a=sqrt(5.7)");
+
+        assertEquals(Math.sqrt(5.7),eq.lookupDouble("a"),1e-8);
+    }
+
 
     @Test
     public void atan2_scalar() {
