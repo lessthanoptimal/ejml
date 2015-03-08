@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -88,7 +88,8 @@ public abstract class LinearSolverLuBase_CD64 extends LinearSolverAbstract_CD64 
         return false;
     }
 
-    public LUDecompositionBase_CD64 getDecomposer() {
+    @Override
+    public LUDecompositionBase_CD64 getDecomposition() {
         return decomp;
     }
 }

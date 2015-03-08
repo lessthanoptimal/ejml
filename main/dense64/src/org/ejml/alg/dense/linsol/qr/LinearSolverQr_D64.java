@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -153,6 +153,11 @@ public class LinearSolverQr_D64 extends LinearSolverAbstract_D64 {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public QRDecomposition<DenseMatrix64F> getDecomposition() {
+        return decomposer;
     }
 
     public QRDecomposition<DenseMatrix64F> getDecomposer() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
@@ -199,6 +200,11 @@ public class TestLinearSolverSafe {
         @Override
         public boolean modifiesB() {
             return modifiesB;
+        }
+
+        @Override
+        public <D extends DecompositionInterface> D getDecomposition() {
+            return null;
         }
     }
 }

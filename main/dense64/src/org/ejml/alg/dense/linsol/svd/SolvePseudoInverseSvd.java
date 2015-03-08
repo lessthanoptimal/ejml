@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -139,6 +139,11 @@ public class SolvePseudoInverseSvd implements LinearSolver<DenseMatrix64F> {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public SingularValueDecomposition<DenseMatrix64F> getDecomposition() {
+        return svd;
     }
 
     /**

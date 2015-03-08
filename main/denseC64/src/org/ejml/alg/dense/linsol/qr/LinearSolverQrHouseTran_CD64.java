@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.alg.dense.decompose.CTriangularSolver;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderTran_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CSpecializedOps;
 
 
@@ -185,5 +186,10 @@ public class LinearSolverQrHouseTran_CD64 extends LinearSolverAbstract_CD64 {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public QRDecomposition<CDenseMatrix64F> getDecomposition() {
+        return decomposer;
     }
 }

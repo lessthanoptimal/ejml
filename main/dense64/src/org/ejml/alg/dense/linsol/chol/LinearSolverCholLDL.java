@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -30,29 +31,29 @@ import org.ejml.ops.SpecializedOps;
  */
 public class LinearSolverCholLDL extends LinearSolverAbstract_D64 {
 
-    private CholeskyDecompositionLDL_D64 decomp;
+    private CholeskyDecompositionLDL_D64 decomposer;
     private int n;
     private double vv[];
     private double el[];
     private double d[];
 
-    public LinearSolverCholLDL( CholeskyDecompositionLDL_D64 decomp ) {
-        this.decomp = decomp;
+    public LinearSolverCholLDL( CholeskyDecompositionLDL_D64 decomposer) {
+        this.decomposer = decomposer;
     }
 
     public LinearSolverCholLDL() {
-        this.decomp = new CholeskyDecompositionLDL_D64();
+        this.decomposer = new CholeskyDecompositionLDL_D64();
     }
 
     @Override
     public boolean setA(DenseMatrix64F A) {
         _setA(A);
 
-        if( decomp.decompose(A) ){
+        if( decomposer.decompose(A) ){
             n = A.numCols;
-            vv = decomp._getVV();
-            el = decomp.getL().data;
-            d = decomp.getDiagonal();
+            vv = decomposer._getVV();
+            el = decomposer.getL().data;
+            d = decomposer.getDiagonal();
             return true;
         } else {
             return false;
@@ -61,7 +62,7 @@ public class LinearSolverCholLDL extends LinearSolverAbstract_D64 {
 
     @Override
     public double quality() {
-        return Math.abs(SpecializedOps.diagProd(decomp.getL()));
+        return Math.abs(SpecializedOps.diagProd(decomposer.getL()));
     }
 
     /**
@@ -159,11 +160,16 @@ public class LinearSolverCholLDL extends LinearSolverAbstract_D64 {
 
     @Override
     public boolean modifiesA() {
-        return decomp.inputModified();
+        return decomposer.inputModified();
     }
 
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public CholeskyLDLDecomposition<DenseMatrix64F> getDecomposition() {
+        return decomposer;
     }
 }

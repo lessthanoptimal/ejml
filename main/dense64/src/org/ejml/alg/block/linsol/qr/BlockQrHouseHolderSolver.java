@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,7 @@ import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.SpecializedOps;
 
@@ -48,14 +49,14 @@ import org.ejml.ops.SpecializedOps;
 public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
     // QR decomposition algorithm
-    protected QRDecompositionHouseholder_B64 decomp = new QRDecompositionHouseholder_B64();
+    protected QRDecompositionHouseholder_B64 decomposer = new QRDecompositionHouseholder_B64();
 
     // the input matrix which has been decomposed
     protected BlockMatrix64F QR;
 
 
     public BlockQrHouseHolderSolver() {
-        decomp.setSaveW(false);
+        decomposer.setSaveW(false);
     }
 
     /**
@@ -70,10 +71,10 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
             throw new IllegalArgumentException("Number of rows must be more than or equal to the number of columns.  " +
                     "Can't solve an underdetermined system.");
 
-        if( !decomp.decompose(A))
+        if( !decomposer.decompose(A))
             return false;
 
-        this.QR = decomp.getQR();
+        this.QR = decomposer.getQR();
 
         return true;
     }
@@ -85,7 +86,7 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
      */
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(decomp.getQR());
+        return SpecializedOps.qualityTriangular(decomposer.getQR());
     }
 
     @Override
@@ -105,7 +106,7 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
         // First apply householder reflectors to B
         // Y = Q^T*B
-        decomp.applyQTran(B);
+        decomposer.applyQTran(B);
 
         // Second solve for Y using the upper triangle matrix R and the just computed Y
         // X = R^-1 * Y
@@ -137,7 +138,7 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
         // Apply householder reflectors to the identity matrix
         // y = Q^T*I = Q^T
         BlockMatrixOps.setIdentity(A_inv);
-        decomp.applyQTran(A_inv);
+        decomposer.applyQTran(A_inv);
 
         // Solve using upper triangular R matrix
         // R*A^-1 = y
@@ -148,11 +149,16 @@ public class BlockQrHouseHolderSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public boolean modifiesA() {
-        return decomp.inputModified();
+        return decomposer.inputModified();
     }
 
     @Override
     public boolean modifiesB() {
         return true;
+    }
+
+    @Override
+    public QRDecomposition<BlockMatrix64F> getDecomposition() {
+        return decomposer;
     }
 }

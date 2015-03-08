@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -166,5 +166,10 @@ public class LinearSolverQrHouseCol_CD64 extends LinearSolverAbstract_CD64 {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public QRDecompositionHouseholderColumn_CD64 getDecomposition() {
+        return decomposer;
     }
 }

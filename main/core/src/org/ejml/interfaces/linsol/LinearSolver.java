@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.interfaces.linsol;
 
 import org.ejml.data.Matrix;
+import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 
 /**
@@ -143,4 +144,14 @@ public interface LinearSolver< T extends Matrix> {
      * @return true if B is modified in solve(B,X).
      */
     public boolean modifiesB();
+
+
+    /**
+     * If a decomposition class was used internally then this will return that class.
+     * Most linear solvers decompose the input matrix into a more simplistic form.
+     * However some solutions do not require decomposition, e.g. inverse by minor.
+     * @param <D> Decomposition type
+     * @return Internal decomposition class.  If there is none then null.
+     */
+    public <D extends DecompositionInterface>D getDecomposition();
 }

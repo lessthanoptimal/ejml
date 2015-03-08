@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -105,5 +106,10 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public <D extends DecompositionInterface> D getDecomposition() {
+        return alg.getDecomposition();
     }
 }

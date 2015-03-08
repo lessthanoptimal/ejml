@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,7 @@ import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -156,5 +157,10 @@ public class LinearSolverQrHouseCol_D64 extends LinearSolverAbstract_D64 {
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public QRDecomposition<DenseMatrix64F> getDecomposition() {
+        return decomposer;
     }
 }

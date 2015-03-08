@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,7 @@ import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.SpecializedOps;
 
@@ -49,7 +50,7 @@ import org.ejml.ops.SpecializedOps;
 public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     // cholesky decomposition
-    private CholeskyOuterForm_B64 chol = new CholeskyOuterForm_B64(true);
+    private CholeskyOuterForm_B64 decomposer = new CholeskyOuterForm_B64(true);
 
     // size of a block take from input matrix
     private int blockLength;
@@ -66,7 +67,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
     @Override
     public boolean setA(BlockMatrix64F A) {
         // Extract a lower triangular solution
-        if( !chol.decompose(A) )
+        if( !decomposer.decompose(A) )
             return false;
 
         blockLength = A.blockLength;
@@ -76,7 +77,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(chol.getT(null));
+        return SpecializedOps.qualityTriangular(decomposer.getT(null));
     }
 
     /**
@@ -88,7 +89,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
         if( B.blockLength != blockLength )
             throw new IllegalArgumentException("Unexpected blocklength in B.");
 
-        D1Submatrix64F L = new D1Submatrix64F(chol.getT(null));
+        D1Submatrix64F L = new D1Submatrix64F(decomposer.getT(null));
 
         if( X != null ) {
             if( X.blockLength != blockLength )
@@ -115,7 +116,7 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public void invert(BlockMatrix64F A_inv) {
-        BlockMatrix64F T = chol.getT(null);
+        BlockMatrix64F T = decomposer.getT(null);
         if( A_inv.numRows != T.numRows || A_inv.numCols != T.numCols )
             throw new IllegalArgumentException("Unexpected number or rows and/or columns");
 
@@ -142,11 +143,16 @@ public class BlockCholeskyOuterSolver implements LinearSolver<BlockMatrix64F> {
 
     @Override
     public boolean modifiesA() {
-        return chol.inputModified();
+        return decomposer.inputModified();
     }
 
     @Override
     public boolean modifiesB() {
         return true;
+    }
+
+    @Override
+    public CholeskyDecomposition<BlockMatrix64F> getDecomposition() {
+        return decomposer;
     }
 }

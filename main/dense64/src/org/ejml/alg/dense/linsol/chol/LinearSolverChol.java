@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -30,13 +31,13 @@ import org.ejml.ops.SpecializedOps;
  */
 public class LinearSolverChol extends LinearSolverAbstract_D64 {
 
-    CholeskyDecompositionCommon_D64 decomp;
+    CholeskyDecompositionCommon_D64 decomposer;
     int n;
     double vv[];
     double t[];
 
-    public LinearSolverChol( CholeskyDecompositionCommon_D64 decomp ) {
-        this.decomp = decomp;
+    public LinearSolverChol( CholeskyDecompositionCommon_D64 decomposer) {
+        this.decomposer = decomposer;
     }
 
     @Override
@@ -46,10 +47,10 @@ public class LinearSolverChol extends LinearSolverAbstract_D64 {
 
         _setA(A);
 
-        if( decomp.decompose(A) ){
+        if( decomposer.decompose(A) ){
             n = A.numCols;
-            vv = decomp._getVV();
-            t = decomp.getT().data;
+            vv = decomposer._getVV();
+            t = decomposer.getT().data;
             return true;
         } else {
             return false;
@@ -58,7 +59,7 @@ public class LinearSolverChol extends LinearSolverAbstract_D64 {
 
     @Override
     public double quality() {
-        return SpecializedOps.qualityTriangular(decomp.getT());
+        return SpecializedOps.qualityTriangular(decomposer.getT());
     }
 
     /**
@@ -87,7 +88,7 @@ public class LinearSolverChol extends LinearSolverAbstract_D64 {
         double dataB[] = B.data;
         double dataX[] = X.data;
 
-        if(decomp.isLower()) {
+        if(decomposer.isLower()) {
             for( int j = 0; j < numCols; j++ ) {
                 for( int i = 0; i < n; i++ ) vv[i] = dataB[i*numCols+j];
                 solveInternalL();
@@ -125,7 +126,7 @@ public class LinearSolverChol extends LinearSolverAbstract_D64 {
 
         double a[] = inv.data;
 
-        if(decomp.isLower()) {
+        if(decomposer.isLower()) {
             setToInverseL(a);
         } else {
             throw new RuntimeException("Implement");
@@ -167,11 +168,16 @@ public class LinearSolverChol extends LinearSolverAbstract_D64 {
 
     @Override
     public boolean modifiesA() {
-        return decomp.inputModified();
+        return decomposer.inputModified();
     }
 
     @Override
     public boolean modifiesB() {
         return false;
+    }
+
+    @Override
+    public CholeskyDecomposition<DenseMatrix64F> getDecomposition() {
+        return decomposer;
     }
 }
