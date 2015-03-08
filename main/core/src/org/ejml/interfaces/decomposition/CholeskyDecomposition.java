@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,15 @@
 
 package org.ejml.interfaces.decomposition;
 
+import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix;
 
 
 /**
  * <p>
- * Cholesky decomposition for {@link DenseMatrix64F}.  It decomposes positive-definite symmetric matrices
- * into either upper or lower triangles:<br>
+ * Cholesky decomposition for {@link DenseMatrix64F}.  It decomposes positive-definite symmetric matrices (real)
+ * or hermitian-positive definite (complex) into either upper or lower triangles:<br>
  * <br>
  * L*L<sup>H</sup>=A<br>
  * R<sup>H</sup>*R=A<br>
@@ -47,7 +48,6 @@ public interface CholeskyDecomposition <MatrixType extends Matrix>
      */
     public boolean isLower();
 
-
     /**
      * <p>
      * Returns the triangular matrix from the decomposition.
@@ -62,5 +62,12 @@ public interface CholeskyDecomposition <MatrixType extends Matrix>
      * @return A lower or upper triangular matrix.
      */
     public MatrixType getT( MatrixType T  );
+
+    /**
+     * Computes the matrix's determinant using the decomposition.
+     *
+     * @return The determinant.
+     */
+    public Complex64F computeDeterminant();
 
 }

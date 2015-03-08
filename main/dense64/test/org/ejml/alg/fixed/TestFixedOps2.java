@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,7 +53,4 @@ public class TestFixedOps2 extends CompareFixedToCommonOps {
         assertEquals(1,found.a1,1e-8);
         assertEquals(4,found.a2,1e-8);
     }
-
-
-
 }

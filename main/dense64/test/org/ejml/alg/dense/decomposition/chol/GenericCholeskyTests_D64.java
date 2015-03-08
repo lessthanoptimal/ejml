@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.EjmlUnitTests;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.RandomMatrices;
@@ -29,8 +30,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -122,8 +122,6 @@ public abstract class GenericCholeskyTests_D64 {
             for( int size = 1; size < 10; size++ ) {
                 checkWithDefinition(lower, size);
             }
-            // now try it with a smaller matrix and see what happens
-            checkWithDefinition(lower,5);
         }
     }
 
@@ -143,5 +141,36 @@ public abstract class GenericCholeskyTests_D64 {
         }
 
         assertTrue(A.isIdentical(found,1e-8));
+    }
+
+    @Test
+    public void checkDeterminant() {
+        for( int i = 0; i < 2; i++ ) {
+            boolean lower = i == 0;
+            if( lower && !canL )
+                continue;
+            if( !lower && !canR )
+                continue;
+
+            for( int size = 1; size < 20; size += 2 ) {
+                checkDeterminant(lower, size);
+            }
+        }
+    }
+
+    public void checkDeterminant( boolean lower , int size ) {
+
+        LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(size,size);
+        CholeskyDecomposition<DenseMatrix64F> cholesky = create(lower);
+
+        DenseMatrix64F A = RandomMatrices.createSymmPosDef(size,rand);
+
+        assertTrue(DecompositionFactory.decomposeSafe(lu,A));
+        assertTrue(DecompositionFactory.decomposeSafe(cholesky,A));
+
+        double expected = lu.computeDeterminant().real;
+        double found = cholesky.computeDeterminant().real;
+
+        assertEquals(expected,found,1e-8);
     }
 }

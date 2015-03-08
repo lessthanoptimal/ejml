@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.alg.block.BlockInnerRankUpdate;
 import org.ejml.alg.block.BlockMatrixOps;
 import org.ejml.alg.block.BlockTriangularSolver;
 import org.ejml.data.BlockMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 
@@ -48,6 +49,9 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition<BlockMatrix6
     private D1Submatrix64F subA = new D1Submatrix64F();
     private D1Submatrix64F subB = new D1Submatrix64F();
     private D1Submatrix64F subC = new D1Submatrix64F();
+
+    // storage for the determinant
+    private Complex64F det = new Complex64F();
 
     /**
      * Creates a new BlockCholeskyOuterForm
@@ -166,6 +170,31 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition<BlockMatrix6
         T.set(this.T);
 
         return T;
+    }
+
+    @Override
+    public Complex64F computeDeterminant() {
+        double prod = 1.0;
+
+        int blockLength = T.blockLength;
+        for( int i = 0; i < T.numCols; i += blockLength ) {
+            // width of the submatrix
+            int widthA = Math.min(blockLength, T.numCols-i);
+
+            // index of the first element in the block
+            int indexT = i*T.numCols + i*widthA;
+
+            // product along the diagonal
+            for (int j = 0; j < widthA; j++) {
+                prod *= T.data[indexT];
+                indexT += widthA+1;
+            }
+        }
+
+        det.real = prod*prod;
+        det.imaginary = 0;
+
+        return det;
     }
 
     @Override

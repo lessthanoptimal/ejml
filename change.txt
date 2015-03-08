@@ -28,6 +28,7 @@ Date format: year/month/day
 - Added primitive 32bit data structures to make adding 32bit support in the future smoother
 - Equation
   * 1x1 matrix can be assigned to a double scalar
+- Added determinant to Cholesky decomposition interface
 
 ----- Version 0.26
 

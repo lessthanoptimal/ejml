@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,11 @@
 
 package org.ejml.alg.dense.decompose.chol;
 
+import org.ejml.data.Complex64F;
+
 /**
  * <p>
  * This implementation of a Cholesky decomposition using the inner-product form.
- * For large matrices a block implementation is better.  On larger matrices the lower triangular
- * decomposition is significantly faster.  This is faster on smaller matrices than {@link CholeskyDecompositionBlock_CD64}
- * but much slower on larger matrices.
  * </p>
  *
  * @author Peter Abeles
@@ -115,5 +114,10 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
         }
 
         return true;
+    }
+
+    @Override
+    public Complex64F computeDeterminant() {
+        throw new RuntimeException("IMplement");
     }
 }

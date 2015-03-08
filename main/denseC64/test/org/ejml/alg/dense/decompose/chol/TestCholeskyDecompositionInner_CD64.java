@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,14 +20,11 @@ package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
-import org.junit.Test;
-
-import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
 
 
 /**
- * @author Peter Abeles
- */
+* @author Peter Abeles
+*/
 public class TestCholeskyDecompositionInner_CD64 extends GenericCholeskyTests_CD64 {
 
     @Override
@@ -35,9 +32,9 @@ public class TestCholeskyDecompositionInner_CD64 extends GenericCholeskyTests_CD
         return new CholeskyDecompositionInner_CD64(lower);
     }
 
-    @Test
-    public void checkModifyInput() {
-        checkModifiedInput(new CholeskyDecompositionInner_CD64(true));
-        checkModifiedInput(new CholeskyDecompositionInner_CD64(false));
-    }
+//    @Test
+//    public void checkModifyInput() {
+//        checkModifiedInput(new CholeskyDecompositionInner_CD64(true));
+//        checkModifiedInput(new CholeskyDecompositionInner_CD64(false));
+//    }
 }

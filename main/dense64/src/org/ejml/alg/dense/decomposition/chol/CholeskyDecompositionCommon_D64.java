@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 
+import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.ops.CommonOps;
@@ -52,6 +53,9 @@ public abstract class CholeskyDecompositionCommon_D64
 
     // is it a lower triangular matrix or an upper triangular matrix
     protected boolean lower;
+
+    // storage for computed determinant
+    protected Complex64F det = new Complex64F();
 
     /**
      * Specifies if a lower or upper variant should be constructed.
@@ -176,5 +180,20 @@ public abstract class CholeskyDecompositionCommon_D64
 
     public double[] _getVV() {
         return vv;
+    }
+
+    @Override
+    public Complex64F computeDeterminant() {
+        double prod = 1;
+
+        int total = n*n;
+        for( int i = 0; i < total; i += n + 1 ) {
+            prod *= t[i];
+        }
+
+        det.real = prod*prod;
+        det.imaginary = 0;
+
+        return det;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -52,9 +53,9 @@ public class TestCholeskyOuterForm_B64 {
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
 
             CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,false);
-            assertTrue(chol.decompose(A));
+            assertTrue(DecompositionFactory.decomposeSafe(chol,A));
 
-            DenseMatrix64F L = chol.getT(null);
+            DenseMatrix64F expectedT = chol.getT(null);
 
             BlockMatrix64F blockA = BlockMatrixOps.convert(A,bl);
 
@@ -62,7 +63,12 @@ public class TestCholeskyOuterForm_B64 {
 
             assertTrue(DecompositionFactory.decomposeSafe(blockChol,blockA));
 
-            assertTrue(GenericMatrixOps.isEquivalent(L,blockA,1e-8));
+            assertTrue(GenericMatrixOps.isEquivalent(expectedT,blockChol.getT(null),1e-8));
+
+            double blockDet = blockChol.computeDeterminant().real;
+            double expectedDet = chol.computeDeterminant().real;
+
+            assertEquals(expectedDet,blockDet,1e-8);
         }
     }
 
@@ -77,9 +83,9 @@ public class TestCholeskyOuterForm_B64 {
             DenseMatrix64F A = RandomMatrices.createSymmPosDef(N,rand);
 
             CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(1,true);
-            assertTrue(chol.decompose(A));
+            assertTrue(DecompositionFactory.decomposeSafe(chol, A));
 
-            DenseMatrix64F L = chol.getT(null);
+            DenseMatrix64F expectedT = chol.getT(null);
 
             BlockMatrix64F blockA = BlockMatrixOps.convert(A,bl);
 
@@ -87,7 +93,12 @@ public class TestCholeskyOuterForm_B64 {
 
             assertTrue(DecompositionFactory.decomposeSafe(blockChol,blockA));
 
-            assertTrue(GenericMatrixOps.isEquivalent(L,blockA,1e-8));
+            assertTrue(GenericMatrixOps.isEquivalent(expectedT,blockChol.getT(null),1e-8));
+
+            double blockDet = blockChol.computeDeterminant().real;
+            double expectedDet = chol.computeDeterminant().real;
+
+            assertEquals(expectedDet,blockDet,1e-8);
         }
     }
 }
