@@ -949,6 +949,16 @@ public class Equation {
     }
 
     public double lookupDouble(String token) {
+        Variable v = variables.get(token);
+
+        if( v instanceof VariableMatrix ) {
+            DenseMatrix64F m = ((VariableMatrix)v).matrix;
+            if( m.numCols == 1 && m.numRows == 1 ) {
+                return m.get(0,0);
+            } else {
+                throw new RuntimeException("Can only return 1x1 real matrices as doubles");
+            }
+        }
         return ((VariableScalar)variables.get(token)).getDouble();
     }
 
