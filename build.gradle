@@ -2,7 +2,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
 
-    group = 'com.googlecode.efficient-java-matrix-library'
+    group = 'org.ejml'
     version = '0.27-SNAPSHOT'
 }
 
@@ -56,7 +56,7 @@ subprojects {
         manifest { // the manifest of the default jar is of type OsgiManifest
             instruction 'Bundle-Vendor', 'EJML'
 //            instruction 'Bundle-Description', 'EJML'
-            instruction 'Bundle-DocURL', 'http://code.google.com/p/efficient-java-matrix-library/'
+            instruction 'Bundle-DocURL', 'http://ejml.org/'
         }
     }
 
@@ -98,7 +98,7 @@ subprojects {
                         packaging 'pom'
                         // optionally artifactId can be defined here
                         description 'A fast and easy to use dense matrix linear algebra library written in Java.'
-                        url 'http://code.google.com/p/efficient-java-matrix-library/'
+                        url 'http://ejml.org/'
 
                         scm {
                             connection 'git@github.com:lessthanoptimal/ejml.git'
@@ -132,6 +132,7 @@ def allModules = [
         ':main:dense64',
         ':main:equation',
         ':main:core',
+        ':main:simple',
         ':main:experimental'
 ]
 
