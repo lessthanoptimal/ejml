@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,6 +39,34 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * @author Peter Abeles
  */
 public class LinearSolverFactory {
+
+    /**
+     * Creates a linear solver using LU decomposition
+     */
+    public static LinearSolver<DenseMatrix64F> lu( int numRows ) {
+        return linear(numRows);
+    }
+
+    /**
+     * Creates a linear solver using Cholesky decomposition
+     */
+    public static LinearSolver<DenseMatrix64F> chol( int numRows ) {
+        return symmPosDef(numRows);
+    }
+
+    /**
+     * Creates a linear solver using QR decomposition
+     */
+    public static LinearSolver<DenseMatrix64F> qr( int numRows , int numCols ) {
+        return leastSquares(numRows,numCols);
+    }
+
+    /**
+     * Creates a linear solver using QRP decomposition
+     */
+    public static LinearSolver<DenseMatrix64F> qrp( boolean computeNorm2, boolean computeQ ) {
+        return leastSquaresQrPivot(computeNorm2,computeQ);
+    }
 
     /**
      * Creates a general purpose solver.  Use this if you are not sure what you need.

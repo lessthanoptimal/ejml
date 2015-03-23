@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -98,8 +98,7 @@ public class MatrixIO {
     {
         PrintStream fileStream = new PrintStream(fileName);
 
-        fileStream.print(A.getNumRows()+" ");
-        fileStream.println(A.getNumCols());
+        fileStream.println(A.getNumRows() + " " + A.getNumCols() + " real");
         for( int i = 0; i < A.getNumRows(); i++ ) {
             for( int j = 0; j < A.getNumCols(); j++ ) {
                 fileStream.print(A.get(i,j)+" ");
@@ -147,7 +146,7 @@ public class MatrixIO {
         FileInputStream fileStream = new FileInputStream(fileName);
         ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
 
-        DenseMatrix64F ret = csv.read(numRows,numCols);
+        DenseMatrix64F ret = csv.readReal(numRows, numCols);
 
         fileStream.close();
 
@@ -168,7 +167,7 @@ public class MatrixIO {
 
         String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
 
-        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        out.println("Type = "+type+" real , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
         format += " ";
 
@@ -232,9 +231,9 @@ public class MatrixIO {
 
     public static void print(PrintStream out , ComplexMatrix64F mat , String format ) {
 
-        String type = "Dense";
+        String type = "dense";
 
-        out.println("Type = Complex "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        out.println("Type = "+type+" complex , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
         format += " ";
 
