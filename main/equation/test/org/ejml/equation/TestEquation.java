@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -263,6 +263,20 @@ public class TestEquation {
         eq.alias(B, "B");
         eq.process("A=B(:,2:)");
         assertTrue(A.isIdentical(B.extractMatrix(0,6,2,10), 1e-15));
+    }
+
+    @Test
+    public void compile_parentheses_extractScalar() {
+        Equation eq = new Equation();
+
+        SimpleMatrix B = SimpleMatrix.random(8, 8, -1, 1, rand);
+
+        eq.alias(B, "B");
+
+        eq.process("A=B(1,2)");
+        Variable v = eq.lookupVariable("A");
+        assertTrue(v instanceof VariableDouble);
+        assertEquals(eq.lookupDouble("A"),B.get(1,2),1e-8);
     }
 
     @Test

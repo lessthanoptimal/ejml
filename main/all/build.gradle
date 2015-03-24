@@ -1,0 +1,13 @@
+dependencies {
+    compile project(':main:core')
+    compile project(':main:dense64')
+    compile project(':main:denseC64')
+    compile project(':main:equation')
+    compile project(':main:simple')
+}
+
+idea {
+    module {
+        name = "EJML All"
+    }
+}

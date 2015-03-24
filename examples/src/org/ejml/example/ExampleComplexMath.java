@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,32 +29,32 @@ import org.ejml.ops.ComplexMath64F;
  */
 public class ExampleComplexMath {
 
-	public static void main( String []args ) {
-		Complex64F a = new Complex64F(1,2);
-		Complex64F b = new Complex64F(-1,-0.6);
-		Complex64F c = new Complex64F();
-		ComplexPolar64F polarC = new ComplexPolar64F();
+    public static void main( String []args ) {
+        Complex64F a = new Complex64F(1,2);
+        Complex64F b = new Complex64F(-1,-0.6);
+        Complex64F c = new Complex64F();
+        ComplexPolar64F polarC = new ComplexPolar64F();
 
-		System.out.println("a = "+a);
-		System.out.println("b = "+b);
-		System.out.println("------------------");
+        System.out.println("a = "+a);
+        System.out.println("b = "+b);
+        System.out.println("------------------");
 
-		ComplexMath64F.plus(a, b, c);
-		System.out.println("a + b = "+c);
-		ComplexMath64F.minus(a, b, c);
-		System.out.println("a - b = "+c);
-		ComplexMath64F.multiply(a, b, c);
-		System.out.println("a * b = "+c);
-		ComplexMath64F.divide(a, b, c);
-		System.out.println("a / b = "+c);
+        ComplexMath64F.plus(a, b, c);
+        System.out.println("a + b = "+c);
+        ComplexMath64F.minus(a, b, c);
+        System.out.println("a - b = "+c);
+        ComplexMath64F.multiply(a, b, c);
+        System.out.println("a * b = "+c);
+        ComplexMath64F.divide(a, b, c);
+        System.out.println("a / b = "+c);
 
-		System.out.println("------------------");
-		ComplexPolar64F polarA = new ComplexPolar64F();
-		ComplexMath64F.convert(a, polarA);
-		System.out.println("polar notation of a = "+polarA);
-		ComplexMath64F.pow(polarA, 3, polarC);
-		System.out.println("a ** 3 = "+polarC);
-		ComplexMath64F.convert(polarC, c);
-		System.out.println("a ** 3 = "+c);
-	}
+        System.out.println("------------------");
+        ComplexPolar64F polarA = new ComplexPolar64F();
+        ComplexMath64F.convert(a, polarA);
+        System.out.println("polar notation of a = "+polarA);
+        ComplexMath64F.pow(polarA, 3, polarC);
+        System.out.println("a ** 3 = "+polarC);
+        ComplexMath64F.convert(polarC, c);
+        System.out.println("a ** 3 = "+c);
+    }
 }

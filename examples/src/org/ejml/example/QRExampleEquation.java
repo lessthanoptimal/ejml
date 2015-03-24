@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -78,18 +78,17 @@ public class QRExampleEquation {
                 if( v.get(0) < 0 )
                     tau *= -1.0;
 
-                double u_0 = v.get(0) + tau;
-                double gamma = u_0/tau;
-
-                eq.alias(gamma,"gamma",tau,"tau");
-                eq.process("v=v/"+u_0);
+                eq.alias(tau,"tau");
+                eq.process("u_0 = v(0,0)+tau");
+                eq.process("gamma = u_0/tau");
+                eq.process("v=v/u_0");
                 eq.process("v(0,0)=1");
                 eq.process("QR(i:,i:) = (eye(Ni) - gamma*v*v')*QR(i:,i:)");
                 eq.process("QR(i:,i) = v");
                 eq.process("QR(i,i) = -1*tau*maxV");
 
                 // save gamma for recomputing Q later on
-                gammas[i] = gamma;
+                gammas[i] = eq.lookupDouble("gamma");
             }
         }
     }

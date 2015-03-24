@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,27 +40,13 @@ import java.util.Arrays;
  * <br>
  * For example:<br>
  * data =
- * <table border="1">
- * <tr>
- * <td>a<sub>11</sub></td>
- * <td>a<sub>12</sub></td>
- * <td>a<sub>13</sub></td>
- * <td>a<sub>14</sub></td>
- * <td>a<sub>21</sub></td>
- * <td>a<sub>22</sub></td>
- * <td>a<sub>23</sub></td>
- * <td>a<sub>24</sub></td>
- * <td>a<sub>31</sub></td>
- * <td>a<sub>32</sub></td>
- * <td>a<sub>33</sub></td>
- * <td>a<sub>34</sub></td>
- * <td>a<sub>41</sub></td>
- * <td>a<sub>42</sub></td>
- * <td>a<sub>43</sub></td>
- * <td>a<sub>44</sub></td>
- * </tr>
- * </table>
  * </p>
+ * <pre>
+ * a[0]  a[1]   a[2]   a[3]
+ * a[4]  a[5]   a[6]   a[7]
+ * a[8]  a[9]   a[10]  a[11]
+ * a[12] a[13]  a[14]  a[15]
+ * </pre>
  *
  * @author Peter Abeles
  */

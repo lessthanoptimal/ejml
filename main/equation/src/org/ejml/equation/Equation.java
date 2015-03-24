@@ -580,7 +580,17 @@ public class Equation {
         parseSubmatrixRange(tokens, sequence, variables);
 
         // first parameter is the matrix it will be extracted from.  rest specify range
-        Operation.Info info = functions.create("extract", variables);
+        Operation.Info info;
+
+        // if it is extracting only a single number explicitly then convert it into a scalar
+        if( variables.get(1) == variables.get(2) && variables.get(3) == variables.get(4) ) {
+            // remove some redundant variables
+            variables.remove(4);
+            variables.remove(2);
+            info = functions.create("extractScalar", variables);
+        } else {
+            info = functions.create("extract", variables);
+        }
 
         sequence.addOperation(info.op);
 
@@ -643,7 +653,7 @@ public class Equation {
             }
         }
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < t.length; i++) {
            if(t[i] == null)
                continue;
            if( t[i].getType() != Type.VARIABLE ) {

@@ -1,6 +1,5 @@
 dependencies {
-    compile project(':main:core')
-    compile project(':main:equation')
+    compile project(':main:all')
 }
 
 idea {

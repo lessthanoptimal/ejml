@@ -332,6 +332,13 @@ public class ManagerFunctions {
                 return Operation.extract(inputs, manager);
             }
         });
+        inputN.put("extractScalar",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
+                if( inputs.size() != 3 ) throw new RuntimeException("Three inputs expected");
+                return Operation.extractScalar(inputs, manager);
+            }
+        });
     }
 
     public ManagerTempVariables getManagerTemp() {

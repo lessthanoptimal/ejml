@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1301,6 +1301,38 @@ public abstract class Operation {
 
                 output.matrix.reshape(extents.row1-extents.row0,extents.col1-extents.col0);
                 CommonOps.extract(A,extents.row0,extents.row1,extents.col0,extents.col1,output.matrix,0,0);
+            }
+        };
+
+        return ret;
+    }
+
+    public static Info extractScalar( final List<Variable> inputs, ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if(  !(inputs.get(0) instanceof VariableMatrix))
+            throw new RuntimeException("First parameter must be a matrix.");
+
+        for (int i = 1; i < 3; i++) {
+            if( !(inputs.get(i) instanceof VariableInteger) )
+                throw new RuntimeException("Parameters must be integers for extract scalar");
+        }
+
+        ret.op = new Operation("extractScalar") {
+
+            Extents extents = new Extents();
+
+            @Override
+            public void process() {
+
+                DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
+
+                int row = ((VariableInteger)inputs.get(1)).value;
+                int col = ((VariableInteger)inputs.get(2)).value;
+
+                output.value = A.get(row,col);
             }
         };
 
