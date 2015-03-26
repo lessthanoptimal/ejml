@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -266,6 +266,21 @@ public class TestCommonOps {
         }
 
         return true;
+    }
+
+    @Test
+    public void dot() {
+        DenseMatrix64F a = RandomMatrices.createRandom(10,1,rand);
+        DenseMatrix64F b = RandomMatrices.createRandom(1,10,rand);
+
+        double found = CommonOps.dot(a,b);
+
+        double expected = 0;
+        for (int i = 0; i < 10; i++) {
+            expected += a.data[i]*b.data[i];
+        }
+
+        assertEquals(expected,found,1e-8);
     }
 
     @Test

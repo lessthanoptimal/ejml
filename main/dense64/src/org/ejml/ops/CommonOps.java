@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,7 @@ import org.ejml.alg.dense.misc.*;
 import org.ejml.alg.dense.mult.MatrixMatrixMult;
 import org.ejml.alg.dense.mult.MatrixMultProduct;
 import org.ejml.alg.dense.mult.MatrixVectorMult;
+import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RealMatrix64F;
@@ -245,6 +246,24 @@ public class CommonOps {
         } else {
             MatrixMatrixMult.multTransAB(alpha,a,b,c);
         }
+    }
+
+    /**
+     * <p></p>
+     * Computes the dot product or inner product between two vectors.  If the two vectors are columns vectors
+     * then it is defined as:<br>
+     * {@code dot(a,b) = a<sup>T</sup> * b}<br>
+     * If the vectors are column or row or both is ignored by this function.
+     * </p>
+     * @param a Vector
+     * @param b Vector
+     * @return Dot product of the two vectors
+     */
+    public static double dot( D1Matrix64F a , D1Matrix64F b ) {
+        if( !MatrixFeatures.isVector(a) || !MatrixFeatures.isVector(b))
+            throw new RuntimeException("Both inputs must be vectors");
+
+        return VectorVectorMult.innerProd(a,b);
     }
 
     /**

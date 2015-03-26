@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -256,7 +256,7 @@ public class FixedOps3 {
      * <br>
      * c = a * b <br>
      * <br>
-     * c> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }
+     * {@code c = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }}
      * </p>
      *
      * @param a The left vector in the multiplication operation. Not modified.

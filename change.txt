@@ -31,9 +31,13 @@ Date format: year/month/day
   * When referencing a single element in a matrix it will be extracted as a scalar and not a 1x1 matrix.
   * Added sqrt() to parser
   * lookupDouble() will now work on 1x1 matrices
+- CommonOps
+  * Added dot(a,b) for dot product between two vectors
 - Added determinant to Cholesky decomposition interface
 - Added getDecomposition() to LinearSolver to provide access to internal classes,
   which can be useful in some specialized cases.  Alternatives were very ugly.
+
+- TODO add some functions from VectorVectorMult into CommonOps?  inner and outer products... etc.
 
 ----- Version 0.26
 

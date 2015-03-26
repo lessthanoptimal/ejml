@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -87,13 +87,13 @@ public abstract class CompareFixedToCommonOps {
             }
         }
 
-        int numExpected = 28;
+        int numExpected = 29;
         if( N > GenerateFixedOps.maxInverseSize ) {
             numExpected -= 2;
         }
 
         assertEquals(0,numFailed);
-        assertEquals(2,numNotMatched);
+        assertEquals(1,numNotMatched);
         assertEquals(numExpected,numPassed);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,21 +29,6 @@ import org.ejml.data.RowD1Matrix64F;
  * @author Peter Abeles
  */
 public class VectorVectorMult {
-    // TODO write this
-    /**
-     *
-     * @param x
-     * @param y
-     * @param A
-     */
-    // TODO create a VectorOps for meer mortals to use?
-    // TODO have DenseMatrix64F flag itself as being a vector to make checks faster?
-    public static void mult( DenseMatrix64F x , DenseMatrix64F y , DenseMatrix64F A )
-    {
-       // sanity check inputs
-
-        // call the outer or inner product
-    }
 
     /**
      * <p>
