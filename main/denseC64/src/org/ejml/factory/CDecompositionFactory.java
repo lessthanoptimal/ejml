@@ -18,9 +18,11 @@
 
 package org.ejml.factory;
 
+import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CD64;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.interfaces.decomposition.QRDecomposition;
@@ -41,10 +43,11 @@ public class CDecompositionFactory {
      * Returns a {@link org.ejml.interfaces.decomposition.LUDecomposition} that has been optimized for the specified matrix size.
      * </p>
      *
-     * @parm matrixWidth The matrix size that the decomposition should be optimized for.
+     * @param numRows Number of rows the returned decomposition is optimized for.
+     * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition<CDenseMatrix64F> lu( int numRows , int numCol ) {
+    public static LUDecomposition<CDenseMatrix64F> lu( int numRows , int numCols ) {
         return new LUDecompositionAlt_CD64();
     }
 
@@ -59,6 +62,19 @@ public class CDecompositionFactory {
      */
     public static QRDecomposition<CDenseMatrix64F> qr( int numRows , int numCols ) {
         return new QRDecompositionHouseholderColumn_CD64();
+    }
+
+    /**
+     * <p>
+     * Returns a {@link org.ejml.interfaces.decomposition.CholeskyDecomposition} that has been optimized for the specified matrix size.
+     * </p>
+     *
+     * @param size Number of rows and columns it should be optimized for
+     * @param lower if true then it will be a lower cholesky.  false for upper.  Try lower.
+     * @return QRDecomposition
+     */
+    public static CholeskyDecomposition<CDenseMatrix64F> chol( int size , boolean lower ) {
+        return new CholeskyDecompositionInner_CD64(lower);
     }
 
     /**

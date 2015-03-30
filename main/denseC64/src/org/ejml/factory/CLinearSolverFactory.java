@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,9 @@
 
 package org.ejml.factory;
 
+import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
+import org.ejml.alg.dense.linsol.chol.LinearSolverChol_CD64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_CD64;
 import org.ejml.data.CDenseMatrix64F;
@@ -30,24 +32,35 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * @author Peter Abeles
  */
 public class CLinearSolverFactory {
+
     /**
-     * Creates a solver for linear systems.  The A matrix will have dimensions (m,m).
+     * Creates a linear solver which uses LU decomposition internally
      *
-     * @return A new linear solver.
+     * @param matrixSize Approximate of rows and columns
+     * @return Linear solver
      */
-    public static LinearSolver<CDenseMatrix64F> linear( int matrixSize ) {
+    public static LinearSolver<CDenseMatrix64F> lu( int matrixSize ) {
         return new LinearSolverLu_CD64(new LUDecompositionAlt_CD64());
     }
 
     /**
-     * Creates a good general purpose solver for over determined systems and returns the optimal least-squares
-     * solution.  The A matrix will have dimensions (m,n) where m &ge; n.
+     * Creates a linear solver which uses Cholesky decomposition internally
      *
-     * @param numRows The number of rows that the decomposition is optimized for.
-     * @param numCols The number of columns that the decomposition is optimized for.
-     * @return A new least-squares solver for over determined systems.
+     * @param matrixSize Approximate of rows and columns
+     * @return Linear solver
      */
-    public static LinearSolver<CDenseMatrix64F> leastSquares( int numRows , int numCols ) {
+    public static LinearSolver<CDenseMatrix64F> chol( int matrixSize ) {
+        return new LinearSolverChol_CD64(new CholeskyDecompositionInner_CD64());
+    }
+
+    /**
+     * Creates a linear solver which uses QR decomposition internally
+     *
+     * @param numRows Approximate of rows
+     * @param numCols Approximate of columns
+     * @return Linear solver
+     */
+    public static LinearSolver<CDenseMatrix64F> qr(  int numRows , int numCols ) {
         return new LinearSolverQrHouseCol_CD64();
     }
 }

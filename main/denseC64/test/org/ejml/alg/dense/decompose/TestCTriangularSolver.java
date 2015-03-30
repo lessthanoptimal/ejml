@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -52,5 +52,56 @@ public class TestCTriangularSolver {
         CTriangularSolver.solveU(U.data,B.data,3);
 
         assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
+    }
+
+    @Test
+    public void solveL_diagReal() {
+        for( int N = 1; N <= 4; N++ ) {
+            CDenseMatrix64F L = createLowerTriangleDiagReal(N);
+
+            CDenseMatrix64F X = CRandomMatrices.createRandom(N, 1, -1, 1, rand);
+            CDenseMatrix64F B = new CDenseMatrix64F(N, 1);
+
+            CCommonOps.mult(L, X, B);
+
+            CTriangularSolver.solveL_diagReal(L.data, B.data, N);
+
+            assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
+        }
+    }
+
+    /**
+     * Creates a random complex lower triangular matrix with real diagonal elements
+     */
+    private CDenseMatrix64F createLowerTriangleDiagReal(int n) {
+        CDenseMatrix64F L = CRandomMatrices.createRandom(n, n, -1, 1, rand);
+        for (int i = 0; i < L.numRows; i++) {
+            for (int j = i + 1; j < L.numCols; j++) {
+                L.set(i, j, 0, 0);
+            }
+        }
+        for (int i = 0; i < L.numRows; i++) {
+            L.data[(i*L.numRows+i)*2+1] = 0;
+        }
+        return L;
+    }
+
+    @Test
+    public void solveConjTranL_diagReal() {
+        for( int N = 1; N <= 4; N++ ) {
+            CDenseMatrix64F L = createLowerTriangleDiagReal(N);
+
+            CDenseMatrix64F L_ct = new CDenseMatrix64F(N, N);
+            CCommonOps.transposeConjugate(L,L_ct);
+
+            CDenseMatrix64F X = CRandomMatrices.createRandom(N, 1, -1, 1, rand);
+            CDenseMatrix64F B = new CDenseMatrix64F(N, 1);
+
+            CCommonOps.mult(L_ct, X, B);
+
+            CTriangularSolver.solveConjTranL_diagReal(L.data, B.data, N);
+
+            assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
+        }
     }
 }

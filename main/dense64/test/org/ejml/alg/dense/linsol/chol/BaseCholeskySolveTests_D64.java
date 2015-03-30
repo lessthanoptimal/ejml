@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public abstract class BaseCholeskySolveTests {
+public abstract class BaseCholeskySolveTests_D64 {
 
     Random rand = new Random(0x45);
 

@@ -38,9 +38,6 @@ import org.ejml.ops.CCommonOps;
 public abstract class CholeskyDecompositionCommon_CD64
         implements CholeskyDecomposition<CDenseMatrix64F> {
 
-    // it can decompose a matrix up to this width
-    protected int maxWidth=-1;
-
     // width and height of the matrix
     protected int n;
 
@@ -48,8 +45,6 @@ public abstract class CholeskyDecompositionCommon_CD64
     protected CDenseMatrix64F T;
     protected double[] t;
 
-    // tempoary variable used by various functions
-    protected double vv[];
 
     // is it a lower triangular matrix or an upper triangular matrix
     protected boolean lower;
@@ -66,15 +61,6 @@ public abstract class CholeskyDecompositionCommon_CD64
         this.lower = lower;
     }
 
-    public void setExpectedMaxSize( int numRows , int numCols ) {
-        if( numRows != numCols ) {
-            throw new IllegalArgumentException("Can only decompose square matrices");
-        }
-
-        this.maxWidth = numCols;
-
-        this.vv = new double[maxWidth];
-    }
 
     /**
      * {@inheritDoc}
@@ -89,9 +75,7 @@ public abstract class CholeskyDecompositionCommon_CD64
      */
     @Override
     public boolean decompose( CDenseMatrix64F mat ) {
-        if( mat.numRows > maxWidth ) {
-            setExpectedMaxSize(mat.numRows,mat.numCols);
-        } else if( mat.numRows != mat.numCols ) {
+        if( mat.numRows != mat.numCols ) {
             throw new IllegalArgumentException("Must be a square matrix.");
         }
 
@@ -165,16 +149,12 @@ public abstract class CholeskyDecompositionCommon_CD64
     }
 
     /**
-     * Returns the triangular matrix from the decomposition.
+     * Returns the raw decomposed matrix.
      *
      * @return A lower or upper triangular matrix.
      */
     public CDenseMatrix64F _getT() {
         return T;
-    }
-
-    public double[] _getVV() {
-        return vv;
     }
 
     @Override

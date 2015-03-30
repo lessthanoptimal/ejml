@@ -19,7 +19,6 @@
 package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.CCommonOps;
 
 /**
  * <p>
@@ -30,7 +29,7 @@ import org.ejml.ops.CCommonOps;
  */
 public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon_CD64 {
 
-    // tolerance for it being SPD
+    // tolerance for testing to see if diagonal elements are real
     double tolerance = UtilEjml.EPS;
 
     public CholeskyDecompositionInner_CD64() {
@@ -52,18 +51,16 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
 
         double real_el_ii=0;
 
-        double pivmax = CCommonOps.elementMaxAbs(T);
-
         int stride = n*2;
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double realSum =  t[i*stride+j*2  ];
-                double imagSum =  t[i*stride+j*2+1];
+                double realSum = t[i*stride+j*2  ];
+                double imagSum = t[i*stride+j*2+1];
 
                 if( i == j ) {
                     // its easy to prove that for the cholesky decomposition to be valid the original
                     // diagonal elements must be real
-                    if( Math.abs(imagSum/pivmax) > tolerance )
+                    if( Math.abs(imagSum) > tolerance*Math.abs(realSum) )
                         return false;
 
                     // This takes advantage of the fact that when you multiply a complex number by
@@ -76,11 +73,9 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
                         realSum -= real*real + imag*imag;
                     }
 
-                    if( realSum <= tolerance*pivmax ) {
+                    if( realSum <= 0 ) {
                         return false;
                     }
-                    if( realSum > pivmax )
-                        pivmax = realSum;
 
                     real_el_ii = Math.sqrt(realSum);
                     t[i*stride+i*2]   = real_el_ii;
@@ -132,17 +127,15 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
 
         double real_el_ii=0;
 
-        double pivmax = CCommonOps.elementMaxAbs(T);
-
         int stride = n*2;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double realSum =  t[i*stride+j*2  ];
-                double imagSum =  t[i*stride+j*2+1];
+                double realSum = t[i*stride+j*2  ];
+                double imagSum = t[i*stride+j*2+1];
 
                 if( i == j ) {
-                    if( Math.abs(imagSum/pivmax) > tolerance )
+                    if( Math.abs(imagSum) > tolerance*Math.abs(realSum) )
                         return false;
 
                     for (int k = 0; k < i; k++) {
@@ -152,11 +145,9 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
                         realSum -= real*real + imag*imag;
                     }
 
-                    if( realSum <= tolerance*pivmax ) {
+                    if( realSum <= 0 ) {
                         return false;
                     }
-                    if( realSum > pivmax )
-                        pivmax = realSum;
 
                     real_el_ii = Math.sqrt(realSum);
                     t[i*stride+i*2]   = real_el_ii;

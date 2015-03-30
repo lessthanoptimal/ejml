@@ -40,6 +40,7 @@ Date format: year/month/day
   which can be useful in some specialized cases.  Alternatives were very ugly.
 
 - TODO add some functions from VectorVectorMult into CommonOps?  inner and outer products... etc.
+- TODO add complex operations to JMatBench
 
 ----- Version 0.26
 

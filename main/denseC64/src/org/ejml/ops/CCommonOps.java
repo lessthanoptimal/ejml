@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -498,7 +498,7 @@ public class CCommonOps {
      */
     public static boolean invert( CDenseMatrix64F A )
     {
-        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.linear(A.numRows);
+        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.lu(A.numRows);
 
         if( solver.setA(A) ) {
             solver.invert(A);
@@ -534,7 +534,7 @@ public class CCommonOps {
      */
     public static boolean invert( CDenseMatrix64F input , CDenseMatrix64F output )
     {
-        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.linear(input.numRows);
+        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.lu(input.numRows);
 
         if( solver.modifiesA() )
             input = input.copy();
@@ -577,9 +577,9 @@ public class CCommonOps {
     {
         LinearSolver<CDenseMatrix64F> solver;
         if( a.numCols == a.numRows ) {
-            solver = CLinearSolverFactory.linear(a.numRows);
+            solver = CLinearSolverFactory.lu(a.numRows);
         } else {
-            solver = CLinearSolverFactory.leastSquares(a.numRows,a.numCols);
+            solver = CLinearSolverFactory.qr(a.numRows, a.numCols);
         }
 
         // make sure the inputs 'a' and 'b' are not modified

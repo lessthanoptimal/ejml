@@ -25,7 +25,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverChol_B64 extends BaseCholeskySolveTests{
+public class TestLinearSolverChol_B64 extends BaseCholeskySolveTests_D64 {
 
     @Override
     public LinearSolver<DenseMatrix64F> createSolver() {

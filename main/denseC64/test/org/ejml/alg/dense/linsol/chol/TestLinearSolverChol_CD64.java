@@ -18,16 +18,18 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
+import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
+import org.ejml.data.CDenseMatrix64F;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverChol_CD64 {
-    @Test
-    public void stuff() {
-        fail("Implement");
+public class TestLinearSolverChol_CD64 extends BaseCholeskySolveTests_CD64 {
+
+    @Override
+    public LinearSolver<CDenseMatrix64F> createSolver() {
+        CholeskyDecompositionInner_CD64 alg = new CholeskyDecompositionInner_CD64(true);
+        return new LinearSolverChol_CD64(alg);
     }
 }
