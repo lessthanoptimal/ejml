@@ -16,19 +16,19 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decompose.chol;
+package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
-* @author Peter Abeles
-*/
-public class TestCholeskyDecompositionInner_CD64 extends GenericCholeskyTests_CD64 {
+ * @author Peter Abeles
+ */
+public class TestLinearSolverChol_B64 extends BaseCholeskySolveTests{
 
     @Override
-    public CholeskyDecomposition<CDenseMatrix64F> create(boolean lower) {
-        return new CholeskyDecompositionInner_CD64(lower);
+    public LinearSolver<DenseMatrix64F> createSolver() {
+        return new LinearSolverChol_B64();
     }
 }

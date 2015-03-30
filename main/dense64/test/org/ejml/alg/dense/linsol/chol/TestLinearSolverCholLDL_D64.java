@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverCholLDL {
+public class TestLinearSolverCholLDL_D64 {
 
     Random rand = new Random(3466);
 
@@ -41,7 +41,7 @@ public class TestLinearSolverCholLDL {
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
         DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
 
-        LinearSolverCholLDL solver = new LinearSolverCholLDL();
+        LinearSolverCholLDL_D64 solver = new LinearSolverCholLDL_D64();
         assertTrue(solver.setA(A));
         solver.invert(A);
         solver.solve(b,x);

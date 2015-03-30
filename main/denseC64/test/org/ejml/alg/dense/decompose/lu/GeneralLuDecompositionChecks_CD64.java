@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public abstract class GeneralCLuDecompositionChecks {
+public abstract class GeneralLuDecompositionChecks_CD64 {
 
     Random rand = new Random(0xff);
 
@@ -202,8 +202,8 @@ public abstract class GeneralCLuDecompositionChecks {
         CDenseMatrix64F U = alg.getUpper(null);
         CDenseMatrix64F P = alg.getPivot(null);
 
-        CDenseMatrix64F P_tran = new CDenseMatrix64F(P.numCols,P.numRows);
-        CDenseMatrix64F PL = new CDenseMatrix64F(P_tran.numRows,L.numCols);
+        CDenseMatrix64F P_tran  = new CDenseMatrix64F(P.numCols,P.numRows);
+        CDenseMatrix64F PL      = new CDenseMatrix64F(P_tran.numRows,L.numCols);
         CDenseMatrix64F A_found = new CDenseMatrix64F(a.numRows, a.numCols);
 
         CCommonOps.transpose(P, P_tran);

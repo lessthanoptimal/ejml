@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock_D64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
-import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
-import org.ejml.alg.dense.linsol.chol.LinearSolverCholBlock64;
+import org.ejml.alg.dense.linsol.chol.LinearSolverChol_B64;
+import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CovarianceOps;
@@ -78,10 +78,10 @@ public class BenchmarkInvertSymPosDef {
 //        System.out.println("invert LU-NR            = "+ invertLU_nr(mat,numTrials));
 //        System.out.println("invert LU-Alt           = "+ invertLU_alt(mat,numTrials));
         System.out.println("invert Cholesky Inner       = "+ invertCholesky(
-                new LinearSolverChol(new CholeskyDecompositionInner_D64( true)),
+                new LinearSolverChol_D64(new CholeskyDecompositionInner_D64( true)),
                 mat,numTrials));
         System.out.println("invert Cholesky Block Dense = "+ invertCholesky(
-                new LinearSolverChol(new CholeskyDecompositionBlock_D64( EjmlParameters.BLOCK_WIDTH_CHOL)),
+                new LinearSolverChol_D64(new CholeskyDecompositionBlock_D64( EjmlParameters.BLOCK_WIDTH_CHOL)),
                 mat,numTrials));
 //        System.out.println("invert default              = "+ invertCholesky(
 //                LinearSolverFactory.symmetric(mat.numRows),
@@ -90,7 +90,7 @@ public class BenchmarkInvertSymPosDef {
 //                new LinearSolverCholLDL(new CholeskyDecompositionLDL()),
 //                mat,numTrials));
         System.out.println("invert CholeskyBlock64      = "+ invertCholesky(
-                new LinearSolverCholBlock64(),
+                new LinearSolverChol_B64(),
                 mat,numTrials));
     }
 

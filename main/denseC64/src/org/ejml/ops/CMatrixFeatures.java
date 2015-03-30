@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
 import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CD1Matrix64F;
 import org.ejml.data.CDenseMatrix64F;
@@ -286,5 +287,29 @@ public class CMatrixFeatures {
         }
 
         return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if the matrix is positive definite.
+     * </p>
+     * <p>
+     * x<sup>T</sup> A x > 0<br>
+     * for all x where x is a non-zero vector and A is a hermitian matrix.
+     * </p>
+     *
+     * @param A square hermitian matrix. Not modified.
+     *
+     * @return True if it is positive definite and false if it is not.
+     */
+    public static boolean isPositiveDefinite( CDenseMatrix64F A ) {
+        if( A.numCols != A.numRows)
+            return false;
+
+        CholeskyDecompositionInner_CD64 chol = new CholeskyDecompositionInner_CD64(true);
+        if( chol.inputModified() )
+            A = A.copy();
+
+        return chol.decompose(A);
     }
 }

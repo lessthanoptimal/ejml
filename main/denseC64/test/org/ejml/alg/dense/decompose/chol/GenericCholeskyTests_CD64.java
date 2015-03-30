@@ -18,9 +18,12 @@
 
 package org.ejml.alg.dense.decompose.chol;
 
+import org.ejml.alg.dense.decompose.CheckDecompositionInterface_CD64;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.factory.CDecompositionFactory;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
@@ -28,8 +31,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -40,46 +42,25 @@ public abstract class GenericCholeskyTests_CD64 {
     Random rand = new Random(0x45478);
 
     boolean canL = true;
-    boolean canR = false;
+    boolean canR = true;
 
     public abstract CholeskyDecomposition<CDenseMatrix64F> create( boolean lower );
 
-//    /**
-//     * If it is not positive definate it should fail
-//     */
-//    @Test
-//    public void testNotPositiveDefinite() {
-//        DenseMatrix64F A = new DenseMatrix64F(2,2, true, 1, -1, -1, -2);
-//
-//        CholeskyDecomposition<DenseMatrix64F> alg = create(true);
-//        assertFalse(alg.decompose(A));
-//    }
-//
-//    /**
-//     * The correctness of getT(null) has been tested else where effectively.  This
-//     * checks to see if it handles the case where an input is provided correctly.
-//     */
-//    @Test
-//    public void getT() {
-//        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-//
-//        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(true);
-//
-//        assertTrue(cholesky.decompose(A));
-//
-//        CDenseMatrix64F L_null = cholesky.getT(null);
-//        CDenseMatrix64F L_provided = CRandomMatrices.createRandom(3, 3, rand);
-//        assertTrue( L_provided == cholesky.getT(L_provided));
-//
-//        assertTrue(CMatrixFeatures.isEquals(L_null, L_provided));
-//    }
+    @Test
+    public void checkModifyInput() {
+        CheckDecompositionInterface_CD64.checkModifiedInput(create(true));
+        CheckDecompositionInterface_CD64.checkModifiedInput(create(false));
+    }
 
     /**
-     * A 1x1 matrix is a special case
+     * If it is not positive definate it should fail
      */
     @Test
-    public void checkWithDefinition_1x1() {
-        fail("Implement");
+    public void testNotPositiveDefinite() {
+        CDenseMatrix64F A = new CDenseMatrix64F(2, 2, true, 1, 0, -1, 0, -1, 0, -2, 0);
+
+        CholeskyDecomposition<CDenseMatrix64F> alg = create(true);
+        assertFalse(alg.decompose(A));
     }
 
     /**
@@ -95,16 +76,14 @@ public abstract class GenericCholeskyTests_CD64 {
             if( !lower && !canR )
                 continue;
 
-            // start at size = 2 since 1 is a special case
-            for( int size = 4; size < 10; size++ ) {
-                System.out.println("----------- Size = "+size);
+            for( int size = 1; size < 10; size++ ) {
                 checkWithDefinition(lower, size);
             }
         }
     }
 
     private void checkWithDefinition(boolean lower, int size) {
-        CDenseMatrix64F A = CRandomMatrices.createSymmPosDef(size, rand);
+        CDenseMatrix64F A = CRandomMatrices.createHermPosDef(size, rand);
 
         CholeskyDecomposition<CDenseMatrix64F> cholesky = create(lower);
         assertTrue(CDecompositionFactory.decomposeSafe(cholesky, A));
@@ -120,45 +99,46 @@ public abstract class GenericCholeskyTests_CD64 {
             CCommonOps.mult(T_trans,T,found);
         }
 
-        A.print();
-        found.print();
-        T.print();
-
-//        CCommonOps.conjugate(T,T);
-//        CCommonOps.conjugate(T_trans,T_trans);
-//        CCommonOps.mult(T,T_trans,found);
-//        found.print();
         assertTrue(CMatrixFeatures.isIdentical(A, found, 1e-8));
     }
 
-//    @Test
-//    public void checkDeterminant() {
-//        for( int i = 0; i < 2; i++ ) {
-//            boolean lower = i == 0;
-//            if( lower && !canL )
-//                continue;
-//            if( !lower && !canR )
-//                continue;
-//
-//            for( int size = 1; size < 20; size += 2 ) {
-//                checkDeterminant(lower, size);
-//            }
-//        }
-//    }
-//
-//    public void checkDeterminant( boolean lower , int size ) {
-//
-//        LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(size,size);
-//        CholeskyDecomposition<DenseMatrix64F> cholesky = create(lower);
-//
-//        DenseMatrix64F A = RandomMatrices.createSymmPosDef(size,rand);
-//
-//        assertTrue(DecompositionFactory.decomposeSafe(lu,A));
-//        assertTrue(DecompositionFactory.decomposeSafe(cholesky,A));
-//
-//        double expected = lu.computeDeterminant().real;
-//        double found = cholesky.computeDeterminant().real;
-//
-//        assertEquals(expected,found,1e-8);
-//    }
+    @Test
+    public void checkDeterminant() {
+        for( int i = 0; i < 2; i++ ) {
+            boolean lower = i == 0;
+            if( lower && !canL )
+                continue;
+            if( !lower && !canR )
+                continue;
+
+            for( int size = 2; size < 20; size += 2 ) {
+                checkDeterminant(lower, size);
+            }
+        }
+    }
+
+    public void checkDeterminant( boolean lower , int size ) {
+
+        LUDecomposition<CDenseMatrix64F> lu = CDecompositionFactory.lu(size,size);
+        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(lower);
+
+        CDenseMatrix64F A = CRandomMatrices.createHermPosDef(size, rand);
+
+        assertTrue(CDecompositionFactory.decomposeSafe(lu,A));
+        assertTrue(CDecompositionFactory.decomposeSafe(cholesky,A));
+
+        Complex64F expected = lu.computeDeterminant();
+        Complex64F found = cholesky.computeDeterminant();
+
+        assertEquals(expected.real,found.real,1e-8);
+        assertEquals(expected.imaginary,found.imaginary,1e-8);
+    }
+
+    @Test
+    public void failZeros() {
+        CDenseMatrix64F A = new CDenseMatrix64F(3,3);
+
+        assertFalse(create(true).decompose(A));
+        assertFalse(create(false).decompose(A));
+    }
 }

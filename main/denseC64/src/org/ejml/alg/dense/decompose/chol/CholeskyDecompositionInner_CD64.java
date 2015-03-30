@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex64F;
+import org.ejml.ops.CCommonOps;
 
 /**
  * <p>
@@ -32,10 +32,6 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
 
     // tolerance for it being SPD
     double tolerance = UtilEjml.EPS;
-
-    // storage for the square root of a number
-    protected double realRoot;
-    protected double imagRoot;
 
     public CholeskyDecompositionInner_CD64() {
         super(true);
@@ -55,123 +51,134 @@ public class CholeskyDecompositionInner_CD64 extends CholeskyDecompositionCommon
             throw new IllegalArgumentException("Cholesky is undefined for 0 by 0 matrix");
 
         double real_el_ii=0;
-        double imag_el_ii=0;
-        double norm2_ii=0;
 
-        sqrt(t[0],t[1]);
-        double pivmax = Math.sqrt(realRoot*realRoot + imagRoot*imagRoot);
+        double pivmax = CCommonOps.elementMaxAbs(T);
 
         int stride = n*2;
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double realSum = t[i*stride+j*2];
-                double imagSum = t[i*stride+j*2+1];
-
-                int iEl = i*stride; // row i is inside the lower triangle
-                int jEl = j*stride; // row j conjugate transposed upper triangle
-                int end = iEl+i*2;
-                // k = 0:i-1
-                for( ; iEl<end; ) {
-//                    sum -= el[i*n+k]*el[j*n+k];
-                    double realI = t[iEl++];
-                    double imagI = t[iEl++];
-
-                    double realJ = t[jEl++];
-                    double imagJ = t[jEl++];
-
-                    // multiply by the complex conjugate of I  TODO look at this more carefully
-                    realSum -= realI*realJ + imagI*imagJ;
-                    imagSum -= realI*imagJ - realJ*imagI;
-                }
+                double realSum =  t[i*stride+j*2  ];
+                double imagSum =  t[i*stride+j*2+1];
 
                 if( i == j ) {
-                    sqrt(realSum,imagSum);
-                    real_el_ii = realRoot;
-                    imag_el_ii = imagRoot;
-                    norm2_ii = real_el_ii*real_el_ii + imag_el_ii*imag_el_ii;
-
-                    double norm_ii = Math.sqrt(norm2_ii);
-
-                    // is it positive-definite?
-                    if( norm_ii/pivmax <= tolerance )
+                    // its easy to prove that for the cholesky decomposition to be valid the original
+                    // diagonal elements must be real
+                    if( Math.abs(imagSum/pivmax) > tolerance )
                         return false;
 
-                    if( norm_ii > pivmax )
-                        pivmax = norm_ii;
+                    // This takes advantage of the fact that when you multiply a complex number by
+                    // its conjigate the result is a real number
+                    int end = i*stride+i*2;
+                    for( int index = i*stride; index < end; ) {
+                        double real = t[index++];
+                        double imag = t[index++];
 
+                        realSum -= real*real + imag*imag;
+                    }
+
+                    if( realSum <= tolerance*pivmax ) {
+                        return false;
+                    }
+                    if( realSum > pivmax )
+                        pivmax = realSum;
+
+                    real_el_ii = Math.sqrt(realSum);
                     t[i*stride+i*2]   = real_el_ii;
-                    t[i*stride+i*2+1] = imag_el_ii;
-
+                    t[i*stride+i*2+1] = 0;
                 } else {
-                    // divide the sum by the conjugate of the diagonal element
-                    t[j*stride+i*2]   = (realSum*real_el_ii - imagSum*imag_el_ii)/norm2_ii;
-                    t[j*stride+i*2+1] = (imagSum*real_el_ii + realSum*imag_el_ii)/norm2_ii;
+                    int iEl = i*stride; // row i is inside the lower triangle
+                    int jEl = j*stride; // row j conjugate transposed upper triangle
+                    int end = iEl+i*2;
+                    // k = 0:i-1
+                    for( ; iEl<end; ) {
+//                    sum -= el[i*n+k]*el[j*n+k];
+                        double realI = t[iEl++];
+                        double imagI = t[iEl++];
+
+                        double realJ = t[jEl++];
+                        double imagJ = t[jEl++];
+
+                        // multiply by the complex conjugate of I since the triangle being stored
+                        // is the conjugate of L
+                        realSum -= realI*realJ + imagI*imagJ;
+                        imagSum -= realI*imagJ - realJ*imagI;
+                    }
+
+                    // divide the sum by the diagonal element, which is always real
+                    // Note that it is storing the conjugate of L
+                    t[j*stride+i*2]   = realSum/real_el_ii;
+                    t[j*stride+i*2+1] = imagSum/real_el_ii;
                 }
             }
         }
-
-        // zero the top right corner.
-        for( int i = 0; i < n; i++ ) {
-            for( int j = i+1; j < n; j++ ) {
-                t[i*stride+j*2] = 0.0;
-                t[i*stride+j*2+1] = 0.0;
+        // Make it L instead of the conjugate of L
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                t[i*stride+j*2+1] = -t[i*stride+j*2+1];
             }
         }
 
         return true;
     }
 
+
     @Override
-    protected boolean decomposeUpper() {
-        double el_ii;
-        double div_el_ii=0;
+    protected boolean decomposeUpper()
+    {
+        // See code comments in lower for more details on the algorithm
+
+        if( n == 0 )
+            throw new IllegalArgumentException("Cholesky is undefined for 0 by 0 matrix");
+
+        double real_el_ii=0;
+
+        double pivmax = CCommonOps.elementMaxAbs(T);
+
+        int stride = n*2;
 
         for( int i = 0; i < n; i++ ) {
             for( int j = i; j < n; j++ ) {
-                double sum = t[i*n+j];
-
-                for( int k = 0; k < i; k++ ) {
-                    sum -= t[k*n+i]* t[k*n+j];
-                }
+                double realSum =  t[i*stride+j*2  ];
+                double imagSum =  t[i*stride+j*2+1];
 
                 if( i == j ) {
-                    // is it positive-definite?
-                    if( sum <= 0.0 )
+                    if( Math.abs(imagSum/pivmax) > tolerance )
                         return false;
 
-                    // I suspect that the sqrt is slowing this down relative to MTJ
-                    el_ii = Math.sqrt(sum);
-                    t[i*n+i] = el_ii;
-                    div_el_ii = 1.0/el_ii;
+                    for (int k = 0; k < i; k++) {
+                        double real = t[k*stride+i*2 ];
+                        double imag = t[k*stride+i*2+1];
+
+                        realSum -= real*real + imag*imag;
+                    }
+
+                    if( realSum <= tolerance*pivmax ) {
+                        return false;
+                    }
+                    if( realSum > pivmax )
+                        pivmax = realSum;
+
+                    real_el_ii = Math.sqrt(realSum);
+                    t[i*stride+i*2]   = real_el_ii;
+                    t[i*stride+i*2+1] = 0;
                 } else {
-                    t[i*n+j] = sum*div_el_ii;
+                    for( int k = 0; k < i; k++ ) {
+                        double realI = t[k*stride+i*2  ];
+                        double imagI = t[k*stride+i*2+1];
+
+                        double realJ = t[k*stride+j*2  ];
+                        double imagJ = t[k*stride+j*2+1];
+
+                        realSum -= realI*realJ + imagI*imagJ;
+                        imagSum -= realI*imagJ - realJ*imagI;
+                    }
+
+                    t[i*stride+j*2]   = realSum/real_el_ii;
+                    t[i*stride+j*2+1] = imagSum/real_el_ii;
                 }
-            }
-        }
-        // zero the lower left corner.
-        for( int i = 0; i < n; i++ ) {
-            for( int j = 0; j < i; j++ ) {
-                t[i*n+j] = 0.0;
             }
         }
 
         return true;
-    }
-
-    /**
-     * Computes the square root of the input complex number
-     */
-    protected void sqrt( double real , double imag ) {
-        double r = Math.sqrt(real*real + imag*imag);
-
-        realRoot = Math.sqrt((r+real)/2.0);
-        imagRoot = Math.sqrt((r-real)/2.0);
-        if( imagRoot < 0 )
-            imagRoot = -imagRoot;
-    }
-
-    @Override
-    public Complex64F computeDeterminant() {
-        throw new RuntimeException("IMplement");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,16 +18,57 @@
 
 package org.ejml.alg.dense.decompose.chol;
 
+import org.ejml.data.CDenseMatrix64F;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import java.util.Random;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 public class TestCholeskyDecompositionCommon_CD64 {
+    Random rand = new Random(234);
+
+    int N = 6;
+
+    /**
+     * The correctness of getT(null) has been tested else where effectively.  This
+     * checks to see if it handles the case where an input is provided correctly.
+     */
     @Test
     public void getT() {
-        fail("Implement");
+        CDenseMatrix64F A = CRandomMatrices.createHermPosDef(N, rand);
+
+        CholeskyDecomposition<CDenseMatrix64F> cholesky = new Dummy(true);
+
+        CDenseMatrix64F L_null = cholesky.getT(null);
+        CDenseMatrix64F L_provided = CRandomMatrices.createRandom(N, N, rand);
+        assertTrue( L_provided == cholesky.getT(L_provided));
+
+        assertTrue(CMatrixFeatures.isEquals(L_null, L_provided));
+    }
+
+    private class Dummy extends CholeskyDecompositionCommon_CD64 {
+
+        public Dummy(boolean lower) {
+            super(lower);
+            T = CRandomMatrices.createRandom(N,N,rand);
+            n = N;
+        }
+
+        @Override
+        protected boolean decomposeLower() {
+            return true;
+        }
+
+        @Override
+        protected boolean decomposeUpper() {
+            return true;
+        }
     }
 }

@@ -122,12 +122,11 @@ public class TestCRandomMatrices {
 
 
     @Test
-    public void createSymmPosDef() {
+    public void createHermPosDef() {
         for( int i = 1; i < 20; i++ ) {
-            CDenseMatrix64F A = CRandomMatrices.createSymmPosDef(i,rand);
+            CDenseMatrix64F A = CRandomMatrices.createHermPosDef(i, rand);
 
-            fail("implement");
-//            assertTrue(CMatrixFeatures.isPositiveDefinite(A));
+            assertTrue(CMatrixFeatures.isPositiveDefinite(A));
         }
     }
 

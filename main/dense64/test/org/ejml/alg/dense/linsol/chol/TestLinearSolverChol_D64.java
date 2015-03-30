@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,12 +26,12 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverChol extends BaseCholeskySolveTests{
+public class TestLinearSolverChol_D64 extends BaseCholeskySolveTests{
 
     @Override
     public LinearSolver<DenseMatrix64F> createSolver() {
         CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
-        return new LinearSolverChol(alg);
+        return new LinearSolverChol_D64(alg);
     }
 
 }

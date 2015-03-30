@@ -29,14 +29,14 @@ import org.ejml.ops.SpecializedOps;
 /**
  * @author Peter Abeles
  */
-public class LinearSolverChol extends LinearSolverAbstract_D64 {
+public class LinearSolverChol_D64 extends LinearSolverAbstract_D64 {
 
     CholeskyDecompositionCommon_D64 decomposer;
     int n;
     double vv[];
     double t[];
 
-    public LinearSolverChol( CholeskyDecompositionCommon_D64 decomposer) {
+    public LinearSolverChol_D64(CholeskyDecompositionCommon_D64 decomposer) {
         this.decomposer = decomposer;
     }
 

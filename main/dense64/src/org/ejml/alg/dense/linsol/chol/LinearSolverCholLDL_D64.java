@@ -29,7 +29,7 @@ import org.ejml.ops.SpecializedOps;
 /**
  * @author Peter Abeles
  */
-public class LinearSolverCholLDL extends LinearSolverAbstract_D64 {
+public class LinearSolverCholLDL_D64 extends LinearSolverAbstract_D64 {
 
     private CholeskyDecompositionLDL_D64 decomposer;
     private int n;
@@ -37,11 +37,11 @@ public class LinearSolverCholLDL extends LinearSolverAbstract_D64 {
     private double el[];
     private double d[];
 
-    public LinearSolverCholLDL( CholeskyDecompositionLDL_D64 decomposer) {
+    public LinearSolverCholLDL_D64(CholeskyDecompositionLDL_D64 decomposer) {
         this.decomposer = decomposer;
     }
 
-    public LinearSolverCholLDL() {
+    public LinearSolverCholLDL_D64() {
         this.decomposer = new CholeskyDecompositionLDL_D64();
     }
 

@@ -107,7 +107,7 @@ public class CRandomMatrices {
      * @param rand Random number generator used to make the matrix.
      * @return The random symmetric  positive definite matrix.
      */
-    public static CDenseMatrix64F createSymmPosDef(int width, Random rand) {
+    public static CDenseMatrix64F createHermPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
         CDenseMatrix64F a = CRandomMatrices.createRandom(width,1,rand);
         CDenseMatrix64F b = new CDenseMatrix64F(1,width);

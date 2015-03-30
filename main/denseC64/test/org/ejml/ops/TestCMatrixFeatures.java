@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -152,8 +152,6 @@ public class TestCMatrixFeatures {
         assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
     }
 
-
-
     @Test
     public void isHermitian() {
         CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{1,1.1,2,2.1},{2,-2.1,3,3.1}});
@@ -184,5 +182,23 @@ public class TestCMatrixFeatures {
         A.set(0,1,Double.NaN,Double.NaN);
 
         assertFalse(CMatrixFeatures.isUnitary(A, 1e-6f));
+    }
+
+    /**
+     * Check some trial cases.
+     */
+    @Test
+    public void isPositiveDefinite() {
+        CDenseMatrix64F a = new CDenseMatrix64F(2,2,true,2,0,0,0,0,0,2,0);
+        CDenseMatrix64F b = new CDenseMatrix64F(2,2,true,0,0,1,0,1,0,0,0);
+        CDenseMatrix64F c = new CDenseMatrix64F(2,2);
+
+        assertTrue(CMatrixFeatures.isPositiveDefinite(a));
+        assertFalse(CMatrixFeatures.isPositiveDefinite(b));
+        assertFalse(CMatrixFeatures.isPositiveDefinite(c));
+
+        // make sure the input isn't modified
+        assertEquals(2,a.getReal(0, 0),1e-8);
+        assertEquals(2,a.getReal(1,1),1e-8);
     }
 }

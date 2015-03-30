@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,9 +30,9 @@ import org.ejml.data.DenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class LinearSolverCholBlock64 extends LinearSolver_B64_to_D64 {
+public class LinearSolverChol_B64 extends LinearSolver_B64_to_D64 {
 
-    public LinearSolverCholBlock64() {
+    public LinearSolverChol_B64() {
         super(new BlockCholeskyOuterSolver());
     }
 

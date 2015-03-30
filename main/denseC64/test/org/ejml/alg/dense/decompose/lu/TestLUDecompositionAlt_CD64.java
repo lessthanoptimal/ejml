@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decompose.lu;
 /**
  * @author Peter Abeles
  */
-public class TestLUDecompositionAlt_CD64 extends GeneralCLuDecompositionChecks {
+public class TestLUDecompositionAlt_CD64 extends GeneralLuDecompositionChecks_CD64 {
     @Override
     public LUDecompositionBase_CD64 create(int numRows, int numCols) {
         return new LUDecompositionAlt_CD64();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,17 +18,16 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.junit.Test;
 
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverCholBlock64 extends BaseCholeskySolveTests{
-
-    @Override
-    public LinearSolver<DenseMatrix64F> createSolver() {
-        return new LinearSolverCholBlock64();
+public class TestLinearSolverChol_CD64 {
+    @Test
+    public void stuff() {
+        fail("Implement");
     }
 }

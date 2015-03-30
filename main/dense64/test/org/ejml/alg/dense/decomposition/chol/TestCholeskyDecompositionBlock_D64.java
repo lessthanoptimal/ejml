@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.alg.dense.linsol.chol.LinearSolverChol;
+import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -96,13 +96,13 @@ public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests_D64
         DenseMatrix64F A_inv_block = new DenseMatrix64F(w, w);
 
         CholeskyDecompositionBlock_D64 algBlock = new CholeskyDecompositionBlock_D64(b);
-        LinearSolver<DenseMatrix64F> solver = new LinearSolverChol(algBlock);
+        LinearSolver<DenseMatrix64F> solver = new LinearSolverChol_D64(algBlock);
         solver = new LinearSolverSafe<DenseMatrix64F>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv_block);
 
         CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
-        solver = new LinearSolverChol(alg);
+        solver = new LinearSolverChol_D64(alg);
         solver = new LinearSolverSafe<DenseMatrix64F>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
