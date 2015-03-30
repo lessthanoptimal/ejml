@@ -19,54 +19,31 @@
 package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.factory.CDecompositionFactory;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CMatrixFeatures;
+import org.ejml.ops.CRandomMatrices;
+import org.junit.Test;
 
 import java.util.Random;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
 * @author Peter Abeles
 */
+// TODO Handle special case of 1x1 matrix
 public abstract class GenericCholeskyTests_CD64 {
     Random rand = new Random(0x45478);
 
     boolean canL = true;
-    boolean canR = true;
+    boolean canR = false;
 
     public abstract CholeskyDecomposition<CDenseMatrix64F> create( boolean lower );
 
-//    @Test
-//    public void testDecomposeL() {
-//        if( !canL ) return;
-//
-//        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-//
-//        DenseMatrix64F L = new DenseMatrix64F(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
-//
-//        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(true);
-//        assertTrue(cholesky.decompose(A));
-//
-//        CDenseMatrix64F foundL = cholesky.getT(null);
-//
-//        EjmlUnitTests.assertEquals(L,foundL,1e-8);
-//    }
-//
-//    @Test
-//    public void testDecomposeR() {
-//        if( !canR ) return;
-//
-//        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-//
-//        DenseMatrix64F R = new DenseMatrix64F(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
-//
-//        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(false);
-//        assertTrue(cholesky.decompose(A));
-//
-//        DenseMatrix64F foundR = cholesky.getT(null);
-//
-//        EjmlUnitTests.assertEquals(R,foundR,1e-8);
-//    }
-//
 //    /**
 //     * If it is not positive definate it should fail
 //     */
@@ -96,45 +73,63 @@ public abstract class GenericCholeskyTests_CD64 {
 //
 //        assertTrue(CMatrixFeatures.isEquals(L_null, L_provided));
 //    }
-//
-//    /**
-//     * Test across several different matrix sizes and upper/lower decompositions using
-//     * the definition of cholesky.
-//     */
-//    @Test
-//    public void checkWithDefinition() {
-//        for( int i = 0; i < 2; i++ ) {
-//            boolean lower = i == 0;
-//            if( lower && !canL )
-//                continue;
-//            if( !lower && !canR )
-//                continue;
-//
-//            for( int size = 1; size < 10; size++ ) {
-//                checkWithDefinition(lower, size);
-//            }
-//            // now try it with a smaller matrix and see what happens
-//            checkWithDefinition(lower,5);
-//        }
-//    }
-//
-//    private void checkWithDefinition(boolean lower, int size) {
-//        SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices.createSymmPosDef(size,rand));
-//
-//        CholeskyDecomposition<DenseMatrix64F> cholesky = create(lower);
-//        assertTrue(DecompositionFactory.decomposeSafe(cholesky,A.getMatrix()));
-//
-//        SimpleMatrix T = SimpleMatrix.wrap(cholesky.getT(null));
-//        SimpleMatrix found;
-//
-//        if( lower ) {
-//            found = T.mult(T.transpose());
-//        } else {
-//            found = T.transpose().mult(T);
-//        }
-//
-//        assertTrue(A.isIdentical(found,1e-8));
-//    }
+
+    /**
+     * A 1x1 matrix is a special case
+     */
+    @Test
+    public void checkWithDefinition_1x1() {
+        fail("Implement");
+    }
+
+    /**
+     * Test across several different matrix sizes and upper/lower decompositions using
+     * the definition of cholesky.
+     */
+    @Test
+    public void checkWithDefinition() {
+        for( int i = 0; i < 2; i++ ) {
+            boolean lower = i == 0;
+            if( lower && !canL )
+                continue;
+            if( !lower && !canR )
+                continue;
+
+            // start at size = 2 since 1 is a special case
+            for( int size = 4; size < 10; size++ ) {
+                System.out.println("----------- Size = "+size);
+                checkWithDefinition(lower, size);
+            }
+        }
+    }
+
+    private void checkWithDefinition(boolean lower, int size) {
+        CDenseMatrix64F A = CRandomMatrices.createSymmPosDef(size, rand);
+
+        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(lower);
+        assertTrue(CDecompositionFactory.decomposeSafe(cholesky, A));
+
+        CDenseMatrix64F T = cholesky.getT(null);
+        CDenseMatrix64F T_trans = new CDenseMatrix64F(size,size);
+        CCommonOps.transposeConjugate(T, T_trans);
+        CDenseMatrix64F found = new CDenseMatrix64F(size,size);
+
+        if( lower ) {
+            CCommonOps.mult(T,T_trans,found);
+        } else {
+            CCommonOps.mult(T_trans,T,found);
+        }
+
+        A.print();
+        found.print();
+        T.print();
+
+//        CCommonOps.conjugate(T,T);
+//        CCommonOps.conjugate(T_trans,T_trans);
+//        CCommonOps.mult(T,T_trans,found);
+//        found.print();
+        assertTrue(CMatrixFeatures.isIdentical(A, found, 1e-8));
+    }
 
 //    @Test
 //    public void checkDeterminant() {

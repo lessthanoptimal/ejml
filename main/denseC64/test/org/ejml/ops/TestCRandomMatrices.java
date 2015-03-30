@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -121,19 +121,35 @@ public class TestCRandomMatrices {
     }
 
 
-//    @Test
-//    public void createSymmetric() {
-//        CDenseMatrix64F A = CRandomMatrices.createSymmetric(10,-1,1,rand);
-//
-//        assertTrue(MatrixFeatures.isSymmetric(A,1e-8));
-//
-//        // see if it has the expected range of elements
-//        double min = CommonOps.elementMin(A);
-//        double max = CommonOps.elementMax(A);
-//
-//        assertTrue(min < 0 && min >= -1);
-//        assertTrue(max > 0 && max <= 1);
-//    }
+    @Test
+    public void createSymmPosDef() {
+        for( int i = 1; i < 20; i++ ) {
+            CDenseMatrix64F A = CRandomMatrices.createSymmPosDef(i,rand);
+
+            fail("implement");
+//            assertTrue(CMatrixFeatures.isPositiveDefinite(A));
+        }
+    }
+
+    @Test
+    public void createHermitian() {
+        CDenseMatrix64F A = CRandomMatrices.createHermitian(10, -1, 1, rand);
+
+        assertTrue(CMatrixFeatures.isHermitian(A, 1e-8));
+
+        // see if it has the expected range of elements
+        double min = CCommonOps.elementMinReal(A);
+        double max = CCommonOps.elementMaxReal(A);
+
+        assertTrue(min < 0 && min >= -1);
+        assertTrue(max > 0 && max <=  1);
+
+        min = CCommonOps.elementMinImaginary(A);
+        max = CCommonOps.elementMaxImaginary(A);
+
+        assertTrue(min < 0 && min >= -1);
+        assertTrue(max > 0 && max <=  1);
+    }
 //
 //    @Test
 //    public void createUpperTriangle() {

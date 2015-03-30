@@ -18,6 +18,8 @@ Date format: year/month/day
   * QR Decomposition
   * Square Matrices: inverse, solve, determinant
   * Overdetermined: solve
+- ComplexMath64F
+  * Added sqrt(Complex64F)
 - Tweaked matrix inheritance to better support the addition of complex matrices
 - Added RandomMatrices setGaussian() and createGaussian()
 - Changed how SimpleMatrix computes its threshold for singular values

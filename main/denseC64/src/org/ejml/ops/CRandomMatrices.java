@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -100,51 +100,72 @@ public class CRandomMatrices {
         }
     }
 
-//    /**
-//     * Creates a random symmetric matrix whose values are selected from an uniform distribution
-//     * from min to max, inclusive.
-//     *
-//     * @param length Width and height of the matrix.
-//     * @param min Minimum value an element can have.
-//     * @param max Maximum value an element can have.
-//     * @param rand Random number generator.
-//     * @return A symmetric matrix.
-//     */
-//    public static CDenseMatrix64F createSymmetric(int length, double min, double max, Random rand) {
-//        CDenseMatrix64F A = new CDenseMatrix64F(length,length);
-//
-//        createSymmetric(A,min,max,rand);
-//
-//        return A;
-//    }
-//
-//    /**
-//     * Sets the provided square matrix to be a random symmetric matrix whose values are selected from an uniform distribution
-//     * from min to max, inclusive.
-//     *
-//     * @param A The matrix that is to be modified.  Must be square.  Modified.
-//     * @param min Minimum value an element can have.
-//     * @param max Maximum value an element can have.
-//     * @param rand Random number generator.
-//     */
-//    public static void createSymmetric(CDenseMatrix64F A, double min, double max, Random rand) {
-//        if( A.numRows != A.numCols )
-//            throw new IllegalArgumentException("A must be a square matrix");
-//
-//        double range = max-min;
-//
-//        int length = A.numRows;
-//
-//        for( int i = 0; i < length; i++ ) {
-//            for( int j = i; j < length; j++ ) {
-//                double real = rand.nextDouble()*range + min;
-//                double imaginary = rand.nextDouble()*range + min;
-//                A.set(i,j,real,imaginary);
-//                A.set(j,i,real,imaginary);
-//            }
-//        }
-//    }
-//
+    /**
+     * Creates a random symmetric positive definite matrix.
+     *
+     * @param width The width of the square matrix it returns.
+     * @param rand Random number generator used to make the matrix.
+     * @return The random symmetric  positive definite matrix.
+     */
+    public static CDenseMatrix64F createSymmPosDef(int width, Random rand) {
+        // This is not formally proven to work.  It just seems to work.
+        CDenseMatrix64F a = CRandomMatrices.createRandom(width,1,rand);
+        CDenseMatrix64F b = new CDenseMatrix64F(1,width);
+        CDenseMatrix64F c = new CDenseMatrix64F(width,width);
+
+        CCommonOps.transposeConjugate(a,b);
+        CCommonOps.mult(a, b, c);
+
+        for( int i = 0; i < width; i++ ) {
+            c.data[2*(i*width+i)] += 1;
+        }
+
+        return c;
+    }
+
+    /**
+     * Creates a random Hermitian matrix with elements from min to max value.
+     *
+     * @param length Width and height of the matrix.
+     * @param min Minimum value an element can have.
+     * @param max Maximum value an element can have.
+     * @param rand Random number generator.
+     * @return A symmetric matrix.
+     */
+    public static CDenseMatrix64F createHermitian(int length, double min, double max, Random rand) {
+        CDenseMatrix64F A = new CDenseMatrix64F(length,length);
+
+        setHermitian(A, min, max, rand);
+
+        return A;
+    }
+
+    /**
+     * Assigns the provided square matrix to be a random Hermitian matrix with elements from min to max value.
+     *
+     * @param A The matrix that is to be modified.  Must be square.  Modified.
+     * @param min Minimum value an element can have.
+     * @param max Maximum value an element can have.
+     * @param rand Random number generator.
+     */
+    public static void setHermitian(CDenseMatrix64F A, double min, double max, Random rand) {
+        if( A.numRows != A.numCols )
+            throw new IllegalArgumentException("A must be a square matrix");
+
+        double range = max-min;
+
+        int length = A.numRows;
+
+        for( int i = 0; i < length; i++ ) {
+            for( int j = i; j < length; j++ ) {
+                double real = rand.nextDouble()*range + min;
+                double imaginary = rand.nextDouble()*range + min;
+                A.set(i,j,real,imaginary);
+                A.set(j,i,real,-imaginary);
+            }
+        }
+    }
+
 //    /**
 //     * Creates an upper triangular matrix whose values are selected from a uniform distribution.  If hessenberg
 //     * is greater than zero then a hessenberg matrix of the specified degree is created instead.
