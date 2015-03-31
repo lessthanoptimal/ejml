@@ -131,6 +131,109 @@ public class FixedOps6 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a - b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void subtract( FixedMatrix6x6_64F a , FixedMatrix6x6_64F b , FixedMatrix6x6_64F c ) {
+        c.a11 = a.a11 - b.a11;
+        c.a12 = a.a12 - b.a12;
+        c.a13 = a.a13 - b.a13;
+        c.a14 = a.a14 - b.a14;
+        c.a15 = a.a15 - b.a15;
+        c.a16 = a.a16 - b.a16;
+        c.a21 = a.a21 - b.a21;
+        c.a22 = a.a22 - b.a22;
+        c.a23 = a.a23 - b.a23;
+        c.a24 = a.a24 - b.a24;
+        c.a25 = a.a25 - b.a25;
+        c.a26 = a.a26 - b.a26;
+        c.a31 = a.a31 - b.a31;
+        c.a32 = a.a32 - b.a32;
+        c.a33 = a.a33 - b.a33;
+        c.a34 = a.a34 - b.a34;
+        c.a35 = a.a35 - b.a35;
+        c.a36 = a.a36 - b.a36;
+        c.a41 = a.a41 - b.a41;
+        c.a42 = a.a42 - b.a42;
+        c.a43 = a.a43 - b.a43;
+        c.a44 = a.a44 - b.a44;
+        c.a45 = a.a45 - b.a45;
+        c.a46 = a.a46 - b.a46;
+        c.a51 = a.a51 - b.a51;
+        c.a52 = a.a52 - b.a52;
+        c.a53 = a.a53 - b.a53;
+        c.a54 = a.a54 - b.a54;
+        c.a55 = a.a55 - b.a55;
+        c.a56 = a.a56 - b.a56;
+        c.a61 = a.a61 - b.a61;
+        c.a62 = a.a62 - b.a62;
+        c.a63 = a.a63 - b.a63;
+        c.a64 = a.a64 - b.a64;
+        c.a65 = a.a65 - b.a65;
+        c.a66 = a.a66 - b.a66;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a - b <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param a A Matrix. Modified.
+     * @param b A Matrix. Not modified.
+     */
+    public static void subtractEquals( FixedMatrix6x6_64F a , FixedMatrix6x6_64F b ) {
+        a.a11 -= b.a11;
+        a.a12 -= b.a12;
+        a.a13 -= b.a13;
+        a.a14 -= b.a14;
+        a.a15 -= b.a15;
+        a.a16 -= b.a16;
+        a.a21 -= b.a21;
+        a.a22 -= b.a22;
+        a.a23 -= b.a23;
+        a.a24 -= b.a24;
+        a.a25 -= b.a25;
+        a.a26 -= b.a26;
+        a.a31 -= b.a31;
+        a.a32 -= b.a32;
+        a.a33 -= b.a33;
+        a.a34 -= b.a34;
+        a.a35 -= b.a35;
+        a.a36 -= b.a36;
+        a.a41 -= b.a41;
+        a.a42 -= b.a42;
+        a.a43 -= b.a43;
+        a.a44 -= b.a44;
+        a.a45 -= b.a45;
+        a.a46 -= b.a46;
+        a.a51 -= b.a51;
+        a.a52 -= b.a52;
+        a.a53 -= b.a53;
+        a.a54 -= b.a54;
+        a.a55 -= b.a55;
+        a.a56 -= b.a56;
+        a.a61 -= b.a61;
+        a.a62 -= b.a62;
+        a.a63 -= b.a63;
+        a.a64 -= b.a64;
+        a.a65 -= b.a65;
+        a.a66 -= b.a66;
+    }
+
+    /**
      * Performs an in-place transpose.  This algorithm is only efficient for square
      * matrices.
      *

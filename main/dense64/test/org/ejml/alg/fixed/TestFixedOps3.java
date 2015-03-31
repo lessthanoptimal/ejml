@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,16 +35,6 @@ public class TestFixedOps3 extends CompareFixedToCommonOps {
 
     public TestFixedOps3() {
         super(FixedOps3.class);
-    }
-
-    @Test
-    public void dot() {
-        FixedMatrix3_64F a = new FixedMatrix3_64F(1,2,3);
-        FixedMatrix3_64F b = new FixedMatrix3_64F(2,3,4);
-
-        double found = FixedOps3.dot(a,b);
-
-        assertEquals(2+6+12,found,1e-8);
     }
 
     @Test

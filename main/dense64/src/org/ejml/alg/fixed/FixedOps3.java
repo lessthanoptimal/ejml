@@ -77,6 +77,55 @@ public class FixedOps3 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a - b <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Matrix C can be the same instance as Matrix A and/or B.
+     * </p>
+     *
+     * @param a A Matrix. Not modified.
+     * @param b A Matrix. Not modified.
+     * @param c A Matrix where the results are stored. Modified.
+     */
+    public static void subtract( FixedMatrix3x3_64F a , FixedMatrix3x3_64F b , FixedMatrix3x3_64F c ) {
+        c.a11 = a.a11 - b.a11;
+        c.a12 = a.a12 - b.a12;
+        c.a13 = a.a13 - b.a13;
+        c.a21 = a.a21 - b.a21;
+        c.a22 = a.a22 - b.a22;
+        c.a23 = a.a23 - b.a23;
+        c.a31 = a.a31 - b.a31;
+        c.a32 = a.a32 - b.a32;
+        c.a33 = a.a33 - b.a33;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a - b <br>
+     * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param a A Matrix. Modified.
+     * @param b A Matrix. Not modified.
+     */
+    public static void subtractEquals( FixedMatrix3x3_64F a , FixedMatrix3x3_64F b ) {
+        a.a11 -= b.a11;
+        a.a12 -= b.a12;
+        a.a13 -= b.a13;
+        a.a21 -= b.a21;
+        a.a22 -= b.a22;
+        a.a23 -= b.a23;
+        a.a31 -= b.a31;
+        a.a32 -= b.a32;
+        a.a33 -= b.a33;
+    }
+
+    /**
      * Performs an in-place transpose.  This algorithm is only efficient for square
      * matrices.
      *
@@ -436,14 +485,14 @@ public class FixedOps3 {
      */
     public static double elementMin( FixedMatrix3x3_64F a ) {
         double min = a.a11;
-        min = Math.min(min, a.a12);
-        min = Math.min(min, a.a13);
-        min = Math.min(min, a.a21);
-        min = Math.min(min, a.a22);
-        min = Math.min(min, a.a23);
-        min = Math.min(min, a.a31);
-        min = Math.min(min, a.a32);
-        min = Math.min(min, a.a33);
+        min = Math.min(min,a.a12);
+        min = Math.min(min,a.a13);
+        min = Math.min(min,a.a21);
+        min = Math.min(min,a.a22);
+        min = Math.min(min,a.a23);
+        min = Math.min(min,a.a31);
+        min = Math.min(min,a.a32);
+        min = Math.min(min,a.a33);
 
         return min;
     }
@@ -460,14 +509,14 @@ public class FixedOps3 {
      */
     public static double elementMinAbs( FixedMatrix3x3_64F a ) {
         double min = a.a11;
-        min = Math.min(min, Math.abs(a.a12));
-        min = Math.min(min, Math.abs(a.a13));
-        min = Math.min(min, Math.abs(a.a21));
-        min = Math.min(min, Math.abs(a.a22));
-        min = Math.min(min, Math.abs(a.a23));
-        min = Math.min(min, Math.abs(a.a31));
-        min = Math.min(min, Math.abs(a.a32));
-        min = Math.min(min, Math.abs(a.a33));
+        min = Math.min(min,Math.abs(a.a12));
+        min = Math.min(min,Math.abs(a.a13));
+        min = Math.min(min,Math.abs(a.a21));
+        min = Math.min(min,Math.abs(a.a22));
+        min = Math.min(min,Math.abs(a.a23));
+        min = Math.min(min,Math.abs(a.a31));
+        min = Math.min(min,Math.abs(a.a32));
+        min = Math.min(min,Math.abs(a.a33));
 
         return min;
     }

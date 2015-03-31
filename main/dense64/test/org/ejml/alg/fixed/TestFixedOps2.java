@@ -34,16 +34,6 @@ public class TestFixedOps2 extends CompareFixedToCommonOps {
     }
 
     @Test
-    public void dot() {
-        FixedMatrix2_64F a = new FixedMatrix2_64F(1,2);
-        FixedMatrix2_64F b = new FixedMatrix2_64F(2,3);
-
-        double found = FixedOps2.dot(a,b);
-
-        assertEquals(2+6,found,1e-8);
-    }
-
-    @Test
     public void diag() {
         FixedMatrix2x2_64F m = new FixedMatrix2x2_64F(1,2,3,4);
         FixedMatrix2_64F found = new FixedMatrix2_64F();

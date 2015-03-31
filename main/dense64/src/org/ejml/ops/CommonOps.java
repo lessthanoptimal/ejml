@@ -1135,9 +1135,7 @@ public class CommonOps {
         else if( !MatrixFeatures.isVector(out) || out.getNumElements() != a.numCols )
             throw new IllegalArgumentException("Output must be a vector of length "+a.numCols);
 
-        for (int i = 0; i < a.numCols; i++) {
-            out.data[i] = a.unsafe_get(row,i);
-        }
+        System.arraycopy(a.data,a.getIndex(row,0),out.data,0,a.numCols);
 
         return out;
     }
@@ -1155,8 +1153,9 @@ public class CommonOps {
         else if( !MatrixFeatures.isVector(out) || out.getNumElements() != a.numRows )
             throw new IllegalArgumentException("Output must be a vector of length "+a.numRows);
 
-        for (int i = 0; i < a.numRows; i++) {
-            out.data[i] = a.unsafe_get(i,column);
+        int index = column;
+        for (int i = 0; i < a.numRows; i++, index += a.numCols ) {
+            out.data[i] = a.data[index];
         }
         return out;
     }

@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.27
 
-2014
+2015/04/??
 
 - Added SimpleMatrix.randomNormal() for drawing numbers from a normal distribution with zero mean
 - Added EjmlUnitTests.assertEquals() and similar for SimpleMatrix
@@ -37,13 +37,11 @@ Date format: year/month/day
   * Added dot(a,b) for dot product between two vectors
   * Added extractRow and extractColumn
 - FixedOps
-  * Added extractRow and extractColumn.  Thanks nknize for creating the original pull request
+  * Added extractRow and extractColumn.  Thanks nknize for inspiring this modification with a pull request
+  * Added subtract and subtractEquals.  Thanks nknize for the pull request
 - Added determinant to Cholesky decomposition interface
 - Added getDecomposition() to LinearSolver to provide access to internal classes,
   which can be useful in some specialized cases.  Alternatives were very ugly.
-
-- TODO add some functions from VectorVectorMult into CommonOps?  inner and outer products... etc.
-- TODO add complex operations to JMatBench
 
 ----- Version 0.26
 

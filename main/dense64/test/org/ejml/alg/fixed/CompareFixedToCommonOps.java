@@ -83,11 +83,11 @@ public abstract class CompareFixedToCommonOps {
                 numPassed++;
             } else {
                 numFailed++;
-                System.out.println("Failed comparision to common: "+fixedM);
+                System.out.println("Failed comparison to common: "+fixedM);
             }
         }
 
-        int numExpected = 31;
+        int numExpected = 33;
         if( N > GenerateFixedOps.maxInverseSize ) {
             numExpected -= 2;
         }
