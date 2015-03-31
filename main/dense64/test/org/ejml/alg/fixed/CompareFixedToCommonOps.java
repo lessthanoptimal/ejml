@@ -87,7 +87,7 @@ public abstract class CompareFixedToCommonOps {
             }
         }
 
-        int numExpected = 29;
+        int numExpected = 31;
         if( N > GenerateFixedOps.maxInverseSize ) {
             numExpected -= 2;
         }
@@ -161,8 +161,10 @@ public abstract class CompareFixedToCommonOps {
             }
 
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
             fail("IllegalAccessException");
         } catch (InvocationTargetException e) {
+            e.printStackTrace();
             fail("InvocationTargetException");
         }
 
@@ -188,6 +190,9 @@ public abstract class CompareFixedToCommonOps {
             } else if( double.class == typesFixed[i] ) {
                 inputsFixed[i] = 2.5;
                 inputsCommon[i] = 2.5;
+            } else if( int.class == typesFixed[i] ) {
+                inputsFixed[i] = 1;  // handle tailored towards extractRow and extractCol
+                inputsCommon[i] = 1;
             }
         }
     }
@@ -241,7 +246,9 @@ public abstract class CompareFixedToCommonOps {
             return MatrixFeatures.isIdentical(m, bb, 1e-8);
 
         } else if( Boolean.class == a.getClass() ) {
-            return ((Boolean)a).booleanValue()  == ((Boolean)b).booleanValue();
+            return true;
+        } else if( Integer.class == a.getClass() ) {
+            return true;
         } else {
             fail("Not sure what this is");
         }

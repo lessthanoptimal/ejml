@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix3_64F;
@@ -256,7 +255,7 @@ public class FixedOps3 {
      * <br>
      * c = a * b <br>
      * <br>
-     * {@code c = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }}
+     * c> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }
      * </p>
      *
      * @param a The left vector in the multiplication operation. Not modified.
@@ -437,14 +436,14 @@ public class FixedOps3 {
      */
     public static double elementMin( FixedMatrix3x3_64F a ) {
         double min = a.a11;
-        min = Math.min(min,a.a12);
-        min = Math.min(min,a.a13);
-        min = Math.min(min,a.a21);
-        min = Math.min(min,a.a22);
-        min = Math.min(min,a.a23);
-        min = Math.min(min,a.a31);
-        min = Math.min(min,a.a32);
-        min = Math.min(min,a.a33);
+        min = Math.min(min, a.a12);
+        min = Math.min(min, a.a13);
+        min = Math.min(min, a.a21);
+        min = Math.min(min, a.a22);
+        min = Math.min(min, a.a23);
+        min = Math.min(min, a.a31);
+        min = Math.min(min, a.a32);
+        min = Math.min(min, a.a33);
 
         return min;
     }
@@ -461,14 +460,14 @@ public class FixedOps3 {
      */
     public static double elementMinAbs( FixedMatrix3x3_64F a ) {
         double min = a.a11;
-        min = Math.min(min,Math.abs(a.a12));
-        min = Math.min(min,Math.abs(a.a13));
-        min = Math.min(min,Math.abs(a.a21));
-        min = Math.min(min,Math.abs(a.a22));
-        min = Math.min(min,Math.abs(a.a23));
-        min = Math.min(min,Math.abs(a.a31));
-        min = Math.min(min,Math.abs(a.a32));
-        min = Math.min(min,Math.abs(a.a33));
+        min = Math.min(min, Math.abs(a.a12));
+        min = Math.min(min, Math.abs(a.a13));
+        min = Math.min(min, Math.abs(a.a21));
+        min = Math.min(min, Math.abs(a.a22));
+        min = Math.min(min, Math.abs(a.a23));
+        min = Math.min(min, Math.abs(a.a31));
+        min = Math.min(min, Math.abs(a.a32));
+        min = Math.min(min, Math.abs(a.a33));
 
         return min;
     }
@@ -627,6 +626,68 @@ public class FixedOps3 {
         a.a11 = v; a.a12 = v; a.a13 = v;
         a.a21 = v; a.a22 = v; a.a23 = v;
         a.a31 = v; a.a32 = v; a.a33 = v;
+    }
+
+    /**
+     * Extracts the row from the matrix a.
+     * @param a Input matrix
+     * @param row Which row is to be extracted
+     * @param out output. Storage for the extracted row. If null then a new vector will be returned.
+     * @return The extracted row.
+     */
+    public static FixedMatrix3_64F extractRow( FixedMatrix3x3_64F a , int row , FixedMatrix3_64F out ) {
+        if( out == null) out = new FixedMatrix3_64F();
+        switch( row ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a12;
+                out.a3 = a.a13;
+            break;
+            case 1:
+                out.a1 = a.a21;
+                out.a2 = a.a22;
+                out.a3 = a.a23;
+            break;
+            case 2:
+                out.a1 = a.a31;
+                out.a2 = a.a32;
+                out.a3 = a.a33;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds row.  row = "+row);
+        }
+        return out;
+    }
+
+    /**
+     * Extracts the column from the matrix a.
+     * @param a Input matrix
+     * @param column Which column is to be extracted
+     * @param out output. Storage for the extracted column. If null then a new vector will be returned.
+     * @return The extracted column.
+     */
+    public static FixedMatrix3_64F extractColumn( FixedMatrix3x3_64F a , int column , FixedMatrix3_64F out ) {
+        if( out == null) out = new FixedMatrix3_64F();
+        switch( column ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a21;
+                out.a3 = a.a31;
+            break;
+            case 1:
+                out.a1 = a.a12;
+                out.a2 = a.a22;
+                out.a3 = a.a32;
+            break;
+            case 2:
+                out.a1 = a.a13;
+                out.a2 = a.a23;
+                out.a3 = a.a33;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds column.  column = "+column);
+        }
+        return out;
     }
 
 }

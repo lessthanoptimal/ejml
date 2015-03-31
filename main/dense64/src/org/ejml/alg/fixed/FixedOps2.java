@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix2_64F;
@@ -367,9 +366,9 @@ public class FixedOps2 {
      */
     public static double elementMin( FixedMatrix2x2_64F a ) {
         double min = a.a11;
-        min = Math.min(min,a.a12);
-        min = Math.min(min,a.a21);
-        min = Math.min(min,a.a22);
+        min = Math.min(min, a.a12);
+        min = Math.min(min, a.a21);
+        min = Math.min(min, a.a22);
 
         return min;
     }
@@ -386,9 +385,9 @@ public class FixedOps2 {
      */
     public static double elementMinAbs( FixedMatrix2x2_64F a ) {
         double min = a.a11;
-        min = Math.min(min,Math.abs(a.a12));
-        min = Math.min(min,Math.abs(a.a21));
-        min = Math.min(min,Math.abs(a.a22));
+        min = Math.min(min, Math.abs(a.a12));
+        min = Math.min(min, Math.abs(a.a21));
+        min = Math.min(min, Math.abs(a.a22));
 
         return min;
     }
@@ -537,6 +536,54 @@ public class FixedOps2 {
     public static void fill( FixedMatrix2x2_64F a , double v  ) {
         a.a11 = v; a.a12 = v;
         a.a21 = v; a.a22 = v;
+    }
+
+    /**
+     * Extracts the row from the matrix a.
+     * @param a Input matrix
+     * @param row Which row is to be extracted
+     * @param out output. Storage for the extracted row. If null then a new vector will be returned.
+     * @return The extracted row.
+     */
+    public static FixedMatrix2_64F extractRow( FixedMatrix2x2_64F a , int row , FixedMatrix2_64F out ) {
+        if( out == null) out = new FixedMatrix2_64F();
+        switch( row ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a12;
+            break;
+            case 1:
+                out.a1 = a.a21;
+                out.a2 = a.a22;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds row.  row = "+row);
+        }
+        return out;
+    }
+
+    /**
+     * Extracts the column from the matrix a.
+     * @param a Input matrix
+     * @param column Which column is to be extracted
+     * @param out output. Storage for the extracted column. If null then a new vector will be returned.
+     * @return The extracted column.
+     */
+    public static FixedMatrix2_64F extractColumn( FixedMatrix2x2_64F a , int column , FixedMatrix2_64F out ) {
+        if( out == null) out = new FixedMatrix2_64F();
+        switch( column ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a21;
+            break;
+            case 1:
+                out.a1 = a.a12;
+                out.a2 = a.a22;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds column.  column = "+column);
+        }
+        return out;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,6 +76,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             divide_three(dimension);
             changeSign(dimension);
             fill(dimension);
+            extract(dimension);
 
             out.println("}\n");
         }
@@ -902,6 +903,56 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             }
         }
                 out.print("    }\n\n");
+    }
+
+    private void extract( int dimen ) {
+        out.print("    /**\n" +
+                "     * Extracts the row from the matrix a.\n" +
+                "     * @param a Input matrix\n" +
+                "     * @param row Which row is to be extracted\n" +
+                "     * @param out output. Storage for the extracted row. If null then a new vector will be returned.\n" +
+                "     * @return The extracted row.\n" +
+                "     */\n" +
+                "    public static "+nameVector+" extractRow( "+nameMatrix+" a , int row , "+nameVector+" out ) {\n" +
+                "        if( out == null) out = new "+nameVector+"();\n" +
+                "        switch( row ) {\n");
+        for (int i = 0; i < dimen; i++) {
+            out.print("            case "+i+":\n");
+            for (int j = 0; j < dimen; j++) {
+                int n = j+1;
+                out.print("                out.a"+n+" = a.a"+(i+1)+""+n+";\n");
+            }
+            out.print("            break;\n");
+        }
+        out.print("            default:\n" +
+                "                throw new IllegalArgumentException(\"Out of bounds row.  row = \"+row);\n" +
+                "        }\n" +
+                "        return out;\n" +
+                "    }\n" +
+                "\n" +
+                "    /**\n" +
+                "     * Extracts the column from the matrix a.\n" +
+                "     * @param a Input matrix\n" +
+                "     * @param column Which column is to be extracted\n" +
+                "     * @param out output. Storage for the extracted column. If null then a new vector will be returned.\n" +
+                "     * @return The extracted column.\n" +
+                "     */\n" +
+                "    public static "+nameVector+" extractColumn( "+nameMatrix+" a , int column , "+nameVector+" out ) {\n" +
+                "        if( out == null) out = new "+nameVector+"();\n" +
+                "        switch( column ) {\n");
+        for (int i = 0; i < dimen; i++) {
+            out.print("            case "+i+":\n");
+            for (int j = 0; j < dimen; j++) {
+                int n = j+1;
+                out.print("                out.a"+n+" = a.a"+n+""+(i+1)+";\n");
+            }
+            out.print("            break;\n");
+        }
+        out.print("            default:\n" +
+                "                throw new IllegalArgumentException(\"Out of bounds column.  column = \"+column);\n" +
+                "        }\n" +
+                "        return out;\n" +
+                "    }\n\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {

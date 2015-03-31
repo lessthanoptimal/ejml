@@ -1,7 +1,7 @@
                  Efficient Java Matrix Library
 
-                         Version 0.26
-                         September 15, 2014
+                         Version 0.27
+                         April ??, 2015
 
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
@@ -9,7 +9,7 @@
   Project Website: http://code.google.com/p/efficient-java-matrix-library/
 
 ==========================================================================
------ Introduction
+# Introduction
 
 Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts.  These goals are accomplished by dynamically selecting the best algorithms to use at runtime and by designing a clean API.  EJML is free, written in 100% Java and has been released under the Apache v2.0 open source license.
 
@@ -29,7 +29,7 @@ The following functionality is provided:
 Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
 
 ==========================================================================
------ Documentation
+# Documentation
 
 For a more detailed explanation of how to use the library see:
 
@@ -40,29 +40,40 @@ The JavaDoc has also been posted online at:
 http://ejml.org/javadoc/
 
 ==========================================================================
------ Central Repository
+# Maven and Gradle Projects
 
-Instead of including EJML's jars directly you can reference them using Maven's central repository.
+EJML is on the Maven central repository and can easily be included in projects by adding the following code to the dependency section of your Maven or Gradle project.  This will include all the modules in EJML.
 
-If using Maven:
-
+Maven:
+```
 <groupId>com.googlecode.efficient-java-matrix-library</groupId>
-<artifactId>MODULE</artifactId>
-<version>0.26</version>
-where MODULE is 'core' or 'equation'
+<artifactId>all</artifactId>
+<version>0.27</version>
+```
 
-If using Gradle:
+Gradle:
+```
+compile group: 'com.googlecode.efficient-java-matrix-library', name: 'all', version: '0.27'
+```
 
-compile group: 'com.googlecode.efficient-java-matrix-library', name: 'core', version: '0.26'
-compile group: 'com.googlecode.efficient-java-matrix-library', name: 'equation', version: '0.26'
+Or you can include the required modules individually
+
+       Name      |                 Description
+-----------------|---------------------------------------------------------------------
+main:core        | Contains core data structures
+main:dense64     | Algorithms for dense real 64-bit floats
+main:denseC64    | Algorithms for dense complex 64-bit floats
+main:equation    | Equations interface
+main:simple      | Object oriented SimpleMatrix interface
+
 
 ==========================================================================
------ Building
+# Building
 
 Gradle build scripts are provided for building EJML.  If Gradle is installed, then type "gradle createLibraryDirectory" to build the jar files.  They can be found in the ejml/libraries directory.
 
 ==========================================================================
------ File System
+# File System
 
 
 docs/
@@ -72,10 +83,19 @@ examples/
 - Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
 
 main/core
-- Contains all the essential source code for EJML
+- Contains all esseital data structures
+
+main/dense64
+- Algorithms for real dense 64-bit floating point math
+
+main/denseC64
+- Algorithms for complex dense 64-bit floating point math
 
 main/equation
 - Contains source code for Equations API
+
+main/simple
+- Contains source code for SimpleMatrix
 
 main/experimental/
 - Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
@@ -87,7 +107,7 @@ TODO_Algorithms.txt
 - Contains a list of what needs to be added to this library.
 
 ==========================================================================
------ Questions and Comments 
+# Questions and Comments
 
 A public message board has been created for asking questions and making comments:
 
@@ -98,13 +118,13 @@ Bugs can either be posted on that message board or at:
 http://code.google.com/p/efficient-java-matrix-library/issues/list
 
 ==========================================================================
------ Acknowledgements
+# Acknowledgements
 
 I would like to thank all the people have made various comments, suggestions, and reported bugs.  Also David Watkins
 for writing "Fundamentals of Matrix Computations", which clearly explains algorithms and yet addresses important
 implementation issues.
 
 ==========================================================================
------ License
+# License
 
 EJML is released under the Apache v2.0 open source license

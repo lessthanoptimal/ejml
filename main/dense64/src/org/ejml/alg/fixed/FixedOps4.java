@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix4_64F;
@@ -549,21 +548,21 @@ public class FixedOps4 {
      */
     public static double elementMin( FixedMatrix4x4_64F a ) {
         double min = a.a11;
-        min = Math.min(min,a.a12);
-        min = Math.min(min,a.a13);
-        min = Math.min(min,a.a14);
-        min = Math.min(min,a.a21);
-        min = Math.min(min,a.a22);
-        min = Math.min(min,a.a23);
-        min = Math.min(min,a.a24);
-        min = Math.min(min,a.a31);
-        min = Math.min(min,a.a32);
-        min = Math.min(min,a.a33);
-        min = Math.min(min,a.a34);
-        min = Math.min(min,a.a41);
-        min = Math.min(min,a.a42);
-        min = Math.min(min,a.a43);
-        min = Math.min(min,a.a44);
+        min = Math.min(min, a.a12);
+        min = Math.min(min, a.a13);
+        min = Math.min(min, a.a14);
+        min = Math.min(min, a.a21);
+        min = Math.min(min, a.a22);
+        min = Math.min(min, a.a23);
+        min = Math.min(min, a.a24);
+        min = Math.min(min, a.a31);
+        min = Math.min(min, a.a32);
+        min = Math.min(min, a.a33);
+        min = Math.min(min, a.a34);
+        min = Math.min(min, a.a41);
+        min = Math.min(min, a.a42);
+        min = Math.min(min, a.a43);
+        min = Math.min(min, a.a44);
 
         return min;
     }
@@ -580,21 +579,21 @@ public class FixedOps4 {
      */
     public static double elementMinAbs( FixedMatrix4x4_64F a ) {
         double min = a.a11;
-        min = Math.min(min,Math.abs(a.a12));
-        min = Math.min(min,Math.abs(a.a13));
-        min = Math.min(min,Math.abs(a.a14));
-        min = Math.min(min,Math.abs(a.a21));
-        min = Math.min(min,Math.abs(a.a22));
-        min = Math.min(min,Math.abs(a.a23));
-        min = Math.min(min,Math.abs(a.a24));
-        min = Math.min(min,Math.abs(a.a31));
-        min = Math.min(min,Math.abs(a.a32));
-        min = Math.min(min,Math.abs(a.a33));
-        min = Math.min(min,Math.abs(a.a34));
-        min = Math.min(min,Math.abs(a.a41));
-        min = Math.min(min,Math.abs(a.a42));
-        min = Math.min(min,Math.abs(a.a43));
-        min = Math.min(min,Math.abs(a.a44));
+        min = Math.min(min, Math.abs(a.a12));
+        min = Math.min(min, Math.abs(a.a13));
+        min = Math.min(min, Math.abs(a.a14));
+        min = Math.min(min, Math.abs(a.a21));
+        min = Math.min(min, Math.abs(a.a22));
+        min = Math.min(min, Math.abs(a.a23));
+        min = Math.min(min, Math.abs(a.a24));
+        min = Math.min(min, Math.abs(a.a31));
+        min = Math.min(min, Math.abs(a.a32));
+        min = Math.min(min, Math.abs(a.a33));
+        min = Math.min(min, Math.abs(a.a34));
+        min = Math.min(min, Math.abs(a.a41));
+        min = Math.min(min, Math.abs(a.a42));
+        min = Math.min(min, Math.abs(a.a43));
+        min = Math.min(min, Math.abs(a.a44));
 
         return min;
     }
@@ -763,6 +762,86 @@ public class FixedOps4 {
         a.a21 = v; a.a22 = v; a.a23 = v; a.a24 = v;
         a.a31 = v; a.a32 = v; a.a33 = v; a.a34 = v;
         a.a41 = v; a.a42 = v; a.a43 = v; a.a44 = v;
+    }
+
+    /**
+     * Extracts the row from the matrix a.
+     * @param a Input matrix
+     * @param row Which row is to be extracted
+     * @param out output. Storage for the extracted row. If null then a new vector will be returned.
+     * @return The extracted row.
+     */
+    public static FixedMatrix4_64F extractRow( FixedMatrix4x4_64F a , int row , FixedMatrix4_64F out ) {
+        if( out == null) out = new FixedMatrix4_64F();
+        switch( row ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a12;
+                out.a3 = a.a13;
+                out.a4 = a.a14;
+            break;
+            case 1:
+                out.a1 = a.a21;
+                out.a2 = a.a22;
+                out.a3 = a.a23;
+                out.a4 = a.a24;
+            break;
+            case 2:
+                out.a1 = a.a31;
+                out.a2 = a.a32;
+                out.a3 = a.a33;
+                out.a4 = a.a34;
+            break;
+            case 3:
+                out.a1 = a.a41;
+                out.a2 = a.a42;
+                out.a3 = a.a43;
+                out.a4 = a.a44;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds row.  row = "+row);
+        }
+        return out;
+    }
+
+    /**
+     * Extracts the column from the matrix a.
+     * @param a Input matrix
+     * @param column Which column is to be extracted
+     * @param out output. Storage for the extracted column. If null then a new vector will be returned.
+     * @return The extracted column.
+     */
+    public static FixedMatrix4_64F extractColumn( FixedMatrix4x4_64F a , int column , FixedMatrix4_64F out ) {
+        if( out == null) out = new FixedMatrix4_64F();
+        switch( column ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a21;
+                out.a3 = a.a31;
+                out.a4 = a.a41;
+            break;
+            case 1:
+                out.a1 = a.a12;
+                out.a2 = a.a22;
+                out.a3 = a.a32;
+                out.a4 = a.a42;
+            break;
+            case 2:
+                out.a1 = a.a13;
+                out.a2 = a.a23;
+                out.a3 = a.a33;
+                out.a4 = a.a43;
+            break;
+            case 3:
+                out.a1 = a.a14;
+                out.a2 = a.a24;
+                out.a3 = a.a34;
+                out.a4 = a.a44;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds column.  column = "+column);
+        }
+        return out;
     }
 
 }

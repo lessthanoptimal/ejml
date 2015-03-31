@@ -636,6 +636,34 @@ public class TestCommonOps {
     }
 
     @Test
+    public void extractRow() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,6, 0, 1, rand);
+
+        DenseMatrix64F B = CommonOps.extractRow(A, 3, null);
+
+        assertEquals(B.numRows,1);
+        assertEquals(B.numCols,6);
+
+        for( int i = 0; i < 6; i++ ) {
+            assertEquals(A.get(3,i),B.get(0,i),1e-8);
+        }
+    }
+
+    @Test
+    public void extractColumn() {
+        DenseMatrix64F A = RandomMatrices.createRandom(5,6, 0, 1, rand);
+
+        DenseMatrix64F B = CommonOps.extractColumn(A, 3, null);
+
+        assertEquals(B.numRows,5);
+        assertEquals(B.numCols,1);
+
+        for( int i = 0; i < 5; i++ ) {
+            assertEquals(A.get(i,3),B.get(i,0),1e-8);
+        }
+    }
+
+    @Test
     public void insert() {
         DenseMatrix64F A = new DenseMatrix64F(5,5);
         for( int i = 0; i < A.numRows; i++ ) {

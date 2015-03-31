@@ -1123,6 +1123,45 @@ public class CommonOps {
     }
 
     /**
+     * Extracts the row from a matrix.
+     * @param a Input matrix
+     * @param row Which row is to be extracted
+     * @param out output. Storage for the extracted row. If null then a new vector will be returned.
+     * @return The extracted row.
+     */
+    public static DenseMatrix64F extractRow( DenseMatrix64F a , int row , DenseMatrix64F out ) {
+        if( out == null)
+            out = new DenseMatrix64F(1,a.numCols);
+        else if( !MatrixFeatures.isVector(out) || out.getNumElements() != a.numCols )
+            throw new IllegalArgumentException("Output must be a vector of length "+a.numCols);
+
+        for (int i = 0; i < a.numCols; i++) {
+            out.data[i] = a.unsafe_get(row,i);
+        }
+
+        return out;
+    }
+
+    /**
+     * Extracts the column from a matrix.
+     * @param a Input matrix
+     * @param column Which column is to be extracted
+     * @param out output. Storage for the extracted column. If null then a new vector will be returned.
+     * @return The extracted column.
+     */
+    public static DenseMatrix64F extractColumn( DenseMatrix64F a , int column , DenseMatrix64F out ) {
+        if( out == null)
+            out = new DenseMatrix64F(a.numRows,1);
+        else if( !MatrixFeatures.isVector(out) || out.getNumElements() != a.numRows )
+            throw new IllegalArgumentException("Output must be a vector of length "+a.numRows);
+
+        for (int i = 0; i < a.numRows; i++) {
+            out.data[i] = a.unsafe_get(i,column);
+        }
+        return out;
+    }
+
+    /**
      * Inserts matrix 'src' into matrix 'dest' with the (0,0) of src at (row,col) in dest.
      * This is equivalent to calling extract(src,0,src.numRows,0,src.numCols,dest,destY0,destX0).
      *

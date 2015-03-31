@@ -35,6 +35,9 @@ Date format: year/month/day
   * lookupDouble() will now work on 1x1 matrices
 - CommonOps
   * Added dot(a,b) for dot product between two vectors
+  * Added extractRow and extractColumn
+- FixedOps
+  * Added extractRow and extractColumn.  Thanks nknize for creating the original pull request
 - Added determinant to Cholesky decomposition interface
 - Added getDecomposition() to LinearSolver to provide access to internal classes,
   which can be useful in some specialized cases.  Alternatives were very ugly.

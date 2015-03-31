@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix6_64F;
@@ -912,6 +911,134 @@ public class FixedOps6 {
         a.a41 = v; a.a42 = v; a.a43 = v; a.a44 = v; a.a45 = v; a.a46 = v;
         a.a51 = v; a.a52 = v; a.a53 = v; a.a54 = v; a.a55 = v; a.a56 = v;
         a.a61 = v; a.a62 = v; a.a63 = v; a.a64 = v; a.a65 = v; a.a66 = v;
+    }
+
+    /**
+     * Extracts the row from the matrix a.
+     * @param a Input matrix
+     * @param row Which row is to be extracted
+     * @param out output. Storage for the extracted row. If null then a new vector will be returned.
+     * @return The extracted row.
+     */
+    public static FixedMatrix6_64F extractRow( FixedMatrix6x6_64F a , int row , FixedMatrix6_64F out ) {
+        if( out == null) out = new FixedMatrix6_64F();
+        switch( row ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a12;
+                out.a3 = a.a13;
+                out.a4 = a.a14;
+                out.a5 = a.a15;
+                out.a6 = a.a16;
+            break;
+            case 1:
+                out.a1 = a.a21;
+                out.a2 = a.a22;
+                out.a3 = a.a23;
+                out.a4 = a.a24;
+                out.a5 = a.a25;
+                out.a6 = a.a26;
+            break;
+            case 2:
+                out.a1 = a.a31;
+                out.a2 = a.a32;
+                out.a3 = a.a33;
+                out.a4 = a.a34;
+                out.a5 = a.a35;
+                out.a6 = a.a36;
+            break;
+            case 3:
+                out.a1 = a.a41;
+                out.a2 = a.a42;
+                out.a3 = a.a43;
+                out.a4 = a.a44;
+                out.a5 = a.a45;
+                out.a6 = a.a46;
+            break;
+            case 4:
+                out.a1 = a.a51;
+                out.a2 = a.a52;
+                out.a3 = a.a53;
+                out.a4 = a.a54;
+                out.a5 = a.a55;
+                out.a6 = a.a56;
+            break;
+            case 5:
+                out.a1 = a.a61;
+                out.a2 = a.a62;
+                out.a3 = a.a63;
+                out.a4 = a.a64;
+                out.a5 = a.a65;
+                out.a6 = a.a66;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds row.  row = "+row);
+        }
+        return out;
+    }
+
+    /**
+     * Extracts the column from the matrix a.
+     * @param a Input matrix
+     * @param column Which column is to be extracted
+     * @param out output. Storage for the extracted column. If null then a new vector will be returned.
+     * @return The extracted column.
+     */
+    public static FixedMatrix6_64F extractColumn( FixedMatrix6x6_64F a , int column , FixedMatrix6_64F out ) {
+        if( out == null) out = new FixedMatrix6_64F();
+        switch( column ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a21;
+                out.a3 = a.a31;
+                out.a4 = a.a41;
+                out.a5 = a.a51;
+                out.a6 = a.a61;
+            break;
+            case 1:
+                out.a1 = a.a12;
+                out.a2 = a.a22;
+                out.a3 = a.a32;
+                out.a4 = a.a42;
+                out.a5 = a.a52;
+                out.a6 = a.a62;
+            break;
+            case 2:
+                out.a1 = a.a13;
+                out.a2 = a.a23;
+                out.a3 = a.a33;
+                out.a4 = a.a43;
+                out.a5 = a.a53;
+                out.a6 = a.a63;
+            break;
+            case 3:
+                out.a1 = a.a14;
+                out.a2 = a.a24;
+                out.a3 = a.a34;
+                out.a4 = a.a44;
+                out.a5 = a.a54;
+                out.a6 = a.a64;
+            break;
+            case 4:
+                out.a1 = a.a15;
+                out.a2 = a.a25;
+                out.a3 = a.a35;
+                out.a4 = a.a45;
+                out.a5 = a.a55;
+                out.a6 = a.a65;
+            break;
+            case 5:
+                out.a1 = a.a16;
+                out.a2 = a.a26;
+                out.a3 = a.a36;
+                out.a4 = a.a46;
+                out.a5 = a.a56;
+                out.a6 = a.a66;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds column.  column = "+column);
+        }
+        return out;
     }
 
 }

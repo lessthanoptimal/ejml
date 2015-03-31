@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.alg.fixed;
 
 import org.ejml.data.FixedMatrix5_64F;
@@ -922,6 +921,108 @@ public class FixedOps5 {
         a.a31 = v; a.a32 = v; a.a33 = v; a.a34 = v; a.a35 = v;
         a.a41 = v; a.a42 = v; a.a43 = v; a.a44 = v; a.a45 = v;
         a.a51 = v; a.a52 = v; a.a53 = v; a.a54 = v; a.a55 = v;
+    }
+
+    /**
+     * Extracts the row from the matrix a.
+     * @param a Input matrix
+     * @param row Which row is to be extracted
+     * @param out output. Storage for the extracted row. If null then a new vector will be returned.
+     * @return The extracted row.
+     */
+    public static FixedMatrix5_64F extractRow( FixedMatrix5x5_64F a , int row , FixedMatrix5_64F out ) {
+        if( out == null) out = new FixedMatrix5_64F();
+        switch( row ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a12;
+                out.a3 = a.a13;
+                out.a4 = a.a14;
+                out.a5 = a.a15;
+            break;
+            case 1:
+                out.a1 = a.a21;
+                out.a2 = a.a22;
+                out.a3 = a.a23;
+                out.a4 = a.a24;
+                out.a5 = a.a25;
+            break;
+            case 2:
+                out.a1 = a.a31;
+                out.a2 = a.a32;
+                out.a3 = a.a33;
+                out.a4 = a.a34;
+                out.a5 = a.a35;
+            break;
+            case 3:
+                out.a1 = a.a41;
+                out.a2 = a.a42;
+                out.a3 = a.a43;
+                out.a4 = a.a44;
+                out.a5 = a.a45;
+            break;
+            case 4:
+                out.a1 = a.a51;
+                out.a2 = a.a52;
+                out.a3 = a.a53;
+                out.a4 = a.a54;
+                out.a5 = a.a55;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds row.  row = "+row);
+        }
+        return out;
+    }
+
+    /**
+     * Extracts the column from the matrix a.
+     * @param a Input matrix
+     * @param column Which column is to be extracted
+     * @param out output. Storage for the extracted column. If null then a new vector will be returned.
+     * @return The extracted column.
+     */
+    public static FixedMatrix5_64F extractColumn( FixedMatrix5x5_64F a , int column , FixedMatrix5_64F out ) {
+        if( out == null) out = new FixedMatrix5_64F();
+        switch( column ) {
+            case 0:
+                out.a1 = a.a11;
+                out.a2 = a.a21;
+                out.a3 = a.a31;
+                out.a4 = a.a41;
+                out.a5 = a.a51;
+            break;
+            case 1:
+                out.a1 = a.a12;
+                out.a2 = a.a22;
+                out.a3 = a.a32;
+                out.a4 = a.a42;
+                out.a5 = a.a52;
+            break;
+            case 2:
+                out.a1 = a.a13;
+                out.a2 = a.a23;
+                out.a3 = a.a33;
+                out.a4 = a.a43;
+                out.a5 = a.a53;
+            break;
+            case 3:
+                out.a1 = a.a14;
+                out.a2 = a.a24;
+                out.a3 = a.a34;
+                out.a4 = a.a44;
+                out.a5 = a.a54;
+            break;
+            case 4:
+                out.a1 = a.a15;
+                out.a2 = a.a25;
+                out.a3 = a.a35;
+                out.a4 = a.a45;
+                out.a5 = a.a55;
+            break;
+            default:
+                throw new IllegalArgumentException("Out of bounds column.  column = "+column);
+        }
+        return out;
     }
 
 }
