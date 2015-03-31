@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main:core')
+    testCompile project(':main:dense64')
 }
 
 idea {

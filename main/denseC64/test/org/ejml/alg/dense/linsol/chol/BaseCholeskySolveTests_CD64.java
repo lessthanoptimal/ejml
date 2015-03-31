@@ -128,7 +128,7 @@ public abstract class BaseCholeskySolveTests_CD64 {
 
         LinearSolver<CDenseMatrix64F> solver = createSolver();
 
-        for (int N = 1; N <= 4; N++) {
+        for (int N = 1; N <= 5; N++) {
             CDenseMatrix64F A = CRandomMatrices.createHermPosDef(N,rand);
             CDenseMatrix64F A_orig = A.copy();
             CDenseMatrix64F A_inv = new CDenseMatrix64F(N,N);
@@ -138,12 +138,10 @@ public abstract class BaseCholeskySolveTests_CD64 {
             solver.invert(A_inv);
 
             CCommonOps.mult(A_inv,A_orig,found);
-
-            assertTrue(CMatrixFeatures.isIdentity(found,1e-8));
+            assertTrue(CMatrixFeatures.isIdentity(found, 1e-8));
 
             // see if input was modified
             assertEquals(!solver.modifiesA(),CMatrixFeatures.isIdentical(A,A_orig,1e-8));
-
         }
     }
 

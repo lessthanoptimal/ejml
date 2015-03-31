@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -92,67 +92,6 @@ public class QrHelperFunctions_CD64 {
             u[index++] = (realU*realA + imagU*imagA)/mag2;
             u[index++] = (imagU*realA - realU*imagA)/mag2;
         }
-    }
-
-    public static void divideElements_Brow(int j, int numRows , double[] u,
-                                             double b[] , int startB ,
-                                             double u_0 ) {
-//        double div_u = 1.0/u_0;
-//
-//        if( Double.isInfinite(div_u)) {
-            for( int i = j; i < numRows; i++ ) {
-                u[i] = b[i+startB] /= u_0;
-            }
-//        } else {
-//            for( int i = j; i < numRows; i++ ) {
-//                u[i] = b[i+startB] *= div_u;
-//            }
-//        }
-    }
-
-    public static void divideElements_Bcol(int j, int numRows , int numCols ,
-                                             double[] u,
-                                             double b[] , int startB ,
-                                             double u_0 ) {
-//        double div_u = 1.0/u_0;
-//
-//        if( Double.isInfinite(div_u)) {
-            int indexB = j*numCols+startB;
-            for( int i = j; i < numRows; i++ , indexB += numCols ) {
-                b[indexB] = u[i] /= u_0;
-            }
-//        } else {
-//            int indexB = j*numCols+startB;
-//            for( int i = j; i < numRows; i++ , indexB += numCols ) {
-//                b[indexB] = u[i] *= div_u;
-//            }
-//        }
-    }
-
-    public static double computeTauAndDivide(int j, int numRows , double[] u, int startU , double max) {
-        // compute the norm2 of the matrix, with each element
-        // normalized by the max value to avoid overflow problems
-        double tau = 0;
-//        double div_max = 1.0/max;
-//        if( Double.isInfinite(div_max)) {
-            // more accurate
-            for( int i = j; i < numRows; i++ ) {
-                double d = u[startU+i] /= max;
-                tau += d*d;
-            }
-//        } else {
-//            // faster
-//            for( int i = j; i < numRows; i++ ) {
-//                double d = u[startU+i] *= div_max;
-//                tau += d*d;
-//            }
-//        }
-        tau = Math.sqrt(tau);
-
-        if( u[startU+j] < 0 )
-            tau = -tau;
-
-        return tau;
     }
 
     /**

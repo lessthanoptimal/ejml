@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,15 +21,15 @@ package org.ejml.alg.dense.decompose.qr;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
 import org.ejml.ops.ComplexMath64F;
-import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -100,16 +100,6 @@ public class TestQrHelperFunctions_CD64 {
     }
 
     @Test
-    public void divideElements_Brow() {
-        fail("Implement");
-    }
-
-    @Test
-    public void divideElements_Bcol() {
-        fail("Implement");
-    }
-
-    @Test
     public void computeTauGammaAndDivide() {
         double u[] = new double[12*2];
         for (int i = 0; i < u.length; i++ ) {
@@ -173,11 +163,6 @@ public class TestQrHelperFunctions_CD64 {
     }
 
     @Test
-    public void computeTauAndDivide_offsetU() {
-        fail("Implement");
-    }
-
-    @Test
     public void rank1UpdateMultR() {
         double u[] = new double[12*2];
         double uoff[] = new double[12*2+2];
@@ -204,7 +189,7 @@ public class TestQrHelperFunctions_CD64 {
                 CDenseMatrix64F subFound = CCommonOps.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
-                EjmlUnitTests.assertEquals(expected,subFound,1e-8);
+                assertTrue(CMatrixFeatures.isEquals(expected, subFound, 1e-8));
             }
         }
     }
@@ -253,7 +238,7 @@ public class TestQrHelperFunctions_CD64 {
                 CDenseMatrix64F subFound = CCommonOps.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
-                EjmlUnitTests.assertEquals(expected,subFound,1e-8);
+                assertTrue(CMatrixFeatures.isEquals(expected, subFound, 1e-8));
             }
         }
     }

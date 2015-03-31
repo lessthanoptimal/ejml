@@ -25,6 +25,8 @@ import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
 import org.ejml.ops.CSpecializedOps;
 
+import java.util.Arrays;
+
 
 /**
 * @author Peter Abeles
@@ -133,10 +135,8 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
             throw new IllegalArgumentException("Passing in the same matrix that was decomposed.");
         }
 
-        double a[] = inv.data;
-
         if(decomposer.isLower()) {
-            setToInverseL(a);
+            setToInverseL(inv.data);
         } else {
             throw new RuntimeException("Implement");
         }
@@ -146,33 +146,21 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
     public void setToInverseL( double a[] ) {
-        // TODO reorder these operations to avoid cache misses
 
-        // inverts the lower triangular system and saves the result
-        // in the upper triangle to minimize cache misses
-        for( int i =0; i < n; i++ ) {
-            double el_ii = t[i*n+i];
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i==j) ? 1.0 : 0;
-                for( int k=i-1; k >=j; k-- ) {
-                    sum -= t[i*n+k]*a[j*n+k];
-                }
-                a[j*n+i] = sum / el_ii;
+        // the more direct method which takes full advantage of the sparsity of the data structures proved to
+        // be difficult to get right due to the conjugates and reordering.
+        // See comparable real number code for an example.
+        for (int col = 0; col < n; col++) {
+            Arrays.fill(vv,0);
+            vv[col*2] = 1;
+            CTriangularSolver.solveL_diagReal(t, vv, n);
+            CTriangularSolver.solveConjTranL_diagReal(t, vv, n);
+            for( int i = 0; i < n; i++ ) {
+                a[(i*numCols+col)*2  ] = vv[i*2];
+                a[(i*numCols+col)*2+1] = vv[i*2+1];
             }
         }
-        // solve the system and handle the previous solution being in the upper triangle
-        // takes advantage of symmetry
-        for( int i=n-1; i>=0; i-- ) {
-            double el_ii = t[i*n+i];
-
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i<j) ? 0 : a[j*n+i];
-                for( int k=i+1;k<n;k++) {
-                    sum -= t[k*n+i]*a[j*n+k];
-                }
-                a[i*n+j] = a[j*n+i] = sum / el_ii;
-            }
-        }
+        // NOTE: If you want to make inverse faster take advantage of the sparsity
     }
 
     @Override

@@ -5,6 +5,7 @@ dependencies {
     compile project(':main:simple')
     compile project(':main:equation')
 
+    testCompile project(':main:core').sourceSets.test.output
     testCompile project(':main:dense64').sourceSets.test.output
     testCompile project(':main:denseC64').sourceSets.test.output
 }
