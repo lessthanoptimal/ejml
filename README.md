@@ -6,7 +6,7 @@
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
 
-  Project Website: http://code.google.com/p/efficient-java-matrix-library/
+  Project Website: http://ejml.org
 
 ==========================================================================
 # Introduction
@@ -33,7 +33,7 @@ Unit tests are extensively used to ensure correctness of each algorithm's implem
 
 For a more detailed explanation of how to use the library see:
 
-http://code.google.com/p/efficient-java-matrix-library/wiki/EjmlManual
+http://ejml.org/wiki/index.php?title=Manual
 
 The JavaDoc has also been posted online at:
 
@@ -76,35 +76,35 @@ Gradle build scripts are provided for building EJML.  If Gradle is installed, th
 # File System
 
 
-docs/
-- Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
+* docs/ :
+  Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
 
-examples/
-- Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
+* examples/ :
+  Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
 
-main/core
-- Contains all esseital data structures
+* main/core :
+  Contains all essential data structures
 
-main/dense64
-- Algorithms for real dense 64-bit floating point math
+* main/dense64 :
+  Algorithms for real dense 64-bit floating point math
 
-main/denseC64
-- Algorithms for complex dense 64-bit floating point math
+* main/denseC64 :
+  Algorithms for complex dense 64-bit floating point math
 
-main/equation
-- Contains source code for Equations API
+* main/equation :
+  Contains source code for Equations API
 
-main/simple
-- Contains source code for SimpleMatrix
+* main/simple :
+  Contains source code for SimpleMatrix
 
-main/experimental/
-- Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
+* main/experimental/ :
+  Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
 
-change.txt
-- History of what changed between each version.
+* change.txt :
+  History of what changed between each version.
 
-TODO_Algorithms.txt
-- Contains a list of what needs to be added to this library.
+* TODO_Algorithms.txt :
+  Contains a list of what needs to be added to this library.
 
 ==========================================================================
 # Questions and Comments
