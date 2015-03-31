@@ -167,6 +167,7 @@ public class TestDenseMatrix32F {
     @Ignore
     public void set_ColumnMajor() {
         // todo implement later after basic 32bit operations are done
+        fail("implement");
 //        DenseMatrix32F A = UtilTestMatrix.random32(3,5,-1,1,rand);
 //
 //        DenseMatrix32F Atran = A.copy();
@@ -181,7 +182,7 @@ public class TestDenseMatrix32F {
     @Ignore
     public void set_RowMajor() {
         // todo implement later after basic 32bit operations are done
-//        fail("implement");
+        fail("implement");
 //        DenseMatrix32F A = UtilTestMatrix.random32(3, 5, -1, 1, rand);
 //
 //        DenseMatrix32F Afound = new DenseMatrix32F(3,5);

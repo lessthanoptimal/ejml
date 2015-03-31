@@ -1,9 +1,6 @@
 language: java
 jdk:
-  - openjdk7
+  - openjdk6
   - oraclejdk7
   - oraclejdk8
 script:
-  - gradle main:core:build
-  - gradle main:core:check
-  - gradle main:core:test
