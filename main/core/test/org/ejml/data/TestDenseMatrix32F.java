@@ -20,6 +20,7 @@ package org.ejml.data;
 
 import org.ejml.EjmlParameters;
 import org.ejml.ops.EjmlUnitTests;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -163,6 +164,7 @@ public class TestDenseMatrix32F {
     }
 
     @Test
+    @Ignore
     public void set_ColumnMajor() {
         // todo implement later after basic 32bit operations are done
 //        DenseMatrix32F A = UtilTestMatrix.random32(3,5,-1,1,rand);
@@ -176,6 +178,7 @@ public class TestDenseMatrix32F {
     }
 
     @Test
+    @Ignore
     public void set_RowMajor() {
         // todo implement later after basic 32bit operations are done
 //        fail("implement");
