@@ -15,3 +15,10 @@ Push to central:
   * click close button
   * double check the files
   * click release button
+
+
+---------
+Once a year:
+- Update copy right
+- Update year in ant script
+- update year on docs/bottom.txt
