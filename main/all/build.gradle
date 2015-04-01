@@ -6,10 +6,6 @@ dependencies {
     compile project(':main:simple')
 }
 
-sourcesJar.enabled = false
-javadocJar.enabled = false
-jar.enabled = false
-
 idea {
     module {
         name = "EJML All"

@@ -44,24 +44,24 @@ EJML is on the Maven central repository and can easily be included in projects b
 
 Gradle:
 ```
-compile group: 'org.ejml', name: 'main:all', version: '0.27'
+compile group: 'org.ejml', name: 'all', version: '0.27'
 ```
 
 Maven:
 ```
 <groupId>org.ejml</groupId>
-<artifactId>main:all</artifactId>
+<artifactId>all</artifactId>
 <version>0.27</version>
 ```
 Or you can include the required modules individually
 
      Name        |                 Description
 -----------------|-------------------------------------------------------
-main:core        | Contains core data structures
-main:dense64     | Algorithms for dense real 64-bit floats
-main:denseC64    | Algorithms for dense complex 64-bit floats
-main:equation    | Equations interface
-main:simple      | Object oriented SimpleMatrix interface
+core             | Contains core data structures
+dense64          | Algorithms for dense real 64-bit floats
+denseC64         | Algorithms for dense complex 64-bit floats
+equation         | Equations interface
+simple           | Object oriented SimpleMatrix interface
 
 ==========================================================================
 ## Building
