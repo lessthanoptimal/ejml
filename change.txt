@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.27
 
-2015/04/??
+2015/04/01
 
 - Added SimpleMatrix.randomNormal() for drawing numbers from a normal distribution with zero mean
 - Added EjmlUnitTests.assertEquals() and similar for SimpleMatrix
@@ -13,9 +13,10 @@ Date format: year/month/day
 - Triangle quality now just uses diagonal elements to scale results
 - Support for complex matrices
   * Thanks IHMC (http://ihmc.us) for funding parts of this addition
-  * Most basic operations (e.g. multiplication, addition, ... etc)
-  * LU Decomposition
-  * QR Decomposition
+  * Basic operations (e.g. multiplication, addition, ... etc)
+  * LU Decomposition + Linear Solver
+  * QR Decomposition + Linear Solver
+  * Cholesky Decomposition + Linear Solver
   * Square Matrices: inverse, solve, determinant
   * Overdetermined: solve
 - ComplexMath64F

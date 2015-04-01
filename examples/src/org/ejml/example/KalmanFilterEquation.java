@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,8 +30,7 @@ import org.ejml.equation.Sequence;
 public class KalmanFilterEquation implements KalmanFilter{
 
     // system state estimate
-    private DenseMatrix64F x;
-    private DenseMatrix64F P;
+    private DenseMatrix64F x,P;
 
     private Equation eq;
 

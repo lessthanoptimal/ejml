@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,14 +33,10 @@ import org.ejml.simple.SimpleMatrix;
 public class KalmanFilterSimple implements KalmanFilter{
 
     // kinematics description
-    private SimpleMatrix F;
-    private SimpleMatrix Q;
-    private SimpleMatrix H;
+    private SimpleMatrix F,Q,H;
 
     // sytem state estimate
-    private SimpleMatrix x;
-    private SimpleMatrix P;
-
+    private SimpleMatrix x,P;
 
     @Override
     public void configure(DenseMatrix64F F, DenseMatrix64F Q, DenseMatrix64F H) {

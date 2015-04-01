@@ -3,7 +3,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.ejml'
-    version = '0.27-SNAPSHOT'
+    version = '0.27'
 }
 
 subprojects {
@@ -128,14 +128,12 @@ subprojects {
 }
 
 def allModules = [
-        ':main:denseC64',
-        ':main:dense64',
-        ':main:equation',
         ':main:core',
-        ':main:simple',
-        ':main:experimental'
+        ':main:dense64',
+        ':main:denseC64',
+        ':main:equation',
+        ':main:simple'
 ]
-
 
 // Creates a directory with all the comiled jars
 task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModules.collect{ it+":sourcesJar"}) << {
@@ -170,8 +168,7 @@ def javadocProjects = [
         ':main:denseC64',
         ':main:dense64',
         ':main:core',
-        ':main:equation',
-        ':main:experimental'
+        ':main:equation'
 ]
 task alljavadoc(type: Javadoc) {
     // only include source code in src directory to avoid including 3rd party code which some projects do as a hack
