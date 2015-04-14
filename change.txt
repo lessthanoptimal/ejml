@@ -2,6 +2,11 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.28
+
+20xx/xx/xx
+
+
 ----- Version 0.27
 
 2015/04/01
