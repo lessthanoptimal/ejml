@@ -8,6 +8,9 @@ Date format: year/month/day
 
 - Added multAdd to fixed sized matrices
 
+
+TODO explore using Fixed4x4Block matrix in the inner most loop of block matrix multiply to speed it up
+
 ----- Version 0.27
 
 2015/04/01

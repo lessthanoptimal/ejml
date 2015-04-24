@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.mult(matA,matB,matResult);
+            CommonOps.mult(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_small(matA,matB,matResult);
+            MatrixMatrixMult.mult_small(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -74,7 +74,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_aux(matA,matB,matResult,null);
+            MatrixMatrixMult.mult_aux(matA, matB, matResult, null);
         }
 
         long curr = System.currentTimeMillis();
@@ -86,7 +86,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_reorder(matA,matB,matResult);
+            MatrixMatrixMult.mult_reorder(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -102,7 +102,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            BlockMatrixOps.mult(blockA,blockB,blockC);
+            BlockMatrixOps.mult(blockA, blockB, blockC);
         }
 
         long curr = System.currentTimeMillis();
@@ -124,7 +124,6 @@ public class BenchmarkMatrixMatrixMult {
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
-
 
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
