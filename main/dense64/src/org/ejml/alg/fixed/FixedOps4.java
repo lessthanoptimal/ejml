@@ -330,6 +330,130 @@ public class FixedOps4 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31 + a.a14*b.a41;
+        c.a12 += a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32 + a.a14*b.a42;
+        c.a13 += a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33 + a.a14*b.a43;
+        c.a14 += a.a11*b.a14 + a.a12*b.a24 + a.a13*b.a34 + a.a14*b.a44;
+        c.a21 += a.a21*b.a11 + a.a22*b.a21 + a.a23*b.a31 + a.a24*b.a41;
+        c.a22 += a.a21*b.a12 + a.a22*b.a22 + a.a23*b.a32 + a.a24*b.a42;
+        c.a23 += a.a21*b.a13 + a.a22*b.a23 + a.a23*b.a33 + a.a24*b.a43;
+        c.a24 += a.a21*b.a14 + a.a22*b.a24 + a.a23*b.a34 + a.a24*b.a44;
+        c.a31 += a.a31*b.a11 + a.a32*b.a21 + a.a33*b.a31 + a.a34*b.a41;
+        c.a32 += a.a31*b.a12 + a.a32*b.a22 + a.a33*b.a32 + a.a34*b.a42;
+        c.a33 += a.a31*b.a13 + a.a32*b.a23 + a.a33*b.a33 + a.a34*b.a43;
+        c.a34 += a.a31*b.a14 + a.a32*b.a24 + a.a33*b.a34 + a.a34*b.a44;
+        c.a41 += a.a41*b.a11 + a.a42*b.a21 + a.a43*b.a31 + a.a44*b.a41;
+        c.a42 += a.a41*b.a12 + a.a42*b.a22 + a.a43*b.a32 + a.a44*b.a42;
+        c.a43 += a.a41*b.a13 + a.a42*b.a23 + a.a43*b.a33 + a.a44*b.a43;
+        c.a44 += a.a41*b.a14 + a.a42*b.a24 + a.a43*b.a34 + a.a44*b.a44;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31 + a.a41*b.a41;
+        c.a12 += a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32 + a.a41*b.a42;
+        c.a13 += a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33 + a.a41*b.a43;
+        c.a14 += a.a11*b.a14 + a.a21*b.a24 + a.a31*b.a34 + a.a41*b.a44;
+        c.a21 += a.a12*b.a11 + a.a22*b.a21 + a.a32*b.a31 + a.a42*b.a41;
+        c.a22 += a.a12*b.a12 + a.a22*b.a22 + a.a32*b.a32 + a.a42*b.a42;
+        c.a23 += a.a12*b.a13 + a.a22*b.a23 + a.a32*b.a33 + a.a42*b.a43;
+        c.a24 += a.a12*b.a14 + a.a22*b.a24 + a.a32*b.a34 + a.a42*b.a44;
+        c.a31 += a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31 + a.a43*b.a41;
+        c.a32 += a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32 + a.a43*b.a42;
+        c.a33 += a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33 + a.a43*b.a43;
+        c.a34 += a.a13*b.a14 + a.a23*b.a24 + a.a33*b.a34 + a.a43*b.a44;
+        c.a41 += a.a14*b.a11 + a.a24*b.a21 + a.a34*b.a31 + a.a44*b.a41;
+        c.a42 += a.a14*b.a12 + a.a24*b.a22 + a.a34*b.a32 + a.a44*b.a42;
+        c.a43 += a.a14*b.a13 + a.a24*b.a23 + a.a34*b.a33 + a.a44*b.a43;
+        c.a44 += a.a14*b.a14 + a.a24*b.a24 + a.a34*b.a34 + a.a44*b.a44;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13 + a.a41*b.a14;
+        c.a12 += a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23 + a.a41*b.a24;
+        c.a13 += a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33 + a.a41*b.a34;
+        c.a14 += a.a11*b.a41 + a.a21*b.a42 + a.a31*b.a43 + a.a41*b.a44;
+        c.a21 += a.a12*b.a11 + a.a22*b.a12 + a.a32*b.a13 + a.a42*b.a14;
+        c.a22 += a.a12*b.a21 + a.a22*b.a22 + a.a32*b.a23 + a.a42*b.a24;
+        c.a23 += a.a12*b.a31 + a.a22*b.a32 + a.a32*b.a33 + a.a42*b.a34;
+        c.a24 += a.a12*b.a41 + a.a22*b.a42 + a.a32*b.a43 + a.a42*b.a44;
+        c.a31 += a.a13*b.a11 + a.a23*b.a12 + a.a33*b.a13 + a.a43*b.a14;
+        c.a32 += a.a13*b.a21 + a.a23*b.a22 + a.a33*b.a23 + a.a43*b.a24;
+        c.a33 += a.a13*b.a31 + a.a23*b.a32 + a.a33*b.a33 + a.a43*b.a34;
+        c.a34 += a.a13*b.a41 + a.a23*b.a42 + a.a33*b.a43 + a.a43*b.a44;
+        c.a41 += a.a14*b.a11 + a.a24*b.a12 + a.a34*b.a13 + a.a44*b.a14;
+        c.a42 += a.a14*b.a21 + a.a24*b.a22 + a.a34*b.a23 + a.a44*b.a24;
+        c.a43 += a.a14*b.a31 + a.a24*b.a32 + a.a34*b.a33 + a.a44*b.a34;
+        c.a44 += a.a14*b.a41 + a.a24*b.a42 + a.a34*b.a43 + a.a44*b.a44;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13 + a.a14*b.a14;
+        c.a12 += a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23 + a.a14*b.a24;
+        c.a13 += a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33 + a.a14*b.a34;
+        c.a14 += a.a11*b.a41 + a.a12*b.a42 + a.a13*b.a43 + a.a14*b.a44;
+        c.a21 += a.a21*b.a11 + a.a22*b.a12 + a.a23*b.a13 + a.a24*b.a14;
+        c.a22 += a.a21*b.a21 + a.a22*b.a22 + a.a23*b.a23 + a.a24*b.a24;
+        c.a23 += a.a21*b.a31 + a.a22*b.a32 + a.a23*b.a33 + a.a24*b.a34;
+        c.a24 += a.a21*b.a41 + a.a22*b.a42 + a.a23*b.a43 + a.a24*b.a44;
+        c.a31 += a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13 + a.a34*b.a14;
+        c.a32 += a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23 + a.a34*b.a24;
+        c.a33 += a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33 + a.a34*b.a34;
+        c.a34 += a.a31*b.a41 + a.a32*b.a42 + a.a33*b.a43 + a.a34*b.a44;
+        c.a41 += a.a41*b.a11 + a.a42*b.a12 + a.a43*b.a13 + a.a44*b.a14;
+        c.a42 += a.a41*b.a21 + a.a42*b.a22 + a.a43*b.a23 + a.a44*b.a24;
+        c.a43 += a.a41*b.a31 + a.a42*b.a32 + a.a43*b.a33 + a.a44*b.a34;
+        c.a44 += a.a41*b.a41 + a.a42*b.a42 + a.a43*b.a43 + a.a44*b.a44;
+    }
+
+    /**
      * <p>Performs matrix to vector multiplication:<br>
      * <br>
      * c = a * b <br>

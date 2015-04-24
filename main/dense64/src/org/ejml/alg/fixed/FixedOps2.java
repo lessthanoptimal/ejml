@@ -217,6 +217,82 @@ public class FixedOps2 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( FixedMatrix2x2_64F a , FixedMatrix2x2_64F b , FixedMatrix2x2_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a21;
+        c.a12 += a.a11*b.a12 + a.a12*b.a22;
+        c.a21 += a.a21*b.a11 + a.a22*b.a21;
+        c.a22 += a.a21*b.a12 + a.a22*b.a22;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( FixedMatrix2x2_64F a , FixedMatrix2x2_64F b , FixedMatrix2x2_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a21;
+        c.a12 += a.a11*b.a12 + a.a21*b.a22;
+        c.a21 += a.a12*b.a11 + a.a22*b.a21;
+        c.a22 += a.a12*b.a12 + a.a22*b.a22;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB( FixedMatrix2x2_64F a , FixedMatrix2x2_64F b , FixedMatrix2x2_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a12;
+        c.a12 += a.a11*b.a21 + a.a21*b.a22;
+        c.a21 += a.a12*b.a11 + a.a22*b.a12;
+        c.a22 += a.a12*b.a21 + a.a22*b.a22;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( FixedMatrix2x2_64F a , FixedMatrix2x2_64F b , FixedMatrix2x2_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a12;
+        c.a12 += a.a11*b.a21 + a.a12*b.a22;
+        c.a21 += a.a21*b.a11 + a.a22*b.a12;
+        c.a22 += a.a21*b.a21 + a.a22*b.a22;
+    }
+
+    /**
      * <p>Performs matrix to vector multiplication:<br>
      * <br>
      * c = a * b <br>

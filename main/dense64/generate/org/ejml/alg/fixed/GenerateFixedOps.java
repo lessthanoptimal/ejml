@@ -50,10 +50,13 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             subtractEquals(dimension);
             transpose_one(dimension);
             transpose_two(dimension);
-            mult(dimension);
-            multTransA(dimension);
-            multTransAB(dimension);
-            multTransB(dimension);
+            for( int i = 0; i < 2; i ++ ) {
+                boolean add = i == 1;
+                mult(dimension,add);
+                multTransA(dimension,add);
+                multTransAB(dimension,add);
+                multTransB(dimension,add);
+            }
             mult_m_v_v(dimension);
             mult_v_m_v(dimension);
             dot(dimension);
@@ -248,24 +251,27 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "    }\n\n");
     }
 
-    private void mult( int dimen ){
+    private void mult( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAdd" : "mult";
+
         out.print("    /**\n" +
                 "     * <p>Performs the following operation:<br>\n" +
                 "     * <br>\n" +
-                "     * c = a * b <br>\n" +
+                "     * c "+plus+"= a * b <br>\n" +
                 "     * <br>\n" +
-                "     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}\n" +
+                "     * c<sub>ij</sub> "+plus+"= &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void mult( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+                "    public static void "+name+"( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
 
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" = ");
+                out.print("        c.a"+y+""+x+" "+plus+"= ");
                 for( int k = 1; k <= dimen; k++ ) {
                     out.print("a.a"+y+""+k+"*b.a"+k+""+x);
                     if( k < dimen )
@@ -278,23 +284,26 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
-    private void multTransA( int dimen ){
+    private void multTransA( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAddTransA" : "multTransA";
+
         out.print("    /**\n" +
                 "     * <p>Performs the following operation:<br>\n" +
                 "     * <br>\n" +
-                "     * c = a<sup>T</sup> * b <br>\n" +
+                "     * c " + plus + "= a<sup>T</sup> * b <br>\n" +
                 "     * <br>\n" +
-                "     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}\n" +
+                "     * c<sub>ij</sub> " + plus + "= &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void multTransA( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+                "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" = ");
+                out.print("        c.a"+y+""+x+" "+plus+"= ");
                 for( int k = 1; k <= dimen; k++ ) {
                     out.print("a.a"+k+""+y+"*b.a"+k+""+x);
                     if( k < dimen )
@@ -307,23 +316,26 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.printf("    }\n\n");
     }
 
-    private void multTransAB( int dimen ){
+    private void multTransAB( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAddTransAB" : "multTransAB";
+
         out.printf("    /**\n" +
                 "     * <p>\n" +
                 "     * Performs the following operation:<br>\n" +
                 "     * <br>\n" +
-                "     * c = a<sup>T</sup> * b<sup>T</sup><br>\n" +
-                "     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}\n" +
+                "     * c " + plus + "= a<sup>T</sup> * b<sup>T</sup><br>\n" +
+                "     * c<sub>ij</sub> " + plus + "= &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void multTransAB( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+                "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" = ");
+                out.print("        c.a"+y+""+x+" "+plus+"= ");
                 for( int k = 1; k <= dimen; k++ ) {
                     out.print("a.a"+k+""+y+"*b.a"+x+""+k);
                     if( k < dimen )
@@ -336,23 +348,26 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
-    private void multTransB( int dimen ){
+    private void multTransB( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAddTransB" : "multTransB";
+
         out.print("    /**\n" +
                 "     * <p>\n" +
                 "     * Performs the following operation:<br>\n" +
                 "     * <br>\n" +
-                "     * c = a * b<sup>T</sup> <br>\n" +
-                "     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}\n" +
+                "     * c "+plus+"= a * b<sup>T</sup> <br>\n" +
+                "     * c<sub>ij</sub> "+plus+"= &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void multTransB( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+                "    public static void "+name+"( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" = ");
+                out.print("        c.a"+y+""+x+" "+plus+"= ");
                 for( int k = 1; k <= dimen; k++ ) {
                     out.print("a.a"+y+""+k+"*b.a"+x+""+k);
                     if( k < dimen )

@@ -415,6 +415,166 @@ public class FixedOps5 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( FixedMatrix5x5_64F a , FixedMatrix5x5_64F b , FixedMatrix5x5_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31 + a.a14*b.a41 + a.a15*b.a51;
+        c.a12 += a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32 + a.a14*b.a42 + a.a15*b.a52;
+        c.a13 += a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33 + a.a14*b.a43 + a.a15*b.a53;
+        c.a14 += a.a11*b.a14 + a.a12*b.a24 + a.a13*b.a34 + a.a14*b.a44 + a.a15*b.a54;
+        c.a15 += a.a11*b.a15 + a.a12*b.a25 + a.a13*b.a35 + a.a14*b.a45 + a.a15*b.a55;
+        c.a21 += a.a21*b.a11 + a.a22*b.a21 + a.a23*b.a31 + a.a24*b.a41 + a.a25*b.a51;
+        c.a22 += a.a21*b.a12 + a.a22*b.a22 + a.a23*b.a32 + a.a24*b.a42 + a.a25*b.a52;
+        c.a23 += a.a21*b.a13 + a.a22*b.a23 + a.a23*b.a33 + a.a24*b.a43 + a.a25*b.a53;
+        c.a24 += a.a21*b.a14 + a.a22*b.a24 + a.a23*b.a34 + a.a24*b.a44 + a.a25*b.a54;
+        c.a25 += a.a21*b.a15 + a.a22*b.a25 + a.a23*b.a35 + a.a24*b.a45 + a.a25*b.a55;
+        c.a31 += a.a31*b.a11 + a.a32*b.a21 + a.a33*b.a31 + a.a34*b.a41 + a.a35*b.a51;
+        c.a32 += a.a31*b.a12 + a.a32*b.a22 + a.a33*b.a32 + a.a34*b.a42 + a.a35*b.a52;
+        c.a33 += a.a31*b.a13 + a.a32*b.a23 + a.a33*b.a33 + a.a34*b.a43 + a.a35*b.a53;
+        c.a34 += a.a31*b.a14 + a.a32*b.a24 + a.a33*b.a34 + a.a34*b.a44 + a.a35*b.a54;
+        c.a35 += a.a31*b.a15 + a.a32*b.a25 + a.a33*b.a35 + a.a34*b.a45 + a.a35*b.a55;
+        c.a41 += a.a41*b.a11 + a.a42*b.a21 + a.a43*b.a31 + a.a44*b.a41 + a.a45*b.a51;
+        c.a42 += a.a41*b.a12 + a.a42*b.a22 + a.a43*b.a32 + a.a44*b.a42 + a.a45*b.a52;
+        c.a43 += a.a41*b.a13 + a.a42*b.a23 + a.a43*b.a33 + a.a44*b.a43 + a.a45*b.a53;
+        c.a44 += a.a41*b.a14 + a.a42*b.a24 + a.a43*b.a34 + a.a44*b.a44 + a.a45*b.a54;
+        c.a45 += a.a41*b.a15 + a.a42*b.a25 + a.a43*b.a35 + a.a44*b.a45 + a.a45*b.a55;
+        c.a51 += a.a51*b.a11 + a.a52*b.a21 + a.a53*b.a31 + a.a54*b.a41 + a.a55*b.a51;
+        c.a52 += a.a51*b.a12 + a.a52*b.a22 + a.a53*b.a32 + a.a54*b.a42 + a.a55*b.a52;
+        c.a53 += a.a51*b.a13 + a.a52*b.a23 + a.a53*b.a33 + a.a54*b.a43 + a.a55*b.a53;
+        c.a54 += a.a51*b.a14 + a.a52*b.a24 + a.a53*b.a34 + a.a54*b.a44 + a.a55*b.a54;
+        c.a55 += a.a51*b.a15 + a.a52*b.a25 + a.a53*b.a35 + a.a54*b.a45 + a.a55*b.a55;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( FixedMatrix5x5_64F a , FixedMatrix5x5_64F b , FixedMatrix5x5_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31 + a.a41*b.a41 + a.a51*b.a51;
+        c.a12 += a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32 + a.a41*b.a42 + a.a51*b.a52;
+        c.a13 += a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33 + a.a41*b.a43 + a.a51*b.a53;
+        c.a14 += a.a11*b.a14 + a.a21*b.a24 + a.a31*b.a34 + a.a41*b.a44 + a.a51*b.a54;
+        c.a15 += a.a11*b.a15 + a.a21*b.a25 + a.a31*b.a35 + a.a41*b.a45 + a.a51*b.a55;
+        c.a21 += a.a12*b.a11 + a.a22*b.a21 + a.a32*b.a31 + a.a42*b.a41 + a.a52*b.a51;
+        c.a22 += a.a12*b.a12 + a.a22*b.a22 + a.a32*b.a32 + a.a42*b.a42 + a.a52*b.a52;
+        c.a23 += a.a12*b.a13 + a.a22*b.a23 + a.a32*b.a33 + a.a42*b.a43 + a.a52*b.a53;
+        c.a24 += a.a12*b.a14 + a.a22*b.a24 + a.a32*b.a34 + a.a42*b.a44 + a.a52*b.a54;
+        c.a25 += a.a12*b.a15 + a.a22*b.a25 + a.a32*b.a35 + a.a42*b.a45 + a.a52*b.a55;
+        c.a31 += a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31 + a.a43*b.a41 + a.a53*b.a51;
+        c.a32 += a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32 + a.a43*b.a42 + a.a53*b.a52;
+        c.a33 += a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33 + a.a43*b.a43 + a.a53*b.a53;
+        c.a34 += a.a13*b.a14 + a.a23*b.a24 + a.a33*b.a34 + a.a43*b.a44 + a.a53*b.a54;
+        c.a35 += a.a13*b.a15 + a.a23*b.a25 + a.a33*b.a35 + a.a43*b.a45 + a.a53*b.a55;
+        c.a41 += a.a14*b.a11 + a.a24*b.a21 + a.a34*b.a31 + a.a44*b.a41 + a.a54*b.a51;
+        c.a42 += a.a14*b.a12 + a.a24*b.a22 + a.a34*b.a32 + a.a44*b.a42 + a.a54*b.a52;
+        c.a43 += a.a14*b.a13 + a.a24*b.a23 + a.a34*b.a33 + a.a44*b.a43 + a.a54*b.a53;
+        c.a44 += a.a14*b.a14 + a.a24*b.a24 + a.a34*b.a34 + a.a44*b.a44 + a.a54*b.a54;
+        c.a45 += a.a14*b.a15 + a.a24*b.a25 + a.a34*b.a35 + a.a44*b.a45 + a.a54*b.a55;
+        c.a51 += a.a15*b.a11 + a.a25*b.a21 + a.a35*b.a31 + a.a45*b.a41 + a.a55*b.a51;
+        c.a52 += a.a15*b.a12 + a.a25*b.a22 + a.a35*b.a32 + a.a45*b.a42 + a.a55*b.a52;
+        c.a53 += a.a15*b.a13 + a.a25*b.a23 + a.a35*b.a33 + a.a45*b.a43 + a.a55*b.a53;
+        c.a54 += a.a15*b.a14 + a.a25*b.a24 + a.a35*b.a34 + a.a45*b.a44 + a.a55*b.a54;
+        c.a55 += a.a15*b.a15 + a.a25*b.a25 + a.a35*b.a35 + a.a45*b.a45 + a.a55*b.a55;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB( FixedMatrix5x5_64F a , FixedMatrix5x5_64F b , FixedMatrix5x5_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13 + a.a41*b.a14 + a.a51*b.a15;
+        c.a12 += a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23 + a.a41*b.a24 + a.a51*b.a25;
+        c.a13 += a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33 + a.a41*b.a34 + a.a51*b.a35;
+        c.a14 += a.a11*b.a41 + a.a21*b.a42 + a.a31*b.a43 + a.a41*b.a44 + a.a51*b.a45;
+        c.a15 += a.a11*b.a51 + a.a21*b.a52 + a.a31*b.a53 + a.a41*b.a54 + a.a51*b.a55;
+        c.a21 += a.a12*b.a11 + a.a22*b.a12 + a.a32*b.a13 + a.a42*b.a14 + a.a52*b.a15;
+        c.a22 += a.a12*b.a21 + a.a22*b.a22 + a.a32*b.a23 + a.a42*b.a24 + a.a52*b.a25;
+        c.a23 += a.a12*b.a31 + a.a22*b.a32 + a.a32*b.a33 + a.a42*b.a34 + a.a52*b.a35;
+        c.a24 += a.a12*b.a41 + a.a22*b.a42 + a.a32*b.a43 + a.a42*b.a44 + a.a52*b.a45;
+        c.a25 += a.a12*b.a51 + a.a22*b.a52 + a.a32*b.a53 + a.a42*b.a54 + a.a52*b.a55;
+        c.a31 += a.a13*b.a11 + a.a23*b.a12 + a.a33*b.a13 + a.a43*b.a14 + a.a53*b.a15;
+        c.a32 += a.a13*b.a21 + a.a23*b.a22 + a.a33*b.a23 + a.a43*b.a24 + a.a53*b.a25;
+        c.a33 += a.a13*b.a31 + a.a23*b.a32 + a.a33*b.a33 + a.a43*b.a34 + a.a53*b.a35;
+        c.a34 += a.a13*b.a41 + a.a23*b.a42 + a.a33*b.a43 + a.a43*b.a44 + a.a53*b.a45;
+        c.a35 += a.a13*b.a51 + a.a23*b.a52 + a.a33*b.a53 + a.a43*b.a54 + a.a53*b.a55;
+        c.a41 += a.a14*b.a11 + a.a24*b.a12 + a.a34*b.a13 + a.a44*b.a14 + a.a54*b.a15;
+        c.a42 += a.a14*b.a21 + a.a24*b.a22 + a.a34*b.a23 + a.a44*b.a24 + a.a54*b.a25;
+        c.a43 += a.a14*b.a31 + a.a24*b.a32 + a.a34*b.a33 + a.a44*b.a34 + a.a54*b.a35;
+        c.a44 += a.a14*b.a41 + a.a24*b.a42 + a.a34*b.a43 + a.a44*b.a44 + a.a54*b.a45;
+        c.a45 += a.a14*b.a51 + a.a24*b.a52 + a.a34*b.a53 + a.a44*b.a54 + a.a54*b.a55;
+        c.a51 += a.a15*b.a11 + a.a25*b.a12 + a.a35*b.a13 + a.a45*b.a14 + a.a55*b.a15;
+        c.a52 += a.a15*b.a21 + a.a25*b.a22 + a.a35*b.a23 + a.a45*b.a24 + a.a55*b.a25;
+        c.a53 += a.a15*b.a31 + a.a25*b.a32 + a.a35*b.a33 + a.a45*b.a34 + a.a55*b.a35;
+        c.a54 += a.a15*b.a41 + a.a25*b.a42 + a.a35*b.a43 + a.a45*b.a44 + a.a55*b.a45;
+        c.a55 += a.a15*b.a51 + a.a25*b.a52 + a.a35*b.a53 + a.a45*b.a54 + a.a55*b.a55;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( FixedMatrix5x5_64F a , FixedMatrix5x5_64F b , FixedMatrix5x5_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13 + a.a14*b.a14 + a.a15*b.a15;
+        c.a12 += a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23 + a.a14*b.a24 + a.a15*b.a25;
+        c.a13 += a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33 + a.a14*b.a34 + a.a15*b.a35;
+        c.a14 += a.a11*b.a41 + a.a12*b.a42 + a.a13*b.a43 + a.a14*b.a44 + a.a15*b.a45;
+        c.a15 += a.a11*b.a51 + a.a12*b.a52 + a.a13*b.a53 + a.a14*b.a54 + a.a15*b.a55;
+        c.a21 += a.a21*b.a11 + a.a22*b.a12 + a.a23*b.a13 + a.a24*b.a14 + a.a25*b.a15;
+        c.a22 += a.a21*b.a21 + a.a22*b.a22 + a.a23*b.a23 + a.a24*b.a24 + a.a25*b.a25;
+        c.a23 += a.a21*b.a31 + a.a22*b.a32 + a.a23*b.a33 + a.a24*b.a34 + a.a25*b.a35;
+        c.a24 += a.a21*b.a41 + a.a22*b.a42 + a.a23*b.a43 + a.a24*b.a44 + a.a25*b.a45;
+        c.a25 += a.a21*b.a51 + a.a22*b.a52 + a.a23*b.a53 + a.a24*b.a54 + a.a25*b.a55;
+        c.a31 += a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13 + a.a34*b.a14 + a.a35*b.a15;
+        c.a32 += a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23 + a.a34*b.a24 + a.a35*b.a25;
+        c.a33 += a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33 + a.a34*b.a34 + a.a35*b.a35;
+        c.a34 += a.a31*b.a41 + a.a32*b.a42 + a.a33*b.a43 + a.a34*b.a44 + a.a35*b.a45;
+        c.a35 += a.a31*b.a51 + a.a32*b.a52 + a.a33*b.a53 + a.a34*b.a54 + a.a35*b.a55;
+        c.a41 += a.a41*b.a11 + a.a42*b.a12 + a.a43*b.a13 + a.a44*b.a14 + a.a45*b.a15;
+        c.a42 += a.a41*b.a21 + a.a42*b.a22 + a.a43*b.a23 + a.a44*b.a24 + a.a45*b.a25;
+        c.a43 += a.a41*b.a31 + a.a42*b.a32 + a.a43*b.a33 + a.a44*b.a34 + a.a45*b.a35;
+        c.a44 += a.a41*b.a41 + a.a42*b.a42 + a.a43*b.a43 + a.a44*b.a44 + a.a45*b.a45;
+        c.a45 += a.a41*b.a51 + a.a42*b.a52 + a.a43*b.a53 + a.a44*b.a54 + a.a45*b.a55;
+        c.a51 += a.a51*b.a11 + a.a52*b.a12 + a.a53*b.a13 + a.a54*b.a14 + a.a55*b.a15;
+        c.a52 += a.a51*b.a21 + a.a52*b.a22 + a.a53*b.a23 + a.a54*b.a24 + a.a55*b.a25;
+        c.a53 += a.a51*b.a31 + a.a52*b.a32 + a.a53*b.a33 + a.a54*b.a34 + a.a55*b.a35;
+        c.a54 += a.a51*b.a41 + a.a52*b.a42 + a.a53*b.a43 + a.a54*b.a44 + a.a55*b.a45;
+        c.a55 += a.a51*b.a51 + a.a52*b.a52 + a.a53*b.a53 + a.a54*b.a54 + a.a55*b.a55;
+    }
+
+    /**
      * <p>Performs matrix to vector multiplication:<br>
      * <br>
      * c = a * b <br>

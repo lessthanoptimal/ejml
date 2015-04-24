@@ -6,6 +6,7 @@ Date format: year/month/day
 
 20xx/xx/xx
 
+- Added multAdd to fixed sized matrices
 
 ----- Version 0.27
 

@@ -264,6 +264,102 @@ public class FixedOps3 {
     }
 
     /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( FixedMatrix3x3_64F a , FixedMatrix3x3_64F b , FixedMatrix3x3_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31;
+        c.a12 += a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32;
+        c.a13 += a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33;
+        c.a21 += a.a21*b.a11 + a.a22*b.a21 + a.a23*b.a31;
+        c.a22 += a.a21*b.a12 + a.a22*b.a22 + a.a23*b.a32;
+        c.a23 += a.a21*b.a13 + a.a22*b.a23 + a.a23*b.a33;
+        c.a31 += a.a31*b.a11 + a.a32*b.a21 + a.a33*b.a31;
+        c.a32 += a.a31*b.a12 + a.a32*b.a22 + a.a33*b.a32;
+        c.a33 += a.a31*b.a13 + a.a32*b.a23 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( FixedMatrix3x3_64F a , FixedMatrix3x3_64F b , FixedMatrix3x3_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31;
+        c.a12 += a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32;
+        c.a13 += a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33;
+        c.a21 += a.a12*b.a11 + a.a22*b.a21 + a.a32*b.a31;
+        c.a22 += a.a12*b.a12 + a.a22*b.a22 + a.a32*b.a32;
+        c.a23 += a.a12*b.a13 + a.a22*b.a23 + a.a32*b.a33;
+        c.a31 += a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31;
+        c.a32 += a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32;
+        c.a33 += a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB( FixedMatrix3x3_64F a , FixedMatrix3x3_64F b , FixedMatrix3x3_64F c) {
+        c.a11 += a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13;
+        c.a12 += a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23;
+        c.a13 += a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33;
+        c.a21 += a.a12*b.a11 + a.a22*b.a12 + a.a32*b.a13;
+        c.a22 += a.a12*b.a21 + a.a22*b.a22 + a.a32*b.a23;
+        c.a23 += a.a12*b.a31 + a.a22*b.a32 + a.a32*b.a33;
+        c.a31 += a.a13*b.a11 + a.a23*b.a12 + a.a33*b.a13;
+        c.a32 += a.a13*b.a21 + a.a23*b.a22 + a.a33*b.a23;
+        c.a33 += a.a13*b.a31 + a.a23*b.a32 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( FixedMatrix3x3_64F a , FixedMatrix3x3_64F b , FixedMatrix3x3_64F c) {
+        c.a11 += a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13;
+        c.a12 += a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23;
+        c.a13 += a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33;
+        c.a21 += a.a21*b.a11 + a.a22*b.a12 + a.a23*b.a13;
+        c.a22 += a.a21*b.a21 + a.a22*b.a22 + a.a23*b.a23;
+        c.a23 += a.a21*b.a31 + a.a22*b.a32 + a.a23*b.a33;
+        c.a31 += a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13;
+        c.a32 += a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23;
+        c.a33 += a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33;
+    }
+
+    /**
      * <p>Performs matrix to vector multiplication:<br>
      * <br>
      * c = a * b <br>
