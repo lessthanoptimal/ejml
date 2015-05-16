@@ -640,16 +640,30 @@ public class TestOperation {
     }
 
     @Test
-    public void copy_region() {
+    public void copy_submatrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(2,2,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random(2,3,-1,1,rand);
         SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
-        eq.process("b(1:2,2:3)=a");
+        eq.process("b(1:2,1:3)=a");
 
-        assertTrue(a.isIdentical(b.extractMatrix(1, 3, 2, 4), 1e-8));
+        assertTrue(a.isIdentical(b.extractMatrix(1, 3, 1, 4), 1e-8));
+    }
+
+    @Test
+    public void copy_submatrix_scalar() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b,"b");
+        eq.process("b(2,3)=4.5");
+        eq.process("b(0,0)=3.5");
+
+        assertEquals(3.5, b.get(0, 0),1e-8);
+        assertEquals(4.5, b.get(2, 3),1e-8);
     }
 
     @Test

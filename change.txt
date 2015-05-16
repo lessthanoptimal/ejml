@@ -2,6 +2,14 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.28
+
+2015/
+
+- Equations
+  * Fixed bug where bounds for a submatrix-scalar assignment was being checked using col,row instead of row,col
+    Thanks lenhhoxung for reporting this bug
+
 ----- Version 0.27
 
 2015/04/01
