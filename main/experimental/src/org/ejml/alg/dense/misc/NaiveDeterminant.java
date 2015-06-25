@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,11 +40,12 @@ public class NaiveDeterminant {
      * </p>
      * <p>
      * det(A) = Sum( &sigma; in S<sub>n</sub> ; sgn(&sigma;) Prod( i = 1 to n ; a<sub>i,&sigma;(i)</sub>) )<br>
+     * </p>
      * <ul>
      * <li>sgn is the sign function of permutations. +1 or -1 for even and odd permutations</li>
      * <li>a set of permutations. if n=3 then the possible permutations are (1,2,3) (1,3,2), (3,2,1), ... etc</li>
      * </ul>
-     * </p>
+
      *
      * @param mat The matrix whose determinant is computed.
      * @return The value of the determinant
