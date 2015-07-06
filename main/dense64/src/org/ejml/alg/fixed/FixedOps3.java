@@ -57,6 +57,27 @@ public class FixedOps3 {
     /**
      * <p>Performs the following operation:<br>
      * <br>
+     * c = a + b <br>
+     * c<sub>i</sub> = a<sub>i</sub> + b<sub>i</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Vector C can be the same instance as Vector A and/or B.
+     * </p>
+     *
+     * @param a A Vector. Not modified.
+     * @param b A Vector. Not modified.
+     * @param c A Vector where the results are stored. Modified.
+     */
+    public static void add( FixedMatrix3_64F a , FixedMatrix3_64F b , FixedMatrix3_64F c ) {
+        c.a1 = a.a1 + b.a1;
+        c.a2 = a.a2 + b.a2;
+        c.a3 = a.a3 + b.a3;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
      * a = a + b <br>
      * a<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
      * </p>
@@ -74,6 +95,22 @@ public class FixedOps3 {
         a.a31 += b.a31;
         a.a32 += b.a32;
         a.a33 += b.a33;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a + b <br>
+     * a<sub>i</sub> = a<sub>i</sub> + b<sub>i</sub> <br>
+     * </p>
+     *
+     * @param a A Vector. Modified.
+     * @param b A Vector. Not modified.
+     */
+    public static void addEquals( FixedMatrix3_64F a , FixedMatrix3_64F b ) {
+        a.a1 += b.a1;
+        a.a2 += b.a2;
+        a.a3 += b.a3;
     }
 
     /**
@@ -106,6 +143,27 @@ public class FixedOps3 {
     /**
      * <p>Performs the following operation:<br>
      * <br>
+     * c = a - b <br>
+     * c<sub>i</sub> = a<sub>i</sub> - b<sub>i</sub> <br>
+     * </p>
+     *
+     * <p>
+     * Vector C can be the same instance as Vector A and/or B.
+     * </p>
+     *
+     * @param a A Vector. Not modified.
+     * @param b A Vector. Not modified.
+     * @param c A Vector where the results are stored. Modified.
+     */
+    public static void subtract( FixedMatrix3_64F a , FixedMatrix3_64F b , FixedMatrix3_64F c ) {
+        c.a1 = a.a1 - b.a1;
+        c.a2 = a.a2 - b.a2;
+        c.a3 = a.a3 - b.a3;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
      * a = a - b <br>
      * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub> <br>
      * </p>
@@ -123,6 +181,22 @@ public class FixedOps3 {
         a.a31 -= b.a31;
         a.a32 -= b.a32;
         a.a33 -= b.a33;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * a = a - b <br>
+     * a<sub>i</sub> = a<sub>i</sub> - b<sub>i</sub> <br>
+     * </p>
+     *
+     * @param a A Vector. Modified.
+     * @param b A Vector. Not modified.
+     */
+    public static void subtractEquals( FixedMatrix3_64F a , FixedMatrix3_64F b ) {
+        a.a1 -= b.a1;
+        a.a2 -= b.a2;
+        a.a3 -= b.a3;
     }
 
     /**
@@ -451,6 +525,24 @@ public class FixedOps3 {
 
     /**
      * <p>
+     * Returns the value of the element in the vector that has the largest value.<br>
+     * <br>
+     * Max{ a<sub>i</sub> } for all i<br>
+     * </p>
+     *
+     * @param a A vector. Not modified.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMax( FixedMatrix3_64F a ) {
+        double max = a.a1;
+        max = Math.max(max,a.a2);
+        max = Math.max(max,a.a3);
+
+        return max;
+    }
+
+    /**
+     * <p>
      * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
      * <br>
      * Max{ |a<sub>ij</sub>| } for all i and j<br>
@@ -475,6 +567,24 @@ public class FixedOps3 {
 
     /**
      * <p>
+     * Returns the absolute value of the element in the vector that has the largest absolute value.<br>
+     * <br>
+     * Max{ |a<sub>i</sub>| } for all i<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max abs element value of the vector.
+     */
+    public static double elementMaxAbs( FixedMatrix3_64F a ) {
+        double max = a.a1;
+        max = Math.max(max,Math.abs(a.a2));
+        max = Math.max(max,Math.abs(a.a3));
+
+        return max;
+    }
+
+    /**
+     * <p>
      * Returns the value of the element in the matrix that has the minimum value.<br>
      * <br>
      * Min{ a<sub>ij</sub> } for all i and j<br>
@@ -485,14 +595,32 @@ public class FixedOps3 {
      */
     public static double elementMin( FixedMatrix3x3_64F a ) {
         double min = a.a11;
-        min = Math.min(min,a.a12);
-        min = Math.min(min,a.a13);
-        min = Math.min(min,a.a21);
-        min = Math.min(min,a.a22);
-        min = Math.min(min,a.a23);
-        min = Math.min(min,a.a31);
-        min = Math.min(min,a.a32);
-        min = Math.min(min,a.a33);
+        min = Math.min(min, a.a12);
+        min = Math.min(min, a.a13);
+        min = Math.min(min, a.a21);
+        min = Math.min(min, a.a22);
+        min = Math.min(min, a.a23);
+        min = Math.min(min, a.a31);
+        min = Math.min(min, a.a32);
+        min = Math.min(min, a.a33);
+
+        return min;
+    }
+
+    /**
+     * <p>
+     * Returns the value of the element in the vector that has the minimum value.<br>
+     * <br>
+     * Min{ a<sub>i</sub> } for all<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The value of element in the vector with the minimum value.
+     */
+    public static double elementMin( FixedMatrix3_64F a ) {
+        double min = a.a1;
+        min = Math.min(min, a.a2);
+        min = Math.min(min, a.a3);
 
         return min;
     }
@@ -522,7 +650,25 @@ public class FixedOps3 {
     }
 
     /**
-     * <p>Performs the an element by element multiplication operation:<br>
+     * <p>
+     * Returns the absolute value of the element in the vector that has the smallest absolute value.<br>
+     * <br>
+     * Min{ |a<sub>i</sub>| } for all i<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The max element value of the vector.
+     */
+    public static double elementMinAbs( FixedMatrix3_64F a ) {
+        double min = a.a1;
+        min = Math.min(min,Math.abs(a.a2));
+        min = Math.min(min,Math.abs(a.a3));
+
+        return min;
+    }
+
+    /**
+     * <p>Performs an element by element multiplication operation:<br>
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
      * </p>
@@ -536,7 +682,21 @@ public class FixedOps3 {
     }
 
     /**
-     * <p>Performs the an element by element multiplication operation:<br>
+     * <p>Performs an element by element multiplication operation:<br>
+     * <br>
+     * a<sub>i</sub> = a<sub>i</sub> * b<sub>i</sub> <br>
+     * </p>
+     * @param a The left vector in the multiplication operation. Modified.
+     * @param b The right vector in the multiplication operation. Not modified.
+     */
+    public static void elementMult( FixedMatrix3_64F a , FixedMatrix3_64F b) {
+        a.a1 *= b.a1;
+        a.a2 *= b.a2;
+        a.a3 *= b.a3;
+    }
+
+    /**
+     * <p>Performs an element by element multiplication operation:<br>
      * <br>
      * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
      * </p>
@@ -551,7 +711,22 @@ public class FixedOps3 {
     }
 
     /**
-     * <p>Performs the an element by element division operation:<br>
+     * <p>Performs an element by element multiplication operation:<br>
+     * <br>
+     * c<sub>i</sub> = a<sub>i</sub> * b<sub>j</sub> <br>
+     * </p>
+     * @param a The left vector in the multiplication operation. Not modified.
+     * @param b The right vector in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void elementMult( FixedMatrix3_64F a , FixedMatrix3_64F b , FixedMatrix3_64F c ) {
+        c.a1 = a.a1*b.a1;
+        c.a2 = a.a2*b.a2;
+        c.a3 = a.a3*b.a3;
+    }
+
+    /**
+     * <p>Performs an element by element division operation:<br>
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
      * </p>
@@ -565,7 +740,21 @@ public class FixedOps3 {
     }
 
     /**
-     * <p>Performs the an element by element division operation:<br>
+     * <p>Performs an element by element division operation:<br>
+     * <br>
+     * a<sub>i</sub> = a<sub>i</sub> / b<sub>i</sub> <br>
+     * </p>
+     * @param a The left vector in the division operation. Modified.
+     * @param b The right vector in the division operation. Not modified.
+     */
+    public static void elementDiv( FixedMatrix3_64F a , FixedMatrix3_64F b) {
+        a.a1 /= b.a1;
+        a.a2 /= b.a2;
+        a.a3 /= b.a3;
+    }
+
+    /**
+     * <p>Performs an element by element division operation:<br>
      * <br>
      * c<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
      * </p>
@@ -577,6 +766,21 @@ public class FixedOps3 {
         c.a11 = a.a11/b.a11; c.a12 = a.a12/b.a12; c.a13 = a.a13/b.a13;
         c.a21 = a.a21/b.a21; c.a22 = a.a22/b.a22; c.a23 = a.a23/b.a23;
         c.a31 = a.a31/b.a31; c.a32 = a.a32/b.a32; c.a33 = a.a33/b.a33;
+    }
+
+    /**
+     * <p>Performs an element by element division operation:<br>
+     * <br>
+     * c<sub>i</sub> = a<sub>i</sub> / b<sub>i</sub> <br>
+     * </p>
+     * @param a The left vector in the division operation. Not modified.
+     * @param b The right vector in the division operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void elementDiv( FixedMatrix3_64F a , FixedMatrix3_64F b , FixedMatrix3_64F c ) {
+        c.a1 = a.a1/b.a1;
+        c.a2 = a.a2/b.a2;
+        c.a3 = a.a3/b.a3;
     }
 
     /**
@@ -593,6 +797,22 @@ public class FixedOps3 {
         a.a11 *= alpha; a.a12 *= alpha; a.a13 *= alpha;
         a.a21 *= alpha; a.a22 *= alpha; a.a23 *= alpha;
         a.a31 *= alpha; a.a32 *= alpha; a.a33 *= alpha;
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar multiplication.<br>
+     * <br>
+     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param a The vector that is to be scaled.  Modified.
+     * @param alpha the amount each element is multiplied by.
+     */
+    public static void scale( double alpha , FixedMatrix3_64F a ) {
+        a.a1 *= alpha;
+        a.a2 *= alpha;
+        a.a3 *= alpha;
     }
 
     /**
@@ -614,6 +834,23 @@ public class FixedOps3 {
 
     /**
      * <p>
+     * Performs an element by element scalar multiplication.<br>
+     * <br>
+     * b<sub>i</sub> = &alpha;*a<sub>i</sub>
+     * </p>
+     *
+     * @param alpha the amount each element is multiplied by.
+     * @param a The vector that is to be scaled.  Not modified.
+     * @param b Where the scaled matrix is stored. Modified.
+     */
+    public static void scale( double alpha , FixedMatrix3_64F a , FixedMatrix3_64F b ) {
+        b.a1 = a.a1*alpha;
+        b.a2 = a.a2*alpha;
+        b.a3 = a.a3*alpha;
+    }
+
+    /**
+     * <p>
      * Performs an in-place element by element scalar division. Scalar denominator.<br>
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
@@ -630,9 +867,25 @@ public class FixedOps3 {
 
     /**
      * <p>
+     * Performs an in-place element by element scalar division. Scalar denominator.<br>
+     * <br>
+     * a<sub>i</sub> = a<sub>i</sub>/&alpha;
+     * </p>
+     *
+     * @param a The vector whose elements are to be divided.  Modified.
+     * @param alpha the amount each element is divided by.
+     */
+    public static void divide( FixedMatrix3_64F a , double alpha ) {
+        a.a1 /= alpha;
+        a.a2 /= alpha;
+        a.a3 /= alpha;
+    }
+
+    /**
+     * <p>
      * Performs an element by element scalar division.  Scalar denominator.<br>
      * <br>
-     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;
+     * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;
      * </p>
      *
      * @param alpha the amount each element is divided by.
@@ -643,6 +896,23 @@ public class FixedOps3 {
         b.a11 = a.a11/alpha; b.a12 = a.a12/alpha; b.a13 = a.a13/alpha;
         b.a21 = a.a21/alpha; b.a22 = a.a22/alpha; b.a23 = a.a23/alpha;
         b.a31 = a.a31/alpha; b.a32 = a.a32/alpha; b.a33 = a.a33/alpha;
+    }
+
+    /**
+     * <p>
+     * Performs an element by element scalar division.  Scalar denominator.<br>
+     * <br>
+     * b<sub>i</sub> = a<sub>i</sub> /&alpha;
+     * </p>
+     *
+     * @param alpha the amount each element is divided by.
+     * @param a The vector whose elements are to be divided.  Not modified.
+     * @param b Where the results are stored. Modified.
+     */
+    public static void divide( FixedMatrix3_64F a , double alpha , FixedMatrix3_64F b ) {
+        b.a1 = a.a1/alpha;
+        b.a2 = a.a2/alpha;
+        b.a3 = a.a3/alpha;
     }
 
     /**
@@ -663,6 +933,22 @@ public class FixedOps3 {
 
     /**
      * <p>
+     * Changes the sign of every element in the vector.<br>
+     * <br>
+     * a<sub>i</sub> = -a<sub>i</sub>
+     * </p>
+     *
+     * @param a A vector. Modified.
+     */
+    public static void changeSign( FixedMatrix3_64F a )
+    {
+        a.a1 = -a.a1;
+        a.a2 = -a.a2;
+        a.a3 = -a.a3;
+    }
+
+    /**
+     * <p>
      * Sets every element in the matrix to the specified value.<br>
      * <br>
      * a<sub>ij</sub> = value
@@ -675,6 +961,22 @@ public class FixedOps3 {
         a.a11 = v; a.a12 = v; a.a13 = v;
         a.a21 = v; a.a22 = v; a.a23 = v;
         a.a31 = v; a.a32 = v; a.a33 = v;
+    }
+
+    /**
+     * <p>
+     * Sets every element in the vector to the specified value.<br>
+     * <br>
+     * a<sub>i</sub> = value
+     * <p>
+     *
+     * @param a A vector whose elements are about to be set. Modified.
+     * @param v The value each element will have.
+     */
+    public static void fill( FixedMatrix3_64F a , double v  ) {
+        a.a1 = v;
+        a.a2 = v;
+        a.a3 = v;
     }
 
     /**

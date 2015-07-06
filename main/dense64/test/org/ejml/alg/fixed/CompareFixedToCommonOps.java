@@ -87,7 +87,7 @@ public abstract class CompareFixedToCommonOps {
             }
         }
 
-        int numExpected = 33;
+        int numExpected = 51;
         if( N > GenerateFixedOps.maxInverseSize ) {
             numExpected -= 2;
         }

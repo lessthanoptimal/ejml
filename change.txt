@@ -9,6 +9,8 @@ Date format: year/month/day
 - Equations
   * Fixed bug where bounds for a submatrix-scalar assignment was being checked using col,row instead of row,col
     Thanks lenhhoxung for reporting this bug
+- FixedOps
+  * Added vector equivalents for all element-wise matrix operations
 
 Feature TODO
 - a = [5:10]
