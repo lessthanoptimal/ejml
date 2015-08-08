@@ -11,6 +11,7 @@ Date format: year/month/day
     Thanks lenhhoxung for reporting this bug
 - FixedOps
   * Added vector equivalents for all element-wise matrix operations
+  * Added multAdd operators
 
 Feature TODO
 - a = [5:10]

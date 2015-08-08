@@ -882,9 +882,9 @@ public class FixedOps4 {
      */
     public static double elementMin( FixedMatrix4_64F a ) {
         double min = a.a1;
-        min = Math.min(min,a.a2);
-        min = Math.min(min,a.a3);
-        min = Math.min(min,a.a4);
+        min = Math.min(min, a.a2);
+        min = Math.min(min, a.a3);
+        min = Math.min(min, a.a4);
 
         return min;
     }

@@ -1082,10 +1082,10 @@ public class FixedOps5 {
      */
     public static double elementMin( FixedMatrix5_64F a ) {
         double min = a.a1;
-        min = Math.min(min,a.a2);
-        min = Math.min(min,a.a3);
-        min = Math.min(min,a.a4);
-        min = Math.min(min,a.a5);
+        min = Math.min(min, a.a2);
+        min = Math.min(min, a.a3);
+        min = Math.min(min, a.a4);
+        min = Math.min(min, a.a5);
 
         return min;
     }
