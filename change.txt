@@ -6,7 +6,19 @@ Date format: year/month/day
 
 20xx/xx/xx
 
-- Added multAdd to fixed sized matrices
+- Equations
+  * Fixed bug where bounds for a submatrix-scalar assignment was being checked using col,row instead of row,col
+    Thanks lenhhoxung for reporting this bug
+- FixedOps
+  * Added vector equivalents for all element-wise matrix operations
+
+Feature TODO
+- a = [5:10]
+- first: b = [1 2 50 69]
+  then:  c(b) = 1
+
+Maybe do this by parsing "5:10" and "1 2 3 4 5" into IntegerSequence with specific types range and list?
+Have an interator in IntegerSequence for generic processing, but allow for specialized for each sequence type?
 
 ----- Version 0.27
 
