@@ -750,9 +750,9 @@ public abstract class Operation {
 
                     findExtents(mdst,range,0,extents);
 
-                    if( !mdst.isInBounds(extents.col0,extents.row0))
+                    if( !mdst.isInBounds(extents.row0,extents.col0))
                         throw new RuntimeException("Submatrix out of bounds. Lower extent");
-                    if( !mdst.isInBounds(extents.col1-1,extents.row1-1))
+                    if( !mdst.isInBounds(extents.row1-1,extents.col1-1))
                         throw new RuntimeException("Submatrix out of bounds. Upper extent");
 
                     for (int i = extents.row0; i < extents.row1; i++) {

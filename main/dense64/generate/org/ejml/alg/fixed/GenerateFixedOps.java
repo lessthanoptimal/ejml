@@ -45,9 +45,13 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             printPreable(dimension);
 
             add(dimension);
+            vector_add(dimension);
             addEquals(dimension);
+            vector_addEquals(dimension);
             subtract(dimension);
+            vector_subtract(dimension);
             subtractEquals(dimension);
+            vector_subtractEquals(dimension);
             transpose_one(dimension);
             transpose_two(dimension);
             for( int i = 0; i < 2; i ++ ) {
@@ -68,19 +72,33 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             trace(dimension);
             diag(dimension);
             elementMax(dimension);
+            elementMax_vector(dimension);
             elementMaxAbs(dimension);
+            elementMaxAbs_vector(dimension);
             elementMin(dimension);
+            elementMin_vector(dimension);
             elementMinAbs(dimension);
+            elementMinAbs_vector(dimension);
             elementMult_two(dimension);
+            elementMult_vector_two(dimension);
             elementMult_three(dimension);
+            elementMult_vector_three(dimension);
             elementDiv_two(dimension);
+            elementDiv_vector_two(dimension);
             elementDiv_three(dimension);
+            elementDiv_vector_three(dimension);
             scale_two(dimension);
+            scale_vector_two(dimension);
             scale_three(dimension);
+            scale_vector_three(dimension);
             divide_two(dimension);
+            divide_vector_two(dimension);
             divide_three(dimension);
+            divide_vector_three(dimension);
             changeSign(dimension);
+            changeSign_vector(dimension);
             fill(dimension);
+            fill_vector(dimension);
             extract(dimension);
 
             out.println("}\n");
@@ -124,12 +142,35 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param b A Matrix. Not modified.\n" +
                 "     * @param c A Matrix where the results are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void add( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c ) {\n");
+                "    public static void add( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c ) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
                 String n = y+""+x;
                 out.print("        c.a"+n+" = a.a"+n+" + b.a"+n+";\n");
             }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void vector_add( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c = a + b <br>\n" +
+                "     * c<sub>i</sub> = a<sub>i</sub> + b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * <p>\n" +
+                "     * Vector C can be the same instance as Vector A and/or B.\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A Vector. Not modified.\n" +
+                "     * @param b A Vector. Not modified.\n" +
+                "     * @param c A Vector where the results are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void add( " + nameVector + " a , " + nameVector + " b , " + nameVector + " c ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        c.a"+y+" = a.a"+y+" + b.a"+y+";\n");
         }
         out.print("    }\n\n");
     }
@@ -145,12 +186,30 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param a A Matrix. Modified.\n" +
                 "     * @param b A Matrix. Not modified.\n" +
                 "     */\n" +
-                "    public static void addEquals( "+nameMatrix+" a , "+nameMatrix+" b ) {\n");
+                "    public static void addEquals( " + nameMatrix + " a , " + nameMatrix + " b ) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
                 String n = y+""+x;
                 out.print("        a.a"+n+" += b.a"+n+";\n");
             }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void vector_addEquals( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a = a + b <br>\n" +
+                "     * a<sub>i</sub> = a<sub>i</sub> + b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A Vector. Modified.\n" +
+                "     * @param b A Vector. Not modified.\n" +
+                "     */\n" +
+                "    public static void addEquals( " + nameVector + " a , " + nameVector + " b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" += b.a"+y+";\n");
         }
         out.print("    }\n\n");
     }
@@ -171,7 +230,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param b A Matrix. Not modified.\n" +
                 "     * @param c A Matrix where the results are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void subtract( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c ) {\n");
+                "    public static void subtract( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c ) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
                 String n = y+""+x;
@@ -181,7 +240,30 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
-    private void subtractEquals( int dimen ){
+    private void vector_subtract( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c = a - b <br>\n" +
+                "     * c<sub>i</sub> = a<sub>i</sub> - b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * <p>\n" +
+                "     * Vector C can be the same instance as Vector A and/or B.\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A Vector. Not modified.\n" +
+                "     * @param b A Vector. Not modified.\n" +
+                "     * @param c A Vector where the results are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void subtract( "+nameVector+" a , "+nameVector+" b , "+nameVector+" c ) {\n");
+        for( int y = 1; y <= dimen; y++) {
+            out.print("        c.a" + y + " = a.a" + y + " - b.a" + y + ";\n");
+        }
+        out.print("    }\n\n");
+    }
+
+    private void subtractEquals(int dimen) {
         out.print("    /**\n" +
                 "     * <p>Performs the following operation:<br>\n" +
                 "     * <br>\n" +
@@ -194,10 +276,29 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     */\n" +
                 "    public static void subtractEquals( "+nameMatrix+" a , "+nameMatrix+" b ) {\n");
         for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ ) {
-                String n = y+""+x;
-                out.print("        a.a"+n+" -= b.a"+n+";\n");
+            for (int x = 1; x <= dimen; x++) {
+                String n = y + "" + x;
+                out.print("        a.a" + n + " -= b.a" + n + ";\n");
             }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void vector_subtractEquals( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a = a - b <br>\n" +
+                "     * a<sub>i</sub> = a<sub>i</sub> - b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A Vector. Modified.\n" +
+                "     * @param b A Vector. Not modified.\n" +
+                "     */\n" +
+                "    public static void subtractEquals( "+nameVector+" a , "+nameVector+" b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            String n = ""+y;
+            out.print("        a.a"+n+" -= b.a"+n+";\n");
         }
         out.print("    }\n\n");
     }
@@ -209,12 +310,12 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     *\n" +
                 "     * @param m The matrix that is to be transposed. Modified.\n" +
                 "     */\n" +
-                "    public static void transpose( "+nameMatrix+" m ) {\n"  +
+                "    public static void transpose( " + nameMatrix + " m ) {\n" +
                 "        double tmp;\n");
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = y+1; x <= dimen; x++ ) {
-                String f = +y+""+x;
-                String t = +x+""+y;
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = y + 1; x <= dimen; x++) {
+                String f = +y + "" + x;
+                String t = +x + "" + y;
 
                 out.print("        tmp = m.a"+f+"; m.a"+f+" = m.a"+t+"; m.a"+t+" = tmp;\n");
             }
@@ -235,12 +336,12 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param output Where the transpose is stored. If null a new matrix is created. Modified.\n" +
                 "     * @return The transposed matrix.\n" +
                 "     */\n" +
-                "    public static "+nameMatrix+" transpose( "+nameMatrix+" input , "+nameMatrix+" output ) {\n" +
+                "    public static " + nameMatrix + " transpose( " + nameMatrix + " input , " + nameMatrix + " output ) {\n" +
                 "        if( input == null )\n" +
-                "            input = new "+nameMatrix+"();\n\n");
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ ) {
-                String f = +y+""+x;
+                "            input = new " + nameMatrix + "();\n\n");
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                String f = +y + "" + x;
                 String t = +x+""+y;
 
                 out.print("        output.a"+f+" = input.a"+t+";\n");
@@ -301,12 +402,12 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" "+plus+"= ");
-                for( int k = 1; k <= dimen; k++ ) {
-                    out.print("a.a"+k+""+y+"*b.a"+k+""+x);
-                    if( k < dimen )
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                out.print("        c.a" + y + "" + x + " " + plus + "= ");
+                for (int k = 1; k <= dimen; k++) {
+                    out.print("a.a" + k + "" + y + "*b.a" + k + "" + x);
+                    if (k < dimen)
                         out.print(" + ");
                     else
                         out.print(";\n");
@@ -333,12 +434,12 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" "+plus+"= ");
-                for( int k = 1; k <= dimen; k++ ) {
-                    out.print("a.a"+k+""+y+"*b.a"+x+""+k);
-                    if( k < dimen )
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                out.print("        c.a" + y + "" + x + " " + plus + "= ");
+                for (int k = 1; k <= dimen; k++) {
+                    out.print("a.a" + k + "" + y + "*b.a" + x + "" + k);
+                    if (k < dimen)
                         out.print(" + ");
                     else
                         out.print(";\n");
@@ -364,13 +465,13 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void "+name+"( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ ) {
-                out.print("        c.a"+y+""+x+" "+plus+"= ");
-                for( int k = 1; k <= dimen; k++ ) {
-                    out.print("a.a"+y+""+k+"*b.a"+x+""+k);
-                    if( k < dimen )
+                "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                out.print("        c.a" + y + "" + x + " " + plus + "= ");
+                for (int k = 1; k <= dimen; k++) {
+                    out.print("a.a" + y + "" + k + "*b.a" + x + "" + k);
+                    if (k < dimen )
                         out.print(" + ");
                     else
                         out.print(";\n");
@@ -393,11 +494,11 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     * @param b The right vector in the multiplication operation. Not modified.\n" +
                 "     * @param c Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
-                "    public static void mult( "+nameMatrix+" a , "+nameVector+" b , "+nameVector+" c) {\n");
-        for( int y = 1; y <= dimen; y++ ) {
-            out.print("        c.a"+y+" = ");
-            for( int x = 1; x <= dimen; x++ ) {
-                out.print("a.a"+y+""+x+"*b.a"+x);
+                "    public static void mult( " + nameMatrix + " a , " + nameVector + " b , " + nameVector + " c) {\n");
+        for (int y = 1; y <= dimen; y++) {
+            out.print("        c.a" + y + " = ");
+            for (int x = 1; x <= dimen; x++) {
+                out.print("a.a" + y + "" + x + "*b.a"+x);
                 if( x < dimen )
                     out.print(" + ");
                 else
@@ -452,7 +553,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     */\n" +
                 "    public static double dot( "+nameVector+" a , "+nameVector+" b ) {\n");
         out.print("        return ");
-        for( int i = 1; i <= dimen; i++ ) {
+        for( int i = 1; i <= dimen; i++) {
             out.print("a.a"+i+"*b.a"+i);
             if( i < dimen )
                 out.print(" + ");
@@ -502,24 +603,24 @@ public class GenerateFixedOps extends CodeGeneratorBase {
 
         int matrix[] = new int[dimen*dimen];
         int index = 0;
-        for( int y = 1; y <= dimen; y++ ) {
-            for( int x = 1; x <= dimen; x++ , index++) {
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++, index++) {
                 matrix[index] = index;
-                String coor = y+""+x;
-                out.print("        double a"+coor+" = a.a"+coor+"*scale;\n");
+                String coor = y + "" + x;
+                out.print("        double a" + coor + " = a.a" + coor + "*scale;\n");
             }
         }
         out.println();
 
         try {
             GenerateInverseFromMinor gen = new GenerateInverseFromMinor(false);
-            gen.printMinors(matrix,dimen, out);
+            gen.printMinors(matrix, dimen, out);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         out.println();
 
-        for( int y = 1; y <= dimen; y++ ) {
+        for (int y = 1; y <= dimen; y++) {
             for( int x = 1; x <= dimen; x++ ) {
                 String coor0 = y+""+x;
                 String coor1 = x+""+y;
@@ -532,7 +633,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
 
     }
 
-    private void trace( int dimen ){
+    private void trace(int dimen) {
         out.print("    /**\n" +
                 "     * <p>\n" +
                 "     * This computes the trace of the matrix:<br>\n" +
@@ -605,7 +706,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "     */\n" +
                 "    public static void diag( "+nameMatrix+" input , "+nameVector+" out ) {\n");
         for( int i = 1; i <= dimen; i++ ) {
-            out.print("        out.a"+i+" = input.a"+i+""+i+";\n");
+            out.print("        out.a" + i + " = input.a" + i + "" + i + ";\n");
         }
         out.print("    }\n\n");
     }
@@ -636,6 +737,28 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "    }\n\n");
     }
 
+    private void elementMax_vector( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the value of the element in the vector that has the largest value.<br>\n" +
+                "     * <br>\n" +
+                "     * Max{ a<sub>i</sub> } for all i<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A vector. Not modified.\n" +
+                "     * @return The max element value of the matrix.\n" +
+                "     */\n" +
+                "    public static double elementMax( "+nameVector+" a ) {\n");
+
+        out.print("        double max = a.a1;\n");
+        for( int y = 2; y <= dimen; y++ ) {
+            out.print("        max = Math.max(max,a.a"+y+");\n");
+        }
+        out.print("\n" +
+                "        return max;\n" +
+                "    }\n\n");
+    }
+
     private void elementMaxAbs( int dimen ) {
         out.print("    /**\n" +
                 "     * <p>\n" +
@@ -650,12 +773,34 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "    public static double elementMaxAbs( "+nameMatrix+" a ) {\n");
 
         out.print("        double max = a.a11;\n");
-        for( int y = 1; y <= dimen; y++ ) {
+        for (int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
                 if( y == 1 && x == 1 )
                     continue;
-                out.print("        max = Math.max(max,Math.abs(a.a"+y+""+x+"));\n");
+                out.print("        max = Math.max(max,Math.abs(a.a" + y + "" + x + "));\n");
             }
+        }
+        out.print("\n" +
+                "        return max;\n" +
+                "    }\n\n");
+    }
+
+    private void elementMaxAbs_vector( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the absolute value of the element in the vector that has the largest absolute value.<br>\n" +
+                "     * <br>\n" +
+                "     * Max{ |a<sub>i</sub>| } for all i<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The max abs element value of the vector.\n" +
+                "     */\n" +
+                "    public static double elementMaxAbs( "+nameVector+" a ) {\n");
+
+        out.print("        double max = a.a1;\n");
+        for( int y = 2; y <= dimen; y++ ) {
+            out.print("        max = Math.max(max,Math.abs(a.a"+y+"));\n");
         }
         out.print("\n" +
                 "        return max;\n" +
@@ -680,8 +825,30 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             for( int x = 1; x <= dimen; x++ ) {
                 if( y == 1 && x == 1 )
                     continue;
-                out.print("        min = Math.min(min,a.a"+y+""+x+");\n");
+                out.print("        min = Math.min(min, a.a"+y+""+x+");\n");
             }
+        }
+        out.print("\n" +
+                "        return min;\n" +
+                "    }\n\n");
+    }
+
+    private void elementMin_vector( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the value of the element in the vector that has the minimum value.<br>\n" +
+                "     * <br>\n" +
+                "     * Min{ a<sub>i</sub> } for all<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The value of element in the vector with the minimum value.\n" +
+                "     */\n" +
+                "    public static double elementMin( "+nameVector+" a ) {\n");
+
+        out.print("        double min = a.a1;\n");
+        for( int y = 2; y <= dimen; y++ ) {
+            out.print("        min = Math.min(min, a.a"+y+");\n");
         }
         out.print("\n" +
                 "        return min;\n" +
@@ -702,7 +869,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "    public static double elementMinAbs( "+nameMatrix+" a ) {\n");
 
         out.print("        double min = a.a11;\n");
-        for( int y = 1; y <= dimen; y++ ) {
+        for (int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
                 if( y == 1 && x == 1 )
                     continue;
@@ -714,22 +881,45 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 "    }\n\n");
     }
 
+
+    private void elementMinAbs_vector(int dimen) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Returns the absolute value of the element in the vector that has the smallest absolute value.<br>\n" +
+                "     * <br>\n" +
+                "     * Min{ |a<sub>i</sub>| } for all i<br>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A matrix. Not modified.\n" +
+                "     * @return The max element value of the vector.\n" +
+                "     */\n" +
+                "    public static double elementMinAbs( "+nameVector+" a ) {\n");
+
+        out.print("        double min = a.a1;\n");
+        for( int y = 2; y <= dimen; y++ ) {
+            out.print("        min = Math.min(min,Math.abs(a.a"+y+"));\n");
+        }
+        out.print("\n" +
+                "        return min;\n" +
+                "    }\n\n");
+    }
+
     private void elementMult_two( int dimen ) {
         out.print("    /**\n" +
-                "     * <p>Performs the an element by element multiplication operation:<br>\n" +
+                "     * <p>Performs an element by element multiplication operation:<br>\n" +
                 "     * <br>\n" +
                 "     * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>\n" +
                 "     * </p>\n" +
                 "     * @param a The left matrix in the multiplication operation. Modified.\n" +
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
                 "     */\n" +
-                "    public static void elementMult( "+nameMatrix+" a , "+nameMatrix+" b) {\n");
+                "    public static void elementMult( " + nameMatrix + " a , " + nameMatrix + " b) {\n");
         for( int y = 1; y <= dimen; y++ ) {
             out.print("        ");
             for( int x = 1; x <= dimen; x++ ) {
                 String w = "a"+y+""+x;
-                out.print("a."+w+" *= b."+w+";");
-                if( x < dimen )
+                out.print("a."+w+" *= b."+w+ ";");
+                if (x < dimen)
                     out.print(" ");
                 else
                     out.println();
@@ -738,9 +928,25 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
+    private void elementMult_vector_two(int dimen) {
+        out.print("    /**\n" +
+                "     * <p>Performs an element by element multiplication operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>i</sub> = a<sub>i</sub> * b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left vector in the multiplication operation. Modified.\n" +
+                "     * @param b The right vector in the multiplication operation. Not modified.\n" +
+                "     */\n" +
+                "    public static void elementMult( "+nameVector+" a , "+nameVector+" b) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" *= b.a"+y+";\n");
+        }
+        out.print("    }\n\n");
+    }
+
     private void elementMult_three( int dimen ) {
         out.print("    /**\n" +
-                "     * <p>Performs the an element by element multiplication operation:<br>\n" +
+                "     * <p>Performs an element by element multiplication operation:<br>\n" +
                 "     * <br>\n" +
                 "     * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>\n" +
                 "     * </p>\n" +
@@ -763,9 +969,26 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
+    private void elementMult_vector_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs an element by element multiplication operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>i</sub> = a<sub>i</sub> * b<sub>j</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left vector in the multiplication operation. Not modified.\n" +
+                "     * @param b The right vector in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void elementMult( "+nameVector+" a , "+nameVector+" b , "+nameVector+" c ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        c.a"+y+" = a.a"+y+"*b.a"+y+";\n");
+        }
+        out.print("    }\n\n");
+    }
+
     private void elementDiv_two( int dimen ) {
         out.print("    /**\n" +
-                "     * <p>Performs the an element by element division operation:<br>\n" +
+                "     * <p>Performs an element by element division operation:<br>\n" +
                 "     * <br>\n" +
                 "     * a<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>\n" +
                 "     * </p>\n" +
@@ -787,9 +1010,25 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
+    private void elementDiv_vector_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs an element by element division operation:<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>i</sub> = a<sub>i</sub> / b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left vector in the division operation. Modified.\n" +
+                "     * @param b The right vector in the division operation. Not modified.\n" +
+                "     */\n" +
+                "    public static void elementDiv( "+nameVector+" a , "+nameVector+" b) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" /= b.a"+y+";\n");
+        }
+        out.print("    }\n\n");
+    }
+
     private void elementDiv_three( int dimen ) {
         out.print("    /**\n" +
-                "     * <p>Performs the an element by element division operation:<br>\n" +
+                "     * <p>Performs an element by element division operation:<br>\n" +
                 "     * <br>\n" +
                 "     * c<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>\n" +
                 "     * </p>\n" +
@@ -808,6 +1047,23 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 else
                     out.println();
             }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void elementDiv_vector_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>Performs an element by element division operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>i</sub> = a<sub>i</sub> / b<sub>i</sub> <br>\n" +
+                "     * </p>\n" +
+                "     * @param a The left vector in the division operation. Not modified.\n" +
+                "     * @param b The right vector in the division operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void elementDiv( "+nameVector+" a , "+nameVector+" b , "+nameVector+" c ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        c.a"+y+" = a.a"+y+"/b.a"+y+";\n");
         }
         out.print("    }\n\n");
     }
@@ -834,6 +1090,24 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 else
                     out.println();
             }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void scale_vector_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an in-place element by element scalar multiplication.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The vector that is to be scaled.  Modified.\n" +
+                "     * @param alpha the amount each element is multiplied by.\n" +
+                "     */\n" +
+                "    public static void scale( double alpha , "+nameVector+" a ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" *= alpha;\n");
         }
         out.print("    }\n\n");
     }
@@ -865,6 +1139,25 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
+    private void scale_vector_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an element by element scalar multiplication.<br>\n" +
+                "     * <br>\n" +
+                "     * b<sub>i</sub> = &alpha;*a<sub>i</sub>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha the amount each element is multiplied by.\n" +
+                "     * @param a The vector that is to be scaled.  Not modified.\n" +
+                "     * @param b Where the scaled matrix is stored. Modified.\n" +
+                "     */\n" +
+                "    public static void scale( double alpha , "+nameVector+" a , "+nameVector+" b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        b.a"+y+" = a.a"+y+"*alpha;\n");
+        }
+        out.print("    }\n\n");
+    }
+
     private void divide_two( int dimen ) {
         out.print("    /**\n" +
                 "     * <p>\n" +
@@ -888,14 +1181,33 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                     out.println();
             }
         }
-        out.print("    }\n\n");    }
+        out.print("    }\n\n");
+    }
+
+    private void divide_vector_two( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an in-place element by element scalar division. Scalar denominator.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>i</sub> = a<sub>i</sub>/&alpha;\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a The vector whose elements are to be divided.  Modified.\n" +
+                "     * @param alpha the amount each element is divided by.\n" +
+                "     */\n" +
+                "    public static void divide( "+nameVector+" a , double alpha ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" /= alpha;\n");
+        }
+        out.print("    }\n\n");
+    }
 
     private void divide_three( int dimen ) {
         out.print("    /**\n" +
                 "     * <p>\n" +
                 "     * Performs an element by element scalar division.  Scalar denominator.<br>\n" +
                 "     * <br>\n" +
-                "     * b<sub>ij</sub> = *a<sub>ij</sub> /&alpha;\n" +
+                "     * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;\n" +
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param alpha the amount each element is divided by.\n" +
@@ -913,6 +1225,25 @@ public class GenerateFixedOps extends CodeGeneratorBase {
                 else
                     out.println();
             }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void divide_vector_three( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs an element by element scalar division.  Scalar denominator.<br>\n" +
+                "     * <br>\n" +
+                "     * b<sub>i</sub> = a<sub>i</sub> /&alpha;\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha the amount each element is divided by.\n" +
+                "     * @param a The vector whose elements are to be divided.  Not modified.\n" +
+                "     * @param b Where the results are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void divide( "+nameVector+" a , double alpha , "+nameVector+" b ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+                out.print("        b.a"+y+" = a.a"+y+"/alpha;\n");
         }
         out.print("    }\n\n");
     }
@@ -943,6 +1274,24 @@ public class GenerateFixedOps extends CodeGeneratorBase {
         out.print("    }\n\n");
     }
 
+    private void changeSign_vector( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Changes the sign of every element in the vector.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>i</sub> = -a<sub>i</sub>\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param a A vector. Modified.\n" +
+                "     */\n" +
+                "    public static void changeSign( "+nameVector+" a )\n" +
+                "    {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" = -a.a"+y+";\n");
+        }
+        out.print("    }\n\n");
+    }
+
     private void fill( int dimen ) {
         out.print("    /**\n" +
                 "     * <p>\n" +
@@ -967,6 +1316,24 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             }
         }
                 out.print("    }\n\n");
+    }
+
+    private void fill_vector( int dimen ) {
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Sets every element in the vector to the specified value.<br>\n" +
+                "     * <br>\n" +
+                "     * a<sub>i</sub> = value\n" +
+                "     * <p>\n" +
+                "     *\n" +
+                "     * @param a A vector whose elements are about to be set. Modified.\n" +
+                "     * @param v The value each element will have.\n" +
+                "     */\n" +
+                "    public static void fill( "+nameVector+" a , double v  ) {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("        a.a"+y+" = v;\n");
+        }
+        out.print("    }\n\n");
     }
 
     private void extract( int dimen ) {
