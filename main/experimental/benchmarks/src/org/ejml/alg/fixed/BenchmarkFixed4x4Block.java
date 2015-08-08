@@ -36,13 +36,15 @@ import java.util.Random;
 public class BenchmarkFixed4x4Block {
     private static Random rand = new Random(234);
 
-    private static DenseMatrix64F dm32x32_a = new DenseMatrix64F(32,32);
-    private static DenseMatrix64F dm32x32_b = new DenseMatrix64F(32,32);
-    private static DenseMatrix64F dm32x32_c = new DenseMatrix64F(32,32);
+    private static int N = 64;
 
-    private static Fixed4x4Block fixed32x32_a = new Fixed4x4Block(32/4,32/4);
-    private static Fixed4x4Block fixed32x32_b = new Fixed4x4Block(32/4,32/4);
-    private static Fixed4x4Block fixed32x32_c = new Fixed4x4Block(32/4,32/4);
+    private static DenseMatrix64F dm_a = new DenseMatrix64F(N,N);
+    private static DenseMatrix64F dm_b = new DenseMatrix64F(N,N);
+    private static DenseMatrix64F dm_c = new DenseMatrix64F(N,N);
+
+    private static Fixed4x4Block fixed_a = new Fixed4x4Block(N/4,N/4);
+    private static Fixed4x4Block fixed_b = new Fixed4x4Block(N/4,N/4);
+    private static Fixed4x4Block fixed_c = new Fixed4x4Block(N/4,N/4);
 
     public static long benchmark(DenseMatrix64F a, DenseMatrix64F b , DenseMatrix64F c , int numTrials ) {
 
@@ -86,18 +88,19 @@ public class BenchmarkFixed4x4Block {
 
 
     public static void main( String arg[] ) {
-        RandomMatrices.setRandom(dm32x32_a, rand);
-        RandomMatrices.setRandom(dm32x32_b, rand);
-        RandomMatrices.setRandom(dm32x32_c, rand);
+        RandomMatrices.setRandom(dm_a, rand);
+        RandomMatrices.setRandom(dm_b, rand);
+        RandomMatrices.setRandom(dm_c, rand);
 
-        fixed32x32_a.set(dm32x32_a, 0, 0);
-        fixed32x32_b.set(dm32x32_b, 0, 0);
-        fixed32x32_c.set(dm32x32_c, 0, 0);
+        fixed_a.set(dm_a, 0, 0);
+        fixed_b.set(dm_b, 0, 0);
+        fixed_c.set(dm_c, 0, 0);
 
-        int numTrials = 150000;
+        int numTrials = 20000;
 
-        System.out.println("Dense  32x32 = "+benchmark(dm32x32_a,dm32x32_b,dm32x32_c,numTrials));
-        System.out.println("Fixed  32x32 = "+benchmark(fixed32x32_a,fixed32x32_b,fixed32x32_c,numTrials));
-        System.out.println("FixedC 32x32 = "+benchmarkConv(dm32x32_a, dm32x32_b, dm32x32_c, numTrials));
+        System.out.println("   "+N+" by "+N);
+        System.out.println("Dense   = "+benchmark(dm_a, dm_b, dm_c,numTrials));
+        System.out.println("Fixed   = "+benchmark(fixed_a, fixed_b, fixed_c,numTrials));
+        System.out.println("FixedC  = "+benchmarkConv(dm_a, dm_b, dm_c, numTrials));
     }
 }

@@ -135,7 +135,7 @@ def allModules = [
         ':main:simple'
 ]
 
-// Creates a directory with all the comiled jars
+// Creates a directory with all the compiled jars
 task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModules.collect{ it+":sourcesJar"}) << {
 
     // Create lists of .class jars and source jars
