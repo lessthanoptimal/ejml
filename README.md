@@ -8,6 +8,8 @@
 
 #####  Project Website: http://ejml.org
 
+[![Build Status](https://travis-ci.org/lessthanoptimal/ejml.svg?branch=master)](https://travis-ci.org/lessthanoptimal/ejml)
+
 ## Introduction
 
 Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime, clean API, and multiple interfaces. EJML is free, written in 100% Java and has been released under an Apache v2.0 license.
