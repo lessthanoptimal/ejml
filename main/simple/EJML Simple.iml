@@ -23,6 +23,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="EJML Core" exported="" />
     <orderEntry type="module" module-name="EJML Dense 64" exported="" />
+    <orderEntry type="module" module-name="EJML Dense C64" exported="" />
     <orderEntry type="module" module-name="EJML Experimental" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />

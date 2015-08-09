@@ -2,8 +2,7 @@
 - Update change.txt
 - Update version in build.gradle
 - Commit and tag release
-- Create .zip of source code
-  - remove .svn
+- Create zip of source code
 - Create jar file "gradle createLibraryDirectory"
 - Update documentation on website
 
