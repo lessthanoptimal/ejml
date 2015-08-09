@@ -1,8 +1,5 @@
 # Efficient Java Matrix Library
 
-                         Version 0.27
-                         April 1, 2015
-
                     Author: Peter Abeles
                             peter.abeles@gmail.com 
 
