@@ -19,20 +19,14 @@
 package org.ejml.equation;
 
 /**
- * Variable which stores an instance of int.
+ * Variable which stores/describes a sequence of integers
  *
  * @author Peter Abeles
  */
-public class VariableInteger extends VariableScalar {
-    public int value;
-
-    public VariableInteger(int value) {
-        super( Type.INTEGER );
-        this.value = value;
-    }
-
-    @Override
-    public double getDouble() {
-        return value;
+public class VariableIntegerSequence extends Variable {
+    IntegerSequence sequence;
+    protected VariableIntegerSequence(IntegerSequence sequence) {
+        super(VariableType.INTEGER_SEQUENCE);
+        this.sequence = sequence;
     }
 }

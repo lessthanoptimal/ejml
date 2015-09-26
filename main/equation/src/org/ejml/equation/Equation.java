@@ -56,8 +56,8 @@ import static org.ejml.equation.TokenList.Type;
  * eq.process("x = F*x");
  * eq.process("P = F*P*F' + Q");
  * </pre>
- * Which will modify the matrices 'x' amd 'P'.  Sub-matrices and inline matrix construction is also
- * supported.
+ * Which will modify the matrices 'x' and 'P'.  Support for sub-matrices and inline matrix construction is also
+ * available.
  * <pre>
  * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");
  * eq.process("x(1:3,5:9) = [a ; b]*2");
@@ -149,8 +149,8 @@ import static org.ejml.equation.TokenList.Type;
  * cos(a)       Math.cos(a) for scalars only
  * atan(a)      Math.atan(a) for scalars only
  * atan2(a,b)   Math.atan2(a,b) for scalars only
- * exp(a)       Math.exp(a) for scalars and element-wise matrices
- * log(a)       Math.log(a) for scalars and element-wise matrices
+ * exp(a)       Math.exp(a) for scalars is also an element-wise matrix operator
+ * log(a)       Math.log(a) for scalars is also an element-wise matrix operator
  * </pre>
  * </p>
  *
@@ -327,14 +327,14 @@ public class Equation {
 
         // Get the results variable
         if( t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD )
-            throw new RuntimeException("Expected variable name first.  Not "+t0);
+            throw new ParseError("Expected variable name first.  Not "+t0);
 
         // see if it is assign or a range
         List<Variable> range = parseAssignRange(sequence, tokens, t0);
 
         TokenList.Token t1 = t0.next;
         if( t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN )
-            throw new RuntimeException("Expected assign next");
+            throw new ParseError("Expected assign next");
 
         // Parse the right side of the equation
         TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
@@ -356,7 +356,7 @@ public class Equation {
         } else {
             // a sub-matrix range is specified.  Copy into that inner part
             if( t0.getType() == Type.WORD ) {
-                throw new RuntimeException("Can't do lazy variable initialization with submatrices. "+t0.getWord());
+                throw new ParseError("Can't do lazy variable initialization with submatrices. "+t0.getWord());
             }
             sequence.addOperation(Operation.copy(variableRight, t0.getVariable(),range));
         }
@@ -378,7 +378,7 @@ public class Equation {
         TokenList.Token t = tokens.getFirst();
         while( t != null ) {
             if( t.getType() == Type.WORD )
-                throw new RuntimeException("Unknown variable on right side. "+t.getWord());
+                throw new ParseError("Unknown variable on right side. "+t.getWord());
             t = t.next;
         }
     }
@@ -417,6 +417,9 @@ public class Equation {
 
     /**
      * See if a range for assignment is specified.  If so return the range, otherwise return null
+     *
+     * Example of assign range:
+     *    a(0:3,4:5) = blah
      */
     private List<Variable> parseAssignRange(Sequence sequence, TokenList tokens, TokenList.Token t0) {
         List<Variable> range;
@@ -435,7 +438,7 @@ public class Equation {
                 }
 
                 if( t2 == null )
-                    throw new RuntimeException("Could not find closing )");
+                    throw new ParseError("Could not find closing )");
 
                 TokenList.Token n = t2.next;
                 TokenList sublist = tokens.extractSubList(t1,t2);
@@ -448,13 +451,13 @@ public class Equation {
                 parseSubmatrixRange(sublist, sequence, range);
 
                 t1 = n;
-                if( t1.symbol != Symbol.ASSIGN )
-                    throw new RuntimeException("Expected assign after sub-matrix");
+                if( t1 == null || t1.symbol != Symbol.ASSIGN )
+                    throw new ParseError("Expected assign after sub-matrix");
             } else {
-                throw new RuntimeException("Expected assign or submatrix");
+                throw new ParseError("Expected assignment '=' or submatrix of variable being assigned '('");
             }
         } else {
-            throw new RuntimeException("Expecting symbol after first variable");
+            throw new ParseError("Expecting symbol after first variable");
         }
         return range;
     }
@@ -477,7 +480,7 @@ public class Equation {
                     left.add(t);
                 else if( t.getSymbol() == Symbol.PAREN_RIGHT ) {
                     if( left.isEmpty() )
-                        throw new RuntimeException(") found with no matching (");
+                        throw new ParseError(") found with no matching (");
 
                     TokenList.Token a = left.remove(left.size()-1);
 
@@ -493,7 +496,7 @@ public class Equation {
                     if( before != null && before.getType() == Type.FUNCTION ) {
                         List<TokenList.Token> inputs = parseParameterCommaBlock(sublist, sequence);
                         if (inputs.isEmpty())
-                            throw new RuntimeException("Empty function input parameters");
+                            throw new ParseError("Empty function input parameters");
                         else {
                             createFunction(before, inputs, tokens, sequence);
                         }
@@ -515,7 +518,7 @@ public class Equation {
         }
 
         if( !left.isEmpty())
-            throw new RuntimeException("Dangling ( parentheses");
+            throw new ParseError("Dangling ( parentheses");
 
         if( tokens.size() > 1 ) {
             parseBlockNoParentheses(tokens, sequence);
@@ -547,7 +550,7 @@ public class Equation {
             for (int i = 0; i < commas.size(); i++) {
                 TokenList.Token after = commas.get(i);
                 if( before == after )
-                    throw new RuntimeException("No empty function inputs allowed!");
+                    throw new ParseError("No empty function inputs allowed!");
                 TokenList.Token tmp = after.next;
                 TokenList sublist = tokens.extractSubList(before,after);
                 sublist.remove(after);// remove the comma
@@ -557,7 +560,7 @@ public class Equation {
 
             // if the last character is a comma then after.next above will be null and thus before is null
             if( before == null )
-                throw new RuntimeException("No empty function inputs allowed!");
+                throw new ParseError("No empty function inputs allowed!");
 
             TokenList.Token after = tokens.last;
             TokenList sublist = tokens.extractSubList(before, after);
@@ -612,7 +615,7 @@ public class Equation {
             comma = comma.next;
 
         if( comma == null )
-            throw new RuntimeException("Can't find comma inside submatrix");
+            throw new ParseError("Can't find comma inside submatrix");
 
         TokenList listLeft = tokens.extractSubList(tokens.first,comma.previous);
         TokenList listRight = tokens.extractSubList(comma.next,tokens.last);
@@ -644,7 +647,7 @@ public class Equation {
                 t[0] = parseBlockNoParentheses(listRow0,sequence);
                 t[1] = new TokenList.Token(VariableSpecial.Special.END);
             } else if( colon.previous == null ) {
-                throw new RuntimeException(":<int> not allowed");
+                throw new ParseError(":<int> not allowed");
             } else {
                 TokenList listRow0 = tokens.extractSubList(tokens.first, colon.previous);
                 TokenList listRow1 = tokens.extractSubList(colon.next, tokens.last);
@@ -657,7 +660,7 @@ public class Equation {
            if(t[i] == null)
                continue;
            if( t[i].getType() != Type.VARIABLE ) {
-               throw new RuntimeException("Expected variable inside of range");
+               throw new ParseError("Expected variable inside of range");
            }
             variables.add(t[i].getVariable());
         }
@@ -769,6 +772,9 @@ public class Equation {
     /**
      * Searches for cases where a minus sign means negative operator.  That happens when there is a minus
      * sign with a variable to its right and no variable to its left
+     *
+     * Example:
+     *  a = - b * c
      */
     protected void parseNegOp(TokenList tokens, Sequence sequence) {
         if( tokens.size == 0 )
@@ -819,16 +825,16 @@ public class Equation {
         TokenList.Token token = tokens.first;
 
         if( token.getType() != Type.VARIABLE )
-            throw new RuntimeException("The first token in an equation needs to be a variable and not "+token);
+            throw new ParseError("The first token in an equation needs to be a variable and not "+token);
 
         while( token != null ) {
             if( token.getType() == Type.FUNCTION ) {
-                throw new RuntimeException("Function encountered with no parentheses");
+                throw new ParseError("Function encountered with no parentheses");
             } else if( token.getType() == Type.SYMBOL && token.getSymbol() == Symbol.TRANSPOSE) {
                 if( token.previous.getType() == Type.VARIABLE )
                     token = insertTranspose(token.previous,tokens,sequence);
                 else
-                    throw new RuntimeException("Expected variable before tranpose");
+                    throw new ParseError("Expected variable before transpose");
             }
             token = token.next;
         }
@@ -849,16 +855,16 @@ public class Equation {
         TokenList.Token token = tokens.first;
 
         if( token.getType() != Type.VARIABLE )
-            throw new RuntimeException("The first token in an equation needs to be a variable and not "+token);
+            throw new ParseError("The first token in an equation needs to be a variable and not "+token);
 
         boolean hasLeft = false;
         while( token != null ) {
             if( token.getType() == Type.FUNCTION ) {
-                throw new RuntimeException("Function encountered with no parentheses");
+                throw new ParseError("Function encountered with no parentheses");
             } else if( token.getType() == Type.VARIABLE ) {
                 if( hasLeft ) {
                     if( token.previous.getType() == Type.VARIABLE ) {
-                        throw new RuntimeException("Two variables next to each other");
+                        throw new ParseError("Two variables next to each other");
                     }
                     if( isTargetOp(token.previous,ops)) {
                         token = createOp(token.previous.previous,token.previous,token,tokens,sequence);
@@ -868,7 +874,7 @@ public class Equation {
                 }
             } else {
                 if( token.previous.getType() == Type.SYMBOL ) {
-                    throw new RuntimeException("Two symbols next to each other. "+token.previous+" and "+token);
+                    throw new ParseError("Two symbols next to each other. "+token.previous+" and "+token);
                 }
             }
             token = token.next;
@@ -1020,11 +1026,11 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 } else {
-                    throw new RuntimeException("Unexpected character at the end of an integer "+c);
+                    throw new ParseError("Unexpected character at the end of an integer "+c);
                 }
             } else if( type == TokenType.FLOAT ) { // Handle floating point numbers
                 if( c == '.') {
-                    throw new RuntimeException("Unexpected '.' in a float");
+                    throw new ParseError("Unexpected '.' in a float");
                 } else if( c == 'e' || c == 'E' ) {
                     storage[length++] = c;
                     type = TokenType.FLOAT_EXP;
@@ -1036,7 +1042,7 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 } else {
-                    throw new RuntimeException("Unexpected character at the end of an float "+c);
+                    throw new ParseError("Unexpected character at the end of an float "+c);
                 }
             } else if( type == TokenType.FLOAT_EXP ) { // Handle floating point numbers in exponential format
                 boolean end = false;
@@ -1052,7 +1058,7 @@ public class Equation {
                 } else if( isSymbol(c) || Character.isWhitespace(c) ) {
                     end = true;
                 } else {
-                    throw new RuntimeException("Unexpected character at the end of an float "+c);
+                    throw new ParseError("Unexpected character at the end of an float "+c);
                 }
 
                 if( end ) {
@@ -1108,7 +1114,7 @@ public class Equation {
             String word = new String(storage,0,length);
             Variable v = lookupVariable(word);
             if( v == null )
-                throw new RuntimeException("Unknown variable "+word);
+                throw new ParseError("Unknown variable "+word);
             tokens.add( v );
         } else if( type == TokenType.INTEGER ) {
             tokens.add(managerTemp.createInteger(Integer.parseInt( new String(storage, 0, length))));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,5 +26,6 @@ package org.ejml.equation;
 public enum VariableType {
     MATRIX,
     SCALAR,
-    SPECIAL
+    SPECIAL,
+    INTEGER_SEQUENCE
 }

@@ -19,20 +19,12 @@
 package org.ejml.equation;
 
 /**
- * Variable which stores an instance of int.
+ * Exception generated for parse errors in {@link Equation}
  *
  * @author Peter Abeles
  */
-public class VariableInteger extends VariableScalar {
-    public int value;
-
-    public VariableInteger(int value) {
-        super( Type.INTEGER );
-        this.value = value;
-    }
-
-    @Override
-    public double getDouble() {
-        return value;
+public class ParseError extends RuntimeException {
+    public ParseError(String message) {
+        super(message);
     }
 }

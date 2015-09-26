@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,9 +25,36 @@ package org.ejml.equation;
  */
 public abstract class VariableScalar extends Variable {
 
-    public VariableScalar() {
+    Type type;
+
+    public VariableScalar(Type type) {
         super(VariableType.SCALAR);
+        this.type = type;
     }
 
     public abstract double getDouble();
+
+    @Override
+    public String toString() {
+        switch( type ) {
+            case INTEGER:
+                return "ScalarI";
+            case DOUBLE:
+                return "ScalarD";
+            case COMPLEX:
+                return "ScalarC";
+            default:
+                return "ScalarUnknown";
+        }
+    }
+
+    public Type getScalarType() {
+        return type;
+    }
+
+    public enum Type {
+        INTEGER,
+        DOUBLE,
+        COMPLEX
+    }
 }

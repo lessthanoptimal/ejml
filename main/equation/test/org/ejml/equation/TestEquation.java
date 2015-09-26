@@ -166,8 +166,8 @@ public class TestEquation {
         eq.process("B=A");
 
         DenseMatrix64F B = eq.lookupMatrix("B");
-        assertTrue(A.getMatrix()!=B);
-        assertTrue(MatrixFeatures.isEquals(A.getMatrix(),B));
+        assertTrue(A.getMatrix() != B);
+        assertTrue(MatrixFeatures.isEquals(A.getMatrix(), B));
     }
 
     /**
@@ -191,7 +191,7 @@ public class TestEquation {
         eq.alias(B, "B");
         eq.process("B=A");
 
-        assertTrue(A.isIdentical(B,1e-8));
+        assertTrue(A.isIdentical(B, 1e-8));
     }
 
     @Test
@@ -236,7 +236,7 @@ public class TestEquation {
         eq.alias(A, "A");
         sequence = eq.compile("A=B(2:7,3)");
         sequence.perform();
-        assertTrue(A.isIdentical(B.extractMatrix(2,8,3,4), 1e-15));
+        assertTrue(A.isIdentical(B.extractMatrix(2, 8, 3, 4), 1e-15));
 
         // multiple in a row
         A = SimpleMatrix.random(1, 2, -1, 1, rand);
@@ -276,7 +276,7 @@ public class TestEquation {
         eq.process("A=B(1,2)");
         Variable v = eq.lookupVariable("A");
         assertTrue(v instanceof VariableDouble);
-        assertEquals(eq.lookupDouble("A"),B.get(1,2),1e-8);
+        assertEquals(eq.lookupDouble("A"), B.get(1, 2), 1e-8);
     }
 
     @Test
@@ -293,7 +293,7 @@ public class TestEquation {
         eq.process("A=B+-B");
         assertEquals(0,eq.lookupInteger("A"));
         eq.process("A=B---5");
-        assertEquals(2-5,eq.lookupInteger("A"));
+        assertEquals(2 - 5, eq.lookupInteger("A"));
         eq.process("A=B--5");
         assertEquals(2+5,eq.lookupInteger("A"));
     }
@@ -556,7 +556,7 @@ public class TestEquation {
         assertEquals(2,sequence.operations.size());
         assertEquals(5,tokens.size);
         assertTrue(tokens.last.getType() == Type.VARIABLE);
-        assertTrue(Symbol.MINUS==tokens.last.previous.getSymbol());
+        assertTrue(Symbol.MINUS == tokens.last.previous.getSymbol());
 
         tokens = eq.extractTokens("B+B*B*A-B",managerTemp);
         sequence = new Sequence();
@@ -564,7 +564,7 @@ public class TestEquation {
         eq.parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
         assertEquals(2,sequence.operations.size());
-        assertEquals(5,tokens.size);
+        assertEquals(5, tokens.size);
         assertTrue(tokens.last.getType() == Type.VARIABLE);
         assertTrue(Symbol.TIMES == tokens.last.previous.getSymbol());
         assertTrue(Symbol.TIMES == tokens.first.next.next.next.getSymbol());
@@ -598,12 +598,12 @@ public class TestEquation {
     @Test
     public void lookupVariable() {
         Equation eq = new Equation();
-        eq.alias(new DenseMatrix64F(1,1),"A");
-        eq.alias(new DenseMatrix64F(1,1),"BSD");
+        eq.alias(new DenseMatrix64F(1, 1), "A");
+        eq.alias(new DenseMatrix64F(1, 1), "BSD");
 
         eq.lookupVariable("A");
         eq.lookupVariable("BSD");
-        assertTrue( null == eq.lookupVariable("dDD") );
+        assertTrue(null == eq.lookupVariable("dDD"));
     }
 
     @Test
@@ -721,7 +721,7 @@ public class TestEquation {
         assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
         assertTrue(v1==t.getVariable()); t = t.next;
         assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(5.1==((VariableDouble)t.getVariable()).value);
+        assertTrue(5.1 == ((VariableDouble) t.getVariable()).value);
         assertTrue(t.next == null);
     }
 
@@ -812,4 +812,17 @@ public class TestEquation {
         assertFalse(Equation.isLetter('='));
     }
 
+    @Test
+    public void gracefullyHandleBadCode() {
+        checkForParseException("a(2,4:5)");
+        checkForParseException("a(2,4:5");
+    }
+
+    private void checkForParseException( String code ) {
+        try {
+            Equation eq = new Equation();
+            eq.process(code);
+            fail("Should have generated parse error. "+code);
+        } catch( ParseError ignore ) {}
+    }
 }

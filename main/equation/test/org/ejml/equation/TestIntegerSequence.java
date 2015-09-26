@@ -18,21 +18,16 @@
 
 package org.ejml.equation;
 
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+
 /**
- * Variable which stores an instance of int.
- *
  * @author Peter Abeles
  */
-public class VariableInteger extends VariableScalar {
-    public int value;
-
-    public VariableInteger(int value) {
-        super( Type.INTEGER );
-        this.value = value;
-    }
-
-    @Override
-    public double getDouble() {
-        return value;
+public class TestIntegerSequence {
+    @Test
+    public void foo() {
+        fail("implement");
     }
 }
