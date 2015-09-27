@@ -438,16 +438,12 @@ public class Equation {
      *    a(0:3,4:5) = blah
      */
     private List<Variable> parseAssignRange(Sequence sequence, TokenList tokens, TokenList.Token t0) {
-        // TODO rewrite to use sequences
         List<Variable> range;
         TokenList.Token t1 = t0.next;
         if( t1.getType() == Type.SYMBOL ) {
             if( t1.symbol == Symbol.ASSIGN ) {
                 range = null; // copy into the entire matrix
             } else if( t1.symbol == Symbol.PAREN_LEFT ) {
-                // copy into a specific area
-                range = new ArrayList<Variable>();
-
                 // find the right parentheses
                 TokenList.Token t2 = t1.next;
                 while( t2 != null && t2.symbol != Symbol.PAREN_RIGHT ) {
@@ -458,14 +454,20 @@ public class Equation {
                     throw new ParseError("Could not find closing )");
 
                 TokenList.Token n = t2.next;
-                TokenList sublist = tokens.extractSubList(t1,t2);
+                TokenList sublist = tokens.extractSubList(t1.next,t2.previous);
+                // need to remove paren also
+                tokens.remove(t1);
+                tokens.remove(t2);
 
-                // remove parentheses
-                sublist.remove(sublist.first);
-                sublist.remove(sublist.last);
+                List<TokenList.Token> inputs = parseParameterCommaBlock(sublist, sequence);
+                if (inputs.isEmpty())
+                    throw new ParseError("Empty function input parameters");
 
-                // parse the range
-                parseSubmatrixRange(sublist, sequence, range);
+                range = new ArrayList<Variable>();
+                addSubMatrixVariables(inputs, range);
+                if( range.size() != 1 && range.size() != 2 ) {
+                    throw new ParseError("Unexpected number of range variables.  1 or 2 expected");
+                }
 
                 t1 = n;
                 if( t1 == null || t1.symbol != Symbol.ASSIGN )
@@ -603,16 +605,9 @@ public class Equation {
         // for the operation, the first variable must be the matrix which is being manipulated
         variables.add(variableTarget.getVariable());
 
-        for (int i = 0; i < inputs.size(); i++) {
-            TokenList.Token t = inputs.get(i);
-            if( t.getType() != Type.VARIABLE )
-                continue;
-            Variable v = t.getVariable();
-            if( v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t) || v.getType() == VariableType.ARRAY_RANGE) {
-                variables.add(v);
-            } else {
-                throw new ParseError("Expected an integer, integer sequence, or array range to define a submatrix");
-            }
+        addSubMatrixVariables(inputs, variables);
+        if( variables.size() != 2 && variables.size() != 3 ) {
+            throw new ParseError("Unexpected number of variables.  1 or 2 expected");
         }
 
         // first parameter is the matrix it will be extracted from.  rest specify range
@@ -646,70 +641,20 @@ public class Equation {
     }
 
     /**
-     * Parses the range for a sub-matrix and puts the results into variables. List
-     * should be everything inside the parentheses.
-     *
-     * e.g. 1,2 or 2:10,4 or 2:10,3:13
-     *
-     * @param variables Variables which describe the selected range
+     * Goes through the token lists and adds all the variables which can be used to define a sub-matrix.  If anything
+     * else is found an excpetion is thrown
      */
-    private void parseSubmatrixRange(TokenList tokens, Sequence sequence,
-                                     List<Variable> variables) {
-        // TODO update for integer sequences
-        TokenList.Token comma = tokens.first;
-        while( comma != null && comma.getSymbol() != Symbol.COMMA )
-            comma = comma.next;
-
-        if( comma == null )
-            throw new ParseError("Can't find comma inside submatrix");
-
-        TokenList listLeft = tokens.extractSubList(tokens.first,comma.previous);
-        TokenList listRight = tokens.extractSubList(comma.next,tokens.last);
-
-        parseValueRange(listLeft, sequence, variables); // rows
-        parseValueRange(listRight, sequence, variables); // columns
-    }
-
-    /**
-     * Parse a range written like 0:10 in which two numbers are separated by a colon.
-     */
-    protected void parseValueRange( TokenList tokens, Sequence sequence , List<Variable> variables ) {
-        // TODO update for integer sequences
-
-        TokenList.Token[] t = new TokenList.Token[2];
-
-        // range of values are specified with a colon
-        TokenList.Token colon = tokens.first;
-        while( colon != null && colon.getSymbol() != Symbol.COLON ) {
-            colon = colon.next;
-        }
-        if( colon == null ) {
-            // no range, just a single value
-            t[0] = t[1] = parseBlockNoParentheses(tokens,sequence);
-        } else {
-            if( colon.previous == null && colon.next == null) {
-                t[0] = new TokenList.Token(VariableSpecial.Special.ALL);
-            } else if( colon.next == null ) {
-                TokenList listRow0 = tokens.extractSubList(tokens.first,colon.previous);
-                t[0] = parseBlockNoParentheses(listRow0,sequence);
-                t[1] = new TokenList.Token(VariableSpecial.Special.END);
-            } else if( colon.previous == null ) {
-                throw new ParseError(":<int> not allowed");
+    private void addSubMatrixVariables(List<TokenList.Token> inputs, List<Variable> variables) {
+        for (int i = 0; i < inputs.size(); i++) {
+            TokenList.Token t = inputs.get(i);
+            if( t.getType() != Type.VARIABLE )
+                throw new ParseError("Expected variables only in sub-matrix input, not "+t.getType());
+            Variable v = t.getVariable();
+            if( v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t) || v.getType() == VariableType.ARRAY_RANGE) {
+                variables.add(v);
             } else {
-                TokenList listRow0 = tokens.extractSubList(tokens.first, colon.previous);
-                TokenList listRow1 = tokens.extractSubList(colon.next, tokens.last);
-                t[0] = parseBlockNoParentheses(listRow0, sequence);
-                t[1] = parseBlockNoParentheses(listRow1, sequence);
+                throw new ParseError("Expected an integer, integer sequence, or array range to define a submatrix");
             }
-        }
-
-        for (int i = 0; i < t.length; i++) {
-           if(t[i] == null)
-               continue;
-           if( t[i].getType() != Type.VARIABLE ) {
-               throw new ParseError("Expected variable inside of range");
-           }
-            variables.add(t[i].getVariable());
         }
     }
 

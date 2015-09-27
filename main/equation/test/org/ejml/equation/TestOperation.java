@@ -640,7 +640,7 @@ public class TestOperation {
     }
 
     @Test
-    public void copy_submatrix_matrix() {
+    public void copy_submatrix_matrix_case0() {
         Equation eq = new Equation();
 
         SimpleMatrix a = SimpleMatrix.random(2,3,-1,1,rand);
@@ -653,17 +653,154 @@ public class TestOperation {
     }
 
     @Test
-    public void copy_submatrix_scalar() {
+    public void copy_submatrix_matrix_case1() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(2,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b");
+        eq.process("b(0 1,3 2 0)=a");
+
+        int rows[] = new int[]{0,1};
+        int cols[] = new int[]{3,2,0};
+
+        checkSubMatrixArraysInsert(a, b, rows, cols);
+    }
+
+    @Test
+    public void copy_submatrix_matrix_case2() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3,2,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b");
+        eq.process("b(:,2:)=a");
+
+        int rows[] = new int[]{0,1,2};
+        int cols[] = new int[]{2,3};
+
+        checkSubMatrixArraysInsert(a, b, rows, cols);
+    }
+
+    @Test
+    public void copy_submatrix_matrix_case3() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(6,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b");
+        eq.process("b(2 3 4 5 6 7)=a");
+
+        for (int i = 0; i < 6; i++) {
+            assertEquals(b.get(i+2),a.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void copy_submatrix_matrix_case4() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(7,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b");
+        eq.process("b(2:8)=a");
+
+        for (int i = 0; i < 7; i++) {
+            assertEquals(b.get(i+2),a.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void copy_submatrix_matrix_case5() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3*4-2,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b");
+        eq.process("b(2:)=a");
+
+        for (int i = 0; i < a.getNumElements(); i++) {
+            assertEquals(b.get(i+2),a.get(i),1e-8);
+        }
+    }
+
+    @Test
+    public void copy_submatrix_scalar_case0() {
         Equation eq = new Equation();
 
         SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
 
-        eq.alias(b,"b");
+        eq.alias(b, "b");
         eq.process("b(2,3)=4.5");
         eq.process("b(0,0)=3.5");
 
         assertEquals(3.5, b.get(0, 0), 1e-8);
         assertEquals(4.5, b.get(2, 3), 1e-8);
+    }
+
+    @Test
+    public void copy_submatrix_scalar_case1() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b, "b");
+        eq.process("b(0:1,1:3)=4.5");
+
+        int rows[] = new int[]{0,1};
+        int cols[] = new int[]{1,2,3};
+
+        checkSubMatrixArraysInsert(4.5, b, rows, cols);
+    }
+
+    @Test
+    public void copy_submatrix_scalar_case2() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b, "b");
+        eq.process("b(:,2:)=4.5");
+
+        int rows[] = new int[]{0, 1, 2};
+        int cols[] = new int[]{2,3};
+
+        checkSubMatrixArraysInsert(4.5,b,rows,cols);
+    }
+
+    @Test
+    public void copy_submatrix_scalar_case3() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b, "b");
+        eq.process("b(1 0 3)=4.5");
+
+        int indexes[] = new int[]{1,0,3};
+        for (int i = 0; i < indexes.length; i++) {
+            assertEquals(b.get(indexes[i]),4.5,1e-8);
+        }
+    }
+
+    @Test
+    public void copy_submatrix_scalar_case4() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b, "b");
+        eq.process("b(1:3)=4.5");
+
+        int indexes[] = new int[]{1,2,3};
+        for (int i = 0; i < indexes.length; i++) {
+            assertEquals(b.get(indexes[i]),4.5,1e-8);
+        }
     }
 
     @Test
@@ -687,7 +824,7 @@ public class TestOperation {
 
         SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
 
-        eq.alias(b,"b");
+        eq.alias(b, "b");
         eq.process("c=b(1:3)");
         DenseMatrix64F found = eq.lookupMatrix("c");
 
@@ -742,14 +879,31 @@ public class TestOperation {
         int rows[] = new int[]{1,2};
         int cols[] = new int[]{1,0,2};
 
-        checkSubMatrixArrays(b, found, rows, cols);
+        checkSubMatrixArraysExtract(b, found, rows, cols);
     }
 
-    private void checkSubMatrixArrays(SimpleMatrix b, DenseMatrix64F found, int[] rows, int[] cols) {
-        assertTrue(found.numRows == rows.length && found.numCols == cols.length);
+    private void checkSubMatrixArraysExtract(SimpleMatrix src, DenseMatrix64F dst, int[] rows, int[] cols) {
+        assertTrue(dst.numRows == rows.length && dst.numCols == cols.length);
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < cols.length; j++) {
-                assertEquals(b.get(rows[i],cols[j]), found.get(i,j), 1e-8);
+                assertEquals(src.get(rows[i],cols[j]), dst.get(i,j), 1e-8);
+            }
+        }
+    }
+
+    private void checkSubMatrixArraysInsert(SimpleMatrix src, SimpleMatrix dst, int[] rows, int[] cols) {
+        assertTrue(src.numRows() == rows.length && src.numCols() == cols.length);
+        for (int i = 0; i < rows.length; i++) {
+            for (int j = 0; j < cols.length; j++) {
+                assertEquals(src.get(i,j), dst.get(rows[i],cols[j]), 1e-8);
+            }
+        }
+    }
+
+    private void checkSubMatrixArraysInsert(double src, SimpleMatrix dst, int[] rows, int[] cols) {
+        for (int i = 0; i < rows.length; i++) {
+            for (int j = 0; j < cols.length; j++) {
+                assertEquals(src, dst.get(rows[i],cols[j]), 1e-8);
             }
         }
     }
@@ -767,7 +921,7 @@ public class TestOperation {
         int rows[] = new int[]{1,2};
         int cols[] = new int[]{2,3};
 
-        checkSubMatrixArrays(b, found, rows, cols);
+        checkSubMatrixArraysExtract(b, found, rows, cols);
     }
 
     @Test
@@ -783,7 +937,7 @@ public class TestOperation {
         int rows[] = new int[]{2};
         int cols[] = new int[]{1,2,3};
 
-        checkSubMatrixArrays(b, found, rows, cols);
+        checkSubMatrixArraysExtract(b, found, rows, cols);
     }
 
     @Test
@@ -799,7 +953,7 @@ public class TestOperation {
         int rows[] = new int[]{0,1,2};
         int cols[] = new int[]{0,1,2,3};
 
-        checkSubMatrixArrays(b, found, rows, cols);
+        checkSubMatrixArraysExtract(b, found, rows, cols);
     }
 
     @Test

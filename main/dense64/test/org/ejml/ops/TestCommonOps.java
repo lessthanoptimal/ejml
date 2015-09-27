@@ -662,6 +662,27 @@ public class TestCommonOps {
     }
 
     @Test
+    public void insert_array_two() {
+        DenseMatrix64F A = RandomMatrices.createRandom(2,1, 0, 1, rand);
+
+        int rows[] = new int[6];
+        rows[0] = 2;
+        rows[1] = 4;
+
+        int cols[] = new int[4];
+        cols[0] = 1;
+        DenseMatrix64F B = new DenseMatrix64F(5,5);
+        CommonOps.insert(A, B, rows, 2, cols, 1);
+
+
+        for( int i = 0; i < 2; i++ ) {
+            for( int j = 0; j < 1; j++ ) {
+                assertEquals(A.get(i,j),B.get(rows[i],cols[j]),1e-8);
+            }
+        }
+    }
+
+    @Test
     public void extractDiag() {
         DenseMatrix64F a = RandomMatrices.createRandom(3,4, 0, 1, rand);
 

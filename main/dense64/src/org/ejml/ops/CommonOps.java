@@ -1144,6 +1144,37 @@ public class CommonOps {
     }
 
     /**
+     * Inserts into the specified elements of dst the source matrix.
+     * <pre>
+     * for i in len(rows):
+     *   for j in len(cols):
+     *      dst(rows[i],cols[j]) = src(i,j)
+     * </pre>
+     *
+     * @param src Source matrix. Not modified.
+     * @param dst output matrix.  Must be correct shape.
+     * @param rows array of row indexes
+     * @param rowsSize maximum element in row array
+     * @param cols array of column indexes
+     * @param colsSize maximum element in column array
+     */
+    public static void insert( DenseMatrix64F src ,
+                               DenseMatrix64F dst ,
+                                int rows[] , int rowsSize ,
+                                int cols[] , int colsSize ) {
+        if( rowsSize != src.numRows || colsSize != src.numCols )
+            throw new IllegalArgumentException("Unexpected number of rows and/or columns in dst matrix");
+
+        int indexSrc = 0;
+        for (int i = 0; i < rowsSize; i++) {
+            int indexDstRow = dst.numCols*rows[i];
+            for (int j = 0; j < colsSize; j++) {
+                dst.data[indexDstRow + cols[j]] = src.data[indexSrc++];
+            }
+        }
+    }
+
+    /**
      * <p>
      * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
      * can either be a row or column vector.

@@ -136,11 +136,11 @@ public interface IntegerSequence {
                 valStep = step.value;
             }
 
-            if( valStart <= 0 ) {
-                throw new RuntimeException("step size must be a positive integer");
+            if( valStep <= 0 ) {
+                throw new IllegalArgumentException("step size must be a positive integer");
             }
             if( valEnd < valStart ) {
-                throw new RuntimeException("end value must be >= the start value");
+                throw new IllegalArgumentException("end value must be >= the start value");
             }
 
             where = 0;

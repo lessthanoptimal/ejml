@@ -26,6 +26,7 @@ import org.ejml.ops.CommonOps;
 import org.ejml.ops.MatrixFeatures;
 import org.ejml.ops.NormOps;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -733,6 +734,8 @@ public abstract class Operation {
         if( src instanceof VariableMatrix && dst instanceof VariableMatrix ) {
             return new Operation("copyR-mm") {
                 Extents extents = new Extents();
+                ArrayExtent rowExtent = new ArrayExtent();
+                ArrayExtent colExtent = new ArrayExtent();
 
                 @Override
                 public void process() {
@@ -740,19 +743,50 @@ public abstract class Operation {
                     DenseMatrix64F msrc = ((VariableMatrix) src).matrix;
                     DenseMatrix64F mdst = ((VariableMatrix) dst).matrix;
 
-                    findExtents(mdst, range, 0, extents);
+                    if( range.size() == 1 ) {
+                        if( !MatrixFeatures.isVector(msrc) ) {
+                            throw new ParseError("Source must be a vector for copy into elements");
+                        }
+                        if(extractSimpleExtents(range.get(0),extents,false,mdst.getNumElements())) {
+                            int length = extents.col1-extents.col0+1;
+                            if( msrc.getNumElements() != length )
+                                throw new IllegalArgumentException("Source vector not the right length.");
+                            if( extents.col1+1 > mdst.getNumElements() )
+                                throw new IllegalArgumentException("Requested range is outside of dst length");
+                            System.arraycopy(msrc.data,0,mdst.data,extents.col0,length);
+                        } else {
+                            extractArrayExtent(range.get(0),mdst.getNumElements(),colExtent);
+                            if( colExtent.length > msrc.getNumElements() )
+                                throw new IllegalArgumentException("src doesn't have enough elements");
+                            for (int i = 0; i < colExtent.length; i++) {
+                                mdst.data[colExtent.array[i]] = msrc.data[i];
+                            }
+                        }
+                    } else if( range.size() == 2 ) {
+                        if(extractSimpleExtents(range.get(0),extents,true,mdst.getNumRows()) &&
+                                extractSimpleExtents(range.get(1),extents,false,mdst.getNumCols()) ) {
 
-                    if (extents.col1 - extents.col0 != msrc.numCols)
-                        throw new RuntimeException("Columns don't match");
-                    if (extents.row1 - extents.row0 != msrc.numRows)
-                        throw new RuntimeException("Rows don't match");
+                            int numRows = extents.row1 - extents.row0 + 1;
+                            int numCols = extents.col1 - extents.col0 + 1;
 
-                    CommonOps.insert(msrc, mdst, extents.row0, extents.col0);
+                            CommonOps.extract(msrc, 0, numRows, 0, numCols, mdst, extents.row0, extents.col0);
+                        } else {
+                            extractArrayExtent(range.get(0),mdst.numRows,rowExtent);
+                            extractArrayExtent(range.get(1),mdst.numCols,colExtent);
+
+                            CommonOps.insert(msrc, mdst, rowExtent.array, rowExtent.length,
+                                    colExtent.array, colExtent.length);
+                        }
+                    } else {
+                        throw new RuntimeException("Unexpected number of ranges.  Should have been caught earlier");
+                    }
                 }
             };
         } else if( src instanceof VariableScalar && dst instanceof VariableMatrix ) {
             return new Operation("copyR-sm") {
                 Extents extents = new Extents();
+                ArrayExtent rowExtent = new ArrayExtent();
+                ArrayExtent colExtent = new ArrayExtent();
 
                 @Override
                 public void process() {
@@ -760,18 +794,40 @@ public abstract class Operation {
                     double msrc = ((VariableScalar)src).getDouble();
                     DenseMatrix64F mdst = ((VariableMatrix)dst).matrix;
 
-                    findExtents(mdst,range,0,extents);
-
-                    if( !mdst.isInBounds(extents.row0,extents.col0))
-                        throw new RuntimeException("Submatrix out of bounds. Lower extent");
-                    if( !mdst.isInBounds(extents.row1-1,extents.col1-1))
-                        throw new RuntimeException("Submatrix out of bounds. Upper extent");
-
-                    for (int i = extents.row0; i < extents.row1; i++) {
-                        int index = i*mdst.numCols + extents.col0;
-                        for (int j = extents.col0; j < extents.col1; j++) {
-                            mdst.data[index++] = msrc;
+                    if( range.size() == 1 ) {
+                        if(extractSimpleExtents(range.get(0),extents,false,mdst.getNumElements())) {
+                            Arrays.fill(mdst.data,extents.col0,extents.col1+1,msrc);
+                        } else {
+                            extractArrayExtent(range.get(0),mdst.getNumElements(),colExtent);
+                            for (int i = 0; i < colExtent.length; i++) {
+                                mdst.data[colExtent.array[i]] = msrc;
+                            }
                         }
+                    } else if( range.size() == 2 ) {
+                        if(extractSimpleExtents(range.get(0),extents,true,mdst.getNumRows()) &&
+                                extractSimpleExtents(range.get(1),extents,false,mdst.getNumCols()) ) {
+
+                            extents.row1 += 1;
+                            extents.col1 += 1;
+
+                            for (int i = extents.row0; i < extents.row1; i++) {
+                                int index = i*mdst.numCols + extents.col0;
+                                for (int j = extents.col0; j < extents.col1; j++) {
+                                    mdst.data[index++] = msrc;
+                                }
+                            }
+                        } else {
+                            extractArrayExtent(range.get(0),mdst.numRows,rowExtent);
+                            extractArrayExtent(range.get(1),mdst.numCols,colExtent);
+
+                            for (int i = 0; i < rowExtent.length; i++) {
+                                for (int j = 0; j < colExtent.length; j++) {
+                                    mdst.unsafe_set(rowExtent.array[i],colExtent.array[j],msrc);
+                                }
+                            }
+                        }
+                    } else {
+                        throw new RuntimeException("Unexpected number of ranges.  Should have been caught earlier");
                     }
                 }
             };
@@ -1381,40 +1437,6 @@ public abstract class Operation {
         };
 
         return ret;
-    }
-
-    /**
-     * Parses the inputs to figure out the range of a sub-matrix.  Special variables are handled to set
-     * relative values
-     */
-    // TODO delete this function
-    protected static void findExtents( DenseMatrix64F A, List<Variable> inputs , int where ,Extents e ) {
-        if( inputs.get(where).getType() == VariableType.SPECIAL ) {
-            e.row0 = 0; e.row1 = A.numRows; where++;
-        } else {
-            e.row0 = ((VariableInteger)inputs.get(where++)).value;
-            if( inputs.get(where).getType() == VariableType.SPECIAL ) {
-                e.row1 = A.numRows;
-            } else {
-                e.row1 = ((VariableInteger)inputs.get(where)).value+1;
-            }
-            where++;
-        }
-
-        if( inputs.get(where).getType() == VariableType.SPECIAL ) {
-            e.col0 = 0; e.col1 = A.numCols; where++;
-        } else {
-            e.col0 = ((VariableInteger)inputs.get(where++)).value;
-            if( inputs.get(where).getType() == VariableType.SPECIAL ) {
-                e.col1 = A.numCols;
-            } else {
-                e.col1 = ((VariableInteger)inputs.get(where)).value+1;
-            }
-            where++;
-        }
-
-        if( where != inputs.size())
-            throw new RuntimeException("Unexpected number of inputs");
     }
 
     /**
