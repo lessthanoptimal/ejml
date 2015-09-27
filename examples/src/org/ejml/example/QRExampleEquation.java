@@ -110,7 +110,7 @@ public class QRExampleEquation {
         for( int j = N-1; j>= 0; j-- ) {
             eq.alias(j,"j",gammas[j],"gamma");
 
-            eq.process("u(j:,0) = [1 ; QR(j+1:,j)]");
+            eq.process("u(j:,0) = [1 ; QR((j+1):,j)]");
             eq.process("Q=(eye(r)-gamma*u*u')*Q");
         }
 
