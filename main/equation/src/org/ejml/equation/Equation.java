@@ -274,6 +274,18 @@ public class Equation {
         }
     }
 
+    private void alias( IntegerSequence sequence , String name ) {
+        if( isReserved(name))
+            throw new RuntimeException("Reserved word or contains a reserved character");
+
+        VariableIntegerSequence old = (VariableIntegerSequence)variables.get(name);
+        if( old == null ) {
+            variables.put(name, new VariableIntegerSequence(sequence));
+        }else {
+            old.sequence = sequence;
+        }
+    }
+
     /**
      * Creates multiple aliases at once.
      */
@@ -334,7 +346,7 @@ public class Equation {
 
         TokenList.Token t1 = t0.next;
         if( t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN )
-            throw new ParseError("Expected assign next");
+            throw new ParseError("Expected assignment operator next");
 
         // Parse the right side of the equation
         TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
@@ -404,8 +416,12 @@ public class Equation {
                     }
                     break;
 
+                case INTEGER_SEQUENCE:
+                    alias((IntegerSequence)null,t0.getWord());
+                    break;
+
                 default:
-                    throw new RuntimeException("Unknown type");
+                    throw new RuntimeException("Type not supported for assignment: "+variableRight.getType());
             }
 
             result = variables.get(t0.getWord());
@@ -422,6 +438,7 @@ public class Equation {
      *    a(0:3,4:5) = blah
      */
     private List<Variable> parseAssignRange(Sequence sequence, TokenList tokens, TokenList.Token t0) {
+        // TODO rewrite to use sequences
         List<Variable> range;
         TokenList.Token t1 = t0.next;
         if( t1.getType() == Type.SYMBOL ) {
@@ -469,6 +486,7 @@ public class Equation {
      * @param sequence Sequence of operators
      */
     protected void handleParentheses( TokenList tokens, Sequence sequence ) {
+        // have a list to handle embedded parantheses, e.g. (((((a)))))
         List<TokenList.Token> left = new ArrayList<TokenList.Token>();
 
         // find all of them
@@ -610,6 +628,7 @@ public class Equation {
      */
     private void parseSubmatrixRange(TokenList tokens, Sequence sequence,
                                      List<Variable> variables) {
+        // TODO update for integer sequences
         TokenList.Token comma = tokens.first;
         while( comma != null && comma.getSymbol() != Symbol.COMMA )
             comma = comma.next;
@@ -620,14 +639,15 @@ public class Equation {
         TokenList listLeft = tokens.extractSubList(tokens.first,comma.previous);
         TokenList listRight = tokens.extractSubList(comma.next,tokens.last);
 
-        parseValueRange(listLeft,sequence,variables); // rows
-        parseValueRange(listRight,sequence,variables); // columns
+        parseValueRange(listLeft, sequence, variables); // rows
+        parseValueRange(listRight, sequence, variables); // columns
     }
 
     /**
      * Parse a range written like 0:10 in which two numbers are separated by a colon.
      */
     protected void parseValueRange( TokenList tokens, Sequence sequence , List<Variable> variables ) {
+        // TODO update for integer sequences
 
         TokenList.Token[] t = new TokenList.Token[2];
 
@@ -671,6 +691,10 @@ public class Equation {
      * which is returned.
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
+        // search for integer sequences
+        parseSequencesWithColons(tokens);
+        parseIntegerLists(tokens);
+
         // search for matrix bracket operations
         parseBracketCreateMatrix(tokens, sequence);
 
@@ -685,6 +709,171 @@ public class Equation {
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
 
         return tokens.first;
+    }
+
+    /**
+     * Searches for descriptions of integer sequences and array ranges that have a colon character in them
+     *
+     * examples of integer sequences:
+     * 1:6
+     * 2:4:20
+     *
+     * examples of array range
+     * 2:
+     * 2:4:
+     */
+    protected void parseSequencesWithColons(TokenList tokens ) {
+        TokenList.Token t = tokens.getFirst();
+        if( t == null || t.next == null )
+            return;
+
+        int state = 0;
+
+        TokenList.Token start = null;
+        TokenList.Token middle = null;
+        TokenList.Token prev = t;
+
+        boolean last = false;
+        while( true ) {
+            if( state == 0 ) {
+                if( isVariableInteger(t) ) {
+                    start = t;
+                    state = 1;
+                }
+            } else if( state == 1 ) {
+                // var ?
+                if( t != null && t.getSymbol() == Symbol.COLON ) {  // see if its 'for' type sequence
+                    state = 2;
+                }else {  // just scalar integer, skip
+                    state = 0;
+                }
+            } else if( state == 2 ) {
+                // var: ?
+                if (isVariableInteger(t)) {
+                    state = 3;
+                } else {
+                    // array range
+                    SpecialArrayRange range = new SpecialArrayRange(start,null);
+                    VariableArrayRange varSequence = functions.getManagerTemp().createArrayRange(range);
+                    replaceSequence(tokens, varSequence, start, prev);
+                    state = 0;
+                }
+            } else if ( state == 3 ) {
+                // var:var ?
+                if( t != null && t.getSymbol() == Symbol.COLON ) {
+                    middle = prev;
+                    state = 4;
+                } else {
+                    // create for sequence with start and stop elements only
+                    IntegerSequence sequence = new IntegerSequence.For(start,null,prev);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+                    replaceSequence(tokens, varSequence, start, prev );
+                    if( t != null )
+                        t = t.previous;
+                    state = 0;
+                }
+            } else if ( state == 4 ) {
+                // var:var: ?
+                if( isVariableInteger(t) ) {
+                    // create 'for' sequence with three variables
+                    IntegerSequence sequence = new IntegerSequence.For(start,middle,t);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+                    t = replaceSequence(tokens, varSequence, start, t);
+                } else {
+                    // array range with 2 elements
+                    SpecialArrayRange range = new SpecialArrayRange(start,middle);
+                    VariableArrayRange varSequence = functions.getManagerTemp().createArrayRange(range);
+                    replaceSequence(tokens, varSequence, start, prev);
+                }
+                state = 0;
+            }
+
+            if( last ) {
+                break;
+            } else if( t.next == null ) {
+                // handle the case where it is the last token in the sequence
+                last = true;
+            }
+            prev = t;
+            t = t.next;
+        }
+    }
+
+    /**
+     * Searches for a sequence of integers
+     *
+     * example:
+     * 1 2 3 4 6 7 -3
+     */
+    protected void parseIntegerLists(TokenList tokens) {
+        TokenList.Token t = tokens.getFirst();
+        if( t == null || t.next == null )
+            return;
+
+        int state = 0;
+
+        TokenList.Token start = null;
+        TokenList.Token middle = null;
+        TokenList.Token prev = t;
+
+        boolean last = false;
+        while( true ) {
+            if( state == 0 ) {
+                if( isVariableInteger(t) ) {
+                    start = t;
+                    state = 1;
+                }
+            } else if( state == 1 ) {
+                // var ?
+                if( isVariableInteger(t)) {                 // see if its explicit number sequence
+                    state = 2;
+                } else {  // just scalar integer, skip
+                    state = 0;
+                }
+            } else if ( state == 2 ) {
+                // var var ....
+                if( !isVariableInteger(t) ) {
+                    // create explicit list sequence
+                    IntegerSequence sequence = new IntegerSequence.Explicit(start,prev);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+                    replaceSequence(tokens, varSequence, start, prev);
+                    state = 0;
+                }
+            }
+
+            if( last ) {
+                break;
+            } else if( t.next == null ) {
+                // handle the case where it is the last token in the sequence
+                last = true;
+            }
+            prev = t;
+            t = t.next;
+        }
+    }
+
+    private TokenList.Token replaceSequence(TokenList tokens, Variable target, TokenList.Token start, TokenList.Token end) {
+        TokenList.Token tmp = new TokenList.Token(target);
+        tokens.insert(start.previous, tmp);
+        tokens.extractSubList(start, end);
+        return tmp;
+    }
+
+    /**
+     * Checks to see if the token is an integer scalar
+     *
+     * @return true if integer or false if not
+     */
+    private static boolean isVariableInteger(TokenList.Token t) {
+        if( t == null )
+            return false;
+
+        if( t.getType() == Type.VARIABLE && t.getVariable().getType() == VariableType.SCALAR ) {
+            if( ((VariableScalar)t.getVariable()).getScalarType() == VariableScalar.Type.INTEGER ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

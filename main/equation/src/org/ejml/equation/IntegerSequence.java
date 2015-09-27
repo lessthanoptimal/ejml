@@ -18,6 +18,9 @@
 
 package org.ejml.equation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Interface for an ordered sequence of integer values
  *
@@ -27,46 +30,66 @@ public interface IntegerSequence {
 
     int length();
 
-    void reset();
+    void initialize();
 
     int next();
 
     boolean hasNext();
 
+    Type getType();
+
+    enum Type {
+        EXPLICIT,
+        FOR
+    }
+
     /**
      * An array of integers which was explicitly specified
      */
-    class Array implements IntegerSequence {
+    class Explicit implements IntegerSequence {
 
-        int array[];
+        List<VariableInteger> sequence = new ArrayList<VariableInteger>();
         int where;
 
-        public Array(int[] array) {
-            this.array = array;
+        public Explicit(TokenList.Token start , TokenList.Token end) {
+            TokenList.Token t = start;
+            while( true ) {
+                sequence.add( (VariableInteger)t.getVariable() );
+                if( t == end ) {
+                    break;
+                } else {
+                    t = t.next;
+                }
+            }
         }
 
         @Override
         public int length() {
-            return array.length;
+            return sequence.size();
         }
 
         @Override
-        public void reset() {
+        public void initialize() {
             where = 0;
         }
 
         @Override
         public int next() {
-            return array[where++];
+            return sequence.get(where++).value;
         }
 
         @Override
         public boolean hasNext() {
-            return where < array.length;
+            return where < sequence.size();
         }
 
-        public int[] getArray() {
-            return array;
+        @Override
+        public Type getType() {
+            return Type.EXPLICIT;
+        }
+
+        public List<VariableInteger> getSequence() {
+            return sequence;
         }
     }
 
@@ -77,19 +100,20 @@ public interface IntegerSequence {
      */
     class For implements IntegerSequence {
 
-        int start;
-        int step;
-        int end;
+        VariableInteger start;
+        VariableInteger step;
+        VariableInteger end;
 
-        int length;
+        int valStart;
+        int valStep;
+        int valEnd;
         int where;
+        int length;
 
-        public For(int start, int step, int end) {
-            this.start = start;
-            this.step = step;
-            this.end = end;
-
-            length = (end-start)/step+1;
+        public For(TokenList.Token start, TokenList.Token step, TokenList.Token end) {
+            this.start = (VariableInteger)start.getVariable();
+            this.step = step == null ? null : (VariableInteger)step.getVariable();
+            this.end = (VariableInteger)end.getVariable();
         }
 
         @Override
@@ -98,30 +122,52 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void reset() {
+        public void initialize() {
+            valStart = start.value;
+            valEnd = end.value;
+            if( step == null ) {
+                valStep = 1;
+            } else {
+                valStep = step.value;
+            }
+
+            if( valStart <= 0 ) {
+                throw new RuntimeException("step size must be a positive integer");
+            }
+            if( valEnd < valStart ) {
+                throw new RuntimeException("end value must be >= the start value");
+            }
+
             where = 0;
+            length = (valEnd-valStart)/valStep  + 1;
+
         }
 
         @Override
         public int next() {
-            return start + step*where++;
+            return valStart + valStep*where++;
         }
 
         @Override
         public boolean hasNext() {
-            return where <= length;
+            return where < length;
         }
 
         public int getStart() {
-            return start;
+            return valStart;
         }
 
         public int getStep() {
-            return step;
+            return valStep;
         }
 
         public int getEnd() {
-            return end;
+            return valEnd;
+        }
+
+        @Override
+        public Type getType() {
+            return Type.FOR;
         }
     }
 }

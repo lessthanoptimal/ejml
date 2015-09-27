@@ -19,22 +19,32 @@
 package org.ejml.equation;
 
 /**
- * Instance of a variable created at compile time.  This base class only specifies the type of variable which it is.
+ * Specifies elements inside an array.  Can refer to the beginning and end of the array
  *
  * @author Peter Abeles
  */
-public class Variable {
-    public VariableType type;
+public class SpecialArrayRange {
 
-    protected Variable(VariableType type) {
-        this.type = type;
+    VariableInteger start;
+    VariableInteger step;
+
+    public SpecialArrayRange(TokenList.Token start, TokenList.Token step) {
+        this.start = start == null ? null : (VariableInteger)start.getVariable();
+        this.step = step == null ? null : (VariableInteger)step.getVariable();
     }
 
-    public VariableType getType() {
-        return type;
+    public boolean isAll() {
+        return start == null;
     }
 
-    public String toString() {
-        return "VAR_"  + type;
+    public int getStart() {
+        return start.value;
+    }
+
+    public int getStep() {
+        if( step == null )
+            return 1;
+        else
+            return step.value;
     }
 }

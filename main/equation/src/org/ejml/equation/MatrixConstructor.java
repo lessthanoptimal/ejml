@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,6 @@ public class MatrixConstructor {
     VariableMatrix output;
     List<Item> items = new ArrayList<Item>();
 
-    List<VariableScalar> tmp = new ArrayList<VariableScalar>();
 
     public MatrixConstructor(ManagerTempVariables manager) {
         this.output = manager.createMatrix();
@@ -53,6 +52,11 @@ public class MatrixConstructor {
         if( !items.get(items.size()-1).endRow )
             endRow();
 
+        // have to initialize some variable types first to get the actual size
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).initialize();
+        }
+
         setToRequiredSize(output.matrix);
 
         int matrixRow = 0;
@@ -61,26 +65,36 @@ public class MatrixConstructor {
             Item item = items.get(i);
 
             if( item.endRow ) {
-                Item v = row.get(0);
-                int numRows = v.getRows();
-                int numCols = v.getColumns();
-                if( v.matrix ) {
-                    CommonOps.insert(v.getMatrix(),output.matrix,matrixRow,0);
-                } else {
-                    output.matrix.set(matrixRow,0,v.getValue());
-                }
-                for (int j = 1; j < row.size(); j++) {
-                    v = row.get(j);
-                    if( v.getRows() != numRows)
+                int expectedRows = 0;
+                int numCols = 0;
+                for (int j = 0; j < row.size(); j++) {
+                    Item v = row.get(j);
+
+                    int numRows = v.getRows();
+
+                    if( j == 0 ) {
+                        expectedRows = numRows;
+                    } else if( v.getRows() != expectedRows ){
                         throw new RuntimeException("Row miss-matched. "+numRows+" "+v.getRows());
+                    }
+
                     if( v.matrix ) {
                         CommonOps.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
+                    } else if( v.variable.getType() == VariableType.SCALAR ){
+                        output.matrix.set(matrixRow,numCols,v.getValue());
+                    } else if( v.variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+                        IntegerSequence sequence = ((VariableIntegerSequence)v.variable).sequence;
+                        int col = numCols;
+                        while( sequence.hasNext() ) {
+                            output.matrix.set(matrixRow,col++,sequence.next());
+                        }
                     } else {
-                        output.matrix.set(matrixRow, numCols, v.getValue());
+                        throw new ParseError("Can't insert a variable of type "+v.variable.getType()+" inside a matrix!");
                     }
                     numCols += v.getColumns();
                 }
-                matrixRow += numRows;
+
+                matrixRow += expectedRows;
                 row.clear();
             } else {
                 row.add(item);
@@ -117,7 +131,7 @@ public class MatrixConstructor {
                 if( matrixCol == 0 )
                     matrixCol = numCols;
                 else if( matrixCol != numCols )
-                    throw new RuntimeException("Unexpected number of columns");
+                    throw new RuntimeException("Unexpected number of columns: expected "+matrixCol+" found "+numCols);
 
                 row.clear();
             } else {
@@ -155,8 +169,12 @@ public class MatrixConstructor {
         public int getColumns() {
             if( matrix ) {
                 return ((VariableMatrix)variable).matrix.numCols;
-            } else {
+            } else if( variable.getType() == VariableType.SCALAR ){
                 return 1;
+            } else if( variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+                return ((VariableIntegerSequence)variable).sequence.length();
+            } else {
+                throw new RuntimeException("BUG! Should have been caught earlier");
             }
         }
 
@@ -166,6 +184,12 @@ public class MatrixConstructor {
 
         public double getValue() {
             return ((VariableScalar)variable).getDouble();
+        }
+
+        public void initialize() {
+            if( variable!=null && !matrix && variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+                ((VariableIntegerSequence)variable).sequence.initialize();
+            }
         }
     }
 }

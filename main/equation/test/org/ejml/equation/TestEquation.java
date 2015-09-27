@@ -361,6 +361,78 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_constructMatrix_ForSequence_Case0() {
+        Equation eq = new Equation();
+
+        eq.process("found=[[1:4]' [2:2:8]']");
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 2; x++) {
+                assertEquals(x+" "+y,(x+1)*(y+1),found.get(y,x),1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void compile_constructMatrix_ForSequence_Case1() {
+        Equation eq = new Equation();
+
+        eq.process("found=[1:4 5:1:8]");
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
+        assertEquals(1,found.numRows());
+        assertEquals(8, found.numCols());
+
+        for (int x = 0; x < 8; x++) {
+            assertEquals(x+1,found.get(0,x),1e-8);
+        }
+    }
+
+    @Test
+    public void compile_constructMatrix_ForSequence_Case2() {
+        Equation eq = new Equation();
+
+        eq.process("found=[1 2 3 4 5:1:8]");
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
+        assertEquals(1,found.numRows());
+        assertEquals(8,found.numCols());
+
+        for (int x = 0; x < 8; x++) {
+            assertEquals(x+1,found.get(0,x),1e-8);
+        }
+    }
+
+    @Test
+    public void compile_assign_IntSequence_Case0() {
+        Equation eq = new Equation();
+
+        eq.process("a=5:1:8");
+        eq.process("b=[a]");
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        assertEquals(1,found.numRows());
+        assertEquals(4,found.numCols());
+
+        for (int x = 0; x < 4; x++) {
+            assertEquals(x+5,found.get(0,x),1e-8);
+        }
+    }
+
+    // not sure how I feel about this, but its better to explicity check this behavior
+    @Test
+    public void compile_assign_IntSequence_Case1() {
+        Equation eq = new Equation();
+
+        eq.process("a=2 3 4 5 6");
+        eq.process("b=[a]");
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        assertEquals(1,found.numRows());
+        assertEquals(5,found.numCols());
+
+        for (int x = 0; x < 5; x++) {
+            assertEquals(x+2,found.get(0,x),1e-8);
+        }
+    }
+
+    @Test
     public void compile_transpose() {
         Equation eq = new Equation();
 
@@ -816,6 +888,7 @@ public class TestEquation {
     public void gracefullyHandleBadCode() {
         checkForParseException("a(2,4:5)");
         checkForParseException("a(2,4:5");
+        checkForParseException("m=[3:4:]");
     }
 
     private void checkForParseException( String code ) {

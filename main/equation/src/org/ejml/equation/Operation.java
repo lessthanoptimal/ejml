@@ -154,7 +154,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps.divide(s.getDouble(),m.matrix,output.matrix);
+                    CommonOps.divide(s.getDouble(), m.matrix, output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -241,7 +241,7 @@ public abstract class Operation {
                     double a = ((VariableScalar)A).getDouble();
                     double b = ((VariableScalar)B).getDouble();
 
-                    output.value = Math.pow(a,b);
+                    output.value = Math.pow(a, b);
                 }
             };
         } else {
@@ -409,7 +409,7 @@ public abstract class Operation {
                     DenseMatrix64F a = ((VariableMatrix)A).matrix;
                     DenseMatrix64F out = ((VariableMatrix)ret.output).matrix;
                     out.reshape(a.numRows,a.numCols);
-                    CommonOps.elementLog(a,out);
+                    CommonOps.elementLog(a, out);
                 }
             };
         } else {
@@ -714,7 +714,19 @@ public abstract class Operation {
                 }
             };
         }
-        throw new RuntimeException("Copy type miss-match src = "+src.getClass().getSimpleName()+" dst = "+dst.getClass().getSimpleName());
+
+        if( src instanceof VariableIntegerSequence ) {
+            if( dst instanceof VariableIntegerSequence ) {
+                return new Operation("copy-is-is") {
+                    @Override
+                    public void process() {
+                        ((VariableIntegerSequence)dst).sequence = ((VariableIntegerSequence)src).sequence;
+                    }
+                };
+            }
+        }
+
+        throw new RuntimeException("Unsupported copy types; src = "+src.getClass().getSimpleName()+" dst = "+dst.getClass().getSimpleName());
     }
 
     public static Operation copy( final Variable src , final Variable dst , final List<Variable> range ) {
@@ -801,7 +813,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.matrix.reshape(mA.matrix.numRows,mA.matrix.numCols);
+                    output.matrix.reshape(mA.matrix.numRows, mA.matrix.numCols);
                     if( !CommonOps.invert(mA.matrix,output.matrix) )
                         throw new RuntimeException("Inverse failed!");
                 }
@@ -1177,7 +1189,7 @@ public abstract class Operation {
                     int numRows = ((VariableInteger)A).value;
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows,numCols);
-                    CommonOps.fill(output.matrix,1);
+                    CommonOps.fill(output.matrix, 1);
                 }
             };
         } else {

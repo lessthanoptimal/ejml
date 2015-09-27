@@ -19,22 +19,16 @@
 package org.ejml.equation;
 
 /**
- * Instance of a variable created at compile time.  This base class only specifies the type of variable which it is.
+ * Special way of specifying an integer sequence which can only be used to specify elements inside an array
  *
  * @author Peter Abeles
  */
-public class Variable {
-    public VariableType type;
-
-    protected Variable(VariableType type) {
-        this.type = type;
+public class VariableArrayRange extends Variable {
+    SpecialArrayRange elements;
+    protected VariableArrayRange(SpecialArrayRange elements) {
+        super(VariableType.ARRAY_RANGE);
+        this.elements = elements;
     }
 
-    public VariableType getType() {
-        return type;
-    }
 
-    public String toString() {
-        return "VAR_"  + type;
-    }
 }
