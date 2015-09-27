@@ -503,6 +503,22 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_assign_IntSequence_Case6() {
+        Equation eq = new Equation();
+
+        // Use commas to clarify the meaning of negative
+        eq.process("a=3 2 1,0,-1,0 - 2");
+        eq.process("b=[a]");
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        assertEquals(1,found.numRows());
+        assertEquals(6,found.numCols());
+
+        for (int x = 0; x < 6; x++) {
+            assertEquals(3-x,found.get(0,x),1e-8);
+        }
+    }
+
+    @Test
     public void compile_transpose() {
         Equation eq = new Equation();
 

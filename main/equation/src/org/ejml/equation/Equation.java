@@ -691,11 +691,15 @@ public class Equation {
         parseBracketCreateMatrix(tokens, sequence);
 
         // process operators depending on their priority
-        parseNegOp(tokens,sequence);
-        parseOperationsL(tokens,sequence);
+        parseNegOp(tokens, sequence);
+        parseOperationsL(tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.POWER,Symbol.ELEMENT_POWER}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
+
+        // Commas are used in integer sequences.  Can be used to force to compiler to treat - as negative not
+        // minus.  They can now be removed since they have served their purpose
+        stripCommas(tokens);
 
         // now construct rest of the lists and combine them together
         parseIntegerLists(tokens);
@@ -705,6 +709,21 @@ public class Equation {
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
 
         return tokens.first;
+    }
+
+    /**
+     * Removes all commas from the token list
+     */
+    private void stripCommas(TokenList tokens) {
+        TokenList.Token t = tokens.getFirst();
+
+        while( t != null ) {
+            TokenList.Token next = t.next;
+            if( t.getSymbol() == Symbol.COMMA ) {
+                tokens.remove(t);
+            }
+            t = next;
+        }
     }
 
     /**
