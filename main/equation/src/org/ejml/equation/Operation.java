@@ -1163,7 +1163,7 @@ public abstract class Operation {
                     int numRows = ((VariableInteger)A).value;
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows,numCols);
-                    CommonOps.fill(output.matrix,0);
+                    CommonOps.fill(output.matrix, 0);
                     //not sure if this is necessary.  Can its value every be modified?
                 }
             };
@@ -1295,24 +1295,52 @@ public abstract class Operation {
         if(  !(inputs.get(0) instanceof VariableMatrix))
             throw new RuntimeException("First parameter must be a matrix.");
 
+
         for (int i = 1; i < inputs.size(); i++) {
-            if( !(inputs.get(i) instanceof VariableInteger) && !(inputs.get(i) instanceof VariableSpecial) )
-                throw new RuntimeException("Last parameters must be integers or special for sub");
+            if( !(inputs.get(i) instanceof VariableInteger) &&
+                    (inputs.get(i).getType() != VariableType.INTEGER_SEQUENCE) &&
+                    (inputs.get(i).getType() != VariableType.ARRAY_RANGE))
+                throw new RuntimeException("Parameters must be integers, integer list, or array range");
         }
 
         ret.op = new Operation("extract") {
 
             Extents extents = new Extents();
 
+            ArrayExtent rowExtent = new ArrayExtent();
+            ArrayExtent colExtent = new ArrayExtent();
+
             @Override
             public void process() {
 
                 DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
 
-                findExtents(A,inputs,1,extents);
+                if( inputs.size() == 2  ) {
+                    if( extractSimpleExtents(inputs.get(1), extents, false, A.getNumElements()) ) {
+                        extents.col1 += 1;
+                        output.matrix.reshape(1,extents.col1-extents.col0);
+                        System.arraycopy(A.data,extents.col0,output.matrix.data,0,extents.col1-extents.col0);
+                    } else {
+                        extractArrayExtent(inputs.get(1),A.getNumElements(),colExtent);
+                        output.matrix.reshape(1, colExtent.length);
+                        CommonOps.extract(A,
+                                colExtent.array, colExtent.length, output.matrix);
+                    }
+                } else if( extractSimpleExtents(inputs.get(1), extents, true, A.numRows) &&
+                        extractSimpleExtents(inputs.get(2), extents, false, A.numCols)) {
+                    extents.row1 += 1;
+                    extents.col1 += 1;
+                    output.matrix.reshape(extents.row1-extents.row0,extents.col1-extents.col0);
+                    CommonOps.extract(A,extents.row0,extents.row1,extents.col0,extents.col1,output.matrix,0,0);
+                } else {
+                    extractArrayExtent(inputs.get(1),A.numRows,rowExtent);
+                    extractArrayExtent(inputs.get(2),A.numCols,colExtent);
 
-                output.matrix.reshape(extents.row1-extents.row0,extents.col1-extents.col0);
-                CommonOps.extract(A,extents.row0,extents.row1,extents.col0,extents.col1,output.matrix,0,0);
+                    output.matrix.reshape(rowExtent.length, colExtent.length);
+                    CommonOps.extract(A,
+                            rowExtent.array,rowExtent.length,
+                            colExtent.array,colExtent.length,output.matrix);
+                }
             }
         };
 
@@ -1327,24 +1355,28 @@ public abstract class Operation {
         if(  !(inputs.get(0) instanceof VariableMatrix))
             throw new RuntimeException("First parameter must be a matrix.");
 
-        for (int i = 1; i < 3; i++) {
+        for (int i = 1; i < inputs.size(); i++) {
             if( !(inputs.get(i) instanceof VariableInteger) )
                 throw new RuntimeException("Parameters must be integers for extract scalar");
         }
 
         ret.op = new Operation("extractScalar") {
 
-            Extents extents = new Extents();
-
             @Override
             public void process() {
 
                 DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
 
-                int row = ((VariableInteger)inputs.get(1)).value;
-                int col = ((VariableInteger)inputs.get(2)).value;
+                if( inputs.size() == 2 ) {
+                    int index = ((VariableInteger)inputs.get(1)).value;
 
-                output.value = A.get(row,col);
+                    output.value = A.get(index);
+                } else {
+                    int row = ((VariableInteger) inputs.get(1)).value;
+                    int col = ((VariableInteger) inputs.get(2)).value;
+
+                    output.value = A.get(row, col);
+                }
             }
         };
 
@@ -1355,6 +1387,7 @@ public abstract class Operation {
      * Parses the inputs to figure out the range of a sub-matrix.  Special variables are handled to set
      * relative values
      */
+    // TODO delete this function
     protected static void findExtents( DenseMatrix64F A, List<Variable> inputs , int where ,Extents e ) {
         if( inputs.get(where).getType() == VariableType.SPECIAL ) {
             e.row0 = 0; e.row1 = A.numRows; where++;
@@ -1384,6 +1417,89 @@ public abstract class Operation {
             throw new RuntimeException("Unexpected number of inputs");
     }
 
+    /**
+     * See if a simple sequence can be used to extract the array.  A simple extent is a continuous block from
+     * a min to max index
+     *
+     * @return true if it is a simple range or false if not
+     */
+    private static boolean extractSimpleExtents(Variable var, Extents e, boolean row, int maxIndex) {
+        int lower;
+        int upper;
+        if( var.getType() == VariableType.INTEGER_SEQUENCE ) {
+            IntegerSequence sequence = ((VariableIntegerSequence)var).sequence;
+            if( sequence.getType() == IntegerSequence.Type.FOR ) {
+                IntegerSequence.For seqFor = (IntegerSequence.For)sequence;
+                seqFor.initialize();
+                if( seqFor.getStep() == 1 ) {
+                    lower = seqFor.getStart();
+                    upper = seqFor.getEnd();
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else if( var.getType() == VariableType.SCALAR ) {
+            lower = upper = ((VariableInteger)var).value;
+        } else if( var.getType() == VariableType.ARRAY_RANGE ) {
+            SpecialArrayRange range = ((VariableArrayRange)var).elements;
+            if( range.isAll()) {
+                lower = 0;
+                upper = maxIndex-1;
+            } else if( range.getStep() == 1 ){
+                lower = range.getStart();
+                upper = maxIndex-1;
+            } else {
+                return false;
+            }
+        } else {
+            throw new RuntimeException("How did a bad variable get put here?!?!");
+        }
+        if( row ) {
+            e.row0 = lower;
+            e.row1 = upper;
+        } else {
+            e.col0 = lower;
+            e.col1 = upper;
+        }
+        return true;
+    }
+
+    private static void extractArrayExtent( Variable var , int maxIndex , ArrayExtent extent ) {
+        if( var.getType() == VariableType.INTEGER_SEQUENCE ) {
+            IntegerSequence sequence = ((VariableIntegerSequence)var).sequence;
+            sequence.initialize();
+            extent.setLength(sequence.length());
+            int index = 0;
+            while( sequence.hasNext() ) {
+                extent.array[index++] = sequence.next();
+            }
+        } else if( var.getType() == VariableType.SCALAR ) {
+            extent.setLength(1);
+            extent.array[0] = ((VariableInteger)var).value;
+        } else if( var.getType() == VariableType.ARRAY_RANGE ) {
+            SpecialArrayRange range = ((VariableArrayRange)var).elements;
+            if( range.isAll()) {
+                extent.setLength(maxIndex);
+                for (int i = 0; i < maxIndex; i++) {
+                    extent.array[i] = i;
+                }
+            } else {
+                int start = range.getStart();
+                int step = range.getStep();
+                int length = (maxIndex-start)/step+1;
+                extent.setLength(length);
+
+                for (int i = 0, val = start; i < length; i++, val += step) {
+                    extent.array[i] = val;
+                }
+            }
+        } else {
+            throw new RuntimeException("How did a bad variable get put here?!?!");
+        }
+    }
+
     public static Info matrixConstructor( final MatrixConstructor m ) {
         Info ret = new Info();
         ret.output = m.getOutput();
@@ -1409,5 +1525,22 @@ public abstract class Operation {
     {
         public Operation op;
         public Variable output;
+    }
+
+    public static class ArrayExtent
+    {
+        int array[];
+        int length;
+
+        public ArrayExtent() {
+            array = new int[1];
+        }
+
+        public void setLength( int length ) {
+            if( length > array.length ) {
+                array = new int[ length ];
+            }
+            this.length = length;
+        }
     }
 }

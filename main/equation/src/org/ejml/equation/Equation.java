@@ -595,22 +595,49 @@ public class Equation {
     protected TokenList.Token parseSubmatrixToExtract(TokenList.Token variableTarget,
                                                       TokenList tokens, Sequence sequence) {
 
+
+        List<TokenList.Token> inputs = parseParameterCommaBlock(tokens, sequence);
+
         List<Variable> variables = new ArrayList<Variable>();
+
+        // for the operation, the first variable must be the matrix which is being manipulated
         variables.add(variableTarget.getVariable());
 
-        parseSubmatrixRange(tokens, sequence, variables);
+        for (int i = 0; i < inputs.size(); i++) {
+            TokenList.Token t = inputs.get(i);
+            if( t.getType() != Type.VARIABLE )
+                continue;
+            Variable v = t.getVariable();
+            if( v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t) || v.getType() == VariableType.ARRAY_RANGE) {
+                variables.add(v);
+            } else {
+                throw new ParseError("Expected an integer, integer sequence, or array range to define a submatrix");
+            }
+        }
 
         // first parameter is the matrix it will be extracted from.  rest specify range
         Operation.Info info;
 
-        // if it is extracting only a single number explicitly then convert it into a scalar
-        if( variables.get(1) == variables.get(2) && variables.get(3) == variables.get(4) ) {
-            // remove some redundant variables
-            variables.remove(4);
-            variables.remove(2);
-            info = functions.create("extractScalar", variables);
+        // only one variable means its referencing elements
+        // two variables means its referencing a sub matrix
+        if( inputs.size() == 1 ) {
+            Variable varA = variables.get(1);
+            if( varA.getType() == VariableType.SCALAR ) {
+                info = functions.create("extractScalar", variables);
+            } else {
+                info = functions.create("extract", variables);
+            }
+        } else if( inputs.size() == 2 ) {
+            Variable varA = variables.get(1);
+            Variable varB = variables.get(2);
+
+            if( varA.getType() == VariableType.SCALAR && varB.getType() == VariableType.SCALAR) {
+                info = functions.create("extractScalar", variables);
+            } else {
+                info = functions.create("extract", variables);
+            }
         } else {
-            info = functions.create("extract", variables);
+            throw new ParseError("Expected 2 inputs to sub-matrix");
         }
 
         sequence.addOperation(info.op);
@@ -694,6 +721,7 @@ public class Equation {
         // search for integer sequences
         parseSequencesWithColons(tokens);
         parseIntegerLists(tokens);
+        parseCombineIntegerLists(tokens);
 
         // search for matrix bracket operations
         parseBracketCreateMatrix(tokens, sequence);
@@ -717,6 +745,7 @@ public class Equation {
      * examples of integer sequences:
      * 1:6
      * 2:4:20
+     * :
      *
      * examples of array range
      * 2:
@@ -724,7 +753,7 @@ public class Equation {
      */
     protected void parseSequencesWithColons(TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
-        if( t == null || t.next == null )
+        if( t == null )
             return;
 
         int state = 0;
@@ -736,21 +765,23 @@ public class Equation {
         boolean last = false;
         while( true ) {
             if( state == 0 ) {
-                if( isVariableInteger(t) ) {
+                if( isVariableInteger(t) && (t.next != null && t.next.getSymbol() == Symbol.COLON) ) {
                     start = t;
                     state = 1;
+                    t = t.next;
+                } else if( t != null && t.getSymbol() == Symbol.COLON ) {
+                    // If it starts with a colon then it must be 'all'  or a type-o
+                    SpecialArrayRange range = new SpecialArrayRange(null,null);
+                    VariableArrayRange varSequence = functions.getManagerTemp().createArrayRange(range);
+                    TokenList.Token n = new TokenList.Token(varSequence);
+                    tokens.insert(t.previous, n);
+                    tokens.remove(t);
+                    t = n;
                 }
             } else if( state == 1 ) {
-                // var ?
-                if( t != null && t.getSymbol() == Symbol.COLON ) {  // see if its 'for' type sequence
-                    state = 2;
-                }else {  // just scalar integer, skip
-                    state = 0;
-                }
-            } else if( state == 2 ) {
-                // var: ?
+                // var : ?
                 if (isVariableInteger(t)) {
-                    state = 3;
+                    state = 2;
                 } else {
                     // array range
                     SpecialArrayRange range = new SpecialArrayRange(start,null);
@@ -758,11 +789,11 @@ public class Equation {
                     replaceSequence(tokens, varSequence, start, prev);
                     state = 0;
                 }
-            } else if ( state == 3 ) {
+            } else if ( state == 2 ) {
                 // var:var ?
                 if( t != null && t.getSymbol() == Symbol.COLON ) {
                     middle = prev;
-                    state = 4;
+                    state = 3;
                 } else {
                     // create for sequence with start and stop elements only
                     IntegerSequence sequence = new IntegerSequence.For(start,null,prev);
@@ -772,7 +803,7 @@ public class Equation {
                         t = t.previous;
                     state = 0;
                 }
-            } else if ( state == 4 ) {
+            } else if ( state == 3 ) {
                 // var:var: ?
                 if( isVariableInteger(t) ) {
                     // create 'for' sequence with three variables
@@ -813,7 +844,6 @@ public class Equation {
         int state = 0;
 
         TokenList.Token start = null;
-        TokenList.Token middle = null;
         TokenList.Token prev = t;
 
         boolean last = false;
@@ -852,6 +882,47 @@ public class Equation {
         }
     }
 
+    /**
+     * Looks for sequences of integer lists and combine them into one big sequence
+     */
+    protected void parseCombineIntegerLists(TokenList tokens) {
+        TokenList.Token t = tokens.getFirst();
+        if( t == null || t.next == null )
+            return;
+
+        int numFound = 0;
+
+        TokenList.Token start = null;
+        TokenList.Token end = null;
+
+        while( t != null ) {
+            if( t.getType() == Type.VARIABLE && (isVariableInteger(t) ||
+                    t.getVariable().getType() == VariableType.INTEGER_SEQUENCE )) {
+                if( numFound == 0 ) {
+                    numFound = 1;
+                    start = end = t;
+                } else {
+                    numFound++;
+                    end = t;
+                }
+            } else if( numFound > 1 ) {
+                IntegerSequence sequence = new IntegerSequence.Combined(start,end);
+                VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+                replaceSequence(tokens, varSequence, start, end);
+                numFound = 0;
+            } else {
+                numFound = 0;
+            }
+            t = t.next;
+        }
+
+        if( numFound > 1 ) {
+            IntegerSequence sequence = new IntegerSequence.Combined(start,end);
+            VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+            replaceSequence(tokens, varSequence, start, end);
+        }
+    }
+
     private TokenList.Token replaceSequence(TokenList tokens, Variable target, TokenList.Token start, TokenList.Token end) {
         TokenList.Token tmp = new TokenList.Token(target);
         tokens.insert(start.previous, tmp);
@@ -868,12 +939,7 @@ public class Equation {
         if( t == null )
             return false;
 
-        if( t.getType() == Type.VARIABLE && t.getVariable().getType() == VariableType.SCALAR ) {
-            if( ((VariableScalar)t.getVariable()).getScalarType() == VariableScalar.Type.INTEGER ) {
-                return true;
-            }
-        }
-        return false;
+        return t.getScalarType() == VariableScalar.Type.INTEGER;
     }
 
     /**

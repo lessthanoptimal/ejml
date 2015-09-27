@@ -97,7 +97,7 @@ public class CommonOps {
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult.mult_reorder(alpha,a,b,c);
+            MatrixMatrixMult.mult_reorder(alpha, a, b, c);
         } else {
             MatrixMatrixMult.mult_small(alpha,a,b,c);
         }
@@ -172,9 +172,9 @@ public class CommonOps {
     public static void multTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
     {
         if( b.numRows == 1 ) {
-            MatrixVectorMult.mult(a,b,c);
+            MatrixVectorMult.mult(a, b, c);
         } else {
-            MatrixMatrixMult.multTransB(a,b,c);
+            MatrixMatrixMult.multTransB(a, b, c);
         }
     }
 
@@ -359,7 +359,7 @@ public class CommonOps {
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult.multAdd_reorder(alpha,a,b,c);
+            MatrixMatrixMult.multAdd_reorder(alpha, a, b, c);
         } else {
             MatrixMatrixMult.multAdd_small(alpha,a,b,c);
         }
@@ -969,7 +969,7 @@ public class CommonOps {
         int o = Math.min(numRows,numCols);
 
         for( int i = 0; i < o; i++ ) {
-            ret.set(i,i,diagEl[i]);
+            ret.set(i, i, diagEl[i]);
         }
 
         return ret;
@@ -1096,6 +1096,51 @@ public class CommonOps {
         ImplCommonOps_DenseMatrix64F.extract(src,srcY0,srcX0,dst,0,0, h, w);
 
         return dst;
+    }
+
+    /**
+     * Extracts out a matrix from source given a sub matrix with arbitrary rows and columns specified in
+     * two array lists
+     *
+     * @param src Source matrix. Not modified.
+     * @param rows array of row indexes
+     * @param rowsSize maximum element in row array
+     * @param cols array of column indexes
+     * @param colsSize maximum element in column array
+     * @param dst output matrix.  Must be correct shape.
+     */
+    public static void extract( DenseMatrix64F src,
+                                int rows[] , int rowsSize ,
+                                int cols[] , int colsSize , DenseMatrix64F dst ) {
+        if( rowsSize != dst.numRows || colsSize != dst.numCols )
+            throw new IllegalArgumentException("Unexpected number of rows and/or columns in dst matrix");
+
+        int indexDst = 0;
+        for (int i = 0; i < rowsSize; i++) {
+            int indexSrcRow = src.numCols*rows[i];
+            for (int j = 0; j < colsSize; j++) {
+                dst.data[indexDst++] = src.data[indexSrcRow + cols[j]];
+            }
+        }
+    }
+
+    /**
+     * Extracts the elements from the source matrix by their 1D index.
+     *
+     * @param src Source matrix. Not modified.
+     * @param indexes array of row indexes
+     * @param length maximum element in row array
+     * @param dst output matrix.  Must be a vector of the correct length.
+     */
+    public static void extract( DenseMatrix64F src,  int indexes[] , int length , DenseMatrix64F dst ) {
+        if( !MatrixFeatures.isVector(dst))
+            throw new IllegalArgumentException("Dst must be a vector");
+        if( length != dst.getNumElements())
+            throw new IllegalArgumentException("Unexpected number of elements in dst vector");
+
+        for (int i = 0; i < length; i++) {
+            dst.data[i] = src.data[indexes[i]];
+        }
     }
 
     /**

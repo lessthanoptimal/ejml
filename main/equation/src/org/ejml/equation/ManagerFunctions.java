@@ -335,7 +335,7 @@ public class ManagerFunctions {
         inputN.put("extractScalar",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 3 ) throw new RuntimeException("Three inputs expected");
+                if( inputs.size() != 2 && inputs.size() != 3 ) throw new RuntimeException("Two or three inputs expected");
                 return Operation.extractScalar(inputs, manager);
             }
         });

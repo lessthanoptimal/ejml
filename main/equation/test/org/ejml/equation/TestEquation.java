@@ -433,6 +433,44 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_assign_IntSequence_Case2() {
+        Equation eq = new Equation();
+
+        String tests[] = new String[]{"2 3 4 5 6 7:9","2:4 5 6 7 8 9"};
+
+        for( String s : tests ) {
+            eq.process("a=" + s);
+            eq.process("b=[a]");
+            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+            assertEquals(1, found.numRows());
+            assertEquals(8, found.numCols());
+
+            for (int x = 0; x < 8; x++) {
+                assertEquals(x + 2, found.get(0, x), 1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void compile_assign_IntSequence_Case3() {
+        Equation eq = new Equation();
+
+        String tests[] = new String[]{"2 3:5","2:4 5"};
+
+        for( String s : tests ) {
+            eq.process("a="+s);
+            eq.process("b=[a]");
+            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+            assertEquals(1, found.numRows());
+            assertEquals(4, found.numCols());
+
+            for (int x = 0; x < 4; x++) {
+                assertEquals(x + 2, found.get(0, x), 1e-8);
+            }
+        }
+    }
+
+    @Test
     public void compile_transpose() {
         Equation eq = new Equation();
 

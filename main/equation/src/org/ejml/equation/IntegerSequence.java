@@ -40,7 +40,8 @@ public interface IntegerSequence {
 
     enum Type {
         EXPLICIT,
-        FOR
+        FOR,
+        COMBINED
     }
 
     /**
@@ -61,6 +62,10 @@ public interface IntegerSequence {
                     t = t.next;
                 }
             }
+        }
+
+        public Explicit(TokenList.Token single ) {
+            sequence.add( (VariableInteger)single.getVariable() );
         }
 
         @Override
@@ -168,6 +173,69 @@ public interface IntegerSequence {
         @Override
         public Type getType() {
             return Type.FOR;
+        }
+    }
+
+    /**
+     * This is a sequence of sequences
+     */
+    class Combined implements IntegerSequence {
+
+        List<IntegerSequence> sequences = new ArrayList<IntegerSequence>();
+
+        int which;
+
+        public Combined(TokenList.Token start, TokenList.Token end) {
+
+            TokenList.Token t = start;
+            do {
+                if( t.getVariable().getType() == VariableType.SCALAR ) {
+                    sequences.add( new IntegerSequence.Explicit(t));
+                } else if( t.getVariable().getType() == VariableType.INTEGER_SEQUENCE ) {
+                    sequences.add( ((VariableIntegerSequence)t.getVariable()).sequence );
+                } else {
+                    throw new RuntimeException("Unexpected token type");
+                }
+                t = t.next;
+            } while( t != null && t.previous != end);
+        }
+
+        @Override
+        public int length() {
+            int total = 0;
+            for (int i = 0; i < sequences.size(); i++) {
+                total += sequences.get(i).length();
+            }
+            return total;
+        }
+
+        @Override
+        public void initialize() {
+            which = 0;
+            for (int i = 0; i < sequences.size(); i++) {
+                sequences.get(i).initialize();
+            }
+        }
+
+        @Override
+        public int next() {
+            int output = sequences.get(which).next();
+
+            if( !sequences.get(which).hasNext() ) {
+                which++;
+            }
+
+            return output;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return which < sequences.size();
+        }
+
+        @Override
+        public Type getType() {
+            return Type.COMBINED;
         }
     }
 }

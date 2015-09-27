@@ -65,7 +65,7 @@ public class TestOperation {
         eq.process("x=A/b");
 
         DenseMatrix64F tmp = new DenseMatrix64F(5,3);
-        CommonOps.divide(2.5,b.getMatrix(),tmp);
+        CommonOps.divide(2.5, b.getMatrix(), tmp);
 
         assertTrue(MatrixFeatures.isIdentical(tmp, x.getMatrix(), 1e-8));
     }
@@ -206,7 +206,7 @@ public class TestOperation {
         SimpleMatrix b = SimpleMatrix.random(6, 5, -1, 1, rand);
         SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
 
-        eq.alias(a,"a",b,"b",c,"c");
+        eq.alias(a, "a", b, "b", c, "c");
 
         eq.process("c=a.*b");
 
@@ -271,7 +271,7 @@ public class TestOperation {
         eq.process("c=a.^b");
 
         SimpleMatrix expected = new SimpleMatrix(6,5);
-        CommonOps.elementPower(a,b.getMatrix(),expected.getMatrix());
+        CommonOps.elementPower(a, b.getMatrix(), expected.getMatrix());
         assertTrue(expected.isIdentical(c, 1e-8));
     }
 
@@ -288,7 +288,7 @@ public class TestOperation {
 
         double found = eq.lookupDouble("c");
 
-        assertEquals(Math.pow(a,b),found,1e-8);
+        assertEquals(Math.pow(a, b), found, 1e-8);
     }
 
     @Test
@@ -323,7 +323,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=2^4");
 
-        assertEquals(Math.pow(2,4),eq.lookupDouble("a"),1e-8);
+        assertEquals(Math.pow(2, 4), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -341,7 +341,7 @@ public class TestOperation {
 
         eq.process("a=sqrt(5.7)");
 
-        assertEquals(Math.sqrt(5.7),eq.lookupDouble("a"),1e-8);
+        assertEquals(Math.sqrt(5.7), eq.lookupDouble("a"), 1e-8);
     }
 
 
@@ -411,7 +411,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=cos(2.1)");
 
-        assertEquals(Math.cos(2.1),eq.lookupDouble("a"),1e-8);
+        assertEquals(Math.cos(2.1), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -431,7 +431,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=exp(2.1)");
 
-        assertEquals(Math.exp(2.1),eq.lookupDouble("a"),1e-8);
+        assertEquals(Math.exp(2.1), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -446,7 +446,7 @@ public class TestOperation {
 
         SimpleMatrix expected = a.elementExp();
 
-        assertTrue(expected.isIdentical(b,1e-8));
+        assertTrue(expected.isIdentical(b, 1e-8));
     }
 
     @Test
@@ -456,7 +456,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=log(2.1)");
 
-        assertEquals(Math.log(2.1),eq.lookupDouble("a"),1e-8);
+        assertEquals(Math.log(2.1), eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -471,7 +471,7 @@ public class TestOperation {
 
         SimpleMatrix expected = a.elementLog();
 
-        assertTrue(expected.isIdentical(b,1e-8));
+        assertTrue(expected.isIdentical(b, 1e-8));
     }
 
     @Test
@@ -481,7 +481,7 @@ public class TestOperation {
         eq.alias(1,"a");
         eq.process("a=2 + 3");
 
-        assertEquals(5,eq.lookupInteger("a"),1e-8);
+        assertEquals(5, eq.lookupInteger("a"), 1e-8);
     }
 
     @Test
@@ -528,7 +528,7 @@ public class TestOperation {
     public void subtract_int_int() {
         Equation eq = new Equation();
 
-        eq.alias(1,"a");
+        eq.alias(1, "a");
         eq.process("a=2 - 3");
 
         assertEquals(-1, eq.lookupInteger("a"), 1e-8);
@@ -538,7 +538,7 @@ public class TestOperation {
     public void subtract_scalar_scalar() {
         Equation eq = new Equation();
 
-        eq.alias(1.2,"a");
+        eq.alias(1.2, "a");
         eq.process("a= 2.3 - 3");
 
         assertEquals(2.3 - 3.0, eq.lookupDouble("a"), 1e-8);
@@ -573,7 +573,7 @@ public class TestOperation {
         eq.process("a=2.2-b");
 
         DenseMatrix64F expected = new DenseMatrix64F(3,4);
-        CommonOps.subtract(2.2,b.getMatrix(),expected);
+        CommonOps.subtract(2.2, b.getMatrix(), expected);
         assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, 1e-8));
     }
 
@@ -603,7 +603,7 @@ public class TestOperation {
         assertEquals(2.5, eq.lookupDouble("a"), 1e-8);
 
         // pass in a none 1x1 matrix
-        eq.alias(new DenseMatrix64F(2,1),"b");
+        eq.alias(new DenseMatrix64F(2, 1), "b");
         try {
             eq.process("a=b");
             fail("Exception should have been thrown");
@@ -615,7 +615,7 @@ public class TestOperation {
         Equation eq = new Equation();
 
         eq.alias(2,"a");
-        eq.alias(3,"b");
+        eq.alias(3, "b");
 
         eq.process("a=b");
 
@@ -631,12 +631,12 @@ public class TestOperation {
         eq.alias(3,"b");
 
         eq.process("a=b");
-        assertEquals(3, eq.lookupDouble("a"),1e-8);
+        assertEquals(3, eq.lookupDouble("a"), 1e-8);
 
         // double to double
-        eq.alias(3.5,"c");
+        eq.alias(3.5, "c");
         eq.process("a=c");
-        assertEquals(3.5, eq.lookupDouble("a"),1e-8);
+        assertEquals(3.5, eq.lookupDouble("a"), 1e-8);
     }
 
     @Test
@@ -662,8 +662,170 @@ public class TestOperation {
         eq.process("b(2,3)=4.5");
         eq.process("b(0,0)=3.5");
 
-        assertEquals(3.5, b.get(0, 0),1e-8);
-        assertEquals(4.5, b.get(2, 3),1e-8);
+        assertEquals(3.5, b.get(0, 0), 1e-8);
+        assertEquals(4.5, b.get(2, 3), 1e-8);
+    }
+
+    @Test
+    public void extract_one_case0() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b,"b");
+        eq.process("c=b(1 2)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        assertTrue(found.numRows == 1 && found.numCols == 2);
+        assertEquals(b.get(1), found.get(0), 1e-8);
+        assertEquals(b.get(2), found.get(1), 1e-8);
+    }
+
+    @Test
+    public void extract_one_case1() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b,"b");
+        eq.process("c=b(1:3)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        assertTrue(found.numRows == 1 && found.numCols == 3);
+        for (int i = 0; i < found.numCols; i++) {
+            assertEquals(b.get(i+1), found.get(i), 1e-8);
+        }
+    }
+
+    @Test
+    public void extract_one_case2() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b, "b");
+        eq.process("c=b(4:)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        assertTrue(found.numRows == 1 && found.numCols == b.getNumElements()-4);
+        for (int i = 0; i < found.numCols; i++) {
+            assertEquals(b.get(i+4), found.get(i), 1e-8);
+        }
+    }
+
+    @Test
+    public void extract_one_case3() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b, "b");
+        eq.process("c=b(:)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        assertTrue(found.numRows == 1 && found.numCols == b.getNumElements());
+        for (int i = 0; i < found.numCols; i++) {
+            assertEquals(b.get(i), found.get(i), 1e-8);
+        }
+    }
+
+    @Test
+    public void extract_two_case0() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b,"b");
+        eq.process("c=b(1 2,1 0 2)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        int rows[] = new int[]{1,2};
+        int cols[] = new int[]{1,0,2};
+
+        checkSubMatrixArrays(b, found, rows, cols);
+    }
+
+    private void checkSubMatrixArrays(SimpleMatrix b, DenseMatrix64F found, int[] rows, int[] cols) {
+        assertTrue(found.numRows == rows.length && found.numCols == cols.length);
+        for (int i = 0; i < rows.length; i++) {
+            for (int j = 0; j < cols.length; j++) {
+                assertEquals(b.get(rows[i],cols[j]), found.get(i,j), 1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void extract_two_case1() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b,"b");
+        eq.process("c=b(1:2,2:3)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        int rows[] = new int[]{1,2};
+        int cols[] = new int[]{2,3};
+
+        checkSubMatrixArrays(b, found, rows, cols);
+    }
+
+    @Test
+    public void extract_two_case2() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b, "b");
+        eq.process("c=b(2:,1:)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        int rows[] = new int[]{2};
+        int cols[] = new int[]{1,2,3};
+
+        checkSubMatrixArrays(b, found, rows, cols);
+    }
+
+    @Test
+    public void extract_two_case3() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b, "b");
+        eq.process("c=b(:,:)");
+        DenseMatrix64F found = eq.lookupMatrix("c");
+
+        int rows[] = new int[]{0,1,2};
+        int cols[] = new int[]{0,1,2,3};
+
+        checkSubMatrixArrays(b, found, rows, cols);
+    }
+
+    @Test
+    public void extractScalar_one() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(b,"b");
+        eq.process("c=b(3)");
+        double found = eq.lookupDouble("c");
+
+        assertEquals(b.get(3), found, 1e-8);
+    }
+
+    @Test
+    public void extractScalar_two() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+
+        eq.alias(b,"b");
+        eq.process("c=b(2,3)");
+        double found = eq.lookupDouble("c");
+
+        assertEquals(b.get(2,3), found, 1e-8);
     }
 
     @Test

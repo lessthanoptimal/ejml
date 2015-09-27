@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -309,6 +309,17 @@ class TokenList {
 
         public String getWord() {
             return word;
+        }
+
+        /**
+         * If a scalar variable it returns its type, otherwise null
+         */
+        public VariableScalar.Type getScalarType() {
+            if( variable != null )
+                if( variable.getType() == VariableType.SCALAR ) {
+                    return ((VariableScalar)variable).getScalarType();
+                }
+            return null;
         }
 
         public String toString() {

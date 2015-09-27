@@ -6,14 +6,14 @@ Date format: year/month/day
 
 2015/XX/XX
 
-Feature TODO
-- a = [5:10]
-- first: b = [1 2 50 69]
-  then:  c(b) = 1
-
-Maybe do this by parsing "5:10" and "1 2 3 4 5" into IntegerSequence with specific types range and list?
-Have an interator in IntegerSequence for generic processing, but allow for specialized for each sequence type?
-
+- CommonOps
+  * Added extract with int[] for rows and columns or just indexes
+- Equations
+  * Array support for integer sequence and similar, which allows the following
+    a = [5:10]
+    b = A(1 2 3 2 0 , 4: )
+    c = A(4:3:20 3 4 5)
+    d(3,5:) = f
 
 ----- Version 0.28
 

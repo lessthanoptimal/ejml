@@ -40,6 +40,9 @@ public class MatrixConstructor {
     }
 
     public void addToRow(Variable variable) {
+        if( variable.getType() == VariableType.ARRAY_RANGE ) {
+            throw new ParseError("Can't define a matrix using an array range. Perhaps you're missing a number after a colon?");
+        }
        items.add( new Item(variable));
     }
 
