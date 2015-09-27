@@ -272,10 +272,6 @@ class TokenList {
             this.variable = variable;
         }
 
-        public Token(VariableSpecial.Special special) {
-            this.variable = new VariableSpecial(special);
-        }
-
         public Token(Symbol symbol) {
             this.symbol = symbol;
         }

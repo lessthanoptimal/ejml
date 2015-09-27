@@ -59,8 +59,11 @@ import static org.ejml.equation.TokenList.Type;
  * Which will modify the matrices 'x' and 'P'.  Support for sub-matrices and inline matrix construction is also
  * available.
  * <pre>
- * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");
- * eq.process("x(1:3,5:9) = [a ; b]*2");
+ * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");  // create a 3x3 matrix then multiply it by x
+ * eq.process("x(1:3,5:9) = [a ; b]*2");      // fill the sub-matrix with the result
+ * eq.process("x(:) = a(4:2:20)");            // fill all elements of x with the specified elements in 'a'
+ * eq.process("x( 4 3 ) = a");                // fill only the specified number sequences with 'a'
+ * eq.process("x = [2:3:25 1 4]");            // create a row matrix from the number sequence
  * </pre>
  * </p>
  *
@@ -190,6 +193,23 @@ import static org.ejml.equation.TokenList.Type;
  *             A(1:3,4:8) = B
  * </pre>
  * </p>
+ *
+ * <p>
+ * <h2>Integer Number Sequences</h2>
+ * Previous example code has made much use of integer number sequences. There are three different types of integer number
+ * sequences 'explicit', 'for', and 'for-range'.
+ * <pre>
+ * 1) Explicit:
+ *    Example: "1 2 4 0"
+ *    Example: "1 2,-7,4"     Commas needed to create negative numbers. Otherwise it will be subtraction.
+ * 2) for:
+ *    Example:  "2:10"        Sequence of "2 3 4 5 6 7 8 9 10"
+ *    Example:  "2:2:10"      Sequence of "2 4 6 8 10"
+ * 3) for-range:
+ *    Example:  "2:"          Sequence of "2 3 ... max"
+ *    Example:  "2:2:"        Sequence of "2 4 ... max"
+ * </pre>
+ * Integer number sequences can also be combined together.  This is valid "7 3 9 2:45 9"
  *
  * <p>
  * Footnotes:
@@ -488,7 +508,7 @@ public class Equation {
      * @param sequence Sequence of operators
      */
     protected void handleParentheses( TokenList tokens, Sequence sequence ) {
-        // have a list to handle embedded parantheses, e.g. (((((a)))))
+        // have a list to handle embedded parentheses, e.g. (((((a)))))
         List<TokenList.Token> left = new ArrayList<TokenList.Token>();
 
         // find all of them
@@ -520,7 +540,8 @@ public class Equation {
                         else {
                             createFunction(before, inputs, tokens, sequence);
                         }
-                    } else if( before != null && before.getType() == Type.VARIABLE ) {
+                    } else if( before != null && before.getType() == Type.VARIABLE &&
+                            before.getVariable().getType() == VariableType.MATRIX ) {
                         // if it's a variable then that says it's a sub-matrix
                         TokenList.Token extract = parseSubmatrixToExtract(before,sublist, sequence);
                         // put in the extract operation
@@ -650,7 +671,7 @@ public class Equation {
             if( t.getType() != Type.VARIABLE )
                 throw new ParseError("Expected variables only in sub-matrix input, not "+t.getType());
             Variable v = t.getVariable();
-            if( v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t) || v.getType() == VariableType.ARRAY_RANGE) {
+            if( v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t) ) {
                 variables.add(v);
             } else {
                 throw new ParseError("Expected an integer, integer sequence, or array range to define a submatrix");
@@ -663,10 +684,8 @@ public class Equation {
      * which is returned.
      */
     protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
-        // search for integer sequences
+        // First create sequences from anything involving a colon
         parseSequencesWithColons(tokens);
-        parseIntegerLists(tokens);
-        parseCombineIntegerLists(tokens);
 
         // search for matrix bracket operations
         parseBracketCreateMatrix(tokens, sequence);
@@ -678,6 +697,10 @@ public class Equation {
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
+        // now construct rest of the lists and combine them together
+        parseIntegerLists(tokens);
+        parseCombineIntegerLists(tokens);
+
         if( tokens.size() > 1 )
             throw new RuntimeException("BUG in parser.  There should only be a single token left");
 
@@ -687,12 +710,12 @@ public class Equation {
     /**
      * Searches for descriptions of integer sequences and array ranges that have a colon character in them
      *
-     * examples of integer sequences:
+     * Examples of integer sequences:
      * 1:6
      * 2:4:20
      * :
      *
-     * examples of array range
+     * Examples of array range
      * 2:
      * 2:4:
      */
@@ -716,8 +739,8 @@ public class Equation {
                     t = t.next;
                 } else if( t != null && t.getSymbol() == Symbol.COLON ) {
                     // If it starts with a colon then it must be 'all'  or a type-o
-                    SpecialArrayRange range = new SpecialArrayRange(null,null);
-                    VariableArrayRange varSequence = functions.getManagerTemp().createArrayRange(range);
+                    IntegerSequence range = new IntegerSequence.Range(null,null);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(range);
                     TokenList.Token n = new TokenList.Token(varSequence);
                     tokens.insert(t.previous, n);
                     tokens.remove(t);
@@ -729,8 +752,8 @@ public class Equation {
                     state = 2;
                 } else {
                     // array range
-                    SpecialArrayRange range = new SpecialArrayRange(start,null);
-                    VariableArrayRange varSequence = functions.getManagerTemp().createArrayRange(range);
+                    IntegerSequence range = new IntegerSequence.Range(start,null);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(range);
                     replaceSequence(tokens, varSequence, start, prev);
                     state = 0;
                 }
@@ -757,8 +780,8 @@ public class Equation {
                     t = replaceSequence(tokens, varSequence, start, t);
                 } else {
                     // array range with 2 elements
-                    SpecialArrayRange range = new SpecialArrayRange(start,middle);
-                    VariableArrayRange varSequence = functions.getManagerTemp().createArrayRange(range);
+                    IntegerSequence range = new IntegerSequence.Range(start,middle);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(range);
                     replaceSequence(tokens, varSequence, start, prev);
                 }
                 state = 0;
@@ -1063,9 +1086,6 @@ public class Equation {
                 throw new ParseError("Function encountered with no parentheses");
             } else if( token.getType() == Type.VARIABLE ) {
                 if( hasLeft ) {
-                    if( token.previous.getType() == Type.VARIABLE ) {
-                        throw new ParseError("Two variables next to each other");
-                    }
                     if( isTargetOp(token.previous,ops)) {
                         token = createOp(token.previous.previous,token.previous,token,tokens,sequence);
                     }

@@ -40,10 +40,12 @@ public class MatrixConstructor {
     }
 
     public void addToRow(Variable variable) {
-        if( variable.getType() == VariableType.ARRAY_RANGE ) {
-            throw new ParseError("Can't define a matrix using an array range. Perhaps you're missing a number after a colon?");
+        if( variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+            if( ((VariableIntegerSequence)variable).sequence.requiresMaxIndex() )
+                throw new ParseError("Trying to create a matrix with an unbounded integer range." +
+                        " Forgot a value after a colon?");
         }
-       items.add( new Item(variable));
+        items.add( new Item(variable));
     }
 
     public void endRow() {
@@ -191,7 +193,7 @@ public class MatrixConstructor {
 
         public void initialize() {
             if( variable!=null && !matrix && variable.getType() == VariableType.INTEGER_SEQUENCE ) {
-                ((VariableIntegerSequence)variable).sequence.initialize();
+                ((VariableIntegerSequence)variable).sequence.initialize(-1);
             }
         }
     }

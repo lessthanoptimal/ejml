@@ -30,7 +30,15 @@ public interface IntegerSequence {
 
     int length();
 
-    void initialize();
+    /**
+     * Specifies the maximum index of the array.  If the maximum index is not known then a value < 0 is passed
+     * in and an exception should be thrown if this information is required
+     *
+     * NOTE: This is length - 1
+     *
+     * @param maxIndex Largest possible value in the sequence. or < 0 if unknown
+     */
+    void initialize( int maxIndex );
 
     int next();
 
@@ -38,10 +46,13 @@ public interface IntegerSequence {
 
     Type getType();
 
+    boolean requiresMaxIndex();
+
     enum Type {
         EXPLICIT,
         FOR,
-        COMBINED
+        COMBINED,
+        RANGE
     }
 
     /**
@@ -74,7 +85,7 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize() {
+        public void initialize(int maxIndex) {
             where = 0;
         }
 
@@ -91,6 +102,11 @@ public interface IntegerSequence {
         @Override
         public Type getType() {
             return Type.EXPLICIT;
+        }
+
+        @Override
+        public boolean requiresMaxIndex() {
+            return false;
         }
 
         public List<VariableInteger> getSequence() {
@@ -127,7 +143,7 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize() {
+        public void initialize(int maxIndex) {
             valStart = start.value;
             valEnd = end.value;
             if( step == null ) {
@@ -174,6 +190,11 @@ public interface IntegerSequence {
         public Type getType() {
             return Type.FOR;
         }
+
+        @Override
+        public boolean requiresMaxIndex() {
+            return false;
+        }
     }
 
     /**
@@ -210,10 +231,10 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize() {
+        public void initialize(int maxIndex) {
             which = 0;
             for (int i = 0; i < sequences.size(); i++) {
-                sequences.get(i).initialize();
+                sequences.get(i).initialize(maxIndex);
             }
         }
 
@@ -236,6 +257,104 @@ public interface IntegerSequence {
         @Override
         public Type getType() {
             return Type.COMBINED;
+        }
+
+        @Override
+        public boolean requiresMaxIndex() {
+            for (int i = 0; i < sequences.size(); i++) {
+                if( sequences.get(i).requiresMaxIndex() )
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * A sequence of integers which has been specified using a start number, end number, and step size and uses
+     * the known upper limit of the array to bound it
+     *
+     * Examples:
+     * :
+     * 2:
+     * 2:3:
+     */
+    class Range implements IntegerSequence {
+
+        VariableInteger start;
+        VariableInteger step;
+
+        int valStart;
+        int valStep;
+        int valEnd;
+        int where;
+        int length;
+
+        public Range(TokenList.Token start, TokenList.Token step ) {
+            this.start = start == null ? null : (VariableInteger)start.getVariable();
+            this.step = step == null ? null : (VariableInteger)step.getVariable();
+        }
+
+        @Override
+        public int length() {
+            return length;
+        }
+
+        @Override
+        public void initialize(int maxIndex) {
+            if( maxIndex < 0 )
+                throw new IllegalArgumentException("Range sequence being used inside an object without a known upper limit");
+            valEnd = maxIndex;
+
+            if( start != null )
+                valStart = start.value;
+            else
+                valStart = 0;
+
+            if( step == null ) {
+                valStep = 1;
+            } else {
+                valStep = step.value;
+            }
+
+            if( valStep <= 0 ) {
+                throw new IllegalArgumentException("step size must be a positive integer");
+            }
+
+            where = 0;
+            length = (valEnd-valStart)/valStep  + 1;
+
+        }
+
+        @Override
+        public int next() {
+            return valStart + valStep*where++;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return where < length;
+        }
+
+        public int getStart() {
+            return valStart;
+        }
+
+        public int getStep() {
+            return valStep;
+        }
+
+        public int getEnd() {
+            return valEnd;
+        }
+
+        @Override
+        public Type getType() {
+            return Type.RANGE;
+        }
+
+        @Override
+        public boolean requiresMaxIndex() {
+            return true;
         }
     }
 }

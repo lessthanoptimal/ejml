@@ -50,8 +50,4 @@ public class ManagerTempVariables {
     public VariableIntegerSequence createIntegerSequence( IntegerSequence sequence ) {
         return new VariableIntegerSequence(sequence);
     }
-
-    public VariableArrayRange createArrayRange( SpecialArrayRange range ) {
-        return new VariableArrayRange(range);
-    }
 }

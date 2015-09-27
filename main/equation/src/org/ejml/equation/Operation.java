@@ -1354,8 +1354,7 @@ public abstract class Operation {
 
         for (int i = 1; i < inputs.size(); i++) {
             if( !(inputs.get(i) instanceof VariableInteger) &&
-                    (inputs.get(i).getType() != VariableType.INTEGER_SEQUENCE) &&
-                    (inputs.get(i).getType() != VariableType.ARRAY_RANGE))
+                    (inputs.get(i).getType() != VariableType.INTEGER_SEQUENCE))
                 throw new RuntimeException("Parameters must be integers, integer list, or array range");
         }
 
@@ -1445,14 +1444,14 @@ public abstract class Operation {
      *
      * @return true if it is a simple range or false if not
      */
-    private static boolean extractSimpleExtents(Variable var, Extents e, boolean row, int maxIndex) {
+    private static boolean extractSimpleExtents(Variable var, Extents e, boolean row, int length) {
         int lower;
         int upper;
         if( var.getType() == VariableType.INTEGER_SEQUENCE ) {
             IntegerSequence sequence = ((VariableIntegerSequence)var).sequence;
             if( sequence.getType() == IntegerSequence.Type.FOR ) {
                 IntegerSequence.For seqFor = (IntegerSequence.For)sequence;
-                seqFor.initialize();
+                seqFor.initialize(length);
                 if( seqFor.getStep() == 1 ) {
                     lower = seqFor.getStart();
                     upper = seqFor.getEnd();
@@ -1464,17 +1463,6 @@ public abstract class Operation {
             }
         } else if( var.getType() == VariableType.SCALAR ) {
             lower = upper = ((VariableInteger)var).value;
-        } else if( var.getType() == VariableType.ARRAY_RANGE ) {
-            SpecialArrayRange range = ((VariableArrayRange)var).elements;
-            if( range.isAll()) {
-                lower = 0;
-                upper = maxIndex-1;
-            } else if( range.getStep() == 1 ){
-                lower = range.getStart();
-                upper = maxIndex-1;
-            } else {
-                return false;
-            }
         } else {
             throw new RuntimeException("How did a bad variable get put here?!?!");
         }
@@ -1488,10 +1476,10 @@ public abstract class Operation {
         return true;
     }
 
-    private static void extractArrayExtent( Variable var , int maxIndex , ArrayExtent extent ) {
+    private static void extractArrayExtent( Variable var , int length , ArrayExtent extent ) {
         if( var.getType() == VariableType.INTEGER_SEQUENCE ) {
             IntegerSequence sequence = ((VariableIntegerSequence)var).sequence;
-            sequence.initialize();
+            sequence.initialize(length-1);
             extent.setLength(sequence.length());
             int index = 0;
             while( sequence.hasNext() ) {
@@ -1500,23 +1488,6 @@ public abstract class Operation {
         } else if( var.getType() == VariableType.SCALAR ) {
             extent.setLength(1);
             extent.array[0] = ((VariableInteger)var).value;
-        } else if( var.getType() == VariableType.ARRAY_RANGE ) {
-            SpecialArrayRange range = ((VariableArrayRange)var).elements;
-            if( range.isAll()) {
-                extent.setLength(maxIndex);
-                for (int i = 0; i < maxIndex; i++) {
-                    extent.array[i] = i;
-                }
-            } else {
-                int start = range.getStart();
-                int step = range.getStep();
-                int length = (maxIndex-start)/step+1;
-                extent.setLength(length);
-
-                for (int i = 0, val = start; i < length; i++, val += step) {
-                    extent.array[i] = val;
-                }
-            }
         } else {
             throw new RuntimeException("How did a bad variable get put here?!?!");
         }

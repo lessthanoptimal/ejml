@@ -730,6 +730,21 @@ public class TestOperation {
     }
 
     @Test
+    public void copy_submatrix_matrix_case6() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random(3*4-2,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+
+        eq.alias(a, "a", b, "b");
+        eq.process("b(2 3:)=a");
+
+        for (int i = 0; i < a.getNumElements(); i++) {
+            assertEquals(b.get(i+2),a.get(i),1e-8);
+        }
+    }
+
+    @Test
     public void copy_submatrix_scalar_case0() {
         Equation eq = new Equation();
 
@@ -798,6 +813,21 @@ public class TestOperation {
         eq.process("b(1:3)=4.5");
 
         int indexes[] = new int[]{1,2,3};
+        for (int i = 0; i < indexes.length; i++) {
+            assertEquals(b.get(indexes[i]),4.5,1e-8);
+        }
+    }
+
+    @Test
+    public void copy_submatrix_scalar_case5() {
+        Equation eq = new Equation();
+
+        SimpleMatrix b = SimpleMatrix.random(2,3,-1,1,rand);
+
+        eq.alias(b, "b");
+        eq.process("b(2 3:)=4.5");
+
+        int indexes[] = new int[]{2,3,4,5};
         for (int i = 0; i < indexes.length; i++) {
             assertEquals(b.get(indexes[i]),4.5,1e-8);
         }

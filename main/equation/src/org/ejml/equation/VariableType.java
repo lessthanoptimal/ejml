@@ -26,7 +26,5 @@ package org.ejml.equation;
 public enum VariableType {
     MATRIX,
     SCALAR,
-    SPECIAL, // TODO can be deleted?
-    INTEGER_SEQUENCE,
-    ARRAY_RANGE,
+    INTEGER_SEQUENCE
 }
