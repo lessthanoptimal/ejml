@@ -136,7 +136,7 @@ public class MatrixConstructor {
                 if( matrixCol == 0 )
                     matrixCol = numCols;
                 else if( matrixCol != numCols )
-                    throw new RuntimeException("Unexpected number of columns: expected "+matrixCol+" found "+numCols);
+                    throw new ParseError("Row "+matrixRow+" has an unexpected number of columns; expected = "+matrixCol+" found = "+numCols);
 
                 row.clear();
             } else {

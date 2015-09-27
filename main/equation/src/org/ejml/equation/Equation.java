@@ -549,7 +549,7 @@ public class Equation {
                         tokens.remove(before);
                     } else {
                         // if null then it was empty inside
-                        TokenList.Token output = parseBlockNoParentheses(sublist,sequence);
+                        TokenList.Token output = parseBlockNoParentheses(sublist,sequence, false);
                         if (output != null)
                             tokens.insert(before, output);
                     }
@@ -562,7 +562,7 @@ public class Equation {
             throw new ParseError("Dangling ( parentheses");
 
         if( tokens.size() > 1 ) {
-            parseBlockNoParentheses(tokens, sequence);
+            parseBlockNoParentheses(tokens, sequence, false);
         }
     }
 
@@ -585,7 +585,7 @@ public class Equation {
 
         List<TokenList.Token> output = new ArrayList<TokenList.Token>();
         if( commas.isEmpty() ) {
-            output.add(parseBlockNoParentheses(tokens, sequence));
+            output.add(parseBlockNoParentheses(tokens, sequence, false));
         } else {
             TokenList.Token before = tokens.first;
             for (int i = 0; i < commas.size(); i++) {
@@ -595,7 +595,7 @@ public class Equation {
                 TokenList.Token tmp = after.next;
                 TokenList sublist = tokens.extractSubList(before,after);
                 sublist.remove(after);// remove the comma
-                output.add(parseBlockNoParentheses(sublist, sequence));
+                output.add(parseBlockNoParentheses(sublist, sequence, false));
                 before = tmp;
             }
 
@@ -605,7 +605,7 @@ public class Equation {
 
             TokenList.Token after = tokens.last;
             TokenList sublist = tokens.extractSubList(before, after);
-            output.add(parseBlockNoParentheses(sublist, sequence));
+            output.add(parseBlockNoParentheses(sublist, sequence, false));
         }
 
         return output;
@@ -683,17 +683,20 @@ public class Equation {
      * Parses a code block with no parentheses and no commas.  After it is done there should be a single token left,
      * which is returned.
      */
-    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence ) {
-        // First create sequences from anything involving a colon
-        parseSequencesWithColons(tokens);
+    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence, boolean insideMatrixConstructor) {
 
         // search for matrix bracket operations
-        parseBracketCreateMatrix(tokens, sequence);
+        if( !insideMatrixConstructor ) {
+            parseBracketCreateMatrix(tokens, sequence);
+        }
+
+        // First create sequences from anything involving a colon
+        parseSequencesWithColons(tokens);
 
         // process operators depending on their priority
         parseNegOp(tokens, sequence);
         parseOperationsL(tokens, sequence);
-        parseOperationsLR(new Symbol[]{Symbol.POWER,Symbol.ELEMENT_POWER}, tokens, sequence);
+        parseOperationsLR(new Symbol[]{Symbol.POWER, Symbol.ELEMENT_POWER}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
@@ -705,10 +708,14 @@ public class Equation {
         parseIntegerLists(tokens);
         parseCombineIntegerLists(tokens);
 
-        if( tokens.size() > 1 )
-            throw new RuntimeException("BUG in parser.  There should only be a single token left");
+        if( !insideMatrixConstructor ) {
+            if (tokens.size() > 1)
+                throw new RuntimeException("BUG in parser.  There should only be a single token left");
 
-        return tokens.first;
+            return tokens.first;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -947,48 +954,22 @@ public class Equation {
                     throw new RuntimeException("No matching left bracket for right");
 
                 TokenList.Token start = left.remove(left.size() - 1);
-                TokenList.Token i = start.next;
 
-                // define the constructor
-                MatrixConstructor constructor = new MatrixConstructor(functions.getManagerTemp());
+                // Compute everything inside the [ ], this will leave a
+                // series of variables and semi-colons hopefully
+                TokenList bracketLet = tokens.extractSubList(start.next,t.previous);
+                parseBlockNoParentheses(bracketLet, sequence, true);
+                MatrixConstructor constructor = constructMatrix(bracketLet);
 
-                TokenList.Token opStart = null;
-
-                while( true ) {
-                    if( i.getType() == Type.VARIABLE ) {
-                        innerMatrixConstructorOp(tokens, sequence, constructor, opStart, i.previous);
-                        opStart = i;
-                    } else if( i.getType() == Type.SYMBOL ) {
-                        boolean finished = false;
-                        boolean ignore = true; // ignore if it's part of an inner expression
-                        if( i.getSymbol() == Symbol.SEMICOLON ) {
-                            ignore = false;
-                        } else if( i.getSymbol() == Symbol.BRACKET_RIGHT ) {
-                            finished = true;
-                            ignore = false;
-                        }
-                        if( !ignore ) {
-                            innerMatrixConstructorOp(tokens, sequence, constructor, opStart, i.previous);
-                            constructor.endRow();
-                            opStart = null;
-
-                            if (finished)
-                                break;
-                        }
-                    } else {
-                        throw new RuntimeException("Unexpected token "+i);
-                    }
-                    i = i.next;
-                }
-
+                // define the matrix op and inject into token list
                 Operation.Info info = Operation.matrixConstructor(constructor);
                 sequence.addOperation(info.op);
 
-                // add the new variable to the tokens list
-                tokens.insert(t,new TokenList.Token(info.output));
+                tokens.insert(start.previous, new TokenList.Token(info.output));
 
-                // remove used tokens
-                tokens.extractSubList(start,t);
+                // remove the brackets
+                tokens.remove(start);
+                tokens.remove(t);
             }
 
             t = next;
@@ -998,17 +979,26 @@ public class Equation {
             throw new RuntimeException("Dangling [");
     }
 
-    private void innerMatrixConstructorOp(TokenList tokens, Sequence sequence, MatrixConstructor constructor,
-                                          TokenList.Token opStart, TokenList.Token opEnd) {
-        if( opStart == null )
-            return;
-        if( opStart != opEnd) {
-            TokenList opList = tokens.extractSubList(opStart,opEnd);
-            TokenList.Token var = parseBlockNoParentheses(opList,sequence);
-            constructor.addToRow(var.getVariable());
-        } else {
-            constructor.addToRow(opStart.getVariable());
+    private MatrixConstructor constructMatrix(TokenList bracketLet) {
+        // Go through the bracket and construct the matrix
+        MatrixConstructor constructor = new MatrixConstructor(functions.getManagerTemp());
+
+        TokenList.Token n = bracketLet.first;
+
+        while( n != null ) {
+            if( n.getType() == Type.VARIABLE ) {
+                constructor.addToRow(n.getVariable());
+            } else if( n.getType() == Type.SYMBOL ) {
+                if( n.getSymbol() == Symbol.SEMICOLON ) {
+                    constructor.endRow();
+                }
+            } else {
+                throw new ParseError("Expected variable or symbol only");
+            }
+            n = n.next;
         }
+        constructor.endRow();
+        return constructor;
     }
 
     /**

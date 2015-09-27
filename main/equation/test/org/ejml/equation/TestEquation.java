@@ -312,6 +312,50 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_constructMatrix_doubles() {
+        Equation eq = new Equation();
+
+        eq.process("A=[1 2 3 4.5 6 7.7 8.8 9]");
+        DenseMatrix64F found = eq.lookupMatrix("A");
+
+        double[] expected = new double[]{1,2,3,4.5,6,7.7,8.8,9};
+
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(found.get(i),expected[i],1e-8);
+        }
+    }
+
+    @Test
+    public void compile_constructMatrix_for() {
+        Equation eq = new Equation();
+
+        eq.process("A=[ 2:2:10 12 14 ]");
+        DenseMatrix64F found = eq.lookupMatrix("A");
+
+        assertEquals(7,found.getNumCols());
+        assertEquals(1,found.getNumRows());
+
+        for (int i = 0; i < 7; i++) {
+            assertEquals(found.get(i),2+2*i,1e-8);
+        }
+    }
+
+    @Test
+    public void compile_constructMatrix_commas() {
+        Equation eq = new Equation();
+
+        eq.process("A=[1 2 , 3, 4.5,-6 7]");
+        DenseMatrix64F found = eq.lookupMatrix("A");
+
+        double[] expected = new double[]{1,2,3,4.5,-6,7};
+
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(found.get(i),expected[i],1e-8);
+        }
+    }
+
+
+    @Test
     public void compile_constructMatrix_MatrixAndScalar() {
         Equation eq = new Equation();
 
@@ -475,7 +519,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         // needs to realize () is not a function call
-        eq.process("a=3 2 1 0 (-1) (-2)",true);
+        eq.process("a=3 2 1 0 (-1) (-2)");
         eq.process("b=[a]");
         SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
         assertEquals(1,found.numRows());
@@ -975,6 +1019,7 @@ public class TestEquation {
         checkForParseException("a(2,4:5)");
         checkForParseException("a(2,4:5");
         checkForParseException("m=[3:4:]");
+        checkForParseException("m=[1:5;2,3,4]");
     }
 
     private void checkForParseException( String code ) {

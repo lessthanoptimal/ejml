@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,6 +39,10 @@ public enum Symbol {
     PAREN_RIGHT,
     BRACKET_LEFT,
     BRACKET_RIGHT,
+    GREATER_THAN,
+    LESS_THAN,
+    GREATER_THAN_EQ,
+    LESS_THAN_EQ,
     COMMA,
     TRANSPOSE,
     COLON,
@@ -60,6 +64,8 @@ public enum Symbol {
             case ')': return PAREN_RIGHT;
             case '[': return BRACKET_LEFT;
             case ']': return BRACKET_RIGHT;
+            case '>': return GREATER_THAN;
+            case '<': return LESS_THAN;
             case ':': return COLON;
             case ';': return SEMICOLON;
         }
