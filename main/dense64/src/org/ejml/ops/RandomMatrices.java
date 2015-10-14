@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.alg.dense.mult.SubmatrixOps;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DenseMatrixBool;
 
 import java.util.Random;
 
@@ -143,7 +144,7 @@ public class RandomMatrices {
 
         DenseMatrix64F ret = new DenseMatrix64F(numRows,numCols);
         for( int i = 0; i < numCols; i++ ) {
-            SubmatrixOps.setSubMatrix(u[i],ret,0,0,0,i,numRows,1);
+            SubmatrixOps.setSubMatrix(u[i], ret, 0, 0, 0, i, numRows, 1);
         }
 
         return ret;
@@ -257,7 +258,23 @@ public class RandomMatrices {
     public static DenseMatrix64F createRandom( int numRow , int numCol , Random rand ) {
         DenseMatrix64F mat = new DenseMatrix64F(numRow,numCol);
 
-        setRandom(mat,0,1,rand);
+        setRandom(mat, 0, 1, rand);
+
+        return mat;
+    }
+
+    /**
+     * Returns new boolean matrix with true or false values selected with equal probability.
+     *
+     * @param numRow Number of rows in the new matrix.
+     * @param numCol Number of columns in the new matrix.
+     * @param rand Random number generator used to fill the matrix.
+     * @return The randomly generated matrix.
+     */
+    public static DenseMatrixBool createRandomB( int numRow , int numCol , Random rand ) {
+        DenseMatrixBool mat = new DenseMatrixBool(numRow,numCol);
+
+        setRandomB(mat, rand);
 
         return mat;
     }
@@ -340,6 +357,26 @@ public class RandomMatrices {
             d[i] = r*rand.nextDouble()+min;
         }
     }
+
+    /**
+     * <p>
+     * Sets each element in the boolean matrix to true or false with equal probability
+     * </p>
+     *
+     * @param mat The matrix who is to be randomized. Modified.
+     * @param rand Random number generator used to fill the matrix.
+     */
+    public static void setRandomB( DenseMatrixBool mat , Random rand )
+    {
+        boolean d[] = mat.data;
+        int size = mat.getNumElements();
+
+
+        for( int i = 0; i < size; i++ ) {
+            d[i] = rand.nextBoolean();
+        }
+    }
+
 
     /**
      * <p>

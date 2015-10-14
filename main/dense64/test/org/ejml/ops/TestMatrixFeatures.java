@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DenseMatrixBool;
 import org.junit.Test;
 
 import java.util.Random;
@@ -43,20 +44,20 @@ public class TestMatrixFeatures {
         assertFalse(MatrixFeatures.hasUncountable(a));
 
         // check two positve cases with different types of uncountables
-        a.set(2,2,Double.NaN);
+        a.set(2, 2, Double.NaN);
         assertTrue(MatrixFeatures.hasUncountable(a));
 
-        a.set(2,2,Double.POSITIVE_INFINITY);
+        a.set(2, 2, Double.POSITIVE_INFINITY);
         assertTrue(MatrixFeatures.hasUncountable(a));
     }
 
     @Test
     public void isZeros() {
         DenseMatrix64F a = new DenseMatrix64F(4,4);
-        a.set(0,0,1);
+        a.set(0, 0, 1);
 
-        assertFalse(MatrixFeatures.isZeros(a,0.1));
-        assertTrue(MatrixFeatures.isZeros(a,2));
+        assertFalse(MatrixFeatures.isZeros(a, 0.1));
+        assertTrue(MatrixFeatures.isZeros(a, 2));
 
     }
 
@@ -66,10 +67,10 @@ public class TestMatrixFeatures {
 
         assertFalse(MatrixFeatures.isVector(a));
 
-        a.reshape(3,1, false);
+        a.reshape(3, 1, false);
         assertTrue(MatrixFeatures.isVector(a));
 
-        a.reshape(1,3, false);
+        a.reshape(1, 3, false);
         assertTrue(MatrixFeatures.isVector(a));
     }
 
@@ -87,23 +88,23 @@ public class TestMatrixFeatures {
         assertFalse(MatrixFeatures.isPositiveDefinite(c));
 
         // make sure the input isn't modified
-        assertEquals(2,a.get(0,0),1e-8);
-        assertEquals(2,a.get(1,1),1e-8);
+        assertEquals(2, a.get(0, 0), 1e-8);
+        assertEquals(2, a.get(1, 1), 1e-8);
     }
 
     @Test
     public void isPositiveSemidefinite() {
         DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
         DenseMatrix64F b = UtilEjml.parseMatrix("0 1 1 0",2);
-        DenseMatrix64F c = UtilEjml.parseMatrix("0 0 0 0",2);
+        DenseMatrix64F c = UtilEjml.parseMatrix("0 0 0 0", 2);
 
         assertTrue(MatrixFeatures.isPositiveSemidefinite(a));
         assertFalse(MatrixFeatures.isPositiveSemidefinite(b));
         assertTrue(MatrixFeatures.isPositiveSemidefinite(c));
 
         // make sure the input isn't modified
-        assertEquals(2,a.get(0,0),1e-8);
-        assertEquals(2,a.get(1,1),1e-8);
+        assertEquals(2, a.get(0, 0), 1e-8);
+        assertEquals(2, a.get(1, 1), 1e-8);
     }
 
     @Test
@@ -112,7 +113,7 @@ public class TestMatrixFeatures {
 
         assertFalse(MatrixFeatures.isSquare(a));
 
-        a.reshape(4,4, false);
+        a.reshape(4, 4, false);
         assertTrue(MatrixFeatures.isSquare(a));
     }
 
@@ -121,37 +122,37 @@ public class TestMatrixFeatures {
         DenseMatrix64F m = CommonOps.identity(3);
         assertTrue(MatrixFeatures.isDiagonalPositive(m));
 
-        m.set(1,1,-1);
+        m.set(1, 1, -1);
         assertFalse(MatrixFeatures.isDiagonalPositive(m));
 
-        m.set(1,1,Double.NaN);
+        m.set(1, 1, Double.NaN);
         assertFalse(MatrixFeatures.isDiagonalPositive(m));
     }
 
     @Test
     public void isSymmetric() {
         DenseMatrix64F m = CommonOps.identity(3);
-        m.set(1,2,5);m.set(2,1,5);
+        m.set(1, 2, 5);m.set(2,1,5);
         assertTrue(MatrixFeatures.isSymmetric(m));
 
-        m.set(1,2,50);
+        m.set(1, 2, 50);
         assertTrue(!MatrixFeatures.isSymmetric(m));
 
-        m.set(1,2,Double.NaN);
+        m.set(1, 2, Double.NaN);
         assertTrue(!MatrixFeatures.isSymmetric(m));
     }
 
     @Test
     public void isSkewSymmetric() {
         DenseMatrix64F m = CommonOps.identity(3);
-        m.set(1,2,5);m.set(2,1,-5);
-        assertTrue(MatrixFeatures.isSkewSymmetric(m,1e-8));
+        m.set(1, 2, 5);m.set(2,1,-5);
+        assertTrue(MatrixFeatures.isSkewSymmetric(m, 1e-8));
 
-        m.set(1,2,-5);
-        assertTrue(!MatrixFeatures.isSkewSymmetric(m,1e-8));
+        m.set(1, 2, -5);
+        assertTrue(!MatrixFeatures.isSkewSymmetric(m, 1e-8));
 
-        m.set(1,2,Double.NaN);
-        assertTrue(!MatrixFeatures.isSkewSymmetric(m,1e-8));
+        m.set(1, 2, Double.NaN);
+        assertTrue(!MatrixFeatures.isSkewSymmetric(m, 1e-8));
     }
 
 
@@ -170,12 +171,26 @@ public class TestMatrixFeatures {
         assertFalse(MatrixFeatures.isEquals(m,n));
 
         m.set(2,1,Double.NaN);
-        n.set(2,1,Double.NaN);
-        assertFalse(MatrixFeatures.isEquals(m,n));
-        m.set(2,1,Double.POSITIVE_INFINITY);
+        n.set(2, 1, Double.NaN);
+        assertFalse(MatrixFeatures.isEquals(m, n));
+        m.set(2, 1, Double.POSITIVE_INFINITY);
         n.set(2,1,Double.POSITIVE_INFINITY);
-        assertTrue(MatrixFeatures.isEquals(m,n));
+        assertTrue(MatrixFeatures.isEquals(m, n));
     }
+
+    @Test
+    public void isEquals_boolean() {
+         DenseMatrixBool a = new DenseMatrixBool(3,4);
+         DenseMatrixBool b = new DenseMatrixBool(3,4);
+
+         RandomMatrices.setRandomB(a,rand);
+         b.set(a);
+
+         assertTrue(MatrixFeatures.isEquals(a, b));
+
+         b.data[4] = !a.data[4];
+         assertFalse(MatrixFeatures.isEquals(a, b));
+     }
 
     @Test
     public void isEquals_tol() {
@@ -192,14 +207,14 @@ public class TestMatrixFeatures {
         assertTrue(MatrixFeatures.isEquals(m,n,1e-6));
 
         n.set(2,1,n.get(2,1)+1e-2);
-        assertFalse(MatrixFeatures.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures.isEquals(m, n, 1e-6));
 
         m.set(2,1,Double.NaN);
-        n.set(2,1,Double.NaN);
-        assertFalse(MatrixFeatures.isEquals(m,n,1e-6));
-        m.set(2,1,Double.POSITIVE_INFINITY);
+        n.set(2, 1, Double.NaN);
+        assertFalse(MatrixFeatures.isEquals(m, n, 1e-6));
+        m.set(2, 1, Double.POSITIVE_INFINITY);
         n.set(2,1,Double.POSITIVE_INFINITY);
-        assertFalse(MatrixFeatures.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures.isEquals(m, n, 1e-6));
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.ops;
 import org.ejml.alg.dense.mult.VectorVectorMult;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DenseMatrixBool;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
@@ -113,7 +114,7 @@ public class TestRandomMatrices {
         assertTrue(CommonOps.elementSum(A) > 5 );
         for( int i = 0; i < A.numRows; i++ ) {
             for( int j = 0; j < A.numCols; j++ ) {
-                double v = A.get(i,j);
+                double v = A.get(i, j);
 
                 if( i == j ) {
                     assertTrue(v >= 1 || v <= 10);
@@ -128,16 +129,16 @@ public class TestRandomMatrices {
     public void createDiagonal_general() {
         testDiagonal(5,3);
         testDiagonal(3,5);
-        testDiagonal(3,3);
+        testDiagonal(3, 3);
     }
 
     public void testDiagonal( int numRows , int numCols ) {
         DenseMatrix64F A = RandomMatrices.createDiagonal(numRows,numCols,1,10,rand);
 
-        assertEquals(A.getNumRows(),numRows);
-        assertEquals(A.getNumCols(),numCols);
+        assertEquals(A.getNumRows(), numRows);
+        assertEquals(A.getNumCols(), numCols);
 
-        assertTrue(CommonOps.elementSum(A) > 5 );
+        assertTrue(CommonOps.elementSum(A) > 5);
         for( int i = 0; i < A.numRows; i++ ) {
             for( int j = 0; j < A.numCols; j++ ) {
                 double v = A.get(i,j);
@@ -174,11 +175,11 @@ public class TestRandomMatrices {
         DenseMatrix64F A = RandomMatrices.createSingularValues(5,5, rand, sv);
 
         SingularValueDecomposition<DenseMatrix64F> svd =
-                DecompositionFactory.svd(A.numRows,A.numCols,true,true,false);
+                DecompositionFactory.svd(A.numRows, A.numCols, true, true, false);
         assertTrue(svd.decompose(A));
 
-        UtilTestMatrix.checkSameElements(1e-8,sv.length,sv,svd.getSingularValues());
-        assertEquals(0,svd.getSingularValues()[4],1e-8);
+        UtilTestMatrix.checkSameElements(1e-8, sv.length, sv, svd.getSingularValues());
+        assertEquals(0, svd.getSingularValues()[4], 1e-8);
     }
 
     @Test
@@ -189,7 +190,7 @@ public class TestRandomMatrices {
         assertTrue(MatrixFeatures.isSymmetric(A,1e-10));
 
         // decompose the matrix and extract its eigenvalues
-        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numRows,true);
+        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(A.numRows, true);
         assertTrue(eig.decompose(A));
 
         double ev[] = new double[5];
@@ -215,10 +216,10 @@ public class TestRandomMatrices {
 
         CommonOps.fill(A, -2.0);
 
-        RandomMatrices.addRandom(A,1,2,rand);
+        RandomMatrices.addRandom(A, 1, 2, rand);
 
         for( int i = 0; i < A.getNumElements(); i++ ) {
-            assertTrue(A.get(i) >= -1 && A.get(i) <= 0 );
+            assertTrue(A.get(i) >= -1 && A.get(i) <= 0);
         }
     }
 
@@ -260,7 +261,27 @@ public class TestRandomMatrices {
             }
         }
 
-        assertTrue(total>0);
+        assertTrue(total > 0);
+    }
+
+    @Test
+    public void setRandomB() {
+        DenseMatrixBool A = new DenseMatrixBool(5,4);
+
+        RandomMatrices.setRandomB(A,rand);
+
+        int numTrue=0,numFalse=0;
+
+        for (int i = 0; i < 20; i++) {
+            if( A.data[i] )
+                numTrue++;
+            else
+                numFalse++;
+        }
+
+        assertTrue(numTrue>6);
+        assertTrue(numFalse>6);
+        assertEquals(20,numTrue+numFalse);
     }
 
     @Test

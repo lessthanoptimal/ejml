@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -385,6 +385,36 @@ public class MatrixFeatures {
      * @return true if identical and false otherwise.
      */
     public static boolean isEquals( D1Matrix64F a, D1Matrix64F b ) {
+        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+            return false;
+        }
+
+        final int length = a.getNumElements();
+        for( int i = 0; i < length; i++ ) {
+            if( !(a.get(i) == b.get(i)) ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if each element in the two matrices are equal:
+     * a<sub>ij</sub> == b<sub>ij</sub>
+     * <p>
+     *
+     * <p>
+     * NOTE: If any of the elements are NaN then false is returned.  If two corresponding
+     * elements are both positive or negative infinity then they are equal.
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param b A matrix. Not modified.
+     * @return true if identical and false otherwise.
+     */
+    public static boolean isEquals( DenseMatrixBool a, DenseMatrixBool b ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }

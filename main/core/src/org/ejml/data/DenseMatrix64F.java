@@ -279,10 +279,10 @@ public class DenseMatrix64F extends RowD1Matrix64F {
     }
 
     /**
-     * Determins if the specified element is inside the bounds of the Matrix.
+     * Determines if the specified element is inside the bounds of the Matrix.
      *
      * @param row The element's row.
-     * @param col The elements' column.
+     * @param col The element's column.
      * @return True if it is inside the matrices bound, false otherwise.
      */
     public boolean isInBounds( int row  , int col ) {
