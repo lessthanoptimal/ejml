@@ -8,6 +8,9 @@ Date format: year/month/day
 
 - CommonOps
   * Added extract with int[] for rows and columns or just indexes
+  * Added support for matrix element-wise inequality functions and boolean matrix
+    - This does go a little bit beyond the strict "linear algebra" only scope
+    - Primarily driven by adding features to Equations
 - Equations
   * Can now create vectors using integer sequences
     a = [5:10]
@@ -15,16 +18,15 @@ Date format: year/month/day
 
     Commas are needed when using negative numbers or else it will think you're doing a-b instead of a and -b.
 
-  * Now now reference submatrices using integer sequences
-    b = A(1 2 3 2 0 , 4: )
-    c = A(4:3:20 3 4 5)
+  * Now now reference submatrices using integer sequences.  Works in 1D and 2D.
+    b = A(1 2 3 2 0 , 4: )   <-- 2D sub-matrix
+    c = A(4:3:20 3 4 5)      <-- reference elements by index in the sequence. c will be a row matrix
 
   * Sub-matrix also works for assignment
     d(3,5:) = f
 
-- Added support for matrix element-wise inequality functions and boolean matrix
-  * This does go a little bit beyond the strict "linear algebra" only scope
-  * Primarily driven by adding features to Equations
+- Added DenseMatrixBool
+  * boolean matrix
 
 TODO functions?  def name( Matrix a, int b, double c ) a(b:(2*b),:).*c.
 TODO equations support for boolean matrices and inequalities
