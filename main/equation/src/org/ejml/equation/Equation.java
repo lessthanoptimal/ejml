@@ -208,8 +208,9 @@ import static org.ejml.equation.TokenList.Type;
  * 3) for-range:
  *    Example:  "2:"          Sequence of "2 3 ... max"
  *    Example:  "2:2:"        Sequence of "2 4 ... max"
+ * 4) combined:
+ *    Example:  "1 2 7:10"    Sequence of "1 2 7 8 9 10"
  * </pre>
- * Integer number sequences can also be combined together.  This is valid "7 3 9 2:45 9"
  *
  * <p>
  * Footnotes:
