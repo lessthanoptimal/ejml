@@ -1212,6 +1212,9 @@ public class Equation {
      * Parses the text string to extract tokens.
      */
     protected TokenList extractTokens(String equation , ManagerTempVariables managerTemp ) {
+        // add a space to make sure everything is parsed when its done
+        equation += " ";
+
         TokenList tokens = new TokenList();
 
         int length = 0;
@@ -1339,17 +1342,6 @@ public class Equation {
             // see if it should process the same character again
             if( again )
                 i--;
-        }
-        if( type == TokenType.WORD ) {
-            String word = new String(storage,0,length);
-            Variable v = lookupVariable(word);
-            if( v == null )
-                throw new ParseError("Unknown variable "+word);
-            tokens.add( v );
-        } else if( type == TokenType.INTEGER ) {
-            tokens.add(managerTemp.createInteger(Integer.parseInt( new String(storage, 0, length))));
-        } else if( type == TokenType.FLOAT || type == TokenType.FLOAT_EXP ) {
-            tokens.add(managerTemp.createDouble(Double.parseDouble( new String(storage, 0, length))));
         }
 
         return tokens;

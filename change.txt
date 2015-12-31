@@ -28,7 +28,8 @@ Date format: year/month/day
 - Added DenseMatrixBool
   * boolean matrix
 
-TODO functions?  def name( Matrix a, int b, double c ) a(b:(2*b),:).*c.
+TODO functions?  func name( Matrix a, int b, double c ) a(b:(2*b),:).*c
+TODO macro?      macro name( a , b , c ) (a(b:(2*b),:).*c)
 TODO equations support for boolean matrices and inequalities
 
 ----- Version 0.28
