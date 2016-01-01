@@ -212,6 +212,23 @@ class TokenList {
     }
 
     /**
+     * Inserts the LokenList immediately following the 'before' token
+     */
+    public void insertAfter(Token before, TokenList list ) {
+        Token after = before.next;
+
+        before.next = list.first;
+        list.first.previous = before;
+        if( after == null ) {
+            last = list.last;
+        } else {
+            after.previous = list.last;
+            list.last.next = after;
+        }
+        size += list.size;
+    }
+
+    /**
      * Prints the list of tokens
      */
     public String toString() {
@@ -280,6 +297,9 @@ class TokenList {
             this.word = word;
         }
 
+        public Token() {
+        }
+
         public Type getType() {
             if( function != null )
                 return Type.FUNCTION;
@@ -330,6 +350,16 @@ class TokenList {
                     return "Word:"+word;
             }
             throw new RuntimeException("Unknown type");
+        }
+
+        public Token copy() {
+            Token t = new Token();
+            t.word = word;
+            t.function = function;
+            t.symbol = symbol;
+            t.variable = variable;
+
+            return t;
         }
     }
 

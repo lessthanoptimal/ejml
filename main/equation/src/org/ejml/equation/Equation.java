@@ -194,7 +194,6 @@ import static org.ejml.equation.TokenList.Type;
  * </pre>
  * </p>
  *
- * <p>
  * <h2>Integer Number Sequences</h2>
  * Previous example code has made much use of integer number sequences. There are three different types of integer number
  * sequences 'explicit', 'for', and 'for-range'.
@@ -212,12 +211,27 @@ import static org.ejml.equation.TokenList.Type;
  *    Example:  "1 2 7:10"    Sequence of "1 2 7 8 9 10"
  * </pre>
  *
- * <p>
- * Footnotes:
+ * <h2>Macros</h2>
+ * Macros are used to insert patterns into the code.  Consider this example:
+ * <pre>
+ * eq.process("macro ata( a ) = (a'*a)
+ * eq.process("b = ata(c)")
+ * </pre>
+ * The first line defines a macro named "ata" with one parameter 'a'.  When compiled the equation in the second
+ * line is replaced with "b = (a'*a)".  The "(" ")" in the macro isn't strictly necissary in this situation, but
+ * is a good practice.  Consider the following.
+ * <pre>
+ * eq.process("b = ata(c)*r")
+ * </pre>
+ * Will become "b = (a'*a)*r"  but with out () it will be "b = a'*a*r" which is not the same thing!
+ *
+ * <p><b>NOTE:</b>In the future macros might be replaced with functions.  Macros are harder for the user to debug, but
+ * functions are harder for EJML's developer to implement.</p>
+ *
+ * <h2>Footnotes:</h2>
  * <pre>
  * [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a List.
  * </pre>
- * </p>
  *
  * @author Peter Abeles
  */
@@ -226,6 +240,7 @@ import static org.ejml.equation.TokenList.Type;
 // TODO intelligently handle identity matrices
 public class Equation {
     HashMap<String,Variable> variables = new HashMap<String, Variable>();
+    HashMap<String,Macro> macros = new HashMap<String, Macro>();
 
     // storage for a single word in the tokenizer
     char storage[] = new char[1024];
@@ -350,58 +365,119 @@ public class Equation {
         if( tokens.size() < 3 )
             throw new RuntimeException("Too few tokens");
 
-        if( debug ) {
-            System.out.println("Parsed tokens:\n------------");
-            tokens.print();
-            System.out.println();
-        }
-
         TokenList.Token t0 = tokens.getFirst();
 
-        // Get the results variable
-        if( t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD )
-            throw new ParseError("Expected variable name first.  Not "+t0);
-
-        // see if it is assign or a range
-        List<Variable> range = parseAssignRange(sequence, tokens, t0);
-
-        TokenList.Token t1 = t0.next;
-        if( t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN )
-            throw new ParseError("Expected assignment operator next");
-
-        // Parse the right side of the equation
-        TokenList tokensRight = tokens.extractSubList(t1.next,tokens.last);
-        checkForUnknownVariables(tokensRight);
-        handleParentheses( tokensRight ,sequence);
-
-        // see if it needs to be parsed more
-        if( tokensRight.size() != 1 )
-            throw new RuntimeException("BUG");
-        if( tokensRight.getLast().getType() != Type.VARIABLE )
-            throw new RuntimeException("BUG the last token must be a variable");
-
-        // copy the results into the output
-        Variable variableRight = tokensRight.getFirst().getVariable();
-        if( range == null) {
-            // no range, so copy results into the entire output matrix
-            Variable output = createVariableInferred(t0, variableRight);
-            sequence.addOperation(Operation.copy(variableRight, output));
+        if( t0.word != null && t0.word.compareToIgnoreCase("macro") == 0 ) {
+            parseMacro(tokens,sequence);
         } else {
-            // a sub-matrix range is specified.  Copy into that inner part
-            if( t0.getType() == Type.WORD ) {
-                throw new ParseError("Can't do lazy variable initialization with submatrices. "+t0.getWord());
+            insertFunctionsAndVariables(tokens);
+            insertMacros(tokens);
+            if (debug) {
+                System.out.println("Parsed tokens:\n------------");
+                tokens.print();
+                System.out.println();
             }
-            sequence.addOperation(Operation.copy(variableRight, t0.getVariable(),range));
-        }
 
-        if( debug ) {
-            System.out.println("Operations:\n------------");
-            for (int i = 0; i < sequence.operations.size(); i++) {
-                System.out.println(sequence.operations.get(i).name());
+            // Get the results variable
+            if (t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD)
+                throw new ParseError("Expected variable name first.  Not " + t0);
+
+            // see if it is assign or a range
+            List<Variable> range = parseAssignRange(sequence, tokens, t0);
+
+            TokenList.Token t1 = t0.next;
+            if (t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN)
+                throw new ParseError("Expected assignment operator next");
+
+            // Parse the right side of the equation
+            TokenList tokensRight = tokens.extractSubList(t1.next, tokens.last);
+            checkForUnknownVariables(tokensRight);
+            handleParentheses(tokensRight, sequence);
+
+            // see if it needs to be parsed more
+            if (tokensRight.size() != 1)
+                throw new RuntimeException("BUG");
+            if (tokensRight.getLast().getType() != Type.VARIABLE)
+                throw new RuntimeException("BUG the last token must be a variable");
+
+            // copy the results into the output
+            Variable variableRight = tokensRight.getFirst().getVariable();
+            if (range == null) {
+                // no range, so copy results into the entire output matrix
+                Variable output = createVariableInferred(t0, variableRight);
+                sequence.addOperation(Operation.copy(variableRight, output));
+            } else {
+                // a sub-matrix range is specified.  Copy into that inner part
+                if (t0.getType() == Type.WORD) {
+                    throw new ParseError("Can't do lazy variable initialization with submatrices. " + t0.getWord());
+                }
+                sequence.addOperation(Operation.copy(variableRight, t0.getVariable(), range));
+            }
+
+            if (debug) {
+                System.out.println("Operations:\n------------");
+                for (int i = 0; i < sequence.operations.size(); i++) {
+                    System.out.println(sequence.operations.get(i).name());
+                }
             }
         }
 
         return sequence;
+    }
+
+    /**
+     * Parse a macro defintion.
+     *
+     * "macro NAME( var0 , var1 ) = 5+var0+var1'
+     */
+    private void parseMacro( TokenList tokens , Sequence sequence ) {
+        Macro macro = new Macro();
+
+        TokenList.Token t = tokens.getFirst().next;
+
+        if( t.word == null ) {
+            throw new ParseError("Expected the macro's name after "+tokens.getFirst().word);
+        }
+        List<TokenList.Token> variableTokens = new ArrayList<TokenList.Token>();
+
+        macro.name = t.word;
+        t = t.next;
+        t = parseMacroInput(variableTokens, t);
+        for( TokenList.Token a : variableTokens ) {
+            if( a.word == null) throw new ParseError("expected word in macro header");
+            macro.inputs.add(a.word);
+        }
+        t = t.next;
+        if( t == null || t.getSymbol() != Symbol.ASSIGN)
+            throw new ParseError("Expected assignment");
+        t = t.next;
+        macro.tokens = new TokenList(t,tokens.last);
+
+        sequence.addOperation(macro.createOperation(macros));
+    }
+
+
+    private TokenList.Token parseMacroInput(List<TokenList.Token> variables, TokenList.Token t) {
+        if( t.getSymbol() != Symbol.PAREN_LEFT ) {
+            throw new ParseError("Expected (");
+        }
+        t = t.next;
+        boolean expectWord = true;
+        while( t != null && t.getSymbol() != Symbol.PAREN_RIGHT ) {
+            if( expectWord ) {
+                variables.add(t);
+                expectWord = false;
+            } else {
+                if( t.getSymbol() != Symbol.COMMA )
+                    throw new ParseError("Expected comma");
+                expectWord = true;
+            }
+
+            t = t.next;
+        }
+        if( t == null )
+            throw new ParseError("Token sequence ended unexpectedly");
+        return t;
     }
 
     /**
@@ -1186,6 +1262,10 @@ public class Equation {
         return (T)result;
     }
 
+    public Macro lookupMacro(String token) {
+        return macros.get(token);
+    }
+
     public DenseMatrix64F lookupMatrix(String token) {
         return ((VariableMatrix)variables.get(token)).matrix;
     }
@@ -1229,18 +1309,7 @@ public class Equation {
                 } else {
                     // add the variable/function name to token list
                     String name = new String(storage, 0, length);
-                    Variable v = lookupVariable(name);
-                    if (v == null) {
-                        if (functions.isFunctionName(name)) {
-                            tokens.add(new Function(name));
-                        } else {
-                            // see if it's type can be inferred later on
-                            tokens.add(name);
-                        }
-                    } else {
-                        tokens.add(v);
-                    }
-
+                    tokens.add(name);
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 }
@@ -1347,7 +1416,51 @@ public class Equation {
         return tokens;
     }
 
-    protected static enum TokenType
+    /**
+     * Search for WORDS in the token list.  Then see if the WORD is a function or a variable.  If so replace
+     * the work with the function/variable
+     */
+    void insertFunctionsAndVariables(TokenList tokens ) {
+        TokenList.Token t = tokens.getFirst();
+        while( t != null ) {
+            if( t.getType() == Type.WORD ) {
+                Variable v = lookupVariable(t.word);
+                if (v != null) {
+                    t.variable = v;
+                    t.word = null;
+                } else if (functions.isFunctionName(t.word)) {
+                    t.function = (new Function(t.word));
+                    t.word = null;
+                }
+            }
+            t = t.next;
+        }
+    }
+
+    /**
+     * Checks to see if a WORD matches the name of a macro.  if it does it applies the macro at that location
+     */
+    void insertMacros(TokenList tokens ) {
+        TokenList.Token t = tokens.getFirst();
+        while( t != null ) {
+            if( t.getType() == Type.WORD ) {
+                Macro v = lookupMacro(t.word);
+                if (v != null) {
+                    TokenList.Token before = t.previous;
+                    List<TokenList.Token> inputs = new ArrayList<TokenList.Token>();
+                    t = parseMacroInput(inputs,t.next);
+
+                    TokenList sniplet = v.execute(inputs);
+                    tokens.extractSubList(before.next,t);
+                    tokens.insertAfter(before,sniplet);
+                    t = sniplet.last;
+                }
+            }
+            t = t.next;
+        }
+    }
+
+    protected enum TokenType
     {
         WORD,
         INTEGER,

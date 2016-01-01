@@ -25,11 +25,14 @@ Date format: year/month/day
   * Sub-matrix also works for assignment
     d(3,5:) = f
 
+  * Added macros
+    Example: "macro m2m(a) = a*2*a"
+
 - Added DenseMatrixBool
   * boolean matrix
 
-TODO functions?  func name( Matrix a, int b, double c ) a(b:(2*b),:).*c
-TODO macro?      macro name( a , b , c ) (a(b:(2*b),:).*c)
+
+TODO functions?  func name( Matrix a, int b, double c ) = a(b:(2*b),:).*c
 TODO equations support for boolean matrices and inequalities
 
 ----- Version 0.28
