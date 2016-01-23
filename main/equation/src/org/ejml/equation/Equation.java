@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -214,14 +214,14 @@ import static org.ejml.equation.TokenList.Type;
  * <h2>Macros</h2>
  * Macros are used to insert patterns into the code.  Consider this example:
  * <pre>
- * eq.process("macro ata( a ) = (a'*a)
- * eq.process("b = ata(c)")
+ * eq.process("macro ata( a ) = (a'*a)");
+ * eq.process("b = ata(c)");
  * </pre>
  * The first line defines a macro named "ata" with one parameter 'a'.  When compiled the equation in the second
  * line is replaced with "b = (a'*a)".  The "(" ")" in the macro isn't strictly necissary in this situation, but
  * is a good practice.  Consider the following.
  * <pre>
- * eq.process("b = ata(c)*r")
+ * eq.process("b = ata(c)*r");
  * </pre>
  * Will become "b = (a'*a)*r"  but with out () it will be "b = a'*a*r" which is not the same thing!
  *
