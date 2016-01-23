@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.29
 
-2015/XX/XX
+2016/01/23
 
 - CommonOps
   * Added extract with int[] for rows and columns or just indexes
@@ -30,10 +30,6 @@ Date format: year/month/day
 
 - Added DenseMatrixBool
   * boolean matrix
-
-
-TODO functions?  func name( Matrix a, int b, double c ) = a(b:(2*b),:).*c
-TODO equations support for boolean matrices and inequalities
 
 ----- Version 0.28
 

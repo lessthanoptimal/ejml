@@ -132,7 +132,7 @@
             </packageset>
 
             <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification</h1>]]></doctitle>
-            <bottom><![CDATA[<i>Copyright &#169; 2009-2015 Peter Abeles All Rights Reserved.</i>]]></bottom>
+            <bottom><![CDATA[<i>Copyright &#169; 2009-2016 Peter Abeles All Rights Reserved.</i>]]></bottom>
             <!--<group title="Group 1 Packages" packages="com.dummy.test.a*"/>-->
             <!--<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>-->
             <!--<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>-->
@@ -169,19 +169,6 @@
             </packageset>
 
             <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification:</h1>]]></doctitle>
-            <header><![CDATA[<script type="text/javascript"><!--
-google_ad_client = "ca-pub-0419821832107208";
-/* boofcv javadoc banner */
-google_ad_slot = "3257872658";
-google_ad_width = 468;
-google_ad_height = 60;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-]]>
-            </header>
             <bottom><![CDATA[<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -193,7 +180,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 </script>
 <br>
-<b>Copyright &copy; 2009-2015 Peter Abeles</b>
+<b>Copyright &copy; 2009-2016 Peter Abeles</b>
 ]]>
             </bottom>
         </javadoc>

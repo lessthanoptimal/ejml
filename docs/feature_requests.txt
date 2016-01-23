@@ -1,0 +1,6 @@
+TODO functions?  func name( Matrix a, int b, double c ) = a(b:(2*b),:).*c
+TODO equations support for boolean matrices and inequalities
+TODO Neural network back propagation example?
+TODO MatrixMatrixMult
+    - Strip all inner accessors to matrix values
+    - Functions for checking inputs
