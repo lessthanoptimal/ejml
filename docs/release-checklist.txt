@@ -1,6 +1,7 @@
 - Update version number in UtilEjml.VERSION
 - Update change.txt
 - Update version in build.gradle
+- Update version in readme.md
 - Commit and tag release
 - Create zip of source code
 - Create jar file "gradle createLibraryDirectory"
