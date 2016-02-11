@@ -45,6 +45,10 @@ Gradle:
 ```
 compile group: 'org.ejml', name: 'all', version: '0.29'
 ```
+Gradle Example:
+```java
+compile 'org.ejml:all:0.29'
+```
 
 Maven:
 ```
