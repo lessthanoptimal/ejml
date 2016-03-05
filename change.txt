@@ -4,6 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.30
 
+- Thanks Peter Fodar for fixing misleading javadoc
 
 TODO look at sparse matrix contribution
 TODO equations support for boolean matrices and inequalities
