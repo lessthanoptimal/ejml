@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,6 +62,8 @@ public abstract class GeneralEigenDecompositionCheck {
         checkSmallValue(true);
         checkLargeValue(false);
         checkLargeValue(true);
+
+        checkFailure0();
     }
 
     /**
@@ -417,6 +419,25 @@ public abstract class GeneralEigenDecompositionCheck {
         } else {
             testEigenvalueConsistency(alg,A);
         }
+    }
+
+    /**
+     * A failure condition that was found in the wild.
+     *
+     * Found by user343 on github
+     */
+    public void checkFailure0() {
+        double[][] matrix = new double[][] {
+                {1, 0, 0},
+                {0.01, 0, -1},
+                {0.01, 1, 0}};
+        DenseMatrix64F A = new DenseMatrix64F(matrix);
+
+        EigenDecomposition alg = createDecomposition();
+
+        assertTrue(safeDecomposition(alg,A));
+
+        performStandardTests(alg,A,1);
     }
 
     /**
