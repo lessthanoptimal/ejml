@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ public class CheckDecompositionInterface {
     /**
      * Performs a decomposition and makes sure the input matrix is not modified.
      */
-    public static boolean safeDecomposition( DecompositionInterface decomp , DenseMatrix64F A ) {
+    public static boolean safeDecomposition( DecompositionInterface<DenseMatrix64F> decomp , DenseMatrix64F A ) {
 
         DenseMatrix64F A_orig = decomp.inputModified() ? A.copy() : A;
 
@@ -50,7 +50,7 @@ public class CheckDecompositionInterface {
      *
      * @param decomp
      */
-    public static void checkModifiedInput( DecompositionInterface decomp ) {
+    public static void checkModifiedInput( DecompositionInterface<DenseMatrix64F> decomp ) {
         DenseMatrix64F A = RandomMatrices.createSymmPosDef(4,new Random(0x434));
         DenseMatrix64F A_orig = A.copy();
 

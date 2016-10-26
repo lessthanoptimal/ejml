@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
+
+import java.util.Arrays;
 
 /**
  * Dense matrix for complex numbers.  Internally it stores its data in a single row-major array with the real
@@ -212,5 +214,12 @@ public class CDenseMatrix64F extends CD1Matrix64F {
                 }
             }
         }
+    }
+
+    /**
+     * Sets all the elements in the matrix to zero
+     */
+    public void zero() {
+        Arrays.fill(data, 0, numCols*numRows*2, 0.0);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,6 +33,16 @@ import static org.junit.Assert.assertTrue;
  */
 public class CheckDecompositionInterface_CD64 {
 
+    /**
+     * Performs a decomposition and makes sure the input matrix is not modified.
+     */
+    public static boolean safeDecomposition( DecompositionInterface<CDenseMatrix64F> decomp , CDenseMatrix64F A ) {
+
+        CDenseMatrix64F A_orig = decomp.inputModified() ? A.copy() : A;
+
+        return decomp.decompose(A_orig);
+    }
+
 
     /**
      * Checks to see if the matrix is or is not modified as according to the modified
@@ -40,7 +50,7 @@ public class CheckDecompositionInterface_CD64 {
      *
      * @param decomp
      */
-    public static void checkModifiedInput( DecompositionInterface decomp ) {
+    public static void checkModifiedInput( DecompositionInterface<CDenseMatrix64F> decomp ) {
         CDenseMatrix64F A = CRandomMatrices.createHermPosDef(4, new Random(0x434));
         CDenseMatrix64F A_orig = A.copy();
 

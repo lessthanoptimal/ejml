@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ import org.ejml.ops.CCommonOps;
  * of CPU cache misses and the number of copies that are performed.
  * </p>
  *
- * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_D64
+ * @see QRDecompositionHouseholder_CD64
  *
  * @author Peter Abeles
  */

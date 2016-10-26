@@ -16,20 +16,20 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.hessenberg;
+package org.ejml.alg.dense.decompose.hessenberg;
 
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CCommonOps;
 
 /**
  * <p>
- * Finds the decomposition of a matrix in the form of:<br>
+ * Complex Hessenberg decomposition.  It find matrices O and P such that:<br>
  * <br>
- * A = OHO<sup>T</sup><br>
+ * A = OPO<sup>H</sup><br>
  * <br>
- * where A is an m by m matrix, O is an orthogonal matrix, and H is an upper Hessenberg matrix.
+ * where A is an m by m matrix, O is an orthogonal matrix, and P is an upper Hessenberg matrix.
  * </p>
  *
  * <p>
@@ -45,10 +45,10 @@ import org.ejml.ops.CommonOps;
  * </p>
  */
 // TODO create a column based one similar to what was done for QR decomposition?
-public class HessenbergSimilarDecomposition_D64
-        implements DecompositionInterface<DenseMatrix64F> {
+public class HessenbergSimilarDecomposition_CD64
+        implements DecompositionInterface<CDenseMatrix64F> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
-    private DenseMatrix64F QH;
+    private CDenseMatrix64F QH;
     // number of rows and columns of the matrix being decompose
     private int N;
 
@@ -64,13 +64,13 @@ public class HessenbergSimilarDecomposition_D64
      *
      * @param initialSize Expected size of the matrices it will decompose.
      */
-    public HessenbergSimilarDecomposition_D64(int initialSize) {
+    public HessenbergSimilarDecomposition_CD64(int initialSize) {
         gammas = new double[ initialSize ];
-        b = new double[ initialSize ];
-        u = new double[ initialSize ];
+        b = new double[ initialSize*2 ];
+        u = new double[ initialSize*2 ];
     }
 
-    public HessenbergSimilarDecomposition_D64() {
+    public HessenbergSimilarDecomposition_CD64() {
         this(5);
     }
 
@@ -81,7 +81,7 @@ public class HessenbergSimilarDecomposition_D64
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A )
+    public boolean decompose( CDenseMatrix64F A )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be square.");
@@ -92,10 +92,10 @@ public class HessenbergSimilarDecomposition_D64
 
         N = A.numCols;
 
-        if( b.length < N ) {
-            b = new double[ N ];
+        if( b.length < N*2 ) {
+            b = new double[ N*2 ];
             gammas = new double[ N ];
-            u = new double[ N ];
+            u = new double[ N*2 ];
         }
         return _decompose();
     }
@@ -110,7 +110,7 @@ public class HessenbergSimilarDecomposition_D64
      *
      * @return QH matrix.
      */
-    public DenseMatrix64F getQH() {
+    public CDenseMatrix64F getQH() {
         return QH;
     }
 
@@ -120,20 +120,21 @@ public class HessenbergSimilarDecomposition_D64
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public DenseMatrix64F getH( DenseMatrix64F H ) {
+    public CDenseMatrix64F getH( CDenseMatrix64F H ) {
         if( H == null ) {
-            H = new DenseMatrix64F(N,N);
+            H = new CDenseMatrix64F(N,N);
         } else if( N != H.numRows || N != H.numCols )
             throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
         else
-            H.zero();
+            CCommonOps.fill(H,0,0);
 
         // copy the first row
-        System.arraycopy(QH.data, 0, H.data, 0, N);
+        System.arraycopy(QH.data, 0, H.data, 0, N*2);
 
         for( int i = 1; i < N; i++ ) {
             for( int j = i-1; j < N; j++ ) {
-                H.set(i,j, QH.get(i,j));
+                int indexQH = QH.getIndex(i,j);
+                H.set(i,j, QH.data[indexQH],QH.data[indexQH+1]);
             }
         }
 
@@ -146,23 +147,28 @@ public class HessenbergSimilarDecomposition_D64
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DenseMatrix64F getQ( DenseMatrix64F Q ) {
+    public CDenseMatrix64F getQ( CDenseMatrix64F Q ) {
         if( Q == null ) {
-            Q = new DenseMatrix64F(N,N);
+            Q = new CDenseMatrix64F(N,N);
             for( int i = 0; i < N; i++ ) {
-                Q.data[i*N+i] = 1;
+                Q.data[(i*N+i)*2] = 1;
+                Q.data[(i*N+i)*2+1] = 0;
             }
         } else if( N != Q.numRows || N != Q.numCols )
             throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
         else
-            CommonOps.setIdentity(Q);
+            CCommonOps.setIdentity(Q);
 
         for( int j = N-2; j >= 0; j-- ) {
-            u[j+1] = 1;
+            u[(j+1)*2] = 1;
+            u[(j+1)*2+1] = 0;
+
             for( int i = j+2; i < N; i++ ) {
-                u[i] = QH.get(i,j);
+                int indexQH = QH.getIndex(i,j);
+                u[i*2] = QH.data[indexQH];
+                u[i*2+1] = QH.data[indexQH+1];
             }
-            QrHelperFunctions_D64.rank1UpdateMultR(Q, u, gammas[j], j + 1, j + 1, N, b);
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q, u, j+1,gammas[j], j + 1, j + 1, N, b);
         }
 
         return Q;
@@ -182,48 +188,86 @@ public class HessenbergSimilarDecomposition_D64
             for( int i = k+1; i < N; i++ ) {
                 // copy the householder vector to vector outside of the matrix to reduce caching issues
                 // big improvement on larger matrices and a relatively small performance hit on small matrices.
-                double val = u[i] = h[i*N+k];
-                val = Math.abs(val);
-                if( val > max )
-                    max = val;
+                double realVal = u[i*2] = h[i*N*2+k*2];
+                double imagVal = u[i*2+1] = h[i*N*2+k*2+1];
+
+                double magVal = realVal*realVal + imagVal*imagVal;
+                if( max < magVal ) {
+                    max = magVal;
+                }
             }
+            max = Math.sqrt(max);
 
             if( max > 0 ) {
                 // -------- set up the reflector Q_k
 
-                double tau = 0;
-                // normalize to reduce overflow/underflow
-                // and compute tau for the reflector
+                double nx = 0;
+                // normalize to reduce overflow/underflow and compute tau for the reflector
                 for( int i = k+1; i < N; i++ ) {
-                    double val = u[i] /= max;
-                    tau += val*val;
+                    double realVal = u[i*2] /= max;
+                    double imagVal = u[i*2+1] /= max;
+
+                    nx += realVal*realVal + imagVal*imagVal;
                 }
 
-                tau = Math.sqrt(tau);
-
-                if( u[k+1] < 0 )
-                    tau = -tau;
+                nx = Math.sqrt(nx);
 
                 // write the reflector into the lower left column of the matrix
-                double nu = u[k+1] + tau;
-                u[k+1] = 1.0;
+                double real_nu = u[(k+1)*2];
+                double imag_nu = u[(k+1)*2+1];
+                double mag_nu = real_nu*real_nu + imag_nu*imag_nu;
 
-                for( int i = k+2; i < N; i++ ) {
-                    h[i*N+k] = u[i] /= nu;
+                double realTau,imagTau;
+                if( mag_nu == 0 ) {
+                    realTau = nx;
+                    imagTau = 0;
+                } else {
+                    realTau = real_nu / mag_nu * nx;
+                    imagTau = imag_nu / mag_nu * nx;
                 }
 
-                double gamma = nu/tau;
-                gammas[k] = gamma;
+                double top,bottom;
+
+                // if there is a chance they can cancel swap the sign
+                if ( real_nu*realTau<0) {
+                    realTau = -realTau;
+                    imagTau = -imagTau;
+                    top = nx * nx - nx *mag_nu;
+                    bottom = mag_nu*mag_nu - 2.0* nx *mag_nu + nx * nx;
+                } else {
+                    top = nx * nx + nx *mag_nu;
+                    bottom = mag_nu*mag_nu + 2.0* nx *mag_nu + nx * nx;
+                }
+
+                double realGamma = bottom/top;
+                gammas[k] = realGamma;
+
+                double real_u_0 = real_nu + realTau;
+                double imag_u_0 = imag_nu + imagTau;
+                double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
+
+                int indexU = (k+2)*2;
+                for( int i = k+2; i < N; i++ ) {
+                    double realU = u[indexU];
+                    double imagU = u[indexU+1];
+
+                    u[indexU++] = (realU*real_u_0 + imagU*imag_u_0)/norm_u_0;
+                    u[indexU++] = (imagU*real_u_0 - realU*imag_u_0)/norm_u_0;
+                }
+                u[2*(k+1)]   = 1;
+                u[2*(k+1)+1] = 0;
+
 
                 // ---------- multiply on the left by Q_k
-                QrHelperFunctions_D64.rank1UpdateMultR(QH, u, gamma, k + 1, k + 1, N, b);
+                QrHelperFunctions_CD64.rank1UpdateMultR(QH, u,k+1, realGamma, k + 1, k + 1, N, b);
 
                 // ---------- multiply on the right by Q_k
-                QrHelperFunctions_D64.rank1UpdateMultL(QH, u, gamma, 0, k + 1, N);
+                QrHelperFunctions_CD64.rank1UpdateMultL(QH, u,k+1, realGamma, 0, k + 1, N);
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg
-                h[(k+1)*N+k] = -tau*max;
+                h[((k+1)*N+k)*2]   = -realGamma*max;
+                h[((k+1)*N+k)*2+1] = -imagTau*max;
 
             } else {
                 gammas[k] = 0;
