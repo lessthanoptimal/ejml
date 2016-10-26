@@ -1,5 +1,5 @@
 <component name="CopyrightManager">
-  <settings default="">
+  <settings default="ejml">
     <module2copyright>
       <element module="ejml" copyright="ejml" />
     </module2copyright>
