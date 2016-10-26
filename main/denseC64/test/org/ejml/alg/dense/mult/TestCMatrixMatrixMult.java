@@ -58,10 +58,11 @@ public class TestCMatrixMatrixMult {
             boolean add = name.contains("Add");
             boolean hasAlpha = double.class == params[0];
             boolean transA = name.contains("TransA");
+            boolean transB = name.contains("TransB");
 
             try {
-//                System.out.println("add "+add+" alpha "+hasAlpha+" transA "+transA+"  "+name);
-                check(method,add,hasAlpha,transA);
+//                System.out.println("add "+add+" alpha "+hasAlpha+" TA "+transA+" TB "+transB+"  "+name);
+                check(method,add,hasAlpha,transA,transB);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -70,11 +71,11 @@ public class TestCMatrixMatrixMult {
             numChecked++;
         }
 
-        assertEquals(16,numChecked);
+        assertEquals(20,numChecked);
     }
 
     public static void check( Method method , boolean isAdd , boolean hasAlpha,
-                              boolean transA ) throws InvocationTargetException, IllegalAccessException {
+                              boolean transA , boolean transB ) throws InvocationTargetException, IllegalAccessException {
         Random rand = new Random(234);
 
         double realAlpha = 2.3;
@@ -85,10 +86,11 @@ public class TestCMatrixMatrixMult {
                 for (int k = 1; k <= 4; k++) {
                     CDenseMatrix64F A = transA ? CRandomMatrices.createRandom(j,i,-1,1,rand) :
                             CRandomMatrices.createRandom(i,j,-1,1,rand);
-                    CDenseMatrix64F B = CRandomMatrices.createRandom(j,k,-1,1,rand);
+                    CDenseMatrix64F B = transB ? CRandomMatrices.createRandom(k,j,-1,1,rand) :
+                            CRandomMatrices.createRandom(j,k,-1,1,rand);
                     CDenseMatrix64F C = CRandomMatrices.createRandom(i,k,-1,1,rand);
 
-                    CDenseMatrix64F AB = multiply(A,B,transA);
+                    CDenseMatrix64F AB = multiply(A,B,transA,transB);
                     CDenseMatrix64F expected = new CDenseMatrix64F(i,k);
 
                     if( hasAlpha ) {
@@ -127,12 +129,17 @@ public class TestCMatrixMatrixMult {
         }
     }
 
-    public static CDenseMatrix64F multiply( CDenseMatrix64F A , CDenseMatrix64F B, boolean transA ) {
+    public static CDenseMatrix64F multiply( CDenseMatrix64F A , CDenseMatrix64F B, boolean transA, boolean transB ) {
 
         if( transA ) {
             CDenseMatrix64F A_h = new CDenseMatrix64F(A.numCols, A.numRows);
             CCommonOps.transposeConjugate(A,A_h);
             A = A_h;
+        }
+        if( transB ) {
+            CDenseMatrix64F B_h = new CDenseMatrix64F(B.numCols, B.numRows);
+            CCommonOps.transposeConjugate(B,B_h);
+            B = B_h;
         }
         CDenseMatrix64F C = new CDenseMatrix64F(A.numRows,B.numCols);
 

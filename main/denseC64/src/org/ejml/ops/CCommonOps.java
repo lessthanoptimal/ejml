@@ -415,7 +415,7 @@ public class CCommonOps {
     /**
      * <p>Performs the following operation:<br>
      * <br>
-     * c = a<sup>T</sup> * b <br>
+     * c = a<sup>H</sup> * b <br>
      * <br>
      * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
      * </p>
@@ -437,7 +437,7 @@ public class CCommonOps {
     /**
      * <p>Performs the following operation:<br>
      * <br>
-     * c = &alpha; * a<sup>T</sup> * b <br>
+     * c = &alpha; * a<sup>H</sup> * b <br>
      * <br>
      * c<sub>ij</sub> = &alpha; &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
      * </p>
@@ -457,6 +457,128 @@ public class CCommonOps {
         } else {
             CMatrixMatrixMult.multTransA_small(realAlpha, imagAlpha, a, b, c);
         }
+    }
+
+        /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = a * b<sup>H</sup> <br>
+     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        CMatrixMatrixMult.multTransB(a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c =  &alpha; * a * b<sup>H</sup> <br>
+     * c<sub>ij</sub> = &alpha; &sum;<sub>k=1:n</sub> {  a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param realAlpha Real component of scaling factor.
+     * @param imagAlpha Imaginary component of scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransB( double realAlpha , double imagAlpha, CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        // TODO add a matrix vectory multiply here
+        CMatrixMatrixMult.multTransB(realAlpha,imagAlpha,a,b,c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a<sup>H</sup> * b<br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
+            CMatrixMatrixMult.multAddTransA_reorder(a, b, c);
+        } else {
+            CMatrixMatrixMult.multAddTransA_small(a, b, c);
+        }
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a<sup>H</sup> * b<br>
+     * c<sub>ij</sub> =c<sub>ij</sub> +  &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param realAlpha Real component of scaling factor.
+     * @param imagAlpha Imaginary component of scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        // TODO add a matrix vectory multiply here
+        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
+            CMatrixMatrixMult.multAddTransA_reorder(realAlpha, imagAlpha, a, b, c);
+        } else {
+            CMatrixMatrixMult.multAddTransA_small(realAlpha, imagAlpha, a, b, c);
+        }
+    }
+
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a * b<sup>H</sup> <br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        CMatrixMatrixMult.multAddTransB(a,b,c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a * b<sup>H</sup><br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param realAlpha Real component of scaling factor.
+     * @param imagAlpha Imaginary component of scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        // TODO add a matrix vectory multiply here
+        CMatrixMatrixMult.multAddTransB(realAlpha,imagAlpha,a,b,c);
     }
 
     /**

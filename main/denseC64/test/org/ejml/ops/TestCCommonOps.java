@@ -289,9 +289,10 @@ public class TestCCommonOps {
             boolean add = name.contains("Add");
             boolean hasAlpha = double.class == params[0];
             boolean transA = name.contains("TransA");
+            boolean transB = name.contains("TransB");
 
             try {
-                TestCMatrixMatrixMult.check(method, add, hasAlpha, transA);
+                TestCMatrixMatrixMult.check(method, add, hasAlpha, transA, transB);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -300,7 +301,7 @@ public class TestCCommonOps {
             numChecked++;
         }
 
-        assertEquals(6,numChecked);
+        assertEquals(12,numChecked);
     }
 
     @Test
@@ -311,7 +312,7 @@ public class TestCCommonOps {
                 for (int k = 1; k < 10; k++) {
                     CDenseMatrix64F B = CRandomMatrices.createRandom(j, k, -1, 1, rand);
                     CDenseMatrix64F found = CRandomMatrices.createRandom(i, k, -1, 1, rand);
-                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B, false);
+                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B, false, false);
 
                     CMatrixMatrixMult.mult_reorder(A, B, found);
 

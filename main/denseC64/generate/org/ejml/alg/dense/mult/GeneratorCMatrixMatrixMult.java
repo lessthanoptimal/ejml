@@ -67,6 +67,8 @@ public class GeneratorCMatrixMatrixMult {
                 stream.print("\n");
                 printMultTransA_small(alpha,add);
                 stream.print("\n");
+                printMultTransB(alpha,add);
+                stream.print("\n");
             }
         }
         stream.print("}\n");
@@ -305,6 +307,54 @@ public class GeneratorCMatrixMatrixMult {
 
          stream.print(foo);
     }
+
+    public void printMultTransB( boolean alpha , boolean add ) {
+        String header,valLine;
+
+        header = makeHeader("mult",null,add,alpha, false, false,true);
+
+        String assignment = add ? "+=" : "=";
+
+        if( alpha ) {
+            valLine = "                c.data[cIndex++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                      "                c.data[cIndex++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        } else {
+            valLine = "                c.data[cIndex++] "+assignment+" realTotal;\n" +
+                      "                c.data[cIndex++] "+assignment+" imagTotal;\n";
+        }
+
+
+        String foo =
+                header + makeBoundsCheck(false,true, null)+
+                        "        int cIndex = 0;\n" +
+                        "        int aIndexStart = 0;\n" +
+                        "\n" +
+                        "        for( int xA = 0; xA < a.numRows; xA++ ) {\n" +
+                        "            int end = aIndexStart + b.numCols*2;\n" +
+                        "            int indexB = 0;\n"+
+                        "            for( int xB = 0; xB < b.numRows; xB++ ) {\n" +
+                        "                int indexA = aIndexStart;\n" +
+                        "\n" +
+                        "                double realTotal = 0;\n" +
+                        "                double imagTotal = 0;\n" +
+                        "\n" +
+                        "                while( indexA<end ) {\n" +
+                        "                    double realA = a.data[indexA++];\n" +
+                        "                    double imagA = a.data[indexA++];\n" +
+                        "                    double realB = b.data[indexB++];\n" +
+                        "                    double imagB = b.data[indexB++];\n" +
+                        "                    realTotal += realA*realB + imagA*imagB;\n" +
+                        "                    imagTotal += imagA*realB - realA*imagB;\n" +
+                        "                }\n" +
+                        "\n" +
+                        valLine +
+                        "            }\n" +
+                        "            aIndexStart += a.numCols*2;\n" +
+                        "        }\n" +
+                        "    }\n";
+        stream.print(foo);
+    }
+
 
     private String makeBoundsCheck(boolean tranA, boolean tranB, String auxLength)
     {

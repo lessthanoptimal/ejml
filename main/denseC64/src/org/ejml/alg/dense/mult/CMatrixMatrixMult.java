@@ -225,6 +225,44 @@ public class CMatrixMatrixMult {
         }
     }
 
+    public static void multTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int cIndex = 0;
+        int aIndexStart = 0;
+
+        for( int xA = 0; xA < a.numRows; xA++ ) {
+            int end = aIndexStart + b.numCols*2;
+            int indexB = 0;
+            for( int xB = 0; xB < b.numRows; xB++ ) {
+                int indexA = aIndexStart;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                while( indexA<end ) {
+                    double realA = a.data[indexA++];
+                    double imagA = a.data[indexA++];
+                    double realB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
+                    realTotal += realA*realB + imagA*imagB;
+                    imagTotal += imagA*realB - realA*imagB;
+                }
+
+                c.data[cIndex++] = realTotal;
+                c.data[cIndex++] = imagTotal;
+            }
+            aIndexStart += a.numCols*2;
+        }
+    }
+
     public static void multAdd_reorder( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( a == c || b == c )
@@ -413,6 +451,44 @@ public class CMatrixMatrixMult {
                 c.data[cIndex++] += realTotal;
                 c.data[cIndex++] += imagTotal;
             }
+        }
+    }
+
+    public static void multAddTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int cIndex = 0;
+        int aIndexStart = 0;
+
+        for( int xA = 0; xA < a.numRows; xA++ ) {
+            int end = aIndexStart + b.numCols*2;
+            int indexB = 0;
+            for( int xB = 0; xB < b.numRows; xB++ ) {
+                int indexA = aIndexStart;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                while( indexA<end ) {
+                    double realA = a.data[indexA++];
+                    double imagA = a.data[indexA++];
+                    double realB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
+                    realTotal += realA*realB + imagA*imagB;
+                    imagTotal += imagA*realB - realA*imagB;
+                }
+
+                c.data[cIndex++] += realTotal;
+                c.data[cIndex++] += imagTotal;
+            }
+            aIndexStart += a.numCols*2;
         }
     }
 
@@ -618,6 +694,44 @@ public class CMatrixMatrixMult {
         }
     }
 
+    public static void multTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int cIndex = 0;
+        int aIndexStart = 0;
+
+        for( int xA = 0; xA < a.numRows; xA++ ) {
+            int end = aIndexStart + b.numCols*2;
+            int indexB = 0;
+            for( int xB = 0; xB < b.numRows; xB++ ) {
+                int indexA = aIndexStart;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                while( indexA<end ) {
+                    double realA = a.data[indexA++];
+                    double imagA = a.data[indexA++];
+                    double realB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
+                    realTotal += realA*realB + imagA*imagB;
+                    imagTotal += imagA*realB - realA*imagB;
+                }
+
+                c.data[cIndex++] = realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[cIndex++] = realAlpha*imagTotal + imagAlpha*realTotal;
+            }
+            aIndexStart += a.numCols*2;
+        }
+    }
+
     public static void multAdd_reorder( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( a == c || b == c )
@@ -815,6 +929,44 @@ public class CMatrixMatrixMult {
                 c.data[cIndex++] += realAlpha*realTotal - imagAlpha*imagTotal;
                 c.data[cIndex++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
+        }
+    }
+
+    public static void multAddTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int cIndex = 0;
+        int aIndexStart = 0;
+
+        for( int xA = 0; xA < a.numRows; xA++ ) {
+            int end = aIndexStart + b.numCols*2;
+            int indexB = 0;
+            for( int xB = 0; xB < b.numRows; xB++ ) {
+                int indexA = aIndexStart;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                while( indexA<end ) {
+                    double realA = a.data[indexA++];
+                    double imagA = a.data[indexA++];
+                    double realB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
+                    realTotal += realA*realB + imagA*imagB;
+                    imagTotal += imagA*realB - realA*imagB;
+                }
+
+                c.data[cIndex++] += realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[cIndex++] += realAlpha*imagTotal + imagAlpha*realTotal;
+            }
+            aIndexStart += a.numCols*2;
         }
     }
 
