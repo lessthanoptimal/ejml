@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -82,7 +82,7 @@ public class GeneratorMatrixMatrixMult {
                 " * \n" +
                 " * <p>\n" +
                 " * <center>******** IMPORTANT **********</center>\n" +
-                " * This class was auto generated using {@link "+getClass().getName()+"}\n" +
+                " * This class was auto generated using "+getClass().getName()+"\n" +
                 " * </p>\n" +
                 " * \n" +
                 " * @author Peter Abeles\n" +

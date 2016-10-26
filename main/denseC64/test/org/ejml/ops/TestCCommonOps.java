@@ -258,7 +258,7 @@ public class TestCCommonOps {
         Complex64F expected = new Complex64F();
         for (int i = 0; i < mat.numRows; i++) {
             for (int j = 0; j < mat.numCols; j++) {
-                System.out.println("i "+i+" j "+j);
+//                System.out.println("i "+i+" j "+j);
                 orig.get(i,j,value);
 
                 ComplexMath64F.multiply(scale,value,expected);
@@ -288,9 +288,10 @@ public class TestCCommonOps {
 
             boolean add = name.contains("Add");
             boolean hasAlpha = double.class == params[0];
+            boolean transA = name.contains("TransA");
 
             try {
-                TestCMatrixMatrixMult.check(method, add, hasAlpha);
+                TestCMatrixMatrixMult.check(method, add, hasAlpha, transA);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -299,7 +300,7 @@ public class TestCCommonOps {
             numChecked++;
         }
 
-        assertEquals(4,numChecked);
+        assertEquals(6,numChecked);
     }
 
     @Test
@@ -310,7 +311,7 @@ public class TestCCommonOps {
                 for (int k = 1; k < 10; k++) {
                     CDenseMatrix64F B = CRandomMatrices.createRandom(j, k, -1, 1, rand);
                     CDenseMatrix64F found = CRandomMatrices.createRandom(i, k, -1, 1, rand);
-                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B);
+                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B, false);
 
                     CMatrixMatrixMult.mult_reorder(A, B, found);
 

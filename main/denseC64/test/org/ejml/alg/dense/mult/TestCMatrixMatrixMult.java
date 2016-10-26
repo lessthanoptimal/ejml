@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -57,9 +57,11 @@ public class TestCMatrixMatrixMult {
 
             boolean add = name.contains("Add");
             boolean hasAlpha = double.class == params[0];
+            boolean transA = name.contains("TransA");
 
             try {
-                check(method,add,hasAlpha);
+//                System.out.println("add "+add+" alpha "+hasAlpha+" transA "+transA+"  "+name);
+                check(method,add,hasAlpha,transA);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -68,10 +70,11 @@ public class TestCMatrixMatrixMult {
             numChecked++;
         }
 
-        assertEquals(8,numChecked);
+        assertEquals(16,numChecked);
     }
 
-    public static void check( Method method , boolean isAdd , boolean hasAlpha ) throws InvocationTargetException, IllegalAccessException {
+    public static void check( Method method , boolean isAdd , boolean hasAlpha,
+                              boolean transA ) throws InvocationTargetException, IllegalAccessException {
         Random rand = new Random(234);
 
         double realAlpha = 2.3;
@@ -80,11 +83,12 @@ public class TestCMatrixMatrixMult {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
                 for (int k = 1; k <= 4; k++) {
-                    CDenseMatrix64F A = CRandomMatrices.createRandom(i,j,-1,1,rand);
+                    CDenseMatrix64F A = transA ? CRandomMatrices.createRandom(j,i,-1,1,rand) :
+                            CRandomMatrices.createRandom(i,j,-1,1,rand);
                     CDenseMatrix64F B = CRandomMatrices.createRandom(j,k,-1,1,rand);
                     CDenseMatrix64F C = CRandomMatrices.createRandom(i,k,-1,1,rand);
 
-                    CDenseMatrix64F AB = multiply(A,B);
+                    CDenseMatrix64F AB = multiply(A,B,transA);
                     CDenseMatrix64F expected = new CDenseMatrix64F(i,k);
 
                     if( hasAlpha ) {
@@ -123,7 +127,13 @@ public class TestCMatrixMatrixMult {
         }
     }
 
-    public static CDenseMatrix64F multiply( CDenseMatrix64F A , CDenseMatrix64F B ) {
+    public static CDenseMatrix64F multiply( CDenseMatrix64F A , CDenseMatrix64F B, boolean transA ) {
+
+        if( transA ) {
+            CDenseMatrix64F A_h = new CDenseMatrix64F(A.numCols, A.numRows);
+            CCommonOps.transposeConjugate(A,A_h);
+            A = A_h;
+        }
         CDenseMatrix64F C = new CDenseMatrix64F(A.numRows,B.numCols);
 
         Complex64F a = new Complex64F();

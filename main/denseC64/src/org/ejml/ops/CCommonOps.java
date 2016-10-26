@@ -412,7 +412,52 @@ public class CCommonOps {
         }
     }
 
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransA( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
+            CMatrixMatrixMult.multTransA_reorder(a, b, c);
+        } else {
+            CMatrixMatrixMult.multTransA_small(a, b, c);
+        }
+    }
 
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = &alpha; * a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> = &alpha; &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param realAlpha Real component of scaling factor.
+     * @param imagAlpha Imaginary component of scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransA( double realAlpha , double imagAlpha, CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        // TODO add a matrix vectory multiply here
+        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
+            CMatrixMatrixMult.multTransA_reorder(realAlpha, imagAlpha, a, b, c);
+        } else {
+            CMatrixMatrixMult.multTransA_small(realAlpha, imagAlpha, a, b, c);
+        }
+    }
 
     /**
      * <p>Performs an "in-place" transpose.</p>
