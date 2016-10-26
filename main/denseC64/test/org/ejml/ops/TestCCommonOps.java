@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -245,6 +245,29 @@ public class TestCCommonOps {
         }
     }
 
+    @Test
+    public void scale() {
+        Complex64F scale = new Complex64F(2.5,0.4);
+
+        CDenseMatrix64F mat = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F orig = mat.copy();
+
+        CCommonOps.scale(scale.real, scale.imaginary, mat);
+
+        Complex64F value = new Complex64F();
+        Complex64F expected = new Complex64F();
+        for (int i = 0; i < mat.numRows; i++) {
+            for (int j = 0; j < mat.numCols; j++) {
+//                System.out.println("i "+i+" j "+j);
+                orig.get(i,j,value);
+
+                ComplexMath64F.multiply(scale,value,expected);
+                assertEquals(expected.real, mat.getReal(i,j), 1e-8);
+                assertEquals(expected.imaginary, mat.getImaginary(i,j), 1e-8);
+            }
+        }
+    }
+
     /**
      * Make sure the multiplication methods here have the same behavior as the ones in MatrixMatrixMult.
      */
@@ -265,9 +288,13 @@ public class TestCCommonOps {
 
             boolean add = name.contains("Add");
             boolean hasAlpha = double.class == params[0];
+            boolean transA = name.contains("TransA");
+            boolean transB = name.contains("TransB");
+            if( name.contains("TransAB") )
+                transA = transB = true;
 
             try {
-                TestCMatrixMatrixMult.check(method, add, hasAlpha);
+                TestCMatrixMatrixMult.check(method, add, hasAlpha, transA, transB);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -276,7 +303,7 @@ public class TestCCommonOps {
             numChecked++;
         }
 
-        assertEquals(4,numChecked);
+        assertEquals(16,numChecked);
     }
 
     @Test
@@ -287,7 +314,7 @@ public class TestCCommonOps {
                 for (int k = 1; k < 10; k++) {
                     CDenseMatrix64F B = CRandomMatrices.createRandom(j, k, -1, 1, rand);
                     CDenseMatrix64F found = CRandomMatrices.createRandom(i, k, -1, 1, rand);
-                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B);
+                    CDenseMatrix64F expected = TestCMatrixMatrixMult.multiply(A, B, false, false);
 
                     CMatrixMatrixMult.mult_reorder(A, B, found);
 

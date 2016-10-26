@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,7 +33,35 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestCSpecializedOps {
 
-    Random rand = new Random(234);
+    private Random rand = new Random(234);
+
+
+    @Test
+    public void createReflector() {
+        CDenseMatrix64F u = CRandomMatrices.createRandom(4,1,rand);
+
+        CDenseMatrix64F Q = CSpecializedOps.createReflector(u);
+
+        assertTrue(CMatrixFeatures.isHermitian(Q,1e-8));
+
+        CDenseMatrix64F w = new CDenseMatrix64F(4,1);
+
+        CCommonOps.mult(Q,u,w);
+
+        assertTrue(CMatrixFeatures.isNegative(u,w,1e-8));
+    }
+
+    @Test
+    public void createReflector_gamma() {
+        CDenseMatrix64F u = CRandomMatrices.createRandom(4,1,rand);
+        double gamma = 2.0/Math.pow(CNormOps.normF(u),2.0);
+        CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gamma);
+
+        CDenseMatrix64F w = new CDenseMatrix64F(4,1);
+        CCommonOps.mult(Q,u,w);
+
+        assertTrue(CMatrixFeatures.isNegative(u,w,1e-8));
+    }
 
     @Test
     public void pivotMatrix() {
@@ -52,10 +80,10 @@ public class TestCSpecializedOps {
             int index = pivots[i];
             for( int j = 0; j < 4; j++ ) {
                 double real = A.getReal(index,j);
-                double img = A.getImaginary(index, j);
+                double imag = A.getImaginary(index, j);
 
                 assertEquals(real,B.getReal(i, j),1e-8);
-                assertEquals(img,B.getImaginary(i, j),1e-8);
+                assertEquals(imag,B.getImaginary(i, j),1e-8);
             }
         }
 

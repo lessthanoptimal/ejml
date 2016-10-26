@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,6 +26,53 @@ import org.ejml.data.Complex64F;
  * @author Peter Abeles
  */
 public class CSpecializedOps {
+
+    /**
+     * <p>
+     * Creates a reflector from the provided vector.<br>
+     * <br>
+     * Q = I - &gamma; u u<sup>T</sup><br>
+     * &gamma; = 2/||u||<sup>2</sup>
+     * </p>
+     *
+     * @param u A vector. Not modified.
+     * @return An orthogonal reflector.
+     */
+    public static CDenseMatrix64F createReflector(CDenseMatrix64F u ) {
+        if( !CMatrixFeatures.isVector(u))
+            throw new IllegalArgumentException("u must be a vector");
+
+        double norm = CNormOps.normF(u);
+        double gamma = -2.0/(norm*norm);
+
+        CDenseMatrix64F Q = CCommonOps.identity(u.getNumElements());
+
+        CCommonOps.multAddTransB(gamma,0,u,u,Q);
+
+        return Q;
+    }
+
+    /**
+     * <p>
+     * Creates a reflector from the provided vector and gamma.<br>
+     * <br>
+     * Q = I - &gamma; u u<sup>T</sup><br>
+     * </p>
+     *
+     * @param u A vector.  Not modified.
+     * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
+     * @return An orthogonal reflector.
+     */
+    public static CDenseMatrix64F createReflector( CDenseMatrix64F u , double gamma) {
+        if( !CMatrixFeatures.isVector(u))
+            throw new IllegalArgumentException("u must be a vector");
+
+        CDenseMatrix64F Q = CCommonOps.identity(u.getNumElements());
+        CCommonOps.multAddTransB(-gamma,0,u,u,Q);
+
+        return Q;
+    }
+
     /**
      * <p>
      * Creates a pivot matrix that exchanges the rows in a matrix:

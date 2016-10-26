@@ -23,12 +23,14 @@ import org.ejml.data.CDenseMatrix64F;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CSpecializedOps;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.ejml.alg.dense.decompose.CheckDecompositionInterface_CD64.safeDecomposition;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Ignore
@@ -137,11 +139,12 @@ public class TestHessenbergSimilarDecomposition_CD64 {
             u.zero();
             u.data[i+1] = 1;
             for( int j = i+2; j < N; j++ ) {
-//                u.data[j] = QH.get(j,i); TODO uncomment
+                u.data[j*2]   = QH.getReal(j,i);
+                u.data[j*2+1] = QH.getImaginary(j,i);
             }
 
-//            CDenseMatrix64F Q = SpecializedOps.createReflector(u,gammas[i]); TODO uncomment
-//            CCommonOps.mult(Q,A,B); TODO uncomment
+            CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gammas[i]);
+            CCommonOps.mult(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
 //            System.out.println("----- Q ------");
@@ -149,14 +152,15 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //            System.out.println("----- B ------");
 //            UtilEjml.print(B);
 
-            // TODO uncomment below
-//            for( int j = 0; j < i+2; j++ ) {
-//                assertTrue(Math.abs(B.get(j,i))>UtilEjml.TOLERANCE);
-//            }
-//            for( int j = i+2; j < N; j++ ) {
-//                assertEquals(0,B.get(j,i),UtilEjml.TOLERANCE);
-//            }
-//            CCommonOps.mult(B,Q,A); TODO uncomment
+            for( int j = 0; j < i+2; j++ ) {
+                assertTrue(Math.abs(B.getReal(j,i))>UtilEjml.TOLERANCE);
+                assertTrue(Math.abs(B.getImaginary(j,i))>UtilEjml.TOLERANCE);
+            }
+            for( int j = i+2; j < N; j++ ) {
+                assertEquals(0,B.getReal(j,i),UtilEjml.TOLERANCE);
+                assertEquals(0,B.getImaginary(j,i),UtilEjml.TOLERANCE);
+            }
+            CCommonOps.mult(B,Q,A);
 
 //            System.out.println("-------------------");
 //            UtilEjml.print(A);
@@ -182,7 +186,6 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
         CDenseMatrix64F u = new CDenseMatrix64F(N,1);
 
-
         CDenseMatrix64F Q = CCommonOps.identity(N);
         CDenseMatrix64F temp = new CDenseMatrix64F(N,N);
 
@@ -190,17 +193,18 @@ public class TestHessenbergSimilarDecomposition_CD64 {
             u.zero();
             u.data[i+1] = 1;
             for( int j = i+2; j < N; j++ ) {
-//                u.data[j] = QH.get(j,i); TODO uncomment
+                u.data[j*2]   = QH.getReal(j,i);
+                u.data[j*2+1] = QH.getImaginary(j,i);
             }
 
-//            CDenseMatrix64F Qi = SpecializedOps.createReflector(u,gammas[i]); TODO uncomment
+            CDenseMatrix64F Qi = CSpecializedOps.createReflector(u,gammas[i]);
 
-//            CCommonOps.mult(Qi,Q,temp); TODO uncomment
+            CCommonOps.mult(Qi,Q,temp);
             Q.set(temp);
         }
         CDenseMatrix64F expectedH = new CDenseMatrix64F(N,N);
 
-//        CCommonOps.multTransA(Q,A,temp); TODO uncomment
+        CCommonOps.multTransA(Q,A,temp);
         CCommonOps.mult(temp,Q,expectedH);
 
 //        UtilEjml.print(expectedH);
@@ -210,7 +214,5 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //        UtilEjml.print(foundH);
 
         assertTrue(CMatrixFeatures.isIdentical(expectedH,foundH,UtilEjml.TOLERANCE));
-
-        System.out.println();
     }
 }
