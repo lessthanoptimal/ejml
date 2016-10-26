@@ -5,9 +5,12 @@ Date format: year/month/day
 ----- Version 0.30
 
 - Thanks Peter Fodar for fixing misleading javadoc
-- Fixed bug in computation of eigenvectors where if it was following the script and the first eigenvalue was complex
-  it would get messed up
+- Fixed bug in computation of eigenvectors where the first eigenvalue was complex it would get messed up
   *  Thanks user343 for reporting the bug!
+- Complex matrix multiplication
+  * added multTransA variants
+  * added multTransB variants
+  * added multTransAB variants
 
 TODO look at sparse matrix contribution
 TODO equations support for boolean matrices and inequalities
