@@ -23,6 +23,7 @@ import org.ejml.data.CDenseMatrix64F;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -30,6 +31,7 @@ import java.util.Random;
 import static org.ejml.alg.dense.decompose.CheckDecompositionInterface_CD64.safeDecomposition;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class TestHessenbergSimilarDecomposition_CD64 {
 
     Random rand = new Random(5745784);
