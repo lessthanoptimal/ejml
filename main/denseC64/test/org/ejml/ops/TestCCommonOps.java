@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -241,6 +241,29 @@ public class TestCCommonOps {
 
                 assertEquals(expected.real,found.real,1e-8);
                 assertEquals(expected.imaginary,found.imaginary,1e-8);
+            }
+        }
+    }
+
+    @Test
+    public void scale() {
+        Complex64F scale = new Complex64F(2.5,0.4);
+
+        CDenseMatrix64F mat = CRandomMatrices.createRandom(5,7,-1,1,rand);
+        CDenseMatrix64F orig = mat.copy();
+
+        CCommonOps.scale(scale.real, scale.imaginary, mat);
+
+        Complex64F value = new Complex64F();
+        Complex64F expected = new Complex64F();
+        for (int i = 0; i < mat.numRows; i++) {
+            for (int j = 0; j < mat.numCols; j++) {
+                System.out.println("i "+i+" j "+j);
+                orig.get(i,j,value);
+
+                ComplexMath64F.multiply(scale,value,expected);
+                assertEquals(expected.real, mat.getReal(i,j), 1e-8);
+                assertEquals(expected.imaginary, mat.getImaginary(i,j), 1e-8);
             }
         }
     }

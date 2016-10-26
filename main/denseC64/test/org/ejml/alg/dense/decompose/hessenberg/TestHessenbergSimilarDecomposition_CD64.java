@@ -23,6 +23,7 @@ import org.ejml.data.CDenseMatrix64F;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CSpecializedOps;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -140,8 +141,8 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //                u.data[j] = QH.get(j,i); TODO uncomment
             }
 
-//            CDenseMatrix64F Q = SpecializedOps.createReflector(u,gammas[i]); TODO uncomment
-//            CCommonOps.mult(Q,A,B); TODO uncomment
+            CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gammas[i]);
+            CCommonOps.mult(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
 //            System.out.println("----- Q ------");
@@ -193,9 +194,9 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //                u.data[j] = QH.get(j,i); TODO uncomment
             }
 
-//            CDenseMatrix64F Qi = SpecializedOps.createReflector(u,gammas[i]); TODO uncomment
+            CDenseMatrix64F Qi = CSpecializedOps.createReflector(u,gammas[i]);
 
-//            CCommonOps.mult(Qi,Q,temp); TODO uncomment
+            CCommonOps.mult(Qi,Q,temp);
             Q.set(temp);
         }
         CDenseMatrix64F expectedH = new CDenseMatrix64F(N,N);

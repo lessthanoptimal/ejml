@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -295,6 +295,32 @@ public class CCommonOps {
 
         for( int i = 0; i < length; i++ ) {
             c.data[i] = a.data[i]-b.data[i];
+        }
+    }
+
+    /**
+     * <p>
+     * Performs an in-place element by element scalar multiplication.<br>
+     * <br>
+     * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param a The matrix that is to be scaled.  Modified.
+     * @param alphaReal real component of scale factor
+     * @param alphaImag imaginary component of scale factor
+     */
+    public static void scale( double alphaReal, double alphaImag , CD1Matrix64F a )
+    {
+        // on very small matrices (2 by 2) the call to getNumElements() can slow it down
+        // slightly compared to other libraries since it involves an extra multiplication.
+        final int size = a.getNumElements()*2;
+
+        for( int i = 0; i < size; i += 2 ) {
+            double real = a.data[i];
+            double imag = a.data[i+1];
+
+            a.data[i] = real*alphaReal - imag*alphaImag;
+            a.data[i+1] = real*alphaImag + imag*alphaReal;
         }
     }
 

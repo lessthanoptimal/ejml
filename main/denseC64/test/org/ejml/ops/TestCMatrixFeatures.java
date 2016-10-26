@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,7 +32,37 @@ import static org.junit.Assert.*;
  */
 public class TestCMatrixFeatures {
 
-    Random rand = new Random(234);
+    private Random rand = new Random(234);
+
+    @Test
+    public void isVector() {
+        CDenseMatrix64F a = new CDenseMatrix64F(4,4);
+
+        assertFalse(CMatrixFeatures.isVector(a));
+
+        a.reshape(3, 1);
+        assertTrue(CMatrixFeatures.isVector(a));
+
+        a.reshape(1, 3);
+        assertTrue(CMatrixFeatures.isVector(a));
+    }
+
+    @Test
+    public void isNegative() {
+        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,rand);
+        CDenseMatrix64F b = a.copy();
+        CCommonOps.scale(-1,0,b);
+
+        // test the positive case first
+        assertTrue(CMatrixFeatures.isNegative(a,b,1e-8));
+
+        // now the negative case
+        b.set(2,2,10,0);
+        assertFalse(CMatrixFeatures.isNegative(a,b,1e-8));
+
+        b.set(2,2,Double.NaN,0);
+        assertFalse(CMatrixFeatures.isNegative(a,b,1e-8));
+    }
 
     @Test
     public void hasUncountable() {

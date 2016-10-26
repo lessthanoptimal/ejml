@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,10 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
 import org.ejml.alg.dense.mult.CVectorVectorMult;
-import org.ejml.data.CD1Matrix64F;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
-import org.ejml.data.ComplexMatrix64F;
+import org.ejml.data.*;
 
 /**
  * <p>
@@ -33,6 +30,43 @@ import org.ejml.data.ComplexMatrix64F;
  * @author Peter Abeles
  */
 public class CMatrixFeatures {
+
+    /**
+     * Checks to see if the matrix is a vector or not.
+     *
+     * @param mat A matrix. Not modified.
+     *
+     * @return True if it is a vector and false if it is not.
+     */
+    public static boolean isVector( Matrix mat ) {
+        return (mat.getNumCols() == 1 || mat.getNumRows() == 1);
+    }
+
+    /**
+     * <p>
+     * Checks to see if the two matrices are the negative of each other:<br>
+     * <br>
+     * a<sub>ij</sub> = -b<sub>ij</sub>
+     * </p>
+     *
+     * @param a First matrix.  Not modified.
+     * @param b Second matrix.  Not modified.
+     * @param tol Numerical tolerance.
+     * @return True if they are the negative of each other within tolerance.
+     */
+    public static boolean isNegative(CD1Matrix64F a, CD1Matrix64F b, double tol) {
+        if( a.numRows != b.numRows || a.numCols != b.numCols )
+            throw new IllegalArgumentException("Matrix dimensions must match");
+
+        int length = a.getNumElements()*2;
+
+        for( int i = 0; i < length; i++ ) {
+            if( !(Math.abs(a.data[i]+b.data[i]) <= tol) )
+                return false;
+        }
+
+        return true;
+    }
 
     /**
      * Checks to see if any element in the matrix is NaN.
