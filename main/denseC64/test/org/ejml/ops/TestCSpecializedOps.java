@@ -80,10 +80,10 @@ public class TestCSpecializedOps {
             int index = pivots[i];
             for( int j = 0; j < 4; j++ ) {
                 double real = A.getReal(index,j);
-                double img = A.getImaginary(index, j);
+                double imag = A.getImaginary(index, j);
 
                 assertEquals(real,B.getReal(i, j),1e-8);
-                assertEquals(img,B.getImaginary(i, j),1e-8);
+                assertEquals(imag,B.getImaginary(i, j),1e-8);
             }
         }
 

@@ -47,11 +47,7 @@ public class CSpecializedOps {
 
         CDenseMatrix64F Q = CCommonOps.identity(u.getNumElements());
 
-        CDenseMatrix64F u_H = new CDenseMatrix64F(u.numCols,u.numRows);
-        CDenseMatrix64F uu = new CDenseMatrix64F(u.numRows, u.numRows);
-        CCommonOps.transposeConjugate(u,u_H);
-        CCommonOps.mult(gamma,0,u,u_H,uu);
-        CCommonOps.add(Q,uu,Q);
+        CCommonOps.multAddTransB(gamma,0,u,u,Q);
 
         return Q;
     }
@@ -72,11 +68,7 @@ public class CSpecializedOps {
             throw new IllegalArgumentException("u must be a vector");
 
         CDenseMatrix64F Q = CCommonOps.identity(u.getNumElements());
-        CDenseMatrix64F u_H = new CDenseMatrix64F(u.numCols,u.numRows);
-        CDenseMatrix64F uu = new CDenseMatrix64F(u.numRows, u.numRows);
-        CCommonOps.transposeConjugate(u,u_H);
-        CCommonOps.mult(-gamma,0,u,u_H,uu);
-        CCommonOps.add(Q,uu,Q);
+        CCommonOps.multAddTransB(-gamma,0,u,u,Q);
 
         return Q;
     }
