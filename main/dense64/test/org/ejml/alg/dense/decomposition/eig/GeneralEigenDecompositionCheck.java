@@ -46,22 +46,22 @@ public abstract class GeneralEigenDecompositionCheck {
     public void allTests() {
         computeVectors = true;
 
-//        checkSizeZero();
-//        checkRandom();
-//        checkKnownReal();
-//        checkKnownComplex();
-//        checkCompanionMatrix();
-//        checkRandomSymmetric();
-//        checkExceptional();
-//        checkIdentity();
-//        checkAllZeros();
-//        rand = new Random(2934);
-//        checkWithSomeRepeatedValuesSymm();
-//        checkWithSingularSymm();
-//        checkSmallValue(false);
-//        checkSmallValue(true);
-//        checkLargeValue(false);
-//        checkLargeValue(true);
+        checkSizeZero();
+        checkRandom();
+        checkKnownReal();
+        checkKnownComplex();
+        checkCompanionMatrix();
+        checkRandomSymmetric();
+        checkExceptional();
+        checkIdentity();
+        checkAllZeros();
+        rand = new Random(2934);
+        checkWithSomeRepeatedValuesSymm();
+        checkWithSingularSymm();
+        checkSmallValue(false);
+        checkSmallValue(true);
+        checkLargeValue(false);
+        checkLargeValue(true);
 
         checkFailure0();
     }

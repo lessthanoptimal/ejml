@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -273,7 +273,7 @@ public class WatchedDoubleStepQREigenvector {
                 // if no splits are found perform an implicit step
                 if( a.isReal() ) {
                     implicit.performImplicitSingleStep(x1,x2, a.getReal());
-                } else if( x2 < N-2 ) {
+                } else if( x2-x1 >= 2 ) {
                     implicit.performImplicitDoubleStep(x1,x2, a.real,a.imaginary);
                 } else {
                     onscript = false;
