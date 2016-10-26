@@ -5,6 +5,10 @@ Date format: year/month/day
 ----- Version 0.30
 
 - Thanks Peter Fodar for fixing misleading javadoc
+- Complex matrix multiplication
+  * added multTransA variants
+  * added multTransB variants
+  * added multTransAB variants
 
 TODO look at sparse matrix contribution
 TODO equations support for boolean matrices and inequalities

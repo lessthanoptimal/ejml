@@ -105,7 +105,7 @@ public class CMatrixMatrixMult {
         }
 
         int aIndexStart = 0;
-        int cIndex = 0;
+        int indexC = 0;
 
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
@@ -131,8 +131,8 @@ public class CMatrixMatrixMult {
                     indexB += strideB;
                 }
 
-                c.data[cIndex++] = realTotal;
-                c.data[cIndex++] = imgTotal;
+                c.data[indexC++] = realTotal;
+                c.data[indexC++] = imgTotal;
             }
             aIndexStart += strideA;
         }
@@ -197,7 +197,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
 
         for( int i = 0; i < a.numCols; i++ ) {
             for( int j = 0; j < b.numCols; j++ ) {
@@ -219,8 +219,8 @@ public class CMatrixMatrixMult {
                     indexA += a.numCols*2;
                 }
 
-                c.data[cIndex++] = realTotal;
-                c.data[cIndex++] = imagTotal;
+                c.data[indexC++] = realTotal;
+                c.data[indexC++] = imagTotal;
             }
         }
     }
@@ -235,7 +235,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
         int aIndexStart = 0;
 
         for( int xA = 0; xA < a.numRows; xA++ ) {
@@ -256,10 +256,92 @@ public class CMatrixMatrixMult {
                     imagTotal += imagA*realB - realA*imagB;
                 }
 
-                c.data[cIndex++] = realTotal;
-                c.data[cIndex++] = imagTotal;
+                c.data[indexC++] = realTotal;
+                c.data[indexC++] = imagTotal;
             }
             aIndexStart += a.numCols*2;
+        }
+    }
+
+    public static void multTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int indexC = 0;
+
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexB = 0;
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexA = i*2;
+                int end = indexB + b.numCols*2;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( ;indexB<end; ) {
+                    double realA = a.data[indexA];
+                    double imagA = -a.data[indexA+1];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                    indexA += a.numCols*2;
+                }
+
+                c.data[indexC++] = realTotal;
+                c.data[indexC++] = imagTotal;
+            }
+        }
+    }
+
+    public static void multTransAB_aux( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        if( aux == null ) aux = new double[ a.numRows*2 ];
+
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CCommonOps.fill(c,0,0);
+            return;
+        }
+        int indexC = 0;
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexA = i*2;
+            for( int k = 0; k < b.numCols; k++ ) {
+                aux[k*2]   = a.data[indexA];
+                aux[k*2+1] = a.data[indexA+1];
+                indexA += a.numCols*2;
+            }
+
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexAux = 0;
+                int indexB = j*b.numCols*2;
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( int k = 0; k < b.numCols; k++ ) {
+                    double realA = aux[indexAux++];
+                    double imagA = -aux[indexAux++];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                }
+                c.data[indexC++] = realTotal;
+                c.data[indexC++] = imagTotal;
+            }
         }
     }
 
@@ -335,7 +417,7 @@ public class CMatrixMatrixMult {
         }
 
         int aIndexStart = 0;
-        int cIndex = 0;
+        int indexC = 0;
 
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
@@ -361,8 +443,8 @@ public class CMatrixMatrixMult {
                     indexB += strideB;
                 }
 
-                c.data[cIndex++] += realTotal;
-                c.data[cIndex++] += imgTotal;
+                c.data[indexC++] += realTotal;
+                c.data[indexC++] += imgTotal;
             }
             aIndexStart += strideA;
         }
@@ -426,7 +508,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
 
         for( int i = 0; i < a.numCols; i++ ) {
             for( int j = 0; j < b.numCols; j++ ) {
@@ -448,8 +530,8 @@ public class CMatrixMatrixMult {
                     indexA += a.numCols*2;
                 }
 
-                c.data[cIndex++] += realTotal;
-                c.data[cIndex++] += imagTotal;
+                c.data[indexC++] += realTotal;
+                c.data[indexC++] += imagTotal;
             }
         }
     }
@@ -464,7 +546,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
         int aIndexStart = 0;
 
         for( int xA = 0; xA < a.numRows; xA++ ) {
@@ -485,10 +567,91 @@ public class CMatrixMatrixMult {
                     imagTotal += imagA*realB - realA*imagB;
                 }
 
-                c.data[cIndex++] += realTotal;
-                c.data[cIndex++] += imagTotal;
+                c.data[indexC++] += realTotal;
+                c.data[indexC++] += imagTotal;
             }
             aIndexStart += a.numCols*2;
+        }
+    }
+
+    public static void multAddTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int indexC = 0;
+
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexB = 0;
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexA = i*2;
+                int end = indexB + b.numCols*2;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( ;indexB<end; ) {
+                    double realA = a.data[indexA];
+                    double imagA = -a.data[indexA+1];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                    indexA += a.numCols*2;
+                }
+
+                c.data[indexC++] += realTotal;
+                c.data[indexC++] += imagTotal;
+            }
+        }
+    }
+
+    public static void multAddTransAB_aux( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        if( aux == null ) aux = new double[ a.numRows*2 ];
+
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
+        int indexC = 0;
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexA = i*2;
+            for( int k = 0; k < b.numCols; k++ ) {
+                aux[k*2]   = a.data[indexA];
+                aux[k*2+1] = a.data[indexA+1];
+                indexA += a.numCols*2;
+            }
+
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexAux = 0;
+                int indexB = j*b.numCols*2;
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( int k = 0; k < b.numCols; k++ ) {
+                    double realA = aux[indexAux++];
+                    double imagA = -aux[indexAux++];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                }
+                c.data[indexC++] += realTotal;
+                c.data[indexC++] += imagTotal;
+            }
         }
     }
 
@@ -569,7 +732,7 @@ public class CMatrixMatrixMult {
         }
 
         int aIndexStart = 0;
-        int cIndex = 0;
+        int indexC = 0;
 
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
@@ -595,8 +758,8 @@ public class CMatrixMatrixMult {
                     indexB += strideB;
                 }
 
-                c.data[cIndex++] = realAlpha*realTotal - imagAlpha*imgTotal;
-                c.data[cIndex++] = realAlpha*imgTotal + imagAlpha*realTotal;
+                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imgTotal;
+                c.data[indexC++] = realAlpha*imgTotal + imagAlpha*realTotal;
             }
             aIndexStart += strideA;
         }
@@ -666,7 +829,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
 
         for( int i = 0; i < a.numCols; i++ ) {
             for( int j = 0; j < b.numCols; j++ ) {
@@ -688,8 +851,8 @@ public class CMatrixMatrixMult {
                     indexA += a.numCols*2;
                 }
 
-                c.data[cIndex++] = realAlpha*realTotal - imagAlpha*imagTotal;
-                c.data[cIndex++] = realAlpha*imagTotal + imagAlpha*realTotal;
+                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
             }
         }
     }
@@ -704,7 +867,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
         int aIndexStart = 0;
 
         for( int xA = 0; xA < a.numRows; xA++ ) {
@@ -725,10 +888,92 @@ public class CMatrixMatrixMult {
                     imagTotal += imagA*realB - realA*imagB;
                 }
 
-                c.data[cIndex++] = realAlpha*realTotal - imagAlpha*imagTotal;
-                c.data[cIndex++] = realAlpha*imagTotal + imagAlpha*realTotal;
+                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
             }
             aIndexStart += a.numCols*2;
+        }
+    }
+
+    public static void multTransAB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int indexC = 0;
+
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexB = 0;
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexA = i*2;
+                int end = indexB + b.numCols*2;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( ;indexB<end; ) {
+                    double realA = a.data[indexA];
+                    double imagA = -a.data[indexA+1];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                    indexA += a.numCols*2;
+                }
+
+                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
+            }
+        }
+    }
+
+    public static void multTransAB_aux( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        if( aux == null ) aux = new double[ a.numRows*2 ];
+
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            CCommonOps.fill(c,0,0);
+            return;
+        }
+        int indexC = 0;
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexA = i*2;
+            for( int k = 0; k < b.numCols; k++ ) {
+                aux[k*2]   = a.data[indexA];
+                aux[k*2+1] = a.data[indexA+1];
+                indexA += a.numCols*2;
+            }
+
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexAux = 0;
+                int indexB = j*b.numCols*2;
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( int k = 0; k < b.numCols; k++ ) {
+                    double realA = aux[indexAux++];
+                    double imagA = -aux[indexAux++];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                }
+                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
+            }
         }
     }
 
@@ -808,7 +1053,7 @@ public class CMatrixMatrixMult {
         }
 
         int aIndexStart = 0;
-        int cIndex = 0;
+        int indexC = 0;
 
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
@@ -834,8 +1079,8 @@ public class CMatrixMatrixMult {
                     indexB += strideB;
                 }
 
-                c.data[cIndex++] += realAlpha*realTotal - imagAlpha*imgTotal;
-                c.data[cIndex++] += realAlpha*imgTotal + imagAlpha*realTotal;
+                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imgTotal;
+                c.data[indexC++] += realAlpha*imgTotal + imagAlpha*realTotal;
             }
             aIndexStart += strideA;
         }
@@ -904,7 +1149,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
 
         for( int i = 0; i < a.numCols; i++ ) {
             for( int j = 0; j < b.numCols; j++ ) {
@@ -926,8 +1171,8 @@ public class CMatrixMatrixMult {
                     indexA += a.numCols*2;
                 }
 
-                c.data[cIndex++] += realAlpha*realTotal - imagAlpha*imagTotal;
-                c.data[cIndex++] += realAlpha*imagTotal + imagAlpha*realTotal;
+                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
         }
     }
@@ -942,7 +1187,7 @@ public class CMatrixMatrixMult {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int cIndex = 0;
+        int indexC = 0;
         int aIndexStart = 0;
 
         for( int xA = 0; xA < a.numRows; xA++ ) {
@@ -963,10 +1208,91 @@ public class CMatrixMatrixMult {
                     imagTotal += imagA*realB - realA*imagB;
                 }
 
-                c.data[cIndex++] += realAlpha*realTotal - imagAlpha*imagTotal;
-                c.data[cIndex++] += realAlpha*imagTotal + imagAlpha*realTotal;
+                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
             aIndexStart += a.numCols*2;
+        }
+    }
+
+    public static void multAddTransAB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        int indexC = 0;
+
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexB = 0;
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexA = i*2;
+                int end = indexB + b.numCols*2;
+
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( ;indexB<end; ) {
+                    double realA = a.data[indexA];
+                    double imagA = -a.data[indexA+1];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                    indexA += a.numCols*2;
+                }
+
+                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
+            }
+        }
+    }
+
+    public static void multAddTransAB_aux( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numRows != b.numCols ) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
+        }
+
+        if( aux == null ) aux = new double[ a.numRows*2 ];
+
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            return;
+        }
+        int indexC = 0;
+        for( int i = 0; i < a.numCols; i++ ) {
+            int indexA = i*2;
+            for( int k = 0; k < b.numCols; k++ ) {
+                aux[k*2]   = a.data[indexA];
+                aux[k*2+1] = a.data[indexA+1];
+                indexA += a.numCols*2;
+            }
+
+            for( int j = 0; j < b.numRows; j++ ) {
+                int indexAux = 0;
+                int indexB = j*b.numCols*2;
+                double realTotal = 0;
+                double imagTotal = 0;
+
+                for( int k = 0; k < b.numCols; k++ ) {
+                    double realA = aux[indexAux++];
+                    double imagA = -aux[indexAux++];
+                    double realB = b.data[indexB++];
+                    double imagB = -b.data[indexB++];
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
+                }
+                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
+            }
         }
     }
 

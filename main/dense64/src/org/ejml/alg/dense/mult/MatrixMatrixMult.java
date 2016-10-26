@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -52,11 +52,12 @@ import org.ejml.ops.MatrixDimensionException;
  * 
  * <p>
  * <center>******** IMPORTANT **********</center>
- * This class was auto generated using {@link org.ejml.alg.dense.mult.GeneratorMatrixMatrixMult}
+ * This class was auto generated using org.ejml.alg.dense.mult.GeneratorMatrixMatrixMult
  * </p>
  * 
  * @author Peter Abeles
  */
+@SuppressWarnings("Duplicates")
 public class MatrixMatrixMult {
     /**
      * @see org.ejml.ops.CommonOps#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)

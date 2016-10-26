@@ -69,6 +69,10 @@ public class GeneratorCMatrixMatrixMult {
                 stream.print("\n");
                 printMultTransB(alpha,add);
                 stream.print("\n");
+                printMultTransAB(alpha,add);
+                stream.print("\n");
+                printMultTransAB_aux(alpha,add);
+                stream.print("\n");
             }
         }
         stream.print("}\n");
@@ -152,17 +156,17 @@ public class GeneratorCMatrixMatrixMult {
         String assignment = add ? "+=" : "=";
 
         if( alpha ) {
-            valLine = "                c.data[cIndex++] "+assignment+" realAlpha*realTotal - imagAlpha*imgTotal;\n" +
-                      "                c.data[cIndex++] "+assignment+" realAlpha*imgTotal + imagAlpha*realTotal;\n";
+            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imgTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" realAlpha*imgTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[cIndex++] "+assignment+" realTotal;\n" +
-                      "                c.data[cIndex++] "+assignment+" imgTotal;\n";
+            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" imgTotal;\n";
         }
 
         String foo =
                 header + makeBoundsCheck(false,false, null)+
                         "        int aIndexStart = 0;\n" +
-                        "        int cIndex = 0;\n" +
+                        "        int indexC = 0;\n" +
                         "\n" +
                         "        int strideA = a.getRowStride();\n" +
                         "        int strideB = b.getRowStride();\n" +
@@ -269,16 +273,16 @@ public class GeneratorCMatrixMatrixMult {
         String assignment = add ? "+=" : "=";
 
         if( alpha ) {
-            valLine = "                c.data[cIndex++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[cIndex++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[cIndex++] "+assignment+" realTotal;\n" +
-                      "                c.data[cIndex++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
         }
 
         String foo =
                 header + makeBoundsCheck(true,false, null)+
-                        "        int cIndex = 0;\n" +
+                        "        int indexC = 0;\n" +
                         "\n" +
                         "        for( int i = 0; i < a.numCols; i++ ) {\n" +
                         "            for( int j = 0; j < b.numCols; j++ ) {\n" +
@@ -316,17 +320,16 @@ public class GeneratorCMatrixMatrixMult {
         String assignment = add ? "+=" : "=";
 
         if( alpha ) {
-            valLine = "                c.data[cIndex++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[cIndex++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[cIndex++] "+assignment+" realTotal;\n" +
-                      "                c.data[cIndex++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
         }
-
 
         String foo =
                 header + makeBoundsCheck(false,true, null)+
-                        "        int cIndex = 0;\n" +
+                        "        int indexC = 0;\n" +
                         "        int aIndexStart = 0;\n" +
                         "\n" +
                         "        for( int xA = 0; xA < a.numRows; xA++ ) {\n" +
@@ -355,6 +358,97 @@ public class GeneratorCMatrixMatrixMult {
         stream.print(foo);
     }
 
+    public void printMultTransAB( boolean alpha , boolean add ) {
+        String header,valLine;
+
+        header = makeHeader("mult",null,add,alpha, false, true,true);
+
+        String assignment = add ? "+=" : "=";
+
+        if( alpha ) {
+            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        } else {
+            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+        }
+
+        String foo =
+                header + makeBoundsCheck(true,true, null)+
+                        "        int indexC = 0;\n" +
+                        "\n" +
+                        "        for( int i = 0; i < a.numCols; i++ ) {\n" +
+                        "            int indexB = 0;\n"+
+                        "            for( int j = 0; j < b.numRows; j++ ) {\n" +
+                        "                int indexA = i*2;\n" +
+                        "                int end = indexB + b.numCols*2;\n" +
+                        "\n" +
+                        "                double realTotal = 0;\n" +
+                        "                double imagTotal = 0;\n" +
+                        "\n" +
+                        "                for( ;indexB<end; ) {\n" +
+                        "                    double realA = a.data[indexA];\n" +
+                        "                    double imagA = -a.data[indexA+1];\n" +
+                        "                    double realB = b.data[indexB++];\n" +
+                        "                    double imagB = -b.data[indexB++];\n" +
+                        "                    realTotal += realA*realB - imagA*imagB;\n" +
+                        "                    imagTotal += realA*imagB + imagA*realB;\n" +
+                        "                    indexA += a.numCols*2;\n" +
+                        "                }\n" +
+                        "\n" +
+                        valLine+
+                        "            }\n" +
+                        "        }\n"+
+                        "    }\n";
+        stream.print(foo);
+    }
+
+    public void printMultTransAB_aux( boolean alpha , boolean add ) {
+        String header,valLine;
+
+        header = makeHeader("mult","aux",add,alpha, true, true,true);
+
+        String assignment = add ? "+=" : "=";
+
+        if( alpha ) {
+            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        } else {
+            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
+                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+        }
+
+        String foo =
+                header + makeBoundsCheck(true,true, "a.numRows")+handleZeros(add)+
+                        "        int indexC = 0;\n" +
+                        "        for( int i = 0; i < a.numCols; i++ ) {\n" +
+                        "            int indexA = i*2;\n" +
+                        "            for( int k = 0; k < b.numCols; k++ ) {\n" +
+                        "                aux[k*2]   = a.data[indexA];\n" +
+                        "                aux[k*2+1] = a.data[indexA+1];\n" +
+                        "                indexA += a.numCols*2;\n" +
+                        "            }\n" +
+                        "\n" +
+                        "            for( int j = 0; j < b.numRows; j++ ) {\n" +
+                        "                int indexAux = 0;\n" +
+                        "                int indexB = j*b.numCols*2;\n" +
+                        "                double realTotal = 0;\n" +
+                        "                double imagTotal = 0;\n" +
+                        "\n" +
+                        "                for( int k = 0; k < b.numCols; k++ ) {\n" +
+                        "                    double realA = aux[indexAux++];\n" +
+                        "                    double imagA = -aux[indexAux++];\n" +
+                        "                    double realB = b.data[indexB++];\n" +
+                        "                    double imagB = -b.data[indexB++];\n" +
+                        "                    realTotal += realA*realB - imagA*imagB;\n" +
+                        "                    imagTotal += realA*imagB + imagA*realB;\n" +
+                        "                }\n" +
+                        valLine +
+                        "            }\n" +
+                        "        }\n"+
+                        "    }\n";
+        stream.print(foo);
+    }
 
     private String makeBoundsCheck(boolean tranA, boolean tranB, String auxLength)
     {
@@ -374,7 +468,7 @@ public class GeneratorCMatrixMatrixMult {
                         "\n";
 
         if( auxLength != null ) {
-            ret += "        if( aux == null ) aux = new double[ "+auxLength+" ];\n\n";
+            ret += "        if( aux == null ) aux = new double[ "+auxLength+"*2 ];\n\n";
         }
 
         return ret;

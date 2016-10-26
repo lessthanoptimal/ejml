@@ -290,6 +290,8 @@ public class TestCCommonOps {
             boolean hasAlpha = double.class == params[0];
             boolean transA = name.contains("TransA");
             boolean transB = name.contains("TransB");
+            if( name.contains("TransAB") )
+                transA = transB = true;
 
             try {
                 TestCMatrixMatrixMult.check(method, add, hasAlpha, transA, transB);
@@ -301,7 +303,7 @@ public class TestCCommonOps {
             numChecked++;
         }
 
-        assertEquals(12,numChecked);
+        assertEquals(16,numChecked);
     }
 
     @Test

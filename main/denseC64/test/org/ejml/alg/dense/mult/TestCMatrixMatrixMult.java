@@ -59,6 +59,8 @@ public class TestCMatrixMatrixMult {
             boolean hasAlpha = double.class == params[0];
             boolean transA = name.contains("TransA");
             boolean transB = name.contains("TransB");
+            if( name.contains("TransAB"))
+                transA = transB = true;
 
             try {
 //                System.out.println("add "+add+" alpha "+hasAlpha+" TA "+transA+" TB "+transB+"  "+name);
@@ -71,7 +73,7 @@ public class TestCMatrixMatrixMult {
             numChecked++;
         }
 
-        assertEquals(20,numChecked);
+        assertEquals(28,numChecked);
     }
 
     public static void check( Method method , boolean isAdd , boolean hasAlpha,
