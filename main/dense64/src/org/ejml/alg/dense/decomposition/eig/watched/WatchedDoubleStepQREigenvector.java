@@ -273,7 +273,7 @@ public class WatchedDoubleStepQREigenvector {
                 // if no splits are found perform an implicit step
                 if( a.isReal() ) {
                     implicit.performImplicitSingleStep(x1,x2, a.getReal());
-                } else if( x2-x1 >= 2 ) {
+                } else if( x2-x1 >= 1 && x1+2 < N ) {
                     implicit.performImplicitDoubleStep(x1,x2, a.real,a.imaginary);
                 } else {
                     onscript = false;
@@ -281,7 +281,7 @@ public class WatchedDoubleStepQREigenvector {
             }
         } else {
             // that didn't work so try a modified order
-            if( x2-x1 >= 1 && x2 < N-2 )
+            if( x2-x1 >= 1 && x1+2 < N )
                 implicit.implicitDoubleStep(x1,x2);
             else
                 implicit.performImplicitSingleStep(x1,x2,implicit.A.get(x2,x2));
