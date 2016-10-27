@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,9 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
+import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CCommonOps;
 
 
 /**
@@ -125,27 +125,10 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      */
     @Override
     public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean compact ) {
-        if( compact ) {
-            if( Q == null ) {
-                Q = CCommonOps.identity(numRows,minLength);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != minLength ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CCommonOps.setIdentity(Q);
-                }
-            }
-        } else {
-            if( Q == null ) {
-                Q = CCommonOps.identity(numRows);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != numRows ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CCommonOps.setIdentity(Q);
-                }
-            }
-        }
+        if( compact )
+            Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,minLength);
+        else
+            Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,numRows);
 
         for( int j = minLength-1; j >= 0; j-- ) {
             u[2*j]   = 1;
@@ -170,27 +153,10 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      */
     @Override
     public CDenseMatrix64F getR(CDenseMatrix64F R, boolean compact) {
-        if( R == null ) {
-            if( compact ) {
-                R = new CDenseMatrix64F(minLength,numCols);
-            } else
-                R = new CDenseMatrix64F(numRows,numCols);
-        } else {
-            if( compact ) {
-                if( R.numCols != numCols || R.numRows != minLength )
-                    throw new IllegalArgumentException("Unexpected dimensions");
-            } else {
-                if( R.numCols != numCols || R.numRows != numRows )
-                    throw new IllegalArgumentException("Unexpected dimensions");
-            }
-
-            for( int i = 0; i < R.numRows; i++ ) {
-                int min = Math.min(i,R.numCols);
-                for( int j = 0; j < min; j++ ) {
-                    R.set(i,j,0,0);
-                }
-            }
-        }
+        if( compact )
+            R = UtilDecompositons_CD64.checkZerosLT(R,minLength,numCols);
+        else
+            R = UtilDecompositons_CD64.checkZerosLT(R,numRows,numCols);
 
         for( int i = 0; i < minLength; i++ ) {
             for( int j = i; j < numCols; j++ ) {

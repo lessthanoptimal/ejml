@@ -231,4 +231,73 @@ public class TestCMatrixFeatures {
         assertEquals(2,a.getReal(0, 0),1e-8);
         assertEquals(2,a.getReal(1,1),1e-8);
     }
+
+    @Test
+    public void isUpperTriangle() {
+        // test matrices that are upper triangular to various degree hessenberg
+        for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
+            CDenseMatrix64F A = new CDenseMatrix64F(6,6);
+            for( int i = 0; i < A.numRows; i++ ) {
+                int s = i <= hessenberg ? 0 : i-hessenberg;
+
+                for( int j = s; j < A.numCols; j++ ) {
+                   A.set(i,j,2,2);
+                }
+            }
+
+            // test positive
+            for( int i = hessenberg; i < A.numRows; i++ ) {
+                assertTrue(CMatrixFeatures.isUpperTriangle(A,i,1e-8));
+            }
+
+            // test negative
+            for( int i = 0; i < hessenberg; i++ ) {
+                assertFalse(CMatrixFeatures.isUpperTriangle(A,i,1e-8));
+            }
+
+            // see if it handles NaN well
+            A.set(4,0,Double.NaN,Double.NaN);
+            assertFalse(CMatrixFeatures.isUpperTriangle(A,0,1e-8));
+        }
+    }
+
+    @Test
+    public void isLowerTriangle() {
+        // test matrices that are upper triangular to various degree hessenberg
+        for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
+            CDenseMatrix64F A = new CDenseMatrix64F(6,6);
+            for( int i = 0; i < A.numRows; i++ ) {
+                int s = i <= hessenberg ? 0 : i-hessenberg;
+
+                for( int j = s; j < A.numCols; j++ ) {
+                   A.set(i,j,2,2);
+                }
+            }
+            CCommonOps.transpose(A);
+
+            // test positive
+            for( int i = hessenberg; i < A.numRows; i++ ) {
+                assertTrue(CMatrixFeatures.isLowerTriangle(A,i,1e-8));
+            }
+
+            // test negative
+            for( int i = 0; i < hessenberg; i++ ) {
+                assertFalse(CMatrixFeatures.isLowerTriangle(A,i,1e-8));
+            }
+
+            // see if it handles NaN well
+            A.set(0,4,Double.NaN,Double.NaN);
+            assertFalse(CMatrixFeatures.isLowerTriangle(A,0,1e-8));
+        }
+    }
+
+
+    @Test
+    public void isZeros() {
+        CDenseMatrix64F a = new CDenseMatrix64F(4,4);
+        a.set(0, 0, 1, -1);
+
+        assertFalse(CMatrixFeatures.isZeros(a, 0.1));
+        assertTrue(CMatrixFeatures.isZeros(a, 2));
+    }
 }

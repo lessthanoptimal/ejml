@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -641,12 +641,35 @@ public class MatrixFeatures {
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
     public static boolean isUpperTriangle(DenseMatrix64F A , int hessenberg , double tol ) {
-        if( A.numRows != A.numCols )
-            return false;
-
         for( int i = hessenberg+1; i < A.numRows; i++ ) {
-            for( int j = 0; j < i-hessenberg; j++ ) {
-                if( !(Math.abs(A.get(i,j)) <= tol) ) {
+            int maxCol = Math.min(i-hessenberg, A.numCols);
+            for( int j = 0; j < maxCol; j++ ) {
+                if( !(Math.abs(A.unsafe_get(i,j)) <= tol) ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if a matrix is lower triangular or Hessenberg. A Hessenberg matrix of degree N
+     * has the following property:<br>
+     * <br>
+     * a<sub>ij</sub> &le; 0 for all i < j+N<br>
+     * <br>
+     * A triangular matrix is a Hessenberg matrix of degree 0.
+     * </p>
+     * @param A Matrix being tested.  Not modified.
+     * @param hessenberg The degree of being hessenberg.
+     * @param tol How close to zero the lower left elements need to be.
+     * @return If it is an upper triangular/hessenberg matrix or not.
+     */
+    public static boolean isLowerTriangle(DenseMatrix64F A , int hessenberg , double tol ) {
+        for( int i = 0; i < A.numRows-hessenberg-1; i++ ) {
+            for( int j = i+hessenberg+1; j < A.numCols; j++ ) {
+                if( !(Math.abs(A.unsafe_get(i,j)) <= tol) ) {
                     return false;
                 }
             }

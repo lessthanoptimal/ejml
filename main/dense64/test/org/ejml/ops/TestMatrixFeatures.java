@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -58,7 +58,6 @@ public class TestMatrixFeatures {
 
         assertFalse(MatrixFeatures.isZeros(a, 0.1));
         assertTrue(MatrixFeatures.isZeros(a, 2));
-
     }
 
     @Test
@@ -416,6 +415,37 @@ public class TestMatrixFeatures {
             assertFalse(MatrixFeatures.isUpperTriangle(A,0,1e-8));
         }
     }
+
+    @Test
+    public void isLowerTriangle() {
+        // test matrices that are upper triangular to various degree hessenberg
+        for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
+            DenseMatrix64F A = new DenseMatrix64F(6,6);
+            for( int i = 0; i < A.numRows; i++ ) {
+                int s = i <= hessenberg ? 0 : i-hessenberg;
+
+                for( int j = s; j < A.numCols; j++ ) {
+                   A.set(i,j,2);
+                }
+            }
+            CommonOps.transpose(A);
+
+            // test positive
+            for( int i = hessenberg; i < A.numRows; i++ ) {
+                assertTrue(MatrixFeatures.isLowerTriangle(A,i,1e-8));
+            }
+
+            // test negative
+            for( int i = 0; i < hessenberg; i++ ) {
+                assertFalse(MatrixFeatures.isLowerTriangle(A,i,1e-8));
+            }
+
+            // see if it handles NaN well
+            A.set(0,4,Double.NaN);
+            assertFalse(MatrixFeatures.isLowerTriangle(A,0,1e-8));
+        }
+    }
+
 
     @Test
     public void rank() {

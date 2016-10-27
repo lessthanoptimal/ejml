@@ -18,11 +18,11 @@
 
 package org.ejml.alg.dense.decompose.hessenberg;
 
+import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.ops.CCommonOps;
 
 import java.util.Arrays;
 
@@ -124,12 +124,7 @@ public class HessenbergSimilarDecomposition_CD64
      * @return The extracted H matrix.
      */
     public CDenseMatrix64F getH( CDenseMatrix64F H ) {
-        if( H == null ) {
-            H = new CDenseMatrix64F(N,N);
-        } else if( N != H.numRows || N != H.numCols )
-            throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
-        else
-            CCommonOps.fill(H,0,0);
+        H = UtilDecompositons_CD64.checkZeros(H,N,N);
 
         // copy the first row
         System.arraycopy(QH.data, 0, H.data, 0, N*2);
@@ -148,12 +143,7 @@ public class HessenbergSimilarDecomposition_CD64
      * @return The extracted Q matrix.
      */
     public CDenseMatrix64F getQ( CDenseMatrix64F Q ) {
-        if( Q == null ) {
-            Q = CCommonOps.identity(N);
-        } else if( N != Q.numRows || N != Q.numCols )
-            throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
-        else
-            CCommonOps.setIdentity(Q);
+        Q = UtilDecompositons_CD64.checkIdentity(Q,N,N);
 
         Arrays.fill(u,0,N*2,0);
         for( int j = N-2; j >= 0; j-- ) {

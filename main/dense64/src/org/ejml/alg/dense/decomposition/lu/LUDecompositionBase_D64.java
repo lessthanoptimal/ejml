@@ -89,7 +89,7 @@ public abstract class LUDecompositionBase_D64
     /**
      * Writes the lower triangular matrix into the specified matrix.
      *
-     * @param lower Where the lower triangular matrix is writen to.
+     * @param lower Where the lower triangular matrix is written to.
      */
     @Override
     public DenseMatrix64F getLower( DenseMatrix64F lower )
@@ -97,20 +97,20 @@ public abstract class LUDecompositionBase_D64
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
 
-        lower = UtilDecompositons_D64.checkZeros(lower,numRows,numCols);
+        lower = UtilDecompositons_D64.checkZerosUT(lower,numRows,numCols);
 
         for( int i = 0; i < numCols; i++ ) {
-            lower.set(i,i,1.0);
+            lower.unsafe_set(i,i,1.0);
 
             for( int j = 0; j < i; j++ ) {
-                lower.set(i,j, LU.get(i,j));
+                lower.unsafe_set(i,j, LU.unsafe_get(i,j));
             }
         }
 
         if( numRows > numCols ) {
             for( int i = numCols; i < numRows; i++ ) {
                 for( int j = 0; j < numCols; j++ ) {
-                    lower.set(i,j, LU.get(i,j));
+                    lower.unsafe_set(i,j, LU.unsafe_get(i,j));
                 }
             }
         }
@@ -128,11 +128,11 @@ public abstract class LUDecompositionBase_D64
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
 
-        upper = UtilDecompositons_D64.checkZeros(upper,numRows,numCols);
+        upper = UtilDecompositons_D64.checkZerosLT(upper,numRows,numCols);
 
         for( int i = 0; i < numRows; i++ ) {
             for( int j = i; j < numCols; j++ ) {
-                upper.set(i,j, LU.get(i,j));
+                upper.unsafe_set(i,j, LU.unsafe_get(i,j));
             }
         }
 

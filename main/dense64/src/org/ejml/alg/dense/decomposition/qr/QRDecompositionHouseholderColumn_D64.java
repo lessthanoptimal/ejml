@@ -125,9 +125,9 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
     @Override
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
         if( compact ) {
-            R = UtilDecompositons_D64.checkZeros(R,minLength,numCols);
+            R = UtilDecompositons_D64.checkZerosLT(R,minLength,numCols);
         } else {
-            R = UtilDecompositons_D64.checkZeros(R,numRows,numCols);
+            R = UtilDecompositons_D64.checkZerosLT(R,numRows,numCols);
         }
 
         for( int j = 0; j < numCols; j++ ) {

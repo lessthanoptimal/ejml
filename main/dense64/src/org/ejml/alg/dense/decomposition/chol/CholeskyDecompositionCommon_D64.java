@@ -141,16 +141,17 @@ public abstract class CholeskyDecompositionCommon_D64
 
     @Override
     public DenseMatrix64F getT( DenseMatrix64F T ) {
-        T = UtilDecompositons_D64.checkZeros(T,n,n);
 
         // write the values to T
         if( lower ) {
+            T = UtilDecompositons_D64.checkZerosUT(T,n,n);
             for( int i = 0; i < n; i++ ) {
                 for( int j = 0; j <= i; j++ ) {
                     T.unsafe_set(i,j,this.T.unsafe_get(i,j));
                 }
             }
         } else {
+             T = UtilDecompositons_D64.checkZerosLT(T,n,n);
             for( int i = 0; i < n; i++ ) {
                 for( int j = i; j < n; j++ ) {
                     T.unsafe_set(i,j,this.T.unsafe_get(i,j));
