@@ -24,7 +24,6 @@ import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
 import org.ejml.ops.CSpecializedOps;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -33,7 +32,6 @@ import static org.ejml.alg.dense.decompose.CheckDecompositionInterface_CD64.safe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Ignore
 public class TestHessenbergSimilarDecomposition_CD64 {
 
     Random rand = new Random(5745784);
@@ -59,7 +57,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //        UtilEjml.print(H,"%8.2e");
 //        System.out.println("-------- Q ---------");
 //        UtilEjml.print(Q,"%8.2e");
-        assertTrue(CMatrixFeatures.isHermitian(Q, UtilEjml.TOLERANCE));
+        assertTrue(CMatrixFeatures.isUnitary(Q, UtilEjml.TOLERANCE));
 
         CDenseMatrix64F temp0 = new CDenseMatrix64F(5,5);
 
@@ -136,23 +134,26 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //        System.out.println("-------------------");
 
         for( int i = 0; i < N-1; i++ ) {
+//            System.out.println("------- Column "+i);
             u.zero();
-            u.data[i+1] = 1;
+            u.data[(i+1)*2  ] = 1;
+            u.data[(i+1)*2+1] = 0;
+
             for( int j = i+2; j < N; j++ ) {
                 u.data[j*2]   = QH.getReal(j,i);
                 u.data[j*2+1] = QH.getImaginary(j,i);
             }
 
             CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gammas[i]);
-            CCommonOps.mult(Q,A,B);
+            CCommonOps.multTransA(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
-//            System.out.println("----- Q ------");
-//            UtilEjml.print(Q);
+//            System.out.println("----- Q ------")
+//            Q.print();
 //            System.out.println("----- B ------");
-//            UtilEjml.print(B);
+//            B.print();
 
-            for( int j = 0; j < i+2; j++ ) {
+            for( int j = 0; j  < i+2; j++ ) {
                 assertTrue(Math.abs(B.getReal(j,i))>UtilEjml.TOLERANCE);
                 assertTrue(Math.abs(B.getImaginary(j,i))>UtilEjml.TOLERANCE);
             }
@@ -163,7 +164,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
             CCommonOps.mult(B,Q,A);
 
 //            System.out.println("-------------------");
-//            UtilEjml.print(A);
+//            A.print();
 //            System.out.println("-------------------");
         }
     }
@@ -191,7 +192,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
         for( int i = N-2; i >= 0; i-- ) {
             u.zero();
-            u.data[i+1] = 1;
+            u.data[(i+1)*2] = 1;
             for( int j = i+2; j < N; j++ ) {
                 u.data[j*2]   = QH.getReal(j,i);
                 u.data[j*2+1] = QH.getImaginary(j,i);

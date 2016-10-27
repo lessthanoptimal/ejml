@@ -20,8 +20,11 @@ package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.ops.CCommonOps;
+
+import java.util.Arrays;
 
 /**
  * <p>
@@ -57,7 +60,7 @@ public class HessenbergSimilarDecomposition_CD64
     // temporary storage
     private double b[];
     private double u[];
-
+    private Complex64F tau = new Complex64F();
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
      * the specified size.
@@ -132,10 +135,7 @@ public class HessenbergSimilarDecomposition_CD64
         System.arraycopy(QH.data, 0, H.data, 0, N*2);
 
         for( int i = 1; i < N; i++ ) {
-            for( int j = i-1; j < N; j++ ) {
-                int indexQH = QH.getIndex(i,j);
-                H.set(i,j, QH.data[indexQH],QH.data[indexQH+1]);
-            }
+            System.arraycopy(QH.data, (i*N+i-1)*2, H.data, (i*N+i-1)*2, (N-i+1)*2);
         }
 
         return H;
@@ -149,26 +149,23 @@ public class HessenbergSimilarDecomposition_CD64
      */
     public CDenseMatrix64F getQ( CDenseMatrix64F Q ) {
         if( Q == null ) {
-            Q = new CDenseMatrix64F(N,N);
-            for( int i = 0; i < N; i++ ) {
-                Q.data[(i*N+i)*2] = 1;
-                Q.data[(i*N+i)*2+1] = 0;
-            }
+            Q = CCommonOps.identity(N);
         } else if( N != Q.numRows || N != Q.numCols )
             throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
         else
             CCommonOps.setIdentity(Q);
 
+        Arrays.fill(u,0,N*2,0);
         for( int j = N-2; j >= 0; j-- ) {
-            u[(j+1)*2] = 1;
+            u[(j+1)*2]   = 1;
             u[(j+1)*2+1] = 0;
 
             for( int i = j+2; i < N; i++ ) {
                 int indexQH = QH.getIndex(i,j);
-                u[i*2] = QH.data[indexQH];
+                u[i*2]   = QH.data[indexQH];
                 u[i*2+1] = QH.data[indexQH+1];
             }
-            QrHelperFunctions_CD64.rank1UpdateMultR(Q, u, j+1,gammas[j], j + 1, j + 1, N, b);
+            QrHelperFunctions_CD64.rank1UpdateMultR(Q, u, 0,gammas[j], j + 1, j + 1, N, b);
         }
 
         return Q;
@@ -180,16 +177,18 @@ public class HessenbergSimilarDecomposition_CD64
     private boolean _decompose() {
         double h[] = QH.data;
 
-        for( int k = 0; k < N-2; k++ ) {
+        for( int k = 0; k < N-2; k++ ) { // k = column
             // find the largest value in this column
             // this is used to normalize the column and mitigate overflow/underflow
             double max = 0;
 
+            u[k*2] = 0;
+            u[k*2+1] = 0;
             for( int i = k+1; i < N; i++ ) {
                 // copy the householder vector to vector outside of the matrix to reduce caching issues
                 // big improvement on larger matrices and a relatively small performance hit on small matrices.
-                double realVal = u[i*2] = h[i*N*2+k*2];
-                double imagVal = u[i*2+1] = h[i*N*2+k*2+1];
+                double realVal = u[i*2] = h[(i*N+k)*2];
+                double imagVal = u[i*2+1] = h[(i*N+k)*2+1];
 
                 double magVal = realVal*realVal + imagVal*imagVal;
                 if( max < magVal ) {
@@ -201,73 +200,33 @@ public class HessenbergSimilarDecomposition_CD64
             if( max > 0 ) {
                 // -------- set up the reflector Q_k
 
-                double nx = 0;
-                // normalize to reduce overflow/underflow and compute tau for the reflector
-                for( int i = k+1; i < N; i++ ) {
-                    double realVal = u[i*2] /= max;
-                    double imagVal = u[i*2+1] /= max;
+                double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(k+1,N,u,max,tau);
+                gammas[k] = gamma;
 
-                    nx += realVal*realVal + imagVal*imagVal;
-                }
-
-                nx = Math.sqrt(nx);
+                // divide u by u_0
+                double real_u_0 = u[(k+1)*2]   + tau.real;
+                double imag_u_0 = u[(k+1)*2+1] + tau.imaginary;
+                QrHelperFunctions_CD64.divideElements(k + 2, N, u, 0, real_u_0,imag_u_0 );
 
                 // write the reflector into the lower left column of the matrix
-                double real_nu = u[(k+1)*2];
-                double imag_nu = u[(k+1)*2+1];
-                double mag_nu = real_nu*real_nu + imag_nu*imag_nu;
-
-                double realTau,imagTau;
-                if( mag_nu == 0 ) {
-                    realTau = nx;
-                    imagTau = 0;
-                } else {
-                    realTau = real_nu / mag_nu * nx;
-                    imagTau = imag_nu / mag_nu * nx;
+                for (int i = k+2; i < N; i++) {
+                    h[(i*N+k)*2]   = u[i*2];
+                    h[(i*N+k)*2+1] = u[i*2+1];
                 }
 
-                double top,bottom;
-
-                // if there is a chance they can cancel swap the sign
-                if ( real_nu*realTau<0) {
-                    realTau = -realTau;
-                    imagTau = -imagTau;
-                    top = nx * nx - nx *mag_nu;
-                    bottom = mag_nu*mag_nu - 2.0* nx *mag_nu + nx * nx;
-                } else {
-                    top = nx * nx + nx *mag_nu;
-                    bottom = mag_nu*mag_nu + 2.0* nx *mag_nu + nx * nx;
-                }
-
-                double realGamma = bottom/top;
-                gammas[k] = realGamma;
-
-                double real_u_0 = real_nu + realTau;
-                double imag_u_0 = imag_nu + imagTau;
-                double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
-
-                int indexU = (k+2)*2;
-                for( int i = k+2; i < N; i++ ) {
-                    double realU = u[indexU];
-                    double imagU = u[indexU+1];
-
-                    u[indexU++] = (realU*real_u_0 + imagU*imag_u_0)/norm_u_0;
-                    u[indexU++] = (imagU*real_u_0 - realU*imag_u_0)/norm_u_0;
-                }
-                u[2*(k+1)]   = 1;
-                u[2*(k+1)+1] = 0;
-
+                u[(k+1)*2]   = 1;
+                u[(k+1)*2+1] = 0;
 
                 // ---------- multiply on the left by Q_k
-                QrHelperFunctions_CD64.rank1UpdateMultR(QH, u,k+1, realGamma, k + 1, k + 1, N, b);
+                QrHelperFunctions_CD64.rank1UpdateMultR(QH, u,0, gamma, k + 1, k + 1, N, b);
 
                 // ---------- multiply on the right by Q_k
-                QrHelperFunctions_CD64.rank1UpdateMultL(QH, u,k+1, realGamma, 0, k + 1, N);
+                QrHelperFunctions_CD64.rank1UpdateMultL(QH, u,0, gamma, 0, k + 1, N);
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg
-                h[((k+1)*N+k)*2]   = -realGamma*max;
-                h[((k+1)*N+k)*2+1] = -imagTau*max;
+                h[((k+1)*N+k)*2]   = -tau.real*max;
+                h[((k+1)*N+k)*2+1] = -tau.imaginary*max;
 
             } else {
                 gammas[k] = 0;

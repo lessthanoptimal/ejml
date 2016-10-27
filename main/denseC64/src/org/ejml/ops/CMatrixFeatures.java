@@ -265,7 +265,6 @@ public class CMatrixFeatures {
         Complex64F a = new Complex64F();
         Complex64F b = new Complex64F();
 
-
         for( int i = 0; i < Q.numCols; i++ ) {
             for( int j = i+1; j < Q.numCols; j++ ) {
                 Q.get(i,j,a);

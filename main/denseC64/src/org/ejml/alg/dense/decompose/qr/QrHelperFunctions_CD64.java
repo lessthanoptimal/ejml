@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -266,16 +266,16 @@ public class QrHelperFunctions_CD64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL( CDenseMatrix64F A , double u[] ,
-                                         double gammaR , double gammaI ,
+    public static void rank1UpdateMultL( CDenseMatrix64F A , double u[] , int offsetU,
+                                         double gammaR ,
                                          int colA0,
                                          int w0 , int w1 )
     {
         for( int i = colA0; i < A.numRows; i++ ) {
-            int startIndex = i*A.numCols*2+w0*2;
+            int startIndex = (i*A.numCols+w0)*2;
             double realSum = 0,imagSum=0;
             int rowIndex = startIndex;
-            int indexU = w0*2;
+            int indexU = offsetU+w0*2;
             for( int j = w0; j < w1; j++ ) {
                 double realA = A.data[rowIndex++];
                 double imajA = A.data[rowIndex++];
@@ -286,11 +286,11 @@ public class QrHelperFunctions_CD64 {
                 realSum += realA*realU - imajA*imajU;
                 imagSum += realA*imajU + imajA*realU;
             }
-            double realTmp = -(gammaR*realSum - gammaI*imagSum);
-            double imagTmp = -(gammaR*imagSum + gammaI*realSum);
+            double realTmp = -gammaR*realSum;
+            double imagTmp = -gammaR*imagSum;
 
             rowIndex = startIndex;
-            indexU = w0*2;
+            indexU = offsetU+w0*2;
             for( int j = w0; j < w1; j++ ) {
                 double realU = u[indexU++];
                 double imagU = -u[indexU++];

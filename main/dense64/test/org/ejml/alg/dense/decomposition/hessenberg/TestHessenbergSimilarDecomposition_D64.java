@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -140,7 +140,7 @@ public class TestHessenbergSimilarDecomposition_D64 {
             }
 
             DenseMatrix64F Q = SpecializedOps.createReflector(u,gammas[i]);
-            CommonOps.mult(Q,A,B);
+            CommonOps.multTransA(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
 //            System.out.println("----- Q ------");

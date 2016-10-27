@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -197,18 +197,11 @@ public class TestQrHelperFunctions_CD64 {
     private CDenseMatrix64F rank1UpdateMultR( CDenseMatrix64F A , double gamma,  double u[] ) {
         CDenseMatrix64F U = new CDenseMatrix64F(A.numCols,1);
         U.data = u;
-        CDenseMatrix64F Ut = new CDenseMatrix64F(1,A.numCols);
-        CCommonOps.transposeConjugate(U,Ut);
-
         CDenseMatrix64F UUt = new CDenseMatrix64F(A.numCols,A.numCols);
-        CCommonOps.mult(gamma,0,U,Ut,UUt);
+        CCommonOps.multTransB(-gamma,0,U,U,UUt);
 
-        CDenseMatrix64F I = CCommonOps.identity(A.numCols);
-        CDenseMatrix64F inner = new CDenseMatrix64F(A.numCols,A.numCols);
-        CDenseMatrix64F expected = new CDenseMatrix64F(A.numCols,A.numCols);
-
-        CCommonOps.subtract(I,UUt,inner);
-        CCommonOps.mult(inner,A,expected);
+        CDenseMatrix64F expected = A.copy();
+        CCommonOps.multAdd(UUt,A,expected);
 
         return expected;
     }
@@ -217,7 +210,7 @@ public class TestQrHelperFunctions_CD64 {
     public void rank1UpdateMultL() {
         double u[] = new double[12*2];
         double subU[] = new double[12*2];
-        Complex64F gamma = new Complex64F(0.5,-0.2);
+        double gamma = 0.23;
 
         for (int i = 0; i < u.length; i++) {
             u[i] = (rand.nextDouble()*0.5-1.0)*2;
@@ -232,7 +225,7 @@ public class TestQrHelperFunctions_CD64 {
                 CDenseMatrix64F expected = rank1UpdateMultL(subA,gamma,subU);
 
                 CDenseMatrix64F found = A.copy();
-                QrHelperFunctions_CD64.rank1UpdateMultL(found,u,gamma.real,gamma.imaginary,
+                QrHelperFunctions_CD64.rank1UpdateMultL(found,u,0,gamma,
                         A.numRows-j,A.numRows-j,A.numRows);
 
                 CDenseMatrix64F subFound = CCommonOps.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
@@ -243,21 +236,14 @@ public class TestQrHelperFunctions_CD64 {
         }
     }
 
-    private CDenseMatrix64F rank1UpdateMultL( CDenseMatrix64F A , Complex64F gamma,  double u[] ) {
+    private CDenseMatrix64F rank1UpdateMultL( CDenseMatrix64F A , double gamma,  double u[] ) {
         CDenseMatrix64F U = new CDenseMatrix64F(A.numCols,1);
         U.data = u;
-        CDenseMatrix64F Ut = new CDenseMatrix64F(1,A.numCols);
-        CCommonOps.transposeConjugate(U,Ut);
-
         CDenseMatrix64F UUt = new CDenseMatrix64F(A.numCols,A.numCols);
-        CCommonOps.mult(gamma.real,gamma.imaginary,U,Ut,UUt);
+        CCommonOps.multTransB(-gamma,0,U,U,UUt);
 
-        CDenseMatrix64F I = CCommonOps.identity(A.numCols);
-        CDenseMatrix64F inner = new CDenseMatrix64F(A.numCols,A.numCols);
-        CDenseMatrix64F expected = new CDenseMatrix64F(A.numCols,A.numCols);
-
-        CCommonOps.subtract(I,UUt,inner);
-        CCommonOps.mult(A,inner,expected);
+        CDenseMatrix64F expected = A.copy();
+        CCommonOps.multAdd(A,UUt,expected);
 
         return expected;
     }
