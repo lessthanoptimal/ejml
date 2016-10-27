@@ -18,10 +18,10 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
+import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.ops.CommonOps;
 
 /**
  * <p>
@@ -121,12 +121,7 @@ public class HessenbergSimilarDecomposition_D64
      * @return The extracted H matrix.
      */
     public DenseMatrix64F getH( DenseMatrix64F H ) {
-        if( H == null ) {
-            H = new DenseMatrix64F(N,N);
-        } else if( N != H.numRows || N != H.numCols )
-            throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
-        else
-            H.zero();
+        H = UtilDecompositons_D64.checkZeros(H,N,N);
 
         // copy the first row
         System.arraycopy(QH.data, 0, H.data, 0, N);
@@ -147,15 +142,7 @@ public class HessenbergSimilarDecomposition_D64
      * @return The extracted Q matrix.
      */
     public DenseMatrix64F getQ( DenseMatrix64F Q ) {
-        if( Q == null ) {
-            Q = new DenseMatrix64F(N,N);
-            for( int i = 0; i < N; i++ ) {
-                Q.data[i*N+i] = 1;
-            }
-        } else if( N != Q.numRows || N != Q.numCols )
-            throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
-        else
-            CommonOps.setIdentity(Q);
+        Q = UtilDecompositons_D64.checkIdentity(Q,N,N);
 
         for( int j = N-2; j >= 0; j-- ) {
             u[j+1] = 1;

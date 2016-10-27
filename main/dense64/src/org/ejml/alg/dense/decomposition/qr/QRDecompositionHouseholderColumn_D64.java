@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,9 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CommonOps;
 
 
 /**
@@ -98,25 +98,9 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
     @Override
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
         if( compact ) {
-            if( Q == null ) {
-                Q = CommonOps.identity(numRows,minLength);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != minLength ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_D64.checkIdentity(Q,numRows,minLength);
         } else {
-            if( Q == null ) {
-                Q = CommonOps.identity(numRows);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != numRows ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_D64.checkIdentity(Q,numRows,numRows);
         }
 
         for( int j = minLength-1; j >= 0; j-- ) {
@@ -140,27 +124,10 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
      */
     @Override
     public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
-        if( R == null ) {
-            if( compact ) {
-                R = new DenseMatrix64F(minLength,numCols);
-            } else
-                R = new DenseMatrix64F(numRows,numCols);
+        if( compact ) {
+            R = UtilDecompositons_D64.checkZeros(R,minLength,numCols);
         } else {
-            if( compact ) {
-                if( R.numCols != numCols || R.numRows != minLength )
-                    throw new IllegalArgumentException(
-                            "Unexpected dimensions: found( "+R.numRows+" "+R.numCols+" ) expected( "+minLength+" "+numCols+" )");
-            } else {
-                if( R.numCols != numCols || R.numRows != numRows )
-                    throw new IllegalArgumentException("Unexpected dimensions");
-            }
-
-            for( int i = 0; i < R.numRows; i++ ) {
-                int min = Math.min(i,R.numCols);
-                for( int j = 0; j < min; j++ ) {
-                    R.set(i,j,0);
-                }
-            }
+            R = UtilDecompositons_D64.checkZeros(R,numRows,numCols);
         }
 
         for( int j = 0; j < numCols; j++ ) {

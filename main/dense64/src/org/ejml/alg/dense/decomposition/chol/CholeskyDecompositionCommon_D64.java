@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 
+import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition;
-import org.ejml.ops.CommonOps;
 
 
 /**
@@ -141,15 +141,7 @@ public abstract class CholeskyDecompositionCommon_D64
 
     @Override
     public DenseMatrix64F getT( DenseMatrix64F T ) {
-        // see if it needs to declare a new matrix or not
-        if( T == null ) {
-            T = new DenseMatrix64F(n,n);
-        } else {
-            if( T.numRows != n || T.numCols != n )
-                throw new IllegalArgumentException("Unexpected matrix dimension for T.");
-
-            CommonOps.fill(T, 0);
-        }
+        T = UtilDecompositons_D64.checkZeros(T,n,n);
 
         // write the values to T
         if( lower ) {

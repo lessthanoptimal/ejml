@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,10 +20,10 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.CommonOps;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -97,13 +97,7 @@ public abstract class LUDecompositionBase_D64
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
 
-        if( lower == null ) {
-            lower = new DenseMatrix64F(numRows,numCols);
-        } else {
-            if( lower.numCols != numCols || lower.numRows != numRows )
-                throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.fill(lower, 0);
-        }
+        lower = UtilDecompositons_D64.checkZeros(lower,numRows,numCols);
 
         for( int i = 0; i < numCols; i++ ) {
             lower.set(i,i,1.0);
@@ -134,13 +128,7 @@ public abstract class LUDecompositionBase_D64
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
 
-        if( upper == null ) {
-            upper = new DenseMatrix64F(numRows, numCols);
-        } else {
-            if( upper.numCols != numCols || upper.numRows != numRows )
-                throw new IllegalArgumentException("Unexpected matrix dimension");
-            CommonOps.fill(upper, 0);
-        }
+        upper = UtilDecompositons_D64.checkZeros(upper,numRows,numCols);
 
         for( int i = 0; i < numRows; i++ ) {
             for( int j = i; j < numCols; j++ ) {

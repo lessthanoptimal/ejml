@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,10 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
+import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
-import org.ejml.ops.CommonOps;
 
 /**
  * <p>
@@ -97,13 +97,7 @@ public class TridiagonalDecompositionHouseholder_D64
      */
     @Override
     public DenseMatrix64F getT( DenseMatrix64F T ) {
-        if( T == null ) {
-            T = new DenseMatrix64F(N,N);
-        } else if( N != T.numRows || N != T.numCols )
-            throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
-        else
-            T.zero();
-
+        T = UtilDecompositons_D64.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
 
@@ -130,12 +124,7 @@ public class TridiagonalDecompositionHouseholder_D64
      */
     @Override
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean transposed ) {
-        if( Q == null ) {
-            Q = CommonOps.identity(N);
-        } else if( N != Q.numRows || N != Q.numCols )
-            throw new IllegalArgumentException("The provided H must have the same dimensions as the decomposed matrix.");
-        else
-            CommonOps.setIdentity(Q);
+        Q = UtilDecompositons_D64.checkIdentity(Q,N,N);
 
         for( int i = 0; i < N; i++ ) w[i] = 0;
 
@@ -267,7 +256,6 @@ public class TridiagonalDecompositionHouseholder_D64
                 QT.data[rowA+j] += ww*QT.data[startU+j] + w[j]*uu;
             }
         }
-
     }
 
 
