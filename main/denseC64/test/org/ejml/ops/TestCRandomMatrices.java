@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -57,7 +57,7 @@ public class TestCRandomMatrices {
         for( int i = 0; i < a.numRows; i++ ) {
             for( int j = 0; j < a.numCols; j++ ) {
                 double real = a.getReal(i,j);
-                double img = a.getImaginary(i, j);
+                double img = a.getImag(i, j);
 
                 assertTrue( real >= 0);
                 assertTrue( real <= 1);
@@ -93,7 +93,7 @@ public class TestCRandomMatrices {
         for( int i = 0; i < a.numRows; i++ ) {
             for( int j = 0; j < a.numCols; j++ ) {
                 double real = a.getReal(i,j);
-                double img = a.getImaginary(i,j);
+                double img = a.getImag(i,j);
 
                 if( real < 0 )
                     numRealNeg++;

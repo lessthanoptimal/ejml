@@ -255,7 +255,7 @@ public class TestQrHelperFunctions_CD64 {
             for (int j = 0; j < A.numCols; j++) {
                 if( i < outside || j < outside ) {
                     assertEquals(A.getReal(i,j),B.getReal(i,j),1e-8);
-                    assertEquals(A.getImaginary(i, j), B.getImaginary(i,j),1e-8);
+                    assertEquals(A.getImag(i, j), B.getImag(i,j),1e-8);
                 }
             }
         }

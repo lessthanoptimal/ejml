@@ -141,7 +141,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
             for( int j = i+2; j < N; j++ ) {
                 u.data[j*2]   = QH.getReal(j,i);
-                u.data[j*2+1] = QH.getImaginary(j,i);
+                u.data[j*2+1] = QH.getImag(j,i);
             }
 
             CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gammas[i]);
@@ -155,11 +155,11 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
             for( int j = 0; j  < i+2; j++ ) {
                 assertTrue(Math.abs(B.getReal(j,i))>UtilEjml.TOLERANCE);
-                assertTrue(Math.abs(B.getImaginary(j,i))>UtilEjml.TOLERANCE);
+                assertTrue(Math.abs(B.getImag(j,i))>UtilEjml.TOLERANCE);
             }
             for( int j = i+2; j < N; j++ ) {
                 assertEquals(0,B.getReal(j,i),UtilEjml.TOLERANCE);
-                assertEquals(0,B.getImaginary(j,i),UtilEjml.TOLERANCE);
+                assertEquals(0,B.getImag(j,i),UtilEjml.TOLERANCE);
             }
             CCommonOps.mult(B,Q,A);
 
@@ -195,7 +195,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
             u.data[(i+1)*2] = 1;
             for( int j = i+2; j < N; j++ ) {
                 u.data[j*2]   = QH.getReal(j,i);
-                u.data[j*2+1] = QH.getImaginary(j,i);
+                u.data[j*2+1] = QH.getImag(j,i);
             }
 
             CDenseMatrix64F Qi = CSpecializedOps.createReflector(u,gammas[i]);

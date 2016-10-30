@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -80,7 +80,7 @@ public class TestLUDecompositionBase_CD64 {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
                 double real = LU.getReal(i,j);
-                double imag = LU.getImaginary(i, j);
+                double imag = LU.getImag(i, j);
 
                 if( j <= i ) {
                     if( j == i )
@@ -123,7 +123,7 @@ public class TestLUDecompositionBase_CD64 {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
                 double real = LU.getReal(i,j);
-                double imag = LU.getImaginary(i, j);
+                double imag = LU.getImag(i, j);
 
                 if( j <= i ) {
                     if( j == i )

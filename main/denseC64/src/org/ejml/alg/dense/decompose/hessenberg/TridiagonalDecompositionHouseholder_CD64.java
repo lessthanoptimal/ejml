@@ -86,10 +86,12 @@ public class TridiagonalDecompositionHouseholder_CD64
     @Override
     public void getDiagonal(double[] diag, double[] off) {
         for( int i = 0; i < N; i++ ) {
-            diag[i] = QT.data[i*N+i];
+            diag[i*2]   = QT.data[(i*N+i)*2];
+            diag[i*2+1] = QT.data[(i*N+i)*2+1];
 
             if( i+1 < N ) {
-                off[i] = QT.data[i*N+i+1];
+                off[i*2]   = QT.data[(i*N+i+1)*2];
+                off[i*2+1] = QT.data[(i*N+i+1)*2+1];
             }
         }
     }
@@ -105,11 +107,12 @@ public class TridiagonalDecompositionHouseholder_CD64
         T = UtilDecompositons_CD64.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
+        T.data[1] = QT.data[1];
 
         for( int i = 1; i < N; i++ ) {
-            T.set(i,i, QT.getReal(i,i), QT.getImaginary(i,i));
+            T.set(i,i, QT.getReal(i,i), QT.getImag(i,i));
             double real = QT.getReal(i-1,i);
-            double imag = QT.getReal(i-1,i);
+            double imag = QT.getImag(i-1,i);
             T.set(i-1,i,real,imag);
             T.set(i,i-1,real,imag);
         }
@@ -177,7 +180,6 @@ public class TridiagonalDecompositionHouseholder_CD64
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
         double max = QrHelperFunctions_CD64.computeRowMax(QT,k-1,k,N);
-
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k

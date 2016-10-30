@@ -235,7 +235,7 @@ public class CSpecializedOps {
         }
 
         u.set(0,0,c.real + realTau,c.imaginary + imagTau);
-        CCommonOps.elementDivide(u,u.getReal(0,0),u.getImaginary(0,0),u);
+        CCommonOps.elementDivide(u,u.getReal(0,0),u.getImag(0,0),u);
 
         return u;
     }

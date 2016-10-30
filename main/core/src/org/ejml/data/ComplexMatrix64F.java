@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -69,7 +69,7 @@ public interface ComplexMatrix64F extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double getImaginary(int row, int col);
+    public double getImag(int row, int col);
 
 
     /**
@@ -79,7 +79,7 @@ public interface ComplexMatrix64F extends Matrix {
      * @param col Matrix element's column index.
      * @param val  The element's new value.
      */
-    public void setImaginary(int row, int col, double val);
+    public void setImag(int row, int col, double val);
 
     /**
      * Returns the number of elements in the internal data array

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -266,11 +266,11 @@ public abstract class GenericCLinearSolverChecks {
         solver.solve(B,x);
 
         assertEquals(a.real,     x.getReal(0, 0),tol);
-        assertEquals(a.imaginary,x.getImaginary(0, 0),tol);
+        assertEquals(a.imaginary,x.getImag(0, 0),tol);
         assertEquals(b.real,     x.getReal(1, 0),tol);
-        assertEquals(b.imaginary,x.getImaginary(1, 0),tol);
+        assertEquals(b.imaginary,x.getImag(1, 0),tol);
         assertEquals(c.real,     x.getReal(2, 0),tol);
-        assertEquals(c.imaginary,x.getImaginary(2, 0),tol);
+        assertEquals(c.imaginary,x.getImag(2, 0),tol);
     }
 
     private CDenseMatrix64F createPolyA( double t[] , int dof ) {

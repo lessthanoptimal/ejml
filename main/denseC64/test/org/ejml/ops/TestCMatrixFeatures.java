@@ -165,7 +165,7 @@ public class TestCMatrixFeatures {
 
         assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
 
-        m.setImaginary(0,0,1e-12);
+        m.setImag(0,0,1e-12);
         assertTrue(CMatrixFeatures.isIdentity(m, 1e-8));
         m.setReal(0, 0, 1 + 1e-12);
         assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
@@ -173,7 +173,7 @@ public class TestCMatrixFeatures {
         assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
         assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
 
-        m.setImaginary(1,0,1e-12);
+        m.setImag(1,0,1e-12);
         assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
         m.setReal(1,0,1e-12);
         assertTrue(CMatrixFeatures.isIdentity(m,1e-8));

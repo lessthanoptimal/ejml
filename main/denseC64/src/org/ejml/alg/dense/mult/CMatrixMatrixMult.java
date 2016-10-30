@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.CDenseMatrix64F;
@@ -173,7 +174,7 @@ public class CMatrixMatrixMult {
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
             realA = a.getReal(k,i);
-            imagA = a.getImaginary(k,i);
+            imagA = a.getImag(k,i);
                 end = indexB+b.numCols*2;
                 indexC = indexC_start;
                 // this is the loop for j
@@ -484,7 +485,7 @@ public class CMatrixMatrixMult {
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
             realA = a.getReal(k,i);
-            imagA = a.getImaginary(k,i);
+            imagA = a.getImag(k,i);
                 end = indexB+b.numCols*2;
                 indexC = indexC_start;
                 // this is the loop for j
@@ -803,7 +804,7 @@ public class CMatrixMatrixMult {
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
             realTmp = a.getReal(k,i);
-            imagTmp = a.getImaginary(k,i);
+            imagTmp = a.getImag(k,i);
             realA = realAlpha*realTmp + imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp - imagAlpha*realTmp;
                 end = indexB+b.numCols*2;
@@ -1123,7 +1124,7 @@ public class CMatrixMatrixMult {
             // now increment it
             for( int k = 1; k < a.numRows; k++ ) {
             realTmp = a.getReal(k,i);
-            imagTmp = a.getImaginary(k,i);
+            imagTmp = a.getImag(k,i);
             realA = realAlpha*realTmp + imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp - imagAlpha*realTmp;
                 end = indexB+b.numCols*2;

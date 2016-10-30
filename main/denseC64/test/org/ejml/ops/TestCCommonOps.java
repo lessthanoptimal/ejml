@@ -263,7 +263,7 @@ public class TestCCommonOps {
 
                 ComplexMath64F.multiply(scale,value,expected);
                 assertEquals(expected.real, mat.getReal(i,j), 1e-8);
-                assertEquals(expected.imaginary, mat.getImaginary(i,j), 1e-8);
+                assertEquals(expected.imaginary, mat.getImag(i,j), 1e-8);
             }
         }
     }

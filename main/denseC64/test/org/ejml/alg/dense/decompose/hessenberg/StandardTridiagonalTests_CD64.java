@@ -80,17 +80,17 @@ public abstract class StandardTridiagonalTests_CD64 {
 
             CDenseMatrix64F T = alg.getT(null);
 
-            double diag[] = new double[width];
-            double off[] = new double[width];
+            double diag[] = new double[width*2];
+            double off[] = new double[width*2];
 
             alg.getDiagonal(diag,off);
             assertEquals(T.getReal(0,0)     ,diag[0],1e-8);
-            assertEquals(T.getImaginary(0,0),diag[1],1e-8);
+            assertEquals(T.getImag(0,0),diag[1],1e-8);
             for( int i = 1; i < width; i++ ) {
                 assertEquals(T.getReal(i,i)       , diag[i*2]     ,1e-8);
-                assertEquals(T.getImaginary(i,i)  , diag[i*2+1]   ,1e-8);
+                assertEquals(T.getImag(i,i)  , diag[i*2+1]   ,1e-8);
                 assertEquals(T.getReal(i-1,i)     , off[(i-1)*2]  ,1e-8);
-                assertEquals(T.getImaginary(i-1,i), off[(i-1)*2+1],1e-8);
+                assertEquals(T.getImag(i-1,i), off[(i-1)*2+1],1e-8);
             }
         }
     }
@@ -112,7 +112,7 @@ public abstract class StandardTridiagonalTests_CD64 {
             for( int i = 0; i < Q.numRows; i++ ) {
                 for( int j = 0; j < Q.numCols; j++ ) {
                     assertEquals(Q.getReal(i,j),Q_t.getReal(j,i),1e-8);
-                    assertEquals(Q.getImaginary(i,j),Q_t.getImaginary(j,i),1e-8);
+                    assertEquals(Q.getImag(i,j),Q_t.getImag(j,i),1e-8);
                 }
             }
         }

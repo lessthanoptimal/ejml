@@ -131,12 +131,12 @@ public class CDenseMatrix64F extends CD1Matrix64F {
     }
 
     @Override
-    public double getImaginary(int row, int col) {
+    public double getImag(int row, int col) {
         return data[(row*numCols + col)*2 + 1];
     }
 
     @Override
-    public void setImaginary(int row, int col, double val) {
+    public void setImag(int row, int col, double val) {
         data[(row*numCols + col)*2 + 1] = val;
     }
 

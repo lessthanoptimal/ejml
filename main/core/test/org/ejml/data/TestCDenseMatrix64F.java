@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -151,14 +151,14 @@ public class TestCDenseMatrix64F {
         Complex64F c = new Complex64F();
         a.get(2,1,c);
 
-        assertEquals(a.getImaginary(2, 1), 6, 1e-8);
+        assertEquals(a.getImag(2, 1), 6, 1e-8);
     }
 
     @Test
     public void setImaginary() {
         CDenseMatrix64F a = new CDenseMatrix64F(3,4);
 
-        a.setImaginary(2, 1, 6);
+        a.setImag(2, 1, 6);
 
         assertEquals(6, a.data[2 * 4 * 2 + 3], 1e-8);
     }
