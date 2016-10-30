@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,9 +44,10 @@ public interface TridiagonalSimilarDecomposition<MatrixType extends Matrix>
     public MatrixType getT( MatrixType T );
 
     /**
-     * An orthogonal matrix that has the following property: T = Q<sup>T</sup>AQ
+     * An orthogonal matrix that has the following property: T = Q<sup>H</sup>AQ
      *
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param transposed If true then the transpose (real) or conjugate transpose (complex) of Q is returned.
      * @return The extracted Q matrix.
      */
     public MatrixType getQ( MatrixType Q , boolean transposed );

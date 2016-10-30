@@ -82,7 +82,7 @@ public class QrHelperFunctions_CD64 {
 
         double mag2 = realA*realA + imagA*imagA;
 
-        int index = (j+startU)*2;
+        int index = startU+j*2;
 
         for( int i = j; i < numRows; i++ ) {
             double realU = u[index];

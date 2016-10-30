@@ -108,7 +108,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
     /**
      * This checks to see the gammas and if the householder vectors stored in QH are correct. This
-     * is done by extracting the vectors, computing reflectors, and multipling them by A and seeing
+     * is done by extracting the vectors, computing reflectors, and multiplying them by A and seeing
      * if it has the expected response.
      */
     @Test

@@ -165,7 +165,7 @@ public class TridiagonalDecompositionHouseholder_CD64
         init(A);
 
         for( int k = 1; k < N; k++ ) {
-            similarTransform(k);
+            similarTransform(k-1);
         }
 
         return true;
@@ -179,30 +179,38 @@ public class TridiagonalDecompositionHouseholder_CD64
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
-        double max = QrHelperFunctions_CD64.computeRowMax(QT,k-1,k,N);
+        double max = QrHelperFunctions_CD64.computeRowMax(QT,k,k+1,N);
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
-            int rowU = (k-1)*N*2;
+            int elementU = k*N;
 
-            double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(k-1, N, t, max, tau);
+            double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(elementU+k+1, elementU+N, t, max, tau);
             gammas[k] = gamma;
 
             // divide u by u_0
-            double real_u_0 = t[rowU]   + tau.real;
-            double imag_u_0 = t[rowU+1] + tau.imaginary;
-            QrHelperFunctions_CD64.divideElements(k + 1, N, t, rowU, real_u_0,imag_u_0 );
+            double real_u_0 = t[(elementU+k+1)*2]   + tau.real;
+            double imag_u_0 = t[(elementU+k+1)*2+1] + tau.imaginary;
+            QrHelperFunctions_CD64.divideElements(k+2, N, t, elementU*2, real_u_0,imag_u_0 );
 
-            t[rowU+k*2]   = 1.0;
-            t[rowU+k*2+1] = 0;
+            // the goal is to zero a column, so this is the conjugate of what we want.  fix that
+            for (int i = k+2; i < N; i++) {
+                t[(elementU+i)*2+1] = -t[(elementU+i)*2+1];
+            }
+
+            t[(elementU+k+1)*2]   = 1.0;
+            t[(elementU+k+1)*2+1] = 0;
 
             // ---------- Specialized householder that takes advantage of the symmetry
             householderSymmetric(k,gamma);
 
             // since the first element in the householder vector is known to be 1
             // store the full upper hessenberg
-            t[rowU+k*2]   = -tau.real*max;
-            t[rowU+k*2+1] = -tau.imaginary*max;
+            t[(elementU+k+1)*2]   = -tau.real*max;
+            t[(elementU+k+1)*2+1] = -tau.imaginary*max;
+
+            System.out.println("Inner QT k = "+k);
+            QT.print();
 
         } else {
             gammas[k] = 0;
@@ -217,17 +225,17 @@ public class TridiagonalDecompositionHouseholder_CD64
      */
     public void householderSymmetric( int row , double gamma )
     {
-        int startU = (row-1)*N;
+        int startU = row*N;
 
         // compute v = -gamma*A*u
-        for( int i = row; i < N; i++ ) {
+        for( int i = row+1; i < N; i++ ) {
             double totalReal = 0;
             double totalImag = 0;
 
             // the lower triangle is not written to so it needs to traverse upwards
             // to get the information.  Reduces the number of matrix writes need
             // improving large matrix performance
-            for( int j = row; j < i; j++ ) {
+            for( int j = row+1; j < i; j++ ) {
                 double realA = QT.data[(j*N+i)*2];
                 double imagA = QT.data[(j*N+i)*2+1];
 
@@ -255,7 +263,7 @@ public class TridiagonalDecompositionHouseholder_CD64
         double alphaReal = 0;
         double alphaImag = 0;
 
-        for( int i = row; i < N; i++ ) {
+        for( int i = row+1; i < N; i++ ) {
             double realU = QT.data[(startU+i)*2];
             double imagU = QT.data[(startU+i)*2+1];
 
@@ -269,7 +277,7 @@ public class TridiagonalDecompositionHouseholder_CD64
         alphaImag *= -0.5*gamma;
 
         // w = v + alpha*u
-        for( int i = row; i < N; i++ ) {
+        for( int i = row+1; i < N; i++ ) {
             double realU = QT.data[(startU+i)*2];
             double imagU = QT.data[(startU+i)*2+1];
 
@@ -277,7 +285,7 @@ public class TridiagonalDecompositionHouseholder_CD64
             w[i*2+1] += alphaReal*imagU + alphaImag*realU;
         }
         // A = A + w*u^T + u*w^T
-        for( int i = row; i < N; i++ ) {
+        for( int i = row+1; i < N; i++ ) {
 
             double realWW = w[i*2];
             double imagWW = w[i*2+1];
@@ -328,5 +336,9 @@ public class TridiagonalDecompositionHouseholder_CD64
     @Override
     public boolean inputModified() {
         return true;
+    }
+
+    public double[] getGammas() {
+        return gammas;
     }
 }

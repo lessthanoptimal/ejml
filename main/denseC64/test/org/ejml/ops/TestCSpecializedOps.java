@@ -163,13 +163,9 @@ public class TestCSpecializedOps {
         double gamma = 2.0/Math.pow(CNormOps.normF(u), 2.0);
 
         // Q = I - gamma*U*U^H
-        CDenseMatrix64F I = CCommonOps.identity(6);
-        CDenseMatrix64F UUt = new CDenseMatrix64F(6,6);
-        CDenseMatrix64F Q = new CDenseMatrix64F(6,6);
+        CDenseMatrix64F Q = CCommonOps.identity(6);
 
-        CVectorVectorMult.outerProdH(u, u, UUt);
-        CCommonOps.elementMultiply(UUt,gamma,0,UUt);
-        CCommonOps.subtract(I,UUt,Q);
+        CCommonOps.multAddTransB(-gamma,0,u,u,Q);
 
         CDenseMatrix64F found = new CDenseMatrix64F(x.numRows,x.numCols);
         CCommonOps.mult(Q,x,found);
