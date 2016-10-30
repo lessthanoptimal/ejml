@@ -16,20 +16,18 @@
  * limitations under the License.
  */
 
-package org.ejml.alg.dense.decomposition.hessenberg;
+package org.ejml.alg.dense.decompose.hessenberg;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
-
 
 /**
  * @author Peter Abeles
  */
-public class TestTridiagonalDecompositionHouseholder_D64 extends StandardTridiagonalTests_D64 {
-
+public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridiagonalTests_CD64 {
 
     @Override
-    protected TridiagonalSimilarDecomposition<DenseMatrix64F> createDecomposition() {
-        return new TridiagonalDecompositionHouseholder_D64();
+    protected TridiagonalSimilarDecomposition<CDenseMatrix64F> createDecomposition() {
+        return new TridiagonalDecompositionHouseholder_CD64();
     }
 }
