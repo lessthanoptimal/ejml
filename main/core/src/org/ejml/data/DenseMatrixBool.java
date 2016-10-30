@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -124,5 +124,10 @@ public class DenseMatrixBool implements ReshapeMatrix {
     @Override
     public void print() {
         System.out.println("Implement this");
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new DenseMatrixBool(numRows,numCols);
     }
 }

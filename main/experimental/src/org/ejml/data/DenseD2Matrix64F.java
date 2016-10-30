@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -109,6 +109,11 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, RealMatrix
     @Override
     public <T extends Matrix> T copy() {
         return null;
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new DenseD2Matrix64F(numRows,numCols);
     }
 
     @Override

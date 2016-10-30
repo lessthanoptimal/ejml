@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -171,6 +171,11 @@ public class FixedMatrix3x3_64F implements FixedMatrix64F {
     @Override
     public void print() {
         MatrixIO.print(System.out, this);
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new FixedMatrix3x3_64F();
     }
 }
 

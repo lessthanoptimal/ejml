@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -399,5 +399,10 @@ public class DenseMatrix64F extends RowD1Matrix64F {
         MatrixIO.print(new PrintStream(stream),this);
 
         return stream.toString();
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new DenseMatrix64F(numRows,numCols);
     }
 }

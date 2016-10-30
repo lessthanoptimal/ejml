@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -144,6 +144,11 @@ public class BlockMatrix64F extends D1Matrix64F {
     @Override
     public int getNumCols() {
         return numCols;
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new BlockMatrix64F(numRows,numCols);
     }
 
     @Override

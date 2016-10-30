@@ -222,4 +222,9 @@ public class CDenseMatrix64F extends CD1Matrix64F {
     public void zero() {
         Arrays.fill(data, 0, numCols*numRows*2, 0.0);
     }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new CDenseMatrix64F(numRows,numCols);
+    }
 }

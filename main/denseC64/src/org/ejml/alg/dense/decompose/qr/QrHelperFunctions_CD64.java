@@ -98,7 +98,7 @@ public class QrHelperFunctions_CD64 {
      * Performs the following operations:
      * <pre>
      * x = x / max
-     * tau = x0*|x|/|xo|   adjust sign to avoid cancelation
+     * tau = x0*|x|/|xo|   adjust sign to avoid cancellation
      * u = x; u0 = x0 + tau; u = u/u0  (x is not divided by x0)
      * gamma = 2/|u|^2
      * </pre>

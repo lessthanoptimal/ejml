@@ -13,6 +13,8 @@ Date format: year/month/day
   * added multTransAB variants
 - Added complex Hessenberg Similar Decomposition
 - Added MatrixFeatures.isLowerTriangle()
+- Added createLike() to all matrices
+  * Creates a new matrix that is the same size and shape.  filled with zeros initially
 
 TODO look at sparse matrix contribution
 TODO equations support for boolean matrices and inequalities

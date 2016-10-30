@@ -56,7 +56,7 @@ public class CSpecializedOps {
      * <p>
      * Creates a reflector from the provided vector and gamma.<br>
      * <br>
-     * Q = I - &gamma; u u<sup>T</sup><br>
+     * Q = I - &gamma; u u<sup>H</sup><br>
      * </p>
      *
      * @param u A vector.  Not modified.

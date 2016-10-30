@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -142,6 +142,11 @@ public class BlockD3Matrix64F implements ReshapeMatrix, RealMatrix64F {
     @Override
     public <T extends Matrix> T copy() {
         return null;
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new BlockD3Matrix64F(numRows,numCols);
     }
 
     @Override

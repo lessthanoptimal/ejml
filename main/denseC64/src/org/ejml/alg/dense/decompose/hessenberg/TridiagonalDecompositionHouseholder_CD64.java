@@ -202,6 +202,9 @@ public class TridiagonalDecompositionHouseholder_CD64
             t[(elementU+k+1)*2+1] = 0;
 
             // ---------- Specialized householder that takes advantage of the symmetry
+//            QrHelperFunctions_CD64.rank1UpdateMultR(QT,QT.data,elementU,gamma,k+1,k+1,N,w);
+//            QrHelperFunctions_CD64.rank1UpdateMultL(QT,QT.data,elementU,gamma,k+1,k+1,N);
+
             householderSymmetric(k,gamma);
 
             // since the first element in the householder vector is known to be 1
@@ -237,7 +240,7 @@ public class TridiagonalDecompositionHouseholder_CD64
             // improving large matrix performance
             for( int j = row+1; j < i; j++ ) {
                 double realA = QT.data[(j*N+i)*2];
-                double imagA = QT.data[(j*N+i)*2+1];
+                double imagA = -QT.data[(j*N+i)*2+1];
 
                 double realU = QT.data[(startU+j)*2];
                 double imagU = QT.data[(startU+j)*2+1];
@@ -257,32 +260,41 @@ public class TridiagonalDecompositionHouseholder_CD64
             }
             w[i*2]   = -gamma*totalReal;
             w[i*2+1] = -gamma*totalImag;
-
         }
+        for (int i = row+1; i < N; i++) {
+            System.out.println("-gamma*A*u ["+i+"] = "+w[i*2]+" "+w[i*2+1]);
+        }
+
         // alpha = -0.5*gamma*u^T*v
-        double alphaReal = 0;
-        double alphaImag = 0;
+        double realAplha = 0;
+        double imageAlpha = 0;
 
         for( int i = row+1; i < N; i++ ) {
             double realU = QT.data[(startU+i)*2];
-            double imagU = QT.data[(startU+i)*2+1];
+            double imagU = -QT.data[(startU+i)*2+1];
 
             double realV = w[i*2];
             double imagV = w[i*2+1];
 
-            alphaReal += realU*realV - imagU*imagV;
-            alphaImag += realU*imagV + imagU*realV;
+            System.out.println("v ["+i+"] = "+realV+" "+imagV);
+
+            realAplha += realU*realV - imagU*imagV;
+            imageAlpha += realU*imagV + imagU*realV;
         }
-        alphaReal *= -0.5*gamma;
-        alphaImag *= -0.5*gamma;
+        realAplha *= -0.5*gamma;
+        imageAlpha *= -0.5*gamma;
+        System.out.println("alpha = "+realAplha+" "+imageAlpha+"i");
 
         // w = v + alpha*u
         for( int i = row+1; i < N; i++ ) {
             double realU = QT.data[(startU+i)*2];
             double imagU = QT.data[(startU+i)*2+1];
 
-            w[i*2]   += alphaReal*realU - alphaImag*imagU;
-            w[i*2+1] += alphaReal*imagU + alphaImag*realU;
+            w[i*2]   += realAplha*realU - imageAlpha*imagU;
+            w[i*2+1] += realAplha*imagU + imageAlpha*realU;
+        }
+        for (int i = row+1; i < N; i++) {
+            System.out.println("w = v + alpha*u ["+i+"] = "+w[i*2]+" "+w[i*2+1]);
         }
         // A = A + w*u^T + u*w^T
         for( int i = row+1; i < N; i++ ) {
@@ -293,20 +305,23 @@ public class TridiagonalDecompositionHouseholder_CD64
             double realUU = QT.data[(startU+i)*2];
             double imagUU = QT.data[(startU+i)*2+1];
 
-            int rowA = i*N;
+            int indA = (i*N+i)*2;
             for( int j = i; j < N; j++ ) {
                 // only write to the upper portion of the matrix
                 // this reduces the number of cache misses
 
                 double realU = QT.data[(startU+j)*2];
-                double imagU = QT.data[(startU+j)*2+1];
+                double imagU = -QT.data[(startU+j)*2+1];
 
                 double realW = w[j*2];
-                double imagW = w[j*2+1];
+                double imagW = -w[j*2+1];
 
-                QT.data[(rowA+j)*2]   += realWW*realU - imagWW*imagU + realW*realUU - imagW*imagUU;
-                QT.data[(rowA+j)*2+1] += realWW*imagU + imagWW*realU + realW*imagUU + imagW*realUU;
+                QT.data[indA++] += realWW*realU - imagWW*imagU + realW*realUU - imagW*imagUU;
+                QT.data[indA++] += realWW*imagU + imagWW*realU + realW*imagUU + imagW*realUU;
+                System.out.print((realWW*realU - imagWW*imagU + realW*realUU - imagW*imagUU)+" "+
+                        (realWW*imagU + imagWW*realU + realW*imagUU + imagW*realUU)+" , ");
             }
+            System.out.println();
         }
     }
 
