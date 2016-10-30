@@ -131,14 +131,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,numRows);
 
         for( int j = minLength-1; j >= 0; j-- ) {
-            u[2*j]   = 1;
-            u[2*j+1] = 0;
-
-            for( int i = j+1; i < numRows; i++ ) {
-                int indexQR = QR.getIndex(i,j);
-                u[i*2] = QR.data[indexQR];
-                u[i*2+1] = QR.data[indexQR+1];
-            }
+            QrHelperFunctions_CD64.extractHouseholderColumn(QR,j,numRows,j,u,j*2);
             QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,0,gammas[j],j,j,numRows,v);
         }
 
@@ -218,22 +211,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     protected void householder( int j )
     {
         // find the element with the largest absolute value in the column and make a copy
-        int indexQR = 2*(j+j*numCols);
-        int indexU = 2*j;
-        double max = 0;
-        for( int i = j; i < numRows; i++ ) {
-
-            double realD = u[indexU++] = dataQR[indexQR];
-            double imagD = u[indexU++] = dataQR[indexQR+1];
-
-            // absolute value of d
-            double magD = realD*realD + imagD*imagD;
-            if( max < magD ) {
-                max = magD;
-            }
-            indexQR += numCols*2;
-        }
-        max = Math.sqrt(max);
+        double max = QrHelperFunctions_CD64.extractColumnAndMax(QR,j,numRows,j,u,j*2);
 
         if( max == 0.0 ) {
             realGamma = 0;
@@ -242,7 +220,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             // compute the norm2 of the vector, with each element
             // normalized by the max value to avoid overflow problems
             double nx = 0;
-            indexU = 2*j;
+            int indexU = 2*j;
 
             for( int i = j; i < numRows; i++ ) {
                 double realD = u[indexU++] /= max;

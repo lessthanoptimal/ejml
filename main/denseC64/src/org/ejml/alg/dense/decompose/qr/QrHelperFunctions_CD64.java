@@ -300,4 +300,111 @@ public class QrHelperFunctions_CD64 {
             }
         }
     }
+
+    /**
+     * Extracts a house holder vector from the column of A and stores it in u
+     * @param A Complex matrix with householder vectors stored in the lower left triangle
+     * @param row0 first row in A (implicitly assumed to be r + i0)
+     * @param row1 last row + 1 in A
+     * @param col Column in A
+     * @param u Output array storage
+     * @param startU first index in U
+     */
+    public static void extractHouseholderColumn( CDenseMatrix64F A ,
+                                                 int row0 , int row1 ,
+                                                 int col , double u[], int startU )
+    {
+        int indexU = startU;
+        u[indexU++] = 1;
+        u[indexU++] = 0;
+
+        for (int row = row0+1; row < row1; row++) {
+            int indexA = A.getIndex(row,col);
+            u[indexU++] = A.data[indexA];
+            u[indexU++] = A.data[indexA+1];
+        }
+    }
+
+    /**
+     * Extracts a house holder vector from the rows of A and stores it in u
+     * @param A Complex matrix with householder vectors stored in the upper right triangle
+     * @param row Row in A
+     * @param col0 first row in A (implicitly assumed to be r + i0)
+     * @param col1 last row +1 in A
+     * @param u Output array storage
+     * @param startU first index in U
+     */
+    public static void extractHouseholderRow( CDenseMatrix64F A ,
+                                              int row ,
+                                              int col0, int col1 , double u[], int startU )
+    {
+        u[startU]   = 1;
+        u[startU+1] = 0;
+
+        int indexA = (row*A.numCols + (col0+1))*2;
+        System.arraycopy(A.data,indexA,u,startU+2,(col1-col0-1)*2);
+    }
+
+    /**
+     * Extracts the column of A and copies it into u while computing the magnitude of the
+     * largest element and returning it.
+     * @param A Complex matrix
+     * @param row0 First row in A to be copied
+     * @param row1 Last row in A + 1 to be copied
+     * @param col Column in A
+     * @param u Output array storage
+     * @return magnitude of largest element
+     */
+    public static double extractColumnAndMax( CDenseMatrix64F A ,
+                                              int row0 , int row1 ,
+                                              int col , double u[], int startU) {
+        int indexU = startU;
+
+        // find the largest value in this column
+        // this is used to normalize the column and mitigate overflow/underflow
+        double max = 0;
+
+        int indexA = A.getIndex(row0,col);
+        double h[] = A.data;
+
+        for( int i = row0; i < row1; i++, indexA += A.numCols*2 ) {
+            // copy the householder vector to an array to reduce cache misses
+            // big improvement on larger matrices and a relatively small performance hit on small matrices.
+            double realVal = u[indexU++] = h[indexA];
+            double imagVal = u[indexU++] = h[indexA+1];
+
+            double magVal = realVal*realVal + imagVal*imagVal;
+            if( max < magVal ) {
+                max = magVal;
+            }
+        }
+        return Math.sqrt(max);
+    }
+
+    /**
+     * Finds the magnitude of the largest element in the row
+     * @param A Complex matrix
+     * @param row Row in A
+     * @param col0 First column in A to be copied
+     * @param col1 Last column in A + 1 to be copied
+     * @return magnitude of largest element
+     */
+    public static double computeRowMax( CDenseMatrix64F A ,
+                                        int row , int col0 , int col1 ) {
+        double max = 0;
+
+        int indexA = A.getIndex(row,col0);
+        double h[] = A.data;
+
+        for (int i = col0; i < col1; i++) {
+            double realVal = h[indexA++];
+            double imagVal = h[indexA++];
+
+            double magVal = realVal*realVal + imagVal*imagVal;
+            if( max < magVal ) {
+                max = magVal;
+            }
+        }
+        return Math.sqrt(max);
+    }
 }

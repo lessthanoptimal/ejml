@@ -147,14 +147,7 @@ public class HessenbergSimilarDecomposition_CD64
 
         Arrays.fill(u,0,N*2,0);
         for( int j = N-2; j >= 0; j-- ) {
-            u[(j+1)*2]   = 1;
-            u[(j+1)*2+1] = 0;
-
-            for( int i = j+2; i < N; i++ ) {
-                int indexQH = QH.getIndex(i,j);
-                u[i*2]   = QH.data[indexQH];
-                u[i*2+1] = QH.data[indexQH+1];
-            }
+            QrHelperFunctions_CD64.extractHouseholderColumn(QH,j+1,N,j,u,(j+1)*2);
             QrHelperFunctions_CD64.rank1UpdateMultR(Q, u, 0,gammas[j], j + 1, j + 1, N, b);
         }
 
@@ -168,24 +161,9 @@ public class HessenbergSimilarDecomposition_CD64
         double h[] = QH.data;
 
         for( int k = 0; k < N-2; k++ ) { // k = column
-            // find the largest value in this column
-            // this is used to normalize the column and mitigate overflow/underflow
-            double max = 0;
-
             u[k*2] = 0;
             u[k*2+1] = 0;
-            for( int i = k+1; i < N; i++ ) {
-                // copy the householder vector to vector outside of the matrix to reduce caching issues
-                // big improvement on larger matrices and a relatively small performance hit on small matrices.
-                double realVal = u[i*2] = h[(i*N+k)*2];
-                double imagVal = u[i*2+1] = h[(i*N+k)*2+1];
-
-                double magVal = realVal*realVal + imagVal*imagVal;
-                if( max < magVal ) {
-                    max = magVal;
-                }
-            }
-            max = Math.sqrt(max);
+            double max = QrHelperFunctions_CD64.extractColumnAndMax(QH,k+1,N,k,u,(k+1)*2);
 
             if( max > 0 ) {
                 // -------- set up the reflector Q_k

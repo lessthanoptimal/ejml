@@ -28,8 +28,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -260,5 +259,25 @@ public class TestQrHelperFunctions_CD64 {
                 }
             }
         }
+    }
+
+    @Test
+    public void extractHouseholderColumn() {
+        fail("Implement");
+    }
+
+    @Test
+    public void extractHouseholderRow() {
+        fail("Implement");
+    }
+
+    @Test
+    public void extractColumnAndMax() {
+        fail("Implement");
+    }
+
+    @Test
+    public void computeRowMax() {
+        fail("Implement");
     }
 }

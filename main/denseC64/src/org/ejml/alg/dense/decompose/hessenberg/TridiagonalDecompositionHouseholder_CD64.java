@@ -18,10 +18,13 @@
 
 package org.ejml.alg.dense.decompose.hessenberg;
 
-import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
-import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
+import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
+import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
+
+import java.util.Arrays;
 
 /**
  * <p>
@@ -45,13 +48,13 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_CD64
-        implements TridiagonalSimilarDecomposition<DenseMatrix64F> {
+        implements TridiagonalSimilarDecomposition<CDenseMatrix64F> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores
      * the tridiagonal matrix.  The rows store householder vectors.
      */
-    private DenseMatrix64F QT;
+    private CDenseMatrix64F QT;
 
     // The size of the matrix
     private int N;
@@ -63,10 +66,12 @@ public class TridiagonalDecompositionHouseholder_CD64
     // temporary storage
     private double b[];
 
+    private Complex64F tau = new Complex64F();
+
     public TridiagonalDecompositionHouseholder_CD64() {
         N = 1;
-        w = new double[N];
-        b = new double[N];
+        w = new double[N*2];
+        b = new double[N*2];
         gammas = new double[N];
     }
 
@@ -74,7 +79,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      * Returns the internal matrix where the decomposed results are stored.
      * @return
      */
-    public DenseMatrix64F getQT() {
+    public CDenseMatrix64F getQT() {
         return QT;
     }
 
@@ -96,53 +101,51 @@ public class TridiagonalDecompositionHouseholder_CD64
      * @return The extracted T matrix.
      */
     @Override
-    public DenseMatrix64F getT( DenseMatrix64F T ) {
-        T = UtilDecompositons_D64.checkZeros(T,N,N);
+    public CDenseMatrix64F getT( CDenseMatrix64F T ) {
+        T = UtilDecompositons_CD64.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
 
         for( int i = 1; i < N; i++ ) {
-            T.set(i,i, QT.get(i,i));
-            double a = QT.get(i-1,i);
-            T.set(i-1,i,a);
-            T.set(i,i-1,a);
+            T.set(i,i, QT.getReal(i,i), QT.getImaginary(i,i));
+            double real = QT.getReal(i-1,i);
+            double imag = QT.getReal(i-1,i);
+            T.set(i-1,i,real,imag);
+            T.set(i,i-1,real,imag);
         }
 
         if( N > 1 ) {
-            T.data[(N-1)*N+N-1] = QT.data[(N-1)*N+N-1];
-            T.data[(N-1)*N+N-2] = QT.data[(N-2)*N+N-1];
+            T.data[((N-1)*N+N-1)*2]   = QT.data[((N-1)*N+N-1)*2];
+            T.data[((N-1)*N+N-1)*2+1] = QT.data[((N-1)*N+N-1)*2+1];
+
+            T.data[((N-1)*N+N-2)*2]   = QT.data[((N-1)*N+N-2)*2];
+            T.data[((N-1)*N+N-2)*2+1] = QT.data[((N-1)*N+N-2)*2+1];
         }
-            
+
         return T;
     }
 
     /**
-     * An orthogonal matrix that has the following property: T = Q<sup>T</sup>AQ
+     * An orthogonal matrix that has the following property: T = Q<sup>H</sup>AQ
      *
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
     @Override
-    public DenseMatrix64F getQ( DenseMatrix64F Q , boolean transposed ) {
-        Q = UtilDecompositons_D64.checkIdentity(Q,N,N);
+    public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean transposed ) {
+        Q = UtilDecompositons_CD64.checkIdentity(Q,N,N);
 
-        for( int i = 0; i < N; i++ ) w[i] = 0;
+        Arrays.fill(w,0,N,0);
 
         if( transposed ) {
             for( int j = N-2; j >= 0; j-- ) {
-                w[j+1] = 1;
-                for( int i = j+2; i < N; i++ ) {
-                    w[i] = QT.data[j*N+i];
-                }
-                QrHelperFunctions_D64.rank1UpdateMultL(Q, w, gammas[j + 1], j + 1, j + 1, N);
+                QrHelperFunctions_CD64.extractHouseholderRow(QT,j,j+1,N,w,j+1);
+                QrHelperFunctions_CD64.rank1UpdateMultL(Q, w, 0, gammas[j + 1], j + 1, j + 1, N);
             }
         } else {
             for( int j = N-2; j >= 0; j-- ) {
-                w[j+1] = 1;
-                for( int i = j+2; i < N; i++ ) {
-                    w[i] = QT.get(j,i);
-                }
-                QrHelperFunctions_D64.rank1UpdateMultR(Q, w, gammas[j + 1], j + 1, j + 1, N, b);
+                QrHelperFunctions_CD64.extractHouseholderColumn(QT,j+1,N,j,w,(j+1)*2);
+                QrHelperFunctions_CD64.rank1UpdateMultR(Q, w, 0, gammas[j + 1], j + 1, j + 1, N, b);
             }
         }
 
@@ -155,7 +158,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      * @param A Symmetric matrix that is going to be decomposed.  Not modified.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A ) {
+    public boolean decompose( CDenseMatrix64F A ) {
         init(A);
 
         for( int k = 1; k < N; k++ ) {
@@ -173,35 +176,32 @@ public class TridiagonalDecompositionHouseholder_CD64
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
-        double max = 0;
+        double max = QrHelperFunctions_CD64.computeRowMax(QT,k-1,k,N);
 
-        int rowU = (k-1)*N;
-
-        for( int i = k; i < N; i++ ) {
-            double val = Math.abs(t[rowU+i]);
-            if( val > max )
-                max = val;
-        }
 
         if( max > 0 ) {
             // -------- set up the reflector Q_k
+            int rowU = (k-1)*N*2;
 
-            double tau = QrHelperFunctions_D64.computeTauAndDivide(k, N, t, rowU, max);
-
-            // write the reflector into the lower left column of the matrix
-            double nu = t[rowU+k] + tau;
-            QrHelperFunctions_D64.divideElements(k + 1, N, t, rowU, nu);
-            t[rowU+k] = 1.0;
-
-            double gamma = nu/tau;
+            double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(k-1, N, t, max, tau);
             gammas[k] = gamma;
+
+            // divide u by u_0
+            double real_u_0 = t[rowU]   + tau.real;
+            double imag_u_0 = t[rowU+1] + tau.imaginary;
+            QrHelperFunctions_CD64.divideElements(k + 1, N, t, rowU, real_u_0,imag_u_0 );
+
+            t[rowU+k*2]   = 1.0;
+            t[rowU+k*2+1] = 0;
 
             // ---------- Specialized householder that takes advantage of the symmetry
             householderSymmetric(k,gamma);
 
             // since the first element in the householder vector is known to be 1
             // store the full upper hessenberg
-            t[rowU+k] = -tau*max;
+            t[rowU+k*2]   = -tau.real*max;
+            t[rowU+k*2+1] = -tau.imaginary*max;
+
         } else {
             gammas[k] = 0;
         }
@@ -219,41 +219,83 @@ public class TridiagonalDecompositionHouseholder_CD64
 
         // compute v = -gamma*A*u
         for( int i = row; i < N; i++ ) {
-            double total = 0;
+            double totalReal = 0;
+            double totalImag = 0;
+
             // the lower triangle is not written to so it needs to traverse upwards
             // to get the information.  Reduces the number of matrix writes need
             // improving large matrix performance
             for( int j = row; j < i; j++ ) {
-                total += QT.data[j*N+i]*QT.data[startU+j];
+                double realA = QT.data[(j*N+i)*2];
+                double imagA = QT.data[(j*N+i)*2+1];
+
+                double realU = QT.data[(startU+j)*2];
+                double imagU = QT.data[(startU+j)*2+1];
+
+                totalReal += realA*realU - imagA*imagU;
+                totalImag += realA*imagU + imagA*realU;
             }
             for( int j = i; j < N; j++ ) {
-                total += QT.data[i*N+j]*QT.data[startU+j];
+                double realA = QT.data[(i*N+j)*2];
+                double imagA = QT.data[(i*N+j)*2+1];
+
+                double realU = QT.data[(startU+j)*2];
+                double imagU = QT.data[(startU+j)*2+1];
+
+                totalReal += realA*realU - imagA*imagU;
+                totalImag += realA*imagU + imagA*realU;
             }
-            w[i] = -gamma*total;
+            w[i*2]   = -gamma*totalReal;
+            w[i*2+1] = -gamma*totalImag;
+
         }
         // alpha = -0.5*gamma*u^T*v
-        double alpha = 0;
+        double alphaReal = 0;
+        double alphaImag = 0;
 
         for( int i = row; i < N; i++ ) {
-            alpha += QT.data[startU+i]*w[i];
+            double realU = QT.data[(startU+i)*2];
+            double imagU = QT.data[(startU+i)*2+1];
+
+            double realV = w[i*2];
+            double imagV = w[i*2+1];
+
+            alphaReal += realU*realV - imagU*imagV;
+            alphaImag += realU*imagV + imagU*realV;
         }
-        alpha *= -0.5*gamma;
+        alphaReal *= -0.5*gamma;
+        alphaImag *= -0.5*gamma;
 
         // w = v + alpha*u
         for( int i = row; i < N; i++ ) {
-            w[i] += alpha*QT.data[startU+i];
+            double realU = QT.data[(startU+i)*2];
+            double imagU = QT.data[(startU+i)*2+1];
+
+            w[i*2]   += alphaReal*realU - alphaImag*imagU;
+            w[i*2+1] += alphaReal*imagU + alphaImag*realU;
         }
         // A = A + w*u^T + u*w^T
         for( int i = row; i < N; i++ ) {
 
-            double ww = w[i];
-            double uu = QT.data[startU+i];
+            double realWW = w[i*2];
+            double imagWW = w[i*2+1];
+
+            double realUU = QT.data[(startU+i)*2];
+            double imagUU = QT.data[(startU+i)*2+1];
 
             int rowA = i*N;
             for( int j = i; j < N; j++ ) {
                 // only write to the upper portion of the matrix
                 // this reduces the number of cache misses
-                QT.data[rowA+j] += ww*QT.data[startU+j] + w[j]*uu;
+
+                double realU = QT.data[(startU+j)*2];
+                double imagU = QT.data[(startU+j)*2+1];
+
+                double realW = w[j*2];
+                double imagW = w[j*2+1];
+
+                QT.data[(rowA+j)*2]   += realWW*realU - imagWW*imagU + realW*realUU - imagW*imagUU;
+                QT.data[(rowA+j)*2+1] += realWW*imagU + imagWW*realU + realW*imagUU + imagW*realUU;
             }
         }
     }
@@ -264,7 +306,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      *
      * @param A Matrix being decomposed.
      */
-    public void init( DenseMatrix64F A ) {
+    public void init( CDenseMatrix64F A ) {
         if( A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be square");
 
@@ -272,9 +314,9 @@ public class TridiagonalDecompositionHouseholder_CD64
             N = A.numCols;
 
             if( w.length < N ) {
-                w = new double[ N ];
-                gammas = new double[N];
-                b = new double[N];
+                w = new double[ N*2 ];
+                gammas = new double[N*2];
+                b = new double[N*2];
             }
         }
 
