@@ -163,7 +163,7 @@ public class HessenbergSimilarDecomposition_CD64
         for( int k = 0; k < N-2; k++ ) { // k = column
             u[k*2] = 0;
             u[k*2+1] = 0;
-            double max = QrHelperFunctions_CD64.extractColumnAndMax(QH,k+1,N,k,u,k+1);
+            double max = QrHelperFunctions_CD64.extractColumnAndMax(QH,k+1,N,k,u,0);
 
             if( max > 0 ) {
                 // -------- set up the reflector Q_k

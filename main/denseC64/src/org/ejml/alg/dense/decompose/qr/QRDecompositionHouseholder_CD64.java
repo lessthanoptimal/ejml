@@ -209,7 +209,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     protected void householder( int j )
     {
         // find the element with the largest absolute value in the column and make a copy
-        double max = QrHelperFunctions_CD64.extractColumnAndMax(QR,j,numRows,j,u,j);
+        double max = QrHelperFunctions_CD64.extractColumnAndMax(QR,j,numRows,j,u,0);
 
         if( max <= 0.0 ) {
             gammas[j] = 0;

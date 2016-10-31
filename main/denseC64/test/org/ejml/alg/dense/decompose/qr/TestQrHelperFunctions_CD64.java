@@ -28,7 +28,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -263,21 +264,72 @@ public class TestQrHelperFunctions_CD64 {
 
     @Test
     public void extractHouseholderColumn() {
-        fail("Implement");
+        CDenseMatrix64F A = CRandomMatrices.createRandom(6,5,rand);
+
+        double u[] = new double[6*2];
+
+        QrHelperFunctions_CD64.extractHouseholderColumn(A,1,5,1,u,1);
+
+        assertEquals(1 , u[4], 1e-8);
+        assertEquals(0 , u[5], 1e-8);
+
+        for (int i = 2; i < 5; i++) {
+            double real = A.getReal(i,1);
+            double imag = A.getImag(i,1);
+
+            assertEquals(u[(i+1)*2]   , real , 1e-8);
+            assertEquals(u[(i+1)*2+1] , imag , 1e-8);
+        }
     }
 
     @Test
     public void extractHouseholderRow() {
-        fail("Implement");
+        CDenseMatrix64F A = CRandomMatrices.createRandom(5,6,rand);
+
+        double u[] = new double[6*2];
+
+        QrHelperFunctions_CD64.extractHouseholderRow(A,1,1,5,u,1);
+
+        assertEquals(1 , u[4], 1e-8);
+        assertEquals(0 , u[5], 1e-8);
+
+        for (int i = 2; i < 5; i++) {
+            double real = A.getReal(1,i);
+            double imag = A.getImag(1,i);
+
+            assertEquals(u[(i+1)*2]   , real , 1e-8);
+            assertEquals(u[(i+1)*2+1] , imag , 1e-8);
+        }
     }
 
     @Test
     public void extractColumnAndMax() {
-        fail("Implement");
+        CDenseMatrix64F A = CRandomMatrices.createRandom(5,6,rand);
+
+        A.set(2,1,10,0);
+
+        double u[] = new double[6*2];
+        double max = QrHelperFunctions_CD64.extractColumnAndMax(A,1,5,1,u,1);
+
+        assertEquals(10, max, 1e-8);
+
+        for (int i = 1; i < 5; i++) {
+            double real = A.getReal(i,1);
+            double imag = A.getImag(i,1);
+
+            assertEquals(u[(i+1)*2]   , real , 1e-8);
+            assertEquals(u[(i+1)*2+1] , imag , 1e-8);
+        }
     }
 
     @Test
     public void computeRowMax() {
-        fail("Implement");
+        CDenseMatrix64F A = CRandomMatrices.createRandom(5,6,rand);
+
+        A.set(1,2,10,0);
+
+        double max = QrHelperFunctions_CD64.computeRowMax(A,1,1,5);
+
+        assertEquals(10, max, 1e-8);
     }
 }

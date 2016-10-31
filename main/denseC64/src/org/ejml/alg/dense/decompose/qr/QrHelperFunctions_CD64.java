@@ -355,17 +355,24 @@ public class QrHelperFunctions_CD64 {
     /**
      * Extracts the column of A and copies it into u while computing the magnitude of the
      * largest element and returning it.
+     *
+     * <pre>
+     * u[ (offsetU+row0+i)*2    ] = A.getReal(row0+i,col)
+     * u[ (offsetU+row0+i)*2 + 1] = A.getImag(row0+i,col)
+     * </pre>
+     *
      * @param A Complex matrix
      * @param row0 First row in A to be copied
      * @param row1 Last row in A + 1 to be copied
      * @param col Column in A
      * @param u Output array storage
+     * @param offsetU first index in U
      * @return magnitude of largest element
      */
     public static double extractColumnAndMax( CDenseMatrix64F A ,
                                               int row0 , int row1 ,
-                                              int col , double u[], int startU) {
-        int indexU = startU*2;
+                                              int col , double u[], int offsetU) {
+        int indexU = (offsetU+row0)*2;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow

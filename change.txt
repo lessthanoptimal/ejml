@@ -17,6 +17,8 @@ Date format: year/month/day
 - Added MatrixFeatures.isLowerTriangle()
 - Added createLike() to all matrices
   * Creates a new matrix that is the same size and shape.  filled with zeros initially
+- Fixed CRandomMatrices.createHermitian()
+- Fixed CMatrixFeatures.isHermitian()
 
 TODO look at sparse matrix contribution
 TODO equations support for boolean matrices and inequalities
