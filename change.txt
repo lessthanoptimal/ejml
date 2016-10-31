@@ -11,7 +11,9 @@ Date format: year/month/day
   * added multTransA variants
   * added multTransB variants
   * added multTransAB variants
-- Added complex Hessenberg Similar Decomposition
+- Added the following complex decompositions
+  * Hessenberg Similar Decomposition
+  * Tridiagonal Similar Decomposition
 - Added MatrixFeatures.isLowerTriangle()
 - Added createLike() to all matrices
   * Creates a new matrix that is the same size and shape.  filled with zeros initially

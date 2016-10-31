@@ -64,9 +64,6 @@ public abstract class StandardTridiagonalTests_CD64 {
             CCommonOps.mult(Q,T,tmp);
             CCommonOps.multTransB(tmp,Q,A_found);
 
-            A_found.print();
-            A.print();
-
             assertTrue("width = "+width, CMatrixFeatures.isIdentical(A,A_found,1e-8));
         }
     }
