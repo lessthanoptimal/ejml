@@ -182,7 +182,8 @@ public class TridiagonalDecompositionHouseholder_CD64
             double imag_u_0 = t[(k*N+k+1)*2+1] + tau.imaginary;
             QrHelperFunctions_CD64.divideElements(k+2, N, t, k*N, real_u_0,imag_u_0 );
 
-            // the goal is to zero a column, so this is the conjugate of what we want.  fix that
+            // A column is zeroed first.  However a row is being used to store because it reduces
+            // cache misses.  Need to compute the conjugate to have the correct householder operation
             for (int i = k+2; i < N; i++) {
                 t[(k*N+i)*2+1] = -t[(k*N+i)*2+1];
             }
