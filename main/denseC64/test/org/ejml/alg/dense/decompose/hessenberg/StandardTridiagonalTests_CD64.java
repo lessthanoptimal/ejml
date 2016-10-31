@@ -45,7 +45,7 @@ public abstract class StandardTridiagonalTests_CD64 {
     @Test
     public void fullTest() {
 
-        for( int width = 3; width < 20; width += 2 ) {
+        for( int width = 1; width < 20; width += 2 ) {
 
             CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
 

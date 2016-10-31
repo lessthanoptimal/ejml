@@ -33,6 +33,7 @@ For some future Release
   - Save up rotators, multiply against each other, then multiply against U and V
   - Divide and conquer algorithm
   - An implementation that just finds zero singular values
+  - Bidiagonal decompositions have a lot of inefficient code
 
 - Incremental SVD
 

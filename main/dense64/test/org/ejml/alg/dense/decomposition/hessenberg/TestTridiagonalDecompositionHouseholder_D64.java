@@ -27,7 +27,6 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
  */
 public class TestTridiagonalDecompositionHouseholder_D64 extends StandardTridiagonalTests_D64 {
 
-
     @Override
     protected TridiagonalSimilarDecomposition<DenseMatrix64F> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_D64();
