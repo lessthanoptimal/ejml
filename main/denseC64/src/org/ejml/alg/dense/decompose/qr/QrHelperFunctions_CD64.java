@@ -82,7 +82,7 @@ public class QrHelperFunctions_CD64 {
 
         double mag2 = realA*realA + imagA*imagA;
 
-        int index = startU+j*2;
+        int index = (startU+j)*2;
 
         for( int i = j; i < numRows; i++ ) {
             double realU = u[index];
@@ -143,7 +143,12 @@ public class QrHelperFunctions_CD64 {
         double top,bottom;
 
         // if there is a chance they can cancel swap the sign
-        if ( real_x0*tau.real<0) {
+        // TODO not sure if this is right...
+        double m0 = mag(real_x0+tau.real , imag_x0+tau.imaginary);
+        double m1 = mag(real_x0-tau.real , imag_x0-tau.imaginary);
+
+        // if ( real_x0*tau.real<0) { // This is the previous rule until the m0 m1 code came into play
+        if ( m1 > m0 ) {
             tau.real = -tau.real;
             tau.imaginary = -tau.imaginary;
             top = nx * nx - nx *mag_x0;
@@ -156,6 +161,10 @@ public class QrHelperFunctions_CD64 {
         return bottom/top; // gamma
     }
 
+    private static double mag( double r , double i ) {
+        return r*r + i*i;
+    }
+
     /**
      * <p>
      * Performs a rank-1 update operation on the submatrix specified by w with the multiply on the right.<br>
@@ -166,7 +175,7 @@ public class QrHelperFunctions_CD64 {
      * @param A matrix
      * @param u vector
      * @param offsetU offset added to w0 when indexing u.  Multiplied by 2 since complex.
-     * @param gammaR real component of gamma
+     * @param gamma real component of gamma
      * @param colA0 first column in A sub-matrix.
      * @param w0 first index in sub-array in u and row sub-matrix in A
      * @param w1 last index + 1 in sub-array in u and row sub-matrix in A
@@ -174,7 +183,7 @@ public class QrHelperFunctions_CD64 {
      */
     public static void rank1UpdateMultR(CDenseMatrix64F A,
                                         double u[], int offsetU,
-                                        double gammaR ,
+                                        double gamma ,
                                         int colA0,
                                         int w0, int w1,
                                         double _temp[])
@@ -193,7 +202,7 @@ public class QrHelperFunctions_CD64 {
         double realU = u[indexU];
         double imagU = -u[indexU+1];
 
-        int indexA = w0*A.numCols*2 + colA0*2;
+        int indexA = (w0*A.numCols + colA0)*2;
         int indexTmp = colA0*2;
 
         for( int i = colA0; i < A.numCols; i++ ) {
@@ -205,7 +214,7 @@ public class QrHelperFunctions_CD64 {
         }
 
         for( int k = w0+1; k < w1; k++ ) {
-            indexA = k*A.numCols*2 + colA0*2;
+            indexA = (k*A.numCols + colA0)*2;
             indexU = (k+offsetU)*2;
             indexTmp = colA0*2;
 
@@ -223,17 +232,14 @@ public class QrHelperFunctions_CD64 {
 
         indexTmp = colA0*2;
         for( int i = colA0; i < A.numCols; i++ ) {
-            double realTmp = _temp[indexTmp];
-            double imagTmp = _temp[indexTmp+1];
-
-            _temp[indexTmp++] = gammaR*realTmp;
-            _temp[indexTmp++] = gammaR*imagTmp;
+            _temp[indexTmp++] *= gamma;
+            _temp[indexTmp++] *= gamma;
         }
 
         // end of reorder
 
         for( int i = w0; i < w1; i++ ) {
-            indexA = i*A.numCols*2 + colA0*2;
+            indexA = (i*A.numCols + colA0)*2;
             indexU = (i+offsetU)*2;
             indexTmp = colA0*2;
 
@@ -275,7 +281,7 @@ public class QrHelperFunctions_CD64 {
             int startIndex = (i*A.numCols+w0)*2;
             double realSum = 0,imagSum=0;
             int rowIndex = startIndex;
-            int indexU = offsetU+w0*2;
+            int indexU = (offsetU+w0)*2;
             for( int j = w0; j < w1; j++ ) {
                 double realA = A.data[rowIndex++];
                 double imajA = A.data[rowIndex++];
@@ -290,7 +296,7 @@ public class QrHelperFunctions_CD64 {
             double imagTmp = -gammaR*imagSum;
 
             rowIndex = startIndex;
-            indexU = offsetU+w0*2;
+            indexU = (offsetU+w0)*2;
             for( int j = w0; j < w1; j++ ) {
                 double realU = u[indexU++];
                 double imagU = -u[indexU++];
@@ -308,13 +314,13 @@ public class QrHelperFunctions_CD64 {
      * @param row1 last row + 1 in A
      * @param col Column in A
      * @param u Output array storage
-     * @param startU first index in U
+     * @param offsetU first index in U
      */
     public static void extractHouseholderColumn( CDenseMatrix64F A ,
                                                  int row0 , int row1 ,
-                                                 int col , double u[], int startU )
+                                                 int col , double u[], int offsetU )
     {
-        int indexU = startU;
+        int indexU = (row0+offsetU)*2;
         u[indexU++] = 1;
         u[indexU++] = 0;
 
@@ -332,17 +338,18 @@ public class QrHelperFunctions_CD64 {
      * @param col0 first row in A (implicitly assumed to be r + i0)
      * @param col1 last row +1 in A
      * @param u Output array storage
-     * @param startU first index in U
+     * @param offsetU first index in U
      */
     public static void extractHouseholderRow( CDenseMatrix64F A ,
                                               int row ,
-                                              int col0, int col1 , double u[], int startU )
+                                              int col0, int col1 , double u[], int offsetU )
     {
-        u[startU]   = 1;
-        u[startU+1] = 0;
+        int indexU = (offsetU+col0)*2;
+        u[indexU]   = 1;
+        u[indexU+1] = 0;
 
         int indexA = (row*A.numCols + (col0+1))*2;
-        System.arraycopy(A.data,indexA,u,startU+2,(col1-col0-1)*2);
+        System.arraycopy(A.data,indexA,u,indexU+2,(col1-col0-1)*2);
     }
 
     /**
@@ -358,7 +365,7 @@ public class QrHelperFunctions_CD64 {
     public static double extractColumnAndMax( CDenseMatrix64F A ,
                                               int row0 , int row1 ,
                                               int col , double u[], int startU) {
-        int indexU = startU;
+        int indexU = startU*2;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow

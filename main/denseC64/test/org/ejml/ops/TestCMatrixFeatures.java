@@ -184,7 +184,7 @@ public class TestCMatrixFeatures {
 
     @Test
     public void isHermitian() {
-        CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{1,1.1,2,2.1},{2,-2.1,3,3.1}});
+        CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{1,0, 2,2.1},{2,-2.1 ,3,0}});
 
         assertTrue(CMatrixFeatures.isHermitian(A, 1e-8));
 

@@ -20,6 +20,7 @@ package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -70,9 +71,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
     // the computed gamma for Q_k matrix
     protected double gammas[];
-    // local variables
-    protected double realGamma; // gamma is always real
-    protected double realTau,imagTau;
+    protected Complex64F tau = new Complex64F();
 
 
     // did it encounter an error?
@@ -131,7 +130,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
             Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,numRows);
 
         for( int j = minLength-1; j >= 0; j-- ) {
-            QrHelperFunctions_CD64.extractHouseholderColumn(QR,j,numRows,j,u,j*2);
+            QrHelperFunctions_CD64.extractHouseholderColumn(QR,j,numRows,j,u,0);
             QrHelperFunctions_CD64.rank1UpdateMultR(Q,u,0,gammas[j],j,j,numRows,v);
         }
 
@@ -182,7 +181,6 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
         for( int j = 0; j < minLength; j++ ) {
             householder(j);
-            updateA(j);
         }
 
         return !error;
@@ -211,162 +209,37 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
     protected void householder( int j )
     {
         // find the element with the largest absolute value in the column and make a copy
-        double max = QrHelperFunctions_CD64.extractColumnAndMax(QR,j,numRows,j,u,j*2);
+        double max = QrHelperFunctions_CD64.extractColumnAndMax(QR,j,numRows,j,u,j);
 
-        if( max == 0.0 ) {
-            realGamma = 0;
+        if( max <= 0.0 ) {
+            gammas[j] = 0;
             error = true;
         } else {
-            // compute the norm2 of the vector, with each element
-            // normalized by the max value to avoid overflow problems
-            double nx = 0;
-            int indexU = 2*j;
+            double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(j,numRows,u,max,tau);
+            gammas[j] = gamma;
 
-            for( int i = j; i < numRows; i++ ) {
-                double realD = u[indexU++] /= max;
-                double imagD = u[indexU++] /= max;
+            // divide u by u_0
+            double real_u_0 = u[j*2]   + tau.real;
+            double imag_u_0 = u[j*2+1] + tau.imaginary;
+            QrHelperFunctions_CD64.divideElements(j + 1, numRows, u, 0, real_u_0,imag_u_0 );
 
-                nx += realD*realD + imagD*imagD;
-            }
-            nx = Math.sqrt(nx);
-
-            double real_x0 = u[2*j];
-            double imag_x0 = u[2*j+1];
-            double mag_x0 = Math.sqrt(real_x0*real_x0 + imag_x0*imag_x0);
-
-            // TODO Could stability be improved by computing theta so that this
-            // special case doesn't need to be handled?
-            if( mag_x0 == 0 ) {
-                realTau = nx;
-                imagTau = 0;
-            } else {
-                realTau = real_x0 / mag_x0 * nx;
-                imagTau = imag_x0 / mag_x0 * nx;
+            // write the reflector into the lower left column of the matrix
+            for (int i = j+1; i < numRows; i++) {
+                dataQR[(i*numCols+j)*2]   = u[i*2];
+                dataQR[(i*numCols+j)*2+1] = u[i*2+1];
             }
 
-            double top,bottom;
+            u[j*2]   = 1;
+            u[j*2+1] = 0;
 
-            // if there is a chance they can cancel swap the sign
-            if ( real_x0*realTau<0) {
-                realTau = -realTau;
-                imagTau = -imagTau;
-                top = nx * nx - nx *mag_x0;
-                bottom = mag_x0*mag_x0 - 2.0* nx *mag_x0 + nx * nx;
-            } else {
-                top = nx * nx + nx *mag_x0;
-                bottom = mag_x0*mag_x0 + 2.0* nx *mag_x0 + nx * nx;
+            QrHelperFunctions_CD64.rank1UpdateMultR(QR,u,0,gamma,j+1,j,numRows,v);
+
+            // since the first element in the householder vector is known to be 1
+            // store the full upper hessenberg
+            if( j < numCols ) {
+                dataQR[(j * numCols + j) * 2] = -tau.real * max;
+                dataQR[(j * numCols + j) * 2 + 1] = -tau.imaginary * max;
             }
-
-            realGamma = bottom/top;
-
-            double real_u_0 = real_x0 + realTau;
-            double imag_u_0 = imag_x0 + imagTau;
-            double norm_u_0 = real_u_0*real_u_0 + imag_u_0*imag_u_0;
-
-            indexU = (j+1)*2;
-            for( int i = j+1; i < numRows; i++ ) {
-                double realU = u[indexU];
-                double imagU = u[indexU+1];
-
-                u[indexU++] = (realU*real_u_0 + imagU*imag_u_0)/norm_u_0;
-                u[indexU++] = (imagU*real_u_0 - realU*imag_u_0)/norm_u_0;
-            }
-            u[2*j  ] = 1;
-            u[2*j+1] = 0;
-
-            realTau *= max;
-            imagTau *= max;
-        }
-
-        gammas[j] = realGamma;
-    }
-
-    /**
-     * <p>
-     * Takes the results from the householder computation and updates the 'A' matrix.<br>
-     * <br>
-     * A = (I - &gamma;*u*u<sup>H</sup>)A
-     * </p>
-     *
-     * @param w The submatrix.
-     */
-    protected void updateA( int w )
-    {
-        // much of the code below is equivalent to the rank1Update function
-        // however, since &tau; has already been computed there is no need to
-        // recompute it, saving a few multiplication operations
-//        for( int i = w+1; i < numCols; i++ ) {
-//            double val = 0;
-//
-//            for( int k = w; k < numRows; k++ ) {
-//                val += u[k]*dataQR[k*numCols +i];
-//            }
-//            v[i] = gamma*val;
-//        }
-
-        // This is functionally the same as the above code but the order has been changed
-        // to avoid jumping the cpu cache
-
-        int stride = numCols*2;
-        double realU = u[w*2];
-        double imagU = -u[w*2+1];
-
-        int indexQR = w*stride+(w+1)*2;
-        for( int i = w+1; i < numCols; i++ ) {
-
-            double realQR = dataQR[indexQR++];
-            double imagQR = dataQR[indexQR++];
-
-            v[i*2]   = realU*realQR - imagU*imagQR;
-            v[i*2+1] = realU*imagQR + imagU*realQR;
-        }
-
-        for( int k = w+1; k < numRows; k++ ) {
-            realU = u[k*2];
-            imagU = -u[k*2+1];
-
-            indexQR = k*stride+(w+1)*2;
-            for( int i = w+1; i < numCols; i++ ) {
-                double realQR = dataQR[indexQR++];
-                double imagQR = dataQR[indexQR++];
-
-//                v[i] += u[k]*dataQR[k*numCols +i];
-                v[i*2]   += realU*realQR - imagU*imagQR;
-                v[i*2+1] += realU*imagQR + imagU*realQR;
-            }
-        }
-
-        for( int i = w+1; i < numCols; i++ ) {
-            v[i*2] *= realGamma;
-            v[i*2+1] *= realGamma;
-        }
-
-        // end of reordered code
-
-        for( int i = w; i < numRows; i++ ) {
-            double realI = u[i*2];
-            double imagI = u[i*2+1];
-
-            indexQR = i*stride+(w+1)*2;
-            for( int j = w+1; j < numCols; j++ ) {
-                double realJ = v[j*2];
-                double imagJ = v[j*2+1];
-
-//                dataQR[i*numCols+j] -= valU*v[j];
-                dataQR[indexQR++] -= realI*realJ - imagI*imagJ;
-                dataQR[indexQR++] -= realI*imagJ + imagI*realJ;
-            }
-        }
-
-        if( w < numCols ) {
-            dataQR[2*w+w*stride] = -realTau;
-            dataQR[2*w+w*stride+1] = -imagTau;
-        }
-
-        // save the Q matrix in the lower portion of QR
-        for( int i = w+1; i < numRows; i++ ) {
-            dataQR[2*w+i*stride]     = u[i*2];
-            dataQR[2*w+i*stride + 1] = u[i*2 + 1];
         }
     }
 

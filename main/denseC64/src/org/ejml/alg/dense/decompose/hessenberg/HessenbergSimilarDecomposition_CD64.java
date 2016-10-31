@@ -147,7 +147,7 @@ public class HessenbergSimilarDecomposition_CD64
 
         Arrays.fill(u,0,N*2,0);
         for( int j = N-2; j >= 0; j-- ) {
-            QrHelperFunctions_CD64.extractHouseholderColumn(QH,j+1,N,j,u,(j+1)*2);
+            QrHelperFunctions_CD64.extractHouseholderColumn(QH,j+1,N,j,u,0);
             QrHelperFunctions_CD64.rank1UpdateMultR(Q, u, 0,gammas[j], j + 1, j + 1, N, b);
         }
 
@@ -163,7 +163,7 @@ public class HessenbergSimilarDecomposition_CD64
         for( int k = 0; k < N-2; k++ ) { // k = column
             u[k*2] = 0;
             u[k*2+1] = 0;
-            double max = QrHelperFunctions_CD64.extractColumnAndMax(QH,k+1,N,k,u,(k+1)*2);
+            double max = QrHelperFunctions_CD64.extractColumnAndMax(QH,k+1,N,k,u,k+1);
 
             if( max > 0 ) {
                 // -------- set up the reflector Q_k

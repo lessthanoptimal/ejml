@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -157,7 +157,9 @@ public class CRandomMatrices {
         int length = A.numRows;
 
         for( int i = 0; i < length; i++ ) {
-            for( int j = i; j < length; j++ ) {
+            A.set(i,i,rand.nextDouble()*range + min,0);
+
+            for( int j = i+1; j < length; j++ ) {
                 double real = rand.nextDouble()*range + min;
                 double imaginary = rand.nextDouble()*range + min;
                 A.set(i,j,real,imaginary);

@@ -138,17 +138,23 @@ public class TridiagonalDecompositionHouseholder_CD64
     public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean transposed ) {
         Q = UtilDecompositons_CD64.checkIdentity(Q,N,N);
 
-        Arrays.fill(w,0,N,0);
+        Arrays.fill(w,0,N*2,0);
 
         if( transposed ) {
             for( int j = N-2; j >= 0; j-- ) {
-                QrHelperFunctions_CD64.extractHouseholderRow(QT,j,j+1,N,w,j+1);
-                QrHelperFunctions_CD64.rank1UpdateMultL(Q, w, 0, gammas[j + 1], j + 1, j + 1, N);
+                QrHelperFunctions_CD64.extractHouseholderRow(QT,j,j+1,N,w,0);
+                QrHelperFunctions_CD64.rank1UpdateMultL(Q, w, 0, gammas[j], j+1, j+1 , N);
             }
         } else {
             for( int j = N-2; j >= 0; j-- ) {
-                QrHelperFunctions_CD64.extractHouseholderColumn(QT,j+1,N,j,w,(j+1)*2);
-                QrHelperFunctions_CD64.rank1UpdateMultR(Q, w, 0, gammas[j + 1], j + 1, j + 1, N, b);
+                System.out.println("------------- j "+j+"  gamma "+gammas[j]);
+                QrHelperFunctions_CD64.extractHouseholderRow(QT,j,j+1,N,w,0);
+                QrHelperFunctions_CD64.rank1UpdateMultR(Q, w, 0, gammas[j], j+1, j+1 , N, b);
+
+                for (int i = 0; i < N; i++) {
+                    System.out.println("house "+w[i*2]+" "+w[i*2+1]);
+                }
+                System.out.println();
             }
         }
 
@@ -164,8 +170,8 @@ public class TridiagonalDecompositionHouseholder_CD64
     public boolean decompose( CDenseMatrix64F A ) {
         init(A);
 
-        for( int k = 1; k < N; k++ ) {
-            similarTransform(k-1);
+        for( int k = 0; k < N-1; k++ ) {
+            similarTransform(k);
         }
 
         return true;
@@ -182,38 +188,37 @@ public class TridiagonalDecompositionHouseholder_CD64
         double max = QrHelperFunctions_CD64.computeRowMax(QT,k,k+1,N);
 
         if( max > 0 ) {
-            // -------- set up the reflector Q_k
-            int elementU = k*N;
-
-            double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(elementU+k+1, elementU+N, t, max, tau);
+            double gamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(k*N+k+1, k*N+N, t, max, tau);
             gammas[k] = gamma;
 
             // divide u by u_0
-            double real_u_0 = t[(elementU+k+1)*2]   + tau.real;
-            double imag_u_0 = t[(elementU+k+1)*2+1] + tau.imaginary;
-            QrHelperFunctions_CD64.divideElements(k+2, N, t, elementU*2, real_u_0,imag_u_0 );
+            double real_u_0 = t[(k*N+k+1)*2]   + tau.real;
+            double imag_u_0 = t[(k*N+k+1)*2+1] + tau.imaginary;
+            QrHelperFunctions_CD64.divideElements(k+2, N, t, k*N, real_u_0,imag_u_0 );
 
             // the goal is to zero a column, so this is the conjugate of what we want.  fix that
             for (int i = k+2; i < N; i++) {
-                t[(elementU+i)*2+1] = -t[(elementU+i)*2+1];
+                t[(k*N+i)*2+1] = -t[(k*N+i)*2+1];
             }
 
-            t[(elementU+k+1)*2]   = 1.0;
-            t[(elementU+k+1)*2+1] = 0;
+            t[(k*N+k+1)*2]   = 1.0;
+            t[(k*N+k+1)*2+1] = 0;
+
+            System.out.println("Computed "+k+"  gamma "+gamma);
+            for (int i = k+1; i < N; i++) {
+                System.out.println("   "+t[(k*N+i)*2]+" "+t[(k*N+i)*2+1] );
+            }
 
             // ---------- Specialized householder that takes advantage of the symmetry
-//            QrHelperFunctions_CD64.rank1UpdateMultR(QT,QT.data,elementU,gamma,k+1,k+1,N,w);
-//            QrHelperFunctions_CD64.rank1UpdateMultL(QT,QT.data,elementU,gamma,k+1,k+1,N);
+            QrHelperFunctions_CD64.rank1UpdateMultR(QT,QT.data,k*N,gamma,k+1,k+1,N,w);
+            QrHelperFunctions_CD64.rank1UpdateMultL(QT,QT.data,k*N,gamma,k+1,k+1,N);
 
-            householderSymmetric(k,gamma);
+//            householderSymmetric(k,gamma);
 
             // since the first element in the householder vector is known to be 1
             // store the full upper hessenberg
-            t[(elementU+k+1)*2]   = -tau.real*max;
-            t[(elementU+k+1)*2+1] = -tau.imaginary*max;
-
-            System.out.println("Inner QT k = "+k);
-            QT.print();
+            t[(k*N+k+1)*2]   = -tau.real*max;
+            t[(k*N+k+1)*2+1] = -tau.imaginary*max;
 
         } else {
             gammas[k] = 0;
@@ -318,10 +323,7 @@ public class TridiagonalDecompositionHouseholder_CD64
 
                 QT.data[indA++] += realWW*realU - imagWW*imagU + realW*realUU - imagW*imagUU;
                 QT.data[indA++] += realWW*imagU + imagWW*realU + realW*imagUU + imagW*realUU;
-                System.out.print((realWW*realU - imagWW*imagU + realW*realUU - imagW*imagUU)+" "+
-                        (realWW*imagU + imagWW*realU + realW*imagUU + imagW*realUU)+" , ");
             }
-            System.out.println();
         }
     }
 

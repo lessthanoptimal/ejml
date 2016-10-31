@@ -253,7 +253,9 @@ public class CMatrixFeatures {
     }
 
     /**
-     * Hermitian matrix is a square matrix with complex entries that is equal to its own conjugate transpose.
+     * <p>Hermitian matrix is a square matrix with complex entries that are equal to its own conjugate transpose.</p>
+     *
+     * <p>a[i,j] = conj(a[j,i])</p>
      *
      * @param Q The matrix being tested. Not modified.
      * @param tol Tolerance.
@@ -267,7 +269,7 @@ public class CMatrixFeatures {
         Complex64F b = new Complex64F();
 
         for( int i = 0; i < Q.numCols; i++ ) {
-            for( int j = i+1; j < Q.numCols; j++ ) {
+            for( int j = i; j < Q.numCols; j++ ) {
                 Q.get(i,j,a);
                 Q.get(j,i,b);
 
