@@ -4,3 +4,7 @@ TODO Neural network back propagation example?
 TODO MatrixMatrixMult
     - Strip all inner accessors to matrix values
     - Functions for checking inputs
+
+TODO look at sparse matrix contribution
+TODO equations support for boolean matrices and inequalities
+TODO Neural network back propagation example?

@@ -4,6 +4,8 @@ Date format: year/month/day
 
 ----- Version 0.30
 
+2016/11/09
+
 - Thanks Peter Fodar for fixing misleading javadoc
 - Fixed bug in computation of eigenvectors where the first eigenvalue was complex it would get messed up
   *  Thanks user343 for reporting the bug!
@@ -19,10 +21,6 @@ Date format: year/month/day
   * Creates a new matrix that is the same size and shape.  filled with zeros initially
 - Fixed CRandomMatrices.createHermitian()
 - Fixed CMatrixFeatures.isHermitian()
-
-TODO look at sparse matrix contribution
-TODO equations support for boolean matrices and inequalities
-TODO Neural network back propagation example?
 
 ----- Version 0.29
 
