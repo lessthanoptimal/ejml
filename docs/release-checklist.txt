@@ -6,6 +6,8 @@
 - Create zip of source code
 - Create jar file "gradle createLibraryDirectory"
 - Update documentation on website
+- Update javadoc on website
+  * ant javadocWeb;cd docs;zip -r api.zip api/
 
 -----
 Push to central:
@@ -16,6 +18,7 @@ Push to central:
   * double check the files
   * click release button
 
+Not working?  Is ~/.gradle/gradle.properties been setup?
 
 ---------
 Once a year:
