@@ -19,6 +19,6 @@ Push to central:
 
 ---------
 Once a year:
-- Update copy right
+- Update copyright
 - Update year in ant script
 - update year on docs/bottom.txt
