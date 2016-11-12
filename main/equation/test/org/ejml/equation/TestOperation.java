@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -912,32 +912,6 @@ public class TestOperation {
         checkSubMatrixArraysExtract(b, found, rows, cols);
     }
 
-    private void checkSubMatrixArraysExtract(SimpleMatrix src, DenseMatrix64F dst, int[] rows, int[] cols) {
-        assertTrue(dst.numRows == rows.length && dst.numCols == cols.length);
-        for (int i = 0; i < rows.length; i++) {
-            for (int j = 0; j < cols.length; j++) {
-                assertEquals(src.get(rows[i],cols[j]), dst.get(i,j), 1e-8);
-            }
-        }
-    }
-
-    private void checkSubMatrixArraysInsert(SimpleMatrix src, SimpleMatrix dst, int[] rows, int[] cols) {
-        assertTrue(src.numRows() == rows.length && src.numCols() == cols.length);
-        for (int i = 0; i < rows.length; i++) {
-            for (int j = 0; j < cols.length; j++) {
-                assertEquals(src.get(i,j), dst.get(rows[i],cols[j]), 1e-8);
-            }
-        }
-    }
-
-    private void checkSubMatrixArraysInsert(double src, SimpleMatrix dst, int[] rows, int[] cols) {
-        for (int i = 0; i < rows.length; i++) {
-            for (int j = 0; j < cols.length; j++) {
-                assertEquals(src, dst.get(rows[i],cols[j]), 1e-8);
-            }
-        }
-    }
-
     @Test
     public void extract_two_case1() {
         Equation eq = new Equation();
@@ -1407,4 +1381,31 @@ public class TestOperation {
 
         assertTrue(A.solve(b).isIdentical(x, 1e-8));
     }
+
+    private void checkSubMatrixArraysExtract(SimpleMatrix src, DenseMatrix64F dst, int[] rows, int[] cols) {
+        assertTrue(dst.numRows == rows.length && dst.numCols == cols.length);
+        for (int i = 0; i < rows.length; i++) {
+            for (int j = 0; j < cols.length; j++) {
+                assertEquals(src.get(rows[i],cols[j]), dst.get(i,j), 1e-8);
+            }
+        }
+    }
+
+    private void checkSubMatrixArraysInsert(SimpleMatrix src, SimpleMatrix dst, int[] rows, int[] cols) {
+        assertTrue(src.numRows() == rows.length && src.numCols() == cols.length);
+        for (int i = 0; i < rows.length; i++) {
+            for (int j = 0; j < cols.length; j++) {
+                assertEquals(src.get(i,j), dst.get(rows[i],cols[j]), 1e-8);
+            }
+        }
+    }
+
+    private void checkSubMatrixArraysInsert(double src, SimpleMatrix dst, int[] rows, int[] cols) {
+        for (int i = 0; i < rows.length; i++) {
+            for (int j = 0; j < cols.length; j++) {
+                assertEquals(src, dst.get(rows[i],cols[j]), 1e-8);
+            }
+        }
+    }
+
 }

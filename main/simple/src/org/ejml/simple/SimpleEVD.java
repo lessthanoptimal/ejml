@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,9 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Wrapper around EigenDecomposition for SimpleMatrix
@@ -30,7 +33,7 @@ import org.ejml.interfaces.decomposition.EigenDecomposition;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public class SimpleEVD <T extends SimpleMatrix>
+public class SimpleEVD <T extends SimpleBase>
 {
     private EigenDecomposition<DenseMatrix64F> eig;
 
@@ -42,6 +45,19 @@ public class SimpleEVD <T extends SimpleMatrix>
         eig = DecompositionFactory.eig(mat.numCols,true);
         if( !eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
+    }
+
+    /**
+     * Returns a list of all the eigenvalues
+     */
+    public List<Complex64F> getEigenvalues() {
+        List<Complex64F> ret = new ArrayList<Complex64F>();
+
+        for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
+            ret.add( eig.getEigenvalue(i) );
+        }
+
+        return ret;
     }
 
     /**

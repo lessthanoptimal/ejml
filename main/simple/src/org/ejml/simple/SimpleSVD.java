@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,7 +44,7 @@ import org.ejml.ops.SingularOps;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public class SimpleSVD<T extends SimpleMatrix> {
+public class SimpleSVD<T extends SimpleBase> {
 
     private SingularValueDecomposition<DenseMatrix64F> svd;
     private T U;
@@ -138,6 +138,17 @@ public class SimpleSVD<T extends SimpleMatrix> {
      */
     public double getSingleValue( int index ) {
         return W.get(index,index);
+    }
+
+    /**
+     * Returns an array of all the singular values
+     */
+    public double[] getSingularValues() {
+        double ret[] = new double[ W.numCols() ];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = getSingleValue(i);
+        }
+        return ret;
     }
 
     /**

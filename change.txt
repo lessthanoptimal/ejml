@@ -2,6 +2,14 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.31
+
+201?
+
+- Added SimpleEVD.getEigenvalues()
+- Added SimpleSVD.getSingularValues()
+- Fixed issue with generics and SimpleEVD and SimpleSVD
+
 ----- Version 0.30
 
 2016/11/09

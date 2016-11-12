@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -478,7 +478,7 @@ public class TestSimpleMatrix {
     public void svd() {
         SimpleMatrix a = SimpleMatrix.random(3,4, 0, 1, rand);
 
-        SimpleSVD svd = a.svd();
+        SimpleSVD<SimpleMatrix> svd = a.svd();
 
         SimpleMatrix U = svd.getU();
         SimpleMatrix W = svd.getW();

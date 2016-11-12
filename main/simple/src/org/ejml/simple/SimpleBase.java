@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -799,7 +799,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @return SVD
      */
-    public SimpleSVD svd() {
+    public SimpleSVD<T> svd() {
         return new SimpleSVD(mat,false);
     }
 
@@ -808,14 +808,14 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @return SVD of this matrix.
      */
-    public SimpleSVD svd( boolean compact ) {
+    public SimpleSVD<T> svd( boolean compact ) {
         return new SimpleSVD(mat,compact);
     }
 
     /**
      * Returns the Eigen Value Decomposition (EVD) of this matrix.
      */
-    public SimpleEVD eig() {
+    public SimpleEVD<T> eig() {
         return new SimpleEVD(mat);
     }
 
