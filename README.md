@@ -43,14 +43,14 @@ EJML is on the Maven central repository and can easily be included in projects b
 
 Gradle:
 ```
-compile group: 'org.ejml', name: 'all', version: '0.29'
+compile group: 'org.ejml', name: 'all', version: '0.30'
 ```
 
 Maven:
 ```
 <groupId>org.ejml</groupId>
 <artifactId>all</artifactId>
-<version>0.29</version>
+<version>0.30</version>
 ```
 Or you can include the required modules individually
 
