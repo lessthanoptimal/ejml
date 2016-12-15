@@ -10,6 +10,10 @@ Date format: year/month/day
 - Added SimpleSVD.getSingularValues()
 - Fixed issue with generics and SimpleEVD and SimpleSVD
 
+- TODO Add support for matrix norms to Equations
+- TODO Add fixed F32 matrices
+- TODO Add fixed ops for F32 matrices
+
 ----- Version 0.30
 
 2016/11/09
