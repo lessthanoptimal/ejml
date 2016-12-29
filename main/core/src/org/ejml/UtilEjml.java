@@ -42,6 +42,22 @@ public class UtilEjml {
     public static double TOLERANCE = 1e-8;
 
     public static double EPS = Math.pow(2,-52);
+    public static float F_EPS = (float)Math.pow(2,-21);
+
+    public static double PI = Math.PI;
+    public static double PI2 = 2.0*Math.PI;
+    public static double PId2 = Math.PI/2.0;
+
+    public static float F_PI = (float)Math.PI;
+    public static float F_PI2 = (float)(2.0*Math.PI);
+    public static float F_PId2 = (float)(Math.PI/2.0);
+
+    // tolerances for unit tests
+    public static float TEST_32F = 1e-4f;
+    public static double TEST_64F = 1e-8;
+    public static float TEST_32F_SQ = (float)Math.sqrt(TEST_32F);
+    public static double TEST_64F_SQ = Math.sqrt(TEST_64F);
+
 
     public static boolean isUncountable( double val ) {
         return Double.isNaN(val) || Double.isInfinite(val);

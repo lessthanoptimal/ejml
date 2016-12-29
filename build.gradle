@@ -51,6 +51,7 @@ subprojects {
 
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile group: 'com.peterabeles', name: 'auto64fto32f', version: '1.0.2'
     }
 
     jar {
@@ -166,6 +167,7 @@ idea {
 }
 
 def javadocProjects = [
+        ':main:dense32',
         ':main:denseC64',
         ':main:dense64',
         ':main:core',

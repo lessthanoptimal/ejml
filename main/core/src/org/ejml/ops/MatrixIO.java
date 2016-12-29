@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -219,7 +219,25 @@ public class MatrixIO {
         }
     }
 
+    public static void print( PrintStream out , RealMatrix32F mat , String format ,
+                              int row0 , int row1, int col0 , int col1 ) {
+        out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);
+
+        format += " ";
+
+        for( int y = row0; y < row1; y++ ) {
+            for( int x = col0; x < col1; x++ ) {
+                out.printf(format,mat.get(y,x));
+            }
+            out.println();
+        }
+    }
+
     public static void print( PrintStream out , ComplexMatrix64F mat ) {
+        print(out,mat,6,3);
+    }
+
+    public static void print( PrintStream out , ComplexMatrix32F mat ) {
         print(out,mat,6,3);
     }
 
@@ -229,15 +247,42 @@ public class MatrixIO {
         print(out, mat,format);
     }
 
+    public static void print(PrintStream out, ComplexMatrix32F mat , int numChar , int precision ) {
+        String format = "%"+numChar+"."+precision+"f + %"+numChar+"."+precision+"fi";
+
+        print(out, mat,format);
+    }
+
     public static void print(PrintStream out , ComplexMatrix64F mat , String format ) {
 
-        String type = "dense";
+        String type = "dense64";
 
         out.println("Type = "+type+" complex , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
         format += " ";
 
         Complex64F c = new Complex64F();
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            for( int x = 0; x < mat.getNumCols(); x++ ) {
+                mat.get(y,x,c);
+                out.printf(format,c.real,c.imaginary);
+                if( x < mat.getNumCols()-1 ) {
+                    out.print(" , ");
+                }
+            }
+            out.println();
+        }
+    }
+
+    public static void print(PrintStream out , ComplexMatrix32F mat , String format ) {
+
+        String type = "dense32";
+
+        out.println("Type = "+type+" complex , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+
+        format += " ";
+
+        Complex32F c = new Complex32F();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
                 mat.get(y,x,c);

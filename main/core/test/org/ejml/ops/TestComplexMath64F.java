@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.Complex64F;
 import org.ejml.data.ComplexPolar64F;
 import org.junit.Test;
@@ -35,8 +36,8 @@ public class TestComplexMath64F {
 
         ComplexMath64F.conj(a, b);
 
-        assertEquals(a.real, b.real, 1e-8);
-        assertEquals(-a.imaginary, b.imaginary, 1e-8);
+        assertEquals(a.real, b.real, UtilEjml.TEST_64F);
+        assertEquals(-a.imaginary, b.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -47,8 +48,8 @@ public class TestComplexMath64F {
 
         ComplexMath64F.plus(a, b, c);
 
-        assertEquals(-1, c.real, 1e-8);
-        assertEquals(9, c.imaginary, 1e-8);
+        assertEquals(-1, c.real, UtilEjml.TEST_64F);
+        assertEquals(9, c.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -59,8 +60,8 @@ public class TestComplexMath64F {
 
         ComplexMath64F.minus(a, b, c);
 
-        assertEquals(5, c.real, 1e-8);
-        assertEquals(-3, c.imaginary, 1e-8);
+        assertEquals(5, c.real, UtilEjml.TEST_64F);
+        assertEquals(-3, c.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -71,8 +72,8 @@ public class TestComplexMath64F {
 
         ComplexMath64F.multiply(a, b, c);
 
-        assertEquals(-24, c.real, 1e-8);
-        assertEquals(3, c.imaginary, 1e-8);
+        assertEquals(-24, c.real, UtilEjml.TEST_64F);
+        assertEquals(3, c.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -83,8 +84,8 @@ public class TestComplexMath64F {
 
         ComplexMath64F.divide(a, b, c);
 
-        assertEquals(0.26666666666, c.real, 1e-8);
-        assertEquals(-0.466666666666, c.imaginary, 1e-8);
+        assertEquals(0.26666666666, c.real, UtilEjml.TEST_64F);
+        assertEquals(-0.466666666666, c.imaginary, UtilEjml.TEST_64F);
     }
 
     /**
@@ -99,8 +100,8 @@ public class TestComplexMath64F {
         ComplexMath64F.convert(a, b);
         ComplexMath64F.convert(b, c);
 
-        assertEquals(a.real, c.real, 1e-8);
-        assertEquals(a.imaginary, c.imaginary, 1e-8);
+        assertEquals(a.real, c.real, UtilEjml.TEST_64F);
+        assertEquals(a.imaginary, c.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -119,8 +120,8 @@ public class TestComplexMath64F {
 
         Complex64F found = pc.toStandard();
 
-        assertEquals(expected.real, found.real, 1e-8);
-        assertEquals(expected.imaginary, found.imaginary, 1e-8);
+        assertEquals(expected.real, found.real, UtilEjml.TEST_64F);
+        assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -139,8 +140,8 @@ public class TestComplexMath64F {
 
         Complex64F found = pc.toStandard();
 
-        assertEquals(expected.real, found.real, 1e-8);
-        assertEquals(expected.imaginary, found.imaginary, 1e-8);
+        assertEquals(expected.real, found.real, UtilEjml.TEST_64F);
+        assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -154,8 +155,8 @@ public class TestComplexMath64F {
 
         ComplexMath64F.pow(a, 3, found);
 
-        assertEquals(expected.r, found.r, 1e-8);
-        assertEquals(expected.theta, found.theta, 1e-8);
+        assertEquals(expected.r, found.r, UtilEjml.TEST_64F);
+        assertEquals(expected.theta, found.theta, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -174,8 +175,8 @@ public class TestComplexMath64F {
             Complex64F e = expected.toStandard();
             Complex64F f = found.toStandard();
 
-            assertEquals(e.real, f.real, 1e-8);
-            assertEquals(e.imaginary, f.imaginary, 1e-8);
+            assertEquals(e.real, f.real, UtilEjml.TEST_64F);
+            assertEquals(e.imaginary, f.imaginary, UtilEjml.TEST_64F);
         }
     }
 
@@ -192,8 +193,8 @@ public class TestComplexMath64F {
 
             ComplexMath64F.multiply(root, root, found);
 
-            assertEquals(expected.real, found.real, 1e-8);
-            assertEquals(expected.imaginary, found.imaginary, 1e-8);
+            assertEquals(expected.real, found.real, UtilEjml.TEST_64F);
+            assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_64F);
         }
     }
 
@@ -206,15 +207,15 @@ public class TestComplexMath64F {
         ComplexMath64F.sqrt(input, root);
         ComplexMath64F.multiply(root, root, found);
 
-        assertEquals(input.real, found.real, 1e-8);
-        assertEquals(input.imaginary, found.imaginary, 1e-8);
+        assertEquals(input.real, found.real, UtilEjml.TEST_64F);
+        assertEquals(input.imaginary, found.imaginary, UtilEjml.TEST_64F);
 
         input = new Complex64F(2, -0.2);
 
         ComplexMath64F.sqrt(input, root);
         ComplexMath64F.multiply(root, root, found);
 
-        assertEquals(input.real, found.real, 1e-8);
-        assertEquals(input.imaginary, found.imaginary, 1e-8);
+        assertEquals(input.real, found.real, UtilEjml.TEST_64F);
+        assertEquals(input.imaginary, found.imaginary, UtilEjml.TEST_64F);
     }
 }

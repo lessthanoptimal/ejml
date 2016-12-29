@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -102,7 +102,7 @@ public abstract class D1Matrix32F implements ReshapeMatrix, RealMatrix32F {
      * @param val The new value of the index.
      */
     public float set( int index , float val ) {
-        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6f.0_21
         return data[index] = val;
     }
 
@@ -122,7 +122,7 @@ public abstract class D1Matrix32F implements ReshapeMatrix, RealMatrix32F {
      * @param val The value that is being added.
      */
     public float plus( int index , float val ) {
-        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6f.0_21
         return data[index] += val;
     }
 
@@ -142,7 +142,7 @@ public abstract class D1Matrix32F implements ReshapeMatrix, RealMatrix32F {
      * @param val The value that is being subtracted.
      */
     public float minus( int index , float val ) {
-        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6f.0_21
         return data[index] -= val;
     }
 
@@ -162,7 +162,7 @@ public abstract class D1Matrix32F implements ReshapeMatrix, RealMatrix32F {
      * @param val The value that is being multiplied.
      */
     public float times( int index , float val ) {
-        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6f.0_21
         return data[index] *= val;
     }
 
@@ -182,7 +182,7 @@ public abstract class D1Matrix32F implements ReshapeMatrix, RealMatrix32F {
      * @param val The value that is being divided.
      */
     public float div( int index , float val ) {
-        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6.0_21
+        // See benchmarkFunctionReturn.  Pointless return does not degrade performance.  Tested on JDK 1.6f.0_21
         return data[index] /= val;
     }
 

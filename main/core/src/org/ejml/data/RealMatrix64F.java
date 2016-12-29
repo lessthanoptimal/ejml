@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.data;
 
 /**
- * Interface for all 64 bit floating point rectangular matrices.
+ * Interface for all 64F real matrices.
  *
  * @author Peter Abeles
  */

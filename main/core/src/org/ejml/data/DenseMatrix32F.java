@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.ejml.ops.MatrixIO;
 
 import java.io.ByteArrayOutputStream;
@@ -27,7 +28,7 @@ import java.util.Arrays;
 
 /**
  * <p>
- * DenseMatrix64F is a dense matrix with elements that are 32-bit floats.  A matrix
+ * DenseMatrix32F is a dense matrix with real elements that are 32-bit floats.  A matrix
  * is the fundamental data structure in linear algebra.  Unlike a sparse matrix, there is no
  * compression in a dense matrix and every element is stored in memory.  This allows for fast
  * reads and writes to the matrix.
@@ -47,10 +48,9 @@ import java.util.Arrays;
  * a[8]  a[9]   a[10]  a[11]
  * a[12] a[13]  a[14]  a[15]
  * </pre>
- *
  * @author Peter Abeles
  */
-public class DenseMatrix32F extends D1Matrix32F {
+public class DenseMatrix32F extends RowD1Matrix32F {
 
     /**
      * <p>
@@ -92,7 +92,7 @@ public class DenseMatrix32F extends D1Matrix32F {
      * </p>
      * @param data 2D array representation of the matrix. Not modified.
      */
-    public DenseMatrix32F(float data[][]) {
+    public DenseMatrix32F( float data[][] ) {
         this.numRows = data.length;
         this.numCols = data[0].length;
 
@@ -119,7 +119,7 @@ public class DenseMatrix32F extends D1Matrix32F {
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
      */
-    public DenseMatrix32F(int numRows, int numCols) {
+    public DenseMatrix32F( int numRows  , int numCols ) {
         data = new float[ numRows * numCols ];
 
         this.numRows = numRows;
@@ -132,7 +132,7 @@ public class DenseMatrix32F extends D1Matrix32F {
      *
      * @param orig The matrix which is to be copied.  This is not modified or saved.
      */
-    public DenseMatrix32F(DenseMatrix32F orig) {
+    public DenseMatrix32F( DenseMatrix32F orig ) {
         this(orig.numRows,orig.numCols);
         System.arraycopy(orig.data, 0, this.data, 0, orig.getNumElements());
     }
@@ -143,7 +143,7 @@ public class DenseMatrix32F extends D1Matrix32F {
      *
      * @param length The size of the matrice's data array.
      */
-    public DenseMatrix32F(int length) {
+    public DenseMatrix32F( int length ) {
         data = new float[ length ];
     }
 
@@ -154,7 +154,7 @@ public class DenseMatrix32F extends D1Matrix32F {
     public DenseMatrix32F(){}
 
     /**
-     * Creates a new DenseMatrix64F which contains the same information as the provided Matrix64F.
+     * Creates a new DenseMatrix32F which contains the same information as the provided Matrix32F.
      *
      * @param mat Matrix whose values will be copied.  Not modified.
      */
@@ -168,7 +168,7 @@ public class DenseMatrix32F extends D1Matrix32F {
     }
 
     /**
-     * Creates a new DenseMatrix64F around the provided data.  The data must encode
+     * Creates a new DenseMatrix32F around the provided data.  The data must encode
      * a row-major matrix.  Any modification to the returned matrix will modify the
      * provided data.
      *
@@ -279,10 +279,10 @@ public class DenseMatrix32F extends D1Matrix32F {
     }
 
     /**
-     * Determins if the specified element is inside the bounds of the Matrix.
+     * Determines if the specified element is inside the bounds of the Matrix.
      *
      * @param row The element's row.
-     * @param col The elements' column.
+     * @param col The element's column.
      * @return True if it is inside the matrices bound, false otherwise.
      */
     public boolean isInBounds( int row  , int col ) {
@@ -351,8 +351,8 @@ public class DenseMatrix32F extends D1Matrix32F {
 
         reshape(original.getNumRows(),original.getNumCols());
 
-        if( original instanceof DenseMatrix32F) {
-            // do a faster copy if its of type DenseMatrix64F
+        if( original instanceof DenseMatrix32F ) {
+            // do a faster copy if its of type DenseMatrix32F
             System.arraycopy(((DenseMatrix32F)m).data,0,data,0,numRows*numCols);
         } else {
             int index = 0;
@@ -366,7 +366,7 @@ public class DenseMatrix32F extends D1Matrix32F {
 
     /**
      * Prints the value of this matrix to the screen.  For more options see
-     * {@link org.ejml.UtilEjml}
+     * {@link UtilEjml}
      *
      */
     @Override
@@ -388,7 +388,7 @@ public class DenseMatrix32F extends D1Matrix32F {
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link org.ejml.ops.MatrixIO#print(java.io.PrintStream, org.ejml.data.RealMatrix64F)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, RealMatrix32F)}.
      * </p>
      *
      * @return String representation of the matrix.

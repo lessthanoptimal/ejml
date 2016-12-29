@@ -1,0 +1,11 @@
+dependencies {
+    compile project(':main:core')
+    testCompile project(':main:experimental')
+    testCompile project(':main:core').sourceSets.test.output
+}
+
+idea {
+    module {
+        name = "EJML Dense 32"
+    }
+}

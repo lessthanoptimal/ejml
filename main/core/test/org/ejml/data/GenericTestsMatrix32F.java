@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -69,7 +69,7 @@ public abstract class GenericTestsMatrix32F {
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {
-                double found = mat.get(i,j);
+                float found = mat.get(i,j);
 
                 assertEquals(i* m +j,found,1e-8);
             }
@@ -98,7 +98,7 @@ public abstract class GenericTestsMatrix32F {
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {
-                double found = mat.unsafe_get(i,j);
+                float found = mat.unsafe_get(i,j);
 
                 assertEquals(i* m +j,found,1e-8);
             }
