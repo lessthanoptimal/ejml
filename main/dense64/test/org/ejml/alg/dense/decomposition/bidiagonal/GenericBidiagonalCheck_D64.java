@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericBidiagonalCheck {
+public abstract class GenericBidiagonalCheck_D64 {
     protected Random rand = new Random(0xff);
 
     abstract protected BidiagonalDecomposition_F64<DenseMatrix64F> createQRDecomposition();

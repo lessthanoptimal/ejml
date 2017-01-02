@@ -138,7 +138,7 @@ public class GenerateCode32F {
     public static void main(String args[] ) {
         String coreDir[] = new String[]{
                 "main/core/src/org/ejml/data",
-//                "main/core/test/org/ejml/data", // TODO uncomment when full support is added for 32F
+                "main/core/test/org/ejml/data",
                 "main/core/src/org/ejml/ops",
                 "main/core/test/org/ejml/ops"
         };
@@ -150,7 +150,7 @@ public class GenerateCode32F {
         }
 
         app.process(new File("main/dense64/src"), new File("main/dense32/src") );
-        app.process(new File("main/dense64/src"), new File("main/dense32/src") );
-        app.process(new File("main/dense64/src"), new File("main/dense32/src") );
+        // TODO figure out some way to get SimpleMatrix to work with F32
+//        app.process(new File("main/dense64/test"), new File("main/dense32/test") );
     }
 }

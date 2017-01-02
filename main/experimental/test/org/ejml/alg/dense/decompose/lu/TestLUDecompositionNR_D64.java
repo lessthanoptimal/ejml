@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decompose.lu;
 
-import org.ejml.alg.dense.decomposition.lu.GeneralLuDecompositionChecks;
+import org.ejml.alg.dense.decomposition.lu.GeneralLuDecompositionChecks_D64;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_D64;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR_D64;
 
@@ -26,7 +26,7 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionNR_D64;
 /**
  * @author Peter Abeles
  */
-public class TestLUDecompositionNR_D64 extends GeneralLuDecompositionChecks {
+public class TestLUDecompositionNR_D64 extends GeneralLuDecompositionChecks_D64 {
     @Override
     public LUDecompositionBase_D64 create(int numRows, int numCols) {
         return new LUDecompositionNR_D64();

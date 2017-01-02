@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import java.util.Random;
 /**
  * @author Peter Abeles
  */
-public class TestLUDecompositionAlt_D64 extends GeneralLuDecompositionChecks {
+public class TestLUDecompositionAlt_D64 extends GeneralLuDecompositionChecks_D64 {
     Random rand = new Random(0x3344);
 
     @Override

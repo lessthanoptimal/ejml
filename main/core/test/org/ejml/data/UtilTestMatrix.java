@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -17,6 +17,8 @@
  */
 
 package org.ejml.data;
+
+import org.ejml.UtilEjml;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -36,7 +38,16 @@ public class UtilTestMatrix {
         double data[] = mat.getData();
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
-            assertEquals(d[i],data[i],1e-6);
+            assertEquals(d[i],data[i], UtilEjml.TEST_64F);
+        }
+    }
+
+    public static void checkMat( DenseMatrix32F mat , float ...d )
+    {
+        float data[] = mat.getData();
+
+        for( int i = 0; i < mat.getNumElements(); i++ ) {
+            assertEquals(d[i],data[i],UtilEjml.TEST_32F);
         }
     }
 

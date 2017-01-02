@@ -190,7 +190,7 @@ public class TestMatrixMatrixMult_D64 {
 
             invoke(method,alpha,a,b,c);
 
-            EjmlUnitTests.assertEquals(expected,c,1e-12);
+            EjmlUnitTests.assertEquals(expected,c,UtilEjml.TEST_64F);
             numChecked++;
         }
 

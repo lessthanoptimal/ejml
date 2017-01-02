@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public abstract class GeneralLuDecompositionChecks {
+public abstract class GeneralLuDecompositionChecks_D64 {
 
     Random rand = new Random(0xff);
 

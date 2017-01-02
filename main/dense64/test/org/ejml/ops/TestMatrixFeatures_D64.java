@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.ejml.UtilEjml.parseMatrix;
+import static org.ejml.UtilEjml.parseD64;
 import static org.junit.Assert.*;
 
 
@@ -78,9 +78,9 @@ public class TestMatrixFeatures_D64 {
      */
     @Test
     public void isPositiveDefinite() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
-        DenseMatrix64F b = UtilEjml.parseMatrix("0 1 1 0",2);
-        DenseMatrix64F c = UtilEjml.parseMatrix("0 0 0 0",2);
+        DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
+        DenseMatrix64F b = UtilEjml.parseD64("0 1 1 0",2);
+        DenseMatrix64F c = UtilEjml.parseD64("0 0 0 0",2);
 
         assertTrue(MatrixFeatures_D64.isPositiveDefinite(a));
         assertFalse(MatrixFeatures_D64.isPositiveDefinite(b));
@@ -93,9 +93,9 @@ public class TestMatrixFeatures_D64 {
 
     @Test
     public void isPositiveSemidefinite() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
-        DenseMatrix64F b = UtilEjml.parseMatrix("0 1 1 0",2);
-        DenseMatrix64F c = UtilEjml.parseMatrix("0 0 0 0", 2);
+        DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
+        DenseMatrix64F b = UtilEjml.parseD64("0 1 1 0",2);
+        DenseMatrix64F c = UtilEjml.parseD64("0 0 0 0", 2);
 
         assertTrue(MatrixFeatures_D64.isPositiveSemidefinite(a));
         assertFalse(MatrixFeatures_D64.isPositiveSemidefinite(b));
@@ -161,8 +161,8 @@ public class TestMatrixFeatures_D64 {
                  "   1.304014  -1.880739   1.438741\n" +
                  "  -0.746918   1.382356  -0.520416";
 
-        DenseMatrix64F m = parseMatrix(a,3);
-        DenseMatrix64F n = parseMatrix(a,3);
+        DenseMatrix64F m = parseD64(a,3);
+        DenseMatrix64F n = parseD64(a,3);
 
         assertTrue(MatrixFeatures_D64.isEquals(m,n));
 
@@ -197,8 +197,8 @@ public class TestMatrixFeatures_D64 {
                  "   1.304014  -1.880739   1.438741\n" +
                  "  -0.746918   1.382356  -0.520416";
 
-        DenseMatrix64F m = parseMatrix(a,3);
-        DenseMatrix64F n = parseMatrix(a,3);
+        DenseMatrix64F m = parseD64(a,3);
+        DenseMatrix64F n = parseD64(a,3);
 
         assertTrue(MatrixFeatures_D64.isEquals(m,n,1e-6));
 
@@ -449,61 +449,61 @@ public class TestMatrixFeatures_D64 {
 
     @Test
     public void rank() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
         DenseMatrix64F a_copy = a.copy();
 
         assertEquals(2, MatrixFeatures_D64.rank(a));
         // make sure the input wasn't modified
         assertTrue(MatrixFeatures_D64.isIdentical(a,a_copy,UtilEjml.TEST_64F));
 
-        a = UtilEjml.parseMatrix("2 0 0 0",2);
+        a = UtilEjml.parseD64("2 0 0 0",2);
         assertEquals(1, MatrixFeatures_D64.rank(a));
     }
 
     @Test
     public void rank_threshold() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
         DenseMatrix64F a_copy = a.copy();
 
         assertEquals(2, MatrixFeatures_D64.rank(a,1e-14));
         // make sure the input wasn't modified
         assertTrue(MatrixFeatures_D64.isIdentical(a,a_copy,UtilEjml.TEST_64F));
 
-        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        a = UtilEjml.parseD64("2 0 0 1e-20",2);
         assertEquals(1, MatrixFeatures_D64.rank(a,1e-14));
 
         // make sure it's using the threshold parameter
-        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        a = UtilEjml.parseD64("2 0 0 1e-20",2);
         assertEquals(2, MatrixFeatures_D64.rank(a,1e-200));
     }
 
     @Test
     public void nullity() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
         DenseMatrix64F a_copy = a.copy();
 
         assertEquals(0, MatrixFeatures_D64.nullity(a));
         // make sure the input wasn't modified
         assertTrue(MatrixFeatures_D64.isIdentical(a,a_copy,UtilEjml.TEST_64F));
 
-        a = UtilEjml.parseMatrix("2 0 0 0",2);
+        a = UtilEjml.parseD64("2 0 0 0",2);
         assertEquals(1, MatrixFeatures_D64.nullity(a));
     }
 
     @Test
     public void nullity_threshold() {
-        DenseMatrix64F a = UtilEjml.parseMatrix("2 0 0 2",2);
+        DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
         DenseMatrix64F a_copy = a.copy();
 
         assertEquals(0, MatrixFeatures_D64.nullity(a, 1e-14));
         // make sure the input wasn't modified
         assertTrue(MatrixFeatures_D64.isIdentical(a,a_copy,UtilEjml.TEST_64F));
 
-        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        a = UtilEjml.parseD64("2 0 0 1e-20",2);
         assertEquals(1, MatrixFeatures_D64.nullity(a, 1e-14));
 
         // make sure it's using the threshold parameter
-        a = UtilEjml.parseMatrix("2 0 0 1e-20",2);
+        a = UtilEjml.parseD64("2 0 0 1e-20",2);
         assertEquals(0, MatrixFeatures_D64.nullity(a, 1e-200));
     }
 }

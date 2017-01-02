@@ -114,7 +114,7 @@ public class TestSvdImplicitQrAlgorithm {
 
     @Test
     public void knownCaseSquare() {
-        DenseMatrix64F A = UtilEjml.parseMatrix("-3   1   3  -3   0\n" +
+        DenseMatrix64F A = UtilEjml.parseD64("-3   1   3  -3   0\n" +
                 "   2  -4   0  -2   0\n" +
                 "   1  -4   4   1  -3\n" +
                 "  -1  -3   2   2  -4\n" +

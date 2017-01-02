@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck {
+public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D64 {
 
 
     /**

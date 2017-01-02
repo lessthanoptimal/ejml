@@ -18,6 +18,7 @@
 
 package org.ejml;
 
+import org.ejml.data.DenseMatrix32F;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Arrays;
@@ -114,7 +115,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static DenseMatrix64F parseMatrix( String s , int numColumns )
+    public static DenseMatrix64F parseD64(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 
@@ -130,6 +131,31 @@ public class UtilEjml {
         for( int i = 0; i < numRows; i++ ) {
             for( int j = 0; j < numColumns; j++ ) {
                 ret.set(i,j, Double.parseDouble(vals[ index++ ]));
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Give a string of numbers it returns a DenseMatrix
+     */
+    public static DenseMatrix32F parseD32(String s , int numColumns )
+    {
+        String []vals = s.split("(\\s)+");
+
+        // there is the possibility the first element could be empty
+        int start = vals[0].isEmpty() ? 1 : 0;
+
+        // covert it from string to doubles
+        int numRows = (vals.length-start) / numColumns;
+
+        DenseMatrix32F ret = new DenseMatrix32F(numRows,numColumns);
+
+        int index = start;
+        for( int i = 0; i < numRows; i++ ) {
+            for( int j = 0; j < numColumns; j++ ) {
+                ret.set(i,j, Float.parseFloat(vals[ index++ ]));
             }
         }
 

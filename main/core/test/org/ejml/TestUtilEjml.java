@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -52,7 +52,7 @@ public class TestUtilEjml {
         String a = "-0.779094   1.682750\n" +
                  "   1.304014  -1.880739\n";
 
-        DenseMatrix64F m = UtilEjml.parseMatrix(a,2);
+        DenseMatrix64F m = UtilEjml.parseD64(a,2);
 
         assertEquals(2,m.numCols);
         assertEquals(2,m.numRows);
@@ -65,7 +65,7 @@ public class TestUtilEjml {
         a = " -0.779094   1.682750  5\n" +
            "   1.304014  -1.880739  8\n";
 
-        m = UtilEjml.parseMatrix(a,3);
+        m = UtilEjml.parseD64(a,3);
         assertEquals(3,m.numCols);
         assertEquals(2,m.numRows);
         assertEquals(-0.779094 , m.get(0,0) , 1e-5);

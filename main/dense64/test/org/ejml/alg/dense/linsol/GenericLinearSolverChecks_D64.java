@@ -45,7 +45,7 @@ public abstract class GenericLinearSolverChecks_D64 {
     protected boolean shouldFailSingular = true;
     protected boolean shouldWorkRectangle = true;
 
-    protected double tol = 1e-8;
+    protected double tol = UtilEjml.TEST_64F;
 
     @Test
     public void solve_dimensionCheck() {

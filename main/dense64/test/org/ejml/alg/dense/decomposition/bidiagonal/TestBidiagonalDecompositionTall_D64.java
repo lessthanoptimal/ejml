@@ -25,7 +25,7 @@ import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 /**
  * @author Peter Abeles
  */
-public class TestBidiagonalDecompositionTall_D64 extends GenericBidiagonalCheck {
+public class TestBidiagonalDecompositionTall_D64 extends GenericBidiagonalCheck_D64 {
     @Override
     protected BidiagonalDecomposition_F64<DenseMatrix64F> createQRDecomposition() {
         return new BidiagonalDecompositionTall_D64();
