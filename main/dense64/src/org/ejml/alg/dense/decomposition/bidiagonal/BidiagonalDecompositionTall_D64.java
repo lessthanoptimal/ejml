@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,15 +19,15 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
-import org.ejml.interfaces.decomposition.QRPDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
  * <p>
- * {@link org.ejml.interfaces.decomposition.BidiagonalDecomposition} specifically designed for tall matrices.
+ * {@link BidiagonalDecomposition_F64} specifically designed for tall matrices.
  * First step is to perform QR decomposition on the input matrix.  Then R is decomposed using
  * a bidiagonal decomposition.  By performing the bidiagonal decomposition on the smaller matrix
  * computations can be saved if m/n > 5/3 and if U is NOT needed.
@@ -43,7 +43,7 @@ import org.ejml.ops.CommonOps;
  * <p>
  * A QRP decomposition is used internally.  That decomposition relies an a fixed threshold for selecting singular
  * values and is known to be less stable than SVD.  There is the potential for a degregation of stability
- * by using BidiagonalDecompositionTall instead of BidiagonalDecomposition. A few simple tests have shown
+ * by using BidiagonalDecompositionTall instead of BidiagonalDecomposition_F64. A few simple tests have shown
  * that loss in stability to be insignificant.
  * </p>
  *
@@ -56,10 +56,10 @@ import org.ejml.ops.CommonOps;
  */
 // TODO optimize this code
 public class BidiagonalDecompositionTall_D64
-        implements BidiagonalDecomposition<DenseMatrix64F>
+        implements BidiagonalDecomposition_F64<DenseMatrix64F>
 {
-    QRPDecomposition<DenseMatrix64F> decompQRP = DecompositionFactory.qrp(500, 100); // todo this should be passed in
-    BidiagonalDecomposition<DenseMatrix64F> decompBi = new BidiagonalDecompositionRow_D64();
+    QRPDecomposition_F64<DenseMatrix64F> decompQRP = DecompositionFactory_D64.qrp(500, 100); // todo this should be passed in
+    BidiagonalDecomposition_F64<DenseMatrix64F> decompBi = new BidiagonalDecompositionRow_D64();
 
     DenseMatrix64F B = new DenseMatrix64F(1,1);
 
@@ -102,19 +102,19 @@ public class BidiagonalDecompositionTall_D64
             // U = Q*U1
             DenseMatrix64F Q1 = decompQRP.getQ(null,true);
             DenseMatrix64F U1 = decompBi.getU(null,false,true);
-            CommonOps.mult(Q1,U1,U);
+            CommonOps_D64.mult(Q1,U1,U);
         } else {
            // U = [Q1*U1 Q2]
             DenseMatrix64F Q = decompQRP.getQ(U,false);
             DenseMatrix64F U1 = decompBi.getU(null,false,true);
-            DenseMatrix64F Q1 = CommonOps.extract(Q,0,Q.numRows,0,min);
+            DenseMatrix64F Q1 = CommonOps_D64.extract(Q,0,Q.numRows,0,min);
             DenseMatrix64F tmp = new DenseMatrix64F(Q1.numRows,U1.numCols);
-            CommonOps.mult(Q1,U1,tmp);
-            CommonOps.insert(tmp,Q,0,0);
+            CommonOps_D64.mult(Q1,U1,tmp);
+            CommonOps_D64.insert(tmp,Q,0,0);
         }
 
         if( transpose )
-            CommonOps.transpose(U);
+            CommonOps_D64.transpose(U);
 
         return U;
     }
@@ -142,7 +142,7 @@ public class BidiagonalDecompositionTall_D64
         // TODO this is horribly inefficient
         DenseMatrix64F result = new DenseMatrix64F(min,n);
         DenseMatrix64F P = decompQRP.getPivotMatrix(null);
-        CommonOps.multTransB(B, P, result);
+        CommonOps_D64.multTransB(B, P, result);
         B.set(result);
 
         return decompBi.decompose(B);

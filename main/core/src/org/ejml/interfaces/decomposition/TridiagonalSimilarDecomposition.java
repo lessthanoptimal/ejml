@@ -41,7 +41,7 @@ public interface TridiagonalSimilarDecomposition<MatrixType extends Matrix>
      * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
-    public MatrixType getT( MatrixType T );
+    MatrixType getT(MatrixType T);
 
     /**
      * An orthogonal matrix that has the following property: T = Q<sup>H</sup>AQ
@@ -50,14 +50,5 @@ public interface TridiagonalSimilarDecomposition<MatrixType extends Matrix>
      * @param transposed If true then the transpose (real) or conjugate transpose (complex) of Q is returned.
      * @return The extracted Q matrix.
      */
-    public MatrixType getQ( MatrixType Q , boolean transposed );
-
-    /**
-     * Extracts the diagonal and off diagonal elements of the decomposed tridiagonal matrix.
-     * Since it is symmetric only one off diagonal array is returned.
-     *
-     * @param diag Diagonal elements. Modified.
-     * @param off off diagonal elements. Modified.
-     */
-    public void getDiagonal( double []diag, double []off );
+    MatrixType getQ(MatrixType Q, boolean transposed);
 }

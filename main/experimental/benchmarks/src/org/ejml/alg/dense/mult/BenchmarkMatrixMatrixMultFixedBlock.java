@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -39,7 +39,7 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.mult(matA,matB,matResult);
+            CommonOps_D64.mult(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -79,9 +79,9 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
 
     public static void performTests( int size , int numTrials )
     {
-        DenseMatrix64F matA = RandomMatrices.createRandom(size,size,rand);
-        DenseMatrix64F matB = RandomMatrices.createRandom(size,size,rand);
-        DenseMatrix64F matResult = RandomMatrices.createRandom(size,size,rand);
+        DenseMatrix64F matA = RandomMatrices_D64.createRandom(size,size,rand);
+        DenseMatrix64F matB = RandomMatrices_D64.createRandom(size,size,rand);
+        DenseMatrix64F matResult = RandomMatrices_D64.createRandom(size,size,rand);
 
         System.out.printf("12x12 multiply  standard: %7d  fixed6 %7d fixed3 %7d\n",
                 mult(matA,matB,matResult,numTrials),

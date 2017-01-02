@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,6 +53,6 @@ public abstract class LinearSolverAbstract_D64 implements LinearSolver<DenseMatr
 
     @Override
     public void invert(DenseMatrix64F A_inv) {
-        InvertUsingSolve.invert(this,A,A_inv);
+        InvertUsingSolve_D64.invert(this,A,A_inv);
     }
 }

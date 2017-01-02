@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,10 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.alg.dense.misc.DeterminantFromMinor;
+import org.ejml.alg.dense.misc.DeterminantFromMinor_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -46,9 +46,9 @@ public class TestLUDecompositionBase_D64 {
 
         int width = 10;
 
-        DenseMatrix64F A = RandomMatrices.createRandom(width,width,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(width,width,rand);
 
-        DeterminantFromMinor minor = new DeterminantFromMinor(width);
+        DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(width);
         double minorVal = minor.compute(A);
 
         LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
@@ -61,7 +61,7 @@ public class TestLUDecompositionBase_D64 {
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        DenseMatrix64F LU = RandomMatrices.createRandom(width,width,rand);
+        DenseMatrix64F LU = RandomMatrices_D64.createRandom(width,width,rand);
 
         DenseMatrix64F L = new DenseMatrix64F(width,width);
         DenseMatrix64F U = new DenseMatrix64F(width,width);
@@ -81,12 +81,12 @@ public class TestLUDecompositionBase_D64 {
             }
         }
 
-        DenseMatrix64F x = RandomMatrices.createRandom(width, 1, -1, 1, rand);
+        DenseMatrix64F x = RandomMatrices_D64.createRandom(width, 1, -1, 1, rand);
         DenseMatrix64F tmp = new DenseMatrix64F(width,1);
         DenseMatrix64F b = new DenseMatrix64F(width,1);
 
-        CommonOps.mult(U, x, tmp);
-        CommonOps.mult(L,tmp,b);
+        CommonOps_D64.mult(U, x, tmp);
+        CommonOps_D64.mult(L,tmp,b);
 
 
         DebugDecompose alg = new DebugDecompose(width);

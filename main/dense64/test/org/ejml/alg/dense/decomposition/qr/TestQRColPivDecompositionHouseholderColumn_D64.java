@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,11 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -43,7 +44,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
      */
     @Test
     public void noPivot() {
-        DenseMatrix64F A = RandomMatrices.createOrthogonal(6, 3, rand);
+        DenseMatrix64F A = RandomMatrices_D64.createOrthogonal(6, 3, rand);
 
         // make sure the columns have norms in descending magnitude
         for( int i = 0; i < A.numCols; i++ ) {
@@ -63,9 +64,9 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
         DenseMatrix64F R = alg.getR(null, false);
 
         DenseMatrix64F found = new DenseMatrix64F(A.numRows,A.numCols);
-        CommonOps.mult(Q,R,found);
+        CommonOps_D64.mult(Q,R,found);
 
-        assertTrue(MatrixFeatures.isIdentical(A,found,1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(A,found, UtilEjml.TEST_64F));
 
         // check the pivots
         int pivots[] = alg.getPivots();
@@ -74,7 +75,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
         }
 
         DenseMatrix64F P = alg.getPivotMatrix(null);
-        assertTrue(MatrixFeatures.isIdentity(P, 1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentity(P, UtilEjml.TEST_64F));
     }
 
     /**
@@ -87,9 +88,9 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
         for( int numSingular = 0; numSingular < numRows-1; numSingular++ )  {
 
             // construct a singular matrix from its SVD decomposition
-            SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,numRows,rand));
+            SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_D64.createOrthogonal(numRows,numRows,rand));
             SimpleMatrix S = SimpleMatrix.diag(1,2,3,4,5,6,7,8,9,10);
-            SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices.createOrthogonal(numRows,numRows,rand));
+            SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_D64.createOrthogonal(numRows,numRows,rand));
 
             for( int i = 0; i < numSingular; i++ ) {
                 S.set(i,i,0);
@@ -135,7 +136,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
     {
 
         for( int i = 0; i < 10; i++ ) {
-            DenseMatrix64F A = RandomMatrices.createRandom(numRows, numCols, rand);
+            DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows, numCols, rand);
 
             QRColPivDecompositionHouseholderColumn_D64 alg = new QRColPivDecompositionHouseholderColumn_D64();
             assertTrue(alg.decompose(A));
@@ -161,7 +162,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
 //        System.out.println("asdfasdf");
 //        expected.print();
 //        found.print();
-        assertTrue(expected.isIdentical(found,1e-8));
+        assertTrue(expected.isIdentical(found,UtilEjml.TEST_64F));
     }
 
 }

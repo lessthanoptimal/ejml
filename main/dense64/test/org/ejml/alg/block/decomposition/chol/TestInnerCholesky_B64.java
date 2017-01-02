@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,11 @@
 
 package org.ejml.alg.block.decomposition.chol;
 
-import org.ejml.alg.generic.GenericMatrixOps;
+import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -53,12 +53,12 @@ public class TestInnerCholesky_B64 {
      * Test a positive case where it should be able to decompose the matrix
      */
     private void checkDecompose(int n, boolean lower) {
-        DenseMatrix64F A = RandomMatrices.createSymmPosDef(n,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(n,rand);
 
         // decompose a DenseMatrix64F to find expected solution
-        CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(n,lower);
+        CholeskyDecomposition_F64<DenseMatrix64F> chol = DecompositionFactory_D64.chol(n,lower);
 
-        assertTrue(DecompositionFactory.decomposeSafe(chol,A));
+        assertTrue(DecompositionFactory_D64.decomposeSafe(chol,A));
 
         DenseMatrix64F expected = chol.getT(null);
 
@@ -76,7 +76,7 @@ public class TestInnerCholesky_B64 {
         System.arraycopy(data,2,found.data,0,found.data.length);
 
         // set lower triangular potion to be zero so that it is exactly the same
-        assertTrue(GenericMatrixOps.isEquivalentTriangle(!lower,expected,found,1e-10));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(!lower,expected,found,1e-10));
     }
 
     /**

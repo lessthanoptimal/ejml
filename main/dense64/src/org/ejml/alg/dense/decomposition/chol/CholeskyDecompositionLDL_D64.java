@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -42,7 +42,7 @@ import org.ejml.ops.CommonOps;
  * @author Peter Abeles
  */
 public class CholeskyDecompositionLDL_D64
-        implements CholeskyLDLDecomposition<DenseMatrix64F> {
+        implements CholeskyLDLDecomposition_F64<DenseMatrix64F> {
 
     // it can decompose a matrix up to this width
     private int maxWidth;
@@ -170,6 +170,6 @@ public class CholeskyDecompositionLDL_D64
 
     @Override
     public DenseMatrix64F getD(DenseMatrix64F D) {
-        return CommonOps.diag(D,L.numCols,d);
+        return CommonOps_D64.diag(D,L.numCols,d);
     }
 }

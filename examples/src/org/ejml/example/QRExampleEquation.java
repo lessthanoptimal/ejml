@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.equation.Equation;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.NormOps;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.NormOps_D64;
 
 /**
  * <p>
@@ -65,7 +65,7 @@ public class QRExampleEquation {
             // Note that v is lazily created above.  Need direct access to it, which is done below.
             DenseMatrix64F v = eq.lookupMatrix("v");
 
-            double maxV = CommonOps.elementMaxAbs(v);
+            double maxV = CommonOps_D64.elementMaxAbs(v);
             eq.alias(maxV,"maxV");
 
             if( maxV > 0 && v.getNumElements() > 1 ) {
@@ -73,7 +73,7 @@ public class QRExampleEquation {
                 eq.process("v=v/maxV");
 
                 // compute the magnitude of the vector
-                double tau = NormOps.normF(v);
+                double tau = NormOps_D64.normF(v);
 
                 if( v.get(0) < 0 )
                     tau *= -1.0;
@@ -99,7 +99,7 @@ public class QRExampleEquation {
     public DenseMatrix64F getQ() {
         Equation eq = new Equation();
 
-        DenseMatrix64F Q = CommonOps.identity(QR.numRows);
+        DenseMatrix64F Q = CommonOps_D64.identity(QR.numRows);
         DenseMatrix64F u = new DenseMatrix64F(QR.numRows,1);
 
         int N = Math.min(QR.numCols,QR.numRows);

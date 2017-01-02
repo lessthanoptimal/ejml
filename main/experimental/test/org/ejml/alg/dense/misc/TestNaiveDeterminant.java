@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,9 @@
 
 package org.ejml.alg.dense.misc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -52,12 +53,12 @@ public class TestNaiveDeterminant {
         Random rand = new Random(0xff);
 
         for( int i = 1; i <= 5; i++ ) {
-            DenseMatrix64F A = RandomMatrices.createRandom(i,i,rand);
+            DenseMatrix64F A = RandomMatrices_D64.createRandom(i,i,rand);
 
             double expected = NaiveDeterminant.recursive(A);
             double found = NaiveDeterminant.leibniz(A);
 
-            assertEquals(expected,found,1e-8);
+            assertEquals(expected,found, UtilEjml.TEST_64F);
         }
     }
 }

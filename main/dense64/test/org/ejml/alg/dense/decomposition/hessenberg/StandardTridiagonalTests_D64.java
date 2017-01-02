@@ -18,16 +18,17 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.safeDecomposition;
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface_D64.safeDecomposition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -39,16 +40,16 @@ public abstract class StandardTridiagonalTests_D64 {
 
     protected Random rand = new Random(2344);
 
-    protected abstract TridiagonalSimilarDecomposition<DenseMatrix64F> createDecomposition();
+    protected abstract TridiagonalSimilarDecomposition_F64<DenseMatrix64F> createDecomposition();
 
     @Test
     public void fullTest() {
 
         for( int width = 1; width < 20; width += 2 ) {
 
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createSymmetric(width,-1,1,rand));
 
-            TridiagonalSimilarDecomposition<DenseMatrix64F> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<DenseMatrix64F> alg = createDecomposition();
 
 
             assertTrue(safeDecomposition(alg,A.getMatrix()));
@@ -59,7 +60,7 @@ public abstract class StandardTridiagonalTests_D64 {
 
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
-            assertTrue("width = "+width,MatrixFeatures.isIdentical(A.getMatrix(),A_found.getMatrix(),1e-8));
+            assertTrue("width = "+width, MatrixFeatures_D64.isIdentical(A.getMatrix(),A_found.getMatrix(),UtilEjml.TEST_64F));
         }
     }
 
@@ -67,9 +68,9 @@ public abstract class StandardTridiagonalTests_D64 {
     public void getDiagonal() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            DenseMatrix64F A = RandomMatrices.createSymmetric(width,-1,1,rand);
+            DenseMatrix64F A = RandomMatrices_D64.createSymmetric(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition<DenseMatrix64F> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<DenseMatrix64F> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -79,10 +80,10 @@ public abstract class StandardTridiagonalTests_D64 {
             double off[] = new double[width];
 
             alg.getDiagonal(diag,off);
-            assertEquals(T.get(0,0),diag[0],1e-8);
+            assertEquals(T.get(0,0),diag[0],UtilEjml.TEST_64F);
             for( int i = 1; i < width; i++ ) {
-                assertEquals(T.get(i,i),diag[i],1e-8);
-                assertEquals(T.get(i-1,i),off[i-1],1e-8);
+                assertEquals(T.get(i,i),diag[i], UtilEjml.TEST_64F);
+                assertEquals(T.get(i-1,i),off[i-1],UtilEjml.TEST_64F);
             }
         }
     }
@@ -91,9 +92,9 @@ public abstract class StandardTridiagonalTests_D64 {
     public void transposeFlagForQ() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            DenseMatrix64F A = RandomMatrices.createSymmetric(width,-1,1,rand);
+            DenseMatrix64F A = RandomMatrices_D64.createSymmetric(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition<DenseMatrix64F> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<DenseMatrix64F> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -102,7 +103,7 @@ public abstract class StandardTridiagonalTests_D64 {
 
             for( int i = 0; i < Q.numRows; i++ ) {
                 for( int j = 0; j < Q.numCols; j++ ) {
-                    assertEquals(Q.get(i,j),Q_t.get(j,i),1e-8);
+                    assertEquals(Q.get(i,j),Q_t.get(j,i),UtilEjml.TEST_64F);
                 }
             }
         }

@@ -18,10 +18,11 @@
 
 package org.ejml.data;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
@@ -41,7 +42,7 @@ public class TestCDenseMatrix64F {
         CDenseMatrix64F a = new CDenseMatrix64F(new double[][]{{1,2,3,4},{5,6,7,8},{5,6,7,8}});
         CDenseMatrix64F b = new CDenseMatrix64F(3,2,true,1,2,3,4,5,6,7,8,5,6,7,8);
 
-        EjmlUnitTests.assertEquals(a, b, 1e-8);
+        EjmlUnitTests.assertEquals(a, b, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class TestCDenseMatrix64F {
 
         CDenseMatrix64F b = new CDenseMatrix64F(a);
         for (int i = 0; i < a.getDataLength(); i++) {
-            assertEquals(a.data[i],b.data[i],1e-8);
+            assertEquals(a.data[i],b.data[i],UtilEjml.TEST_64F);
         }
     }
 
@@ -104,8 +105,8 @@ public class TestCDenseMatrix64F {
         Complex64F c = new Complex64F();
         a.get(2,1,c);
 
-        assertEquals(c.real,5,1e-8);
-        assertEquals(c.imaginary, 6, 1e-8);
+        assertEquals(c.real,5, UtilEjml.TEST_64F);
+        assertEquals(c.imaginary, 6, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -114,8 +115,8 @@ public class TestCDenseMatrix64F {
 
         a.set(2, 1, 5, 6);
 
-        assertEquals(5,a.data[2*4*2+2],1e-8);
-        assertEquals(6,a.data[2*4*2+3],1e-8);
+        assertEquals(5,a.data[2*4*2+2],UtilEjml.TEST_64F);
+        assertEquals(6,a.data[2*4*2+3],UtilEjml.TEST_64F);
     }
 
     @Test
@@ -128,7 +129,7 @@ public class TestCDenseMatrix64F {
         Complex64F c = new Complex64F();
         a.get(2,1,c);
 
-        assertEquals(a.getReal(2, 1), 5, 1e-8);
+        assertEquals(a.getReal(2, 1), 5, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -138,7 +139,7 @@ public class TestCDenseMatrix64F {
 
         a.setReal(2,1,5);
 
-        assertEquals(5, a.data[2 * 4 * 2 + 2], 1e-8);
+        assertEquals(5, a.data[2 * 4 * 2 + 2], UtilEjml.TEST_64F);
     }
 
     @Test
@@ -151,7 +152,7 @@ public class TestCDenseMatrix64F {
         Complex64F c = new Complex64F();
         a.get(2,1,c);
 
-        assertEquals(a.getImag(2, 1), 6, 1e-8);
+        assertEquals(a.getImag(2, 1), 6, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -160,7 +161,7 @@ public class TestCDenseMatrix64F {
 
         a.setImag(2, 1, 6);
 
-        assertEquals(6, a.data[2 * 4 * 2 + 3], 1e-8);
+        assertEquals(6, a.data[2 * 4 * 2 + 3], UtilEjml.TEST_64F);
     }
 
     @Test
@@ -175,7 +176,7 @@ public class TestCDenseMatrix64F {
 
         CDenseMatrix64F b = a.copy();
         for (int i = 0; i < a.getDataLength(); i++) {
-            assertEquals(a.data[i],b.data[i],1e-8);
+            assertEquals(a.data[i],b.data[i],UtilEjml.TEST_64F);
         }
     }
 

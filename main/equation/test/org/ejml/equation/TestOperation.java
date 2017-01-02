@@ -18,9 +18,10 @@
 
 package org.ejml.equation;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class TestOperation {
 
         eq.process("x=b/A");
 
-        assertTrue(b.divide(2.5).isIdentical(x, 1e-8));
+        assertTrue(b.divide(2.5).isIdentical(x, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -65,9 +66,9 @@ public class TestOperation {
         eq.process("x=A/b");
 
         DenseMatrix64F tmp = new DenseMatrix64F(5,3);
-        CommonOps.divide(2.5, b.getMatrix(), tmp);
+        CommonOps_D64.divide(2.5, b.getMatrix(), tmp);
 
-        assertTrue(MatrixFeatures.isIdentical(tmp, x.getMatrix(), 1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(tmp, x.getMatrix(), UtilEjml.TEST_64F));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class TestOperation {
 
         int found = eq.lookupInteger("x");
 
-        assertEquals(13 / 4, found, 1e-8);
+        assertEquals(13 / 4, found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -97,7 +98,7 @@ public class TestOperation {
 
         double found = eq.lookupDouble("x");
 
-        assertEquals(4.2 / 5.0, found, 1e-8);
+        assertEquals(4.2 / 5.0, found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -114,7 +115,7 @@ public class TestOperation {
 
         eq.process("x=b/A");
 
-        assertTrue(A.solve(b).isIdentical(x, 1e-8));
+        assertTrue(A.solve(b).isIdentical(x, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -131,7 +132,7 @@ public class TestOperation {
 
         eq.process("x=A\\b");
 
-        assertTrue(A.solve(b).isIdentical(x, 1e-8));
+        assertTrue(A.solve(b).isIdentical(x, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -146,9 +147,9 @@ public class TestOperation {
         eq.alias(x, "x");
 
         eq.process("x=b*A");
-        assertTrue(b.scale(2.5).isIdentical(x, 1e-8));
+        assertTrue(b.scale(2.5).isIdentical(x, UtilEjml.TEST_64F));
         eq.process("x=A*b");
-        assertTrue(b.scale(2.5).isIdentical(x, 1e-8));
+        assertTrue(b.scale(2.5).isIdentical(x, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -163,7 +164,7 @@ public class TestOperation {
 
         int found = eq.lookupInteger("x");
 
-        assertEquals(13 * 4, found, 1e-8);
+        assertEquals(13 * 4, found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -178,7 +179,7 @@ public class TestOperation {
 
         double found = eq.lookupDouble("x");
 
-        assertEquals(4.2 * 5.0, found, 1e-8);
+        assertEquals(4.2 * 5.0, found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -195,7 +196,7 @@ public class TestOperation {
 
         eq.process("b=A*x");
 
-        assertTrue(A.mult(x).isIdentical(b, 1e-8));
+        assertTrue(A.mult(x).isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -210,7 +211,7 @@ public class TestOperation {
 
         eq.process("c=a.*b");
 
-        assertTrue(a.elementMult(b).isIdentical(c, 1e-8));
+        assertTrue(a.elementMult(b).isIdentical(c, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -225,7 +226,7 @@ public class TestOperation {
 
         eq.process("c=a./b");
 
-        assertTrue(a.elementDiv(b).isIdentical(c, 1e-8));
+        assertTrue(a.elementDiv(b).isIdentical(c, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -240,7 +241,7 @@ public class TestOperation {
 
         eq.process("c=a.^b");
 
-        assertTrue(a.elementPower(b).isIdentical(c, 1e-8));
+        assertTrue(a.elementPower(b).isIdentical(c, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -255,7 +256,7 @@ public class TestOperation {
 
         eq.process("c=a.^b");
 
-        assertTrue(a.elementPower(b).isIdentical(c, 1e-8));
+        assertTrue(a.elementPower(b).isIdentical(c, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -271,8 +272,8 @@ public class TestOperation {
         eq.process("c=a.^b");
 
         SimpleMatrix expected = new SimpleMatrix(6,5);
-        CommonOps.elementPower(a, b.getMatrix(), expected.getMatrix());
-        assertTrue(expected.isIdentical(c, 1e-8));
+        CommonOps_D64.elementPower(a, b.getMatrix(), expected.getMatrix());
+        assertTrue(expected.isIdentical(c, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -288,7 +289,7 @@ public class TestOperation {
 
         double found = eq.lookupDouble("c");
 
-        assertEquals(Math.pow(a, b), found, 1e-8);
+        assertEquals(Math.pow(a, b), found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -303,7 +304,7 @@ public class TestOperation {
 
         eq.process("c=kron(a,b)");
 
-        assertTrue(a.kron(b).isIdentical(c, 1e-8));
+        assertTrue(a.kron(b).isIdentical(c, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -313,7 +314,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=2.3^4.2");
 
-        assertEquals(Math.pow(2.3, 4.2), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.pow(2.3, 4.2), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -323,7 +324,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=2^4");
 
-        assertEquals(Math.pow(2, 4), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.pow(2, 4), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -332,7 +333,7 @@ public class TestOperation {
 
         eq.process("a=sqrt(5)");
 
-        assertEquals(Math.sqrt(5),eq.lookupDouble("a"),1e-8);
+        assertEquals(Math.sqrt(5),eq.lookupDouble("a"),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -341,7 +342,7 @@ public class TestOperation {
 
         eq.process("a=sqrt(5.7)");
 
-        assertEquals(Math.sqrt(5.7), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.sqrt(5.7), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
 
@@ -352,7 +353,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=atan2(1.1,0.5)");
 
-        assertEquals(Math.atan2(1.1, 0.5), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.atan2(1.1, 0.5), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -374,7 +375,7 @@ public class TestOperation {
         eq.alias(3.1,"b");
         eq.process("a=-b");
 
-        assertEquals(-3.1, eq.lookupDouble("a"), 1e-8);
+        assertEquals(-3.1, eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -390,7 +391,7 @@ public class TestOperation {
         eq.process("A=-B");
 
         for (int i = 0; i < A.getNumElements(); i++) {
-            assertEquals(-A.get(i),B.get(i),1e-8);
+            assertEquals(-A.get(i),B.get(i),UtilEjml.TEST_64F);
         }
     }
 
@@ -401,7 +402,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=sin(2.1)");
 
-        assertEquals(Math.sin(2.1), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.sin(2.1), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -411,7 +412,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=cos(2.1)");
 
-        assertEquals(Math.cos(2.1), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.cos(2.1), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -421,7 +422,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=atan(2.1)");
 
-        assertEquals(Math.atan(2.1), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.atan(2.1), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -431,7 +432,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=exp(2.1)");
 
-        assertEquals(Math.exp(2.1), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.exp(2.1), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -446,7 +447,7 @@ public class TestOperation {
 
         SimpleMatrix expected = a.elementExp();
 
-        assertTrue(expected.isIdentical(b, 1e-8));
+        assertTrue(expected.isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -456,7 +457,7 @@ public class TestOperation {
         eq.alias(1.1,"a");
         eq.process("a=log(2.1)");
 
-        assertEquals(Math.log(2.1), eq.lookupDouble("a"), 1e-8);
+        assertEquals(Math.log(2.1), eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -471,7 +472,7 @@ public class TestOperation {
 
         SimpleMatrix expected = a.elementLog();
 
-        assertTrue(expected.isIdentical(b, 1e-8));
+        assertTrue(expected.isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -481,7 +482,7 @@ public class TestOperation {
         eq.alias(1,"a");
         eq.process("a=2 + 3");
 
-        assertEquals(5, eq.lookupInteger("a"), 1e-8);
+        assertEquals(5, eq.lookupInteger("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -491,7 +492,7 @@ public class TestOperation {
         eq.alias(1.2,"a");
         eq.process("a= 2.3 + 3");
 
-        assertEquals(5.3, eq.lookupDouble("a"), 1e-8);
+        assertEquals(5.3, eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -505,7 +506,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b",c,"c");
         eq.process("a=b+c");
 
-        assertTrue(b.plus(c).isIdentical(a, 1e-8));
+        assertTrue(b.plus(c).isIdentical(a, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -518,10 +519,10 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
 
         eq.process("a=b+2.2");
-        assertTrue(b.plus(2.2).isIdentical(a, 1e-8));
+        assertTrue(b.plus(2.2).isIdentical(a, UtilEjml.TEST_64F));
 
         eq.process("a=2.2+b");
-        assertTrue(b.plus(2.2).isIdentical(a, 1e-8));
+        assertTrue(b.plus(2.2).isIdentical(a, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -531,7 +532,7 @@ public class TestOperation {
         eq.alias(1, "a");
         eq.process("a=2 - 3");
 
-        assertEquals(-1, eq.lookupInteger("a"), 1e-8);
+        assertEquals(-1, eq.lookupInteger("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -541,7 +542,7 @@ public class TestOperation {
         eq.alias(1.2, "a");
         eq.process("a= 2.3 - 3");
 
-        assertEquals(2.3 - 3.0, eq.lookupDouble("a"), 1e-8);
+        assertEquals(2.3 - 3.0, eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -555,7 +556,7 @@ public class TestOperation {
         eq.alias(a, "a", b, "b", c, "c");
         eq.process("a=b-c");
 
-        assertTrue(b.minus(c).isIdentical(a, 1e-8));
+        assertTrue(b.minus(c).isIdentical(a, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -568,13 +569,13 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
 
         eq.process("a=b-2.2");
-        assertTrue(b.plus(-2.2).isIdentical(a, 1e-8));
+        assertTrue(b.plus(-2.2).isIdentical(a, UtilEjml.TEST_64F));
 
         eq.process("a=2.2-b");
 
         DenseMatrix64F expected = new DenseMatrix64F(3,4);
-        CommonOps.subtract(2.2, b.getMatrix(), expected);
-        assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, 1e-8));
+        CommonOps_D64.subtract(2.2, b.getMatrix(), expected);
+        assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -587,7 +588,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
         eq.process("b=a");
 
-        assertTrue(a.isIdentical(b, 1e-8));
+        assertTrue(a.isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -600,7 +601,7 @@ public class TestOperation {
 
         eq.process("a=b");
 
-        assertEquals(2.5, eq.lookupDouble("a"), 1e-8);
+        assertEquals(2.5, eq.lookupDouble("a"), UtilEjml.TEST_64F);
 
         // pass in a none 1x1 matrix
         eq.alias(new DenseMatrix64F(2, 1), "b");
@@ -631,12 +632,12 @@ public class TestOperation {
         eq.alias(3,"b");
 
         eq.process("a=b");
-        assertEquals(3, eq.lookupDouble("a"), 1e-8);
+        assertEquals(3, eq.lookupDouble("a"), UtilEjml.TEST_64F);
 
         // double to double
         eq.alias(3.5, "c");
         eq.process("a=c");
-        assertEquals(3.5, eq.lookupDouble("a"), 1e-8);
+        assertEquals(3.5, eq.lookupDouble("a"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -649,7 +650,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
         eq.process("b(1:2,1:3)=a");
 
-        assertTrue(a.isIdentical(b.extractMatrix(1, 3, 1, 4), 1e-8));
+        assertTrue(a.isIdentical(b.extractMatrix(1, 3, 1, 4), UtilEjml.TEST_64F));
     }
 
     @Test
@@ -695,7 +696,7 @@ public class TestOperation {
         eq.process("b(2 3 4 5 6 7)=a");
 
         for (int i = 0; i < 6; i++) {
-            assertEquals(b.get(i+2),a.get(i),1e-8);
+            assertEquals(b.get(i+2),a.get(i),UtilEjml.TEST_64F);
         }
     }
 
@@ -710,7 +711,7 @@ public class TestOperation {
         eq.process("b(2:8)=a");
 
         for (int i = 0; i < 7; i++) {
-            assertEquals(b.get(i+2),a.get(i),1e-8);
+            assertEquals(b.get(i+2),a.get(i),UtilEjml.TEST_64F);
         }
     }
 
@@ -725,7 +726,7 @@ public class TestOperation {
         eq.process("b(2:)=a");
 
         for (int i = 0; i < a.getNumElements(); i++) {
-            assertEquals(b.get(i+2),a.get(i),1e-8);
+            assertEquals(b.get(i+2),a.get(i),UtilEjml.TEST_64F);
         }
     }
 
@@ -740,7 +741,7 @@ public class TestOperation {
         eq.process("b(2 3:)=a");
 
         for (int i = 0; i < a.getNumElements(); i++) {
-            assertEquals(b.get(i+2),a.get(i),1e-8);
+            assertEquals(b.get(i+2),a.get(i),UtilEjml.TEST_64F);
         }
     }
 
@@ -754,8 +755,8 @@ public class TestOperation {
         eq.process("b(2,3)=4.5");
         eq.process("b(0,0)=3.5");
 
-        assertEquals(3.5, b.get(0, 0), 1e-8);
-        assertEquals(4.5, b.get(2, 3), 1e-8);
+        assertEquals(3.5, b.get(0, 0), UtilEjml.TEST_64F);
+        assertEquals(4.5, b.get(2, 3), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -799,7 +800,7 @@ public class TestOperation {
 
         int indexes[] = new int[]{1,0,3};
         for (int i = 0; i < indexes.length; i++) {
-            assertEquals(b.get(indexes[i]),4.5,1e-8);
+            assertEquals(b.get(indexes[i]),4.5,UtilEjml.TEST_64F);
         }
     }
 
@@ -814,7 +815,7 @@ public class TestOperation {
 
         int indexes[] = new int[]{1,2,3};
         for (int i = 0; i < indexes.length; i++) {
-            assertEquals(b.get(indexes[i]),4.5,1e-8);
+            assertEquals(b.get(indexes[i]),4.5,UtilEjml.TEST_64F);
         }
     }
 
@@ -829,7 +830,7 @@ public class TestOperation {
 
         int indexes[] = new int[]{2,3,4,5};
         for (int i = 0; i < indexes.length; i++) {
-            assertEquals(b.get(indexes[i]),4.5,1e-8);
+            assertEquals(b.get(indexes[i]),4.5,UtilEjml.TEST_64F);
         }
     }
 
@@ -844,8 +845,8 @@ public class TestOperation {
         DenseMatrix64F found = eq.lookupMatrix("c");
 
         assertTrue(found.numRows == 1 && found.numCols == 2);
-        assertEquals(b.get(1), found.get(0), 1e-8);
-        assertEquals(b.get(2), found.get(1), 1e-8);
+        assertEquals(b.get(1), found.get(0), UtilEjml.TEST_64F);
+        assertEquals(b.get(2), found.get(1), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -860,7 +861,7 @@ public class TestOperation {
 
         assertTrue(found.numRows == 1 && found.numCols == 3);
         for (int i = 0; i < found.numCols; i++) {
-            assertEquals(b.get(i+1), found.get(i), 1e-8);
+            assertEquals(b.get(i+1), found.get(i), UtilEjml.TEST_64F);
         }
     }
 
@@ -876,7 +877,7 @@ public class TestOperation {
 
         assertTrue(found.numRows == 1 && found.numCols == b.getNumElements()-4);
         for (int i = 0; i < found.numCols; i++) {
-            assertEquals(b.get(i+4), found.get(i), 1e-8);
+            assertEquals(b.get(i+4), found.get(i), UtilEjml.TEST_64F);
         }
     }
 
@@ -892,7 +893,7 @@ public class TestOperation {
 
         assertTrue(found.numRows == 1 && found.numCols == b.getNumElements());
         for (int i = 0; i < found.numCols; i++) {
-            assertEquals(b.get(i), found.get(i), 1e-8);
+            assertEquals(b.get(i), found.get(i), UtilEjml.TEST_64F);
         }
     }
 
@@ -970,7 +971,7 @@ public class TestOperation {
         eq.process("c=b(3)");
         double found = eq.lookupDouble("c");
 
-        assertEquals(b.get(3), found, 1e-8);
+        assertEquals(b.get(3), found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -983,7 +984,7 @@ public class TestOperation {
         eq.process("c=b(2,3)");
         double found = eq.lookupDouble("c");
 
-        assertEquals(b.get(2,3), found, 1e-8);
+        assertEquals(b.get(2,3), found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -996,7 +997,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
         eq.process("b=a'");
 
-        assertTrue(a.transpose().isIdentical(b, 1e-8));
+        assertTrue(a.transpose().isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -1009,7 +1010,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
         eq.process("b=inv(a)");
 
-        assertTrue(a.invert().isIdentical(b, 1e-8));
+        assertTrue(a.invert().isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -1019,7 +1020,7 @@ public class TestOperation {
         eq.alias(2.2,"a",3.3,"b");
         eq.process("b=inv(a)");
 
-        assertEquals(1.0 / 2.2, eq.lookupDouble("b"), 1e-8);
+        assertEquals(1.0 / 2.2, eq.lookupDouble("b"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1032,7 +1033,7 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
         eq.process("b=pinv(a)");
 
-        assertTrue(a.pseudoInverse().isIdentical(b, 1e-8));
+        assertTrue(a.pseudoInverse().isIdentical(b, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -1042,7 +1043,7 @@ public class TestOperation {
         eq.alias(2.2,"a",3.3,"b");
         eq.process("b=pinv(a)");
 
-        assertEquals(1.0 / 2.2, eq.lookupDouble("b"), 1e-8);
+        assertEquals(1.0 / 2.2, eq.lookupDouble("b"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1056,9 +1057,9 @@ public class TestOperation {
         eq.process("b=rref(a)");
 
         DenseMatrix64F expected = new DenseMatrix64F(4,3);
-        CommonOps.rref(a.getMatrix(),-1,expected);
+        CommonOps_D64.rref(a.getMatrix(),-1,expected);
 
-        assertTrue(MatrixFeatures.isIdentical(expected,b.getMatrix(),1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(expected,b.getMatrix(),UtilEjml.TEST_64F));
     }
 
     @Test
@@ -1066,13 +1067,13 @@ public class TestOperation {
         Equation eq = new Equation();
 
         eq.process("a=rref(2.3)");
-        assertEquals(1,eq.lookupDouble("a"),1e-8);
+        assertEquals(1,eq.lookupDouble("a"),UtilEjml.TEST_64F);
 
         eq.process("a=rref(0)");
-        assertEquals(0,eq.lookupDouble("a"),1e-8);
+        assertEquals(0,eq.lookupDouble("a"),UtilEjml.TEST_64F);
 
         eq.process("a=rref(-1.2)");
-        assertEquals(1,eq.lookupDouble("a"),1e-8);
+        assertEquals(1,eq.lookupDouble("a"),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1084,7 +1085,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("b=det(a)");
 
-        assertEquals(a.determinant(),eq.lookupDouble("b"),1e-8);
+        assertEquals(a.determinant(),eq.lookupDouble("b"),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1093,7 +1094,7 @@ public class TestOperation {
 
         eq.process("b=det(5.6)");
 
-        assertEquals(5.6, eq.lookupDouble("b"), 1e-8);
+        assertEquals(5.6, eq.lookupDouble("b"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1105,7 +1106,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("b=trace(a)");
 
-        assertEquals(a.trace(), eq.lookupDouble("b"), 1e-8);
+        assertEquals(a.trace(), eq.lookupDouble("b"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1117,7 +1118,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("b=normF(a)");
 
-        assertEquals(a.normF(), eq.lookupDouble("b"), 1e-8);
+        assertEquals(a.normF(), eq.lookupDouble("b"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1126,7 +1127,7 @@ public class TestOperation {
 
         eq.process("b=normF(5.6)");
 
-        assertEquals(5.6, eq.lookupDouble("b"), 1e-8);
+        assertEquals(5.6, eq.lookupDouble("b"), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1138,7 +1139,7 @@ public class TestOperation {
         eq.alias(a,"a");
         eq.process("a=eye(3)");
 
-        assertTrue(SimpleMatrix.identity(3).isIdentical(a, 1e-8));
+        assertTrue(SimpleMatrix.identity(3).isIdentical(a, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -1170,7 +1171,7 @@ public class TestOperation {
         eq.process("B=abs(A)");
 
         int found = eq.lookupInteger("B");
-        assertEquals(4,found,1e-8);
+        assertEquals(4,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1183,7 +1184,7 @@ public class TestOperation {
         eq.process("B=abs(A)");
 
         double found = eq.lookupDouble("B");
-        assertEquals(4.6,found,1e-8);
+        assertEquals(4.6,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1198,8 +1199,8 @@ public class TestOperation {
         eq.process("B=max(A)");
 
         double found = eq.lookupDouble("B");
-        double expected = CommonOps.elementMax(A.getMatrix());
-        assertEquals(expected,found,1e-8);
+        double expected = CommonOps_D64.elementMax(A.getMatrix());
+        assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1212,7 +1213,7 @@ public class TestOperation {
         eq.process("B=max(A)");
 
         int found = eq.lookupInteger("B");
-        assertEquals(4,found,1e-8);
+        assertEquals(4,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1225,7 +1226,7 @@ public class TestOperation {
         eq.process("B=max(A)");
 
         double found = eq.lookupDouble("B");
-        assertEquals(4.6,found,1e-8);
+        assertEquals(4.6,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1240,8 +1241,8 @@ public class TestOperation {
         eq.process("B=min(A)");
 
         double found = eq.lookupDouble("B");
-        double expected = CommonOps.elementMin(A.getMatrix());
-        assertEquals(expected,found,1e-8);
+        double expected = CommonOps_D64.elementMin(A.getMatrix());
+        assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1254,7 +1255,7 @@ public class TestOperation {
         eq.process("B=min(A)");
 
         int found = eq.lookupInteger("B");
-        assertEquals(4,found,1e-8);
+        assertEquals(4,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1267,7 +1268,7 @@ public class TestOperation {
         eq.process("B=min(A)");
 
         double found = eq.lookupDouble("B");
-        assertEquals(4.6,found,1e-8);
+        assertEquals(4.6,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1282,7 +1283,7 @@ public class TestOperation {
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 8; j++) {
-                assertEquals(0,A.get(i,j),1e-8);
+                assertEquals(0,A.get(i,j),UtilEjml.TEST_64F);
             }
         }
     }
@@ -1299,7 +1300,7 @@ public class TestOperation {
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 8; j++) {
-                assertEquals(1,A.get(i,j),1e-8);
+                assertEquals(1,A.get(i,j),UtilEjml.TEST_64F);
             }
         }
     }
@@ -1320,9 +1321,9 @@ public class TestOperation {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 if( i == j )
-                    assertEquals(B.get(i,0),A.get(i,j),1e-8);
+                    assertEquals(B.get(i,0),A.get(i,j),UtilEjml.TEST_64F);
                 else
-                    assertEquals(0,A.get(i,j),1e-8);
+                    assertEquals(0,A.get(i,j),UtilEjml.TEST_64F);
             }
         }
     }
@@ -1343,7 +1344,7 @@ public class TestOperation {
         assertEquals(1,B.numCols());
 
         for (int i = 0; i < 6; i++) {
-            assertEquals(A.get(i,i),B.get(i,0),1e-8);
+            assertEquals(A.get(i,i),B.get(i,0),UtilEjml.TEST_64F);
         }
     }
 
@@ -1362,7 +1363,7 @@ public class TestOperation {
 
         double found = ((VariableDouble)eq.lookupVariable("found")).value;
 
-        assertEquals(A.dot(B),found,1e-8);
+        assertEquals(A.dot(B),found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -1379,14 +1380,14 @@ public class TestOperation {
 
         eq.process("x=solve(A,b)");
 
-        assertTrue(A.solve(b).isIdentical(x, 1e-8));
+        assertTrue(A.solve(b).isIdentical(x, UtilEjml.TEST_64F));
     }
 
     private void checkSubMatrixArraysExtract(SimpleMatrix src, DenseMatrix64F dst, int[] rows, int[] cols) {
         assertTrue(dst.numRows == rows.length && dst.numCols == cols.length);
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < cols.length; j++) {
-                assertEquals(src.get(rows[i],cols[j]), dst.get(i,j), 1e-8);
+                assertEquals(src.get(rows[i],cols[j]), dst.get(i,j), UtilEjml.TEST_64F);
             }
         }
     }
@@ -1395,7 +1396,7 @@ public class TestOperation {
         assertTrue(src.numRows() == rows.length && src.numCols() == cols.length);
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < cols.length; j++) {
-                assertEquals(src.get(i,j), dst.get(rows[i],cols[j]), 1e-8);
+                assertEquals(src.get(i,j), dst.get(rows[i],cols[j]), UtilEjml.TEST_64F);
             }
         }
     }
@@ -1403,7 +1404,7 @@ public class TestOperation {
     private void checkSubMatrixArraysInsert(double src, SimpleMatrix dst, int[] rows, int[] cols) {
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < cols.length; j++) {
-                assertEquals(src, dst.get(rows[i],cols[j]), 1e-8);
+                assertEquals(src, dst.get(rows[i],cols[j]), UtilEjml.TEST_64F);
             }
         }
     }

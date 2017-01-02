@@ -22,13 +22,13 @@ import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 import java.util.Arrays;
 
 /**
  * <p>
- * Performs a complex {@link TridiagonalSimilarDecomposition similar tridiagonal decomposition} on a
+ * Performs a complex {@link TridiagonalSimilarDecomposition_F64 similar tridiagonal decomposition} on a
  * square Hermitian matrix.  Householder vectors perform the similar operation and the symmetry
  * is taken advantage of for good performance.
  * </p>
@@ -48,7 +48,7 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_CD64
-        implements TridiagonalSimilarDecomposition<CDenseMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores

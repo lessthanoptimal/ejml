@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,10 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -61,7 +62,7 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
         DebugQR qr = new DebugQR(width,width);
 
         SimpleMatrix A = new SimpleMatrix(width,width);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
+        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
 
         qr.householder(w,A.getMatrix());
 
@@ -103,8 +104,8 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
         SimpleMatrix U = new SimpleMatrix(width,1);
         SimpleMatrix A = new SimpleMatrix(width,width);
 
-        RandomMatrices.setRandom(U.getMatrix(),rand);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
+        RandomMatrices_D64.setRandom(U.getMatrix(),rand);
+        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
 
         qr.convertToColumnMajor(A.getMatrix());
 
@@ -121,7 +122,7 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
         double[][] found = qr.getQR();
 
         for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found[w][i],1e-8);
+            assertEquals(U.get(i,0),found[w][i], UtilEjml.TEST_64F);
         }
 
         // the right should be the same

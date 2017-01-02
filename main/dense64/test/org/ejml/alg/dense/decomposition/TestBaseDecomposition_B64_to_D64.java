@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
@@ -53,7 +54,7 @@ public class TestBaseDecomposition_B64_to_D64 {
         assertFalse(alg.inputModified());
         assertTrue(alg.decompose(A));
         for (int i = 0; i < A.data.length; i++) {
-            assertEquals(i,A.data[i],1e-8);
+            assertEquals(i,A.data[i], UtilEjml.TEST_64F);
         }
 
         // test it with a decomposition which modifies the input
@@ -72,7 +73,7 @@ public class TestBaseDecomposition_B64_to_D64 {
             int val = 0;
             for (int i = 0; i < orig.numRows; i++) {
                 for (int j = 0; j < orig.numCols; j++,val++) {
-                    assertEquals(val,orig.get(i,j),1e-8);
+                    assertEquals(val,orig.get(i,j),UtilEjml.TEST_64F);
                 }
             }
 

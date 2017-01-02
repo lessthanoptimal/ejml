@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,10 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.UtilEjml;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,34 +39,34 @@ public class TestD1Submatrix64F {
 
     @Test
     public void get() {
-        DenseMatrix64F A = RandomMatrices.createRandom(5,10,-1,1,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,10,-1,1,rand);
 
         D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
 
-        assertEquals(A.get(3,2),S.get(1,1),1e-8);
+        assertEquals(A.get(3,2),S.get(1,1), UtilEjml.TEST_64F);
     }
 
     @Test
     public void set() {
-        DenseMatrix64F A = RandomMatrices.createRandom(5,10,-1,1,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,10,-1,1,rand);
 
         D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
 
         S.set(1,1,5);
 
-        assertEquals(A.get(3,2),5,1e-8);
+        assertEquals(A.get(3,2),5,UtilEjml.TEST_64F);
     }
 
     @Test
     public void extract() {
-        DenseMatrix64F A = RandomMatrices.createRandom(5,10,-1,1,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,10,-1,1,rand);
 
         D1Submatrix64F S = new D1Submatrix64F(A,2,4,1,10);
 
         DenseMatrix64F M = S.extract();
 
-        DenseMatrix64F E = CommonOps.extract(A,2,4,1,10);
+        DenseMatrix64F E = CommonOps_D64.extract(A,2,4,1,10);
 
-        assertTrue(MatrixFeatures.isEquals(E,M));
+        assertTrue(MatrixFeatures_D64.isEquals(E,M));
     }
 }

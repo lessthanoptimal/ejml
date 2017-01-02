@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.example;
 
+import org.ejml.UtilEjml;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -56,7 +57,7 @@ public class TestPolynomialFit {
         double found[] = alg.getCoef();
 
         for( int i = 0; i < coef.length; i++ ) {
-            assertEquals(coef[i],found[i],1e-8);
+            assertEquals(coef[i],found[i], UtilEjml.TEST_64F);
         }
     }
 
@@ -92,7 +93,7 @@ public class TestPolynomialFit {
         // the coefficients that it initialy computes should be incorrect
 
         for( int i = 0; i < coef.length; i++ ) {
-            assertTrue(Math.abs(coef[i]-found[i])>1e-8);
+            assertTrue(Math.abs(coef[i]-found[i])>UtilEjml.TEST_64F);
         }
 
         //remove the outlier
@@ -102,7 +103,7 @@ public class TestPolynomialFit {
         found = alg.getCoef();
 
         for( int i = 0; i < coef.length; i++ ) {
-            assertEquals(coef[i],found[i],1e-8);
+            assertEquals(coef[i],found[i],UtilEjml.TEST_64F);
         }
     }
 }

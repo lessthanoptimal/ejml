@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.linsol.GenericLinearSolverChecks;
+import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 
@@ -26,7 +26,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverQrBlock64_D64 extends GenericLinearSolverChecks {
+public class TestLinearSolverQrBlock64_D64 extends GenericLinearSolverChecks_D64 {
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
         return new LinearSolverQrBlock64_D64();

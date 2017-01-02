@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decompose.CTriangularSolver;
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.interfaces.decomposition.LUDecomposition;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.ops.CSpecializedOps;
 
 
@@ -34,7 +34,7 @@ import org.ejml.ops.CSpecializedOps;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_CD64
-        implements LUDecomposition<CDenseMatrix64F> {
+        implements LUDecomposition_F64<CDenseMatrix64F> {
     // the decomposed matrix
     protected CDenseMatrix64F LU;
 
@@ -229,7 +229,7 @@ public abstract class LUDecompositionBase_CD64
         return det;
     }
 
-    public double quality() {
+    public /**/double quality() {
         return CSpecializedOps.qualityTriangular(LU);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,7 +42,7 @@ public class BenchmarkVariousOps {
         DenseMatrix64F tran = new DenseMatrix64F(mat.numCols,mat.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.transpose(mat,tran);
+            CommonOps_D64.transpose(mat,tran);
         }
 
         long curr = System.currentTimeMillis();
@@ -68,8 +68,8 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.scale(10,mat);
-            CommonOps.scale(0.1,mat);
+            CommonOps_D64.scale(10,mat);
+            CommonOps_D64.scale(0.1,mat);
         }
 
         long curr = System.currentTimeMillis();
@@ -82,8 +82,8 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.scale(10,mat,result);
-            CommonOps.scale(0.1,mat,result);
+            CommonOps_D64.scale(10,mat,result);
+            CommonOps_D64.scale(0.1,mat,result);
         }
 
         long curr = System.currentTimeMillis();
@@ -108,7 +108,7 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            NormOps.normF(mat);
+            NormOps_D64.normF(mat);
         }
 
         long curr = System.currentTimeMillis();
@@ -119,7 +119,7 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.det(mat);
+            CommonOps_D64.det(mat);
         }
 
         long curr = System.currentTimeMillis();
@@ -167,7 +167,7 @@ public class BenchmarkVariousOps {
 
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
-        DenseMatrix64F mat = RandomMatrices.createRandom(4,4,rand);
+        DenseMatrix64F mat = RandomMatrices_D64.createRandom(4,4,rand);
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));
@@ -186,7 +186,7 @@ public class BenchmarkVariousOps {
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
-        mat = RandomMatrices.createRandom(2000,2000,rand);
+        mat = RandomMatrices_D64.createRandom(2000,2000,rand);
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,100));
 //        System.out.printf("Scale:             eml = %10d\n",

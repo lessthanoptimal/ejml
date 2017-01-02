@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,10 +20,10 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -37,9 +37,9 @@ import java.util.Random;
 public class StabilityCholeksyDecomposition {
 
 
-    public static double evaluate( CholeskyDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
+    public static double evaluate(CholeskyDecomposition_F64<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
-        if( !DecompositionFactory.decomposeSafe(alg,orig)) {
+        if( !DecompositionFactory_D64.decomposeSafe(alg,orig)) {
             return Double.NaN;
         }
 
@@ -73,8 +73,8 @@ public class StabilityCholeksyDecomposition {
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                DenseMatrix64F mat = RandomMatrices.createSymmPosDef(size,rand);
-                CommonOps.scale(scales[i],mat);
+                DenseMatrix64F mat = RandomMatrices_D64.createSymmPosDef(size,rand);
+                CommonOps_D64.scale(scales[i],mat);
                 runAlgorithms(mat);
             }
         }

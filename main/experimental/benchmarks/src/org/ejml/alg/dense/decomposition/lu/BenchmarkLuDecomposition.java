@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -66,7 +66,7 @@ public class BenchmarkLuDecomposition {
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
 //            System.out.print("* Creating matrix ");
-            DenseMatrix64F symMat = RandomMatrices.createRandom(w,w,-1,1,rand);
+            DenseMatrix64F symMat = RandomMatrices_D64.createRandom(w,w,-1,1,rand);
 //            System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

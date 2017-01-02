@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.block;
 
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class BenchmarkBlockTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.transpose(mat);
+            CommonOps_D64.transpose(mat);
         }
         long curr = System.currentTimeMillis();
 
@@ -55,7 +55,7 @@ public class BenchmarkBlockTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.transpose(mat,tran);
+            CommonOps_D64.transpose(mat,tran);
         }
         long curr = System.currentTimeMillis();
 
@@ -67,12 +67,12 @@ public class BenchmarkBlockTranspose {
         BlockMatrix64F A = new BlockMatrix64F(mat.numRows,mat.numCols);
         BlockMatrix64F A_t = new BlockMatrix64F(mat.numCols,mat.numRows);
 
-        BlockMatrixOps.convert(mat,A);
+        MatrixOps_B64.convert(mat,A);
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            BlockMatrixOps.transpose(A,A_t);
+            MatrixOps_B64.transpose(A,A_t);
         }
         long curr = System.currentTimeMillis();
 
@@ -81,7 +81,7 @@ public class BenchmarkBlockTranspose {
 
     public static void main( String args[] ) {
 
-        DenseMatrix64F A = RandomMatrices.createRandom(5000,5000,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(5000,5000,rand);
 
         int N = 5;
 

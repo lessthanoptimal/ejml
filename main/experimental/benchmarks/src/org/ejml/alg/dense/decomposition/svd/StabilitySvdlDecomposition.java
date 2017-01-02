@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -58,7 +58,7 @@ public class StabilitySvdlDecomposition {
 
         // I'm not sure how to test quality of U or V is not computed.
 
-        return DecompositionFactory.quality(orig, U,W,Vt);
+        return DecompositionFactory_D64.quality(orig, U,W,Vt);
     }
 
     private static void runAlgorithms( DenseMatrix64F mat )
@@ -75,12 +75,12 @@ public class StabilitySvdlDecomposition {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
 
-        DenseMatrix64F orig = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+        DenseMatrix64F orig = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
         DenseMatrix64F mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("  Decomposition size %3d %d for %e scale\n",numRows,numCols,scales[i]);
-            CommonOps.scale(scales[i],orig,mat);
+            CommonOps_D64.scale(scales[i],orig,mat);
             runAlgorithms(mat);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.decompose.eig;
 
-import org.ejml.alg.dense.decomposition.eig.EigenvalueExtractor;
-import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalue;
+import org.ejml.alg.dense.decomposition.eig.EigenvalueExtractor_D64;
+import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.*;
@@ -40,7 +40,7 @@ public class RealEigenvalueHessenbergStressTest {
 
     Random rand = new Random(0x3434);
 
-    EigenvalueExtractor extractor;
+    EigenvalueExtractor_D64 extractor;
 
 //    public RealEigenvalueStressTest(EigenvalueExtractor extractor) {
 //        this.extractor = extractor;
@@ -49,7 +49,7 @@ public class RealEigenvalueHessenbergStressTest {
     int numCantFindEigenvector;
 
     public RealEigenvalueHessenbergStressTest() {
-        extractor = new WatchedDoubleStepQREigenvalue();
+        extractor = new WatchedDoubleStepQREigenvalue_D64();
     }
 
     public void evaluateRandom() {
@@ -65,7 +65,7 @@ public class RealEigenvalueHessenbergStressTest {
 
             long startTime = System.currentTimeMillis();
             for( int i = 0; i < 100; i++ ) {
-                DenseMatrix64F A = RandomMatrices.createUpperTriangle(n,1,-1,1,rand);
+                DenseMatrix64F A = RandomMatrices_D64.createUpperTriangle(n,1,-1,1,rand);
 
                 extractor.process(A);
 
@@ -98,14 +98,14 @@ public class RealEigenvalueHessenbergStressTest {
             if( ev[j].imaginary != 0 )
                 continue;
 
-            DenseMatrix64F v = EigenOps.computeEigenVector(a,ev[j].real).vector;
+            DenseMatrix64F v = EigenOps_D64.computeEigenVector(a,ev[j].real).vector;
             Complex64F c = ev[j];
 
-            if( v == null || MatrixFeatures.hasUncountable(v)) {
+            if( v == null || MatrixFeatures_D64.hasUncountable(v)) {
                 a.print("%f");
                 System.out.println("Can't find eigen vector?!?!");
                 numCantFindEigenvector++;
-                EigenOps.computeEigenVector(a,ev[j].real);
+                EigenOps_D64.computeEigenVector(a,ev[j].real);
                 continue;
             }
 
@@ -115,7 +115,7 @@ public class RealEigenvalueHessenbergStressTest {
 //                System.out.println("Failed on this matrix:");
 //                a.print("%f");
                 numFailed++;
-                EigenOps.computeEigenVector(a,ev[j].real);
+                EigenOps_D64.computeEigenVector(a,ev[j].real);
             }
 
             totalError += error;
@@ -139,11 +139,11 @@ public class RealEigenvalueHessenbergStressTest {
 //        v.print();
         DenseMatrix64F l = new DenseMatrix64F(A.numRows,1);
 
-        CommonOps.mult(A,v,l);
-        CommonOps.scale(eigenvalue,v);
+        CommonOps_D64.mult(A,v,l);
+        CommonOps_D64.scale(eigenvalue,v);
 
-        double top = SpecializedOps.diffNormF(l,v);
-        double bottom = NormOps.normF(v);
+        double top = SpecializedOps_D64.diffNormF(l,v);
+        double bottom = NormOps_D64.normF(v);
 
         if( Double.isNaN(top) || Double.isInfinite(top) || Double.isNaN(bottom) || Double.isInfinite(bottom) )
             System.out.println("bad stuff");
@@ -174,13 +174,13 @@ public class RealEigenvalueHessenbergStressTest {
         for( int n = 3; n < 100; n++ ) {
             System.out.println("Matrix size = "+n);
 
-            DenseMatrix64F A = RandomMatrices.createUpperTriangle(n,1,-1,1,rand);
+            DenseMatrix64F A = RandomMatrices_D64.createUpperTriangle(n,1,-1,1,rand);
             if( !extractor.process(A) ){
                 throw new RuntimeException("Failed!");
             }
             while( isAllComplex()) {
                 System.out.println("Trying to find a matrix that isn't all complex number");
-                A = RandomMatrices.createUpperTriangle(n,1,-1,1,rand);
+                A = RandomMatrices_D64.createUpperTriangle(n,1,-1,1,rand);
                 extractor.process(A);
             }
 
@@ -190,7 +190,7 @@ public class RealEigenvalueHessenbergStressTest {
                 System.out.println("Scale = "+s);
                 DenseMatrix64F B = A.copy();
 
-                CommonOps.scale(s,B);
+                CommonOps_D64.scale(s,B);
 
                 if( !extractor.process(B) ) {
                     System.out.println("  Failed to converge.");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,8 +34,6 @@ import org.ejml.data.Matrix;
  * it avoid a square root operation.
  * </p>
  *
- * @see org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64
- *
  * @author Peter Abeles
  */
 public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
@@ -55,13 +53,7 @@ public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
      * @param L If not null then the decomposed matrix is written here.
      * @return A lower triangular matrix.
      */
-    public MatrixType getL(MatrixType L);
-
-    /**
-     * Returns the elements in the diagonal matrix
-     * @return array with diagonal elements. Array might be larger than the number of elements.
-     */
-    public double[] getDiagonal();
+    MatrixType getL(MatrixType L);
 
     /**
      * <p>
@@ -76,6 +68,5 @@ public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
      * @param D If not null it will be used to store the diagonal matrix
      * @return D Square diagonal matrix
      */
-    public MatrixType getD(MatrixType D);
-
+    MatrixType getD(MatrixType D);
 }

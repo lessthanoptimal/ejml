@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -17,6 +17,8 @@
  */
 
 package org.ejml.data;
+
+import org.ejml.UtilEjml;
 
 import static org.junit.Assert.assertEquals;
 
@@ -71,7 +73,7 @@ public abstract class GenericTestsMatrix64F {
             for( int j = 0; j < n; j++ ) {
                 double found = mat.get(i,j);
 
-                assertEquals(i* m +j,found,1e-8);
+                assertEquals(i* m +j,found, UtilEjml.TEST_64F);
             }
         }
     }
@@ -100,7 +102,7 @@ public abstract class GenericTestsMatrix64F {
             for( int j = 0; j < n; j++ ) {
                 double found = mat.unsafe_get(i,j);
 
-                assertEquals(i* m +j,found,1e-8);
+                assertEquals(i* m +j,found,UtilEjml.TEST_64F);
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -35,9 +36,9 @@ public class TestCD1Matrix64F {
 
         b.set(a);
         for (int i = 0; i < a.getDataLength(); i++) {
-            assertEquals(a.data[i],b.data[i],1e-8);
+            assertEquals(a.data[i],b.data[i], UtilEjml.TEST_64F);
         }
-        assertEquals(9, b.getReal(1, 3), 1e-8);
+        assertEquals(9, b.getReal(1, 3), UtilEjml.TEST_64F);
     }
 
     @Test

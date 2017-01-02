@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -46,7 +46,7 @@ public class BenchmarkMatrixMatrixMultTransA {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multTransA(matA,matB,matResult);
+            CommonOps_D64.multTransA(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -58,7 +58,7 @@ public class BenchmarkMatrixMatrixMultTransA {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.multTransA_small(matA,matB,matResult);
+            MatrixMatrixMult_D64.multTransA_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -70,7 +70,7 @@ public class BenchmarkMatrixMatrixMultTransA {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.multTransA_reorder(matA,matB,matResult);
+            MatrixMatrixMult_D64.multTransA_reorder(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -80,9 +80,9 @@ public class BenchmarkMatrixMatrixMultTransA {
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
     {
-        DenseMatrix64F matA = RandomMatrices.createRandom(numRows,numCols,rand);
-        DenseMatrix64F matB = RandomMatrices.createRandom(numCols,numK,rand);
-        DenseMatrix64F matResult = RandomMatrices.createRandom(numRows,numK,rand);
+        DenseMatrix64F matA = RandomMatrices_D64.createRandom(numRows,numCols,rand);
+        DenseMatrix64F matB = RandomMatrices_D64.createRandom(numCols,numK,rand);
+        DenseMatrix64F matResult = RandomMatrices_D64.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 mult(matA,matB,matResult,numTrials),

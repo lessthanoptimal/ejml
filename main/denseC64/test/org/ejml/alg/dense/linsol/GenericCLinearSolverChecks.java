@@ -18,13 +18,14 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
@@ -147,7 +148,7 @@ public abstract class GenericCLinearSolverChecks {
 
         assertTrue(q_bad < q_good);
 
-        assertEquals(q_bad*10.0,q_good,1e-8);
+        assertEquals(q_bad*10.0,q_good, UtilEjml.TEST_64F);
     }
 
     /**
@@ -173,7 +174,7 @@ public abstract class GenericCLinearSolverChecks {
         assertTrue(solver.setA(Asmall));
         double q_small = solver.quality();
 
-        assertEquals(q_small,q,1e-8);
+        assertEquals(q_small,q,UtilEjml.TEST_64F);
     }
 
     /**
@@ -194,7 +195,7 @@ public abstract class GenericCLinearSolverChecks {
 
         CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1,0, 2,0, 3,0);
 
-        EjmlUnitTests.assertEquals(x_expected,x,1e-8);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F);
     }
 
     /**
@@ -215,7 +216,7 @@ public abstract class GenericCLinearSolverChecks {
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
-        EjmlUnitTests.assertEquals(x_expected,x,1e-8);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -307,7 +308,7 @@ public abstract class GenericCLinearSolverChecks {
 
             CCommonOps.mult(A, A_inv, I);
 
-            assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+            assertTrue(CMatrixFeatures.isIdentity(I,UtilEjml.TEST_64F));
         }
     }
 

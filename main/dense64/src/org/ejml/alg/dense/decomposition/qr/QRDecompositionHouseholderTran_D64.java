@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -100,22 +100,22 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows,minLength);
+                Q = CommonOps_D64.identity(numRows,minLength);
             } else {
                 if( Q.numRows != numRows || Q.numCols != minLength ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
-                    CommonOps.setIdentity(Q);
+                    CommonOps_D64.setIdentity(Q);
                 }
             }
         } else {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows);
+                Q = CommonOps_D64.identity(numRows);
             } else {
                 if( Q.numRows != numRows || Q.numCols != numRows ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
-                    CommonOps.setIdentity(Q);
+                    CommonOps_D64.setIdentity(Q);
                 }
             }
         }
@@ -222,7 +222,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
     public boolean decompose( DenseMatrix64F A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
-        CommonOps.transpose(A,QR);
+        CommonOps_D64.transpose(A,QR);
 
         error = false;
 

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
 public class TestTridiagonalDecompositionHouseholder_D64 extends StandardTridiagonalTests_D64 {
 
     @Override
-    protected TridiagonalSimilarDecomposition<DenseMatrix64F> createDecomposition() {
+    protected TridiagonalSimilarDecomposition_F64<DenseMatrix64F> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_D64();
     }
 }

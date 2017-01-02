@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,7 +76,7 @@ public class NaiveDeterminant {
     /**
      * <p>
      * A simple and inefficient algorithm for computing the determinant. This should never be used.
-     * It is at least two orders of magnitude slower than {@link DeterminantFromMinor}. This is included
+     * It is at least two orders of magnitude slower than {@link DeterminantFromMinor_D64}. This is included
      * to provide a point of comparison for other algorithms.
      * </p>
      * @param mat The matrix that the determinant is to be computed from
@@ -89,7 +89,7 @@ public class NaiveDeterminant {
         } else if(mat.numRows == 2) {
             return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
         } else if( mat.numRows == 3 ) {
-            return UnrolledDeterminantFromMinor.det3(mat);
+            return UnrolledDeterminantFromMinor_D64.det3(mat);
         }
 
         double result = 0;

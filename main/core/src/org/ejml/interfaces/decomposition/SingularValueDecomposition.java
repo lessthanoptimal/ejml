@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,8 +42,8 @@ import org.ejml.data.Matrix;
  * </p>
  *
  * <p>
- * To create a new instance of SingularValueDecomposition see {@link org.ejml.factory.DecompositionFactory#svd(int, int, boolean, boolean, boolean)}
- * and {@link org.ejml.ops.SingularOps} contains additional helpful SVD related functions.
+ * To create a new instance of SingularValueDecomposition see DecompositionFactory_D64
+ * and SingularOps_D64 contains additional helpful SVD related functions.
  * </p>
  *
  * <p>
@@ -53,31 +53,22 @@ import org.ejml.data.Matrix;
  *
  * @author Peter Abeles
  */
-public abstract interface SingularValueDecomposition <T extends Matrix>
+public interface SingularValueDecomposition <T extends Matrix>
         extends DecompositionInterface<T> {
-
-    /**
-     * Returns the singular values.  This is the diagonal elements of the W matrix in the decomposition.
-     * <b>Ordering of singular values is not guaranteed.</b>.
-     * 
-     * @return Singular values. Note this array can be longer than the number of singular values.
-     * Extra elements have no meaning.
-     */
-    public double [] getSingularValues();
 
     /**
      * The number of singular values in the matrix. This is equal to the length of the smallest side.
      *
      * @return Number of singular values in the matrix.
      */
-    public int numberOfSingularValues();
+    int numberOfSingularValues();
 
     /**
      * If true then compact matrices are returned.
      *
      * @return true if results use compact notation.
      */
-    public boolean isCompact();
+    boolean isCompact();
 
     /**
      * <p>
@@ -92,7 +83,7 @@ public abstract interface SingularValueDecomposition <T extends Matrix>
      * @param transposed If the returned U is transposed.
      * @return An orthogonal matrix.
      */
-    public T getU( T U , boolean transposed );
+    T getU( T U , boolean transposed );
 
     /**
      * <p>
@@ -108,7 +99,7 @@ public abstract interface SingularValueDecomposition <T extends Matrix>
      * @param transposed If the returned V is transposed.
      * @return An orthogonal matrix.
      */
-    public T getV( T V , boolean transposed );
+    T getV( T V , boolean transposed );
 
     /**
      * Returns a diagonal matrix with the singular values.  Order of the singular values
@@ -117,17 +108,17 @@ public abstract interface SingularValueDecomposition <T extends Matrix>
      * @param W Optional storage for W. If null a new instance or internally maintained matrix is returned.  Modified.
      * @return Diagonal matrix with singular values along the diagonal.
      */
-    public T getW( T W );
+    T getW( T W );
 
     /**
      * Number of rows in the decomposed matrix.
      * @return Number of rows in the decomposed matrix.
      */
-    public int numRows();
+    int numRows();
 
     /**
      * Number of columns in the decomposed matrix.
      * @return Number of columns in the decomposed matrix.
      */
-    public int numCols();
+    int numCols();
 }

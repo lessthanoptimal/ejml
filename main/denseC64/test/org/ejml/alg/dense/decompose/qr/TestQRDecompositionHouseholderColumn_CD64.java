@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
@@ -86,8 +87,8 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
 
         Complex64F a = new Complex64F();
         result.get(0,0,a);
-        assertEquals(-qr.tau.real, a.real, 1e-8);
-        assertEquals(-qr.tau.imaginary,a.imaginary,1e-8);
+        assertEquals(-qr.tau.real, a.real, UtilEjml.TEST_64F);
+        assertEquals(-qr.tau.imaginary,a.imaginary, UtilEjml.TEST_64F);
 
         for( int i = 1; i < result.numRows; i++ ) {
             result.get(i,0,a);
@@ -138,8 +139,8 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
             A.get(i,w,a);
             b.set(found[w][i*2],found[w][i*2+1]);
 
-            assertEquals(a.real, b.real, 1e-8);
-            assertEquals(a.imaginary,b.imaginary,1e-8);
+            assertEquals(a.real, b.real, UtilEjml.TEST_64F);
+            assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_64F);
         }
 
         // the right should be the same

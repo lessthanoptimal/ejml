@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -51,7 +51,7 @@ public class QrHelperFunctions_D64 {
         int stopIndex = startU + length;
         for( ; index < stopIndex; index++ ) {
             double val = u[index];
-            val = (val < 0.0D) ? -val : val;
+            val = (val < 0.0) ? -val : val;
             if( val > max )
                 max = val;
         }

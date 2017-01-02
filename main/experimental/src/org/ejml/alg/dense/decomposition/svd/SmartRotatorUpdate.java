@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -40,7 +40,7 @@ public class SmartRotatorUpdate {
 
     public void init( DenseMatrix64F R ) {
         this.R = R;
-        CommonOps.setIdentity(R);
+        CommonOps_D64.setIdentity(R);
 
         int a = Math.min(R.numRows,R.numCols);
 

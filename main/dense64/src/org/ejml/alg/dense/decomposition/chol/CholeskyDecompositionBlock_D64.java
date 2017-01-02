@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
+import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -133,7 +134,7 @@ public class CholeskyDecompositionBlock_D64 extends CholeskyDecompositionCommon_
     }
 
     /**
-     * This is a variation on the {@link org.ejml.alg.dense.decomposition.TriangularSolver#solveL} function.
+     * This is a variation on the {@link TriangularSolver_D64#solveL} function.
      * It grabs the input from the top right row rectangle of the source matrix then writes the results
      * to the lower bottom column rectangle.  The rectangle matrices just matrices are submatrices
      * of the matrix that is being decomposed.  The results are also written to B.

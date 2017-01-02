@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 /**
  * Helper functions for generic decompsotions.
@@ -30,11 +30,11 @@ public class UtilDecompositons_D64 {
 
     public static DenseMatrix64F checkIdentity(DenseMatrix64F A, int numRows, int numCols) {
         if( A == null ) {
-            return CommonOps.identity(numRows,numCols);
+            return CommonOps_D64.identity(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else
-            CommonOps.setIdentity(A);
+            CommonOps_D64.setIdentity(A);
         return A;
     }
 

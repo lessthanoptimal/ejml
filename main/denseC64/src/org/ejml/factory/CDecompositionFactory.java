@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,9 @@ import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CD64;
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.interfaces.decomposition.LUDecomposition;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 /**
@@ -47,7 +47,7 @@ public class CDecompositionFactory {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition<CDenseMatrix64F> lu( int numRows , int numCols ) {
+    public static LUDecomposition_F64<CDenseMatrix64F> lu(int numRows , int numCols ) {
         return new LUDecompositionAlt_CD64();
     }
 
@@ -66,14 +66,14 @@ public class CDecompositionFactory {
 
     /**
      * <p>
-     * Returns a {@link org.ejml.interfaces.decomposition.CholeskyDecomposition} that has been optimized for the specified matrix size.
+     * Returns a {@link CholeskyDecomposition_F64} that has been optimized for the specified matrix size.
      * </p>
      *
      * @param size Number of rows and columns it should be optimized for
      * @param lower if true then it will be a lower cholesky.  false for upper.  Try lower.
      * @return QRDecomposition
      */
-    public static CholeskyDecomposition<CDenseMatrix64F> chol( int size , boolean lower ) {
+    public static CholeskyDecomposition_F64<CDenseMatrix64F> chol(int size , boolean lower ) {
         return new CholeskyDecompositionInner_CD64(lower);
     }
 

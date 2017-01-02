@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,11 @@
 
 package org.ejml.equation;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,11 +39,11 @@ public class TestMatrixConstructor {
 
     @Test
     public void basicTest() {
-        DenseMatrix64F A = RandomMatrices.createRandom(10,8,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(10,8,rand);
 
-        DenseMatrix64F B = CommonOps.extract(A,0,5,0,3);
-        DenseMatrix64F C = CommonOps.extract(A,0,5,3,8);
-        DenseMatrix64F D = CommonOps.extract(A,5,10,0,8);
+        DenseMatrix64F B = CommonOps_D64.extract(A,0,5,0,3);
+        DenseMatrix64F C = CommonOps_D64.extract(A,0,5,3,8);
+        DenseMatrix64F D = CommonOps_D64.extract(A,5,10,0,8);
 
         MatrixConstructor alg = new MatrixConstructor(new ManagerTempVariables());
 
@@ -54,7 +55,7 @@ public class TestMatrixConstructor {
         alg.construct();
 
         DenseMatrix64F found = alg.getOutput().matrix;
-        assertTrue(MatrixFeatures.isIdentical(A, found, 1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(A, found, UtilEjml.TEST_64F));
     }
 
     @Test

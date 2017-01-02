@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,7 +16,10 @@
  * limitations under the License.
  */
 
-package org.ejml.example;import org.ejml.simple.SimpleMatrix;
+package org.ejml.example;
+
+import org.ejml.UtilEjml;
+import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
 import java.util.Random;
@@ -50,7 +53,7 @@ public class TestQRExampleSimple {
 
         SimpleMatrix A_found = Q.mult(R);
 
-        assertTrue( A.isIdentical(A_found,1e-8));
+        assertTrue( A.isIdentical(A_found, UtilEjml.TEST_64F));
     }
 
 

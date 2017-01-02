@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,15 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
+import org.ejml.alg.block.MatrixOps_B64;
+import org.ejml.alg.block.linsol.chol.CholeskyOuterSolver_B64;
 import org.ejml.alg.dense.linsol.LinearSolver_B64_to_D64;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
- * A wrapper around {@link org.ejml.interfaces.decomposition.CholeskyDecomposition}(BlockMatrix64F) that allows
+ * A wrapper around {@link CholeskyDecomposition_F64}(BlockMatrix64F) that allows
  * it to be easily used with {@link org.ejml.data.DenseMatrix64F}.
  *
  * @author Peter Abeles
@@ -33,7 +34,7 @@ import org.ejml.data.DenseMatrix64F;
 public class LinearSolverChol_B64 extends LinearSolver_B64_to_D64 {
 
     public LinearSolverChol_B64() {
-        super(new BlockCholeskyOuterSolver());
+        super(new CholeskyOuterSolver_B64());
     }
 
     /**
@@ -46,12 +47,12 @@ public class LinearSolverChol_B64 extends LinearSolver_B64_to_D64 {
     @Override
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
         blockB.reshape(B.numRows,B.numCols,false);
-        BlockMatrixOps.convert(B,blockB);
+        MatrixOps_B64.convert(B,blockB);
 
         // since overwrite B is true X does not need to be passed in
         alg.solve(blockB,null);
 
-        BlockMatrixOps.convert(blockB,X);
+        MatrixOps_B64.convert(blockB,X);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -142,7 +142,7 @@ public class BenchmarkInliningGetSet {
     }
 
     public static void main( String args[] ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(1000,1000,new Random());
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(1000,1000,new Random());
 
         int N = 2000;
 

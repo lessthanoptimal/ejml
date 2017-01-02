@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,10 +23,10 @@ import org.ejml.alg.dense.linsol.lu.LinearSolverLuKJI_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
-import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd;
+import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -45,8 +45,8 @@ public class BenchmarkSolveEq {
     public static long solveBenchmark( LinearSolver<DenseMatrix64F> solver , int numTrials ) {
         rand.setSeed(SEED);
         DenseMatrix64F X = new DenseMatrix64F(B.numRows,B.numCols);
-        RandomMatrices.setRandom(A,rand);
-        RandomMatrices.setRandom(B,rand);
+        RandomMatrices_D64.setRandom(A,rand);
+        RandomMatrices_D64.setRandom(B,rand);
 
         if( !includeSet ) solver.setA(A);
 
@@ -72,7 +72,7 @@ public class BenchmarkSolveEq {
         System.out.println("solve QR house Col    = "+ solveBenchmark(
                 new LinearSolverQrHouseCol_D64(),numTrials));
         System.out.println("solve PInv            = "+ solveBenchmark(
-                new SolvePseudoInverseSvd(),numTrials));
+                new SolvePseudoInverseSvd_D64(),numTrials));
 //        System.out.println("solve SVD             = "+ solveBenchmark(
 //                new LinearSolverSvd(new SvdNumericalRecipes(A.numRows,A.numCols)),numTrials/8));
     }
@@ -87,7 +87,7 @@ public class BenchmarkSolveEq {
             int w = size[i];
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices.createRandom(w,w,rand);
+            A = RandomMatrices_D64.createRandom(w,w,rand);
             B = new DenseMatrix64F(w,2);
 
             runAlgorithms(trials[i]);
@@ -98,7 +98,7 @@ public class BenchmarkSolveEq {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices.createRandom(100,100,rand);
+            A = RandomMatrices_D64.createRandom(100,100,rand);
             B = new DenseMatrix64F(100,w);
 
             runAlgorithms(trialsX[i]/80);

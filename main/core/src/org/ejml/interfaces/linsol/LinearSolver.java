@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -84,7 +84,7 @@ public interface LinearSolver< T extends Matrix> {
      * @param A The 'A' matrix in the linear equation. Might be modified or save the reference.
      * @return true if it can be processed.
      */
-    public boolean setA( T A );
+    boolean setA( T A );
 
     /**
      * <p>
@@ -103,7 +103,7 @@ public interface LinearSolver< T extends Matrix> {
      *
      * @return The quality of the linear system.
      */
-    public double quality();
+    double quality();
 
     /**
      * <p>
@@ -117,7 +117,7 @@ public interface LinearSolver< T extends Matrix> {
      * @param B A matrix &real; <sup>m &times; p</sup>.  Might be modified.
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
-    public void solve( T B , T X );
+    void solve( T B , T X );
 
 
     /**
@@ -127,7 +127,7 @@ public interface LinearSolver< T extends Matrix> {
      *
      * @param A_inv Where the inverted matrix saved. Modified.
      */
-    public void invert( T A_inv );
+    void invert( T A_inv );
 
     /**
      * Returns true if the passed in matrix to {@link #setA(org.ejml.data.Matrix)}
@@ -135,7 +135,7 @@ public interface LinearSolver< T extends Matrix> {
      *
      * @return true if A is modified in setA().
      */
-    public boolean modifiesA();
+    boolean modifiesA();
 
     /**
      * Returns true if the passed in 'B' matrix to {@link #solve(org.ejml.data.Matrix, org.ejml.data.Matrix)}
@@ -143,7 +143,7 @@ public interface LinearSolver< T extends Matrix> {
      *
      * @return true if B is modified in solve(B,X).
      */
-    public boolean modifiesB();
+    boolean modifiesB();
 
 
     /**
@@ -153,5 +153,5 @@ public interface LinearSolver< T extends Matrix> {
      * @param <D> Decomposition type
      * @return Internal decomposition class.  If there is none then null.
      */
-    public <D extends DecompositionInterface>D getDecomposition();
+    <D extends DecompositionInterface>D getDecomposition();
 }

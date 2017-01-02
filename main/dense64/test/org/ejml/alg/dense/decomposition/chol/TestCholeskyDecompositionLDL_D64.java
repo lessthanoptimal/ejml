@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,14 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface_D64.checkModifiedInput;
 import static org.junit.Assert.*;
 
 
@@ -54,9 +55,9 @@ public class TestCholeskyDecompositionLDL_D64 {
 
         DenseMatrix64F foundL = cholesky.getL();
 
-        EjmlUnitTests.assertEquals(L,foundL,1e-8);
+        EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_64F);
         for( int i = 0; i < D.length; i++ ) {
-            assertEquals(D[i],cholesky.getDiagonal()[i],1e-8);
+            assertEquals(D[i],cholesky.getDiagonal()[i], UtilEjml.TEST_64F);
         }
     }
 

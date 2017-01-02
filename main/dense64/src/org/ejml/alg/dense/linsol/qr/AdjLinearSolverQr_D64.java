@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
-import org.ejml.alg.dense.decomposition.qr.QrUpdate;
-import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
+import org.ejml.alg.dense.decomposition.qr.QrUpdate_D64;
+import org.ejml.alg.dense.linsol.AdjustableLinearSolver_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -31,9 +31,9 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements AdjustableLinearSolver {
+public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements AdjustableLinearSolver_D64 {
 
-    private QrUpdate update;
+    private QrUpdate_D64 update;
 
     private DenseMatrix64F A;
 
@@ -48,7 +48,7 @@ public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements Adjusta
 
         super.setMaxSize(maxRows,maxCols);
 
-        update = new QrUpdate(maxRows,maxCols,true);
+        update = new QrUpdate_D64(maxRows,maxCols,true);
         A = new DenseMatrix64F(maxRows,maxCols);
     }
 
@@ -63,7 +63,7 @@ public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements Adjusta
             A = new DenseMatrix64F(numRows,numCols);
         }
         A.reshape(numRows,numCols, false);
-        CommonOps.mult(Q,R,A);
+        CommonOps_D64.mult(Q,R,A);
 
         return A;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalue;
-import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvector;
+import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_D64;
+import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvector_D64;
 import org.ejml.alg.dense.decomposition.hessenberg.HessenbergSimilarDecomposition_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 
 /**
@@ -42,11 +42,11 @@ import org.ejml.interfaces.decomposition.EigenDecomposition;
  */
 //TODO looks like there might be some pointless copying of arrays going on
 public class WatchedDoubleStepQRDecomposition_D64
-        implements EigenDecomposition<DenseMatrix64F> {
+        implements EigenDecomposition_F64<DenseMatrix64F> {
 
     HessenbergSimilarDecomposition_D64 hessenberg;
-    WatchedDoubleStepQREigenvalue algValue;
-    WatchedDoubleStepQREigenvector algVector;
+    WatchedDoubleStepQREigenvalue_D64 algValue;
+    WatchedDoubleStepQREigenvector_D64 algVector;
 
     DenseMatrix64F H;
 
@@ -55,8 +55,8 @@ public class WatchedDoubleStepQRDecomposition_D64
 
     public WatchedDoubleStepQRDecomposition_D64(boolean computeVectors) {
         hessenberg = new HessenbergSimilarDecomposition_D64(10);
-        algValue = new WatchedDoubleStepQREigenvalue();
-        algVector = new WatchedDoubleStepQREigenvector();
+        algValue = new WatchedDoubleStepQREigenvalue_D64();
+        algVector = new WatchedDoubleStepQREigenvector_D64();
 
         this.computeVectors = computeVectors;
     }

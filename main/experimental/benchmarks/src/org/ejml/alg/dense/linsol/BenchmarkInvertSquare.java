@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,11 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.misc.UnrolledInverseFromMinor;
+import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -56,7 +56,7 @@ public class BenchmarkInvertSquare {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            UnrolledInverseFromMinor.inv(orig,A);
+            UnrolledInverseFromMinor_D64.inv(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
@@ -68,7 +68,7 @@ public class BenchmarkInvertSquare {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CommonOps.invert(orig,A);
+            CommonOps_D64.invert(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
@@ -100,7 +100,7 @@ public class BenchmarkInvertSquare {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
-            DenseMatrix64F mat = RandomMatrices.createRandom(w,w,rand);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,w,rand);
 
             runAlgorithms(mat,trials[i]);
         }

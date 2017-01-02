@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -35,9 +36,9 @@ public class TestCD1Matrix32F {
 
         b.set(a);
         for (int i = 0; i < a.getDataLength(); i++) {
-            assertEquals(a.data[i],b.data[i],1e-8);
+            assertEquals(a.data[i],b.data[i], UtilEjml.TEST_64F);
         }
-        assertEquals(9, b.getReal(1, 3), 1e-8);
+        assertEquals(9, b.getReal(1, 3), UtilEjml.TEST_64F);
     }
 
     @Test

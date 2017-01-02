@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,12 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
 import java.util.Random;
@@ -48,7 +49,7 @@ public class TestCVectorVectorMult {
         c.get(0,0,expected);
         Complex64F found = CVectorVectorMult.innerProd(a,b,null);
 
-        EjmlUnitTests.assertEquals(expected,found,1e-8);
+        EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class TestCVectorVectorMult {
         Complex64F expected = new Complex64F();
         c.get(0,0,expected);
 
-        EjmlUnitTests.assertEquals(expected,found,1e-8);
+        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -81,7 +82,7 @@ public class TestCVectorVectorMult {
         CCommonOps.mult(a,b,expected);
         CVectorVectorMult.outerProd(a,b,found);
 
-        EjmlUnitTests.assertEquals(expected,found,1e-8);
+        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -96,6 +97,6 @@ public class TestCVectorVectorMult {
         CCommonOps.conjugate(b,b);
         CCommonOps.mult(a, b, expected);
 
-        EjmlUnitTests.assertEquals(expected,found,1e-8);
+        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 }

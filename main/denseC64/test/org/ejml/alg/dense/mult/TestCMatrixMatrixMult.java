@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CCommonOps;
@@ -107,7 +108,7 @@ public class TestCMatrixMatrixMult {
 
                     invoke(method,realAlpha,imgAlpha,A,B,C);
 
-                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected,C,1e-8));
+                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected,C, UtilEjml.TEST_64F));
                 }
             }
         }

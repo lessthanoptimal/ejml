@@ -19,11 +19,11 @@
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.mult.VectorVectorMult;
+import org.ejml.alg.dense.mult.VectorVectorMult_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.MatrixIterator64F;
 import org.ejml.data.RealMatrix64F;
-import org.ejml.factory.SingularMatrixException;
+import org.ejml.data.SingularMatrixException;
 import org.ejml.ops.*;
 
 import java.io.ByteArrayOutputStream;
@@ -83,14 +83,14 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * a<sup>T</sup>
      * </p>
      *
-     * @see org.ejml.ops.CommonOps#transpose(DenseMatrix64F,DenseMatrix64F)
+     * @see CommonOps_D64#transpose(DenseMatrix64F,DenseMatrix64F)
      *
      * @return A matrix that is n by m.
      */
     public T transpose() {
         T ret = createMatrix(mat.numCols,mat.numRows);
 
-        CommonOps.transpose(mat,ret.getMatrix());
+        CommonOps_D64.transpose(mat,ret.getMatrix());
 
         return ret;
     }
@@ -104,7 +104,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#mult(org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F)
      *
      * @param b A matrix that is n by bn. Not modified.
      *
@@ -113,7 +113,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T mult( T b ) {
         T ret = createMatrix(mat.numRows,b.getMatrix().numCols);
 
-        CommonOps.mult(mat,b.getMatrix(),ret.getMatrix());
+        CommonOps_D64.mult(mat,b.getMatrix(),ret.getMatrix());
 
         return ret;
     }
@@ -125,14 +125,14 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * C = kron(A,B)
      * </p>
 
-     * @see CommonOps#kron(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps_D64#kron(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
      *
      * @param B The right matrix in the operation. Not modified.
      * @return Kronecker product between this matrix and B.
      */
     public T kron( T B ) {
         T ret = createMatrix(mat.numRows*B.numRows(),mat.numCols*B.numCols());
-        CommonOps.kron(mat,B.getMatrix(),ret.getMatrix());
+        CommonOps_D64.kron(mat,B.getMatrix(),ret.getMatrix());
 
         return ret;
     }
@@ -146,7 +146,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#mult(org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F , org.ejml.data.RowD1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -155,7 +155,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( T b ) {
         T ret = copy();
 
-        CommonOps.addEquals(ret.getMatrix(),b.getMatrix());
+        CommonOps_D64.addEquals(ret.getMatrix(),b.getMatrix());
 
         return ret;
     }
@@ -169,7 +169,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#subtract(org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
+     * @see CommonOps_D64#subtract(org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -178,7 +178,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T minus( T b ) {
         T ret = copy();
 
-        CommonOps.subtract(getMatrix(), b.getMatrix(), ret.getMatrix());
+        CommonOps_D64.subtract(getMatrix(), b.getMatrix(), ret.getMatrix());
 
         return ret;
     }
@@ -192,7 +192,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
-     * @see CommonOps#subtract(org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F)
+     * @see CommonOps_D64#subtract(org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F)
      *
      * @param b Value subtracted from each element
      *
@@ -201,7 +201,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T minus( double b ) {
         T ret = copy();
 
-        CommonOps.subtract(getMatrix(), b, ret.getMatrix());
+        CommonOps_D64.subtract(getMatrix(), b, ret.getMatrix());
 
         return ret;
     }
@@ -215,7 +215,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
-     * @see CommonOps#add( org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F)
+     * @see CommonOps_D64#add( org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F)
      *
      * @param b Value added to each element
      *
@@ -224,7 +224,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( double b ) {
         T ret = createMatrix(numRows(),numCols());
 
-        CommonOps.add(getMatrix(), b, ret.getMatrix());
+        CommonOps_D64.add(getMatrix(), b, ret.getMatrix());
 
         return ret;
     }
@@ -238,7 +238,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps#add( org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
+     * @see CommonOps_D64#add( org.ejml.data.D1Matrix64F , double , org.ejml.data.D1Matrix64F , org.ejml.data.D1Matrix64F)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -247,7 +247,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( double beta , T b ) {
         T ret = copy();
 
-        CommonOps.addEquals(ret.getMatrix(),beta,b.getMatrix());
+        CommonOps_D64.addEquals(ret.getMatrix(),beta,b.getMatrix());
 
         return ret;
     }
@@ -265,7 +265,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             throw new IllegalArgumentException("'v' matrix is not a vector.");
         }
 
-        return VectorVectorMult.innerProd(mat,v.getMatrix());
+        return VectorVectorMult_D64.innerProd(mat,v.getMatrix());
     }
 
     /**
@@ -284,7 +284,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * b<sub>i,j</sub> = val*a<sub>i,j</sub>
      * </p>
      *
-     * @see CommonOps#scale(double, org.ejml.data.D1Matrix64F)
+     * @see CommonOps_D64#scale(double, org.ejml.data.D1Matrix64F)
      *
      * @param val The multiplication factor.
      * @return The scaled matrix.
@@ -292,7 +292,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T scale( double val ) {
         T ret = copy();
 
-        CommonOps.scale(val,ret.getMatrix());
+        CommonOps_D64.scale(val,ret.getMatrix());
 
         return ret;
     }
@@ -303,7 +303,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * b<sub>i,j</sub> = a<sub>i,j</sub>/val
      * </p>
      *
-     * @see CommonOps#divide(org.ejml.data.D1Matrix64F,double)
+     * @see CommonOps_D64#divide(org.ejml.data.D1Matrix64F,double)
      *
      * @param val Divisor.
      * @return Matrix with its elements divided by the specified value.
@@ -311,7 +311,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T divide( double val ) {
         T ret = copy();
 
-        CommonOps.divide(ret.getMatrix(),val);
+        CommonOps_D64.divide(ret.getMatrix(),val);
 
         return ret;
     }
@@ -328,18 +328,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * if no exception is thrown the matrix could still be singular or nearly singular.
      * </p>
      *
-     * @see CommonOps#invert(DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps_D64#invert(DenseMatrix64F, DenseMatrix64F)
      *
-     * @throws org.ejml.factory.SingularMatrixException
+     * @throws SingularMatrixException
      *
      * @return The inverse of this matrix.
      */
     public T invert() {
         T ret = createMatrix(mat.numRows,mat.numCols);
-        if( !CommonOps.invert(mat,ret.getMatrix()) ) {
+        if( !CommonOps_D64.invert(mat,ret.getMatrix()) ) {
             throw new SingularMatrixException();
         }
-        if( MatrixFeatures.hasUncountable(ret.getMatrix()))
+        if( MatrixFeatures_D64.hasUncountable(ret.getMatrix()))
             throw new SingularMatrixException("Solution has uncountable numbers");
         return ret;
     }
@@ -353,7 +353,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T pseudoInverse() {
         T ret = createMatrix(mat.numCols,mat.numRows);
-        CommonOps.pinv(mat,ret.getMatrix());
+        CommonOps_D64.pinv(mat,ret.getMatrix());
         return ret;
     }
 
@@ -371,7 +371,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * if no exception is thrown 'a' could still be singular or nearly singular.
      * </p>
      *
-     * @see CommonOps#solve(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps_D64#solve(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
      *
      * @throws SingularMatrixException
      *
@@ -382,10 +382,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T x = createMatrix(mat.numCols,b.getMatrix().numCols);
 
-        if( !CommonOps.solve(mat,b.getMatrix(),x.getMatrix()) )
+        if( !CommonOps_D64.solve(mat,b.getMatrix(),x.getMatrix()) )
             throw new SingularMatrixException();
 
-        if( MatrixFeatures.hasUncountable(x.getMatrix()) )
+        if( MatrixFeatures_D64.hasUncountable(x.getMatrix()) )
             throw new SingularMatrixException("Solution contains uncountable numbers");
 
         return x;
@@ -410,18 +410,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * a<sub>ij</sub> = val<br>
      * </p>
      *
-     * @see CommonOps#fill(org.ejml.data.D1Matrix64F , double)
+     * @see CommonOps_D64#fill(org.ejml.data.D1Matrix64F , double)
      *
      * @param val The value each element is set to.
      */
     public void set( double val ) {
-        CommonOps.fill(mat, val);
+        CommonOps_D64.fill(mat, val);
     }
 
     /**
      * Sets all the elements in the matrix equal to zero.
      *
-     * @see CommonOps#fill(org.ejml.data.D1Matrix64F , double)
+     * @see CommonOps_D64#fill(org.ejml.data.D1Matrix64F , double)
      */
     public void zero() {
         mat.zero();
@@ -434,12 +434,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
      * </p>
      *
-     * @see org.ejml.ops.NormOps#normF(org.ejml.data.D1Matrix64F)
+     * @see NormOps_D64#normF(org.ejml.data.D1Matrix64F)
      *
      * @return The matrix's Frobenius normal.
      */
     public double normF() {
-        return NormOps.normF(mat);
+        return NormOps_D64.normF(mat);
     }
 
     /**
@@ -448,23 +448,23 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.
      * </p>
      *
-     * @see NormOps#conditionP2(DenseMatrix64F)
+     * @see NormOps_D64#conditionP2(DenseMatrix64F)
      *
      * @return The condition number.
      */
     public double conditionP2() {
-        return NormOps.conditionP2(mat);
+        return NormOps_D64.conditionP2(mat);
     }
 
     /**
      * Computes the determinant of the matrix.
      *
-     * @see CommonOps#det(DenseMatrix64F)
+     * @see CommonOps_D64#det(DenseMatrix64F)
      *
      * @return The determinant.
      */
     public double determinant() {
-        double ret = CommonOps.det(mat);
+        double ret = CommonOps_D64.det(mat);
         // if the decomposition silently failed then the matrix is most likely singular
         if(UtilEjml.isUncountable(ret))
             return 0;
@@ -476,12 +476,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Computes the trace of the matrix.
      * </p>
      *
-     * @see CommonOps#trace(org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#trace(org.ejml.data.RowD1Matrix64F)
      *
      * @return The trace of the matrix.
      */
     public double trace() {
-        return CommonOps.trace(mat);
+        return CommonOps_D64.trace(mat);
     }
 
     /**
@@ -723,7 +723,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         T ret = createMatrix(y1-y0,x1-x0);
 
-        CommonOps.extract(mat,y0,y1,x0,x1,ret.getMatrix(),0,0);
+        CommonOps_D64.extract(mat,y0,y1,x0,x1,ret.getMatrix(),0,0);
 
         return ret;
     }
@@ -745,9 +745,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = extractRow ? createMatrix(1,length) : createMatrix(length,1);
 
         if( extractRow ) {
-            SpecializedOps.subvector(mat,element,0,length,true,0,ret.getMatrix());
+            SpecializedOps_D64.subvector(mat,element,0,length,true,0,ret.getMatrix());
         } else {
-            SpecializedOps.subvector(mat,0,element,length,false,0,ret.getMatrix());
+            SpecializedOps_D64.subvector(mat,0,element,length,false,0,ret.getMatrix());
         }
 
         return ret;
@@ -758,7 +758,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Extracts the diagonal from this matrix and returns them inside a column vector.
      * </p>
      *
-     * @see org.ejml.ops.CommonOps#extractDiag(DenseMatrix64F, DenseMatrix64F)
+     * @see CommonOps_D64#extractDiag(DenseMatrix64F, DenseMatrix64F)
      * @return Diagonal elements inside a column vector.
      */
     public T extractDiag()
@@ -767,7 +767,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         T diag = createMatrix(N,1);
 
-        CommonOps.extractDiag(mat,diag.getMatrix());
+        CommonOps_D64.extractDiag(mat,diag.getMatrix());
 
         return diag;
     }
@@ -781,7 +781,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return If they are equal within tolerance of each other.
      */
     public boolean isIdentical(T a, double tol) {
-        return MatrixFeatures.isIdentical(mat,a.getMatrix(),tol);
+        return MatrixFeatures_D64.isIdentical(mat,a.getMatrix(),tol);
     }
 
     /**
@@ -790,7 +790,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return True of an element is NaN or infinite.  False otherwise.
      */
     public boolean hasUncountable() {
-        return MatrixFeatures.hasUncountable(mat);
+        return MatrixFeatures_D64.hasUncountable(mat);
     }
 
     /**
@@ -827,7 +827,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param B The matrix that is being inserted.
      */
     public void insertIntoThis(int insertRow, int insertCol, T B) {
-        CommonOps.insert(B.getMatrix(), mat, insertRow,insertCol);
+        CommonOps_D64.insert(B.getMatrix(), mat, insertRow,insertCol);
     }
 
     /**
@@ -889,7 +889,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Largest absolute value of any element.
      */
     public double elementMaxAbs() {
-        return CommonOps.elementMaxAbs(mat);
+        return CommonOps_D64.elementMaxAbs(mat);
     }
 
     /**
@@ -898,7 +898,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Sum of all the elements.
      */
     public double elementSum() {
-        return CommonOps.elementSum(mat);
+        return CommonOps_D64.elementSum(mat);
     }
 
     /**
@@ -914,7 +914,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T c = createMatrix(mat.numRows,mat.numCols);
 
-        CommonOps.elementMult(mat,b.getMatrix(),c.getMatrix());
+        CommonOps_D64.elementMult(mat,b.getMatrix(),c.getMatrix());
 
         return c;
     }
@@ -932,7 +932,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T c = createMatrix(mat.numRows,mat.numCols);
 
-        CommonOps.elementDiv(mat, b.getMatrix(), c.getMatrix());
+        CommonOps_D64.elementDiv(mat, b.getMatrix(), c.getMatrix());
 
         return c;
     }
@@ -950,7 +950,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T c = createMatrix(mat.numRows,mat.numCols);
 
-        CommonOps.elementPower(mat, b.getMatrix(), c.getMatrix());
+        CommonOps_D64.elementPower(mat, b.getMatrix(), c.getMatrix());
 
         return c;
     }
@@ -968,7 +968,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T c = createMatrix(mat.numRows,mat.numCols);
 
-        CommonOps.elementPower(mat, b, c.getMatrix());
+        CommonOps_D64.elementPower(mat, b, c.getMatrix());
 
         return c;
     }
@@ -985,7 +985,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T c = createMatrix(mat.numRows,mat.numCols);
 
-        CommonOps.elementExp(mat, c.getMatrix());
+        CommonOps_D64.elementExp(mat, c.getMatrix());
 
         return c;
     }
@@ -1002,7 +1002,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         T c = createMatrix(mat.numRows,mat.numCols);
 
-        CommonOps.elementLog(mat, c.getMatrix());
+        CommonOps_D64.elementLog(mat, c.getMatrix());
 
         return c;
     }
@@ -1018,7 +1018,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T negative() {
         T A = copy();
-        CommonOps.changeSign(A.getMatrix());
+        CommonOps_D64.changeSign(A.getMatrix());
         return A;
     }
 

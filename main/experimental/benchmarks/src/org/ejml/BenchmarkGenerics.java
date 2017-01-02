@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml;
 
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -91,7 +91,7 @@ public class BenchmarkGenerics {
 
 
     public static void main( String []args ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(10,10,new Random(234));
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(10,10,new Random(234));
 
         int N = 10000000;
 

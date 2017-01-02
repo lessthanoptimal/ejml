@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class TestCholeskyDecompositionCommon_CD64 {
     public void getT() {
         CDenseMatrix64F A = CRandomMatrices.createHermPosDef(N, rand);
 
-        CholeskyDecomposition<CDenseMatrix64F> cholesky = new Dummy(true);
+        CholeskyDecomposition_F64<CDenseMatrix64F> cholesky = new Dummy(true);
 
         CDenseMatrix64F L_null = cholesky.getT(null);
         CDenseMatrix64F L_provided = CRandomMatrices.createRandom(N, N, rand);

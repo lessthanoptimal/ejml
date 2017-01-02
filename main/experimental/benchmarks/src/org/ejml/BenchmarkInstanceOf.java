@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RealMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -46,12 +46,12 @@ public class BenchmarkInstanceOf {
         public void process(Stuff a, RealMatrix64F M) {
 
             if( M instanceof BlockMatrix64F) {
-                CommonOps.scale(1.0,(BlockMatrix64F)M);
+                CommonOps_D64.scale(1.0,(BlockMatrix64F)M);
             } else if( M instanceof DenseMatrix64F) {
-                CommonOps.scale(SCALE,(DenseMatrix64F)M);
+                CommonOps_D64.scale(SCALE,(DenseMatrix64F)M);
 //                CommonOps.scale(0.5,(DenseMatrix64F)M);
             } else if(M instanceof D1Matrix64F) {
-                CommonOps.scale(1.0,(D1Matrix64F)M);
+                CommonOps_D64.scale(1.0,(D1Matrix64F)M);
             } else {
                throw new IllegalArgumentException("Who knows");
             }
@@ -61,11 +61,11 @@ public class BenchmarkInstanceOf {
     public static void withIfStatement( DenseMatrix64F M )
     {
         if( M.numCols > 10 ) {
-            CommonOps.scale(2.0,M);
+            CommonOps_D64.scale(2.0,M);
         } else if( M.numRows > 12 ) {
-            CommonOps.scale(2.0,M);
+            CommonOps_D64.scale(2.0,M);
         } else {
-            CommonOps.scale(SCALE,M);
+            CommonOps_D64.scale(SCALE,M);
 //            CommonOps.scale(0.5,M);
         }
     }
@@ -87,7 +87,7 @@ public class BenchmarkInstanceOf {
         long before = System.currentTimeMillis();
 
         for( int i = 0; i < N; i++ ) {
-            CommonOps.scale(SCALE,M);
+            CommonOps_D64.scale(SCALE,M);
 //            CommonOps.scale(0.5,M);
         }
 

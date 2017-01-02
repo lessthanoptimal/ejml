@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,11 +20,11 @@ package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionTall_D64;
-import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
+import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -43,7 +43,7 @@ import org.ejml.ops.CommonOps;
  *
  * @author Peter Abeles
  */
-public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<DenseMatrix64F> {
+public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition_F64<DenseMatrix64F> {
 
     private int numRows;
     private int numCols;
@@ -57,8 +57,8 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
 
     // If U is not being computed and the input matrix is 'tall' then a special bidiagonal decomposition
     // can be used which is faster.
-    private BidiagonalDecomposition<DenseMatrix64F> bidiag;
-    private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
+    private BidiagonalDecomposition_F64<DenseMatrix64F> bidiag;
+    private SvdImplicitQrAlgorithm_D64 qralg = new SvdImplicitQrAlgorithm_D64();
 
     double diag[];
     double off[];
@@ -135,7 +135,7 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
             else if( U.numRows != Ut.numCols || U.numCols != Ut.numRows )
                 throw new IllegalArgumentException("Unexpected shape of U");
 
-            CommonOps.transpose(Ut,U);
+            CommonOps_D64.transpose(Ut,U);
         }
 
         return U;
@@ -157,7 +157,7 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
                 V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
             else if( V.numRows != Vt.numCols || V.numCols != Vt.numRows )
                 throw new IllegalArgumentException("Unexpected shape of V");
-            CommonOps.transpose(Vt,V);
+            CommonOps_D64.transpose(Vt,V);
         }
 
         return V;
@@ -211,7 +211,7 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
         // change the matrix to bidiagonal form
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
-            CommonOps.transpose(orig,A_mod);
+            CommonOps_D64.transpose(orig,A_mod);
         } else {
             A_mod.reshape(orig.numRows,orig.numCols,false);
             A_mod.set(orig);
@@ -315,7 +315,7 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
             double val = qralg.getSingularValue(i);
 
             if( val < 0 ) {
-                singularValues[i] = 0.0d - val;
+                singularValues[i] = 0.0 - val;
 
                 if( computeU ) {
                     // compute the results of multiplying it by an element of -1 at this location in
@@ -324,7 +324,7 @@ public class SvdImplicitQrDecompose_D64 implements SingularValueDecomposition<De
                     int stop = start+ Ut.numCols;
 
                     for( int j = start; j < stop; j++ ) {
-                        Ut.set(j, 0.0d - Ut.get(j));
+                        Ut.set(j, 0.0 - Ut.get(j));
                     }
                 }
             } else {

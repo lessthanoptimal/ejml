@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,10 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.QRPDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ public class SolvePseudoInverseQrp_D64 extends BaseLinearSolverQrp_D64 {
      * @param decomposition Decomposition used.
      * @param norm2Solution If true the basic solution will be returned, false the minimal 2-norm solution.
      */
-    public SolvePseudoInverseQrp_D64(QRPDecomposition<DenseMatrix64F> decomposition,
+    public SolvePseudoInverseQrp_D64(QRPDecomposition_F64<DenseMatrix64F> decomposition,
                                      boolean norm2Solution) {
         super(decomposition,norm2Solution);
     }
@@ -85,10 +85,10 @@ public class SolvePseudoInverseQrp_D64 extends BaseLinearSolverQrp_D64 {
             }
 
             // Solve Q*a=b => a = Q'*b
-            CommonOps.multTransA(Q, Y, x_basic);
+            CommonOps_D64.multTransA(Q, Y, x_basic);
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(R11.data, x_basic.data, rank);
+            TriangularSolver_D64.solveU(R11.data, x_basic.data, rank);
 
             // finish the basic solution by filling in zeros
             x_basic.reshape(numCols, 1, true);

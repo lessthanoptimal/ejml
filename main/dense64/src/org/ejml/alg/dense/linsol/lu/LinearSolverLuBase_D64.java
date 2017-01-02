@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,7 +43,7 @@ public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         return decomp.quality();
     }
 

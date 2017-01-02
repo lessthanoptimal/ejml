@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.svd.implicitqr;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class TestSvdImplicitQrAlgorithm {
      */
     @Test
     public void oneBidiagonalMatrix() {
-        SvdImplicitQrAlgorithm svd = new SvdImplicitQrAlgorithm(true);
+        SvdImplicitQrAlgorithm_D64 svd = new SvdImplicitQrAlgorithm_D64(true);
         for( int N = 5; N < 10; N++ ) {
             double diag[] = new double[N];
             double off[] = new double[N-1];
@@ -62,7 +62,7 @@ public class TestSvdImplicitQrAlgorithm {
             for( int i = 0; i < N; i++ ) {
                 double val = 2.0*Math.cos( (i+1)*Math.PI/(2.0*N+1.0));
 
-                assertEquals(1,countNumFound(svd,val,1e-8));
+                assertEquals(1,countNumFound(svd,val,UtilEjml.TEST_64F));
             }
         }
     }
@@ -75,16 +75,16 @@ public class TestSvdImplicitQrAlgorithm {
         double diag[] = new double[]{1,2,3,4,5};
         double off[] = new double[diag.length-1];
 
-        SvdImplicitQrAlgorithm svd = new SvdImplicitQrAlgorithm(true);
+        SvdImplicitQrAlgorithm_D64 svd = new SvdImplicitQrAlgorithm_D64(true);
         svd.setMatrix(diag.length,diag.length,diag,off);
 
         assertTrue(svd.process());
 
-        assertEquals(1,countNumFound(svd,5,1e-8));
-        assertEquals(1,countNumFound(svd,4,1e-8));
-        assertEquals(1,countNumFound(svd,3,1e-8));
-        assertEquals(1,countNumFound(svd,2,1e-8));
-        assertEquals(1,countNumFound(svd,1,1e-8));
+        assertEquals(1,countNumFound(svd,5,UtilEjml.TEST_64F));
+        assertEquals(1,countNumFound(svd,4,UtilEjml.TEST_64F));
+        assertEquals(1,countNumFound(svd,3,UtilEjml.TEST_64F));
+        assertEquals(1,countNumFound(svd,2,UtilEjml.TEST_64F));
+        assertEquals(1,countNumFound(svd,1,UtilEjml.TEST_64F));
     }
 
     /**
@@ -99,7 +99,7 @@ public class TestSvdImplicitQrAlgorithm {
 
 //        A.print();
 
-        SvdImplicitQrAlgorithm svd = new SvdImplicitQrAlgorithm(false);
+        SvdImplicitQrAlgorithm_D64 svd = new SvdImplicitQrAlgorithm_D64(false);
         svd.setMatrix(6,6,diag,off);
 
         assertTrue(svd.process());
@@ -122,7 +122,7 @@ public class TestSvdImplicitQrAlgorithm {
 
 //        A.print();
 
-        SvdImplicitQrAlgorithm svd = createHelper(A);
+        SvdImplicitQrAlgorithm_D64 svd = createHelper(A);
 
         assertTrue(svd.process());
 
@@ -176,7 +176,7 @@ public class TestSvdImplicitQrAlgorithm {
     private void checkFullDecomposition(int n, double diag[] , double off[] ) {
 //        a.print();
 
-        SvdImplicitQrAlgorithm svd = createHelper(n,n,diag.clone(),off.clone());
+        SvdImplicitQrAlgorithm_D64 svd = createHelper(n,n,diag.clone(),off.clone());
         svd.setFastValues(true);
         assertTrue(svd.process());
 
@@ -185,8 +185,8 @@ public class TestSvdImplicitQrAlgorithm {
         svd.setFastValues(false);
         double values[] = svd.diag.clone();
         svd.setMatrix(n,n,diag.clone(),off.clone());
-        svd.setUt(CommonOps.identity(n));
-        svd.setVt(CommonOps.identity(n));
+        svd.setUt(CommonOps_D64.identity(n));
+        svd.setVt(CommonOps_D64.identity(n));
         assertTrue(svd.process(values));
 
 //        System.out.println("Vector total steps = "+svd.totalSteps);
@@ -199,14 +199,14 @@ public class TestSvdImplicitQrAlgorithm {
         SimpleMatrix A_found = Ut.transpose().mult(W).mult(Vt);
 //            A_found.print();
 
-        assertEquals(diag[0],A_found.get(0,0),1e-8);
+        assertEquals(diag[0],A_found.get(0,0),UtilEjml.TEST_64F);
         for( int i = 0; i < n-1; i++ ) {
-            assertEquals(diag[i+1],A_found.get(i+1,i+1),1e-8);
-            assertEquals(off[i],A_found.get(i,i+1),1e-8);
+            assertEquals(diag[i+1],A_found.get(i+1,i+1),UtilEjml.TEST_64F);
+            assertEquals(off[i],A_found.get(i,i+1),UtilEjml.TEST_64F);
         }
     }
 
-    public static SvdImplicitQrAlgorithm createHelper( DenseMatrix64F a ) {
+    public static SvdImplicitQrAlgorithm_D64 createHelper(DenseMatrix64F a ) {
         BidiagonalDecompositionRow_D64 bidiag = new BidiagonalDecompositionRow_D64();
         assertTrue(bidiag.decompose(a.copy()));
         double diag[] = new double[a.numRows];
@@ -216,10 +216,10 @@ public class TestSvdImplicitQrAlgorithm {
         return createHelper(a.numRows,a.numCols,diag,off);
     }
 
-    public static SvdImplicitQrAlgorithm createHelper( int numRows , int numCols ,
-                                                       double diag[] , double off[] ) {
+    public static SvdImplicitQrAlgorithm_D64 createHelper(int numRows , int numCols ,
+                                                          double diag[] , double off[] ) {
 
-        SvdImplicitQrAlgorithm helper = new SvdImplicitQrAlgorithm();
+        SvdImplicitQrAlgorithm_D64 helper = new SvdImplicitQrAlgorithm_D64();
 
         helper.setMatrix(numRows,numCols,diag,off);
         return helper;
@@ -228,7 +228,7 @@ public class TestSvdImplicitQrAlgorithm {
     /**
      * Counts the number of times the specified eigenvalue appears.
      */
-    public int countNumFound( SvdImplicitQrAlgorithm alg , double val , double tol ) {
+    public int countNumFound(SvdImplicitQrAlgorithm_D64 alg , double val , double tol ) {
         int total = 0;
 
         for( int i = 0; i < alg.getNumberOfSingularValues(); i++ ) {

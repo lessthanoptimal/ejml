@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,12 @@
 
 package org.ejml.alg.block.decomposition.hessenberg;
 
-import org.ejml.alg.block.BlockVectorOps;
-import org.ejml.alg.block.decomposition.qr.BlockHouseHolder;
+import org.ejml.alg.block.VectorOps_B64;
+import org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64;
 import org.ejml.data.D1Submatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
-import static org.ejml.alg.block.decomposition.qr.BlockHouseHolder.computeHouseHolderRow;
+import static org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64.computeHouseHolderRow;
 
 
 /**
@@ -108,10 +108,10 @@ public class TridiagonalHelper_B64 {
                                      final double beta[] , int betaIndex ) {
 
         final int heightY = Y.row1-Y.row0;
-        CommonOps.fill(W.original, 0);
+        CommonOps_D64.fill(W.original, 0);
 
         // W = -beta*v(1)
-        BlockHouseHolder.scale_row(blockLength,Y,W,0,1,-beta[betaIndex++]);
+        BlockHouseHolder_B64.scale_row(blockLength,Y,W,0,1,-beta[betaIndex++]);
 
         final int min = Math.min(heightY,W.col1-W.col0);
 
@@ -122,12 +122,12 @@ public class TridiagonalHelper_B64 {
 
             // w = w -beta*W*(Y^T*u)
             for( int j = 0; j < i; j++ ) {
-                double yv = BlockHouseHolder.innerProdRow(blockLength,Y,i,Y,j,1);
-                BlockVectorOps.add_row(blockLength,W,i,1,W,j,b*yv,W,i,1,Y.col1-Y.col0);
+                double yv = BlockHouseHolder_B64.innerProdRow(blockLength,Y,i,Y,j,1);
+                VectorOps_B64.add_row(blockLength,W,i,1,W,j,b*yv,W,i,1,Y.col1-Y.col0);
             }
 
             //w=w -beta*u + stuff above
-            BlockHouseHolder.add_row(blockLength,Y,i,b,W,i,1,W,i,1,Y.col1-Y.col0);
+            BlockHouseHolder_B64.add_row(blockLength,Y,i,b,W,i,1,W,i,1,Y.col1-Y.col0);
         }
     }
 
@@ -201,8 +201,8 @@ public class TridiagonalHelper_B64 {
             A.set(i,i+1,1);
 
             // grab only the relevant row from A = A + u*v^T + v*u^T
-            BlockVectorOps.add_row(blockLength,A,row,1,V,i,u_row,A,row,row,A.col1-A.col0);
-            BlockVectorOps.add_row(blockLength,A,row,1,A,i,v_row,A,row,row,A.col1-A.col0);
+            VectorOps_B64.add_row(blockLength,A,row,1,V,i,u_row,A,row,row,A.col1-A.col0);
+            VectorOps_B64.add_row(blockLength,A,row,1,A,i,v_row,A,row,row,A.col1-A.col0);
 
             A.set(i,i+1,before);
         }
@@ -235,23 +235,23 @@ public class TridiagonalHelper_B64 {
             // y = y + u_i*v_i^t*u + v_i*u_i^t*u
 
             // v_i^t*u
-            double dot_v_u = BlockHouseHolder.innerProdRow(blockLength,A,row,V,i,1);
+            double dot_v_u = BlockHouseHolder_B64.innerProdRow(blockLength,A,row,V,i,1);
 
             // u_i^t*u
-            double dot_u_u = BlockHouseHolder.innerProdRow(blockLength,A,row,A,i,1);
+            double dot_u_u = BlockHouseHolder_B64.innerProdRow(blockLength,A,row,A,i,1);
 
             // y = y + u_i*(v_i^t*u)
             // the ones in these 'u' are skipped over since the next submatrix of A
             // is only updated
-            BlockVectorOps.add_row(blockLength,V,row,1,A,i,dot_v_u,V,row,row+1,A.col1-A.col0);
+            VectorOps_B64.add_row(blockLength,V,row,1,A,i,dot_v_u,V,row,row+1,A.col1-A.col0);
 
             // y = y + v_i*(u_i^t*u)
             // the 1 in U is taken account above
-            BlockVectorOps.add_row(blockLength,V,row,1,V,i,dot_u_u,V,row,row+1,A.col1-A.col0);
+            VectorOps_B64.add_row(blockLength,V,row,1,V,i,dot_u_u,V,row,row+1,A.col1-A.col0);
         }
 
         // y = -gamma*y
-        BlockVectorOps.scale_row(blockLength,V,row,-gamma,V,row,row+1,V.col1-V.col0);
+        VectorOps_B64.scale_row(blockLength,V,row,-gamma,V,row,row+1,V.col1-V.col0);
     }
 
     /**
@@ -295,15 +295,15 @@ public class TridiagonalHelper_B64 {
             // take in account the one in 'A'
             double total = B.get(offset,rowB);
 
-            total += BlockVectorOps.dot_row_col(blockLength,A,rowA,B,rowB,offset+1,rowB);
-            total += BlockVectorOps.dot_row(blockLength,A,rowA,B,rowB,rowB,A.col1-A.col0);
+            total += VectorOps_B64.dot_row_col(blockLength,A,rowA,B,rowB,offset+1,rowB);
+            total += VectorOps_B64.dot_row(blockLength,A,rowA,B,rowB,rowB,A.col1-A.col0);
 
             return total;
         } else {
             // take in account the one in 'A'
             double total = B.get(rowB,offset);
 
-            total += BlockVectorOps.dot_row(blockLength,A,rowA,B,rowB,offset+1,A.col1-A.col0);
+            total += VectorOps_B64.dot_row(blockLength,A,rowA,B,rowB,offset+1,A.col1-A.col0);
 
             return total;
         }
@@ -329,14 +329,14 @@ public class TridiagonalHelper_B64 {
                                       double gamma )
     {
         // val=(y^T*u)
-        double val = BlockHouseHolder.innerProdRow(blockLength,A,row,V,row,1);
+        double val = BlockHouseHolder_B64.innerProdRow(blockLength,A,row,V,row,1);
 
         // take in account the one
         double before = A.get(row,row+1);
         A.set(row,row+1,1);
 
         // v = y - (1/2)gamma*val * u
-        BlockVectorOps.add_row(blockLength,V,row,1,A,row,-0.5*gamma*val,V,row,row+1,A.col1-A.col0);
+        VectorOps_B64.add_row(blockLength,V,row,1,A,row,-0.5*gamma*val,V,row,row+1,A.col1-A.col0);
 
         A.set(row,row+1,before);
     }

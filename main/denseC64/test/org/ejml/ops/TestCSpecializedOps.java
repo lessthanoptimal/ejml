@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
@@ -42,13 +43,13 @@ public class TestCSpecializedOps {
 
         CDenseMatrix64F Q = CSpecializedOps.createReflector(u);
 
-        assertTrue(CMatrixFeatures.isHermitian(Q,1e-8));
+        assertTrue(CMatrixFeatures.isHermitian(Q, UtilEjml.TEST_64F));
 
         CDenseMatrix64F w = new CDenseMatrix64F(4,1);
 
         CCommonOps.mult(Q,u,w);
 
-        assertTrue(CMatrixFeatures.isNegative(u,w,1e-8));
+        assertTrue(CMatrixFeatures.isNegative(u,w,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class TestCSpecializedOps {
         CDenseMatrix64F w = new CDenseMatrix64F(4,1);
         CCommonOps.mult(Q,u,w);
 
-        assertTrue(CMatrixFeatures.isNegative(u,w,1e-8));
+        assertTrue(CMatrixFeatures.isNegative(u,w,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -82,15 +83,15 @@ public class TestCSpecializedOps {
                 double real = A.getReal(index,j);
                 double imag = A.getImag(index, j);
 
-                assertEquals(real,B.getReal(i, j),1e-8);
-                assertEquals(imag,B.getImag(i, j),1e-8);
+                assertEquals(real,B.getReal(i, j),UtilEjml.TEST_64F);
+                assertEquals(imag,B.getImag(i, j),UtilEjml.TEST_64F);
             }
         }
 
         // see if it transposed
         CCommonOps.transpose(P,B);
 
-        assertTrue(CMatrixFeatures.isIdentical(B, Pt, 1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(B, Pt, UtilEjml.TEST_64F));
     }
 
 
@@ -108,7 +109,7 @@ public class TestCSpecializedOps {
         }
 
         double found = CSpecializedOps.elementDiagMaxMagnitude2(A);
-        assertEquals(expected, found, 1e-8);
+        assertEquals(expected, found, UtilEjml.TEST_64F);
     }
 
     @Test
@@ -131,7 +132,7 @@ public class TestCSpecializedOps {
         double expected = total.getMagnitude();
 
         double found = CSpecializedOps.qualityTriangular(A);
-        assertEquals(expected,found,1e-8);
+        assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -150,7 +151,7 @@ public class TestCSpecializedOps {
 
         CDenseMatrix64F found = CSpecializedOps.householder(U,gamma);
 
-        assertTrue(CMatrixFeatures.isIdentical(expected,found,1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(expected,found,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -177,8 +178,8 @@ public class TestCSpecializedOps {
 
         for (int i = 1; i < found.numRows; i++) {
             found.get(i,0,c);
-            assertEquals(0,c.real, 1e-8);
-            assertEquals(0,c.imaginary,1e-8);
+            assertEquals(0,c.real, UtilEjml.TEST_64F);
+            assertEquals(0,c.imaginary,UtilEjml.TEST_64F);
         }
     }
 }

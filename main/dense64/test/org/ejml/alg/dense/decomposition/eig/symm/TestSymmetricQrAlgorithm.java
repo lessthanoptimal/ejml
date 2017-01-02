@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,7 +39,7 @@ public class TestSymmetricQrAlgorithm {
         double diag[] = new double[]{2,3,4,5,6};
         double off[] = new double[diag.length-1];
 
-        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
+        SymmetricQrAlgorithm_D64 alg = new SymmetricQrAlgorithm_D64();
 
         assertTrue(alg.process(diag.length,diag,off));
 
@@ -60,7 +60,7 @@ public class TestSymmetricQrAlgorithm {
             off[i-1] = i+0.5;
         }
 
-        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
+        SymmetricQrAlgorithm_D64 alg = new SymmetricQrAlgorithm_D64();
 
         assertTrue(alg.process(diag.length,diag,off));
 
@@ -88,7 +88,7 @@ public class TestSymmetricQrAlgorithm {
 
 //        A.print();
 
-        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
+        SymmetricQrAlgorithm_D64 alg = new SymmetricQrAlgorithm_D64();
 
         assertTrue(alg.process(N,diag,off));
 
@@ -114,7 +114,7 @@ public class TestSymmetricQrAlgorithm {
 
         tridiag.getDiagonal(diag,off);
 
-        SymmetricQrAlgorithm alg = new SymmetricQrAlgorithm();
+        SymmetricQrAlgorithm_D64 alg = new SymmetricQrAlgorithm_D64();
 
         assertTrue(alg.process(5,diag,off));
 
@@ -125,7 +125,7 @@ public class TestSymmetricQrAlgorithm {
     /**
      * Counts the number of times the specified eigenvalue appears.
      */
-    public int countNumFound( SymmetricQrAlgorithm alg , double val , double tol ) {
+    public int countNumFound(SymmetricQrAlgorithm_D64 alg , double val , double tol ) {
         int total = 0;
 
         for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {

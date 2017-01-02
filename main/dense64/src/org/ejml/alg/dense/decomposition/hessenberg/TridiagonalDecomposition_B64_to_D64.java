@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,18 +23,18 @@ import org.ejml.alg.block.decomposition.hessenberg.TridiagonalDecompositionHouse
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_D64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
- * Wrapper around a block implementation of TridiagonalSimilarDecomposition
+ * Wrapper around a block implementation of TridiagonalSimilarDecomposition_F64
  *
  * @author Peter Abeles
  */
 public class TridiagonalDecomposition_B64_to_D64
         extends BaseDecomposition_B64_to_D64
-        implements TridiagonalSimilarDecomposition<DenseMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<DenseMatrix64F> {
 
 
     public TridiagonalDecomposition_B64_to_D64() {
@@ -52,7 +52,7 @@ public class TridiagonalDecomposition_B64_to_D64
         if( T == null ) {
             T = new DenseMatrix64F(N,N);
         } else {
-            CommonOps.fill(T, 0);
+            CommonOps_D64.fill(T, 0);
         }
 
         double[] diag = new double[ N ];

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,14 +21,14 @@ package org.ejml.alg.dense.decomposition.qr;
 import org.ejml.EjmlParameters;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.interfaces.decomposition.QRPDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-import static org.ejml.factory.DecompositionFactory.decomposeSafe;
+import static org.ejml.factory.DecompositionFactory_D64.decomposeSafe;
 
 
 /**
@@ -54,7 +54,7 @@ public class StabilityQRDecomposition {
         return A.minus(A_found).normF()/A.normF();
     }
 
-    public static double evaluate( QRPDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
+    public static double evaluate(QRPDecomposition_F64<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
         if( !decomposeSafe(alg,orig)) {
             return Double.NaN;
@@ -90,12 +90,12 @@ public class StabilityQRDecomposition {
             double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
             System.out.println("Square matrix");
-            DenseMatrix64F orig = RandomMatrices.createRandom(2*size,size,-1,1,rand);
+            DenseMatrix64F orig = RandomMatrices_D64.createRandom(2*size,size,-1,1,rand);
             DenseMatrix64F mat = orig.copy();
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                CommonOps.scale(scales[i],orig,mat);
+                CommonOps_D64.scale(scales[i],orig,mat);
                 runAlgorithms(mat);
             }
         }

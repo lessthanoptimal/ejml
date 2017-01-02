@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,19 +20,19 @@ package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 /**
  * <p>
- * Performs a {@link org.ejml.interfaces.decomposition.BidiagonalDecomposition} using
+ * Performs a {@link BidiagonalDecomposition_F64} using
  * householder reflectors.  This is efficient on wide or square matrices.
  * </p>
  *
  * @author Peter Abeles
  */
 public class BidiagonalDecompositionRow_D64
-        implements BidiagonalDecomposition<DenseMatrix64F>
+        implements BidiagonalDecomposition_F64<DenseMatrix64F>
 {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DenseMatrix64F UBV;
@@ -181,7 +181,7 @@ public class BidiagonalDecompositionRow_D64
     @Override
     public DenseMatrix64F getU( DenseMatrix64F U , boolean transpose , boolean compact ) {
         U = handleU(U, transpose, compact,m,n,min);
-        CommonOps.setIdentity(U);
+        CommonOps_D64.setIdentity(U);
 
         for( int i = 0; i < m; i++ ) u[i] = 0;
 
@@ -234,7 +234,7 @@ public class BidiagonalDecompositionRow_D64
     @Override
     public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose , boolean compact ) {
         V = handleV(V, transpose, compact,m,n,min);
-        CommonOps.setIdentity(V);
+        CommonOps_D64.setIdentity(V);
 
 //        UBV.print();
 

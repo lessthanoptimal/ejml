@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridiagonalTests_CD64 {
 
     @Override
-    protected TridiagonalSimilarDecomposition<CDenseMatrix64F> createDecomposition() {
+    protected TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_CD64();
     }
 

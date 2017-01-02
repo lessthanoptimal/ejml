@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,6 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix;
 
@@ -37,7 +36,7 @@ import org.ejml.data.Matrix;
  *
  * @author Peter Abeles
  */
-public interface CholeskyDecomposition <MatrixType extends Matrix>
+public interface CholeskyDecomposition<MatrixType extends Matrix>
         extends DecompositionInterface<MatrixType> {
 
     /**
@@ -46,7 +45,7 @@ public interface CholeskyDecomposition <MatrixType extends Matrix>
      *
      * @return True if lower, false if upper.
      */
-    public boolean isLower();
+    boolean isLower();
 
     /**
      * <p>
@@ -61,13 +60,5 @@ public interface CholeskyDecomposition <MatrixType extends Matrix>
      * @param T If not null then the decomposed matrix is written here.
      * @return A lower or upper triangular matrix.
      */
-    public MatrixType getT( MatrixType T  );
-
-    /**
-     * Computes the matrix's determinant using the decomposition.
-     *
-     * @return The determinant.
-     */
-    public Complex64F computeDeterminant();
-
+    MatrixType getT(MatrixType T);
 }

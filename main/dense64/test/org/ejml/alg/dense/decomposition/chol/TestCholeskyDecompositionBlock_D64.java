@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,15 +18,15 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.EjmlUnitTests;
 import org.junit.Test;
 
-import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface.checkModifiedInput;
+import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface_D64.checkModifiedInput;
 import static org.junit.Assert.assertTrue;
 
 
@@ -45,7 +45,7 @@ public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests_D64
     }
 
     @Override
-    public CholeskyDecomposition<DenseMatrix64F> create(boolean lower) {
+    public CholeskyDecomposition_F64<DenseMatrix64F> create(boolean lower) {
         if( !lower )
             throw new IllegalArgumentException("Doesn't support upper form");
 

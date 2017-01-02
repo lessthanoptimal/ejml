@@ -22,7 +22,7 @@ package org.ejml.alg.dense.decompose.chol;
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
@@ -32,11 +32,11 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition;
  * decomposition is provided in other classes.
  * </p>
  *
- * @see org.ejml.interfaces.decomposition.CholeskyDecomposition
+ * @see CholeskyDecomposition_F64
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_CD64
-        implements CholeskyDecomposition<CDenseMatrix64F> {
+        implements CholeskyDecomposition_F64<CDenseMatrix64F> {
 
     // width and height of the matrix
     protected int n;

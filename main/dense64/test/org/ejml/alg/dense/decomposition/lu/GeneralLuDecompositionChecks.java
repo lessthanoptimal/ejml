@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,14 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.alg.dense.decomposition.CheckDecompositionInterface;
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
+import org.ejml.alg.dense.decomposition.CheckDecompositionInterface_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.EjmlUnitTests;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public abstract class GeneralLuDecompositionChecks {
 
     @Test
     public void testModifiedInput() {
-        CheckDecompositionInterface.checkModifiedInput(create(0,0));
+        CheckDecompositionInterface_D64.checkModifiedInput(create(0,0));
     }
 
     /**
@@ -72,14 +73,14 @@ public abstract class GeneralLuDecompositionChecks {
         EjmlUnitTests.assertEquals(octUpper,U.getMatrix(),1e-5);
 
         DenseMatrix64F A_found = P.mult(L).mult(U).getMatrix();
-        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(A_found,A,UtilEjml.TEST_64F));
     }
 
     @Test
     public void testDecomposition2()
     {
         for( int i = 2; i <= 20; i++ ) {
-            DenseMatrix64F A = RandomMatrices.createRandom(i,i,-1,1,rand);
+            DenseMatrix64F A = RandomMatrices_D64.createRandom(i,i,-1,1,rand);
 
             LUDecomposition<DenseMatrix64F> alg = create(i,i);
             assertTrue(alg.decompose(A));
@@ -91,7 +92,7 @@ public abstract class GeneralLuDecompositionChecks {
             SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
 
             DenseMatrix64F A_found = P.transpose().mult(L).mult(U).getMatrix();
-            assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+            assertTrue(MatrixFeatures_D64.isIdentical(A_found,A,UtilEjml.TEST_64F));
         }
     }
 
@@ -108,10 +109,10 @@ public abstract class GeneralLuDecompositionChecks {
         DenseMatrix64F U = alg.getUpper(null);
 
         DenseMatrix64F A_found = new DenseMatrix64F(3,3);
-        CommonOps.mult(L,U,A_found);
+        CommonOps_D64.mult(L,U,A_found);
 
-        assertFalse(MatrixFeatures.hasUncountable(A_found));
-        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertFalse(MatrixFeatures_D64.hasUncountable(A_found));
+        assertTrue(MatrixFeatures_D64.isIdentical(A_found,A, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -144,8 +145,8 @@ public abstract class GeneralLuDecompositionChecks {
 
         alg.decompose(A);
 
-        DenseMatrix64F L_provided = RandomMatrices.createRandom(3,3,rand);
-        DenseMatrix64F U_provided = RandomMatrices.createRandom(3,3,rand);
+        DenseMatrix64F L_provided = RandomMatrices_D64.createRandom(3,3,rand);
+        DenseMatrix64F U_provided = RandomMatrices_D64.createRandom(3,3,rand);
 
         assertTrue(L_provided == alg.getLower(L_provided));
         assertTrue(U_provided == alg.getUpper(U_provided));
@@ -153,8 +154,8 @@ public abstract class GeneralLuDecompositionChecks {
         DenseMatrix64F L_ret = alg.getLower(null);
         DenseMatrix64F U_ret = alg.getUpper(null);
 
-        assertTrue(MatrixFeatures.isEquals(L_provided,L_ret));
-        assertTrue(MatrixFeatures.isEquals(U_provided,U_ret));
+        assertTrue(MatrixFeatures_D64.isEquals(L_provided,L_ret));
+        assertTrue(MatrixFeatures_D64.isEquals(U_provided,U_ret));
     }
 
     @Test
@@ -172,7 +173,7 @@ public abstract class GeneralLuDecompositionChecks {
 
         DenseMatrix64F A_found = P.mult(L).mult(U).getMatrix();
 
-        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(A_found,A,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -190,6 +191,6 @@ public abstract class GeneralLuDecompositionChecks {
 
         DenseMatrix64F A_found = P.transpose().mult(L).mult(U).getMatrix();
 
-        assertTrue(MatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(A_found,A,UtilEjml.TEST_64F));
     }
 }

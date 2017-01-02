@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleBase;
 
 import java.util.Random;
@@ -109,8 +109,8 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
         int N = 500;
 
         // create two vectors whose elements are drawn from uniform distributions
-        StatisticsMatrix A = StatisticsMatrix.wrap(RandomMatrices.createRandom(N,1,0,1,rand));
-        StatisticsMatrix B = StatisticsMatrix.wrap(RandomMatrices.createRandom(N,1,1,2,rand));
+        StatisticsMatrix A = StatisticsMatrix.wrap(RandomMatrices_D64.createRandom(N,1,0,1,rand));
+        StatisticsMatrix B = StatisticsMatrix.wrap(RandomMatrices_D64.createRandom(N,1,1,2,rand));
 
         // the mean should be about 0.5
         System.out.println("Mean of A is               "+A.mean());

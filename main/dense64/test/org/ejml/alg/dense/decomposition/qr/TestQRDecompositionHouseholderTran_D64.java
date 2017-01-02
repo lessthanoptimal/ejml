@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,12 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -49,21 +50,21 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
      */
     @Test
     public void applyQ() {
-        DenseMatrix64F A = RandomMatrices.createRandom(5,4,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,4,rand);
 
         QRDecompositionHouseholderTran_D64 alg = new QRDecompositionHouseholderTran_D64();
 
         assertTrue(alg.decompose(A));
 
         DenseMatrix64F Q = alg.getQ(null,false);
-        DenseMatrix64F B = RandomMatrices.createRandom(5,2,rand);
+        DenseMatrix64F B = RandomMatrices_D64.createRandom(5,2,rand);
 
         DenseMatrix64F expected = new DenseMatrix64F(B.numRows,B.numCols);
-        CommonOps.mult(Q,B,expected);
+        CommonOps_D64.mult(Q,B,expected);
 
         alg.applyQ(B);
 
-        assertTrue(MatrixFeatures.isIdentical(expected,B,1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(expected,B, UtilEjml.TEST_64F));
     }
 
     /**
@@ -71,21 +72,21 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
      */
     @Test
     public void applyTranQ() {
-        DenseMatrix64F A = RandomMatrices.createRandom(5,4,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,4,rand);
 
         QRDecompositionHouseholderTran_D64 alg = new QRDecompositionHouseholderTran_D64();
 
         assertTrue(alg.decompose(A));
 
         DenseMatrix64F Q = alg.getQ(null,false);
-        DenseMatrix64F B = RandomMatrices.createRandom(5,2,rand);
+        DenseMatrix64F B = RandomMatrices_D64.createRandom(5,2,rand);
 
         DenseMatrix64F expected = new DenseMatrix64F(B.numRows,B.numCols);
-        CommonOps.multTransA(Q,B,expected);
+        CommonOps_D64.multTransA(Q,B,expected);
 
         alg.applyTranQ(B);
 
-        assertTrue(MatrixFeatures.isIdentical(expected,B,1e-8));
+        assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_64F));
     }
 
     /**
@@ -104,7 +105,7 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
         DebugQR qr = new DebugQR(width,width);
 
         SimpleMatrix A = new SimpleMatrix(width,width);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
+        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
 
         qr.householder(w,A.getMatrix());
 
@@ -146,10 +147,10 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
         SimpleMatrix U = new SimpleMatrix(width,1);
         SimpleMatrix A = new SimpleMatrix(width,width);
 
-        RandomMatrices.setRandom(U.getMatrix(),rand);
-        RandomMatrices.setRandom(A.getMatrix(),rand);
+        RandomMatrices_D64.setRandom(U.getMatrix(),rand);
+        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
 
-        CommonOps.transpose(A.getMatrix(),qr.getQR());
+        CommonOps_D64.transpose(A.getMatrix(),qr.getQR());
 
         // compute the results using standard matrix operations
         SimpleMatrix I = SimpleMatrix.identity(width-w);
@@ -164,7 +165,7 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
         DenseMatrix64F found = qr.getQR();
 
         for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found.get(w,i),1e-8);
+            assertEquals(U.get(i,0),found.get(w,i),UtilEjml.TEST_64F);
         }
 
         // the right should be the same
@@ -188,7 +189,7 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
         }
 
         public void householder( int j , DenseMatrix64F A ) {
-            CommonOps.transpose(A,QR);
+            CommonOps_D64.transpose(A,QR);
 
             super.householder(j);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -31,14 +31,14 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSvdImplicitQrDecompose_D64 extends StandardSvdChecks {
+public class TestSvdImplicitQrDecompose_D64 extends StandardSvdChecks_D64 {
 
     boolean compact;
     boolean needU;
     boolean needV;
 
     @Override
-    public SingularValueDecomposition createSvd() {
+    public SingularValueDecomposition_F64 createSvd() {
         return new SvdImplicitQrDecompose_D64(compact,needU,needV,false);
     }
 
@@ -82,7 +82,7 @@ public class TestSvdImplicitQrDecompose_D64 extends StandardSvdChecks {
             for( int k = 0; k < 2; k++ ) {
                 compact = k == 0;
 
-                SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose_D64(compact,true,true,false);
+                SingularValueDecomposition_F64<DenseMatrix64F> alg = new SvdImplicitQrDecompose_D64(compact,true,true,false);
 
                 DenseMatrix64F A;
 
@@ -92,10 +92,10 @@ public class TestSvdImplicitQrDecompose_D64 extends StandardSvdChecks {
 //                        sv[i] = rand.nextDouble()*2;
 //                    sv[0] = 0;
 
-                    A = RandomMatrices.createSingularValues(numRows,numCols,rand,sv);
+                    A = RandomMatrices_D64.createSingularValues(numRows,numCols,rand,sv);
 //                    A = new DenseMatrix64F(numRows,numCols);
                 } else {
-                    A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+                    A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
                 }
 
                 assertTrue(alg.decompose(A.copy()));
@@ -122,16 +122,16 @@ public class TestSvdImplicitQrDecompose_D64 extends StandardSvdChecks {
                              DenseMatrix64F V ,
                              boolean checkU , boolean checkV )
     {
-        SingularValueDecomposition<DenseMatrix64F> alg = new SvdImplicitQrDecompose_D64(compact,checkU,checkV,false);
+        SingularValueDecomposition_F64<DenseMatrix64F> alg = new SvdImplicitQrDecompose_D64(compact,checkU,checkV,false);
 
         assertTrue(alg.decompose(A.copy()));
 
         UtilTestMatrix.checkSameElements(1e-10,sv.length,sv,alg.getSingularValues());
 
         if( checkU ) {
-            assertTrue(MatrixFeatures.isIdentical(U,alg.getU(null,false),1e-10));
+            assertTrue(MatrixFeatures_D64.isIdentical(U,alg.getU(null,false),1e-10));
         }
         if( checkV )
-            assertTrue(MatrixFeatures.isIdentical(V,alg.getV(null,false),1e-10));
+            assertTrue(MatrixFeatures_D64.isIdentical(V,alg.getV(null,false),1e-10));
     }
 }

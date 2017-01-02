@@ -18,6 +18,8 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.CMatrixMatrixMult;
 import org.ejml.alg.dense.mult.TestCMatrixMatrixMult;
 import org.ejml.data.CDenseMatrix64F;
@@ -45,7 +47,7 @@ public class TestCCommonOps {
         assertEquals(4,I.numRows);
         assertEquals(4,I.numCols);
 
-        assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(I, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -54,13 +56,13 @@ public class TestCCommonOps {
         assertEquals(4,I.numRows);
         assertEquals(5,I.numCols);
 
-        assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(I,UtilEjml.TEST_64F));
 
         I = CCommonOps.identity(5,4);
         assertEquals(5,I.numRows);
         assertEquals(4,I.numCols);
 
-        assertTrue(CMatrixFeatures.isIdentity(I,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(I,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -77,11 +79,11 @@ public class TestCCommonOps {
                 m.get(i,j,a);
 
                 if( i == j ) {
-                    assertEquals(2*i+1,a.real,1e-8);
-                    assertEquals(2*i+2,a.imaginary,1e-8);
+                    assertEquals(2*i+1,a.real,UtilEjml.TEST_64F);
+                    assertEquals(2*i+2,a.imaginary,UtilEjml.TEST_64F);
                 } else {
-                    assertEquals(0,a.real,1e-8);
-                    assertEquals(0,a.imaginary,1e-8);
+                    assertEquals(0,a.real,UtilEjml.TEST_64F);
+                    assertEquals(0,a.imaginary,UtilEjml.TEST_64F);
                 }
             }
         }
@@ -89,7 +91,7 @@ public class TestCCommonOps {
 
     @Test
     public void convert() {
-        DenseMatrix64F input = RandomMatrices.createRandom(5,7,-1,1,rand);
+        DenseMatrix64F input = RandomMatrices_D64.createRandom(5,7,-1,1,rand);
         CDenseMatrix64F output = new CDenseMatrix64F(5,7);
 
         Complex64F a = new Complex64F();
@@ -100,8 +102,8 @@ public class TestCCommonOps {
             for (int j = 0; j < input.numCols; j++) {
                 output.get(i,j,a);
 
-                assertEquals(input.get(i,j),a.getReal(),1e-8);
-                assertEquals(0,a.getImaginary(),1e-8);
+                assertEquals(input.get(i,j),a.getReal(),UtilEjml.TEST_64F);
+                assertEquals(0,a.getImaginary(),UtilEjml.TEST_64F);
             }
         }
     }
@@ -119,7 +121,7 @@ public class TestCCommonOps {
             for (int j = 0; j < input.numCols; j++) {
                 input.get(i,j,a);
 
-                assertEquals(a.getReal(),output.get(i,j),1e-8);
+                assertEquals(a.getReal(),output.get(i,j),UtilEjml.TEST_64F);
             }
         }
     }
@@ -137,7 +139,7 @@ public class TestCCommonOps {
             for (int j = 0; j < input.numCols; j++) {
                 input.get(i,j,a);
 
-                assertEquals(a.getImaginary(),output.get(i,j),1e-8);
+                assertEquals(a.getImaginary(),output.get(i,j),UtilEjml.TEST_64F);
             }
         }
     }
@@ -155,7 +157,7 @@ public class TestCCommonOps {
             for (int j = 0; j < input.numCols; j++) {
                 input.get(i,j,a);
 
-                assertEquals(a.getMagnitude(),output.get(i,j),1e-8);
+                assertEquals(a.getMagnitude(),output.get(i,j),UtilEjml.TEST_64F);
             }
         }
     }
@@ -171,8 +173,8 @@ public class TestCCommonOps {
             double real = matrix.data[i];
             double img = matrix.data[i+1];
 
-            assertEquals(real, found.data[i],1e-8);
-            assertEquals(img, -found.data[i+1],1e-8);
+            assertEquals(real, found.data[i],UtilEjml.TEST_64F);
+            assertEquals(img, -found.data[i+1],UtilEjml.TEST_64F);
         }
     }
 
@@ -186,8 +188,8 @@ public class TestCCommonOps {
             double real = matrix.data[i];
             double img = matrix.data[i+1];
 
-            assertEquals(2,real,1e-8);
-            assertEquals(-1,img,1e-8);
+            assertEquals(2,real,UtilEjml.TEST_64F);
+            assertEquals(-1,img,UtilEjml.TEST_64F);
         }
     }
 
@@ -212,8 +214,8 @@ public class TestCCommonOps {
 
                 ComplexMath64F.plus(a, b, expected);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -239,8 +241,8 @@ public class TestCCommonOps {
 
                 ComplexMath64F.minus(a, b, expected);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -262,8 +264,8 @@ public class TestCCommonOps {
                 orig.get(i,j,value);
 
                 ComplexMath64F.multiply(scale,value,expected);
-                assertEquals(expected.real, mat.getReal(i,j), 1e-8);
-                assertEquals(expected.imaginary, mat.getImag(i,j), 1e-8);
+                assertEquals(expected.real, mat.getReal(i,j), UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary, mat.getImag(i,j), UtilEjml.TEST_64F);
             }
         }
     }
@@ -318,7 +320,7 @@ public class TestCCommonOps {
 
                     CMatrixMatrixMult.mult_reorder(A, B, found);
 
-                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected, found, 1e-8));
+                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected, found, UtilEjml.TEST_64F));
                 }
             }
         }
@@ -340,8 +342,8 @@ public class TestCCommonOps {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -362,8 +364,8 @@ public class TestCCommonOps {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(-expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -384,8 +386,8 @@ public class TestCCommonOps {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -406,8 +408,8 @@ public class TestCCommonOps {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(-expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -423,7 +425,7 @@ public class TestCCommonOps {
             assertTrue(CCommonOps.invert(A));
             CCommonOps.mult(A_orig,A,I);
 
-            assertTrue(CMatrixFeatures.isIdentity(I, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentity(I, UtilEjml.TEST_64F));
         }
     }
 
@@ -439,7 +441,7 @@ public class TestCCommonOps {
             assertTrue(CCommonOps.invert(A, A_inv));
             CCommonOps.mult(A, A_inv, I);
 
-            assertTrue(CMatrixFeatures.isIdentity(I, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentity(I, UtilEjml.TEST_64F));
             assertTrue(CMatrixFeatures.isIdentical(A, A_orig, 0));
         }
     }
@@ -462,7 +464,7 @@ public class TestCCommonOps {
 
             CCommonOps.mult(A, X, found);
 
-            assertTrue(CMatrixFeatures.isIdentical(B, found, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentical(B, found, UtilEjml.TEST_64F));
 
             assertTrue(CMatrixFeatures.isIdentical(A, A_orig, 0));
             assertTrue(CMatrixFeatures.isIdentical(B, B_orig, 0));
@@ -482,7 +484,7 @@ public class TestCCommonOps {
 
             assertTrue(CCommonOps.solve(A, B, X));
 
-            assertTrue(CMatrixFeatures.isIdentical(X, X_expected, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentical(X, X_expected, UtilEjml.TEST_64F));
 
             assertTrue(CMatrixFeatures.isIdentical(B, B_orig, 0));
             assertTrue(CMatrixFeatures.isIdentical(A, A_orig, 0));
@@ -527,8 +529,8 @@ public class TestCCommonOps {
 
                 ComplexMath64F.multiply(a,b,expected);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -552,8 +554,8 @@ public class TestCCommonOps {
 
                 ComplexMath64F.divide(a,b,expected);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -577,8 +579,8 @@ public class TestCCommonOps {
 
                 ComplexMath64F.divide(a,b,expected);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -590,7 +592,7 @@ public class TestCCommonOps {
             m.data[i] = -6 + i;
         }
 
-        assertEquals(-6, CCommonOps.elementMinReal(m),1e-8);
+        assertEquals(-6, CCommonOps.elementMinReal(m),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -600,7 +602,7 @@ public class TestCCommonOps {
             m.data[i] = -6 + i;
         }
 
-        assertEquals(-5, CCommonOps.elementMinImaginary(m), 1e-8);
+        assertEquals(-5, CCommonOps.elementMinImaginary(m), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -610,7 +612,7 @@ public class TestCCommonOps {
             m.data[i] = -6 + i;
         }
 
-        assertEquals(-6 + 11 * 2, CCommonOps.elementMaxReal(m), 1e-8);
+        assertEquals(-6 + 11 * 2, CCommonOps.elementMaxReal(m), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -620,7 +622,7 @@ public class TestCCommonOps {
             m.data[i] = -6 + i;
         }
 
-        assertEquals(-5 + 11 * 2, CCommonOps.elementMaxImaginary(m), 1e-8);
+        assertEquals(-5 + 11 * 2, CCommonOps.elementMaxImaginary(m), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -630,12 +632,12 @@ public class TestCCommonOps {
 
         CCommonOps.magnitude(m,a);
 
-        double expected = CommonOps.elementMaxAbs(a);
+        double expected = CommonOps_D64.elementMaxAbs(a);
         expected *= expected;
 
         double found = CCommonOps.elementMaxMagnitude2(m);
 
-        assertEquals(expected,found,1e-8);
+        assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -649,11 +651,11 @@ public class TestCCommonOps {
             for (int j = 0; j < a.numCols; j++) {
                 a.get(i,j,c);
                 if( i == j ) {
-                    assertEquals(1,c.real,1e-8);
-                    assertEquals(0,c.imaginary,1e-8);
+                    assertEquals(1,c.real,UtilEjml.TEST_64F);
+                    assertEquals(0,c.imaginary,UtilEjml.TEST_64F);
                 } else {
-                    assertEquals(0,c.real,1e-8);
-                    assertEquals(0,c.imaginary,1e-8);
+                    assertEquals(0,c.real,UtilEjml.TEST_64F);
+                    assertEquals(0,c.imaginary,UtilEjml.TEST_64F);
                 }
             }
         }
@@ -672,8 +674,8 @@ public class TestCCommonOps {
                 a.get(2+i,j+3,ca);
                 b.get(  i,j  , cb);
 
-                assertEquals(ca.real,cb.real,1e-8);
-                assertEquals(ca.imaginary,cb.imaginary,1e-8);
+                assertEquals(ca.real,cb.real,UtilEjml.TEST_64F);
+                assertEquals(ca.imaginary,cb.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -693,8 +695,8 @@ public class TestCCommonOps {
                 a.get(2+i,j+3,ca);
                 b.get(1 + i, j + 2, cb);
 
-                assertEquals(ca.real,cb.real,1e-8);
-                assertEquals(ca.imaginary,cb.imaginary,1e-8);
+                assertEquals(ca.real,cb.real,UtilEjml.TEST_64F);
+                assertEquals(ca.imaginary,cb.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -717,7 +719,7 @@ public class TestCCommonOps {
                 a.get(j,i,ca);
                 c.get(j,0,cc);
 
-                EjmlUnitTests.assertEquals(ca,cc,1e-8);
+                EjmlUnitTests.assertEquals(ca,cc,UtilEjml.TEST_64F);
             }
         }
     }
@@ -729,6 +731,6 @@ public class TestCCommonOps {
 
         double expected = Math.sqrt(10*10 + 12*12);
         double found = CCommonOps.elementMaxAbs(a);
-        assertEquals(expected,found,1e-8);
+        assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 }

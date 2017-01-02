@@ -20,8 +20,9 @@ package org.ejml.simple;
 
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +36,14 @@ import java.util.List;
 @SuppressWarnings({"unchecked"})
 public class SimpleEVD <T extends SimpleBase>
 {
-    private EigenDecomposition<DenseMatrix64F> eig;
+    private EigenDecomposition_F64<DenseMatrix64F> eig;
 
     DenseMatrix64F mat;
 
     public SimpleEVD( DenseMatrix64F mat )
     {
         this.mat = mat;
-        eig = DecompositionFactory.eig(mat.numCols,true);
+        eig = DecompositionFactory_D64.eig(mat.numCols,true);
         if( !eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
     }
@@ -114,8 +115,8 @@ public class SimpleEVD <T extends SimpleBase>
      *
      * @return Quality of the decomposition.
      */
-    public double quality() {
-        return DecompositionFactory.quality(mat,eig);
+    public /**/double quality() {
+        return DecompositionFactory_D64.quality(mat,eig);
     }
 
     /**

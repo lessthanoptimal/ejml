@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.blockd3;
 
-import org.ejml.alg.generic.GenericMatrixOps;
+import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockD3Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 
@@ -114,7 +114,7 @@ public class BlockD3MatrixOps {
     {
         BlockD3Matrix64F ret = new BlockD3Matrix64F(numRows,numCols,blockLength);
 
-        GenericMatrixOps.setRandom(ret,min,max,rand);
+        GenericMatrixOps_F64.setRandom(ret,min,max,rand);
 
         return ret;
     }

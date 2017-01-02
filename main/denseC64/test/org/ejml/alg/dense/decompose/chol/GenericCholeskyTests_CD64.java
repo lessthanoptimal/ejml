@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,13 @@
 
 package org.ejml.alg.dense.decompose.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.CheckDecompositionInterface_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.factory.CDecompositionFactory;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
-import org.ejml.interfaces.decomposition.LUDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
@@ -44,7 +45,7 @@ public abstract class GenericCholeskyTests_CD64 {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition<CDenseMatrix64F> create( boolean lower );
+    public abstract CholeskyDecomposition_F64<CDenseMatrix64F> create(boolean lower );
 
     @Test
     public void checkModifyInput() {
@@ -59,7 +60,7 @@ public abstract class GenericCholeskyTests_CD64 {
     public void testNotPositiveDefinite() {
         CDenseMatrix64F A = new CDenseMatrix64F(2, 2, true, 1, 0, -1, 0, -1, 0, -2, 0);
 
-        CholeskyDecomposition<CDenseMatrix64F> alg = create(true);
+        CholeskyDecomposition_F64<CDenseMatrix64F> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -85,7 +86,7 @@ public abstract class GenericCholeskyTests_CD64 {
     private void checkWithDefinition(boolean lower, int size) {
         CDenseMatrix64F A = CRandomMatrices.createHermPosDef(size, rand);
 
-        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(lower);
+        CholeskyDecomposition_F64<CDenseMatrix64F> cholesky = create(lower);
         assertTrue(CDecompositionFactory.decomposeSafe(cholesky, A));
 
         CDenseMatrix64F T = cholesky.getT(null);
@@ -99,7 +100,7 @@ public abstract class GenericCholeskyTests_CD64 {
             CCommonOps.mult(T_trans,T,found);
         }
 
-        assertTrue(CMatrixFeatures.isIdentical(A, found, 1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(A, found, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -119,8 +120,8 @@ public abstract class GenericCholeskyTests_CD64 {
 
     public void checkDeterminant( boolean lower , int size ) {
 
-        LUDecomposition<CDenseMatrix64F> lu = CDecompositionFactory.lu(size,size);
-        CholeskyDecomposition<CDenseMatrix64F> cholesky = create(lower);
+        LUDecomposition_F64<CDenseMatrix64F> lu = CDecompositionFactory.lu(size,size);
+        CholeskyDecomposition_F64<CDenseMatrix64F> cholesky = create(lower);
 
         CDenseMatrix64F A = CRandomMatrices.createHermPosDef(size, rand);
 
@@ -130,8 +131,8 @@ public abstract class GenericCholeskyTests_CD64 {
         Complex64F expected = lu.computeDeterminant();
         Complex64F found = cholesky.computeDeterminant();
 
-        assertEquals(expected.real,found.real,1e-8);
-        assertEquals(expected.imaginary,found.imaginary,1e-8);
+        assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+        assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
     }
 
     @Test

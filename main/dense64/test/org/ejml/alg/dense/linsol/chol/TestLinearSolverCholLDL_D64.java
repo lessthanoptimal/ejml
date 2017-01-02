@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,9 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.EjmlUnitTests;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -39,7 +39,7 @@ public class TestLinearSolverCholLDL_D64 {
     public void testInverseAndSolve() {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
-        DenseMatrix64F x = RandomMatrices.createRandom(3,1,rand);
+        DenseMatrix64F x = RandomMatrices_D64.createRandom(3,1,rand);
 
         LinearSolverCholLDL_D64 solver = new LinearSolverCholLDL_D64();
         assertTrue(solver.setA(A));

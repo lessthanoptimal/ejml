@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.junit.Test;
 
@@ -134,7 +135,7 @@ public class TestCRandomMatrices {
     public void createHermitian() {
         CDenseMatrix64F A = CRandomMatrices.createHermitian(10, -1, 1, rand);
 
-        assertTrue(CMatrixFeatures.isHermitian(A, 1e-8));
+        assertTrue(CMatrixFeatures.isHermitian(A, UtilEjml.TEST_64F));
 
         // see if it has the expected range of elements
         double min = CCommonOps.elementMinReal(A);
@@ -155,7 +156,7 @@ public class TestCRandomMatrices {
 //        for( int hess = 0; hess < 3; hess++ ) {
 //            CDenseMatrix64F A = CRandomMatrices.createUpperTriangle(10,hess,-1,1,rand);
 //
-//            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,1e-8));
+//            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,UtilEjml.TEST_64F));
 //
 //            // quick sanity check to make sure it could be proper
 //            assertTrue(A.get(hess,0) != 0 );

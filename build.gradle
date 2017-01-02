@@ -51,7 +51,7 @@ subprojects {
 
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile group: 'com.peterabeles', name: 'auto64fto32f', version: '1.0.2'
+        testCompile group: 'com.peterabeles', name: 'auto64fto32f', version: '1.1'
     }
 
     jar {

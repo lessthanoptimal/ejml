@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,11 @@
 
 package org.ejml.example;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -43,7 +44,7 @@ public class TestQRExampleEquation {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,-1,1,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
 
         QRExampleEquation alg = new QRExampleEquation();
 
@@ -53,9 +54,9 @@ public class TestQRExampleEquation {
         DenseMatrix64F R = alg.getR();
 
         DenseMatrix64F A_found = new DenseMatrix64F(numRows,numCols);
-        CommonOps.mult(Q,R,A_found);
+        CommonOps_D64.mult(Q,R,A_found);
 
-        assertTrue( MatrixFeatures.isIdentical(A,A_found,1e-8));
+        assertTrue( MatrixFeatures_D64.isIdentical(A,A_found, UtilEjml.TEST_64F));
     }
 
 

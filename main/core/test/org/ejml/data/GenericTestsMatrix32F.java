@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
+
 import static org.junit.Assert.assertEquals;
 
 
@@ -71,7 +73,7 @@ public abstract class GenericTestsMatrix32F {
             for( int j = 0; j < n; j++ ) {
                 float found = mat.get(i,j);
 
-                assertEquals(i* m +j,found,1e-8);
+                assertEquals(i* m +j,found, UtilEjml.TEST_64F);
             }
         }
     }
@@ -100,7 +102,7 @@ public abstract class GenericTestsMatrix32F {
             for( int j = 0; j < n; j++ ) {
                 float found = mat.unsafe_get(i,j);
 
-                assertEquals(i* m +j,found,1e-8);
+                assertEquals(i* m +j,found,UtilEjml.TEST_64F);
             }
         }
     }

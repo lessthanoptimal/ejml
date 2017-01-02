@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.linsol.chol.BlockCholeskyOuterSolver;
+import org.ejml.alg.block.MatrixOps_B64;
+import org.ejml.alg.block.linsol.chol.CholeskyOuterSolver_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
@@ -34,7 +34,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * @author Peter Abeles
  */
 public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
-    protected LinearSolver<BlockMatrix64F> alg = new BlockCholeskyOuterSolver();
+    protected LinearSolver<BlockMatrix64F> alg = new CholeskyOuterSolver_B64();
 
     // block matrix copy of the system A matrix.
     protected BlockMatrix64F blockA = new BlockMatrix64F(1,1);
@@ -56,13 +56,13 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
     @Override
     public boolean setA(DenseMatrix64F A) {
         blockA.reshape(A.numRows,A.numCols,false);
-        BlockMatrixOps.convert(A,blockA);
+        MatrixOps_B64.convert(A,blockA);
 
         return alg.setA(blockA);
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         return alg.quality();
     }
 
@@ -76,11 +76,11 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
     public void solve(DenseMatrix64F B, DenseMatrix64F X) {
         blockB.reshape(B.numRows,B.numCols,false);
         blockX.reshape(X.numRows,X.numCols,false);
-        BlockMatrixOps.convert(B,blockB);
+        MatrixOps_B64.convert(B,blockB);
 
         alg.solve(blockB,blockX);
 
-        BlockMatrixOps.convert(blockX,X);
+        MatrixOps_B64.convert(blockX,X);
     }
 
     /**
@@ -95,7 +95,7 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
 
         alg.invert(blockB);
 
-        BlockMatrixOps.convert(blockB,A_inv);
+        MatrixOps_B64.convert(blockB,A_inv);
     }
 
     @Override

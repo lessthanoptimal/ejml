@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,10 @@
 
 package org.ejml.example;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.EjmlUnitTests;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -46,7 +47,7 @@ public class TestLevenbergMarquardt {
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        DenseMatrix64F X = RandomMatrices.createRandom(NUM_PTS,1,rand);
+        DenseMatrix64F X = RandomMatrices_D64.createRandom(NUM_PTS,1,rand);
 
         DenseMatrix64F numJacobian = new DenseMatrix64F(3,NUM_PTS);
         DenseMatrix64F analyticalJacobian = new DenseMatrix64F(3,NUM_PTS);
@@ -82,7 +83,7 @@ public class TestLevenbergMarquardt {
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        DenseMatrix64F X = RandomMatrices.createRandom(numPoints,1,rand);
+        DenseMatrix64F X = RandomMatrices_D64.createRandom(numPoints,1,rand);
         DenseMatrix64F Y = new DenseMatrix64F(numPoints,1);
         func.compute(param,X,Y);
 
@@ -90,7 +91,7 @@ public class TestLevenbergMarquardt {
 
         DenseMatrix64F foundParam = alg.getParameters();
 
-        assertEquals(0,alg.getFinalCost(),1e-8);
+        assertEquals(0,alg.getFinalCost(), UtilEjml.TEST_64F);
         EjmlUnitTests.assertEquals(param,foundParam,1e-6);
     }
 

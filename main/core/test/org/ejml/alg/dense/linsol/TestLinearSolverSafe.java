@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -160,7 +161,7 @@ public class TestLinearSolverSafe {
 
             // the input matrix has an expected input value
             if( !Double.isNaN(expectedA))
-                assertEquals(expectedA,A.get(0),1e-8);
+                assertEquals(expectedA,A.get(0), UtilEjml.TEST_64F);
 
             if( modifiesA ) {
                 A.set(0,0,rand.nextDouble());
@@ -170,7 +171,7 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public double quality() {
+        public /**/double quality() {
             return 1.1;
         }
 
@@ -180,7 +181,7 @@ public class TestLinearSolverSafe {
 
             // the input matrix has an expected input value
             if( !Double.isNaN(expectedB))
-                assertEquals(expectedB,B.get(0),1e-8);
+                assertEquals(expectedB,B.get(0),UtilEjml.TEST_64F);
 
             if( modifiesB ) {
                 B.set(0,0,rand.nextDouble());

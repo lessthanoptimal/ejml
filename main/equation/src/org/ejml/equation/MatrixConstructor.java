@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class MatrixConstructor {
                     }
 
                     if( v.matrix ) {
-                        CommonOps.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
+                        CommonOps_D64.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
                     } else if( v.variable.getType() == VariableType.SCALAR ){
                         output.matrix.set(matrixRow,numCols,v.getValue());
                     } else if( v.variable.getType() == VariableType.INTEGER_SEQUENCE ) {

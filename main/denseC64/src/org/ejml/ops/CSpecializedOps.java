@@ -158,8 +158,8 @@ public class CSpecializedOps {
 
         double max = elementDiagMaxMagnitude2(T);
 
-        if( max == 0.0d )
-            return 0.0d;
+        if( max == 0.0 )
+            return 0.0;
 
         max = Math.sqrt(max);
         int rowStride = T.getRowStride();

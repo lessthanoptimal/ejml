@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,9 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.dense.linsol.AdjustableLinearSolver;
+import org.ejml.alg.dense.linsol.AdjustableLinearSolver_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory_D64;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ public class PolynomialFit {
     DenseMatrix64F y;
 
     // solver used to compute
-    AdjustableLinearSolver solver;
+    AdjustableLinearSolver_D64 solver;
 
     /**
      * Constructor.
@@ -61,7 +61,7 @@ public class PolynomialFit {
         y = new DenseMatrix64F(1,1);
 
         // create a solver that allows elements to be added or removed efficiently
-        solver = LinearSolverFactory.adjustable();
+        solver = LinearSolverFactory_D64.adjustable();
     }
 
     /**

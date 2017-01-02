@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,14 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenHelper;
-import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm;
+import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenHelper_D64;
+import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.interfaces.decomposition.EigenDecomposition;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -38,21 +38,21 @@ import org.ejml.ops.CommonOps;
  * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition. page 377-385
  * </p>
  *
- * @see org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm
+ * @see SymmetricQrAlgorithm_D64
  * @see org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_D64
  *
  * @author Peter Abeles
  */
 public class SymmetricQRAlgorithmDecomposition_D64
-        implements EigenDecomposition<DenseMatrix64F> {
+        implements EigenDecomposition_F64<DenseMatrix64F> {
 
     // computes a tridiagonal matrix whose eigenvalues are the same as the original
     // matrix and can be easily computed.
-    private TridiagonalSimilarDecomposition<DenseMatrix64F> decomp;
+    private TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp;
     // helper class for eigenvalue and eigenvector algorithms
-    private SymmetricQREigenHelper helper;
+    private SymmetricQREigenHelper_D64 helper;
     // computes the eigenvectors
-    private SymmetricQrAlgorithm vector;
+    private SymmetricQrAlgorithm_D64 vector;
 
     // should it compute eigenvectors at the same time as the eigenvalues?
     private boolean computeVectorsWithValues = false;
@@ -75,20 +75,20 @@ public class SymmetricQRAlgorithmDecomposition_D64
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
 
-    public SymmetricQRAlgorithmDecomposition_D64(TridiagonalSimilarDecomposition<DenseMatrix64F> decomp,
+    public SymmetricQRAlgorithmDecomposition_D64(TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp,
                                                  boolean computeVectors) {
 
         this.decomp = decomp;
         this.computeVectors = computeVectors;
 
-        helper = new SymmetricQREigenHelper();
+        helper = new SymmetricQREigenHelper_D64();
 
-        vector = new SymmetricQrAlgorithm(helper);
+        vector = new SymmetricQrAlgorithm_D64(helper);
     }
 
     public SymmetricQRAlgorithmDecomposition_D64(boolean computeVectors) {
 
-        this(DecompositionFactory.tridiagonal(0),computeVectors);
+        this(DecompositionFactory_D64.tridiagonal(0),computeVectors);
     }
 
     public void setComputeVectorsWithValues(boolean computeVectorsWithValues) {
@@ -182,7 +182,7 @@ public class SymmetricQRAlgorithmDecomposition_D64
             return false;
 
         // the V matrix contains the eigenvectors.  Convert those into column vectors
-        eigenvectors = CommonOps.rowsToVector(V,eigenvectors);
+        eigenvectors = CommonOps_D64.rowsToVector(V,eigenvectors);
 
         // save a copy of them since this data structure will be recycled next
         values = helper.copyEigenvalues(values);
@@ -213,7 +213,7 @@ public class SymmetricQRAlgorithmDecomposition_D64
         // the ordering of the eigenvalues might have changed
         values = helper.copyEigenvalues(values);
         // the V matrix contains the eigenvectors.  Convert those into column vectors
-        eigenvectors = CommonOps.rowsToVector(V,eigenvectors);
+        eigenvectors = CommonOps_D64.rowsToVector(V,eigenvectors);
 
         return true;
     }

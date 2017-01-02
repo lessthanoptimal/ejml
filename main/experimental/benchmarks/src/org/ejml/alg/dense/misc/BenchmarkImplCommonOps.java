@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RealMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -36,7 +36,7 @@ public class BenchmarkImplCommonOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            ImplCommonOps_DenseMatrix64F.extract(src, 0, 0, dst, 0, 0, src.numRows, src.numCols);
+            ImplCommonOps_D64.extract(src, 0, 0, dst, 0, 0, src.numRows, src.numCols);
         }
         long curr = System.currentTimeMillis();
 
@@ -48,7 +48,7 @@ public class BenchmarkImplCommonOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            ImplCommonOps_Matrix64F.extract(src,0,0,dst,0,0, src.getNumRows(), src.getNumCols());
+            ImplCommonOps_F64.extract(src,0,0,dst,0,0, src.getNumRows(), src.getNumCols());
         }
         long curr = System.currentTimeMillis();
 
@@ -60,7 +60,7 @@ public class BenchmarkImplCommonOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.extract(src, 0, src.numRows, 0 , src.numCols, dst, 0, 0 );
+            CommonOps_D64.extract(src, 0, src.numRows, 0 , src.numCols, dst, 0, 0 );
         }
         long curr = System.currentTimeMillis();
 
@@ -73,7 +73,7 @@ public class BenchmarkImplCommonOps {
         DenseMatrix64F src = new DenseMatrix64F(N,N);
         DenseMatrix64F dst = new DenseMatrix64F(N,N);
 
-        RandomMatrices.addRandom(src,0,100,rand);
+        RandomMatrices_D64.addRandom(src,0,100,rand);
 
         System.out.println("N = "+N);
         System.out.println("extract DenseMatrix64F = "+extract_DenseMatrix64F(src,dst,trials));

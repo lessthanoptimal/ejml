@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,9 @@
 
 package org.ejml.equation;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
+import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -142,14 +143,14 @@ public class TestEquation {
         // single element
         eq.process("A(1,2)=0.5");
 
-        assertEquals(A.get(1, 2), 0.5, 1e-8);
+        assertEquals(A.get(1, 2), 0.5, UtilEjml.TEST_64F);
 
         // multiple elements
         eq.process("A(1:2,2:4)=0.5");
 
         for (int i = 1; i <= 2; i++) {
             for (int j = 2; j <= 4; j++) {
-                assertEquals(A.get(i, j), 0.5, 1e-8);
+                assertEquals(A.get(i, j), 0.5, UtilEjml.TEST_64F);
             }
         }
     }
@@ -167,7 +168,7 @@ public class TestEquation {
 
         DenseMatrix64F B = eq.lookupMatrix("B");
         assertTrue(A.getMatrix() != B);
-        assertTrue(MatrixFeatures.isEquals(A.getMatrix(), B));
+        assertTrue(MatrixFeatures_D64.isEquals(A.getMatrix(), B));
     }
 
     /**
@@ -191,7 +192,7 @@ public class TestEquation {
         eq.alias(B, "B");
         eq.process("B=A");
 
-        assertTrue(A.isIdentical(B, 1e-8));
+        assertTrue(A.isIdentical(B, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -276,7 +277,7 @@ public class TestEquation {
         eq.process("A=B(1,2)");
         Variable v = eq.lookupVariable("A");
         assertTrue(v instanceof VariableDouble);
-        assertEquals(eq.lookupDouble("A"), B.get(1, 2), 1e-8);
+        assertEquals(eq.lookupDouble("A"), B.get(1, 2), UtilEjml.TEST_64F);
     }
 
     @Test
@@ -308,7 +309,7 @@ public class TestEquation {
         eq.alias(A, "A");
         Sequence sequence = eq.compile("A=[0 1 2 3; 4 5 6 7;8 1 1 1]");
         sequence.perform();
-        assertTrue(A.isIdentical(expected, 1e-8));
+        assertTrue(A.isIdentical(expected, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -321,7 +322,7 @@ public class TestEquation {
         double[] expected = new double[]{1,2,3,4.5,6,7.7,8.8,9};
 
         for (int i = 0; i < expected.length; i++) {
-            assertEquals(found.get(i),expected[i],1e-8);
+            assertEquals(found.get(i),expected[i],UtilEjml.TEST_64F);
         }
     }
 
@@ -336,7 +337,7 @@ public class TestEquation {
         assertEquals(1,found.getNumRows());
 
         for (int i = 0; i < 7; i++) {
-            assertEquals(found.get(i),2+2*i,1e-8);
+            assertEquals(found.get(i),2+2*i,UtilEjml.TEST_64F);
         }
     }
 
@@ -350,7 +351,7 @@ public class TestEquation {
         double[] expected = new double[]{1,2,3,4.5,-6,7};
 
         for (int i = 0; i < expected.length; i++) {
-            assertEquals(found.get(i),expected[i],1e-8);
+            assertEquals(found.get(i),expected[i],UtilEjml.TEST_64F);
         }
     }
 
@@ -399,7 +400,7 @@ public class TestEquation {
         int index = 1;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 3; y++) {
-                assertEquals(x+" "+y,found.get(y,x),index++,1e-8);
+                assertEquals(x+" "+y,found.get(y,x),index++,UtilEjml.TEST_64F);
             }
         }
     }
@@ -412,7 +413,7 @@ public class TestEquation {
         SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 2; x++) {
-                assertEquals(x+" "+y,(x+1)*(y+1),found.get(y,x),1e-8);
+                assertEquals(x+" "+y,(x+1)*(y+1),found.get(y,x),UtilEjml.TEST_64F);
             }
         }
     }
@@ -427,7 +428,7 @@ public class TestEquation {
         assertEquals(8, found.numCols());
 
         for (int x = 0; x < 8; x++) {
-            assertEquals(x+1,found.get(0,x),1e-8);
+            assertEquals(x+1,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -441,7 +442,7 @@ public class TestEquation {
         assertEquals(8,found.numCols());
 
         for (int x = 0; x < 8; x++) {
-            assertEquals(x+1,found.get(0,x),1e-8);
+            assertEquals(x+1,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -456,7 +457,7 @@ public class TestEquation {
         assertEquals(4,found.numCols());
 
         for (int x = 0; x < 4; x++) {
-            assertEquals(x+5,found.get(0,x),1e-8);
+            assertEquals(x+5,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -472,7 +473,7 @@ public class TestEquation {
         assertEquals(5,found.numCols());
 
         for (int x = 0; x < 5; x++) {
-            assertEquals(x+2,found.get(0,x),1e-8);
+            assertEquals(x+2,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -490,7 +491,7 @@ public class TestEquation {
             assertEquals(8, found.numCols());
 
             for (int x = 0; x < 8; x++) {
-                assertEquals(x + 2, found.get(0, x), 1e-8);
+                assertEquals(x + 2, found.get(0, x), UtilEjml.TEST_64F);
             }
         }
     }
@@ -509,7 +510,7 @@ public class TestEquation {
             assertEquals(4, found.numCols());
 
             for (int x = 0; x < 4; x++) {
-                assertEquals(x + 2, found.get(0, x), 1e-8);
+                assertEquals(x + 2, found.get(0, x), UtilEjml.TEST_64F);
             }
         }
     }
@@ -526,7 +527,7 @@ public class TestEquation {
         assertEquals(6,found.numCols());
 
         for (int x = 0; x < 6; x++) {
-            assertEquals(3-x,found.get(0,x),1e-8);
+            assertEquals(3-x,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -542,7 +543,7 @@ public class TestEquation {
         assertEquals(4,found.numCols());
 
         for (int x = 0; x < 4; x++) {
-            assertEquals(3-x,found.get(0,x),1e-8);
+            assertEquals(3-x,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -558,7 +559,7 @@ public class TestEquation {
         assertEquals(6,found.numCols());
 
         for (int x = 0; x < 6; x++) {
-            assertEquals(3-x,found.get(0,x),1e-8);
+            assertEquals(3-x,found.get(0,x),UtilEjml.TEST_64F);
         }
     }
 
@@ -629,12 +630,12 @@ public class TestEquation {
 
         sequence = eq.compile("E=2.5*D");
         sequence.perform();
-        assertEquals(C * D, E.value, 1e-8);
+        assertEquals(C * D, E.value, UtilEjml.TEST_64F);
 
         // try exponential formats
         sequence = eq.compile("E=2.001e-6*1e3");
         sequence.perform();
-        assertEquals(2.001e-6*1e3, E.value, 1e-8);
+        assertEquals(2.001e-6*1e3, E.value, UtilEjml.TEST_64F);
     }
 
     /**

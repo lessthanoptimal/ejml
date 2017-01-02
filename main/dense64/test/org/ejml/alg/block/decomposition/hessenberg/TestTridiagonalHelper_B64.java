@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,15 @@
 
 package org.ejml.alg.block.decomposition.hessenberg;
 
-import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.UtilEjml;
+import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_D64;
-import org.ejml.alg.generic.GenericMatrixOps;
+import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -57,7 +58,7 @@ public class TestTridiagonalHelper_B64 {
 //            System.out.println("********* width "+width);
 
             // create a random symmetric matrix
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createSymmetric(width,-1,1,rand));
 
             TridiagonalDecompositionHouseholderOrig_D64 decomp = new TridiagonalDecompositionHouseholderOrig_D64();
             decomp.decompose(A.getMatrix());
@@ -75,12 +76,12 @@ public class TestTridiagonalHelper_B64 {
             // see if the decomposed matrix is the same
             for( int i = 0; i < r; i++ ) {
                 for( int j = i; j < width; j++ ) {
-                    assertEquals(i+" "+j,expected.get(i,j),Ab.get(i,j),1e-8);
+                    assertEquals(i+" "+j,expected.get(i,j),Ab.get(i,j), UtilEjml.TEST_64F);
                 }
             }
             // check the gammas
             for( int i = 0; i < Math.min(width-1,r); i++ ) {
-                assertEquals(decomp.getGamma(i+1),gammas[i+gammaOffset],1e-8);
+                assertEquals(decomp.getGamma(i+1),gammas[i+gammaOffset],UtilEjml.TEST_64F);
             }
         }
     }
@@ -118,7 +119,7 @@ public class TestTridiagonalHelper_B64 {
             }
 
             // now compute it using the block matrix stuff
-            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
             BlockMatrix64F Wb = new BlockMatrix64F(Ab.numRows,Ab.numCols,r);
 
             D1Submatrix64F Ab_sub = new D1Submatrix64F(Ab);
@@ -127,7 +128,7 @@ public class TestTridiagonalHelper_B64 {
             TridiagonalHelper_B64.computeW_row(r, Ab_sub, Wb_sub, betas, 0);
 
             // see if the result is the same
-            assertTrue(GenericMatrixOps.isEquivalent(Wb,W.getMatrix(),1e-8));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.getMatrix(),UtilEjml.TEST_64F));
         }
     }
 
@@ -164,7 +165,7 @@ public class TestTridiagonalHelper_B64 {
 
                 // compare to manually computed solution
                 for( int i = row; i < A.numCols(); i++ ) {
-                    assertEquals(A.get(row,i),Ab.get(row,i),1e-8);
+                    assertEquals(A.get(row,i),Ab.get(row,i),UtilEjml.TEST_64F);
                 }
             }
         }
@@ -173,9 +174,9 @@ public class TestTridiagonalHelper_B64 {
     private static D1Submatrix64F insertIntoBlock( int offRow , int offCol , SimpleMatrix A , int r )
     {
         DenseMatrix64F B = new DenseMatrix64F(offRow+A.numRows(),offCol+A.numCols());
-        CommonOps.insert(A.getMatrix(),B,offRow,offCol);
+        CommonOps_D64.insert(A.getMatrix(),B,offRow,offCol);
 
-        BlockMatrix64F C = BlockMatrixOps.convert(B,r);
+        BlockMatrix64F C = MatrixOps_B64.convert(B,r);
         return new D1Submatrix64F(C,offRow,C.numRows,offCol,C.numCols);
     }
 
@@ -185,7 +186,7 @@ public class TestTridiagonalHelper_B64 {
         // make a symmetric so that this mult will work
         A = A.transpose().mult(A);
 
-        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+        BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
         BlockMatrix64F V = new BlockMatrix64F(r,Ab.numCols,r);
 
         int row = 1;
@@ -202,7 +203,7 @@ public class TestTridiagonalHelper_B64 {
                 new D1Submatrix64F(V), row);
 
         for( int i = row+1; i < A.numCols(); i++ ) {
-            assertEquals(v.get(i),V.get(row,i),1e-8);
+            assertEquals(v.get(i),V.get(row,i),UtilEjml.TEST_64F);
         }
     }
 
@@ -251,13 +252,13 @@ public class TestTridiagonalHelper_B64 {
 
             y = y.scale(-gamma);
 
-            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
-            BlockMatrix64F Vb = BlockMatrixOps.convert(Vo.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+            BlockMatrix64F Vb = MatrixOps_B64.convert(Vo.getMatrix(),r);
 
             TridiagonalHelper_B64.computeY(r, new D1Submatrix64F(Ab), new D1Submatrix64F(Vb), row, gamma);
 
             for( int i = row+1; i < A.numCols(); i++ ) {
-                assertEquals(Vb.get(row,i),y.get(i),1e-8);
+                assertEquals(Vb.get(row,i),y.get(i),UtilEjml.TEST_64F);
             }
         }
     }
@@ -280,14 +281,14 @@ public class TestTridiagonalHelper_B64 {
 
             SimpleMatrix v = y.plus(u.scale(-(gamma/2.0)*u.dot(y)));
 
-            BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
-            BlockMatrix64F Vb = BlockMatrixOps.convert(V.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+            BlockMatrix64F Vb = MatrixOps_B64.convert(V.getMatrix(),r);
 
             TridiagonalHelper_B64.computeRowOfV(r, new D1Submatrix64F(Ab), new D1Submatrix64F(Vb),
                     row, gamma);
 
             for( int i = row+1; i < A.numCols(); i++ ) {
-                assertEquals(Vb.get(row,i),v.get(i),1e-8);
+                assertEquals(Vb.get(row,i),v.get(i),UtilEjml.TEST_64F);
             }
         }
     }

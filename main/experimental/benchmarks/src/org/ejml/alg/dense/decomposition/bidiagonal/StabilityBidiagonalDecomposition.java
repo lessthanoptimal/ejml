@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,9 +19,9 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -35,7 +35,7 @@ import java.util.Random;
 public class StabilityBidiagonalDecomposition {
 
 
-    public static double evaluate( BidiagonalDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
+    public static double evaluate(BidiagonalDecomposition_F64<DenseMatrix64F> alg , DenseMatrix64F orig ) {
 
         if( !alg.decompose(orig.copy())) {
             return Double.NaN;
@@ -71,8 +71,8 @@ public class StabilityBidiagonalDecomposition {
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
 
-            DenseMatrix64F mat = RandomMatrices.createRandom(size,size,-1,1,rand);
-            CommonOps.scale(scales[i],mat);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(size,size,-1,1,rand);
+            CommonOps_D64.scale(scales[i],mat);
             runAlgorithms(mat);
         }
 
@@ -88,8 +88,8 @@ public class StabilityBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %e singular\n",size,sv[0]);
 
 //            System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createSingularValues(size,size,rand,sv);
-            CommonOps.scale(scales[i],mat);
+            DenseMatrix64F mat = RandomMatrices_D64.createSingularValues(size,size,rand,sv);
+            CommonOps_D64.scale(scales[i],mat);
 //            System.out.println("  Done.");
             runAlgorithms(mat);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
 
-import static org.ejml.ops.CommonOps.*;
-import static org.ejml.ops.SpecializedOps.diffNormF;
+import static org.ejml.ops.CommonOps_D64.*;
+import static org.ejml.ops.SpecializedOps_D64.diffNormF;
 
 /**
  * <p>

@@ -19,12 +19,12 @@
 package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.ops.SpecializedOps_D64;
 
 
 /**
@@ -34,7 +34,7 @@ import org.ejml.ops.SpecializedOps;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_D64
-        implements LUDecomposition<DenseMatrix64F> {
+        implements LUDecomposition_F64<DenseMatrix64F> {
     // the decomposed matrix
     protected DenseMatrix64F LU;
 
@@ -140,7 +140,7 @@ public abstract class LUDecompositionBase_D64
     }
 
     public DenseMatrix64F getPivot( DenseMatrix64F pivot ) {
-        return SpecializedOps.pivotMatrix(pivot, this.pivot, LU.numRows, false);
+        return SpecializedOps_D64.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
     protected void decomposeCommonInit(DenseMatrix64F a) {
@@ -196,8 +196,8 @@ public abstract class LUDecompositionBase_D64
         return det;
     }
 
-    public double quality() {
-        return SpecializedOps.qualityTriangular(LU);
+    public /**/double quality() {
+        return SpecializedOps_D64.qualityTriangular(LU);
     }
 
     /**
@@ -225,7 +225,7 @@ public abstract class LUDecompositionBase_D64
         }
 
         // Solve U*X = Y;
-        TriangularSolver.solveU(dataLU,vv,n);
+        TriangularSolver_D64.solveU(dataLU,vv,n);
     }
 
     public double[] _getVV() {

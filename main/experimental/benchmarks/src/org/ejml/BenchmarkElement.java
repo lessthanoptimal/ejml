@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -36,21 +36,21 @@ public class BenchmarkElement {
 
         double num = 2.5;
 
-        DenseMatrix64F A = RandomMatrices.createRandom(10,10,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(10,10,rand);
 
         long timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {
-            CommonOps.divide(A,num);
+            CommonOps_D64.divide(A,num);
         }
         long timeAfter = System.currentTimeMillis();
 
         System.out.println("div = "+(timeAfter-timeBefore));
 
-        A = RandomMatrices.createRandom(10,10,rand);
+        A = RandomMatrices_D64.createRandom(10,10,rand);
 
         timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {
-            CommonOps.scale(num,A);
+            CommonOps_D64.scale(num,A);
         }
         timeAfter = System.currentTimeMillis();
 

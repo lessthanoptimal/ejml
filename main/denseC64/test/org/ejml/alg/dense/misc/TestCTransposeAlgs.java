@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CRandomMatrices;
@@ -49,8 +50,8 @@ public class TestCTransposeAlgs {
                 a.get(j,i,expected);
                 b.get(i,j,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real, UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -70,8 +71,8 @@ public class TestCTransposeAlgs {
                 a.get(j,i,expected);
                 b.get(i,j,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(-expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -91,8 +92,8 @@ public class TestCTransposeAlgs {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }
@@ -112,8 +113,8 @@ public class TestCTransposeAlgs {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,1e-8);
-                assertEquals(-expected.imaginary,found.imaginary,1e-8);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
+                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
             }
         }
     }

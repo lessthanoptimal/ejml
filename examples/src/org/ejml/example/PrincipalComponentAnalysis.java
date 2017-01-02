@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,11 +19,11 @@
 package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
+import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.NormOps;
-import org.ejml.ops.SingularOps;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.NormOps_D64;
+import org.ejml.ops.SingularOps_D64;
 
 /**
  * <p>
@@ -137,7 +137,7 @@ public class PrincipalComponentAnalysis {
 
         // Compute SVD and save time by not computing U
         SingularValueDecomposition<DenseMatrix64F> svd =
-                DecompositionFactory.svd(A.numRows, A.numCols, false, true, false);
+                DecompositionFactory_D64.svd(A.numRows, A.numCols, false, true, false);
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 
@@ -145,7 +145,7 @@ public class PrincipalComponentAnalysis {
         DenseMatrix64F W = svd.getW(null);
 
         // Singular values are in an arbitrary order initially
-        SingularOps.descendingOrder(null,false,W,V_t,true);
+        SingularOps_D64.descendingOrder(null,false,W,V_t,true);
 
         // strip off unneeded components and find the basis
         V_t.reshape(numComponents,mean.length,true);
@@ -162,7 +162,7 @@ public class PrincipalComponentAnalysis {
             throw new IllegalArgumentException("Invalid component");
 
         DenseMatrix64F v = new DenseMatrix64F(1,A.numCols);
-        CommonOps.extract(V_t,which,which+1,0,A.numCols,v,0,0);
+        CommonOps_D64.extract(V_t,which,which+1,0,A.numCols,v,0,0);
 
         return v.data;
     }
@@ -181,9 +181,9 @@ public class PrincipalComponentAnalysis {
         DenseMatrix64F s = new DenseMatrix64F(A.getNumCols(),1,true,sampleData);
         DenseMatrix64F r = new DenseMatrix64F(numComponents,1);
 
-        CommonOps.subtract(s, mean, s);
+        CommonOps_D64.subtract(s, mean, s);
 
-        CommonOps.mult(V_t,s,r);
+        CommonOps_D64.mult(V_t,s,r);
 
         return r.data;
     }
@@ -201,10 +201,10 @@ public class PrincipalComponentAnalysis {
         DenseMatrix64F s = new DenseMatrix64F(A.getNumCols(),1);
         DenseMatrix64F r = DenseMatrix64F.wrap(numComponents,1,eigenData);
         
-        CommonOps.multTransA(V_t,r,s);
+        CommonOps_D64.multTransA(V_t,r,s);
 
         DenseMatrix64F mean = DenseMatrix64F.wrap(A.getNumCols(),1,this.mean);
-        CommonOps.add(s,mean,s);
+        CommonOps_D64.add(s,mean,s);
 
         return s.data;
     }
@@ -251,8 +251,8 @@ public class PrincipalComponentAnalysis {
         DenseMatrix64F dots = new DenseMatrix64F(numComponents,1);
         DenseMatrix64F s = DenseMatrix64F.wrap(A.numCols,1,sample);
 
-        CommonOps.mult(V_t,s,dots);
+        CommonOps_D64.mult(V_t,s,dots);
 
-        return NormOps.normF(dots);
+        return NormOps_D64.normF(dots);
     }
 }

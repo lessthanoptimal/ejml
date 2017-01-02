@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -37,7 +37,7 @@ public class BenchmarkMatrixMultProduct {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multTransA(matA, matA, matResult);
+            CommonOps_D64.multTransA(matA, matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -49,7 +49,7 @@ public class BenchmarkMatrixMultProduct {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMultProduct.inner_small(matA, matResult);
+            MatrixMultProduct_D64.inner_small(matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -61,7 +61,7 @@ public class BenchmarkMatrixMultProduct {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMultProduct.inner_reorder(matA, matResult);
+            MatrixMultProduct_D64.inner_reorder(matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -72,8 +72,8 @@ public class BenchmarkMatrixMultProduct {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" trials "+numTrials);
-        DenseMatrix64F matA = RandomMatrices.createRandom(numRows, numCols, rand);
-        DenseMatrix64F matResult = RandomMatrices.createRandom(numCols,numCols,rand);
+        DenseMatrix64F matA = RandomMatrices_D64.createRandom(numRows, numCols, rand);
+        DenseMatrix64F matResult = RandomMatrices_D64.createRandom(numCols,numCols,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 0,//multTransA(matA,matResult,numTrials),

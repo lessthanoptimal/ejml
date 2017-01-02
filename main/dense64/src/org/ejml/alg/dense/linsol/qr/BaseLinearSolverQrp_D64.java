@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,15 +18,15 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolverFactory;
-import org.ejml.interfaces.decomposition.QRPDecomposition;
+import org.ejml.factory.LinearSolverFactory_D64;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.SpecializedOps_D64;
 
 /**
  * <p>
@@ -67,7 +67,7 @@ import org.ejml.ops.SpecializedOps;
  */
 public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
 
-    QRPDecomposition<DenseMatrix64F> decomposition;
+    QRPDecomposition_F64<DenseMatrix64F> decomposition;
 
     // if true then only the basic solution will be found
     protected boolean norm2Solution;
@@ -84,7 +84,7 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
     // rank of the system matrix
     protected int rank;
 
-    protected LinearSolver<DenseMatrix64F> internalSolver = LinearSolverFactory.leastSquares(1, 1);
+    protected LinearSolver<DenseMatrix64F> internalSolver = LinearSolverFactory_D64.leastSquares(1, 1);
 
     // used to compute optimal 2-norm solution
     private DenseMatrix64F W = new DenseMatrix64F(1,1);
@@ -95,7 +95,7 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
      * @param decomposition Used to solve the linear system.
      * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
      */
-    protected BaseLinearSolverQrp_D64(QRPDecomposition<DenseMatrix64F> decomposition,
+    protected BaseLinearSolverQrp_D64(QRPDecomposition_F64<DenseMatrix64F> decomposition,
                                       boolean norm2Solution)
     {
         this.decomposition = decomposition;
@@ -119,15 +119,15 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
 
         // extract the r11 triangle sub matrix
         R11.reshape(rank, rank);
-        CommonOps.extract(R, 0, rank, 0, rank, R11, 0, 0);
+        CommonOps_D64.extract(R, 0, rank, 0, rank, R11, 0, 0);
 
         if( norm2Solution && rank < numCols ) {
             // extract the R12 sub-matrix
             W.reshape(rank,numCols - rank);
-            CommonOps.extract(R,0,rank,rank,numCols,W,0,0);
+            CommonOps_D64.extract(R,0,rank,rank,numCols,W,0,0);
 
             // W=inv(R11)*R12
-            TriangularSolver.solveU(R11.data, 0, R11.numCols, R11.numCols, W.data, 0, W.numCols, W.numCols);
+            TriangularSolver_D64.solveU(R11.data, 0, R11.numCols, R11.numCols, W.data, 0, W.numCols, W.numCols);
 
             // set the identity matrix in the upper portion
             W.reshape(numCols, W.numCols,true);
@@ -146,8 +146,8 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public double quality() {
-        return SpecializedOps.qualityTriangular(R);
+    public /**/double quality() {
+        return SpecializedOps_D64.qualityTriangular(R);
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
         internalSolver.solve(X, z);
 
         // compute X by tweaking the original
-        CommonOps.multAdd(-1, W, z, X);
+        CommonOps_D64.multAdd(-1, W, z, X);
     }
 
     @Override
@@ -185,12 +185,12 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
             throw new IllegalArgumentException("Unexpected dimensions for A_inv");
 
         I.reshape(numRows, numRows);
-        CommonOps.setIdentity(I);
+        CommonOps_D64.setIdentity(I);
 
         solve(I, A_inv);
     }
 
-    public QRPDecomposition<DenseMatrix64F> getDecomposition() {
+    public QRPDecomposition_F64<DenseMatrix64F> getDecomposition() {
         return decomposition;
     }
 }

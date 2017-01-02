@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -39,8 +39,8 @@ public class BenchmarkMatrixMatrixMultQuad {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_small(A,B,tmp);
-            MatrixMatrixMult.multTransB(tmp, A, expected);
+            MatrixMatrixMult_D64.mult_small(A,B,tmp);
+            MatrixMatrixMult_D64.multTransB(tmp, A, expected);
         }
 
         long curr = System.currentTimeMillis();
@@ -61,9 +61,9 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     public static void performTests( int numRows , int numCols ,
                                      int numTrials ) {
-        DenseMatrix64F A = RandomMatrices.createRandom(numRows,numCols,rand);
-        DenseMatrix64F B = RandomMatrices.createRandom(numCols,numCols,rand);
-        DenseMatrix64F out = RandomMatrices.createRandom(numRows, numRows, rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,rand);
+        DenseMatrix64F B = RandomMatrices_D64.createRandom(numCols,numCols,rand);
+        DenseMatrix64F out = RandomMatrices_D64.createRandom(numRows, numRows, rand);
         DenseMatrix64F tmp = new DenseMatrix64F(numRows,numCols);
 
         System.out.printf(numRows+"  "+numCols+"     Mult1: %7d  Quad1 %7d\n",

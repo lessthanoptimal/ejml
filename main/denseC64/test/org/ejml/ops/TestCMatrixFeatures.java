@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.CVectorVectorMult;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
@@ -54,14 +55,14 @@ public class TestCMatrixFeatures {
         CCommonOps.scale(-1,0,b);
 
         // test the positive case first
-        assertTrue(CMatrixFeatures.isNegative(a,b,1e-8));
+        assertTrue(CMatrixFeatures.isNegative(a,b,UtilEjml.TEST_64F));
 
         // now the negative case
         b.set(2,2,10,0);
-        assertFalse(CMatrixFeatures.isNegative(a,b,1e-8));
+        assertFalse(CMatrixFeatures.isNegative(a,b,UtilEjml.TEST_64F));
 
         b.set(2,2,Double.NaN,0);
-        assertFalse(CMatrixFeatures.isNegative(a,b,1e-8));
+        assertFalse(CMatrixFeatures.isNegative(a,b,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -163,20 +164,20 @@ public class TestCMatrixFeatures {
     public void isIdentity() {
         CDenseMatrix64F m = CCommonOps.diag(1,0,1,0,1,0);
 
-        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
 
         m.setImag(0,0,1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m, 1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(m, UtilEjml.TEST_64F));
         m.setReal(0, 0, 1 + 1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
 
         assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
         assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
 
         m.setImag(1,0,1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
         m.setReal(1,0,1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m,1e-8));
+        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
 
         assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
         assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
@@ -186,11 +187,11 @@ public class TestCMatrixFeatures {
     public void isHermitian() {
         CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{1,0, 2,2.1},{2,-2.1 ,3,0}});
 
-        assertTrue(CMatrixFeatures.isHermitian(A, 1e-8));
+        assertTrue(CMatrixFeatures.isHermitian(A, UtilEjml.TEST_64F));
 
         A.set(0,1,5,6);
 
-        assertFalse(CMatrixFeatures.isHermitian(A, 1e-8));
+        assertFalse(CMatrixFeatures.isHermitian(A, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -228,8 +229,8 @@ public class TestCMatrixFeatures {
         assertFalse(CMatrixFeatures.isPositiveDefinite(c));
 
         // make sure the input isn't modified
-        assertEquals(2,a.getReal(0, 0),1e-8);
-        assertEquals(2,a.getReal(1,1),1e-8);
+        assertEquals(2,a.getReal(0, 0),UtilEjml.TEST_64F);
+        assertEquals(2,a.getReal(1,1),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -247,17 +248,17 @@ public class TestCMatrixFeatures {
 
             // test positive
             for( int i = hessenberg; i < A.numRows; i++ ) {
-                assertTrue(CMatrixFeatures.isUpperTriangle(A,i,1e-8));
+                assertTrue(CMatrixFeatures.isUpperTriangle(A,i,UtilEjml.TEST_64F));
             }
 
             // test negative
             for( int i = 0; i < hessenberg; i++ ) {
-                assertFalse(CMatrixFeatures.isUpperTriangle(A,i,1e-8));
+                assertFalse(CMatrixFeatures.isUpperTriangle(A,i, UtilEjml.TEST_64F));
             }
 
             // see if it handles NaN well
             A.set(4,0,Double.NaN,Double.NaN);
-            assertFalse(CMatrixFeatures.isUpperTriangle(A,0,1e-8));
+            assertFalse(CMatrixFeatures.isUpperTriangle(A,0,UtilEjml.TEST_64F));
         }
     }
 
@@ -277,17 +278,17 @@ public class TestCMatrixFeatures {
 
             // test positive
             for( int i = hessenberg; i < A.numRows; i++ ) {
-                assertTrue(CMatrixFeatures.isLowerTriangle(A,i,1e-8));
+                assertTrue(CMatrixFeatures.isLowerTriangle(A,i,UtilEjml.TEST_64F));
             }
 
             // test negative
             for( int i = 0; i < hessenberg; i++ ) {
-                assertFalse(CMatrixFeatures.isLowerTriangle(A,i,1e-8));
+                assertFalse(CMatrixFeatures.isLowerTriangle(A,i,UtilEjml.TEST_64F));
             }
 
             // see if it handles NaN well
             A.set(0,4,Double.NaN,Double.NaN);
-            assertFalse(CMatrixFeatures.isLowerTriangle(A,0,1e-8));
+            assertFalse(CMatrixFeatures.isLowerTriangle(A,0,UtilEjml.TEST_64F));
         }
     }
 

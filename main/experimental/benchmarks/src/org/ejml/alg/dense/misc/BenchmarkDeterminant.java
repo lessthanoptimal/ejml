@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class BenchmarkDeterminant {
         double total = 0;
 
         for( int i = 0; i < numTrials; i++ ) {
-            total += UnrolledDeterminantFromMinor.det(mat);
+            total += UnrolledDeterminantFromMinor_D64.det(mat);
         }
 
         long after = System.currentTimeMillis();
@@ -58,7 +58,7 @@ public class BenchmarkDeterminant {
         double total = 0;
 
         for( int i = 0; i < TOTAL_TRIALS; i++ ) {
-            total += UnrolledDeterminantFromMinor.det4(mat);
+            total += UnrolledDeterminantFromMinor_D64.det4(mat);
         }
 
         long after = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class BenchmarkDeterminant {
     {
         long before = System.currentTimeMillis();
 
-        DeterminantFromMinor minor = new DeterminantFromMinor(4,5);
+        DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(4,5);
 
         double total = 0;
 
@@ -115,7 +115,7 @@ public class BenchmarkDeterminant {
     {
         long before = System.currentTimeMillis();
 
-        DeterminantFromMinor minor = new DeterminantFromMinor(mat.numRows,5);
+        DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(mat.numRows,5);
 
         double total = 0;
 
@@ -170,7 +170,7 @@ public class BenchmarkDeterminant {
 
             System.out.println("Dimension = "+i+"  trials = "+numTrials);
 
-            mat = RandomMatrices.createRandom(i,i,rand);
+            mat = RandomMatrices_D64.createRandom(i,i,rand);
 
             System.out.println("  Auto         = "+computeAuto(mat,numTrials));
 //            System.out.println("  Minor         = "+computeMinor(mat,numTrials));

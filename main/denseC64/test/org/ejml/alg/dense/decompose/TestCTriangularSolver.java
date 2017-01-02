@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decompose;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
@@ -51,7 +52,7 @@ public class TestCTriangularSolver {
 
         CTriangularSolver.solveU(U.data,B.data,3);
 
-        assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(X, B, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -66,7 +67,7 @@ public class TestCTriangularSolver {
 
             CTriangularSolver.solveL_diagReal(L.data, B.data, N);
 
-            assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentical(X, B, UtilEjml.TEST_64F));
         }
     }
 
@@ -101,7 +102,7 @@ public class TestCTriangularSolver {
 
             CTriangularSolver.solveConjTranL_diagReal(L.data, B.data, N);
 
-            assertTrue(CMatrixFeatures.isIdentical(X, B, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentical(X, B, UtilEjml.TEST_64F));
         }
     }
 }

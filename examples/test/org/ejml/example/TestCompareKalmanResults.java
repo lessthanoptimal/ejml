@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,10 @@
 
 package org.ejml.example;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.EjmlUnitTests;
+import org.ejml.ops.CommonOps_D64;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class TestCompareKalmanResults {
         all.add( simple );
 
         DenseMatrix64F priorX = new DenseMatrix64F(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DenseMatrix64F priorP = CommonOps.identity(9);
+        DenseMatrix64F priorP = CommonOps_D64.identity(9);
 
         DenseMatrix64F F = BenchmarkKalmanPerformance.createF(T);
         DenseMatrix64F Q = BenchmarkKalmanPerformance.createQ(T,0.1);
@@ -66,7 +67,7 @@ public class TestCompareKalmanResults {
         }
 
         DenseMatrix64F z = new DenseMatrix64F(H.numRows,1);
-        DenseMatrix64F R = CommonOps.identity(H.numRows);
+        DenseMatrix64F R = CommonOps_D64.identity(H.numRows);
 
         for( KalmanFilter f : all ) {
             f.update(z,R);
@@ -84,7 +85,7 @@ public class TestCompareKalmanResults {
             DenseMatrix64F X = a.getState();
             DenseMatrix64F P = a.getCovariance();
 
-            EjmlUnitTests.assertEquals(testX,X,1e-8);
-            EjmlUnitTests.assertEquals(testP,P,1e-8);
+            EjmlUnitTests.assertEquals(testX,X,UtilEjml.TEST_64F);
+            EjmlUnitTests.assertEquals(testP,P,UtilEjml.TEST_64F);
     }
 }

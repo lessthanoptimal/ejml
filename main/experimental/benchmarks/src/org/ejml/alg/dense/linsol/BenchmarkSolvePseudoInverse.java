@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,9 @@ import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol_D64;
 import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -72,7 +72,7 @@ public class BenchmarkSolvePseudoInverse {
         System.out.println("solve QRP Col        = "+ solveBenchmark(
                 new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
-                LinearSolverFactory.leastSquaresQrPivot(true,false),numTrials));
+                LinearSolverFactory_D64.leastSquaresQrPivot(true,false),numTrials));
     }
 
     public static void main( String args [] ) {
@@ -90,7 +90,7 @@ public class BenchmarkSolvePseudoInverse {
                 singularValues[j] = 10+w-j;
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices.createSingularValues(w, w, rand, singularValues);
+            A = RandomMatrices_D64.createSingularValues(w, w, rand, singularValues);
             B = new DenseMatrix64F(w,2);
 
             runAlgorithms(trials[i]);
@@ -101,7 +101,7 @@ public class BenchmarkSolvePseudoInverse {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices.createRandom(100,100,rand);
+            A = RandomMatrices_D64.createRandom(100,100,rand);
             B = new DenseMatrix64F(100,w);
 
             runAlgorithms(trialsX[i]/80);

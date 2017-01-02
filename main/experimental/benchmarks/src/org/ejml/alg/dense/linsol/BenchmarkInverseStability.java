@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,11 +20,11 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class BenchmarkInverseStability {
 
     private double evaluateInverse( DenseMatrix64F A , DenseMatrix64F A_inv )
     {
-        CommonOps.mult(A,A_inv,b);
+        CommonOps_D64.mult(A,A_inv,b);
 
         double total = 0;
 
@@ -84,11 +84,11 @@ public class BenchmarkInverseStability {
 //        names.add("SVD NR");
 //        solvers.add(new LinearSolverUnrolled());
 //        names.add("Unrolled");
-        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true, true));
+        solvers.add(LinearSolverFactory_D64.leastSquaresQrPivot(true, true));
         names.add("P'QR compute Q");
-        solvers.add(LinearSolverFactory.leastSquaresQrPivot(true,false));
+        solvers.add(LinearSolverFactory_D64.leastSquaresQrPivot(true,false));
         names.add("P'QR householder");
-        solvers.add(LinearSolverFactory.pseudoInverse(true));
+        solvers.add(LinearSolverFactory_D64.pseudoInverse(true));
         names.add("PINV SVD");
 
         allTheBreaks(solvers,names);
@@ -155,20 +155,20 @@ public class BenchmarkInverseStability {
     private void breakOverUnderFlow( String name , LinearSolver<DenseMatrix64F> alg , boolean overflow ) {
         boolean madeBad= false;
 
-        DenseMatrix64F A_orig = RandomMatrices.createRandom(3,3,new Random(0x14));
+        DenseMatrix64F A_orig = RandomMatrices_D64.createRandom(3,3,new Random(0x14));
 
         int i;
         for( i = 0; i < 3000; i++ ) {
 //            System.out.println("i = "+i);
             DenseMatrix64F A = new DenseMatrix64F(A_orig);
             if( overflow )
-                CommonOps.scale(Math.pow(2,i),A);
+                CommonOps_D64.scale(Math.pow(2,i),A);
             else
-                CommonOps.scale(Math.pow(1.0/2,i),A);
+                CommonOps_D64.scale(Math.pow(1.0/2,i),A);
 
             DenseMatrix64F A_inv = new DenseMatrix64F(A.numRows,A.numCols);
 
-            if(MatrixFeatures.hasUncountable(A)) {
+            if(MatrixFeatures_D64.hasUncountable(A)) {
                 madeBad = true;
                 break;
             }
@@ -178,7 +178,7 @@ public class BenchmarkInverseStability {
                     break;
                 }
                 alg.invert(A_inv);
-                if(MatrixFeatures.hasUncountable(A_inv)) {
+                if(MatrixFeatures_D64.hasUncountable(A_inv)) {
                     break;
                 }
             } catch( RuntimeException e ) {

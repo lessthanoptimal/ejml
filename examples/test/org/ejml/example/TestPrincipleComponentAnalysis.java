@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,8 @@
 
 package org.ejml.example;
 
-import org.ejml.ops.RandomMatrices;
+import org.ejml.UtilEjml;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -49,14 +50,14 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_D64.createRandom(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 
         // as a more crude estimate is made of the input data the error should increase
         pca.computeBasis(N);
         double errorPrev = computeError(pca,obs);
-        assertEquals(errorPrev,0,1e-8);
+        assertEquals(errorPrev,0, UtilEjml.TEST_64F);
 
         for( int i = N-1; i >= 1; i-- ) {
             pca.computeBasis(i);
@@ -91,7 +92,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_D64.createRandom(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 
@@ -132,7 +133,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_D64.createRandom(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 

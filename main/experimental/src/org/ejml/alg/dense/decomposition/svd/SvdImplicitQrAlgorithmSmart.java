@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,14 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
+import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
 import org.ejml.data.DenseMatrix64F;
 
 
 /**
  * @author Peter Abeles
  */
-public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm {
+public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_D64 {
 
     SmartRotatorUpdate smartU = new SmartRotatorUpdate();
     SmartRotatorUpdate smartV = new SmartRotatorUpdate();

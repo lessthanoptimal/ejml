@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
-import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm;
+import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -38,14 +38,14 @@ import org.ejml.ops.CommonOps;
  * @author Peter Abeles
  */
 public class SvdImplicitQrDecompose_Ultimate
-        implements SingularValueDecomposition<DenseMatrix64F> {
+        implements SingularValueDecomposition_F64<DenseMatrix64F> {
 
     private int numRows;
     private int numCols;
     private int smallSide;
 
     private BidiagonalDecompositionRow_D64 bidiag = new BidiagonalDecompositionRow_D64();
-    private SvdImplicitQrAlgorithm qralg = new SvdImplicitQrAlgorithm();
+    private SvdImplicitQrAlgorithm_D64 qralg = new SvdImplicitQrAlgorithm_D64();
 
     private double diag[];
     private double off[];
@@ -103,7 +103,7 @@ public class SvdImplicitQrDecompose_Ultimate
             return Ut;
 
         U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
-        CommonOps.transpose(Ut,U);
+        CommonOps_D64.transpose(Ut,U);
 
         return U;
     }
@@ -116,7 +116,7 @@ public class SvdImplicitQrDecompose_Ultimate
             return Vt;
 
         V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
-        CommonOps.transpose(Vt,V);
+        CommonOps_D64.transpose(Vt,V);
 
         return V;
     }
@@ -262,7 +262,7 @@ public class SvdImplicitQrDecompose_Ultimate
     private boolean bidiagonalization(DenseMatrix64F orig, boolean transposed) {
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
-            CommonOps.transpose(orig,A_mod);
+            CommonOps_D64.transpose(orig,A_mod);
         } else {
             A_mod.reshape(orig.numRows,orig.numCols,false);
             A_mod.set(orig);

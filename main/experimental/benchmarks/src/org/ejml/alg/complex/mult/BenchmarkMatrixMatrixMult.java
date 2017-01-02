@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.complex.mult;
 
-import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.blockd3.BlockD3MatrixOps;
 import org.ejml.alg.dense.mult.CMatrixMatrixMult;
 import org.ejml.data.BlockD3Matrix64F;
@@ -97,14 +97,14 @@ public class BenchmarkMatrixMatrixMult {
 
     public static long multBlockNative( DenseMatrix64F matA , DenseMatrix64F matB ,
                                         DenseMatrix64F matResult , int numTrials) {
-        BlockMatrix64F blockA = BlockMatrixOps.convert(matA);
-        BlockMatrix64F blockB = BlockMatrixOps.convert(matB);
+        BlockMatrix64F blockA = MatrixOps_B64.convert(matA);
+        BlockMatrix64F blockB = MatrixOps_B64.convert(matB);
         BlockMatrix64F blockC = new BlockMatrix64F(matResult.numRows,matResult.numCols);
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            BlockMatrixOps.mult(blockA,blockB,blockC);
+            MatrixOps_B64.mult(blockA,blockB,blockC);
         }
 
         long curr = System.currentTimeMillis();

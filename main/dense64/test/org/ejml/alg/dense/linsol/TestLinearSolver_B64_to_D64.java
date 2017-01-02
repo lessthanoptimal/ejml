@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.block.linsol.qr.BlockQrHouseHolderSolver;
+import org.ejml.alg.block.linsol.qr.QrHouseHolderSolver_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -28,12 +28,12 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class TestLinearSolver_B64_to_D64 extends GenericLinearSolverChecks {
+public class TestLinearSolver_B64_to_D64 extends GenericLinearSolverChecks_D64 {
 
     @Override
     protected LinearSolver<DenseMatrix64F> createSolver(DenseMatrix64F A) {
 
-        LinearSolver<BlockMatrix64F> solver = new BlockQrHouseHolderSolver();
+        LinearSolver<BlockMatrix64F> solver = new QrHouseHolderSolver_B64();
 
         return new LinearSolver_B64_to_D64(solver);
     }

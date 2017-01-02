@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,8 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.RandomMatrices;
+import org.ejml.UtilEjml;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -36,14 +37,14 @@ public class TestMatrixIterator64F {
 
     @Test
     public void allRow() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,6,rand);
 
         MatrixIterator64F iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
 
         for( int i = 0; i < A.numRows; i++ ) {
             for( int j = 0; j < A.numCols; j++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(), UtilEjml.TEST_64F);
             }
         }
         assertTrue(!iter.hasNext());
@@ -51,14 +52,14 @@ public class TestMatrixIterator64F {
 
     @Test
     public void allCol() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,6,rand);
 
         MatrixIterator64F iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
 
         for( int j = 0; j < A.numCols; j++ ) {
             for( int i = 0; i < A.numRows; i++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(),UtilEjml.TEST_64F);
             }
         }
         assertTrue(!iter.hasNext());
@@ -66,14 +67,14 @@ public class TestMatrixIterator64F {
 
     @Test
     public void subRow() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,6,rand);
 
         MatrixIterator64F iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
 
         for( int i = 1; i < A.numRows-1; i++ ) {
             for( int j = 2; j < A.numCols; j++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(),UtilEjml.TEST_64F);
             }
         }
         assertTrue(!iter.hasNext());
@@ -82,14 +83,14 @@ public class TestMatrixIterator64F {
 
     @Test
     public void subCol() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,6,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,6,rand);
 
         MatrixIterator64F iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
 
         for( int j = 2; j < A.numCols; j++ ) {
             for( int i = 1; i < A.numRows-1; i++ ) {
                 assertTrue(iter.hasNext());
-                assertEquals(A.get(i,j),iter.next(),1e-8);
+                assertEquals(A.get(i,j),iter.next(),UtilEjml.TEST_64F);
             }
         }
         assertTrue(!iter.hasNext());

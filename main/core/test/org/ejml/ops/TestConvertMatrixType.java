@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,8 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.UtilEjml;
+import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.FixedMatrix64F;
@@ -44,14 +45,14 @@ public class TestConvertMatrixType {
         DenseMatrix64F a = new DenseMatrix64F(2,3,true,1,2,3,4,5,6);
         DenseMatrix64F b = new DenseMatrix64F(2,3);
 
-        ConvertMatrixType.convert((RealMatrix64F)a,(RealMatrix64F)b);
+        ConvertMatrixType_F64.convert((RealMatrix64F)a,(RealMatrix64F)b);
 
-        assertTrue(MatrixFeatures.isIdentical(a,b,1e-12));
+        assertTrue(MatrixFeatures_D64.isIdentical(a,b,1e-12));
     }
 
     @Test
     public void checkAll_Fixed_to_DM() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertMatrixType.class.getMethods();
+        Method[] methods = ConvertMatrixType_F64.class.getMethods();
 
         int numFound = 0;
 
@@ -89,7 +90,7 @@ public class TestConvertMatrixType {
 
     @Test
     public void checkAll_DM_to_Fixed() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertMatrixType.class.getMethods();
+        Method[] methods = ConvertMatrixType_F64.class.getMethods();
 
         int numFound = 0;
 
@@ -129,10 +130,10 @@ public class TestConvertMatrixType {
     public void BM_to_DM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                BlockMatrix64F a = BlockMatrixOps.createRandom(rows,cols,-1,2,rand);
+                BlockMatrix64F a = MatrixOps_B64.createRandom(rows,cols,-1,2,rand);
                 DenseMatrix64F b = new DenseMatrix64F(rows,cols);
 
-                ConvertMatrixType.convert(a,b);
+                ConvertMatrixType_F64.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -143,10 +144,10 @@ public class TestConvertMatrixType {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                DenseMatrix64F a = RandomMatrices.createRandom(rows,cols,rand);
+                DenseMatrix64F a = RandomMatrices_D64.createRandom(rows,cols,rand);
                 BlockMatrix64F b = new BlockMatrix64F(rows,cols,3);
 
-                ConvertMatrixType.convert(a,b);
+                ConvertMatrixType_F64.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -157,7 +158,7 @@ public class TestConvertMatrixType {
     private void checkIdentical( RealMatrix64F a , RealMatrix64F b ) {
         for( int i = 0; i < a.getNumRows(); i++  ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
-                assertEquals(a.get(i,j),b.get(i,j),1e-8);
+                assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_64F);
             }
         }
     }
@@ -182,7 +183,7 @@ public class TestConvertMatrixType {
             else
                 valueB = b.get(0,i);
 
-            assertEquals(valueA,valueB,1e-8);
+            assertEquals(valueA,valueB,UtilEjml.TEST_64F);
         }
 
 

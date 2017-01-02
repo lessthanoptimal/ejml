@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,15 +18,15 @@
 
 package org.ejml.alg.block.decomposition.hessenberg;
 
-import org.ejml.alg.block.BlockMultiplication;
+import org.ejml.alg.block.MatrixMult_B64;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
-import static org.ejml.alg.block.BlockInnerMultiplication.blockMultPlusTransA;
+import static org.ejml.alg.block.InnerMultiplication_B64.blockMultPlusTransA;
 
 
 /**
@@ -47,7 +47,7 @@ import static org.ejml.alg.block.BlockInnerMultiplication.blockMultPlusTransA;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_B64
-        implements TridiagonalSimilarDecomposition<BlockMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<BlockMatrix64F> {
 
     // matrix which is being decomposed
     // householder vectors are stored along the upper triangle rows
@@ -69,7 +69,7 @@ public class TridiagonalDecompositionHouseholder_B64
             if( T.numRows != A.numRows || T.numCols != A.numCols )
                 throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
 
-            CommonOps.fill(T, 0);
+            CommonOps_D64.fill(T, 0);
         }
 
         T.set(0,0,A.data[0]);
@@ -146,14 +146,14 @@ public class TridiagonalDecompositionHouseholder_B64
             // (I + W*U^T)*Q
             // F=U^T*Q(i)
             if( transposed )
-                BlockMultiplication.multTransB(A.blockLength,subQ,subU,tmp);
+                MatrixMult_B64.multTransB(A.blockLength,subQ,subU,tmp);
             else
-                BlockMultiplication.mult(A.blockLength,subU,subQ,tmp);
+                MatrixMult_B64.mult(A.blockLength,subU,subQ,tmp);
             // Q(i+1) = Q(i) + W*F
             if( transposed )
-                BlockMultiplication.multPlus(A.blockLength,tmp,subW,subQ);
+                MatrixMult_B64.multPlus(A.blockLength,tmp,subW,subQ);
             else
-                BlockMultiplication.multPlusTransA(A.blockLength,subW,tmp,subQ);
+                MatrixMult_B64.multPlusTransA(A.blockLength,subW,tmp,subQ);
 
             replaceZeros(subU);
         }

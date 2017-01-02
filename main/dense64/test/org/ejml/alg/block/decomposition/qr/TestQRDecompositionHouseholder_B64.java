@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,8 +29,8 @@ public class TestQRDecompositionHouseholder_B64 {
     public void generic() {
         QRDecompositionHouseholder_B64 decomp = new QRDecompositionHouseholder_B64();
 
-        GenericBlock64QrDecompositionTests tests;
-        tests = new GenericBlock64QrDecompositionTests(decomp);
+        GenericBlock64QrDecompositionTests_B64 tests;
+        tests = new GenericBlock64QrDecompositionTests_B64(decomp);
 
         tests.allTests();
     }
@@ -40,8 +40,8 @@ public class TestQRDecompositionHouseholder_B64 {
         QRDecompositionHouseholder_B64 decomp = new QRDecompositionHouseholder_B64();
         decomp.setSaveW(true);
 
-        GenericBlock64QrDecompositionTests tests;
-        tests = new GenericBlock64QrDecompositionTests(decomp);
+        GenericBlock64QrDecompositionTests_B64 tests;
+        tests = new GenericBlock64QrDecompositionTests_B64(decomp);
 
         tests.allTests();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -115,11 +116,11 @@ public abstract class BaseCholeskySolveTests_CD64 {
             assertTrue(solver.setA(A));
             solver.solve(b,x);
 
-            assertTrue(CMatrixFeatures.isIdentical(x, x_expected, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentical(x, x_expected, UtilEjml.TEST_64F));
 
             // see if input was modified
-            assertEquals(!solver.modifiesA(),CMatrixFeatures.isIdentical(A,A_orig,1e-8));
-            assertEquals(!solver.modifiesB(),CMatrixFeatures.isIdentical(b,B_orig,1e-8));
+            assertEquals(!solver.modifiesA(),CMatrixFeatures.isIdentical(A,A_orig,UtilEjml.TEST_64F));
+            assertEquals(!solver.modifiesB(),CMatrixFeatures.isIdentical(b,B_orig,UtilEjml.TEST_64F));
         }
     }
 
@@ -138,10 +139,10 @@ public abstract class BaseCholeskySolveTests_CD64 {
             solver.invert(A_inv);
 
             CCommonOps.mult(A_inv,A_orig,found);
-            assertTrue(CMatrixFeatures.isIdentity(found, 1e-8));
+            assertTrue(CMatrixFeatures.isIdentity(found, UtilEjml.TEST_64F));
 
             // see if input was modified
-            assertEquals(!solver.modifiesA(),CMatrixFeatures.isIdentical(A,A_orig,1e-8));
+            assertEquals(!solver.modifiesA(),CMatrixFeatures.isIdentical(A,A_orig,UtilEjml.TEST_64F));
         }
     }
 
@@ -177,6 +178,6 @@ public abstract class BaseCholeskySolveTests_CD64 {
         assertTrue(solver.setA(B));
         double qualityB = solver.quality();
 
-        assertEquals(qualityB,qualityA,1e-8);
+        assertEquals(qualityB,qualityA,UtilEjml.TEST_64F);
     }
 }

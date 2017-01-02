@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.simple;
 
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.ConvertMatrixType;
+import org.ejml.ops.ConvertMatrixType_F64;
 
 /**
  * @author Peter Abeles
@@ -33,7 +33,7 @@ public class UtilSimpleMatrix {
      * @return Equivalent SimpleMatrix.
      */
     public static SimpleMatrix convertSimple( BlockMatrix64F A ) {
-        DenseMatrix64F B = ConvertMatrixType.convert(A, null);
+        DenseMatrix64F B = ConvertMatrixType_F64.convert(A, null);
 
         return SimpleMatrix.wrap(B);
     }

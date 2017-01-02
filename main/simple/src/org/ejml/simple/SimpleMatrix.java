@@ -18,12 +18,12 @@
 
 package org.ejml.simple;
 
-import org.ejml.alg.generic.GenericMatrixOps;
+import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.RealMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.CovarianceRandomDraw;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CovarianceRandomDraw_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -175,7 +175,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public SimpleMatrix( RealMatrix64F orig ) {
         this.mat = new DenseMatrix64F(orig.getNumRows(),orig.getNumCols());
 
-        GenericMatrixOps.copy(orig,mat);
+        GenericMatrixOps_F64.copy(orig,mat);
     }
 
     /**
@@ -198,7 +198,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * Creates a new identity matrix with the specified size.
      *
-     * @see org.ejml.ops.CommonOps#identity(int)
+     * @see CommonOps_D64#identity(int)
      *
      * @param width The width and height of the matrix.
      * @return An identity matrix.
@@ -206,7 +206,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width ) {
         SimpleMatrix ret = new SimpleMatrix(width,width);
 
-        CommonOps.setIdentity(ret.mat);
+        CommonOps_D64.setIdentity(ret.mat);
 
         return ret;
     }
@@ -221,13 +221,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * To extract the diagonal elements from a matrix see {@link #extractDiag()}.
      * </p>
      *
-     * @see org.ejml.ops.CommonOps#diag(double...)
+     * @see CommonOps_D64#diag(double...)
      *
      * @param vals The values of the diagonal elements.
      * @return A diagonal matrix.
      */
     public static SimpleMatrix diag( double ...vals ) {
-        DenseMatrix64F m = CommonOps.diag(vals);
+        DenseMatrix64F m = CommonOps_D64.diag(vals);
         SimpleMatrix ret = wrap(m);
         return ret;
     }
@@ -237,7 +237,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
      * </p>
      *
-     * @see RandomMatrices#setRandom(DenseMatrix64F,java.util.Random)
+     * @see RandomMatrices_D64#setRandom(DenseMatrix64F,java.util.Random)
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -247,7 +247,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix random(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices.setRandom(ret.mat,minValue,maxValue,rand);
+        RandomMatrices_D64.setRandom(ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
@@ -257,13 +257,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * and the provided covariance.
      * </p>
      *
-     * @see CovarianceRandomDraw
+     * @see CovarianceRandomDraw_D64
      *
      * @param covariance Covariance of the multivariate normal distribution
      * @return Vector randomly drawn from the distribution
      */
     public static SimpleMatrix randomNormal( SimpleMatrix covariance , Random random ) {
-        CovarianceRandomDraw draw = new CovarianceRandomDraw(random,covariance.getMatrix());
+        CovarianceRandomDraw_D64 draw = new CovarianceRandomDraw_D64(random,covariance.getMatrix());
 
         SimpleMatrix found = new SimpleMatrix(covariance.numRows(),1);
         draw.next(found.getMatrix());

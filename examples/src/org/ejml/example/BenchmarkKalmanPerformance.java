@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class BenchmarkKalmanPerformance {
 
     public void run() {
         DenseMatrix64F priorX = new DenseMatrix64F(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DenseMatrix64F priorP = CommonOps.identity(9);
+        DenseMatrix64F priorP = CommonOps_D64.identity(9);
 
         DenseMatrix64F trueX = new DenseMatrix64F(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
 
@@ -85,8 +85,8 @@ public class BenchmarkKalmanPerformance {
         DenseMatrix64F z = new DenseMatrix64F(H.numRows,1);
 
         for( int i = 0; i < MAX_STEPS; i++ ) {
-            CommonOps.mult(F,x,x_next);
-            CommonOps.mult(H,x_next,z);
+            CommonOps_D64.mult(F,x,x_next);
+            CommonOps_D64.mult(H,x_next,z);
             ret.add(z.copy());
             x.set(x_next);
         }
@@ -97,7 +97,7 @@ public class BenchmarkKalmanPerformance {
     private void processMeas( KalmanFilter f ,
                               List<DenseMatrix64F> meas )
     {
-        DenseMatrix64F R = CommonOps.identity(measDOF);
+        DenseMatrix64F R = CommonOps_D64.identity(measDOF);
 
         for(DenseMatrix64F z : meas ) {
             f.predict();

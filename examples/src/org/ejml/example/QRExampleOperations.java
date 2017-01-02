@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.NormOps;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.NormOps_D64;
 
 /**
  * <p>
@@ -66,16 +66,16 @@ public class QRExampleOperations {
             Q_k.reshape(v.getNumElements(),v.getNumElements(),false);
 
             // use extract matrix to get the column that is to be zeroed
-            CommonOps.extract(QR,i,QR.numRows,i,i+1,v,0,0);
+            CommonOps_D64.extract(QR,i,QR.numRows,i,i+1,v,0,0);
 
-            double max = CommonOps.elementMaxAbs(v);
+            double max = CommonOps_D64.elementMaxAbs(v);
 
             if( max > 0 && v.getNumElements() > 1 ) {
                 // normalize to reduce overflow issues
-                CommonOps.divide(v,max);
+                CommonOps_D64.divide(v,max);
 
                 // compute the magnitude of the vector
-                double tau = NormOps.normF(v);
+                double tau = NormOps_D64.normF(v);
 
                 if( v.get(0) < 0 )
                     tau *= -1.0;
@@ -83,20 +83,20 @@ public class QRExampleOperations {
                 double u_0 = v.get(0) + tau;
                 double gamma = u_0/tau;
 
-                CommonOps.divide(v,u_0);
+                CommonOps_D64.divide(v,u_0);
                 v.set(0,1.0);
 
                 // extract the submatrix of A which is being operated on
-                CommonOps.extract(QR,i,QR.numRows,i,QR.numCols,A_small,0,0);
+                CommonOps_D64.extract(QR,i,QR.numRows,i,QR.numCols,A_small,0,0);
 
                 // A = (I - &gamma;*u*u<sup>T</sup>)A
-                CommonOps.setIdentity(Q_k);
-                CommonOps.multAddTransB(-gamma,v,v,Q_k);
-                CommonOps.mult(Q_k,A_small,A_mod);
+                CommonOps_D64.setIdentity(Q_k);
+                CommonOps_D64.multAddTransB(-gamma,v,v,Q_k);
+                CommonOps_D64.mult(Q_k,A_small,A_mod);
 
                 // save the results
-                CommonOps.insert(A_mod, QR, i,i);
-                CommonOps.insert(v, QR, i,i);
+                CommonOps_D64.insert(A_mod, QR, i,i);
+                CommonOps_D64.insert(v, QR, i,i);
                 QR.unsafe_set(i,i,-tau*max);
 
                 // save gamma for recomputing Q later on
@@ -109,7 +109,7 @@ public class QRExampleOperations {
      * Returns the Q matrix.
      */
     public DenseMatrix64F getQ() {
-        DenseMatrix64F Q = CommonOps.identity(QR.numRows);
+        DenseMatrix64F Q = CommonOps_D64.identity(QR.numRows);
         DenseMatrix64F Q_k = new DenseMatrix64F(QR.numRows,QR.numRows);
         DenseMatrix64F u = new DenseMatrix64F(QR.numRows,1);
 
@@ -119,13 +119,13 @@ public class QRExampleOperations {
 
         // compute Q by first extracting the householder vectors from the columns of QR and then applying it to Q
         for( int j = N-1; j>= 0; j-- ) {
-            CommonOps.extract(QR,j, QR.numRows,j,j+1,u,j,0);
+            CommonOps_D64.extract(QR,j, QR.numRows,j,j+1,u,j,0);
             u.set(j,1.0);
 
             // A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
-            CommonOps.setIdentity(Q_k);
-            CommonOps.multAddTransB(-gammas[j],u,u,Q_k);
-            CommonOps.mult(Q_k,Q,temp);
+            CommonOps_D64.setIdentity(Q_k);
+            CommonOps_D64.multAddTransB(-gammas[j],u,u,Q_k);
+            CommonOps_D64.mult(Q_k,Q,temp);
             Q.set(temp);
         }
 

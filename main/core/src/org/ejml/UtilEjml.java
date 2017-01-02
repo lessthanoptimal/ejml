@@ -55,18 +55,14 @@ public class UtilEjml {
     // tolerances for unit tests
     public static float TEST_32F = 1e-4f;
     public static double TEST_64F = 1e-8;
+    public static float TESTP_32F = 1e-6f;
+    public static double TESTP_64F = 1e-12;
     public static float TEST_32F_SQ = (float)Math.sqrt(TEST_32F);
     public static double TEST_64F_SQ = Math.sqrt(TEST_64F);
 
 
     public static boolean isUncountable( double val ) {
         return Double.isNaN(val) || Double.isInfinite(val);
-    }
-
-    public static void memset( double[] data , double val ) {
-        for( int i = 0; i < data.length; i++ ) {
-            data[i] = val;
-        }
     }
 
     public static void memset( double[] data , double val , int length ) {
@@ -93,6 +89,20 @@ public class UtilEjml {
 
         for( int i = start+1; i < end; i++ ) {
             double v = array[i];
+            if( v > max ) {
+                max = v;
+            }
+        }
+
+        return max;
+    }
+
+    public static float max( float array[], int start , int length ) {
+        float max = array[start];
+        final int end = start+length;
+
+        for( int i = start+1; i < end; i++ ) {
+            float v = array[i];
             if( v > max ) {
                 max = v;
             }

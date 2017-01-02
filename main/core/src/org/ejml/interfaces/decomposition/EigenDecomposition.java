@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,6 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.Complex64F;
 import org.ejml.data.Matrix;
 
 
@@ -54,24 +53,8 @@ public interface EigenDecomposition<MatrixType extends Matrix>
      *
      * @return number of eigenvalues/eigenvectors.
      */
-    public int getNumberOfEigenvalues();
+    int getNumberOfEigenvalues();
 
-    /**
-     * <p>
-     * Returns an eigenvalue as a complex number.  For symmetric matrices the returned eigenvalue will always be a real
-     * number, which means the imaginary component will be equal to zero.
-     * </p>
-     *
-     * <p>
-     * NOTE: The order of the eigenvalues is dependent upon the decomposition algorithm used.  This means that they may
-     * or may not be ordered by magnitude.  For example the QR algorithm will returns results that are partially
-     * ordered by magnitude, but this behavior should not be relied upon.
-     * </p>
-     * 
-     * @param index Index of the eigenvalue eigenvector pair.
-     * @return An eigenvalue.
-     */
-    public Complex64F getEigenvalue( int index );
 
     /**
      * <p>
@@ -82,5 +65,5 @@ public interface EigenDecomposition<MatrixType extends Matrix>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
-    public MatrixType getEigenVector( int index );
+    MatrixType getEigenVector( int index );
 }

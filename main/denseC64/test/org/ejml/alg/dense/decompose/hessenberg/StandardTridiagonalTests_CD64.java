@@ -18,9 +18,10 @@
 
 package org.ejml.alg.dense.decompose.hessenberg;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CCommonOps;
 import org.ejml.ops.CMatrixFeatures;
 import org.ejml.ops.CRandomMatrices;
@@ -40,7 +41,7 @@ public abstract class StandardTridiagonalTests_CD64 {
 
     protected Random rand = new Random(2344);
 
-    protected abstract TridiagonalSimilarDecomposition<CDenseMatrix64F> createDecomposition();
+    protected abstract TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> createDecomposition();
 
     @Test
     public void fullTest() {
@@ -49,7 +50,7 @@ public abstract class StandardTridiagonalTests_CD64 {
 
             CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition<CDenseMatrix64F> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> alg = createDecomposition();
 
 
             assertTrue(safeDecomposition(alg,A));
@@ -64,7 +65,7 @@ public abstract class StandardTridiagonalTests_CD64 {
             CCommonOps.mult(Q,T,tmp);
             CCommonOps.multTransB(tmp,Q,A_found);
 
-            assertTrue("width = "+width, CMatrixFeatures.isIdentical(A,A_found,1e-8));
+            assertTrue("width = "+width, CMatrixFeatures.isIdentical(A,A_found,UtilEjml.TEST_64F));
         }
     }
 
@@ -74,7 +75,7 @@ public abstract class StandardTridiagonalTests_CD64 {
 
             CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition<CDenseMatrix64F> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -84,13 +85,13 @@ public abstract class StandardTridiagonalTests_CD64 {
             double off[] = new double[width*2];
 
             alg.getDiagonal(diag,off);
-            assertEquals(T.getReal(0,0)     ,diag[0],1e-8);
-            assertEquals(T.getImag(0,0),diag[1],1e-8);
+            assertEquals(T.getReal(0,0)     ,diag[0],UtilEjml.TEST_64F);
+            assertEquals(T.getImag(0,0),diag[1],UtilEjml.TEST_64F);
             for( int i = 1; i < width; i++ ) {
-                assertEquals(T.getReal(i,i)  , diag[i*2]     ,1e-8);
-                assertEquals(T.getImag(i,i)  , diag[i*2+1]   ,1e-8);
-                assertEquals(T.getReal(i-1,i), off[(i-1)*2]  ,1e-8);
-                assertEquals(T.getImag(i-1,i), off[(i-1)*2+1],1e-8);
+                assertEquals(T.getReal(i,i)  , diag[i*2]     ,UtilEjml.TEST_64F);
+                assertEquals(T.getImag(i,i)  , diag[i*2+1]   , UtilEjml.TEST_64F);
+                assertEquals(T.getReal(i-1,i), off[(i-1)*2]  ,UtilEjml.TEST_64F);
+                assertEquals(T.getImag(i-1,i), off[(i-1)*2+1],UtilEjml.TEST_64F);
             }
         }
     }
@@ -101,7 +102,7 @@ public abstract class StandardTridiagonalTests_CD64 {
 
             CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition<CDenseMatrix64F> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -111,8 +112,8 @@ public abstract class StandardTridiagonalTests_CD64 {
             Complex64F q = new Complex64F();
             for( int i = 0; i < Q.numRows; i++ ) {
                 for( int j = 0; j < Q.numCols; j++ ) {
-                    assertEquals(Q.getReal(i,j),Q_t.getReal(j,i),1e-8);
-                    assertEquals(Q.getImag(i,j),-Q_t.getImag(j,i),1e-8);
+                    assertEquals(Q.getReal(i,j),Q_t.getReal(j,i),UtilEjml.TEST_64F);
+                    assertEquals(Q.getImag(i,j),-Q_t.getImag(j,i),UtilEjml.TEST_64F);
                 }
             }
         }

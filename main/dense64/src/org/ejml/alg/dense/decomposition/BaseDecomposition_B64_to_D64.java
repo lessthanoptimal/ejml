@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
@@ -58,13 +58,13 @@ public class BaseDecomposition_B64_to_D64 implements DecompositionInterface<Dens
 
         // doing an in-place convert is much more memory efficient at the cost of a little
         // but of CPU
-        BlockMatrixOps.convertRowToBlock(A.numRows,A.numCols,Ablock.blockLength,A.data,tmp);
+        MatrixOps_B64.convertRowToBlock(A.numRows,A.numCols,Ablock.blockLength,A.data,tmp);
 
         boolean ret = alg.decompose(Ablock);
 
         // convert it back to the normal format if it wouldn't have been modified
         if( !alg.inputModified() ) {
-            BlockMatrixOps.convertBlockToRow(A.numRows,A.numCols,Ablock.blockLength,A.data,tmp);
+            MatrixOps_B64.convertBlockToRow(A.numRows,A.numCols,Ablock.blockLength,A.data,tmp);
         }
 
         return ret;
@@ -77,7 +77,7 @@ public class BaseDecomposition_B64_to_D64 implements DecompositionInterface<Dens
         if( tmp == null || tmp.length < tmpLength )
             tmp = new double[ tmpLength ];
 
-        BlockMatrixOps.convertBlockToRow(numRows,numCols,Ablock.blockLength,data,tmp);
+        MatrixOps_B64.convertBlockToRow(numRows,numCols,Ablock.blockLength,data,tmp);
     }
 
     @Override

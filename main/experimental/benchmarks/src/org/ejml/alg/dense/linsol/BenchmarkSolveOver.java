@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,9 +23,9 @@ import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -44,8 +44,8 @@ public class BenchmarkSolveOver {
     public static long solveBenchmark( LinearSolver<DenseMatrix64F> solver , int numTrials ) {
         rand.setSeed(SEED);
         DenseMatrix64F X = new DenseMatrix64F(A.numCols,B.numCols);
-        RandomMatrices.setRandom(A,rand);
-        RandomMatrices.setRandom(B,rand);
+        RandomMatrices_D64.setRandom(A,rand);
+        RandomMatrices_D64.setRandom(B,rand);
 
         DenseMatrix64F B_tmp = new DenseMatrix64F(B.numRows,B.numCols);
 
@@ -86,7 +86,7 @@ public class BenchmarkSolveOver {
         System.out.println("  solve QR Block64      = "+ solveBenchmark(
                 new LinearSolverQrBlock64_D64(),numTrials));
         System.out.println("  Selected              = "+ solveBenchmark(
-                LinearSolverFactory.leastSquares(A.numRows, A.numCols),numTrials));
+                LinearSolverFactory_D64.leastSquares(A.numRows, A.numCols),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.ops.SpecializedOps_D64;
 
 
 /**
@@ -89,10 +89,10 @@ public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         // even those it is transposed the diagonal elements are at the same
         // elements
-        return SpecializedOps.qualityTriangular(QR);
+        return SpecializedOps_D64.qualityTriangular(QR);
     }
 
     /**
@@ -147,7 +147,7 @@ public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract_D64 {
             }
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver.solveU(U.data,a,numCols);
+            TriangularSolver_D64.solveU(U.data,a,numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {

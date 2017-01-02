@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkBidiagonalDecomposition {
 
 
-    public static long evaluate( BidiagonalDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig , int numTrials ) {
+    public static long evaluate(BidiagonalDecomposition_F64<DenseMatrix64F> alg , DenseMatrix64F orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -71,7 +71,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(w,w,rand);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -89,7 +89,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size w=%3d h=%3d for %12d trials\n",w,h,t);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(h,w,rand);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(h,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }

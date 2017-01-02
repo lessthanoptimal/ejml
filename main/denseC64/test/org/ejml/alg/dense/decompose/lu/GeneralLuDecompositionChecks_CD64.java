@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decompose.lu;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.CCommonOps;
@@ -74,7 +75,7 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CCommonOps.mult(P_tran, L, PL);
         CCommonOps.mult(PL, U, A_found);
 
-        assertTrue(CMatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(A_found,A, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -145,7 +146,7 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CCommonOps.mult(L, U, A_found);
 
         assertFalse(CMatrixFeatures.hasUncountable(A_found));
-        assertTrue(CMatrixFeatures.isIdentical(A_found,A,1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(A_found,A,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -210,6 +211,6 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CCommonOps.mult(P_tran, L, PL);
         CCommonOps.mult(PL, U, A_found);
 
-        assertTrue(CMatrixFeatures.isIdentical(A_found, a, 1e-8));
+        assertTrue(CMatrixFeatures.isIdentical(A_found, a, UtilEjml.TEST_64F));
     }
 }

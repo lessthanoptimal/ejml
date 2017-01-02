@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,10 @@
 package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.LinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
-import static org.ejml.ops.CommonOps.*;
+import static org.ejml.ops.CommonOps_D64.*;
 
 /**
  * A Kalman filter that is implemented using the operations API, which is procedural.  Much of the excessive
@@ -68,7 +68,7 @@ public class KalmanFilterOperations implements KalmanFilter{
         P = new DenseMatrix64F(dimenX,dimenX);
 
         // covariance matrices are symmetric positive semi-definite
-        solver = LinearSolverFactory.symmPosDef(dimenX);
+        solver = LinearSolverFactory_D64.symmPosDef(dimenX);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -66,7 +66,7 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolver<T
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         return alg.quality();
     }
 

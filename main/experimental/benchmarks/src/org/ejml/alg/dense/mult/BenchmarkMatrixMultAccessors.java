@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -147,8 +147,8 @@ public class BenchmarkMatrixMultAccessors {
 
         int N = 1000;
 
-        DenseMatrix64F A = RandomMatrices.createRandom(N,N,rand);
-        DenseMatrix64F B = RandomMatrices.createRandom(N,N,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,rand);
+        DenseMatrix64F B = RandomMatrices_D64.createRandom(N,N,rand);
         DenseMatrix64F C = new DenseMatrix64F(N,N);
 
         long timeInlined = inlined(A,B,C);

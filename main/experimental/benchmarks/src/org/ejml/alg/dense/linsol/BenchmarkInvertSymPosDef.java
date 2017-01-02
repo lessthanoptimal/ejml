@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,8 +25,8 @@ import org.ejml.alg.dense.linsol.chol.LinearSolverChol_B64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CovarianceOps;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CovarianceOps_D64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -45,7 +45,7 @@ public class BenchmarkInvertSymPosDef {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CovarianceOps.invert(orig,A);
+            CovarianceOps_D64.invert(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
@@ -106,7 +106,7 @@ public class BenchmarkInvertSymPosDef {
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F symMat = RandomMatrices.createSymmPosDef(w,rand);
+            DenseMatrix64F symMat = RandomMatrices_D64.createSymmPosDef(w,rand);
             System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

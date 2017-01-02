@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.QRPDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+import org.ejml.ops.CommonOps_D64;
 
 /**
  * <p>
@@ -44,7 +44,7 @@ import org.ejml.ops.CommonOps;
  */
 public class QRColPivDecompositionHouseholderColumn_D64
         extends QRDecompositionHouseholderColumn_D64
-        implements QRPDecomposition<DenseMatrix64F>
+        implements QRPDecomposition_F64<DenseMatrix64F>
 {
     // the ordering of each column, the current column i is the original column pivots[i]
     protected int pivots[];
@@ -98,22 +98,22 @@ public class QRColPivDecompositionHouseholderColumn_D64
     public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows,minLength);
+                Q = CommonOps_D64.identity(numRows,minLength);
             } else {
                 if( Q.numRows != numRows || Q.numCols != minLength ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
-                    CommonOps.setIdentity(Q);
+                    CommonOps_D64.setIdentity(Q);
                 }
             }
         } else {
             if( Q == null ) {
-                Q = CommonOps.identity(numRows);
+                Q = CommonOps_D64.identity(numRows);
             } else {
                 if( Q.numRows != numRows || Q.numCols != numRows ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension.");
                 } else {
-                    CommonOps.setIdentity(Q);
+                    CommonOps_D64.setIdentity(Q);
                 }
             }
         }
@@ -148,7 +148,7 @@ public class QRColPivDecompositionHouseholderColumn_D64
 
         convertToColumnMajor(A);
 
-        maxAbs = CommonOps.elementMaxAbs(A);
+        maxAbs = CommonOps_D64.elementMaxAbs(A);
         // initialize pivot variables
         setupPivotInfo();
 

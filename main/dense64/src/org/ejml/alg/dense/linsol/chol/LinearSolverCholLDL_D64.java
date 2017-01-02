@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.decomposition.TriangularSolver;
+import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
+import org.ejml.ops.SpecializedOps_D64;
 
 
 /**
@@ -61,8 +61,8 @@ public class LinearSolverCholLDL_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public double quality() {
-        return Math.abs(SpecializedOps.diagProd(decomposer.getL()));
+    public /**/double quality() {
+        return Math.abs(SpecializedOps_D64.diagProd(decomposer.getL()));
     }
 
     /**
@@ -103,7 +103,7 @@ public class LinearSolverCholLDL_D64 extends LinearSolverAbstract_D64 {
      */
     private void solveInternal() {
         // solve L*s=b storing y in x
-        TriangularSolver.solveL(el,vv,n);
+        TriangularSolver_D64.solveL(el,vv,n);
 
         // solve D*y=s
         for( int i = 0; i < n; i++ ) {
@@ -111,7 +111,7 @@ public class LinearSolverCholLDL_D64 extends LinearSolverAbstract_D64 {
         }
 
         // solve L^T*x=y
-        TriangularSolver.solveTranL(el,vv,n);
+        TriangularSolver_D64.solveTranL(el,vv,n);
     }
 
     /**
@@ -169,7 +169,7 @@ public class LinearSolverCholLDL_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public CholeskyLDLDecomposition<DenseMatrix64F> getDecomposition() {
+    public CholeskyLDLDecomposition_F64<DenseMatrix64F> getDecomposition() {
         return decomposer;
     }
 }

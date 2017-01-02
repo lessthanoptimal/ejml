@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.example;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.Complex64F;
 import org.junit.Test;
 
@@ -53,6 +54,6 @@ public class TestPolynomialRootFinder {
             a *= root;
         }
 
-        assertEquals(0,total,1e-8);
+        assertEquals(0,total, UtilEjml.TEST_64F);
     }
 }

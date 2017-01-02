@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 /**
  * @author Peter Abeles
@@ -41,7 +41,7 @@ public class MatrixMultQuad {
                 || A.numRows != out.numRows || A.numRows != out.numCols )
             throw new IllegalArgumentException("Incompatible matrix shapes");
 
-        CommonOps.fill(out, 0);
+        CommonOps_D64.fill(out, 0);
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {

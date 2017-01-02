@@ -22,7 +22,7 @@ package org.ejml.alg.dense.decomposition.chol;
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
@@ -32,11 +32,11 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition;
  * decomposition is provided in other classes.
  * </p>
  *
- * @see org.ejml.interfaces.decomposition.CholeskyDecomposition
+ * @see CholeskyDecomposition_F64
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_D64
-        implements CholeskyDecomposition<DenseMatrix64F> {
+        implements CholeskyDecomposition_F64<DenseMatrix64F> {
 
     // it can decompose a matrix up to this width
     protected int maxWidth=-1;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.mult.MatrixMatrixMult;
+import org.ejml.alg.dense.mult.MatrixMatrixMult_D64;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -41,7 +41,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.mult(matA,matB,results);
+            CommonOps_D64.mult(matA,matB,results);
 //            MatrixMatrixMult.mult_small(matA,matB,results);
         }
 
@@ -55,7 +55,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.mult(2.0,matA,matB,results);
+            CommonOps_D64.mult(2.0,matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -68,7 +68,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult.mult_reorder(matA,matB,results);
+            MatrixMatrixMult_D64.mult_reorder(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -81,7 +81,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numCols,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multTransA(matA,matB,results);
+            CommonOps_D64.multTransA(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -94,7 +94,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numCols,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multTransA(2.0,matA,matB,results);
+            CommonOps_D64.multTransA(2.0,matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -107,7 +107,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multTransB(matA,matB,results);
+            CommonOps_D64.multTransB(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -120,7 +120,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numCols,matB.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multTransAB(matA,matB,results);
+            CommonOps_D64.multTransAB(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -133,7 +133,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multAdd(matA,matB,results);
+            CommonOps_D64.multAdd(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -146,7 +146,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numCols,matB.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multAddTransA(matA,matB,results);
+            CommonOps_D64.multAddTransA(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -159,7 +159,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matB.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multAddTransB(matA,matB,results);
+            CommonOps_D64.multAddTransB(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -172,7 +172,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numCols,matB.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.multAddTransAB(matA,matB,results);
+            CommonOps_D64.multAddTransAB(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -185,7 +185,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.addEquals(results,matA);
+            CommonOps_D64.addEquals(results,matA);
         }
 
         long curr = System.currentTimeMillis();
@@ -198,7 +198,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.add(matA,matB,results);
+            CommonOps_D64.add(matA,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -211,7 +211,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.add(1.5,matA,3.4,matB,results);
+            CommonOps_D64.add(1.5,matA,3.4,matB,results);
         }
 
         long curr = System.currentTimeMillis();
@@ -224,7 +224,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.addEquals(results,2.5,matA);
+            CommonOps_D64.addEquals(results,2.5,matA);
         }
 
         long curr = System.currentTimeMillis();
@@ -237,7 +237,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.subtractEquals(results, matA);
+            CommonOps_D64.subtractEquals(results, matA);
         }
 
         long curr = System.currentTimeMillis();
@@ -250,7 +250,7 @@ public class BenchmarkMultAndAddOps {
         DenseMatrix64F results = new DenseMatrix64F(matA.numRows,matA.numCols);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps.subtract(matA, matB, results);
+            CommonOps_D64.subtract(matA, matB, results);
         }
 
         long curr = System.currentTimeMillis();
@@ -304,8 +304,8 @@ public class BenchmarkMultAndAddOps {
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
         int N = 2;
-        DenseMatrix64F matA = RandomMatrices.createRandom(N,N,rand);
-        DenseMatrix64F matB = RandomMatrices.createRandom(N,N,rand);
+        DenseMatrix64F matA = RandomMatrices_D64.createRandom(N,N,rand);
+        DenseMatrix64F matB = RandomMatrices_D64.createRandom(N,N,rand);
         DenseMatrix64F matC,matD;
 
         performMultTests(matA,matB,matB,matA,TRIALS_MULT*10);
@@ -314,18 +314,18 @@ public class BenchmarkMultAndAddOps {
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
-        matA = RandomMatrices.createRandom(1000,1000,rand);
-        matB = RandomMatrices.createRandom(1000,1000,rand);
+        matA = RandomMatrices_D64.createRandom(1000,1000,rand);
+        matB = RandomMatrices_D64.createRandom(1000,1000,rand);
 
         performMultTests(matA,matB,matB,matA,1);
         performAddTests(matA,matB,matB,matA,500);
 
         System.out.println();
         System.out.println("Large Not Square Matrix Results:") ;
-        matA = RandomMatrices.createRandom(600,1000,rand);
-        matB = RandomMatrices.createRandom(1000,600,rand);
-        matC = RandomMatrices.createRandom(600,1000,rand);
-        matD = RandomMatrices.createRandom(1000,600,rand);
+        matA = RandomMatrices_D64.createRandom(600,1000,rand);
+        matB = RandomMatrices_D64.createRandom(1000,600,rand);
+        matC = RandomMatrices_D64.createRandom(600,1000,rand);
+        matD = RandomMatrices_D64.createRandom(1000,600,rand);
 
         performMultTests(matA,matB,matC,matD,1);
         performAddTests(matA,matB,matC,matD,1000);

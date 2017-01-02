@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,6 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.Complex64F;
 import org.ejml.data.Matrix;
 
 
@@ -62,7 +61,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param lower Storage for T matrix. If null then a new matrix is returned.  Modified.
      * @return The L matrix.
      */
-    public T getLower( T lower );
+    T getLower( T lower );
 
     /**
      * <p>
@@ -79,7 +78,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param upper Storage for U matrix. If null then a new matrix is returned. Modified.
      * @return The U matrix.
      */
-    public T getUpper( T upper );
+    T getUpper( T upper );
 
     /**
      * <p>
@@ -90,7 +89,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param pivot Storage for the pivot matrix. If null then a new matrix is returned. Modified.
      * @return The pivot matrix.
      */
-    public T getPivot( T pivot );
+    T getPivot( T pivot );
 
     /**
      * Returns true if the decomposition detected a singular matrix.  This check
@@ -99,12 +98,5 @@ public interface LUDecomposition <T extends Matrix>
      * @return True if the matrix is singular and false if it is not.
      */
     // TODO Remove?  If singular decomposition will fail.
-    public boolean isSingular();
-
-    /**
-     * Computes the matrix's determinant using the LU decomposition.
-     *
-     * @return The determinant.
-     */
-    public Complex64F computeDeterminant();
+    boolean isSingular();
 }

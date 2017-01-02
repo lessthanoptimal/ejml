@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,13 @@
 
 package org.ejml.alg.block.decomposition.chol;
 
-import org.ejml.alg.block.BlockInnerRankUpdate;
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.BlockTriangularSolver;
+import org.ejml.alg.block.InnerRankUpdate_B64;
+import org.ejml.alg.block.MatrixOps_B64;
+import org.ejml.alg.block.TriangularSolver_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.data.D1Submatrix64F;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
@@ -38,7 +38,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition;
  *
  * @author Peter Abeles
  */
-public class CholeskyOuterForm_B64 implements CholeskyDecomposition<BlockMatrix64F> {
+public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMatrix64F> {
 
     // if it should compute an upper or lower triangular matrix
     private boolean lower = false;
@@ -107,14 +107,14 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition<BlockMatrix6
             // on the last block these operations are not needed.
             if( widthA == blockLength ) {
                 // B = L^-1 B
-                BlockTriangularSolver.solveBlock(blockLength,false,subA,subB,false,true);
+                TriangularSolver_B64.solveBlock(blockLength,false,subA,subB,false,true);
 
                 // C = C - B * B^T
-                BlockInnerRankUpdate.symmRankNMinus_L(blockLength,subC,subB);
+                InnerRankUpdate_B64.symmRankNMinus_L(blockLength,subC,subB);
             }
         }
 
-        BlockMatrixOps.zeroTriangle(true,T);
+        MatrixOps_B64.zeroTriangle(true,T);
 
         return true;
     }
@@ -146,14 +146,14 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition<BlockMatrix6
             // on the last block these operations are not needed.
             if( widthA == blockLength ) {
                 // B = U^-1 B
-                BlockTriangularSolver.solveBlock(blockLength,true,subA,subB,true,false);
+                TriangularSolver_B64.solveBlock(blockLength,true,subA,subB,true,false);
 
                 // C = C - B^T * B
-                BlockInnerRankUpdate.symmRankNMinus_U(blockLength,subC,subB);
+                InnerRankUpdate_B64.symmRankNMinus_U(blockLength,subC,subB);
             }
         }
 
-        BlockMatrixOps.zeroTriangle(false,T);
+        MatrixOps_B64.zeroTriangle(false,T);
 
         return true;
     }

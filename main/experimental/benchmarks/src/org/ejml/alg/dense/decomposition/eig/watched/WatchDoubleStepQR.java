@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 
 import org.ejml.data.Complex64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -34,7 +34,7 @@ import java.util.Random;
 public class WatchDoubleStepQR {
 
     public static void watchFindEigen( DenseMatrix64F A ) {
-        WatchedDoubleStepQREigenvalue alg = new WatchedDoubleStepQREigenvalue();
+        WatchedDoubleStepQREigenvalue_D64 alg = new WatchedDoubleStepQREigenvalue_D64();
 
 //        alg.implicitQR.printFound = true;
 //        alg.implicitQR.normalize = true;
@@ -54,7 +54,7 @@ public class WatchDoubleStepQR {
 
         // finding eigen vectors now
 
-        WatchedDoubleStepQREigenvector algVector = new WatchedDoubleStepQREigenvector();
+        WatchedDoubleStepQREigenvector_D64 algVector = new WatchedDoubleStepQREigenvector_D64();
 
         algVector.process(alg.implicitQR,A,null);
 
@@ -70,7 +70,7 @@ public class WatchDoubleStepQR {
     }
 
     public static void watchImplicitDouble( DenseMatrix64F A ) {
-        WatchedDoubleStepQREigen alg = new WatchedDoubleStepQREigen();
+        WatchedDoubleStepQREigen_D64 alg = new WatchedDoubleStepQREigen_D64();
 
 //        alg.printHumps = true;
 
@@ -88,7 +88,7 @@ public class WatchDoubleStepQR {
     }
 
     public static void watchImplicitSingle( DenseMatrix64F A ) {
-        WatchedDoubleStepQREigen alg = new WatchedDoubleStepQREigen();
+        WatchedDoubleStepQREigen_D64 alg = new WatchedDoubleStepQREigen_D64();
 
 //        alg.printHumps = true;
 
@@ -113,7 +113,7 @@ public class WatchDoubleStepQR {
         Random rand = new Random(23475);
 //        Random rand = new Random(235);
 
-        DenseMatrix64F A = RandomMatrices.createUpperTriangle(5,1,2,3,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createUpperTriangle(5,1,2,3,rand);
 //        DenseMatrix64F A = RandomMatrices.createUpperTriangle(50,1,-2,2,rand);
 //        DenseMatrix64F A = new DenseMatrix64F(5,5,new double[]{0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0},true);
 //        DenseMatrix64F A = UtilEjml.parseMatrix("-0.951  0.845 -0.171 \n" +

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,11 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.fixed.FixedOps3;
+import org.ejml.alg.fixed.FixedOps3_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.FixedMatrix3_64F;
 import org.ejml.data.FixedMatrix3x3_64F;
-import org.ejml.ops.ConvertMatrixType;
+import org.ejml.ops.ConvertMatrixType_F64;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -54,20 +54,20 @@ public class ExampleFixedSizedMatrix {
         a.print();
 
         // most of the standard operations are support
-        FixedOps3.transpose(a,b);
+        FixedOps3_D64.transpose(a,b);
         b.print();
 
-        System.out.println("Determinant = "+FixedOps3.det(a));
+        System.out.println("Determinant = "+ FixedOps3_D64.det(a));
 
         // matrix-vector operations are also supported
         // Constructors for vectors and matrices can be used to initialize its value
         FixedMatrix3_64F v = new FixedMatrix3_64F(1,2,3);
         FixedMatrix3_64F result = new FixedMatrix3_64F();
 
-        FixedOps3.mult(a,v,result);
+        FixedOps3_D64.mult(a,v,result);
 
         // Conversion into DenseMatrix64F can also be done
-        DenseMatrix64F dm = ConvertMatrixType.convert(a,null);
+        DenseMatrix64F dm = ConvertMatrixType_F64.convert(a,null);
 
         dm.print();
 
@@ -75,7 +75,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        FixedMatrix3x3_64F fv = ConvertMatrixType.convert(sv.getMatrix(),(FixedMatrix3x3_64F)null);
+        FixedMatrix3x3_64F fv = ConvertMatrixType_F64.convert(sv.getMatrix(),(FixedMatrix3x3_64F)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

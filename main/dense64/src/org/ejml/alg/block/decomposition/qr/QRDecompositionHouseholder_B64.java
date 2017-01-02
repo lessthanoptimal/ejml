@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.block.decomposition.qr;
 
-import org.ejml.alg.block.BlockMatrixOps;
-import org.ejml.alg.block.BlockMultiplication;
+import org.ejml.alg.block.MatrixMult_B64;
+import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
@@ -47,7 +47,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  * </pre>
  * Where r is the block size, i is the submatrix being considered, A is the input matrix,
  * Y is a matrix containing the reflectors just computed,
- * and W is computed using {@link BlockHouseHolder#computeW_Column}.
+ * and W is computed using {@link BlockHouseHolder_B64#computeW_Column}.
  * </p>
  *
  * <p>
@@ -133,23 +133,23 @@ public class QRDecompositionHouseholder_B64
         if( compact ) {
             if( Q == null ) {
                 Q = new BlockMatrix64F(numRows,minLength,blockLength);
-                BlockMatrixOps.setIdentity(Q);
+                MatrixOps_B64.setIdentity(Q);
             } else {
                 if( Q.numRows != numRows || Q.numCols != minLength ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension. Found "+Q.numRows+" "+Q.numCols);
                 } else {
-                    BlockMatrixOps.setIdentity(Q);
+                    MatrixOps_B64.setIdentity(Q);
                 }
             }
         } else {
             if( Q == null ) {
                 Q = new BlockMatrix64F(numRows,numRows,blockLength);
-                BlockMatrixOps.setIdentity(Q);
+                MatrixOps_B64.setIdentity(Q);
             } else {
                 if( Q.numRows != numRows || Q.numCols != numRows ) {
                     throw new IllegalArgumentException("Unexpected matrix dimension. Found "+Q.numRows+" "+Q.numCols);
                 } else {
-                    BlockMatrixOps.setIdentity(Q);
+                    MatrixOps_B64.setIdentity(Q);
                 }
             }
         }
@@ -211,11 +211,11 @@ public class QRDecompositionHouseholder_B64
 
             // Compute W matrix from reflectors stored in Y
             if( !saveW )
-                BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+                BlockHouseHolder_B64.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
             // Apply the Qi to Q
-            BlockHouseHolder.multTransA_vecCol(blockLength,Y,subB,WTA);
-            BlockMultiplication.multPlus(blockLength,W,WTA,subB);
+            BlockHouseHolder_B64.multTransA_vecCol(blockLength,Y,subB,WTA);
+            MatrixMult_B64.multPlus(blockLength,W,WTA,subB);
         }
     }
 
@@ -263,11 +263,11 @@ public class QRDecompositionHouseholder_B64
 
             // Compute W matrix from reflectors stored in Y
             if( !saveW )
-                BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+                BlockHouseHolder_B64.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
             // Apply the Qi to Q
-            BlockMultiplication.multTransA(blockLength,W,subB,WTA);
-            BlockHouseHolder.multAdd_zeros(blockLength,Y,WTA,subB);
+            MatrixMult_B64.multTransA(blockLength,W,subB,WTA);
+            BlockHouseHolder_B64.multAdd_zeros(blockLength,Y,WTA,subB);
         }
     }
 
@@ -294,8 +294,8 @@ public class QRDecompositionHouseholder_B64
             }
         }
 
-        BlockMatrixOps.zeroTriangle(false,R);
-        BlockMatrixOps.copyTriangle(true,dataA,R);
+        MatrixOps_B64.zeroTriangle(false,R);
+        MatrixOps_B64.copyTriangle(true,dataA,R);
 
         return R;
     }
@@ -317,7 +317,7 @@ public class QRDecompositionHouseholder_B64
 
             // compute the QR decomposition of the left most block column
             // this overwrites the original input matrix
-            if( !BlockHouseHolder.decomposeQR_block_col(blockLength,Y,gammas) ) {
+            if( !BlockHouseHolder_B64.decomposeQR_block_col(blockLength,Y,gammas) ) {
                 return false;
             }
 
@@ -381,12 +381,12 @@ public class QRDecompositionHouseholder_B64
         WTA.original.reshape(WTA.row1,WTA.col1,false);
 
         if( A.col1 > A.col0 ) {
-            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+            BlockHouseHolder_B64.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
 
-            BlockMultiplication.multTransA(blockLength,W,A,WTA);
-            BlockHouseHolder.multAdd_zeros(blockLength,Y,WTA,A);
+            MatrixMult_B64.multTransA(blockLength,W,A,WTA);
+            BlockHouseHolder_B64.multAdd_zeros(blockLength,Y,WTA,A);
         } else if( saveW ) {
-            BlockHouseHolder.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
+            BlockHouseHolder_B64.computeW_Column(blockLength,Y,W,temp, gammas,Y.col0);
         }
     }
 

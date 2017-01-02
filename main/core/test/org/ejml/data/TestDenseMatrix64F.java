@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,11 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.EjmlUnitTests;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -62,12 +63,12 @@ public class TestDenseMatrix64F {
 
         assertTrue( mat.data != d );
 
-        assertEquals(1,mat.get(0,0),1e-8);
-        assertEquals(2,mat.get(0,1),1e-8);
-        assertEquals(3,mat.get(1,0),1e-8);
-        assertEquals(4,mat.get(1,1),1e-8);
-        assertEquals(5,mat.get(2,0),1e-8);
-        assertEquals(6,mat.get(2,1),1e-8);
+        assertEquals(1,mat.get(0,0),UtilEjml.TEST_64F);
+        assertEquals(2,mat.get(0,1), UtilEjml.TEST_64F);
+        assertEquals(3,mat.get(1,0),UtilEjml.TEST_64F);
+        assertEquals(4,mat.get(1,1),UtilEjml.TEST_64F);
+        assertEquals(5,mat.get(2,0),UtilEjml.TEST_64F);
+        assertEquals(6,mat.get(2,1),UtilEjml.TEST_64F);
     }
 
     /**
@@ -81,12 +82,12 @@ public class TestDenseMatrix64F {
 
         DenseMatrix64F mat = new DenseMatrix64F(d);
 
-        assertEquals(1,mat.get(0,0),1e-8);
-        assertEquals(2,mat.get(0,1),1e-8);
-        assertEquals(3,mat.get(1,0),1e-8);
-        assertEquals(4,mat.get(1,1),1e-8);
-        assertEquals(5,mat.get(2,0),1e-8);
-        assertEquals(6,mat.get(2,1),1e-8);
+        assertEquals(1,mat.get(0,0),UtilEjml.TEST_64F);
+        assertEquals(2,mat.get(0,1),UtilEjml.TEST_64F);
+        assertEquals(3,mat.get(1,0),UtilEjml.TEST_64F);
+        assertEquals(4,mat.get(1,1),UtilEjml.TEST_64F);
+        assertEquals(5,mat.get(2,0),UtilEjml.TEST_64F);
+        assertEquals(6,mat.get(2,1),UtilEjml.TEST_64F);
     }
 
     /**
@@ -133,12 +134,12 @@ public class TestDenseMatrix64F {
 
         assertTrue(mat.data==d);
 
-        assertEquals(1,mat.get(0,0),1e-8);
-        assertEquals(2,mat.get(0,1),1e-8);
-        assertEquals(3,mat.get(1,0),1e-8);
-        assertEquals(4,mat.get(1,1),1e-8);
-        assertEquals(5,mat.get(2,0),1e-8);
-        assertEquals(6,mat.get(2,1),1e-8);
+        assertEquals(1,mat.get(0,0),UtilEjml.TEST_64F);
+        assertEquals(2,mat.get(0,1),UtilEjml.TEST_64F);
+        assertEquals(3,mat.get(1,0),UtilEjml.TEST_64F);
+        assertEquals(4,mat.get(1,1),UtilEjml.TEST_64F);
+        assertEquals(5,mat.get(2,0),UtilEjml.TEST_64F);
+        assertEquals(6,mat.get(2,1),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -166,24 +167,24 @@ public class TestDenseMatrix64F {
 
     @Test
     public void set_ColumnMajor() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,5,rand);
 
         DenseMatrix64F Atran = A.copy();
-        CommonOps.transpose(Atran);
+        CommonOps_D64.transpose(Atran);
         DenseMatrix64F Afound = new DenseMatrix64F(3,5);
         Afound.set(3,5, false, Atran.data);
 
-        assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
+        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,1e-10));
     }
 
     @Test
     public void set_RowMajor() {
-        DenseMatrix64F A = RandomMatrices.createRandom(3,5,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,5,rand);
 
         DenseMatrix64F Afound = new DenseMatrix64F(3,5);
         Afound.set(3,5, true, A.data);
 
-        assertTrue(MatrixFeatures.isIdentical(Afound,A,1e-10));
+        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,1e-10));
         assertTrue(A.data != Afound.data);
     }
 
@@ -213,14 +214,14 @@ public class TestDenseMatrix64F {
         mat.reshape(10,10,true);
 
         for( int i = 0; i < 6; i++ ) {
-            assertEquals(mat.data[i],orig.data[i],1e-8);
+            assertEquals(mat.data[i],orig.data[i],UtilEjml.TEST_64F);
         }
 
         // now make sure it doesn't
         mat.reshape(11,10,false);
 
         for( int i = 0; i < 6; i++ ) {
-            assertTrue(Math.abs(mat.data[i]-orig.data[i])>1e-8);
+            assertTrue(Math.abs(mat.data[i]-orig.data[i])>UtilEjml.TEST_64F);
         }
     }
 

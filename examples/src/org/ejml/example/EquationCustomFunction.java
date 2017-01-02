@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.equation.*;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.List;
@@ -82,7 +82,7 @@ public class EquationCustomFunction {
                             DenseMatrix64F mB = ((VariableMatrix)varB).matrix;
                             output.matrix.reshape(mA.numCols,mB.numCols);
 
-                            CommonOps.multTransA(mA,mB,output.matrix);
+                            CommonOps_D64.multTransA(mA,mB,output.matrix);
                         }
                     };
                 } else {

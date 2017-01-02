@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.alg.generic.CodeGeneratorMisc;
+import org.ejml.CodeGeneratorMisc;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;

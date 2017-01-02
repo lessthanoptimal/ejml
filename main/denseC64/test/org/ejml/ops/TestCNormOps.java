@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.junit.Test;
@@ -49,6 +50,6 @@ public class TestCNormOps {
         double expected = Math.sqrt(total);
         double found = CNormOps.normF(a);
 
-        assertEquals(expected,found,1e-8);
+        assertEquals(expected,found, UtilEjml.TEST_64F);
     }
 }

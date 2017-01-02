@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,16 +38,16 @@ import org.ejml.data.Matrix;
  *
  * @author Peter Abeles
  */
-public interface BidiagonalDecomposition <T extends Matrix>
-        extends DecompositionInterface<T> {
-
+public interface BidiagonalDecomposition<T extends Matrix>
+        extends DecompositionInterface<T>
+{
     /**
      * Returns the bidiagonal matrix.
      *
      * @param B If not null the results are stored here, if null a new matrix is created.
      * @return The bidiagonal matrix.
      */
-    public T getB( T B , boolean compact );
+    T getB(T B, boolean compact);
 
     /**
      * Returns the orthogonal U matrix.
@@ -55,8 +55,7 @@ public interface BidiagonalDecomposition <T extends Matrix>
      * @param U If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public T getU( T U , boolean transpose , boolean compact );
-
+    T getU(T U, boolean transpose, boolean compact);
 
     /**
      * Returns the orthogonal V matrix.
@@ -64,14 +63,5 @@ public interface BidiagonalDecomposition <T extends Matrix>
      * @param V If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public T getV( T V ,  boolean transpose , boolean compact );
-
-    /**
-     * Extracts the diagonal and off diagonal elements from the decomposition.
-     *
-     * @param diag diagonal elements from B.
-     * @param off off diagonal elements form B.
-     */
-    public void getDiagonal( double diag[], double off[] );
-
+    T getV(T V, boolean transpose, boolean compact);
 }

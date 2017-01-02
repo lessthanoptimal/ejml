@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,9 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.FixedMatrix3x3_64F;
 import org.ejml.data.FixedMatrix4x4_64F;
 import org.ejml.data.FixedMatrix6x6_64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.ConvertMatrixType;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.ConvertMatrixType_F64;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -61,7 +61,7 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CommonOps.invert(a,b);
+            CommonOps_D64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
@@ -72,7 +72,7 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps3.invert(a,b);
+            FixedOps3_D64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
@@ -83,30 +83,30 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps4.invert(a,b);
+            FixedOps4_D64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
     public static void main( String arg[] ) {
-        RandomMatrices.setRandom(dm3x3_a,rand);
-        RandomMatrices.setRandom(dm3x3_b,rand);
+        RandomMatrices_D64.setRandom(dm3x3_a,rand);
+        RandomMatrices_D64.setRandom(dm3x3_b,rand);
 
-        RandomMatrices.setRandom(dm4x4_a,rand);
-        RandomMatrices.setRandom(dm4x4_b,rand);
+        RandomMatrices_D64.setRandom(dm4x4_a,rand);
+        RandomMatrices_D64.setRandom(dm4x4_b,rand);
 
-        RandomMatrices.setRandom(dm6x6_a,rand);
-        RandomMatrices.setRandom(dm6x6_b,rand);
+        RandomMatrices_D64.setRandom(dm6x6_a,rand);
+        RandomMatrices_D64.setRandom(dm6x6_b,rand);
 
-        ConvertMatrixType.convert(dm3x3_a,fixed3x3_a);
-        ConvertMatrixType.convert(dm3x3_b,fixed3x3_b);
+        ConvertMatrixType_F64.convert(dm3x3_a,fixed3x3_a);
+        ConvertMatrixType_F64.convert(dm3x3_b,fixed3x3_b);
 
-        ConvertMatrixType.convert(dm4x4_a,fixed4x4_a);
-        ConvertMatrixType.convert(dm4x4_b,fixed4x4_b);
+        ConvertMatrixType_F64.convert(dm4x4_a,fixed4x4_a);
+        ConvertMatrixType_F64.convert(dm4x4_b,fixed4x4_b);
 
-        ConvertMatrixType.convert(dm6x6_a,fixed6x6_a);
-        ConvertMatrixType.convert(dm6x6_b,fixed6x6_b);
+        ConvertMatrixType_F64.convert(dm6x6_a,fixed6x6_a);
+        ConvertMatrixType_F64.convert(dm6x6_b,fixed6x6_b);
 
         int numTrials = 100000;
 

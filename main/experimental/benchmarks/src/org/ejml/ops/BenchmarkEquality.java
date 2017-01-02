@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 
 import java.util.Random;
@@ -35,7 +36,7 @@ public class BenchmarkEquality {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            args = MatrixFeatures.isEquals(matA,matB,1e-8);
+            args = MatrixFeatures_D64.isEquals(matA,matB, UtilEjml.TEST_64F);
         }
 
         long curr = System.currentTimeMillis();
@@ -52,7 +53,7 @@ public class BenchmarkEquality {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            args = MatrixFeatures.isIdentical(matA,matB,1e-8);
+            args = MatrixFeatures_D64.isIdentical(matA,matB,UtilEjml.TEST_64F);
         }
 
         long curr = System.currentTimeMillis();
@@ -64,7 +65,7 @@ public class BenchmarkEquality {
     public static void main( String args[] ) {
         Random rand = new Random(234234);
 
-        DenseMatrix64F A = RandomMatrices.createRandom(1000,2000,rand);
+        DenseMatrix64F A = RandomMatrices_D64.createRandom(1000,2000,rand);
         DenseMatrix64F B = A.copy();
 
         int N = 1000;

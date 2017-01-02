@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.SpecializedOps;
+import org.ejml.ops.SpecializedOps_D64;
 import org.ejml.simple.SimpleMatrix;
 
 
@@ -138,7 +138,7 @@ public class BidiagonalDecompositionNaive_D64 {
                 u[i] /= nu;
             }
 
-            SimpleMatrix Q_k = SimpleMatrix.wrap(SpecializedOps.createReflector(this.u,nu/tau));
+            SimpleMatrix Q_k = SimpleMatrix.wrap(SpecializedOps_D64.createReflector(this.u,nu/tau));
             U = U.mult(Q_k);
             B = Q_k.mult(B);
         }
@@ -188,7 +188,7 @@ public class BidiagonalDecompositionNaive_D64 {
             }
 
             // ---------- multiply on the left by Q_k
-            SimpleMatrix Q_k = SimpleMatrix.wrap(SpecializedOps.createReflector(this.u,nu/tau));
+            SimpleMatrix Q_k = SimpleMatrix.wrap(SpecializedOps_D64.createReflector(this.u,nu/tau));
 
             V = V.mult(Q_k);
             B = B.mult(Q_k);

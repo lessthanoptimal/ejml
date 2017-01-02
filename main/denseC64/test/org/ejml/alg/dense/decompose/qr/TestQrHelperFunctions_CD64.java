@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CCommonOps;
@@ -61,7 +62,7 @@ public class TestQrHelperFunctions_CD64 {
 
         max = Math.sqrt(max);
 
-        assertEquals(max,QrHelperFunctions_CD64.findMax(u,offset,length),1e-8);
+        assertEquals(max,QrHelperFunctions_CD64.findMax(u,offset,length),UtilEjml.TEST_64F);
     }
 
     @Test
@@ -90,11 +91,11 @@ public class TestQrHelperFunctions_CD64 {
                 U.imaginary = u[index + 1];
                 ComplexMath64F.divide(U, A, expected);
 
-                assertEquals(expected.real, found[index], 1e-8);
-                assertEquals(expected.imaginary, found[index + 1], 1e-8);
+                assertEquals(expected.real, found[index], UtilEjml.TEST_64F);
+                assertEquals(expected.imaginary, found[index + 1], UtilEjml.TEST_64F);
             } else {
-                assertEquals(u[index],found[index],1e-8);
-                assertEquals(u[index+1],found[index+1],1e-8);
+                assertEquals(u[index],found[index],UtilEjml.TEST_64F);
+                assertEquals(u[index+1],found[index+1],UtilEjml.TEST_64F);
             }
         }
     }
@@ -153,13 +154,13 @@ public class TestQrHelperFunctions_CD64 {
         double foundGamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(j,numRows,foundU,max,foundTau);
 
         for (int i = 0; i < expectedU.length; i++) {
-            assertEquals(expectedU[i],foundU[i],1e-8);
+            assertEquals(expectedU[i],foundU[i],UtilEjml.TEST_64F);
         }
 
-        assertEquals(expectedTau.real,foundTau.real,1e-8);
-        assertEquals(expectedTau.imaginary,foundTau.imaginary,1e-8);
+        assertEquals(expectedTau.real,foundTau.real,UtilEjml.TEST_64F);
+        assertEquals(expectedTau.imaginary,foundTau.imaginary, UtilEjml.TEST_64F);
 
-        assertEquals(expectedGamma,foundGamma,1e-8);
+        assertEquals(expectedGamma,foundGamma,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -189,7 +190,7 @@ public class TestQrHelperFunctions_CD64 {
                 CDenseMatrix64F subFound = CCommonOps.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
-                assertTrue(CMatrixFeatures.isEquals(expected, subFound, 1e-8));
+                assertTrue(CMatrixFeatures.isEquals(expected, subFound, UtilEjml.TEST_64F));
             }
         }
     }
@@ -231,7 +232,7 @@ public class TestQrHelperFunctions_CD64 {
                 CDenseMatrix64F subFound = CCommonOps.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
-                assertTrue(CMatrixFeatures.isEquals(expected, subFound, 1e-8));
+                assertTrue(CMatrixFeatures.isEquals(expected, subFound, UtilEjml.TEST_64F));
             }
         }
     }
@@ -255,8 +256,8 @@ public class TestQrHelperFunctions_CD64 {
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {
                 if( i < outside || j < outside ) {
-                    assertEquals(A.getReal(i,j),B.getReal(i,j),1e-8);
-                    assertEquals(A.getImag(i, j), B.getImag(i,j),1e-8);
+                    assertEquals(A.getReal(i,j),B.getReal(i,j),UtilEjml.TEST_64F);
+                    assertEquals(A.getImag(i, j), B.getImag(i,j),UtilEjml.TEST_64F);
                 }
             }
         }
@@ -270,15 +271,15 @@ public class TestQrHelperFunctions_CD64 {
 
         QrHelperFunctions_CD64.extractHouseholderColumn(A,1,5,1,u,1);
 
-        assertEquals(1 , u[4], 1e-8);
-        assertEquals(0 , u[5], 1e-8);
+        assertEquals(1 , u[4], UtilEjml.TEST_64F);
+        assertEquals(0 , u[5], UtilEjml.TEST_64F);
 
         for (int i = 2; i < 5; i++) {
             double real = A.getReal(i,1);
             double imag = A.getImag(i,1);
 
-            assertEquals(u[(i+1)*2]   , real , 1e-8);
-            assertEquals(u[(i+1)*2+1] , imag , 1e-8);
+            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_64F);
+            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_64F);
         }
     }
 
@@ -290,15 +291,15 @@ public class TestQrHelperFunctions_CD64 {
 
         QrHelperFunctions_CD64.extractHouseholderRow(A,1,1,5,u,1);
 
-        assertEquals(1 , u[4], 1e-8);
-        assertEquals(0 , u[5], 1e-8);
+        assertEquals(1 , u[4], UtilEjml.TEST_64F);
+        assertEquals(0 , u[5], UtilEjml.TEST_64F);
 
         for (int i = 2; i < 5; i++) {
             double real = A.getReal(1,i);
             double imag = A.getImag(1,i);
 
-            assertEquals(u[(i+1)*2]   , real , 1e-8);
-            assertEquals(u[(i+1)*2+1] , imag , 1e-8);
+            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_64F);
+            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_64F);
         }
     }
 
@@ -311,14 +312,14 @@ public class TestQrHelperFunctions_CD64 {
         double u[] = new double[6*2];
         double max = QrHelperFunctions_CD64.extractColumnAndMax(A,1,5,1,u,1);
 
-        assertEquals(10, max, 1e-8);
+        assertEquals(10, max, UtilEjml.TEST_64F);
 
         for (int i = 1; i < 5; i++) {
             double real = A.getReal(i,1);
             double imag = A.getImag(i,1);
 
-            assertEquals(u[(i+1)*2]   , real , 1e-8);
-            assertEquals(u[(i+1)*2+1] , imag , 1e-8);
+            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_64F);
+            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_64F);
         }
     }
 
@@ -330,6 +331,6 @@ public class TestQrHelperFunctions_CD64 {
 
         double max = QrHelperFunctions_CD64.computeRowMax(A,1,1,5);
 
-        assertEquals(10, max, 1e-8);
+        assertEquals(10, max, UtilEjml.TEST_64F);
     }
 }

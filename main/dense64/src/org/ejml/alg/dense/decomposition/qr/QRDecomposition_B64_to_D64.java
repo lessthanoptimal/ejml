@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,13 +19,13 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.EjmlParameters;
-import org.ejml.alg.block.BlockMatrixOps;
+import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_D64;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CommonOps;
+import org.ejml.ops.CommonOps_D64;
 
 
 /**
@@ -48,10 +48,10 @@ public class QRDecomposition_B64_to_D64
         if( Q == null  ) {
             if( compact ) {
                 Q = new DenseMatrix64F(Ablock.numRows,minLength);
-                CommonOps.setIdentity(Q);
+                CommonOps_D64.setIdentity(Q);
             } else {
                 Q = new DenseMatrix64F(Ablock.numRows,Ablock.numRows);
-                CommonOps.setIdentity(Q);
+                CommonOps_D64.setIdentity(Q);
             }
         }
 
@@ -77,7 +77,7 @@ public class QRDecomposition_B64_to_D64
         if( R == null ) {
             R = new DenseMatrix64F(Rblock.numRows,Rblock.numCols);
         }
-        BlockMatrixOps.convert(Rblock,R);
+        MatrixOps_B64.convert(Rblock,R);
 
         return R;
     }

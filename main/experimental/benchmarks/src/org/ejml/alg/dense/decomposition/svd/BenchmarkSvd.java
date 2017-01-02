@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.RandomMatrices;
+import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
@@ -74,7 +74,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(w,w,rand);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -91,7 +91,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(2*w,w,rand);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(2*w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }
@@ -108,7 +108,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices.createRandom(w,2*w,rand);
+            DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,2*w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
