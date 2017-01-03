@@ -138,6 +138,15 @@ public class GenerateCode32F {
     }
 
     public static void main(String args[] ) {
+        String path = "./";
+        while( true ) {
+            File d = new File(path);
+            if( new File(d,"main").exists() )
+                break;
+            path = "../"+path;
+        }
+        System.out.println("Path to project root: "+path);
+
         String coreDir[] = new String[]{
                 "main/core/src/org/ejml/data",
                 "main/core/test/org/ejml/data",
@@ -149,13 +158,13 @@ public class GenerateCode32F {
 
         GenerateCode32F app = new GenerateCode32F();
         for( String dir : coreDir ) {
-            app.process(new File(dir) );
+            app.process(new File(path,dir) );
         }
 
-        app.process(new File("main/dense64/src"), new File("main/dense32/src") );
-        app.process(new File("main/dense64/test"), new File("main/dense32/test") );
+        app.process(new File(path,"main/dense64/src"), new File(path,"main/dense32/src") );
+        app.process(new File(path,"main/dense64/test"), new File(path,"main/dense32/test") );
 
-        app.process(new File("main/denseC64/src"), new File("main/denseC32/src") );
-        app.process(new File("main/denseC64/test"), new File("main/denseC32/test") );
+        app.process(new File(path,"main/denseC64/src"), new File(path,"main/denseC32/src") );
+        app.process(new File("main/denseC64/test"), new File(path,"main/denseC32/test") );
     }
 }
