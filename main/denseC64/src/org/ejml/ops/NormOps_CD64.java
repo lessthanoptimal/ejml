@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.CDenseMatrix64F;
 /**
  * @author Peter Abeles
  */
-public class CNormOps {
+public class NormOps_CD64 {
     /**
      * <p>
      * Computes the Frobenius matrix norm:<br>
@@ -41,7 +41,7 @@ public class CNormOps {
     public static double normF( CDenseMatrix64F a ) {
         double total = 0;
 
-        double scale = CCommonOps.elementMaxAbs(a);
+        double scale = CommonOps_CD64.elementMaxAbs(a);
 
         if( scale == 0.0 )
             return 0.0;

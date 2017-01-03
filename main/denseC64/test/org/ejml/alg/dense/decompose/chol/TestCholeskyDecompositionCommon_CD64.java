@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -42,22 +42,22 @@ public class TestCholeskyDecompositionCommon_CD64 {
      */
     @Test
     public void getT() {
-        CDenseMatrix64F A = CRandomMatrices.createHermPosDef(N, rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(N, rand);
 
         CholeskyDecomposition_F64<CDenseMatrix64F> cholesky = new Dummy(true);
 
         CDenseMatrix64F L_null = cholesky.getT(null);
-        CDenseMatrix64F L_provided = CRandomMatrices.createRandom(N, N, rand);
+        CDenseMatrix64F L_provided = RandomMatrices_CD64.createRandom(N, N, rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
-        assertTrue(CMatrixFeatures.isEquals(L_null, L_provided));
+        assertTrue(MatrixFeatures_CD64.isEquals(L_null, L_provided));
     }
 
     private class Dummy extends CholeskyDecompositionCommon_CD64 {
 
         public Dummy(boolean lower) {
             super(lower);
-            T = CRandomMatrices.createRandom(N,N,rand);
+            T = RandomMatrices_CD64.createRandom(N,N,rand);
             n = N;
         }
 

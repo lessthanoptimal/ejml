@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.mult.CVectorVectorMult;
+import org.ejml.alg.dense.mult.VectorVectorMult_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public class TestCMatrixFeatures {
+public class TestMatrixFeatures_CD64 {
 
     private Random rand = new Random(234);
 
@@ -39,30 +39,30 @@ public class TestCMatrixFeatures {
     public void isVector() {
         CDenseMatrix64F a = new CDenseMatrix64F(4,4);
 
-        assertFalse(CMatrixFeatures.isVector(a));
+        assertFalse(MatrixFeatures_CD64.isVector(a));
 
         a.reshape(3, 1);
-        assertTrue(CMatrixFeatures.isVector(a));
+        assertTrue(MatrixFeatures_CD64.isVector(a));
 
         a.reshape(1, 3);
-        assertTrue(CMatrixFeatures.isVector(a));
+        assertTrue(MatrixFeatures_CD64.isVector(a));
     }
 
     @Test
     public void isNegative() {
-        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,5,rand);
         CDenseMatrix64F b = a.copy();
-        CCommonOps.scale(-1,0,b);
+        CommonOps_CD64.scale(-1,0,b);
 
         // test the positive case first
-        assertTrue(CMatrixFeatures.isNegative(a,b,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isNegative(a,b,UtilEjml.TEST_64F));
 
         // now the negative case
         b.set(2,2,10,0);
-        assertFalse(CMatrixFeatures.isNegative(a,b,UtilEjml.TEST_64F));
+        assertFalse(MatrixFeatures_CD64.isNegative(a,b,UtilEjml.TEST_64F));
 
         b.set(2,2,Double.NaN,0);
-        assertFalse(CMatrixFeatures.isNegative(a,b,UtilEjml.TEST_64F));
+        assertFalse(MatrixFeatures_CD64.isNegative(a,b,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -70,62 +70,62 @@ public class TestCMatrixFeatures {
         CDenseMatrix64F a = new CDenseMatrix64F(4,4);
 
         // check a negative case first
-        assertFalse(CMatrixFeatures.hasUncountable(a));
+        assertFalse(MatrixFeatures_CD64.hasUncountable(a));
 
         // check two positve cases with different types of uncountables
         a.set(2,2,Double.NaN,0);
-        assertTrue(CMatrixFeatures.hasUncountable(a));
+        assertTrue(MatrixFeatures_CD64.hasUncountable(a));
 
         a.set(2,2,Double.POSITIVE_INFINITY,0);
-        assertTrue(CMatrixFeatures.hasUncountable(a));
+        assertTrue(MatrixFeatures_CD64.hasUncountable(a));
     }
 
     @Test
     public void hasNaN() {
         CDenseMatrix64F m = new CDenseMatrix64F(3,3);
-        assertFalse(CMatrixFeatures.hasNaN(m));
+        assertFalse(MatrixFeatures_CD64.hasNaN(m));
 
         m.set(1,2,-Double.NaN,0);
-        assertTrue(CMatrixFeatures.hasNaN(m));
+        assertTrue(MatrixFeatures_CD64.hasNaN(m));
     }
 
     @Test
     public void isEquals() {
-        CDenseMatrix64F m = CRandomMatrices.createRandom(3,4,-1,1,rand);
+        CDenseMatrix64F m = RandomMatrices_CD64.createRandom(3,4,-1,1,rand);
         CDenseMatrix64F n = m.copy();
 
-        assertTrue(CMatrixFeatures.isEquals(m,n));
+        assertTrue(MatrixFeatures_CD64.isEquals(m,n));
 
         n.set(2,1,-0.5,-0.6);
-        assertFalse(CMatrixFeatures.isEquals(m,n));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n));
 
         m.set(2,1,Double.NaN,1);
         n.set(2,1,Double.NaN,1);
-        assertFalse(CMatrixFeatures.isEquals(m,n));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n));
         m.set(2,1,Double.POSITIVE_INFINITY,1);
         n.set(2,1,Double.POSITIVE_INFINITY,1);
-        assertTrue(CMatrixFeatures.isEquals(m,n));
+        assertTrue(MatrixFeatures_CD64.isEquals(m,n));
     }
 
     @Test
     public void isEquals_tol() {
-        CDenseMatrix64F m = CRandomMatrices.createRandom(3,4,-1,1,rand);
+        CDenseMatrix64F m = RandomMatrices_CD64.createRandom(3,4,-1,1,rand);
         CDenseMatrix64F n = m.copy();
 
-        assertTrue(CMatrixFeatures.isEquals(m,n,1e-6));
+        assertTrue(MatrixFeatures_CD64.isEquals(m,n,1e-6));
 
         n.data[4] += 1e-25;
-        assertTrue(CMatrixFeatures.isEquals(m,n,1e-6));
+        assertTrue(MatrixFeatures_CD64.isEquals(m,n,1e-6));
 
         n.data[4] += 1e-2;
-        assertFalse(CMatrixFeatures.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n,1e-6));
 
         m.set(2,1,Double.NaN,1);
         n.set(2,1,Double.NaN,1);
-        assertFalse(CMatrixFeatures.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n,1e-6));
         m.set(2,1,Double.POSITIVE_INFINITY,1);
         n.set(2,1,Double.POSITIVE_INFINITY,1);
-        assertFalse(CMatrixFeatures.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n,1e-6));
     }
 
     @Test
@@ -149,70 +149,70 @@ public class TestCMatrixFeatures {
     private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
         CDenseMatrix64F A = new CDenseMatrix64F(2,2);
         CDenseMatrix64F B = new CDenseMatrix64F(2,2);
-        CCommonOps.fill(A, valA,0);
-        CCommonOps.fill(B, valB,0);
+        CommonOps_CD64.fill(A, valA,0);
+        CommonOps_CD64.fill(B, valB,0);
 
-        assertEquals(expected,CMatrixFeatures.isIdentical(A,B,tol));
+        assertEquals(expected, MatrixFeatures_CD64.isIdentical(A,B,tol));
 
-        CCommonOps.fill(A, 0,valA);
-        CCommonOps.fill(B, 0,valB);
+        CommonOps_CD64.fill(A, 0,valA);
+        CommonOps_CD64.fill(B, 0,valB);
 
-        assertEquals(expected,CMatrixFeatures.isIdentical(A,B,tol));
+        assertEquals(expected, MatrixFeatures_CD64.isIdentical(A,B,tol));
     }
 
     @Test
     public void isIdentity() {
-        CDenseMatrix64F m = CCommonOps.diag(1,0,1,0,1,0);
+        CDenseMatrix64F m = CommonOps_CD64.diag(1,0,1,0,1,0);
 
-        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
 
         m.setImag(0,0,1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(m, UtilEjml.TEST_64F));
         m.setReal(0, 0, 1 + 1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
 
-        assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
-        assertFalse(CMatrixFeatures.isIdentity(m, 1e-15));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m, 1e-15));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m, 1e-15));
 
         m.setImag(1,0,1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
         m.setReal(1,0,1e-12);
-        assertTrue(CMatrixFeatures.isIdentity(m,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
 
-        assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
-        assertFalse(CMatrixFeatures.isIdentity(m,1e-15));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m,1e-15));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m,1e-15));
     }
 
     @Test
     public void isHermitian() {
         CDenseMatrix64F A = new CDenseMatrix64F(new double[][]{{1,0, 2,2.1},{2,-2.1 ,3,0}});
 
-        assertTrue(CMatrixFeatures.isHermitian(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isHermitian(A, UtilEjml.TEST_64F));
 
         A.set(0,1,5,6);
 
-        assertFalse(CMatrixFeatures.isHermitian(A, UtilEjml.TEST_64F));
+        assertFalse(MatrixFeatures_CD64.isHermitian(A, UtilEjml.TEST_64F));
     }
 
     @Test
     public void isUnitary() {
         // create a reflector since it's unitary
-        CDenseMatrix64F u = CRandomMatrices.createRandom(5,1,rand);
+        CDenseMatrix64F u = RandomMatrices_CD64.createRandom(5,1,rand);
         Complex64F dot = new Complex64F();
-        CVectorVectorMult.innerProdH(u, u,dot);
+        VectorVectorMult_CD64.innerProdH(u, u,dot);
         double gamma = 2.0/dot.real;
-        CDenseMatrix64F A = CSpecializedOps.householder(u,gamma);
+        CDenseMatrix64F A = SpecializedOps_CD64.householder(u,gamma);
 
-        assertTrue(CMatrixFeatures.isUnitary(A, 1e-6f));
+        assertTrue(MatrixFeatures_CD64.isUnitary(A, 1e-6f));
 
         // try a negative case now
         A.set(0,1,495,400);
 
-        assertFalse(CMatrixFeatures.isUnitary(A, 1e-6f));
+        assertFalse(MatrixFeatures_CD64.isUnitary(A, 1e-6f));
 
         A.set(0,1,Double.NaN,Double.NaN);
 
-        assertFalse(CMatrixFeatures.isUnitary(A, 1e-6f));
+        assertFalse(MatrixFeatures_CD64.isUnitary(A, 1e-6f));
     }
 
     /**
@@ -224,9 +224,9 @@ public class TestCMatrixFeatures {
         CDenseMatrix64F b = new CDenseMatrix64F(2,2,true,0,0,1,0,1,0,0,0);
         CDenseMatrix64F c = new CDenseMatrix64F(2,2);
 
-        assertTrue(CMatrixFeatures.isPositiveDefinite(a));
-        assertFalse(CMatrixFeatures.isPositiveDefinite(b));
-        assertFalse(CMatrixFeatures.isPositiveDefinite(c));
+        assertTrue(MatrixFeatures_CD64.isPositiveDefinite(a));
+        assertFalse(MatrixFeatures_CD64.isPositiveDefinite(b));
+        assertFalse(MatrixFeatures_CD64.isPositiveDefinite(c));
 
         // make sure the input isn't modified
         assertEquals(2,a.getReal(0, 0),UtilEjml.TEST_64F);
@@ -248,17 +248,17 @@ public class TestCMatrixFeatures {
 
             // test positive
             for( int i = hessenberg; i < A.numRows; i++ ) {
-                assertTrue(CMatrixFeatures.isUpperTriangle(A,i,UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_CD64.isUpperTriangle(A,i,UtilEjml.TEST_64F));
             }
 
             // test negative
             for( int i = 0; i < hessenberg; i++ ) {
-                assertFalse(CMatrixFeatures.isUpperTriangle(A,i, UtilEjml.TEST_64F));
+                assertFalse(MatrixFeatures_CD64.isUpperTriangle(A,i, UtilEjml.TEST_64F));
             }
 
             // see if it handles NaN well
             A.set(4,0,Double.NaN,Double.NaN);
-            assertFalse(CMatrixFeatures.isUpperTriangle(A,0,UtilEjml.TEST_64F));
+            assertFalse(MatrixFeatures_CD64.isUpperTriangle(A,0,UtilEjml.TEST_64F));
         }
     }
 
@@ -274,21 +274,21 @@ public class TestCMatrixFeatures {
                    A.set(i,j,2,2);
                 }
             }
-            CCommonOps.transpose(A);
+            CommonOps_CD64.transpose(A);
 
             // test positive
             for( int i = hessenberg; i < A.numRows; i++ ) {
-                assertTrue(CMatrixFeatures.isLowerTriangle(A,i,UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_CD64.isLowerTriangle(A,i,UtilEjml.TEST_64F));
             }
 
             // test negative
             for( int i = 0; i < hessenberg; i++ ) {
-                assertFalse(CMatrixFeatures.isLowerTriangle(A,i,UtilEjml.TEST_64F));
+                assertFalse(MatrixFeatures_CD64.isLowerTriangle(A,i,UtilEjml.TEST_64F));
             }
 
             // see if it handles NaN well
             A.set(0,4,Double.NaN,Double.NaN);
-            assertFalse(CMatrixFeatures.isLowerTriangle(A,0,UtilEjml.TEST_64F));
+            assertFalse(MatrixFeatures_CD64.isLowerTriangle(A,0,UtilEjml.TEST_64F));
         }
     }
 
@@ -298,7 +298,7 @@ public class TestCMatrixFeatures {
         CDenseMatrix64F a = new CDenseMatrix64F(4,4);
         a.set(0, 0, 1, -1);
 
-        assertFalse(CMatrixFeatures.isZeros(a, 0.1));
-        assertTrue(CMatrixFeatures.isZeros(a, 2));
+        assertFalse(MatrixFeatures_CD64.isZeros(a, 0.1));
+        assertTrue(MatrixFeatures_CD64.isZeros(a, 2));
     }
 }

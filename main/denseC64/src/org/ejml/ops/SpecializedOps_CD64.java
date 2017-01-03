@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,14 @@
 
 package org.ejml.ops;
 
-import org.ejml.alg.dense.mult.CVectorVectorMult;
+import org.ejml.alg.dense.mult.VectorVectorMult_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 
 /**
  * @author Peter Abeles
  */
-public class CSpecializedOps {
+public class SpecializedOps_CD64 {
 
     /**
      * <p>
@@ -39,15 +39,15 @@ public class CSpecializedOps {
      * @return An orthogonal reflector.
      */
     public static CDenseMatrix64F createReflector(CDenseMatrix64F u ) {
-        if( !CMatrixFeatures.isVector(u))
+        if( !MatrixFeatures_CD64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
-        double norm = CNormOps.normF(u);
+        double norm = NormOps_CD64.normF(u);
         double gamma = -2.0/(norm*norm);
 
-        CDenseMatrix64F Q = CCommonOps.identity(u.getNumElements());
+        CDenseMatrix64F Q = CommonOps_CD64.identity(u.getNumElements());
 
-        CCommonOps.multAddTransB(gamma,0,u,u,Q);
+        CommonOps_CD64.multAddTransB(gamma,0,u,u,Q);
 
         return Q;
     }
@@ -64,11 +64,11 @@ public class CSpecializedOps {
      * @return An orthogonal reflector.
      */
     public static CDenseMatrix64F createReflector( CDenseMatrix64F u , double gamma) {
-        if( !CMatrixFeatures.isVector(u))
+        if( !MatrixFeatures_CD64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
-        CDenseMatrix64F Q = CCommonOps.identity(u.getNumElements());
-        CCommonOps.multAddTransB(-gamma,0,u,u,Q);
+        CDenseMatrix64F Q = CommonOps_CD64.identity(u.getNumElements());
+        CommonOps_CD64.multAddTransB(-gamma,0,u,u,Q);
 
         return Q;
     }
@@ -96,7 +96,7 @@ public class CSpecializedOps {
         } else {
             if( ret.numCols != numPivots || ret.numRows != numPivots )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
-            CCommonOps.fill(ret, 0,0);
+            CommonOps_CD64.fill(ret, 0,0);
         }
 
         if( transposed ) {
@@ -190,9 +190,9 @@ public class CSpecializedOps {
         int N = u.getDataLength()/2;
         // u*u^H
         CDenseMatrix64F uut = new CDenseMatrix64F(N,N);
-        CVectorVectorMult.outerProdH(u, u, uut);
+        VectorVectorMult_CD64.outerProdH(u, u, uut);
         // foo = -gamma*u*u^H
-        CCommonOps.elementMultiply(uut,-gamma,0,uut);
+        CommonOps_CD64.elementMultiply(uut,-gamma,0,uut);
 
         // I + foo
         for (int i = 0; i < N; i++) {
@@ -216,11 +216,11 @@ public class CSpecializedOps {
     public static CDenseMatrix64F householderVector( CDenseMatrix64F x ) {
         CDenseMatrix64F u = x.copy();
 
-        double max = CCommonOps.elementMaxAbs(u);
+        double max = CommonOps_CD64.elementMaxAbs(u);
 
-        CCommonOps.elementDivide(u, max, 0, u);
+        CommonOps_CD64.elementDivide(u, max, 0, u);
 
-        double nx = CNormOps.normF(u);
+        double nx = NormOps_CD64.normF(u);
         Complex64F c = new Complex64F();
         u.get(0,0,c);
 
@@ -235,7 +235,7 @@ public class CSpecializedOps {
         }
 
         u.set(0,0,c.real + realTau,c.imaginary + imagTau);
-        CCommonOps.elementDivide(u,u.getReal(0,0),u.getImag(0,0),u);
+        CommonOps_CD64.elementDivide(u,u.getReal(0,0),u.getImag(0,0),u);
 
         return u;
     }

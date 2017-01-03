@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -64,6 +64,6 @@ public class TestReadMatrixCsv {
         CDenseMatrix64F expected = new CDenseMatrix64F(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
         CDenseMatrix64F m = alg.read();
 
-        assertTrue(CMatrixFeatures.isIdentical(expected,m, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(expected,m, UtilEjml.TEST_64F));
     }
 }

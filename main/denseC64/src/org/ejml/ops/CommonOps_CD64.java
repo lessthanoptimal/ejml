@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,10 +21,10 @@ package org.ejml.ops;
 import org.ejml.EjmlParameters;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.alg.dense.misc.CTransposeAlgs;
-import org.ejml.alg.dense.mult.CMatrixMatrixMult;
+import org.ejml.alg.dense.misc.TransposeAlgs_CD64;
+import org.ejml.alg.dense.mult.MatrixMatrixMult_CD64;
 import org.ejml.data.*;
-import org.ejml.factory.CLinearSolverFactory;
+import org.ejml.factory.LinearSolverFactory_CD64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import java.util.Arrays;
  *
  * @author Peter Abeles
  */
-public class CCommonOps {
+public class CommonOps_CD64 {
 
     /**
      * <p>
@@ -339,9 +339,9 @@ public class CCommonOps {
     public static void mult(CDenseMatrix64F a, CDenseMatrix64F b, CDenseMatrix64F c)
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
-            CMatrixMatrixMult.mult_reorder(a, b, c);
+            MatrixMatrixMult_CD64.mult_reorder(a, b, c);
         } else {
-            CMatrixMatrixMult.mult_small(a, b, c);
+            MatrixMatrixMult_CD64.mult_small(a, b, c);
         }
     }
 
@@ -362,9 +362,9 @@ public class CCommonOps {
     public static void mult( double realAlpha , double imgAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.mult_reorder(realAlpha,imgAlpha,a,b,c);
+            MatrixMatrixMult_CD64.mult_reorder(realAlpha,imgAlpha,a,b,c);
         } else {
-            CMatrixMatrixMult.mult_small(realAlpha,imgAlpha,a,b,c);
+            MatrixMatrixMult_CD64.mult_small(realAlpha,imgAlpha,a,b,c);
         }
     }
 
@@ -383,9 +383,9 @@ public class CCommonOps {
     public static void multAdd( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multAdd_reorder(a, b, c);
+            MatrixMatrixMult_CD64.multAdd_reorder(a, b, c);
         } else {
-            CMatrixMatrixMult.multAdd_small(a,b,c);
+            MatrixMatrixMult_CD64.multAdd_small(a,b,c);
         }
     }
 
@@ -406,9 +406,9 @@ public class CCommonOps {
     public static void multAdd( double realAlpha , double imgAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multAdd_reorder(realAlpha,imgAlpha,a,b,c);
+            MatrixMatrixMult_CD64.multAdd_reorder(realAlpha,imgAlpha,a,b,c);
         } else {
-            CMatrixMatrixMult.multAdd_small(realAlpha,imgAlpha,a,b,c);
+            MatrixMatrixMult_CD64.multAdd_small(realAlpha,imgAlpha,a,b,c);
         }
     }
 
@@ -428,9 +428,9 @@ public class CCommonOps {
     {
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
-            CMatrixMatrixMult.multTransA_reorder(a, b, c);
+            MatrixMatrixMult_CD64.multTransA_reorder(a, b, c);
         } else {
-            CMatrixMatrixMult.multTransA_small(a, b, c);
+            MatrixMatrixMult_CD64.multTransA_small(a, b, c);
         }
     }
 
@@ -453,9 +453,9 @@ public class CCommonOps {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multTransA_reorder(realAlpha, imagAlpha, a, b, c);
+            MatrixMatrixMult_CD64.multTransA_reorder(realAlpha, imagAlpha, a, b, c);
         } else {
-            CMatrixMatrixMult.multTransA_small(realAlpha, imagAlpha, a, b, c);
+            MatrixMatrixMult_CD64.multTransA_small(realAlpha, imagAlpha, a, b, c);
         }
     }
 
@@ -473,7 +473,7 @@ public class CCommonOps {
      */
     public static void multTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
-        CMatrixMatrixMult.multTransB(a, b, c);
+        MatrixMatrixMult_CD64.multTransB(a, b, c);
     }
 
     /**
@@ -493,7 +493,7 @@ public class CCommonOps {
     public static void multTransB( double realAlpha , double imagAlpha, CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         // TODO add a matrix vectory multiply here
-        CMatrixMatrixMult.multTransB(realAlpha,imagAlpha,a,b,c);
+        MatrixMatrixMult_CD64.multTransB(realAlpha,imagAlpha,a,b,c);
     }
 
         /**
@@ -511,9 +511,9 @@ public class CCommonOps {
     public static void multTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multTransAB_aux(a, b, c, null);
+            MatrixMatrixMult_CD64.multTransAB_aux(a, b, c, null);
         } else {
-            CMatrixMatrixMult.multTransAB(a, b, c);
+            MatrixMatrixMult_CD64.multTransAB(a, b, c);
         }
     }
 
@@ -535,9 +535,9 @@ public class CCommonOps {
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multTransAB_aux(realAlpha, imagAlpha, a, b, c, null);
+            MatrixMatrixMult_CD64.multTransAB_aux(realAlpha, imagAlpha, a, b, c, null);
         } else {
-            CMatrixMatrixMult.multTransAB(realAlpha, imagAlpha, a, b, c);
+            MatrixMatrixMult_CD64.multTransAB(realAlpha, imagAlpha, a, b, c);
         }
     }
 
@@ -557,9 +557,9 @@ public class CCommonOps {
     {
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
-            CMatrixMatrixMult.multAddTransA_reorder(a, b, c);
+            MatrixMatrixMult_CD64.multAddTransA_reorder(a, b, c);
         } else {
-            CMatrixMatrixMult.multAddTransA_small(a, b, c);
+            MatrixMatrixMult_CD64.multAddTransA_small(a, b, c);
         }
     }
 
@@ -582,9 +582,9 @@ public class CCommonOps {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multAddTransA_reorder(realAlpha, imagAlpha, a, b, c);
+            MatrixMatrixMult_CD64.multAddTransA_reorder(realAlpha, imagAlpha, a, b, c);
         } else {
-            CMatrixMatrixMult.multAddTransA_small(realAlpha, imagAlpha, a, b, c);
+            MatrixMatrixMult_CD64.multAddTransA_small(realAlpha, imagAlpha, a, b, c);
         }
     }
 
@@ -603,7 +603,7 @@ public class CCommonOps {
      */
     public static void multAddTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
-        CMatrixMatrixMult.multAddTransB(a,b,c);
+        MatrixMatrixMult_CD64.multAddTransB(a,b,c);
     }
 
     /**
@@ -623,7 +623,7 @@ public class CCommonOps {
     public static void multAddTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         // TODO add a matrix vectory multiply here
-        CMatrixMatrixMult.multAddTransB(realAlpha,imagAlpha,a,b,c);
+        MatrixMatrixMult_CD64.multAddTransB(realAlpha,imagAlpha,a,b,c);
     }
 
     /**
@@ -641,9 +641,9 @@ public class CCommonOps {
     public static void multAddTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multAddTransAB_aux(a,b,c,null);
+            MatrixMatrixMult_CD64.multAddTransAB_aux(a,b,c,null);
         } else {
-            CMatrixMatrixMult.multAddTransAB(a,b,c);
+            MatrixMatrixMult_CD64.multAddTransAB(a,b,c);
         }
     }
 
@@ -665,9 +665,9 @@ public class CCommonOps {
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
-            CMatrixMatrixMult.multAddTransAB_aux(realAlpha,imagAlpha, a, b, c, null);
+            MatrixMatrixMult_CD64.multAddTransAB_aux(realAlpha,imagAlpha, a, b, c, null);
         } else {
-            CMatrixMatrixMult.multAddTransAB(realAlpha,imagAlpha, a, b, c);
+            MatrixMatrixMult_CD64.multAddTransAB(realAlpha,imagAlpha, a, b, c);
         }
     }
 
@@ -684,7 +684,7 @@ public class CCommonOps {
      */
     public static void transpose( CDenseMatrix64F mat ) {
         if( mat.numCols == mat.numRows ){
-            CTransposeAlgs.square(mat);
+            TransposeAlgs_CD64.square(mat);
         } else {
             CDenseMatrix64F b = new CDenseMatrix64F(mat.numCols,mat.numRows);
             transpose(mat, b);
@@ -702,7 +702,7 @@ public class CCommonOps {
      */
     public static void transposeConjugate( CDenseMatrix64F mat ) {
         if( mat.numCols == mat.numRows ){
-            CTransposeAlgs.squareConjugate(mat);
+            TransposeAlgs_CD64.squareConjugate(mat);
         } else {
             CDenseMatrix64F b = new CDenseMatrix64F(mat.numCols,mat.numRows);
             transposeConjugate(mat, b);
@@ -731,7 +731,7 @@ public class CCommonOps {
             throw new IllegalArgumentException("Input and output shapes are not compatible");
         }
 
-        CTransposeAlgs.standard(input,output);
+        TransposeAlgs_CD64.standard(input,output);
 
         return output;
     }
@@ -757,7 +757,7 @@ public class CCommonOps {
             throw new IllegalArgumentException("Input and output shapes are not compatible");
         }
 
-        CTransposeAlgs.standardConjugate(input, output);
+        TransposeAlgs_CD64.standardConjugate(input, output);
 
         return output;
     }
@@ -781,7 +781,7 @@ public class CCommonOps {
      */
     public static boolean invert( CDenseMatrix64F A )
     {
-        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.lu(A.numRows);
+        LinearSolver<CDenseMatrix64F> solver = LinearSolverFactory_CD64.lu(A.numRows);
 
         if( solver.setA(A) ) {
             solver.invert(A);
@@ -808,7 +808,7 @@ public class CCommonOps {
      *
      * <p>
      * For medium to large matrices there might be a slight performance boost to using
-     * {@link CLinearSolverFactory} instead.
+     * {@link LinearSolverFactory_CD64} instead.
      * </p>
      *
      * @param input The matrix that is to be inverted. Not modified.
@@ -817,7 +817,7 @@ public class CCommonOps {
      */
     public static boolean invert( CDenseMatrix64F input , CDenseMatrix64F output )
     {
-        LinearSolver<CDenseMatrix64F> solver = CLinearSolverFactory.lu(input.numRows);
+        LinearSolver<CDenseMatrix64F> solver = LinearSolverFactory_CD64.lu(input.numRows);
 
         if( solver.modifiesA() )
             input = input.copy();
@@ -842,7 +842,7 @@ public class CCommonOps {
      * </p>
      *
      * <p>
-     * If repeat calls to solve are being made then one should consider using {@link CLinearSolverFactory}
+     * If repeat calls to solve are being made then one should consider using {@link LinearSolverFactory_CD64}
      * instead.
      * </p>
      *
@@ -860,9 +860,9 @@ public class CCommonOps {
     {
         LinearSolver<CDenseMatrix64F> solver;
         if( a.numCols == a.numRows ) {
-            solver = CLinearSolverFactory.lu(a.numRows);
+            solver = LinearSolverFactory_CD64.lu(a.numRows);
         } else {
-            solver = CLinearSolverFactory.qr(a.numRows, a.numCols);
+            solver = LinearSolverFactory_CD64.qr(a.numRows, a.numCols);
         }
 
         // make sure the inputs 'a' and 'b' are not modified

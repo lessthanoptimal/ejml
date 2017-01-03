@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.alg.dense.decompose.lu;
 
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.ComplexMath64F;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -47,7 +47,7 @@ public class TestLUDecompositionBase_CD64 {
 
         int width = 10;
 
-        CDenseMatrix64F LU = CRandomMatrices.createRandom(width,width,-1,1,rand);
+        CDenseMatrix64F LU = RandomMatrices_CD64.createRandom(width,width,-1,1,rand);
 
         Complex64F expected = new Complex64F(1,0);
         Complex64F a = new Complex64F();
@@ -72,7 +72,7 @@ public class TestLUDecompositionBase_CD64 {
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        CDenseMatrix64F LU = CRandomMatrices.createRandom(width, width,-1,1, rand);
+        CDenseMatrix64F LU = RandomMatrices_CD64.createRandom(width, width,-1,1, rand);
 
         CDenseMatrix64F L = new CDenseMatrix64F(width,width);
         CDenseMatrix64F U = new CDenseMatrix64F(width,width);
@@ -94,12 +94,12 @@ public class TestLUDecompositionBase_CD64 {
             }
         }
 
-        CDenseMatrix64F x = CRandomMatrices.createRandom(width, 1,-1,1, rand);
+        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(width, 1,-1,1, rand);
         CDenseMatrix64F tmp = new CDenseMatrix64F(width,1);
         CDenseMatrix64F b = new CDenseMatrix64F(width,1);
 
-        CCommonOps.mult(U, x, tmp);
-        CCommonOps.mult(L, tmp, b);
+        CommonOps_CD64.mult(U, x, tmp);
+        CommonOps_CD64.mult(L, tmp, b);
 
         DebugDecompose alg = new DebugDecompose(width);
         alg.decomposeCommonInit(LU);
@@ -116,7 +116,7 @@ public class TestLUDecompositionBase_CD64 {
     @Test
     public void solveL() {
         int width = 10;
-        CDenseMatrix64F LU = CRandomMatrices.createRandom(width, width,-1,1, rand);
+        CDenseMatrix64F LU = RandomMatrices_CD64.createRandom(width, width,-1,1, rand);
 
         CDenseMatrix64F L = new CDenseMatrix64F(width,width);
 
@@ -134,10 +134,10 @@ public class TestLUDecompositionBase_CD64 {
             }
         }
 
-        CDenseMatrix64F x = CRandomMatrices.createRandom(width, 1,-1,1, rand);
+        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(width, 1,-1,1, rand);
         CDenseMatrix64F b = new CDenseMatrix64F(width,1);
 
-        CCommonOps.mult(L, x, b);
+        CommonOps_CD64.mult(L, x, b);
 
         DebugDecompose alg = new DebugDecompose(width);
         alg.decomposeCommonInit(LU);

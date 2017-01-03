@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CommonOps_CD64;
 
 
 /**
@@ -207,7 +207,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
     public boolean decompose( CDenseMatrix64F A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
-        CCommonOps.transpose(A, QR);
+        CommonOps_CD64.transpose(A, QR);
 
         error = false;
 

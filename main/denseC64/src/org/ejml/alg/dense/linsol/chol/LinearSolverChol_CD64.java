@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.alg.dense.decompose.CTriangularSolver;
+import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionCommon_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.CSpecializedOps;
+import org.ejml.ops.SpecializedOps_CD64;
 
 import java.util.Arrays;
 
@@ -62,7 +62,7 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
 
     @Override
     public /**/double quality() {
-        return CSpecializedOps.qualityTriangular(decomposer._getT());
+        return SpecializedOps_CD64.qualityTriangular(decomposer._getT());
     }
 
     /**
@@ -115,10 +115,10 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
         // This takes advantage of the diagonal elements always being real numbers
 
         // solve L*y=b storing y in x
-        CTriangularSolver.solveL_diagReal(t, vv, n);
+        TriangularSolver_CD64.solveL_diagReal(t, vv, n);
 
         // solve L^T*x=y
-        CTriangularSolver.solveConjTranL_diagReal(t, vv, n);
+        TriangularSolver_CD64.solveConjTranL_diagReal(t, vv, n);
     }
 
     /**
@@ -153,8 +153,8 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
         for (int col = 0; col < n; col++) {
             Arrays.fill(vv,0);
             vv[col*2] = 1;
-            CTriangularSolver.solveL_diagReal(t, vv, n);
-            CTriangularSolver.solveConjTranL_diagReal(t, vv, n);
+            TriangularSolver_CD64.solveL_diagReal(t, vv, n);
+            TriangularSolver_CD64.solveConjTranL_diagReal(t, vv, n);
             for( int i = 0; i < n; i++ ) {
                 a[(i*numCols+col)*2  ] = vv[i*2];
                 a[(i*numCols+col)*2+1] = vv[i*2+1];

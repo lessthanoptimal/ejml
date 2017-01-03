@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,9 @@ import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestCInvertUsingSolve {
+public class TestInvertUsingSolve_CD64 {
 
     Random rand = new Random(0xff);
     double tol = 1e-8;
@@ -46,18 +46,18 @@ public class TestCInvertUsingSolve {
     @Test
     public void invert() {
         CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
-        CDenseMatrix64F A_inv = CRandomMatrices.createRandom(3, 3, rand);
+        CDenseMatrix64F A_inv = RandomMatrices_CD64.createRandom(3, 3, rand);
 
         LUDecompositionAlt_CD64 decomp = new LUDecompositionAlt_CD64();
         LinearSolver<CDenseMatrix64F> solver = new LinearSolverLu_CD64(decomp);
 
         solver.setA(A);
-        CInvertUsingSolve.invert(solver,A,A_inv);
+        InvertUsingSolve_CD64.invert(solver,A,A_inv);
 
-        CDenseMatrix64F I = CRandomMatrices.createRandom(3,3,rand);
+        CDenseMatrix64F I = RandomMatrices_CD64.createRandom(3,3,rand);
 
-        CCommonOps.mult(A, A_inv, I);
+        CommonOps_CD64.mult(A, A_inv, I);
 
-        assertTrue(CMatrixFeatures.isIdentity(I,tol));
+        assertTrue(MatrixFeatures_CD64.isIdentity(I,tol));
     }
 }

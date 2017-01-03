@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,10 +21,10 @@ package org.ejml.alg.dense.decompose.hessenberg;
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.CSpecializedOps;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
+import org.ejml.ops.SpecializedOps_CD64;
 import org.junit.Test;
 
 import static org.ejml.alg.dense.decompose.CheckDecompositionInterface_CD64.safeDecomposition;
@@ -50,7 +50,7 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
     public void testHouseholderVectors()
     {
         int N = 5;
-        CDenseMatrix64F A = CRandomMatrices.createHermitian(N,-1,1,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(N,-1,1,rand);
         CDenseMatrix64F B = new CDenseMatrix64F(N,N);
 
 //        System.out.println("A");
@@ -79,12 +79,12 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
                 u.data[j*2+1] = QT.getImag(i,j); // the reflector stored in the row will be the conjugate
             }
 
-            CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gammas[i]);
-            CCommonOps.mult(Q,A,B);
-            CCommonOps.mult(B,Q,A);
+            CDenseMatrix64F Q = SpecializedOps_CD64.createReflector(u,gammas[i]);
+            CommonOps_CD64.mult(Q,A,B);
+            CommonOps_CD64.mult(B,Q,A);
 
             // sanity check
-            assertTrue(CMatrixFeatures.isHermitian(A,1e-6));
+            assertTrue(MatrixFeatures_CD64.isHermitian(A,1e-6));
 
             for( int j = i; j  < i+2; j++ ) {
                 assertTrue(Math.abs(A.getReal(j,i))> UtilEjml.TEST_64F);

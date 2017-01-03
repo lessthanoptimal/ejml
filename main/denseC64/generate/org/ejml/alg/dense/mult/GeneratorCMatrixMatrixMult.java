@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,7 +38,7 @@ public class GeneratorCMatrixMatrixMult {
                 "package org.ejml.alg.dense.mult;\n" +
                 "\n" +
                 "import org.ejml.data.CDenseMatrix64F;\n" +
-                "import org.ejml.ops.CCommonOps;\n" +
+                "import org.ejml.ops.CommonOps_CD64;\n" +
                 "import org.ejml.ops.MatrixDimensionException;\n" +
                 "\n" +
                 "/**\n" +
@@ -51,7 +51,7 @@ public class GeneratorCMatrixMatrixMult {
                 " * @author Peter Abeles\n" +
                 " */\n" +
                 "@SuppressWarnings(\"Duplicates\")\n" +
-                "public class CMatrixMatrixMult {\n";
+                "public class MatrixMatrixMult_CD64 {\n";
 
         stream.print(preamble);
 
@@ -476,7 +476,7 @@ public class GeneratorCMatrixMatrixMult {
 
     private String handleZeros( boolean add ) {
 
-        String fill = add ? "" : "            CCommonOps.fill(c,0,0);\n";
+        String fill = add ? "" : "            CommonOps_CD64.fill(c,0,0);\n";
 
         String ret =
                 "        if( a.numCols == 0 || a.numRows == 0 ) {\n" +
@@ -520,7 +520,7 @@ public class GeneratorCMatrixMatrixMult {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        GeneratorCMatrixMatrixMult gen = new GeneratorCMatrixMatrixMult("CMatrixMatrixMult.java");
+        GeneratorCMatrixMatrixMult gen = new GeneratorCMatrixMatrixMult("MatrixMatrixMult_CD64.java");
 
         gen.createClass();
     }

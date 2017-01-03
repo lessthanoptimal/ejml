@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.data.CDenseMatrix64F;
  *
  * @author Peter Abeles
  */
-public class CTransposeAlgs {
+public class TransposeAlgs_CD64 {
     /**
      * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
      * algorithm, but on most modern computers it's slower than block transpose.

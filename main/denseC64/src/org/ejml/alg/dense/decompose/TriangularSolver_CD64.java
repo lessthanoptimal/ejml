@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ package org.ejml.alg.dense.decompose;
  *
  * @author Peter Abeles
  */
-public class CTriangularSolver {
+public class TriangularSolver_CD64 {
     /**
      * <p>
      * This is a forward substitution solver for non-singular upper triangular matrices.

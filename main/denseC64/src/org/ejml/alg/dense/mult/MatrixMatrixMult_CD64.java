@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixDimensionException;
 
 /**
@@ -32,7 +32,7 @@ import org.ejml.ops.MatrixDimensionException;
  * @author Peter Abeles
  */
 @SuppressWarnings("Duplicates")
-public class CMatrixMatrixMult {
+public class MatrixMatrixMult_CD64 {
     public static void mult_reorder( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
     {
         if( a == c || b == c )
@@ -44,7 +44,7 @@ public class CMatrixMatrixMult {
         }
 
         if( a.numCols == 0 || a.numRows == 0 ) {
-            CCommonOps.fill(c,0,0);
+            CommonOps_CD64.fill(c,0,0);
             return;
         }
         double realA,imagA;
@@ -151,7 +151,7 @@ public class CMatrixMatrixMult {
         }
 
         if( a.numCols == 0 || a.numRows == 0 ) {
-            CCommonOps.fill(c,0,0);
+            CommonOps_CD64.fill(c,0,0);
             return;
         }
         double realA,imagA;
@@ -314,7 +314,7 @@ public class CMatrixMatrixMult {
         if( aux == null ) aux = new double[ a.numRows*2 ];
 
         if( a.numCols == 0 || a.numRows == 0 ) {
-            CCommonOps.fill(c,0,0);
+            CommonOps_CD64.fill(c,0,0);
             return;
         }
         int indexC = 0;
@@ -667,7 +667,7 @@ public class CMatrixMatrixMult {
         }
 
         if( a.numCols == 0 || a.numRows == 0 ) {
-            CCommonOps.fill(c,0,0);
+            CommonOps_CD64.fill(c,0,0);
             return;
         }
         double realA,imagA;
@@ -778,7 +778,7 @@ public class CMatrixMatrixMult {
         }
 
         if( a.numCols == 0 || a.numRows == 0 ) {
-            CCommonOps.fill(c,0,0);
+            CommonOps_CD64.fill(c,0,0);
             return;
         }
         double realA,imagA;
@@ -946,7 +946,7 @@ public class CMatrixMatrixMult {
         if( aux == null ) aux = new double[ a.numRows*2 ];
 
         if( a.numCols == 0 || a.numRows == 0 ) {
-            CCommonOps.fill(c,0,0);
+            CommonOps_CD64.fill(c,0,0);
             return;
         }
         int indexC = 0;

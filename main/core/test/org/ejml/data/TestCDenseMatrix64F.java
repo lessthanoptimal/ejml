@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.data;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -188,18 +188,18 @@ public class TestCDenseMatrix64F {
 
     @Test
     public void set_array() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(3,4,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(3,4,rand);
 
         CDenseMatrix64F B = new CDenseMatrix64F(1,1);
         B.set(3,4,true,A.data);
 
-        assertTrue(CMatrixFeatures.isEquals(A,B));
+        assertTrue(MatrixFeatures_CD64.isEquals(A,B));
 
         CDenseMatrix64F A_tran = new CDenseMatrix64F(4,3);
-        CCommonOps.transpose(A,A_tran);
+        CommonOps_CD64.transpose(A,A_tran);
 
         B.set(3,4,false,A_tran.data);
 
-        assertTrue(CMatrixFeatures.isEquals(A,B));
+        assertTrue(MatrixFeatures_CD64.isEquals(A,B));
     }
 }

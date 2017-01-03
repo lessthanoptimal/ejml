@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.alg.dense.decompose;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -32,27 +32,27 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestCTriangularSolver {
+public class TestTriangularSolver_CD64 {
 
     Random rand = new Random(234);
 
     @Test
     public void solveU() {
-        CDenseMatrix64F U = CRandomMatrices.createRandom(3, 3, -1 ,1 ,rand);
+        CDenseMatrix64F U = RandomMatrices_CD64.createRandom(3, 3, -1 ,1 ,rand);
         for( int i = 0; i < U.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {
                 U.set(i,j,0,0);
             }
         }
 
-        CDenseMatrix64F X = CRandomMatrices.createRandom(3, 1, -1 ,1 ,rand);
+        CDenseMatrix64F X = RandomMatrices_CD64.createRandom(3, 1, -1 ,1 ,rand);
         CDenseMatrix64F B = new CDenseMatrix64F(3,1);
 
-        CCommonOps.mult(U, X, B);
+        CommonOps_CD64.mult(U, X, B);
 
-        CTriangularSolver.solveU(U.data,B.data,3);
+        TriangularSolver_CD64.solveU(U.data,B.data,3);
 
-        assertTrue(CMatrixFeatures.isIdentical(X, B, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_64F));
     }
 
     @Test
@@ -60,14 +60,14 @@ public class TestCTriangularSolver {
         for( int N = 1; N <= 4; N++ ) {
             CDenseMatrix64F L = createLowerTriangleDiagReal(N);
 
-            CDenseMatrix64F X = CRandomMatrices.createRandom(N, 1, -1, 1, rand);
+            CDenseMatrix64F X = RandomMatrices_CD64.createRandom(N, 1, -1, 1, rand);
             CDenseMatrix64F B = new CDenseMatrix64F(N, 1);
 
-            CCommonOps.mult(L, X, B);
+            CommonOps_CD64.mult(L, X, B);
 
-            CTriangularSolver.solveL_diagReal(L.data, B.data, N);
+            TriangularSolver_CD64.solveL_diagReal(L.data, B.data, N);
 
-            assertTrue(CMatrixFeatures.isIdentical(X, B, UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_64F));
         }
     }
 
@@ -75,7 +75,7 @@ public class TestCTriangularSolver {
      * Creates a random complex lower triangular matrix with real diagonal elements
      */
     private CDenseMatrix64F createLowerTriangleDiagReal(int n) {
-        CDenseMatrix64F L = CRandomMatrices.createRandom(n, n, -1, 1, rand);
+        CDenseMatrix64F L = RandomMatrices_CD64.createRandom(n, n, -1, 1, rand);
         for (int i = 0; i < L.numRows; i++) {
             for (int j = i + 1; j < L.numCols; j++) {
                 L.set(i, j, 0, 0);
@@ -93,16 +93,16 @@ public class TestCTriangularSolver {
             CDenseMatrix64F L = createLowerTriangleDiagReal(N);
 
             CDenseMatrix64F L_ct = new CDenseMatrix64F(N, N);
-            CCommonOps.transposeConjugate(L,L_ct);
+            CommonOps_CD64.transposeConjugate(L,L_ct);
 
-            CDenseMatrix64F X = CRandomMatrices.createRandom(N, 1, -1, 1, rand);
+            CDenseMatrix64F X = RandomMatrices_CD64.createRandom(N, 1, -1, 1, rand);
             CDenseMatrix64F B = new CDenseMatrix64F(N, 1);
 
-            CCommonOps.mult(L_ct, X, B);
+            CommonOps_CD64.mult(L_ct, X, B);
 
-            CTriangularSolver.solveConjTranL_diagReal(L.data, B.data, N);
+            TriangularSolver_CD64.solveConjTranL_diagReal(L.data, B.data, N);
 
-            assertTrue(CMatrixFeatures.isIdentical(X, B, UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_64F));
         }
     }
 }

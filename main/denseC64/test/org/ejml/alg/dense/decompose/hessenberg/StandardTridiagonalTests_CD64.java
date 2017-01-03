@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,9 @@ import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -48,7 +48,7 @@ public abstract class StandardTridiagonalTests_CD64 {
 
         for( int width = 1; width < 20; width += 2 ) {
 
-            CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(width,-1,1,rand);
 
             TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> alg = createDecomposition();
 
@@ -62,10 +62,10 @@ public abstract class StandardTridiagonalTests_CD64 {
             CDenseMatrix64F tmp = new CDenseMatrix64F(width,width);
             CDenseMatrix64F A_found = new CDenseMatrix64F(width,width);
 
-            CCommonOps.mult(Q,T,tmp);
-            CCommonOps.multTransB(tmp,Q,A_found);
+            CommonOps_CD64.mult(Q,T,tmp);
+            CommonOps_CD64.multTransB(tmp,Q,A_found);
 
-            assertTrue("width = "+width, CMatrixFeatures.isIdentical(A,A_found,UtilEjml.TEST_64F));
+            assertTrue("width = "+width, MatrixFeatures_CD64.isIdentical(A,A_found,UtilEjml.TEST_64F));
         }
     }
 
@@ -73,7 +73,7 @@ public abstract class StandardTridiagonalTests_CD64 {
     public void getDiagonal() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(width,-1,1,rand);
 
             TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> alg = createDecomposition();
 
@@ -100,7 +100,7 @@ public abstract class StandardTridiagonalTests_CD64 {
     public void transposeFlagForQ() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            CDenseMatrix64F A = CRandomMatrices.createHermitian(width,-1,1,rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(width,-1,1,rand);
 
             TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> alg = createDecomposition();
 

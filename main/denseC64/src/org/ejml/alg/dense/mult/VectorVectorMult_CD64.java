@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.ejml.data.Complex64F;
  *
  * @author Peter Abeles
  */
-public class CVectorVectorMult {
+public class VectorVectorMult_CD64 {
     /**
      * <p>
      * Computes the inner product of the two vectors.  In geometry this is known as the dot product.<br>

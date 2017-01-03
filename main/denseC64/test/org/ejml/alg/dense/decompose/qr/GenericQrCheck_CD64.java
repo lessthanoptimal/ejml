@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,9 +21,9 @@ package org.ejml.alg.dense.decompose.qr;
 import org.ejml.EjmlUnitTests;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -43,12 +43,12 @@ public abstract class GenericQrCheck_CD64 {
     public void testModifiedInput() {
         QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(6, 4, rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(6, 4, rand);
         CDenseMatrix64F A_orig = A.copy();
 
         assertTrue(alg.decompose(A));
 
-        boolean modified = !CMatrixFeatures.isEquals(A,A_orig);
+        boolean modified = !MatrixFeatures_CD64.isEquals(A,A_orig);
 
         assertTrue(modified + " " + alg.inputModified(), alg.inputModified() == modified);
     }
@@ -69,7 +69,7 @@ public abstract class GenericQrCheck_CD64 {
     private void checkDecomposition(int height, int width, boolean compact ) {
         QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(height,width,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(height,width,rand);
 
         assertTrue(alg.decompose(A.copy()));
 
@@ -81,16 +81,16 @@ public abstract class GenericQrCheck_CD64 {
         alg.getR(R, compact);
 
         // see if Q has the expected properties
-        assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, 1e-6));
 
         // see if it has the expected properties
         CDenseMatrix64F A_found = new CDenseMatrix64F(Q.numRows,R.numCols);
-        CCommonOps.mult(Q,R,A_found);
+        CommonOps_CD64.mult(Q,R,A_found);
 
         EjmlUnitTests.assertEquals(A,A_found,1e-6);
         CDenseMatrix64F R_found = new CDenseMatrix64F(R.numRows,R.numCols);
-        CCommonOps.transposeConjugate(Q);
-        CCommonOps.mult(Q, A, R_found);
+        CommonOps_CD64.transposeConjugate(Q);
+        CommonOps_CD64.mult(Q, A, R_found);
     }
 
     /**
@@ -102,7 +102,7 @@ public abstract class GenericQrCheck_CD64 {
 
         QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(height,width,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(height,width,rand);
 
         // cause the pathological situation
         A.set(0,0,0,0);
@@ -115,16 +115,16 @@ public abstract class GenericQrCheck_CD64 {
         alg.getR(R, false);
 
         // see if Q has the expected properties
-        assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, 1e-6));
 
         // see if it has the expected properties
         CDenseMatrix64F A_found = new CDenseMatrix64F(Q.numRows,R.numCols);
-        CCommonOps.mult(Q,R,A_found);
+        CommonOps_CD64.mult(Q,R,A_found);
 
         EjmlUnitTests.assertEquals(A,A_found,1e-6);
         CDenseMatrix64F R_found = new CDenseMatrix64F(R.numRows,R.numCols);
-        CCommonOps.transposeConjugate(Q);
-        CCommonOps.mult(Q, A, R_found);
+        CommonOps_CD64.transposeConjugate(Q);
+        CommonOps_CD64.mult(Q, A, R_found);
     }
 
     /**
@@ -138,13 +138,13 @@ public abstract class GenericQrCheck_CD64 {
 
         QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(height,width,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(height,width,rand);
 
         alg.decompose(A);
 
         // get the results from a provided matrix
-        CDenseMatrix64F Q_provided = CRandomMatrices.createRandom(height,height,rand);
-        CDenseMatrix64F R_provided = CRandomMatrices.createRandom(height,width,rand);
+        CDenseMatrix64F Q_provided = RandomMatrices_CD64.createRandom(height,height,rand);
+        CDenseMatrix64F R_provided = RandomMatrices_CD64.createRandom(height,width,rand);
 
         assertTrue(R_provided == alg.getR(R_provided, false));
         assertTrue(Q_provided == alg.getQ(Q_provided, false));
@@ -154,8 +154,8 @@ public abstract class GenericQrCheck_CD64 {
         CDenseMatrix64F R_null = alg.getR(null,false);
 
         // see if they are the same
-        assertTrue(CMatrixFeatures.isEquals(Q_provided,Q_null));
-        assertTrue(CMatrixFeatures.isEquals(R_provided,R_null));
+        assertTrue(MatrixFeatures_CD64.isEquals(Q_provided,Q_null));
+        assertTrue(MatrixFeatures_CD64.isEquals(R_provided,R_null));
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class GenericQrCheck_CD64 {
 
         QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(height,width,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(height,width,rand);
 
         alg.decompose(A);
 
@@ -204,7 +204,7 @@ public abstract class GenericQrCheck_CD64 {
 
         QRDecomposition<CDenseMatrix64F> alg = createQRDecomposition();
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(height,width,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(height,width,rand);
 
         alg.decompose(A);
 
@@ -214,7 +214,7 @@ public abstract class GenericQrCheck_CD64 {
         // see if Q has the expected properties
         assertEquals(height,Q.numRows);
         assertEquals(width,Q.numCols);
-        assertTrue(CMatrixFeatures.isUnitary(Q,1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q,1e-6));
 
         // try to extract it with the wrong dimensions
         Q = new CDenseMatrix64F(height,height);

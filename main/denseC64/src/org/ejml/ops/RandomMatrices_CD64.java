@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class CRandomMatrices {
+public class RandomMatrices_CD64 {
     /**
      * <p>
      * Returns a matrix where all the elements are selected independently from
@@ -109,12 +109,12 @@ public class CRandomMatrices {
      */
     public static CDenseMatrix64F createHermPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
-        CDenseMatrix64F a = CRandomMatrices.createRandom(width,1,rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(width,1,rand);
         CDenseMatrix64F b = new CDenseMatrix64F(1,width);
         CDenseMatrix64F c = new CDenseMatrix64F(width,width);
 
-        CCommonOps.transposeConjugate(a,b);
-        CCommonOps.mult(a, b, c);
+        CommonOps_CD64.transposeConjugate(a,b);
+        CommonOps_CD64.mult(a, b, c);
 
         for( int i = 0; i < width; i++ ) {
             c.data[2*(i*width+i)] += 1;

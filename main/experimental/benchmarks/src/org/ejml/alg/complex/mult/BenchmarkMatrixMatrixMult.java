@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,13 +20,13 @@ package org.ejml.alg.complex.mult;
 
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.blockd3.BlockD3MatrixOps;
-import org.ejml.alg.dense.mult.CMatrixMatrixMult;
+import org.ejml.alg.dense.mult.MatrixMatrixMult_CD64;
 import org.ejml.data.BlockD3Matrix64F;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 
 import java.util.Random;
 
@@ -52,7 +52,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CCommonOps.mult(matA, matB, matResult);
+            CommonOps_CD64.mult(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -64,7 +64,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CMatrixMatrixMult.mult_small(matA,matB,matResult);
+            MatrixMatrixMult_CD64.mult_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -88,7 +88,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CMatrixMatrixMult.mult_reorder(matA, matB, matResult);
+            MatrixMatrixMult_CD64.mult_reorder(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -132,9 +132,9 @@ public class BenchmarkMatrixMatrixMult {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" K = "+numK);
-        CDenseMatrix64F matA = CRandomMatrices.createRandom(numRows,numCols,-1,1,rand);
-        CDenseMatrix64F matB = CRandomMatrices.createRandom(numCols,numK,-1,1,rand);
-        CDenseMatrix64F matResult = CRandomMatrices.createRandom(numRows, numK,-1,1, rand);
+        CDenseMatrix64F matA = RandomMatrices_CD64.createRandom(numRows,numCols,-1,1,rand);
+        CDenseMatrix64F matB = RandomMatrices_CD64.createRandom(numCols,numK,-1,1,rand);
+        CDenseMatrix64F matResult = RandomMatrices_CD64.createRandom(numRows, numK,-1,1, rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
                 0,//mult(matA,matB,matResult,numTrials),

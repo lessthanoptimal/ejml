@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,10 +22,10 @@ import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.CSpecializedOps;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
+import org.ejml.ops.SpecializedOps_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -51,21 +51,21 @@ public class TestQRDecompositionHouseholderTran_CD64 extends GenericQrCheck_CD64
      */
     @Test
     public void applyQ() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(5, 4, rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(5, 4, rand);
 
         QRDecompositionHouseholderTran_CD64 alg = new QRDecompositionHouseholderTran_CD64();
 
         assertTrue(alg.decompose(A));
 
         CDenseMatrix64F Q = alg.getQ(null,false);
-        CDenseMatrix64F B = CRandomMatrices.createRandom(5,2,rand);
+        CDenseMatrix64F B = RandomMatrices_CD64.createRandom(5,2,rand);
 
         CDenseMatrix64F expected = new CDenseMatrix64F(B.numRows,B.numCols);
-        CCommonOps.mult(Q,B,expected);
+        CommonOps_CD64.mult(Q,B,expected);
 
         alg.applyQ(B);
 
-        assertTrue(CMatrixFeatures.isIdentical(expected,B, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(expected,B, UtilEjml.TEST_64F));
     }
 
     /**
@@ -73,22 +73,22 @@ public class TestQRDecompositionHouseholderTran_CD64 extends GenericQrCheck_CD64
      */
     @Test
     public void applyTranQ() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(5,4,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(5,4,rand);
 
         QRDecompositionHouseholderTran_CD64 alg = new QRDecompositionHouseholderTran_CD64();
 
         assertTrue(alg.decompose(A));
 
         CDenseMatrix64F Q = alg.getQ(null,false);
-        CDenseMatrix64F B = CRandomMatrices.createRandom(5,2,rand);
+        CDenseMatrix64F B = RandomMatrices_CD64.createRandom(5,2,rand);
 
         CDenseMatrix64F expected = new CDenseMatrix64F(B.numRows,B.numCols);
-        CCommonOps.transposeConjugate(Q);
-        CCommonOps.mult(Q, B, expected);
+        CommonOps_CD64.transposeConjugate(Q);
+        CommonOps_CD64.mult(Q, B, expected);
 
         alg.applyTranQ(B);
 
-        assertTrue(CMatrixFeatures.isIdentical(expected,B,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(expected,B,UtilEjml.TEST_64F));
     }
 
     /**
@@ -106,21 +106,21 @@ public class TestQRDecompositionHouseholderTran_CD64 extends GenericQrCheck_CD64
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(width,width,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(width,width,rand);
 
         qr.householder(w,A);
         CDenseMatrix64F U = qr.getU(w);
 
         // Q = I - gamma*u*u'
-        CDenseMatrix64F Q = CSpecializedOps.householder(U,qr.getGamma());
+        CDenseMatrix64F Q = SpecializedOps_CD64.householder(U,qr.getGamma());
 
         // check the expected properties of Q
-        assertTrue(CMatrixFeatures.isHermitian(Q, 1e-6));
-        assertTrue(CMatrixFeatures.isUnitary(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isHermitian(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, 1e-6));
 
         CDenseMatrix64F result = new CDenseMatrix64F(Q.numRows,Q.numCols);
-        CDenseMatrix64F Asub = CCommonOps.extract(A, w, width, w, width);
-        CCommonOps.mult(Q, Asub, result);
+        CDenseMatrix64F Asub = CommonOps_CD64.extract(A, w, width, w, width);
+        CommonOps_CD64.mult(Q, Asub, result);
 
         Complex64F a = new Complex64F();
         result.get(0,0,a);
@@ -150,19 +150,19 @@ public class TestQRDecompositionHouseholderTran_CD64 extends GenericQrCheck_CD64
 
         double gamma = 0.2;
 
-        CDenseMatrix64F A = CRandomMatrices.createRandom(width,width,rand);
-        CCommonOps.transpose(A, qr.QR);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(width,width,rand);
+        CommonOps_CD64.transpose(A, qr.QR);
 
         // compute the results using standard matrix operations
-        CDenseMatrix64F u_sub = CCommonOps.extract(A, w, width, w, w+1);
-        CDenseMatrix64F A_sub = CCommonOps.extract(A, w, width, w, width);
+        CDenseMatrix64F u_sub = CommonOps_CD64.extract(A, w, width, w, w+1);
+        CDenseMatrix64F A_sub = CommonOps_CD64.extract(A, w, width, w, width);
         CDenseMatrix64F expected = new CDenseMatrix64F(u_sub.numRows,u_sub.numRows);
 
         // Q = I - gamma*u*u'
         u_sub.set(0,0,1,0);
-        CDenseMatrix64F Q = CSpecializedOps.householder(u_sub,gamma);
+        CDenseMatrix64F Q = SpecializedOps_CD64.householder(u_sub,gamma);
 
-        CCommonOps.mult(Q,A_sub,expected);
+        CommonOps_CD64.mult(Q,A_sub,expected);
 
         qr.updateA(w,gamma);
 
@@ -201,7 +201,7 @@ public class TestQRDecompositionHouseholderTran_CD64 extends GenericQrCheck_CD64
         }
 
         public void householder( int j , CDenseMatrix64F A ) {
-            CCommonOps.transpose(A, QR);
+            CommonOps_CD64.transpose(A, QR);
 
             super.householder(j);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CommonOps_CD64;
 
 
 /**
@@ -30,7 +30,7 @@ import org.ejml.ops.CCommonOps;
  *
  * @author Peter Abeles
  */
-public class CInvertUsingSolve {
+public class InvertUsingSolve_CD64 {
 
     public static void invert( LinearSolver<CDenseMatrix64F> solver , CDenseMatrix64F A , CDenseMatrix64F A_inv , CDenseMatrix64F storage) {
 
@@ -38,7 +38,7 @@ public class CInvertUsingSolve {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
         }
 
-        CCommonOps.setIdentity(storage);
+        CommonOps_CD64.setIdentity(storage);
 
         solver.solve(storage,A_inv);
     }
@@ -49,7 +49,7 @@ public class CInvertUsingSolve {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
         }
 
-        CCommonOps.setIdentity(A_inv);
+        CommonOps_CD64.setIdentity(A_inv);
 
         solver.solve(A_inv,A_inv);
     }

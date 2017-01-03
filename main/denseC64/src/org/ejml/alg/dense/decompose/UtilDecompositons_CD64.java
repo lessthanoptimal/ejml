@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose;
 
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.ops.CCommonOps;
+import org.ejml.ops.CommonOps_CD64;
 
 /**
  * Helper functions for generic decompsotions.
@@ -30,11 +30,11 @@ public class UtilDecompositons_CD64 {
 
     public static CDenseMatrix64F checkIdentity(CDenseMatrix64F A, int numRows, int numCols) {
         if( A == null ) {
-            return CCommonOps.identity(numRows,numCols);
+            return CommonOps_CD64.identity(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else
-            CCommonOps.setIdentity(A);
+            CommonOps_CD64.setIdentity(A);
         return A;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,13 +29,13 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public class TestCRandomMatrices {
+public class TestRandomMatrices_CD64 {
     
     Random rand = new Random(234);
 
     @Test
     public void createRandom_min_max() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(30,20,-1,1,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
@@ -44,7 +44,7 @@ public class TestCRandomMatrices {
     public void setRandom() {
         CDenseMatrix64F A = new CDenseMatrix64F(5,4);
 
-        CRandomMatrices.setRandom(A,rand);
+        RandomMatrices_CD64.setRandom(A,rand);
 
         checkRandom1(A);
     }
@@ -77,7 +77,7 @@ public class TestCRandomMatrices {
     @Test
     public void setRandom_min_max() {
         CDenseMatrix64F A = new CDenseMatrix64F(30,20);
-        CRandomMatrices.setRandom(A,-1,1,rand);
+        RandomMatrices_CD64.setRandom(A,-1,1,rand);
 
         checkRandomRange(A);
     }
@@ -125,27 +125,27 @@ public class TestCRandomMatrices {
     @Test
     public void createHermPosDef() {
         for( int i = 1; i < 20; i++ ) {
-            CDenseMatrix64F A = CRandomMatrices.createHermPosDef(i, rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(i, rand);
 
-            assertTrue(CMatrixFeatures.isPositiveDefinite(A));
+            assertTrue(MatrixFeatures_CD64.isPositiveDefinite(A));
         }
     }
 
     @Test
     public void createHermitian() {
-        CDenseMatrix64F A = CRandomMatrices.createHermitian(10, -1, 1, rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(10, -1, 1, rand);
 
-        assertTrue(CMatrixFeatures.isHermitian(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isHermitian(A, UtilEjml.TEST_64F));
 
         // see if it has the expected range of elements
-        double min = CCommonOps.elementMinReal(A);
-        double max = CCommonOps.elementMaxReal(A);
+        double min = CommonOps_CD64.elementMinReal(A);
+        double max = CommonOps_CD64.elementMaxReal(A);
 
         assertTrue(min < 0 && min >= -1);
         assertTrue(max > 0 && max <=  1);
 
-        min = CCommonOps.elementMinImaginary(A);
-        max = CCommonOps.elementMaxImaginary(A);
+        min = CommonOps_CD64.elementMinImaginary(A);
+        max = CommonOps_CD64.elementMaxImaginary(A);
 
         assertTrue(min < 0 && min >= -1);
         assertTrue(max > 0 && max <=  1);
@@ -154,7 +154,7 @@ public class TestCRandomMatrices {
 //    @Test
 //    public void createUpperTriangle() {
 //        for( int hess = 0; hess < 3; hess++ ) {
-//            CDenseMatrix64F A = CRandomMatrices.createUpperTriangle(10,hess,-1,1,rand);
+//            CDenseMatrix64F A = RandomMatrices_CD64.createUpperTriangle(10,hess,-1,1,rand);
 //
 //            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,UtilEjml.TEST_64F));
 //

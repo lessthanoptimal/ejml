@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.misc;
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -31,16 +31,16 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestCTransposeAlgs {
+public class TestTransposeAlgs_CD64 {
 
     Random rand = new Random(234);
 
     @Test
     public void square() {
-        CDenseMatrix64F a = CRandomMatrices.createRandom(4,4,-1,1,rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,4,-1,1,rand);
         CDenseMatrix64F b = a.copy();
 
-        CTransposeAlgs.square(b);
+        TransposeAlgs_CD64.square(b);
 
         Complex64F found = new Complex64F();
         Complex64F expected = new Complex64F();
@@ -58,10 +58,10 @@ public class TestCTransposeAlgs {
 
     @Test
     public void squareConjugate() {
-        CDenseMatrix64F a = CRandomMatrices.createRandom(4,4,-1,1,rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,4,-1,1,rand);
         CDenseMatrix64F b = a.copy();
 
-        CTransposeAlgs.squareConjugate(b);
+        TransposeAlgs_CD64.squareConjugate(b);
 
         Complex64F found = new Complex64F();
         Complex64F expected = new Complex64F();
@@ -79,10 +79,10 @@ public class TestCTransposeAlgs {
 
     @Test
     public void standard() {
-        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
-        CDenseMatrix64F b = CRandomMatrices.createRandom(5, 4, -1, 1, rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,5,-1,1,rand);
+        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(5, 4, -1, 1, rand);
 
-        CTransposeAlgs.standard(a, b);
+        TransposeAlgs_CD64.standard(a, b);
 
         Complex64F found = new Complex64F();
         Complex64F expected = new Complex64F();
@@ -100,10 +100,10 @@ public class TestCTransposeAlgs {
 
     @Test
     public void standardConjugate() {
-        CDenseMatrix64F a = CRandomMatrices.createRandom(4,5,-1,1,rand);
-        CDenseMatrix64F b = CRandomMatrices.createRandom(5, 4, -1, 1, rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,5,-1,1,rand);
+        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(5, 4, -1, 1, rand);
 
-        CTransposeAlgs.standardConjugate(a, b);
+        TransposeAlgs_CD64.standardConjugate(a, b);
 
         Complex64F found = new Complex64F();
         Complex64F expected = new Complex64F();

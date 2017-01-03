@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,10 +20,10 @@ package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
-import org.ejml.ops.CSpecializedOps;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
+import org.ejml.ops.SpecializedOps_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -41,7 +41,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
      */
     @Test
     public void testItAllTogether() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(5,5,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(5,5,rand);
 
         checkItAll(A);
     }
@@ -57,22 +57,22 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //        UtilEjml.print(H,"%8.2e");
 //        System.out.println("-------- Q ---------");
 //        UtilEjml.print(Q,"%8.2e");
-        assertTrue(CMatrixFeatures.isUnitary(Q, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, UtilEjml.TEST_64F));
 
         CDenseMatrix64F temp0 = new CDenseMatrix64F(5,5);
 
-        CCommonOps.mult(Q,H,temp0);
-        CCommonOps.transposeConjugate(Q);
-        CCommonOps.mult(temp0,Q,H);
+        CommonOps_CD64.mult(Q,H,temp0);
+        CommonOps_CD64.transposeConjugate(Q);
+        CommonOps_CD64.mult(temp0,Q,H);
 
 //        System.out.println("------- A ----------");
 //        UtilEjml.print(A,"%8.2e");
 //        System.out.println("----- Found A ------");
 //        UtilEjml.print(H,"%8.2e");
 
-        assertTrue(!CMatrixFeatures.hasUncountable(H));
+        assertTrue(!MatrixFeatures_CD64.hasUncountable(H));
 
-        assertTrue(CMatrixFeatures.isIdentical(A,H,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(A,H,UtilEjml.TEST_64F));
     }
 
     /**
@@ -80,14 +80,14 @@ public class TestHessenbergSimilarDecomposition_CD64 {
      */
     @Test
     public void testInputUnmodified() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(4,4,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(4,4,rand);
         CDenseMatrix64F B = A.copy();
 
         HessenbergSimilarDecomposition_CD64 decomp = new HessenbergSimilarDecomposition_CD64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
 
-        assertTrue(CMatrixFeatures.isIdentical(A,B,0));
+        assertTrue(MatrixFeatures_CD64.isIdentical(A,B,0));
     }
 
     /**
@@ -115,7 +115,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
     public void testHouseholderVectors()
     {
         int N = 5;
-        CDenseMatrix64F A = CRandomMatrices.createRandom(N,N,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(N,N,rand);
         CDenseMatrix64F B = new CDenseMatrix64F(N,N);
 
         HessenbergSimilarDecomposition_CD64 decomp = new HessenbergSimilarDecomposition_CD64(A.numRows);
@@ -144,8 +144,8 @@ public class TestHessenbergSimilarDecomposition_CD64 {
                 u.data[j*2+1] = QH.getImag(j,i);
             }
 
-            CDenseMatrix64F Q = CSpecializedOps.createReflector(u,gammas[i]);
-            CCommonOps.multTransA(Q,A,B);
+            CDenseMatrix64F Q = SpecializedOps_CD64.createReflector(u,gammas[i]);
+            CommonOps_CD64.multTransA(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
 //            System.out.println("----- Q ------")
@@ -161,7 +161,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
                 assertEquals(0,B.getReal(j,i),UtilEjml.TEST_64F);
                 assertEquals(0,B.getImag(j,i),UtilEjml.TEST_64F);
             }
-            CCommonOps.mult(B,Q,A);
+            CommonOps_CD64.mult(B,Q,A);
 
 //            System.out.println("-------------------");
 //            A.print();
@@ -175,7 +175,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
     @Test
     public void testH() {
         int N = 5;
-        CDenseMatrix64F A = CRandomMatrices.createRandom(N,N,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(N,N,rand);
 
         HessenbergSimilarDecomposition_CD64 decomp = new HessenbergSimilarDecomposition_CD64(A.numRows);
 
@@ -187,7 +187,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
         CDenseMatrix64F u = new CDenseMatrix64F(N,1);
 
-        CDenseMatrix64F Q = CCommonOps.identity(N);
+        CDenseMatrix64F Q = CommonOps_CD64.identity(N);
         CDenseMatrix64F temp = new CDenseMatrix64F(N,N);
 
         for( int i = N-2; i >= 0; i-- ) {
@@ -198,15 +198,15 @@ public class TestHessenbergSimilarDecomposition_CD64 {
                 u.data[j*2+1] = QH.getImag(j,i);
             }
 
-            CDenseMatrix64F Qi = CSpecializedOps.createReflector(u,gammas[i]);
+            CDenseMatrix64F Qi = SpecializedOps_CD64.createReflector(u,gammas[i]);
 
-            CCommonOps.mult(Qi,Q,temp);
+            CommonOps_CD64.mult(Qi,Q,temp);
             Q.set(temp);
         }
         CDenseMatrix64F expectedH = new CDenseMatrix64F(N,N);
 
-        CCommonOps.multTransA(Q,A,temp);
-        CCommonOps.mult(temp,Q,expectedH);
+        CommonOps_CD64.multTransA(Q,A,temp);
+        CommonOps_CD64.mult(temp,Q,expectedH);
 
 //        UtilEjml.print(expectedH);
 
@@ -214,6 +214,6 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
 //        UtilEjml.print(foundH);
 
-        assertTrue(CMatrixFeatures.isIdentical(expectedH,foundH,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(expectedH,foundH,UtilEjml.TEST_64F));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,12 +19,12 @@
 package org.ejml.alg.dense.decompose.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.decompose.CTriangularSolver;
+import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
-import org.ejml.ops.CSpecializedOps;
+import org.ejml.ops.SpecializedOps_CD64;
 
 
 /**
@@ -160,7 +160,7 @@ public abstract class LUDecompositionBase_CD64
     }
 
     public CDenseMatrix64F getPivot( CDenseMatrix64F pivot ) {
-        return CSpecializedOps.pivotMatrix(pivot, this.pivot, LU.numRows, false);
+        return SpecializedOps_CD64.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
     protected void decomposeCommonInit(CDenseMatrix64F a) {
@@ -230,7 +230,7 @@ public abstract class LUDecompositionBase_CD64
     }
 
     public /**/double quality() {
-        return CSpecializedOps.qualityTriangular(LU);
+        return SpecializedOps_CD64.qualityTriangular(LU);
     }
 
     /**
@@ -242,7 +242,7 @@ public abstract class LUDecompositionBase_CD64
         solveL(vv);
 
         // Solve U*X = Y;
-        CTriangularSolver.solveU(dataLU, vv, n);
+        TriangularSolver_CD64.solveU(dataLU, vv, n);
     }
 
     /**

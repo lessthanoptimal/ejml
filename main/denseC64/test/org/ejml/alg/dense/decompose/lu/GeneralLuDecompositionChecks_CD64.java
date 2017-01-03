@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,9 +21,9 @@ package org.ejml.alg.dense.decompose.lu;
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -42,13 +42,13 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
 
     @Test
     public void testModifiedInput() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(4, 4, -1, 1, rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(4, 4, -1, 1, rand);
         CDenseMatrix64F A_orig = A.copy();
 
         LUDecomposition<CDenseMatrix64F> alg = create(4,4);
         assertTrue(alg.decompose(A));
 
-        boolean modified = !CMatrixFeatures.isEquals(A,A_orig);
+        boolean modified = !MatrixFeatures_CD64.isEquals(A,A_orig);
 
         assertEquals(modified, alg.inputModified());
     }
@@ -71,18 +71,18 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CDenseMatrix64F PL = new CDenseMatrix64F(P.numRows,P.numCols);
         CDenseMatrix64F A_found = new CDenseMatrix64F(A.numRows,A.numCols);
 
-        CCommonOps.transpose(P,P_tran);
-        CCommonOps.mult(P_tran, L, PL);
-        CCommonOps.mult(PL, U, A_found);
+        CommonOps_CD64.transpose(P,P_tran);
+        CommonOps_CD64.mult(P_tran, L, PL);
+        CommonOps_CD64.mult(PL, U, A_found);
 
-        assertTrue(CMatrixFeatures.isIdentical(A_found,A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(A_found,A, UtilEjml.TEST_64F));
     }
 
     @Test
     public void testDecomposition_square_real()
     {
         for( int i = 2; i <= 20; i++ ) {
-            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,-1,1,rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(i,i,-1,1,rand);
 
             for (int j = 1; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -96,7 +96,7 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
     public void testDecomposition_square_imaginary()
     {
         for( int i = 2; i <= 20; i++ ) {
-            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,-1,1,rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(i,i,-1,1,rand);
 
             for (int j = 0; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -110,7 +110,7 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
     public void testDecomposition_square()
     {
         for( int i = 2; i <= 20; i++ ) {
-            CDenseMatrix64F A = CRandomMatrices.createRandom(i,i,-1,1,rand);
+            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(i,i,-1,1,rand);
 
             checkDecomposition(A);
         }
@@ -118,14 +118,14 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
 
     @Test
     public void testFat() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(2,3,-1,1,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(2,3,-1,1,rand);
 
         checkDecomposition(A);
     }
 
     @Test
     public void testTall() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(3,2,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(3,2,rand);
 
         checkDecomposition(A);
     }
@@ -143,10 +143,10 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CDenseMatrix64F U = alg.getUpper(null);
 
         CDenseMatrix64F A_found = new CDenseMatrix64F(3,3);
-        CCommonOps.mult(L, U, A_found);
+        CommonOps_CD64.mult(L, U, A_found);
 
-        assertFalse(CMatrixFeatures.hasUncountable(A_found));
-        assertTrue(CMatrixFeatures.isIdentical(A_found,A,UtilEjml.TEST_64F));
+        assertFalse(MatrixFeatures_CD64.hasUncountable(A_found));
+        assertTrue(MatrixFeatures_CD64.isIdentical(A_found,A,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -173,14 +173,14 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
      */
     @Test
     public void getLower_getUpper() {
-        CDenseMatrix64F A = CRandomMatrices.createRandom(3,3,rand);
+        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(3,3,rand);
 
         LUDecomposition<CDenseMatrix64F> alg = create(3,3);
 
         alg.decompose(A);
 
-        CDenseMatrix64F L_provided = CRandomMatrices.createRandom(3,3,rand);
-        CDenseMatrix64F U_provided = CRandomMatrices.createRandom(3,3,rand);
+        CDenseMatrix64F L_provided = RandomMatrices_CD64.createRandom(3,3,rand);
+        CDenseMatrix64F U_provided = RandomMatrices_CD64.createRandom(3,3,rand);
 
         assertTrue(L_provided == alg.getLower(L_provided));
         assertTrue(U_provided == alg.getUpper(U_provided));
@@ -188,8 +188,8 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CDenseMatrix64F L_ret = alg.getLower(null);
         CDenseMatrix64F U_ret = alg.getUpper(null);
 
-        assertTrue(CMatrixFeatures.isEquals(L_provided,L_ret));
-        assertTrue(CMatrixFeatures.isEquals(U_provided,U_ret));
+        assertTrue(MatrixFeatures_CD64.isEquals(L_provided,L_ret));
+        assertTrue(MatrixFeatures_CD64.isEquals(U_provided,U_ret));
     }
 
     private void checkDecomposition(CDenseMatrix64F a) {
@@ -207,10 +207,10 @@ public abstract class GeneralLuDecompositionChecks_CD64 {
         CDenseMatrix64F PL      = new CDenseMatrix64F(P_tran.numRows,L.numCols);
         CDenseMatrix64F A_found = new CDenseMatrix64F(a.numRows, a.numCols);
 
-        CCommonOps.transpose(P, P_tran);
-        CCommonOps.mult(P_tran, L, PL);
-        CCommonOps.mult(PL, U, A_found);
+        CommonOps_CD64.transpose(P, P_tran);
+        CommonOps_CD64.mult(P_tran, L, PL);
+        CommonOps_CD64.mult(PL, U, A_found);
 
-        assertTrue(CMatrixFeatures.isIdentical(A_found, a, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(A_found, a, UtilEjml.TEST_64F));
     }
 }

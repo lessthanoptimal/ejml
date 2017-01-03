@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decompose;
 
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 
 import java.util.Random;
 
@@ -51,12 +51,12 @@ public class CheckDecompositionInterface_CD64 {
      * @param decomp
      */
     public static void checkModifiedInput( DecompositionInterface<CDenseMatrix64F> decomp ) {
-        CDenseMatrix64F A = CRandomMatrices.createHermPosDef(4, new Random(0x434));
+        CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(4, new Random(0x434));
         CDenseMatrix64F A_orig = A.copy();
 
         assertTrue(decomp.decompose(A));
 
-        boolean modified = !CMatrixFeatures.isEquals(A, A_orig);
+        boolean modified = !MatrixFeatures_CD64.isEquals(A, A_orig);
 
         assertTrue(modified+" "+decomp.inputModified(),decomp.inputModified()==modified);
     }

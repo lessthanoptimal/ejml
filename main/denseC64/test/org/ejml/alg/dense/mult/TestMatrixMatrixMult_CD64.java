@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,10 +21,10 @@ package org.ejml.alg.dense.mult;
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.ComplexMath64F;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -37,13 +37,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestCMatrixMatrixMult {
+public class TestMatrixMatrixMult_CD64 {
 
     @Test
     public void generalChecks() {
 
         int numChecked = 0;
-        Method methods[] = CMatrixMatrixMult.class.getMethods();
+        Method methods[] = MatrixMatrixMult_CD64.class.getMethods();
 
         for( Method method : methods ) {
             String name = method.getName();
@@ -87,28 +87,28 @@ public class TestCMatrixMatrixMult {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
                 for (int k = 1; k <= 4; k++) {
-                    CDenseMatrix64F A = transA ? CRandomMatrices.createRandom(j,i,-1,1,rand) :
-                            CRandomMatrices.createRandom(i,j,-1,1,rand);
-                    CDenseMatrix64F B = transB ? CRandomMatrices.createRandom(k,j,-1,1,rand) :
-                            CRandomMatrices.createRandom(j,k,-1,1,rand);
-                    CDenseMatrix64F C = CRandomMatrices.createRandom(i,k,-1,1,rand);
+                    CDenseMatrix64F A = transA ? RandomMatrices_CD64.createRandom(j,i,-1,1,rand) :
+                            RandomMatrices_CD64.createRandom(i,j,-1,1,rand);
+                    CDenseMatrix64F B = transB ? RandomMatrices_CD64.createRandom(k,j,-1,1,rand) :
+                            RandomMatrices_CD64.createRandom(j,k,-1,1,rand);
+                    CDenseMatrix64F C = RandomMatrices_CD64.createRandom(i,k,-1,1,rand);
 
                     CDenseMatrix64F AB = multiply(A,B,transA,transB);
                     CDenseMatrix64F expected = new CDenseMatrix64F(i,k);
 
                     if( hasAlpha ) {
-                        CCommonOps.elementMultiply(AB,realAlpha,imgAlpha,AB);
+                        CommonOps_CD64.elementMultiply(AB,realAlpha,imgAlpha,AB);
                     }
 
                     if( isAdd ) {
-                        CCommonOps.add(C,AB,expected);
+                        CommonOps_CD64.add(C,AB,expected);
                     } else {
                         expected.set(AB);
                     }
 
                     invoke(method,realAlpha,imgAlpha,A,B,C);
 
-                    assertTrue(i+" "+j+" "+k,CMatrixFeatures.isEquals(expected,C, UtilEjml.TEST_64F));
+                    assertTrue(i+" "+j+" "+k, MatrixFeatures_CD64.isEquals(expected,C, UtilEjml.TEST_64F));
                 }
             }
         }
@@ -136,12 +136,12 @@ public class TestCMatrixMatrixMult {
 
         if( transA ) {
             CDenseMatrix64F A_h = new CDenseMatrix64F(A.numCols, A.numRows);
-            CCommonOps.transposeConjugate(A,A_h);
+            CommonOps_CD64.transposeConjugate(A,A_h);
             A = A_h;
         }
         if( transB ) {
             CDenseMatrix64F B_h = new CDenseMatrix64F(B.numCols, B.numRows);
-            CCommonOps.transposeConjugate(B,B_h);
+            CommonOps_CD64.transposeConjugate(B,B_h);
             B = B_h;
         }
         CDenseMatrix64F C = new CDenseMatrix64F(A.numRows,B.numCols);

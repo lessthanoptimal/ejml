@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,13 +30,13 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestCNormOps {
+public class TestNormOps_CD64 {
 
     Random rand = new Random(234);
 
     @Test
     public void normF() {
-        CDenseMatrix64F a = CRandomMatrices.createRandom(1,7,rand);
+        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(1,7,rand);
 
         Complex64F b = new Complex64F();
         double total = 0;
@@ -48,7 +48,7 @@ public class TestCNormOps {
         }
 
         double expected = Math.sqrt(total);
-        double found = CNormOps.normF(a);
+        double found = NormOps_CD64.normF(a);
 
         assertEquals(expected,found, UtilEjml.TEST_64F);
     }

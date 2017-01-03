@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decompose;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
-import org.ejml.ops.CMatrixFeatures;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.MatrixFeatures_CD64;
+import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -37,56 +37,56 @@ public class TestUtilDecompositons_CD64 {
     @Test
     public void checkIdentity_null() {
         CDenseMatrix64F A = UtilDecompositons_CD64.checkIdentity(null,4,3);
-        assertTrue(CMatrixFeatures.isIdentity(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(A, UtilEjml.TEST_64F));
     }
 
     @Test
     public void checkIdentity_random() {
-        CDenseMatrix64F orig = CRandomMatrices.createRandom(4,3,rand);
+        CDenseMatrix64F orig = RandomMatrices_CD64.createRandom(4,3,rand);
         CDenseMatrix64F A = UtilDecompositons_CD64.checkIdentity(orig,4,3);
-        assertTrue(CMatrixFeatures.isIdentity(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentity(A, UtilEjml.TEST_64F));
         assertTrue(A==orig);
     }
 
     @Test
     public void checkZeros_null() {
         CDenseMatrix64F A = UtilDecompositons_CD64.checkZeros(null,4,3);
-        assertTrue(CMatrixFeatures.isZeros(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isZeros(A, UtilEjml.TEST_64F));
     }
 
     @Test
     public void checkZeros_random() {
-        CDenseMatrix64F orig = CRandomMatrices.createRandom(4,3,rand);
+        CDenseMatrix64F orig = RandomMatrices_CD64.createRandom(4,3,rand);
         CDenseMatrix64F A = UtilDecompositons_CD64.checkZeros(orig,4,3);
-        assertTrue(CMatrixFeatures.isZeros(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isZeros(A, UtilEjml.TEST_64F));
         assertTrue(A==orig);
     }
 
     @Test
     public void checkZerosLT_null() {
         CDenseMatrix64F A = UtilDecompositons_CD64.checkZerosLT(null,4,3);
-        assertTrue(CMatrixFeatures.isUpperTriangle(A,0, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isUpperTriangle(A,0, UtilEjml.TEST_64F));
     }
 
     @Test
     public void checkZerosLT_random() {
-        CDenseMatrix64F orig = CRandomMatrices.createRandom(4,3,rand);
+        CDenseMatrix64F orig = RandomMatrices_CD64.createRandom(4,3,rand);
         CDenseMatrix64F A = UtilDecompositons_CD64.checkZerosLT(orig,4,3);
-        assertTrue(CMatrixFeatures.isUpperTriangle(A, 0, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isUpperTriangle(A, 0, UtilEjml.TEST_64F));
         assertTrue(A==orig);
     }
 
     @Test
     public void checkZerosUT_null() {
         CDenseMatrix64F A = UtilDecompositons_CD64.checkZerosUT(null,4,3);
-        assertTrue(CMatrixFeatures.isLowerTriangle(A,0, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isLowerTriangle(A,0, UtilEjml.TEST_64F));
     }
 
     @Test
     public void checkZerosUT_random() {
-        CDenseMatrix64F orig = CRandomMatrices.createRandom(4,3,rand);
+        CDenseMatrix64F orig = RandomMatrices_CD64.createRandom(4,3,rand);
         CDenseMatrix64F A = UtilDecompositons_CD64.checkZerosUT(orig,4,3);
-        assertTrue(CMatrixFeatures.isLowerTriangle(A, 0, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isLowerTriangle(A, 0, UtilEjml.TEST_64F));
         assertTrue(A==orig);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,12 @@
 
 package org.ejml.alg.dense.linsol.qr;
 
-import org.ejml.alg.dense.decompose.CTriangularSolver;
+import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CCommonOps;
-import org.ejml.ops.CSpecializedOps;
+import org.ejml.ops.CommonOps_CD64;
+import org.ejml.ops.SpecializedOps_CD64;
 
 
 /**
@@ -98,14 +98,14 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
         R.reshape(numRows,numCols);
         decomposer.getQ(Q,false);
         decomposer.getR(R,false);
-        CCommonOps.transposeConjugate(Q,Qt);
+        CommonOps_CD64.transposeConjugate(Q,Qt);
 
         return true;
     }
 
     @Override
     public /**/double quality() {
-        return CSpecializedOps.qualityTriangular(R);
+        return SpecializedOps_CD64.qualityTriangular(R);
     }
 
     /**
@@ -138,10 +138,10 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
 
             // Solve Qa=b
             // a = Q'b
-            CCommonOps.mult(Qt, Y, Z);
+            CommonOps_CD64.mult(Qt, Y, Z);
 
             // solve for Rx = b using the standard upper triangular solver
-            CTriangularSolver.solveU(R.data, Z.data, numCols);
+            TriangularSolver_CD64.solveU(R.data, Z.data, numCols);
 
             // save the results
             for( int i = 0; i < numCols; i++ ) {

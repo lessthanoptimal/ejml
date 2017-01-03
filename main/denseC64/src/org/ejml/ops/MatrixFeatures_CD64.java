@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
-import org.ejml.alg.dense.mult.CVectorVectorMult;
+import org.ejml.alg.dense.mult.VectorVectorMult_CD64;
 import org.ejml.data.*;
 
 /**
@@ -30,7 +30,7 @@ import org.ejml.data.*;
  * @author Peter Abeles
  */
 @SuppressWarnings("Duplicates")
-public class CMatrixFeatures {
+public class MatrixFeatures_CD64 {
 
     /**
      * Checks to see if the matrix is a vector or not.
@@ -302,12 +302,12 @@ public class CMatrixFeatures {
 
         Complex64F prod = new Complex64F();
 
-        CDenseMatrix64F u[] = CCommonOps.columnsToVector(Q, null);
+        CDenseMatrix64F u[] = CommonOps_CD64.columnsToVector(Q, null);
 
         for( int i = 0; i < u.length; i++ ) {
             CDenseMatrix64F a = u[i];
 
-            CVectorVectorMult.innerProdH(a, a, prod);
+            VectorVectorMult_CD64.innerProdH(a, a, prod);
 
             if( Math.abs(prod.real-1) > tol)
                 return false;
@@ -315,7 +315,7 @@ public class CMatrixFeatures {
                 return false;
 
             for( int j = i+1; j < u.length; j++ ) {
-                CVectorVectorMult.innerProdH(a, u[j], prod);
+                VectorVectorMult_CD64.innerProdH(a, u[j], prod);
 
                 if( !(prod.getMagnitude2() <= tol*tol))
                     return false;

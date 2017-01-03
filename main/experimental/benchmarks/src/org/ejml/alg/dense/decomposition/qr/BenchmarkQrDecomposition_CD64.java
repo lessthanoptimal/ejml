@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderTran_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholder_CD64;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.ops.CRandomMatrices;
+import org.ejml.ops.RandomMatrices_CD64;
 
 import java.util.Random;
 
@@ -72,7 +72,7 @@ public class BenchmarkQrDecomposition_CD64 {
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
-            CDenseMatrix64F mat = CRandomMatrices.createRandom(w * 4, w / 1, rand);
+            CDenseMatrix64F mat = RandomMatrices_CD64.createRandom(w * 4, w / 1, rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);
             runAlgorithms(mat,trials[i]);
         }
