@@ -46,7 +46,7 @@ public abstract class GenericLinearSolverChecks_CD64 {
     protected boolean shouldFailSingular = true;
     protected boolean shouldWorkRectangle = true;
 
-    protected double tol = 1e-8;
+    protected double tol = UtilEjml.TEST_64F;
 
     @Test
     public void solve_dimensionCheck() {
@@ -137,14 +137,14 @@ public abstract class GenericLinearSolverChecks_CD64 {
         assertTrue(solver.setA(A_good));
         double q_good;
         try {
-            q_good = solver.quality();
+            q_good = (double)solver.quality();
         } catch( IllegalArgumentException e ) {
             // quality is not supported
             return;
         }
 
         assertTrue(solver.setA(A_bad));
-        double q_bad = solver.quality();
+        double q_bad = (double)solver.quality();
 
         assertTrue(q_bad < q_good);
 
@@ -165,14 +165,14 @@ public abstract class GenericLinearSolverChecks_CD64 {
         assertTrue(solver.setA(A));
         double q;
         try {
-            q = solver.quality();
+            q = (double)solver.quality();
         } catch( IllegalArgumentException e ) {
             // quality is not supported
             return;
         }
 
         assertTrue(solver.setA(Asmall));
-        double q_small = solver.quality();
+        double q_small = (double)solver.quality();
 
         assertEquals(q_small,q,UtilEjml.TEST_64F);
     }

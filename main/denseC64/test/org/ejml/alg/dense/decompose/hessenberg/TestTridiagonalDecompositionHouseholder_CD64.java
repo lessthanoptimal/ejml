@@ -84,7 +84,7 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
             CommonOps_CD64.mult(B,Q,A);
 
             // sanity check
-            assertTrue(MatrixFeatures_CD64.isHermitian(A,1e-6));
+            assertTrue(MatrixFeatures_CD64.isHermitian(A,UtilEjml.TEST_64F));
 
             for( int j = i; j  < i+2; j++ ) {
                 assertTrue(Math.abs(A.getReal(j,i))> UtilEjml.TEST_64F);

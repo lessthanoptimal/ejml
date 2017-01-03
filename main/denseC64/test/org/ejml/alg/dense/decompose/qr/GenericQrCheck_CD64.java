@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_CD64;
@@ -81,13 +82,13 @@ public abstract class GenericQrCheck_CD64 {
         alg.getR(R, compact);
 
         // see if Q has the expected properties
-        assertTrue(MatrixFeatures_CD64.isUnitary(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, UtilEjml.TEST_64F));
 
         // see if it has the expected properties
         CDenseMatrix64F A_found = new CDenseMatrix64F(Q.numRows,R.numCols);
         CommonOps_CD64.mult(Q,R,A_found);
 
-        EjmlUnitTests.assertEquals(A,A_found,1e-6);
+        EjmlUnitTests.assertEquals(A,A_found,UtilEjml.TEST_64F);
         CDenseMatrix64F R_found = new CDenseMatrix64F(R.numRows,R.numCols);
         CommonOps_CD64.transposeConjugate(Q);
         CommonOps_CD64.mult(Q, A, R_found);
@@ -115,13 +116,13 @@ public abstract class GenericQrCheck_CD64 {
         alg.getR(R, false);
 
         // see if Q has the expected properties
-        assertTrue(MatrixFeatures_CD64.isUnitary(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, UtilEjml.TEST_64F));
 
         // see if it has the expected properties
         CDenseMatrix64F A_found = new CDenseMatrix64F(Q.numRows,R.numCols);
         CommonOps_CD64.mult(Q,R,A_found);
 
-        EjmlUnitTests.assertEquals(A,A_found,1e-6);
+        EjmlUnitTests.assertEquals(A,A_found,UtilEjml.TEST_64F);
         CDenseMatrix64F R_found = new CDenseMatrix64F(R.numRows,R.numCols);
         CommonOps_CD64.transposeConjugate(Q);
         CommonOps_CD64.mult(Q, A, R_found);
@@ -214,7 +215,7 @@ public abstract class GenericQrCheck_CD64 {
         // see if Q has the expected properties
         assertEquals(height,Q.numRows);
         assertEquals(width,Q.numCols);
-        assertTrue(MatrixFeatures_CD64.isUnitary(Q,1e-6));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q,UtilEjml.TEST_64F));
 
         // try to extract it with the wrong dimensions
         Q = new CDenseMatrix64F(height,height);

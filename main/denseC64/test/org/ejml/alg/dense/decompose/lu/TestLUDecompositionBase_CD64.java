@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decompose.lu;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.CDenseMatrix64F;
 import org.ejml.data.Complex64F;
 import org.ejml.ops.CommonOps_CD64;
@@ -65,8 +66,8 @@ public class TestLUDecompositionBase_CD64 {
 
         Complex64F found = alg.computeDeterminant();
 
-        assertEquals(expected.real,found.real,1e-6);
-        assertEquals(expected.imaginary,found.imaginary,1e-6);
+        assertEquals(expected.real,found.real, UtilEjml.TEST_64F);
+        assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -109,7 +110,7 @@ public class TestLUDecompositionBase_CD64 {
         alg._solveVectorInternal(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(x.data[i],b.data[i],1e-6);
+            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_64F);
         }
     }
 
@@ -147,7 +148,7 @@ public class TestLUDecompositionBase_CD64 {
         alg.solveL(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(x.data[i],b.data[i],1e-6);
+            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_64F);
         }
     }
 

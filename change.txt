@@ -10,6 +10,7 @@ Date format: year/month/day
 - Added SimpleSVD.getSingularValues()
 - Fixed issue with generics and SimpleEVD and SimpleSVD
 - Auto coded 32F support
+  * real and complex numbers
   * core data structures
   * dense matrix operations
 - Added support for 32-bit floats in SimpleMatrix

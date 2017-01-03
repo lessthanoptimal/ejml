@@ -167,8 +167,9 @@ idea {
 
 def javadocProjects = [
         ':main:dense32',
-        ':main:denseC64',
         ':main:dense64',
+        ':main:denseC32',
+        ':main:denseC64',
         ':main:core',
         ':main:equation'
 ]

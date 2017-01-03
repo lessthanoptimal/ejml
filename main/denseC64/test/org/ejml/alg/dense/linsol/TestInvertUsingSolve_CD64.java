@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
 import org.ejml.data.CDenseMatrix64F;
@@ -38,7 +39,7 @@ import static org.junit.Assert.assertTrue;
 public class TestInvertUsingSolve_CD64 {
 
     Random rand = new Random(0xff);
-    double tol = 1e-8;
+    double tol = UtilEjml.TEST_64F;
 
     /**
      * See if it can invert a matrix that is known to be invertable.

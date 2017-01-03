@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -174,6 +174,16 @@ public class EjmlUnitTests {
         assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
     }
 
+    public static void assertEquals( Complex32F a , Complex32F b , float tol ) {
+        assertTrue(!Float.isNaN(a.real) && !Float.isNaN(b.real) ,"real a = "+a.real+" b = "+b.real);
+        assertTrue(!Float.isInfinite(a.real) && !Float.isInfinite(b.real) ,"real a = "+a.real+" b = "+b.real);
+        assertTrue(Math.abs( a.real-b.real) <= tol,"real a = "+a.real+" b = "+b.real);
+
+        assertTrue(!Float.isNaN(a.imaginary) && !Float.isNaN(b.imaginary) ,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
+        assertTrue(!Float.isInfinite(a.imaginary) && !Float.isInfinite(b.imaginary) ,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
+        assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
+    }
+
     public static void assertEquals( ComplexMatrix64F A , ComplexMatrix64F B , double tol ) {
         assertShape(A,B);
 
@@ -194,6 +204,29 @@ public class EjmlUnitTests {
                 assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"Img At ("+i+","+j+") A = "+a.imaginary+" B = "+b.imaginary);
 
             }
+        }
+    }
+
+    public static void assertEquals( ComplexMatrix32F A , ComplexMatrix32F B , float tol ) {
+        assertShape(A, B);
+
+        Complex32F a = new Complex32F();
+        Complex32F b = new Complex32F();
+
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
+                A.get(i, j, a);
+                B.get(i, j, b);
+
+                assertTrue(!Float.isNaN(a.real) && !Float.isNaN(b.real), "Real At (" + i + "," + j + ") A = " + a.real + " B = " + b.real);
+                assertTrue(!Float.isInfinite(a.real) && !Float.isInfinite(b.real), "Real At (" + i + "," + j + ") A = " + a.real + " B = " + b.real);
+                assertTrue(Math.abs(a.real - b.real) <= tol, "Real At (" + i + "," + j + ") A = " + a.real + " B = " + b.real);
+
+                assertTrue(!Float.isNaN(a.imaginary) && !Float.isNaN(b.imaginary), "Img At (" + i + "," + j + ") A = " + a.imaginary + " B = " + b.imaginary);
+                assertTrue(!Float.isInfinite(a.imaginary) && !Float.isInfinite(b.imaginary), "Img At (" + i + "," + j + ") A = " + a.imaginary + " B = " + b.imaginary);
+                assertTrue(Math.abs(a.imaginary - b.imaginary) <= tol, "Img At (" + i + "," + j + ") A = " + a.imaginary + " B = " + b.imaginary);
+            }
+
         }
     }
 

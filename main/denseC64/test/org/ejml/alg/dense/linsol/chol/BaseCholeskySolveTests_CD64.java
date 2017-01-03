@@ -155,10 +155,10 @@ public abstract class BaseCholeskySolveTests_CD64 {
         CDenseMatrix64F B = CommonOps_CD64.diag(3,0, 2,0, 0.001,0);
 
         assertTrue(solver.setA(A));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(B));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertTrue(qualityB < qualityA);
     }
@@ -173,10 +173,10 @@ public abstract class BaseCholeskySolveTests_CD64 {
         CommonOps_CD64.elementMultiply(B,0.001,0,B);
 
         assertTrue(solver.setA(A));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(B));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertEquals(qualityB,qualityA,UtilEjml.TEST_64F);
     }

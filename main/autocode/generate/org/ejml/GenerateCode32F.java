@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,6 +43,7 @@ public class GenerateCode32F {
         suffices64.add("_D64");
         suffices64.add("_B64");
         suffices64.add("_F64");
+        suffices64.add("_CD64");
 
         for( String word : suffices64 ) {
             suffices32.add( word.replace("64","32"));
@@ -57,6 +58,7 @@ public class GenerateCode32F {
         converter.replacePattern("B64", "B32");
         converter.replacePattern("D64", "D32");
         converter.replacePattern("F64", "F32");
+        converter.replacePattern("CD64", "CD32");
         converter.replacePattern("64F", "32F");
         converter.replacePattern("64-bit", "32-bit");
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");
@@ -152,5 +154,8 @@ public class GenerateCode32F {
 
         app.process(new File("main/dense64/src"), new File("main/dense32/src") );
         app.process(new File("main/dense64/test"), new File("main/dense32/test") );
+
+        app.process(new File("main/denseC64/src"), new File("main/denseC32/src") );
+        app.process(new File("main/denseC64/test"), new File("main/denseC32/test") );
     }
 }

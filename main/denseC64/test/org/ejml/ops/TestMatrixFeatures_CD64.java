@@ -112,20 +112,20 @@ public class TestMatrixFeatures_CD64 {
         CDenseMatrix64F m = RandomMatrices_CD64.createRandom(3,4,-1,1,rand);
         CDenseMatrix64F n = m.copy();
 
-        assertTrue(MatrixFeatures_CD64.isEquals(m,n,1e-6));
+        assertTrue(MatrixFeatures_CD64.isEquals(m,n,UtilEjml.TEST_64F));
 
-        n.data[4] += 1e-25;
-        assertTrue(MatrixFeatures_CD64.isEquals(m,n,1e-6));
+        n.data[4] += UtilEjml.EPS;
+        assertTrue(MatrixFeatures_CD64.isEquals(m,n,UtilEjml.TEST_64F));
 
-        n.data[4] += 1e-2;
-        assertFalse(MatrixFeatures_CD64.isEquals(m,n,1e-6));
+        n.data[4] += Math.sqrt(UtilEjml.TEST_64F_SQ);
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n,UtilEjml.TEST_64F));
 
         m.set(2,1,Double.NaN,1);
         n.set(2,1,Double.NaN,1);
-        assertFalse(MatrixFeatures_CD64.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n,UtilEjml.TEST_64F));
         m.set(2,1,Double.POSITIVE_INFINITY,1);
         n.set(2,1,Double.POSITIVE_INFINITY,1);
-        assertFalse(MatrixFeatures_CD64.isEquals(m,n,1e-6));
+        assertFalse(MatrixFeatures_CD64.isEquals(m,n,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -135,15 +135,15 @@ public class TestMatrixFeatures_CD64 {
 
         for( int i = 0; i < values.length; i++ ) {
             for( int j = 0; j < values.length; j++ ) {
-                checkIdentical(values[i],values[j],1e-8,i==j);
+                checkIdentical(values[i],values[j],UtilEjml.TEST_64F,i==j);
             }
         }
 
-        checkIdentical(1.0,1.5,1e-8,false);
-        checkIdentical(1.5,1.0,1e-8,false);
-        checkIdentical(1.0,1.0000000001,1e-8,true);
-        checkIdentical(1.0,Double.NaN,1e-8,false);
-        checkIdentical(Double.NaN,1.0,1e-8,false);
+        checkIdentical(1.0,1.5,UtilEjml.TEST_64F,false);
+        checkIdentical(1.5,1.0,UtilEjml.TEST_64F,false);
+        checkIdentical(1.0,1.0000000001,UtilEjml.TEST_64F,true);
+        checkIdentical(1.0,Double.NaN,UtilEjml.TEST_64F,false);
+        checkIdentical(Double.NaN,1.0,UtilEjml.TEST_64F,false);
     }
 
     private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
@@ -166,21 +166,21 @@ public class TestMatrixFeatures_CD64 {
 
         assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
 
-        m.setImag(0,0,1e-12);
+        m.setImag(0,0,10*UtilEjml.EPS);
         assertTrue(MatrixFeatures_CD64.isIdentity(m, UtilEjml.TEST_64F));
-        m.setReal(0, 0, 1 + 1e-12);
+        m.setReal(0, 0, 1 + 10*UtilEjml.EPS);
         assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
 
-        assertFalse(MatrixFeatures_CD64.isIdentity(m, 1e-15));
-        assertFalse(MatrixFeatures_CD64.isIdentity(m, 1e-15));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m, UtilEjml.EPS));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m, UtilEjml.EPS));
 
-        m.setImag(1,0,1e-12);
+        m.setImag(1,0,10*UtilEjml.EPS);
         assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
-        m.setReal(1,0,1e-12);
+        m.setReal(1,0,10*UtilEjml.EPS);
         assertTrue(MatrixFeatures_CD64.isIdentity(m,UtilEjml.TEST_64F));
 
-        assertFalse(MatrixFeatures_CD64.isIdentity(m,1e-15));
-        assertFalse(MatrixFeatures_CD64.isIdentity(m,1e-15));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m,UtilEjml.EPS));
+        assertFalse(MatrixFeatures_CD64.isIdentity(m,UtilEjml.EPS));
     }
 
     @Test
@@ -203,16 +203,16 @@ public class TestMatrixFeatures_CD64 {
         double gamma = 2.0/dot.real;
         CDenseMatrix64F A = SpecializedOps_CD64.householder(u,gamma);
 
-        assertTrue(MatrixFeatures_CD64.isUnitary(A, 1e-6f));
+        assertTrue(MatrixFeatures_CD64.isUnitary(A, UtilEjml.TEST_64F));
 
         // try a negative case now
         A.set(0,1,495,400);
 
-        assertFalse(MatrixFeatures_CD64.isUnitary(A, 1e-6f));
+        assertFalse(MatrixFeatures_CD64.isUnitary(A, UtilEjml.TEST_64F));
 
         A.set(0,1,Double.NaN,Double.NaN);
 
-        assertFalse(MatrixFeatures_CD64.isUnitary(A, 1e-6f));
+        assertFalse(MatrixFeatures_CD64.isUnitary(A, UtilEjml.TEST_64F));
     }
 
     /**

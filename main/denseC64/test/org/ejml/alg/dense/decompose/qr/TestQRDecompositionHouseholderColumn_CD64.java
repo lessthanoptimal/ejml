@@ -78,8 +78,8 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
         CDenseMatrix64F Q = SpecializedOps_CD64.householder(U,qr.getGamma());
 
         // check the expected properties of Q
-        assertTrue(MatrixFeatures_CD64.isHermitian(Q, 1e-6));
-        assertTrue(MatrixFeatures_CD64.isUnitary(Q, 1e-6));
+        assertTrue(MatrixFeatures_CD64.isHermitian(Q, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, UtilEjml.TEST_64F));
 
         CDenseMatrix64F result = new CDenseMatrix64F(Q.numRows,Q.numCols);
         CDenseMatrix64F Asub = CommonOps_CD64.extract(A, w, width, w, width);
@@ -150,8 +150,8 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
                 b.set(found[j][i*2],found[j][i*2+1]);
 //                found.get(i,j,b);
 
-                assertEquals(a.real, b.real, 1e-6);
-                assertEquals(a.imaginary,b.imaginary,1e-6);
+                assertEquals(a.real, b.real, UtilEjml.TEST_64F);
+                assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_64F);
             }
         }
     }

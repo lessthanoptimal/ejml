@@ -86,8 +86,12 @@ After that has finished running all the standard commands will work as well as t
          Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
 * **main/core** :
          Contains all essential data structures
+* **main/dense32** :
+         Algorithms for real dense 32-bit floating point matrices
 * **main/dense64** :
          Algorithms for real dense 64-bit floating point matrices
+* **main/denseC32** :
+         Algorithms for complex dense 32-bit floating point matrices
 * **main/denseC64** :
          Algorithms for complex dense 64-bit floating point matrices
 * **main/equation** :

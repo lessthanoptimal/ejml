@@ -55,7 +55,7 @@ public class TestSpecializedOps_CD64 {
     @Test
     public void createReflector_gamma() {
         CDenseMatrix64F u = RandomMatrices_CD64.createRandom(4,1,rand);
-        double gamma = 2.0/Math.pow(NormOps_CD64.normF(u),2.0);
+        double gamma = 2.0/(double)Math.pow(NormOps_CD64.normF(u),2.0);
         CDenseMatrix64F Q = SpecializedOps_CD64.createReflector(u,gamma);
 
         CDenseMatrix64F w = new CDenseMatrix64F(4,1);
@@ -161,7 +161,7 @@ public class TestSpecializedOps_CD64 {
 //        x.set(0,0,0,0);
 
         CDenseMatrix64F u = SpecializedOps_CD64.householderVector(x);
-        double gamma = 2.0/Math.pow(NormOps_CD64.normF(u), 2.0);
+        double gamma = 2.0/(double)Math.pow(NormOps_CD64.normF(u), 2.0);
 
         // Q = I - gamma*U*U^H
         CDenseMatrix64F Q = CommonOps_CD64.identity(6);
