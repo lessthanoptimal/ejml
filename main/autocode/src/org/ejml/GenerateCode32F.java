@@ -165,6 +165,6 @@ public class GenerateCode32F {
         app.process(new File(path,"main/dense64/test"), new File(path,"main/dense32/test") );
 
         app.process(new File(path,"main/denseC64/src"), new File(path,"main/denseC32/src") );
-        app.process(new File("main/denseC64/test"), new File(path,"main/denseC32/test") );
+        app.process(new File(path,"main/denseC64/test"), new File(path,"main/denseC32/test") );
     }
 }
