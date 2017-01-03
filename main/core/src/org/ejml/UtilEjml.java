@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,6 +62,10 @@ public class UtilEjml {
 
     public static boolean isUncountable( double val ) {
         return Double.isNaN(val) || Double.isInfinite(val);
+    }
+
+    public static boolean isUncountable( float val ) {
+        return Float.isNaN(val) || Float.isInfinite(val);
     }
 
     public static void memset( double[] data , double val , int length ) {

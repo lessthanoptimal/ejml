@@ -15,8 +15,8 @@ Date format: year/month/day
   * dense matrix operations
 - Added support for 32-bit floats in SimpleMatrix
 - Massive refactoring to support auto coding of F32
+- Added FixedFeatures*
 
-- TODO Travis auto generate 32 bit code and run tests
 - TODO Add support for matrix norms to Equations
 
 ----- Version 0.30

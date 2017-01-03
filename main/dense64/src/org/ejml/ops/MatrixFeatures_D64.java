@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -457,28 +457,27 @@ public class MatrixFeatures_D64 {
 
         final int length = a.getNumElements();
         for( int i = 0; i < length; i++ ) {
-            double valA = a.get(i);
-            double valB = b.get(i);
-
-            // if either is negative or positive infinity the result will be positive infinity
-            // if either is NaN the result will be NaN
-            double diff = Math.abs(valA-valB);
-
-            // diff = NaN == false
-            // diff = infinity == false
-            if( tol >= diff )
-                continue;
-
-            if( Double.isNaN(valA) ) {
-                return Double.isNaN(valB);
-            } else if( Double.isInfinite(valA) ) {
-                return valA == valB;
-            } else {
+            if( !isIdentical(a.get(i),b.get(i), tol))
                 return false;
-            }
         }
 
         return true;
+    }
+
+    public static boolean isIdentical( double a , double b , double tol ) {
+        // if either is negative or positive infinity the result will be positive infinity
+        // if either is NaN the result will be NaN
+        double diff = Math.abs(a-b);
+
+        // diff = NaN == false
+        // diff = infinity == false
+        if( tol >= diff )
+            return true;
+
+        if (Double.isNaN(a)) {
+            return Double.isNaN(b);
+        } else
+            return Double.isInfinite(a) && a == b;
     }
 
     /**
