@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.DeterminantFromMinor_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps_D64;
@@ -55,7 +56,7 @@ public class TestLUDecompositionBase_D64 {
         alg.decompose(A);
         double luVal = alg.computeDeterminant().real;
 
-        assertEquals(minorVal,luVal,1e-6);
+        assertEquals(minorVal,luVal, UtilEjml.TEST_64F_SQ);
     }
 
     @Test
@@ -96,7 +97,7 @@ public class TestLUDecompositionBase_D64 {
         alg._solveVectorInternal(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(x.data[i],b.data[i],1e-6);
+            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_64F_SQ);
         }
     }
 

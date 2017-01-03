@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main:core')
+    compile project(':main:dense32')
     compile project(':main:dense64')
     testCompile project(':main:experimental')
     testCompile project(':main:core').sourceSets.test.output

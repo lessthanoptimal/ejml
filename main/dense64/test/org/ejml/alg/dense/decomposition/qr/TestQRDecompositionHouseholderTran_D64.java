@@ -104,14 +104,14 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width);
-        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(width,width, DenseMatrix64F.class);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
 
-        qr.householder(w,A.getMatrix());
+        qr.householder(w,(DenseMatrix64F)A.getMatrix());
 
         SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU(w)).extractMatrix(w,width,0,1);
 
-        SimpleMatrix I = SimpleMatrix.identity(width-w);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, DenseMatrix64F.class);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
 
@@ -144,23 +144,23 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
         double gamma = 0.2;
         double tau = 0.75;
 
-        SimpleMatrix U = new SimpleMatrix(width,1);
-        SimpleMatrix A = new SimpleMatrix(width,width);
+        SimpleMatrix U = new SimpleMatrix(width,1, DenseMatrix64F.class);
+        SimpleMatrix A = new SimpleMatrix(width,width, DenseMatrix64F.class);
 
-        RandomMatrices_D64.setRandom(U.getMatrix(),rand);
-        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)U.getMatrix(),rand);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
 
-        CommonOps_D64.transpose(A.getMatrix(),qr.getQR());
+        CommonOps_D64.transpose((DenseMatrix64F)A.getMatrix(),qr.getQR());
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, DenseMatrix64F.class);
 
         SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
         u_sub.set(0,0,1);// assumed to be 1 in the algorithm
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,U.getMatrix().getData(),gamma,tau);
+        qr.updateA(w,((DenseMatrix64F)U.getMatrix()).getData(),gamma,tau);
 
         DenseMatrix64F found = qr.getQR();
 
@@ -171,7 +171,7 @@ public class TestQRDecompositionHouseholderTran_D64 extends GenericQrCheck_D64 {
         // the right should be the same
         for( int i = w; i < width; i++ ) {
             for( int j = w+1; j < width; j++ ) {
-                double a = expected.get(i-w,j-w);
+                double a = (double)expected.get(i-w,j-w);
                 double b = found.get(j,i);
 
                 assertEquals(a,b,1e-6);

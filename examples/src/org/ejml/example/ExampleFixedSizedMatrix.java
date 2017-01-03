@@ -75,7 +75,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        FixedMatrix3x3_64F fv = ConvertMatrixType_F64.convert(sv.getMatrix(),(FixedMatrix3x3_64F)null);
+        FixedMatrix3x3_64F fv = ConvertMatrixType_F64.convert(sv.matrix_F64(),(FixedMatrix3x3_64F)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

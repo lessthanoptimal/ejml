@@ -69,8 +69,8 @@ public abstract class GeneralLuDecompositionChecks_D64 {
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
         SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
 
-        EjmlUnitTests.assertEquals(octLower,L.getMatrix(),1e-5);
-        EjmlUnitTests.assertEquals(octUpper,U.getMatrix(),1e-5);
+        EjmlUnitTests.assertEquals(octLower,L.matrix_F64(),UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(octUpper,U.matrix_F64(),UtilEjml.TEST_64F_SQ);
 
         DenseMatrix64F A_found = P.mult(L).mult(U).getMatrix();
         assertTrue(MatrixFeatures_D64.isIdentical(A_found,A,UtilEjml.TEST_64F));

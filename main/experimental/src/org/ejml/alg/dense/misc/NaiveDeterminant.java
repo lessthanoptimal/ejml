@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
+import org.ejml.data.DenseMatrix32F;
 import org.ejml.data.DenseMatrix64F;
 
 
@@ -96,6 +97,42 @@ public class NaiveDeterminant {
 
         for(int i = 0; i < mat.numRows; i++) {
             DenseMatrix64F minorMat = new DenseMatrix64F(mat.numRows-1,mat.numRows-1);
+
+            for(int j = 1; j < mat.numRows; j++) {
+                for(int k = 0; k < mat.numRows; k++) {
+
+                    if(k < i) {
+                        minorMat.set(j-1,k,mat.get(j,k));
+                    } else if(k > i) {
+                        minorMat.set(j-1,k-1,mat.get(j,k));
+                    }
+                }
+            }
+
+            if( i % 2 == 0 )
+                result += mat.get(0,i) * recursive(minorMat);
+            else
+                result -= mat.get(0,i) * recursive(minorMat);
+
+        }
+
+        return result;
+    }
+
+    public static float recursive( DenseMatrix32F mat )
+    {
+        if(mat.numRows == 1) {
+            return mat.get(0);
+        } else if(mat.numRows == 2) {
+            return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
+        } else if( mat.numRows == 3 ) {
+            return UnrolledDeterminantFromMinor_D32.det3(mat);
+        }
+
+        float result = 0;
+
+        for(int i = 0; i < mat.numRows; i++) {
+            DenseMatrix32F minorMat = new DenseMatrix32F(mat.numRows-1,mat.numRows-1);
 
             for(int j = 1; j < mat.numRows; j++) {
                 for(int k = 0; k < mat.numRows; k++) {

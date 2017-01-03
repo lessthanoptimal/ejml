@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class TestCommonOps_D64 {
 
     Random rand = new Random(0xFF);
-    double tol = 1e-8;
+    double tol = UtilEjml.TEST_64F;
 
     @Test
     public void checkInputShape() {
@@ -459,7 +459,7 @@ public class TestCommonOps_D64 {
         CommonOps_D64.mult(A_inv,b,x);
         CommonOps_D64.mult(A,x,found);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(b,found,1e-4));
+        assertTrue(MatrixFeatures_D64.isIdentical(b,found,UtilEjml.TEST_64F_SQ));
 
         // check tall matrix
         CommonOps_D64.transpose(A);
@@ -471,7 +471,7 @@ public class TestCommonOps_D64 {
         CommonOps_D64.mult(A_inv,b,x);
         CommonOps_D64.mult(A, x, found);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(b,found,1e-4));
+        assertTrue(MatrixFeatures_D64.isIdentical(b,found,UtilEjml.TEST_64F_SQ));
     }
 
     @Test

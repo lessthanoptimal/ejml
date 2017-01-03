@@ -71,24 +71,24 @@ public abstract class GenericBidiagonalCheck_D64 {
 
     @Test
     public void testIdentity() {
-        SimpleMatrix A = SimpleMatrix.identity(5);
+        SimpleMatrix A = SimpleMatrix.identity(5, DenseMatrix64F.class);
 
         BidiagonalDecomposition_F64<DenseMatrix64F> decomp = createQRDecomposition();
 
-        assertTrue(decomp.decompose(A.getMatrix().copy()));
+        assertTrue(decomp.decompose(A.matrix_F64().copy()));
 
-        checkGeneric(A.getMatrix(), decomp);
+        checkGeneric(A.matrix_F64(), decomp);
     }
 
     @Test
     public void testZero() {
-        SimpleMatrix A = new SimpleMatrix(5,5);
+        SimpleMatrix A = new SimpleMatrix(5,5, DenseMatrix64F.class);
 
         BidiagonalDecomposition_F64<DenseMatrix64F> decomp = createQRDecomposition();
 
-        assertTrue(decomp.decompose(A.getMatrix().copy()));
+        assertTrue(decomp.decompose(A.matrix_F64().copy()));
 
-        checkGeneric(A.getMatrix(), decomp);
+        checkGeneric(A.matrix_F64(), decomp);
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class GenericBidiagonalCheck_D64 {
         SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));
         SimpleMatrix V = SimpleMatrix.wrap(decomp.getV(null,false,false));
 
-        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).getMatrix();
+        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
         assertTrue(MatrixFeatures_D64.isIdentical(a,foundA,UtilEjml.TEST_64F));
 
@@ -128,7 +128,7 @@ public abstract class GenericBidiagonalCheck_D64 {
 //        V.print();
 //        B.print();
 
-        foundA = U.mult(B).mult(V.transpose()).getMatrix();
+        foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
         assertTrue(MatrixFeatures_D64.isIdentical(a,foundA,UtilEjml.TEST_64F));
 

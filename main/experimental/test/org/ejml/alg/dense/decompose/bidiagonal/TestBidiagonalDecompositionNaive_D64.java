@@ -51,7 +51,7 @@ public class TestBidiagonalDecompositionNaive_D64 {
 
         BidiagonalDecompositionNaive_D64 decomp = new BidiagonalDecompositionNaive_D64();
 
-        assertTrue(decomp.decompose(A.getMatrix()));
+        assertTrue(decomp.decompose(A.matrix_F64()));
 
         SimpleMatrix U = decomp.getU();
         SimpleMatrix B = decomp.getB();
@@ -64,12 +64,12 @@ public class TestBidiagonalDecompositionNaive_D64 {
 //        U.mult(A).mult(V).print();
 
         // check the decomposition
-        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).getMatrix();
+        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
 //        A.print();
 //        foundA.print();
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A.getMatrix(), foundA, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(), foundA, UtilEjml.TEST_64F));
     }
 
 }

@@ -165,7 +165,7 @@ public class MatrixIO {
 
     public static void print(PrintStream out , RealMatrix64F mat , String format ) {
 
-        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
+        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense64" : "dense64 fixed";
 
         out.println("Type = "+type+" real , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
@@ -191,7 +191,7 @@ public class MatrixIO {
 
     public static void print(PrintStream out , RealMatrix32F mat , String format ) {
 
-        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense" : "dense fixed";
+        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense32" : "dense32 fixed";
 
         out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 

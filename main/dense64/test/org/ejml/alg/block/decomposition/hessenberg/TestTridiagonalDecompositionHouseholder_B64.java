@@ -86,7 +86,7 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
     public void fullTest() {
         for( int width = 1; width <= r*3; width++ ) {
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createSymmetric(width,-1,1,rand));
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
 
             TridiagonalDecompositionHouseholder_B64 alg = new TridiagonalDecompositionHouseholder_B64();
 
@@ -101,20 +101,20 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
             // reconstruct the original matrix
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
-            assertTrue(MatrixFeatures_D64.isIdentical(A.getMatrix(),A_found.getMatrix(),UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(),A_found.matrix_F64(),UtilEjml.TEST_64F));
         }
     }
 
     @Test
     public void multPlusTransA() {
         for( int width = r+1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.random(width,width,-1,1,rand);
-            SimpleMatrix U = SimpleMatrix.random(r,width,-1,1,rand);
-            SimpleMatrix V = SimpleMatrix.random(r,width,-1,1,rand);
+            SimpleMatrix A = SimpleMatrix.random_F64(width,width, -1.0, 1.0,rand);
+            SimpleMatrix U = SimpleMatrix.random_F64(r,width, -1.0, 1.0 ,rand);
+            SimpleMatrix V = SimpleMatrix.random_F64(r,width, -1.0, 1.0 ,rand);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
-            BlockMatrix64F Ub = MatrixOps_B64.convert(U.getMatrix(),r);
-            BlockMatrix64F Vb = MatrixOps_B64.convert(V.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix64F Ub = MatrixOps_B64.convert(U.matrix_F64(),r);
+            BlockMatrix64F Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
 
             SimpleMatrix expected = A.plus(U.transpose().mult(V));
 

@@ -58,11 +58,11 @@ public class TestInnerRankUpdate_B64 {
 
     private void checkRankNUpdate(int lengthA, int heightB) {
         double alpha = -2.0;
-        SimpleMatrix origA = SimpleMatrix.random(lengthA,lengthA,-1,1,rand);
-        SimpleMatrix origB = SimpleMatrix.random(heightB,lengthA,-1,1,rand);
+        SimpleMatrix origA = SimpleMatrix.random_F64(lengthA,lengthA,-1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA,-1.0 , 1.0 ,rand);
 
-        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.getMatrix(),N);
-        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.getMatrix(),N);
+        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
         D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
         D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -70,7 +70,7 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
         InnerRankUpdate_B64.rankNUpdate(N,alpha,subA,subB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(expected.getMatrix(),blockA, UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(expected.matrix_F64(),blockA, UtilEjml.TEST_64F));
     }
 
     /**
@@ -90,10 +90,10 @@ public class TestInnerRankUpdate_B64 {
 
     private void checkSymmRankNMinus_U(int lengthA, int heightB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_D64.createSymmPosDef(lengthA,rand));
-        SimpleMatrix origB = SimpleMatrix.random(heightB,lengthA,-1,1,rand);
+        SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA, -1.0 , 1.0 ,rand);
 
-        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.getMatrix(),N);
-        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.getMatrix(),N);
+        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
         D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
         D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -101,7 +101,7 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
         InnerRankUpdate_B64.symmRankNMinus_U(N,subA,subB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true,expected.getMatrix(),blockA,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true,expected.matrix_F64(),blockA,UtilEjml.TEST_64F));
     }
 
     @Test
@@ -118,10 +118,10 @@ public class TestInnerRankUpdate_B64 {
 
     private void checkSymmRankNMinus_L(int lengthA, int widthB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_D64.createSymmPosDef(lengthA,rand));
-        SimpleMatrix origB = SimpleMatrix.random(lengthA,widthB,-1,1,rand);
+        SimpleMatrix origB = SimpleMatrix.random_F64(lengthA,widthB, -1.0 , 1.0 ,rand);
 
-        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.getMatrix(),N);
-        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.getMatrix(),N);
+        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
         D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
         D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -132,6 +132,6 @@ public class TestInnerRankUpdate_B64 {
 //        expected.print();
 //        blockA.print();
 
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false,expected.getMatrix(),blockA,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false,expected.matrix_F64(),blockA,UtilEjml.TEST_64F));
     }
 }

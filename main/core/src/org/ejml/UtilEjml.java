@@ -37,11 +37,6 @@ public class UtilEjml {
      */
     public static String VERSION = "0.31-SNAPSHOT";
 
-    /**
-     * Default tolerance.
-     */
-    public static double TOLERANCE = 1e-8;
-
     public static double EPS = Math.pow(2,-52);
     public static float F_EPS = (float)Math.pow(2,-21);
 
@@ -60,6 +55,9 @@ public class UtilEjml {
     public static double TESTP_64F = 1e-12;
     public static float TEST_32F_SQ = (float)Math.sqrt(TEST_32F);
     public static double TEST_64F_SQ = Math.sqrt(TEST_64F);
+
+    // The maximize size it will do inverse on
+    public static int maxInverseSize = 5;
 
 
     public static boolean isUncountable( double val ) {

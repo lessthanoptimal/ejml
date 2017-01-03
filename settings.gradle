@@ -1,2 +1,2 @@
 include 'main:equation','main:core','main:experimental','main:dense64','main:denseC64',
-        'main:simple','examples',"main:all",'main:dense32'
+        'main:simple','examples',"main:all",'main:dense32','main:autocode'

@@ -61,7 +61,7 @@ public class TestTridiagonalHelper_B64 {
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createSymmetric(width,-1,1,rand));
 
             TridiagonalDecompositionHouseholderOrig_D64 decomp = new TridiagonalDecompositionHouseholderOrig_D64();
-            decomp.decompose(A.getMatrix());
+            decomp.decompose(A.matrix_F64());
 
             D1Submatrix64F Ab = insertIntoBlock(offX,offY,A,r);
             D1Submatrix64F V = new D1Submatrix64F(new BlockMatrix64F(r,offX+A.numCols(),r));
@@ -95,7 +95,7 @@ public class TestTridiagonalHelper_B64 {
             for( int i = 0; i < r; i++ )
                 betas[i] = i + 0.5;
 
-            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
+            SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
 
             // Compute W directly using SimpleMatrix
             SimpleMatrix v = A.extractVector(true,0);
@@ -119,7 +119,7 @@ public class TestTridiagonalHelper_B64 {
             }
 
             // now compute it using the block matrix stuff
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
             BlockMatrix64F Wb = new BlockMatrix64F(Ab.numRows,Ab.numCols,r);
 
             D1Submatrix64F Ab_sub = new D1Submatrix64F(Ab);
@@ -128,7 +128,7 @@ public class TestTridiagonalHelper_B64 {
             TridiagonalHelper_B64.computeW_row(r, Ab_sub, Wb_sub, betas, 0);
 
             // see if the result is the same
-            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.getMatrix(),UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.matrix_F64(),UtilEjml.TEST_64F));
         }
     }
 
@@ -138,10 +138,10 @@ public class TestTridiagonalHelper_B64 {
         // try different offsets to make sure there are no implicit assumptions
         for( int offX = 0; offX <= r; offX += r) {
             for( int offY = 0; offY <= r; offY += r) {
-                SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+                SimpleMatrix A = SimpleMatrix.random_F64(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
                 A = A.mult(A.transpose());
                 SimpleMatrix A_orig = A.copy();
-                SimpleMatrix V = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
+                SimpleMatrix V = SimpleMatrix.random_F64(r,A.numCols(), -1.0 , 1.0 ,rand);
 
                 D1Submatrix64F Ab = insertIntoBlock(offY,offX,A,r);
                 D1Submatrix64F Vb = insertIntoBlock(0,offX,V,r);
@@ -174,7 +174,7 @@ public class TestTridiagonalHelper_B64 {
     private static D1Submatrix64F insertIntoBlock( int offRow , int offCol , SimpleMatrix A , int r )
     {
         DenseMatrix64F B = new DenseMatrix64F(offRow+A.numRows(),offCol+A.numCols());
-        CommonOps_D64.insert(A.getMatrix(),B,offRow,offCol);
+        CommonOps_D64.insert(A.matrix_F64(),B,offRow,offCol);
 
         BlockMatrix64F C = MatrixOps_B64.convert(B,r);
         return new D1Submatrix64F(C,offRow,C.numRows,offCol,C.numCols);
@@ -182,11 +182,11 @@ public class TestTridiagonalHelper_B64 {
 
     @Test
     public void multA_u() {
-        SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
         // make a symmetric so that this mult will work
         A = A.transpose().mult(A);
 
-        BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+        BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
         BlockMatrix64F V = new BlockMatrix64F(r,Ab.numCols,r);
 
         int row = 1;
@@ -212,9 +212,9 @@ public class TestTridiagonalHelper_B64 {
      */
     @Test
     public void computeY() {
-        SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
         A = A.transpose().mult(A); // needs to be symmetric to pass
-        SimpleMatrix Vo = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
+        SimpleMatrix Vo = SimpleMatrix.random_F64(r,A.numCols(), -1.0 , 1.0 ,rand);
 
         for( int row = 0; row < r; row++ ) {
             SimpleMatrix AA = A.copy();
@@ -252,8 +252,8 @@ public class TestTridiagonalHelper_B64 {
 
             y = y.scale(-gamma);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
-            BlockMatrix64F Vb = MatrixOps_B64.convert(Vo.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix64F Vb = MatrixOps_B64.convert(Vo.matrix_F64(),r);
 
             TridiagonalHelper_B64.computeY(r, new D1Submatrix64F(Ab), new D1Submatrix64F(Vb), row, gamma);
 
@@ -265,8 +265,8 @@ public class TestTridiagonalHelper_B64 {
 
     @Test
     public void computeRowOfV() {
-        SimpleMatrix A = SimpleMatrix.random(2*r+2,2*r+2,-1,1,rand);
-        SimpleMatrix V = SimpleMatrix.random(r,A.numCols(),-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(2*r+2,2*r+2, -1.0 , 1.0 , rand);
+        SimpleMatrix V = SimpleMatrix.random_F64(r,A.numCols(), -1.0 , 1.0 , rand);
 
         double gamma = 2.3;
 
@@ -281,8 +281,8 @@ public class TestTridiagonalHelper_B64 {
 
             SimpleMatrix v = y.plus(u.scale(-(gamma/2.0)*u.dot(y)));
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
-            BlockMatrix64F Vb = MatrixOps_B64.convert(V.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix64F Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
 
             TridiagonalHelper_B64.computeRowOfV(r, new D1Submatrix64F(Ab), new D1Submatrix64F(Vb),
                     row, gamma);

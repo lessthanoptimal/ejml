@@ -18,6 +18,7 @@
 
 package org.ejml.alg.block;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
@@ -147,7 +148,7 @@ public class TestMatrixMult_B64 {
 //                System.out.println(i+" "+j);
                 double diff = Math.abs(subC.get(i,j) - rmC.get(i-C.row0,j-C.col0));
 //                System.out.println(subC.get(i,j)+" "+rmC.get(i-C.row0,j-C.col0));
-                if( diff >= 1e-12) {
+                if( diff >= UtilEjml.TEST_64F) {
                     subC.print();
                     rmC.print();
                     System.out.println(func.getName());

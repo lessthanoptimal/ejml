@@ -57,7 +57,7 @@ public class TestHessenbergSimilarDecomposition_D64 {
 //        UtilEjml.print(H,"%8.2e");
 //        System.out.println("-------- Q ---------");
 //        UtilEjml.print(Q,"%8.2e");
-        assertTrue(MatrixFeatures_D64.isOrthogonal(Q, UtilEjml.TOLERANCE));
+        assertTrue(MatrixFeatures_D64.isOrthogonal(Q, UtilEjml.TEST_64F));
 
         DenseMatrix64F temp0 = new DenseMatrix64F(5,5);
 
@@ -71,7 +71,7 @@ public class TestHessenbergSimilarDecomposition_D64 {
 
         assertTrue(!MatrixFeatures_D64.hasUncountable(H));
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A,H,UtilEjml.TOLERANCE));
+        assertTrue(MatrixFeatures_D64.isIdentical(A,H,UtilEjml.TEST_64F));
     }
 
     /**
@@ -149,10 +149,10 @@ public class TestHessenbergSimilarDecomposition_D64 {
 //            UtilEjml.print(B);
 
             for( int j = 0; j < i+2; j++ ) {
-                assertTrue(Math.abs(B.get(j,i))>UtilEjml.TOLERANCE);
+                assertTrue(Math.abs(B.get(j,i))>UtilEjml.TEST_64F);
             }
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,B.get(j,i),UtilEjml.TOLERANCE);
+                assertEquals(0,B.get(j,i),UtilEjml.TEST_64F);
             }
             CommonOps_D64.mult(B,Q,A);
 
@@ -207,7 +207,7 @@ public class TestHessenbergSimilarDecomposition_D64 {
 
 //        UtilEjml.print(foundH);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(expectedH,foundH,UtilEjml.TOLERANCE));
+        assertTrue(MatrixFeatures_D64.isIdentical(expectedH,foundH,UtilEjml.TEST_64F));
 
         System.out.println();
     }

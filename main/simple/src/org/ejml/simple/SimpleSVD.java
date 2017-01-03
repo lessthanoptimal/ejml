@@ -19,10 +19,15 @@
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DenseMatrix32F;
 import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Matrix;
+import org.ejml.factory.DecompositionFactory_D32;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F32;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.ops.SingularOps_D32;
 import org.ejml.ops.SingularOps_D64;
 
 
@@ -47,19 +52,28 @@ import org.ejml.ops.SingularOps_D64;
 @SuppressWarnings({"unchecked"})
 public class SimpleSVD<T extends SimpleBase> {
 
-    private SingularValueDecomposition_F64<DenseMatrix64F> svd;
+    private SingularValueDecomposition svd;
     private T U;
     private T W;
     private T V;
 
-    private DenseMatrix64F mat;
+    private Matrix mat;
+    final boolean is64;
 
     // tolerance for singular values
     double tol;
 
-    public SimpleSVD( DenseMatrix64F mat , boolean compact ) {
+    public SimpleSVD( Matrix mat , boolean compact ) {
         this.mat = mat;
-        svd = DecompositionFactory_D64.svd(mat.numRows,mat.numCols,true,true,compact);
+        this.is64 = mat instanceof DenseMatrix64F;
+        if( is64 ) {
+            DenseMatrix64F m = (DenseMatrix64F)mat;
+            svd = DecompositionFactory_D64.svd(m.numRows,m.numCols,true,true,compact);
+        } else {
+            DenseMatrix32F m = (DenseMatrix32F)mat;
+            svd = DecompositionFactory_D32.svd(m.numRows,m.numCols,true,true,compact);
+        }
+
         if( !svd.decompose(mat) )
             throw new RuntimeException("Decomposition failed");
         U = (T)SimpleMatrix.wrap(svd.getU(null,false));
@@ -67,9 +81,17 @@ public class SimpleSVD<T extends SimpleBase> {
         V = (T)SimpleMatrix.wrap(svd.getV(null,false));
 
         // order singular values from largest to smallest
-        SingularOps_D64.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
-
-        tol = SingularOps_D64.singularThreshold(svd);
+        if( is64 ) {
+            SingularOps_D64.descendingOrder(
+                    (DenseMatrix64F)U.getMatrix(), false, (DenseMatrix64F)W.getMatrix(),
+                    (DenseMatrix64F)V.getMatrix(), false);
+            tol = SingularOps_D64.singularThreshold((SingularValueDecomposition_F64)svd);
+        } else {
+            SingularOps_D32.descendingOrder(
+                    (DenseMatrix32F)U.getMatrix(), false, (DenseMatrix32F)W.getMatrix(),
+                    (DenseMatrix32F)V.getMatrix(), false);
+            tol = SingularOps_D32.singularThreshold((SingularValueDecomposition_F32)svd);
+        }
 
     }
 
@@ -119,7 +141,12 @@ public class SimpleSVD<T extends SimpleBase> {
      * @return Quality of the decomposition.
      */
     public /**/double quality() {
-        return DecompositionFactory_D64.quality(mat,U.getMatrix(),W.getMatrix(),V.transpose().getMatrix());
+        if( is64 ) {
+            return DecompositionFactory_D64.quality((DenseMatrix64F)mat, (DenseMatrix64F)U.getMatrix(),
+                    (DenseMatrix64F)W.getMatrix(), (DenseMatrix64F)V.transpose().getMatrix());
+        } else {
+            return DecompositionFactory_D32.quality((DenseMatrix32F)mat, (DenseMatrix32F)U.getMatrix(),
+                    (DenseMatrix32F)W.getMatrix(), (DenseMatrix32F)V.transpose().getMatrix());        }
     }
 
     /**
@@ -128,7 +155,11 @@ public class SimpleSVD<T extends SimpleBase> {
      */
     public SimpleMatrix nullSpace() {
         // TODO take advantage of the singular values being ordered already
-        return SimpleMatrix.wrap(SingularOps_D64.nullSpace(svd,null,tol));
+        if( is64 ) {
+            return SimpleMatrix.wrap(SingularOps_D64.nullSpace((SingularValueDecomposition_F64)svd, null, tol));
+        } else {
+            return SimpleMatrix.wrap(SingularOps_D32.nullSpace((SingularValueDecomposition_F32)svd, null, (float)tol));
+        }
     }
 
     /**
@@ -145,7 +176,8 @@ public class SimpleSVD<T extends SimpleBase> {
      * Returns an array of all the singular values
      */
     public double[] getSingularValues() {
-        double ret[] = new double[ W.numCols() ];
+        double ret[] = new double[W.numCols()];
+
         for (int i = 0; i < ret.length; i++) {
             ret[i] = getSingleValue(i);
         }
@@ -155,23 +187,31 @@ public class SimpleSVD<T extends SimpleBase> {
     /**
      * Returns the rank of the decomposed matrix.
      *
-     * @see SingularOps_D64#rank(org.ejml.interfaces.decomposition.SingularValueDecomposition, double)
+     * @see SingularOps_D64#rank(org.ejml.interfaces.decomposition.SingularValueDecomposition_F64, double)
      *
      * @return The matrix's rank
      */
     public int rank() {
-        return SingularOps_D64.rank(svd,tol);
+        if( is64 ) {
+            return SingularOps_D64.rank((SingularValueDecomposition_F64)svd, tol);
+        } else {
+            return SingularOps_D32.rank((SingularValueDecomposition_F32)svd, (float)tol);
+        }
     }
 
     /**
      * The nullity of the decomposed matrix.
      *
-     * @see SingularOps_D64#nullity(org.ejml.interfaces.decomposition.SingularValueDecomposition, double)
+     * @see SingularOps_D64#nullity(org.ejml.interfaces.decomposition.SingularValueDecomposition_F64, double)
      *
      * @return The matrix's nullity
      */
     public int nullity() {
-        return SingularOps_D64.nullity(svd,10.0*UtilEjml.EPS);
+        if( is64 ) {
+            return SingularOps_D64.nullity((SingularValueDecomposition_F64)svd, 10.0 * UtilEjml.EPS);
+        } else {
+            return SingularOps_D32.nullity((SingularValueDecomposition_F32)svd, 5.0f * UtilEjml.F_EPS);
+        }
     }
 
     /**

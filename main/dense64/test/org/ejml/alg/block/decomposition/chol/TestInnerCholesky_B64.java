@@ -18,6 +18,7 @@
 
 package org.ejml.alg.block.decomposition.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory_D64;
@@ -76,7 +77,7 @@ public class TestInnerCholesky_B64 {
         System.arraycopy(data,2,found.data,0,found.data.length);
 
         // set lower triangular potion to be zero so that it is exactly the same
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(!lower,expected,found,1e-10));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(!lower,expected,found, UtilEjml.TEST_64F));
     }
 
     /**

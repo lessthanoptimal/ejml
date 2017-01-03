@@ -19,6 +19,7 @@
 package org.ejml.simple;
 
 import org.ejml.EjmlUnitTests;
+import org.ejml.data.DenseMatrix64F;
 
 /**
  * Unit testing functions for {@link SimpleMatrix}
@@ -33,7 +34,7 @@ public class SimpleUnitTests {
      * @param A Matrix
      */
     public static void assertCountable( SimpleMatrix A ) {
-        EjmlUnitTests.assertCountable(A.getMatrix());
+        EjmlUnitTests.assertCountable((DenseMatrix64F)A.getMatrix());
     }
 
     /**
@@ -67,7 +68,7 @@ public class SimpleUnitTests {
      * @param tol Tolerance
      */
     public static void assertEqualsUncountable( SimpleMatrix A , SimpleMatrix B , double tol ) {
-        EjmlUnitTests.assertEqualsUncountable(A.getMatrix(), B.getMatrix(), tol);
+        EjmlUnitTests.assertEqualsUncountable((DenseMatrix64F)A.getMatrix(), (DenseMatrix64F)B.getMatrix(), tol);
     }
 
     /**
@@ -89,6 +90,6 @@ public class SimpleUnitTests {
      * @param tol Tolerance
      */
     public static void assertEquals( SimpleMatrix A , SimpleMatrix B , double tol ) {
-        EjmlUnitTests.assertEquals(A.getMatrix(), B.getMatrix(), tol);
+        EjmlUnitTests.assertEquals((DenseMatrix64F)A.getMatrix(), (DenseMatrix64F)B.getMatrix(), tol);
     }
 }

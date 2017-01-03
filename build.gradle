@@ -51,7 +51,6 @@ subprojects {
 
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile group: 'com.peterabeles', name: 'auto64fto32f', version: '1.1'
     }
 
     jar {
@@ -195,7 +194,7 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 }
 
 // Disable the creation of jars for distribution.  If you don't do this it will crash
-[':main',':examples'].each {String a ->
+[':main',':examples',':main:autocode'].each {String a ->
     project(a) {
         if( project.hasProperty('ossrhUsername') ) {
             signArchives.enabled = false

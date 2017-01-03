@@ -90,7 +90,7 @@ public class TestRandomMatrices_D64 {
 
         double error = SpecializedOps_D64.diffNormF(A,R);
 
-        assertEquals( error , 0 , 1e-8 );
+        assertEquals( error , 0 , UtilEjml.TEST_64F );
     }
 
     @Test
@@ -168,7 +168,7 @@ public class TestRandomMatrices_D64 {
 
                 int o = Math.min(numRows,numCols);
 
-                UtilTestMatrix.checkSameElements(1e-8,o,sv,svd.getSingularValues());
+                UtilTestMatrix.checkSameElements(UtilEjml.TEST_64F,o,sv,svd.getSingularValues());
             }
         }
 
@@ -179,7 +179,7 @@ public class TestRandomMatrices_D64 {
                 DecompositionFactory_D64.svd(A.numRows, A.numCols, true, true, false);
         assertTrue(svd.decompose(A));
 
-        UtilTestMatrix.checkSameElements(1e-8, sv.length, sv, svd.getSingularValues());
+        UtilTestMatrix.checkSameElements(UtilEjml.TEST_64F, sv.length, sv, svd.getSingularValues());
         assertEquals(0, svd.getSingularValues()[4], UtilEjml.TEST_64F);
     }
 
@@ -188,7 +188,7 @@ public class TestRandomMatrices_D64 {
         DenseMatrix64F A = RandomMatrices_D64.createEigenvaluesSymm(5,rand,1,2,3,4,5);
 
         // this should be symmetric
-        assertTrue(MatrixFeatures_D64.isSymmetric(A,1e-10));
+        assertTrue(MatrixFeatures_D64.isSymmetric(A,UtilEjml.TEST_64F));
 
         // decompose the matrix and extract its eigenvalues
         EigenDecomposition_F64<DenseMatrix64F> eig = DecompositionFactory_D64.eig(A.numRows, true);

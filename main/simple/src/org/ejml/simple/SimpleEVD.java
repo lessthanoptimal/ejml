@@ -18,10 +18,11 @@
 
 package org.ejml.simple;
 
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.*;
+import org.ejml.factory.DecompositionFactory_D32;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F32;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 import java.util.ArrayList;
@@ -36,14 +37,22 @@ import java.util.List;
 @SuppressWarnings({"unchecked"})
 public class SimpleEVD <T extends SimpleBase>
 {
-    private EigenDecomposition_F64<DenseMatrix64F> eig;
+    private EigenDecomposition eig;
 
-    DenseMatrix64F mat;
+    Matrix mat;
+    boolean is64;
 
-    public SimpleEVD( DenseMatrix64F mat )
+    public SimpleEVD( Matrix mat )
     {
         this.mat = mat;
-        eig = DecompositionFactory_D64.eig(mat.numCols,true);
+        this.is64 = mat instanceof DenseMatrix64F;
+
+        if( is64) {
+            eig = DecompositionFactory_D64.eig(mat.getNumCols(), true);
+        } else {
+            eig = DecompositionFactory_D32.eig(mat.getNumCols(), true);
+
+        }
         if( !eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
     }
@@ -54,8 +63,17 @@ public class SimpleEVD <T extends SimpleBase>
     public List<Complex64F> getEigenvalues() {
         List<Complex64F> ret = new ArrayList<Complex64F>();
 
-        for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
-            ret.add( eig.getEigenvalue(i) );
+        if( is64 ) {
+            EigenDecomposition_F64 d = (EigenDecomposition_F64)eig;
+            for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
+                ret.add(d.getEigenvalue(i));
+            }
+        } else {
+            EigenDecomposition_F32 d = (EigenDecomposition_F32)eig;
+            for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
+                Complex32F c = d.getEigenvalue(i);
+                ret.add(new Complex64F(c.real, c.imaginary));
+            }
         }
 
         return ret;
@@ -86,7 +104,12 @@ public class SimpleEVD <T extends SimpleBase>
      * @return An eigenvalue.
      */
     public Complex64F getEigenvalue( int index ) {
-        return eig.getEigenvalue(index);
+        if( is64 )
+            return ((EigenDecomposition_F64)eig).getEigenvalue(index);
+        else {
+            Complex64F c = ((EigenDecomposition_F64)eig).getEigenvalue(index);
+            return new Complex64F(c.real, c.imaginary);
+        }
     }
 
     /**
@@ -116,7 +139,11 @@ public class SimpleEVD <T extends SimpleBase>
      * @return Quality of the decomposition.
      */
     public /**/double quality() {
-        return DecompositionFactory_D64.quality(mat,eig);
+        if (is64) {
+            return DecompositionFactory_D64.quality((DenseMatrix64F)mat, (EigenDecomposition_F64)eig);
+        } else {
+            return DecompositionFactory_D32.quality((DenseMatrix32F)mat, (EigenDecomposition_F32)eig);
+        }
     }
 
     /**

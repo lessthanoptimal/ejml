@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.NormOps_D64;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class TestEigenPowerMethod_D64 {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, dataA);
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(3);
-        power.setOptions(100,1e-10);
+        power.setOptions(100, UtilEjml.TEST_64F);
 
         assertTrue(power.computeDirect(A));
 
@@ -56,9 +57,9 @@ public class TestEigenPowerMethod_D64 {
 
         NormOps_D64.normalizeF(v);
 
-        assertEquals(0.75678,v.get(0,0),1e-6);
-        assertEquals(0.62755,v.get(1,0),1e-5);
-        assertEquals(0.18295,v.get(2,0),1e-5);
+        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_64F_SQ);
     }
 
     @Test
@@ -71,7 +72,7 @@ public class TestEigenPowerMethod_D64 {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, dataA);
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(3);
-        power.setOptions(100,1e-10);
+        power.setOptions(100, UtilEjml.TEST_64F);
 
         assertTrue(power.computeShiftDirect(A,0.2));
 
@@ -79,9 +80,9 @@ public class TestEigenPowerMethod_D64 {
 
         NormOps_D64.normalizeF(v);
 
-        assertEquals(0.75678,v.get(0,0),1e-6);
-        assertEquals(0.62755,v.get(1,0),1e-5);
-        assertEquals(0.18295,v.get(2,0),1e-5);
+        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_64F_SQ);
     }
 
     @Test
@@ -94,7 +95,7 @@ public class TestEigenPowerMethod_D64 {
         DenseMatrix64F A = new DenseMatrix64F(3,3, true, dataA);
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(3);
-        power.setOptions(100,1e-10);
+        power.setOptions(100, UtilEjml.TEST_64F);
 
         // a tried a few values for psi until I found one that converged
         assertTrue(power.computeShiftInvert(A,1.1));
@@ -103,8 +104,8 @@ public class TestEigenPowerMethod_D64 {
 
         NormOps_D64.normalizeF(v);
 
-        assertEquals(0.75678,v.get(0,0),1e-6);
-        assertEquals(0.62755,v.get(1,0),1e-5);
-        assertEquals(0.18295,v.get(2,0),1e-5);
+        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_64F_SQ);
     }
 }

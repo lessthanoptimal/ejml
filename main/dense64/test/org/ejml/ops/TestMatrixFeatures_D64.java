@@ -200,20 +200,20 @@ public class TestMatrixFeatures_D64 {
         DenseMatrix64F m = parseD64(a,3);
         DenseMatrix64F n = parseD64(a,3);
 
-        assertTrue(MatrixFeatures_D64.isEquals(m,n,1e-6));
+        assertTrue(MatrixFeatures_D64.isEquals(m,n,UtilEjml.TEST_64F_SQ));
 
-        n.set(2,1,n.get(2,1)+1e-25);
-        assertTrue(MatrixFeatures_D64.isEquals(m,n,1e-6));
+        n.set(2,1,n.get(2,1)+ UtilEjml.EPS);
+        assertTrue(MatrixFeatures_D64.isEquals(m,n,UtilEjml.TEST_64F_SQ));
 
-        n.set(2,1,n.get(2,1)+1e-2);
-        assertFalse(MatrixFeatures_D64.isEquals(m, n, 1e-6));
+        n.set(2,1,n.get(2,1)+UtilEjml.TEST_64F_SQ);
+        assertFalse(MatrixFeatures_D64.isEquals(m, n, UtilEjml.TEST_64F_SQ));
 
         m.set(2,1,Double.NaN);
         n.set(2, 1, Double.NaN);
-        assertFalse(MatrixFeatures_D64.isEquals(m, n, 1e-6));
+        assertFalse(MatrixFeatures_D64.isEquals(m, n, UtilEjml.TEST_64F_SQ));
         m.set(2, 1, Double.POSITIVE_INFINITY);
         n.set(2,1,Double.POSITIVE_INFINITY);
-        assertFalse(MatrixFeatures_D64.isEquals(m, n, 1e-6));
+        assertFalse(MatrixFeatures_D64.isEquals(m, n, UtilEjml.TEST_64F_SQ));
     }
 
     @Test
@@ -248,15 +248,15 @@ public class TestMatrixFeatures_D64 {
 
         for( int i = 0; i < values.length; i++ ) {
             for( int j = 0; j < values.length; j++ ) {
-                checkIdentical(values[i],values[j],1e-8,i==j);
+                checkIdentical(values[i],values[j],UtilEjml.TEST_64F,i==j);
             }
         }
 
-        checkIdentical(1.0,1.5,1e-8,false);
-        checkIdentical(1.5,1.0,1e-8,false);
-        checkIdentical(1.0,1.0000000001,1e-8,true);
-        checkIdentical(1.0,Double.NaN,1e-8,false);
-        checkIdentical(Double.NaN,1.0,1e-8,false);
+        checkIdentical(1.0,1.5,UtilEjml.TEST_64F,false);
+        checkIdentical(1.5,1.0,UtilEjml.TEST_64F,false);
+        checkIdentical(1.0,1.0000000001,UtilEjml.TEST_64F,true);
+        checkIdentical(1.0,Double.NaN,UtilEjml.TEST_64F,false);
+        checkIdentical(Double.NaN,1.0,UtilEjml.TEST_64F,false);
     }
 
     private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
@@ -275,13 +275,13 @@ public class TestMatrixFeatures_D64 {
 
         CommonOps_D64.invert(A_inv);
 
-        assertTrue(MatrixFeatures_D64.isInverse(A,A_inv,1e-10));
+        assertTrue(MatrixFeatures_D64.isInverse(A,A_inv,UtilEjml.TEST_64F));
 
         A_inv.set(1,2,3);
-        assertFalse(MatrixFeatures_D64.isInverse(A,A_inv,1e-10));
+        assertFalse(MatrixFeatures_D64.isInverse(A,A_inv,UtilEjml.TEST_64F));
 
         A_inv.set(1,2,Double.NaN);
-        assertFalse(MatrixFeatures_D64.isInverse(A,A_inv,1e-10));
+        assertFalse(MatrixFeatures_D64.isInverse(A,A_inv,UtilEjml.TEST_64F));
     }
 
     /**
@@ -294,7 +294,7 @@ public class TestMatrixFeatures_D64 {
         DenseMatrix64F A_copy = A.copy();
         DenseMatrix64F B_copy = B.copy();
 
-        MatrixFeatures_D64.isInverse(A,B,1e-10);
+        MatrixFeatures_D64.isInverse(A,B,UtilEjml.TEST_64F);
 
         assertTrue(MatrixFeatures_D64.isIdentical(A,A_copy,UtilEjml.TEST_64F));
         assertTrue(MatrixFeatures_D64.isIdentical(B,B_copy,UtilEjml.TEST_64F));
@@ -317,16 +317,16 @@ public class TestMatrixFeatures_D64 {
 
         DenseMatrix64F A = new DenseMatrix64F(new double[][]{{c,s},{-s,c}});
 
-        assertTrue(MatrixFeatures_D64.isOrthogonal(A,1e-6f));
+        assertTrue(MatrixFeatures_D64.isOrthogonal(A,UtilEjml.TEST_64F_SQ));
 
         // try a negative case now
         A.set(0,1,495);
 
-        assertFalse(MatrixFeatures_D64.isOrthogonal(A,1e-6f));
+        assertFalse(MatrixFeatures_D64.isOrthogonal(A,UtilEjml.TEST_64F_SQ));
 
         A.set(0,1,Double.NaN);
 
-        assertFalse(MatrixFeatures_D64.isOrthogonal(A,1e-6f));
+        assertFalse(MatrixFeatures_D64.isOrthogonal(A,UtilEjml.TEST_64F_SQ));
     }
 
     @Test
@@ -465,16 +465,16 @@ public class TestMatrixFeatures_D64 {
         DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
         DenseMatrix64F a_copy = a.copy();
 
-        assertEquals(2, MatrixFeatures_D64.rank(a,1e-14));
+        assertEquals(2, MatrixFeatures_D64.rank(a,10 * UtilEjml.EPS));
         // make sure the input wasn't modified
         assertTrue(MatrixFeatures_D64.isIdentical(a,a_copy,UtilEjml.TEST_64F));
 
         a = UtilEjml.parseD64("2 0 0 1e-20",2);
-        assertEquals(1, MatrixFeatures_D64.rank(a,1e-14));
+        assertEquals(1, MatrixFeatures_D64.rank(a,10 * UtilEjml.EPS));
 
         // make sure it's using the threshold parameter
         a = UtilEjml.parseD64("2 0 0 1e-20",2);
-        assertEquals(2, MatrixFeatures_D64.rank(a,1e-200));
+        assertEquals(2, MatrixFeatures_D64.rank(a, Math.pow(UtilEjml.EPS, 10) ));
     }
 
     @Test
@@ -495,15 +495,15 @@ public class TestMatrixFeatures_D64 {
         DenseMatrix64F a = UtilEjml.parseD64("2 0 0 2",2);
         DenseMatrix64F a_copy = a.copy();
 
-        assertEquals(0, MatrixFeatures_D64.nullity(a, 1e-14));
+        assertEquals(0, MatrixFeatures_D64.nullity(a, 10 * UtilEjml.EPS));
         // make sure the input wasn't modified
         assertTrue(MatrixFeatures_D64.isIdentical(a,a_copy,UtilEjml.TEST_64F));
 
         a = UtilEjml.parseD64("2 0 0 1e-20",2);
-        assertEquals(1, MatrixFeatures_D64.nullity(a, 1e-14));
+        assertEquals(1, MatrixFeatures_D64.nullity(a, 10 * UtilEjml.EPS));
 
         // make sure it's using the threshold parameter
         a = UtilEjml.parseD64("2 0 0 1e-20",2);
-        assertEquals(0, MatrixFeatures_D64.nullity(a, 1e-200));
+        assertEquals(0, MatrixFeatures_D64.nullity(a, Math.pow(UtilEjml.EPS, 10)));
     }
 }

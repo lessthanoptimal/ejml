@@ -18,6 +18,7 @@
 
 package org.ejml.factory;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
@@ -53,7 +54,7 @@ public class TestDecompositionFactory_D64 {
         double modQuality = DecompositionFactory_D64.quality(A,eig);
 
         assertTrue(origQuality < modQuality);
-        assertTrue(origQuality < 1e-14);
+        assertTrue(origQuality < UtilEjml.TEST_64F);
     }
 
     @Test
@@ -73,6 +74,6 @@ public class TestDecompositionFactory_D64 {
         double modQuality = DecompositionFactory_D64.quality(A,svd);
 
         assertTrue(origQuality < modQuality);
-        assertTrue(origQuality < 1e-14);
+        assertTrue(origQuality < UtilEjml.TEST_64F);
     }
 }

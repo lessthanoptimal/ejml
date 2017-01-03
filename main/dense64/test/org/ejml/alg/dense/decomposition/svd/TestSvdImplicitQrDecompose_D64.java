@@ -18,6 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
@@ -126,12 +127,12 @@ public class TestSvdImplicitQrDecompose_D64 extends StandardSvdChecks_D64 {
 
         assertTrue(alg.decompose(A.copy()));
 
-        UtilTestMatrix.checkSameElements(1e-10,sv.length,sv,alg.getSingularValues());
+        UtilTestMatrix.checkSameElements(UtilEjml.TEST_64F,sv.length,sv,alg.getSingularValues());
 
         if( checkU ) {
-            assertTrue(MatrixFeatures_D64.isIdentical(U,alg.getU(null,false),1e-10));
+            assertTrue(MatrixFeatures_D64.isIdentical(U,alg.getU(null,false), UtilEjml.TEST_64F));
         }
         if( checkV )
-            assertTrue(MatrixFeatures_D64.isIdentical(V,alg.getV(null,false),1e-10));
+            assertTrue(MatrixFeatures_D64.isIdentical(V,alg.getV(null,false), UtilEjml.TEST_64F));
     }
 }

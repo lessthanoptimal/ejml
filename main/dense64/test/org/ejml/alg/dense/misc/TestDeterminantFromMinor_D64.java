@@ -47,7 +47,7 @@ public class TestDeterminantFromMinor_D64 {
         DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(4,3);
         double minorVal = minor.compute(new DenseMatrix64F(4,4, true, mat));
 
-        assertEquals(val,minorVal,1e-6);
+        assertEquals(val,minorVal, UtilEjml.TEST_64F_SQ);
     }
 
     /**
@@ -60,7 +60,7 @@ public class TestDeterminantFromMinor_D64 {
         DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(5);
         double minorVal = minor.compute(new DenseMatrix64F(5,5, true, mat));
 
-        assertEquals(-4745296.629148000851274,minorVal, UtilEjml.TEST_64F);
+        assertEquals(-4745296.629148000851274 ,minorVal, 100*UtilEjml.TEST_64F_SQ);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TestDeterminantFromMinor_D64 {
 
         double recVal = NaiveDeterminant.recursive(new DenseMatrix64F(width,width, true, A.data));
 
-        assertEquals(recVal,minorVal,1e-6);
+        assertEquals(recVal,minorVal,UtilEjml.TEST_64F_SQ);
     }
 
     /**
@@ -97,7 +97,7 @@ public class TestDeterminantFromMinor_D64 {
             DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(width);
             double minorVal = minor.compute(new DenseMatrix64F(width,width, true, A.data));
 
-            assertEquals(luVal,minorVal,1e-6);
+            assertEquals(luVal,minorVal,UtilEjml.TEST_64F_SQ);
         }
     }
 
@@ -126,6 +126,6 @@ public class TestDeterminantFromMinor_D64 {
 
         // make sure it has a valid result the third time
         double recVal = NaiveDeterminant.recursive(B);
-        assertEquals(third,recVal,1e-6);
+        assertEquals(third,recVal,UtilEjml.TEST_64F_SQ);
     }
 }

@@ -57,7 +57,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //        UtilEjml.print(H,"%8.2e");
 //        System.out.println("-------- Q ---------");
 //        UtilEjml.print(Q,"%8.2e");
-        assertTrue(CMatrixFeatures.isUnitary(Q, UtilEjml.TOLERANCE));
+        assertTrue(CMatrixFeatures.isUnitary(Q, UtilEjml.TEST_64F));
 
         CDenseMatrix64F temp0 = new CDenseMatrix64F(5,5);
 
@@ -72,7 +72,7 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
         assertTrue(!CMatrixFeatures.hasUncountable(H));
 
-        assertTrue(CMatrixFeatures.isIdentical(A,H,UtilEjml.TOLERANCE));
+        assertTrue(CMatrixFeatures.isIdentical(A,H,UtilEjml.TEST_64F));
     }
 
     /**
@@ -154,12 +154,12 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 //            B.print();
 
             for( int j = 0; j  < i+2; j++ ) {
-                assertTrue(Math.abs(B.getReal(j,i))>UtilEjml.TOLERANCE);
-                assertTrue(Math.abs(B.getImag(j,i))>UtilEjml.TOLERANCE);
+                assertTrue(Math.abs(B.getReal(j,i))>UtilEjml.TEST_64F);
+                assertTrue(Math.abs(B.getImag(j,i))>UtilEjml.TEST_64F);
             }
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,B.getReal(j,i),UtilEjml.TOLERANCE);
-                assertEquals(0,B.getImag(j,i),UtilEjml.TOLERANCE);
+                assertEquals(0,B.getReal(j,i),UtilEjml.TEST_64F);
+                assertEquals(0,B.getImag(j,i),UtilEjml.TEST_64F);
             }
             CCommonOps.mult(B,Q,A);
 
@@ -214,6 +214,6 @@ public class TestHessenbergSimilarDecomposition_CD64 {
 
 //        UtilEjml.print(foundH);
 
-        assertTrue(CMatrixFeatures.isIdentical(expectedH,foundH,UtilEjml.TOLERANCE));
+        assertTrue(CMatrixFeatures.isIdentical(expectedH,foundH,UtilEjml.TEST_64F));
     }
 }

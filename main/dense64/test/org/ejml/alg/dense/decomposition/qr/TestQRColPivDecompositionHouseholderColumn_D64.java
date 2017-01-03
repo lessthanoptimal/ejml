@@ -89,7 +89,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
 
             // construct a singular matrix from its SVD decomposition
             SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_D64.createOrthogonal(numRows,numRows,rand));
-            SimpleMatrix S = SimpleMatrix.diag(1,2,3,4,5,6,7,8,9,10);
+            SimpleMatrix S = SimpleMatrix.diag( DenseMatrix64F.class, 1,2,3,4,5,6,7,8,9,10);
             SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_D64.createOrthogonal(numRows,numRows,rand));
 
             for( int i = 0; i < numSingular; i++ ) {
@@ -99,9 +99,9 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
             SimpleMatrix A = U.mult(S).mult(V.transpose());
 
             QRColPivDecompositionHouseholderColumn_D64 alg = new QRColPivDecompositionHouseholderColumn_D64();
-            assertTrue(alg.decompose(A.getMatrix()));
+            assertTrue(alg.decompose((DenseMatrix64F)A.getMatrix()));
 
-            checkDecomposition(false,A.getMatrix(),alg);
+            checkDecomposition(false,(DenseMatrix64F)A.getMatrix(),alg);
         }
     }
 

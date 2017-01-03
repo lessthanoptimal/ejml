@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class TestLinearSolverCholLDL_D64 {
         DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        EjmlUnitTests.assertEquals(A_inv,A,1e-5);
-        EjmlUnitTests.assertEquals(x_expected,x,1e-6);
+        EjmlUnitTests.assertEquals(A_inv,A, UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F_SQ);
     }
 }

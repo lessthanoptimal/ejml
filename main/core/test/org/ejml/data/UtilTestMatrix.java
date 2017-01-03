@@ -68,7 +68,36 @@ public class UtilTestMatrix {
         }
     }
 
+    public static void checkSameElements( float tol, int length , float a[], float b[] )
+    {
+        float aa[] = new float[ length ];
+        float bb[] = new float[ length ];
+
+        System.arraycopy(a,0,aa,0,length);
+        System.arraycopy(b,0,bb,0,length);
+
+        Arrays.sort(aa);
+        Arrays.sort(bb);
+
+        for( int i = 0; i < length; i++ ) {
+            if( Math.abs(aa[i]-bb[i]) > tol )
+                fail("Mismatched elements");
+        }
+    }
+
     public static void checkNumFound( int expected , double tol , double value , double data[] )
+    {
+        int numFound = 0;
+
+        for( int i = 0; i < data.length; i++ ) {
+            if( Math.abs(data[i]-value) <= tol )
+                numFound++;
+        }
+
+        assertEquals(expected,numFound);
+    }
+
+    public static void checkNumFound( int expected , float tol , float value , float data[] )
     {
         int numFound = 0;
 

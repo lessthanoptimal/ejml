@@ -83,9 +83,9 @@ public abstract class StandardSvdChecks_D64 {
         assertEquals(0, SingularOps_D64.nullity(alg, UtilEjml.EPS));
 
         double []w = alg.getSingularValues();
-        UtilTestMatrix.checkNumFound(1,1e-5,9.59186,w);
-        UtilTestMatrix.checkNumFound(1,1e-5,5.18005,w);
-        UtilTestMatrix.checkNumFound(1,1e-5,4.55558,w);
+        UtilTestMatrix.checkNumFound(1,UtilEjml.TEST_64F_SQ,9.59186,w);
+        UtilTestMatrix.checkNumFound(1,UtilEjml.TEST_64F_SQ,5.18005,w);
+        UtilTestMatrix.checkNumFound(1,UtilEjml.TEST_64F_SQ,4.55558,w);
 
         checkComponents(alg,A);
     }
@@ -132,7 +132,7 @@ public abstract class StandardSvdChecks_D64 {
         SingularValueDecomposition_F64<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));
 
-        assertEquals(6,checkOccurrence(1,alg.getSingularValues(),6),1e-5);
+        assertEquals(6,checkOccurrence(1,alg.getSingularValues(),6),UtilEjml.TEST_64F_SQ);
 
         checkComponents(alg,A);
     }
@@ -153,7 +153,7 @@ public abstract class StandardSvdChecks_D64 {
     public void testVerySmallValue() {
         DenseMatrix64F A = RandomMatrices_D64.createRandom(5,5,-1,1,rand);
 
-        CommonOps_D64.scale(1e-200,A);
+        CommonOps_D64.scale( Math.pow(UtilEjml.EPS, 12) ,A);
 
         SingularValueDecomposition<DenseMatrix64F> alg = createSvd();
         assertTrue(alg.decompose(A));

@@ -130,7 +130,7 @@ public abstract class GenericCholeskyTests_D64 {
         SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices_D64.createSymmPosDef(size,rand));
 
         CholeskyDecomposition_F64<DenseMatrix64F> cholesky = create(lower);
-        assertTrue(DecompositionFactory_D64.decomposeSafe(cholesky,A.getMatrix()));
+        assertTrue(DecompositionFactory_D64.decomposeSafe(cholesky,(DenseMatrix64F)A.getMatrix()));
 
         SimpleMatrix T = SimpleMatrix.wrap(cholesky.getT(null));
         SimpleMatrix found;

@@ -87,18 +87,18 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
             assertTrue(CMatrixFeatures.isHermitian(A,1e-6));
 
             for( int j = i; j  < i+2; j++ ) {
-                assertTrue(Math.abs(A.getReal(j,i))> UtilEjml.TOLERANCE);
+                assertTrue(Math.abs(A.getReal(j,i))> UtilEjml.TEST_64F);
                 if( j != i)
-                    assertTrue(Math.abs(A.getImag(j,i))> UtilEjml.TOLERANCE);
+                    assertTrue(Math.abs(A.getImag(j,i))> UtilEjml.TEST_64F);
             }
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,A.getReal(j,i),UtilEjml.TOLERANCE);
-                assertEquals(0,A.getImag(j,i),UtilEjml.TOLERANCE);
+                assertEquals(0,A.getReal(j,i),UtilEjml.TEST_64F);
+                assertEquals(0,A.getImag(j,i),UtilEjml.TEST_64F);
             }
 
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,A.getReal(i,j),UtilEjml.TOLERANCE);
-                assertEquals(0,A.getImag(i,j),UtilEjml.TOLERANCE);
+                assertEquals(0,A.getReal(i,j),UtilEjml.TEST_64F);
+                assertEquals(0,A.getImag(i,j),UtilEjml.TEST_64F);
             }
         }
     }

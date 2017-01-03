@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.CodeGeneratorBase;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.GenerateDeterminantFromMinor;
 import org.ejml.alg.dense.misc.GenerateInverseFromMinor;
 
@@ -35,9 +36,6 @@ public class GenerateFixedOps extends CodeGeneratorBase {
 
     String nameMatrix;
     String nameVector;
-
-    // The maximize size it will do inverse on
-    public static int maxInverseSize = 5;
 
     @Override
     public void generate() throws FileNotFoundException {
@@ -65,7 +63,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
             mult_v_m_v(dimension);
             dot(dimension);
             setIdentity(dimension);
-            if( dimension <= maxInverseSize ) {
+            if( dimension <= UtilEjml.maxInverseSize ) {
                 invert(dimension);
                 det(dimension);
             }

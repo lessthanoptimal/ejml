@@ -99,10 +99,10 @@ public class TestQrHouseHolderSolver_B64 {
         // see if a matrix with smaller singular value has a worse quality
         QrHouseHolderSolver_B64 solver = new QrHouseHolderSolver_B64();
         assertTrue(solver.setA(A.copy()));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(B.copy()));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertTrue(qualityB<qualityA);
         assertEquals(qualityB*10.0,qualityA,UtilEjml.TEST_64F);
@@ -120,10 +120,10 @@ public class TestQrHouseHolderSolver_B64 {
         // see if a matrix with smaller singular value has a worse quality
         QrHouseHolderSolver_B64 solver = new QrHouseHolderSolver_B64();
         assertTrue(solver.setA(A.copy()));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(B.copy()));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertEquals(qualityA,qualityB,UtilEjml.TEST_64F);
     }

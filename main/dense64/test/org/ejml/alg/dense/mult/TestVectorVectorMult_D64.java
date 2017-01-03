@@ -167,7 +167,7 @@ public class TestVectorVectorMult_D64 {
 
         VectorVectorMult_D64.rank1Update(gamma,A,u,w,found);
 
-        EjmlUnitTests.assertEquals(expected.getMatrix(),found,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected.matrix_F64(),found,UtilEjml.TEST_64F);
     }
 
     @Test
@@ -186,6 +186,6 @@ public class TestVectorVectorMult_D64 {
 
         VectorVectorMult_D64.rank1Update(gamma,found,u,w);
 
-        EjmlUnitTests.assertEquals(expected.getMatrix(),found,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected.matrix_F64(),found,UtilEjml.TEST_64F);
     }
 }

@@ -4,3 +4,5 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 script:
+  - gradle autogenerate
+  - gradle check

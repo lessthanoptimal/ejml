@@ -18,6 +18,7 @@
 
 package org.ejml.alg.block;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -129,7 +130,7 @@ public class TestInnerMultiplication_B64 {
 
         invoke(method,alpha,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
 
-        if( !MatrixFeatures_D64.isIdentical(C,C_found,1e-10) ) {
+        if( !MatrixFeatures_D64.isIdentical(C,C_found, UtilEjml.TEST_64F) ) {
             C.print();
             C_found.print();
             System.out.println("Method "+method.getName());

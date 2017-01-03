@@ -43,20 +43,21 @@ EJML is on the Maven central repository and can easily be included in projects b
 
 Gradle:
 ```
-compile group: 'org.ejml', name: 'all', version: '0.30'
+compile group: 'org.ejml', name: 'all', version: '0.31'
 ```
 
 Maven:
 ```
 <groupId>org.ejml</groupId>
 <artifactId>all</artifactId>
-<version>0.30</version>
+<version>0.31</version>
 ```
 Or you can include the required modules individually
 
      Name        |                 Description
 -----------------|-------------------------------------------------------
 core             | Contains core data structures
+dense32          | Algorithms for dense real 32-bit floats
 dense64          | Algorithms for dense real 64-bit floats
 denseC64         | Algorithms for dense complex 64-bit floats
 equation         | Equations interface
@@ -65,7 +66,13 @@ simple           | Object oriented SimpleMatrix interface
 ==========================================================================
 ## Building
 
-Gradle is the official build environment for EJML.  In addition to all the standard commands the following are also available.
+Gradle is the official build environment for EJML.  Before the project can be fully compile you must auto generate
+the F32 code.
+```java
+cd ejml
+gradle autogenerate
+```
+After that has finished running all the standard commands will work as well as the commands listed below:
 
 * createLibraryDirectory : To build all the modules as jars and save them in ejml/libraries
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar

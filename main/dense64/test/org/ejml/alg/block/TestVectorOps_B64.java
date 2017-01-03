@@ -49,8 +49,8 @@ public class TestVectorOps_B64 {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+            SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
             BlockMatrix64F Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).scale(alpha);
@@ -73,8 +73,8 @@ public class TestVectorOps_B64 {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
+            SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
             BlockMatrix64F Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).divide(alpha);
@@ -99,10 +99,10 @@ public class TestVectorOps_B64 {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
-            SimpleMatrix B = SimpleMatrix.random(r,width,-1,1,rand);
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
-            BlockMatrix64F Bb = MatrixOps_B64.convert(B.getMatrix(),r);
+            SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0, 1.0,rand);
+            SimpleMatrix B = SimpleMatrix.random_F64(r,width, -1.0, 1.0,rand);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix64F Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
             BlockMatrix64F Cb = Ab.copy();
 
             SimpleMatrix a = A.extractVector(true,rowA).scale(alpha);
@@ -129,15 +129,15 @@ public class TestVectorOps_B64 {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random(r,width,-1,1,rand);
+            SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0, 1.0, rand);
             SimpleMatrix a = A.extractMatrix(rowA,rowA+1,offset,SimpleMatrix.END);
-            SimpleMatrix B = SimpleMatrix.random(r,width,-1,1,rand);
+            SimpleMatrix B = SimpleMatrix.random_F64(r,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(rowB,rowB+1,offset,SimpleMatrix.END);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
-            BlockMatrix64F Bb = MatrixOps_B64.convert(B.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix64F Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
 
-            double expected = a.dot(b);
+            double expected = (double)a.dot(b);
 
             double found = VectorOps_B64.dot_row(r,new D1Submatrix64F(Ab),rowA, new D1Submatrix64F(Bb),rowB,offset,end);
 
@@ -157,15 +157,15 @@ public class TestVectorOps_B64 {
             int offset = width > 1 ? 1 : 0;
             if( colB >= width) colB = 0;
 
-            SimpleMatrix A = SimpleMatrix.random(width,width,-1,1,rand);
+            SimpleMatrix A = SimpleMatrix.random_F64(width,width, -1.0, 1.0, rand);
             SimpleMatrix a = A.extractMatrix(rowA,rowA+1,offset,SimpleMatrix.END);
-            SimpleMatrix B = SimpleMatrix.random(width,width,-1,1,rand);
+            SimpleMatrix B = SimpleMatrix.random_F64(width,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(offset,SimpleMatrix.END,colB,colB+1);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.getMatrix(),r);
-            BlockMatrix64F Bb = MatrixOps_B64.convert(B.getMatrix(),r);
+            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix64F Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
 
-            double expected = a.dot(b);
+            double expected = (double)a.dot(b);
 
             double found = VectorOps_B64.dot_row_col(r,
                     new D1Submatrix64F(Ab),rowA,

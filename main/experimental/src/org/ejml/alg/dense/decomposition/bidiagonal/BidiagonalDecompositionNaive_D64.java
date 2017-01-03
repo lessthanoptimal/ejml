@@ -75,9 +75,9 @@ public class BidiagonalDecompositionNaive_D64 {
 
         min = Math.min(m,n);
 
-        U = SimpleMatrix.identity(m);
+        U = SimpleMatrix.identity(m, DenseMatrix64F.class);
         B = new SimpleMatrix(A);
-        V = SimpleMatrix.identity(n);
+        V = SimpleMatrix.identity(n, DenseMatrix64F.class);
 
         int max = Math.max(m,n);
         u = new DenseMatrix64F(max,1);
@@ -108,7 +108,7 @@ public class BidiagonalDecompositionNaive_D64 {
         for( int i = k; i < m; i++ ) {
             // copy the householder vector to vector outside of the matrix to reduce caching issues
             // big improvement on larger matrices and a relatively small performance hit on small matrices.
-            double val = u[i] = B.get(i,k);
+            double val = u[i] = (double)B.get(i,k);
             val = Math.abs(val);
             if( val > max )
                 max = val;
@@ -157,7 +157,7 @@ public class BidiagonalDecompositionNaive_D64 {
         for( int i = k+1; i < n; i++ ) {
             // copy the householder vector to vector outside of the matrix to reduce caching issues
             // big improvement on larger matrices and a relatively small performance hit on small matrices.
-            double val = u[i] = B.get(k,i);
+            double val = u[i] = (double)B.get(k,i);
             val = Math.abs(val);
             if( val > max )
                 max = val;

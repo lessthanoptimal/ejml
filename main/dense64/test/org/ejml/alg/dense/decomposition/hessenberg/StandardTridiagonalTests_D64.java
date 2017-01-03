@@ -52,7 +52,7 @@ public abstract class StandardTridiagonalTests_D64 {
             TridiagonalSimilarDecomposition_F64<DenseMatrix64F> alg = createDecomposition();
 
 
-            assertTrue(safeDecomposition(alg,A.getMatrix()));
+            assertTrue(safeDecomposition(alg,(DenseMatrix64F)A.getMatrix()));
 
             // test the results using the decomposition's definition
             SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null,false));
@@ -60,7 +60,8 @@ public abstract class StandardTridiagonalTests_D64 {
 
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
-            assertTrue("width = "+width, MatrixFeatures_D64.isIdentical(A.getMatrix(),A_found.getMatrix(),UtilEjml.TEST_64F));
+            assertTrue("width = "+width, MatrixFeatures_D64.isIdentical(
+                    (DenseMatrix64F)A.getMatrix(),(DenseMatrix64F)A_found.getMatrix(),UtilEjml.TEST_64F));
         }
     }
 

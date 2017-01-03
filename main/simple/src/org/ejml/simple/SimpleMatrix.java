@@ -18,12 +18,8 @@
 
 package org.ejml.simple;
 
-import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RealMatrix64F;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.CovarianceRandomDraw_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.data.*;
+import org.ejml.ops.*;
 
 import java.util.Random;
 
@@ -48,7 +44,7 @@ import java.util.Random;
  * <p>
  * Working with both {@link org.ejml.data.DenseMatrix64F} and SimpleMatrix in the same code base is easy.
  * To access the internal DenseMatrix64F in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
- * To turn a DenseMatrix64F into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.DenseMatrix64F)}.  Not
+ * To turn a DenseMatrix64F into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}.  Not
  * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
  * DenseMatrix64F.
  * </p>
@@ -121,6 +117,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         mat = new DenseMatrix64F(numRows,numCols, rowMajor, data);
     }
 
+    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, float ...data) {
+        mat = new DenseMatrix32F(numRows,numCols, rowMajor, data);
+    }
+
     /**
      * <p>
      * Creates a matrix with the values and shape defined by the 2D array 'data'.
@@ -149,6 +149,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         mat = new DenseMatrix64F(numRows, numCols);
     }
 
+    public SimpleMatrix(int numRows, int numCols, Class type) {
+        if( type == DenseMatrix64F.class )
+            mat = new DenseMatrix64F(numRows, numCols);
+        else
+            mat = new DenseMatrix32F(numRows, numCols);
+    }
+
     /**
      * Creats a new SimpleMatrix which is identical to the original.
      *
@@ -159,23 +166,22 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a new SimpleMatrix which is a copy of the DenseMatrix64F.
+     * Creates a new SimpleMatrix which is a copy of the Matrix.
      *
      * @param orig The original matrix whose value is copied.  Not modified.
      */
-    public SimpleMatrix( DenseMatrix64F orig ) {
-        this.mat = orig.copy();
-    }
-
-    /**
-     * Creates a new SimpleMatrix which is a copy of the Matrix64F.
-     *
-     * @param orig The original matrix whose value is copied.  Not modified.
-     */
-    public SimpleMatrix( RealMatrix64F orig ) {
-        this.mat = new DenseMatrix64F(orig.getNumRows(),orig.getNumCols());
-
-        GenericMatrixOps_F64.copy(orig,mat);
+    public SimpleMatrix( Matrix orig ) {
+        if( orig instanceof BlockMatrix64F ) {
+            DenseMatrix64F a = new DenseMatrix64F(orig.getNumRows(), orig.getNumCols());
+            ConvertMatrixType_F64.convert((BlockMatrix64F) orig, a);
+            this.mat = a;
+        } else if( orig instanceof BlockMatrix32F ) {
+            DenseMatrix32F a = new DenseMatrix32F(orig.getNumRows(),orig.getNumCols());
+            ConvertMatrixType_F32.convert((BlockMatrix32F)orig, a);
+            this.mat = a;
+        } else {
+            this.mat = orig.copy();
+        }
     }
 
     /**
@@ -189,7 +195,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      *
      * @param internalMat The internal DenseMatrix64F of the returned SimpleMatrix. Will be modified.
      */
-    public static SimpleMatrix wrap( DenseMatrix64F internalMat ) {
+    public static SimpleMatrix wrap( Matrix internalMat ) {
         SimpleMatrix ret = new SimpleMatrix();
         ret.mat = internalMat;
         return ret;
@@ -206,7 +212,18 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width ) {
         SimpleMatrix ret = new SimpleMatrix(width,width);
 
-        CommonOps_D64.setIdentity(ret.mat);
+        CommonOps_D64.setIdentity((DenseMatrix64F)ret.mat);
+
+        return ret;
+    }
+
+    public static SimpleMatrix identity( int width , Class type) {
+        SimpleMatrix ret = new SimpleMatrix(width,width, type);
+
+        if( type == DenseMatrix64F.class )
+            CommonOps_D64.setIdentity((DenseMatrix64F)ret.mat);
+        else
+            CommonOps_D32.setIdentity((DenseMatrix32F)ret.mat);
 
         return ret;
     }
@@ -232,6 +249,21 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return ret;
     }
 
+    public static SimpleMatrix diag( Class type, double ...vals ) {
+        Matrix m;
+        if( type == DenseMatrix64F.class )
+            m = CommonOps_D64.diag(vals);
+        else {
+            float f[] = new float[ vals.length ];
+            for (int i = 0; i < f.length; i++) {
+                f[i] = (float)vals[i];
+            }
+            m = CommonOps_D32.diag(f);
+        }
+        SimpleMatrix ret = wrap(m);
+        return ret;
+    }
+
     /**
      * <p>
      * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
@@ -245,9 +277,15 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param maxValue Upper bound
      * @param rand The random number generator that's used to fill the matrix.  @return The new random matrix.
      */
-    public static SimpleMatrix random(int numRows, int numCols, double minValue, double maxValue, Random rand) {
+    public static SimpleMatrix random_F64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices_D64.setRandom(ret.mat,minValue,maxValue,rand);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)ret.mat,minValue,maxValue,rand);
+        return ret;
+    }
+
+    public static SimpleMatrix random_F32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
+        SimpleMatrix ret = new SimpleMatrix(numRows,numCols, DenseMatrix32F.class);
+        RandomMatrices_D32.setRandom((DenseMatrix32F)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
@@ -263,10 +301,18 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @return Vector randomly drawn from the distribution
      */
     public static SimpleMatrix randomNormal( SimpleMatrix covariance , Random random ) {
-        CovarianceRandomDraw_D64 draw = new CovarianceRandomDraw_D64(random,covariance.getMatrix());
 
-        SimpleMatrix found = new SimpleMatrix(covariance.numRows(),1);
-        draw.next(found.getMatrix());
+        SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1);
+
+        if( covariance.bits() == 64) {
+            CovarianceRandomDraw_D64 draw = new CovarianceRandomDraw_D64(random, (DenseMatrix64F)covariance.getMatrix());
+
+            draw.next((DenseMatrix64F)found.getMatrix());
+        } else {
+            CovarianceRandomDraw_D32 draw = new CovarianceRandomDraw_D32(random, (DenseMatrix32F)covariance.getMatrix());
+
+            draw.next((DenseMatrix32F)found.getMatrix());
+        }
 
         return found;
     }
@@ -276,7 +322,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     @Override
     protected SimpleMatrix createMatrix( int numRows , int numCols ) {
-        return new SimpleMatrix(numRows,numCols);
+        return new SimpleMatrix(numRows,numCols, mat.getClass());
     }
 
     // TODO should this function be added back?  It makes the code hard to read when its used

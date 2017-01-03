@@ -65,7 +65,7 @@ public class EjmlUnitTests {
      * @param numRows expected number of rows in the matrix
      * @param numCols expected number of columns in the matrix
      */
-    public static void assertShape( RealMatrix64F A , int numRows , int numCols ) {
+    public static void assertShape( Matrix A , int numRows , int numCols ) {
         assertTrue(  A.getNumRows() == numRows , "Unexpected number of rows.");
         assertTrue(  A.getNumCols() == numCols , "Unexpected number of columns.");
     }
@@ -105,6 +105,14 @@ public class EjmlUnitTests {
                     assertTrue(diff <= tol, "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
                 }
             }
+        }
+    }
+
+    public static void assertEquals( Matrix A , Matrix B ) {
+        if( A instanceof RealMatrix64F ) {
+            assertEquals((RealMatrix64F)A, (RealMatrix64F)B, UtilEjml.TEST_64F );
+        } else {
+            assertEquals((RealMatrix32F)A, (RealMatrix32F)B, UtilEjml.TEST_32F );
         }
     }
 
@@ -216,6 +224,21 @@ public class EjmlUnitTests {
 
                 assertTrue(!Double.isNaN(valA) && !Double.isNaN(valB) ,"A("+i+","+j+") = "+valA+") B("+j+","+i+") = "+valB);
                 assertTrue(!Double.isInfinite(valA) && !Double.isInfinite(valB) ,"A("+i+","+j+") = "+valA+") B("+j+","+i+") = "+valB);
+                assertTrue(Math.abs( valA-valB) <= tol,"A("+i+","+j+") = "+valA+") B("+j+","+i+") = "+valB);
+            }
+        }
+    }
+
+    public static void assertEqualsTrans( RealMatrix32F A , RealMatrix32F B , double tol ) {
+        assertShape(A,B.getNumCols(),B.getNumRows());
+
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
+                Float valA = A.get(i,j);
+                Float valB = B.get(j,i);
+
+                assertTrue(!Float.isNaN(valA) && !Float.isNaN(valB) ,"A("+i+","+j+") = "+valA+") B("+j+","+i+") = "+valB);
+                assertTrue(!Float.isInfinite(valA) && !Float.isInfinite(valB) ,"A("+i+","+j+") = "+valA+") B("+j+","+i+") = "+valB);
                 assertTrue(Math.abs( valA-valB) <= tol,"A("+i+","+j+") = "+valA+") B("+j+","+i+") = "+valB);
             }
         }

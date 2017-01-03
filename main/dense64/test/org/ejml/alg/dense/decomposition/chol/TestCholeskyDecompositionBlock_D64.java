@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
 import org.ejml.data.DenseMatrix64F;
@@ -107,6 +108,6 @@ public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests_D64
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
-        EjmlUnitTests.assertEquals(A_inv,A_inv_block,1e-5);
+        EjmlUnitTests.assertEquals(A_inv,A_inv_block, UtilEjml.TEST_64F_SQ);
     }
 }

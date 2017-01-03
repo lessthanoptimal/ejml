@@ -19,6 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.CheckDecompositionInterface_D64;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.interfaces.decomposition.QRDecomposition;
@@ -62,21 +63,21 @@ public abstract class GenericQrCheck_D64 {
     private void checkDecomposition(int height, int width, boolean compact ) {
         QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width);
-        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DenseMatrix64F.class);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
 
-        assertTrue(alg.decompose(A.copy().getMatrix()));
+        assertTrue(alg.decompose((DenseMatrix64F)A.copy().getMatrix()));
 
         int minStride = Math.min(height,width);
 
-        SimpleMatrix Q = new SimpleMatrix(height,compact ? minStride : height);
-        alg.getQ(Q.getMatrix(), compact);
-        SimpleMatrix R = new SimpleMatrix(compact ? minStride : height,width);
-        alg.getR(R.getMatrix(), compact);
+        SimpleMatrix Q = new SimpleMatrix(height,compact ? minStride : height, DenseMatrix64F.class);
+        alg.getQ((DenseMatrix64F)Q.getMatrix(), compact);
+        SimpleMatrix R = new SimpleMatrix(compact ? minStride : height,width, DenseMatrix64F.class);
+        alg.getR((DenseMatrix64F)R.getMatrix(), compact);
 
 
         // see if Q has the expected properties
-        assertTrue(MatrixFeatures_D64.isOrthogonal(Q.getMatrix(),1e-6));
+        assertTrue(MatrixFeatures_D64.isOrthogonal((DenseMatrix64F)Q.getMatrix(), UtilEjml.TEST_64F_SQ));
 
 //        UtilEjml.print(alg.getQR());
 //        Q.print();
@@ -85,8 +86,8 @@ public abstract class GenericQrCheck_D64 {
         // see if it has the expected properties
         DenseMatrix64F A_found = Q.mult(R).getMatrix();
 
-        EjmlUnitTests.assertEquals(A.getMatrix(),A_found,1e-6);
-        assertTrue(Q.transpose().mult(A).isIdentical(R,1e-6));
+        EjmlUnitTests.assertEquals((DenseMatrix64F)A.getMatrix(),A_found,UtilEjml.TEST_64F_SQ);
+        assertTrue(Q.transpose().mult(A).isIdentical(R,UtilEjml.TEST_64F_SQ));
     }
 
     /**
@@ -100,10 +101,10 @@ public abstract class GenericQrCheck_D64 {
 
         QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width);
-        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DenseMatrix64F.class);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
 
-        alg.decompose(A.getMatrix());
+        alg.decompose((DenseMatrix64F)A.getMatrix());
 
         // get the results from a provided matrix
         DenseMatrix64F Q_provided = RandomMatrices_D64.createRandom(height,height,rand);
@@ -132,10 +133,10 @@ public abstract class GenericQrCheck_D64 {
 
         QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width);
-        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DenseMatrix64F.class);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
 
-        alg.decompose(A.getMatrix());
+        alg.decompose((DenseMatrix64F)A.getMatrix());
 
         // check the case where it creates the matrix first
         assertTrue(alg.getR(null,true).numRows == width);
@@ -168,21 +169,21 @@ public abstract class GenericQrCheck_D64 {
 
         QRDecomposition<DenseMatrix64F> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width);
-        RandomMatrices_D64.setRandom(A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DenseMatrix64F.class);
+        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
 
-        alg.decompose(A.getMatrix());
+        alg.decompose((DenseMatrix64F)A.getMatrix());
 
-        SimpleMatrix Q = new SimpleMatrix(height,width);
-        alg.getQ(Q.getMatrix(), true);
+        SimpleMatrix Q = new SimpleMatrix(height,width, DenseMatrix64F.class);
+        alg.getQ((DenseMatrix64F)Q.getMatrix(), true);
 
         // see if Q has the expected properties
-        assertTrue(MatrixFeatures_D64.isOrthogonal(Q.getMatrix(),1e-6));
+        assertTrue(MatrixFeatures_D64.isOrthogonal((DenseMatrix64F)Q.getMatrix(),UtilEjml.TEST_64F_SQ));
 
         // try to extract it with the wrong dimensions
-        Q = new SimpleMatrix(height,height);
+        Q = new SimpleMatrix(height,height, DenseMatrix64F.class);
         try {
-            alg.getQ(Q.getMatrix(), true);
+            alg.getQ((DenseMatrix64F)Q.getMatrix(), true);
             fail("Didn't fail");
         } catch( RuntimeException e ) {}
     }

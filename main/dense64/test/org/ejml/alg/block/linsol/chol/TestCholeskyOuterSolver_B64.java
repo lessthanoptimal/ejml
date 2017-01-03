@@ -108,10 +108,10 @@ public class TestCholeskyOuterSolver_B64 {
         DenseMatrix64F B = CommonOps_D64.diag(5,3,2,0.001);
 
         assertTrue(solver.setA(MatrixOps_B64.convert(A,r)));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(MatrixOps_B64.convert(B,r)));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertTrue(qualityB < qualityA);
         assertTrue(qualityB*10.0 < qualityA);
@@ -126,10 +126,10 @@ public class TestCholeskyOuterSolver_B64 {
         CommonOps_D64.scale(0.001,B);
 
         assertTrue(solver.setA(MatrixOps_B64.convert(A,r)));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(MatrixOps_B64.convert(B,r)));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertEquals(qualityB,qualityA,UtilEjml.TEST_64F);
     }

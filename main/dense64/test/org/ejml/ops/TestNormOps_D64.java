@@ -221,10 +221,10 @@ public class TestNormOps_D64 {
 
         // make sure the largest singular value is being returned not just the first
         for( int i = 0; i < 20; i++ ) {
-            SimpleMatrix A = SimpleMatrix.random(5,5,-10,10,rand);
-            double largest = A.svd().getW().get(0);
+            SimpleMatrix A = SimpleMatrix.random_F64(5,5,-10,10,rand);
+            double largest = (double)A.svd().getW().get(0);
 
-            assertEquals(largest, NormOps_D64.inducedP2(A.getMatrix()), UtilEjml.TEST_64F);
+            assertEquals(largest, NormOps_D64.inducedP2(A.matrix_F64()), UtilEjml.TEST_64F);
         }
     }
 

@@ -346,7 +346,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                     RandomMatrices_D64.createSymmetric(4,-1,1,rand) :
                     RandomMatrices_D64.createRandom(4,4,-1,1,rand);
 
-            CommonOps_D64.scale(1e-200,A);
+            CommonOps_D64.scale( Math.pow(UtilEjml.EPS,12) ,A);
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -365,7 +365,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                     RandomMatrices_D64.createSymmetric(4,-1,1,rand) :
                     RandomMatrices_D64.createRandom(4,4,-1,1,rand);
 
-            CommonOps_D64.scale(1e100,A);
+            CommonOps_D64.scale( Math.pow(UtilEjml.EPS,-2) ,A);
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -478,7 +478,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 
                 double error = SpecializedOps_D64.diffNormF(tempA,tempB)/max;
 
-                if( error > 1e-12 ) {
+                if( error > UtilEjml.TEST_64F ) {
                     System.out.println("Original matrix:");
                     A.print();
                     System.out.println("Eigenvalue = "+c.real);
@@ -500,7 +500,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                     fail("Error was too large");
                 }
 
-                assertTrue(error <= 1e-12);
+                assertTrue(error <= UtilEjml.TEST_64F);
             }
         }
     }
@@ -528,7 +528,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                     CommonOps_D64.scale(c.getReal(),p.vector,LV);
                     double error = SpecializedOps_D64.diffNormF(AV,LV);
 //                    System.out.println("error = "+error);
-                    assertTrue(error<1e-12);
+                    assertTrue(error < UtilEjml.TEST_64F);
                 }
             }
         }
@@ -548,7 +548,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 
             if( c.isReal() ) {
                 // test using the characteristic equation
-                double det = SimpleMatrix.identity(A.numCols).scale(c.real).minus(a).determinant();
+                double det = (double)SimpleMatrix.identity(A.numCols).scale(c.real).minus(a).determinant();
 
                 // extremely crude test.  given perfect data this is probably considered a failure...  However,
                 // its hard to tell what a good test value actually is.
@@ -601,7 +601,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
         for( int i = 0; i < N; i++ ) {
             Complex64F c = alg.getEigenvalue(i);
 
-            if( Math.abs(c.real-valueReal) < 1e-4 && Math.abs(c.imaginary-valueImg) < 1e-4) {
+            if( Math.abs(c.real-valueReal) < UtilEjml.TEST_64F_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_64F_SQ) {
 
                 if( c.isReal() ) {
                     if( vector.length > 0 ) {
@@ -613,7 +613,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                         double error2 = SpecializedOps_D64.diffNormF(e,v);
 
 
-                        if(error < 1e-3 || error2 < 1e-3)
+                        if(error < 10*UtilEjml.TEST_64F_SQ || error2 < 10*UtilEjml.TEST_64F_SQ)
                             numMatched++;
                     } else {
                         numMatched++;
@@ -638,7 +638,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
         for( int i = 0; i < N; i++ ) {
             Complex64F c = alg.getEigenvalue(i);
 
-            if( Math.abs(c.real-valueReal) < 1e-4 && Math.abs(c.imaginary-valueImg) < 1e-4) {
+            if( Math.abs(c.real-valueReal) < UtilEjml.TEST_64F_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_64F_SQ) {
                 numFound++;
             }
         }

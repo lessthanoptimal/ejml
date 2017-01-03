@@ -40,8 +40,8 @@ public class TestOperation {
     public void divide_matrix_scalar() {
         Equation eq = new Equation();
 
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(5, 3, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
 
         eq.alias(2.5, "A");
         eq.alias(b, "b");
@@ -56,8 +56,8 @@ public class TestOperation {
     public void divide_scalar_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(5, 3, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
 
         eq.alias(2.5, "A");
         eq.alias(b, "b");
@@ -66,9 +66,9 @@ public class TestOperation {
         eq.process("x=A/b");
 
         DenseMatrix64F tmp = new DenseMatrix64F(5,3);
-        CommonOps_D64.divide(2.5, b.getMatrix(), tmp);
+        CommonOps_D64.divide(2.5, (DenseMatrix64F)b.getMatrix(), tmp);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(tmp, x.getMatrix(), UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(tmp, (DenseMatrix64F)x.getMatrix(), UtilEjml.TEST_64F));
     }
 
     @Test
@@ -105,9 +105,9 @@ public class TestOperation {
     public void divide_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 3, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(b, "b");
@@ -122,9 +122,9 @@ public class TestOperation {
     public void ldivide_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 3, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(b, "b");
@@ -139,8 +139,8 @@ public class TestOperation {
     public void multiply_matrix_scalar() {
         Equation eq = new Equation();
 
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(5, 3, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
 
         eq.alias(2.5, "A");
         eq.alias(b, "b");
@@ -186,9 +186,9 @@ public class TestOperation {
     public void multiply_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 3, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(b, "b");
@@ -203,9 +203,9 @@ public class TestOperation {
     public void elementMult_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
 
         eq.alias(a, "a", b, "b", c, "c");
 
@@ -218,9 +218,9 @@ public class TestOperation {
     public void elementDivide_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
 
         eq.alias(a,"a",b,"b",c,"c");
 
@@ -233,9 +233,9 @@ public class TestOperation {
     public void elementPower_mm() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(6, 5, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 5, 0, 1, rand);
-        SimpleMatrix c = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
 
         eq.alias(a,"a",b,"b",c,"c");
 
@@ -248,9 +248,9 @@ public class TestOperation {
     public void elementPower_ms() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
         double b = 1.1;
-        SimpleMatrix c = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
 
         eq.alias(a,"a",b,"b",c,"c");
 
@@ -264,15 +264,15 @@ public class TestOperation {
         Equation eq = new Equation();
 
         double a = 1.1;
-        SimpleMatrix b = SimpleMatrix.random(6, 5, 0, 1, rand);
-        SimpleMatrix c = SimpleMatrix.random(6, 5, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(6, 5, 0, 1, rand);
 
         eq.alias(a,"a",b,"b",c,"c");
 
         eq.process("c=a.^b");
 
         SimpleMatrix expected = new SimpleMatrix(6,5);
-        CommonOps_D64.elementPower(a, b.getMatrix(), expected.getMatrix());
+        CommonOps_D64.elementPower(a, (DenseMatrix64F)b.getMatrix(), (DenseMatrix64F)expected.getMatrix());
         assertTrue(expected.isIdentical(c, UtilEjml.TEST_64F));
     }
 
@@ -296,9 +296,9 @@ public class TestOperation {
     public void kron_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(2, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(3, 2, -1, 1, rand);
-        SimpleMatrix c = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(2, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 2, -1, 1, rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
 
         eq.alias(a,"a",b,"b",c,"c");
 
@@ -382,8 +382,8 @@ public class TestOperation {
     public void neg_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(1, 1, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random(5, 3, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(1, 1, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -439,8 +439,8 @@ public class TestOperation {
     public void exp_m() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,0,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,0,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,0,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,0,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=exp(a)");
@@ -464,8 +464,8 @@ public class TestOperation {
     public void log_m() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,0,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,0,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,0,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,0,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=log(a)");
@@ -499,9 +499,9 @@ public class TestOperation {
     public void add_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix c = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b",c,"c");
         eq.process("a=b+c");
@@ -513,8 +513,8 @@ public class TestOperation {
     public void add_matrix_scalar() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
 
@@ -549,9 +549,9 @@ public class TestOperation {
     public void subtract_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix c = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix c = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b", c, "c");
         eq.process("a=b-c");
@@ -563,8 +563,8 @@ public class TestOperation {
     public void subtract_matrix_scalar() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
 
@@ -574,7 +574,7 @@ public class TestOperation {
         eq.process("a=2.2-b");
 
         DenseMatrix64F expected = new DenseMatrix64F(3,4);
-        CommonOps_D64.subtract(2.2, b.getMatrix(), expected);
+        CommonOps_D64.subtract(2.2, (DenseMatrix64F)b.getMatrix(), expected);
         assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, UtilEjml.TEST_64F));
     }
 
@@ -582,8 +582,8 @@ public class TestOperation {
     public void copy_matrix_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=a");
@@ -644,8 +644,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case0() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(2,3,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(2,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b(1:2,1:3)=a");
@@ -657,8 +657,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case1() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(2,3,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(2,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b");
         eq.process("b(0 1,3 2 0)=a");
@@ -673,8 +673,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case2() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,2,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,2,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b");
         eq.process("b(:,2:)=a");
@@ -689,8 +689,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case3() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(6,1,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(6,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b");
         eq.process("b(2 3 4 5 6 7)=a");
@@ -704,8 +704,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case4() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(7,1,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(7,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b");
         eq.process("b(2:8)=a");
@@ -719,8 +719,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case5() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3*4-2,1,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3*4-2,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b");
         eq.process("b(2:)=a");
@@ -734,8 +734,8 @@ public class TestOperation {
     public void copy_submatrix_matrix_case6() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3*4-2,1,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3*4-2,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a, "a", b, "b");
         eq.process("b(2 3:)=a");
@@ -749,7 +749,7 @@ public class TestOperation {
     public void copy_submatrix_scalar_case0() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b, "b");
         eq.process("b(2,3)=4.5");
@@ -763,7 +763,7 @@ public class TestOperation {
     public void copy_submatrix_scalar_case1() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b, "b");
         eq.process("b(0:1,1:3)=4.5");
@@ -778,7 +778,7 @@ public class TestOperation {
     public void copy_submatrix_scalar_case2() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b, "b");
         eq.process("b(:,2:)=4.5");
@@ -793,7 +793,7 @@ public class TestOperation {
     public void copy_submatrix_scalar_case3() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b, "b");
         eq.process("b(1 0 3)=4.5");
@@ -808,7 +808,7 @@ public class TestOperation {
     public void copy_submatrix_scalar_case4() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b, "b");
         eq.process("b(1:3)=4.5");
@@ -823,7 +823,7 @@ public class TestOperation {
     public void copy_submatrix_scalar_case5() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(2,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(2,3,-1,1,rand);
 
         eq.alias(b, "b");
         eq.process("b(2 3:)=4.5");
@@ -838,7 +838,7 @@ public class TestOperation {
     public void extract_one_case0() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b,"b");
         eq.process("c=b(1 2)");
@@ -853,7 +853,7 @@ public class TestOperation {
     public void extract_one_case1() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b, "b");
         eq.process("c=b(1:3)");
@@ -869,7 +869,7 @@ public class TestOperation {
     public void extract_one_case2() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b, "b");
         eq.process("c=b(4:)");
@@ -885,7 +885,7 @@ public class TestOperation {
     public void extract_one_case3() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b, "b");
         eq.process("c=b(:)");
@@ -901,7 +901,7 @@ public class TestOperation {
     public void extract_two_case0() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b,"b");
         eq.process("c=b(1 2,1 0 2)");
@@ -917,7 +917,7 @@ public class TestOperation {
     public void extract_two_case1() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b,"b");
         eq.process("c=b(1:2,2:3)");
@@ -933,7 +933,7 @@ public class TestOperation {
     public void extract_two_case2() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b, "b");
         eq.process("c=b(2:,1:)");
@@ -949,7 +949,7 @@ public class TestOperation {
     public void extract_two_case3() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b, "b");
         eq.process("c=b(:,:)");
@@ -965,7 +965,7 @@ public class TestOperation {
     public void extractScalar_one() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(b,"b");
         eq.process("c=b(3)");
@@ -978,7 +978,7 @@ public class TestOperation {
     public void extractScalar_two() {
         Equation eq = new Equation();
 
-        SimpleMatrix b = SimpleMatrix.random(3, 4, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3, 4, -1, 1, rand);
 
         eq.alias(b,"b");
         eq.process("c=b(2,3)");
@@ -991,8 +991,8 @@ public class TestOperation {
     public void transpose_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=a'");
@@ -1004,8 +1004,8 @@ public class TestOperation {
     public void inv_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,3,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(3,3,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(3,3,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=inv(a)");
@@ -1027,8 +1027,8 @@ public class TestOperation {
     public void pinv_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(4,3,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(1,1,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(4,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(1,1,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=pinv(a)");
@@ -1050,16 +1050,16 @@ public class TestOperation {
     public void rref_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(4,3,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random(1,1,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(4,3,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(1,1,-1,1,rand);
 
         eq.alias(a,"a",b,"b");
         eq.process("b=rref(a)");
 
         DenseMatrix64F expected = new DenseMatrix64F(4,3);
-        CommonOps_D64.rref(a.getMatrix(),-1,expected);
+        CommonOps_D64.rref((DenseMatrix64F)a.getMatrix(),-1,expected);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(expected,b.getMatrix(),UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(expected,(DenseMatrix64F)b.getMatrix(),UtilEjml.TEST_64F));
     }
 
     @Test
@@ -1080,7 +1080,7 @@ public class TestOperation {
     public void det_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(4,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(4,4,-1,1,rand);
 
         eq.alias(a,"a");
         eq.process("b=det(a)");
@@ -1101,7 +1101,7 @@ public class TestOperation {
     public void trace_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a");
         eq.process("b=trace(a)");
@@ -1113,7 +1113,7 @@ public class TestOperation {
     public void normF_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a");
         eq.process("b=normF(a)");
@@ -1134,7 +1134,7 @@ public class TestOperation {
     public void eye() {
         Equation eq = new Equation();
 
-        SimpleMatrix a = SimpleMatrix.random(3,4,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_F64(3,4,-1,1,rand);
 
         eq.alias(a,"a");
         eq.process("a=eye(3)");
@@ -1146,8 +1146,8 @@ public class TestOperation {
     public void abs_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -1191,7 +1191,7 @@ public class TestOperation {
     public void max_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(1.0, "B");
@@ -1199,7 +1199,7 @@ public class TestOperation {
         eq.process("B=max(A)");
 
         double found = eq.lookupDouble("B");
-        double expected = CommonOps_D64.elementMax(A.getMatrix());
+        double expected = CommonOps_D64.elementMax((DenseMatrix64F)A.getMatrix());
         assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
@@ -1233,7 +1233,7 @@ public class TestOperation {
     public void min_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(1.0, "B");
@@ -1241,7 +1241,7 @@ public class TestOperation {
         eq.process("B=min(A)");
 
         double found = eq.lookupDouble("B");
-        double expected = CommonOps_D64.elementMin(A.getMatrix());
+        double expected = CommonOps_D64.elementMin((DenseMatrix64F)A.getMatrix());
         assertEquals(expected,found,UtilEjml.TEST_64F);
     }
 
@@ -1275,7 +1275,7 @@ public class TestOperation {
     public void zeros() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 8, -1, 1, rand);
 
         eq.alias(A, "A");
 
@@ -1292,7 +1292,7 @@ public class TestOperation {
     public void ones() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 8, -1, 1, rand);
 
         eq.alias(A, "A");
 
@@ -1309,8 +1309,8 @@ public class TestOperation {
     public void diag_vector() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random(6, 1, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_F64(6, 1, -1, 1, rand);
 
 
         eq.alias(A, "A");
@@ -1332,8 +1332,8 @@ public class TestOperation {
     public void diag_matrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 8, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random(6, 1, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 8, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_F64(6, 1, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -1352,8 +1352,8 @@ public class TestOperation {
     public void dot() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 1, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random(6, 1, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 1, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_F64(6, 1, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -1370,9 +1370,9 @@ public class TestOperation {
     public void solve() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random(6, 5, -1, 1, rand);
-        SimpleMatrix x = SimpleMatrix.random(5, 3, -1, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random(6, 3, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_F64(6, 5, -1, 1, rand);
+        SimpleMatrix x = SimpleMatrix.random_F64(5, 3, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_F64(6, 3, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(b, "b");

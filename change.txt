@@ -11,11 +11,11 @@ Date format: year/month/day
 - Fixed issue with generics and SimpleEVD and SimpleSVD
 - Auto coded 32F support
   * core data structures
-  * dense matrix
+  * dense matrix operations
+- Added support for 32-bit floats in SimpleMatrix
 - Massive refactoring to support auto coding of F32
 
 - TODO Travis auto generate 32 bit code and run tests
-- TODO Remove SimpleMatrix code from unit tests
 - TODO Add support for matrix norms to Equations
 
 ----- Version 0.30

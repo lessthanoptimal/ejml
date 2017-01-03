@@ -147,7 +147,7 @@ public class TestTriangularSolver_B64 {
         // Y is overwritten with the solution
         TriangularSolver_B64.solve(r,upper,new D1Submatrix64F(T),new D1Submatrix64F(Y),transT);
 
-        assertTrue( MatrixOps_B64.isEquals(B,Y,UtilEjml.TEST_64F));
+        assertTrue( MatrixOps_B64.isEquals(B,Y, UtilEjml.TEST_64F_SQ));
     }
 
     /**
@@ -182,7 +182,7 @@ public class TestTriangularSolver_B64 {
         TriangularSolver_B64.solve(r,upper,new D1Submatrix64F(T2,0,size,0,size),new D1Submatrix64F(Y),transT);
 
         assertTrue( "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols,
-                MatrixOps_B64.isEquals(B,Y,UtilEjml.TEST_64F));
+                MatrixOps_B64.isEquals(B,Y, UtilEjml.TEST_64F_SQ));
     }
 
 
@@ -243,7 +243,7 @@ public class TestTriangularSolver_B64 {
 
         TriangularSolver_B64.solveBlock(3,!solveL,sub_L,sub_B,transT,transB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(X,b_B,1e-10));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(X,b_B,UtilEjml.TEST_64F));
     }
 
     private DenseMatrix64F createRandomLowerTriangular( int N ) {

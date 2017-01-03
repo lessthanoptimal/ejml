@@ -19,11 +19,9 @@
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
+import org.ejml.alg.dense.mult.VectorVectorMult_D32;
 import org.ejml.alg.dense.mult.VectorVectorMult_D64;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.MatrixIterator64F;
-import org.ejml.data.RealMatrix64F;
-import org.ejml.data.SingularMatrixException;
+import org.ejml.data.*;
 import org.ejml.ops.*;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +43,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     /**
      * Internal matrix which this is a wrapper around.
      */
-    protected DenseMatrix64F mat;
+    protected Matrix mat;
 
     public SimpleBase( int numRows , int numCols ) {
         mat = new DenseMatrix64F(numRows, numCols);
@@ -73,9 +71,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @return Reference to the internal DenseMatrix64F.
      */
-    public DenseMatrix64F getMatrix() {
-        return mat;
+    public <T extends Matrix>T getMatrix() {
+        return (T)mat;
     }
+
+    public DenseMatrix64F matrix_F64() {
+        return (DenseMatrix64F)mat;
+    }
+
+    public DenseMatrix32F matrix_F32() {
+        return (DenseMatrix32F)mat;
+    }
+
 
     /**
      * <p>
@@ -88,9 +95,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A matrix that is n by m.
      */
     public T transpose() {
-        T ret = createMatrix(mat.numCols,mat.numRows);
+        T ret = createMatrix(mat.getNumCols(),mat.getNumRows());
 
-        CommonOps_D64.transpose(mat,ret.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.transpose((DenseMatrix64F)mat,(DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.transpose((DenseMatrix32F)mat,(DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -111,9 +121,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The results of this operation.
      */
     public T mult( T b ) {
-        T ret = createMatrix(mat.numRows,b.getMatrix().numCols);
+        T ret = createMatrix(mat.getNumRows(),b.getMatrix().getNumCols());
 
-        CommonOps_D64.mult(mat,b.getMatrix(),ret.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.mult((DenseMatrix64F)mat,(DenseMatrix64F)b.getMatrix(),(DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.mult((DenseMatrix32F)mat,(DenseMatrix32F)b.getMatrix(),(DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -131,8 +144,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Kronecker product between this matrix and B.
      */
     public T kron( T B ) {
-        T ret = createMatrix(mat.numRows*B.numRows(),mat.numCols*B.numCols());
-        CommonOps_D64.kron(mat,B.getMatrix(),ret.getMatrix());
+        T ret = createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols());
+
+        if( bits() == 64 )
+            CommonOps_D64.kron((DenseMatrix64F)mat,(DenseMatrix64F)B.getMatrix(),(DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.kron((DenseMatrix32F)mat,(DenseMatrix32F)B.getMatrix(),(DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -155,7 +172,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( T b ) {
         T ret = copy();
 
-        CommonOps_D64.addEquals(ret.getMatrix(),b.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.addEquals((DenseMatrix64F)ret.getMatrix(),(DenseMatrix64F)b.getMatrix());
+        else
+            CommonOps_D32.addEquals((DenseMatrix32F)ret.getMatrix(),(DenseMatrix32F)b.getMatrix());
 
         return ret;
     }
@@ -178,7 +198,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T minus( T b ) {
         T ret = copy();
 
-        CommonOps_D64.subtract(getMatrix(), b.getMatrix(), ret.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.subtract((DenseMatrix64F)getMatrix(), (DenseMatrix64F)b.getMatrix(), (DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.subtract((DenseMatrix32F)getMatrix(), (DenseMatrix32F)b.getMatrix(), (DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -201,7 +224,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T minus( double b ) {
         T ret = copy();
 
-        CommonOps_D64.subtract(getMatrix(), b, ret.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.subtract((DenseMatrix64F)getMatrix(), b, (DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.subtract((DenseMatrix32F)getMatrix(), (float)b, (DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -224,7 +250,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( double b ) {
         T ret = createMatrix(numRows(),numCols());
 
-        CommonOps_D64.add(getMatrix(), b, ret.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.add((DenseMatrix64F)getMatrix(), b, (DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.add((DenseMatrix32F)getMatrix(), (float)b, (DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -247,7 +276,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T plus( double beta , T b ) {
         T ret = copy();
 
-        CommonOps_D64.addEquals(ret.getMatrix(),beta,b.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.addEquals((DenseMatrix64F)ret.getMatrix(),beta,(DenseMatrix64F)b.getMatrix());
+        else
+            CommonOps_D32.addEquals((DenseMatrix32F)ret.getMatrix(),(float)beta,(DenseMatrix32F)b.getMatrix());
 
         return ret;
     }
@@ -265,7 +297,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             throw new IllegalArgumentException("'v' matrix is not a vector.");
         }
 
-        return VectorVectorMult_D64.innerProd(mat,v.getMatrix());
+        if( bits() == 64 )
+            return VectorVectorMult_D64.innerProd((DenseMatrix64F)mat,(DenseMatrix64F)v.getMatrix());
+        else
+            return VectorVectorMult_D32.innerProd((DenseMatrix32F)mat,(DenseMatrix32F)v.getMatrix());
     }
 
     /**
@@ -275,7 +310,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Returns true for vectors and false otherwise.
      */
     public boolean isVector() {
-        return mat.numRows == 1 || mat.numCols == 1;
+        return mat.getNumRows() == 1 || mat.getNumCols() == 1;
     }
 
     /**
@@ -292,7 +327,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T scale( double val ) {
         T ret = copy();
 
-        CommonOps_D64.scale(val,ret.getMatrix());
+        if( bits() == 64 )
+            CommonOps_D64.scale(val,(DenseMatrix64F)ret.getMatrix());
+        else
+            CommonOps_D32.scale((float)val,(DenseMatrix32F)ret.getMatrix());
 
         return ret;
     }
@@ -311,7 +349,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T divide( double val ) {
         T ret = copy();
 
-        CommonOps_D64.divide(ret.getMatrix(),val);
+        if( bits() == 64 )
+            CommonOps_D64.divide((DenseMatrix64F)ret.getMatrix(),val);
+        else
+            CommonOps_D32.divide((DenseMatrix32F)ret.getMatrix(),(float)val);
 
         return ret;
     }
@@ -335,12 +376,20 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The inverse of this matrix.
      */
     public T invert() {
-        T ret = createMatrix(mat.numRows,mat.numCols);
-        if( !CommonOps_D64.invert(mat,ret.getMatrix()) ) {
-            throw new SingularMatrixException();
+        T ret = createMatrix(mat.getNumRows(), mat.getNumCols());
+        if (bits() == 64) {
+            if (!CommonOps_D64.invert((DenseMatrix64F)mat, (DenseMatrix64F)ret.getMatrix())) {
+                throw new SingularMatrixException();
+            }
+            if (MatrixFeatures_D64.hasUncountable((DenseMatrix64F)ret.getMatrix()))
+                throw new SingularMatrixException("Solution has uncountable numbers");
+        } else {
+            if (!CommonOps_D32.invert((DenseMatrix32F)mat, (DenseMatrix32F)ret.getMatrix())) {
+                throw new SingularMatrixException();
+            }
+            if (MatrixFeatures_D32.hasUncountable((DenseMatrix32F)ret.getMatrix()))
+                throw new SingularMatrixException("Solution has uncountable numbers");
         }
-        if( MatrixFeatures_D64.hasUncountable(ret.getMatrix()))
-            throw new SingularMatrixException("Solution has uncountable numbers");
         return ret;
     }
 
@@ -352,8 +401,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return inverse computed using the pseudo inverse.
      */
     public T pseudoInverse() {
-        T ret = createMatrix(mat.numCols,mat.numRows);
-        CommonOps_D64.pinv(mat,ret.getMatrix());
+        T ret = createMatrix(mat.getNumCols(),mat.getNumRows());
+        if (bits() == 64) {
+            CommonOps_D64.pinv((DenseMatrix64F)mat, (DenseMatrix64F)ret.getMatrix());
+        } else {
+            CommonOps_D32.pinv((DenseMatrix32F)mat, (DenseMatrix32F)ret.getMatrix());
+        }
         return ret;
     }
 
@@ -380,13 +433,21 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T solve( T b )
     {
-        T x = createMatrix(mat.numCols,b.getMatrix().numCols);
+        T x = createMatrix(mat.getNumCols(),b.getMatrix().getNumCols());
 
-        if( !CommonOps_D64.solve(mat,b.getMatrix(),x.getMatrix()) )
-            throw new SingularMatrixException();
+        if (bits() == 64) {
+            if (!CommonOps_D64.solve((DenseMatrix64F)mat, (DenseMatrix64F)b.getMatrix(), (DenseMatrix64F)x.getMatrix()))
+                throw new SingularMatrixException();
 
-        if( MatrixFeatures_D64.hasUncountable(x.getMatrix()) )
-            throw new SingularMatrixException("Solution contains uncountable numbers");
+            if (MatrixFeatures_D64.hasUncountable((DenseMatrix64F)x.getMatrix()))
+                throw new SingularMatrixException("Solution contains uncountable numbers");
+        } else {
+            if (!CommonOps_D32.solve((DenseMatrix32F)mat, (DenseMatrix32F)b.getMatrix(), (DenseMatrix32F)x.getMatrix()))
+                throw new SingularMatrixException();
+
+            if (MatrixFeatures_D32.hasUncountable((DenseMatrix32F)x.getMatrix()))
+                throw new SingularMatrixException("Solution contains uncountable numbers");
+        }
 
         return x;
     }
@@ -415,7 +476,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param val The value each element is set to.
      */
     public void set( double val ) {
-        CommonOps_D64.fill(mat, val);
+        if (bits() == 64) {
+            CommonOps_D64.fill((DenseMatrix64F)mat, val);
+        } else {
+            CommonOps_D32.fill((DenseMatrix32F)mat, (float)val);
+        }
     }
 
     /**
@@ -424,7 +489,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @see CommonOps_D64#fill(org.ejml.data.D1Matrix64F , double)
      */
     public void zero() {
-        mat.zero();
+        if (bits() == 64) {
+            ((DenseMatrix64F)mat).zero();
+        } else {
+            ((DenseMatrix32F)mat).zero();
+        }
     }
 
     /**
@@ -439,7 +508,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The matrix's Frobenius normal.
      */
     public double normF() {
-        return NormOps_D64.normF(mat);
+        if (bits() == 64) {
+            return NormOps_D64.normF((DenseMatrix64F)mat);
+        } else {
+            return NormOps_D32.normF((DenseMatrix32F)mat);
+        }
     }
 
     /**
@@ -453,7 +526,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The condition number.
      */
     public double conditionP2() {
-        return NormOps_D64.conditionP2(mat);
+        if (bits() == 64) {
+            return NormOps_D64.conditionP2((DenseMatrix64F)mat);
+        } else {
+            return NormOps_D32.conditionP2((DenseMatrix32F)mat);
+        }
     }
 
     /**
@@ -464,11 +541,19 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The determinant.
      */
     public double determinant() {
-        double ret = CommonOps_D64.det(mat);
-        // if the decomposition silently failed then the matrix is most likely singular
-        if(UtilEjml.isUncountable(ret))
-            return 0;
-        return ret;
+        if (bits() == 64) {
+            double ret = CommonOps_D64.det((DenseMatrix64F)mat);
+            // if the decomposition silently failed then the matrix is most likely singular
+            if (UtilEjml.isUncountable(ret))
+                return 0;
+            return ret;
+        } else {
+            double ret = CommonOps_D32.det((DenseMatrix32F)mat);
+            // if the decomposition silently failed then the matrix is most likely singular
+            if (UtilEjml.isUncountable(ret))
+                return 0;
+            return ret;
+        }
     }
 
     /**
@@ -481,7 +566,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The trace of the matrix.
      */
     public double trace() {
-        return CommonOps_D64.trace(mat);
+        if (bits() == 64) {
+            return CommonOps_D64.trace((DenseMatrix64F)mat);
+        } else {
+            return CommonOps_D32.trace((DenseMatrix32F)mat);
+        }
     }
 
     /**
@@ -501,7 +590,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param numCols The new number of columns in the matrix.
      */
     public void reshape( int numRows , int numCols ) {
-        mat.reshape(numRows,numCols, false);
+        if (bits() == 64) {
+            ((DenseMatrix64F)mat).reshape(numRows, numCols, false);
+        } else {
+            ((DenseMatrix32F)mat).reshape(numRows, numCols, false);
+        }
     }
 
     /**
@@ -513,7 +606,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param value The element's new value.
      */
     public void set( int row , int col , double value ) {
-        mat.set(row,col,value);
+        if (bits() == 64) {
+            ((DenseMatrix64F)mat).set(row, col, value);
+        } else {
+            ((DenseMatrix32F)mat).set(row, col, (float)value);
+        }
     }
 
     /**
@@ -523,7 +620,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param value The element's new value.
      */
     public void set( int index , double value ) {
-        mat.set(index,value);
+        if (bits() == 64) {
+            ((DenseMatrix64F)mat).set(index, value);
+        } else {
+            ((DenseMatrix32F)mat).set(index, (float)value);
+        }
     }
 
     /**
@@ -538,8 +639,16 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param values Values which are to be written to the row in a matrix.
      */
     public void setRow( int row , int offset , double ...values ) {
-        for( int i = 0; i < values.length; i++ ) {
-            mat.set(row,offset+i,values[i]);
+        if (bits() == 64) {
+            DenseMatrix64F m = (DenseMatrix64F)mat;
+            for (int i = 0; i < values.length; i++) {
+                m.set(row, offset + i, values[i]);
+            }
+        } else {
+            DenseMatrix32F m = (DenseMatrix32F)mat;
+            for (int i = 0; i < values.length; i++) {
+                m.set(row, offset + i, (float)values[i]);
+            }
         }
     }
 
@@ -555,8 +664,16 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param values Values which are to be written to the row in a matrix.
      */
     public void setColumn( int column , int offset , double ...values ) {
-        for( int i = 0; i < values.length; i++ ) {
-            mat.set(offset+i,column,values[i]);
+        if (bits() == 64) {
+            DenseMatrix64F m = (DenseMatrix64F)mat;
+            for (int i = 0; i < values.length; i++) {
+                m.set(offset + i, column, values[i]);
+            }
+        } else {
+            DenseMatrix32F m = (DenseMatrix32F)mat;
+            for (int i = 0; i < values.length; i++) {
+                m.set(offset + i, column, (float)values[i]);
+            }
         }
     }
 
@@ -569,7 +686,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The value of the element.
      */
     public double get( int row , int col ) {
-        return mat.get(row,col);
+        if (bits() == 64) {
+            return ((DenseMatrix64F)mat).get(row, col);
+        } else {
+            return ((DenseMatrix32F)mat).get(row, col);
+        }
     }
 
     /**
@@ -581,7 +702,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The value of the specified element.
      */
     public double get( int index ) {
-        return mat.data[ index ];
+        if (bits() == 64) {
+            return ((DenseMatrix64F)mat).data[index];
+        } else {
+            return ((DenseMatrix32F)mat).data[index];
+        }
     }
 
     /**
@@ -594,7 +719,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The index of the specified element.
      */
     public int getIndex( int row , int col ) {
-        return row * mat.numCols + col;
+        return row * mat.getNumCols() + col;
     }
 
     /**
@@ -611,7 +736,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public MatrixIterator64F iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator64F(mat,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new MatrixIterator64F((DenseMatrix64F)mat,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**
@@ -620,7 +745,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A new identical matrix.
      */
     public T copy() {
-        T ret = createMatrix(mat.numRows,mat.numCols);
+        T ret = createMatrix(mat.getNumRows(),mat.getNumCols());
         ret.getMatrix().set(this.getMatrix());
         return ret;
     }
@@ -631,7 +756,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return number of rows.
      */
     public int numRows() {
-        return mat.numRows;
+        return mat.getNumRows();
     }
 
     /**
@@ -640,7 +765,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return number of columns.
      */
     public int numCols() {
-        return mat.numCols;
+        return mat.getNumCols();
     }
 
     /**
@@ -650,7 +775,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The number of elements in the matrix.
      */
     public int getNumElements() {
-        return mat.getNumElements();
+        if( bits() == 64 )
+            return ((DenseMatrix64F)mat).getNumElements();
+        else
+            return ((DenseMatrix32F)mat).getNumElements();
     }
 
 
@@ -658,14 +786,22 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Prints the matrix to standard out.
      */
     public void print() {
-        MatrixIO.print(System.out,mat);
+        if( bits() == 64 ) {
+            MatrixIO.print(System.out, (DenseMatrix64F)mat);
+        } else {
+            MatrixIO.print(System.out, (DenseMatrix32F) mat);
+        }
     }
 
     /**
      * Prints the matrix to standard out with the specified precision.
      */
     public void print(int numChar , int precision) {
-        MatrixIO.print(System.out,mat,numChar,precision);
+        if( bits() == 64 ) {
+            MatrixIO.print(System.out, (DenseMatrix64F)mat, numChar, precision);
+        } else {
+            MatrixIO.print(System.out, (DenseMatrix32F)mat, numChar, precision);
+        }
     }
 
     /**
@@ -675,7 +811,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * </p>
      */
     public void print( String format ) {
-        MatrixIO.print(System.out,mat,format);
+        if( bits() == 64 ) {
+            MatrixIO.print(System.out, (DenseMatrix64F)mat, format);
+        } else {
+            MatrixIO.print(System.out, (DenseMatrix32F)mat, format);
+        }
     }
 
     /**
@@ -688,7 +828,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public String toString() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        MatrixIO.print(new PrintStream(stream),mat);
+        if( bits() == 64 ) {
+            MatrixIO.print(new PrintStream(stream), (DenseMatrix64F)mat);
+        } else {
+            MatrixIO.print(new PrintStream(stream), (DenseMatrix32F)mat);
+        }
 
         return stream.toString();
     }
@@ -716,14 +860,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The submatrix.
      */
     public T extractMatrix(int y0 , int y1, int x0 , int x1 ) {
-        if( y0 == SimpleMatrix.END ) y0 = mat.numRows;
-        if( y1 == SimpleMatrix.END ) y1 = mat.numRows;
-        if( x0 == SimpleMatrix.END ) x0 = mat.numCols;
-        if( x1 == SimpleMatrix.END ) x1 = mat.numCols;
+        if( y0 == SimpleMatrix.END ) y0 = mat.getNumRows();
+        if( y1 == SimpleMatrix.END ) y1 = mat.getNumRows();
+        if( x0 == SimpleMatrix.END ) x0 = mat.getNumCols();
+        if( x1 == SimpleMatrix.END ) x1 = mat.getNumCols();
 
         T ret = createMatrix(y1-y0,x1-x0);
 
-        CommonOps_D64.extract(mat,y0,y1,x0,x1,ret.getMatrix(),0,0);
+        if( bits() == 64 ) {
+            CommonOps_D64.extract((DenseMatrix64F)mat, y0, y1, x0, x1, (DenseMatrix64F)ret.getMatrix(), 0, 0);
+        } else {
+            CommonOps_D32.extract((DenseMatrix32F)mat, y0, y1, x0, x1, (DenseMatrix32F)ret.getMatrix(), 0, 0);
+        }
 
         return ret;
     }
@@ -740,14 +888,22 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T extractVector( boolean extractRow , int element )
     {
-        int length = extractRow ? mat.numCols : mat.numRows;
+        int length = extractRow ? mat.getNumCols() : mat.getNumRows();
 
         T ret = extractRow ? createMatrix(1,length) : createMatrix(length,1);
 
-        if( extractRow ) {
-            SpecializedOps_D64.subvector(mat,element,0,length,true,0,ret.getMatrix());
+        if( bits() == 64 ) {
+            if (extractRow) {
+                SpecializedOps_D64.subvector((DenseMatrix64F)mat, element, 0, length, true, 0, (DenseMatrix64F)ret.getMatrix());
+            } else {
+                SpecializedOps_D64.subvector((DenseMatrix64F)mat, 0, element, length, false, 0, (DenseMatrix64F)ret.getMatrix());
+            }
         } else {
-            SpecializedOps_D64.subvector(mat,0,element,length,false,0,ret.getMatrix());
+            if (extractRow) {
+                SpecializedOps_D32.subvector((DenseMatrix32F)mat, element, 0, length, true, 0, (DenseMatrix32F)ret.getMatrix());
+            } else {
+                SpecializedOps_D32.subvector((DenseMatrix32F)mat, 0, element, length, false, 0, (DenseMatrix32F)ret.getMatrix());
+            }
         }
 
         return ret;
@@ -763,11 +919,15 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T extractDiag()
     {
-        int N = Math.min(mat.numCols,mat.numRows);
+        int N = Math.min(mat.getNumCols(),mat.getNumRows());
 
         T diag = createMatrix(N,1);
 
-        CommonOps_D64.extractDiag(mat,diag.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.extractDiag((DenseMatrix64F)mat, (DenseMatrix64F)diag.getMatrix());
+        } else {
+            CommonOps_D32.extractDiag((DenseMatrix32F)mat, (DenseMatrix32F)diag.getMatrix());
+        }
 
         return diag;
     }
@@ -781,7 +941,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return If they are equal within tolerance of each other.
      */
     public boolean isIdentical(T a, double tol) {
-        return MatrixFeatures_D64.isIdentical(mat,a.getMatrix(),tol);
+        if( bits() == 64 ) {
+            return MatrixFeatures_D64.isIdentical((DenseMatrix64F)mat, (DenseMatrix64F)a.getMatrix(), tol);
+        } else {
+            return MatrixFeatures_D32.isIdentical((DenseMatrix32F)mat, (DenseMatrix32F)a.getMatrix(), (float)tol);
+        }
     }
 
     /**
@@ -790,7 +954,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return True of an element is NaN or infinite.  False otherwise.
      */
     public boolean hasUncountable() {
-        return MatrixFeatures_D64.hasUncountable(mat);
+        if( bits() == 64 ) {
+            return MatrixFeatures_D64.hasUncountable((DenseMatrix64F)mat);
+        } else {
+            return MatrixFeatures_D32.hasUncountable((DenseMatrix32F)mat);
+        }
     }
 
     /**
@@ -827,7 +995,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param B The matrix that is being inserted.
      */
     public void insertIntoThis(int insertRow, int insertCol, T B) {
-        CommonOps_D64.insert(B.getMatrix(), mat, insertRow,insertCol);
+        if( bits() == 64 ) {
+            CommonOps_D64.insert((DenseMatrix64F)B.getMatrix(), (DenseMatrix64F)mat, insertRow, insertCol);
+        } else {
+            CommonOps_D32.insert((DenseMatrix32F)B.getMatrix(),(DenseMatrix32F) mat, insertRow, insertCol);
+        }
     }
 
     /**
@@ -855,11 +1027,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T combine( int insertRow, int insertCol, T B) {
 
         if( insertRow == SimpleMatrix.END ) {
-            insertRow = mat.numRows;
+            insertRow = mat.getNumRows();
         }
 
         if( insertCol == SimpleMatrix.END ) {
-            insertCol = mat.numCols;
+            insertCol = mat.getNumCols();
         }
 
         int maxRow = insertRow + B.numRows();
@@ -867,9 +1039,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         T ret;
 
-        if( maxRow > mat.numRows || maxCol > mat.numCols) {
-            int M = Math.max(maxRow,mat.numRows);
-            int N = Math.max(maxCol,mat.numCols);
+        if( maxRow > mat.getNumRows() || maxCol > mat.getNumCols()) {
+            int M = Math.max(maxRow,mat.getNumRows());
+            int N = Math.max(maxCol,mat.getNumCols());
 
             ret = createMatrix(M,N);
             ret.insertIntoThis(0,0,this);
@@ -889,7 +1061,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Largest absolute value of any element.
      */
     public double elementMaxAbs() {
-        return CommonOps_D64.elementMaxAbs(mat);
+        if( bits() == 64 ) {
+            return CommonOps_D64.elementMaxAbs((DenseMatrix64F)mat);
+        } else {
+            return CommonOps_D32.elementMaxAbs((DenseMatrix32F)mat);
+        }
     }
 
     /**
@@ -898,7 +1074,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Sum of all the elements.
      */
     public double elementSum() {
-        return CommonOps_D64.elementSum(mat);
+        if( bits() == 64 ) {
+            return CommonOps_D64.elementSum((DenseMatrix64F)mat);
+        } else {
+            return CommonOps_D32.elementSum((DenseMatrix32F)mat);
+        }
     }
 
     /**
@@ -912,9 +1092,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementMult( T b )
     {
-        T c = createMatrix(mat.numRows,mat.numCols);
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
-        CommonOps_D64.elementMult(mat,b.getMatrix(),c.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.elementMult((DenseMatrix64F)mat, (DenseMatrix64F)b.getMatrix(), (DenseMatrix64F)c.getMatrix());
+        } else {
+            CommonOps_D32.elementMult((DenseMatrix32F)mat, (DenseMatrix32F)b.getMatrix(), (DenseMatrix32F)c.getMatrix());
+        }
 
         return c;
     }
@@ -930,9 +1114,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementDiv( T b )
     {
-        T c = createMatrix(mat.numRows,mat.numCols);
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
-        CommonOps_D64.elementDiv(mat, b.getMatrix(), c.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.elementDiv((DenseMatrix64F)mat, (DenseMatrix64F)b.getMatrix(), (DenseMatrix64F)c.getMatrix());
+        } else {
+            CommonOps_D32.elementDiv((DenseMatrix32F)mat, (DenseMatrix32F)b.getMatrix(), (DenseMatrix32F)c.getMatrix());
+        }
 
         return c;
     }
@@ -948,9 +1136,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementPower( T b )
     {
-        T c = createMatrix(mat.numRows,mat.numCols);
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
-        CommonOps_D64.elementPower(mat, b.getMatrix(), c.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.elementPower((DenseMatrix64F)mat, (DenseMatrix64F)b.getMatrix(), (DenseMatrix64F)c.getMatrix());
+        } else {
+            CommonOps_D32.elementPower((DenseMatrix32F)mat, (DenseMatrix32F)b.getMatrix(), (DenseMatrix32F)c.getMatrix());
+        }
 
         return c;
     }
@@ -966,9 +1158,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementPower( double b )
     {
-        T c = createMatrix(mat.numRows,mat.numCols);
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
-        CommonOps_D64.elementPower(mat, b, c.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.elementPower((DenseMatrix64F)mat, b, (DenseMatrix64F)c.getMatrix());
+        } else {
+            CommonOps_D32.elementPower((DenseMatrix32F)mat, (float)b, (DenseMatrix32F)c.getMatrix());
+        }
 
         return c;
     }
@@ -983,9 +1179,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementExp()
     {
-        T c = createMatrix(mat.numRows,mat.numCols);
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
-        CommonOps_D64.elementExp(mat, c.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.elementExp((DenseMatrix64F)mat, (DenseMatrix64F)c.getMatrix());
+        } else {
+            CommonOps_D32.elementExp((DenseMatrix32F)mat, (DenseMatrix32F)c.getMatrix());
+        }
 
         return c;
     }
@@ -1000,9 +1200,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementLog()
     {
-        T c = createMatrix(mat.numRows,mat.numCols);
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
-        CommonOps_D64.elementLog(mat, c.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.elementLog((DenseMatrix64F)mat, (DenseMatrix64F)c.getMatrix());
+        } else {
+            CommonOps_D32.elementLog((DenseMatrix32F)mat, (DenseMatrix32F)c.getMatrix());
+        }
 
         return c;
     }
@@ -1018,7 +1222,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T negative() {
         T A = copy();
-        CommonOps_D64.changeSign(A.getMatrix());
+        if( bits() == 64 ) {
+            CommonOps_D64.changeSign((DenseMatrix64F)A.getMatrix());
+        } else {
+            CommonOps_D32.changeSign((DenseMatrix32F)A.getMatrix());
+        }
         return A;
     }
 
@@ -1035,7 +1243,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public void saveToFileBinary( String fileName )
         throws IOException
     {
-        MatrixIO.saveBin(mat, fileName);
+        MatrixIO.saveBin((DenseMatrix64F)mat, fileName);
     }
 
     /**
@@ -1075,7 +1283,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public void saveToFileCSV( String fileName )
             throws IOException
     {
-        MatrixIO.saveCSV(mat, fileName);
+        MatrixIO.saveCSV((DenseMatrix64F)mat, fileName);
     }
 
     /**
@@ -1113,7 +1321,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return true if it is a valid element in the matrix.
      */
     public boolean isInBounds(int row, int col) {
-        return row >= 0 && col >= 0 && row < mat.numRows && col < mat.numCols;
+        return row >= 0 && col >= 0 && row < mat.getNumRows() && col < mat.getNumCols();
     }
 
     /**
@@ -1121,5 +1329,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public void printDimensions() {
         System.out.println("[rows = "+numRows()+" , cols = "+numCols()+" ]");
+    }
+
+    /**
+     * Size of internal array elements.  32 or 64 bits
+     */
+    public int bits() {
+        if( mat.getClass() == DenseMatrix64F.class ) {
+            return 64;
+        } if( mat.getClass() == DenseMatrix32F.class ) {
+            return 32;
+        } else {
+            throw new RuntimeException("Unknown matrix type");
+        }
     }
 }

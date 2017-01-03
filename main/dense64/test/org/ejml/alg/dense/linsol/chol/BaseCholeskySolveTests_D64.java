@@ -112,12 +112,12 @@ public abstract class BaseCholeskySolveTests_D64 {
         solver.solve(b,x);
 
         // see if the input got modified
-        EjmlUnitTests.assertEquals(A,A_orig,1e-5);
-        EjmlUnitTests.assertEquals(b,B_orig,1e-5);
+        EjmlUnitTests.assertEquals(A,A_orig,UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(b,B_orig,UtilEjml.TEST_64F_SQ);
 
         DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
 
-        EjmlUnitTests.assertEquals(x_expected,x,1e-6);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F_SQ);
     }
 
     @Test
@@ -133,7 +133,7 @@ public abstract class BaseCholeskySolveTests_D64 {
 
         DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
 
-        EjmlUnitTests.assertEquals(A_inv,found,1e-5);
+        EjmlUnitTests.assertEquals(A_inv,found,UtilEjml.TEST_64F_SQ);
     }
 
     @Test
@@ -145,10 +145,10 @@ public abstract class BaseCholeskySolveTests_D64 {
         DenseMatrix64F B = CommonOps_D64.diag(3,2,0.001);
 
         assertTrue(solver.setA(A));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(B));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertTrue(qualityB < qualityA);
     }
@@ -163,10 +163,10 @@ public abstract class BaseCholeskySolveTests_D64 {
         CommonOps_D64.scale(0.001,B);
 
         assertTrue(solver.setA(A));
-        double qualityA = solver.quality();
+        double qualityA = (double)solver.quality();
 
         assertTrue(solver.setA(B));
-        double qualityB = solver.quality();
+        double qualityB = (double)solver.quality();
 
         assertEquals(qualityB,qualityA, UtilEjml.TEST_64F);
     }

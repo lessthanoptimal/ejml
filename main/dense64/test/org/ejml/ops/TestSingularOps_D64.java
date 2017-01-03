@@ -85,16 +85,16 @@ public class TestSingularOps_D64 {
 
         // extract array of singular values
         for( int i = 0; i < singularValues.length; i++ )
-            singularValues[i] = W.get(i,i);
+            singularValues[i] = (double)W.get(i,i);
         
         // put into descending order
         if( testArray ) {
-            SingularOps_D64.descendingOrder(U.getMatrix(),false,singularValues,minLength,V.getMatrix(),false);
+            SingularOps_D64.descendingOrder(U.matrix_F64(),false,singularValues,minLength,V.matrix_F64(),false);
             // put back into W
             for( int i = 0; i < singularValues.length; i++ )
                 W.set(i,i,singularValues[i]);
         } else {
-            SingularOps_D64.descendingOrder(U.getMatrix(),false,W.getMatrix(),V.getMatrix(),false);
+            SingularOps_D64.descendingOrder(U.matrix_F64(),false,W.matrix_F64(),V.matrix_F64(),false);
         }
 
         // see if it changed the results
@@ -133,7 +133,7 @@ public class TestSingularOps_D64 {
 
         // extract array of singular values
         for( int i = 0; i < singularValues.length; i++ )
-            singularValues[i] = S.get(i,i);
+            singularValues[i] = (double)S.get(i,i);
 
         // put into ascending order
         if( tranU ) U = U.transpose();
@@ -141,12 +141,12 @@ public class TestSingularOps_D64 {
 
         // put into descending order
         if( testArray ) {
-            SingularOps_D64.descendingOrder(U.getMatrix(),tranU,singularValues,minLength,V.getMatrix(),tranV);
+            SingularOps_D64.descendingOrder(U.matrix_F64(),tranU,singularValues,minLength,V.matrix_F64(),tranV);
             // put back into S
             for( int i = 0; i < singularValues.length; i++ )
                 S.set(i,i,singularValues[i]);
         } else {
-            SingularOps_D64.descendingOrder(U.getMatrix(),tranU,S.getMatrix(),V.getMatrix(),tranV);
+            SingularOps_D64.descendingOrder(U.matrix_F64(),tranU,S.matrix_F64(),V.matrix_F64(),tranV);
         }
 
         // see if it changed the results
@@ -186,16 +186,16 @@ public class TestSingularOps_D64 {
         // put in a NaN
         S.set(2,2,Double.NaN);
 
-        SingularOps_D64.descendingOrder(U.getMatrix(),false,S.getMatrix(),V.getMatrix(),false);
+        SingularOps_D64.descendingOrder(U.matrix_F64(),false,S.matrix_F64(),V.matrix_F64(),false);
 
-        assertTrue( Double.isNaN(S.get(minLength-1,minLength-1)));
+        assertTrue( Double.isNaN((double)S.get(minLength-1,minLength-1)));
 
         // put in an Inf
         S.set(2,2,Double.POSITIVE_INFINITY);
 
-        SingularOps_D64.descendingOrder(U.getMatrix(),false,S.getMatrix(),V.getMatrix(),false);
+        SingularOps_D64.descendingOrder(U.matrix_F64(),false,S.matrix_F64(),V.matrix_F64(),false);
 
-        assertTrue( Double.isInfinite(S.get(0,0)));
+        assertTrue( Double.isInfinite((double)S.get(0,0)));
     }
 
 
@@ -289,7 +289,7 @@ public class TestSingularOps_D64 {
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createRandom(numRows,numCols,rand));
 
                 SingularValueDecomposition_F64<DenseMatrix64F> svd = DecompositionFactory_D64.svd(A.numRows(), A.numCols(),true,true,false);
-                assertTrue(svd.decompose(A.getMatrix()));
+                assertTrue(svd.decompose(A.matrix_F64()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
@@ -334,7 +334,7 @@ public class TestSingularOps_D64 {
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createRandom(numRows,numCols,rand));
 
                 SingularValueDecomposition_F64<DenseMatrix64F> svd = DecompositionFactory_D64.svd(A.numRows(), A.numCols(),true,true,false);
-                assertTrue(svd.decompose(A.getMatrix()));
+                assertTrue(svd.decompose(A.matrix_F64()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
@@ -347,10 +347,10 @@ public class TestSingularOps_D64 {
                 A=U.mult(S).mult(Vt);
 
                 // now find the null space
-                SimpleMatrix ns = SimpleMatrix.wrap(SingularOps_D64.nullSpace(svd,null,1e-15));
+                SimpleMatrix ns = SimpleMatrix.wrap(SingularOps_D64.nullSpace(svd,null,UtilEjml.EPS));
 
                 // make sure the null space is not all zero
-                assertTrue( Math.abs(CommonOps_D64.elementMaxAbs(ns.getMatrix())) > 0 );
+                assertTrue( Math.abs(CommonOps_D64.elementMaxAbs(ns.matrix_F64())) > 0 );
 
                 // check the null space's size
                 assertEquals(ns.numRows(),A.numCols());
@@ -358,7 +358,7 @@ public class TestSingularOps_D64 {
 
                 // see if the results are null
                 SimpleMatrix found = A.mult(ns);
-                assertTrue( Math.abs(CommonOps_D64.elementMaxAbs(found.getMatrix())) <= 1e-15 );
+                assertTrue( Math.abs(CommonOps_D64.elementMaxAbs(found.matrix_F64())) <= 10*UtilEjml.EPS );
             }
         }
     }
