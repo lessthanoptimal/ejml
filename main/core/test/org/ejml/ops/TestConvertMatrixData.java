@@ -16,25 +16,18 @@
  * limitations under the License.
  */
 
-package org.ejml.simple;
+package org.ejml.ops;
 
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
-public class UtilSimpleMatrix {
-    /**
-     * <p>Converts the block matrix into a SimpleMatrix.</p>
-     *
-     * @param A Block matrix that is being converted.  Not modified.
-     * @return Equivalent SimpleMatrix.
-     */
-    public static SimpleMatrix convertSimple( BlockMatrix64F A ) {
-        DenseMatrix64F B = ConvertMatrixStruct_F64.convert(A, null);
-
-        return SimpleMatrix.wrap(B);
+public class TestConvertMatrixData {
+    @Test
+    public void stuff() {
+        fail("implement");
     }
 }

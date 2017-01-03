@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.FixedMatrix64F;
 import org.ejml.data.RealMatrix64F;
 import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.ConvertMatrixType_F64;
+import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
@@ -185,7 +185,7 @@ public abstract class CompareFixedToCommonOps_D64 {
                 }
                 DenseMatrix64F m = RandomMatrices_D64.createRandom(f.getNumRows(), f.getNumCols(), rand);
 
-                ConvertMatrixType_F64.convert(m, f);
+                ConvertMatrixStruct_F64.convert(m, f);
                 inputsFixed[i] = f;
                 inputsCommon[i] = m;
             } else if( double.class == typesFixed[i] ) {
@@ -240,7 +240,7 @@ public abstract class CompareFixedToCommonOps_D64 {
 
             FixedMatrix64F f = (FixedMatrix64F)a;
             DenseMatrix64F m = new DenseMatrix64F(f.getNumRows(),f.getNumCols());
-            ConvertMatrixType_F64.convert(f,m);
+            ConvertMatrixStruct_F64.convert(f,m);
             m.numRows = bb.numRows;
             m.numCols = bb.numCols;
 

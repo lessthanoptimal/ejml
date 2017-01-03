@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -173,11 +173,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public SimpleMatrix( Matrix orig ) {
         if( orig instanceof BlockMatrix64F ) {
             DenseMatrix64F a = new DenseMatrix64F(orig.getNumRows(), orig.getNumCols());
-            ConvertMatrixType_F64.convert((BlockMatrix64F) orig, a);
+            ConvertMatrixStruct_F64.convert((BlockMatrix64F) orig, a);
             this.mat = a;
         } else if( orig instanceof BlockMatrix32F ) {
             DenseMatrix32F a = new DenseMatrix32F(orig.getNumRows(),orig.getNumCols());
-            ConvertMatrixType_F32.convert((BlockMatrix32F)orig, a);
+            ConvertMatrixStruct_F32.convert((BlockMatrix32F)orig, a);
             this.mat = a;
         } else {
             this.mat = orig.copy();

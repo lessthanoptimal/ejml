@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestConvertMatrixType {
+public class TestConvertMatrixStruct_F64 {
 
     Random rand = new Random(234);
 
@@ -45,14 +45,14 @@ public class TestConvertMatrixType {
         DenseMatrix64F a = new DenseMatrix64F(2,3,true,1,2,3,4,5,6);
         DenseMatrix64F b = new DenseMatrix64F(2,3);
 
-        ConvertMatrixType_F64.convert((RealMatrix64F)a,(RealMatrix64F)b);
+        ConvertMatrixStruct_F64.convert((RealMatrix64F)a,(RealMatrix64F)b);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(a,b,1e-12));
+        assertTrue(MatrixFeatures_D64.isIdentical(a,b,UtilEjml.TEST_64F));
     }
 
     @Test
     public void checkAll_Fixed_to_DM() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertMatrixType_F64.class.getMethods();
+        Method[] methods = ConvertMatrixStruct_F64.class.getMethods();
 
         int numFound = 0;
 
@@ -90,7 +90,7 @@ public class TestConvertMatrixType {
 
     @Test
     public void checkAll_DM_to_Fixed() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertMatrixType_F64.class.getMethods();
+        Method[] methods = ConvertMatrixStruct_F64.class.getMethods();
 
         int numFound = 0;
 
@@ -133,7 +133,7 @@ public class TestConvertMatrixType {
                 BlockMatrix64F a = MatrixOps_B64.createRandom(rows,cols,-1,2,rand);
                 DenseMatrix64F b = new DenseMatrix64F(rows,cols);
 
-                ConvertMatrixType_F64.convert(a,b);
+                ConvertMatrixStruct_F64.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -147,7 +147,7 @@ public class TestConvertMatrixType {
                 DenseMatrix64F a = RandomMatrices_D64.createRandom(rows,cols,rand);
                 BlockMatrix64F b = new BlockMatrix64F(rows,cols,3);
 
-                ConvertMatrixType_F64.convert(a,b);
+                ConvertMatrixStruct_F64.convert(a,b);
 
                 checkIdentical(a,b);
             }

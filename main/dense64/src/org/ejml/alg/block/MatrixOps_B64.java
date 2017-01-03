@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.data.BlockMatrix64F;
 import org.ejml.data.D1Submatrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.ConvertMatrixType_F64;
+import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -44,7 +44,7 @@ public class MatrixOps_B64 {
      */
     public static void convert( DenseMatrix64F src , BlockMatrix64F dst )
     {
-        ConvertMatrixType_F64.convert(src,dst);
+        ConvertMatrixStruct_F64.convert(src,dst);
     }
 
     /**
@@ -95,7 +95,7 @@ public class MatrixOps_B64 {
      */
     public static DenseMatrix64F convert( BlockMatrix64F src , DenseMatrix64F dst )
     {
-        return ConvertMatrixType_F64.convert(src,dst);
+        return ConvertMatrixStruct_F64.convert(src,dst);
     }
 
     /**

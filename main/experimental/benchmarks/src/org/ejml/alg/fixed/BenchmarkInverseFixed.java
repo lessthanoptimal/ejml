@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.FixedMatrix3x3_64F;
 import org.ejml.data.FixedMatrix4x4_64F;
 import org.ejml.data.FixedMatrix6x6_64F;
 import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.ConvertMatrixType_F64;
+import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -99,14 +99,14 @@ public class BenchmarkInverseFixed {
         RandomMatrices_D64.setRandom(dm6x6_a,rand);
         RandomMatrices_D64.setRandom(dm6x6_b,rand);
 
-        ConvertMatrixType_F64.convert(dm3x3_a,fixed3x3_a);
-        ConvertMatrixType_F64.convert(dm3x3_b,fixed3x3_b);
+        ConvertMatrixStruct_F64.convert(dm3x3_a,fixed3x3_a);
+        ConvertMatrixStruct_F64.convert(dm3x3_b,fixed3x3_b);
 
-        ConvertMatrixType_F64.convert(dm4x4_a,fixed4x4_a);
-        ConvertMatrixType_F64.convert(dm4x4_b,fixed4x4_b);
+        ConvertMatrixStruct_F64.convert(dm4x4_a,fixed4x4_a);
+        ConvertMatrixStruct_F64.convert(dm4x4_b,fixed4x4_b);
 
-        ConvertMatrixType_F64.convert(dm6x6_a,fixed6x6_a);
-        ConvertMatrixType_F64.convert(dm6x6_b,fixed6x6_b);
+        ConvertMatrixStruct_F64.convert(dm6x6_a,fixed6x6_a);
+        ConvertMatrixStruct_F64.convert(dm6x6_b,fixed6x6_b);
 
         int numTrials = 100000;
 

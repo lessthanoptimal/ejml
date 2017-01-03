@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.ejml.data.*;
  *
  * @author Peter Abeles
  */
-public class ConvertMatrixType_F64 {
+public class ConvertMatrixStruct_F64 {
 
     /**
      * Generic, but slow, conversion function.
