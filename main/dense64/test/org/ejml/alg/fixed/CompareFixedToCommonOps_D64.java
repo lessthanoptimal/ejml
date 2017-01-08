@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * @author Peter Abeles
  */
-public abstract class CompareFixedToCommonOps_D64 extends CompareFixed {
+public abstract class CompareFixedToCommonOps_D64 extends CompareFixed_D64 {
 
     public CompareFixedToCommonOps_D64(Class classFixed) {
         super(classFixed, CommonOps_D64.class);

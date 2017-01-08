@@ -68,7 +68,7 @@ public class FixedNormOps3_D64 {
         sum += a21*a21 + a22*a22 + a23*a23;
         sum += a31*a31 + a32*a32 + a33*a33;
 
-        return scale*Math.sqrt(sum);
+        return scale * Math.sqrt(sum);
     }
 
     public static double normF( FixedMatrix3_F64 M ) {
@@ -80,7 +80,7 @@ public class FixedNormOps3_D64 {
         double a1 = M.a1/scale, a2 = M.a2/scale, a3 = M.a3/scale;
         double sum = a1*a1 + a2*a2 + a3*a3;
 
-        return scale*Math.sqrt(sum);
+        return scale * Math.sqrt(sum);
     }
 
 }

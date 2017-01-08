@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * @author Peter Abeles
  */
-public abstract class CompareFixedToNormOps_D64 extends CompareFixed {
+public abstract class CompareFixedToNormOps_D64 extends CompareFixed_D64 {
 
     public CompareFixedToNormOps_D64(Class classFixed) {
         super(classFixed, NormOps_D64.class);

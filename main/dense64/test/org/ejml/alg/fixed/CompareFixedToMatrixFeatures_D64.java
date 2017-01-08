@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author Peter Abeles
  */
 // TODO this should be improved by creating custom matrices for many of these functions.
-public abstract class CompareFixedToMatrixFeatures_D64 extends CompareFixed {
+public abstract class CompareFixedToMatrixFeatures_D64 extends CompareFixed_D64 {
 
     public CompareFixedToMatrixFeatures_D64(Class classFixed) {
         super(classFixed, MatrixFeatures_D64.class);

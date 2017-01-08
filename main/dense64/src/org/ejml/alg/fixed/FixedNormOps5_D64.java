@@ -74,7 +74,7 @@ public class FixedNormOps5_D64 {
         sum += a41*a41 + a42*a42 + a43*a43 + a44*a44 + a45*a45;
         sum += a51*a51 + a52*a52 + a53*a53 + a54*a54 + a55*a55;
 
-        return scale*Math.sqrt(sum);
+        return scale * Math.sqrt(sum);
     }
 
     public static double normF( FixedMatrix5_F64 M ) {
@@ -86,7 +86,7 @@ public class FixedNormOps5_D64 {
         double a1 = M.a1/scale, a2 = M.a2/scale, a3 = M.a3/scale, a4 = M.a4/scale, a5 = M.a5/scale;
         double sum = a1*a1 + a2*a2 + a3*a3 + a4*a4 + a5*a5;
 
-        return scale*Math.sqrt(sum);
+        return scale * Math.sqrt(sum);
     }
 
 }

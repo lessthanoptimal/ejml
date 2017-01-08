@@ -36,14 +36,14 @@ import static org.junit.Assert.fail;
 /**
  * @author Peter Abeles
  */
-public class CompareFixed {
+public class CompareFixed_D64 {
     Random rand = new Random(234);
 
     Class classFixed;
     Class classDense;
     int N;
 
-    public CompareFixed(Class classFixed, Class classDense ) {
+    public CompareFixed_D64(Class classFixed, Class classDense ) {
         this.classFixed = classFixed;
         this.classDense = classDense;
 

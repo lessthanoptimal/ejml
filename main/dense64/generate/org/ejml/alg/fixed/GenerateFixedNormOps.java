@@ -148,7 +148,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
         }
         out.print(
                 "\n" +
-                "        return scale*Math.sqrt(sum);\n" +
+                "        return scale * Math.sqrt(sum);\n" +
                 "    }\n\n");
     }
 
@@ -179,7 +179,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
         }
 
         out.print("\n" +
-                "        return scale*Math.sqrt(sum);\n" +
+                "        return scale * Math.sqrt(sum);\n" +
                 "    }\n\n");
     }
 
