@@ -25,13 +25,15 @@ Date format: year/month/day
   <Data Format>Matrix_<Float Format>
   <Data Format>  = Row, Fixed, Block
   <Float Format> = F32, F64
+  e.g. DenseMatrix64F -> RowMatrix_F64
 - Operation Naming scheme
   <Class Name>_<matrix type>
   <matrix type> = R32,R64 = dense row major real
                 = CR32,CR64 = dense row major complex
                 = B32,B64 = dense block row major real
                 = CB32,CB64 = dense block row major complex
-- Added script which will perform most of the refactorings require via search and replace
+  e.g. CommonOps -> CommonOps_R64
+- A script hs been provided that will perform most of the refactorings:
   convert_to_ejml31.py
 
 - TODO Add support for matrix norms to Equations
