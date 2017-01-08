@@ -720,7 +720,8 @@ public class GenerateFixedOps extends GenerateFixed {
             for( int x = 1; x <= dimen; x++ ) {
                 if( y == 1 && x == 1 )
                     continue;
-                out.print("        max = Math.max(max,a.a"+y+""+x+");\n");
+                String e = "a.a"+y+""+x;
+                out.print("        if( "+e+" > max ) max = "+e+";\n");
             }
         }
         out.print("\n" +
@@ -743,7 +744,8 @@ public class GenerateFixedOps extends GenerateFixed {
 
         out.print("        double max = a.a1;\n");
         for( int y = 2; y <= dimen; y++ ) {
-            out.print("        max = Math.max(max,a.a"+y+");\n");
+            String e = "a.a"+y;
+            out.print("        if( "+e+" > max ) max = "+e+";\n");
         }
         out.print("\n" +
                 "        return max;\n" +

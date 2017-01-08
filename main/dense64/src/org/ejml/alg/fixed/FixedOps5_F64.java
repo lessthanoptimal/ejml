@@ -923,30 +923,30 @@ public class FixedOps5_F64 {
      */
     public static double elementMax( FixedMatrix5x5_F64 a ) {
         double max = a.a11;
-        max = Math.max(max,a.a12);
-        max = Math.max(max,a.a13);
-        max = Math.max(max,a.a14);
-        max = Math.max(max,a.a15);
-        max = Math.max(max,a.a21);
-        max = Math.max(max,a.a22);
-        max = Math.max(max,a.a23);
-        max = Math.max(max,a.a24);
-        max = Math.max(max,a.a25);
-        max = Math.max(max,a.a31);
-        max = Math.max(max,a.a32);
-        max = Math.max(max,a.a33);
-        max = Math.max(max,a.a34);
-        max = Math.max(max,a.a35);
-        max = Math.max(max,a.a41);
-        max = Math.max(max,a.a42);
-        max = Math.max(max,a.a43);
-        max = Math.max(max,a.a44);
-        max = Math.max(max,a.a45);
-        max = Math.max(max,a.a51);
-        max = Math.max(max,a.a52);
-        max = Math.max(max,a.a53);
-        max = Math.max(max,a.a54);
-        max = Math.max(max,a.a55);
+        if( a.a12 > max ) max = a.a12;
+        if( a.a13 > max ) max = a.a13;
+        if( a.a14 > max ) max = a.a14;
+        if( a.a15 > max ) max = a.a15;
+        if( a.a21 > max ) max = a.a21;
+        if( a.a22 > max ) max = a.a22;
+        if( a.a23 > max ) max = a.a23;
+        if( a.a24 > max ) max = a.a24;
+        if( a.a25 > max ) max = a.a25;
+        if( a.a31 > max ) max = a.a31;
+        if( a.a32 > max ) max = a.a32;
+        if( a.a33 > max ) max = a.a33;
+        if( a.a34 > max ) max = a.a34;
+        if( a.a35 > max ) max = a.a35;
+        if( a.a41 > max ) max = a.a41;
+        if( a.a42 > max ) max = a.a42;
+        if( a.a43 > max ) max = a.a43;
+        if( a.a44 > max ) max = a.a44;
+        if( a.a45 > max ) max = a.a45;
+        if( a.a51 > max ) max = a.a51;
+        if( a.a52 > max ) max = a.a52;
+        if( a.a53 > max ) max = a.a53;
+        if( a.a54 > max ) max = a.a54;
+        if( a.a55 > max ) max = a.a55;
 
         return max;
     }
@@ -963,10 +963,10 @@ public class FixedOps5_F64 {
      */
     public static double elementMax( FixedMatrix5_F64 a ) {
         double max = a.a1;
-        max = Math.max(max,a.a2);
-        max = Math.max(max,a.a3);
-        max = Math.max(max,a.a4);
-        max = Math.max(max,a.a5);
+        if( a.a2 > max ) max = a.a2;
+        if( a.a3 > max ) max = a.a3;
+        if( a.a4 > max ) max = a.a4;
+        if( a.a5 > max ) max = a.a5;
 
         return max;
     }

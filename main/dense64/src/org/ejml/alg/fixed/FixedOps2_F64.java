@@ -514,9 +514,9 @@ public class FixedOps2_F64 {
      */
     public static double elementMax( FixedMatrix2x2_F64 a ) {
         double max = a.a11;
-        max = Math.max(max,a.a12);
-        max = Math.max(max,a.a21);
-        max = Math.max(max,a.a22);
+        if( a.a12 > max ) max = a.a12;
+        if( a.a21 > max ) max = a.a21;
+        if( a.a22 > max ) max = a.a22;
 
         return max;
     }
@@ -533,7 +533,7 @@ public class FixedOps2_F64 {
      */
     public static double elementMax( FixedMatrix2_F64 a ) {
         double max = a.a1;
-        max = Math.max(max,a.a2);
+        if( a.a2 > max ) max = a.a2;
 
         return max;
     }
