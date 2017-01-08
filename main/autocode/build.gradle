@@ -9,6 +9,6 @@ idea {
 }
 
 task(autogenerate, dependsOn: 'classes', type: JavaExec) {
-    main = 'org.ejml.GenerateCode32F'
+    main = 'org.ejml.GenerateCode32'
     classpath = sourceSets.main.runtimeClasspath
 }

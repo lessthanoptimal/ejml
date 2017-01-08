@@ -59,6 +59,7 @@ Or you can include the required modules individually
 core             | Contains core data structures
 dense32          | Algorithms for dense real 32-bit floats
 dense64          | Algorithms for dense real 64-bit floats
+denseC32         | Algorithms for dense complex 32-bit floats
 denseC64         | Algorithms for dense complex 64-bit floats
 equation         | Equations interface
 simple           | Object oriented SimpleMatrix interface
