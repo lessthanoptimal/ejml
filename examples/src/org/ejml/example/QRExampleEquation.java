@@ -62,12 +62,12 @@ public class QRExampleEquation {
 
             // Place the column that should be zeroed into v
             eq.process("v=QR(i:,i)");
+            eq.process("maxV=max(abs(v))");
+
             // Note that v is lazily created above.  Need direct access to it, which is done below.
             RowMatrix_F64 v = eq.lookupMatrix("v");
 
-            double maxV = CommonOps_R64.elementMaxAbs(v);
-            eq.alias(maxV,"maxV");
-
+            double maxV = eq.lookupDouble("maxV");
             if( maxV > 0 && v.getNumElements() > 1 ) {
                 // normalize to reduce overflow issues
                 eq.process("v=v/maxV");

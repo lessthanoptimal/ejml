@@ -138,8 +138,11 @@ public class GenerateCode32 {
     }
 
     public static void recursiveDelete( File d , boolean first ) {
-        if( first )
-            System.out.println("Cleaning out "+d.getPath());
+        if( first ) {
+            System.out.println("Cleaning out " + d.getPath());
+            if( !d.exists() )
+                return;
+        }
         if( !d.isDirectory() )
             throw new RuntimeException("Expected directory at "+d);
 
