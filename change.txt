@@ -9,7 +9,7 @@ Date format: year/month/day
 - Added SimpleEVD.getEigenvalues()
 - Added SimpleSVD.getSingularValues()
 - Fixed issue with generics and SimpleEVD and SimpleSVD
-- Auto coded 32F support
+- Auto coded 32-bit support
   * real and complex numbers
   * core data structures
   * dense matrix operations
@@ -25,6 +25,8 @@ Date format: year/month/day
   <matrix type> = D32,D64 = dense row major real
                 = CD32,CD64 = dense row major complex
                 = B32,B64 = dense block real
+- Added script which will perform most of the refactorings require via search and replace
+  convert_to_ejml31.py
 
 - TODO Add support for matrix norms to Equations
 
