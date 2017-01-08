@@ -72,7 +72,7 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps3_R64.invert(a,b);
+            FixedOps3_F64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
@@ -83,7 +83,7 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps4_R64.invert(a,b);
+            FixedOps4_F64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
@@ -108,13 +108,13 @@ public class BenchmarkInverseFixed {
         ConvertMatrixStruct_F64.convert(dm6x6_a,fixed6x6_a);
         ConvertMatrixStruct_F64.convert(dm6x6_b,fixed6x6_b);
 
-        int numTrials = 100000;
+        int numTrials = 100000000;
 
-        System.out.println("Dense 3x3 = "+benchmark(dm3x3_a,dm3x3_b,numTrials));
         System.out.println("Fixed 3x3 = "+benchmark(fixed3x3_a,fixed3x3_b,numTrials));
+        System.out.println("Dense 3x3 = "+benchmark(dm3x3_a,dm3x3_b,numTrials));
 
-        System.out.println("Dense 4x4 = "+benchmark(dm4x4_a,dm4x4_b,numTrials));
         System.out.println("Fixed 4x4 = "+benchmark(fixed4x4_a,fixed4x4_b,numTrials));
+        System.out.println("Dense 4x4 = "+benchmark(dm4x4_a,dm4x4_b,numTrials));
 
     }
 }

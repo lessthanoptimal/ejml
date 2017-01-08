@@ -18,28 +18,38 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.CodeGeneratorBase;
+import org.ejml.UtilEjml;
+import org.ejml.data.FixedMatrix3_F64;
+import org.ejml.data.FixedMatrix3x3_F64;
+import org.junit.Test;
 
-import java.io.FileNotFoundException;
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Abeles
  */
-public abstract class GenerateFixed extends CodeGeneratorBase {
-    protected String classPreamble;
+public class TestFixedOps3_F64 extends CompareFixedToCommonOps_F64 {
 
-    protected String nameMatrix;
-    protected String nameVector;
+    Random rand = new Random(234);
 
-    public GenerateFixed(String classPreamble) {
-        this.classPreamble = classPreamble;
+    public TestFixedOps3_F64() {
+        super(FixedOps3_F64.class);
     }
 
-    void setClassNames( int dimen ) throws FileNotFoundException {
-        String nameClass = classPreamble+dimen+"_F64";
-        nameMatrix = "FixedMatrix"+dimen+"x"+dimen+"_F64";
-        nameVector = "FixedMatrix"+dimen+"_F64";
+    @Test
+    public void diag() {
+        FixedMatrix3x3_F64 m = new FixedMatrix3x3_F64(1,2,3,4,5,6,7,8,9);
+        FixedMatrix3_F64 found = new FixedMatrix3_F64();
 
-        setOutputFile(nameClass);
+        FixedOps3_F64.diag(m,found);
+
+        assertEquals(1,found.a1, UtilEjml.TEST_F64);
+        assertEquals(5,found.a2,UtilEjml.TEST_F64);
+        assertEquals(9,found.a3,UtilEjml.TEST_F64);
     }
+
+
+
 }

@@ -17,6 +17,10 @@ Date format: year/month/day
 - Massive refactoring to support auto coding of F32
 - Added FixedFeatures*
 - Added FixedNormOps*
+- FixedOps
+  * Discovered a bug in a unit test
+  * Fixed bugs in elementAbsMax() elementAbsMin() trace()
+  * Improved the speed of element-wise max and min operations
 - New naming for matrices
   <Data Format>Matrix_<Float Format>
   <Data Format>  = Row, Fixed, Block

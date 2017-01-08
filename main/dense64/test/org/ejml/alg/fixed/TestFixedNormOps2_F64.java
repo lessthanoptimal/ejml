@@ -18,28 +18,13 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.CodeGeneratorBase;
-
-import java.io.FileNotFoundException;
-
 /**
  * @author Peter Abeles
  */
-public abstract class GenerateFixed extends CodeGeneratorBase {
-    protected String classPreamble;
+public class TestFixedNormOps2_F64 extends CompareFixedToNormOps_F64 {
 
-    protected String nameMatrix;
-    protected String nameVector;
-
-    public GenerateFixed(String classPreamble) {
-        this.classPreamble = classPreamble;
+    public TestFixedNormOps2_F64() {
+        super(FixedNormOps2_F64.class);
     }
 
-    void setClassNames( int dimen ) throws FileNotFoundException {
-        String nameClass = classPreamble+dimen+"_F64";
-        nameMatrix = "FixedMatrix"+dimen+"x"+dimen+"_F64";
-        nameVector = "FixedMatrix"+dimen+"_F64";
-
-        setOutputFile(nameClass);
-    }
 }

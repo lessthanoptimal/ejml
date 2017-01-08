@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.alg.fixed.FixedOps3_R64;
-import org.ejml.alg.fixed.FixedOps6_R64;
+import org.ejml.alg.fixed.FixedOps3_F64;
+import org.ejml.alg.fixed.FixedOps6_F64;
 import org.ejml.data.FixedMatrix3x3_F64;
 import org.ejml.data.FixedMatrix6x6_F64;
 import org.ejml.data.RowMatrix_F64;
@@ -72,21 +72,21 @@ public class MatrixMultFixedBlock {
         extract(B, b00_6,0,0); extract(B, b01_6,0,6);
         extract(B, b10_6,6,0); extract(B,b11_6,6,6);
 
-        FixedOps6_R64.mult(a0_6, b00_6, tmp_6);
-        FixedOps6_R64.multAdd(a1_6, b10_6, tmp_6);
+        FixedOps6_F64.mult(a0_6, b00_6, tmp_6);
+        FixedOps6_F64.multAdd(a1_6, b10_6, tmp_6);
         insert(tmp_6,C,0,0);
 
-        FixedOps6_R64.mult(a0_6, b01_6, tmp_6);
-        FixedOps6_R64.multAdd(a1_6,b11_6, tmp_6);
+        FixedOps6_F64.mult(a0_6, b01_6, tmp_6);
+        FixedOps6_F64.multAdd(a1_6,b11_6, tmp_6);
         insert(tmp_6,C,0,6);
 
         extract(A, a0_6,6,0); extract(A, a1_6,6,6);
-        FixedOps6_R64.mult(a0_6, b01_6, tmp_6);
-        FixedOps6_R64.multAdd(a1_6,b11_6, tmp_6);
+        FixedOps6_F64.mult(a0_6, b01_6, tmp_6);
+        FixedOps6_F64.multAdd(a1_6,b11_6, tmp_6);
         insert(tmp_6,C,6,6);
 
-        FixedOps6_R64.mult(a0_6, b00_6, tmp_6);
-        FixedOps6_R64.multAdd(a1_6, b10_6, tmp_6);
+        FixedOps6_F64.mult(a0_6, b00_6, tmp_6);
+        FixedOps6_F64.multAdd(a1_6, b10_6, tmp_6);
         insert(tmp_6,C,6,0);
     }
 
@@ -105,28 +105,28 @@ public class MatrixMultFixedBlock {
 
     private void computeRow_4x3(RowMatrix_F64 A, RowMatrix_F64 C, int row) {
         extract(A, a0_3,row,0); extract(A, a1_3,row,3); extract(A, a2_3,row,6); extract(A, a3_3,row,9);
-        FixedOps3_R64.mult(a0_3, b00_3, tmp_3);
-        FixedOps3_R64.multAdd(a1_3, b10_3, tmp_3);
-        FixedOps3_R64.multAdd(a2_3, b20_3, tmp_3);
-        FixedOps3_R64.multAdd(a3_3, b30_3, tmp_3);
+        FixedOps3_F64.mult(a0_3, b00_3, tmp_3);
+        FixedOps3_F64.multAdd(a1_3, b10_3, tmp_3);
+        FixedOps3_F64.multAdd(a2_3, b20_3, tmp_3);
+        FixedOps3_F64.multAdd(a3_3, b30_3, tmp_3);
         insert(tmp_3,C,row,0);
 
-        FixedOps3_R64.mult(a0_3, b01_3, tmp_3);
-        FixedOps3_R64.multAdd(a1_3, b11_3, tmp_3);
-        FixedOps3_R64.multAdd(a2_3, b21_3, tmp_3);
-        FixedOps3_R64.multAdd(a3_3, b31_3, tmp_3);
+        FixedOps3_F64.mult(a0_3, b01_3, tmp_3);
+        FixedOps3_F64.multAdd(a1_3, b11_3, tmp_3);
+        FixedOps3_F64.multAdd(a2_3, b21_3, tmp_3);
+        FixedOps3_F64.multAdd(a3_3, b31_3, tmp_3);
         insert(tmp_3,C,row,3);
 
-        FixedOps3_R64.mult(a0_3, b02_3, tmp_3);
-        FixedOps3_R64.multAdd(a1_3, b12_3, tmp_3);
-        FixedOps3_R64.multAdd(a2_3, b22_3, tmp_3);
-        FixedOps3_R64.multAdd(a3_3, b32_3, tmp_3);
+        FixedOps3_F64.mult(a0_3, b02_3, tmp_3);
+        FixedOps3_F64.multAdd(a1_3, b12_3, tmp_3);
+        FixedOps3_F64.multAdd(a2_3, b22_3, tmp_3);
+        FixedOps3_F64.multAdd(a3_3, b32_3, tmp_3);
         insert(tmp_3,C,row,6);
 
-        FixedOps3_R64.mult(a0_3, b03_3, tmp_3);
-        FixedOps3_R64.multAdd(a1_3, b13_3, tmp_3);
-        FixedOps3_R64.multAdd(a2_3, b23_3, tmp_3);
-        FixedOps3_R64.multAdd(a3_3, b33_3, tmp_3);
+        FixedOps3_F64.mult(a0_3, b03_3, tmp_3);
+        FixedOps3_F64.multAdd(a1_3, b13_3, tmp_3);
+        FixedOps3_F64.multAdd(a2_3, b23_3, tmp_3);
+        FixedOps3_F64.multAdd(a3_3, b33_3, tmp_3);
         insert(tmp_3,C,row,9);
     }
 

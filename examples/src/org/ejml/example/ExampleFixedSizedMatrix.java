@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.fixed.FixedOps3_R64;
+import org.ejml.alg.fixed.FixedOps3_F64;
 import org.ejml.data.FixedMatrix3_F64;
 import org.ejml.data.FixedMatrix3x3_F64;
 import org.ejml.data.RowMatrix_F64;
@@ -54,17 +54,17 @@ public class ExampleFixedSizedMatrix {
         a.print();
 
         // most of the standard operations are support
-        FixedOps3_R64.transpose(a,b);
+        FixedOps3_F64.transpose(a,b);
         b.print();
 
-        System.out.println("Determinant = "+ FixedOps3_R64.det(a));
+        System.out.println("Determinant = "+ FixedOps3_F64.det(a));
 
         // matrix-vector operations are also supported
         // Constructors for vectors and matrices can be used to initialize its value
         FixedMatrix3_F64 v = new FixedMatrix3_F64(1,2,3);
         FixedMatrix3_F64 result = new FixedMatrix3_F64();
 
-        FixedOps3_R64.mult(a,v,result);
+        FixedOps3_F64.mult(a,v,result);
 
         // Conversion into RowMatrix_F64 can also be done
         RowMatrix_F64 dm = ConvertMatrixStruct_F64.convert(a,null);

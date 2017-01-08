@@ -79,7 +79,7 @@ public class BenchmarkMultiplicationFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps3_R64.mult(a,b,c);
+            FixedOps3_F64.mult(a,b,c);
         }
 
         return System.currentTimeMillis() - prev;
@@ -90,7 +90,7 @@ public class BenchmarkMultiplicationFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps4_R64.mult(a,b,c);
+            FixedOps4_F64.mult(a,b,c);
         }
 
         return System.currentTimeMillis() - prev;
@@ -101,7 +101,7 @@ public class BenchmarkMultiplicationFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps6_R64.mult(a,b,c);
+            FixedOps6_F64.mult(a,b,c);
         }
 
         return System.currentTimeMillis() - prev;

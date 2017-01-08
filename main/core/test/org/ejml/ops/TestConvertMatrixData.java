@@ -19,9 +19,9 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.fixed.FixedFeatures2_R64;
-import org.ejml.alg.fixed.FixedFeatures3_R64;
-import org.ejml.alg.fixed.FixedFeatures4_R64;
+import org.ejml.alg.fixed.FixedFeatures2_F64;
+import org.ejml.alg.fixed.FixedFeatures3_F64;
+import org.ejml.alg.fixed.FixedFeatures4_F64;
 import org.ejml.data.*;
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class TestConvertMatrixData {
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures2_R64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(FixedFeatures2_F64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class TestConvertMatrixData {
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures3_R64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(FixedFeatures3_F64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TestConvertMatrixData {
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures4_R64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(FixedFeatures4_F64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
 }

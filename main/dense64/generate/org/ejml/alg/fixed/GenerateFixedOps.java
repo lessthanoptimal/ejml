@@ -640,7 +640,7 @@ public class GenerateFixedOps extends GenerateFixed {
                 "    public static double trace( "+nameMatrix+" a ) {\n");
         out.print("        return ");
         for( int i = 1; i <= dimen; i++ ) {
-            out.print("a.a"+i+""+1);
+            out.print("a.a"+i+""+i);
             if( i < dimen )
                 out.print(" + ");
             else
@@ -763,12 +763,13 @@ public class GenerateFixedOps extends GenerateFixed {
                 "     */\n" +
                 "    public static double elementMaxAbs( "+nameMatrix+" a ) {\n");
 
-        out.print("        double max = a.a11;\n");
+        out.print("        double max = Math.abs(a.a11);\n");
+        out.print("        double tmp = Math.abs(a.a12); if( tmp > max ) max = tmp;\n");
         for (int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
-                if( y == 1 && x == 1 )
+                if( y == 1 && x <= 2)
                     continue;
-                out.print("        max = Math.max(max,Math.abs(a.a" + y + "" + x + "));\n");
+                out.print("        tmp = Math.abs(a.a"+y+""+x+"); if( tmp > max ) max = tmp;\n");
             }
         }
         out.print("\n" +
@@ -789,9 +790,10 @@ public class GenerateFixedOps extends GenerateFixed {
                 "     */\n" +
                 "    public static double elementMaxAbs( "+nameVector+" a ) {\n");
 
-        out.print("        double max = a.a1;\n");
+        out.print("        double max = Math.abs(a.a1);\n");
+        out.print("        double tmp = Math.abs(a.a2); if( tmp > max ) max = tmp;\n");
         for( int y = 2; y <= dimen; y++ ) {
-            out.print("        max = Math.max(max,Math.abs(a.a"+y+"));\n");
+            out.print("        tmp = Math.abs(a.a"+y+"); if( tmp > max ) max = tmp;\n");
         }
         out.print("\n" +
                 "        return max;\n" +
@@ -816,7 +818,8 @@ public class GenerateFixedOps extends GenerateFixed {
             for( int x = 1; x <= dimen; x++ ) {
                 if( y == 1 && x == 1 )
                     continue;
-                out.print("        min = Math.min(min, a.a"+y+""+x+");\n");
+                String e = "a.a"+y+""+x;
+                out.print("        if( "+e+" < min ) min = "+e+";\n");
             }
         }
         out.print("\n" +
@@ -839,7 +842,8 @@ public class GenerateFixedOps extends GenerateFixed {
 
         out.print("        double min = a.a1;\n");
         for( int y = 2; y <= dimen; y++ ) {
-            out.print("        min = Math.min(min, a.a"+y+");\n");
+            String e = "a.a"+y;
+            out.print("        if( "+e+" < min ) min = "+e+";\n");
         }
         out.print("\n" +
                 "        return min;\n" +
@@ -859,12 +863,13 @@ public class GenerateFixedOps extends GenerateFixed {
                 "     */\n" +
                 "    public static double elementMinAbs( "+nameMatrix+" a ) {\n");
 
-        out.print("        double min = a.a11;\n");
+        out.print("        double min = Math.abs(a.a11);\n");
+        out.print("        double tmp = Math.abs(a.a12); if( tmp < min ) min = tmp;\n");
         for (int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
-                if( y == 1 && x == 1 )
+                if( y == 1 && x <= 2)
                     continue;
-                out.print("        min = Math.min(min,Math.abs(a.a"+y+""+x+"));\n");
+                out.print("        tmp = Math.abs(a.a"+y+""+x+"); if( tmp < min ) min = tmp;\n");
             }
         }
         out.print("\n" +
@@ -886,9 +891,10 @@ public class GenerateFixedOps extends GenerateFixed {
                 "     */\n" +
                 "    public static double elementMinAbs( "+nameVector+" a ) {\n");
 
-        out.print("        double min = a.a1;\n");
+        out.print("        double min = Math.abs(a.a1);\n");
+        out.print("        double tmp = Math.abs(a.a1); if( tmp < min ) min = tmp;\n");
         for( int y = 2; y <= dimen; y++ ) {
-            out.print("        min = Math.min(min,Math.abs(a.a"+y+"));\n");
+            out.print("        tmp = Math.abs(a.a"+y+"); if( tmp < min ) min = tmp;\n");
         }
         out.print("\n" +
                 "        return min;\n" +

@@ -18,28 +18,24 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.CodeGeneratorBase;
-
-import java.io.FileNotFoundException;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.junit.Test;
 
 /**
  * @author Peter Abeles
  */
-public abstract class GenerateFixed extends CodeGeneratorBase {
-    protected String classPreamble;
+// TODO this should be improved by creating custom matrices for many of these functions.
+public abstract class CompareFixedToMatrixFeatures_F64 extends CompareFixed_F64 {
 
-    protected String nameMatrix;
-    protected String nameVector;
-
-    public GenerateFixed(String classPreamble) {
-        this.classPreamble = classPreamble;
+    public CompareFixedToMatrixFeatures_F64(Class classFixed) {
+        super(classFixed, MatrixFeatures_R64.class);
     }
 
-    void setClassNames( int dimen ) throws FileNotFoundException {
-        String nameClass = classPreamble+dimen+"_F64";
-        nameMatrix = "FixedMatrix"+dimen+"x"+dimen+"_F64";
-        nameVector = "FixedMatrix"+dimen+"_F64";
-
-        setOutputFile(nameClass);
+    /**
+     * Compares equivalent functions in FixedOps to CommonOps.  Inputs are randomly generated
+     */
+    @Test
+    public void compareToCommonOps() {
+        compareToCommonOps(4,0);
     }
 }
