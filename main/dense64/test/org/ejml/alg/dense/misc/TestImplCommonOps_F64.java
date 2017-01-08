@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -36,7 +36,7 @@ public class TestImplCommonOps_F64 {
 
     @Test
     public void extract() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5, 5, 0, 1, rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5, 5, 0, 1, rand);
 
         RowMatrix_F64 B = new RowMatrix_F64(3,3);
 

@@ -21,11 +21,11 @@ package org.ejml.alg.dense.decomposition.eig.symm;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
-import org.ejml.ops.SpecializedOps_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
+import org.ejml.ops.SpecializedOps_R64;
 
 import java.util.Date;
 import java.util.Random;
@@ -45,9 +45,9 @@ public class SymmetricEigenStressTest {
         RowMatrix_F64 A = new RowMatrix_F64(N,N);
 
         Random localRand = new Random(seed);
-        RandomMatrices_D64.createSymmetric(A,-1,1,localRand);
+        RandomMatrices_R64.createSymmetric(A,-1,1,localRand);
 
-        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_D64.eig(A.numRows,true);
+        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
 
         System.out.println("Decomposing...");
 
@@ -66,10 +66,10 @@ public class SymmetricEigenStressTest {
             if( !value.isReal())
                 throw new RuntimeException("Complex eigenvalue");
 
-            CommonOps_D64.mult(A,vector,L);
-            CommonOps_D64.scale(value.real,vector,R);
+            CommonOps_R64.mult(A,vector,L);
+            CommonOps_R64.scale(value.real,vector,R);
 
-            double diff = SpecializedOps_D64.diffNormF(L,R)/N;
+            double diff = SpecializedOps_R64.diffNormF(L,R)/N;
 
             if( diff > UtilEjml.EPS*1000 )
                 System.out.println("["+i+"] value = "+value.real+" error = "+diff);
@@ -79,7 +79,7 @@ public class SymmetricEigenStressTest {
 
     public void checkRandomMatrices( int N ) {
         System.out.println("N = "+N);
-        EigenDecomposition_F64 decomp = DecompositionFactory_D64.eig(N,true);
+        EigenDecomposition_F64 decomp = DecompositionFactory_R64.eig(N,true);
 
         RowMatrix_F64 A = new RowMatrix_F64(N,N);
 
@@ -89,14 +89,14 @@ public class SymmetricEigenStressTest {
 
             Random localRand = new Random(seed);
 
-            RandomMatrices_D64.createSymmetric(A,-1,1,localRand);
+            RandomMatrices_R64.createSymmetric(A,-1,1,localRand);
 
             if( !decomp.decompose(A) ) {
                 System.out.println("Decomposition failed");
                 return;
             }
 
-            double error = DecompositionFactory_D64.quality(A,decomp);
+            double error = DecompositionFactory_R64.quality(A,decomp);
             System.out.println("      error = "+error);
             if( error > 0.05 || Double.isNaN(error) || Double.isInfinite(error)) {
                 System.out.println("   Large Error");

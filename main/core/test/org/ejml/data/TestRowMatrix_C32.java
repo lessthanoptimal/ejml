@@ -20,9 +20,9 @@ package org.ejml.data;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_CD32;
-import org.ejml.ops.MatrixFeatures_CD32;
-import org.ejml.ops.RandomMatrices_CD32;
+import org.ejml.ops.CommonOps_CR32;
+import org.ejml.ops.MatrixFeatures_CR32;
+import org.ejml.ops.RandomMatrices_CR32;
 import org.junit.Test;
 
 import java.util.Random;
@@ -188,18 +188,18 @@ public class TestRowMatrix_C32 {
 
     @Test
     public void set_array() {
-        RowMatrix_C32 A = RandomMatrices_CD32.createRandom(3,4,rand);
+        RowMatrix_C32 A = RandomMatrices_CR32.createRandom(3,4,rand);
 
         RowMatrix_C32 B = new RowMatrix_C32(1,1);
         B.set(3,4,true,A.data);
 
-        assertTrue(MatrixFeatures_CD32.isEquals(A,B));
+        assertTrue(MatrixFeatures_CR32.isEquals(A,B));
 
         RowMatrix_C32 A_tran = new RowMatrix_C32(4,3);
-        CommonOps_CD32.transpose(A,A_tran);
+        CommonOps_CR32.transpose(A,A_tran);
 
         B.set(3,4,false,A_tran.data);
 
-        assertTrue(MatrixFeatures_CD32.isEquals(A,B));
+        assertTrue(MatrixFeatures_CR32.isEquals(A,B));
     }
 }

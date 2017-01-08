@@ -18,14 +18,14 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_D64;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_D64;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecomposition_B64_to_D64;
+import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_R64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_R64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecomposition_B64_to_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -38,13 +38,13 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp =  DecompositionFactory_D64.tridiagonal(orig.numRows);
-        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp =  DecompositionFactory_R64.tridiagonal(orig.numRows);
+        SymmetricQRAlgorithmDecomposition_R64 alg = new SymmetricQRAlgorithmDecomposition_R64(decomp,true);
 
         alg.setComputeVectorsWithValues(true);
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_D64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -56,13 +56,13 @@ public class BenchmarkSymmetricEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp =  DecompositionFactory_D64.tridiagonal(orig.numRows);
-        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp =  DecompositionFactory_R64.tridiagonal(orig.numRows);
+        SymmetricQRAlgorithmDecomposition_R64 alg = new SymmetricQRAlgorithmDecomposition_R64(decomp,true);
 
         alg.setComputeVectorsWithValues(false);
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_D64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -71,13 +71,13 @@ public class BenchmarkSymmetricEigenDecomposition {
     }
 
     public static long standardTridiag(RowMatrix_F64 orig , int numTrials ) {
-        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = new TridiagonalDecompositionHouseholder_D64();
-        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = new TridiagonalDecompositionHouseholder_R64();
+        SymmetricQRAlgorithmDecomposition_R64 alg = new SymmetricQRAlgorithmDecomposition_R64(decomp,true);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_D64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -87,13 +87,13 @@ public class BenchmarkSymmetricEigenDecomposition {
 
     public static long blockTridiag(RowMatrix_F64 orig , int numTrials ) {
 
-        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = new TridiagonalDecomposition_B64_to_D64();
-        SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = new TridiagonalDecomposition_B64_to_R64();
+        SymmetricQRAlgorithmDecomposition_R64 alg = new SymmetricQRAlgorithmDecomposition_R64(decomp,true);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_D64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -103,12 +103,12 @@ public class BenchmarkSymmetricEigenDecomposition {
 
     public static long defaultSymm(RowMatrix_F64 orig , int numTrials ) {
 
-        EigenDecomposition<RowMatrix_F64> alg = DecompositionFactory_D64.eig(orig.numCols, true, true);
+        EigenDecomposition<RowMatrix_F64> alg = DecompositionFactory_R64.eig(orig.numCols, true, true);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_D64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -137,7 +137,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            RowMatrix_F64 symMat = RandomMatrices_D64.createSymmetric(w,-1,1,rand);
+            RowMatrix_F64 symMat = RandomMatrices_R64.createSymmetric(w,-1,1,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -53,7 +53,7 @@ public class TestNaiveDeterminant {
         Random rand = new Random(0xff);
 
         for( int i = 1; i <= 5; i++ ) {
-            RowMatrix_F64 A = RandomMatrices_D64.createRandom(i,i,rand);
+            RowMatrix_F64 A = RandomMatrices_R64.createRandom(i,i,rand);
 
             double expected = NaiveDeterminant.recursive(A);
             double found = NaiveDeterminant.leibniz(A);

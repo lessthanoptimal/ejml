@@ -204,7 +204,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * Creates a new identity matrix with the specified size.
      *
-     * @see CommonOps_D64#identity(int)
+     * @see CommonOps_R64#identity(int)
      *
      * @param width The width and height of the matrix.
      * @return An identity matrix.
@@ -212,7 +212,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width ) {
         SimpleMatrix ret = new SimpleMatrix(width,width);
 
-        CommonOps_D64.setIdentity((RowMatrix_F64)ret.mat);
+        CommonOps_R64.setIdentity((RowMatrix_F64)ret.mat);
 
         return ret;
     }
@@ -221,9 +221,9 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix ret = new SimpleMatrix(width,width, type);
 
         if( type == RowMatrix_F64.class )
-            CommonOps_D64.setIdentity((RowMatrix_F64)ret.mat);
+            CommonOps_R64.setIdentity((RowMatrix_F64)ret.mat);
         else
-            CommonOps_D32.setIdentity((RowMatrix_F32)ret.mat);
+            CommonOps_R32.setIdentity((RowMatrix_F32)ret.mat);
 
         return ret;
     }
@@ -238,13 +238,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * To extract the diagonal elements from a matrix see {@link #extractDiag()}.
      * </p>
      *
-     * @see CommonOps_D64#diag(double...)
+     * @see CommonOps_R64#diag(double...)
      *
      * @param vals The values of the diagonal elements.
      * @return A diagonal matrix.
      */
     public static SimpleMatrix diag( double ...vals ) {
-        RowMatrix_F64 m = CommonOps_D64.diag(vals);
+        RowMatrix_F64 m = CommonOps_R64.diag(vals);
         SimpleMatrix ret = wrap(m);
         return ret;
     }
@@ -252,13 +252,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix diag( Class type, double ...vals ) {
         Matrix m;
         if( type == RowMatrix_F64.class )
-            m = CommonOps_D64.diag(vals);
+            m = CommonOps_R64.diag(vals);
         else {
             float f[] = new float[ vals.length ];
             for (int i = 0; i < f.length; i++) {
                 f[i] = (float)vals[i];
             }
-            m = CommonOps_D32.diag(f);
+            m = CommonOps_R32.diag(f);
         }
         SimpleMatrix ret = wrap(m);
         return ret;
@@ -269,7 +269,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
      * </p>
      *
-     * @see RandomMatrices_D64#setRandom(RowMatrix_F64,java.util.Random)
+     * @see RandomMatrices_R64#setRandom(RowMatrix_F64,java.util.Random)
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -279,13 +279,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix random_F64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices_D64.setRandom((RowMatrix_F64)ret.mat,minValue,maxValue,rand);
+        RandomMatrices_R64.setRandom((RowMatrix_F64)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
     public static SimpleMatrix random_F32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols, RowMatrix_F32.class);
-        RandomMatrices_D32.setRandom((RowMatrix_F32)ret.mat,minValue,maxValue,rand);
+        RandomMatrices_R32.setRandom((RowMatrix_F32)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
@@ -295,7 +295,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * and the provided covariance.
      * </p>
      *
-     * @see CovarianceRandomDraw_D64
+     * @see CovarianceRandomDraw_R64
      *
      * @param covariance Covariance of the multivariate normal distribution
      * @return Vector randomly drawn from the distribution
@@ -305,11 +305,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1);
 
         if( covariance.bits() == 64) {
-            CovarianceRandomDraw_D64 draw = new CovarianceRandomDraw_D64(random, (RowMatrix_F64)covariance.getMatrix());
+            CovarianceRandomDraw_R64 draw = new CovarianceRandomDraw_R64(random, (RowMatrix_F64)covariance.getMatrix());
 
             draw.next((RowMatrix_F64)found.getMatrix());
         } else {
-            CovarianceRandomDraw_D32 draw = new CovarianceRandomDraw_D32(random, (RowMatrix_F32)covariance.getMatrix());
+            CovarianceRandomDraw_R32 draw = new CovarianceRandomDraw_R32(random, (RowMatrix_F32)covariance.getMatrix());
 
             draw.next((RowMatrix_F32)found.getMatrix());
         }

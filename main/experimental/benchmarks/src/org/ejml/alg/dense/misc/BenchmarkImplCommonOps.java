@@ -20,8 +20,8 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.data.RealMatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -30,13 +30,13 @@ import java.util.Random;
  */
 public class BenchmarkImplCommonOps {
 
-    public static long extract_DenseMatrix64F(RowMatrix_F64 src , RowMatrix_F64 dst ,
+    public static long extract_RowMatrix_F64(RowMatrix_F64 src , RowMatrix_F64 dst ,
                                               int numTrials) {
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            ImplCommonOps_D64.extract(src, 0, 0, dst, 0, 0, src.numRows, src.numCols);
+            ImplCommonOps_R64.extract(src, 0, 0, dst, 0, 0, src.numRows, src.numCols);
         }
         long curr = System.currentTimeMillis();
 
@@ -60,7 +60,7 @@ public class BenchmarkImplCommonOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.extract(src, 0, src.numRows, 0 , src.numCols, dst, 0, 0 );
+            CommonOps_R64.extract(src, 0, src.numRows, 0 , src.numCols, dst, 0, 0 );
         }
         long curr = System.currentTimeMillis();
 
@@ -73,10 +73,10 @@ public class BenchmarkImplCommonOps {
         RowMatrix_F64 src = new RowMatrix_F64(N,N);
         RowMatrix_F64 dst = new RowMatrix_F64(N,N);
 
-        RandomMatrices_D64.addRandom(src,0,100,rand);
+        RandomMatrices_R64.addRandom(src,0,100,rand);
 
         System.out.println("N = "+N);
-        System.out.println("extract RowMatrix_F64 = "+extract_DenseMatrix64F(src,dst,trials));
+        System.out.println("extract RowMatrix_F64 = "+extract_RowMatrix_F64(src,dst,trials));
         System.out.println("extract Matrix64F      = "+extract_Matrix64F(src,dst,trials));
         System.out.println("extract Common         = "+extract_Common(src, dst, trials));
     }

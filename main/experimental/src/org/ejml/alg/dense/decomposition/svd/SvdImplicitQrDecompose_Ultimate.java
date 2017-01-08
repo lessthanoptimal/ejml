@@ -18,16 +18,16 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
-import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
+import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_R64;
+import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_R64;
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 
 /**
  * <p>
- * Similar to {@link SvdImplicitQrDecompose_D64} but it employs the
+ * Similar to {@link SvdImplicitQrDecompose_R64} but it employs the
  * ultimate shift strategy.  Ultimate shift involves first computing singular values then uses those
  * to quickly compute the U and W matrices.  For EVD this strategy seems to work very well, but for
  * this problem it needs to have little benefit and makes the code more complex.
@@ -44,8 +44,8 @@ public class SvdImplicitQrDecompose_Ultimate
     private int numCols;
     private int smallSide;
 
-    private BidiagonalDecompositionRow_D64 bidiag = new BidiagonalDecompositionRow_D64();
-    private SvdImplicitQrAlgorithm_D64 qralg = new SvdImplicitQrAlgorithm_D64();
+    private BidiagonalDecompositionRow_R64 bidiag = new BidiagonalDecompositionRow_R64();
+    private SvdImplicitQrAlgorithm_R64 qralg = new SvdImplicitQrAlgorithm_R64();
 
     private double diag[];
     private double off[];
@@ -103,7 +103,7 @@ public class SvdImplicitQrDecompose_Ultimate
             return Ut;
 
         U = new RowMatrix_F64(Ut.numCols,Ut.numRows);
-        CommonOps_D64.transpose(Ut,U);
+        CommonOps_R64.transpose(Ut,U);
 
         return U;
     }
@@ -116,7 +116,7 @@ public class SvdImplicitQrDecompose_Ultimate
             return Vt;
 
         V = new RowMatrix_F64(Vt.numCols,Vt.numRows);
-        CommonOps_D64.transpose(Vt,V);
+        CommonOps_R64.transpose(Vt,V);
 
         return V;
     }
@@ -262,7 +262,7 @@ public class SvdImplicitQrDecompose_Ultimate
     private boolean bidiagonalization(RowMatrix_F64 orig, boolean transposed) {
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
-            CommonOps_D64.transpose(orig,A_mod);
+            CommonOps_R64.transpose(orig,A_mod);
         } else {
             A_mod.reshape(orig.numRows,orig.numCols,false);
             A_mod.set(orig);

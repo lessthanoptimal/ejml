@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 /**
  * <p>
  * QR decomposition for {@link BlockMatrix_F64} using householder reflectors.  The decomposition is
- * performed by computing a QR decomposition for each block column as is normally done, see {@link org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_D64}.
+ * performed by computing a QR decomposition for each block column as is normally done, see {@link org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_R64}.
  * The reflectors are then combined and applied to the remainder of the matrix.  This process is repeated
  * until all the block columns have been processed
  * </p>

@@ -19,11 +19,11 @@
 package org.ejml.example;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.NormOps_D64;
-import org.ejml.ops.SingularOps_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.NormOps_R64;
+import org.ejml.ops.SingularOps_R64;
 
 /**
  * <p>
@@ -137,7 +137,7 @@ public class PrincipalComponentAnalysis {
 
         // Compute SVD and save time by not computing U
         SingularValueDecomposition<RowMatrix_F64> svd =
-                DecompositionFactory_D64.svd(A.numRows, A.numCols, false, true, false);
+                DecompositionFactory_R64.svd(A.numRows, A.numCols, false, true, false);
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 
@@ -145,7 +145,7 @@ public class PrincipalComponentAnalysis {
         RowMatrix_F64 W = svd.getW(null);
 
         // Singular values are in an arbitrary order initially
-        SingularOps_D64.descendingOrder(null,false,W,V_t,true);
+        SingularOps_R64.descendingOrder(null,false,W,V_t,true);
 
         // strip off unneeded components and find the basis
         V_t.reshape(numComponents,mean.length,true);
@@ -162,7 +162,7 @@ public class PrincipalComponentAnalysis {
             throw new IllegalArgumentException("Invalid component");
 
         RowMatrix_F64 v = new RowMatrix_F64(1,A.numCols);
-        CommonOps_D64.extract(V_t,which,which+1,0,A.numCols,v,0,0);
+        CommonOps_R64.extract(V_t,which,which+1,0,A.numCols,v,0,0);
 
         return v.data;
     }
@@ -181,9 +181,9 @@ public class PrincipalComponentAnalysis {
         RowMatrix_F64 s = new RowMatrix_F64(A.getNumCols(),1,true,sampleData);
         RowMatrix_F64 r = new RowMatrix_F64(numComponents,1);
 
-        CommonOps_D64.subtract(s, mean, s);
+        CommonOps_R64.subtract(s, mean, s);
 
-        CommonOps_D64.mult(V_t,s,r);
+        CommonOps_R64.mult(V_t,s,r);
 
         return r.data;
     }
@@ -201,10 +201,10 @@ public class PrincipalComponentAnalysis {
         RowMatrix_F64 s = new RowMatrix_F64(A.getNumCols(),1);
         RowMatrix_F64 r = RowMatrix_F64.wrap(numComponents,1,eigenData);
         
-        CommonOps_D64.multTransA(V_t,r,s);
+        CommonOps_R64.multTransA(V_t,r,s);
 
         RowMatrix_F64 mean = RowMatrix_F64.wrap(A.getNumCols(),1,this.mean);
-        CommonOps_D64.add(s,mean,s);
+        CommonOps_R64.add(s,mean,s);
 
         return s.data;
     }
@@ -251,8 +251,8 @@ public class PrincipalComponentAnalysis {
         RowMatrix_F64 dots = new RowMatrix_F64(numComponents,1);
         RowMatrix_F64 s = RowMatrix_F64.wrap(A.numCols,1,sample);
 
-        CommonOps_D64.mult(V_t,s,dots);
+        CommonOps_R64.mult(V_t,s,dots);
 
-        return NormOps_D64.normF(dots);
+        return NormOps_R64.normF(dots);
     }
 }

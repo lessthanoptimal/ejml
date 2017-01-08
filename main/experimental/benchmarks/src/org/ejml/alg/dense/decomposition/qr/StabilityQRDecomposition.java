@@ -22,13 +22,13 @@ import org.ejml.EjmlParameters;
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-import static org.ejml.factory.DecompositionFactory_D64.decomposeSafe;
+import static org.ejml.factory.DecompositionFactory_R64.decomposeSafe;
 
 
 /**
@@ -72,11 +72,11 @@ public class StabilityQRDecomposition {
 
     private static void runAlgorithms( RowMatrix_F64 mat  )
     {
-        System.out.println("qr               = "+ evaluate(new QRDecompositionHouseholder_D64(),mat));
-        System.out.println("qr col           = "+ evaluate(new QRDecompositionHouseholderColumn_D64(),mat));
-        System.out.println("qr pivot col     = "+ evaluate(new QRColPivDecompositionHouseholderColumn_D64(),mat));
-        System.out.println("qr tran          = "+ evaluate(new QRDecompositionHouseholderTran_D64(),mat));
-        System.out.println("qr block         = "+ evaluate(new QRDecomposition_B64_to_D64(),mat));
+        System.out.println("qr               = "+ evaluate(new QRDecompositionHouseholder_R64(),mat));
+        System.out.println("qr col           = "+ evaluate(new QRDecompositionHouseholderColumn_R64(),mat));
+        System.out.println("qr pivot col     = "+ evaluate(new QRColPivDecompositionHouseholderColumn_R64(),mat));
+        System.out.println("qr tran          = "+ evaluate(new QRDecompositionHouseholderTran_R64(),mat));
+        System.out.println("qr block         = "+ evaluate(new QRDecomposition_B64_to_R64(),mat));
     }
 
     public static void main( String args [] ) {
@@ -90,12 +90,12 @@ public class StabilityQRDecomposition {
             double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
             System.out.println("Square matrix");
-            RowMatrix_F64 orig = RandomMatrices_D64.createRandom(2*size,size,-1,1,rand);
+            RowMatrix_F64 orig = RandomMatrices_R64.createRandom(2*size,size,-1,1,rand);
             RowMatrix_F64 mat = orig.copy();
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                CommonOps_D64.scale(scales[i],orig,mat);
+                CommonOps_R64.scale(scales[i],orig,mat);
                 runAlgorithms(mat);
             }
         }

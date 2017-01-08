@@ -22,8 +22,8 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -93,8 +93,8 @@ public class TestQrHouseHolderSolver_B64 {
 
     @Test
     public void testQuality() {
-        BlockMatrix_F64 A = MatrixOps_B64.convert(CommonOps_D64.diag(4,3,2,1),3);
-        BlockMatrix_F64 B = MatrixOps_B64.convert(CommonOps_D64.diag(4,3,2,0.1),3);
+        BlockMatrix_F64 A = MatrixOps_B64.convert(CommonOps_R64.diag(4,3,2,1),3);
+        BlockMatrix_F64 B = MatrixOps_B64.convert(CommonOps_R64.diag(4,3,2,0.1),3);
 
         // see if a matrix with smaller singular value has a worse quality
         QrHouseHolderSolver_B64 solver = new QrHouseHolderSolver_B64();
@@ -113,9 +113,9 @@ public class TestQrHouseHolderSolver_B64 {
      */
     @Test
     public void testQuality_scale() {
-        BlockMatrix_F64 A = MatrixOps_B64.convert(CommonOps_D64.diag(4,3,2,1),3);
+        BlockMatrix_F64 A = MatrixOps_B64.convert(CommonOps_R64.diag(4,3,2,1),3);
         BlockMatrix_F64 B = A.copy();
-        CommonOps_D64.scale(2,B);
+        CommonOps_R64.scale(2,B);
 
         // see if a matrix with smaller singular value has a worse quality
         QrHouseHolderSolver_B64 solver = new QrHouseHolderSolver_B64();
@@ -137,7 +137,7 @@ public class TestQrHouseHolderSolver_B64 {
 
         assertTrue(solver.setA(A));
 
-        boolean modified = !MatrixFeatures_D64.isEquals(A,A_orig);
+        boolean modified = !MatrixFeatures_R64.isEquals(A,A_orig);
 
         assertTrue(modified == solver.modifiesA());
     }
@@ -156,7 +156,7 @@ public class TestQrHouseHolderSolver_B64 {
 
         solver.solve(B,X);
 
-        boolean modified = !MatrixFeatures_D64.isEquals(B_orig,B);
+        boolean modified = !MatrixFeatures_R64.isEquals(B_orig,B);
 
         assertTrue(modified == solver.modifiesB());
     }

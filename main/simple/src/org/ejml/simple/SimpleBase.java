@@ -19,8 +19,8 @@
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.mult.VectorVectorMult_D32;
-import org.ejml.alg.dense.mult.VectorVectorMult_D64;
+import org.ejml.alg.dense.mult.VectorVectorMult_R32;
+import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.data.*;
 import org.ejml.ops.*;
 
@@ -92,7 +92,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * a<sup>T</sup>
      * </p>
      *
-     * @see CommonOps_D64#transpose(RowMatrix_F64, RowMatrix_F64)
+     * @see CommonOps_R64#transpose(RowMatrix_F64, RowMatrix_F64)
      *
      * @return A matrix that is n by m.
      */
@@ -100,9 +100,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = createMatrix(mat.getNumCols(),mat.getNumRows());
 
         if( bits() == 64 )
-            CommonOps_D64.transpose((RowMatrix_F64)mat,(RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.transpose((RowMatrix_F64)mat,(RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.transpose((RowMatrix_F32)mat,(RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.transpose((RowMatrix_F32)mat,(RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -116,7 +116,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_D64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
+     * @see CommonOps_R64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      *
      * @param b A matrix that is n by bn. Not modified.
      *
@@ -126,9 +126,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = createMatrix(mat.getNumRows(),b.getMatrix().getNumCols());
 
         if( bits() == 64 )
-            CommonOps_D64.mult((RowMatrix_F64)mat,(RowMatrix_F64)b.getMatrix(),(RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.mult((RowMatrix_F64)mat,(RowMatrix_F64)b.getMatrix(),(RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.mult((RowMatrix_F32)mat,(RowMatrix_F32)b.getMatrix(),(RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.mult((RowMatrix_F32)mat,(RowMatrix_F32)b.getMatrix(),(RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -140,7 +140,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * C = kron(A,B)
      * </p>
 
-     * @see CommonOps_D64#kron(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
+     * @see CommonOps_R64#kron(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
      *
      * @param B The right matrix in the operation. Not modified.
      * @return Kronecker product between this matrix and B.
@@ -149,9 +149,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols());
 
         if( bits() == 64 )
-            CommonOps_D64.kron((RowMatrix_F64)mat,(RowMatrix_F64)B.getMatrix(),(RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.kron((RowMatrix_F64)mat,(RowMatrix_F64)B.getMatrix(),(RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.kron((RowMatrix_F32)mat,(RowMatrix_F32)B.getMatrix(),(RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.kron((RowMatrix_F32)mat,(RowMatrix_F32)B.getMatrix(),(RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -165,7 +165,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_D64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
+     * @see CommonOps_R64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -175,9 +175,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = copy();
 
         if( bits() == 64 )
-            CommonOps_D64.addEquals((RowMatrix_F64)ret.getMatrix(),(RowMatrix_F64)b.getMatrix());
+            CommonOps_R64.addEquals((RowMatrix_F64)ret.getMatrix(),(RowMatrix_F64)b.getMatrix());
         else
-            CommonOps_D32.addEquals((RowMatrix_F32)ret.getMatrix(),(RowMatrix_F32)b.getMatrix());
+            CommonOps_R32.addEquals((RowMatrix_F32)ret.getMatrix(),(RowMatrix_F32)b.getMatrix());
 
         return ret;
     }
@@ -191,7 +191,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_D64#subtract(D1Matrix_F64, D1Matrix_F64, D1Matrix_F64)
+     * @see CommonOps_R64#subtract(D1Matrix_F64, D1Matrix_F64, D1Matrix_F64)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -201,9 +201,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = copy();
 
         if( bits() == 64 )
-            CommonOps_D64.subtract((RowMatrix_F64)getMatrix(), (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.subtract((RowMatrix_F64)getMatrix(), (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.subtract((RowMatrix_F32)getMatrix(), (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.subtract((RowMatrix_F32)getMatrix(), (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -217,7 +217,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
-     * @see CommonOps_D64#subtract(D1Matrix_F64, double , D1Matrix_F64)
+     * @see CommonOps_R64#subtract(D1Matrix_F64, double , D1Matrix_F64)
      *
      * @param b Value subtracted from each element
      *
@@ -227,9 +227,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = copy();
 
         if( bits() == 64 )
-            CommonOps_D64.subtract((RowMatrix_F64)getMatrix(), b, (RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.subtract((RowMatrix_F64)getMatrix(), b, (RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.subtract((RowMatrix_F32)getMatrix(), (float)b, (RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.subtract((RowMatrix_F32)getMatrix(), (float)b, (RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -243,7 +243,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
-     * @see CommonOps_D64#add( D1Matrix_F64, double , D1Matrix_F64)
+     * @see CommonOps_R64#add( D1Matrix_F64, double , D1Matrix_F64)
      *
      * @param b Value added to each element
      *
@@ -253,9 +253,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = createMatrix(numRows(),numCols());
 
         if( bits() == 64 )
-            CommonOps_D64.add((RowMatrix_F64)getMatrix(), b, (RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.add((RowMatrix_F64)getMatrix(), b, (RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.add((RowMatrix_F32)getMatrix(), (float)b, (RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.add((RowMatrix_F32)getMatrix(), (float)b, (RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -269,7 +269,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_D64#add( D1Matrix_F64, double , D1Matrix_F64, D1Matrix_F64)
+     * @see CommonOps_R64#add( D1Matrix_F64, double , D1Matrix_F64, D1Matrix_F64)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -279,9 +279,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = copy();
 
         if( bits() == 64 )
-            CommonOps_D64.addEquals((RowMatrix_F64)ret.getMatrix(),beta,(RowMatrix_F64)b.getMatrix());
+            CommonOps_R64.addEquals((RowMatrix_F64)ret.getMatrix(),beta,(RowMatrix_F64)b.getMatrix());
         else
-            CommonOps_D32.addEquals((RowMatrix_F32)ret.getMatrix(),(float)beta,(RowMatrix_F32)b.getMatrix());
+            CommonOps_R32.addEquals((RowMatrix_F32)ret.getMatrix(),(float)beta,(RowMatrix_F32)b.getMatrix());
 
         return ret;
     }
@@ -300,9 +300,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         }
 
         if( bits() == 64 )
-            return VectorVectorMult_D64.innerProd((RowMatrix_F64)mat,(RowMatrix_F64)v.getMatrix());
+            return VectorVectorMult_R64.innerProd((RowMatrix_F64)mat,(RowMatrix_F64)v.getMatrix());
         else
-            return VectorVectorMult_D32.innerProd((RowMatrix_F32)mat,(RowMatrix_F32)v.getMatrix());
+            return VectorVectorMult_R32.innerProd((RowMatrix_F32)mat,(RowMatrix_F32)v.getMatrix());
     }
 
     /**
@@ -321,7 +321,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * b<sub>i,j</sub> = val*a<sub>i,j</sub>
      * </p>
      *
-     * @see CommonOps_D64#scale(double, D1Matrix_F64)
+     * @see CommonOps_R64#scale(double, D1Matrix_F64)
      *
      * @param val The multiplication factor.
      * @return The scaled matrix.
@@ -330,9 +330,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = copy();
 
         if( bits() == 64 )
-            CommonOps_D64.scale(val,(RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.scale(val,(RowMatrix_F64)ret.getMatrix());
         else
-            CommonOps_D32.scale((float)val,(RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.scale((float)val,(RowMatrix_F32)ret.getMatrix());
 
         return ret;
     }
@@ -343,7 +343,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * b<sub>i,j</sub> = a<sub>i,j</sub>/val
      * </p>
      *
-     * @see CommonOps_D64#divide(D1Matrix_F64,double)
+     * @see CommonOps_R64#divide(D1Matrix_F64,double)
      *
      * @param val Divisor.
      * @return Matrix with its elements divided by the specified value.
@@ -352,9 +352,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = copy();
 
         if( bits() == 64 )
-            CommonOps_D64.divide((RowMatrix_F64)ret.getMatrix(),val);
+            CommonOps_R64.divide((RowMatrix_F64)ret.getMatrix(),val);
         else
-            CommonOps_D32.divide((RowMatrix_F32)ret.getMatrix(),(float)val);
+            CommonOps_R32.divide((RowMatrix_F32)ret.getMatrix(),(float)val);
 
         return ret;
     }
@@ -371,7 +371,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * if no exception is thrown the matrix could still be singular or nearly singular.
      * </p>
      *
-     * @see CommonOps_D64#invert(RowMatrix_F64, RowMatrix_F64)
+     * @see CommonOps_R64#invert(RowMatrix_F64, RowMatrix_F64)
      *
      * @throws SingularMatrixException
      *
@@ -380,16 +380,16 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T invert() {
         T ret = createMatrix(mat.getNumRows(), mat.getNumCols());
         if (bits() == 64) {
-            if (!CommonOps_D64.invert((RowMatrix_F64)mat, (RowMatrix_F64)ret.getMatrix())) {
+            if (!CommonOps_R64.invert((RowMatrix_F64)mat, (RowMatrix_F64)ret.getMatrix())) {
                 throw new SingularMatrixException();
             }
-            if (MatrixFeatures_D64.hasUncountable((RowMatrix_F64)ret.getMatrix()))
+            if (MatrixFeatures_R64.hasUncountable((RowMatrix_F64)ret.getMatrix()))
                 throw new SingularMatrixException("Solution has uncountable numbers");
         } else {
-            if (!CommonOps_D32.invert((RowMatrix_F32)mat, (RowMatrix_F32)ret.getMatrix())) {
+            if (!CommonOps_R32.invert((RowMatrix_F32)mat, (RowMatrix_F32)ret.getMatrix())) {
                 throw new SingularMatrixException();
             }
-            if (MatrixFeatures_D32.hasUncountable((RowMatrix_F32)ret.getMatrix()))
+            if (MatrixFeatures_R32.hasUncountable((RowMatrix_F32)ret.getMatrix()))
                 throw new SingularMatrixException("Solution has uncountable numbers");
         }
         return ret;
@@ -405,9 +405,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T pseudoInverse() {
         T ret = createMatrix(mat.getNumCols(),mat.getNumRows());
         if (bits() == 64) {
-            CommonOps_D64.pinv((RowMatrix_F64)mat, (RowMatrix_F64)ret.getMatrix());
+            CommonOps_R64.pinv((RowMatrix_F64)mat, (RowMatrix_F64)ret.getMatrix());
         } else {
-            CommonOps_D32.pinv((RowMatrix_F32)mat, (RowMatrix_F32)ret.getMatrix());
+            CommonOps_R32.pinv((RowMatrix_F32)mat, (RowMatrix_F32)ret.getMatrix());
         }
         return ret;
     }
@@ -426,7 +426,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * if no exception is thrown 'a' could still be singular or nearly singular.
      * </p>
      *
-     * @see CommonOps_D64#solve(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
+     * @see CommonOps_R64#solve(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
      *
      * @throws SingularMatrixException
      *
@@ -438,16 +438,16 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T x = createMatrix(mat.getNumCols(),b.getMatrix().getNumCols());
 
         if (bits() == 64) {
-            if (!CommonOps_D64.solve((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)x.getMatrix()))
+            if (!CommonOps_R64.solve((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)x.getMatrix()))
                 throw new SingularMatrixException();
 
-            if (MatrixFeatures_D64.hasUncountable((RowMatrix_F64)x.getMatrix()))
+            if (MatrixFeatures_R64.hasUncountable((RowMatrix_F64)x.getMatrix()))
                 throw new SingularMatrixException("Solution contains uncountable numbers");
         } else {
-            if (!CommonOps_D32.solve((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)x.getMatrix()))
+            if (!CommonOps_R32.solve((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)x.getMatrix()))
                 throw new SingularMatrixException();
 
-            if (MatrixFeatures_D32.hasUncountable((RowMatrix_F32)x.getMatrix()))
+            if (MatrixFeatures_R32.hasUncountable((RowMatrix_F32)x.getMatrix()))
                 throw new SingularMatrixException("Solution contains uncountable numbers");
         }
 
@@ -473,22 +473,22 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * a<sub>ij</sub> = val<br>
      * </p>
      *
-     * @see CommonOps_D64#fill(D1Matrix_F64, double)
+     * @see CommonOps_R64#fill(D1Matrix_F64, double)
      *
      * @param val The value each element is set to.
      */
     public void set( double val ) {
         if (bits() == 64) {
-            CommonOps_D64.fill((RowMatrix_F64)mat, val);
+            CommonOps_R64.fill((RowMatrix_F64)mat, val);
         } else {
-            CommonOps_D32.fill((RowMatrix_F32)mat, (float)val);
+            CommonOps_R32.fill((RowMatrix_F32)mat, (float)val);
         }
     }
 
     /**
      * Sets all the elements in the matrix equal to zero.
      *
-     * @see CommonOps_D64#fill(D1Matrix_F64, double)
+     * @see CommonOps_R64#fill(D1Matrix_F64, double)
      */
     public void zero() {
         if (bits() == 64) {
@@ -505,15 +505,15 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
      * </p>
      *
-     * @see NormOps_D64#normF(D1Matrix_F64)
+     * @see NormOps_R64#normF(D1Matrix_F64)
      *
      * @return The matrix's Frobenius normal.
      */
     public double normF() {
         if (bits() == 64) {
-            return NormOps_D64.normF((RowMatrix_F64)mat);
+            return NormOps_R64.normF((RowMatrix_F64)mat);
         } else {
-            return NormOps_D32.normF((RowMatrix_F32)mat);
+            return NormOps_R32.normF((RowMatrix_F32)mat);
         }
     }
 
@@ -523,34 +523,34 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.
      * </p>
      *
-     * @see NormOps_D64#conditionP2(RowMatrix_F64)
+     * @see NormOps_R64#conditionP2(RowMatrix_F64)
      *
      * @return The condition number.
      */
     public double conditionP2() {
         if (bits() == 64) {
-            return NormOps_D64.conditionP2((RowMatrix_F64)mat);
+            return NormOps_R64.conditionP2((RowMatrix_F64)mat);
         } else {
-            return NormOps_D32.conditionP2((RowMatrix_F32)mat);
+            return NormOps_R32.conditionP2((RowMatrix_F32)mat);
         }
     }
 
     /**
      * Computes the determinant of the matrix.
      *
-     * @see CommonOps_D64#det(RowMatrix_F64)
+     * @see CommonOps_R64#det(RowMatrix_F64)
      *
      * @return The determinant.
      */
     public double determinant() {
         if (bits() == 64) {
-            double ret = CommonOps_D64.det((RowMatrix_F64)mat);
+            double ret = CommonOps_R64.det((RowMatrix_F64)mat);
             // if the decomposition silently failed then the matrix is most likely singular
             if (UtilEjml.isUncountable(ret))
                 return 0;
             return ret;
         } else {
-            double ret = CommonOps_D32.det((RowMatrix_F32)mat);
+            double ret = CommonOps_R32.det((RowMatrix_F32)mat);
             // if the decomposition silently failed then the matrix is most likely singular
             if (UtilEjml.isUncountable(ret))
                 return 0;
@@ -563,15 +563,15 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Computes the trace of the matrix.
      * </p>
      *
-     * @see CommonOps_D64#trace(RowD1Matrix_F64)
+     * @see CommonOps_R64#trace(RowD1Matrix_F64)
      *
      * @return The trace of the matrix.
      */
     public double trace() {
         if (bits() == 64) {
-            return CommonOps_D64.trace((RowMatrix_F64)mat);
+            return CommonOps_R64.trace((RowMatrix_F64)mat);
         } else {
-            return CommonOps_D32.trace((RowMatrix_F32)mat);
+            return CommonOps_R32.trace((RowMatrix_F32)mat);
         }
     }
 
@@ -870,9 +870,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T ret = createMatrix(y1-y0,x1-x0);
 
         if( bits() == 64 ) {
-            CommonOps_D64.extract((RowMatrix_F64)mat, y0, y1, x0, x1, (RowMatrix_F64)ret.getMatrix(), 0, 0);
+            CommonOps_R64.extract((RowMatrix_F64)mat, y0, y1, x0, x1, (RowMatrix_F64)ret.getMatrix(), 0, 0);
         } else {
-            CommonOps_D32.extract((RowMatrix_F32)mat, y0, y1, x0, x1, (RowMatrix_F32)ret.getMatrix(), 0, 0);
+            CommonOps_R32.extract((RowMatrix_F32)mat, y0, y1, x0, x1, (RowMatrix_F32)ret.getMatrix(), 0, 0);
         }
 
         return ret;
@@ -896,15 +896,15 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         if( bits() == 64 ) {
             if (extractRow) {
-                SpecializedOps_D64.subvector((RowMatrix_F64)mat, element, 0, length, true, 0, (RowMatrix_F64)ret.getMatrix());
+                SpecializedOps_R64.subvector((RowMatrix_F64)mat, element, 0, length, true, 0, (RowMatrix_F64)ret.getMatrix());
             } else {
-                SpecializedOps_D64.subvector((RowMatrix_F64)mat, 0, element, length, false, 0, (RowMatrix_F64)ret.getMatrix());
+                SpecializedOps_R64.subvector((RowMatrix_F64)mat, 0, element, length, false, 0, (RowMatrix_F64)ret.getMatrix());
             }
         } else {
             if (extractRow) {
-                SpecializedOps_D32.subvector((RowMatrix_F32)mat, element, 0, length, true, 0, (RowMatrix_F32)ret.getMatrix());
+                SpecializedOps_R32.subvector((RowMatrix_F32)mat, element, 0, length, true, 0, (RowMatrix_F32)ret.getMatrix());
             } else {
-                SpecializedOps_D32.subvector((RowMatrix_F32)mat, 0, element, length, false, 0, (RowMatrix_F32)ret.getMatrix());
+                SpecializedOps_R32.subvector((RowMatrix_F32)mat, 0, element, length, false, 0, (RowMatrix_F32)ret.getMatrix());
             }
         }
 
@@ -916,7 +916,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Extracts the diagonal from this matrix and returns them inside a column vector.
      * </p>
      *
-     * @see CommonOps_D64#extractDiag(RowMatrix_F64, RowMatrix_F64)
+     * @see CommonOps_R64#extractDiag(RowMatrix_F64, RowMatrix_F64)
      * @return Diagonal elements inside a column vector.
      */
     public T extractDiag()
@@ -926,9 +926,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T diag = createMatrix(N,1);
 
         if( bits() == 64 ) {
-            CommonOps_D64.extractDiag((RowMatrix_F64)mat, (RowMatrix_F64)diag.getMatrix());
+            CommonOps_R64.extractDiag((RowMatrix_F64)mat, (RowMatrix_F64)diag.getMatrix());
         } else {
-            CommonOps_D32.extractDiag((RowMatrix_F32)mat, (RowMatrix_F32)diag.getMatrix());
+            CommonOps_R32.extractDiag((RowMatrix_F32)mat, (RowMatrix_F32)diag.getMatrix());
         }
 
         return diag;
@@ -944,9 +944,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public boolean isIdentical(T a, double tol) {
         if( bits() == 64 ) {
-            return MatrixFeatures_D64.isIdentical((RowMatrix_F64)mat, (RowMatrix_F64)a.getMatrix(), tol);
+            return MatrixFeatures_R64.isIdentical((RowMatrix_F64)mat, (RowMatrix_F64)a.getMatrix(), tol);
         } else {
-            return MatrixFeatures_D32.isIdentical((RowMatrix_F32)mat, (RowMatrix_F32)a.getMatrix(), (float)tol);
+            return MatrixFeatures_R32.isIdentical((RowMatrix_F32)mat, (RowMatrix_F32)a.getMatrix(), (float)tol);
         }
     }
 
@@ -957,9 +957,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public boolean hasUncountable() {
         if( bits() == 64 ) {
-            return MatrixFeatures_D64.hasUncountable((RowMatrix_F64)mat);
+            return MatrixFeatures_R64.hasUncountable((RowMatrix_F64)mat);
         } else {
-            return MatrixFeatures_D32.hasUncountable((RowMatrix_F32)mat);
+            return MatrixFeatures_R32.hasUncountable((RowMatrix_F32)mat);
         }
     }
 
@@ -998,9 +998,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public void insertIntoThis(int insertRow, int insertCol, T B) {
         if( bits() == 64 ) {
-            CommonOps_D64.insert((RowMatrix_F64)B.getMatrix(), (RowMatrix_F64)mat, insertRow, insertCol);
+            CommonOps_R64.insert((RowMatrix_F64)B.getMatrix(), (RowMatrix_F64)mat, insertRow, insertCol);
         } else {
-            CommonOps_D32.insert((RowMatrix_F32)B.getMatrix(),(RowMatrix_F32) mat, insertRow, insertCol);
+            CommonOps_R32.insert((RowMatrix_F32)B.getMatrix(),(RowMatrix_F32) mat, insertRow, insertCol);
         }
     }
 
@@ -1064,9 +1064,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public double elementMaxAbs() {
         if( bits() == 64 ) {
-            return CommonOps_D64.elementMaxAbs((RowMatrix_F64)mat);
+            return CommonOps_R64.elementMaxAbs((RowMatrix_F64)mat);
         } else {
-            return CommonOps_D32.elementMaxAbs((RowMatrix_F32)mat);
+            return CommonOps_R32.elementMaxAbs((RowMatrix_F32)mat);
         }
     }
 
@@ -1077,9 +1077,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public double elementSum() {
         if( bits() == 64 ) {
-            return CommonOps_D64.elementSum((RowMatrix_F64)mat);
+            return CommonOps_R64.elementSum((RowMatrix_F64)mat);
         } else {
-            return CommonOps_D32.elementSum((RowMatrix_F32)mat);
+            return CommonOps_R32.elementSum((RowMatrix_F32)mat);
         }
     }
 
@@ -1097,9 +1097,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
         if( bits() == 64 ) {
-            CommonOps_D64.elementMult((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)c.getMatrix());
+            CommonOps_R64.elementMult((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)c.getMatrix());
         } else {
-            CommonOps_D32.elementMult((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)c.getMatrix());
+            CommonOps_R32.elementMult((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)c.getMatrix());
         }
 
         return c;
@@ -1119,9 +1119,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
         if( bits() == 64 ) {
-            CommonOps_D64.elementDiv((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)c.getMatrix());
+            CommonOps_R64.elementDiv((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)c.getMatrix());
         } else {
-            CommonOps_D32.elementDiv((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)c.getMatrix());
+            CommonOps_R32.elementDiv((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)c.getMatrix());
         }
 
         return c;
@@ -1141,9 +1141,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
         if( bits() == 64 ) {
-            CommonOps_D64.elementPower((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)c.getMatrix());
+            CommonOps_R64.elementPower((RowMatrix_F64)mat, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)c.getMatrix());
         } else {
-            CommonOps_D32.elementPower((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)c.getMatrix());
+            CommonOps_R32.elementPower((RowMatrix_F32)mat, (RowMatrix_F32)b.getMatrix(), (RowMatrix_F32)c.getMatrix());
         }
 
         return c;
@@ -1163,9 +1163,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
         if( bits() == 64 ) {
-            CommonOps_D64.elementPower((RowMatrix_F64)mat, b, (RowMatrix_F64)c.getMatrix());
+            CommonOps_R64.elementPower((RowMatrix_F64)mat, b, (RowMatrix_F64)c.getMatrix());
         } else {
-            CommonOps_D32.elementPower((RowMatrix_F32)mat, (float)b, (RowMatrix_F32)c.getMatrix());
+            CommonOps_R32.elementPower((RowMatrix_F32)mat, (float)b, (RowMatrix_F32)c.getMatrix());
         }
 
         return c;
@@ -1184,9 +1184,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
         if( bits() == 64 ) {
-            CommonOps_D64.elementExp((RowMatrix_F64)mat, (RowMatrix_F64)c.getMatrix());
+            CommonOps_R64.elementExp((RowMatrix_F64)mat, (RowMatrix_F64)c.getMatrix());
         } else {
-            CommonOps_D32.elementExp((RowMatrix_F32)mat, (RowMatrix_F32)c.getMatrix());
+            CommonOps_R32.elementExp((RowMatrix_F32)mat, (RowMatrix_F32)c.getMatrix());
         }
 
         return c;
@@ -1205,9 +1205,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         T c = createMatrix(mat.getNumRows(),mat.getNumCols());
 
         if( bits() == 64 ) {
-            CommonOps_D64.elementLog((RowMatrix_F64)mat, (RowMatrix_F64)c.getMatrix());
+            CommonOps_R64.elementLog((RowMatrix_F64)mat, (RowMatrix_F64)c.getMatrix());
         } else {
-            CommonOps_D32.elementLog((RowMatrix_F32)mat, (RowMatrix_F32)c.getMatrix());
+            CommonOps_R32.elementLog((RowMatrix_F32)mat, (RowMatrix_F32)c.getMatrix());
         }
 
         return c;
@@ -1225,9 +1225,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public T negative() {
         T A = copy();
         if( bits() == 64 ) {
-            CommonOps_D64.changeSign((RowMatrix_F64)A.getMatrix());
+            CommonOps_R64.changeSign((RowMatrix_F64)A.getMatrix());
         } else {
-            CommonOps_D32.changeSign((RowMatrix_F32)A.getMatrix());
+            CommonOps_R32.changeSign((RowMatrix_F32)A.getMatrix());
         }
         return A;
     }

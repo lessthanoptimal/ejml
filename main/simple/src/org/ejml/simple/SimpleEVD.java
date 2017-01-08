@@ -19,8 +19,8 @@
 package org.ejml.simple;
 
 import org.ejml.data.*;
-import org.ejml.factory.DecompositionFactory_D32;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R32;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F32;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
@@ -48,9 +48,9 @@ public class SimpleEVD <T extends SimpleBase>
         this.is64 = mat instanceof RowMatrix_F64;
 
         if( is64) {
-            eig = DecompositionFactory_D64.eig(mat.getNumCols(), true);
+            eig = DecompositionFactory_R64.eig(mat.getNumCols(), true);
         } else {
-            eig = DecompositionFactory_D32.eig(mat.getNumCols(), true);
+            eig = DecompositionFactory_R32.eig(mat.getNumCols(), true);
 
         }
         if( !eig.decompose(mat))
@@ -140,9 +140,9 @@ public class SimpleEVD <T extends SimpleBase>
      */
     public /**/double quality() {
         if (is64) {
-            return DecompositionFactory_D64.quality((RowMatrix_F64)mat, (EigenDecomposition_F64)eig);
+            return DecompositionFactory_R64.quality((RowMatrix_F64)mat, (EigenDecomposition_F64)eig);
         } else {
-            return DecompositionFactory_D32.quality((RowMatrix_F32)mat, (EigenDecomposition_F32)eig);
+            return DecompositionFactory_R32.quality((RowMatrix_F32)mat, (EigenDecomposition_F32)eig);
         }
     }
 

@@ -20,7 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.equation.*;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.List;
@@ -82,7 +82,7 @@ public class EquationCustomFunction {
                             RowMatrix_F64 mB = ((VariableMatrix)varB).matrix;
                             output.matrix.reshape(mA.numCols,mB.numCols);
 
-                            CommonOps_D64.multTransA(mA,mB,output.matrix);
+                            CommonOps_R64.multTransA(mA,mB,output.matrix);
                         }
                     };
                 } else {

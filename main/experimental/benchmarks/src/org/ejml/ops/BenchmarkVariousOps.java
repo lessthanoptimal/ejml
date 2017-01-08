@@ -42,7 +42,7 @@ public class BenchmarkVariousOps {
         RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.transpose(mat,tran);
+            CommonOps_R64.transpose(mat,tran);
         }
 
         long curr = System.currentTimeMillis();
@@ -68,8 +68,8 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.scale(10,mat);
-            CommonOps_D64.scale(0.1,mat);
+            CommonOps_R64.scale(10,mat);
+            CommonOps_R64.scale(0.1,mat);
         }
 
         long curr = System.currentTimeMillis();
@@ -82,8 +82,8 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.scale(10,mat,result);
-            CommonOps_D64.scale(0.1,mat,result);
+            CommonOps_R64.scale(10,mat,result);
+            CommonOps_R64.scale(0.1,mat,result);
         }
 
         long curr = System.currentTimeMillis();
@@ -108,7 +108,7 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            NormOps_D64.normF(mat);
+            NormOps_R64.normF(mat);
         }
 
         long curr = System.currentTimeMillis();
@@ -119,7 +119,7 @@ public class BenchmarkVariousOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.det(mat);
+            CommonOps_R64.det(mat);
         }
 
         long curr = System.currentTimeMillis();
@@ -167,7 +167,7 @@ public class BenchmarkVariousOps {
 
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
-        RowMatrix_F64 mat = RandomMatrices_D64.createRandom(4,4,rand);
+        RowMatrix_F64 mat = RandomMatrices_R64.createRandom(4,4,rand);
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));
@@ -186,7 +186,7 @@ public class BenchmarkVariousOps {
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
-        mat = RandomMatrices_D64.createRandom(2000,2000,rand);
+        mat = RandomMatrices_R64.createRandom(2000,2000,rand);
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,100));
 //        System.out.printf("Scale:             eml = %10d\n",

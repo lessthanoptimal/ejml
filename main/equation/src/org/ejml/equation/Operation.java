@@ -18,13 +18,13 @@
 
 package org.ejml.equation;
 
-import org.ejml.alg.dense.mult.VectorVectorMult_D64;
+import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.LinearSolverFactory_D64;
+import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.NormOps_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.NormOps_R64;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,7 +75,7 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output,mA.matrix.numRows,mB.matrix.numCols);
-                    CommonOps_D64.mult(mA.matrix,mB.matrix,output.matrix);
+                    CommonOps_R64.mult(mA.matrix,mB.matrix,output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -120,7 +120,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps_D64.scale(s.getDouble(),m.matrix,output.matrix);
+                    CommonOps_R64.scale(s.getDouble(),m.matrix,output.matrix);
                 }
             };
         }
@@ -143,7 +143,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps_D64.divide(m.matrix,s.getDouble(),output.matrix);
+                    CommonOps_R64.divide(m.matrix,s.getDouble(),output.matrix);
                 }
             };
         } else if( A instanceof VariableScalar && B instanceof VariableMatrix ) {
@@ -155,7 +155,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps_D64.divide(s.getDouble(), m.matrix, output.matrix);
+                    CommonOps_R64.divide(s.getDouble(), m.matrix, output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -219,7 +219,7 @@ public abstract class Operation {
                 public void process() {
                     RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(a.numRows, a.numCols);
-                    CommonOps_D64.changeSign(a, output.matrix);
+                    CommonOps_R64.changeSign(a, output.matrix);
                 }
             };
         } else {
@@ -379,7 +379,7 @@ public abstract class Operation {
                     RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     RowMatrix_F64 out = ((VariableMatrix)ret.output).matrix;
                     out.reshape(a.numRows,a.numCols);
-                    CommonOps_D64.elementExp(a, out);
+                    CommonOps_R64.elementExp(a, out);
                 }
             };
         } else {
@@ -410,7 +410,7 @@ public abstract class Operation {
                     RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     RowMatrix_F64 out = ((VariableMatrix)ret.output).matrix;
                     out.reshape(a.numRows,a.numCols);
-                    CommonOps_D64.elementLog(a, out);
+                    CommonOps_R64.elementLog(a, out);
                 }
             };
         } else {
@@ -433,7 +433,7 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output, mA.matrix.numRows, mA.matrix.numCols);
-                    CommonOps_D64.add(mA.matrix, mB.matrix, output.matrix);
+                    CommonOps_R64.add(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -478,7 +478,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     output.matrix.reshape(m.matrix.numRows,m.matrix.numCols);
-                    CommonOps_D64.add(m.matrix, s.getDouble(), output.matrix);
+                    CommonOps_R64.add(m.matrix, s.getDouble(), output.matrix);
                 }
             };
         }
@@ -499,7 +499,7 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output, mA.matrix.numRows, mA.matrix.numCols);
-                    CommonOps_D64.subtract(mA.matrix, mB.matrix, output.matrix);
+                    CommonOps_R64.subtract(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -537,7 +537,7 @@ public abstract class Operation {
                         RowMatrix_F64 m = ((VariableMatrix)A).matrix;
                         double v = ((VariableScalar)B).getDouble();
                         output.matrix.reshape(m.numRows, m.numCols);
-                        CommonOps_D64.subtract(m, v, output.matrix);
+                        CommonOps_R64.subtract(m, v, output.matrix);
                     }
                 };
             } else {
@@ -547,7 +547,7 @@ public abstract class Operation {
                         RowMatrix_F64 m = ((VariableMatrix)B).matrix;
                         double v = ((VariableScalar)A).getDouble();
                         output.matrix.reshape(m.numRows, m.numCols);
-                        CommonOps_D64.subtract(v, m, output.matrix);
+                        CommonOps_R64.subtract(v, m, output.matrix);
                     }
                 };
             }
@@ -569,7 +569,7 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output, mA.matrix.numRows, mA.matrix.numCols);
-                    CommonOps_D64.elementMult(mA.matrix, mB.matrix, output.matrix);
+                    CommonOps_R64.elementMult(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else {
@@ -592,7 +592,7 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output, mA.matrix.numRows, mA.matrix.numCols);
-                    CommonOps_D64.elementDiv(mA.matrix, mB.matrix, output.matrix);
+                    CommonOps_R64.elementDiv(mA.matrix, mB.matrix, output.matrix);
                 }
             };
         } else {
@@ -632,7 +632,7 @@ public abstract class Operation {
                     RowMatrix_F64 b = ((VariableMatrix) B).matrix;
 
                     resize(output, a.numRows, a.numCols);
-                    CommonOps_D64.elementPower(a, b, output.matrix);
+                    CommonOps_R64.elementPower(a, b, output.matrix);
                 }
             };
         } else if( A instanceof VariableMatrix && B instanceof VariableScalar ) {
@@ -647,7 +647,7 @@ public abstract class Operation {
                     double b = ((VariableScalar) B).getDouble();
 
                     resize(output, a.numRows, a.numCols);
-                    CommonOps_D64.elementPower(a, b, output.matrix);
+                    CommonOps_R64.elementPower(a, b, output.matrix);
                 }
             };
         } else if( A instanceof VariableScalar && B instanceof VariableMatrix ) {
@@ -662,7 +662,7 @@ public abstract class Operation {
                     RowMatrix_F64 b = ((VariableMatrix) B).matrix;
 
                     resize(output, b.numRows, b.numCols);
-                    CommonOps_D64.elementPower(a, b, output.matrix);
+                    CommonOps_R64.elementPower(a, b, output.matrix);
                 }
             };
         } else {
@@ -744,7 +744,7 @@ public abstract class Operation {
                     RowMatrix_F64 mdst = ((VariableMatrix) dst).matrix;
 
                     if( range.size() == 1 ) {
-                        if( !MatrixFeatures_D64.isVector(msrc) ) {
+                        if( !MatrixFeatures_R64.isVector(msrc) ) {
                             throw new ParseError("Source must be a vector for copy into elements");
                         }
                         if(extractSimpleExtents(range.get(0),extents,false,mdst.getNumElements())) {
@@ -769,12 +769,12 @@ public abstract class Operation {
                             int numRows = extents.row1 - extents.row0 + 1;
                             int numCols = extents.col1 - extents.col0 + 1;
 
-                            CommonOps_D64.extract(msrc, 0, numRows, 0, numCols, mdst, extents.row0, extents.col0);
+                            CommonOps_R64.extract(msrc, 0, numRows, 0, numCols, mdst, extents.row0, extents.col0);
                         } else {
                             extractArrayExtent(range.get(0),mdst.numRows,rowExtent);
                             extractArrayExtent(range.get(1),mdst.numCols,colExtent);
 
-                            CommonOps_D64.insert(msrc, mdst, rowExtent.array, rowExtent.length,
+                            CommonOps_R64.insert(msrc, mdst, rowExtent.array, rowExtent.length,
                                     colExtent.array, colExtent.length);
                         }
                     } else {
@@ -847,7 +847,7 @@ public abstract class Operation {
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
                     output.matrix.reshape(mA.matrix.numCols, mA.matrix.numRows);
-                    CommonOps_D64.transpose(mA.matrix, output.matrix);
+                    CommonOps_R64.transpose(mA.matrix, output.matrix);
                 }
             };
         } else {
@@ -870,7 +870,7 @@ public abstract class Operation {
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
                     output.matrix.reshape(mA.matrix.numRows, mA.matrix.numCols);
-                    if( !CommonOps_D64.invert(mA.matrix,output.matrix) )
+                    if( !CommonOps_R64.invert(mA.matrix,output.matrix) )
                         throw new RuntimeException("Inverse failed!");
                 }
             };
@@ -903,7 +903,7 @@ public abstract class Operation {
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
                     output.matrix.reshape(mA.matrix.numCols, mA.matrix.numRows);
-                    CommonOps_D64.pinv(mA.matrix, output.matrix);
+                    CommonOps_R64.pinv(mA.matrix, output.matrix);
                 }
             };
         } else {
@@ -932,7 +932,7 @@ public abstract class Operation {
                 public void process() {
                     RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(a.numRows,a.numCols);
-                    CommonOps_D64.rref(a, -1, output.matrix);
+                    CommonOps_R64.rref(a, -1, output.matrix);
                 }
             };
         } else {
@@ -964,7 +964,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.value = CommonOps_D64.det(mA.matrix);
+                    output.value = CommonOps_R64.det(mA.matrix);
                 }
             };
         } else {
@@ -990,7 +990,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     VariableMatrix mA = (VariableMatrix)A;
-                    output.value= CommonOps_D64.trace(mA.matrix);
+                    output.value= CommonOps_R64.trace(mA.matrix);
                 }
             };
         } else {
@@ -1015,7 +1015,7 @@ public abstract class Operation {
             ret.op = new Operation("normF-m") {
                 @Override
                 public void process() {
-                    output.value= NormOps_D64.normF(((VariableMatrix) A).matrix);
+                    output.value= NormOps_R64.normF(((VariableMatrix) A).matrix);
                 }
             };
         } else {
@@ -1040,7 +1040,7 @@ public abstract class Operation {
             ret.op = new Operation("max-m") {
                 @Override
                 public void process() {
-                    output.value = CommonOps_D64.elementMax(((VariableMatrix) A).matrix);
+                    output.value = CommonOps_R64.elementMax(((VariableMatrix) A).matrix);
                 }
             };
         } else if( A instanceof VariableInteger ) {
@@ -1075,7 +1075,7 @@ public abstract class Operation {
             ret.op = new Operation("min-m") {
                 @Override
                 public void process() {
-                    output.value = CommonOps_D64.elementMin(((VariableMatrix) A).matrix);
+                    output.value = CommonOps_R64.elementMin(((VariableMatrix) A).matrix);
                 }
             };
         } else if( A instanceof VariableInteger ) {
@@ -1155,7 +1155,7 @@ public abstract class Operation {
                 public void process() {
                     RowMatrix_F64 mA = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(mA.numRows,mA.numCols);
-                    CommonOps_D64.setIdentity(output.matrix);
+                    CommonOps_R64.setIdentity(output.matrix);
                 }
             };
         } else if( A instanceof VariableInteger ) {
@@ -1164,7 +1164,7 @@ public abstract class Operation {
                 public void process() {
                     int N = ((VariableInteger)A).value;
                     output.matrix.reshape(N,N);
-                    CommonOps_D64.setIdentity(output.matrix);
+                    CommonOps_R64.setIdentity(output.matrix);
                 }
             };
         } else {
@@ -1185,10 +1185,10 @@ public abstract class Operation {
                 public void process() {
                     RowMatrix_F64 mA = ((VariableMatrix)A).matrix;
 
-                    if(MatrixFeatures_D64.isVector(mA)) {
+                    if(MatrixFeatures_R64.isVector(mA)) {
                         int N = mA.getNumElements();
                         output.matrix.reshape(N,N);
-                        CommonOps_D64.diag(output.matrix,N,mA.data);
+                        CommonOps_R64.diag(output.matrix,N,mA.data);
                     } else {
                         int N = Math.min(mA.numCols,mA.numRows);
                         output.matrix.reshape(N,1);
@@ -1219,7 +1219,7 @@ public abstract class Operation {
                     int numRows = ((VariableInteger)A).value;
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows,numCols);
-                    CommonOps_D64.fill(output.matrix, 0);
+                    CommonOps_R64.fill(output.matrix, 0);
                     //not sure if this is necessary.  Can its value every be modified?
                 }
             };
@@ -1245,7 +1245,7 @@ public abstract class Operation {
                     int numRows = ((VariableInteger)A).value;
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows,numCols);
-                    CommonOps_D64.fill(output.matrix, 1);
+                    CommonOps_R64.fill(output.matrix, 1);
                 }
             };
         } else {
@@ -1270,7 +1270,7 @@ public abstract class Operation {
                     RowMatrix_F64 mA = ((VariableMatrix)A).matrix;
                     RowMatrix_F64 mB = ((VariableMatrix)B).matrix;
                     output.matrix.reshape(mA.numRows * mB.numRows, mA.numCols * mB.numCols);
-                    CommonOps_D64.kron(mA, mB, output.matrix);
+                    CommonOps_R64.kron(mA, mB, output.matrix);
                 }
             };
         } else {
@@ -1295,10 +1295,10 @@ public abstract class Operation {
                     RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     RowMatrix_F64 b = ((VariableMatrix)B).matrix;
 
-                    if( !MatrixFeatures_D64.isVector(a) || !MatrixFeatures_D64.isVector(b))
+                    if( !MatrixFeatures_R64.isVector(a) || !MatrixFeatures_R64.isVector(b))
                         throw new RuntimeException("Both inputs to dot() must be vectors");
 
-                    output.value = VectorVectorMult_D64.innerProd(a,b);
+                    output.value = VectorVectorMult_R64.innerProd(a,b);
                 }
             };
         } else {
@@ -1326,7 +1326,7 @@ public abstract class Operation {
                     RowMatrix_F64 b = ((VariableMatrix)B).matrix;
 
                     if( solver == null ) {
-                        solver = LinearSolverFactory_D64.leastSquares(a.numRows,a.numCols);
+                        solver = LinearSolverFactory_R64.leastSquares(a.numRows,a.numCols);
                     }
 
                     if( !solver.setA(a))
@@ -1378,7 +1378,7 @@ public abstract class Operation {
                     } else {
                         extractArrayExtent(inputs.get(1),A.getNumElements(),colExtent);
                         output.matrix.reshape(1, colExtent.length);
-                        CommonOps_D64.extract(A,
+                        CommonOps_R64.extract(A,
                                 colExtent.array, colExtent.length, output.matrix);
                     }
                 } else if( extractSimpleExtents(inputs.get(1), extents, true, A.numRows) &&
@@ -1386,13 +1386,13 @@ public abstract class Operation {
                     extents.row1 += 1;
                     extents.col1 += 1;
                     output.matrix.reshape(extents.row1-extents.row0,extents.col1-extents.col0);
-                    CommonOps_D64.extract(A,extents.row0,extents.row1,extents.col0,extents.col1,output.matrix,0,0);
+                    CommonOps_R64.extract(A,extents.row0,extents.row1,extents.col0,extents.col1,output.matrix,0,0);
                 } else {
                     extractArrayExtent(inputs.get(1),A.numRows,rowExtent);
                     extractArrayExtent(inputs.get(2),A.numCols,colExtent);
 
                     output.matrix.reshape(rowExtent.length, colExtent.length);
-                    CommonOps_D64.extract(A,
+                    CommonOps_R64.extract(A,
                             rowExtent.array,rowExtent.length,
                             colExtent.array,colExtent.length,output.matrix);
                 }

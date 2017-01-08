@@ -20,8 +20,8 @@ package org.ejml.example;
 
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.equation.Equation;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.NormOps_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.NormOps_R64;
 
 /**
  * <p>
@@ -65,7 +65,7 @@ public class QRExampleEquation {
             // Note that v is lazily created above.  Need direct access to it, which is done below.
             RowMatrix_F64 v = eq.lookupMatrix("v");
 
-            double maxV = CommonOps_D64.elementMaxAbs(v);
+            double maxV = CommonOps_R64.elementMaxAbs(v);
             eq.alias(maxV,"maxV");
 
             if( maxV > 0 && v.getNumElements() > 1 ) {
@@ -73,7 +73,7 @@ public class QRExampleEquation {
                 eq.process("v=v/maxV");
 
                 // compute the magnitude of the vector
-                double tau = NormOps_D64.normF(v);
+                double tau = NormOps_R64.normF(v);
 
                 if( v.get(0) < 0 )
                     tau *= -1.0;
@@ -99,7 +99,7 @@ public class QRExampleEquation {
     public RowMatrix_F64 getQ() {
         Equation eq = new Equation();
 
-        RowMatrix_F64 Q = CommonOps_D64.identity(QR.numRows);
+        RowMatrix_F64 Q = CommonOps_R64.identity(QR.numRows);
         RowMatrix_F64 u = new RowMatrix_F64(QR.numRows,1);
 
         int N = Math.min(QR.numCols,QR.numRows);

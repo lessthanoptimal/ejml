@@ -23,8 +23,8 @@ import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -164,7 +164,7 @@ public class TestTriangularSolver_B64 {
         else
             T2 = MatrixOps_B64.createRandom(T.numRows,T.numCols+1,-1,1,rand,T.blockLength);
 
-        CommonOps_D64.insert(T,T2,0,0);
+        CommonOps_R64.insert(T,T2,0,0);
 
         if( transT ) {
             BlockMatrix_F64 T_tran = MatrixOps_B64.transpose(T,null);
@@ -207,18 +207,18 @@ public class TestTriangularSolver_B64 {
     private void check_solveBlock_submatrix( boolean solveL , boolean transT , boolean transB ) {
         // compute expected solution
         RowMatrix_F64 L = createRandomLowerTriangular(3);
-        RowMatrix_F64 B = RandomMatrices_D64.createRandom(3,5,rand);
+        RowMatrix_F64 B = RandomMatrices_R64.createRandom(3,5,rand);
         RowMatrix_F64 X = new RowMatrix_F64(3,5);
 
         if( !solveL ) {
-            CommonOps_D64.transpose(L);
+            CommonOps_R64.transpose(L);
         }
 
         if( transT ) {
-           CommonOps_D64.transpose(L);
+           CommonOps_R64.transpose(L);
         }
 
-        CommonOps_D64.solve(L,B,X);
+        CommonOps_R64.solve(L,B,X);
 
         // do it again using block matrices
         BlockMatrix_F64 b_L = MatrixOps_B64.convert(L,3);
@@ -235,7 +235,7 @@ public class TestTriangularSolver_B64 {
         if( transB ) {
             sub_B.original = b_B = MatrixOps_B64.transpose((BlockMatrix_F64)sub_B.original,null);
             TestMatrixMult_B64.transposeSub(sub_B);
-            CommonOps_D64.transpose(X);
+            CommonOps_R64.transpose(X);
         }
 
 //        sub_L.original.print();
@@ -247,9 +247,9 @@ public class TestTriangularSolver_B64 {
     }
 
     private RowMatrix_F64 createRandomLowerTriangular(int N ) {
-        RowMatrix_F64 U = RandomMatrices_D64.createUpperTriangle(N,0,-1,1,rand);
+        RowMatrix_F64 U = RandomMatrices_R64.createUpperTriangle(N,0,-1,1,rand);
 
-        CommonOps_D64.transpose(U);
+        CommonOps_R64.transpose(U);
 
         return U;
     }

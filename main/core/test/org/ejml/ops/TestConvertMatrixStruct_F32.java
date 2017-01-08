@@ -47,7 +47,7 @@ public class TestConvertMatrixStruct_F32 {
 
         ConvertMatrixStruct_F32.convert((RealMatrix_F32)a,(RealMatrix_F32)b);
 
-        assertTrue(MatrixFeatures_D32.isIdentical(a,b,UtilEjml.TEST_F32));
+        assertTrue(MatrixFeatures_R32.isIdentical(a,b,UtilEjml.TEST_F32));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class TestConvertMatrixStruct_F32 {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                RowMatrix_F32 a = RandomMatrices_D32.createRandom(rows,cols,rand);
+                RowMatrix_F32 a = RandomMatrices_R32.createRandom(rows,cols,rand);
                 BlockMatrix_F32 b = new BlockMatrix_F32(rows,cols,3);
 
                 ConvertMatrixStruct_F32.convert(a,b);

@@ -18,14 +18,14 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
+import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_R64;
 import org.ejml.data.RowMatrix_F64;
 
 
 /**
  * @author Peter Abeles
  */
-public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_D64 {
+public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_R64 {
 
     SmartRotatorUpdate smartU = new SmartRotatorUpdate();
     SmartRotatorUpdate smartV = new SmartRotatorUpdate();

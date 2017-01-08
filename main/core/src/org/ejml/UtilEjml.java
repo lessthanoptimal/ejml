@@ -117,7 +117,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static RowMatrix_F64 parseD64(String s , int numColumns )
+    public static RowMatrix_F64 parse_R64(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 
@@ -142,7 +142,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static RowMatrix_F32 parseD32(String s , int numColumns )
+    public static RowMatrix_F32 parse_R32(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 

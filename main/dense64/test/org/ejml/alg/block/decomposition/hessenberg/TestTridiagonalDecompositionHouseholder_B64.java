@@ -21,12 +21,12 @@ package org.ejml.alg.block.decomposition.hessenberg;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_D64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_R64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -50,10 +50,10 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
         for( int width = 1; width <= r*3; width++ ) {
 //            System.out.println("width = "+width);
             
-            RowMatrix_F64 A = RandomMatrices_D64.createSymmetric(width,-1,1,rand);
+            RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
             BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
 
-            TridiagonalDecompositionHouseholderOrig_D64 decomp = new TridiagonalDecompositionHouseholderOrig_D64();
+            TridiagonalDecompositionHouseholderOrig_R64 decomp = new TridiagonalDecompositionHouseholderOrig_R64();
             decomp.decompose(A);
 
             RowMatrix_F64 expected = decomp.getQT();
@@ -85,7 +85,7 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
     @Test
     public void fullTest() {
         for( int width = 1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_R64.createSymmetric(width,-1,1,rand));
             BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
 
             TridiagonalDecompositionHouseholder_B64 alg = new TridiagonalDecompositionHouseholder_B64();
@@ -101,7 +101,7 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
             // reconstruct the original matrix
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
-            assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(),A_found.matrix_F64(),UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_R64.isIdentical(A.matrix_F64(),A_found.matrix_F64(),UtilEjml.TEST_F64));
         }
     }
 

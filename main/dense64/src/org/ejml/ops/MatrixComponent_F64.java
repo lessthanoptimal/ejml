@@ -40,7 +40,7 @@ public class MatrixComponent_F64 extends JPanel {
     }
 
     public synchronized void setMatrix( D1Matrix_F64 A ) {
-        double maxValue = CommonOps_D64.elementMaxAbs(A);
+        double maxValue = CommonOps_R64.elementMaxAbs(A);
         renderMatrix(A,image,maxValue);
         repaint();
     }

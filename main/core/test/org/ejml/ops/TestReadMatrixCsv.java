@@ -64,6 +64,6 @@ public class TestReadMatrixCsv {
         RowMatrix_C64 expected = new RowMatrix_C64(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
         RowMatrix_C64 m = alg.read();
 
-        assertTrue(MatrixFeatures_CD64.isIdentical(expected,m, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_CR64.isIdentical(expected,m, UtilEjml.TEST_F64));
     }
 }

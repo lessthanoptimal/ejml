@@ -21,9 +21,9 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -54,12 +54,12 @@ public class TestInnerCholesky_B64 {
      * Test a positive case where it should be able to decompose the matrix
      */
     private void checkDecompose(int n, boolean lower) {
-        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(n,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(n,rand);
 
         // decompose a RowMatrix_F64 to find expected solution
-        CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_D64.chol(n,lower);
+        CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_R64.chol(n,lower);
 
-        assertTrue(DecompositionFactory_D64.decomposeSafe(chol,A));
+        assertTrue(DecompositionFactory_R64.decomposeSafe(chol,A));
 
         RowMatrix_F64 expected = chol.getT(null);
 

@@ -21,7 +21,7 @@ package org.ejml.example;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class TestCompareKalmanResults {
         all.add( simple );
 
         RowMatrix_F64 priorX = new RowMatrix_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        RowMatrix_F64 priorP = CommonOps_D64.identity(9);
+        RowMatrix_F64 priorP = CommonOps_R64.identity(9);
 
         RowMatrix_F64 F = BenchmarkKalmanPerformance.createF(T);
         RowMatrix_F64 Q = BenchmarkKalmanPerformance.createQ(T,0.1);
@@ -67,7 +67,7 @@ public class TestCompareKalmanResults {
         }
 
         RowMatrix_F64 z = new RowMatrix_F64(H.numRows,1);
-        RowMatrix_F64 R = CommonOps_D64.identity(H.numRows);
+        RowMatrix_F64 R = CommonOps_R64.identity(H.numRows);
 
         for( KalmanFilter f : all ) {
             f.update(z,R);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,7 +33,7 @@ import org.ejml.data.Matrix;
  * <ul>
  * <li> Can decompose rectangular matrices. </li>
  * <li> Numerically stable solutions to least-squares problem, but not as stable as SVD </li>
- * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr_D64} </li>
+ * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.alg.dense.linsol.qr.AdjLinearSolverQr_R64} </li>
  * </ul>
  * </p>
  * <p>
@@ -44,8 +44,8 @@ import org.ejml.data.Matrix;
  * </ul>
  * </p>
 
- * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_D64
- * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64
+ * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_R64
+ * @see org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_R64
  *
  * @author Peter Abeles
  */

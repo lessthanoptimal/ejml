@@ -19,7 +19,7 @@
 package org.ejml;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -142,7 +142,7 @@ public class BenchmarkInliningGetSet {
     }
 
     public static void main( String args[] ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(1000,1000,new Random());
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(1000,1000,new Random());
 
         int N = 2000;
 

@@ -18,13 +18,13 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol_D64;
-import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp_D64;
+import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_R64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrpHouseCol_R64;
+import org.ejml.alg.dense.linsol.qr.SolvePseudoInverseQrp_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.LinearSolverFactory_D64;
+import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -64,15 +64,15 @@ public class BenchmarkSolvePseudoInverse {
 //        System.out.println("solve SVD            = "+ solveBenchmark(
 //                new SolvePseudoInverseSvd(),numTrials));
         System.out.println("solve Gen QRP Basic  = "+ solveBenchmark(
-                new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
+                new SolvePseudoInverseQrp_R64(new QRColPivDecompositionHouseholderColumn_R64(),false),numTrials));
         System.out.println("solve Gen QRP        = "+ solveBenchmark(
-                new SolvePseudoInverseQrp_D64(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
+                new SolvePseudoInverseQrp_R64(new QRColPivDecompositionHouseholderColumn_R64(),true),numTrials));
         System.out.println("solve QRP Col Basic  = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),false),numTrials));
+                new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),false),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),true),numTrials));
+                new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),true),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
-                LinearSolverFactory_D64.leastSquaresQrPivot(true,false),numTrials));
+                LinearSolverFactory_R64.leastSquaresQrPivot(true,false),numTrials));
     }
 
     public static void main( String args [] ) {
@@ -90,7 +90,7 @@ public class BenchmarkSolvePseudoInverse {
                 singularValues[j] = 10+w-j;
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_D64.createSingularValues(w, w, rand, singularValues);
+            A = RandomMatrices_R64.createSingularValues(w, w, rand, singularValues);
             B = new RowMatrix_F64(w,2);
 
             runAlgorithms(trials[i]);
@@ -101,7 +101,7 @@ public class BenchmarkSolvePseudoInverse {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_D64.createRandom(100,100,rand);
+            A = RandomMatrices_R64.createRandom(100,100,rand);
             B = new RowMatrix_F64(100,w);
 
             runAlgorithms(trialsX[i]/80);

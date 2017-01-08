@@ -20,14 +20,14 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
-import org.ejml.alg.dense.mult.VectorVectorMult_D64;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_R64;
+import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -51,16 +51,16 @@ public class TestBlockHouseHolder_B64 {
 
     @Test
     public void decomposeQR_block_col() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(r*2+r-1,r,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(r*2+r-1,r,-1,1,rand);
         BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
 
-        QRDecompositionHouseholderTran_D64 algTest = new QRDecompositionHouseholderTran_D64();
+        QRDecompositionHouseholderTran_R64 algTest = new QRDecompositionHouseholderTran_R64();
         assertTrue(algTest.decompose(A));
 
         double gammas[] = new double[A.numCols];
         BlockHouseHolder_B64.decomposeQR_block_col(r,new D1Submatrix_F64(Ab),gammas);
 
-        RowMatrix_F64 expected = CommonOps_D64.transpose(algTest.getQR(),null);
+        RowMatrix_F64 expected = CommonOps_R64.transpose(algTest.getQR(),null);
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(expected,Ab,UtilEjml.TEST_F64));
     }
@@ -162,7 +162,7 @@ public class TestBlockHouseHolder_B64 {
      */
     @Test
     public void innerProdCol() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(r*2+r-1,r*3-1,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(r*2+r-1,r*3-1,-1,1,rand);
         BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
 
         int row = 0;
@@ -173,14 +173,14 @@ public class TestBlockHouseHolder_B64 {
             int widthA = Math.min(r,A.numCols - (colA-colA%r));
             int widthB = Math.min(r,A.numCols - (colB-colB%r));
 
-            RowMatrix_F64 v0 = CommonOps_D64.extract(A,row,A.numRows,colA,colA+1);
-            RowMatrix_F64 v1 = CommonOps_D64.extract(A,row,A.numRows,colB,colB+1);
+            RowMatrix_F64 v0 = CommonOps_R64.extract(A,row,A.numRows,colA,colA+1);
+            RowMatrix_F64 v1 = CommonOps_R64.extract(A,row,A.numRows,colB,colB+1);
             for( int j = 0; j < innerCol; j++ ) {
                 v0.set(j,0.0);
             }
             v0.set(innerCol,1.0);
 
-            double expected = VectorVectorMult_D64.innerProd(v0,v1);
+            double expected = VectorVectorMult_R64.innerProd(v0,v1);
 
             D1Submatrix_F64 subAb = new D1Submatrix_F64(Ab,row,A.numRows,colBlock,A.numCols);
 
@@ -193,7 +193,7 @@ public class TestBlockHouseHolder_B64 {
 
     @Test
     public void innerProdRow() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(r*3-1,r*2+r-1,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(r*3-1,r*2+r-1,-1,1,rand);
         BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
 
         int zeroOffset = 1;
@@ -201,14 +201,14 @@ public class TestBlockHouseHolder_B64 {
             int rowA = 2;
             int rowB = 1;
 
-            RowMatrix_F64 v0 = CommonOps_D64.extract(A,rowBlock+rowA,rowBlock+rowA+1,0,A.numCols);
-            RowMatrix_F64 v1 = CommonOps_D64.extract(A,rowBlock+rowB,rowBlock+rowB+1,0,A.numCols);
+            RowMatrix_F64 v0 = CommonOps_R64.extract(A,rowBlock+rowA,rowBlock+rowA+1,0,A.numCols);
+            RowMatrix_F64 v1 = CommonOps_R64.extract(A,rowBlock+rowB,rowBlock+rowB+1,0,A.numCols);
             for( int j = 0; j < rowA+zeroOffset; j++ ) {
                 v0.set(j,0.0);
             }
             v0.set(rowA+zeroOffset,1.0);
 
-            double expected = VectorVectorMult_D64.innerProd(v0,v1);
+            double expected = VectorVectorMult_R64.innerProd(v0,v1);
 
             D1Submatrix_F64 subAb = new D1Submatrix_F64(Ab,rowBlock,A.numRows,0,A.numCols);
 

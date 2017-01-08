@@ -20,9 +20,9 @@ package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -103,34 +103,34 @@ public class TestInnerMultiplication_B64 {
         if( hasAlpha && operationType == -1 )
             fail("No point to minus and alpha");
 
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(heightA,widthA,rand);
-        RowMatrix_F64 B = RandomMatrices_D64.createRandom(widthA,widthB,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(heightA,widthA,rand);
+        RowMatrix_F64 B = RandomMatrices_R64.createRandom(widthA,widthB,rand);
         RowMatrix_F64 C = new RowMatrix_F64(heightA,widthB);
 
         if( operationType == -1 )
-            CommonOps_D64.mult(-1,A,B,C);
+            CommonOps_R64.mult(-1,A,B,C);
         else
-            CommonOps_D64.mult(A,B,C);
+            CommonOps_R64.mult(A,B,C);
 
         RowMatrix_F64 C_found = new RowMatrix_F64(heightA,widthB);
         // if it is set then it should overwrite everything just fine
         if( operationType == 0)
-            RandomMatrices_D64.setRandom(C_found,rand);
+            RandomMatrices_R64.setRandom(C_found,rand);
 
         if( transA )
-            CommonOps_D64.transpose(A);
+            CommonOps_R64.transpose(A);
         if( transB )
-            CommonOps_D64.transpose(B);
+            CommonOps_R64.transpose(B);
 
         double alpha = 2.0;
 
         if( hasAlpha ) {
-            CommonOps_D64.scale(alpha,C);
+            CommonOps_R64.scale(alpha,C);
         }
 
         invoke(method,alpha,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
 
-        if( !MatrixFeatures_D64.isIdentical(C,C_found, UtilEjml.TEST_F64) ) {
+        if( !MatrixFeatures_R64.isIdentical(C,C_found, UtilEjml.TEST_F64) ) {
             C.print();
             C_found.print();
             System.out.println("Method "+method.getName());

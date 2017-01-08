@@ -19,9 +19,9 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_D32;
-import org.ejml.ops.MatrixFeatures_D32;
-import org.ejml.ops.RandomMatrices_D32;
+import org.ejml.ops.CommonOps_R32;
+import org.ejml.ops.MatrixFeatures_R32;
+import org.ejml.ops.RandomMatrices_R32;
 import org.junit.Test;
 
 import java.util.Random;
@@ -39,7 +39,7 @@ public class TestD1Submatrix_F32 {
 
     @Test
     public void get() {
-        RowMatrix_F32 A = RandomMatrices_D32.createRandom(5,10,-1,1,rand);
+        RowMatrix_F32 A = RandomMatrices_R32.createRandom(5,10,-1,1,rand);
 
         D1Submatrix_F32 S = new D1Submatrix_F32(A,2,4,1,10);
 
@@ -48,7 +48,7 @@ public class TestD1Submatrix_F32 {
 
     @Test
     public void set() {
-        RowMatrix_F32 A = RandomMatrices_D32.createRandom(5,10,-1,1,rand);
+        RowMatrix_F32 A = RandomMatrices_R32.createRandom(5,10,-1,1,rand);
 
         D1Submatrix_F32 S = new D1Submatrix_F32(A,2,4,1,10);
 
@@ -59,14 +59,14 @@ public class TestD1Submatrix_F32 {
 
     @Test
     public void extract() {
-        RowMatrix_F32 A = RandomMatrices_D32.createRandom(5,10,-1,1,rand);
+        RowMatrix_F32 A = RandomMatrices_R32.createRandom(5,10,-1,1,rand);
 
         D1Submatrix_F32 S = new D1Submatrix_F32(A,2,4,1,10);
 
         RowMatrix_F32 M = S.extract();
 
-        RowMatrix_F32 E = CommonOps_D32.extract(A,2,4,1,10);
+        RowMatrix_F32 E = CommonOps_R32.extract(A,2,4,1,10);
 
-        assertTrue(MatrixFeatures_D32.isEquals(E,M));
+        assertTrue(MatrixFeatures_R32.isEquals(E,M));
     }
 }

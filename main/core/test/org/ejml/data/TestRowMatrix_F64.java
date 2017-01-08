@@ -20,9 +20,9 @@ package org.ejml.data;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -167,24 +167,24 @@ public class TestRowMatrix_F64 {
 
     @Test
     public void set_ColumnMajor() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,5,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,5,rand);
 
         RowMatrix_F64 Atran = A.copy();
-        CommonOps_D64.transpose(Atran);
+        CommonOps_R64.transpose(Atran);
         RowMatrix_F64 Afound = new RowMatrix_F64(3,5);
         Afound.set(3,5, false, Atran.data);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_R64.isIdentical(Afound,A,UtilEjml.TEST_F64));
     }
 
     @Test
     public void set_RowMajor() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,5,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,5,rand);
 
         RowMatrix_F64 Afound = new RowMatrix_F64(3,5);
         Afound.set(3,5, true, A.data);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_R64.isIdentical(Afound,A,UtilEjml.TEST_F64));
         assertTrue(A.data != Afound.data);
     }
 

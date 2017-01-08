@@ -20,8 +20,8 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.EjmlParameters;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -37,7 +37,7 @@ public class BenchmarkTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            TransposeAlgs_D64.square(mat);
+            TransposeAlgs_R64.square(mat);
         }
         long curr = System.currentTimeMillis();
 
@@ -50,7 +50,7 @@ public class BenchmarkTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            TransposeAlgs_D64.block(mat,tran,blockLength);
+            TransposeAlgs_R64.block(mat,tran,blockLength);
         }
         long curr = System.currentTimeMillis();
 
@@ -63,7 +63,7 @@ public class BenchmarkTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            TransposeAlgs_D64.standard(mat,tran);
+            TransposeAlgs_R64.standard(mat,tran);
         }
         long curr = System.currentTimeMillis();
 
@@ -76,7 +76,7 @@ public class BenchmarkTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.transpose(mat,tran);
+            CommonOps_R64.transpose(mat,tran);
         }
         long curr = System.currentTimeMillis();
 
@@ -96,7 +96,7 @@ public class BenchmarkTranspose {
 
     private static void evaluateMatrix( int length , int n) {
         System.out.println("*** Size "+length);
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(length,length,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(length,length,rand);
 
         System.out.println("---------- Square ----------------");
         System.out.println("In place  : "+square(A, n));
@@ -109,7 +109,7 @@ public class BenchmarkTranspose {
         System.out.println("Common    : "+common(A, n));
         System.out.println();
         System.out.println("---------- Tall ----------------");
-        A = RandomMatrices_D64.createRandom(2*length,length,rand);
+        A = RandomMatrices_R64.createRandom(2*length,length,rand);
         System.out.println("Block     : "+block(A, n,EjmlParameters.BLOCK_WIDTH));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));
@@ -117,7 +117,7 @@ public class BenchmarkTranspose {
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
         System.out.println("---------- Wide ----------------");
-        A = RandomMatrices_D64.createRandom(length,2*length,rand);
+        A = RandomMatrices_R64.createRandom(length,2*length,rand);
         System.out.println("Block     : "+block(A, n, EjmlParameters.BLOCK_WIDTH));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));

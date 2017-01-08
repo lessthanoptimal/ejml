@@ -21,10 +21,10 @@ package org.ejml.alg.block;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -286,7 +286,7 @@ public class MatrixOps_B64 {
     {
         BlockMatrix_F64 ret = new BlockMatrix_F64(numRows,numCols);
 
-        RandomMatrices_D64.setRandom(ret,min,max,rand);
+        RandomMatrices_R64.setRandom(ret,min,max,rand);
 
         return ret;
     }
@@ -297,7 +297,7 @@ public class MatrixOps_B64 {
     {
         BlockMatrix_F64 ret = new BlockMatrix_F64(numRows,numCols,blockLength);
 
-        RandomMatrices_D64.setRandom(ret,min,max,rand);
+        RandomMatrices_R64.setRandom(ret,min,max,rand);
 
         return ret;
     }
@@ -320,7 +320,7 @@ public class MatrixOps_B64 {
         if( A.blockLength != B.blockLength )
             return false;
 
-        return MatrixFeatures_D64.isEquals(A,B);
+        return MatrixFeatures_R64.isEquals(A,B);
     }
 
     public static boolean isEquals(BlockMatrix_F64 A , BlockMatrix_F64 B , double tol )
@@ -328,7 +328,7 @@ public class MatrixOps_B64 {
         if( A.blockLength != B.blockLength )
             return false;
 
-        return MatrixFeatures_D64.isEquals(A,B,tol);
+        return MatrixFeatures_R64.isEquals(A,B,tol);
     }
 
     /**
@@ -477,7 +477,7 @@ public class MatrixOps_B64 {
      * @param value The value each element will have.
      */
     public static void set(BlockMatrix_F64 A , double value ) {
-        CommonOps_D64.fill(A, value);
+        CommonOps_R64.fill(A, value);
     }
 
     /**
@@ -489,7 +489,7 @@ public class MatrixOps_B64 {
     {
         int minLength = Math.min(A.numRows,A.numCols);
 
-        CommonOps_D64.fill(A, 0);
+        CommonOps_R64.fill(A, 0);
 
         int blockLength = A.blockLength;
 

@@ -23,9 +23,9 @@ import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -51,10 +51,10 @@ public class TestCholeskyOuterForm_B64 {
     public void testUpper() {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
-            RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(N,rand);
+            RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_D64.chol(1,false);
-            assertTrue(DecompositionFactory_D64.decomposeSafe(chol,A));
+            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_R64.chol(1,false);
+            assertTrue(DecompositionFactory_R64.decomposeSafe(chol,A));
 
             RowMatrix_F64 expectedT = chol.getT(null);
 
@@ -62,7 +62,7 @@ public class TestCholeskyOuterForm_B64 {
 
             CholeskyOuterForm_B64 blockChol = new CholeskyOuterForm_B64(false);
 
-            assertTrue(DecompositionFactory_D64.decomposeSafe(blockChol,blockA));
+            assertTrue(DecompositionFactory_R64.decomposeSafe(blockChol,blockA));
 
             assertTrue(GenericMatrixOps_F64.isEquivalent(expectedT,blockChol.getT(null), UtilEjml.TEST_F64));
 
@@ -81,10 +81,10 @@ public class TestCholeskyOuterForm_B64 {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
 
-            RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(N,rand);
+            RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_D64.chol(1,true);
-            assertTrue(DecompositionFactory_D64.decomposeSafe(chol, A));
+            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_R64.chol(1,true);
+            assertTrue(DecompositionFactory_R64.decomposeSafe(chol, A));
 
             RowMatrix_F64 expectedT = chol.getT(null);
 
@@ -92,7 +92,7 @@ public class TestCholeskyOuterForm_B64 {
 
             CholeskyOuterForm_B64 blockChol = new CholeskyOuterForm_B64(true);
 
-            assertTrue(DecompositionFactory_D64.decomposeSafe(blockChol,blockA));
+            assertTrue(DecompositionFactory_R64.decomposeSafe(blockChol,blockA));
 
             assertTrue(GenericMatrixOps_F64.isEquivalent(expectedT,blockChol.getT(null),UtilEjml.TEST_F64));
 

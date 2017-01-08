@@ -19,7 +19,7 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -37,7 +37,7 @@ public class TestMatrixIterator_F64 {
 
     @Test
     public void allRow() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,6,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,6,rand);
 
         MatrixIterator_F64 iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
 
@@ -52,7 +52,7 @@ public class TestMatrixIterator_F64 {
 
     @Test
     public void allCol() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,6,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,6,rand);
 
         MatrixIterator_F64 iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
 
@@ -67,7 +67,7 @@ public class TestMatrixIterator_F64 {
 
     @Test
     public void subRow() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,6,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,6,rand);
 
         MatrixIterator_F64 iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
 
@@ -83,7 +83,7 @@ public class TestMatrixIterator_F64 {
 
     @Test
     public void subCol() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,6,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,6,rand);
 
         MatrixIterator_F64 iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
 

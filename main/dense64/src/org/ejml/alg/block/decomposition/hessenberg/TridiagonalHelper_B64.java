@@ -21,7 +21,7 @@ package org.ejml.alg.block.decomposition.hessenberg;
 import org.ejml.alg.block.VectorOps_B64;
 import org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64;
 import org.ejml.data.D1Submatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 import static org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64.computeHouseHolderRow;
 
@@ -108,7 +108,7 @@ public class TridiagonalHelper_B64 {
                                     final double beta[] , int betaIndex ) {
 
         final int heightY = Y.row1-Y.row0;
-        CommonOps_D64.fill(W.original, 0);
+        CommonOps_R64.fill(W.original, 0);
 
         // W = -beta*v(1)
         BlockHouseHolder_B64.scale_row(blockLength,Y,W,0,1,-beta[betaIndex++]);

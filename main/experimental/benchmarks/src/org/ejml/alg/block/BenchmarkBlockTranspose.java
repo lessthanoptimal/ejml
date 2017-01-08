@@ -20,8 +20,8 @@ package org.ejml.alg.block;
 
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class BenchmarkBlockTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.transpose(mat);
+            CommonOps_R64.transpose(mat);
         }
         long curr = System.currentTimeMillis();
 
@@ -55,7 +55,7 @@ public class BenchmarkBlockTranspose {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.transpose(mat,tran);
+            CommonOps_R64.transpose(mat,tran);
         }
         long curr = System.currentTimeMillis();
 
@@ -81,7 +81,7 @@ public class BenchmarkBlockTranspose {
 
     public static void main( String args[] ) {
 
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5000,5000,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5000,5000,rand);
 
         int N = 5;
 

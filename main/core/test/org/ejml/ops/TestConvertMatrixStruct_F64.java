@@ -47,7 +47,7 @@ public class TestConvertMatrixStruct_F64 {
 
         ConvertMatrixStruct_F64.convert((RealMatrix_F64)a,(RealMatrix_F64)b);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(a,b,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_R64.isIdentical(a,b,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class TestConvertMatrixStruct_F64 {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                RowMatrix_F64 a = RandomMatrices_D64.createRandom(rows,cols,rand);
+                RowMatrix_F64 a = RandomMatrices_R64.createRandom(rows,cols,rand);
                 BlockMatrix_F64 b = new BlockMatrix_F64(rows,cols,3);
 
                 ConvertMatrixStruct_F64.convert(a,b);

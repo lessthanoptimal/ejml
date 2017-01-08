@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 /**
  * @author Peter Abeles
@@ -41,7 +41,7 @@ public class MatrixMultQuad {
                 || A.numRows != out.numRows || A.numRows != out.numCols )
             throw new IllegalArgumentException("Incompatible matrix shapes");
 
-        CommonOps_D64.fill(out, 0);
+        CommonOps_R64.fill(out, 0);
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {

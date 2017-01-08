@@ -24,7 +24,7 @@ import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 import static org.ejml.alg.block.InnerMultiplication_B64.blockMultPlusTransA;
 
@@ -69,7 +69,7 @@ public class TridiagonalDecompositionHouseholder_B64
             if( T.numRows != A.numRows || T.numCols != A.numCols )
                 throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
 
-            CommonOps_D64.fill(T, 0);
+            CommonOps_R64.fill(T, 0);
         }
 
         T.set(0,0,A.data[0]);

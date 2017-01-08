@@ -20,9 +20,9 @@ package org.ejml.equation;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -39,11 +39,11 @@ public class TestMatrixConstructor {
 
     @Test
     public void basicTest() {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(10,8,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(10,8,rand);
 
-        RowMatrix_F64 B = CommonOps_D64.extract(A,0,5,0,3);
-        RowMatrix_F64 C = CommonOps_D64.extract(A,0,5,3,8);
-        RowMatrix_F64 D = CommonOps_D64.extract(A,5,10,0,8);
+        RowMatrix_F64 B = CommonOps_R64.extract(A,0,5,0,3);
+        RowMatrix_F64 C = CommonOps_R64.extract(A,0,5,3,8);
+        RowMatrix_F64 D = CommonOps_R64.extract(A,5,10,0,8);
 
         MatrixConstructor alg = new MatrixConstructor(new ManagerTempVariables());
 
@@ -55,7 +55,7 @@ public class TestMatrixConstructor {
         alg.construct();
 
         RowMatrix_F64 found = alg.getOutput().matrix;
-        assertTrue(MatrixFeatures_D64.isIdentical(A, found, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_R64.isIdentical(A, found, UtilEjml.TEST_F64));
     }
 
     @Test

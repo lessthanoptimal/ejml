@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class MatrixConstructor {
                     }
 
                     if( v.matrix ) {
-                        CommonOps_D64.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
+                        CommonOps_R64.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
                     } else if( v.variable.getType() == VariableType.SCALAR ){
                         output.matrix.set(matrixRow,numCols,v.getValue());
                     } else if( v.variable.getType() == VariableType.INTEGER_SEQUENCE ) {

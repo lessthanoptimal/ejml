@@ -20,7 +20,7 @@ package org.ejml.equation;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.MatrixFeatures_D64;
+import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -168,7 +168,7 @@ public class TestEquation {
 
         RowMatrix_F64 B = eq.lookupMatrix("B");
         assertTrue(A.getMatrix() != B);
-        assertTrue(MatrixFeatures_D64.isEquals((RowMatrix_F64)A.getMatrix(), B));
+        assertTrue(MatrixFeatures_R64.isEquals((RowMatrix_F64)A.getMatrix(), B));
     }
 
     /**

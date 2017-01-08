@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.linsol.chol.CholeskyOuterSolver_B64;
-import org.ejml.alg.dense.linsol.LinearSolver_B64_to_D64;
+import org.ejml.alg.dense.linsol.LinearSolver_B64_to_R64;
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
@@ -31,7 +31,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  *
  * @author Peter Abeles
  */
-public class LinearSolverChol_B64 extends LinearSolver_B64_to_D64 {
+public class LinearSolverChol_B64 extends LinearSolver_B64_to_R64 {
 
     public LinearSolverChol_B64() {
         super(new CholeskyOuterSolver_B64());

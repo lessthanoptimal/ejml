@@ -20,13 +20,13 @@ package org.ejml.alg.complex.mult;
 
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.blockd3.BlockD3MatrixOps;
-import org.ejml.alg.dense.mult.MatrixMatrixMult_CD64;
+import org.ejml.alg.dense.mult.MatrixMatrixMult_CR64;
 import org.ejml.data.BlockD3Matrix64F;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.RowMatrix_C64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_CD64;
-import org.ejml.ops.RandomMatrices_CD64;
+import org.ejml.ops.CommonOps_CR64;
+import org.ejml.ops.RandomMatrices_CR64;
 
 import java.util.Random;
 
@@ -52,7 +52,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_CD64.mult(matA, matB, matResult);
+            CommonOps_CR64.mult(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -64,7 +64,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_CD64.mult_small(matA,matB,matResult);
+            MatrixMatrixMult_CR64.mult_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -88,7 +88,7 @@ public class BenchmarkMatrixMatrixMult {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_CD64.mult_reorder(matA, matB, matResult);
+            MatrixMatrixMult_CR64.mult_reorder(matA, matB, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -132,9 +132,9 @@ public class BenchmarkMatrixMatrixMult {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" K = "+numK);
-        RowMatrix_C64 matA = RandomMatrices_CD64.createRandom(numRows,numCols,-1,1,rand);
-        RowMatrix_C64 matB = RandomMatrices_CD64.createRandom(numCols,numK,-1,1,rand);
-        RowMatrix_C64 matResult = RandomMatrices_CD64.createRandom(numRows, numK,-1,1, rand);
+        RowMatrix_C64 matA = RandomMatrices_CR64.createRandom(numRows,numCols,-1,1,rand);
+        RowMatrix_C64 matB = RandomMatrices_CR64.createRandom(numCols,numK,-1,1,rand);
+        RowMatrix_C64 matResult = RandomMatrices_CR64.createRandom(numRows, numK,-1,1, rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
                 0,//mult(matA,matB,matResult,numTrials),

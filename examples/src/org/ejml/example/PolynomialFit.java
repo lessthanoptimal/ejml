@@ -18,9 +18,9 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.dense.linsol.AdjustableLinearSolver_D64;
+import org.ejml.alg.dense.linsol.AdjustableLinearSolver_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.LinearSolverFactory_D64;
+import org.ejml.factory.LinearSolverFactory_R64;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ public class PolynomialFit {
     RowMatrix_F64 y;
 
     // solver used to compute
-    AdjustableLinearSolver_D64 solver;
+    AdjustableLinearSolver_R64 solver;
 
     /**
      * Constructor.
@@ -61,7 +61,7 @@ public class PolynomialFit {
         y = new RowMatrix_F64(1,1);
 
         // create a solver that allows elements to be added or removed efficiently
-        solver = LinearSolverFactory_D64.adjustable();
+        solver = LinearSolverFactory_R64.adjustable();
     }
 
     /**

@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -37,7 +37,7 @@ public class BenchmarkMatrixMultProduct {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.multTransA(matA, matA, matResult);
+            CommonOps_R64.multTransA(matA, matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -49,7 +49,7 @@ public class BenchmarkMatrixMultProduct {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMultProduct_D64.inner_small(matA, matResult);
+            MatrixMultProduct_R64.inner_small(matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -61,7 +61,7 @@ public class BenchmarkMatrixMultProduct {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMultProduct_D64.inner_reorder(matA, matResult);
+            MatrixMultProduct_R64.inner_reorder(matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -72,8 +72,8 @@ public class BenchmarkMatrixMultProduct {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" trials "+numTrials);
-        RowMatrix_F64 matA = RandomMatrices_D64.createRandom(numRows, numCols, rand);
-        RowMatrix_F64 matResult = RandomMatrices_D64.createRandom(numCols,numCols,rand);
+        RowMatrix_F64 matA = RandomMatrices_R64.createRandom(numRows, numCols, rand);
+        RowMatrix_F64 matResult = RandomMatrices_R64.createRandom(numCols,numCols,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 0,//multTransA(matA,matResult,numTrials),

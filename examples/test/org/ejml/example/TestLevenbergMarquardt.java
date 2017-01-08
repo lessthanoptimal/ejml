@@ -21,7 +21,7 @@ package org.ejml.example;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -47,7 +47,7 @@ public class TestLevenbergMarquardt {
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        RowMatrix_F64 X = RandomMatrices_D64.createRandom(NUM_PTS,1,rand);
+        RowMatrix_F64 X = RandomMatrices_R64.createRandom(NUM_PTS,1,rand);
 
         RowMatrix_F64 numJacobian = new RowMatrix_F64(3,NUM_PTS);
         RowMatrix_F64 analyticalJacobian = new RowMatrix_F64(3,NUM_PTS);
@@ -83,7 +83,7 @@ public class TestLevenbergMarquardt {
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        RowMatrix_F64 X = RandomMatrices_D64.createRandom(numPoints,1,rand);
+        RowMatrix_F64 X = RandomMatrices_R64.createRandom(numPoints,1,rand);
         RowMatrix_F64 Y = new RowMatrix_F64(numPoints,1);
         func.compute(param,X,Y);
 

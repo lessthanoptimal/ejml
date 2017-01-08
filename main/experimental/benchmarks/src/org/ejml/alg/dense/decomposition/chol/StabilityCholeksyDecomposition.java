@@ -20,10 +20,10 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -39,7 +39,7 @@ public class StabilityCholeksyDecomposition {
 
     public static double evaluate(CholeskyDecomposition_F64<RowMatrix_F64> alg , RowMatrix_F64 orig ) {
 
-        if( !DecompositionFactory_D64.decomposeSafe(alg,orig)) {
+        if( !DecompositionFactory_R64.decomposeSafe(alg,orig)) {
             return Double.NaN;
         }
 
@@ -56,9 +56,9 @@ public class StabilityCholeksyDecomposition {
 
     private static void runAlgorithms( RowMatrix_F64 mat  )
     {
-        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner_D64(),mat));
-        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock_D64(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
-        System.out.println("block64           = "+ evaluate(new CholeskyDecomposition_B64_to_D64(true),mat));
+        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner_R64(),mat));
+        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock_R64(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
+        System.out.println("block64           = "+ evaluate(new CholeskyDecomposition_B64_to_R64(true),mat));
 
     }
 
@@ -73,8 +73,8 @@ public class StabilityCholeksyDecomposition {
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                RowMatrix_F64 mat = RandomMatrices_D64.createSymmPosDef(size,rand);
-                CommonOps_D64.scale(scales[i],mat);
+                RowMatrix_F64 mat = RandomMatrices_R64.createSymmPosDef(size,rand);
+                CommonOps_R64.scale(scales[i],mat);
                 runAlgorithms(mat);
             }
         }

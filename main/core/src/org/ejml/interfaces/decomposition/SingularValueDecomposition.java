@@ -42,8 +42,8 @@ import org.ejml.data.Matrix;
  * </p>
  *
  * <p>
- * To create a new instance of SingularValueDecomposition see DecompositionFactory_D64
- * and SingularOps_D64 contains additional helpful SVD related functions.
+ * To create a new instance of SingularValueDecomposition see DecompositionFactory_R64
+ * and SingularOps_R64 contains additional helpful SVD related functions.
  * </p>
  *
  * <p>

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 
 /**
@@ -40,7 +40,7 @@ public class SmartRotatorUpdate {
 
     public void init( RowMatrix_F64 R ) {
         this.R = R;
-        CommonOps_D64.setIdentity(R);
+        CommonOps_R64.setIdentity(R);
 
         int a = Math.min(R.numRows,R.numCols);
 

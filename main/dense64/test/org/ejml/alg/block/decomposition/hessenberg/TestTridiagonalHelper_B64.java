@@ -20,13 +20,13 @@ package org.ejml.alg.block.decomposition.hessenberg;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_D64;
+import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -58,9 +58,9 @@ public class TestTridiagonalHelper_B64 {
 //            System.out.println("********* width "+width);
 
             // create a random symmetric matrix
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_D64.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_R64.createSymmetric(width,-1,1,rand));
 
-            TridiagonalDecompositionHouseholderOrig_D64 decomp = new TridiagonalDecompositionHouseholderOrig_D64();
+            TridiagonalDecompositionHouseholderOrig_R64 decomp = new TridiagonalDecompositionHouseholderOrig_R64();
             decomp.decompose(A.matrix_F64());
 
             D1Submatrix_F64 Ab = insertIntoBlock(offX,offY,A,r);
@@ -174,7 +174,7 @@ public class TestTridiagonalHelper_B64 {
     private static D1Submatrix_F64 insertIntoBlock(int offRow , int offCol , SimpleMatrix A , int r )
     {
         RowMatrix_F64 B = new RowMatrix_F64(offRow+A.numRows(),offCol+A.numCols());
-        CommonOps_D64.insert(A.matrix_F64(),B,offRow,offCol);
+        CommonOps_R64.insert(A.matrix_F64(),B,offRow,offCol);
 
         BlockMatrix_F64 C = MatrixOps_B64.convert(B,r);
         return new D1Submatrix_F64(C,offRow,C.numRows,offCol,C.numCols);

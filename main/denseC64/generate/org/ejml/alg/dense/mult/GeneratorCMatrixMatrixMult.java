@@ -38,7 +38,7 @@ public class GeneratorCMatrixMatrixMult {
                 "package org.ejml.alg.dense.mult;\n" +
                 "\n" +
                 "import org.ejml.data.RowMatrix_C64;\n" +
-                "import org.ejml.ops.CommonOps_CD64;\n" +
+                "import org.ejml.ops.CommonOps_CR64;\n" +
                 "import org.ejml.ops.MatrixDimensionException;\n" +
                 "\n" +
                 "/**\n" +
@@ -51,7 +51,7 @@ public class GeneratorCMatrixMatrixMult {
                 " * @author Peter Abeles\n" +
                 " */\n" +
                 "@SuppressWarnings(\"Duplicates\")\n" +
-                "public class MatrixMatrixMult_CD64 {\n";
+                "public class MatrixMatrixMult_CR64 {\n";
 
         stream.print(preamble);
 
@@ -476,7 +476,7 @@ public class GeneratorCMatrixMatrixMult {
 
     private String handleZeros( boolean add ) {
 
-        String fill = add ? "" : "            CommonOps_CD64.fill(c,0,0);\n";
+        String fill = add ? "" : "            CommonOps_CR64.fill(c,0,0);\n";
 
         String ret =
                 "        if( a.numCols == 0 || a.numRows == 0 ) {\n" +
@@ -520,7 +520,7 @@ public class GeneratorCMatrixMatrixMult {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        GeneratorCMatrixMatrixMult gen = new GeneratorCMatrixMatrixMult("MatrixMatrixMult_CD64.java");
+        GeneratorCMatrixMatrixMult gen = new GeneratorCMatrixMatrixMult("MatrixMatrixMult_CR64.java");
 
         gen.createClass();
     }

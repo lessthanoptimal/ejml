@@ -23,8 +23,8 @@ import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
         BlockMatrix_F64 B = new BlockMatrix_F64(A.numRows,A.numCols,BLOCK_LENGTH);
 
         MatrixOps_B64.convert(A,B);
@@ -76,7 +76,7 @@ public class TestMatrixOps_B64 {
 
     private void checkConvertInline_dense_to_block( int m , int n ) {
         double tmp[] = new double[BLOCK_LENGTH*n];
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
         RowMatrix_F64 A_orig = A.copy();
 
         MatrixOps_B64.convertRowToBlock(m,n,BLOCK_LENGTH,A.data,tmp);
@@ -269,8 +269,8 @@ public class TestMatrixOps_B64 {
 
     private void checkMult( Method func, boolean transA , boolean transB ,
                             int m, int n, int o) {
-        RowMatrix_F64 A_d = RandomMatrices_D64.createRandom(m, n,rand);
-        RowMatrix_F64 B_d = RandomMatrices_D64.createRandom(n, o,rand);
+        RowMatrix_F64 A_d = RandomMatrices_R64.createRandom(m, n,rand);
+        RowMatrix_F64 B_d = RandomMatrices_R64.createRandom(n, o,rand);
         RowMatrix_F64 C_d = new RowMatrix_F64(m, o);
 
         BlockMatrix_F64 A_b = MatrixOps_B64.convert(A_d,BLOCK_LENGTH);
@@ -283,7 +283,7 @@ public class TestMatrixOps_B64 {
         if( transB )
             B_b= MatrixOps_B64.transpose(B_b,null);
 
-        CommonOps_D64.mult(A_d,B_d,C_d);
+        CommonOps_R64.mult(A_d,B_d,C_d);
         try {
             func.invoke(null,A_b,B_b,C_b);
         } catch (IllegalAccessException e) {
@@ -311,11 +311,11 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkTranSrcBlockToDense( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
         RowMatrix_F64 A_t = new RowMatrix_F64(n,m);
         BlockMatrix_F64 B = new BlockMatrix_F64(n,m,BLOCK_LENGTH);
 
-        CommonOps_D64.transpose(A,A_t);
+        CommonOps_R64.transpose(A,A_t);
         MatrixOps_B64.convertTranSrc(A,B);
 
         assertTrue( GenericMatrixOps_F64.isEquivalent(A_t,B,UtilEjml.TEST_F64));
@@ -334,7 +334,7 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkTranspose( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
         RowMatrix_F64 A_t = new RowMatrix_F64(n,m);
 
         BlockMatrix_F64 B = new BlockMatrix_F64(A.numRows,A.numCols,BLOCK_LENGTH);
@@ -342,7 +342,7 @@ public class TestMatrixOps_B64 {
 
         MatrixOps_B64.convert(A,B);
 
-        CommonOps_D64.transpose(A,A_t);
+        CommonOps_R64.transpose(A,A_t);
         MatrixOps_B64.transpose(B,B_t);
 
         assertTrue( GenericMatrixOps_F64.isEquivalent(A_t,B_t,UtilEjml.TEST_F64));
@@ -414,7 +414,7 @@ public class TestMatrixOps_B64 {
                     }
                 }
 
-                CommonOps_D64.fill(B, 0);
+                CommonOps_R64.fill(B, 0);
                 MatrixOps_B64.copyTriangle(false,A,B);
                 
                 for( int i = 0; i < numRows; i++) {
@@ -433,7 +433,7 @@ public class TestMatrixOps_B64 {
         for( int numRows = 4; numRows <= 6; numRows += 1 ){
             for( int numCols = 4; numCols <= 6; numCols += 1 ){
                 BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
-                CommonOps_D64.fill(B, 0);
+                CommonOps_R64.fill(B, 0);
 
                 MatrixOps_B64.copyTriangle(true,A,B);
 
@@ -446,7 +446,7 @@ public class TestMatrixOps_B64 {
                     }
                 }
 
-                CommonOps_D64.fill(B, 0);
+                CommonOps_R64.fill(B, 0);
                 MatrixOps_B64.copyTriangle(false,A,B);
 
                 for( int i = 0; i < B.numRows; i++) {

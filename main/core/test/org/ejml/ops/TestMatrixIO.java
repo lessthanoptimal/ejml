@@ -37,14 +37,14 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_binary() throws IOException {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(6,3,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
 
         MatrixIO.saveBin(A, "temp.mat");
 
         RowMatrix_F64 A_copy = MatrixIO.loadBin("temp.mat");
 
         assertTrue(A != A_copy);
-        assertTrue(MatrixFeatures_D64.isEquals(A,A_copy));
+        assertTrue(MatrixFeatures_R64.isEquals(A,A_copy));
 
         // clean up
         File f = new File("temp.mat");
@@ -54,14 +54,14 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_csv() throws IOException {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(6,3,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
 
         MatrixIO.saveCSV(A,"temp.csv");
 
         RowMatrix_F64 A_copy = MatrixIO.loadCSV("temp.csv");
 
         assertTrue(A != A_copy);
-        assertTrue(MatrixFeatures_D64.isEquals(A,A_copy));
+        assertTrue(MatrixFeatures_R64.isEquals(A,A_copy));
 
         // clean up
         File f = new File("temp.csv");

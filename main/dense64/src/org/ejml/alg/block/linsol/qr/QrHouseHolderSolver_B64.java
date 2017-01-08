@@ -25,7 +25,7 @@ import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.SpecializedOps_D64;
+import org.ejml.ops.SpecializedOps_R64;
 
 
 /**
@@ -86,7 +86,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix_F64> {
      */
     @Override
     public /**/double quality() {
-        return SpecializedOps_D64.qualityTriangular(decomposer.getQR());
+        return SpecializedOps_R64.qualityTriangular(decomposer.getQR());
     }
 
     @Override

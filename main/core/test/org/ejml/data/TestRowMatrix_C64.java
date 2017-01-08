@@ -20,9 +20,9 @@ package org.ejml.data;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_CD64;
-import org.ejml.ops.MatrixFeatures_CD64;
-import org.ejml.ops.RandomMatrices_CD64;
+import org.ejml.ops.CommonOps_CR64;
+import org.ejml.ops.MatrixFeatures_CR64;
+import org.ejml.ops.RandomMatrices_CR64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -188,18 +188,18 @@ public class TestRowMatrix_C64 {
 
     @Test
     public void set_array() {
-        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(3,4,rand);
+        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(3,4,rand);
 
         RowMatrix_C64 B = new RowMatrix_C64(1,1);
         B.set(3,4,true,A.data);
 
-        assertTrue(MatrixFeatures_CD64.isEquals(A,B));
+        assertTrue(MatrixFeatures_CR64.isEquals(A,B));
 
         RowMatrix_C64 A_tran = new RowMatrix_C64(4,3);
-        CommonOps_CD64.transpose(A,A_tran);
+        CommonOps_CR64.transpose(A,A_tran);
 
         B.set(3,4,false,A_tran.data);
 
-        assertTrue(MatrixFeatures_CD64.isEquals(A,B));
+        assertTrue(MatrixFeatures_CR64.isEquals(A,B));
     }
 }

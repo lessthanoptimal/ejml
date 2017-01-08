@@ -18,13 +18,13 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_D64;
+import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -43,13 +43,13 @@ public class StabilitySymmEigen {
             return Double.NaN;
         }
 
-        return DecompositionFactory_D64.quality(orig,alg);
+        return DecompositionFactory_R64.quality(orig,alg);
     }
 
     private static void runAlgorithms( RowMatrix_F64 mat  )
     {
-        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_D64.tridiagonal(0);
-        System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition_D64(decomp,true),mat));
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_R64.tridiagonal(0);
+        System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition_R64(decomp,true),mat));
     }
 
     public static void main( String args [] ) {
@@ -59,12 +59,12 @@ public class StabilitySymmEigen {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
         System.out.println("Square matrix");
-        RowMatrix_F64 orig = RandomMatrices_D64.createSymmetric(size,-1,1,rand);
+        RowMatrix_F64 orig = RandomMatrices_R64.createSymmetric(size,-1,1,rand);
         RowMatrix_F64 mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-            CommonOps_D64.scale(scales[i],orig,mat);
+            CommonOps_R64.scale(scales[i],orig,mat);
             runAlgorithms(mat);
         }
 

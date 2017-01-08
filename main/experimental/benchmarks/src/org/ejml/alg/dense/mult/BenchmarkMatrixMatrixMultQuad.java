@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -39,8 +39,8 @@ public class BenchmarkMatrixMatrixMultQuad {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_D64.mult_small(A,B,tmp);
-            MatrixMatrixMult_D64.multTransB(tmp, A, expected);
+            MatrixMatrixMult_R64.mult_small(A,B,tmp);
+            MatrixMatrixMult_R64.multTransB(tmp, A, expected);
         }
 
         long curr = System.currentTimeMillis();
@@ -61,9 +61,9 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     public static void performTests( int numRows , int numCols ,
                                      int numTrials ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,rand);
-        RowMatrix_F64 B = RandomMatrices_D64.createRandom(numCols,numCols,rand);
-        RowMatrix_F64 out = RandomMatrices_D64.createRandom(numRows, numRows, rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+        RowMatrix_F64 B = RandomMatrices_R64.createRandom(numCols,numCols,rand);
+        RowMatrix_F64 out = RandomMatrices_R64.createRandom(numRows, numRows, rand);
         RowMatrix_F64 tmp = new RowMatrix_F64(numRows,numCols);
 
         System.out.printf(numRows+"  "+numCols+"     Mult1: %7d  Quad1 %7d\n",

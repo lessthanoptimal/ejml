@@ -18,14 +18,14 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64_D64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_D64;
-import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64_R64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_R64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_R64;
+import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.LinearSolverFactory_D64;
+import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -44,8 +44,8 @@ public class BenchmarkSolveOver {
     public static long solveBenchmark(LinearSolver<RowMatrix_F64> solver , int numTrials ) {
         rand.setSeed(SEED);
         RowMatrix_F64 X = new RowMatrix_F64(A.numCols,B.numCols);
-        RandomMatrices_D64.setRandom(A,rand);
-        RandomMatrices_D64.setRandom(B,rand);
+        RandomMatrices_R64.setRandom(A,rand);
+        RandomMatrices_R64.setRandom(B,rand);
 
         RowMatrix_F64 B_tmp = new RowMatrix_F64(B.numRows,B.numCols);
 
@@ -78,15 +78,15 @@ public class BenchmarkSolveOver {
     private static void runAlgorithms( int numTrials )
     {
         System.out.println("  solve QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse_D64(),numTrials));
+                new LinearSolverQrHouse_R64(),numTrials));
         System.out.println("  solve QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol_D64(),numTrials));
+                new LinearSolverQrHouseCol_R64(),numTrials));
         System.out.println("  solve QR tran        = "+ solveBenchmark(
-                new LinearSolverQrHouseTran_D64(),numTrials));
+                new LinearSolverQrHouseTran_R64(),numTrials));
         System.out.println("  solve QR Block64      = "+ solveBenchmark(
-                new LinearSolverQrBlock64_D64(),numTrials));
+                new LinearSolverQrBlock64_R64(),numTrials));
         System.out.println("  Selected              = "+ solveBenchmark(
-                LinearSolverFactory_D64.leastSquares(A.numRows, A.numCols),numTrials));
+                LinearSolverFactory_R64.leastSquares(A.numRows, A.numCols),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -49,8 +49,8 @@ public class BenchmarkLuDecomposition {
 
     private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
-        benchmark(new LUDecompositionAlt_D64(),mat,numTrials);
-        benchmark(new LUDecompositionNR_D64(),mat,numTrials);
+        benchmark(new LUDecompositionAlt_R64(),mat,numTrials);
+        benchmark(new LUDecompositionNR_R64(),mat,numTrials);
     }
 
     public static void main( String args [] ) {
@@ -66,7 +66,7 @@ public class BenchmarkLuDecomposition {
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
 //            System.out.print("* Creating matrix ");
-            RowMatrix_F64 symMat = RandomMatrices_D64.createRandom(w,w,-1,1,rand);
+            RowMatrix_F64 symMat = RandomMatrices_R64.createRandom(w,w,-1,1,rand);
 //            System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

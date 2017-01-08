@@ -18,9 +18,9 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
+import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class BenchmarkDeterminant {
         double total = 0;
 
         for( int i = 0; i < numTrials; i++ ) {
-            total += UnrolledDeterminantFromMinor_D64.det(mat);
+            total += UnrolledDeterminantFromMinor_R64.det(mat);
         }
 
         long after = System.currentTimeMillis();
@@ -58,7 +58,7 @@ public class BenchmarkDeterminant {
         double total = 0;
 
         for( int i = 0; i < TOTAL_TRIALS; i++ ) {
-            total += UnrolledDeterminantFromMinor_D64.det4(mat);
+            total += UnrolledDeterminantFromMinor_R64.det4(mat);
         }
 
         long after = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class BenchmarkDeterminant {
     {
         long before = System.currentTimeMillis();
 
-        DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(4,5);
+        DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(4,5);
 
         double total = 0;
 
@@ -93,7 +93,7 @@ public class BenchmarkDeterminant {
     {
         long before = System.currentTimeMillis();
 
-        LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
+        LUDecompositionAlt_R64 alg = new LUDecompositionAlt_R64();
 
         double total = 0;
 
@@ -115,7 +115,7 @@ public class BenchmarkDeterminant {
     {
         long before = System.currentTimeMillis();
 
-        DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(mat.numRows,5);
+        DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(mat.numRows,5);
 
         double total = 0;
 
@@ -170,7 +170,7 @@ public class BenchmarkDeterminant {
 
             System.out.println("Dimension = "+i+"  trials = "+numTrials);
 
-            mat = RandomMatrices_D64.createRandom(i,i,rand);
+            mat = RandomMatrices_R64.createRandom(i,i,rand);
 
             System.out.println("  Auto         = "+computeAuto(mat,numTrials));
 //            System.out.println("  Minor         = "+computeMinor(mat,numTrials));

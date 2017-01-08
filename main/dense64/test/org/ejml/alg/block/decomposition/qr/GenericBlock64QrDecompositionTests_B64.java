@@ -21,13 +21,13 @@ package org.ejml.alg.block.decomposition.qr;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
+import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -79,7 +79,7 @@ public class GenericBlock64QrDecompositionTests_B64 {
                 MatrixOps_B64.multTransA(Q,B,expected);
                 alg.applyQTran(B);
 
-                assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_R64.isIdentical(expected,B,UtilEjml.TEST_F64));
             }
         }
     }
@@ -103,7 +103,7 @@ public class GenericBlock64QrDecompositionTests_B64 {
                 MatrixOps_B64.mult(Q,B,expected);
                 alg.applyQ(B);
 
-                assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_R64.isIdentical(expected,B,UtilEjml.TEST_F64));
             }
         }
     }
@@ -121,15 +121,15 @@ public class GenericBlock64QrDecompositionTests_B64 {
     }
 
     private void checkSize( int numRows , int numCols ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
         BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
 
-        QRDecompositionHouseholderTran_D64 algCheck = new QRDecompositionHouseholderTran_D64();
+        QRDecompositionHouseholderTran_R64 algCheck = new QRDecompositionHouseholderTran_R64();
         assertTrue(algCheck.decompose(A));
 
         assertTrue(alg.decompose(Ab));
 
-        RowMatrix_F64 expected = CommonOps_D64.transpose(algCheck.getQR(),null);
+        RowMatrix_F64 expected = CommonOps_R64.transpose(algCheck.getQR(),null);
 //        expected.print();
 //        Ab.print();
 

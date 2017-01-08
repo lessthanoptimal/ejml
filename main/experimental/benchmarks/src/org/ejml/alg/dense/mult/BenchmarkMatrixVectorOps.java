@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -38,7 +38,7 @@ public class BenchmarkMatrixVectorOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_D64.mult_small(matA,matB,matResult);
+            MatrixMatrixMult_R64.mult_small(matA,matB,matResult);
 //            MatrixMatrixMult.mult_aux(matA,matB,matResult,null);
         }
 
@@ -51,7 +51,7 @@ public class BenchmarkMatrixVectorOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_D64.multTransA_small(matA,matB,matResult);
+            MatrixMatrixMult_R64.multTransA_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -63,7 +63,7 @@ public class BenchmarkMatrixVectorOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_D64.multTransA_reorder(matA,matB,matResult);
+            MatrixMatrixMult_R64.multTransA_reorder(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -75,7 +75,7 @@ public class BenchmarkMatrixVectorOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixVectorMult_D64.mult(matA,matB,matResult);
+            MatrixVectorMult_R64.mult(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -87,7 +87,7 @@ public class BenchmarkMatrixVectorOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixVectorMult_D64.multTransA_small(matA,matB,matResult);
+            MatrixVectorMult_R64.multTransA_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -99,7 +99,7 @@ public class BenchmarkMatrixVectorOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixVectorMult_D64.multTransA_reorder(matA,matB,matResult);
+            MatrixVectorMult_R64.multTransA_reorder(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -109,10 +109,10 @@ public class BenchmarkMatrixVectorOps {
     public static void performTests( int numRows , int numCols ,
                                      int numTrials )
     {
-        RowMatrix_F64 matA = RandomMatrices_D64.createRandom(numRows,numCols,rand);
-        RowMatrix_F64 matA_tran = RandomMatrices_D64.createRandom(numCols,numRows,rand);
-        RowMatrix_F64 matB = RandomMatrices_D64.createRandom(numCols,1,rand);
-        RowMatrix_F64 matResult = RandomMatrices_D64.createRandom(numRows,1,rand);
+        RowMatrix_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+        RowMatrix_F64 matA_tran = RandomMatrices_R64.createRandom(numCols,numRows,rand);
+        RowMatrix_F64 matB = RandomMatrices_R64.createRandom(numCols,1,rand);
+        RowMatrix_F64 matResult = RandomMatrices_R64.createRandom(numRows,1,rand);
 
 
         System.out.printf("Mult Vec:              %10d\n",

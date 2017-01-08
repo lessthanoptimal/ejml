@@ -22,7 +22,7 @@ import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Matrix_F64;
 import org.ejml.data.RealMatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 
 /**
@@ -46,12 +46,12 @@ public class BenchmarkInstanceOf {
         public void process(Stuff a, RealMatrix_F64 M) {
 
             if( M instanceof BlockMatrix_F64) {
-                CommonOps_D64.scale(1.0,(BlockMatrix_F64)M);
+                CommonOps_R64.scale(1.0,(BlockMatrix_F64)M);
             } else if( M instanceof RowMatrix_F64) {
-                CommonOps_D64.scale(SCALE,(RowMatrix_F64)M);
+                CommonOps_R64.scale(SCALE,(RowMatrix_F64)M);
 //                CommonOps.scale(0.5,(RowMatrix_F64)M);
             } else if(M instanceof D1Matrix_F64) {
-                CommonOps_D64.scale(1.0,(D1Matrix_F64)M);
+                CommonOps_R64.scale(1.0,(D1Matrix_F64)M);
             } else {
                throw new IllegalArgumentException("Who knows");
             }
@@ -61,11 +61,11 @@ public class BenchmarkInstanceOf {
     public static void withIfStatement( RowMatrix_F64 M )
     {
         if( M.numCols > 10 ) {
-            CommonOps_D64.scale(2.0,M);
+            CommonOps_R64.scale(2.0,M);
         } else if( M.numRows > 12 ) {
-            CommonOps_D64.scale(2.0,M);
+            CommonOps_R64.scale(2.0,M);
         } else {
-            CommonOps_D64.scale(SCALE,M);
+            CommonOps_R64.scale(SCALE,M);
 //            CommonOps.scale(0.5,M);
         }
     }
@@ -87,7 +87,7 @@ public class BenchmarkInstanceOf {
         long before = System.currentTimeMillis();
 
         for( int i = 0; i < N; i++ ) {
-            CommonOps_D64.scale(SCALE,M);
+            CommonOps_R64.scale(SCALE,M);
 //            CommonOps.scale(0.5,M);
         }
 

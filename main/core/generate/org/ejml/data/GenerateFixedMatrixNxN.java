@@ -37,7 +37,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
     }
 
     public void print( int dimen ) throws FileNotFoundException {
-        String className = classPreamble +dimen+"x"+dimen+"_D64";
+        String className = classPreamble +dimen+"x"+dimen+"_R64";
 
         setOutputFile(className);
 

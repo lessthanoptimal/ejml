@@ -18,11 +18,11 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_D64;
+import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_R64;
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -56,7 +56,7 @@ public class BenchmarkInvertSquare {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            UnrolledInverseFromMinor_D64.inv(orig,A);
+            UnrolledInverseFromMinor_R64.inv(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
@@ -68,7 +68,7 @@ public class BenchmarkInvertSquare {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.invert(orig,A);
+            CommonOps_R64.invert(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
@@ -81,7 +81,7 @@ public class BenchmarkInvertSquare {
 //        System.out.println("invert GJ              = "+ invertBenchmark(
 //                new GaussJordan(mat.numRows),mat,numTrials));
 //        System.out.println("invert LU              = "+ invertBenchmark(
-//                new LinearSolverLu(new LUDecompositionAlt_D64()),mat,numTrials));
+//                new LinearSolverLu(new LUDecompositionAlt_R64()),mat,numTrials));
 //        System.out.println("invert LU  NR          = "+ invertBenchmark(
 //                new LinearSolverLu(new LUDecompositionNR()),mat,numTrials));
 //        System.out.println("invert Ops             = "+
@@ -100,7 +100,7 @@ public class BenchmarkInvertSquare {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
-            RowMatrix_F64 mat = RandomMatrices_D64.createRandom(w,w,rand);
+            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
 
             runAlgorithms(mat,trials[i]);
         }

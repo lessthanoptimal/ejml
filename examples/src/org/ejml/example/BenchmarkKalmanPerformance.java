@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class BenchmarkKalmanPerformance {
 
     public void run() {
         RowMatrix_F64 priorX = new RowMatrix_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        RowMatrix_F64 priorP = CommonOps_D64.identity(9);
+        RowMatrix_F64 priorP = CommonOps_R64.identity(9);
 
         RowMatrix_F64 trueX = new RowMatrix_F64(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
 
@@ -85,8 +85,8 @@ public class BenchmarkKalmanPerformance {
         RowMatrix_F64 z = new RowMatrix_F64(H.numRows,1);
 
         for( int i = 0; i < MAX_STEPS; i++ ) {
-            CommonOps_D64.mult(F,x,x_next);
-            CommonOps_D64.mult(H,x_next,z);
+            CommonOps_R64.mult(F,x,x_next);
+            CommonOps_R64.mult(H,x_next,z);
             ret.add(z.copy());
             x.set(x_next);
         }
@@ -97,7 +97,7 @@ public class BenchmarkKalmanPerformance {
     private void processMeas( KalmanFilter f ,
                               List<RowMatrix_F64> meas )
     {
-        RowMatrix_F64 R = CommonOps_D64.identity(measDOF);
+        RowMatrix_F64 R = CommonOps_R64.identity(measDOF);
 
         for(RowMatrix_F64 z : meas ) {
             f.predict();

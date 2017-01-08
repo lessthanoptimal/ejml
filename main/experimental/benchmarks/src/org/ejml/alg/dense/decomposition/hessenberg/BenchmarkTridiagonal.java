@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -34,7 +34,7 @@ public class BenchmarkTridiagonal {
 
     public static long basic(RowMatrix_F64 orig , int numTrials ) {
 
-        TridiagonalDecompositionHouseholder_D64 alg = new TridiagonalDecompositionHouseholder_D64();
+        TridiagonalDecompositionHouseholder_R64 alg = new TridiagonalDecompositionHouseholder_R64();
 
         long prev = System.currentTimeMillis();
 
@@ -52,7 +52,7 @@ public class BenchmarkTridiagonal {
 
     public static long alt(RowMatrix_F64 orig , int numTrials ) {
 
-        TridiagonalDecompositionHouseholderOrig_D64 alg = new TridiagonalDecompositionHouseholderOrig_D64();
+        TridiagonalDecompositionHouseholderOrig_R64 alg = new TridiagonalDecompositionHouseholderOrig_R64();
 
         long prev = System.currentTimeMillis();
 
@@ -66,7 +66,7 @@ public class BenchmarkTridiagonal {
     public static long block(RowMatrix_F64 orig , int numTrials ) {
 
 
-        TridiagonalDecomposition_B64_to_D64 alg = new TridiagonalDecomposition_B64_to_D64();
+        TridiagonalDecomposition_B64_to_R64 alg = new TridiagonalDecomposition_B64_to_R64();
 
         long prev = System.currentTimeMillis();
 
@@ -102,7 +102,7 @@ public class BenchmarkTridiagonal {
             System.out.printf("Processing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            RowMatrix_F64 mat = RandomMatrices_D64.createRandom(w,w,rand);
+            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

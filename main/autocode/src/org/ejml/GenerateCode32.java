@@ -39,11 +39,11 @@ public class GenerateCode32 {
 
     public GenerateCode32() {
 
-        suffices64.add("_B64_to_D64");
-        suffices64.add("_D64");
+        suffices64.add("_B64_to_R64");
+        suffices64.add("_R64");
         suffices64.add("_B64");
         suffices64.add("_F64");
-        suffices64.add("_CD64");
+        suffices64.add("_CR64");
         suffices64.add("_C64");
 
         for( String word : suffices64 ) {
@@ -57,10 +57,11 @@ public class GenerateCode32 {
         converter.replacePattern("double", "float");
         converter.replacePattern("Double", "Float");
         converter.replacePattern("B64", "B32");
-        converter.replacePattern("D64", "D32");
+        converter.replacePattern("R64", "R32");
         converter.replacePattern("F64", "F32");
         converter.replacePattern("C64", "C32");
-        converter.replacePattern("CD64", "CD32");
+        converter.replacePattern("CR64", "CR32");
+        converter.replacePattern("CB64", "CB32");
         converter.replacePattern("64-bit", "32-bit");
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");
         converter.replacePattern("UtilEjml.EPS", "UtilEjml.F_EPS");

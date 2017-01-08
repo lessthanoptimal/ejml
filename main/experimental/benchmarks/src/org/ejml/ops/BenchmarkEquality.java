@@ -36,7 +36,7 @@ public class BenchmarkEquality {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            args = MatrixFeatures_D64.isEquals(matA,matB, UtilEjml.TEST_F64);
+            args = MatrixFeatures_R64.isEquals(matA,matB, UtilEjml.TEST_F64);
         }
 
         long curr = System.currentTimeMillis();
@@ -53,7 +53,7 @@ public class BenchmarkEquality {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            args = MatrixFeatures_D64.isIdentical(matA,matB,UtilEjml.TEST_F64);
+            args = MatrixFeatures_R64.isIdentical(matA,matB,UtilEjml.TEST_F64);
         }
 
         long curr = System.currentTimeMillis();
@@ -65,7 +65,7 @@ public class BenchmarkEquality {
     public static void main( String args[] ) {
         Random rand = new Random(234234);
 
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(1000,2000,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(1000,2000,rand);
         RowMatrix_F64 B = A.copy();
 
         int N = 1000;

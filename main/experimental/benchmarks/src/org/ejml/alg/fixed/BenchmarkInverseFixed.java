@@ -22,9 +22,9 @@ import org.ejml.data.FixedMatrix3x3_F64;
 import org.ejml.data.FixedMatrix4x4_F64;
 import org.ejml.data.FixedMatrix6x6_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
+import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -61,7 +61,7 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.invert(a,b);
+            CommonOps_R64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
@@ -72,7 +72,7 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps3_D64.invert(a,b);
+            FixedOps3_R64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
@@ -83,21 +83,21 @@ public class BenchmarkInverseFixed {
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps4_D64.invert(a,b);
+            FixedOps4_R64.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
     public static void main( String arg[] ) {
-        RandomMatrices_D64.setRandom(dm3x3_a,rand);
-        RandomMatrices_D64.setRandom(dm3x3_b,rand);
+        RandomMatrices_R64.setRandom(dm3x3_a,rand);
+        RandomMatrices_R64.setRandom(dm3x3_b,rand);
 
-        RandomMatrices_D64.setRandom(dm4x4_a,rand);
-        RandomMatrices_D64.setRandom(dm4x4_b,rand);
+        RandomMatrices_R64.setRandom(dm4x4_a,rand);
+        RandomMatrices_R64.setRandom(dm4x4_b,rand);
 
-        RandomMatrices_D64.setRandom(dm6x6_a,rand);
-        RandomMatrices_D64.setRandom(dm6x6_b,rand);
+        RandomMatrices_R64.setRandom(dm6x6_a,rand);
+        RandomMatrices_R64.setRandom(dm6x6_b,rand);
 
         ConvertMatrixStruct_F64.convert(dm3x3_a,fixed3x3_a);
         ConvertMatrixStruct_F64.convert(dm3x3_b,fixed3x3_b);

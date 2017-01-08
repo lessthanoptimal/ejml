@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -46,7 +46,7 @@ public class BenchmarkMatrixMatrixMultTransA {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_D64.multTransA(matA,matB,matResult);
+            CommonOps_R64.multTransA(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -58,7 +58,7 @@ public class BenchmarkMatrixMatrixMultTransA {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_D64.multTransA_small(matA,matB,matResult);
+            MatrixMatrixMult_R64.multTransA_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -70,7 +70,7 @@ public class BenchmarkMatrixMatrixMultTransA {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_D64.multTransA_reorder(matA,matB,matResult);
+            MatrixMatrixMult_R64.multTransA_reorder(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -80,9 +80,9 @@ public class BenchmarkMatrixMatrixMultTransA {
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
     {
-        RowMatrix_F64 matA = RandomMatrices_D64.createRandom(numRows,numCols,rand);
-        RowMatrix_F64 matB = RandomMatrices_D64.createRandom(numCols,numK,rand);
-        RowMatrix_F64 matResult = RandomMatrices_D64.createRandom(numRows,numK,rand);
+        RowMatrix_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+        RowMatrix_F64 matB = RandomMatrices_R64.createRandom(numCols,numK,rand);
+        RowMatrix_F64 matResult = RandomMatrices_R64.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 mult(matA,matB,matResult,numTrials),

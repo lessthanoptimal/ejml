@@ -24,9 +24,9 @@ import org.ejml.alg.block.linsol.qr.QrHouseHolderSolver_B64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.MatrixFeatures_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -104,8 +104,8 @@ public class TestCholeskyOuterSolver_B64 {
     public void testQuality() {
         CholeskyOuterSolver_B64 solver = new CholeskyOuterSolver_B64();
 
-        RowMatrix_F64 A = CommonOps_D64.diag(5,3,2,1);
-        RowMatrix_F64 B = CommonOps_D64.diag(5,3,2,0.001);
+        RowMatrix_F64 A = CommonOps_R64.diag(5,3,2,1);
+        RowMatrix_F64 B = CommonOps_R64.diag(5,3,2,0.001);
 
         assertTrue(solver.setA(MatrixOps_B64.convert(A,r)));
         double qualityA = (double)solver.quality();
@@ -121,9 +121,9 @@ public class TestCholeskyOuterSolver_B64 {
     public void testQuality_scale() {
         CholeskyOuterSolver_B64 solver = new CholeskyOuterSolver_B64();
 
-        RowMatrix_F64 A = CommonOps_D64.diag(5,3,2,1);
+        RowMatrix_F64 A = CommonOps_R64.diag(5,3,2,1);
         RowMatrix_F64 B = A.copy();
-        CommonOps_D64.scale(0.001,B);
+        CommonOps_R64.scale(0.001,B);
 
         assertTrue(solver.setA(MatrixOps_B64.convert(A,r)));
         double qualityA = (double)solver.quality();
@@ -166,7 +166,7 @@ public class TestCholeskyOuterSolver_B64 {
 
         assertTrue(solver.setA(A));
 
-        boolean modified = !MatrixFeatures_D64.isEquals(A,A_orig);
+        boolean modified = !MatrixFeatures_R64.isEquals(A,A_orig);
 
         assertTrue(modified == solver.modifiesA());
     }
@@ -185,13 +185,13 @@ public class TestCholeskyOuterSolver_B64 {
 
         solver.solve(B,X);
 
-        boolean modified = !MatrixFeatures_D64.isEquals(B_orig,B);
+        boolean modified = !MatrixFeatures_R64.isEquals(B_orig,B);
 
         assertTrue(modified == solver.modifiesB());
     }
 
     protected BlockMatrix_F64 createMatrixSPD(int width ) {
-        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(width,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(width,rand);
 
         return MatrixOps_B64.convert(A,r);
     }

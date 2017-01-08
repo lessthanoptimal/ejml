@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
-import org.ejml.ops.CommonOps_D64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.CommonOps_R64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -56,8 +56,8 @@ public class StabilityBidiagonalDecomposition {
 
     private static void runAlgorithms( RowMatrix_F64 mat  )
     {
-        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_D64(),mat));
-        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_D64(),mat));
+        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_R64(),mat));
+        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_R64(),mat));
     }
 
     public static void main( String args [] ) {
@@ -71,8 +71,8 @@ public class StabilityBidiagonalDecomposition {
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
 
-            RowMatrix_F64 mat = RandomMatrices_D64.createRandom(size,size,-1,1,rand);
-            CommonOps_D64.scale(scales[i],mat);
+            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(size,size,-1,1,rand);
+            CommonOps_R64.scale(scales[i],mat);
             runAlgorithms(mat);
         }
 
@@ -88,8 +88,8 @@ public class StabilityBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %e singular\n",size,sv[0]);
 
 //            System.out.print("* Creating matrix ");
-            RowMatrix_F64 mat = RandomMatrices_D64.createSingularValues(size,size,rand,sv);
-            CommonOps_D64.scale(scales[i],mat);
+            RowMatrix_F64 mat = RandomMatrices_R64.createSingularValues(size,size,rand,sv);
+            CommonOps_R64.scale(scales[i],mat);
 //            System.out.println("  Done.");
             runAlgorithms(mat);
         }

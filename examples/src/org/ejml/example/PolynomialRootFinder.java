@@ -20,7 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.Complex_F64;
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.DecompositionFactory_D64;
+import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 /**
@@ -74,7 +74,7 @@ public class PolynomialRootFinder {
         }
 
         // use generalized eigenvalue decomposition to find the roots
-        EigenDecomposition_F64<RowMatrix_F64> evd =  DecompositionFactory_D64.eig(N,false);
+        EigenDecomposition_F64<RowMatrix_F64> evd =  DecompositionFactory_R64.eig(N,false);
 
         evd.decompose(c);
 

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -147,8 +147,8 @@ public class BenchmarkMatrixMultAccessors {
 
         int N = 1000;
 
-        RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,rand);
-        RowMatrix_F64 B = RandomMatrices_D64.createRandom(N,N,rand);
+        RowMatrix_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
+        RowMatrix_F64 B = RandomMatrices_R64.createRandom(N,N,rand);
         RowMatrix_F64 C = new RowMatrix_F64(N,N);
 
         long timeInlined = inlined(A,B,C);

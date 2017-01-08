@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -32,7 +32,7 @@ public class BenchmarkEigenDecomposition {
 
         long prev = System.currentTimeMillis();
 
-        WatchedDoubleStepQRDecomposition_D64 alg = new WatchedDoubleStepQRDecomposition_D64(true);
+        WatchedDoubleStepQRDecomposition_R64 alg = new WatchedDoubleStepQRDecomposition_R64(true);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -60,7 +60,7 @@ public class BenchmarkEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            RowMatrix_F64 symMat = RandomMatrices_D64.createRandom(w,w,rand);
+            RowMatrix_F64 symMat = RandomMatrices_R64.createRandom(w,w,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.RandomMatrices_D64;
+import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -50,7 +50,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices_D64.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_R64.createRandom(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 
@@ -92,7 +92,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices_D64.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_R64.createRandom(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 
@@ -133,7 +133,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices_D64.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_R64.createRandom(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 

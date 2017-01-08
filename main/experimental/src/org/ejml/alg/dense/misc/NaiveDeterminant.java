@@ -77,7 +77,7 @@ public class NaiveDeterminant {
     /**
      * <p>
      * A simple and inefficient algorithm for computing the determinant. This should never be used.
-     * It is at least two orders of magnitude slower than {@link DeterminantFromMinor_D64}. This is included
+     * It is at least two orders of magnitude slower than {@link DeterminantFromMinor_R64}. This is included
      * to provide a point of comparison for other algorithms.
      * </p>
      * @param mat The matrix that the determinant is to be computed from
@@ -90,7 +90,7 @@ public class NaiveDeterminant {
         } else if(mat.numRows == 2) {
             return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
         } else if( mat.numRows == 3 ) {
-            return UnrolledDeterminantFromMinor_D64.det3(mat);
+            return UnrolledDeterminantFromMinor_R64.det3(mat);
         }
 
         double result = 0;
@@ -126,7 +126,7 @@ public class NaiveDeterminant {
         } else if(mat.numRows == 2) {
             return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
         } else if( mat.numRows == 3 ) {
-            return UnrolledDeterminantFromMinor_D32.det3(mat);
+            return UnrolledDeterminantFromMinor_R32.det3(mat);
         }
 
         float result = 0;

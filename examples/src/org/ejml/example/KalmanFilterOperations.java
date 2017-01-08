@@ -19,10 +19,10 @@
 package org.ejml.example;
 
 import org.ejml.data.RowMatrix_F64;
-import org.ejml.factory.LinearSolverFactory_D64;
+import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
-import static org.ejml.ops.CommonOps_D64.*;
+import static org.ejml.ops.CommonOps_R64.*;
 
 /**
  * A Kalman filter that is implemented using the operations API, which is procedural.  Much of the excessive
@@ -68,7 +68,7 @@ public class KalmanFilterOperations implements KalmanFilter{
         P = new RowMatrix_F64(dimenX,dimenX);
 
         // covariance matrices are symmetric positive semi-definite
-        solver = LinearSolverFactory_D64.symmPosDef(dimenX);
+        solver = LinearSolverFactory_R64.symmPosDef(dimenX);
     }
 
     @Override

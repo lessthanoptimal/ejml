@@ -24,7 +24,7 @@ def findReplace(directory, find, replace, filePattern):
 
 if len(sys.argv) < 2:
     print "Need to specify where to apply the script to"
-    os.exit(0)
+    exit(0)
 
 location = sys.argv[1]
 
@@ -58,5 +58,19 @@ for n in range(2,7):
     F("FixedMatrix"+suf2+"_64F","FixedMatrix"+suf2+"_F64")
     F("FixedMatrix"+suf1+"_32F","FixedMatrix"+suf1+"_F32")
     F("FixedMatrix"+suf2+"_32F","FixedMatrix"+suf2+"_F32")
+
+F("_D64","_R64")
+F("_D32","_R32")
+F("_CD64","_CR64")
+F("_CD32","_CR32")
+
+F("CommonOps.","CommonOps_R64")
+F("CovarianceOps.","CovarianceOps_R64")
+F("EigenOps.","EigenOps_R64")
+F("MatrixFeatures.","MatrixFeatures_R64")
+F("NormOps.","NormOps_R64")
+F("RandomMatrices.","RandomMatrices_R64")
+F("SingularOps.","SingularOps_R64")
+F("SpecializedOps.","SpecializedOps_R64")
 
 print "Finished!"
