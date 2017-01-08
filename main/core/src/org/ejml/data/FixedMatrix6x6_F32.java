@@ -23,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 6 by FixedMatrix6x6_F32 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -38,12 +39,12 @@ public class FixedMatrix6x6_F32 implements FixedMatrix_F32 {
     public FixedMatrix6x6_F32() {
     }
 
-    public FixedMatrix6x6_F32(float a11, float a12, float a13, float a14, float a15, float a16,
-                              float a21, float a22, float a23, float a24, float a25, float a26,
-                              float a31, float a32, float a33, float a34, float a35, float a36,
-                              float a41, float a42, float a43, float a44, float a45, float a46,
-                              float a51, float a52, float a53, float a54, float a55, float a56,
-                              float a61, float a62, float a63, float a64, float a65, float a66)
+    public FixedMatrix6x6_F32( float a11, float a12, float a13, float a14, float a15, float a16,
+                               float a21, float a22, float a23, float a24, float a25, float a26,
+                               float a31, float a32, float a33, float a34, float a35, float a36,
+                               float a41, float a42, float a43, float a44, float a45, float a46,
+                               float a51, float a52, float a53, float a54, float a55, float a56,
+                               float a61, float a62, float a63, float a64, float a65, float a66)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -83,7 +84,7 @@ public class FixedMatrix6x6_F32 implements FixedMatrix_F32 {
         this.a66 = a66;
     }
 
-    public FixedMatrix6x6_F32(FixedMatrix6x6_F32 o ) {
+    public FixedMatrix6x6_F32( FixedMatrix6x6_F32 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a13 = o.a13;

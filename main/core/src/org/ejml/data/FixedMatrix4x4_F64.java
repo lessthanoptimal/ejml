@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -22,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 4 by FixedMatrix4x4_F64 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -35,10 +37,10 @@ public class FixedMatrix4x4_F64 implements FixedMatrix_F64 {
     public FixedMatrix4x4_F64() {
     }
 
-    public FixedMatrix4x4_F64(double a11, double a12, double a13, double a14,
-                              double a21, double a22, double a23, double a24,
-                              double a31, double a32, double a33, double a34,
-                              double a41, double a42, double a43, double a44)
+    public FixedMatrix4x4_F64( double a11, double a12, double a13, double a14,
+                               double a21, double a22, double a23, double a24,
+                               double a31, double a32, double a33, double a34,
+                               double a41, double a42, double a43, double a44)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -58,7 +60,7 @@ public class FixedMatrix4x4_F64 implements FixedMatrix_F64 {
         this.a44 = a44;
     }
 
-    public FixedMatrix4x4_F64(FixedMatrix4x4_F64 o ) {
+    public FixedMatrix4x4_F64( FixedMatrix4x4_F64 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a13 = o.a13;
@@ -224,13 +226,13 @@ public class FixedMatrix4x4_F64 implements FixedMatrix_F64 {
     }
 
     @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new FixedMatrix4x4_F64();
+    public void print() {
+        MatrixIO.print(System.out, this);
     }
 
     @Override
-    public void print() {
-        MatrixIO.print(System.out, this);
+    public <T extends Matrix> T createLike() {
+        return (T)new FixedMatrix4x4_F64();
     }
 }
 

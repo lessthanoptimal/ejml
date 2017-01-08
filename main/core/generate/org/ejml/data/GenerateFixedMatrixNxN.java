@@ -37,7 +37,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
     }
 
     public void print( int dimen ) throws FileNotFoundException {
-        String className = classPreamble +dimen+"x"+dimen+"_R64";
+        String className = classPreamble +dimen+"x"+dimen+"_F64";
 
         setOutputFile(className);
 
@@ -49,7 +49,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
-                "public class "+className+" implements FixedMatrix64F {\n");
+                "public class "+className+" implements FixedMatrix_F64 {\n");
         printClassParam(dimen);
                 out.print("\n" +
                 "    public "+className+"() {\n" +
@@ -138,11 +138,11 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
             if( y == 1 )
                 out.print("( ");
             else
-                out.print("                              ");
+                out.print("                               ");
             for( int x = 1; x <= dimen; x++ ) {
                 out.print("double a"+y+""+x);
                 if( x != dimen )
-                    out.print(",");
+                    out.print(", ");
                 else if( y != dimen )
                     out.println(",");
                 else

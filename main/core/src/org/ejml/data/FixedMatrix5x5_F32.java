@@ -23,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 5 by FixedMatrix5x5_F32 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -37,11 +38,11 @@ public class FixedMatrix5x5_F32 implements FixedMatrix_F32 {
     public FixedMatrix5x5_F32() {
     }
 
-    public FixedMatrix5x5_F32(float a11, float a12, float a13, float a14, float a15,
-                              float a21, float a22, float a23, float a24, float a25,
-                              float a31, float a32, float a33, float a34, float a35,
-                              float a41, float a42, float a43, float a44, float a45,
-                              float a51, float a52, float a53, float a54, float a55)
+    public FixedMatrix5x5_F32( float a11, float a12, float a13, float a14, float a15,
+                               float a21, float a22, float a23, float a24, float a25,
+                               float a31, float a32, float a33, float a34, float a35,
+                               float a41, float a42, float a43, float a44, float a45,
+                               float a51, float a52, float a53, float a54, float a55)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -70,7 +71,7 @@ public class FixedMatrix5x5_F32 implements FixedMatrix_F32 {
         this.a55 = a55;
     }
 
-    public FixedMatrix5x5_F32(FixedMatrix5x5_F32 o ) {
+    public FixedMatrix5x5_F32( FixedMatrix5x5_F32 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a13 = o.a13;

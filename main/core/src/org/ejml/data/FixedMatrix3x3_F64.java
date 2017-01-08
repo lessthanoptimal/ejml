@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -22,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 3 by FixedMatrix3x3_F64 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -34,9 +36,9 @@ public class FixedMatrix3x3_F64 implements FixedMatrix_F64 {
     public FixedMatrix3x3_F64() {
     }
 
-    public FixedMatrix3x3_F64(double a11, double a12, double a13,
-                              double a21, double a22, double a23,
-                              double a31, double a32, double a33)
+    public FixedMatrix3x3_F64( double a11, double a12, double a13,
+                               double a21, double a22, double a23,
+                               double a31, double a32, double a33)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -49,7 +51,7 @@ public class FixedMatrix3x3_F64 implements FixedMatrix_F64 {
         this.a33 = a33;
     }
 
-    public FixedMatrix3x3_F64(FixedMatrix3x3_F64 o ) {
+    public FixedMatrix3x3_F64( FixedMatrix3x3_F64 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a13 = o.a13;

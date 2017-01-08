@@ -23,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 4 by FixedMatrix4x4_F32 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -36,10 +37,10 @@ public class FixedMatrix4x4_F32 implements FixedMatrix_F32 {
     public FixedMatrix4x4_F32() {
     }
 
-    public FixedMatrix4x4_F32(float a11, float a12, float a13, float a14,
-                              float a21, float a22, float a23, float a24,
-                              float a31, float a32, float a33, float a34,
-                              float a41, float a42, float a43, float a44)
+    public FixedMatrix4x4_F32( float a11, float a12, float a13, float a14,
+                               float a21, float a22, float a23, float a24,
+                               float a31, float a32, float a33, float a34,
+                               float a41, float a42, float a43, float a44)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -59,7 +60,7 @@ public class FixedMatrix4x4_F32 implements FixedMatrix_F32 {
         this.a44 = a44;
     }
 
-    public FixedMatrix4x4_F32(FixedMatrix4x4_F32 o ) {
+    public FixedMatrix4x4_F32( FixedMatrix4x4_F32 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a13 = o.a13;
@@ -225,13 +226,13 @@ public class FixedMatrix4x4_F32 implements FixedMatrix_F32 {
     }
 
     @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new FixedMatrix4x4_F32();
+    public void print() {
+        MatrixIO.print(System.out, this);
     }
 
     @Override
-    public void print() {
-        MatrixIO.print(System.out, this);
+    public <T extends Matrix> T createLike() {
+        return (T)new FixedMatrix4x4_F32();
     }
 }
 

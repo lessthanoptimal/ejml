@@ -23,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 3 by FixedMatrix3x3_F32 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -35,9 +36,9 @@ public class FixedMatrix3x3_F32 implements FixedMatrix_F32 {
     public FixedMatrix3x3_F32() {
     }
 
-    public FixedMatrix3x3_F32(float a11, float a12, float a13,
-                              float a21, float a22, float a23,
-                              float a31, float a32, float a33)
+    public FixedMatrix3x3_F32( float a11, float a12, float a13,
+                               float a21, float a22, float a23,
+                               float a31, float a32, float a33)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -50,7 +51,7 @@ public class FixedMatrix3x3_F32 implements FixedMatrix_F32 {
         this.a33 = a33;
     }
 
-    public FixedMatrix3x3_F32(FixedMatrix3x3_F32 o ) {
+    public FixedMatrix3x3_F32( FixedMatrix3x3_F32 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a13 = o.a13;

@@ -137,6 +137,20 @@ public class GenerateCode32 {
         }
     }
 
+    public static void recursiveDelete( String path ) {
+        File d = new File(path);
+        if( !d.isDirectory() )
+            throw new RuntimeException("Expected directory");
+
+        File[] files = d.listFiles();
+        for( File f : files ) {
+            if( f.isDirectory() )
+                recursiveDelete(f.getPath());
+            if( !f.delete() )
+                throw new RuntimeException("Failed to delete "+f.getPath());
+        }
+    }
+
     public static void main(String args[] ) {
         String path = "./";
         while( true ) {
@@ -155,16 +169,18 @@ public class GenerateCode32 {
                 "main/experimental/src/org/ejml/alg/dense/decomposition/bidiagonal/"
         };
 
-
         GenerateCode32 app = new GenerateCode32();
         for( String dir : coreDir ) {
             app.process(new File(path,dir) );
         }
 
-        app.process(new File(path,"main/dense64/src"), new File(path,"main/dense32/src") );
-        app.process(new File(path,"main/dense64/test"), new File(path,"main/dense32/test") );
+        // remove any previously generated code
+        for( String module : new String[]{"dense","denseC"}) {
+            recursiveDelete("main/"+module+"32/src");
+            recursiveDelete("main/"+module+"32/test");
 
-        app.process(new File(path,"main/denseC64/src"), new File(path,"main/denseC32/src") );
-        app.process(new File(path,"main/denseC64/test"), new File(path,"main/denseC32/test") );
+            app.process(new File(path,"main/"+module+"64/src"), new File(path,"main/"+module+"32/src") );
+            app.process(new File(path,"main/"+module+"64/test"), new File(path,"main/"+module+"32/test") );
+        }
     }
 }

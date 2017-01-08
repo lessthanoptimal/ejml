@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -22,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 2 by FixedMatrix2x2_F64 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -33,8 +35,8 @@ public class FixedMatrix2x2_F64 implements FixedMatrix_F64 {
     public FixedMatrix2x2_F64() {
     }
 
-    public FixedMatrix2x2_F64(double a11, double a12,
-                              double a21, double a22)
+    public FixedMatrix2x2_F64( double a11, double a12,
+                               double a21, double a22)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -42,7 +44,7 @@ public class FixedMatrix2x2_F64 implements FixedMatrix_F64 {
         this.a22 = a22;
     }
 
-    public FixedMatrix2x2_F64(FixedMatrix2x2_F64 o ) {
+    public FixedMatrix2x2_F64( FixedMatrix2x2_F64 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a21 = o.a21;

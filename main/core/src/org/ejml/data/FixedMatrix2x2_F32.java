@@ -23,6 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 2 by FixedMatrix2x2_F32 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedMatrixNxN</p>
  *
  * @author Peter Abeles
  */
@@ -34,8 +35,8 @@ public class FixedMatrix2x2_F32 implements FixedMatrix_F32 {
     public FixedMatrix2x2_F32() {
     }
 
-    public FixedMatrix2x2_F32(float a11, float a12,
-                              float a21, float a22)
+    public FixedMatrix2x2_F32( float a11, float a12,
+                               float a21, float a22)
     {
         this.a11 = a11;
         this.a12 = a12;
@@ -43,7 +44,7 @@ public class FixedMatrix2x2_F32 implements FixedMatrix_F32 {
         this.a22 = a22;
     }
 
-    public FixedMatrix2x2_F32(FixedMatrix2x2_F32 o ) {
+    public FixedMatrix2x2_F32( FixedMatrix2x2_F32 o ) {
         this.a11 = o.a11;
         this.a12 = o.a12;
         this.a21 = o.a21;

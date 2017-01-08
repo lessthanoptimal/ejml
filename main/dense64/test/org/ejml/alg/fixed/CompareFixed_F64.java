@@ -232,7 +232,7 @@ public class CompareFixed_F64 {
             double valA = ((Double)a).doubleValue();
             double valB = ((Double)b).doubleValue();
 
-            return Math.abs(valA-valB) < 1e-8;
+            return Math.abs(valA-valB) < UtilEjml.TEST_F64;
         } else if(FixedMatrix_F64.class.isAssignableFrom(a.getClass()) ) {
             RowMatrix_F64 bb = (RowMatrix_F64)b;
 
