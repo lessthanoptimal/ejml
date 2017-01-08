@@ -34,7 +34,7 @@ public class EjmlUnitTests {
      *
      * @param A Matrix
      */
-    public static void assertCountable( RealMatrix64F A ) {
+    public static void assertCountable( RealMatrix_F64 A ) {
         for( int i = 0; i < A.getNumRows(); i++ ){
             for( int j = 0; j < A.getNumCols(); j++ ) {
                 assertTrue(  !Double.isNaN(A.get(i,j)) , "NaN found at "+i+" "+j );
@@ -88,7 +88,7 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEqualsUncountable( RealMatrix64F A , RealMatrix64F B , double tol ) {
+    public static void assertEqualsUncountable(RealMatrix_F64 A , RealMatrix_F64 B , double tol ) {
         assertShape(A, B);
 
         for (int i = 0; i < A.getNumRows(); i++) {
@@ -109,10 +109,10 @@ public class EjmlUnitTests {
     }
 
     public static void assertEquals( Matrix A , Matrix B ) {
-        if( A instanceof RealMatrix64F ) {
-            assertEquals((RealMatrix64F)A, (RealMatrix64F)B, UtilEjml.TEST_64F );
+        if( A instanceof RealMatrix_F64) {
+            assertEquals((RealMatrix_F64)A, (RealMatrix_F64)B, UtilEjml.TEST_F64);
         } else {
-            assertEquals((RealMatrix32F)A, (RealMatrix32F)B, UtilEjml.TEST_32F );
+            assertEquals((RealMatrix_F32)A, (RealMatrix_F32)B, UtilEjml.TEST_F32);
         }
     }
 
@@ -134,7 +134,7 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEquals( RealMatrix64F A , RealMatrix64F B , double tol ) {
+    public static void assertEquals(RealMatrix_F64 A , RealMatrix_F64 B , double tol ) {
         assertShape(A,B);
 
         for( int i = 0; i < A.getNumRows(); i++ ){
@@ -149,7 +149,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEquals( RealMatrix32F A , RealMatrix32F B , float tol ) {
+    public static void assertEquals(RealMatrix_F32 A , RealMatrix_F32 B , float tol ) {
         assertShape(A,B);
 
         for( int i = 0; i < A.getNumRows(); i++ ){
@@ -164,7 +164,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEquals( Complex64F a , Complex64F b , double tol ) {
+    public static void assertEquals(Complex_F64 a , Complex_F64 b , double tol ) {
         assertTrue(!Double.isNaN(a.real) && !Double.isNaN(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(!Double.isInfinite(a.real) && !Double.isInfinite(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(Math.abs( a.real-b.real) <= tol,"real a = "+a.real+" b = "+b.real);
@@ -174,7 +174,7 @@ public class EjmlUnitTests {
         assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
     }
 
-    public static void assertEquals( Complex32F a , Complex32F b , float tol ) {
+    public static void assertEquals(Complex_F32 a , Complex_F32 b , float tol ) {
         assertTrue(!Float.isNaN(a.real) && !Float.isNaN(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(!Float.isInfinite(a.real) && !Float.isInfinite(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(Math.abs( a.real-b.real) <= tol,"real a = "+a.real+" b = "+b.real);
@@ -184,11 +184,11 @@ public class EjmlUnitTests {
         assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
     }
 
-    public static void assertEquals( ComplexMatrix64F A , ComplexMatrix64F B , double tol ) {
+    public static void assertEquals(Matrix_C64 A , Matrix_C64 B , double tol ) {
         assertShape(A,B);
 
-        Complex64F a = new Complex64F();
-        Complex64F b = new Complex64F();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
 
         for( int i = 0; i < A.getNumRows(); i++ ){
             for( int j = 0; j < A.getNumCols(); j++ ) {
@@ -207,11 +207,11 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEquals( ComplexMatrix32F A , ComplexMatrix32F B , float tol ) {
+    public static void assertEquals(Matrix_C32 A , Matrix_C32 B , float tol ) {
         assertShape(A, B);
 
-        Complex32F a = new Complex32F();
-        Complex32F b = new Complex32F();
+        Complex_F32 a = new Complex_F32();
+        Complex_F32 b = new Complex_F32();
 
         for (int i = 0; i < A.getNumRows(); i++) {
             for (int j = 0; j < A.getNumCols(); j++) {
@@ -247,7 +247,7 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEqualsTrans( RealMatrix64F A , RealMatrix64F B , double tol ) {
+    public static void assertEqualsTrans(RealMatrix_F64 A , RealMatrix_F64 B , double tol ) {
         assertShape(A,B.getNumCols(),B.getNumRows());
 
         for( int i = 0; i < A.getNumRows(); i++ ){
@@ -262,7 +262,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEqualsTrans( RealMatrix32F A , RealMatrix32F B , double tol ) {
+    public static void assertEqualsTrans(RealMatrix_F32 A , RealMatrix_F32 B , double tol ) {
         assertShape(A,B.getNumCols(),B.getNumRows());
 
         for( int i = 0; i < A.getNumRows(); i++ ){

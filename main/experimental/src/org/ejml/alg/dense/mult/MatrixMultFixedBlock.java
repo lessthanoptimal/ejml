@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,53 +20,53 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.alg.fixed.FixedOps3_D64;
 import org.ejml.alg.fixed.FixedOps6_D64;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.FixedMatrix3x3_64F;
-import org.ejml.data.FixedMatrix6x6_64F;
+import org.ejml.data.FixedMatrix3x3_F64;
+import org.ejml.data.FixedMatrix6x6_F64;
+import org.ejml.data.RowMatrix_F64;
 
 /**
  * @author Peter Abeles
  */
 public class MatrixMultFixedBlock {
-    private FixedMatrix6x6_64F a0_6 = new FixedMatrix6x6_64F();
-    private FixedMatrix6x6_64F a1_6 = new FixedMatrix6x6_64F();
+    private FixedMatrix6x6_F64 a0_6 = new FixedMatrix6x6_F64();
+    private FixedMatrix6x6_F64 a1_6 = new FixedMatrix6x6_F64();
 
-    private FixedMatrix6x6_64F b00_6 = new FixedMatrix6x6_64F();
-    private FixedMatrix6x6_64F b01_6 = new FixedMatrix6x6_64F();
-    private FixedMatrix6x6_64F b10_6 = new FixedMatrix6x6_64F();
-    private FixedMatrix6x6_64F b11_6 = new FixedMatrix6x6_64F();
+    private FixedMatrix6x6_F64 b00_6 = new FixedMatrix6x6_F64();
+    private FixedMatrix6x6_F64 b01_6 = new FixedMatrix6x6_F64();
+    private FixedMatrix6x6_F64 b10_6 = new FixedMatrix6x6_F64();
+    private FixedMatrix6x6_F64 b11_6 = new FixedMatrix6x6_F64();
 
-    private FixedMatrix6x6_64F tmp_6 = new FixedMatrix6x6_64F();
+    private FixedMatrix6x6_F64 tmp_6 = new FixedMatrix6x6_F64();
 
 
-    private FixedMatrix3x3_64F a0_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F a1_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F a2_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F a3_3 = new FixedMatrix3x3_64F();
+    private FixedMatrix3x3_F64 a0_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 a1_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 a2_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 a3_3 = new FixedMatrix3x3_F64();
 
-    private FixedMatrix3x3_64F b00_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b01_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b02_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b03_3 = new FixedMatrix3x3_64F();
+    private FixedMatrix3x3_F64 b00_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b01_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b02_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b03_3 = new FixedMatrix3x3_F64();
 
-    private FixedMatrix3x3_64F b10_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b11_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b12_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b13_3 = new FixedMatrix3x3_64F();
+    private FixedMatrix3x3_F64 b10_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b11_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b12_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b13_3 = new FixedMatrix3x3_F64();
 
-    private FixedMatrix3x3_64F b20_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b21_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b22_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b23_3 = new FixedMatrix3x3_64F();
+    private FixedMatrix3x3_F64 b20_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b21_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b22_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b23_3 = new FixedMatrix3x3_F64();
 
-    private FixedMatrix3x3_64F b30_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b31_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b32_3 = new FixedMatrix3x3_64F();
-    private FixedMatrix3x3_64F b33_3 = new FixedMatrix3x3_64F();
+    private FixedMatrix3x3_F64 b30_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b31_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b32_3 = new FixedMatrix3x3_F64();
+    private FixedMatrix3x3_F64 b33_3 = new FixedMatrix3x3_F64();
 
-    private FixedMatrix3x3_64F tmp_3 = new FixedMatrix3x3_64F();
+    private FixedMatrix3x3_F64 tmp_3 = new FixedMatrix3x3_F64();
 
-    public void mult_2x6(DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C ) {
+    public void mult_2x6(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 C ) {
         extract(A, a0_6,0,0); extract(A, a1_6,0,6);
 
         extract(B, b00_6,0,0); extract(B, b01_6,0,6);
@@ -90,7 +90,7 @@ public class MatrixMultFixedBlock {
         insert(tmp_6,C,6,0);
     }
 
-    public void mult_4x3(DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F C ) {
+    public void mult_4x3(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 C ) {
 
         extract(B,b00_3,0,0); extract(B,b01_3,0,3); extract(B,b02_3,0,6); extract(B,b03_3,0,9);
         extract(B,b10_3,3,0); extract(B,b11_3,3,3); extract(B,b12_3,3,6); extract(B,b13_3,3,9);
@@ -103,7 +103,7 @@ public class MatrixMultFixedBlock {
         computeRow_4x3(A, C, 9);
     }
 
-    private void computeRow_4x3(DenseMatrix64F A, DenseMatrix64F C, int row) {
+    private void computeRow_4x3(RowMatrix_F64 A, RowMatrix_F64 C, int row) {
         extract(A, a0_3,row,0); extract(A, a1_3,row,3); extract(A, a2_3,row,6); extract(A, a3_3,row,9);
         FixedOps3_D64.mult(a0_3, b00_3, tmp_3);
         FixedOps3_D64.multAdd(a1_3, b10_3, tmp_3);
@@ -130,7 +130,7 @@ public class MatrixMultFixedBlock {
         insert(tmp_3,C,row,9);
     }
 
-    public static void extract( DenseMatrix64F A , FixedMatrix6x6_64F a , int row , int col ) {
+    public static void extract(RowMatrix_F64 A , FixedMatrix6x6_F64 a , int row , int col ) {
         int idx = row*A.numCols + col;
         a.a11 = A.data[idx++]; a.a12 = A.data[idx++]; a.a13 = A.data[idx++];
         a.a14 = A.data[idx++]; a.a15 = A.data[idx++]; a.a16 = A.data[idx];
@@ -156,7 +156,7 @@ public class MatrixMultFixedBlock {
         a.a64 = A.data[idx++]; a.a65 = A.data[idx++]; a.a66 = A.data[idx];
     }
 
-    public static void insert( FixedMatrix6x6_64F a , DenseMatrix64F A, int row , int col ) {
+    public static void insert(FixedMatrix6x6_F64 a , RowMatrix_F64 A, int row , int col ) {
         int idx = row*A.numCols + col;
         A.data[idx++] = a.a11; A.data[idx++] = a.a12; A.data[idx++] = a.a13;
         A.data[idx++] = a.a14; A.data[idx++] = a.a15; A.data[idx] = a.a16;
@@ -182,7 +182,7 @@ public class MatrixMultFixedBlock {
         A.data[idx++] = a.a64; A.data[idx++] = a.a65; A.data[idx] = a.a66;
     }
 
-    public static void extract(DenseMatrix64F A , FixedMatrix3x3_64F a , int row , int col ) {
+    public static void extract(RowMatrix_F64 A , FixedMatrix3x3_F64 a , int row , int col ) {
         int idx = row * A.numCols + col;
         a.a11 = A.data[idx++]; a.a12 = A.data[idx++]; a.a12 = A.data[idx];
         idx = (row + 1) * A.numCols + col;
@@ -191,7 +191,7 @@ public class MatrixMultFixedBlock {
         a.a31 = A.data[idx++]; a.a32 = A.data[idx++]; a.a33 = A.data[idx];
     }
 
-    public static void insert( FixedMatrix3x3_64F a , DenseMatrix64F A, int row , int col ) {
+    public static void insert(FixedMatrix3x3_F64 a , RowMatrix_F64 A, int row , int col ) {
         int idx = row * A.numCols + col;
         A.data[idx++] = a.a11; A.data[idx++] = a.a12; A.data[idx] = a.a13;
 

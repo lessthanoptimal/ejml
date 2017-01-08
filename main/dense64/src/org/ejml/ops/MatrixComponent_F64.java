@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.D1Matrix64F;
+import org.ejml.data.D1Matrix_F64;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,13 +39,13 @@ public class MatrixComponent_F64 extends JPanel {
         setMinimumSize(new Dimension(width,height));
     }
 
-    public synchronized void setMatrix( D1Matrix64F A ) {
+    public synchronized void setMatrix( D1Matrix_F64 A ) {
         double maxValue = CommonOps_D64.elementMaxAbs(A);
         renderMatrix(A,image,maxValue);
         repaint();
     }
 
-    public static void renderMatrix( D1Matrix64F M , BufferedImage image , double maxValue )
+    public static void renderMatrix(D1Matrix_F64 M , BufferedImage image , double maxValue )
     {
         int w = image.getWidth();
         int h = image.getHeight();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.MatrixDimensionException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -85,19 +85,19 @@ public class CheckMatrixVectorMultShape_D64 {
      * See if the function can be called with matrices of the correct size
      */
     private void checkPositive(Method func, boolean transA) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        DenseMatrix64F A,B;
-        DenseMatrix64F C = new DenseMatrix64F(2,1);
+        RowMatrix_F64 A,B;
+        RowMatrix_F64 C = new RowMatrix_F64(2,1);
 
         if( transA ) {
-            A = new DenseMatrix64F(4,2);
+            A = new RowMatrix_F64(4,2);
         } else {
-            A = new DenseMatrix64F(2,4);
+            A = new RowMatrix_F64(2,4);
         }
 
         // should work for B as a column or row vector
-        B = new DenseMatrix64F(4,1);
+        B = new RowMatrix_F64(4,1);
         func.invoke(null,A,B,C);
-        B = new DenseMatrix64F(1,4);
+        B = new RowMatrix_F64(1,4);
         func.invoke(null,A,B,C);
     }
 
@@ -105,35 +105,35 @@ public class CheckMatrixVectorMultShape_D64 {
      * See if the function throws an exception when it is given bad inputs
      */
     private void checkNegative(Method func, boolean transA) throws NoSuchMethodException, IllegalAccessException {
-        DenseMatrix64F A,B;
-        DenseMatrix64F C = new DenseMatrix64F(2,1);
+        RowMatrix_F64 A,B;
+        RowMatrix_F64 C = new RowMatrix_F64(2,1);
 
         if( transA ) {
-            A = new DenseMatrix64F(2,4);
+            A = new RowMatrix_F64(2,4);
         } else {
-            A = new DenseMatrix64F(4,2);
+            A = new RowMatrix_F64(4,2);
         }
 
         // see if it catched B not being a vector
-        B = new DenseMatrix64F(4,2);
+        B = new RowMatrix_F64(4,2);
         invokeExpectFail(func, A, B, C);
         // B is not compatible with A
-        B = new DenseMatrix64F(3,1);
+        B = new RowMatrix_F64(3,1);
         invokeExpectFail(func, A, B, C);
         // C is a row vector
-        B = new DenseMatrix64F(4,1);
-        C = new DenseMatrix64F(1,2);
+        B = new RowMatrix_F64(4,1);
+        C = new RowMatrix_F64(1,2);
         invokeExpectFail(func, A, B, C);
         // C is not a vector
-        C = new DenseMatrix64F(2,2);
+        C = new RowMatrix_F64(2,2);
         invokeExpectFail(func, A, B, C);
         // C is not compatible with A
-        C = new DenseMatrix64F(3,1);
+        C = new RowMatrix_F64(3,1);
         invokeExpectFail(func, A, B, C);
 
     }
 
-    private void invokeExpectFail(Method func, DenseMatrix64F a, DenseMatrix64F b, DenseMatrix64F c) throws IllegalAccessException {
+    private void invokeExpectFail(Method func, RowMatrix_F64 a, RowMatrix_F64 b, RowMatrix_F64 c) throws IllegalAccessException {
         try {
             func.invoke(null, b, a, c);
         } catch( InvocationTargetException e ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.alg.dense.mult.VectorVectorMult_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
@@ -217,7 +217,7 @@ public abstract class Operation {
             ret.op = new Operation("neg-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(a.numRows, a.numCols);
                     CommonOps_D64.changeSign(a, output.matrix);
                 }
@@ -376,8 +376,8 @@ public abstract class Operation {
             ret.op = new Operation("exp-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
-                    DenseMatrix64F out = ((VariableMatrix)ret.output).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 out = ((VariableMatrix)ret.output).matrix;
                     out.reshape(a.numRows,a.numCols);
                     CommonOps_D64.elementExp(a, out);
                 }
@@ -407,8 +407,8 @@ public abstract class Operation {
             ret.op = new Operation("log-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
-                    DenseMatrix64F out = ((VariableMatrix)ret.output).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 out = ((VariableMatrix)ret.output).matrix;
                     out.reshape(a.numRows,a.numCols);
                     CommonOps_D64.elementLog(a, out);
                 }
@@ -534,7 +534,7 @@ public abstract class Operation {
                 ret.op = new Operation("subtract-ms") {
                     @Override
                     public void process() {
-                        DenseMatrix64F m = ((VariableMatrix)A).matrix;
+                        RowMatrix_F64 m = ((VariableMatrix)A).matrix;
                         double v = ((VariableScalar)B).getDouble();
                         output.matrix.reshape(m.numRows, m.numCols);
                         CommonOps_D64.subtract(m, v, output.matrix);
@@ -544,7 +544,7 @@ public abstract class Operation {
                 ret.op = new Operation("subtract-sm") {
                     @Override
                     public void process() {
-                        DenseMatrix64F m = ((VariableMatrix)B).matrix;
+                        RowMatrix_F64 m = ((VariableMatrix)B).matrix;
                         double v = ((VariableScalar)A).getDouble();
                         output.matrix.reshape(m.numRows, m.numCols);
                         CommonOps_D64.subtract(v, m, output.matrix);
@@ -628,8 +628,8 @@ public abstract class Operation {
             ret.op = new Operation("elementPow-mm") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix) A).matrix;
-                    DenseMatrix64F b = ((VariableMatrix) B).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix) A).matrix;
+                    RowMatrix_F64 b = ((VariableMatrix) B).matrix;
 
                     resize(output, a.numRows, a.numCols);
                     CommonOps_D64.elementPower(a, b, output.matrix);
@@ -643,7 +643,7 @@ public abstract class Operation {
             ret.op = new Operation("elementPow-ms") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix) A).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix) A).matrix;
                     double b = ((VariableScalar) B).getDouble();
 
                     resize(output, a.numRows, a.numCols);
@@ -659,7 +659,7 @@ public abstract class Operation {
                 @Override
                 public void process() {
                     double a = ((VariableScalar) A).getDouble();
-                    DenseMatrix64F b = ((VariableMatrix) B).matrix;
+                    RowMatrix_F64 b = ((VariableMatrix) B).matrix;
 
                     resize(output, b.numRows, b.numCols);
                     CommonOps_D64.elementPower(a, b, output.matrix);
@@ -679,8 +679,8 @@ public abstract class Operation {
                 return new Operation("copy-mm") {
                     @Override
                     public void process() {
-                        DenseMatrix64F d = ((VariableMatrix) dst).matrix;
-                        DenseMatrix64F s = ((VariableMatrix) src).matrix;
+                        RowMatrix_F64 d = ((VariableMatrix) dst).matrix;
+                        RowMatrix_F64 s = ((VariableMatrix) src).matrix;
                         d.reshape(s.numRows, s.numCols);
                         d.set(((VariableMatrix) src).matrix);
                     }
@@ -689,7 +689,7 @@ public abstract class Operation {
                 return new Operation("copy-sm1") {
                     @Override
                     public void process() {
-                        DenseMatrix64F s = ((VariableMatrix) src).matrix;
+                        RowMatrix_F64 s = ((VariableMatrix) src).matrix;
                         if( s.numRows != 1 || s.numCols != 1 ) {
                             throw new RuntimeException("Attempting to assign a non 1x1 matrix to a double");
                         }
@@ -740,8 +740,8 @@ public abstract class Operation {
                 @Override
                 public void process() {
 
-                    DenseMatrix64F msrc = ((VariableMatrix) src).matrix;
-                    DenseMatrix64F mdst = ((VariableMatrix) dst).matrix;
+                    RowMatrix_F64 msrc = ((VariableMatrix) src).matrix;
+                    RowMatrix_F64 mdst = ((VariableMatrix) dst).matrix;
 
                     if( range.size() == 1 ) {
                         if( !MatrixFeatures_D64.isVector(msrc) ) {
@@ -792,7 +792,7 @@ public abstract class Operation {
                 public void process() {
 
                     double msrc = ((VariableScalar)src).getDouble();
-                    DenseMatrix64F mdst = ((VariableMatrix)dst).matrix;
+                    RowMatrix_F64 mdst = ((VariableMatrix)dst).matrix;
 
                     if( range.size() == 1 ) {
                         if(extractSimpleExtents(range.get(0),extents,false,mdst.getNumElements())) {
@@ -930,7 +930,7 @@ public abstract class Operation {
             ret.op = new Operation("rref-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(a.numRows,a.numCols);
                     CommonOps_D64.rref(a, -1, output.matrix);
                 }
@@ -1110,7 +1110,7 @@ public abstract class Operation {
             ret.op = new Operation("abs-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(a.numRows,a.numCols);
                     int N = a.getNumElements();
                     for (int i = 0; i < N; i++) {
@@ -1153,7 +1153,7 @@ public abstract class Operation {
             ret.op = new Operation("eye-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F mA = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 mA = ((VariableMatrix)A).matrix;
                     output.matrix.reshape(mA.numRows,mA.numCols);
                     CommonOps_D64.setIdentity(output.matrix);
                 }
@@ -1183,7 +1183,7 @@ public abstract class Operation {
             ret.op = new Operation("diag-m") {
                 @Override
                 public void process() {
-                    DenseMatrix64F mA = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 mA = ((VariableMatrix)A).matrix;
 
                     if(MatrixFeatures_D64.isVector(mA)) {
                         int N = mA.getNumElements();
@@ -1267,8 +1267,8 @@ public abstract class Operation {
             ret.op = new Operation("kron-mm") {
                 @Override
                 public void process() {
-                    DenseMatrix64F mA = ((VariableMatrix)A).matrix;
-                    DenseMatrix64F mB = ((VariableMatrix)B).matrix;
+                    RowMatrix_F64 mA = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 mB = ((VariableMatrix)B).matrix;
                     output.matrix.reshape(mA.numRows * mB.numRows, mA.numCols * mB.numCols);
                     CommonOps_D64.kron(mA, mB, output.matrix);
                 }
@@ -1292,8 +1292,8 @@ public abstract class Operation {
             ret.op = new Operation("dot-mm") {
                 @Override
                 public void process() {
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
-                    DenseMatrix64F b = ((VariableMatrix)B).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 b = ((VariableMatrix)B).matrix;
 
                     if( !MatrixFeatures_D64.isVector(a) || !MatrixFeatures_D64.isVector(b))
                         throw new RuntimeException("Both inputs to dot() must be vectors");
@@ -1318,12 +1318,12 @@ public abstract class Operation {
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
             ret.op = new Operation("solve-mm") {
-                LinearSolver<DenseMatrix64F> solver;
+                LinearSolver<RowMatrix_F64> solver;
                 @Override
                 public void process() {
 
-                    DenseMatrix64F a = ((VariableMatrix)A).matrix;
-                    DenseMatrix64F b = ((VariableMatrix)B).matrix;
+                    RowMatrix_F64 a = ((VariableMatrix)A).matrix;
+                    RowMatrix_F64 b = ((VariableMatrix)B).matrix;
 
                     if( solver == null ) {
                         solver = LinearSolverFactory_D64.leastSquares(a.numRows,a.numCols);
@@ -1368,7 +1368,7 @@ public abstract class Operation {
             @Override
             public void process() {
 
-                DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
+                RowMatrix_F64 A = ((VariableMatrix)inputs.get(0)).matrix;
 
                 if( inputs.size() == 2  ) {
                     if( extractSimpleExtents(inputs.get(1), extents, false, A.getNumElements()) ) {
@@ -1420,7 +1420,7 @@ public abstract class Operation {
             @Override
             public void process() {
 
-                DenseMatrix64F A = ((VariableMatrix)inputs.get(0)).matrix;
+                RowMatrix_F64 A = ((VariableMatrix)inputs.get(0)).matrix;
 
                 if( inputs.size() == 2 ) {
                     int index = ((VariableInteger)inputs.get(1)).value;

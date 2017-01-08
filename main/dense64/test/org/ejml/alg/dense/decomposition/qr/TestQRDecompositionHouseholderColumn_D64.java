@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
@@ -40,7 +40,7 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
 
 
     @Override
-    protected QRDecomposition<DenseMatrix64F> createQRDecomposition() {
+    protected QRDecomposition<RowMatrix_F64> createQRDecomposition() {
         return new QRDecompositionHouseholderColumn_D64();
     }
 
@@ -61,14 +61,14 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width, DenseMatrix64F.class);
-        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(width,width, RowMatrix_F64.class);
+        RandomMatrices_D64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
 
-        qr.householder(w,(DenseMatrix64F)A.getMatrix());
+        qr.householder(w,(RowMatrix_F64)A.getMatrix());
 
         SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getQR()[w]).extractMatrix(w,width,0,1);
         U.set(0,0,1); // this is not explicity set and is assumed to be 1
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DenseMatrix64F.class);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, RowMatrix_F64.class);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
 
@@ -101,28 +101,28 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
         double gamma = 0.2;
         double tau = 0.75;
 
-        SimpleMatrix U = new SimpleMatrix(width,1, DenseMatrix64F.class);
-        SimpleMatrix A = new SimpleMatrix(width,width, DenseMatrix64F.class);
+        SimpleMatrix U = new SimpleMatrix(width,1, RowMatrix_F64.class);
+        SimpleMatrix A = new SimpleMatrix(width,width, RowMatrix_F64.class);
 
-        RandomMatrices_D64.setRandom((DenseMatrix64F)U.getMatrix(),rand);
-        RandomMatrices_D64.setRandom((DenseMatrix64F)A.getMatrix(),rand);
+        RandomMatrices_D64.setRandom((RowMatrix_F64)U.getMatrix(),rand);
+        RandomMatrices_D64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
 
-        qr.convertToColumnMajor((DenseMatrix64F)A.getMatrix());
+        qr.convertToColumnMajor((RowMatrix_F64)A.getMatrix());
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DenseMatrix64F.class);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, RowMatrix_F64.class);
 
         SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
         u_sub.set(0,0,1);// assumed to be 1 in the algorithm
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,((DenseMatrix64F)U.getMatrix()).getData(),gamma,tau);
+        qr.updateA(w,((RowMatrix_F64)U.getMatrix()).getData(),gamma,tau);
 
         double[][] found = qr.getQR();
 
         for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found[w][i], UtilEjml.TEST_64F);
+            assertEquals(U.get(i,0),found[w][i], UtilEjml.TEST_F64);
         }
 
         // the right should be the same
@@ -145,13 +145,13 @@ public class TestQRDecompositionHouseholderColumn_D64 extends GenericQrCheck_D64
             this.numRows = numRows;
         }
 
-        public void householder( int j , DenseMatrix64F A ) {
+        public void householder( int j , RowMatrix_F64 A ) {
             convertToColumnMajor(A);
 
             super.householder(j);
         }
 
-        protected void convertToColumnMajor(DenseMatrix64F A) {
+        protected void convertToColumnMajor(RowMatrix_F64 A) {
             super.convertToColumnMajor(A);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
@@ -57,12 +57,12 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
-        BlockMatrix64F B = new BlockMatrix64F(A.numRows,A.numCols,BLOCK_LENGTH);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        BlockMatrix_F64 B = new BlockMatrix_F64(A.numRows,A.numCols,BLOCK_LENGTH);
 
         MatrixOps_B64.convert(A,B);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B, UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -76,13 +76,13 @@ public class TestMatrixOps_B64 {
 
     private void checkConvertInline_dense_to_block( int m , int n ) {
         double tmp[] = new double[BLOCK_LENGTH*n];
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
-        DenseMatrix64F A_orig = A.copy();
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A_orig = A.copy();
 
         MatrixOps_B64.convertRowToBlock(m,n,BLOCK_LENGTH,A.data,tmp);
-        BlockMatrix64F B = BlockMatrix64F.wrap(A.data,A.numRows,A.numCols,BLOCK_LENGTH);
+        BlockMatrix_F64 B = BlockMatrix_F64.wrap(A.data,A.numRows,A.numCols,BLOCK_LENGTH);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A_orig,B,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A_orig,B,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -98,12 +98,12 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkBlockToDense( int m , int n ) {
-        DenseMatrix64F A = new DenseMatrix64F(m,n);
-        BlockMatrix64F B = MatrixOps_B64.createRandom(m,n,-1,1,rand);
+        RowMatrix_F64 A = new RowMatrix_F64(m,n);
+        BlockMatrix_F64 B = MatrixOps_B64.createRandom(m,n,-1,1,rand);
 
         MatrixOps_B64.convert(B,A);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -117,13 +117,13 @@ public class TestMatrixOps_B64 {
 
     private void checkConvertInline_block_to_dense( int m , int n ) {
         double tmp[] = new double[BLOCK_LENGTH*n];
-        BlockMatrix64F A = MatrixOps_B64.createRandom(m,n,-1,1,rand,BLOCK_LENGTH);
-        BlockMatrix64F A_orig = A.copy();
+        BlockMatrix_F64 A = MatrixOps_B64.createRandom(m,n,-1,1,rand,BLOCK_LENGTH);
+        BlockMatrix_F64 A_orig = A.copy();
 
         MatrixOps_B64.convertBlockToRow(m,n,BLOCK_LENGTH,A.data,tmp);
-        DenseMatrix64F B = DenseMatrix64F.wrap(A.numRows,A.numCols,A.data);
+        RowMatrix_F64 B = RowMatrix_F64.wrap(A.numRows,A.numCols,A.data);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A_orig,B,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A_orig,B,UtilEjml.TEST_F64));
     }
 
     /**
@@ -162,9 +162,9 @@ public class TestMatrixOps_B64 {
      */
     private void checkMultInput( Method func, boolean transA , boolean transB ) {
         // bad block size
-        BlockMatrix64F A = new BlockMatrix64F(5,4,3);
-        BlockMatrix64F B = new BlockMatrix64F(4,6,3);
-        BlockMatrix64F C = new BlockMatrix64F(5,6,4);
+        BlockMatrix_F64 A = new BlockMatrix_F64(5,4,3);
+        BlockMatrix_F64 B = new BlockMatrix_F64(4,6,3);
+        BlockMatrix_F64 C = new BlockMatrix_F64(5,6,4);
 
         invokeErrorCheck(func, transA , transB , A, B, C);
         C.blockLength = 3;
@@ -188,7 +188,7 @@ public class TestMatrixOps_B64 {
     }
 
     private void invokeErrorCheck(Method func, boolean transA , boolean transB ,
-                                  BlockMatrix64F a, BlockMatrix64F b, BlockMatrix64F c) {
+                                  BlockMatrix_F64 a, BlockMatrix_F64 b, BlockMatrix_F64 c) {
 
         if( transA )
             a = MatrixOps_B64.transpose(a,null);
@@ -269,13 +269,13 @@ public class TestMatrixOps_B64 {
 
     private void checkMult( Method func, boolean transA , boolean transB ,
                             int m, int n, int o) {
-        DenseMatrix64F A_d = RandomMatrices_D64.createRandom(m, n,rand);
-        DenseMatrix64F B_d = RandomMatrices_D64.createRandom(n, o,rand);
-        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
+        RowMatrix_F64 A_d = RandomMatrices_D64.createRandom(m, n,rand);
+        RowMatrix_F64 B_d = RandomMatrices_D64.createRandom(n, o,rand);
+        RowMatrix_F64 C_d = new RowMatrix_F64(m, o);
 
-        BlockMatrix64F A_b = MatrixOps_B64.convert(A_d,BLOCK_LENGTH);
-        BlockMatrix64F B_b = MatrixOps_B64.convert(B_d,BLOCK_LENGTH);
-        BlockMatrix64F C_b = MatrixOps_B64.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
+        BlockMatrix_F64 A_b = MatrixOps_B64.convert(A_d,BLOCK_LENGTH);
+        BlockMatrix_F64 B_b = MatrixOps_B64.convert(B_d,BLOCK_LENGTH);
+        BlockMatrix_F64 C_b = MatrixOps_B64.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
 
         if( transA )
             A_b= MatrixOps_B64.transpose(A_b,null);
@@ -294,7 +294,7 @@ public class TestMatrixOps_B64 {
 
 //        C_d.print();
 //        C_b.print();
-        assertTrue( GenericMatrixOps_F64.isEquivalent(C_d,C_b,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(C_d,C_b,UtilEjml.TEST_F64));
     }
 
 
@@ -311,14 +311,14 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkTranSrcBlockToDense( int m , int n ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
-        DenseMatrix64F A_t = new DenseMatrix64F(n,m);
-        BlockMatrix64F B = new BlockMatrix64F(n,m,BLOCK_LENGTH);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A_t = new RowMatrix_F64(n,m);
+        BlockMatrix_F64 B = new BlockMatrix_F64(n,m,BLOCK_LENGTH);
 
         CommonOps_D64.transpose(A,A_t);
         MatrixOps_B64.convertTranSrc(A,B);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A_t,B,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A_t,B,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -334,18 +334,18 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkTranspose( int m , int n ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
-        DenseMatrix64F A_t = new DenseMatrix64F(n,m);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A_t = new RowMatrix_F64(n,m);
 
-        BlockMatrix64F B = new BlockMatrix64F(A.numRows,A.numCols,BLOCK_LENGTH);
-        BlockMatrix64F B_t = new BlockMatrix64F(n,m,BLOCK_LENGTH);
+        BlockMatrix_F64 B = new BlockMatrix_F64(A.numRows,A.numCols,BLOCK_LENGTH);
+        BlockMatrix_F64 B_t = new BlockMatrix_F64(n,m,BLOCK_LENGTH);
 
         MatrixOps_B64.convert(A,B);
 
         CommonOps_D64.transpose(A,A_t);
         MatrixOps_B64.transpose(B,B_t);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A_t,B_t,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A_t,B_t,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -354,7 +354,7 @@ public class TestMatrixOps_B64 {
 
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix64F B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrix_F64 B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
                 MatrixOps_B64.zeroTriangle(true,B);
 
                 for( int i = 0; i < B.numRows; i++ ) {
@@ -376,7 +376,7 @@ public class TestMatrixOps_B64 {
 
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix64F B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrix_F64 B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
 
                 MatrixOps_B64.zeroTriangle(false,B);
 
@@ -400,8 +400,8 @@ public class TestMatrixOps_B64 {
         // test where src and dst are the same size
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix64F A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
-                BlockMatrix64F B = new BlockMatrix64F(numRows,numCols,r);
+                BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrix_F64 B = new BlockMatrix_F64(numRows,numCols,r);
 
                 MatrixOps_B64.copyTriangle(true,A,B);
 
@@ -429,10 +429,10 @@ public class TestMatrixOps_B64 {
         }
 
         // now the dst will be smaller than the source
-        BlockMatrix64F B = new BlockMatrix64F(r+1,r+1,r);
+        BlockMatrix_F64 B = new BlockMatrix_F64(r+1,r+1,r);
         for( int numRows = 4; numRows <= 6; numRows += 1 ){
             for( int numCols = 4; numCols <= 6; numCols += 1 ){
-                BlockMatrix64F A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
                 CommonOps_D64.fill(B, 0);
 
                 MatrixOps_B64.copyTriangle(true,A,B);
@@ -467,16 +467,16 @@ public class TestMatrixOps_B64 {
 
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix64F A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
 
                 MatrixOps_B64.setIdentity(A);
 
                 for( int i = 0; i < numRows; i++ ) {
                     for( int j = 0; j < numCols; j++ ) {
                         if( i == j )
-                            assertEquals(1.0,A.get(i,j),UtilEjml.TEST_64F);
+                            assertEquals(1.0,A.get(i,j),UtilEjml.TEST_F64);
                         else
-                            assertEquals(0.0,A.get(i,j),UtilEjml.TEST_64F);
+                            assertEquals(0.0,A.get(i,j),UtilEjml.TEST_F64);
                     }
                 }
             }
@@ -485,7 +485,7 @@ public class TestMatrixOps_B64 {
 
     @Test
     public void convertSimple() {
-        BlockMatrix64F A = MatrixOps_B64.createRandom(4,6,-1,1,rand,3);
+        BlockMatrix_F64 A = MatrixOps_B64.createRandom(4,6,-1,1,rand,3);
 
         SimpleMatrix S = new SimpleMatrix(A);
 
@@ -494,7 +494,7 @@ public class TestMatrixOps_B64 {
 
         for( int i = 0; i < A.numRows; i++ ) {
             for( int j = 0; j < A.numCols; j++ ) {
-                assertEquals(A.get(i,j),S.get(i,j),UtilEjml.TEST_64F);
+                assertEquals(A.get(i,j),S.get(i,j),UtilEjml.TEST_F64);
             }
         }
     }
@@ -502,28 +502,28 @@ public class TestMatrixOps_B64 {
     @Test
     public void identity() {
         // test square
-        BlockMatrix64F A = MatrixOps_B64.identity(4,4,3);
-        assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_64F));
+        BlockMatrix_F64 A = MatrixOps_B64.identity(4,4,3);
+        assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_F64));
 
         // test wide
         A = MatrixOps_B64.identity(4,5,3);
-        assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_F64));
 
         // test tall
         A = MatrixOps_B64.identity(5,4,3);
-        assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_F64));
     }
 
     @Test
     public void extractAligned() {
-        BlockMatrix64F A = MatrixOps_B64.createRandom(10,11,-1,1,rand,3);
-        BlockMatrix64F B = new BlockMatrix64F(9,11,3);
+        BlockMatrix_F64 A = MatrixOps_B64.createRandom(10,11,-1,1,rand,3);
+        BlockMatrix_F64 B = new BlockMatrix_F64(9,11,3);
 
         MatrixOps_B64.extractAligned(A,B);
 
         for( int i = 0; i < B.numRows; i++ ) {
             for( int j = 0; j < B.numCols; j++ ) {
-                assertEquals(A.get(i,j),B.get(i,j),UtilEjml.TEST_64F);
+                assertEquals(A.get(i,j),B.get(i,j),UtilEjml.TEST_F64);
             }
         }
     }
@@ -531,9 +531,9 @@ public class TestMatrixOps_B64 {
     @Test
     public void blockAligned() {
         int r = 3;
-        BlockMatrix64F A = MatrixOps_B64.createRandom(10,11,-1,1,rand,r);
+        BlockMatrix_F64 A = MatrixOps_B64.createRandom(10,11,-1,1,rand,r);
 
-        D1Submatrix64F S = new D1Submatrix64F(A);
+        D1Submatrix_F64 S = new D1Submatrix_F64(A);
 
         assertTrue(MatrixOps_B64.blockAligned(r,S));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenvalueSmall_F64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 
 import java.util.Random;
@@ -47,16 +47,16 @@ public class WatchedDoubleStepQREigen_D64 {
 
     private int N;
 
-    DenseMatrix64F A;
-    private DenseMatrix64F u;
+    RowMatrix_F64 A;
+    private RowMatrix_F64 u;
     private double gamma;
 
-    private DenseMatrix64F _temp;
+    private RowMatrix_F64 _temp;
 
     // how many steps did it take to find the eigenvalue
     int numStepsFind[];
     int steps;
-    Complex64F eigenvalues[];
+    Complex_F64 eigenvalues[];
     int numEigen;
 
     // computes eigenvalues for 2 by 2 submatrices
@@ -81,13 +81,13 @@ public class WatchedDoubleStepQREigen_D64 {
 
     public boolean createR = true;
 
-    public DenseMatrix64F Q;
+    public RowMatrix_F64 Q;
 
     public void incrementSteps() {
         steps++;
     }
 
-    public void setQ( DenseMatrix64F Q ) {
+    public void setQ( RowMatrix_F64 Q ) {
         this.Q = Q;
     }
 
@@ -125,7 +125,7 @@ public class WatchedDoubleStepQREigen_D64 {
         return target <= 0.5*UtilEjml.EPS*(above+right);
     }
 
-    public void setup( DenseMatrix64F A ) {
+    public void setup( RowMatrix_F64 A ) {
         if( A.numRows != A.numCols )
             throw new RuntimeException("Must be square") ;
 
@@ -133,9 +133,9 @@ public class WatchedDoubleStepQREigen_D64 {
             N = A.numRows;
 
             this.A = A.copy();
-            u = new DenseMatrix64F(A.numRows,1);
+            u = new RowMatrix_F64(A.numRows,1);
 
-            _temp = new DenseMatrix64F(A.numRows,1);
+            _temp = new RowMatrix_F64(A.numRows,1);
             numStepsFind = new int[ A.numRows ];
         } else {
             this.A.set(A);
@@ -149,9 +149,9 @@ public class WatchedDoubleStepQREigen_D64 {
             }
         }
 
-        eigenvalues = new Complex64F[ A.numRows ];
+        eigenvalues = new Complex_F64[ A.numRows ];
         for( int i = 0; i < eigenvalues.length; i++ ) {
-            eigenvalues[i] = new Complex64F();
+            eigenvalues[i] = new Complex_F64();
         }
 
         numEigen = 0;
@@ -283,7 +283,7 @@ public class WatchedDoubleStepQREigen_D64 {
         // get rid of the bump
         if( Q != null ) {
             QrHelperFunctions_D64.rank1UpdateMultR(Q, u.data, gamma, 0, x1, x1 + 3, _temp.data);
-            if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_64F) ) {
+            if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_F64) ) {
                 u.print();
 
                 Q.print();
@@ -301,7 +301,7 @@ public class WatchedDoubleStepQREigen_D64 {
         for( int i = x1; i < x2-2; i++ ) {
             if( bulgeDoubleStepQn(i) && Q != null ) {
                 QrHelperFunctions_D64.rank1UpdateMultR(Q, u.data, gamma, 0, i + 1, i + 4, _temp.data);
-                if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_64F) )
+                if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_F64) )
                     throw new RuntimeException("Bad");
             }
 
@@ -315,7 +315,7 @@ public class WatchedDoubleStepQREigen_D64 {
         // the last one has to be a single step
         if( x2-2 >= 0 && bulgeSingleStepQn(x2-2) && Q != null ) {
             QrHelperFunctions_D64.rank1UpdateMultR(Q, u.data, gamma, 0, x2 - 1, x2 + 1, _temp.data);
-            if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_64F) )
+            if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_F64) )
                 throw new RuntimeException("Bad");
 
         }
@@ -325,7 +325,7 @@ public class WatchedDoubleStepQREigen_D64 {
         }
 //        A.print("%12.3e");
 
-        if( checkHessenberg && !MatrixFeatures_D64.isUpperTriangle(A,1,UtilEjml.TEST_64F)) {
+        if( checkHessenberg && !MatrixFeatures_D64.isUpperTriangle(A,1,UtilEjml.TEST_F64)) {
             A.print("%12.3e");
             throw new RuntimeException("Bad matrix");
         }
@@ -339,7 +339,7 @@ public class WatchedDoubleStepQREigen_D64 {
         // get rid of the bump
         if( Q != null ) {
             QrHelperFunctions_D64.rank1UpdateMultR(Q, u.data, gamma, 0, x1, x1 + 2, _temp.data);
-            if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_64F) )
+            if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_F64) )
                 throw new RuntimeException("Bad");
         }
 
@@ -353,7 +353,7 @@ public class WatchedDoubleStepQREigen_D64 {
         for( int i = x1; i < x2-1; i++ ) {
             if( bulgeSingleStepQn(i) && Q != null ) {
                 QrHelperFunctions_D64.rank1UpdateMultR(Q, u.data, gamma, 0, i + 1, i + 3, _temp.data);
-                if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TESTP_64F) )
+                if( checkOrthogonal && !MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TESTP_F64) )
                     throw new RuntimeException("Bad");
             }
 
@@ -363,7 +363,7 @@ public class WatchedDoubleStepQREigen_D64 {
             }
         }
 
-        if( checkHessenberg && !MatrixFeatures_D64.isUpperTriangle(A,1,UtilEjml.TESTP_64F)) {
+        if( checkHessenberg && !MatrixFeatures_D64.isUpperTriangle(A,1,UtilEjml.TESTP_F64)) {
             A.print("%12.3e");
             throw new RuntimeException("Bad matrix");
         }
@@ -568,7 +568,7 @@ public class WatchedDoubleStepQREigen_D64 {
         return numEigen;
     }
 
-    public Complex64F[] getEigenvalues() {
+    public Complex_F64[] getEigenvalues() {
         return eigenvalues;
     }
 

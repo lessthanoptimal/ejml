@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -38,15 +38,15 @@ import static org.junit.Assert.assertEquals;
 public class TestInvertUsingSolve_D64 {
 
     Random rand = new Random(0xff);
-    double tol = UtilEjml.TEST_64F;
+    double tol = UtilEjml.TEST_F64;
 
     /**
      * See if it can invert a matrix that is known to be invertable.
      */
     @Test
     public void invert() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DenseMatrix64F A_inv = RandomMatrices_D64.createRandom(3,3,rand);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        RowMatrix_F64 A_inv = RandomMatrices_D64.createRandom(3,3,rand);
 
         LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
         LinearSolver solver = new LinearSolverLu_D64(decomp);
@@ -54,7 +54,7 @@ public class TestInvertUsingSolve_D64 {
         solver.setA(A);
         InvertUsingSolve_D64.invert(solver,A,A_inv);
 
-        DenseMatrix64F I = RandomMatrices_D64.createRandom(3,3,rand);
+        RowMatrix_F64 I = RandomMatrices_D64.createRandom(3,3,rand);
 
         CommonOps_D64.mult(A,A_inv,I);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,9 +21,9 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.alg.block.InnerRankUpdate_B64;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.TriangularSolver_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.Complex64F;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.D1Submatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
@@ -38,20 +38,20 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  *
  * @author Peter Abeles
  */
-public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMatrix64F> {
+public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMatrix_F64> {
 
     // if it should compute an upper or lower triangular matrix
     private boolean lower = false;
     // The decomposed matrix.
-    private BlockMatrix64F T;
+    private BlockMatrix_F64 T;
 
     // predeclare local work space
-    private D1Submatrix64F subA = new D1Submatrix64F();
-    private D1Submatrix64F subB = new D1Submatrix64F();
-    private D1Submatrix64F subC = new D1Submatrix64F();
+    private D1Submatrix_F64 subA = new D1Submatrix_F64();
+    private D1Submatrix_F64 subB = new D1Submatrix_F64();
+    private D1Submatrix_F64 subC = new D1Submatrix_F64();
 
     // storage for the determinant
-    private Complex64F det = new Complex64F();
+    private Complex_F64 det = new Complex_F64();
 
     /**
      * Creates a new BlockCholeskyOuterForm
@@ -69,7 +69,7 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMat
      * @return If it succeeded or not.
      */
     @Override
-    public boolean decompose(BlockMatrix64F A) {
+    public boolean decompose(BlockMatrix_F64 A) {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("A must be square");
 
@@ -164,7 +164,7 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMat
     }
 
     @Override
-    public BlockMatrix64F getT(BlockMatrix64F T) {
+    public BlockMatrix_F64 getT(BlockMatrix_F64 T) {
         if( T == null )
             return this.T;
         T.set(this.T);
@@ -173,7 +173,7 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMat
     }
 
     @Override
-    public Complex64F computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         double prod = 1.0;
 
         int blockLength = T.blockLength;

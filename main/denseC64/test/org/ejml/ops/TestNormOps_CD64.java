@@ -19,8 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -36,9 +36,9 @@ public class TestNormOps_CD64 {
 
     @Test
     public void normF() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(1,7,rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(1,7,rand);
 
-        Complex64F b = new Complex64F();
+        Complex_F64 b = new Complex_F64();
         double total = 0;
         for (int i = 0; i < a.numRows; i++) {
             for (int j = 0; j < a.numCols; j++) {
@@ -50,6 +50,6 @@ public class TestNormOps_CD64 {
         double expected = Math.sqrt(total);
         double found = NormOps_CD64.normF(a);
 
-        assertEquals(expected,found, UtilEjml.TEST_64F);
+        assertEquals(expected,found, UtilEjml.TEST_F64);
     }
 }

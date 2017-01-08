@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -44,7 +44,7 @@ import org.ejml.ops.CommonOps_D64;
  */
 public class QRColPivDecompositionHouseholderColumn_D64
         extends QRDecompositionHouseholderColumn_D64
-        implements QRPDecomposition_F64<DenseMatrix64F>
+        implements QRPDecomposition_F64<RowMatrix_F64>
 {
     // the ordering of each column, the current column i is the original column pivots[i]
     protected int pivots[];
@@ -95,7 +95,7 @@ public class QRColPivDecompositionHouseholderColumn_D64
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
                 Q = CommonOps_D64.identity(numRows,minLength);
@@ -143,7 +143,7 @@ public class QRColPivDecompositionHouseholderColumn_D64
      * </p>
      */
     @Override
-    public boolean decompose( DenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_F64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         convertToColumnMajor(A);
@@ -302,9 +302,9 @@ public class QRColPivDecompositionHouseholderColumn_D64
     }
 
     @Override
-    public DenseMatrix64F getPivotMatrix(DenseMatrix64F P) {
+    public RowMatrix_F64 getPivotMatrix(RowMatrix_F64 P) {
         if( P == null )
-            P = new DenseMatrix64F(numCols,numCols);
+            P = new RowMatrix_F64(numCols,numCols);
         else if( P.numRows != numCols )
             throw new IllegalArgumentException("Number of rows must be "+numCols);
         else if( P.numCols != numCols )

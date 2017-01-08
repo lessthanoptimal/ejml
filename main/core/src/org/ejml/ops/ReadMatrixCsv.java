@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,9 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix;
+import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.RowMatrix_F64;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,8 +44,8 @@ public class ReadMatrixCsv extends ReadCsv {
     }
 
     /**
-     * Reads in a DenseMatrix64F from the IO stream.
-     * @return DenseMatrix64F
+     * Reads in a RowMatrix_F64 from the IO stream.
+     * @return RowMatrix_F64
      * @throws IOException If anything goes wrong.
      */
     public <M extends Matrix>M read() throws IOException {
@@ -67,16 +67,16 @@ public class ReadMatrixCsv extends ReadCsv {
     }
 
     /**
-     * Reads in a DenseMatrix64F from the IO stream where the user specifies the matrix dimensions.
+     * Reads in a RowMatrix_F64 from the IO stream where the user specifies the matrix dimensions.
      *
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
-     * @return DenseMatrix64F
+     * @return RowMatrix_F64
      * @throws IOException
      */
-    public DenseMatrix64F readReal(int numRows, int numCols) throws IOException {
+    public RowMatrix_F64 readReal(int numRows, int numCols) throws IOException {
 
-        DenseMatrix64F A = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 A = new RowMatrix_F64(numRows,numCols);
 
         for( int i = 0; i < numRows; i++ ) {
             List<String> words = extractWords();
@@ -94,16 +94,16 @@ public class ReadMatrixCsv extends ReadCsv {
     }
 
     /**
-     * Reads in a CDenseMatrix64F from the IO stream where the user specifies the matrix dimensions.
+     * Reads in a RowMatrix_C64 from the IO stream where the user specifies the matrix dimensions.
      *
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
-     * @return DenseMatrix64F
+     * @return RowMatrix_F64
      * @throws IOException
      */
-    public CDenseMatrix64F readComplex(int numRows, int numCols) throws IOException {
+    public RowMatrix_C64 readComplex(int numRows, int numCols) throws IOException {
 
-        CDenseMatrix64F A = new CDenseMatrix64F(numRows,numCols);
+        RowMatrix_C64 A = new RowMatrix_C64(numRows,numCols);
 
         int wordsCol = numCols*2;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class TestBaseDecomposition_B64_to_D64 {
     @Test
     public void inputModified() {
 
-        DenseMatrix64F A = new DenseMatrix64F(25,20);
+        RowMatrix_F64 A = new RowMatrix_F64(25,20);
         for (int i = 0; i < A.data.length; i++) {
             A.data[i] = i;
         }
@@ -54,7 +54,7 @@ public class TestBaseDecomposition_B64_to_D64 {
         assertFalse(alg.inputModified());
         assertTrue(alg.decompose(A));
         for (int i = 0; i < A.data.length; i++) {
-            assertEquals(i,A.data[i], UtilEjml.TEST_64F);
+            assertEquals(i,A.data[i], UtilEjml.TEST_F64);
         }
 
         // test it with a decomposition which modifies the input
@@ -64,16 +64,16 @@ public class TestBaseDecomposition_B64_to_D64 {
         assertTrue(alg.decompose(A));
     }
 
-    private static class ModifyBlock implements DecompositionInterface<BlockMatrix64F> {
+    private static class ModifyBlock implements DecompositionInterface<BlockMatrix_F64> {
 
         @Override
-        public boolean decompose(BlockMatrix64F orig) {
+        public boolean decompose(BlockMatrix_F64 orig) {
 
             // see if the input was correctly converted
             int val = 0;
             for (int i = 0; i < orig.numRows; i++) {
                 for (int j = 0; j < orig.numCols; j++,val++) {
-                    assertEquals(val,orig.get(i,j),UtilEjml.TEST_64F);
+                    assertEquals(val,orig.get(i,j),UtilEjml.TEST_F64);
                 }
             }
 
@@ -89,10 +89,10 @@ public class TestBaseDecomposition_B64_to_D64 {
         }
     }
 
-    private static class DoNotModifyBlock implements DecompositionInterface<BlockMatrix64F> {
+    private static class DoNotModifyBlock implements DecompositionInterface<BlockMatrix_F64> {
 
         @Override
-        public boolean decompose(BlockMatrix64F orig) {
+        public boolean decompose(BlockMatrix_F64 orig) {
             return true;
         }
 

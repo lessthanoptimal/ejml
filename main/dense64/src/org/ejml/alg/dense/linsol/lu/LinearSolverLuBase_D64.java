@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -36,7 +36,7 @@ public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         _setA(A);
 
         return decomp.decompose(A);
@@ -48,9 +48,9 @@ public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public void invert(DenseMatrix64F A_inv) {
+    public void invert(RowMatrix_F64 A_inv) {
         double []vv = decomp._getVV();
-        DenseMatrix64F LU = decomp.getLU();
+        RowMatrix_F64 LU = decomp.getLU();
 
         if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
             throw new IllegalArgumentException("Unexpected matrix dimension");
@@ -77,7 +77,7 @@ public abstract class LinearSolverLuBase_D64 extends LinearSolverAbstract_D64 {
      * @param b A matrix. Not modified.
      * @param x A matrix. Modified.
      */
-    public void improveSol( DenseMatrix64F b , DenseMatrix64F x )
+    public void improveSol(RowMatrix_F64 b , RowMatrix_F64 x )
     {
         if( b.numCols != x.numCols ) {
             throw new IllegalArgumentException("bad shapes");

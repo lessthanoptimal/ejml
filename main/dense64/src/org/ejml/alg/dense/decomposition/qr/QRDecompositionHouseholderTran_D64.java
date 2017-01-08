@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_D64;
 
@@ -36,13 +36,13 @@ import org.ejml.ops.CommonOps_D64;
  */
 // TODO remove QR Col and replace with this one?
 // -- On small matrices col seems to be about 10% faster
-public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<DenseMatrix64F> {
+public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<RowMatrix_F64> {
 
     /**
      * Where the Q and R matrices are stored.  For speed reasons
      * this is transposed
      */
-    protected DenseMatrix64F QR;
+    protected RowMatrix_F64 QR;
 
     // used internally to store temporary data
     protected double v[];
@@ -68,7 +68,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
         int maxLength = Math.max(numCols,numRows);
 
         if( QR == null ) {
-            QR = new DenseMatrix64F(numCols,numRows);
+            QR = new RowMatrix_F64(numCols,numRows);
             v = new double[ maxLength ];
             gammas = new double[ minLength ];
         } else {
@@ -86,7 +86,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
     /**
      * Inner matrix that stores the decomposition
      */
-    public DenseMatrix64F getQR() {
+    public RowMatrix_F64 getQR() {
         return QR;
     }
 
@@ -97,7 +97,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
                 Q = CommonOps_D64.identity(numRows,minLength);
@@ -138,7 +138,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
      *
      * @param A Matrix that is being multiplied by Q.  Is modified.
      */
-    public void applyQ( DenseMatrix64F A ) {
+    public void applyQ( RowMatrix_F64 A ) {
         if( A.numRows != numRows )
             throw new IllegalArgumentException("A must have at least "+numRows+" rows.");
 
@@ -156,7 +156,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
      *
      * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
      */
-    public void applyTranQ( DenseMatrix64F A ) {
+    public void applyTranQ( RowMatrix_F64 A ) {
         for( int j = 0; j < minLength; j++ ) {
             int diagIndex = j*numRows+j;
             double before = QR.data[diagIndex];
@@ -173,12 +173,12 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
      * @param compact
      */
     @Override
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
+    public RowMatrix_F64 getR(RowMatrix_F64 R, boolean compact) {
         if( R == null ) {
             if( compact ) {
-                R = new DenseMatrix64F(minLength,numCols);
+                R = new RowMatrix_F64(minLength,numCols);
             } else
-                R = new DenseMatrix64F(numRows,numCols);
+                R = new RowMatrix_F64(numRows,numCols);
         } else {
             if( compact ) {
                 if( R.numCols != numCols || R.numRows != minLength )
@@ -219,7 +219,7 @@ public class QRDecompositionHouseholderTran_D64 implements QRDecomposition<Dense
      * </p>
      */
     @Override
-    public boolean decompose( DenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_F64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         CommonOps_D64.transpose(A,QR);

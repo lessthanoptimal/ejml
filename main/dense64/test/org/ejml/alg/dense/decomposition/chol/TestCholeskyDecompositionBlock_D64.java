@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests_D64
     }
 
     @Override
-    public CholeskyDecomposition_F64<DenseMatrix64F> create(boolean lower) {
+    public CholeskyDecomposition_F64<RowMatrix_F64> create(boolean lower) {
         if( !lower )
             throw new IllegalArgumentException("Doesn't support upper form");
 
@@ -91,23 +91,23 @@ public class TestCholeskyDecompositionBlock_D64 extends GenericCholeskyTests_D64
     }
 
     private void checkBlockMatrix(int w, int b) {
-        DenseMatrix64F A = new DenseMatrix64F(w, w, true, 4, 2, 6, 14, 2, 26, 13, 12, 6, 13, 29, 47, 14, 12, 47, 95);
+        RowMatrix_F64 A = new RowMatrix_F64(w, w, true, 4, 2, 6, 14, 2, 26, 13, 12, 6, 13, 29, 47, 14, 12, 47, 95);
 
-        DenseMatrix64F A_inv = new DenseMatrix64F(w, w);
-        DenseMatrix64F A_inv_block = new DenseMatrix64F(w, w);
+        RowMatrix_F64 A_inv = new RowMatrix_F64(w, w);
+        RowMatrix_F64 A_inv_block = new RowMatrix_F64(w, w);
 
         CholeskyDecompositionBlock_D64 algBlock = new CholeskyDecompositionBlock_D64(b);
-        LinearSolver<DenseMatrix64F> solver = new LinearSolverChol_D64(algBlock);
-        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+        LinearSolver<RowMatrix_F64> solver = new LinearSolverChol_D64(algBlock);
+        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv_block);
 
         CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
         solver = new LinearSolverChol_D64(alg);
-        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
-        EjmlUnitTests.assertEquals(A_inv,A_inv_block, UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(A_inv,A_inv_block, UtilEjml.TEST_F64_SQ);
     }
 }

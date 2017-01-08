@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.factory;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_D64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -42,53 +42,53 @@ public class TestLinearSolverFactory_D64 {
 
     @Test
     public void general() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,4,rand);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(4,1,rand);
-        DenseMatrix64F y = new DenseMatrix64F(5,1);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5,4,rand);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(4,1,rand);
+        RowMatrix_F64 y = new RowMatrix_F64(5,1);
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory_D64.general(A.numRows, A.numCols);
+        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_D64.general(A.numRows, A.numCols);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void linear() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(4,4,rand);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(4,1,rand);
-        DenseMatrix64F y = new DenseMatrix64F(4,1);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(4,4,rand);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(4,1,rand);
+        RowMatrix_F64 y = new RowMatrix_F64(4,1);
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory_D64.linear(A.numRows);
+        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_D64.linear(A.numRows);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void leastSquares() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,4,rand);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(4,1,rand);
-        DenseMatrix64F y = new DenseMatrix64F(5,1);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5,4,rand);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(4,1,rand);
+        RowMatrix_F64 y = new RowMatrix_F64(5,1);
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory_D64.leastSquares(A.numRows,A.numCols);
+        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_D64.leastSquares(A.numRows,A.numCols);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void symmetric() {
-        DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(5,rand);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(5,1,rand);
-        DenseMatrix64F y = new DenseMatrix64F(5,1);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(5,rand);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(5,1,rand);
+        RowMatrix_F64 y = new RowMatrix_F64(5,1);
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory_D64.symmPosDef(A.numCols);
+        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_D64.symmPosDef(A.numCols);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void adjustable() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,4,rand);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(4,1,rand);
-        DenseMatrix64F y = new DenseMatrix64F(5,1);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5,4,rand);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(4,1,rand);
+        RowMatrix_F64 y = new RowMatrix_F64(5,1);
 
         AdjustableLinearSolver_D64 solver = LinearSolverFactory_D64.adjustable();
 
@@ -99,28 +99,28 @@ public class TestLinearSolverFactory_D64 {
 
         // compute the adjusted solution
         y.numRows--;
-        DenseMatrix64F x_adj = new DenseMatrix64F(4,1);
+        RowMatrix_F64 x_adj = new RowMatrix_F64(4,1);
         solver.solve(y,x_adj);
 
         // The solution should still be the same
-        assertTrue(MatrixFeatures_D64.isIdentical(x,x_adj, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(x,x_adj, UtilEjml.TEST_F64));
     }
 
     /**
      * Given A and x it computes the value of y.  This is then compared against what the solver computes
      * x should be.
      */
-    private void standardTest(DenseMatrix64F a, DenseMatrix64F x, DenseMatrix64F y,
-                              LinearSolver<DenseMatrix64F> solver) {
-        solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+    private void standardTest(RowMatrix_F64 a, RowMatrix_F64 x, RowMatrix_F64 y,
+                              LinearSolver<RowMatrix_F64> solver) {
+        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
 
         CommonOps_D64.mult(a,x,y);
 
-        DenseMatrix64F x_found = new DenseMatrix64F(x.numRows,1);
+        RowMatrix_F64 x_found = new RowMatrix_F64(x.numRows,1);
 
         assertTrue(solver.setA(a));
         solver.solve(y,x_found);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(x,x_found,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(x,x_found,UtilEjml.TEST_F64));
     }
 }

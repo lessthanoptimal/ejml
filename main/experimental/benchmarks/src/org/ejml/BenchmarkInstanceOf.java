@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,10 @@
 
 package org.ejml;
 
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Matrix64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Matrix_F64;
+import org.ejml.data.RealMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 
@@ -36,29 +36,29 @@ public class BenchmarkInstanceOf {
 
     public interface Stuff
     {
-        public void process( Stuff a, RealMatrix64F M );
+        public void process( Stuff a, RealMatrix_F64 M );
     }
 
     public static class StuffA implements Stuff
     {
 
         @Override
-        public void process(Stuff a, RealMatrix64F M) {
+        public void process(Stuff a, RealMatrix_F64 M) {
 
-            if( M instanceof BlockMatrix64F) {
-                CommonOps_D64.scale(1.0,(BlockMatrix64F)M);
-            } else if( M instanceof DenseMatrix64F) {
-                CommonOps_D64.scale(SCALE,(DenseMatrix64F)M);
-//                CommonOps.scale(0.5,(DenseMatrix64F)M);
-            } else if(M instanceof D1Matrix64F) {
-                CommonOps_D64.scale(1.0,(D1Matrix64F)M);
+            if( M instanceof BlockMatrix_F64) {
+                CommonOps_D64.scale(1.0,(BlockMatrix_F64)M);
+            } else if( M instanceof RowMatrix_F64) {
+                CommonOps_D64.scale(SCALE,(RowMatrix_F64)M);
+//                CommonOps.scale(0.5,(RowMatrix_F64)M);
+            } else if(M instanceof D1Matrix_F64) {
+                CommonOps_D64.scale(1.0,(D1Matrix_F64)M);
             } else {
                throw new IllegalArgumentException("Who knows");
             }
         }
     }
 
-    public static void withIfStatement( DenseMatrix64F M )
+    public static void withIfStatement( RowMatrix_F64 M )
     {
         if( M.numCols > 10 ) {
             CommonOps_D64.scale(2.0,M);
@@ -71,7 +71,7 @@ public class BenchmarkInstanceOf {
     }
 
 
-    public static long processInstanceOf( DenseMatrix64F M , int N ) {
+    public static long processInstanceOf(RowMatrix_F64 M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -82,7 +82,7 @@ public class BenchmarkInstanceOf {
         return System.currentTimeMillis() - before;
     }
 
-    public static long processDirect( DenseMatrix64F M , int N ) {
+    public static long processDirect(RowMatrix_F64 M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -94,7 +94,7 @@ public class BenchmarkInstanceOf {
         return System.currentTimeMillis() - before;
     }
 
-    public static long processIf( DenseMatrix64F M , int N ) {
+    public static long processIf(RowMatrix_F64 M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -107,7 +107,7 @@ public class BenchmarkInstanceOf {
 
 
     public static void main( String args[] ) {
-        DenseMatrix64F A = new DenseMatrix64F(2,2,true,0.1,0.5,0.7,10.0);
+        RowMatrix_F64 A = new RowMatrix_F64(2,2,true,0.1,0.5,0.7,10.0);
 
         int N = 200000000;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,9 +19,9 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Eigenpair64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.Eigenpair_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.ops.*;
@@ -81,7 +81,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     public void checkSizeZero() {
         EigenDecomposition_F64 alg = createDecomposition();
 
-        assertFalse(alg.decompose(new DenseMatrix64F(0,0)));
+        assertFalse(alg.decompose(new RowMatrix_F64(0,0)));
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 //            System.out.println("N = "+N);
 
             for( int i = 0; i < 2; i++ ) {
-                DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,-1,1,rand);
+                RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,-1,1,rand);
 
                 assertTrue(safeDecomposition(alg,A));
 
@@ -112,7 +112,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * are real.  Octave was used to test the known values.
      */
     public void checkKnownReal() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -153,7 +153,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 //
 //        // build companion matrix
 //        int n = polynomial.length - 1;
-//        DenseMatrix64F companion = new DenseMatrix64F(n, n);
+//        RowMatrix_F64 companion = new RowMatrix_F64(n, n);
 //        for (int i = 0; i < n; i++) {
 //            companion.set(i, n - 1, -polynomial[i] / polynomial[n]);
 //        }
@@ -167,7 +167,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 //
 //        // see if the roots are zero
 //        for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {
-//            Complex64F c = alg.getEigenvalue(i);
+//            Complex_F64 c = alg.getEigenvalue(i);
 //
 //            if( !c.isReal() ) {
 //                continue;
@@ -189,7 +189,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
      */
     public void checkKnownReal_JustValue() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -204,7 +204,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
      */
     public void checkKnownSymmetric_JustValue() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true,
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true,
                 0.98139,   0.78650,   0.78564,
                 0.78650,   1.03207,   0.29794,
                 0.78564,   0.29794,   0.91926);
@@ -222,7 +222,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * are real and some are complex.
      */
     public void checkKnownComplex() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, -0.418284, 0.279875, 0.452912, -0.093748, -0.045179, 0.310949, 0.250513, -0.304077, -0.031414);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, -0.418284, 0.279875, 0.452912, -0.093748, -0.045179, 0.310949, 0.250513, -0.304077, -0.031414);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -240,7 +240,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     public void checkRandomSymmetric() {
         for( int N = 1; N <= 15; N++ ) {
             for( int i = 0; i < 20; i++ ) {
-                DenseMatrix64F A = RandomMatrices_D64.createSymmetric(N,-1,1,rand);
+                RowMatrix_F64 A = RandomMatrices_D64.createSymmetric(N,-1,1,rand);
 
                 EigenDecomposition_F64 alg = createDecomposition();
 
@@ -256,7 +256,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * check for.  If it fails that check it will either loop forever or exit before converging.
      */
     public void checkExceptional() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
+        RowMatrix_F64 A = new RowMatrix_F64(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -266,7 +266,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     }
 
     public void checkIdentity() {
-        DenseMatrix64F I = CommonOps_D64.identity(4);
+        RowMatrix_F64 I = CommonOps_D64.identity(4);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -281,7 +281,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     }
 
     public void checkAllZeros() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
+        RowMatrix_F64 A = new RowMatrix_F64(5,5);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -324,7 +324,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
         }
 
         for( int i = 0; i < 200; i++ ) {
-            DenseMatrix64F A = RandomMatrices_D64.createEigenvaluesSymm(ev.length,rand,ev);
+            RowMatrix_F64 A = RandomMatrices_D64.createEigenvaluesSymm(ev.length,rand,ev);
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -342,7 +342,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
         EigenDecomposition_F64 alg = createDecomposition();
 
         for( int i = 0; i < 20; i++ ) {
-            DenseMatrix64F A = symmetric ?
+            RowMatrix_F64 A = symmetric ?
                     RandomMatrices_D64.createSymmetric(4,-1,1,rand) :
                     RandomMatrices_D64.createRandom(4,4,-1,1,rand);
 
@@ -361,7 +361,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
         EigenDecomposition_F64 alg = createDecomposition();
 
         for( int i = 0; i < 20; i++ ) {
-            DenseMatrix64F A = symmetric ?
+            RowMatrix_F64 A = symmetric ?
                     RandomMatrices_D64.createSymmetric(4,-1,1,rand) :
                     RandomMatrices_D64.createRandom(4,4,-1,1,rand);
 
@@ -379,11 +379,11 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     public void testEigenvalues(EigenDecomposition_F64 alg , double expected ) {
 
         for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {
-            Complex64F c = alg.getEigenvalue(i);
+            Complex_F64 c = alg.getEigenvalue(i);
 
             assertTrue(c.isReal());
 
-            assertEquals(expected,c.real,UtilEjml.TEST_64F);
+            assertEquals(expected,c.real,UtilEjml.TEST_F64);
         }
     }
 
@@ -391,7 +391,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * Preforms standard tests that can be performed on any decomposition without prior knowledge of
      * what the results should be.
      */
-    public void performStandardTests( EigenDecomposition_F64 alg , DenseMatrix64F A , int numReal )
+    public void performStandardTests(EigenDecomposition_F64 alg , RowMatrix_F64 A , int numReal )
     {
 
         // basic sanity tests
@@ -399,7 +399,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 
         if( numReal >= 0 ) {
             for( int i = 0; i < A.numRows; i++ ) {
-                Complex64F v = alg.getEigenvalue(i);
+                Complex_F64 v = alg.getEigenvalue(i);
 
                 assertFalse( Double.isNaN(v.getReal() ));
                 if( v.isReal() )
@@ -432,7 +432,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                 {1, 0, 0},
                 {0.01, 0, -1},
                 {0.01, 1, 0}};
-        DenseMatrix64F A = new DenseMatrix64F(matrix);
+        RowMatrix_F64 A = new RowMatrix_F64(matrix);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -445,17 +445,17 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * Checks to see if an eigenvalue is complex then the eigenvector is null.  If it is real it
      * then checks to see if the equation A*v = lambda*v holds true.
      */
-    public void testPairsConsistent( EigenDecomposition_F64<DenseMatrix64F> alg , DenseMatrix64F A )
+    public void testPairsConsistent(EigenDecomposition_F64<RowMatrix_F64> alg , RowMatrix_F64 A )
     {
 //        System.out.println("-------------------------------------------------------------------------");
         int N = alg.getNumberOfEigenvalues();
 
-        DenseMatrix64F tempA = new DenseMatrix64F(N,1);
-        DenseMatrix64F tempB = new DenseMatrix64F(N,1);
+        RowMatrix_F64 tempA = new RowMatrix_F64(N,1);
+        RowMatrix_F64 tempB = new RowMatrix_F64(N,1);
         
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = alg.getEigenvalue(i);
-            DenseMatrix64F v = alg.getEigenVector(i);
+            Complex_F64 c = alg.getEigenvalue(i);
+            RowMatrix_F64 v = alg.getEigenVector(i);
 
             if( Double.isInfinite(c.real) || Double.isNaN(c.real) ||
                     Double.isInfinite(c.imaginary) || Double.isNaN(c.imaginary))
@@ -478,11 +478,11 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 
                 double error = SpecializedOps_D64.diffNormF(tempA,tempB)/max;
 
-                if( error > UtilEjml.TEST_64F ) {
+                if( error > UtilEjml.TEST_F64) {
                     System.out.println("Original matrix:");
                     A.print();
                     System.out.println("Eigenvalue = "+c.real);
-                    Eigenpair64F p = EigenOps_D64.computeEigenVector(A,c.real);
+                    Eigenpair_F64 p = EigenOps_D64.computeEigenVector(A,c.real);
                     p.vector.print();
                     v.print();
 
@@ -500,7 +500,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
                     fail("Error was too large");
                 }
 
-                assertTrue(error <= UtilEjml.TEST_64F);
+                assertTrue(error <= UtilEjml.TEST_F64);
             }
         }
     }
@@ -510,25 +510,25 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * eigenvalue
      */
     public void testEigenvalueConsistency( EigenDecomposition_F64 alg ,
-                                           DenseMatrix64F A )
+                                           RowMatrix_F64 A )
     {
         int N = alg.getNumberOfEigenvalues();
 
-        DenseMatrix64F AV = new DenseMatrix64F(N,1);
-        DenseMatrix64F LV = new DenseMatrix64F(N,1);
+        RowMatrix_F64 AV = new RowMatrix_F64(N,1);
+        RowMatrix_F64 LV = new RowMatrix_F64(N,1);
 
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = alg.getEigenvalue(i);
+            Complex_F64 c = alg.getEigenvalue(i);
 
             if( c.isReal() ) {
-                Eigenpair64F p = EigenOps_D64.computeEigenVector(A,c.getReal());
+                Eigenpair_F64 p = EigenOps_D64.computeEigenVector(A,c.getReal());
 
                 if( p != null ) {
                     CommonOps_D64.mult(A,p.vector,AV);
                     CommonOps_D64.scale(c.getReal(),p.vector,LV);
                     double error = SpecializedOps_D64.diffNormF(AV,LV);
 //                    System.out.println("error = "+error);
-                    assertTrue(error < UtilEjml.TEST_64F);
+                    assertTrue(error < UtilEjml.TEST_F64);
                 }
             }
         }
@@ -538,13 +538,13 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
      * See if eigenvalues cause the characteristic equation to have a value of zero
      */
     public void checkCharacteristicEquation( EigenDecomposition_F64 alg ,
-                                             DenseMatrix64F A ) {
+                                             RowMatrix_F64 A ) {
         int N = alg.getNumberOfEigenvalues();
 
         SimpleMatrix a = SimpleMatrix.wrap(A);
 
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = alg.getEigenvalue(i);
+            Complex_F64 c = alg.getEigenvalue(i);
 
             if( c.isReal() ) {
                 // test using the characteristic equation
@@ -560,15 +560,15 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     /**
      * Checks to see if all the real eigenvectors are linearly independent of each other.
      */
-    public void testVectorsLinearlyIndependent( EigenDecomposition<DenseMatrix64F> alg ) {
+    public void testVectorsLinearlyIndependent( EigenDecomposition<RowMatrix_F64> alg ) {
         int N = alg.getNumberOfEigenvalues();
 
         // create a matrix out of the eigenvectors
-        DenseMatrix64F A = new DenseMatrix64F(N,N);
+        RowMatrix_F64 A = new RowMatrix_F64(N,N);
 
         int off = 0;
         for( int i = 0; i < N; i++ ) {
-            DenseMatrix64F v = alg.getEigenVector(i);
+            RowMatrix_F64 v = alg.getEigenVector(i);
 
             // it can only handle real eigenvectors
             if( v == null )
@@ -592,28 +592,28 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     /**
      * Sees if the pair of eigenvalue and eigenvector was found in the decomposition.
      */
-    public void testForEigenpair( EigenDecomposition_F64<DenseMatrix64F> alg , double valueReal ,
-                                  double valueImg , double... vector )
+    public void testForEigenpair(EigenDecomposition_F64<RowMatrix_F64> alg , double valueReal ,
+                                 double valueImg , double... vector )
     {
         int N = alg.getNumberOfEigenvalues();
 
         int numMatched = 0;
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = alg.getEigenvalue(i);
+            Complex_F64 c = alg.getEigenvalue(i);
 
-            if( Math.abs(c.real-valueReal) < UtilEjml.TEST_64F_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_64F_SQ) {
+            if( Math.abs(c.real-valueReal) < UtilEjml.TEST_F64_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_F64_SQ) {
 
                 if( c.isReal() ) {
                     if( vector.length > 0 ) {
-                        DenseMatrix64F v = alg.getEigenVector(i);
-                        DenseMatrix64F e = new DenseMatrix64F(N,1, true, vector);
+                        RowMatrix_F64 v = alg.getEigenVector(i);
+                        RowMatrix_F64 e = new RowMatrix_F64(N,1, true, vector);
 
                         double error = SpecializedOps_D64.diffNormF(e,v);
                         CommonOps_D64.changeSign(e);
                         double error2 = SpecializedOps_D64.diffNormF(e,v);
 
 
-                        if(error < 10*UtilEjml.TEST_64F_SQ || error2 < 10*UtilEjml.TEST_64F_SQ)
+                        if(error < 10*UtilEjml.TEST_F64_SQ || error2 < 10*UtilEjml.TEST_F64_SQ)
                             numMatched++;
                     } else {
                         numMatched++;
@@ -628,7 +628,7 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
     }
 
     public void testForEigenvalue( EigenDecomposition_F64 alg ,
-                                   DenseMatrix64F A,
+                                   RowMatrix_F64 A,
                                    double valueReal ,
                                    double valueImg , int numMatched )
     {
@@ -636,9 +636,9 @@ public abstract class GeneralEigenDecompositionCheck_D64 {
 
         int numFound = 0;
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = alg.getEigenvalue(i);
+            Complex_F64 c = alg.getEigenvalue(i);
 
-            if( Math.abs(c.real-valueReal) < UtilEjml.TEST_64F_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_64F_SQ) {
+            if( Math.abs(c.real-valueReal) < UtilEjml.TEST_F64_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_F64_SQ) {
                 numFound++;
             }
         }

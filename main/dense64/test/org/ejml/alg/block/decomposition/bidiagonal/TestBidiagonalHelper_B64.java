@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ public class TestBidiagonalHelper_B64 {
     @Test
     public void bidiagOuterBlocks() {
 //        SimpleMatrix A = SimpleMatrix.random(r*2+r-1,r*2+r-1,-1,1,rand);
-//        BlockMatrix64F Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+//        BlockMatrix_F64 Ab = BlockMatrixOps.convert(A.getMatrix(),r);
 //
 //        A.print();
 //        BidiagonalDecompositionRow decompTest = new BidiagonalDecompositionRow();
@@ -44,7 +44,7 @@ public class TestBidiagonalHelper_B64 {
 //        double gammasU[] = new double[ r*3 ];
 //        double gammasV[] = new double[ r*3 ];
 //
-//        BidiagonalHelper.bidiagOuterBlocks(r,new D1Submatrix64F(Ab),gammasU,gammasV);
+//        BidiagonalHelper.bidiagOuterBlocks(r,new D1Submatrix_F64(Ab),gammasU,gammasV);
 //
 //        for( int i = 0; i < r; i++ ) {
 //            assertEquals(decompTest.getGammasU()[i],gammasU[i],UtilEjml.TEST_64F);

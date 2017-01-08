@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decompose.chol;
 
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
@@ -36,13 +36,13 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_CD64
-        implements CholeskyDecomposition_F64<CDenseMatrix64F> {
+        implements CholeskyDecomposition_F64<RowMatrix_C64> {
 
     // width and height of the matrix
     protected int n;
 
     // the decomposed matrix
-    protected CDenseMatrix64F T;
+    protected RowMatrix_C64 T;
     protected double[] t;
 
 
@@ -50,7 +50,7 @@ public abstract class CholeskyDecompositionCommon_CD64
     protected boolean lower;
 
     // storage for the determinant
-    protected Complex64F det = new Complex64F();
+    protected Complex_F64 det = new Complex_F64();
 
     /**
      * Specifies if a lower or upper variant should be constructed.
@@ -74,7 +74,7 @@ public abstract class CholeskyDecompositionCommon_CD64
      * {@inheritDoc}
      */
     @Override
-    public boolean decompose( CDenseMatrix64F mat ) {
+    public boolean decompose( RowMatrix_C64 mat ) {
         if( mat.numRows != mat.numCols ) {
             throw new IllegalArgumentException("Must be a square matrix.");
         }
@@ -111,7 +111,7 @@ public abstract class CholeskyDecompositionCommon_CD64
     protected abstract boolean decomposeUpper();
 
     @Override
-    public CDenseMatrix64F getT( CDenseMatrix64F T ) {
+    public RowMatrix_C64 getT(RowMatrix_C64 T ) {
         // write the values to T
         if( lower ) {
             T = UtilDecompositons_CD64.checkZerosUT(T,n,n);
@@ -145,12 +145,12 @@ public abstract class CholeskyDecompositionCommon_CD64
      *
      * @return A lower or upper triangular matrix.
      */
-    public CDenseMatrix64F _getT() {
+    public RowMatrix_C64 _getT() {
         return T;
     }
 
     @Override
-    public Complex64F computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         double prod = 1;
 
         // take advantage of the diagonal elements all being real

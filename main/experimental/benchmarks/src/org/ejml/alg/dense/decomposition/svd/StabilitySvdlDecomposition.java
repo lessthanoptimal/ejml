@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.CommonOps_D64;
@@ -40,11 +40,11 @@ public class StabilitySvdlDecomposition {
     private static boolean computeV = true;
 
 
-    public static double evaluate( SingularValueDecomposition<DenseMatrix64F> alg , DenseMatrix64F orig ) {
+    public static double evaluate(SingularValueDecomposition<RowMatrix_F64> alg , RowMatrix_F64 orig ) {
 
-        DenseMatrix64F U=null;
-        DenseMatrix64F W;
-        DenseMatrix64F Vt=null;
+        RowMatrix_F64 U=null;
+        RowMatrix_F64 W;
+        RowMatrix_F64 Vt=null;
 
         if( !alg.decompose(orig.copy())) {
             return Double.NaN;
@@ -61,7 +61,7 @@ public class StabilitySvdlDecomposition {
         return DecompositionFactory_D64.quality(orig, U,W,Vt);
     }
 
-    private static void runAlgorithms( DenseMatrix64F mat )
+    private static void runAlgorithms( RowMatrix_F64 mat )
     {
         System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_D64(compact,computeU,computeV,false),mat));
         System.out.println("qr ult           = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(compact,computeU,computeV),mat));
@@ -75,8 +75,8 @@ public class StabilitySvdlDecomposition {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
 
-        DenseMatrix64F orig = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
-        DenseMatrix64F mat = orig.copy();
+        RowMatrix_F64 orig = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
+        RowMatrix_F64 mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("  Decomposition size %3d %d for %e scale\n",numRows,numCols,scales[i]);

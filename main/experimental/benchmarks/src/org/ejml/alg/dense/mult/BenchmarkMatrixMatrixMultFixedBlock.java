@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -34,8 +34,8 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
+    public static long mult(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                            RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -46,8 +46,8 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
         return curr-prev;
     }
 
-    public static long multFixed12_2x6(DenseMatrix64F matA , DenseMatrix64F matB ,
-                                       DenseMatrix64F matResult , int numTrials) {
+    public static long multFixed12_2x6(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                       RowMatrix_F64 matResult , int numTrials) {
 
         MatrixMultFixedBlock ops = new MatrixMultFixedBlock();
 
@@ -61,8 +61,8 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
         return curr-prev;
     }
 
-    public static long multFixed12_4x3(DenseMatrix64F matA , DenseMatrix64F matB ,
-                                       DenseMatrix64F matResult , int numTrials) {
+    public static long multFixed12_4x3(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                       RowMatrix_F64 matResult , int numTrials) {
 
         MatrixMultFixedBlock ops = new MatrixMultFixedBlock();
 
@@ -79,9 +79,9 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
 
     public static void performTests( int size , int numTrials )
     {
-        DenseMatrix64F matA = RandomMatrices_D64.createRandom(size,size,rand);
-        DenseMatrix64F matB = RandomMatrices_D64.createRandom(size,size,rand);
-        DenseMatrix64F matResult = RandomMatrices_D64.createRandom(size,size,rand);
+        RowMatrix_F64 matA = RandomMatrices_D64.createRandom(size,size,rand);
+        RowMatrix_F64 matB = RandomMatrices_D64.createRandom(size,size,rand);
+        RowMatrix_F64 matResult = RandomMatrices_D64.createRandom(size,size,rand);
 
         System.out.printf("12x12 multiply  standard: %7d  fixed6 %7d fixed3 %7d\n",
                 mult(matA,matB,matResult,numTrials),

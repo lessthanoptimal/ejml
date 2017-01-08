@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
@@ -45,10 +45,10 @@ public class TestUnrolledInverseFromMinor_D64 {
     public void compareToLU() {
 
         for(int N = 2; N <= UnrolledInverseFromMinor_D64.MAX; N++ ) {
-            DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,rand);
 
-            DenseMatrix64F expected = new DenseMatrix64F(N,N);
-            DenseMatrix64F found = new DenseMatrix64F(N,N);
+            RowMatrix_F64 expected = new RowMatrix_F64(N,N);
+            RowMatrix_F64 found = new RowMatrix_F64(N,N);
 
             // first compute inverse by LU
             LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
@@ -60,7 +60,7 @@ public class TestUnrolledInverseFromMinor_D64 {
             // compute the result from the algorithm being tested
             UnrolledInverseFromMinor_D64.inv(A,found);
 
-            EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_64F);
+            EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_F64);
         }
 
     }

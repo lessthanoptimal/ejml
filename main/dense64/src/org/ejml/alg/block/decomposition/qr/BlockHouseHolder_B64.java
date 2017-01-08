@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,8 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.InnerMultiplication_B64;
 import org.ejml.alg.block.VectorOps_B64;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 
 /**
  *
@@ -31,7 +32,7 @@ import org.ejml.data.D1Submatrix64F;
  * <p>
  * Assumptions:
  * <ul>
- *  <le> All submatrices are aligned along the inner blocks of the {@link org.ejml.data.BlockMatrix64F}.
+ *  <le> All submatrices are aligned along the inner blocks of the {@link BlockMatrix_F64}.
  *  <le> Some times vectors are assumed to have leading zeros and a one.
  * </ul>
  *
@@ -47,7 +48,7 @@ public class BlockHouseHolder_B64 {
      * @param gamma
      */
     public static boolean decomposeQR_block_col( final int blockLength ,
-                                                 final D1Submatrix64F Y ,
+                                                 final D1Submatrix_F64 Y ,
                                                  final double gamma[] )
     {
         int width = Y.col1-Y.col0;
@@ -82,7 +83,7 @@ public class BlockHouseHolder_B64 {
      *
      * @return If there was any problems or not. true = no problem.
      */
-    public static boolean computeHouseHolderCol( final int blockLength, final D1Submatrix64F Y,
+    public static boolean computeHouseHolderCol( final int blockLength, final D1Submatrix_F64 Y,
                                                  final double[] gamma, final int i) {
         double max = BlockHouseHolder_B64.findMaxCol(blockLength,Y,i);
 
@@ -121,7 +122,7 @@ public class BlockHouseHolder_B64 {
      *
      * @return If there was any problems or not. true = no problem.
      */
-    public static boolean computeHouseHolderRow( final int blockLength, final D1Submatrix64F Y,
+    public static boolean computeHouseHolderRow( final int blockLength, final D1Submatrix_F64 Y,
                                                  final double[] gamma, final int i) {
         double max = BlockHouseHolder_B64.findMaxRow(blockLength,Y,i,i+1);
 
@@ -155,8 +156,8 @@ public class BlockHouseHolder_B64 {
      * @param col The column in A containing 'u'
      *
      */
-    public static void rank1UpdateMultR_Col( final int blockLength ,
-                                            final D1Submatrix64F A , final int col , final double gamma )
+    public static void rank1UpdateMultR_Col(final int blockLength ,
+                                            final D1Submatrix_F64 A , final int col , final double gamma )
     {
         final int width = Math.min(blockLength,A.col1 - A.col0);
 
@@ -210,8 +211,8 @@ public class BlockHouseHolder_B64 {
      * @param col The column in A containing 'u'
      *
      */
-    public static void rank1UpdateMultR_TopRow( final int blockLength ,
-                                                final D1Submatrix64F A , final int col , final double gamma )
+    public static void rank1UpdateMultR_TopRow(final int blockLength ,
+                                               final D1Submatrix_F64 A , final int col , final double gamma )
     {
         final double dataA[] = A.original.data;
 
@@ -262,7 +263,7 @@ public class BlockHouseHolder_B64 {
      *
      */
     public static void rank1UpdateMultL_Row( final int blockLength ,
-                                             final D1Submatrix64F A ,
+                                             final D1Submatrix_F64 A ,
                                              final int row , final int colStart , final double gamma )
     {
         final int height = Math.min(blockLength,A.row1 - A.row0);
@@ -316,7 +317,7 @@ public class BlockHouseHolder_B64 {
      *
      */
     public static void rank1UpdateMultL_LeftCol( final int blockLength ,
-                                                 final D1Submatrix64F A ,
+                                                 final D1Submatrix_F64 A ,
                                                  final int row , final double gamma , int zeroOffset )
     {
         final int heightU = Math.min(blockLength,A.row1 - A.row0);
@@ -373,7 +374,7 @@ public class BlockHouseHolder_B64 {
      * @param widthB how wide the column block that colB is inside of.
      * @return dot product of the two vectors.
      */
-    public static double innerProdCol( int blockLength, D1Submatrix64F A,
+    public static double innerProdCol( int blockLength, D1Submatrix_F64 A,
                                           int colA, int widthA,
                                           int colB, int widthB ) {
         double total = 0;
@@ -439,9 +440,9 @@ public class BlockHouseHolder_B64 {
      * @return dot product of the two vectors.
      */
     public static double innerProdRow(int blockLength,
-                                      D1Submatrix64F A,
+                                      D1Submatrix_F64 A,
                                       int rowA,
-                                      D1Submatrix64F B,
+                                      D1Submatrix_F64 B,
                                       int rowB, int zeroOffset ) {
         int offset = rowA + zeroOffset;
         if( offset + B.col0 >= B.col1 )
@@ -455,11 +456,11 @@ public class BlockHouseHolder_B64 {
         return total;
     }
 
-    public static void add_row( final int blockLength ,
-                                D1Submatrix64F A , int rowA , double alpha ,
-                                D1Submatrix64F B , int rowB , double beta ,
-                                D1Submatrix64F C , int rowC ,
-                                int zeroOffset , int end ) {
+    public static void add_row(final int blockLength ,
+                               D1Submatrix_F64 A , int rowA , double alpha ,
+                               D1Submatrix_F64 B , int rowB , double beta ,
+                               D1Submatrix_F64 C , int rowC ,
+                               int zeroOffset , int end ) {
         int offset = rowA+zeroOffset;
 
         if( C.col0 + offset >= C.col1 )
@@ -474,8 +475,8 @@ public class BlockHouseHolder_B64 {
      * Divides the elements at the specified column by 'val'.  Takes in account
      * leading zeros and one.
      */
-    public static void divideElementsCol( final int blockLength ,
-                                       final D1Submatrix64F Y , final int col , final double val ) {
+    public static void divideElementsCol(final int blockLength ,
+                                         final D1Submatrix_F64 Y , final int col , final double val ) {
         final int width = Math.min(blockLength,Y.col1-Y.col0);
 
         final double dataY[] = Y.original.data;
@@ -511,8 +512,8 @@ public class BlockHouseHolder_B64 {
      * @param zeroOffset How far off the diagonal is the first element in the vector.
      */
     public static void scale_row( final int blockLength ,
-                                  final D1Submatrix64F Y ,
-                                  final D1Submatrix64F W ,
+                                  final D1Submatrix_F64 Y ,
+                                  final D1Submatrix_F64 W ,
                                   final int row ,
                                   final int zeroOffset,
                                   final double val ) {
@@ -548,7 +549,7 @@ public class BlockHouseHolder_B64 {
      *
      */
     public static double computeTauAndDivideCol( final int blockLength ,
-                                                 final D1Submatrix64F Y ,
+                                                 final D1Submatrix_F64 Y ,
                                                  final int col , final double max ) {
         final int width = Math.min(blockLength,Y.col1-Y.col0);
 
@@ -611,7 +612,7 @@ public class BlockHouseHolder_B64 {
      *
      */
     public static double computeTauAndDivideRow( final int blockLength ,
-                                                 final D1Submatrix64F Y ,
+                                                 final D1Submatrix_F64 Y ,
                                                  final int row , int colStart , final double max ) {
         final int height = Math.min(blockLength , Y.row1-Y.row0);
 
@@ -659,7 +660,7 @@ public class BlockHouseHolder_B64 {
      * Finds the element in the column with the largest absolute value. The offset
      * from zero is automatically taken in account based on the column.
      */
-    public static double findMaxCol( final int blockLength , final D1Submatrix64F Y , final int col )
+    public static double findMaxCol(final int blockLength , final D1Submatrix_F64 Y , final int col )
     {
         final int width = Math.min(blockLength,Y.col1-Y.col0);
 
@@ -698,7 +699,7 @@ public class BlockHouseHolder_B64 {
      * from zero is automatically taken in account based on the column.
      */
     public static double findMaxRow( final int blockLength ,
-                                          final D1Submatrix64F Y ,
+                                          final D1Submatrix_F64 Y ,
                                           final int row , final int colStart ) {
         final int height = Math.min(blockLength , Y.row1-Y.row0);
 
@@ -762,9 +763,9 @@ public class BlockHouseHolder_B64 {
      * @param beta Beta's for householder vectors.
      * @param betaIndex Index of first relevant beta.
      */
-    public static void computeW_Column( final int blockLength ,
-                                        final D1Submatrix64F Y , final D1Submatrix64F W ,
-                                        final double temp[], final double beta[] , int betaIndex ) {
+    public static void computeW_Column(final int blockLength ,
+                                       final D1Submatrix_F64 Y , final D1Submatrix_F64 W ,
+                                       final double temp[], final double beta[] , int betaIndex ) {
 
         final int widthB = W.col1-W.col0;
 
@@ -796,9 +797,9 @@ public class BlockHouseHolder_B64 {
      * @param widthB How wide the W block matrix is.
      * @param b beta
      */
-    public static void initializeW( final int blockLength,
-                                    final D1Submatrix64F W, final D1Submatrix64F Y,
-                                    final int widthB, final double b) {
+    public static void initializeW(final int blockLength,
+                                   final D1Submatrix_F64 W, final D1Submatrix_F64 Y,
+                                   final int widthB, final double b) {
 
         final double dataW[] = W.original.data;
         final double dataY[] = Y.original.data;
@@ -834,8 +835,8 @@ public class BlockHouseHolder_B64 {
      * V is a column in the Y matrix. Z is a column in the W matrix.  Both Z and V are
      * column 'col'.
      */
-    public static void computeZ( final int blockLength , final D1Submatrix64F Y , final D1Submatrix64F W,
-                                 final int col , final double []temp , final double beta )
+    public static void computeZ(final int blockLength , final D1Submatrix_F64 Y , final D1Submatrix_F64 W,
+                                final int col , final double []temp , final double beta )
     {
         final int width = Y.col1-Y.col0;
 
@@ -900,7 +901,7 @@ public class BlockHouseHolder_B64 {
      *
      * @param temp Temporary storage of least length 'col'
      */
-    public static void computeY_t_V( final int blockLength , final D1Submatrix64F Y ,
+    public static void computeY_t_V( final int blockLength , final D1Submatrix_F64 Y ,
                                      final int col , final double []temp )
     {
         final int widthB = Y.col1-Y.col0;
@@ -915,9 +916,9 @@ public class BlockHouseHolder_B64 {
      * is the matrix that stores the householder vectors.
      *
      */
-    public static void multAdd_zeros( final int blockLength ,
-                                      final D1Submatrix64F Y , final D1Submatrix64F B ,
-                                      final D1Submatrix64F C )
+    public static void multAdd_zeros(final int blockLength ,
+                                     final D1Submatrix_F64 Y , final D1Submatrix_F64 B ,
+                                     final D1Submatrix_F64 C )
     {
         int widthY = Y.col1 - Y.col0;
 
@@ -981,9 +982,9 @@ public class BlockHouseHolder_B64 {
      * C = A^T * B
      * </p>
      */
-    public static void multTransA_vecCol( final int blockLength ,
-                                          D1Submatrix64F A , D1Submatrix64F B ,
-                                          D1Submatrix64F C )
+    public static void multTransA_vecCol(final int blockLength ,
+                                         D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                         D1Submatrix_F64 C )
     {
         int widthA = A.col1 - A.col0;
         if( widthA > blockLength )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -34,7 +34,7 @@ public class BenchmarkMatrixMultAccessors {
     /**
      * All reads/writes have been inline by hand
      */
-    public static long inlined( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static long inlined(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
     {
         long timeBefore = System.currentTimeMillis();
 
@@ -80,7 +80,7 @@ public class BenchmarkMatrixMultAccessors {
     /**
      * Wrapper functions with no bounds checking are used to access matrix internals
      */
-    public static long wrapped( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static long wrapped(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
     {
         long timeBefore = System.currentTimeMillis();
         double valA;
@@ -121,7 +121,7 @@ public class BenchmarkMatrixMultAccessors {
     /**
      * Only sets and gets that are by row and column are used.
      */
-    public static long access2d( DenseMatrix64F a , DenseMatrix64F b , DenseMatrix64F c )
+    public static long access2d(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
     {
         long timeBefore = System.currentTimeMillis();
 
@@ -147,9 +147,9 @@ public class BenchmarkMatrixMultAccessors {
 
         int N = 1000;
 
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,rand);
-        DenseMatrix64F B = RandomMatrices_D64.createRandom(N,N,rand);
-        DenseMatrix64F C = new DenseMatrix64F(N,N);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,rand);
+        RowMatrix_F64 B = RandomMatrices_D64.createRandom(N,N,rand);
+        RowMatrix_F64 C = new RowMatrix_F64(N,N);
 
         long timeInlined = inlined(A,B,C);
         long timeWrapped = wrapped(A,B,C);

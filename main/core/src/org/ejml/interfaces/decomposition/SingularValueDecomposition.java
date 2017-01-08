@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,7 +48,7 @@ import org.ejml.data.Matrix;
  *
  * <p>
  * <b>*Note*</b> that the ordering of singular values is not guaranteed, unless done so by a specific implementation.
- * The singular values can be put into descending order while adjusting U and V using {@link org.ejml.ops.SingularOps#descendingOrder(org.ejml.data.DenseMatrix64F, boolean, org.ejml.data.DenseMatrix64F, org.ejml.data.DenseMatrix64F, boolean)}  SingularOps.descendingOrder()}.
+ * The singular values can be put into descending order while adjusting U and V using SingularOps.descendingOrder().
  * </p>
  *
  * @author Peter Abeles

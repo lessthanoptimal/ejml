@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ public class LinearSolverQrpHouseCol_D64 extends BaseLinearSolverQrp_D64 {
     private QRColPivDecompositionHouseholderColumn_D64 decomposition;
 
     // storage for basic solution
-    private DenseMatrix64F x_basic = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 x_basic = new RowMatrix_F64(1,1);
 
     public LinearSolverQrpHouseCol_D64(QRColPivDecompositionHouseholderColumn_D64 decomposition,
                                        boolean norm2Solution)
@@ -47,7 +47,7 @@ public class LinearSolverQrpHouseCol_D64 extends BaseLinearSolverQrp_D64 {
     }
 
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )

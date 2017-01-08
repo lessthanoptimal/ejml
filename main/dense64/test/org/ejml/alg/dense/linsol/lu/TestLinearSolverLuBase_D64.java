@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.lu;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
@@ -43,10 +43,10 @@ public class TestLinearSolverLuBase_D64 {
      */
     @Test
     public void testImproveSol_noharm() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, 8, 33, 15.5);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(3,1,rand);
-        DenseMatrix64F x_improved = new DenseMatrix64F(3,1);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 8, 33, 15.5);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(3,1,rand);
+        RowMatrix_F64 x_improved = new RowMatrix_F64(3,1);
 
         LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
 
@@ -57,8 +57,8 @@ public class TestLinearSolverLuBase_D64 {
         solver.solve(x,b);
         solver.improveSol(x_improved,b);
 
-//        DenseMatrix64F x_truth = new DenseMatrix64F(3,1,new double[]{1,2,3});
+//        RowMatrix_F64 x_truth = new RowMatrix_F64(3,1,new double[]{1,2,3});
 
-        EjmlUnitTests.assertEquals(x,x_improved, UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(x,x_improved, UtilEjml.TEST_F64);
     }
 }

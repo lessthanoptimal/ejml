@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 
 /**
@@ -41,11 +41,11 @@ import org.ejml.factory.LinearSolverFactory_D64;
 public class PolynomialFit {
 
     // Vandermonde matrix
-    DenseMatrix64F A;
+    RowMatrix_F64 A;
     // matrix containing computed polynomial coefficients
-    DenseMatrix64F coef;
+    RowMatrix_F64 coef;
     // observation matrix
-    DenseMatrix64F y;
+    RowMatrix_F64 y;
 
     // solver used to compute
     AdjustableLinearSolver_D64 solver;
@@ -56,9 +56,9 @@ public class PolynomialFit {
      * @param degree The polynomial's degree which is to be fit to the observations.
      */
     public PolynomialFit( int degree ) {
-        coef = new DenseMatrix64F(degree+1,1);
-        A = new DenseMatrix64F(1,degree+1);
-        y = new DenseMatrix64F(1,1);
+        coef = new RowMatrix_F64(degree+1,1);
+        A = new RowMatrix_F64(1,degree+1);
+        y = new RowMatrix_F64(1,1);
 
         // create a solver that allows elements to be added or removed efficiently
         solver = LinearSolverFactory_D64.adjustable();

@@ -20,10 +20,10 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.FixedMatrix64F;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.FixedMatrix_F64;
+import org.ejml.data.RealMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,12 +42,12 @@ public class TestConvertMatrixStruct_F64 {
 
     @Test
     public void any_to_any() {
-        DenseMatrix64F a = new DenseMatrix64F(2,3,true,1,2,3,4,5,6);
-        DenseMatrix64F b = new DenseMatrix64F(2,3);
+        RowMatrix_F64 a = new RowMatrix_F64(2,3,true,1,2,3,4,5,6);
+        RowMatrix_F64 b = new RowMatrix_F64(2,3);
 
-        ConvertMatrixStruct_F64.convert((RealMatrix64F)a,(RealMatrix64F)b);
+        ConvertMatrixStruct_F64.convert((RealMatrix_F64)a,(RealMatrix_F64)b);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(a,b,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(a,b,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -61,12 +61,12 @@ public class TestConvertMatrixStruct_F64 {
                 continue;
             Class[]param = m.getParameterTypes();
 
-            if( !FixedMatrix64F.class.isAssignableFrom(param[0]) ) {
+            if( !FixedMatrix_F64.class.isAssignableFrom(param[0]) ) {
                 continue;
             }
 
-            FixedMatrix64F a = (FixedMatrix64F)param[0].newInstance();
-            DenseMatrix64F b = new DenseMatrix64F(a.getNumRows(),a.getNumCols());
+            FixedMatrix_F64 a = (FixedMatrix_F64)param[0].newInstance();
+            RowMatrix_F64 b = new RowMatrix_F64(a.getNumRows(),a.getNumCols());
 
             for( int i = 0; i < b.numRows; i++ ) {
                 for( int j = 0; j < b.numCols; j++ ) {
@@ -99,12 +99,12 @@ public class TestConvertMatrixStruct_F64 {
                 continue;
             Class[]param = m.getParameterTypes();
 
-            if( !FixedMatrix64F.class.isAssignableFrom(param[1]) ) {
+            if( !FixedMatrix_F64.class.isAssignableFrom(param[1]) ) {
                 continue;
             }
 
-            FixedMatrix64F b = (FixedMatrix64F)param[1].newInstance();
-            DenseMatrix64F a = new DenseMatrix64F(b.getNumRows(),b.getNumCols());
+            FixedMatrix_F64 b = (FixedMatrix_F64)param[1].newInstance();
+            RowMatrix_F64 a = new RowMatrix_F64(b.getNumRows(),b.getNumCols());
 
             for( int i = 0; i < a.numRows; i++ ) {
                 for( int j = 0; j < a.numCols; j++ ) {
@@ -130,8 +130,8 @@ public class TestConvertMatrixStruct_F64 {
     public void BM_to_DM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                BlockMatrix64F a = MatrixOps_B64.createRandom(rows,cols,-1,2,rand);
-                DenseMatrix64F b = new DenseMatrix64F(rows,cols);
+                BlockMatrix_F64 a = MatrixOps_B64.createRandom(rows,cols,-1,2,rand);
+                RowMatrix_F64 b = new RowMatrix_F64(rows,cols);
 
                 ConvertMatrixStruct_F64.convert(a,b);
 
@@ -144,8 +144,8 @@ public class TestConvertMatrixStruct_F64 {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                DenseMatrix64F a = RandomMatrices_D64.createRandom(rows,cols,rand);
-                BlockMatrix64F b = new BlockMatrix64F(rows,cols,3);
+                RowMatrix_F64 a = RandomMatrices_D64.createRandom(rows,cols,rand);
+                BlockMatrix_F64 b = new BlockMatrix_F64(rows,cols,3);
 
                 ConvertMatrixStruct_F64.convert(a,b);
 
@@ -155,15 +155,15 @@ public class TestConvertMatrixStruct_F64 {
     }
 
 
-    private void checkIdentical( RealMatrix64F a , RealMatrix64F b ) {
+    private void checkIdentical(RealMatrix_F64 a , RealMatrix_F64 b ) {
         for( int i = 0; i < a.getNumRows(); i++  ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
-                assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_64F);
+                assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_F64);
             }
         }
     }
 
-    private void checkIdenticalV( RealMatrix64F a , RealMatrix64F b ) {
+    private void checkIdenticalV(RealMatrix_F64 a , RealMatrix_F64 b ) {
         boolean columnVectorA = a.getNumRows() > a.getNumCols();
         boolean columnVectorB = b.getNumRows() > b.getNumCols();
 
@@ -183,7 +183,7 @@ public class TestConvertMatrixStruct_F64 {
             else
                 valueB = b.get(0,i);
 
-            assertEquals(valueA,valueB,UtilEjml.TEST_64F);
+            assertEquals(valueA,valueB,UtilEjml.TEST_F64);
         }
 
 

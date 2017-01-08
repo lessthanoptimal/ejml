@@ -16,8 +16,18 @@ Date format: year/month/day
 - Added support for 32-bit floats in SimpleMatrix
 - Massive refactoring to support auto coding of F32
 - Added FixedFeatures*
+- New naming for matrices
+  <Data Format>Matrix_<Float Format>
+  <Data Format>  = Row, Fixed, Block
+  <Float Format> = F32, F64
+- Operation Naming scheme
+  <Class Name>_<matrix type>
+  <matrix type> = D32,D64 = dense row major real
+                = CD32,CD64 = dense row major complex
+                = B32,B64 = dense block real
 
 - TODO Add support for matrix norms to Equations
+
 
 ----- Version 0.30
 

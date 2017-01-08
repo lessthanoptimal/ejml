@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
-public class BlockD3Matrix64F implements ReshapeMatrix, RealMatrix64F {
+public class BlockD3Matrix64F implements ReshapeMatrix, RealMatrix_F64 {
     public int blockLength;
     public double[][][] blocks;
 

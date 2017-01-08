@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,7 +31,7 @@ public class TestCovarianceOps_D64 {
     @Test
     public void isValid() {
         // nothing is wrong with it
-        DenseMatrix64F m = CommonOps_D64.identity(3);
+        RowMatrix_F64 m = CommonOps_D64.identity(3);
         assertEquals(0, CovarianceOps_D64.isValid(m));
 
         // negative diagonal term

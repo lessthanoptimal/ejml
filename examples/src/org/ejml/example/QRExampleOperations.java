@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.NormOps_D64;
 
@@ -35,7 +35,7 @@ import org.ejml.ops.NormOps_D64;
 public class QRExampleOperations {
 
     // where the QR decomposition is stored
-    private DenseMatrix64F QR;
+    private RowMatrix_F64 QR;
 
     // used for computing Q
     private double gammas[];
@@ -45,7 +45,7 @@ public class QRExampleOperations {
      *
      * @param A Matrix which is to be decomposed.  Not modified.
      */
-    public void decompose( DenseMatrix64F A ) {
+    public void decompose( RowMatrix_F64 A ) {
 
         this.QR = A.copy();
 
@@ -53,10 +53,10 @@ public class QRExampleOperations {
 
         gammas = new double[ A.numCols ];
 
-        DenseMatrix64F A_small = new DenseMatrix64F(A.numRows,A.numCols);
-        DenseMatrix64F A_mod = new DenseMatrix64F(A.numRows,A.numCols);
-        DenseMatrix64F v = new DenseMatrix64F(A.numRows,1);
-        DenseMatrix64F Q_k = new DenseMatrix64F(A.numRows,A.numRows);
+        RowMatrix_F64 A_small = new RowMatrix_F64(A.numRows,A.numCols);
+        RowMatrix_F64 A_mod = new RowMatrix_F64(A.numRows,A.numCols);
+        RowMatrix_F64 v = new RowMatrix_F64(A.numRows,1);
+        RowMatrix_F64 Q_k = new RowMatrix_F64(A.numRows,A.numRows);
 
         for( int i = 0; i < N; i++ ) {
             // reshape temporary variables
@@ -108,12 +108,12 @@ public class QRExampleOperations {
     /**
      * Returns the Q matrix.
      */
-    public DenseMatrix64F getQ() {
-        DenseMatrix64F Q = CommonOps_D64.identity(QR.numRows);
-        DenseMatrix64F Q_k = new DenseMatrix64F(QR.numRows,QR.numRows);
-        DenseMatrix64F u = new DenseMatrix64F(QR.numRows,1);
+    public RowMatrix_F64 getQ() {
+        RowMatrix_F64 Q = CommonOps_D64.identity(QR.numRows);
+        RowMatrix_F64 Q_k = new RowMatrix_F64(QR.numRows,QR.numRows);
+        RowMatrix_F64 u = new RowMatrix_F64(QR.numRows,1);
 
-        DenseMatrix64F temp = new DenseMatrix64F(QR.numRows,QR.numRows);
+        RowMatrix_F64 temp = new RowMatrix_F64(QR.numRows,QR.numRows);
 
         int N = Math.min(QR.numCols,QR.numRows);
 
@@ -135,8 +135,8 @@ public class QRExampleOperations {
     /**
      * Returns the R matrix.
      */
-    public DenseMatrix64F getR() {
-        DenseMatrix64F R = new DenseMatrix64F(QR.numRows,QR.numCols);
+    public RowMatrix_F64 getR() {
+        RowMatrix_F64 R = new RowMatrix_F64(QR.numRows,QR.numCols);
 
         int N = Math.min(QR.numCols,QR.numRows);
 

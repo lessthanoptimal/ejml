@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.CommonOps_CD64;
-import org.ejml.ops.ComplexMath64F;
+import org.ejml.ops.ComplexMath_F64;
 import org.ejml.ops.MatrixFeatures_CD64;
 import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class TestQrHelperFunctions_CD64 {
 
         max = Math.sqrt(max);
 
-        assertEquals(max,QrHelperFunctions_CD64.findMax(u,offset,length),UtilEjml.TEST_64F);
+        assertEquals(max,QrHelperFunctions_CD64.findMax(u,offset,length),UtilEjml.TEST_F64);
     }
 
     @Test
@@ -73,9 +73,9 @@ public class TestQrHelperFunctions_CD64 {
         }
         double found[] = u.clone();
 
-        Complex64F A = new Complex64F(rand.nextDouble(),rand.nextDouble());
-        Complex64F U = new Complex64F();
-        Complex64F expected = new Complex64F();
+        Complex_F64 A = new Complex_F64(rand.nextDouble(),rand.nextDouble());
+        Complex_F64 U = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
 
         int j = 3;
         int numRows = 8;
@@ -89,13 +89,13 @@ public class TestQrHelperFunctions_CD64 {
             if( i >= j+startU && i < numRows+startU ) {
                 U.real = u[index];
                 U.imaginary = u[index + 1];
-                ComplexMath64F.divide(U, A, expected);
+                ComplexMath_F64.divide(U, A, expected);
 
-                assertEquals(expected.real, found[index], UtilEjml.TEST_64F);
-                assertEquals(expected.imaginary, found[index + 1], UtilEjml.TEST_64F);
+                assertEquals(expected.real, found[index], UtilEjml.TEST_F64);
+                assertEquals(expected.imaginary, found[index + 1], UtilEjml.TEST_F64);
             } else {
-                assertEquals(u[index],found[index],UtilEjml.TEST_64F);
-                assertEquals(u[index+1],found[index+1],UtilEjml.TEST_64F);
+                assertEquals(u[index],found[index],UtilEjml.TEST_F64);
+                assertEquals(u[index+1],found[index+1],UtilEjml.TEST_F64);
             }
         }
     }
@@ -111,14 +111,14 @@ public class TestQrHelperFunctions_CD64 {
         int j = 2;
         int numRows = 6;
 
-        Complex64F expectedTau = new Complex64F();
+        Complex_F64 expectedTau = new Complex_F64();
         double expectedGamma = 0;
         double[] expectedU = u.clone();
 
         for (int i = j; i < numRows; i++) {
-            Complex64F U = new Complex64F(u[i*2],u[i*2+1]);
-            Complex64F div = new Complex64F();
-            ComplexMath64F.divide(U,new Complex64F(max,0),div);
+            Complex_F64 U = new Complex_F64(u[i*2],u[i*2+1]);
+            Complex_F64 div = new Complex_F64();
+            ComplexMath_F64.divide(U,new Complex_F64(max,0),div);
 
             expectedU[i*2] = div.real;
             expectedU[i*2+1] = div.imaginary;
@@ -140,27 +140,27 @@ public class TestQrHelperFunctions_CD64 {
 
         //
         double normU = 1;
-        Complex64F B = new Complex64F(realU0,imagU0);
+        Complex_F64 B = new Complex_F64(realU0,imagU0);
         for (int i = j+1; i < numRows; i++) {
-            Complex64F A = new Complex64F( expectedU[i*2], expectedU[i*2+1]);
-            Complex64F result = new Complex64F();
-            ComplexMath64F.divide(A,B,result);
+            Complex_F64 A = new Complex_F64( expectedU[i*2], expectedU[i*2+1]);
+            Complex_F64 result = new Complex_F64();
+            ComplexMath_F64.divide(A,B,result);
             normU += result.getMagnitude2();
         }
         expectedGamma = 2.0/normU;
 
-        Complex64F foundTau = new Complex64F();
+        Complex_F64 foundTau = new Complex_F64();
         double[] foundU = u.clone();
         double foundGamma = QrHelperFunctions_CD64.computeTauGammaAndDivide(j,numRows,foundU,max,foundTau);
 
         for (int i = 0; i < expectedU.length; i++) {
-            assertEquals(expectedU[i],foundU[i],UtilEjml.TEST_64F);
+            assertEquals(expectedU[i],foundU[i],UtilEjml.TEST_F64);
         }
 
-        assertEquals(expectedTau.real,foundTau.real,UtilEjml.TEST_64F);
-        assertEquals(expectedTau.imaginary,foundTau.imaginary, UtilEjml.TEST_64F);
+        assertEquals(expectedTau.real,foundTau.real,UtilEjml.TEST_F64);
+        assertEquals(expectedTau.imaginary,foundTau.imaginary, UtilEjml.TEST_F64);
 
-        assertEquals(expectedGamma,foundGamma,UtilEjml.TEST_64F);
+        assertEquals(expectedGamma,foundGamma,UtilEjml.TEST_F64);
     }
 
     @Test
@@ -176,32 +176,32 @@ public class TestQrHelperFunctions_CD64 {
         }
 
         for (int i = 1; i < 12; i++) {
-            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(i,i,rand);
+            RowMatrix_C64 A = RandomMatrices_CD64.createRandom(i,i,rand);
 
             for (int j = 1; j <= i; j += 2) {
-                CDenseMatrix64F subA = CommonOps_CD64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                RowMatrix_C64 subA = CommonOps_CD64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
                 System.arraycopy(u,(A.numRows-j)*2,subU,0,j*2);
-                CDenseMatrix64F expected = rank1UpdateMultR(subA, gamma,subU);
+                RowMatrix_C64 expected = rank1UpdateMultR(subA, gamma,subU);
 
-                CDenseMatrix64F found = A.copy();
+                RowMatrix_C64 found = A.copy();
                 QrHelperFunctions_CD64.rank1UpdateMultR(found, uoff, 1, gamma,
                         A.numRows - j, A.numRows - j, A.numRows, _temp);
 
-                CDenseMatrix64F subFound = CommonOps_CD64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                RowMatrix_C64 subFound = CommonOps_CD64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
-                assertTrue(MatrixFeatures_CD64.isEquals(expected, subFound, UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_CD64.isEquals(expected, subFound, UtilEjml.TEST_F64));
             }
         }
     }
 
-    private CDenseMatrix64F rank1UpdateMultR( CDenseMatrix64F A , double gamma,  double u[] ) {
-        CDenseMatrix64F U = new CDenseMatrix64F(A.numCols,1);
+    private RowMatrix_C64 rank1UpdateMultR(RowMatrix_C64 A , double gamma, double u[] ) {
+        RowMatrix_C64 U = new RowMatrix_C64(A.numCols,1);
         U.data = u;
-        CDenseMatrix64F UUt = new CDenseMatrix64F(A.numCols,A.numCols);
+        RowMatrix_C64 UUt = new RowMatrix_C64(A.numCols,A.numCols);
         CommonOps_CD64.multTransB(-gamma,0,U,U,UUt);
 
-        CDenseMatrix64F expected = A.copy();
+        RowMatrix_C64 expected = A.copy();
         CommonOps_CD64.multAdd(UUt,A,expected);
 
         return expected;
@@ -218,46 +218,46 @@ public class TestQrHelperFunctions_CD64 {
         }
 
         for (int i = 1; i < 12; i++) {
-            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(i,i,rand);
+            RowMatrix_C64 A = RandomMatrices_CD64.createRandom(i,i,rand);
 
             for (int j = 1; j <= i; j += 2) {
-                CDenseMatrix64F subA = CommonOps_CD64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                RowMatrix_C64 subA = CommonOps_CD64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
                 System.arraycopy(u,(A.numRows-j)*2,subU,0,j*2);
-                CDenseMatrix64F expected = rank1UpdateMultL(subA,gamma,subU);
+                RowMatrix_C64 expected = rank1UpdateMultL(subA,gamma,subU);
 
-                CDenseMatrix64F found = A.copy();
+                RowMatrix_C64 found = A.copy();
                 QrHelperFunctions_CD64.rank1UpdateMultL(found,u,0,gamma,
                         A.numRows-j,A.numRows-j,A.numRows);
 
-                CDenseMatrix64F subFound = CommonOps_CD64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                RowMatrix_C64 subFound = CommonOps_CD64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
-                assertTrue(MatrixFeatures_CD64.isEquals(expected, subFound, UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_CD64.isEquals(expected, subFound, UtilEjml.TEST_F64));
             }
         }
     }
 
-    private CDenseMatrix64F rank1UpdateMultL( CDenseMatrix64F A , double gamma,  double u[] ) {
-        CDenseMatrix64F U = new CDenseMatrix64F(A.numCols,1);
+    private RowMatrix_C64 rank1UpdateMultL(RowMatrix_C64 A , double gamma, double u[] ) {
+        RowMatrix_C64 U = new RowMatrix_C64(A.numCols,1);
         U.data = u;
-        CDenseMatrix64F UUt = new CDenseMatrix64F(A.numCols,A.numCols);
+        RowMatrix_C64 UUt = new RowMatrix_C64(A.numCols,A.numCols);
         CommonOps_CD64.multTransB(-gamma,0,U,U,UUt);
 
-        CDenseMatrix64F expected = A.copy();
+        RowMatrix_C64 expected = A.copy();
         CommonOps_CD64.multAdd(A,UUt,expected);
 
         return expected;
     }
 
-    private void outsideIdentical( CDenseMatrix64F A , CDenseMatrix64F B , int width ) {
+    private void outsideIdentical(RowMatrix_C64 A , RowMatrix_C64 B , int width ) {
 
         int outside = A.numRows-width;
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {
                 if( i < outside || j < outside ) {
-                    assertEquals(A.getReal(i,j),B.getReal(i,j),UtilEjml.TEST_64F);
-                    assertEquals(A.getImag(i, j), B.getImag(i,j),UtilEjml.TEST_64F);
+                    assertEquals(A.getReal(i,j),B.getReal(i,j),UtilEjml.TEST_F64);
+                    assertEquals(A.getImag(i, j), B.getImag(i,j),UtilEjml.TEST_F64);
                 }
             }
         }
@@ -265,72 +265,72 @@ public class TestQrHelperFunctions_CD64 {
 
     @Test
     public void extractHouseholderColumn() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(6,5,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(6,5,rand);
 
         double u[] = new double[6*2];
 
         QrHelperFunctions_CD64.extractHouseholderColumn(A,1,5,1,u,1);
 
-        assertEquals(1 , u[4], UtilEjml.TEST_64F);
-        assertEquals(0 , u[5], UtilEjml.TEST_64F);
+        assertEquals(1 , u[4], UtilEjml.TEST_F64);
+        assertEquals(0 , u[5], UtilEjml.TEST_F64);
 
         for (int i = 2; i < 5; i++) {
             double real = A.getReal(i,1);
             double imag = A.getImag(i,1);
 
-            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_64F);
-            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_64F);
+            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_F64);
+            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_F64);
         }
     }
 
     @Test
     public void extractHouseholderRow() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(5,6,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(5,6,rand);
 
         double u[] = new double[6*2];
 
         QrHelperFunctions_CD64.extractHouseholderRow(A,1,1,5,u,1);
 
-        assertEquals(1 , u[4], UtilEjml.TEST_64F);
-        assertEquals(0 , u[5], UtilEjml.TEST_64F);
+        assertEquals(1 , u[4], UtilEjml.TEST_F64);
+        assertEquals(0 , u[5], UtilEjml.TEST_F64);
 
         for (int i = 2; i < 5; i++) {
             double real = A.getReal(1,i);
             double imag = A.getImag(1,i);
 
-            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_64F);
-            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_64F);
+            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_F64);
+            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_F64);
         }
     }
 
     @Test
     public void extractColumnAndMax() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(5,6,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(5,6,rand);
 
         A.set(2,1,10,0);
 
         double u[] = new double[6*2];
         double max = QrHelperFunctions_CD64.extractColumnAndMax(A,1,5,1,u,1);
 
-        assertEquals(10, max, UtilEjml.TEST_64F);
+        assertEquals(10, max, UtilEjml.TEST_F64);
 
         for (int i = 1; i < 5; i++) {
             double real = A.getReal(i,1);
             double imag = A.getImag(i,1);
 
-            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_64F);
-            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_64F);
+            assertEquals(u[(i+1)*2]   , real , UtilEjml.TEST_F64);
+            assertEquals(u[(i+1)*2+1] , imag , UtilEjml.TEST_F64);
         }
     }
 
     @Test
     public void computeRowMax() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(5,6,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(5,6,rand);
 
         A.set(1,2,10,0);
 
         double max = QrHelperFunctions_CD64.computeRowMax(A,1,1,5);
 
-        assertEquals(10, max, UtilEjml.TEST_64F);
+        assertEquals(10, max, UtilEjml.TEST_F64);
     }
 }

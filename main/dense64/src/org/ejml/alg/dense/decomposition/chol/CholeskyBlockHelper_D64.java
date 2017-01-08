@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -32,7 +32,7 @@ import org.ejml.data.DenseMatrix64F;
 class CholeskyBlockHelper_D64 {
 
     // the decomposed matrix
-    private DenseMatrix64F L;
+    private RowMatrix_F64 L;
     private double[] el;
 
     /**
@@ -43,7 +43,7 @@ class CholeskyBlockHelper_D64 {
      */
     public CholeskyBlockHelper_D64(int widthMax) {
 
-        this.L = new DenseMatrix64F(widthMax,widthMax);
+        this.L = new RowMatrix_F64(widthMax,widthMax);
         this.el = L.data;
     }
 
@@ -56,7 +56,7 @@ class CholeskyBlockHelper_D64 {
      * @param n The width of the submatrix that is to be inverted.
      * @return True if it was able to finish the decomposition.
      */
-    public boolean decompose( DenseMatrix64F mat , int indexStart , int n ) {
+    public boolean decompose(RowMatrix_F64 mat , int indexStart , int n ) {
         double m[] = mat.data;
 
         double el_ii;
@@ -101,7 +101,7 @@ class CholeskyBlockHelper_D64 {
      *
      * @return A lower triangular matrix.
      */
-    public DenseMatrix64F getL() {
+    public RowMatrix_F64 getL() {
         return L;
     }
 }

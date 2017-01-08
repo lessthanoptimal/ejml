@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.decompose.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.CommonOps_CD64;
-import org.ejml.ops.ComplexMath64F;
+import org.ejml.ops.ComplexMath_F64;
 import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
@@ -48,14 +48,14 @@ public class TestLUDecompositionBase_CD64 {
 
         int width = 10;
 
-        CDenseMatrix64F LU = RandomMatrices_CD64.createRandom(width,width,-1,1,rand);
+        RowMatrix_C64 LU = RandomMatrices_CD64.createRandom(width,width,-1,1,rand);
 
-        Complex64F expected = new Complex64F(1,0);
-        Complex64F a = new Complex64F();
-        Complex64F tmp = new Complex64F();
+        Complex_F64 expected = new Complex_F64(1,0);
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 tmp = new Complex_F64();
         for (int i = 0; i < width; i++) {
             LU.get(i, i, a);
-            ComplexMath64F.multiply(expected,a,tmp);
+            ComplexMath_F64.multiply(expected,a,tmp);
             expected.set(tmp);
         }
 
@@ -64,19 +64,19 @@ public class TestLUDecompositionBase_CD64 {
         for( int i = 0; i < width; i++ ) alg.getIndx()[i] = i;
         alg.setLU(LU);
 
-        Complex64F found = alg.computeDeterminant();
+        Complex_F64 found = alg.computeDeterminant();
 
-        assertEquals(expected.real,found.real, UtilEjml.TEST_64F);
-        assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
+        assertEquals(expected.real,found.real, UtilEjml.TEST_F64);
+        assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
     }
 
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        CDenseMatrix64F LU = RandomMatrices_CD64.createRandom(width, width,-1,1, rand);
+        RowMatrix_C64 LU = RandomMatrices_CD64.createRandom(width, width,-1,1, rand);
 
-        CDenseMatrix64F L = new CDenseMatrix64F(width,width);
-        CDenseMatrix64F U = new CDenseMatrix64F(width,width);
+        RowMatrix_C64 L = new RowMatrix_C64(width,width);
+        RowMatrix_C64 U = new RowMatrix_C64(width,width);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
@@ -95,9 +95,9 @@ public class TestLUDecompositionBase_CD64 {
             }
         }
 
-        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(width, 1,-1,1, rand);
-        CDenseMatrix64F tmp = new CDenseMatrix64F(width,1);
-        CDenseMatrix64F b = new CDenseMatrix64F(width,1);
+        RowMatrix_C64 x = RandomMatrices_CD64.createRandom(width, 1,-1,1, rand);
+        RowMatrix_C64 tmp = new RowMatrix_C64(width,1);
+        RowMatrix_C64 b = new RowMatrix_C64(width,1);
 
         CommonOps_CD64.mult(U, x, tmp);
         CommonOps_CD64.mult(L, tmp, b);
@@ -110,16 +110,16 @@ public class TestLUDecompositionBase_CD64 {
         alg._solveVectorInternal(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_64F);
+            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_F64);
         }
     }
 
     @Test
     public void solveL() {
         int width = 10;
-        CDenseMatrix64F LU = RandomMatrices_CD64.createRandom(width, width,-1,1, rand);
+        RowMatrix_C64 LU = RandomMatrices_CD64.createRandom(width, width,-1,1, rand);
 
-        CDenseMatrix64F L = new CDenseMatrix64F(width,width);
+        RowMatrix_C64 L = new RowMatrix_C64(width,width);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
@@ -135,8 +135,8 @@ public class TestLUDecompositionBase_CD64 {
             }
         }
 
-        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(width, 1,-1,1, rand);
-        CDenseMatrix64F b = new CDenseMatrix64F(width,1);
+        RowMatrix_C64 x = RandomMatrices_CD64.createRandom(width, 1,-1,1, rand);
+        RowMatrix_C64 b = new RowMatrix_C64(width,1);
 
         CommonOps_CD64.mult(L, x, b);
 
@@ -148,7 +148,7 @@ public class TestLUDecompositionBase_CD64 {
         alg.solveL(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_64F);
+            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_F64);
         }
     }
 
@@ -159,13 +159,13 @@ public class TestLUDecompositionBase_CD64 {
             m = n = width;
         }
 
-        void setLU( CDenseMatrix64F LU ) {
+        void setLU( RowMatrix_C64 LU ) {
             this.LU = LU;
             this.dataLU = LU.data;
         }
 
         @Override
-        public boolean decompose(CDenseMatrix64F orig) {
+        public boolean decompose(RowMatrix_C64 orig) {
             return false;
         }
     }

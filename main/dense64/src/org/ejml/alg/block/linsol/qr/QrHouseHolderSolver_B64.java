@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.block.linsol.qr;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.TriangularSolver_B64;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.SpecializedOps_D64;
@@ -46,13 +46,13 @@ import org.ejml.ops.SpecializedOps_D64;
  *
  * @author Peter Abeles
  */
-public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
+public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix_F64> {
 
     // QR decomposition algorithm
     protected QRDecompositionHouseholder_B64 decomposer = new QRDecompositionHouseholder_B64();
 
     // the input matrix which has been decomposed
-    protected BlockMatrix64F QR;
+    protected BlockMatrix_F64 QR;
 
 
     public QrHouseHolderSolver_B64() {
@@ -66,7 +66,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
      * @return true if the decomposition was successful.
      */
     @Override
-    public boolean setA(BlockMatrix64F A) {
+    public boolean setA(BlockMatrix_F64 A) {
         if( A.numRows < A.numCols )
             throw new IllegalArgumentException("Number of rows must be more than or equal to the number of columns.  " +
                     "Can't solve an underdetermined system.");
@@ -90,7 +90,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
     }
 
     @Override
-    public void solve(BlockMatrix64F B, BlockMatrix64F X) {
+    public void solve(BlockMatrix_F64 B, BlockMatrix_F64 X) {
 
         if( B.numCols != X.numCols )
             throw new IllegalArgumentException("Columns of B and X do not match");
@@ -116,7 +116,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
         int M = Math.min(QR.numRows,QR.numCols);
 
         TriangularSolver_B64.solve(QR.blockLength,true,
-                new D1Submatrix64F(QR,0,M,0,M),new D1Submatrix64F(X),false);
+                new D1Submatrix_F64(QR,0,M,0,M),new D1Submatrix_F64(X),false);
 
     }
 
@@ -126,7 +126,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
      * @param A_inv Where the inverted matrix saved. Modified.
      */
     @Override
-    public void invert(BlockMatrix64F A_inv) {
+    public void invert(BlockMatrix_F64 A_inv) {
         int M = Math.min(QR.numRows,QR.numCols);
         if( A_inv.numRows != M || A_inv.numCols != M )
             throw new IllegalArgumentException("A_inv must be square an have dimension "+M);
@@ -144,7 +144,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
         // R*A^-1 = y
         // A^-1 = R^-1*y
         TriangularSolver_B64.solve(QR.blockLength,true,
-                new D1Submatrix64F(QR,0,M,0,M),new D1Submatrix64F(A_inv),false);
+                new D1Submatrix_F64(QR,0,M,0,M),new D1Submatrix_F64(A_inv),false);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class QrHouseHolderSolver_B64 implements LinearSolver<BlockMatrix64F> {
     }
 
     @Override
-    public QRDecomposition<BlockMatrix64F> getDecomposition() {
+    public QRDecomposition<BlockMatrix_F64> getDecomposition() {
         return decomposer;
     }
 }

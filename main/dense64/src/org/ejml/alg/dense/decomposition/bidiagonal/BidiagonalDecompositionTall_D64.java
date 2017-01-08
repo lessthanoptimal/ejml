@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
@@ -56,12 +56,12 @@ import org.ejml.ops.CommonOps_D64;
  */
 // TODO optimize this code
 public class BidiagonalDecompositionTall_D64
-        implements BidiagonalDecomposition_F64<DenseMatrix64F>
+        implements BidiagonalDecomposition_F64<RowMatrix_F64>
 {
-    QRPDecomposition_F64<DenseMatrix64F> decompQRP = DecompositionFactory_D64.qrp(500, 100); // todo this should be passed in
-    BidiagonalDecomposition_F64<DenseMatrix64F> decompBi = new BidiagonalDecompositionRow_D64();
+    QRPDecomposition_F64<RowMatrix_F64> decompQRP = DecompositionFactory_D64.qrp(500, 100); // todo this should be passed in
+    BidiagonalDecomposition_F64<RowMatrix_F64> decompBi = new BidiagonalDecompositionRow_D64();
 
-    DenseMatrix64F B = new DenseMatrix64F(1,1);
+    RowMatrix_F64 B = new RowMatrix_F64(1,1);
 
     // number of rows
     int m;
@@ -80,7 +80,7 @@ public class BidiagonalDecompositionTall_D64
     }
 
     @Override
-    public DenseMatrix64F getB(DenseMatrix64F B, boolean compact) {
+    public RowMatrix_F64 getB(RowMatrix_F64 B, boolean compact) {
         B = BidiagonalDecompositionRow_D64.handleB(B, compact, m, n, min);
 
         B.set(0,0,this.B.get(0,0));
@@ -95,20 +95,20 @@ public class BidiagonalDecompositionTall_D64
     }
 
     @Override
-    public DenseMatrix64F getU(DenseMatrix64F U, boolean transpose, boolean compact) {
+    public RowMatrix_F64 getU(RowMatrix_F64 U, boolean transpose, boolean compact) {
         U = BidiagonalDecompositionRow_D64.handleU(U, false, compact, m, n, min);
 
         if( compact ) {
             // U = Q*U1
-            DenseMatrix64F Q1 = decompQRP.getQ(null,true);
-            DenseMatrix64F U1 = decompBi.getU(null,false,true);
+            RowMatrix_F64 Q1 = decompQRP.getQ(null,true);
+            RowMatrix_F64 U1 = decompBi.getU(null,false,true);
             CommonOps_D64.mult(Q1,U1,U);
         } else {
            // U = [Q1*U1 Q2]
-            DenseMatrix64F Q = decompQRP.getQ(U,false);
-            DenseMatrix64F U1 = decompBi.getU(null,false,true);
-            DenseMatrix64F Q1 = CommonOps_D64.extract(Q,0,Q.numRows,0,min);
-            DenseMatrix64F tmp = new DenseMatrix64F(Q1.numRows,U1.numCols);
+            RowMatrix_F64 Q = decompQRP.getQ(U,false);
+            RowMatrix_F64 U1 = decompBi.getU(null,false,true);
+            RowMatrix_F64 Q1 = CommonOps_D64.extract(Q,0,Q.numRows,0,min);
+            RowMatrix_F64 tmp = new RowMatrix_F64(Q1.numRows,U1.numCols);
             CommonOps_D64.mult(Q1,U1,tmp);
             CommonOps_D64.insert(tmp,Q,0,0);
         }
@@ -120,12 +120,12 @@ public class BidiagonalDecompositionTall_D64
     }
 
     @Override
-    public DenseMatrix64F getV(DenseMatrix64F V, boolean transpose, boolean compact) {
+    public RowMatrix_F64 getV(RowMatrix_F64 V, boolean transpose, boolean compact) {
         return decompBi.getV(V,transpose,compact);
     }
 
     @Override
-    public boolean decompose(DenseMatrix64F orig) {
+    public boolean decompose(RowMatrix_F64 orig) {
 
         if( !decompQRP.decompose(orig) ) {
             return false;
@@ -140,8 +140,8 @@ public class BidiagonalDecompositionTall_D64
 
         // apply the column pivots.
         // TODO this is horribly inefficient
-        DenseMatrix64F result = new DenseMatrix64F(min,n);
-        DenseMatrix64F P = decompQRP.getPivotMatrix(null);
+        RowMatrix_F64 result = new RowMatrix_F64(min,n);
+        RowMatrix_F64 P = decompQRP.getPivotMatrix(null);
         CommonOps_D64.multTransB(B, P, result);
         B.set(result);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -33,7 +33,7 @@ public class BenchmarkDeterminant {
     static int TOTAL_TRIALS = 50000000;
 
 
-    public static long computeAuto( DenseMatrix64F mat ,int numTrials )
+    public static long computeAuto(RowMatrix_F64 mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
@@ -51,7 +51,7 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeFixed4x4( DenseMatrix64F mat )
+    public static long computeFixed4x4( RowMatrix_F64 mat )
     {
         long before = System.currentTimeMillis();
 
@@ -69,7 +69,7 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeMinor4x4( DenseMatrix64F mat )
+    public static long computeMinor4x4( RowMatrix_F64 mat )
     {
         long before = System.currentTimeMillis();
 
@@ -89,7 +89,7 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeLU( DenseMatrix64F mat , int numTrials )
+    public static long computeLU(RowMatrix_F64 mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
@@ -111,7 +111,7 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeMinor( DenseMatrix64F mat , int numTrials )
+    public static long computeMinor(RowMatrix_F64 mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
@@ -132,7 +132,7 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeLeibniz( DenseMatrix64F mat , int numTrials )
+    public static long computeLeibniz(RowMatrix_F64 mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
@@ -155,7 +155,7 @@ public class BenchmarkDeterminant {
     public static void main( String args[] ) {
         double[] d = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
 
-        DenseMatrix64F mat = new DenseMatrix64F(4,4, true, d);
+        RowMatrix_F64 mat = new RowMatrix_F64(4,4, true, d);
 
 //        System.out.println("Fixed 4x4       = "+computeFixed4x4(mat));
 //        System.out.println("Auto 4x4       = "+computeAuto(mat,TOTAL_TRIALS));

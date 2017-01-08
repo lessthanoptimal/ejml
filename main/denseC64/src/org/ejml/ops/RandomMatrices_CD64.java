@@ -18,8 +18,8 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.CD1Matrix64F;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.D1Matrix_C64;
+import org.ejml.data.RowMatrix_C64;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class RandomMatrices_CD64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static CDenseMatrix64F createRandom( int numRow , int numCol , Random rand ) {
+    public static RowMatrix_C64 createRandom(int numRow , int numCol , Random rand ) {
         return createRandom(numRow,numCol,-1,1,rand);
     }
 
@@ -57,8 +57,8 @@ public class RandomMatrices_CD64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static CDenseMatrix64F createRandom( int numRow , int numCol , double min , double max , Random rand ) {
-        CDenseMatrix64F mat = new CDenseMatrix64F(numRow,numCol);
+    public static RowMatrix_C64 createRandom(int numRow , int numCol , double min , double max , Random rand ) {
+        RowMatrix_C64 mat = new RowMatrix_C64(numRow,numCol);
 
         setRandom(mat,min,max,rand);
 
@@ -73,7 +73,7 @@ public class RandomMatrices_CD64 {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom( CDenseMatrix64F mat , Random rand )
+    public static void setRandom(RowMatrix_C64 mat , Random rand )
     {
         setRandom(mat,0,1,rand);
     }
@@ -88,7 +88,7 @@ public class RandomMatrices_CD64 {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom( CD1Matrix64F mat , double min , double max , Random rand )
+    public static void setRandom(D1Matrix_C64 mat , double min , double max , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getDataLength();
@@ -107,11 +107,11 @@ public class RandomMatrices_CD64 {
      * @param rand Random number generator used to make the matrix.
      * @return The random symmetric  positive definite matrix.
      */
-    public static CDenseMatrix64F createHermPosDef(int width, Random rand) {
+    public static RowMatrix_C64 createHermPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(width,1,rand);
-        CDenseMatrix64F b = new CDenseMatrix64F(1,width);
-        CDenseMatrix64F c = new CDenseMatrix64F(width,width);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(width,1,rand);
+        RowMatrix_C64 b = new RowMatrix_C64(1,width);
+        RowMatrix_C64 c = new RowMatrix_C64(width,width);
 
         CommonOps_CD64.transposeConjugate(a,b);
         CommonOps_CD64.mult(a, b, c);
@@ -132,8 +132,8 @@ public class RandomMatrices_CD64 {
      * @param rand Random number generator.
      * @return A symmetric matrix.
      */
-    public static CDenseMatrix64F createHermitian(int length, double min, double max, Random rand) {
-        CDenseMatrix64F A = new CDenseMatrix64F(length,length);
+    public static RowMatrix_C64 createHermitian(int length, double min, double max, Random rand) {
+        RowMatrix_C64 A = new RowMatrix_C64(length,length);
 
         setHermitian(A, min, max, rand);
 
@@ -148,7 +148,7 @@ public class RandomMatrices_CD64 {
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
      */
-    public static void setHermitian(CDenseMatrix64F A, double min, double max, Random rand) {
+    public static void setHermitian(RowMatrix_C64 A, double min, double max, Random rand) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
 
@@ -179,14 +179,14 @@ public class RandomMatrices_CD64 {
 //     * @param rand random number generator used.
 //     * @return The randomly generated matrix.
 //     */
-//    public static CDenseMatrix64F createUpperTriangle( int dimen , int hessenberg , double min , double max , Random rand )
+//    public static RowMatrix_C64 createUpperTriangle( int dimen , int hessenberg , double min , double max , Random rand )
 //    {
 //        if( hessenberg < 0 )
 //            throw new RuntimeException("hessenberg must be more than or equal to 0");
 //
 //        double range = max-min;
 //
-//        CDenseMatrix64F A = new CDenseMatrix64F(dimen,dimen);
+//        RowMatrix_C64 A = new RowMatrix_C64(dimen,dimen);
 //
 //        for( int i = 0; i < dimen; i++ ) {
 //            int start = i <= hessenberg ? 0 : i-hessenberg;

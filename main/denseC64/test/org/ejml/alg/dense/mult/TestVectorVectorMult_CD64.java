@@ -20,8 +20,8 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
@@ -38,65 +38,65 @@ public class TestVectorVectorMult_CD64 {
     @Test
     public void innerProd() {
 
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(1,6,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(6,1,rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(1,6,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(6,1,rand);
 
-        CDenseMatrix64F c = new CDenseMatrix64F(1,1);
+        RowMatrix_C64 c = new RowMatrix_C64(1,1);
 
         CommonOps_CD64.mult(a,b,c);
 
-        Complex64F expected = new Complex64F();
+        Complex_F64 expected = new Complex_F64();
         c.get(0,0,expected);
-        Complex64F found = VectorVectorMult_CD64.innerProd(a,b,null);
+        Complex_F64 found = VectorVectorMult_CD64.innerProd(a,b,null);
 
-        EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_F64);
     }
 
     @Test
     public void innerProdH() {
 
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(1,6,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(6,1,rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(1,6,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(6,1,rand);
 
-        Complex64F found = VectorVectorMult_CD64.innerProdH(a, b, null);
+        Complex_F64 found = VectorVectorMult_CD64.innerProdH(a, b, null);
 
-        CDenseMatrix64F c = new CDenseMatrix64F(1,1);
+        RowMatrix_C64 c = new RowMatrix_C64(1,1);
 
         CommonOps_CD64.conjugate(b,b);
         CommonOps_CD64.mult(a,b,c);
 
-        Complex64F expected = new Complex64F();
+        Complex_F64 expected = new Complex_F64();
         c.get(0,0,expected);
 
-        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 
     @Test
     public void outerProd() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(6,1,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(1,6,rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(6,1,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(1,6,rand);
 
-        CDenseMatrix64F expected = new CDenseMatrix64F(6,6);
-        CDenseMatrix64F found = new CDenseMatrix64F(6,6);
+        RowMatrix_C64 expected = new RowMatrix_C64(6,6);
+        RowMatrix_C64 found = new RowMatrix_C64(6,6);
 
         CommonOps_CD64.mult(a,b,expected);
         VectorVectorMult_CD64.outerProd(a,b,found);
 
-        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 
     @Test
     public void outerProdH() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(6,1,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(1,6,rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(6,1,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(1,6,rand);
 
-        CDenseMatrix64F expected = new CDenseMatrix64F(6,6);
-        CDenseMatrix64F found = new CDenseMatrix64F(6,6);
+        RowMatrix_C64 expected = new RowMatrix_C64(6,6);
+        RowMatrix_C64 found = new RowMatrix_C64(6,6);
 
         VectorVectorMult_CD64.outerProdH(a, b, found);
         CommonOps_CD64.conjugate(b,b);
         CommonOps_CD64.mult(a, b, expected);
 
-        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 }

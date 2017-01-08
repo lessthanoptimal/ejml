@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,14 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 
 import static org.ejml.alg.block.InnerMultiplication_B64.*;
 
 /**
  * <p>
- * Matrix multiplication for {@link org.ejml.data.BlockMatrix64F}.  All sub-matrices must be
+ * Matrix multiplication for {@link BlockMatrix_F64}.  All sub-matrices must be
  * block aligned.
  * </p>
  * 
@@ -34,7 +35,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication on {@link org.ejml.data.BlockMatrix64F} submatrices.<br>
+     * Performs a matrix multiplication on {@link BlockMatrix_F64} submatrices.<br>
      * <br>
      * c = a * b <br>
      * <br>
@@ -49,9 +50,9 @@ public class MatrixMult_B64 {
      * @param B A submatrix.  Not modified.
      * @param C Result of the operation.  Modified,
      */
-    public static void mult( int blockLength ,
-                             D1Submatrix64F A , D1Submatrix64F B ,
-                             D1Submatrix64F C )
+    public static void mult(int blockLength ,
+                            D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                            D1Submatrix_F64 C )
     {
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );
@@ -80,7 +81,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication on {@link org.ejml.data.BlockMatrix64F} submatrices.<br>
+     * Performs a matrix multiplication on {@link BlockMatrix_F64} submatrices.<br>
      * <br>
      * c = c + a * b <br>
      * <br>
@@ -95,9 +96,9 @@ public class MatrixMult_B64 {
      * @param B A submatrix.  Not modified.
      * @param C Result of the operation.  Modified,
      */
-    public static void multPlus( int blockLength ,
-                                D1Submatrix64F A , D1Submatrix64F B ,
-                                D1Submatrix64F C )
+    public static void multPlus(int blockLength ,
+                                D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                D1Submatrix_F64 C )
     {
 //        checkInput( blockLength,A,B,C);
 
@@ -124,7 +125,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication on {@link org.ejml.data.BlockMatrix64F} submatrices.<br>
+     * Performs a matrix multiplication on {@link BlockMatrix_F64} submatrices.<br>
      * <br>
      * c = c - a * b <br>
      * <br>
@@ -139,9 +140,9 @@ public class MatrixMult_B64 {
      * @param B A submatrix.  Not modified.
      * @param C Result of the operation.  Modified,
      */
-    public static void multMinus( int blockLength ,
-                                  D1Submatrix64F A , D1Submatrix64F B ,
-                                  D1Submatrix64F C )
+    public static void multMinus(int blockLength ,
+                                 D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                 D1Submatrix_F64 C )
     {
         checkInput( blockLength,A,B,C);
 
@@ -166,9 +167,9 @@ public class MatrixMult_B64 {
         }
     }
 
-    private static void checkInput( int blockLength ,
-                                    D1Submatrix64F A , D1Submatrix64F B ,
-                                    D1Submatrix64F C )
+    private static void checkInput(int blockLength ,
+                                   D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                   D1Submatrix_F64 C )
     {
         int Arow = A.getRows();int Acol = A.getCols();
         int Brow = B.getRows();int Bcol = B.getCols();
@@ -193,7 +194,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication with a transpose on {@link org.ejml.data.BlockMatrix64F} submatrices.<br>
+     * Performs a matrix multiplication with a transpose on {@link BlockMatrix_F64} submatrices.<br>
      * <br>
      * c = a<sup>T</sup> * b <br>
      * <br>
@@ -208,9 +209,9 @@ public class MatrixMult_B64 {
      * @param B A submatrix.  Not modified.
      * @param C Result of the operation.  Modified,
      */
-    public static void multTransA( int blockLength ,
-                                   D1Submatrix64F A , D1Submatrix64F B ,
-                                   D1Submatrix64F C )
+    public static void multTransA(int blockLength ,
+                                  D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                  D1Submatrix_F64 C )
     {
         for( int i = A.col0; i < A.col1; i += blockLength ) {
             int widthA = Math.min( blockLength , A.col1 - i );
@@ -237,9 +238,9 @@ public class MatrixMult_B64 {
         }
     }
 
-    public static void multPlusTransA( int blockLength ,
-                                       D1Submatrix64F A , D1Submatrix64F B ,
-                                       D1Submatrix64F C )
+    public static void multPlusTransA(int blockLength ,
+                                      D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                      D1Submatrix_F64 C )
     {
         for( int i = A.col0; i < A.col1; i += blockLength ) {
             int widthA = Math.min( blockLength , A.col1 - i );
@@ -262,9 +263,9 @@ public class MatrixMult_B64 {
         }
     }
 
-    public static void multMinusTransA( int blockLength ,
-                                        D1Submatrix64F A , D1Submatrix64F B ,
-                                        D1Submatrix64F C )
+    public static void multMinusTransA(int blockLength ,
+                                       D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                       D1Submatrix_F64 C )
     {
         for( int i = A.col0; i < A.col1; i += blockLength ) {
             int widthA = Math.min( blockLength , A.col1 - i );
@@ -290,7 +291,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication with a transpose on {@link org.ejml.data.BlockMatrix64F} submatrices.<br>
+     * Performs a matrix multiplication with a transpose on {@link BlockMatrix_F64} submatrices.<br>
      * <br>
      * c = a * b <sup>T</sup> <br>
      * <br>
@@ -305,9 +306,9 @@ public class MatrixMult_B64 {
      * @param B A submatrix.  Not modified.
      * @param C Result of the operation.  Modified,
      */
-    public static void multTransB( int blockLength ,
-                                   D1Submatrix64F A , D1Submatrix64F B ,
-                                   D1Submatrix64F C )
+    public static void multTransB(int blockLength ,
+                                  D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                  D1Submatrix_F64 C )
     {
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -32,8 +32,8 @@ public class BenchmarkMatrixMultProduct {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long multTransA( DenseMatrix64F matA ,
-                             DenseMatrix64F matResult , int numTrials) {
+    public static long multTransA(RowMatrix_F64 matA ,
+                                  RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -44,8 +44,8 @@ public class BenchmarkMatrixMultProduct {
         return curr-prev;
     }
 
-    public static long innerProd_small( DenseMatrix64F matA ,
-                                        DenseMatrix64F matResult , int numTrials) {
+    public static long innerProd_small(RowMatrix_F64 matA ,
+                                       RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -56,8 +56,8 @@ public class BenchmarkMatrixMultProduct {
         return curr-prev;
     }
 
-    public static long innerProd_reorder( DenseMatrix64F matA ,
-                                        DenseMatrix64F matResult , int numTrials) {
+    public static long innerProd_reorder(RowMatrix_F64 matA ,
+                                         RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -72,8 +72,8 @@ public class BenchmarkMatrixMultProduct {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" trials "+numTrials);
-        DenseMatrix64F matA = RandomMatrices_D64.createRandom(numRows, numCols, rand);
-        DenseMatrix64F matResult = RandomMatrices_D64.createRandom(numCols,numCols,rand);
+        RowMatrix_F64 matA = RandomMatrices_D64.createRandom(numRows, numCols, rand);
+        RowMatrix_F64 matResult = RandomMatrices_D64.createRandom(numCols,numCols,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 0,//multTransA(matA,matResult,numTrials),

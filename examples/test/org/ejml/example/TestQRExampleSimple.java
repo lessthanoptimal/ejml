@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,7 +53,7 @@ public class TestQRExampleSimple {
 
         SimpleMatrix A_found = Q.mult(R);
 
-        assertTrue( A.isIdentical(A_found, UtilEjml.TEST_64F));
+        assertTrue( A.isIdentical(A_found, UtilEjml.TEST_F64));
     }
 
 

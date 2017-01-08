@@ -19,10 +19,10 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.CommonOps_CD64;
-import org.ejml.ops.ComplexMath64F;
+import org.ejml.ops.ComplexMath_F64;
 import org.ejml.ops.MatrixFeatures_CD64;
 import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
@@ -87,14 +87,14 @@ public class TestMatrixMatrixMult_CD64 {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
                 for (int k = 1; k <= 4; k++) {
-                    CDenseMatrix64F A = transA ? RandomMatrices_CD64.createRandom(j,i,-1,1,rand) :
+                    RowMatrix_C64 A = transA ? RandomMatrices_CD64.createRandom(j,i,-1,1,rand) :
                             RandomMatrices_CD64.createRandom(i,j,-1,1,rand);
-                    CDenseMatrix64F B = transB ? RandomMatrices_CD64.createRandom(k,j,-1,1,rand) :
+                    RowMatrix_C64 B = transB ? RandomMatrices_CD64.createRandom(k,j,-1,1,rand) :
                             RandomMatrices_CD64.createRandom(j,k,-1,1,rand);
-                    CDenseMatrix64F C = RandomMatrices_CD64.createRandom(i,k,-1,1,rand);
+                    RowMatrix_C64 C = RandomMatrices_CD64.createRandom(i,k,-1,1,rand);
 
-                    CDenseMatrix64F AB = multiply(A,B,transA,transB);
-                    CDenseMatrix64F expected = new CDenseMatrix64F(i,k);
+                    RowMatrix_C64 AB = multiply(A,B,transA,transB);
+                    RowMatrix_C64 expected = new RowMatrix_C64(i,k);
 
                     if( hasAlpha ) {
                         CommonOps_CD64.elementMultiply(AB,realAlpha,imgAlpha,AB);
@@ -108,7 +108,7 @@ public class TestMatrixMatrixMult_CD64 {
 
                     invoke(method,realAlpha,imgAlpha,A,B,C);
 
-                    assertTrue(i+" "+j+" "+k, MatrixFeatures_CD64.isEquals(expected,C, UtilEjml.TEST_64F));
+                    assertTrue(i+" "+j+" "+k, MatrixFeatures_CD64.isEquals(expected,C, UtilEjml.TEST_F64));
                 }
             }
         }
@@ -116,7 +116,7 @@ public class TestMatrixMatrixMult_CD64 {
 
     public static void invoke(Method func,
                               double realAlpha, double imgAlpha,
-                              CDenseMatrix64F a, CDenseMatrix64F b, CDenseMatrix64F c)
+                              RowMatrix_C64 a, RowMatrix_C64 b, RowMatrix_C64 c)
             throws IllegalAccessException, InvocationTargetException {
         if( func.getParameterTypes().length == 3 ) {
             func.invoke(null, a, b, c);
@@ -132,33 +132,33 @@ public class TestMatrixMatrixMult_CD64 {
         }
     }
 
-    public static CDenseMatrix64F multiply( CDenseMatrix64F A , CDenseMatrix64F B, boolean transA, boolean transB ) {
+    public static RowMatrix_C64 multiply(RowMatrix_C64 A , RowMatrix_C64 B, boolean transA, boolean transB ) {
 
         if( transA ) {
-            CDenseMatrix64F A_h = new CDenseMatrix64F(A.numCols, A.numRows);
+            RowMatrix_C64 A_h = new RowMatrix_C64(A.numCols, A.numRows);
             CommonOps_CD64.transposeConjugate(A,A_h);
             A = A_h;
         }
         if( transB ) {
-            CDenseMatrix64F B_h = new CDenseMatrix64F(B.numCols, B.numRows);
+            RowMatrix_C64 B_h = new RowMatrix_C64(B.numCols, B.numRows);
             CommonOps_CD64.transposeConjugate(B,B_h);
             B = B_h;
         }
-        CDenseMatrix64F C = new CDenseMatrix64F(A.numRows,B.numCols);
+        RowMatrix_C64 C = new RowMatrix_C64(A.numRows,B.numCols);
 
-        Complex64F a = new Complex64F();
-        Complex64F b = new Complex64F();
-        Complex64F m = new Complex64F();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
+        Complex_F64 m = new Complex_F64();
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < B.numCols; j++) {
-                Complex64F sum = new Complex64F();
+                Complex_F64 sum = new Complex_F64();
 
                 for (int k = 0; k < A.numCols; k++) {
                     A.get(i,k,a);
                     B.get(k,j,b);
 
-                    ComplexMath64F.multiply(a,b,m);
+                    ComplexMath_F64.multiply(a,b,m);
                     sum.real += m.real;
                     sum.imaginary += m.imaginary;
                 }

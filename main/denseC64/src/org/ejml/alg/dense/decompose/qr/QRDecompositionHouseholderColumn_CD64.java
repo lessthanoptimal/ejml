@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -35,7 +35,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CDenseMatrix64F> {
+public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<RowMatrix_C64> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
@@ -56,7 +56,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
     protected double gammas[];
     // local variables
     protected double gamma;
-    protected Complex64F tau = new Complex64F();
+    protected Complex_F64 tau = new Complex_F64();
 
     // did it encounter an error?
     protected boolean error;
@@ -97,7 +97,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean compact ) {
+    public RowMatrix_C64 getQ(RowMatrix_C64 Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,minLength);
         else
@@ -130,7 +130,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
      * @param compact If true then a compact matrix is expected.
      */
     @Override
-    public CDenseMatrix64F getR(CDenseMatrix64F R, boolean compact) {
+    public RowMatrix_C64 getR(RowMatrix_C64 R, boolean compact) {
         if( compact )
             R = UtilDecompositons_CD64.checkZerosLT(R,minLength,numCols);
         else
@@ -160,7 +160,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
      * </p>
      */
     @Override
-    public boolean decompose( CDenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_C64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         convertToColumnMajor(A);
@@ -186,7 +186,7 @@ public class QRDecompositionHouseholderColumn_CD64 implements QRDecomposition<CD
      *
      * @param A original matrix that is to be decomposed.
      */
-    protected void convertToColumnMajor(CDenseMatrix64F A) {
+    protected void convertToColumnMajor(RowMatrix_C64 A) {
         for( int x = 0; x < numCols; x++ ) {
             double colQ[] = dataQR[x];
             int indexCol = 0;

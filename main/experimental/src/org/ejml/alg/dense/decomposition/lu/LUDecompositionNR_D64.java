@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -43,7 +43,7 @@ public class LUDecompositionNR_D64 extends LUDecompositionBase_D64 {
      * return true and still be singular.
      */
     @Override
-    public boolean decompose( DenseMatrix64F orig ) {
+    public boolean decompose( RowMatrix_F64 orig ) {
 //        if( orig.numCols != orig.numRows )
 //            throw new RuntimeException("Must be square");
         decomposeCommonInit(orig);

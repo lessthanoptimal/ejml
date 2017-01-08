@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,12 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 
 
 /**
- * Performs rank-n update operations on the inner blocks of a {@link org.ejml.data.BlockMatrix64F}
+ * Performs rank-n update operations on the inner blocks of a {@link BlockMatrix_F64}
  *
  * It is assumed and not checked that the submatrices are aligned along the matrix's blocks.
  *
@@ -42,8 +43,8 @@ public class InnerRankUpdate_B64 {
      * @param A Block aligned submatrix.
      * @param B Block aligned submatrix.
      */
-    public static void rankNUpdate( int blockLength , double alpha ,
-                                    D1Submatrix64F A , D1Submatrix64F B )
+    public static void rankNUpdate(int blockLength , double alpha ,
+                                   D1Submatrix_F64 A , D1Submatrix_F64 B )
     {
 
         int heightB = B.row1-B.row0;
@@ -87,8 +88,8 @@ public class InnerRankUpdate_B64 {
      * A = A - B <sup>T</sup>B
      * </p>
      */
-    public static void symmRankNMinus_U( int blockLength ,
-                                          D1Submatrix64F A , D1Submatrix64F B )
+    public static void symmRankNMinus_U(int blockLength ,
+                                        D1Submatrix_F64 A , D1Submatrix_F64 B )
     {
 
         int heightB = B.row1-B.row0;
@@ -138,8 +139,8 @@ public class InnerRankUpdate_B64 {
      * A = A - B*B<sup>T</sup><br>
      * </p>
      */
-    public static void symmRankNMinus_L( int blockLength ,
-                                         D1Submatrix64F A , D1Submatrix64F B )
+    public static void symmRankNMinus_L(int blockLength ,
+                                        D1Submatrix_F64 A , D1Submatrix_F64 B )
     {
         int widthB = B.col1-B.col0;
         if( widthB > blockLength )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.NormOps_D64;
 import org.junit.Test;
 
@@ -46,20 +46,20 @@ public class TestEigenPowerMethod_D64 {
                 0.850879 ,  0.104374 ,  0.247645 ,
                 0.069614 ,  0.155754  , 0.380435 };
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, dataA);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, dataA);
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(3);
-        power.setOptions(100, UtilEjml.TEST_64F);
+        power.setOptions(100, UtilEjml.TEST_F64);
 
         assertTrue(power.computeDirect(A));
 
-        DenseMatrix64F v = power.getEigenVector();
+        RowMatrix_F64 v = power.getEigenVector();
 
         NormOps_D64.normalizeF(v);
 
-        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_64F_SQ);
-        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_64F_SQ);
-        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_F64_SQ);
+        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_F64_SQ);
+        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -69,20 +69,20 @@ public class TestEigenPowerMethod_D64 {
                 0.850879 ,  0.104374 ,  0.247645 ,
                 0.069614 ,  0.155754  , 0.380435 };
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, dataA);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, dataA);
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(3);
-        power.setOptions(100, UtilEjml.TEST_64F);
+        power.setOptions(100, UtilEjml.TEST_F64);
 
         assertTrue(power.computeShiftDirect(A,0.2));
 
-        DenseMatrix64F v = power.getEigenVector();
+        RowMatrix_F64 v = power.getEigenVector();
 
         NormOps_D64.normalizeF(v);
 
-        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_64F_SQ);
-        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_64F_SQ);
-        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_F64_SQ);
+        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_F64_SQ);
+        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -92,20 +92,20 @@ public class TestEigenPowerMethod_D64 {
                 0.850879 ,  0.104374 ,  0.247645 ,
                 0.069614 ,  0.155754  , 0.380435 };
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, dataA);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, dataA);
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(3);
-        power.setOptions(100, UtilEjml.TEST_64F);
+        power.setOptions(100, UtilEjml.TEST_F64);
 
         // a tried a few values for psi until I found one that converged
         assertTrue(power.computeShiftInvert(A,1.1));
 
-        DenseMatrix64F v = power.getEigenVector();
+        RowMatrix_F64 v = power.getEigenVector();
 
         NormOps_D64.normalizeF(v);
 
-        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_64F_SQ);
-        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_64F_SQ);
-        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_64F_SQ);
+        assertEquals(0.75678,v.get(0,0),UtilEjml.TEST_F64_SQ);
+        assertEquals(0.62755,v.get(1,0),UtilEjml.TEST_F64_SQ);
+        assertEquals(0.18295,v.get(2,0),UtilEjml.TEST_F64_SQ);
     }
 }

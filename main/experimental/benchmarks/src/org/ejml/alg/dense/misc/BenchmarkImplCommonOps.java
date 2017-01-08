@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.RealMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -30,8 +30,8 @@ import java.util.Random;
  */
 public class BenchmarkImplCommonOps {
 
-    public static long extract_DenseMatrix64F( DenseMatrix64F src ,  DenseMatrix64F dst ,
-                                               int numTrials) {
+    public static long extract_DenseMatrix64F(RowMatrix_F64 src , RowMatrix_F64 dst ,
+                                              int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -43,7 +43,7 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Matrix64F( RealMatrix64F src ,  RealMatrix64F dst , int numTrials) {
+    public static long extract_Matrix64F(RealMatrix_F64 src , RealMatrix_F64 dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -55,7 +55,7 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Common( DenseMatrix64F src ,  DenseMatrix64F dst , int numTrials) {
+    public static long extract_Common(RowMatrix_F64 src , RowMatrix_F64 dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -70,13 +70,13 @@ public class BenchmarkImplCommonOps {
     public static void benchmark( int N , int trials ) {
         Random rand = new Random(234);
 
-        DenseMatrix64F src = new DenseMatrix64F(N,N);
-        DenseMatrix64F dst = new DenseMatrix64F(N,N);
+        RowMatrix_F64 src = new RowMatrix_F64(N,N);
+        RowMatrix_F64 dst = new RowMatrix_F64(N,N);
 
         RandomMatrices_D64.addRandom(src,0,100,rand);
 
         System.out.println("N = "+N);
-        System.out.println("extract DenseMatrix64F = "+extract_DenseMatrix64F(src,dst,trials));
+        System.out.println("extract RowMatrix_F64 = "+extract_DenseMatrix64F(src,dst,trials));
         System.out.println("extract Matrix64F      = "+extract_Matrix64F(src,dst,trials));
         System.out.println("extract Common         = "+extract_Common(src, dst, trials));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -27,7 +27,7 @@ import java.util.Random;
 
 
 /**
- * Compare block against other transpose for DenseMatrix64F
+ * Compare block against other transpose for RowMatrix_F64
  *
  *  @author Peter Abeles
  */
@@ -35,7 +35,7 @@ public class BenchmarkBlockTranspose {
 
     static Random rand = new Random(234);
 
-    public static long transposeDenseInPlace( DenseMatrix64F mat , int numTrials) {
+    public static long transposeDenseInPlace(RowMatrix_F64 mat , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -47,10 +47,10 @@ public class BenchmarkBlockTranspose {
         return curr-prev;
     }
 
-    public static long transposeDense( DenseMatrix64F mat , int numTrials) {
+    public static long transposeDense(RowMatrix_F64 mat , int numTrials) {
 
 
-        DenseMatrix64F tran = new DenseMatrix64F(mat.numCols,mat.numRows);
+        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -62,10 +62,10 @@ public class BenchmarkBlockTranspose {
         return curr-prev;
     }
 
-    public static long transposeBlock( DenseMatrix64F mat , int numTrials) {
+    public static long transposeBlock(RowMatrix_F64 mat , int numTrials) {
 
-        BlockMatrix64F A = new BlockMatrix64F(mat.numRows,mat.numCols);
-        BlockMatrix64F A_t = new BlockMatrix64F(mat.numCols,mat.numRows);
+        BlockMatrix_F64 A = new BlockMatrix_F64(mat.numRows,mat.numCols);
+        BlockMatrix_F64 A_t = new BlockMatrix_F64(mat.numCols,mat.numRows);
 
         MatrixOps_B64.convert(mat,A);
 
@@ -81,7 +81,7 @@ public class BenchmarkBlockTranspose {
 
     public static void main( String args[] ) {
 
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5000,5000,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5000,5000,rand);
 
         int N = 5;
 

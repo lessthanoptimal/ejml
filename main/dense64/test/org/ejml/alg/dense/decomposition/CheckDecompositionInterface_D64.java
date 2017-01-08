@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -36,9 +36,9 @@ public class CheckDecompositionInterface_D64 {
     /**
      * Performs a decomposition and makes sure the input matrix is not modified.
      */
-    public static boolean safeDecomposition( DecompositionInterface<DenseMatrix64F> decomp , DenseMatrix64F A ) {
+    public static boolean safeDecomposition(DecompositionInterface<RowMatrix_F64> decomp , RowMatrix_F64 A ) {
 
-        DenseMatrix64F A_orig = decomp.inputModified() ? A.copy() : A;
+        RowMatrix_F64 A_orig = decomp.inputModified() ? A.copy() : A;
 
         return decomp.decompose(A_orig);
     }
@@ -50,9 +50,9 @@ public class CheckDecompositionInterface_D64 {
      *
      * @param decomp
      */
-    public static void checkModifiedInput( DecompositionInterface<DenseMatrix64F> decomp ) {
-        DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(4,new Random(0x434));
-        DenseMatrix64F A_orig = A.copy();
+    public static void checkModifiedInput( DecompositionInterface<RowMatrix_F64> decomp ) {
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(4,new Random(0x434));
+        RowMatrix_F64 A_orig = A.copy();
 
         assertTrue(decomp.decompose(A));
 

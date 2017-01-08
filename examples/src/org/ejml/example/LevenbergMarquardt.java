@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 import static org.ejml.ops.CommonOps_D64.*;
 import static org.ejml.ops.SpecializedOps_D64.diffNormF;
@@ -57,25 +57,25 @@ public class LevenbergMarquardt {
     private Function func;
 
     // the optimized parameters and associated costs
-    private DenseMatrix64F param;
+    private RowMatrix_F64 param;
     private double initialCost;
     private double finalCost;
 
     // used by matrix operations
-    private DenseMatrix64F d;
-    private DenseMatrix64F H;
-    private DenseMatrix64F negDelta;
-    private DenseMatrix64F tempParam;
-    private DenseMatrix64F A;
+    private RowMatrix_F64 d;
+    private RowMatrix_F64 H;
+    private RowMatrix_F64 negDelta;
+    private RowMatrix_F64 tempParam;
+    private RowMatrix_F64 A;
 
     // variables used by the numerical jacobian algorithm
-    private DenseMatrix64F temp0;
-    private DenseMatrix64F temp1;
+    private RowMatrix_F64 temp0;
+    private RowMatrix_F64 temp1;
     // used when computing d and H variables
-    private DenseMatrix64F tempDH;
+    private RowMatrix_F64 tempDH;
 
     // Where the numerical Jacobian is stored.
-    private DenseMatrix64F jacobian;
+    private RowMatrix_F64 jacobian;
 
     /**
      * Creates a new instance that uses the provided cost function.
@@ -90,19 +90,19 @@ public class LevenbergMarquardt {
         int maxElements = 1;
         int numParam = 1;
 
-        this.temp0 = new DenseMatrix64F(maxElements,1);
-        this.temp1 = new DenseMatrix64F(maxElements,1);
-        this.tempDH = new DenseMatrix64F(maxElements,1);
-        this.jacobian = new DenseMatrix64F(numParam,maxElements);
+        this.temp0 = new RowMatrix_F64(maxElements,1);
+        this.temp1 = new RowMatrix_F64(maxElements,1);
+        this.tempDH = new RowMatrix_F64(maxElements,1);
+        this.jacobian = new RowMatrix_F64(numParam,maxElements);
 
         this.func = funcCost;
 
-        this.param = new DenseMatrix64F(numParam,1);
-        this.d = new DenseMatrix64F(numParam,1);
-        this.H = new DenseMatrix64F(numParam,numParam);
-        this.negDelta = new DenseMatrix64F(numParam,1);
-        this.tempParam = new DenseMatrix64F(numParam,1);
-        this.A = new DenseMatrix64F(numParam,numParam);
+        this.param = new RowMatrix_F64(numParam,1);
+        this.d = new RowMatrix_F64(numParam,1);
+        this.H = new RowMatrix_F64(numParam,numParam);
+        this.negDelta = new RowMatrix_F64(numParam,1);
+        this.tempParam = new RowMatrix_F64(numParam,1);
+        this.A = new RowMatrix_F64(numParam,numParam);
     }
 
 
@@ -114,7 +114,7 @@ public class LevenbergMarquardt {
         return finalCost;
     }
 
-    public DenseMatrix64F getParameters() {
+    public RowMatrix_F64 getParameters() {
         return param;
     }
 
@@ -126,9 +126,9 @@ public class LevenbergMarquardt {
      * @param Y The "observed" output of the function
      * @return true if it succeeded and false if it did not.
      */
-    public boolean optimize( DenseMatrix64F initParam ,
-                             DenseMatrix64F X ,
-                             DenseMatrix64F Y )
+    public boolean optimize( RowMatrix_F64 initParam ,
+                             RowMatrix_F64 X ,
+                             RowMatrix_F64 Y )
     {
         configure(initParam,X,Y);
 
@@ -149,7 +149,7 @@ public class LevenbergMarquardt {
      * Iterate until the difference between the costs is insignificant
      * or it iterates too many times
      */
-    private boolean adjustParam(DenseMatrix64F X, DenseMatrix64F Y,
+    private boolean adjustParam(RowMatrix_F64 X, RowMatrix_F64 Y,
                                 double prevCost) {
         // lambda adjusts how big of a step it takes
         double lambda = initialLambda;
@@ -197,7 +197,7 @@ public class LevenbergMarquardt {
      * Performs sanity checks on the input data and reshapes internal matrices.  By reshaping
      * a matrix it will only declare new memory when needed.
      */
-    protected void configure( DenseMatrix64F initParam , DenseMatrix64F X , DenseMatrix64F Y )
+    protected void configure(RowMatrix_F64 initParam , RowMatrix_F64 X , RowMatrix_F64 Y )
     {
         if( Y.getNumRows() != X.getNumRows() ) {
             throw new IllegalArgumentException("Different vector lengths");
@@ -233,7 +233,7 @@ public class LevenbergMarquardt {
      * Computes the d and H parameters.  Where d is the average error gradient and
      * H is an approximation of the hessian.
      */
-    private void computeDandH( DenseMatrix64F param , DenseMatrix64F x , DenseMatrix64F y )
+    private void computeDandH(RowMatrix_F64 param , RowMatrix_F64 x , RowMatrix_F64 y )
     {
         func.compute(param,x, tempDH);
         subtractEquals(tempDH, y);
@@ -262,7 +262,7 @@ public class LevenbergMarquardt {
      * <br>
      * where I is an identity matrix.
      */
-    private void computeA( DenseMatrix64F A , DenseMatrix64F H , double lambda )
+    private void computeA(RowMatrix_F64 A , RowMatrix_F64 H , double lambda )
     {
         final int numParam = param.getNumElements();
 
@@ -277,7 +277,7 @@ public class LevenbergMarquardt {
      *
      * cost = (1/N) Sum (f(x;p) - y)^2
      */
-    private double cost( DenseMatrix64F param , DenseMatrix64F X , DenseMatrix64F Y)
+    private double cost(RowMatrix_F64 param , RowMatrix_F64 X , RowMatrix_F64 Y)
     {
         func.compute(param,X, temp0);
 
@@ -293,9 +293,9 @@ public class LevenbergMarquardt {
      * @param pt The point around which the Jacobian is to be computed.
      * @param deriv Where the jacobian will be stored
      */
-    protected void computeNumericalJacobian( DenseMatrix64F param ,
-                                             DenseMatrix64F pt ,
-                                             DenseMatrix64F deriv )
+    protected void computeNumericalJacobian( RowMatrix_F64 param ,
+                                             RowMatrix_F64 pt ,
+                                             RowMatrix_F64 deriv )
     {
         double invDelta = 1.0/DELTA;
 
@@ -326,6 +326,6 @@ public class LevenbergMarquardt {
          * @param x the input points.
          * @param y the resulting output.
          */
-        public void compute( DenseMatrix64F param , DenseMatrix64F x , DenseMatrix64F y );
+        public void compute(RowMatrix_F64 param , RowMatrix_F64 x , RowMatrix_F64 y );
     }
 }

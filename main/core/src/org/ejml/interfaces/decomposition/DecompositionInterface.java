@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.Matrix;
 
 /**
  * <p>
- * An interface for performing matrix decompositions on a {@link org.ejml.data.DenseMatrix64F}.
+ * An interface for performing matrix decompositions.
  * </p>
  *
  * <p>

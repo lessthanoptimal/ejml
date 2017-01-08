@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
@@ -40,14 +40,14 @@ public class TestUnrolledDeterminantFromMinor_D64 {
     @Test
     public void testAll() {
         for(int N = 2; N <= UnrolledDeterminantFromMinor_D64.MAX; N++ ) {
-            DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,rand);
 
             double unrolled = UnrolledDeterminantFromMinor_D64.det(A);
             LUDecompositionAlt_D64 alg = new LUDecompositionAlt_D64();
             assertTrue( alg.decompose(A) );
             double expected = alg.computeDeterminant().real;
 
-            assertEquals(expected,unrolled, UtilEjml.TEST_64F);
+            assertEquals(expected,unrolled, UtilEjml.TEST_F64);
         }
     }
 }

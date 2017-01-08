@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,9 +19,9 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.VectorVectorMult_D64;
-import org.ejml.data.D1Matrix64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.D1Matrix_F64;
+import org.ejml.data.RowD1Matrix_F64;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -40,21 +40,21 @@ public class SpecializedOps_D64 {
      * </p>
      *
      * <p>
-     * In practice {@link VectorVectorMult_D64#householder(double, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}  multHouseholder}
+     * In practice {@link VectorVectorMult_D64#householder(double, D1Matrix_F64, D1Matrix_F64, D1Matrix_F64)}  multHouseholder}
      * should be used for performance reasons since there is no need to calculate Q explicitly.
      * </p>
      *
      * @param u A vector. Not modified.
      * @return An orthogonal reflector.
      */
-    public static DenseMatrix64F createReflector( RowD1Matrix64F u ) {
+    public static RowMatrix_F64 createReflector(RowD1Matrix_F64 u ) {
         if( !MatrixFeatures_D64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
         double norm = NormOps_D64.fastNormF(u);
         double gamma = -2.0/(norm*norm);
 
-        DenseMatrix64F Q = CommonOps_D64.identity(u.getNumElements());
+        RowMatrix_F64 Q = CommonOps_D64.identity(u.getNumElements());
         CommonOps_D64.multAddTransB(gamma,u,u,Q);
 
         return Q;
@@ -68,7 +68,7 @@ public class SpecializedOps_D64 {
      * </p>
      *
      * <p>
-     * In practice {@link VectorVectorMult_D64#householder(double, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F, org.ejml.data.D1Matrix64F)}  multHouseholder}
+     * In practice {@link VectorVectorMult_D64#householder(double, D1Matrix_F64, D1Matrix_F64, D1Matrix_F64)}  multHouseholder}
      * should be used for performance reasons since there is no need to calculate Q explicitly.
      * </p>
      *
@@ -76,11 +76,11 @@ public class SpecializedOps_D64 {
      * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
      * @return An orthogonal reflector.
      */
-    public static DenseMatrix64F createReflector( DenseMatrix64F u , double gamma) {
+    public static RowMatrix_F64 createReflector(RowMatrix_F64 u , double gamma) {
         if( !MatrixFeatures_D64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
-        DenseMatrix64F Q = CommonOps_D64.identity(u.getNumElements());
+        RowMatrix_F64 Q = CommonOps_D64.identity(u.getNumElements());
         CommonOps_D64.multAddTransB(-gamma,u,u,Q);
 
         return Q;
@@ -93,10 +93,10 @@ public class SpecializedOps_D64 {
      * @param src The original matrix. Not modified.
      * @param dst A Matrix that is a row swapped copy of src. Modified.
      */
-    public static DenseMatrix64F copyChangeRow( int order[] , DenseMatrix64F src , DenseMatrix64F dst )
+    public static RowMatrix_F64 copyChangeRow(int order[] , RowMatrix_F64 src , RowMatrix_F64 dst )
     {
         if( dst == null ) {
-            dst = new DenseMatrix64F(src.numRows,src.numCols);
+            dst = new RowMatrix_F64(src.numRows,src.numCols);
         } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
@@ -119,9 +119,9 @@ public class SpecializedOps_D64 {
      * @param upper If the upper or lower triangle should be copied.
      * @return The copied matrix.
      */
-    public static DenseMatrix64F copyTriangle( DenseMatrix64F src , DenseMatrix64F dst , boolean upper ) {
+    public static RowMatrix_F64 copyTriangle(RowMatrix_F64 src , RowMatrix_F64 dst , boolean upper ) {
         if( dst == null ) {
-            dst = new DenseMatrix64F(src.numRows,src.numCols);
+            dst = new RowMatrix_F64(src.numRows,src.numCols);
         } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
@@ -160,7 +160,7 @@ public class SpecializedOps_D64 {
      *
      * @return The F normal of the difference matrix.
      */
-    public static double diffNormF( D1Matrix64F a , D1Matrix64F b )
+    public static double diffNormF(D1Matrix_F64 a , D1Matrix_F64 b )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
@@ -168,7 +168,7 @@ public class SpecializedOps_D64 {
 
         final int size = a.getNumElements();
 
-        DenseMatrix64F diff = new DenseMatrix64F(size,1);
+        RowMatrix_F64 diff = new RowMatrix_F64(size,1);
 
         for( int i = 0; i < size; i++ ) {
             diff.set(i , b.get(i) - a.get(i));
@@ -176,7 +176,7 @@ public class SpecializedOps_D64 {
         return NormOps_D64.normF(diff);
     }
 
-    public static double diffNormF_fast( D1Matrix64F a , D1Matrix64F b )
+    public static double diffNormF_fast(D1Matrix_F64 a , D1Matrix_F64 b )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
@@ -209,7 +209,7 @@ public class SpecializedOps_D64 {
      *
      * @return The p=1 p-norm of the difference matrix.
      */
-    public static double diffNormP1( D1Matrix64F a , D1Matrix64F b )
+    public static double diffNormP1(D1Matrix_F64 a , D1Matrix_F64 b )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
@@ -235,7 +235,7 @@ public class SpecializedOps_D64 {
      * @param B A square matrix that the results are saved to.  Modified.
      * @param alpha Scaling factor for the identity matrix.
      */
-    public static void addIdentity( RowD1Matrix64F A , RowD1Matrix64F B , double alpha )
+    public static void addIdentity(RowD1Matrix_F64 A , RowD1Matrix_F64 B , double alpha )
     {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("A must be square");
@@ -271,7 +271,7 @@ public class SpecializedOps_D64 {
      * @param offsetV First element in 'v' where the results are extracted to.
      * @param v Vector where the results are written to. Modified.
      */
-    public static void subvector(RowD1Matrix64F A, int rowA, int colA, int length , boolean row, int offsetV, RowD1Matrix64F v) {
+    public static void subvector(RowD1Matrix_F64 A, int rowA, int colA, int length , boolean row, int offsetV, RowD1Matrix_F64 v) {
         if( row ) {
             for( int i = 0; i < length; i++ ) {
                 v.set( offsetV +i , A.get(rowA,colA+i) );
@@ -290,7 +290,7 @@ public class SpecializedOps_D64 {
      * @param column If true then column vectors will be created.
      * @return Set of vectors.
      */
-    public static DenseMatrix64F[] splitIntoVectors( RowD1Matrix64F A , boolean column )
+    public static RowMatrix_F64[] splitIntoVectors(RowD1Matrix_F64 A , boolean column )
     {
         int w = column ? A.numCols : A.numRows;
 
@@ -299,10 +299,10 @@ public class SpecializedOps_D64 {
 
         int o = Math.max(M,N);
 
-        DenseMatrix64F[] ret  = new DenseMatrix64F[w];
+        RowMatrix_F64[] ret  = new RowMatrix_F64[w];
 
         for( int i = 0; i < w; i++ ) {
-            DenseMatrix64F a = new DenseMatrix64F(M,N);
+            RowMatrix_F64 a = new RowMatrix_F64(M,N);
 
             if( column )
                 subvector(A,0,i,o,false,0,a);
@@ -331,10 +331,10 @@ public class SpecializedOps_D64 {
      * @param transposed If the transpose of the matrix is returned.
      * @return A pivot matrix.
      */
-    public static DenseMatrix64F pivotMatrix(DenseMatrix64F ret, int pivots[], int numPivots, boolean transposed ) {
+    public static RowMatrix_F64 pivotMatrix(RowMatrix_F64 ret, int pivots[], int numPivots, boolean transposed ) {
 
         if( ret == null ) {
-            ret = new DenseMatrix64F(numPivots, numPivots);
+            ret = new RowMatrix_F64(numPivots, numPivots);
         } else {
             if( ret.numCols != numPivots || ret.numRows != numPivots )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
@@ -361,7 +361,7 @@ public class SpecializedOps_D64 {
      * @param T A matrix.
      * @return product of the diagonal elements.
      */
-    public static double diagProd( RowD1Matrix64F T )
+    public static double diagProd( RowD1Matrix_F64 T )
     {
         double prod = 1.0;
         int N = Math.min(T.numRows,T.numCols);
@@ -382,7 +382,7 @@ public class SpecializedOps_D64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the matrix.
      */
-    public static double elementDiagonalMaxAbs( D1Matrix64F a ) {
+    public static double elementDiagonalMaxAbs( D1Matrix_F64 a ) {
         final int size = Math.min(a.numRows,a.numCols);
 
         double max = 0;
@@ -406,7 +406,7 @@ public class SpecializedOps_D64 {
      * @param T A matrix.  @return product of the diagonal elements.
      * @return the quality of the system.
      */
-    public static double qualityTriangular(D1Matrix64F T)
+    public static double qualityTriangular(D1Matrix_F64 T)
     {
         int N = Math.min(T.numRows,T.numCols);
 
@@ -431,7 +431,7 @@ public class SpecializedOps_D64 {
      * @param m Matrix.
      * @return Sum of elements squared.
      */
-    public static double elementSumSq( D1Matrix64F m  ) {
+    public static double elementSumSq( D1Matrix_F64 m  ) {
         double total = 0;
         
         int N = m.getNumElements();

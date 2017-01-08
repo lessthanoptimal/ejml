@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -50,14 +50,14 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMatrix64F> {
+public class QRDecompositionHouseholder_CD64 implements QRDecomposition<RowMatrix_C64> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
      * upper triangular portion and Q on the lower bit.  Lower columns
      * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^H).
      */
-    protected CDenseMatrix64F QR;
+    protected RowMatrix_C64 QR;
 
     // used internally to store temporary data
     protected double u[],v[];
@@ -71,7 +71,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
 
     // the computed gamma for Q_k matrix
     protected double gammas[];
-    protected Complex64F tau = new Complex64F();
+    protected Complex_F64 tau = new Complex_F64();
 
 
     // did it encounter an error?
@@ -86,7 +86,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
         int maxLength = Math.max(numRows,numCols);
 
         if( QR == null ) {
-            QR = new CDenseMatrix64F(numRows,numCols);
+            QR = new RowMatrix_C64(numRows,numCols);
             u = new double[ maxLength*2 ];
             v = new double[ maxLength*2 ];
             gammas = new double[ minLength ];
@@ -112,7 +112,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      *
      * @return The combined Q R matrix.
      */
-    public CDenseMatrix64F getQR() {
+    public RowMatrix_C64 getQR() {
         return QR;
     }
 
@@ -123,7 +123,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean compact ) {
+    public RowMatrix_C64 getQ(RowMatrix_C64 Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,minLength);
         else
@@ -144,7 +144,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      * @param compact
      */
     @Override
-    public CDenseMatrix64F getR(CDenseMatrix64F R, boolean compact) {
+    public RowMatrix_C64 getR(RowMatrix_C64 R, boolean compact) {
         if( compact )
             R = UtilDecompositons_CD64.checkZerosLT(R,minLength,numCols);
         else
@@ -176,7 +176,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      * </p>
      */
     @Override
-    public boolean decompose( CDenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_C64 A ) {
         commonSetup(A);
 
         for( int j = 0; j < minLength; j++ ) {
@@ -248,7 +248,7 @@ public class QRDecompositionHouseholder_CD64 implements QRDecomposition<CDenseMa
      *
      * @param A
      */
-    protected void commonSetup(CDenseMatrix64F A) {
+    protected void commonSetup(RowMatrix_C64 A) {
         setExpectedMaxSize(A.numRows,A.numCols);
 
         QR.set(A);

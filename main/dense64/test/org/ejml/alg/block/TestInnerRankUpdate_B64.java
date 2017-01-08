@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -61,16 +61,16 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix origA = SimpleMatrix.random_F64(lengthA,lengthA,-1.0 , 1.0 ,rand);
         SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA,-1.0 , 1.0 ,rand);
 
-        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
-        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
+        BlockMatrix_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        BlockMatrix_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
-        D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
-        D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
+        D1Submatrix_F64 subA = new D1Submatrix_F64(blockA,0, origA.numRows(), 0, origA.numCols());
+        D1Submatrix_F64 subB = new D1Submatrix_F64(blockB,0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
         InnerRankUpdate_B64.rankNUpdate(N,alpha,subA,subB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(expected.matrix_F64(),blockA, UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(expected.matrix_F64(),blockA, UtilEjml.TEST_F64));
     }
 
     /**
@@ -92,16 +92,16 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_D64.createSymmPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA, -1.0 , 1.0 ,rand);
 
-        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
-        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
+        BlockMatrix_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        BlockMatrix_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
-        D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
-        D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
+        D1Submatrix_F64 subA = new D1Submatrix_F64(blockA,0, origA.numRows(), 0, origA.numCols());
+        D1Submatrix_F64 subB = new D1Submatrix_F64(blockB,0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
         InnerRankUpdate_B64.symmRankNMinus_U(N,subA,subB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true,expected.matrix_F64(),blockA,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true,expected.matrix_F64(),blockA,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -120,11 +120,11 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_D64.createSymmPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random_F64(lengthA,widthB, -1.0 , 1.0 ,rand);
 
-        BlockMatrix64F blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
-        BlockMatrix64F blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
+        BlockMatrix_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        BlockMatrix_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
-        D1Submatrix64F subA = new D1Submatrix64F(blockA,0, origA.numRows(), 0, origA.numCols());
-        D1Submatrix64F subB = new D1Submatrix64F(blockB,0, origB.numRows(), 0, origB.numCols());
+        D1Submatrix_F64 subA = new D1Submatrix_F64(blockA,0, origA.numRows(), 0, origA.numCols());
+        D1Submatrix_F64 subB = new D1Submatrix_F64(blockB,0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.mult(origB.transpose()).scale(-1));
         InnerRankUpdate_B64.symmRankNMinus_L(N,subA,subB);
@@ -132,6 +132,6 @@ public class TestInnerRankUpdate_B64 {
 //        expected.print();
 //        blockA.print();
 
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false,expected.matrix_F64(),blockA,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false,expected.matrix_F64(),blockA,UtilEjml.TEST_F64));
     }
 }

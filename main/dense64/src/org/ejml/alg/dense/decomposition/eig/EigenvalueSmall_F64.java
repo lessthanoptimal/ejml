@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
 
 
 /**
@@ -26,8 +26,8 @@ import org.ejml.data.Complex64F;
  */
 public class EigenvalueSmall_F64 {
 
-    public Complex64F value0 = new Complex64F();
-    public Complex64F value1 = new Complex64F();
+    public Complex_F64 value0 = new Complex_F64();
+    public Complex_F64 value1 = new Complex_F64();
 
     // if |a11-a22| >> |a12+a21| there might be a better way.  see pg371
     public void value2x2( double a11 , double a12, double a21 , double a22 )

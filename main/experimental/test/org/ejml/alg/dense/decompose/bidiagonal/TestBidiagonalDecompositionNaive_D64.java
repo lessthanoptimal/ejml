@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.bidiagonal;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionNaive_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
@@ -64,12 +64,12 @@ public class TestBidiagonalDecompositionNaive_D64 {
 //        U.mult(A).mult(V).print();
 
         // check the decomposition
-        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        RowMatrix_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
 //        A.print();
 //        foundA.print();
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(), foundA, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(), foundA, UtilEjml.TEST_F64));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.MatrixDimensionException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -107,18 +107,18 @@ public class CheckMatrixMultShape_D64 {
      */
     private void checkPositive(Method func, boolean transA, boolean transB ,
                                int m , int n , int o ) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        DenseMatrix64F A,B;
-        DenseMatrix64F C = new DenseMatrix64F(m,o);
+        RowMatrix_F64 A,B;
+        RowMatrix_F64 C = new RowMatrix_F64(m,o);
 
         if( transA ) {
-            A = new DenseMatrix64F(n,m);
+            A = new RowMatrix_F64(n,m);
         } else {
-            A = new DenseMatrix64F(m,n);
+            A = new RowMatrix_F64(m,n);
         }
         if( transB ) {
-            B = new DenseMatrix64F(o,n);
+            B = new RowMatrix_F64(o,n);
         } else {
-            B = new DenseMatrix64F(n,o);
+            B = new RowMatrix_F64(n,o);
         }
 
         TestMatrixMatrixMult_D64.invoke(func, 2.0, A, B, C);
@@ -147,18 +147,18 @@ public class CheckMatrixMultShape_D64 {
     private void checkNegative(Method func,
                                int m_a , int n_a , int m_b , int n_b , int m_c , int n_c ,
                                boolean transA, boolean transB) throws NoSuchMethodException, IllegalAccessException {
-        DenseMatrix64F A,B;
-        DenseMatrix64F C = new DenseMatrix64F(m_c,n_c);
+        RowMatrix_F64 A,B;
+        RowMatrix_F64 C = new RowMatrix_F64(m_c,n_c);
 
         if( transA ) {
-            A = new DenseMatrix64F(n_a,m_a);
+            A = new RowMatrix_F64(n_a,m_a);
         } else {
-            A = new DenseMatrix64F(m_a,n_a);
+            A = new RowMatrix_F64(m_a,n_a);
         }
         if( transB ) {
-            B = new DenseMatrix64F(n_b,m_b);
+            B = new RowMatrix_F64(n_b,m_b);
         } else {
-            B = new DenseMatrix64F(m_b,n_b);
+            B = new RowMatrix_F64(m_b,n_b);
         }
 
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -34,8 +34,8 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult1( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F tmp,
-                              DenseMatrix64F expected , int numTrials) {
+    public static long mult1(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 tmp,
+                             RowMatrix_F64 expected , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -47,8 +47,8 @@ public class BenchmarkMatrixMatrixMultQuad {
         return curr-prev;
     }
 
-    public static long quad1( DenseMatrix64F A , DenseMatrix64F B ,
-                              DenseMatrix64F expected , int numTrials) {
+    public static long quad1(RowMatrix_F64 A , RowMatrix_F64 B ,
+                             RowMatrix_F64 expected , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -61,10 +61,10 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     public static void performTests( int numRows , int numCols ,
                                      int numTrials ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,rand);
-        DenseMatrix64F B = RandomMatrices_D64.createRandom(numCols,numCols,rand);
-        DenseMatrix64F out = RandomMatrices_D64.createRandom(numRows, numRows, rand);
-        DenseMatrix64F tmp = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,rand);
+        RowMatrix_F64 B = RandomMatrices_D64.createRandom(numCols,numCols,rand);
+        RowMatrix_F64 out = RandomMatrices_D64.createRandom(numRows, numRows, rand);
+        RowMatrix_F64 tmp = new RowMatrix_F64(numRows,numCols);
 
         System.out.printf(numRows+"  "+numCols+"     Mult1: %7d  Quad1 %7d\n",
                 mult1(A,B,tmp,out,numTrials),

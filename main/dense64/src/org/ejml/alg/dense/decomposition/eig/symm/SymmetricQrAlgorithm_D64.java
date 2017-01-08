@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 
@@ -38,7 +38,7 @@ public class SymmetricQrAlgorithm_D64 {
     private SymmetricQREigenHelper_D64 helper;
 
     // transpose of the orthogonal matrix
-    private DenseMatrix64F Q;
+    private RowMatrix_F64 Q;
 
     // the eigenvalues previously computed
     private double eigenvalues[];
@@ -68,11 +68,11 @@ public class SymmetricQrAlgorithm_D64 {
         this.maxIterations = maxIterations;
     }
 
-    public DenseMatrix64F getQ() {
+    public RowMatrix_F64 getQ() {
         return Q;
     }
 
-    public void setQ(DenseMatrix64F q) {
+    public void setQ(RowMatrix_F64 q) {
         Q = q;
     }
 

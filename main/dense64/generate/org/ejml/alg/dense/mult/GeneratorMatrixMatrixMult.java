@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,12 +49,12 @@ public class GeneratorMatrixMatrixMult {
                 "\n" +
                 "package org.ejml.alg.dense.mult;\n" +
                 "\n" +
-                "import org.ejml.data.RowD1Matrix64F;\n"+
+                "import org.ejml.data.RowD1Matrix_F64;\n"+
                 "import org.ejml.ops.CommonOps;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
-                " * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix64F}.\n" +
+                " * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix_F64}.\n" +
                 " * </p>\n" +
                 " * <p>\n" +
                 " * Two algorithms that are equivalent can often have very different runtime performance.\n" +
@@ -155,7 +155,7 @@ public class GeneratorMatrixMatrixMult {
     private String makeComment( String nameOp , boolean hasAlpha )
     {
         String a = hasAlpha ? "double, " : "";
-        String inputs = "("+a+" org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)";
+        String inputs = "("+a+" org.ejml.data.RowD1Matrix_F64, org.ejml.data.RowD1Matrix_F64, org.ejml.data.RowD1Matrix_F64)";
 
 
         String ret =
@@ -189,9 +189,9 @@ public class GeneratorMatrixMatrixMult {
         if( hasAlpha ) ret += "double alpha , ";
 
         if( hasAux ) {
-            ret += "RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )\n";
+            ret += "RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )\n";
         } else {
-            ret += "RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )\n";
+            ret += "RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )\n";
         }
 
         ret += "    {\n";

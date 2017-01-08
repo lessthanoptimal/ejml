@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.RandomMatrices_CD64;
 import org.junit.Test;
 
@@ -37,84 +37,84 @@ public class TestTransposeAlgs_CD64 {
 
     @Test
     public void square() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,4,-1,1,rand);
-        CDenseMatrix64F b = a.copy();
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(4,4,-1,1,rand);
+        RowMatrix_C64 b = a.copy();
 
         TransposeAlgs_CD64.square(b);
 
-        Complex64F found = new Complex64F();
-        Complex64F expected = new Complex64F();
+        Complex_F64 found = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 a.get(j,i,expected);
                 b.get(i,j,found);
 
-                assertEquals(expected.real,found.real, UtilEjml.TEST_64F);
-                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
+                assertEquals(expected.real,found.real, UtilEjml.TEST_F64);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
             }
         }
     }
 
     @Test
     public void squareConjugate() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,4,-1,1,rand);
-        CDenseMatrix64F b = a.copy();
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(4,4,-1,1,rand);
+        RowMatrix_C64 b = a.copy();
 
         TransposeAlgs_CD64.squareConjugate(b);
 
-        Complex64F found = new Complex64F();
-        Complex64F expected = new Complex64F();
+        Complex_F64 found = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 a.get(j,i,expected);
                 b.get(i,j,found);
 
-                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
-                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
+                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
             }
         }
     }
 
     @Test
     public void standard() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,5,-1,1,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(5, 4, -1, 1, rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(4,5,-1,1,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(5, 4, -1, 1, rand);
 
         TransposeAlgs_CD64.standard(a, b);
 
-        Complex64F found = new Complex64F();
-        Complex64F expected = new Complex64F();
+        Complex_F64 found = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
-                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
+                assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
             }
         }
     }
 
     @Test
     public void standardConjugate() {
-        CDenseMatrix64F a = RandomMatrices_CD64.createRandom(4,5,-1,1,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(5, 4, -1, 1, rand);
+        RowMatrix_C64 a = RandomMatrices_CD64.createRandom(4,5,-1,1,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(5, 4, -1, 1, rand);
 
         TransposeAlgs_CD64.standardConjugate(a, b);
 
-        Complex64F found = new Complex64F();
-        Complex64F expected = new Complex64F();
+        Complex_F64 found = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
                 a.get(i,j,expected);
                 b.get(j,i,found);
 
-                assertEquals(expected.real,found.real,UtilEjml.TEST_64F);
-                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_64F);
+                assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
+                assertEquals(-expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -17,8 +17,8 @@
  */
 package org.ejml.alg.fixed;
 
-import org.ejml.data.FixedMatrix4_64F;
-import org.ejml.data.FixedMatrix4x4_64F;
+import org.ejml.data.FixedMatrix4_F64;
+import org.ejml.data.FixedMatrix4x4_F64;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 4 x 4 or 4 element vectors.</p>
@@ -42,7 +42,7 @@ public class FixedOps4_D64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c ) {
+    public static void add(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c ) {
         c.a11 = a.a11 + b.a11;
         c.a12 = a.a12 + b.a12;
         c.a13 = a.a13 + b.a13;
@@ -76,7 +76,7 @@ public class FixedOps4_D64 {
      * @param b A Vector. Not modified.
      * @param c A Vector where the results are stored. Modified.
      */
-    public static void add( FixedMatrix4_64F a , FixedMatrix4_64F b , FixedMatrix4_64F c ) {
+    public static void add(FixedMatrix4_F64 a , FixedMatrix4_F64 b , FixedMatrix4_F64 c ) {
         c.a1 = a.a1 + b.a1;
         c.a2 = a.a2 + b.a2;
         c.a3 = a.a3 + b.a3;
@@ -93,7 +93,7 @@ public class FixedOps4_D64 {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void addEquals( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b ) {
+    public static void addEquals(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b ) {
         a.a11 += b.a11;
         a.a12 += b.a12;
         a.a13 += b.a13;
@@ -122,7 +122,7 @@ public class FixedOps4_D64 {
      * @param a A Vector. Modified.
      * @param b A Vector. Not modified.
      */
-    public static void addEquals( FixedMatrix4_64F a , FixedMatrix4_64F b ) {
+    public static void addEquals(FixedMatrix4_F64 a , FixedMatrix4_F64 b ) {
         a.a1 += b.a1;
         a.a2 += b.a2;
         a.a3 += b.a3;
@@ -144,7 +144,7 @@ public class FixedOps4_D64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void subtract( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c ) {
+    public static void subtract(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c ) {
         c.a11 = a.a11 - b.a11;
         c.a12 = a.a12 - b.a12;
         c.a13 = a.a13 - b.a13;
@@ -178,7 +178,7 @@ public class FixedOps4_D64 {
      * @param b A Vector. Not modified.
      * @param c A Vector where the results are stored. Modified.
      */
-    public static void subtract( FixedMatrix4_64F a , FixedMatrix4_64F b , FixedMatrix4_64F c ) {
+    public static void subtract(FixedMatrix4_F64 a , FixedMatrix4_F64 b , FixedMatrix4_F64 c ) {
         c.a1 = a.a1 - b.a1;
         c.a2 = a.a2 - b.a2;
         c.a3 = a.a3 - b.a3;
@@ -195,7 +195,7 @@ public class FixedOps4_D64 {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void subtractEquals( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b ) {
+    public static void subtractEquals(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b ) {
         a.a11 -= b.a11;
         a.a12 -= b.a12;
         a.a13 -= b.a13;
@@ -224,7 +224,7 @@ public class FixedOps4_D64 {
      * @param a A Vector. Modified.
      * @param b A Vector. Not modified.
      */
-    public static void subtractEquals( FixedMatrix4_64F a , FixedMatrix4_64F b ) {
+    public static void subtractEquals(FixedMatrix4_F64 a , FixedMatrix4_F64 b ) {
         a.a1 -= b.a1;
         a.a2 -= b.a2;
         a.a3 -= b.a3;
@@ -237,7 +237,7 @@ public class FixedOps4_D64 {
      *
      * @param m The matrix that is to be transposed. Modified.
      */
-    public static void transpose( FixedMatrix4x4_64F m ) {
+    public static void transpose( FixedMatrix4x4_F64 m ) {
         double tmp;
         tmp = m.a12; m.a12 = m.a21; m.a21 = tmp;
         tmp = m.a13; m.a13 = m.a31; m.a31 = tmp;
@@ -259,9 +259,9 @@ public class FixedOps4_D64 {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static FixedMatrix4x4_64F transpose( FixedMatrix4x4_64F input , FixedMatrix4x4_64F output ) {
+    public static FixedMatrix4x4_F64 transpose(FixedMatrix4x4_F64 input , FixedMatrix4x4_F64 output ) {
         if( input == null )
-            input = new FixedMatrix4x4_64F();
+            input = new FixedMatrix4x4_F64();
 
         output.a11 = input.a11;
         output.a12 = input.a21;
@@ -295,7 +295,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void mult(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 = a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31 + a.a14*b.a41;
         c.a12 = a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32 + a.a14*b.a42;
         c.a13 = a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33 + a.a14*b.a43;
@@ -326,7 +326,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multTransA(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 = a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31 + a.a41*b.a41;
         c.a12 = a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32 + a.a41*b.a42;
         c.a13 = a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33 + a.a41*b.a43;
@@ -357,7 +357,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multTransAB(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 = a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13 + a.a41*b.a14;
         c.a12 = a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23 + a.a41*b.a24;
         c.a13 = a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33 + a.a41*b.a34;
@@ -388,7 +388,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multTransB(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 = a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13 + a.a14*b.a14;
         c.a12 = a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23 + a.a14*b.a24;
         c.a13 = a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33 + a.a14*b.a34;
@@ -419,7 +419,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multAdd(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 += a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31 + a.a14*b.a41;
         c.a12 += a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32 + a.a14*b.a42;
         c.a13 += a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33 + a.a14*b.a43;
@@ -450,7 +450,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multAddTransA(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 += a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31 + a.a41*b.a41;
         c.a12 += a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32 + a.a41*b.a42;
         c.a13 += a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33 + a.a41*b.a43;
@@ -481,7 +481,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multAddTransAB(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 += a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13 + a.a41*b.a14;
         c.a12 += a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23 + a.a41*b.a24;
         c.a13 += a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33 + a.a41*b.a34;
@@ -512,7 +512,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c) {
+    public static void multAddTransB(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c) {
         c.a11 += a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13 + a.a14*b.a14;
         c.a12 += a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23 + a.a14*b.a24;
         c.a13 += a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33 + a.a14*b.a34;
@@ -543,7 +543,7 @@ public class FixedOps4_D64 {
      * @param b The right vector in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix4x4_64F a , FixedMatrix4_64F b , FixedMatrix4_64F c) {
+    public static void mult(FixedMatrix4x4_F64 a , FixedMatrix4_F64 b , FixedMatrix4_F64 c) {
         c.a1 = a.a11*b.a1 + a.a12*b.a2 + a.a13*b.a3 + a.a14*b.a4;
         c.a2 = a.a21*b.a1 + a.a22*b.a2 + a.a23*b.a3 + a.a24*b.a4;
         c.a3 = a.a31*b.a1 + a.a32*b.a2 + a.a33*b.a3 + a.a34*b.a4;
@@ -562,7 +562,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix4_64F a , FixedMatrix4x4_64F b , FixedMatrix4_64F c) {
+    public static void mult(FixedMatrix4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4_F64 c) {
         c.a1 = a.a1*b.a11 + a.a2*b.a21 + a.a3*b.a31 + a.a4*b.a41;
         c.a2 = a.a1*b.a12 + a.a2*b.a22 + a.a3*b.a32 + a.a4*b.a42;
         c.a3 = a.a1*b.a13 + a.a2*b.a23 + a.a3*b.a33 + a.a4*b.a43;
@@ -581,7 +581,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @return The dot product
      */
-    public static double dot( FixedMatrix4_64F a , FixedMatrix4_64F b ) {
+    public static double dot(FixedMatrix4_F64 a , FixedMatrix4_F64 b ) {
         return a.a1*b.a1 + a.a2*b.a2 + a.a3*b.a3 + a.a4*b.a4;
     }
 
@@ -591,7 +591,7 @@ public class FixedOps4_D64 {
      *
      * @param a A matrix.
      */
-    public static void setIdentity( FixedMatrix4x4_64F a ) {
+    public static void setIdentity( FixedMatrix4x4_F64 a ) {
         a.a11 = 1; a.a21 = 0; a.a31 = 0; a.a41 = 0;
         a.a12 = 0; a.a22 = 1; a.a32 = 0; a.a42 = 0;
         a.a13 = 0; a.a23 = 0; a.a33 = 1; a.a43 = 0;
@@ -608,7 +608,7 @@ public class FixedOps4_D64 {
      * @param inv Inverted output matrix.  Modified.
      * @return true if it was successful or false if it failed.  Not always reliable.
      */
-    public static boolean invert( FixedMatrix4x4_64F a , FixedMatrix4x4_64F inv ) {
+    public static boolean invert(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 inv ) {
 
         double scale = 1.0/elementMaxAbs(a);
 
@@ -676,7 +676,7 @@ public class FixedOps4_D64 {
      * @param mat Input matrix.  Not modified.
      * @return The determinant.
      */
-    public static double det( FixedMatrix4x4_64F mat ) {
+    public static double det( FixedMatrix4x4_F64 mat ) {
 
         double  a11 = mat.a22;
         double  a12 = mat.a23;
@@ -718,7 +718,7 @@ public class FixedOps4_D64 {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( FixedMatrix4x4_64F a ) {
+    public static double trace( FixedMatrix4x4_F64 a ) {
         return a.a11 + a.a21 + a.a31 + a.a41;
     }
 
@@ -732,7 +732,7 @@ public class FixedOps4_D64 {
      * @param input Matrix.  Not modified.
      * @param out Vector containing diagonal elements.  Modified.
      */
-    public static void diag( FixedMatrix4x4_64F input , FixedMatrix4_64F out ) {
+    public static void diag(FixedMatrix4x4_F64 input , FixedMatrix4_F64 out ) {
         out.a1 = input.a11;
         out.a2 = input.a22;
         out.a3 = input.a33;
@@ -749,7 +749,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMax( FixedMatrix4x4_64F a ) {
+    public static double elementMax( FixedMatrix4x4_F64 a ) {
         double max = a.a11;
         max = Math.max(max,a.a12);
         max = Math.max(max,a.a13);
@@ -780,7 +780,7 @@ public class FixedOps4_D64 {
      * @param a A vector. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMax( FixedMatrix4_64F a ) {
+    public static double elementMax( FixedMatrix4_F64 a ) {
         double max = a.a1;
         max = Math.max(max,a.a2);
         max = Math.max(max,a.a3);
@@ -799,7 +799,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the matrix.
      */
-    public static double elementMaxAbs( FixedMatrix4x4_64F a ) {
+    public static double elementMaxAbs( FixedMatrix4x4_F64 a ) {
         double max = a.a11;
         max = Math.max(max,Math.abs(a.a12));
         max = Math.max(max,Math.abs(a.a13));
@@ -830,7 +830,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the vector.
      */
-    public static double elementMaxAbs( FixedMatrix4_64F a ) {
+    public static double elementMaxAbs( FixedMatrix4_F64 a ) {
         double max = a.a1;
         max = Math.max(max,Math.abs(a.a2));
         max = Math.max(max,Math.abs(a.a3));
@@ -849,7 +849,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The value of element in the matrix with the minimum value.
      */
-    public static double elementMin( FixedMatrix4x4_64F a ) {
+    public static double elementMin( FixedMatrix4x4_F64 a ) {
         double min = a.a11;
         min = Math.min(min, a.a12);
         min = Math.min(min, a.a13);
@@ -880,7 +880,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The value of element in the vector with the minimum value.
      */
-    public static double elementMin( FixedMatrix4_64F a ) {
+    public static double elementMin( FixedMatrix4_F64 a ) {
         double min = a.a1;
         min = Math.min(min, a.a2);
         min = Math.min(min, a.a3);
@@ -899,7 +899,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMinAbs( FixedMatrix4x4_64F a ) {
+    public static double elementMinAbs( FixedMatrix4x4_F64 a ) {
         double min = a.a11;
         min = Math.min(min,Math.abs(a.a12));
         min = Math.min(min,Math.abs(a.a13));
@@ -930,7 +930,7 @@ public class FixedOps4_D64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the vector.
      */
-    public static double elementMinAbs( FixedMatrix4_64F a ) {
+    public static double elementMinAbs( FixedMatrix4_F64 a ) {
         double min = a.a1;
         min = Math.min(min,Math.abs(a.a2));
         min = Math.min(min,Math.abs(a.a3));
@@ -947,7 +947,7 @@ public class FixedOps4_D64 {
      * @param a The left matrix in the multiplication operation. Modified.
      * @param b The right matrix in the multiplication operation. Not modified.
      */
-    public static void elementMult( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b) {
+    public static void elementMult(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b) {
         a.a11 *= b.a11; a.a12 *= b.a12; a.a13 *= b.a13; a.a14 *= b.a14;
         a.a21 *= b.a21; a.a22 *= b.a22; a.a23 *= b.a23; a.a24 *= b.a24;
         a.a31 *= b.a31; a.a32 *= b.a32; a.a33 *= b.a33; a.a34 *= b.a34;
@@ -962,7 +962,7 @@ public class FixedOps4_D64 {
      * @param a The left vector in the multiplication operation. Modified.
      * @param b The right vector in the multiplication operation. Not modified.
      */
-    public static void elementMult( FixedMatrix4_64F a , FixedMatrix4_64F b) {
+    public static void elementMult(FixedMatrix4_F64 a , FixedMatrix4_F64 b) {
         a.a1 *= b.a1;
         a.a2 *= b.a2;
         a.a3 *= b.a3;
@@ -978,7 +978,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementMult( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c ) {
+    public static void elementMult(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c ) {
         c.a11 = a.a11*b.a11; c.a12 = a.a12*b.a12; c.a13 = a.a13*b.a13; c.a14 = a.a14*b.a14;
         c.a21 = a.a21*b.a21; c.a22 = a.a22*b.a22; c.a23 = a.a23*b.a23; c.a24 = a.a24*b.a24;
         c.a31 = a.a31*b.a31; c.a32 = a.a32*b.a32; c.a33 = a.a33*b.a33; c.a34 = a.a34*b.a34;
@@ -994,7 +994,7 @@ public class FixedOps4_D64 {
      * @param b The right vector in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementMult( FixedMatrix4_64F a , FixedMatrix4_64F b , FixedMatrix4_64F c ) {
+    public static void elementMult(FixedMatrix4_F64 a , FixedMatrix4_F64 b , FixedMatrix4_F64 c ) {
         c.a1 = a.a1*b.a1;
         c.a2 = a.a2*b.a2;
         c.a3 = a.a3*b.a3;
@@ -1009,7 +1009,7 @@ public class FixedOps4_D64 {
      * @param a The left matrix in the division operation. Modified.
      * @param b The right matrix in the division operation. Not modified.
      */
-    public static void elementDiv( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b) {
+    public static void elementDiv(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b) {
         a.a11 /= b.a11; a.a12 /= b.a12; a.a13 /= b.a13; a.a14 /= b.a14;
         a.a21 /= b.a21; a.a22 /= b.a22; a.a23 /= b.a23; a.a24 /= b.a24;
         a.a31 /= b.a31; a.a32 /= b.a32; a.a33 /= b.a33; a.a34 /= b.a34;
@@ -1024,7 +1024,7 @@ public class FixedOps4_D64 {
      * @param a The left vector in the division operation. Modified.
      * @param b The right vector in the division operation. Not modified.
      */
-    public static void elementDiv( FixedMatrix4_64F a , FixedMatrix4_64F b) {
+    public static void elementDiv(FixedMatrix4_F64 a , FixedMatrix4_F64 b) {
         a.a1 /= b.a1;
         a.a2 /= b.a2;
         a.a3 /= b.a3;
@@ -1040,7 +1040,7 @@ public class FixedOps4_D64 {
      * @param b The right matrix in the division operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv( FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , FixedMatrix4x4_64F c ) {
+    public static void elementDiv(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c ) {
         c.a11 = a.a11/b.a11; c.a12 = a.a12/b.a12; c.a13 = a.a13/b.a13; c.a14 = a.a14/b.a14;
         c.a21 = a.a21/b.a21; c.a22 = a.a22/b.a22; c.a23 = a.a23/b.a23; c.a24 = a.a24/b.a24;
         c.a31 = a.a31/b.a31; c.a32 = a.a32/b.a32; c.a33 = a.a33/b.a33; c.a34 = a.a34/b.a34;
@@ -1056,7 +1056,7 @@ public class FixedOps4_D64 {
      * @param b The right vector in the division operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv( FixedMatrix4_64F a , FixedMatrix4_64F b , FixedMatrix4_64F c ) {
+    public static void elementDiv(FixedMatrix4_F64 a , FixedMatrix4_F64 b , FixedMatrix4_F64 c ) {
         c.a1 = a.a1/b.a1;
         c.a2 = a.a2/b.a2;
         c.a3 = a.a3/b.a3;
@@ -1073,7 +1073,7 @@ public class FixedOps4_D64 {
      * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , FixedMatrix4x4_64F a ) {
+    public static void scale( double alpha , FixedMatrix4x4_F64 a ) {
         a.a11 *= alpha; a.a12 *= alpha; a.a13 *= alpha; a.a14 *= alpha;
         a.a21 *= alpha; a.a22 *= alpha; a.a23 *= alpha; a.a24 *= alpha;
         a.a31 *= alpha; a.a32 *= alpha; a.a33 *= alpha; a.a34 *= alpha;
@@ -1090,7 +1090,7 @@ public class FixedOps4_D64 {
      * @param a The vector that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , FixedMatrix4_64F a ) {
+    public static void scale( double alpha , FixedMatrix4_F64 a ) {
         a.a1 *= alpha;
         a.a2 *= alpha;
         a.a3 *= alpha;
@@ -1108,7 +1108,7 @@ public class FixedOps4_D64 {
      * @param a The matrix that is to be scaled.  Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
-    public static void scale( double alpha , FixedMatrix4x4_64F a , FixedMatrix4x4_64F b ) {
+    public static void scale(double alpha , FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b ) {
         b.a11 = a.a11*alpha; b.a12 = a.a12*alpha; b.a13 = a.a13*alpha; b.a14 = a.a14*alpha;
         b.a21 = a.a21*alpha; b.a22 = a.a22*alpha; b.a23 = a.a23*alpha; b.a24 = a.a24*alpha;
         b.a31 = a.a31*alpha; b.a32 = a.a32*alpha; b.a33 = a.a33*alpha; b.a34 = a.a34*alpha;
@@ -1126,7 +1126,7 @@ public class FixedOps4_D64 {
      * @param a The vector that is to be scaled.  Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
-    public static void scale( double alpha , FixedMatrix4_64F a , FixedMatrix4_64F b ) {
+    public static void scale(double alpha , FixedMatrix4_F64 a , FixedMatrix4_F64 b ) {
         b.a1 = a.a1*alpha;
         b.a2 = a.a2*alpha;
         b.a3 = a.a3*alpha;
@@ -1143,7 +1143,7 @@ public class FixedOps4_D64 {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( FixedMatrix4x4_64F a , double alpha ) {
+    public static void divide(FixedMatrix4x4_F64 a , double alpha ) {
         a.a11 /= alpha; a.a12 /= alpha; a.a13 /= alpha; a.a14 /= alpha;
         a.a21 /= alpha; a.a22 /= alpha; a.a23 /= alpha; a.a24 /= alpha;
         a.a31 /= alpha; a.a32 /= alpha; a.a33 /= alpha; a.a34 /= alpha;
@@ -1160,7 +1160,7 @@ public class FixedOps4_D64 {
      * @param a The vector whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( FixedMatrix4_64F a , double alpha ) {
+    public static void divide(FixedMatrix4_F64 a , double alpha ) {
         a.a1 /= alpha;
         a.a2 /= alpha;
         a.a3 /= alpha;
@@ -1178,7 +1178,7 @@ public class FixedOps4_D64 {
      * @param a The matrix whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( FixedMatrix4x4_64F a , double alpha , FixedMatrix4x4_64F b ) {
+    public static void divide(FixedMatrix4x4_F64 a , double alpha , FixedMatrix4x4_F64 b ) {
         b.a11 = a.a11/alpha; b.a12 = a.a12/alpha; b.a13 = a.a13/alpha; b.a14 = a.a14/alpha;
         b.a21 = a.a21/alpha; b.a22 = a.a22/alpha; b.a23 = a.a23/alpha; b.a24 = a.a24/alpha;
         b.a31 = a.a31/alpha; b.a32 = a.a32/alpha; b.a33 = a.a33/alpha; b.a34 = a.a34/alpha;
@@ -1196,7 +1196,7 @@ public class FixedOps4_D64 {
      * @param a The vector whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( FixedMatrix4_64F a , double alpha , FixedMatrix4_64F b ) {
+    public static void divide(FixedMatrix4_F64 a , double alpha , FixedMatrix4_F64 b ) {
         b.a1 = a.a1/alpha;
         b.a2 = a.a2/alpha;
         b.a3 = a.a3/alpha;
@@ -1212,7 +1212,7 @@ public class FixedOps4_D64 {
      *
      * @param a A matrix. Modified.
      */
-    public static void changeSign( FixedMatrix4x4_64F a )
+    public static void changeSign( FixedMatrix4x4_F64 a )
     {
         a.a11 = -a.a11; a.a12 = -a.a12; a.a13 = -a.a13; a.a14 = -a.a14;
         a.a21 = -a.a21; a.a22 = -a.a22; a.a23 = -a.a23; a.a24 = -a.a24;
@@ -1229,7 +1229,7 @@ public class FixedOps4_D64 {
      *
      * @param a A vector. Modified.
      */
-    public static void changeSign( FixedMatrix4_64F a )
+    public static void changeSign( FixedMatrix4_F64 a )
     {
         a.a1 = -a.a1;
         a.a2 = -a.a2;
@@ -1247,7 +1247,7 @@ public class FixedOps4_D64 {
      * @param a A matrix whose elements are about to be set. Modified.
      * @param v The value each element will have.
      */
-    public static void fill( FixedMatrix4x4_64F a , double v  ) {
+    public static void fill(FixedMatrix4x4_F64 a , double v  ) {
         a.a11 = v; a.a12 = v; a.a13 = v; a.a14 = v;
         a.a21 = v; a.a22 = v; a.a23 = v; a.a24 = v;
         a.a31 = v; a.a32 = v; a.a33 = v; a.a34 = v;
@@ -1264,7 +1264,7 @@ public class FixedOps4_D64 {
      * @param a A vector whose elements are about to be set. Modified.
      * @param v The value each element will have.
      */
-    public static void fill( FixedMatrix4_64F a , double v  ) {
+    public static void fill(FixedMatrix4_F64 a , double v  ) {
         a.a1 = v;
         a.a2 = v;
         a.a3 = v;
@@ -1278,8 +1278,8 @@ public class FixedOps4_D64 {
      * @param out output. Storage for the extracted row. If null then a new vector will be returned.
      * @return The extracted row.
      */
-    public static FixedMatrix4_64F extractRow( FixedMatrix4x4_64F a , int row , FixedMatrix4_64F out ) {
-        if( out == null) out = new FixedMatrix4_64F();
+    public static FixedMatrix4_F64 extractRow(FixedMatrix4x4_F64 a , int row , FixedMatrix4_F64 out ) {
+        if( out == null) out = new FixedMatrix4_F64();
         switch( row ) {
             case 0:
                 out.a1 = a.a11;
@@ -1318,8 +1318,8 @@ public class FixedOps4_D64 {
      * @param out output. Storage for the extracted column. If null then a new vector will be returned.
      * @return The extracted column.
      */
-    public static FixedMatrix4_64F extractColumn( FixedMatrix4x4_64F a , int column , FixedMatrix4_64F out ) {
-        if( out == null) out = new FixedMatrix4_64F();
+    public static FixedMatrix4_F64 extractColumn(FixedMatrix4x4_F64 a , int column , FixedMatrix4_F64 out ) {
+        if( out == null) out = new FixedMatrix4_F64();
         switch( column ) {
             case 0:
                 out.a1 = a.a11;

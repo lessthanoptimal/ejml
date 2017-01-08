@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 /**
@@ -26,7 +26,7 @@ import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
  *
  * @author Peter Abeles
  */
-public class RrefGaussJordanRowPivot_D64 implements ReducedRowEchelonForm_F64<DenseMatrix64F> {
+public class RrefGaussJordanRowPivot_D64 implements ReducedRowEchelonForm_F64<RowMatrix_F64> {
 
     // tolerance for singular matrix
     double tol;
@@ -37,7 +37,7 @@ public class RrefGaussJordanRowPivot_D64 implements ReducedRowEchelonForm_F64<De
     }
 
     @Override
-    public void reduce( DenseMatrix64F A , int coefficientColumns) {
+    public void reduce(RowMatrix_F64 A , int coefficientColumns) {
         if( A.numCols < coefficientColumns)
             throw new IllegalArgumentException("The system must be at least as wide as A");
 
@@ -93,7 +93,7 @@ public class RrefGaussJordanRowPivot_D64 implements ReducedRowEchelonForm_F64<De
         }
     }
 
-    protected static void swapRows( DenseMatrix64F A , int rowA , int rowB ) {
+    protected static void swapRows(RowMatrix_F64 A , int rowA , int rowB ) {
         int indexA = rowA*A.numCols;
         int indexB = rowB*A.numCols;
 

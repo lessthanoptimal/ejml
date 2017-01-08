@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,7 +62,7 @@ public class GeneratorBlockInnerMultiplication {
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
-                " * Matrix multiplication for the inner row major blocks, typically inside of a {@link org.ejml.data.BlockMatrix64F}.\n" +
+                " * Matrix multiplication for the inner row major blocks, typically inside of a {@link org.ejml.data.BlockMatrix_F64}.\n" +
                 " * </p>\n" +
                 " *\n" +
                 " * <p>\n" +

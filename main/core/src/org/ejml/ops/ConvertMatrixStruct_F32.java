@@ -34,7 +34,7 @@ public class ConvertMatrixStruct_F32 {
      * @param input Input matrix.
      * @param output Output matrix.
      */
-    public static void convert( RealMatrix32F input , RealMatrix32F output ) {
+    public static void convert(RealMatrix_F32 input , RealMatrix_F32 output ) {
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
         if( input.getNumCols() != output.getNumCols() )
@@ -48,15 +48,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix2x2_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix2x2_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix2x2_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix2x2_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(2,2);
+            output = new RowMatrix_F32(2,2);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -72,15 +72,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix3x3_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix3x3_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix3x3_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix3x3_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(3,3);
+            output = new RowMatrix_F32(3,3);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -101,15 +101,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix4x4_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix4x4_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix4x4_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix4x4_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(4,4);
+            output = new RowMatrix_F32(4,4);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -137,15 +137,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix5x5_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix5x5_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix5x5_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix5x5_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(5,5);
+            output = new RowMatrix_F32(5,5);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -182,15 +182,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix6x6_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix6x6_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix6x6_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix6x6_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(6,6);
+            output = new RowMatrix_F32(6,6);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -238,15 +238,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix2x2_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix2x2_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix2x2_32F convert( DenseMatrix32F input , FixedMatrix2x2_32F output ) {
+    public static FixedMatrix2x2_F32 convert(RowMatrix_F32 input , FixedMatrix2x2_F32 output ) {
         if( output == null)
-            output = new FixedMatrix2x2_32F();
+            output = new FixedMatrix2x2_F32();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -262,15 +262,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix3x3_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix3x3_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix3x3_32F convert( DenseMatrix32F input , FixedMatrix3x3_32F output ) {
+    public static FixedMatrix3x3_F32 convert(RowMatrix_F32 input , FixedMatrix3x3_F32 output ) {
         if( output == null)
-            output = new FixedMatrix3x3_32F();
+            output = new FixedMatrix3x3_F32();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -291,15 +291,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix4x4_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix4x4_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix4x4_32F convert( DenseMatrix32F input , FixedMatrix4x4_32F output ) {
+    public static FixedMatrix4x4_F32 convert(RowMatrix_F32 input , FixedMatrix4x4_F32 output ) {
         if( output == null)
-            output = new FixedMatrix4x4_32F();
+            output = new FixedMatrix4x4_F32();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -327,15 +327,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix5x5_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix5x5_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix5x5_32F convert( DenseMatrix32F input , FixedMatrix5x5_32F output ) {
+    public static FixedMatrix5x5_F32 convert(RowMatrix_F32 input , FixedMatrix5x5_F32 output ) {
         if( output == null)
-            output = new FixedMatrix5x5_32F();
+            output = new FixedMatrix5x5_F32();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -372,15 +372,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix6x6_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix6x6_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix6x6_32F convert( DenseMatrix32F input , FixedMatrix6x6_32F output ) {
+    public static FixedMatrix6x6_F32 convert(RowMatrix_F32 input , FixedMatrix6x6_F32 output ) {
         if( output == null)
-            output = new FixedMatrix6x6_32F();
+            output = new FixedMatrix6x6_F32();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -428,15 +428,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix2_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix2_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix2_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix2_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(2,1);
+            output = new RowMatrix_F32(2,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -451,15 +451,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix3_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix3_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix3_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix3_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(3,1);
+            output = new RowMatrix_F32(3,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -475,15 +475,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix4_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix4_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix4_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix4_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(4,1);
+            output = new RowMatrix_F32(4,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -500,15 +500,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix5_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix5_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix5_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix5_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(5,1);
+            output = new RowMatrix_F32(5,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -526,15 +526,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link FixedMatrix6_32F} into {@link DenseMatrix32F}.
+     * Converts {@link FixedMatrix6_F32} into {@link RowMatrix_F32}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( FixedMatrix6_32F input , DenseMatrix32F output ) {
+    public static RowMatrix_F32 convert(FixedMatrix6_F32 input , RowMatrix_F32 output ) {
         if( output == null)
-            output = new DenseMatrix32F(6,1);
+            output = new RowMatrix_F32(6,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -553,15 +553,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix2_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix2_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix2_32F convert( DenseMatrix32F input , FixedMatrix2_32F output ) {
+    public static FixedMatrix2_F32 convert(RowMatrix_F32 input , FixedMatrix2_F32 output ) {
         if( output == null)
-            output = new FixedMatrix2_32F();
+            output = new FixedMatrix2_F32();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -576,15 +576,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix3_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix3_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix3_32F convert( DenseMatrix32F input , FixedMatrix3_32F output ) {
+    public static FixedMatrix3_F32 convert(RowMatrix_F32 input , FixedMatrix3_F32 output ) {
         if( output == null)
-            output = new FixedMatrix3_32F();
+            output = new FixedMatrix3_F32();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -600,15 +600,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix4_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix4_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix4_32F convert( DenseMatrix32F input , FixedMatrix4_32F output ) {
+    public static FixedMatrix4_F32 convert(RowMatrix_F32 input , FixedMatrix4_F32 output ) {
         if( output == null)
-            output = new FixedMatrix4_32F();
+            output = new FixedMatrix4_F32();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -625,15 +625,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix5_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix5_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix5_32F convert( DenseMatrix32F input , FixedMatrix5_32F output ) {
+    public static FixedMatrix5_F32 convert(RowMatrix_F32 input , FixedMatrix5_F32 output ) {
         if( output == null)
-            output = new FixedMatrix5_32F();
+            output = new FixedMatrix5_F32();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -651,15 +651,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link FixedMatrix6_32F}
+     * Converts {@link RowMatrix_F32} into {@link FixedMatrix6_F32}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix6_32F convert( DenseMatrix32F input , FixedMatrix6_32F output ) {
+    public static FixedMatrix6_F32 convert(RowMatrix_F32 input , FixedMatrix6_F32 output ) {
         if( output == null)
-            output = new FixedMatrix6_32F();
+            output = new FixedMatrix6_F32();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -678,14 +678,14 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DenseMatrix32F} into {@link BlockMatrix32F}
+     * Converts {@link RowMatrix_F32} into {@link BlockMatrix_F32}
      *
      * Can't handle null output matrix since block size needs to be specified.
      *
      * @param src Input matrix.
      * @param dst Output matrix.
      */
-    public static void convert( DenseMatrix32F src , BlockMatrix32F dst ) {
+    public static void convert(RowMatrix_F32 src , BlockMatrix_F32 dst ) {
         if( src.numRows != dst.numRows || src.numCols != dst.numCols )
             throw new IllegalArgumentException("Must be the same size.");
 
@@ -708,18 +708,18 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link BlockMatrix32F} into {@link DenseMatrix32F}
+     * Converts {@link BlockMatrix_F32} into {@link RowMatrix_F32}
      *
      * @param src Input matrix.
      * @param dst Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DenseMatrix32F convert( BlockMatrix32F src , DenseMatrix32F dst ) {
+    public static RowMatrix_F32 convert(BlockMatrix_F32 src , RowMatrix_F32 dst ) {
         if( dst != null ) {
             if( dst.numRows != src.numRows || dst.numCols != src.numCols )
                 throw new IllegalArgumentException("Must be the same size.");
         } else {
-            dst = new DenseMatrix32F(src.numRows,src.numCols);
+            dst = new RowMatrix_F32(src.numRows,src.numCols);
         }
 
         for( int i = 0; i < src.numRows; i += src.blockLength ) {

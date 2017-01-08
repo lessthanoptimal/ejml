@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix6_64F;
-import org.ejml.data.FixedMatrix6x6_64F;
+import org.ejml.data.FixedMatrix6_F64;
+import org.ejml.data.FixedMatrix6x6_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,18 +36,18 @@ public class TestFixedOps6_D64 extends CompareFixedToCommonOps_D64 {
 
     @Test
     public void diag() {
-        FixedMatrix6x6_64F m = new FixedMatrix6x6_64F();
+        FixedMatrix6x6_F64 m = new FixedMatrix6x6_F64();
         for( int i = 0; i < 36; i++ )
             m.set(i/6,i%6,i+1);
-        FixedMatrix6_64F found = new FixedMatrix6_64F();
+        FixedMatrix6_F64 found = new FixedMatrix6_F64();
 
         FixedOps6_D64.diag(m,found);
 
-        assertEquals(1,found.a1, UtilEjml.TEST_64F);
-        assertEquals(8,found.a2, UtilEjml.TEST_64F);
-        assertEquals(15,found.a3,UtilEjml.TEST_64F);
-        assertEquals(22,found.a4,UtilEjml.TEST_64F);
-        assertEquals(29,found.a5,UtilEjml.TEST_64F);
-        assertEquals(36,found.a6,UtilEjml.TEST_64F);
+        assertEquals(1,found.a1, UtilEjml.TEST_F64);
+        assertEquals(8,found.a2, UtilEjml.TEST_F64);
+        assertEquals(15,found.a3,UtilEjml.TEST_F64);
+        assertEquals(22,found.a4,UtilEjml.TEST_F64);
+        assertEquals(29,found.a5,UtilEjml.TEST_F64);
+        assertEquals(36,found.a6,UtilEjml.TEST_F64);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -57,7 +57,7 @@ public class TestPrincipleComponentAnalysis {
         // as a more crude estimate is made of the input data the error should increase
         pca.computeBasis(N);
         double errorPrev = computeError(pca,obs);
-        assertEquals(errorPrev,0, UtilEjml.TEST_64F);
+        assertEquals(errorPrev,0, UtilEjml.TEST_F64);
 
         for( int i = N-1; i >= 1; i-- ) {
             pca.computeBasis(i);

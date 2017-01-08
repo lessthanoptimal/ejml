@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.SpecializedOps_D64;
 
@@ -53,8 +53,8 @@ public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract_D64 {
     protected int maxRows = -1;
     protected int maxCols = -1;
 
-    private DenseMatrix64F QR; // a column major QR matrix
-    private DenseMatrix64F U;
+    private RowMatrix_F64 QR; // a column major QR matrix
+    private RowMatrix_F64 U;
 
     /**
      * Creates a linear solver that uses QR decomposition.
@@ -76,7 +76,7 @@ public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract_D64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         if( A.numRows > maxRows || A.numCols > maxCols )
             setMaxSize(A.numRows,A.numCols);
 
@@ -102,7 +102,7 @@ public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract_D64 {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -167,7 +167,7 @@ public class LinearSolverQrHouseTran_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public QRDecomposition<DenseMatrix64F> getDecomposition() {
+    public QRDecomposition<RowMatrix_F64> getDecomposition() {
         return decomposer;
     }
 }

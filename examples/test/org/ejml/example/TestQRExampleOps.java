@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -45,19 +45,19 @@ public class TestQRExampleOps {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
 
         QRExampleOperations alg = new QRExampleOperations();
 
         alg.decompose(A);
 
-        DenseMatrix64F Q = alg.getQ();
-        DenseMatrix64F R = alg.getR();
+        RowMatrix_F64 Q = alg.getQ();
+        RowMatrix_F64 R = alg.getR();
 
-        DenseMatrix64F A_found = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 A_found = new RowMatrix_F64(numRows,numCols);
         CommonOps_D64.mult(Q,R,A_found);
 
-        assertTrue( MatrixFeatures_D64.isIdentical(A,A_found, UtilEjml.TEST_64F));
+        assertTrue( MatrixFeatures_D64.isIdentical(A,A_found, UtilEjml.TEST_F64));
     }
 
 

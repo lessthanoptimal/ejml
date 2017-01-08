@@ -26,7 +26,7 @@ import java.util.Random;
 
 /**
  * <p>
- * {@link SimpleMatrix} is a wrapper around {@link org.ejml.data.DenseMatrix64F} that provides an
+ * {@link SimpleMatrix} is a wrapper around {@link RowMatrix_F64} that provides an
  * easy to use object oriented interface for performing matrix operations.  It is designed to be
  * more accessible to novice programmers and provide a way to rapidly code up solutions by simplifying
  * memory management and providing easy to use functions.
@@ -42,11 +42,11 @@ import java.util.Random;
  * </p>
  *
  * <p>
- * Working with both {@link org.ejml.data.DenseMatrix64F} and SimpleMatrix in the same code base is easy.
- * To access the internal DenseMatrix64F in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
- * To turn a DenseMatrix64F into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}.  Not
+ * Working with both {@link RowMatrix_F64} and SimpleMatrix in the same code base is easy.
+ * To access the internal RowMatrix_F64 in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
+ * To turn a RowMatrix_F64 into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}.  Not
  * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
- * DenseMatrix64F.
+ * RowMatrix_F64.
  * </p>
  *
  * <p>
@@ -106,7 +106,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Both are equivalent.
      * </p>
      *
-     * @see DenseMatrix64F#DenseMatrix64F(int, int, boolean, double...)
+     * @see RowMatrix_F64#RowMatrix_F64(int, int, boolean, double...)
      *
      * @param numRows The number of rows.
      * @param numCols The number of columns.
@@ -114,11 +114,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data The formatted 1D array. Not modified.
      */
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double ...data) {
-        mat = new DenseMatrix64F(numRows,numCols, rowMajor, data);
+        mat = new RowMatrix_F64(numRows,numCols, rowMajor, data);
     }
 
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, float ...data) {
-        mat = new DenseMatrix32F(numRows,numCols, rowMajor, data);
+        mat = new RowMatrix_F32(numRows,numCols, rowMajor, data);
     }
 
     /**
@@ -129,31 +129,31 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * data[ row ][ column ]
      * </p>
      *
-     * @see org.ejml.data.DenseMatrix64F#DenseMatrix64F(double[][])
+     * @see RowMatrix_F64#RowMatrix_F64(double[][])
      *
      * @param data 2D array representation of the matrix. Not modified.
      */
     public SimpleMatrix(double data[][]) {
-        mat = new DenseMatrix64F(data);
+        mat = new RowMatrix_F64(data);
     }
 
     /**
      * Creates a new matrix that is initially set to zero with the specified dimensions.
      *
-     * @see org.ejml.data.DenseMatrix64F#DenseMatrix64F(int, int) 
+     * @see RowMatrix_F64#RowMatrix_F64(int, int)
      *
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
      */
     public SimpleMatrix(int numRows, int numCols) {
-        mat = new DenseMatrix64F(numRows, numCols);
+        mat = new RowMatrix_F64(numRows, numCols);
     }
 
     public SimpleMatrix(int numRows, int numCols, Class type) {
-        if( type == DenseMatrix64F.class )
-            mat = new DenseMatrix64F(numRows, numCols);
+        if( type == RowMatrix_F64.class )
+            mat = new RowMatrix_F64(numRows, numCols);
         else
-            mat = new DenseMatrix32F(numRows, numCols);
+            mat = new RowMatrix_F32(numRows, numCols);
     }
 
     /**
@@ -171,13 +171,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param orig The original matrix whose value is copied.  Not modified.
      */
     public SimpleMatrix( Matrix orig ) {
-        if( orig instanceof BlockMatrix64F ) {
-            DenseMatrix64F a = new DenseMatrix64F(orig.getNumRows(), orig.getNumCols());
-            ConvertMatrixStruct_F64.convert((BlockMatrix64F) orig, a);
+        if( orig instanceof BlockMatrix_F64) {
+            RowMatrix_F64 a = new RowMatrix_F64(orig.getNumRows(), orig.getNumCols());
+            ConvertMatrixStruct_F64.convert((BlockMatrix_F64) orig, a);
             this.mat = a;
-        } else if( orig instanceof BlockMatrix32F ) {
-            DenseMatrix32F a = new DenseMatrix32F(orig.getNumRows(),orig.getNumCols());
-            ConvertMatrixStruct_F32.convert((BlockMatrix32F)orig, a);
+        } else if( orig instanceof BlockMatrix_F32) {
+            RowMatrix_F32 a = new RowMatrix_F32(orig.getNumRows(),orig.getNumCols());
+            ConvertMatrixStruct_F32.convert((BlockMatrix_F32)orig, a);
             this.mat = a;
         } else {
             this.mat = orig.copy();
@@ -190,10 +190,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public SimpleMatrix(){}
 
     /**
-     * Creates a new SimpleMatrix with the specified DenseMatrix64F used as its internal matrix.  This means
-     * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in DenseMatrix64F.
+     * Creates a new SimpleMatrix with the specified RowMatrix_F64 used as its internal matrix.  This means
+     * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in RowMatrix_F64.
      *
-     * @param internalMat The internal DenseMatrix64F of the returned SimpleMatrix. Will be modified.
+     * @param internalMat The internal RowMatrix_F64 of the returned SimpleMatrix. Will be modified.
      */
     public static SimpleMatrix wrap( Matrix internalMat ) {
         SimpleMatrix ret = new SimpleMatrix();
@@ -212,7 +212,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width ) {
         SimpleMatrix ret = new SimpleMatrix(width,width);
 
-        CommonOps_D64.setIdentity((DenseMatrix64F)ret.mat);
+        CommonOps_D64.setIdentity((RowMatrix_F64)ret.mat);
 
         return ret;
     }
@@ -220,10 +220,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width , Class type) {
         SimpleMatrix ret = new SimpleMatrix(width,width, type);
 
-        if( type == DenseMatrix64F.class )
-            CommonOps_D64.setIdentity((DenseMatrix64F)ret.mat);
+        if( type == RowMatrix_F64.class )
+            CommonOps_D64.setIdentity((RowMatrix_F64)ret.mat);
         else
-            CommonOps_D32.setIdentity((DenseMatrix32F)ret.mat);
+            CommonOps_D32.setIdentity((RowMatrix_F32)ret.mat);
 
         return ret;
     }
@@ -244,14 +244,14 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @return A diagonal matrix.
      */
     public static SimpleMatrix diag( double ...vals ) {
-        DenseMatrix64F m = CommonOps_D64.diag(vals);
+        RowMatrix_F64 m = CommonOps_D64.diag(vals);
         SimpleMatrix ret = wrap(m);
         return ret;
     }
 
     public static SimpleMatrix diag( Class type, double ...vals ) {
         Matrix m;
-        if( type == DenseMatrix64F.class )
+        if( type == RowMatrix_F64.class )
             m = CommonOps_D64.diag(vals);
         else {
             float f[] = new float[ vals.length ];
@@ -269,7 +269,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
      * </p>
      *
-     * @see RandomMatrices_D64#setRandom(DenseMatrix64F,java.util.Random)
+     * @see RandomMatrices_D64#setRandom(RowMatrix_F64,java.util.Random)
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -279,13 +279,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix random_F64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices_D64.setRandom((DenseMatrix64F)ret.mat,minValue,maxValue,rand);
+        RandomMatrices_D64.setRandom((RowMatrix_F64)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
     public static SimpleMatrix random_F32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
-        SimpleMatrix ret = new SimpleMatrix(numRows,numCols, DenseMatrix32F.class);
-        RandomMatrices_D32.setRandom((DenseMatrix32F)ret.mat,minValue,maxValue,rand);
+        SimpleMatrix ret = new SimpleMatrix(numRows,numCols, RowMatrix_F32.class);
+        RandomMatrices_D32.setRandom((RowMatrix_F32)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
@@ -305,13 +305,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1);
 
         if( covariance.bits() == 64) {
-            CovarianceRandomDraw_D64 draw = new CovarianceRandomDraw_D64(random, (DenseMatrix64F)covariance.getMatrix());
+            CovarianceRandomDraw_D64 draw = new CovarianceRandomDraw_D64(random, (RowMatrix_F64)covariance.getMatrix());
 
-            draw.next((DenseMatrix64F)found.getMatrix());
+            draw.next((RowMatrix_F64)found.getMatrix());
         } else {
-            CovarianceRandomDraw_D32 draw = new CovarianceRandomDraw_D32(random, (DenseMatrix32F)covariance.getMatrix());
+            CovarianceRandomDraw_D32 draw = new CovarianceRandomDraw_D32(random, (RowMatrix_F32)covariance.getMatrix());
 
-            draw.next((DenseMatrix32F)found.getMatrix());
+            draw.next((RowMatrix_F32)found.getMatrix());
         }
 
         return found;
@@ -338,10 +338,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 //     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
 //     * </p>
 //     *
-//     * @see CommonOps#mult(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
-//     * @see CommonOps#multTransA(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
-//     * @see CommonOps#multTransB(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
-//     * @see CommonOps#multTransAB(DenseMatrix64F, DenseMatrix64F, DenseMatrix64F)
+//     * @see CommonOps#mult(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
+//     * @see CommonOps#multTransA(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
+//     * @see CommonOps#multTransB(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
+//     * @see CommonOps#multTransAB(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
 //     *
 //     * @param tranA If true matrix A is transposed.
 //     * @param tranB If true matrix B is transposed.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 
@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 public class TestTridiagonalDecompositionHouseholder_D64 extends StandardTridiagonalTests_D64 {
 
     @Override
-    protected TridiagonalSimilarDecomposition_F64<DenseMatrix64F> createDecomposition() {
+    protected TridiagonalSimilarDecomposition_F64<RowMatrix_F64> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_D64();
     }
 }

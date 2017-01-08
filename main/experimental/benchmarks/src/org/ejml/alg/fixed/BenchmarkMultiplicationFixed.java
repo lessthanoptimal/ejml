@@ -18,10 +18,10 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.FixedMatrix3x3_64F;
-import org.ejml.data.FixedMatrix4x4_64F;
-import org.ejml.data.FixedMatrix6x6_64F;
+import org.ejml.data.FixedMatrix3x3_F64;
+import org.ejml.data.FixedMatrix4x4_F64;
+import org.ejml.data.FixedMatrix6x6_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -38,32 +38,32 @@ import java.util.Random;
 public class BenchmarkMultiplicationFixed {
     private static Random rand = new Random(234);
 
-    private static DenseMatrix64F dm3x3_a = new DenseMatrix64F(3,3);
-    private static DenseMatrix64F dm3x3_b = new DenseMatrix64F(3,3);
-    private static DenseMatrix64F dm3x3_c = new DenseMatrix64F(3,3);
+    private static RowMatrix_F64 dm3x3_a = new RowMatrix_F64(3,3);
+    private static RowMatrix_F64 dm3x3_b = new RowMatrix_F64(3,3);
+    private static RowMatrix_F64 dm3x3_c = new RowMatrix_F64(3,3);
 
-    private static DenseMatrix64F dm4x4_a = new DenseMatrix64F(4,4);
-    private static DenseMatrix64F dm4x4_b = new DenseMatrix64F(4,4);
-    private static DenseMatrix64F dm4x4_c = new DenseMatrix64F(4,4);
+    private static RowMatrix_F64 dm4x4_a = new RowMatrix_F64(4,4);
+    private static RowMatrix_F64 dm4x4_b = new RowMatrix_F64(4,4);
+    private static RowMatrix_F64 dm4x4_c = new RowMatrix_F64(4,4);
 
-    private static DenseMatrix64F dm6x6_a = new DenseMatrix64F(6,6);
-    private static DenseMatrix64F dm6x6_b = new DenseMatrix64F(6,6);
-    private static DenseMatrix64F dm6x6_c = new DenseMatrix64F(6,6);
+    private static RowMatrix_F64 dm6x6_a = new RowMatrix_F64(6,6);
+    private static RowMatrix_F64 dm6x6_b = new RowMatrix_F64(6,6);
+    private static RowMatrix_F64 dm6x6_c = new RowMatrix_F64(6,6);
 
 
-    private static FixedMatrix3x3_64F fixed3x3_a = new FixedMatrix3x3_64F();
-    private static FixedMatrix3x3_64F fixed3x3_b = new FixedMatrix3x3_64F();
-    private static FixedMatrix3x3_64F fixed3x3_c = new FixedMatrix3x3_64F();
+    private static FixedMatrix3x3_F64 fixed3x3_a = new FixedMatrix3x3_F64();
+    private static FixedMatrix3x3_F64 fixed3x3_b = new FixedMatrix3x3_F64();
+    private static FixedMatrix3x3_F64 fixed3x3_c = new FixedMatrix3x3_F64();
 
-    private static FixedMatrix4x4_64F fixed4x4_a = new FixedMatrix4x4_64F();
-    private static FixedMatrix4x4_64F fixed4x4_b = new FixedMatrix4x4_64F();
-    private static FixedMatrix4x4_64F fixed4x4_c = new FixedMatrix4x4_64F();
+    private static FixedMatrix4x4_F64 fixed4x4_a = new FixedMatrix4x4_F64();
+    private static FixedMatrix4x4_F64 fixed4x4_b = new FixedMatrix4x4_F64();
+    private static FixedMatrix4x4_F64 fixed4x4_c = new FixedMatrix4x4_F64();
 
-    private static FixedMatrix6x6_64F fixed6x6_a = new FixedMatrix6x6_64F();
-    private static FixedMatrix6x6_64F fixed6x6_b = new FixedMatrix6x6_64F();
-    private static FixedMatrix6x6_64F fixed6x6_c = new FixedMatrix6x6_64F();
+    private static FixedMatrix6x6_F64 fixed6x6_a = new FixedMatrix6x6_F64();
+    private static FixedMatrix6x6_F64 fixed6x6_b = new FixedMatrix6x6_F64();
+    private static FixedMatrix6x6_F64 fixed6x6_c = new FixedMatrix6x6_F64();
 
-    public static long benchmark(DenseMatrix64F a, DenseMatrix64F b , DenseMatrix64F c , int numTrials ) {
+    public static long benchmark(RowMatrix_F64 a, RowMatrix_F64 b , RowMatrix_F64 c , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -74,7 +74,7 @@ public class BenchmarkMultiplicationFixed {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(FixedMatrix3x3_64F a, FixedMatrix3x3_64F b , FixedMatrix3x3_64F c , int numTrials ) {
+    public static long benchmark(FixedMatrix3x3_F64 a, FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -85,7 +85,7 @@ public class BenchmarkMultiplicationFixed {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(FixedMatrix4x4_64F a, FixedMatrix4x4_64F b , FixedMatrix4x4_64F c , int numTrials ) {
+    public static long benchmark(FixedMatrix4x4_F64 a, FixedMatrix4x4_F64 b , FixedMatrix4x4_F64 c , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -96,7 +96,7 @@ public class BenchmarkMultiplicationFixed {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(FixedMatrix6x6_64F a, FixedMatrix6x6_64F b , FixedMatrix6x6_64F c , int numTrials ) {
+    public static long benchmark(FixedMatrix6x6_F64 a, FixedMatrix6x6_F64 b , FixedMatrix6x6_F64 c , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 

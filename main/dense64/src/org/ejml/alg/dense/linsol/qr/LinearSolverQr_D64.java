@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.SpecializedOps_D64;
@@ -42,21 +42,21 @@ import org.ejml.ops.SpecializedOps_D64;
  */
 public class LinearSolverQr_D64 extends LinearSolverAbstract_D64 {
 
-    private QRDecomposition<DenseMatrix64F> decomposer;
+    private QRDecomposition<RowMatrix_F64> decomposer;
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
-    protected DenseMatrix64F Q;
-    protected DenseMatrix64F R;
+    protected RowMatrix_F64 Q;
+    protected RowMatrix_F64 R;
 
-    private DenseMatrix64F Y,Z;
+    private RowMatrix_F64 Y,Z;
 
     /**
      * Creates a linear solver that uses QR decomposition.
      *
      */
-    public LinearSolverQr_D64(QRDecomposition<DenseMatrix64F> decomposer) {
+    public LinearSolverQr_D64(QRDecomposition<RowMatrix_F64> decomposer) {
         this.decomposer = decomposer;
     }
 
@@ -70,11 +70,11 @@ public class LinearSolverQr_D64 extends LinearSolverAbstract_D64 {
     {
         this.maxRows = maxRows; this.maxCols = maxCols;
 
-        Q = new DenseMatrix64F(maxRows,maxRows);
-        R = new DenseMatrix64F(maxRows,maxCols);
+        Q = new RowMatrix_F64(maxRows,maxRows);
+        R = new RowMatrix_F64(maxRows,maxCols);
 
-        Y = new DenseMatrix64F(maxRows,1);
-        Z = new DenseMatrix64F(maxRows,1);
+        Y = new RowMatrix_F64(maxRows,1);
+        Z = new RowMatrix_F64(maxRows,1);
     }
 
     /**
@@ -83,7 +83,7 @@ public class LinearSolverQr_D64 extends LinearSolverAbstract_D64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         if( A.numRows > maxRows || A.numCols > maxCols ) {
             setMaxSize(A.numRows,A.numCols);
         }
@@ -112,7 +112,7 @@ public class LinearSolverQr_D64 extends LinearSolverAbstract_D64 {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -156,19 +156,19 @@ public class LinearSolverQr_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public QRDecomposition<DenseMatrix64F> getDecomposition() {
+    public QRDecomposition<RowMatrix_F64> getDecomposition() {
         return decomposer;
     }
 
-    public QRDecomposition<DenseMatrix64F> getDecomposer() {
+    public QRDecomposition<RowMatrix_F64> getDecomposer() {
         return decomposer;
     }
 
-    public DenseMatrix64F getQ() {
+    public RowMatrix_F64 getQ() {
         return Q;
     }
 
-    public DenseMatrix64F getR() {
+    public RowMatrix_F64 getR() {
         return R;
     }
 }

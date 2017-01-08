@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_D64;
 import org.ejml.alg.dense.linsol.GenericSolvePseudoInverseChecks_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
@@ -34,13 +34,13 @@ public class TestSolveLinearSolverQrpHouseCol_D64 extends GenericLinearSolverChe
     }
 
     @Override
-    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A ) {
         return new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),true);
     }
 
     @Test
     public void checkSingularBasic() {
-        LinearSolver<DenseMatrix64F> solver =
+        LinearSolver<RowMatrix_F64> solver =
                 new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),true);
         GenericSolvePseudoInverseChecks_D64 checks = new GenericSolvePseudoInverseChecks_D64(solver);
 
@@ -49,7 +49,7 @@ public class TestSolveLinearSolverQrpHouseCol_D64 extends GenericLinearSolverChe
 
     @Test
     public void checkSingularFull() {
-        LinearSolver<DenseMatrix64F> solver =
+        LinearSolver<RowMatrix_F64> solver =
                 new LinearSolverQrpHouseCol_D64(new QRColPivDecompositionHouseholderColumn_D64(),false);
         GenericSolvePseudoInverseChecks_D64 checks = new GenericSolvePseudoInverseChecks_D64(solver);
 

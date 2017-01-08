@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkLuDecomposition {
 
 
-    public static void benchmark( LUDecomposition<DenseMatrix64F> lu , DenseMatrix64F orig , int numTrials ) {
+    public static void benchmark(LUDecomposition<RowMatrix_F64> lu , RowMatrix_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
         for( long i = 0; i < numTrials; i++ ) {
@@ -47,7 +47,7 @@ public class BenchmarkLuDecomposition {
     }
 
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
         benchmark(new LUDecompositionAlt_D64(),mat,numTrials);
         benchmark(new LUDecompositionNR_D64(),mat,numTrials);
@@ -66,7 +66,7 @@ public class BenchmarkLuDecomposition {
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
 //            System.out.print("* Creating matrix ");
-            DenseMatrix64F symMat = RandomMatrices_D64.createRandom(w,w,-1,1,rand);
+            RowMatrix_F64 symMat = RandomMatrices_D64.createRandom(w,w,-1,1,rand);
 //            System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

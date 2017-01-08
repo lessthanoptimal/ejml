@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -38,7 +38,7 @@ import org.ejml.ops.CommonOps_D64;
  * @author Peter Abeles
  */
 public class SvdImplicitQrDecompose_Ultimate
-        implements SingularValueDecomposition_F64<DenseMatrix64F> {
+        implements SingularValueDecomposition_F64<RowMatrix_F64> {
 
     private int numRows;
     private int numCols;
@@ -50,8 +50,8 @@ public class SvdImplicitQrDecompose_Ultimate
     private double diag[];
     private double off[];
 
-    private DenseMatrix64F Ut;
-    private DenseMatrix64F Vt;
+    private RowMatrix_F64 Ut;
+    private RowMatrix_F64 Vt;
 
     private double singularValues[];
     private int numSingular;
@@ -72,7 +72,7 @@ public class SvdImplicitQrDecompose_Ultimate
     private double offOld[];
 
     // Either a copy of the input matrix or a copy of it transposed
-    private DenseMatrix64F A_mod = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 A_mod = new RowMatrix_F64(1,1);
 
     public SvdImplicitQrDecompose_Ultimate( boolean compact , boolean computeU , boolean computeV  ) {
         this.compact = compact;
@@ -96,38 +96,38 @@ public class SvdImplicitQrDecompose_Ultimate
     }
 
     @Override
-    public DenseMatrix64F getU(DenseMatrix64F U , boolean transpose) {
+    public RowMatrix_F64 getU(RowMatrix_F64 U , boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
         if( transpose )
             return Ut;
 
-        U = new DenseMatrix64F(Ut.numCols,Ut.numRows);
+        U = new RowMatrix_F64(Ut.numCols,Ut.numRows);
         CommonOps_D64.transpose(Ut,U);
 
         return U;
     }
 
     @Override
-    public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose ) {
+    public RowMatrix_F64 getV(RowMatrix_F64 V , boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
         if( transpose )
             return Vt;
 
-        V = new DenseMatrix64F(Vt.numCols,Vt.numRows);
+        V = new RowMatrix_F64(Vt.numCols,Vt.numRows);
         CommonOps_D64.transpose(Vt,V);
 
         return V;
     }
 
     @Override
-    public DenseMatrix64F getW( DenseMatrix64F W ) {
+    public RowMatrix_F64 getW(RowMatrix_F64 W ) {
         int m = compact ? numSingular : numRows;
         int n = compact ? numSingular : numCols;
 
         if( W == null )
-            W = new DenseMatrix64F(m,n);
+            W = new RowMatrix_F64(m,n);
         else {
             W.reshape(m,n, false);
             W.zero();
@@ -141,7 +141,7 @@ public class SvdImplicitQrDecompose_Ultimate
     }
 
     @Override
-    public boolean decompose(DenseMatrix64F orig) {
+    public boolean decompose(RowMatrix_F64 orig) {
         boolean transposed = orig.numCols > orig.numRows;
 
         init(orig, transposed);
@@ -166,7 +166,7 @@ public class SvdImplicitQrDecompose_Ultimate
         return false;
     }
 
-    private void init(DenseMatrix64F orig, boolean transposed) {
+    private void init(RowMatrix_F64 orig, boolean transposed) {
         if( transposed ) {
             computeU = prefComputeV;
             computeV = prefComputeU;
@@ -222,14 +222,14 @@ public class SvdImplicitQrDecompose_Ultimate
 //        System.out.println("  bidiag UV "+(pointB-pointA)+" qr UV "+(pointC-pointB));
 
         if( transposed ) {
-            DenseMatrix64F temp = Vt;
+            RowMatrix_F64 temp = Vt;
             Vt = Ut;
             Ut = temp;
         }
         return false;
     }
 
-    private boolean computeSingularValues(DenseMatrix64F orig, boolean transposed) {
+    private boolean computeSingularValues(RowMatrix_F64 orig, boolean transposed) {
 //        long pointA = System.currentTimeMillis();
 
         // change the matrix to bidiagonal form
@@ -259,7 +259,7 @@ public class SvdImplicitQrDecompose_Ultimate
         return ret;
     }
 
-    private boolean bidiagonalization(DenseMatrix64F orig, boolean transposed) {
+    private boolean bidiagonalization(RowMatrix_F64 orig, boolean transposed) {
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
             CommonOps_D64.transpose(orig,A_mod);

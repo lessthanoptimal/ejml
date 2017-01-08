@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_CD64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
@@ -39,7 +39,7 @@ public class LinearSolverFactory_CD64 {
      * @param matrixSize Approximate of rows and columns
      * @return Linear solver
      */
-    public static LinearSolver<CDenseMatrix64F> lu( int matrixSize ) {
+    public static LinearSolver<RowMatrix_C64> lu(int matrixSize ) {
         return new LinearSolverLu_CD64(new LUDecompositionAlt_CD64());
     }
 
@@ -49,7 +49,7 @@ public class LinearSolverFactory_CD64 {
      * @param matrixSize Approximate of rows and columns
      * @return Linear solver
      */
-    public static LinearSolver<CDenseMatrix64F> chol( int matrixSize ) {
+    public static LinearSolver<RowMatrix_C64> chol(int matrixSize ) {
         return new LinearSolverChol_CD64(new CholeskyDecompositionInner_CD64());
     }
 
@@ -60,7 +60,7 @@ public class LinearSolverFactory_CD64 {
      * @param numCols Approximate of columns
      * @return Linear solver
      */
-    public static LinearSolver<CDenseMatrix64F> qr(  int numRows , int numCols ) {
+    public static LinearSolver<RowMatrix_C64> qr(int numRows , int numCols ) {
         return new LinearSolverQrHouseCol_CD64();
     }
 }

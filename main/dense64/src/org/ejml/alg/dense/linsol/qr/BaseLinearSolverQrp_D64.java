@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -67,27 +67,27 @@ import org.ejml.ops.SpecializedOps_D64;
  */
 public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
 
-    QRPDecomposition_F64<DenseMatrix64F> decomposition;
+    QRPDecomposition_F64<RowMatrix_F64> decomposition;
 
     // if true then only the basic solution will be found
     protected boolean norm2Solution;
 
-    protected DenseMatrix64F Y = new DenseMatrix64F(1,1);
-    protected DenseMatrix64F R = new DenseMatrix64F(1,1);
+    protected RowMatrix_F64 Y = new RowMatrix_F64(1,1);
+    protected RowMatrix_F64 R = new RowMatrix_F64(1,1);
     
     // stores sub-matrices inside the R matrix
-    protected DenseMatrix64F R11 = new DenseMatrix64F(1,1);
+    protected RowMatrix_F64 R11 = new RowMatrix_F64(1,1);
     
     // store an identity matrix for computing the inverse
-    protected DenseMatrix64F I = new DenseMatrix64F(1,1);
+    protected RowMatrix_F64 I = new RowMatrix_F64(1,1);
 
     // rank of the system matrix
     protected int rank;
 
-    protected LinearSolver<DenseMatrix64F> internalSolver = LinearSolverFactory_D64.leastSquares(1, 1);
+    protected LinearSolver<RowMatrix_F64> internalSolver = LinearSolverFactory_D64.leastSquares(1, 1);
 
     // used to compute optimal 2-norm solution
-    private DenseMatrix64F W = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 W = new RowMatrix_F64(1,1);
 
     /**
      * Configures internal parameters.
@@ -95,18 +95,18 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
      * @param decomposition Used to solve the linear system.
      * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
      */
-    protected BaseLinearSolverQrp_D64(QRPDecomposition_F64<DenseMatrix64F> decomposition,
+    protected BaseLinearSolverQrp_D64(QRPDecomposition_F64<RowMatrix_F64> decomposition,
                                       boolean norm2Solution)
     {
         this.decomposition = decomposition;
         this.norm2Solution = norm2Solution;
 
         if( internalSolver.modifiesA() )
-            internalSolver = new LinearSolverSafe<DenseMatrix64F>(internalSolver);
+            internalSolver = new LinearSolverSafe<RowMatrix_F64>(internalSolver);
     }
 
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         _setA(A);
 
         if( !decomposition.decompose(A) )
@@ -165,8 +165,8 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
      *
      * @param X basic solution, also output solution
      */
-    protected void upgradeSolution( DenseMatrix64F X ) {
-        DenseMatrix64F z = Y; // recycle Y
+    protected void upgradeSolution( RowMatrix_F64 X ) {
+        RowMatrix_F64 z = Y; // recycle Y
 
         // compute the z which will minimize the 2-norm of X
         // because of the identity matrix tacked onto the end 'A' should never be singular
@@ -180,7 +180,7 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public void invert(DenseMatrix64F A_inv) {
+    public void invert(RowMatrix_F64 A_inv) {
         if( A_inv.numCols != numRows || A_inv.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for A_inv");
 
@@ -190,7 +190,7 @@ public abstract class BaseLinearSolverQrp_D64 extends LinearSolverAbstract_D64 {
         solve(I, A_inv);
     }
 
-    public QRPDecomposition_F64<DenseMatrix64F> getDecomposition() {
+    public QRPDecomposition_F64<RowMatrix_F64> getDecomposition() {
         return decomposition;
     }
 }

@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -35,21 +35,21 @@ public class TestRandomMatrices_CD64 {
 
     @Test
     public void createRandom_min_max() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(30,20,-1,1,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
 
     @Test
     public void setRandom() {
-        CDenseMatrix64F A = new CDenseMatrix64F(5,4);
+        RowMatrix_C64 A = new RowMatrix_C64(5,4);
 
         RandomMatrices_CD64.setRandom(A,rand);
 
         checkRandom1(A);
     }
 
-    private void checkRandom1(CDenseMatrix64F a) {
+    private void checkRandom1(RowMatrix_C64 a) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
@@ -76,13 +76,13 @@ public class TestRandomMatrices_CD64 {
 
     @Test
     public void setRandom_min_max() {
-        CDenseMatrix64F A = new CDenseMatrix64F(30,20);
+        RowMatrix_C64 A = new RowMatrix_C64(30,20);
         RandomMatrices_CD64.setRandom(A,-1,1,rand);
 
         checkRandomRange(A);
     }
 
-    private void checkRandomRange(CDenseMatrix64F a) {
+    private void checkRandomRange(RowMatrix_C64 a) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -125,7 +125,7 @@ public class TestRandomMatrices_CD64 {
     @Test
     public void createHermPosDef() {
         for( int i = 1; i < 20; i++ ) {
-            CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(i, rand);
+            RowMatrix_C64 A = RandomMatrices_CD64.createHermPosDef(i, rand);
 
             assertTrue(MatrixFeatures_CD64.isPositiveDefinite(A));
         }
@@ -133,9 +133,9 @@ public class TestRandomMatrices_CD64 {
 
     @Test
     public void createHermitian() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(10, -1, 1, rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createHermitian(10, -1, 1, rand);
 
-        assertTrue(MatrixFeatures_CD64.isHermitian(A, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isHermitian(A, UtilEjml.TEST_F64));
 
         // see if it has the expected range of elements
         double min = CommonOps_CD64.elementMinReal(A);
@@ -154,9 +154,9 @@ public class TestRandomMatrices_CD64 {
 //    @Test
 //    public void createUpperTriangle() {
 //        for( int hess = 0; hess < 3; hess++ ) {
-//            CDenseMatrix64F A = RandomMatrices_CD64.createUpperTriangle(10,hess,-1,1,rand);
+//            RowMatrix_C64 A = RandomMatrices_CD64.createUpperTriangle(10,hess,-1,1,rand);
 //
-//            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,UtilEjml.TEST_64F));
+//            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,UtilEjml.TEST_F64));
 //
 //            // quick sanity check to make sure it could be proper
 //            assertTrue(A.get(hess,0) != 0 );

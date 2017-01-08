@@ -21,7 +21,7 @@ package org.ejml.factory;
 import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CD64;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
@@ -47,7 +47,7 @@ public class DecompositionFactory_CD64 {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition_F64<CDenseMatrix64F> lu(int numRows , int numCols ) {
+    public static LUDecomposition_F64<RowMatrix_C64> lu(int numRows , int numCols ) {
         return new LUDecompositionAlt_CD64();
     }
 
@@ -60,7 +60,7 @@ public class DecompositionFactory_CD64 {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRDecomposition
      */
-    public static QRDecomposition<CDenseMatrix64F> qr( int numRows , int numCols ) {
+    public static QRDecomposition<RowMatrix_C64> qr(int numRows , int numCols ) {
         return new QRDecompositionHouseholderColumn_CD64();
     }
 
@@ -73,14 +73,14 @@ public class DecompositionFactory_CD64 {
      * @param lower if true then it will be a lower cholesky.  false for upper.  Try lower.
      * @return QRDecomposition
      */
-    public static CholeskyDecomposition_F64<CDenseMatrix64F> chol(int size , boolean lower ) {
+    public static CholeskyDecomposition_F64<RowMatrix_C64> chol(int size , boolean lower ) {
         return new CholeskyDecompositionInner_CD64(lower);
     }
 
     /**
      * Decomposes the input matrix 'a' and makes sure it isn't modified.
      */
-    public static boolean decomposeSafe(DecompositionInterface<CDenseMatrix64F> decomposition, CDenseMatrix64F a) {
+    public static boolean decomposeSafe(DecompositionInterface<RowMatrix_C64> decomposition, RowMatrix_C64 a) {
 
         if( decomposition.inputModified() ) {
             a = a.copy();

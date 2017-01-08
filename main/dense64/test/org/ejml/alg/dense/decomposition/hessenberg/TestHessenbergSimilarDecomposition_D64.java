@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -41,25 +41,25 @@ public class TestHessenbergSimilarDecomposition_D64 {
      */
     @Test
     public void testItAllTogether() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,5,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5,5,rand);
 
         checkItAll(A);
     }
 
-    private void checkItAll(DenseMatrix64F A) {
+    private void checkItAll(RowMatrix_F64 A) {
         HessenbergSimilarDecomposition_D64 decomp = new HessenbergSimilarDecomposition_D64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
 
-        DenseMatrix64F Q = decomp.getQ(null);
-        DenseMatrix64F H = decomp.getH(null);
+        RowMatrix_F64 Q = decomp.getQ(null);
+        RowMatrix_F64 H = decomp.getH(null);
 //        System.out.println("-------- H ---------");
 //        UtilEjml.print(H,"%8.2e");
 //        System.out.println("-------- Q ---------");
 //        UtilEjml.print(Q,"%8.2e");
-        assertTrue(MatrixFeatures_D64.isOrthogonal(Q, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isOrthogonal(Q, UtilEjml.TEST_F64));
 
-        DenseMatrix64F temp0 = new DenseMatrix64F(5,5);
+        RowMatrix_F64 temp0 = new RowMatrix_F64(5,5);
 
         CommonOps_D64.mult(Q,H,temp0);
         CommonOps_D64.multTransB(temp0,Q,H);
@@ -71,7 +71,7 @@ public class TestHessenbergSimilarDecomposition_D64 {
 
         assertTrue(!MatrixFeatures_D64.hasUncountable(H));
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A,H,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A,H,UtilEjml.TEST_F64));
     }
 
     /**
@@ -79,8 +79,8 @@ public class TestHessenbergSimilarDecomposition_D64 {
      */
     @Test
     public void testInputUnmodified() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(4,4,rand);
-        DenseMatrix64F B = A.copy();
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(4,4,rand);
+        RowMatrix_F64 B = A.copy();
 
         HessenbergSimilarDecomposition_D64 decomp = new HessenbergSimilarDecomposition_D64(A.numRows);
 
@@ -94,13 +94,13 @@ public class TestHessenbergSimilarDecomposition_D64 {
      */
 //    @Test
 //    public void testNoChange() {
-//        DenseMatrix64F A = RandomMatrices.createUpperTriangle(4,1,-1,1,rand);
+//        RowMatrix_F64 A = RandomMatrices.createUpperTriangle(4,1,-1,1,rand);
 //
 //        HessenbergSimilarDecomposition decomp = new HessenbergSimilarDecomposition(A.numRows);
 //
 //        assertTrue(decomp.decompose(A));
 //
-//        DenseMatrix64F H = decomp.getH(null);
+//        RowMatrix_F64 H = decomp.getH(null);
 //
 //        assertTrue(MatrixFeatures.isIdentical(A,H,0));
 //    }
@@ -114,20 +114,20 @@ public class TestHessenbergSimilarDecomposition_D64 {
     public void testHouseholderVectors()
     {
         int N = 5;
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,rand);
-        DenseMatrix64F B = new DenseMatrix64F(N,N);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,rand);
+        RowMatrix_F64 B = new RowMatrix_F64(N,N);
 
         HessenbergSimilarDecomposition_D64 decomp = new HessenbergSimilarDecomposition_D64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
         
-        DenseMatrix64F QH = decomp.getQH();
+        RowMatrix_F64 QH = decomp.getQH();
 //        System.out.println("------------ QH -----------");
 //        UtilEjml.print(QH);
 
         double gammas[] = decomp.getGammas();
 
-        DenseMatrix64F u = new DenseMatrix64F(N,1);
+        RowMatrix_F64 u = new RowMatrix_F64(N,1);
 
 //        UtilEjml.print(A);
 //        System.out.println("-------------------");
@@ -139,7 +139,7 @@ public class TestHessenbergSimilarDecomposition_D64 {
                 u.data[j] = QH.get(j,i);
             }
 
-            DenseMatrix64F Q = SpecializedOps_D64.createReflector(u,gammas[i]);
+            RowMatrix_F64 Q = SpecializedOps_D64.createReflector(u,gammas[i]);
             CommonOps_D64.multTransA(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
@@ -149,10 +149,10 @@ public class TestHessenbergSimilarDecomposition_D64 {
 //            UtilEjml.print(B);
 
             for( int j = 0; j < i+2; j++ ) {
-                assertTrue(Math.abs(B.get(j,i))>UtilEjml.TEST_64F);
+                assertTrue(Math.abs(B.get(j,i))>UtilEjml.TEST_F64);
             }
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,B.get(j,i),UtilEjml.TEST_64F);
+                assertEquals(0,B.get(j,i),UtilEjml.TEST_F64);
             }
             CommonOps_D64.mult(B,Q,A);
 
@@ -168,21 +168,21 @@ public class TestHessenbergSimilarDecomposition_D64 {
     @Test
     public void testH() {
         int N = 5;
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N,rand);
 
         HessenbergSimilarDecomposition_D64 decomp = new HessenbergSimilarDecomposition_D64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
 
-        DenseMatrix64F QH = decomp.getQH();
+        RowMatrix_F64 QH = decomp.getQH();
 
         double gammas[] = decomp.getGammas();
 
-        DenseMatrix64F u = new DenseMatrix64F(N,1);
+        RowMatrix_F64 u = new RowMatrix_F64(N,1);
 
 
-        DenseMatrix64F Q = CommonOps_D64.identity(N);
-        DenseMatrix64F temp = new DenseMatrix64F(N,N);
+        RowMatrix_F64 Q = CommonOps_D64.identity(N);
+        RowMatrix_F64 temp = new RowMatrix_F64(N,N);
 
         for( int i = N-2; i >= 0; i-- ) {
             u.zero();
@@ -191,23 +191,23 @@ public class TestHessenbergSimilarDecomposition_D64 {
                 u.data[j] = QH.get(j,i);
             }
 
-            DenseMatrix64F Qi = SpecializedOps_D64.createReflector(u,gammas[i]);
+            RowMatrix_F64 Qi = SpecializedOps_D64.createReflector(u,gammas[i]);
 
             CommonOps_D64.mult(Qi,Q,temp);
             Q.set(temp);
         }
-        DenseMatrix64F expectedH = new DenseMatrix64F(N,N);
+        RowMatrix_F64 expectedH = new RowMatrix_F64(N,N);
 
         CommonOps_D64.multTransA(Q,A,temp);
         CommonOps_D64.mult(temp,Q,expectedH);
 
 //        UtilEjml.print(expectedH);
 
-        DenseMatrix64F foundH = decomp.getH(null);
+        RowMatrix_F64 foundH = decomp.getH(null);
 
 //        UtilEjml.print(foundH);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(expectedH,foundH,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(expectedH,foundH,UtilEjml.TEST_F64));
 
         System.out.println();
     }

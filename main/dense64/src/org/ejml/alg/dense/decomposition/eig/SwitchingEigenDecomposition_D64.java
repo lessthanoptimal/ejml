@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -34,18 +34,18 @@ import org.ejml.ops.MatrixFeatures_D64;
  * @author Peter Abeles
  */
 public class SwitchingEigenDecomposition_D64
-        implements EigenDecomposition_F64<DenseMatrix64F> {
+        implements EigenDecomposition_F64<RowMatrix_F64> {
     // tolerance used in deciding if a matrix is symmetric or not
     private double tol;
 
-    EigenDecomposition_F64<DenseMatrix64F> symmetricAlg;
-    EigenDecomposition_F64<DenseMatrix64F> generalAlg;
+    EigenDecomposition_F64<RowMatrix_F64> symmetricAlg;
+    EigenDecomposition_F64<RowMatrix_F64> generalAlg;
 
     boolean symmetric;
     // should it compute eigenvectors or just eigenvalues?
     boolean computeVectors;
 
-    DenseMatrix64F A = new DenseMatrix64F(1,1);
+    RowMatrix_F64 A = new RowMatrix_F64(1,1);
 
     /**
      *
@@ -60,7 +60,7 @@ public class SwitchingEigenDecomposition_D64
     }
 
     public SwitchingEigenDecomposition_D64(int matrixSize ) {
-        this(matrixSize,true, UtilEjml.TEST_64F);
+        this(matrixSize,true, UtilEjml.TEST_F64);
     }
 
     @Override
@@ -70,13 +70,13 @@ public class SwitchingEigenDecomposition_D64
     }
 
     @Override
-    public Complex64F getEigenvalue(int index) {
+    public Complex_F64 getEigenvalue(int index) {
         return symmetric ? symmetricAlg.getEigenvalue(index) :
                 generalAlg.getEigenvalue(index);
     }
 
     @Override
-    public DenseMatrix64F getEigenVector(int index) {
+    public RowMatrix_F64 getEigenVector(int index) {
         if( !computeVectors )
             throw new IllegalArgumentException("Configured to not compute eignevectors");
 
@@ -85,7 +85,7 @@ public class SwitchingEigenDecomposition_D64
     }
 
     @Override
-    public boolean decompose(DenseMatrix64F orig) {
+    public boolean decompose(RowMatrix_F64 orig) {
         A.set(orig);
 
         symmetric = MatrixFeatures_D64.isSymmetric(A,tol);

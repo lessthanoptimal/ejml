@@ -18,8 +18,8 @@
 
 package org.ejml;
 
-import org.ejml.data.DenseMatrix32F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F32;
+import org.ejml.data.RowMatrix_F64;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -49,12 +49,12 @@ public class UtilEjml {
     public static float F_PId2 = (float)(Math.PI/2.0);
 
     // tolerances for unit tests
-    public static float TEST_32F = 1e-4f;
-    public static double TEST_64F = 1e-8;
-    public static float TESTP_32F = 1e-6f;
-    public static double TESTP_64F = 1e-12;
-    public static float TEST_32F_SQ = (float)Math.sqrt(TEST_32F);
-    public static double TEST_64F_SQ = Math.sqrt(TEST_64F);
+    public static float TEST_F32 = 1e-4f;
+    public static double TEST_F64 = 1e-8;
+    public static float TESTP_F32 = 1e-6f;
+    public static double TESTP_F64 = 1e-12;
+    public static float TEST_F32_SQ = (float)Math.sqrt(TEST_F32);
+    public static double TEST_F64_SQ = Math.sqrt(TEST_F64);
 
     // The maximize size it will do inverse on
     public static int maxInverseSize = 5;
@@ -117,7 +117,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static DenseMatrix64F parseD64(String s , int numColumns )
+    public static RowMatrix_F64 parseD64(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 
@@ -127,7 +127,7 @@ public class UtilEjml {
         // covert it from string to doubles
         int numRows = (vals.length-start) / numColumns;
 
-        DenseMatrix64F ret = new DenseMatrix64F(numRows,numColumns);
+        RowMatrix_F64 ret = new RowMatrix_F64(numRows,numColumns);
 
         int index = start;
         for( int i = 0; i < numRows; i++ ) {
@@ -142,7 +142,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static DenseMatrix32F parseD32(String s , int numColumns )
+    public static RowMatrix_F32 parseD32(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 
@@ -152,7 +152,7 @@ public class UtilEjml {
         // covert it from string to doubles
         int numRows = (vals.length-start) / numColumns;
 
-        DenseMatrix32F ret = new DenseMatrix32F(numRows,numColumns);
+        RowMatrix_F32 ret = new RowMatrix_F32(numRows,numColumns);
 
         int index = start;
         for( int i = 0; i < numRows; i++ ) {

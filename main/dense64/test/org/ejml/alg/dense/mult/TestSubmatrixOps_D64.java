@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.EjmlUnitTests;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.junit.Test;
 
 
@@ -30,8 +30,8 @@ public class TestSubmatrixOps_D64 {
 
     @Test
     public void setSubMatrix() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
-        DenseMatrix64F B = new DenseMatrix64F(6,6);
+        RowMatrix_F64 A = new RowMatrix_F64(5,5);
+        RowMatrix_F64 B = new RowMatrix_F64(6,6);
 
         for( int i = 0; i < A.data.length; i++ ) {
             A.data[i] = 1;
@@ -40,7 +40,7 @@ public class TestSubmatrixOps_D64 {
         SubmatrixOps_D64.setSubMatrix(A,B,1,1,2,3,2,3);
 
         // create a matrix that should be identical to B
-        DenseMatrix64F C = new DenseMatrix64F(6,6);
+        RowMatrix_F64 C = new RowMatrix_F64(6,6);
         for( int i = 2; i < 4; i++ ) {
             for( int j = 3; j < 6; j++ ) {
                 C.set(i,j,1);

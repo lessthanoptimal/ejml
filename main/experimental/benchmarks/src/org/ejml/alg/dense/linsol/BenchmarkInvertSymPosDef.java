@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock_D64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_B64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CovarianceOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -38,9 +38,9 @@ import java.util.Random;
  */
 public class BenchmarkInvertSymPosDef {
 
-    public static long invertCovar( DenseMatrix64F orig , int numTrials ) {
+    public static long invertCovar(RowMatrix_F64 orig , int numTrials ) {
 
-        DenseMatrix64F A = new DenseMatrix64F(orig.numRows,orig.numCols);
+        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -51,10 +51,10 @@ public class BenchmarkInvertSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertCholesky( LinearSolver<DenseMatrix64F> alg , DenseMatrix64F orig , int numTrials ) {
+    public static long invertCholesky(LinearSolver<RowMatrix_F64> alg , RowMatrix_F64 orig , int numTrials ) {
 
-        alg = new LinearSolverSafe<DenseMatrix64F>(alg);
-        DenseMatrix64F A = new DenseMatrix64F(orig.numRows,orig.numCols);
+        alg = new LinearSolverSafe<RowMatrix_F64>(alg);
+        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -69,7 +69,7 @@ public class BenchmarkInvertSymPosDef {
     }
 
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
 
         System.out.println("invert covariance         = "+ invertCovar(mat,numTrials));
@@ -106,7 +106,7 @@ public class BenchmarkInvertSymPosDef {
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F symMat = RandomMatrices_D64.createSymmPosDef(w,rand);
+            RowMatrix_F64 symMat = RandomMatrices_D64.createSymmPosDef(w,rand);
             System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

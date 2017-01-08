@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -50,9 +50,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void mult() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = RandomMatrices_D64.createRandom(2,1,rand);
+        RowMatrix_F64 a = new RowMatrix_F64(2,3, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = RandomMatrices_D64.createRandom(2,1,rand);
 
         MatrixVectorMult_D64.mult(a,b,c);
 
@@ -62,9 +62,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void mult_zero() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = RandomMatrices_D64.createRandom(2,1,rand);
+        RowMatrix_F64 a = new RowMatrix_F64(2,3, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = RandomMatrices_D64.createRandom(2,1,rand);
 
         MatrixVectorMult_D64.mult(a,b,c);
 
@@ -74,9 +74,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void multAdd() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(2,3, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = new DenseMatrix64F(2,1, true, 2, 6);
+        RowMatrix_F64 a = new RowMatrix_F64(2,3, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = new RowMatrix_F64(2,1, true, 2, 6);
 
         MatrixVectorMult_D64.multAdd(a,b,c);
 
@@ -86,9 +86,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void multTransA_small() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(3,2, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = RandomMatrices_D64.createRandom(2,1,rand);
+        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = RandomMatrices_D64.createRandom(2,1,rand);
 
         MatrixVectorMult_D64.multTransA_small(a,b,c);
 
@@ -98,9 +98,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void multTransA_reorder() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(3,2, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = RandomMatrices_D64.createRandom(2,1,rand);
+        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = RandomMatrices_D64.createRandom(2,1,rand);
 
         MatrixVectorMult_D64.multTransA_reorder(a,b,c);
 
@@ -110,9 +110,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void multAddTransA_small() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(3,2, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = new DenseMatrix64F(2,1, true, 2, 6);
+        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = new RowMatrix_F64(2,1, true, 2, 6);
 
         MatrixVectorMult_D64.multAddTransA_small(a,b,c);
 
@@ -122,9 +122,9 @@ public class TestMatrixVectorMult_D64 {
     @Test
     public void multAddTransA_reorder() {
         double d[] = new double[]{0,1,2,3,4,5};
-        DenseMatrix64F a = new DenseMatrix64F(3,2, true, d);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, d);
-        DenseMatrix64F c = new DenseMatrix64F(2,1, true, 2, 6);
+        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
+        RowMatrix_F64 c = new RowMatrix_F64(2,1, true, 2, 6);
 
         MatrixVectorMult_D64.multAddTransA_reorder(a,b,c);
 
@@ -157,9 +157,9 @@ public class TestMatrixVectorMult_D64 {
 
 //            System.out.println(name);
 
-            DenseMatrix64F a = new DenseMatrix64F(rowsA,colsA);
-            DenseMatrix64F b = new DenseMatrix64F(colsA,1);
-            DenseMatrix64F c = RandomMatrices_D64.createRandom(rowsA,1,rand);
+            RowMatrix_F64 a = new RowMatrix_F64(rowsA,colsA);
+            RowMatrix_F64 b = new RowMatrix_F64(colsA,1);
+            RowMatrix_F64 c = RandomMatrices_D64.createRandom(rowsA,1,rand);
 
             boolean add = name.contains("multAdd");
 
@@ -172,13 +172,13 @@ public class TestMatrixVectorMult_D64 {
                 CommonOps_D64.transpose(b);
             }
 
-            DenseMatrix64F original = c.copy();
+            RowMatrix_F64 original = c.copy();
             invoke(method,a,b,c);
 
             if( add ) {
                 assertTrue(MatrixFeatures_D64.isEquals(original, c));
             } else {
-                assertTrue(MatrixFeatures_D64.isZeros(c, UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_D64.isZeros(c, UtilEjml.TEST_F64));
             }
             numChecked++;
         }
@@ -187,7 +187,7 @@ public class TestMatrixVectorMult_D64 {
     }
 
     public static void invoke(Method func,
-                              DenseMatrix64F a, DenseMatrix64F b, DenseMatrix64F c)
+                              RowMatrix_F64 a, RowMatrix_F64 b, RowMatrix_F64 c)
             throws IllegalAccessException, InvocationTargetException {
         if( func.getParameterTypes().length == 3 ) {
             func.invoke(null, a, b, c);

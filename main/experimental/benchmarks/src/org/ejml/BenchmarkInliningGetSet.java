@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,14 @@
 
 package org.ejml;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
 
 
 /**
- * Test to see how well set and get are inlined in DenseMatrix64F.
+ * Test to see how well set and get are inlined in RowMatrix_F64.
  *
  * @author Peter Abeles
  */
@@ -34,7 +34,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Bounds checks are performed on get(i,j)
      */
-    public static long benchGet( DenseMatrix64F A , int n ) {
+    public static long benchGet(RowMatrix_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -61,7 +61,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Unsafe version of get(i,j) with no bounds checking
      */
-    public static long getUnsafeGet( DenseMatrix64F A , int n ) {
+    public static long getUnsafeGet(RowMatrix_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -88,7 +88,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Get by index is used here.
      */
-    public static long get1D( DenseMatrix64F A , int n ) {
+    public static long get1D(RowMatrix_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -117,7 +117,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Hand inlined version of get(i,j)
      */
-    public static long inlined( DenseMatrix64F A , int n ) {
+    public static long inlined(RowMatrix_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -142,7 +142,7 @@ public class BenchmarkInliningGetSet {
     }
 
     public static void main( String args[] ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(1000,1000,new Random());
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(1000,1000,new Random());
 
         int N = 2000;
 

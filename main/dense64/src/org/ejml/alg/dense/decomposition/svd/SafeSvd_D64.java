@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
@@ -28,14 +28,14 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class SafeSvd_D64
-        implements SingularValueDecomposition_F64<DenseMatrix64F>
+        implements SingularValueDecomposition_F64<RowMatrix_F64>
 {
     // the decomposition algorithm
-    SingularValueDecomposition_F64<DenseMatrix64F> alg;
+    SingularValueDecomposition_F64<RowMatrix_F64> alg;
     // storage for the input if it would be modified
-    DenseMatrix64F work = new DenseMatrix64F(1,1);
+    RowMatrix_F64 work = new RowMatrix_F64(1,1);
 
-    public SafeSvd_D64(SingularValueDecomposition_F64<DenseMatrix64F> alg) {
+    public SafeSvd_D64(SingularValueDecomposition_F64<RowMatrix_F64> alg) {
         this.alg = alg;
     }
 
@@ -55,17 +55,17 @@ public class SafeSvd_D64
     }
 
     @Override
-    public DenseMatrix64F getU(DenseMatrix64F U, boolean transposed) {
+    public RowMatrix_F64 getU(RowMatrix_F64 U, boolean transposed) {
         return alg.getU(U,transposed);
     }
 
     @Override
-    public DenseMatrix64F getV(DenseMatrix64F V, boolean transposed) {
+    public RowMatrix_F64 getV(RowMatrix_F64 V, boolean transposed) {
         return alg.getV(V,transposed);
     }
 
     @Override
-    public DenseMatrix64F getW(DenseMatrix64F W) {
+    public RowMatrix_F64 getW(RowMatrix_F64 W) {
         return alg.getW(W);
     }
 
@@ -80,7 +80,7 @@ public class SafeSvd_D64
     }
 
     @Override
-    public boolean decompose(DenseMatrix64F orig) {
+    public boolean decompose(RowMatrix_F64 orig) {
         if( alg.inputModified() ) {
             work.reshape(orig.numRows,orig.numCols);
             work.set(orig);

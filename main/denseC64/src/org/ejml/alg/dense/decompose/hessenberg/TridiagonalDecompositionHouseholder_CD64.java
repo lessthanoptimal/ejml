@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 import java.util.Arrays;
@@ -48,13 +48,13 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_CD64
-        implements TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<RowMatrix_C64> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores
      * the tridiagonal matrix.  The rows store householder vectors.
      */
-    private CDenseMatrix64F QT;
+    private RowMatrix_C64 QT;
 
     // The size of the matrix
     private int N;
@@ -66,7 +66,7 @@ public class TridiagonalDecompositionHouseholder_CD64
     // temporary storage
     private double b[];
 
-    private Complex64F tau = new Complex64F();
+    private Complex_F64 tau = new Complex_F64();
 
     public TridiagonalDecompositionHouseholder_CD64() {
         N = 1;
@@ -79,7 +79,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      * Returns the internal matrix where the decomposed results are stored.
      * @return
      */
-    public CDenseMatrix64F getQT() {
+    public RowMatrix_C64 getQT() {
         return QT;
     }
 
@@ -103,7 +103,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      * @return The extracted T matrix.
      */
     @Override
-    public CDenseMatrix64F getT( CDenseMatrix64F T ) {
+    public RowMatrix_C64 getT(RowMatrix_C64 T ) {
         T = UtilDecompositons_CD64.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
@@ -127,7 +127,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      * @return The extracted Q matrix.
      */
     @Override
-    public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean transposed ) {
+    public RowMatrix_C64 getQ(RowMatrix_C64 Q , boolean transposed ) {
         Q = UtilDecompositons_CD64.checkIdentity(Q,N,N);
 
         Arrays.fill(w,0,N*2,0);
@@ -153,7 +153,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      * @param A Symmetric matrix that is going to be decomposed.  Not modified.
      */
     @Override
-    public boolean decompose( CDenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_C64 A ) {
         init(A);
 
         for( int k = 0; k < N-1; k++ ) {
@@ -307,7 +307,7 @@ public class TridiagonalDecompositionHouseholder_CD64
      *
      * @param A Matrix being decomposed.
      */
-    public void init( CDenseMatrix64F A ) {
+    public void init( RowMatrix_C64 A ) {
         if( A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be square");
 

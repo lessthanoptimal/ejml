@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.equation.Equation;
 import org.ejml.equation.Sequence;
 
@@ -30,7 +30,7 @@ import org.ejml.equation.Sequence;
 public class KalmanFilterEquation implements KalmanFilter{
 
     // system state estimate
-    private DenseMatrix64F x,P;
+    private RowMatrix_F64 x,P;
 
     private Equation eq;
 
@@ -39,11 +39,11 @@ public class KalmanFilterEquation implements KalmanFilter{
     Sequence updateY,updateK,updateX,updateP;
 
     @Override
-    public void configure(DenseMatrix64F F, DenseMatrix64F Q, DenseMatrix64F H) {
+    public void configure(RowMatrix_F64 F, RowMatrix_F64 Q, RowMatrix_F64 H) {
         int dimenX = F.numCols;
 
-        x = new DenseMatrix64F(dimenX,1);
-        P = new DenseMatrix64F(dimenX,dimenX);
+        x = new RowMatrix_F64(dimenX,1);
+        P = new RowMatrix_F64(dimenX,dimenX);
 
         eq = new Equation();
 
@@ -52,8 +52,8 @@ public class KalmanFilterEquation implements KalmanFilter{
         eq.alias(x,"x",P,"P",Q,"Q",F,"F",H,"H");
 
         // Dummy matrix place holder to avoid compiler errors.  Will be replaced later on
-        eq.alias(new DenseMatrix64F(1,1),"z");
-        eq.alias(new DenseMatrix64F(1,1),"R");
+        eq.alias(new RowMatrix_F64(1,1),"z");
+        eq.alias(new RowMatrix_F64(1,1),"R");
 
         // Pre-compile so that it doesn't have to compile it each time it's invoked.  More cumbersome
         // but for small matrices the overhead is significant
@@ -67,7 +67,7 @@ public class KalmanFilterEquation implements KalmanFilter{
     }
 
     @Override
-    public void setState(DenseMatrix64F x, DenseMatrix64F P) {
+    public void setState(RowMatrix_F64 x, RowMatrix_F64 P) {
         this.x.set(x);
         this.P.set(P);
     }
@@ -79,7 +79,7 @@ public class KalmanFilterEquation implements KalmanFilter{
     }
 
     @Override
-    public void update(DenseMatrix64F z, DenseMatrix64F R) {
+    public void update(RowMatrix_F64 z, RowMatrix_F64 R) {
 
         // Alias will overwrite the reference to the previous matrices with the same name
         eq.alias(z,"z"); eq.alias(R,"R");
@@ -91,12 +91,12 @@ public class KalmanFilterEquation implements KalmanFilter{
     }
 
     @Override
-    public DenseMatrix64F getState() {
+    public RowMatrix_F64 getState() {
         return x;
     }
 
     @Override
-    public DenseMatrix64F getCovariance() {
+    public RowMatrix_F64 getCovariance() {
         return P;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.Matrix;
 
 
@@ -46,5 +46,5 @@ public interface EigenDecomposition_F64<MatrixType extends Matrix>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return An eigenvalue.
      */
-    Complex64F getEigenvalue(int index);
+    Complex_F64 getEigenvalue(int index);
 }

@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.qr;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderTran_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholder_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.RandomMatrices_CD64;
 
@@ -35,10 +35,10 @@ import java.util.Random;
  */
 public class BenchmarkQrDecomposition_CD64 {
 
-    public static long generic(QRDecomposition<CDenseMatrix64F> alg,  CDenseMatrix64F orig , int numTrials ) {
+    public static long generic(QRDecomposition<RowMatrix_C64> alg, RowMatrix_C64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
-        CDenseMatrix64F B;
+        RowMatrix_C64 B;
         for( long i = 0; i < numTrials; i++ ) {
             if( alg.inputModified())
                 B = orig.copy();
@@ -52,7 +52,7 @@ public class BenchmarkQrDecomposition_CD64 {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms( CDenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_C64 mat , int numTrials )
     {
         System.out.println("basic            = "+ generic( new QRDecompositionHouseholder_CD64(), mat,numTrials));
         System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn_CD64() ,mat,numTrials));
@@ -72,7 +72,7 @@ public class BenchmarkQrDecomposition_CD64 {
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
-            CDenseMatrix64F mat = RandomMatrices_CD64.createRandom(w * 4, w / 1, rand);
+            RowMatrix_C64 mat = RandomMatrices_CD64.createRandom(w * 4, w / 1, rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);
             runAlgorithms(mat,trials[i]);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ public class TestCholeskyDecomposition_B64_to_D64 extends GenericCholeskyTests_D
     }
 
     @Override
-    public CholeskyDecomposition_F64<DenseMatrix64F> create(boolean lower) {
+    public CholeskyDecomposition_F64<RowMatrix_F64> create(boolean lower) {
         return new CholeskyDecomposition_B64_to_D64(lower);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.block.decomposition.hessenberg;
 
 import org.ejml.alg.block.VectorOps_B64;
 import org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.D1Submatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 import static org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64.computeHouseHolderRow;
@@ -50,9 +50,9 @@ public class TridiagonalHelper_B64 {
      * @param V Where computed 'v' are stored in a row block.  Modified.
      */
     public static void tridiagUpperRow( final int blockLength ,
-                                        final D1Submatrix64F A ,
+                                        final D1Submatrix_F64 A ,
                                         final double gammas[] ,
-                                        final D1Submatrix64F V )
+                                        final D1Submatrix_F64 V )
     {
         int blockHeight = Math.min(blockLength,A.row1-A.row0);
         if( blockHeight <= 1 )
@@ -103,9 +103,9 @@ public class TridiagonalHelper_B64 {
      * Y and W are assumed to have the same number of rows and columns.
      * </p>
      */
-    public static void computeW_row( final int blockLength ,
-                                     final D1Submatrix64F Y , final D1Submatrix64F W ,
-                                     final double beta[] , int betaIndex ) {
+    public static void computeW_row(final int blockLength ,
+                                    final D1Submatrix_F64 Y , final D1Submatrix_F64 W ,
+                                    final double beta[] , int betaIndex ) {
 
         final int heightY = Y.row1-Y.row0;
         CommonOps_D64.fill(W.original, 0);
@@ -141,9 +141,9 @@ public class TridiagonalHelper_B64 {
      * </p>
      */
     public static void computeV_blockVector( final int blockLength ,
-                                             final D1Submatrix64F A ,
+                                             final D1Submatrix_F64 A ,
                                              final double gammas[] ,
-                                             final D1Submatrix64F V )
+                                             final D1Submatrix_F64 V )
     {
         int blockHeight = Math.min(blockLength,A.row1-A.row0);
         if( blockHeight <= 1 )
@@ -175,8 +175,8 @@ public class TridiagonalHelper_B64 {
      * @param row The row of 'A' that is to be updated.
      */
     public static void applyReflectorsToRow( final int blockLength ,
-                                             final D1Submatrix64F A ,
-                                             final D1Submatrix64F V ,
+                                             final D1Submatrix_F64 A ,
+                                             final D1Submatrix_F64 V ,
                                              int row )
     {
         int height = Math.min(blockLength, A.row1 - A.row0);
@@ -221,8 +221,8 @@ public class TridiagonalHelper_B64 {
      * @param row The row of 'A' that is to be updated.
      */
     public static void computeY( final int blockLength ,
-                                 final D1Submatrix64F A ,
-                                 final D1Submatrix64F V ,
+                                 final D1Submatrix_F64 A ,
+                                 final D1Submatrix_F64 V ,
                                  int row ,
                                  double gamma )
     {
@@ -268,8 +268,8 @@ public class TridiagonalHelper_B64 {
      * @param row row in matrix 'A' that 'u' vector and the row in 'V' that 'y' is stored in.
      */
     public static void multA_u( final int blockLength ,
-                                final D1Submatrix64F A ,
-                                final D1Submatrix64F V ,
+                                final D1Submatrix_F64 A ,
+                                final D1Submatrix_F64 V ,
                                 int row )
     {
         int heightMatA = A.row1-A.row0;
@@ -283,9 +283,9 @@ public class TridiagonalHelper_B64 {
     }
 
     public static double innerProdRowSymm(int blockLength,
-                                          D1Submatrix64F A,
+                                          D1Submatrix_F64 A,
                                           int rowA,
-                                          D1Submatrix64F B,
+                                          D1Submatrix_F64 B,
                                           int rowB, int zeroOffset ) {
         int offset = rowA + zeroOffset;
         if( offset + B.col0 >= B.col1 )
@@ -323,8 +323,8 @@ public class TridiagonalHelper_B64 {
      * @param gamma
      */
     public static void computeRowOfV( final int blockLength ,
-                                      final D1Submatrix64F A ,
-                                      final D1Submatrix64F V ,
+                                      final D1Submatrix_F64 A ,
+                                      final D1Submatrix_F64 V ,
                                       int row ,
                                       double gamma )
     {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.block;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_D64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -44,37 +44,37 @@ public class TestInnerTriangularSolver_B64 {
 
     @Test
     public void testInvertLower_two() {
-        DenseMatrix64F A = RandomMatrices_D64.createUpperTriangle(5,0,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createUpperTriangle(5,0,-1,1,rand);
         CommonOps_D64.transpose(A);
 
-        DenseMatrix64F A_inv = A.copy();
+        RowMatrix_F64 A_inv = A.copy();
 
         InnerTriangularSolver_B64.invertLower(A.data,A_inv.data,5,0,0);
 
-        DenseMatrix64F S = new DenseMatrix64F(5,5);
+        RowMatrix_F64 S = new RowMatrix_F64(5,5);
         CommonOps_D64.mult(A,A_inv,S);
 
-        assertTrue(GenericMatrixOps_F64.isIdentity(S,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isIdentity(S,UtilEjml.TEST_F64));
 
         // see if it works with the same input matrix
         InnerTriangularSolver_B64.invertLower(A.data,A.data,5,0,0);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A,A_inv,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A,A_inv,UtilEjml.TEST_F64));
     }
 
     @Test
     public void testInvertLower_one() {
-        DenseMatrix64F A = RandomMatrices_D64.createUpperTriangle(5,0,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createUpperTriangle(5,0,-1,1,rand);
         CommonOps_D64.transpose(A);
 
-        DenseMatrix64F A_inv = A.copy();
+        RowMatrix_F64 A_inv = A.copy();
 
         InnerTriangularSolver_B64.invertLower(A_inv.data,5,0);
 
-        DenseMatrix64F S = new DenseMatrix64F(5,5);
+        RowMatrix_F64 S = new RowMatrix_F64(5,5);
         CommonOps_D64.mult(A,A_inv,S);
 
-        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
     }
 
     /**
@@ -119,7 +119,7 @@ public class TestInnerTriangularSolver_B64 {
         int offsetL = 2;
         int offsetB = 3;
 
-        DenseMatrix64F L = createRandomLowerTriangular(3);
+        RowMatrix_F64 L = createRandomLowerTriangular(3);
 
         if( !solveL ) {
             CommonOps_D64.transpose(L);
@@ -129,12 +129,12 @@ public class TestInnerTriangularSolver_B64 {
             CommonOps_D64.transpose(L);
         }
 
-        DenseMatrix64F L_inv = L.copy();
+        RowMatrix_F64 L_inv = L.copy();
         UnrolledInverseFromMinor_D64.inv(L_inv,L_inv);
 
-        DenseMatrix64F B = RandomMatrices_D64.createRandom(3,4,rand);
-        DenseMatrix64F expected = RandomMatrices_D64.createRandom(3,4,rand);
-        DenseMatrix64F found = B.copy();
+        RowMatrix_F64 B = RandomMatrices_D64.createRandom(3,4,rand);
+        RowMatrix_F64 expected = RandomMatrices_D64.createRandom(3,4,rand);
+        RowMatrix_F64 found = B.copy();
 
         // compute the expected solution
         CommonOps_D64.mult(L_inv,B,expected);
@@ -164,11 +164,11 @@ public class TestInnerTriangularSolver_B64 {
         // put the solution into B, minus the offset
         System.arraycopy(dataB,offsetB,found.data,0,found.data.length);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(expected,found,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(expected,found,UtilEjml.TEST_F64));
     }
 
-    private DenseMatrix64F createRandomLowerTriangular( int N ) {
-        DenseMatrix64F U = RandomMatrices_D64.createUpperTriangle(N,0,-1,1,rand);
+    private RowMatrix_F64 createRandomLowerTriangular(int N ) {
+        RowMatrix_F64 U = RandomMatrices_D64.createUpperTriangle(N,0,-1,1,rand);
 
         CommonOps_D64.transpose(U);
 

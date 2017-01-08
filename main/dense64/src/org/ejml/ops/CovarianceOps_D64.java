@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
@@ -35,7 +35,7 @@ import java.util.Random;
  */
 public class CovarianceOps_D64 {
 
-    public static double TOL = UtilEjml.TESTP_64F;
+    public static double TOL = UtilEjml.TESTP_F64;
 
     /**
      * This is a fairly light weight check to see of a covariance matrix is valid.
@@ -44,7 +44,7 @@ public class CovarianceOps_D64 {
 	 *
 	 * @return true if valid and false if invalid
      */
-    public static boolean isValidFast( DenseMatrix64F cov ) {
+    public static boolean isValidFast( RowMatrix_F64 cov ) {
         return MatrixFeatures_D64.isDiagonalPositive(cov);
     }
 
@@ -54,7 +54,7 @@ public class CovarianceOps_D64 {
      *
      * @return  0 = is valid 1 = failed positive diagonal, 2 = failed on symmetry, 2 = failed on positive definite
      */
-    public static int isValid( DenseMatrix64F cov ) {
+    public static int isValid( RowMatrix_F64 cov ) {
         if( !MatrixFeatures_D64.isDiagonalPositive(cov) )
             return 1;
 
@@ -74,7 +74,7 @@ public class CovarianceOps_D64 {
      * @param cov On input it is a covariance matrix, on output it is the inverse.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( DenseMatrix64F cov ) {
+    public static boolean invert( RowMatrix_F64 cov ) {
         return invert(cov,cov);
     }
 
@@ -86,7 +86,7 @@ public class CovarianceOps_D64 {
      * @param cov_inv The inverse of cov.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( final DenseMatrix64F cov , final DenseMatrix64F cov_inv ) {
+    public static boolean invert(final RowMatrix_F64 cov , final RowMatrix_F64 cov_inv ) {
         if( cov.numCols <= 4 ) {
             if( cov.numCols != cov.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
@@ -98,9 +98,9 @@ public class CovarianceOps_D64 {
                 cov_inv.data[0] = 1.0/cov_inv.data[0];
 
         } else {
-            LinearSolver<DenseMatrix64F> solver = LinearSolverFactory_D64.symmPosDef(cov.numRows);
+            LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_D64.symmPosDef(cov.numRows);
             // wrap it to make sure the covariance is not modified.
-            solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+            solver = new LinearSolverSafe<RowMatrix_F64>(solver);
             if( !solver.setA(cov) )
                 return false;
             solver.invert(cov_inv);
@@ -116,8 +116,8 @@ public class CovarianceOps_D64 {
      * @param vector The random vector. Modified.
      * @param rand Random number generator.
      */
-    public static void randomVector( DenseMatrix64F cov ,
-                                     DenseMatrix64F vector ,
+    public static void randomVector( RowMatrix_F64 cov ,
+                                     RowMatrix_F64 vector ,
                                      Random rand  )
     {
         CovarianceRandomDraw_D64 rng = new CovarianceRandomDraw_D64(rand,cov);

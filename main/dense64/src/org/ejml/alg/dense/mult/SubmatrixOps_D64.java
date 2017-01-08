@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
 
 
 /**
@@ -28,9 +28,9 @@ import org.ejml.data.RowD1Matrix64F;
  */
 public class SubmatrixOps_D64 {
 
-    public static void setSubMatrix( RowD1Matrix64F src , RowD1Matrix64F dst ,
-                                     int srcRow , int srcCol , int dstRow , int dstCol ,
-                                     int numSubRows, int numSubCols )
+    public static void setSubMatrix(RowD1Matrix_F64 src , RowD1Matrix_F64 dst ,
+                                    int srcRow , int srcCol , int dstRow , int dstCol ,
+                                    int numSubRows, int numSubCols )
     {
         for( int i = 0; i < numSubRows; i++ ) {
             for( int j = 0; j < numSubCols; j++ ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -72,17 +72,17 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
 
 //        naive.getVTran().print();
 
-        assertTrue(naive.getB().isIdentical(B,UtilEjml.TEST_64F));
-        assertTrue(naive.getU().isIdentical(U,UtilEjml.TEST_64F));
-        assertTrue(naive.getV().isIdentical(V,UtilEjml.TEST_64F));
+        assertTrue(naive.getB().isIdentical(B,UtilEjml.TEST_F64));
+        assertTrue(naive.getU().isIdentical(U,UtilEjml.TEST_F64));
+        assertTrue(naive.getV().isIdentical(V,UtilEjml.TEST_F64));
 
         // check the decomposition
-        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        RowMatrix_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
 //        A.print();
 //        foundA.print();
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(),foundA, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A.matrix_F64(),foundA, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -91,16 +91,16 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
         int m = 7;
         int n = 5;
 
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
 
         DebugBidiagonal alg = new DebugBidiagonal(A);
 
-        DenseMatrix64F B = new DenseMatrix64F(A);
+        RowMatrix_F64 B = new RowMatrix_F64(A);
 
-        DenseMatrix64F C = new DenseMatrix64F(m,n);
-        DenseMatrix64F u = new DenseMatrix64F(m,1);
+        RowMatrix_F64 C = new RowMatrix_F64(m,n);
+        RowMatrix_F64 u = new RowMatrix_F64(m,1);
 
-        RowD1Matrix64F UBV = alg.getUBV();
+        RowD1Matrix_F64 UBV = alg.getUBV();
 
         for( int i = 0; i < n; i++ ) {
             alg.computeU(i);
@@ -108,7 +108,7 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
             SpecializedOps_D64.subvector(UBV,i+1,i,m-i-1,false,i+1,u);
             u.data[i] = 1;
 
-            DenseMatrix64F Q = SpecializedOps_D64.createReflector(u,alg.getGammasU()[i]);
+            RowMatrix_F64 Q = SpecializedOps_D64.createReflector(u,alg.getGammasU()[i]);
 
             CommonOps_D64.mult(Q,B,C);
 
@@ -121,11 +121,11 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
 
             // make sure everything is as expected
             for( int j = i+1; j < m; j++ ) {
-                assertEquals(0,C.get(j,i),UtilEjml.TEST_64F);
+                assertEquals(0,C.get(j,i),UtilEjml.TEST_F64);
             }
 
             for( int j = i+1; j < n; j++ ) {
-                assertEquals(UBV.get(i,j),C.get(i,j),UtilEjml.TEST_64F);
+                assertEquals(UBV.get(i,j),C.get(i,j),UtilEjml.TEST_F64);
             }
             u.data[i] = 0;
         }
@@ -137,16 +137,16 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
         int m = 7;
         int n = 5;
 
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
 
         DebugBidiagonal alg = new DebugBidiagonal(A);
 
-        DenseMatrix64F B = new DenseMatrix64F(A);
+        RowMatrix_F64 B = new RowMatrix_F64(A);
 
-        DenseMatrix64F C = new DenseMatrix64F(m,n);
-        DenseMatrix64F u = new DenseMatrix64F(n,1);
+        RowMatrix_F64 C = new RowMatrix_F64(m,n);
+        RowMatrix_F64 u = new RowMatrix_F64(n,1);
 
-        RowD1Matrix64F UBV = alg.getUBV();
+        RowD1Matrix_F64 UBV = alg.getUBV();
 
 //        A.print();
 
@@ -157,7 +157,7 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
             SpecializedOps_D64.subvector(UBV,i,i+2,n-i-2,true,i+2,u);
             u.data[i+1] = 1;
 
-            DenseMatrix64F Q = SpecializedOps_D64.createReflector(u,alg.getGammasV()[i]);
+            RowMatrix_F64 Q = SpecializedOps_D64.createReflector(u,alg.getGammasV()[i]);
 
 //            Q.print();
 
@@ -172,11 +172,11 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
 
             // make sure everything is as expected
             for( int j = i+2; j < n; j++ ) {
-                assertEquals(0,C.get(i,j),UtilEjml.TEST_64F);
+                assertEquals(0,C.get(i,j),UtilEjml.TEST_F64);
             }
 
             for( int j = i+2; j < m; j++ ) {
-                assertEquals(UBV.get(j,i),C.get(j,i),UtilEjml.TEST_64F);
+                assertEquals(UBV.get(j,i),C.get(j,i),UtilEjml.TEST_F64);
             }
             u.data[i] = 0;
         }
@@ -184,14 +184,14 @@ public class TestBidiagonalDecompositionRow_D64 extends GenericBidiagonalCheck_D
     }
 
     @Override
-    protected BidiagonalDecomposition_F64<DenseMatrix64F> createQRDecomposition() {
+    protected BidiagonalDecomposition_F64<RowMatrix_F64> createQRDecomposition() {
         return new BidiagonalDecompositionRow_D64();
     }
 
     private static class DebugBidiagonal extends BidiagonalDecompositionRow_D64 {
 
 
-        public DebugBidiagonal( DenseMatrix64F A ) {
+        public DebugBidiagonal( RowMatrix_F64 A ) {
             init(A.copy());
         }
 

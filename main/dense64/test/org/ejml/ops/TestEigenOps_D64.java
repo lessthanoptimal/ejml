@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.junit.Test;
@@ -43,10 +43,10 @@ public class TestEigenOps_D64 {
      */
     @Test
     public void computeEigenValue() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3,
+        RowMatrix_F64 A = new RowMatrix_F64(3,3,
                 true, 0.053610, 0.030405, 0.892620, 0.090954, 0.074065, 0.875797, 0.105369, 0.928981, 0.965506);
 
-        DenseMatrix64F u = new DenseMatrix64F(3,1,
+        RowMatrix_F64 u = new RowMatrix_F64(3,1,
                 true, -0.4502917, -0.4655377, -0.7619134);
 
         double value = EigenOps_D64.computeEigenValue(A,u);
@@ -60,7 +60,7 @@ public class TestEigenOps_D64 {
     @Test
     public void boundLargestEigenValue_markov() {
         // create the matrix
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(3,3,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(3,3,rand);
 
         for( int i = 0; i < 3; i++ ) {
             double total = 0;
@@ -75,39 +75,39 @@ public class TestEigenOps_D64 {
 
         double[] val = EigenOps_D64.boundLargestEigenValue(A,null);
 
-        assertEquals(1.0,val[0], UtilEjml.TEST_64F);
-        assertEquals(1.0,val[1],UtilEjml.TEST_64F);
+        assertEquals(1.0,val[0], UtilEjml.TEST_F64);
+        assertEquals(1.0,val[1],UtilEjml.TEST_F64);
     }
 
     @Test
     public void createMatrixV() {
-        DenseMatrix64F A = RandomMatrices_D64.createSymmetric(3,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition_F64<DenseMatrix64F> decomp = DecompositionFactory_D64.eig(A.numRows,true);
+        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_D64.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
 
-        DenseMatrix64F V = EigenOps_D64.createMatrixV(decomp);
+        RowMatrix_F64 V = EigenOps_D64.createMatrixV(decomp);
 
         for( int i = 0; i < 3; i++ ) {
-            DenseMatrix64F v = decomp.getEigenVector(i);
+            RowMatrix_F64 v = decomp.getEigenVector(i);
 
             for( int j = 0; j < 3; j++ ) {
-                assertEquals(V.get(j,i),v.get(j),UtilEjml.TEST_64F);
+                assertEquals(V.get(j,i),v.get(j),UtilEjml.TEST_F64);
             }
         }
     }
 
     @Test
     public void createMatrixD() {
-        DenseMatrix64F A = RandomMatrices_D64.createSymmetric(3,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition_F64<DenseMatrix64F> decomp = DecompositionFactory_D64.eig(A.numRows,true);
+        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_D64.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
 
-        DenseMatrix64F D = EigenOps_D64.createMatrixD(decomp);
+        RowMatrix_F64 D = EigenOps_D64.createMatrixD(decomp);
 
         for( int i = 0; i < 3; i++ ) {
-            Complex64F e = decomp.getEigenvalue(i);
+            Complex_F64 e = decomp.getEigenvalue(i);
 
             if( e.isReal() ) {
                 assertEquals(e.real,D.get(i,i),1e-10);

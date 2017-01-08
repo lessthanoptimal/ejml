@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_D64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -35,7 +35,7 @@ public class TestLinearSolverLu_D64 extends GenericLinearSolverChecks_D64 {
     }
 
     @Override
-    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A ) {
         LUDecompositionAlt_D64 decomp = new LUDecompositionAlt_D64();
 
         return new LinearSolverLu_D64(decomp);

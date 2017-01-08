@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.chol;
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionCommon_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.SpecializedOps_D64;
 
@@ -41,7 +41,7 @@ public class LinearSolverChol_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Matrix must be square");
 
@@ -78,7 +78,7 @@ public class LinearSolverChol_D64 extends LinearSolverAbstract_D64 {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve( DenseMatrix64F B , DenseMatrix64F X ) {
+    public void solve(RowMatrix_F64 B , RowMatrix_F64 X ) {
         if( B.numCols != X.numCols || B.numRows != n || X.numRows != n) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
@@ -116,7 +116,7 @@ public class LinearSolverChol_D64 extends LinearSolverAbstract_D64 {
      * @param inv Where the value of the inverse will be stored.  Modified.
      */
     @Override
-    public void invert( DenseMatrix64F inv ) {
+    public void invert( RowMatrix_F64 inv ) {
         if( inv.numRows != n || inv.numCols != n ) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
@@ -177,7 +177,7 @@ public class LinearSolverChol_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public CholeskyDecomposition_F64<DenseMatrix64F> getDecomposition() {
+    public CholeskyDecomposition_F64<RowMatrix_F64> getDecomposition() {
         return decomposer;
     }
 }

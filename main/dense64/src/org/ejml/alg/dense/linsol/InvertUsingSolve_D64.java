@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
 
@@ -33,7 +33,7 @@ import org.ejml.ops.CommonOps_D64;
  */
 public class InvertUsingSolve_D64 {
 
-    public static void invert( LinearSolver<DenseMatrix64F> solver , RowD1Matrix64F A , DenseMatrix64F A_inv , DenseMatrix64F storage) {
+    public static void invert(LinearSolver<RowMatrix_F64> solver , RowD1Matrix_F64 A , RowMatrix_F64 A_inv , RowMatrix_F64 storage) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
@@ -44,7 +44,7 @@ public class InvertUsingSolve_D64 {
         solver.solve(storage,A_inv);
     }
 
-    public static void invert( LinearSolver<DenseMatrix64F> solver , RowD1Matrix64F A , DenseMatrix64F A_inv ) {
+    public static void invert(LinearSolver<RowMatrix_F64> solver , RowD1Matrix_F64 A , RowMatrix_F64 A_inv ) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");

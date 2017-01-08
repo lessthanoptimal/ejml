@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
@@ -43,38 +43,38 @@ public abstract class GenericCholeskyTests_D64 {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition_F64<DenseMatrix64F> create(boolean lower );
+    public abstract CholeskyDecomposition_F64<RowMatrix_F64> create(boolean lower );
 
     @Test
     public void testDecomposeL() {
         if( !canL ) return;
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        DenseMatrix64F L = new DenseMatrix64F(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
+        RowMatrix_F64 L = new RowMatrix_F64(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
 
-        CholeskyDecomposition_F64<DenseMatrix64F> cholesky = create(true);
+        CholeskyDecomposition_F64<RowMatrix_F64> cholesky = create(true);
         assertTrue(cholesky.decompose(A));
 
-        DenseMatrix64F foundL = cholesky.getT(null);
+        RowMatrix_F64 foundL = cholesky.getT(null);
 
-        EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_F64);
     }
 
     @Test
     public void testDecomposeR() {
         if( !canR ) return;
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        DenseMatrix64F R = new DenseMatrix64F(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
+        RowMatrix_F64 R = new RowMatrix_F64(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
 
-        CholeskyDecomposition_F64<DenseMatrix64F> cholesky = create(false);
+        CholeskyDecomposition_F64<RowMatrix_F64> cholesky = create(false);
         assertTrue(cholesky.decompose(A));
 
-        DenseMatrix64F foundR = cholesky.getT(null);
+        RowMatrix_F64 foundR = cholesky.getT(null);
 
-        EjmlUnitTests.assertEquals(R,foundR,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(R,foundR,UtilEjml.TEST_F64);
     }
 
     /**
@@ -82,9 +82,9 @@ public abstract class GenericCholeskyTests_D64 {
      */
     @Test
     public void testNotPositiveDefinite() {
-        DenseMatrix64F A = new DenseMatrix64F(2,2, true, 1, -1, -1, -2);
+        RowMatrix_F64 A = new RowMatrix_F64(2,2, true, 1, -1, -1, -2);
 
-        CholeskyDecomposition_F64<DenseMatrix64F> alg = create(true);
+        CholeskyDecomposition_F64<RowMatrix_F64> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -94,14 +94,14 @@ public abstract class GenericCholeskyTests_D64 {
      */
     @Test
     public void getT() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        CholeskyDecomposition_F64<DenseMatrix64F> cholesky = create(true);
+        CholeskyDecomposition_F64<RowMatrix_F64> cholesky = create(true);
 
         assertTrue(cholesky.decompose(A));
 
-        DenseMatrix64F L_null = cholesky.getT(null);
-        DenseMatrix64F L_provided = RandomMatrices_D64.createRandom(3,3,rand);
+        RowMatrix_F64 L_null = cholesky.getT(null);
+        RowMatrix_F64 L_provided = RandomMatrices_D64.createRandom(3,3,rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
         assertTrue(MatrixFeatures_D64.isEquals(L_null,L_provided));
@@ -129,8 +129,8 @@ public abstract class GenericCholeskyTests_D64 {
     private void checkWithDefinition(boolean lower, int size) {
         SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices_D64.createSymmPosDef(size,rand));
 
-        CholeskyDecomposition_F64<DenseMatrix64F> cholesky = create(lower);
-        assertTrue(DecompositionFactory_D64.decomposeSafe(cholesky,(DenseMatrix64F)A.getMatrix()));
+        CholeskyDecomposition_F64<RowMatrix_F64> cholesky = create(lower);
+        assertTrue(DecompositionFactory_D64.decomposeSafe(cholesky,(RowMatrix_F64)A.getMatrix()));
 
         SimpleMatrix T = SimpleMatrix.wrap(cholesky.getT(null));
         SimpleMatrix found;
@@ -141,7 +141,7 @@ public abstract class GenericCholeskyTests_D64 {
             found = T.transpose().mult(T);
         }
 
-        assertTrue(A.isIdentical(found, UtilEjml.TEST_64F));
+        assertTrue(A.isIdentical(found, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -161,10 +161,10 @@ public abstract class GenericCholeskyTests_D64 {
 
     public void checkDeterminant( boolean lower , int size ) {
 
-        LUDecomposition_F64<DenseMatrix64F> lu = DecompositionFactory_D64.lu(size,size);
-        CholeskyDecomposition_F64<DenseMatrix64F> cholesky = create(lower);
+        LUDecomposition_F64<RowMatrix_F64> lu = DecompositionFactory_D64.lu(size,size);
+        CholeskyDecomposition_F64<RowMatrix_F64> cholesky = create(lower);
 
-        DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(size,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(size,rand);
 
         assertTrue(DecompositionFactory_D64.decomposeSafe(lu,A));
         assertTrue(DecompositionFactory_D64.decomposeSafe(cholesky,A));
@@ -172,6 +172,6 @@ public abstract class GenericCholeskyTests_D64 {
         double expected = lu.computeDeterminant().real;
         double found = cholesky.computeDeterminant().real;
 
-        assertEquals(expected,found,UtilEjml.TEST_64F);
+        assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 }

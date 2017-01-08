@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -51,25 +51,25 @@ public class TestCholeskyOuterForm_B64 {
     public void testUpper() {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
-            DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(N,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition_F64<DenseMatrix64F> chol = DecompositionFactory_D64.chol(1,false);
+            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_D64.chol(1,false);
             assertTrue(DecompositionFactory_D64.decomposeSafe(chol,A));
 
-            DenseMatrix64F expectedT = chol.getT(null);
+            RowMatrix_F64 expectedT = chol.getT(null);
 
-            BlockMatrix64F blockA = MatrixOps_B64.convert(A,bl);
+            BlockMatrix_F64 blockA = MatrixOps_B64.convert(A,bl);
 
             CholeskyOuterForm_B64 blockChol = new CholeskyOuterForm_B64(false);
 
             assertTrue(DecompositionFactory_D64.decomposeSafe(blockChol,blockA));
 
-            assertTrue(GenericMatrixOps_F64.isEquivalent(expectedT,blockChol.getT(null), UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(expectedT,blockChol.getT(null), UtilEjml.TEST_F64));
 
             double blockDet = blockChol.computeDeterminant().real;
             double expectedDet = chol.computeDeterminant().real;
 
-            assertEquals(expectedDet,blockDet,UtilEjml.TEST_64F);
+            assertEquals(expectedDet,blockDet,UtilEjml.TEST_F64);
         }
     }
 
@@ -81,25 +81,25 @@ public class TestCholeskyOuterForm_B64 {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
 
-            DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(N,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition_F64<DenseMatrix64F> chol = DecompositionFactory_D64.chol(1,true);
+            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_D64.chol(1,true);
             assertTrue(DecompositionFactory_D64.decomposeSafe(chol, A));
 
-            DenseMatrix64F expectedT = chol.getT(null);
+            RowMatrix_F64 expectedT = chol.getT(null);
 
-            BlockMatrix64F blockA = MatrixOps_B64.convert(A,bl);
+            BlockMatrix_F64 blockA = MatrixOps_B64.convert(A,bl);
 
             CholeskyOuterForm_B64 blockChol = new CholeskyOuterForm_B64(true);
 
             assertTrue(DecompositionFactory_D64.decomposeSafe(blockChol,blockA));
 
-            assertTrue(GenericMatrixOps_F64.isEquivalent(expectedT,blockChol.getT(null),UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(expectedT,blockChol.getT(null),UtilEjml.TEST_F64));
 
             double blockDet = blockChol.computeDeterminant().real;
             double expectedDet = chol.computeDeterminant().real;
 
-            assertEquals(expectedDet,blockDet,UtilEjml.TEST_64F);
+            assertEquals(expectedDet,blockDet,UtilEjml.TEST_F64);
         }
     }
 }

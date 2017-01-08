@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CD64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.SpecializedOps_CD64;
 
 
@@ -48,14 +48,14 @@ public class LinearSolverQrHouseCol_CD64 extends LinearSolverAbstract_CD64 {
 
     private QRDecompositionHouseholderColumn_CD64 decomposer;
 
-    private CDenseMatrix64F a = new CDenseMatrix64F(1,1);
-    private CDenseMatrix64F temp = new CDenseMatrix64F(1,1);
+    private RowMatrix_C64 a = new RowMatrix_C64(1,1);
+    private RowMatrix_C64 temp = new RowMatrix_C64(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
     private double[][] QR; // a column major QR matrix
-    private CDenseMatrix64F R = new CDenseMatrix64F(1,1);
+    private RowMatrix_C64 R = new RowMatrix_C64(1,1);
     private double gammas[];
 
     /**
@@ -76,7 +76,7 @@ public class LinearSolverQrHouseCol_CD64 extends LinearSolverAbstract_CD64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(CDenseMatrix64F A) {
+    public boolean setA(RowMatrix_C64 A) {
         if( A.numRows < A.numCols )
             throw new IllegalArgumentException("Can't solve for wide systems.  More variables than equations.");
         if( A.numRows > maxRows || A.numCols > maxCols )
@@ -108,7 +108,7 @@ public class LinearSolverQrHouseCol_CD64 extends LinearSolverAbstract_CD64 {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(CDenseMatrix64F B, CDenseMatrix64F X) {
+    public void solve(RowMatrix_C64 B, RowMatrix_C64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
         else if( B.numRows != numRows || B.numCols != X.numCols )

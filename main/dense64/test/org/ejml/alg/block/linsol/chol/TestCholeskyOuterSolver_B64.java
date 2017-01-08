@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,8 +22,8 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.linsol.qr.QrHouseHolderSolver_B64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -51,10 +51,10 @@ public class TestCholeskyOuterSolver_B64 {
 
         for( int i = 1; i <= r*3; i++ ) {
             for( int j = 1; j <= r*3; j++ ) {
-                BlockMatrix64F A = createMatrixSPD(i);
-                BlockMatrix64F X = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
-                BlockMatrix64F Y = new BlockMatrix64F(i,j,r);
-                BlockMatrix64F X_found = new BlockMatrix64F(i,j,r);
+                BlockMatrix_F64 A = createMatrixSPD(i);
+                BlockMatrix_F64 X = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix_F64 Y = new BlockMatrix_F64(i,j,r);
+                BlockMatrix_F64 X_found = new BlockMatrix_F64(i,j,r);
 
                 // compute the expected solution directly
                 MatrixOps_B64.mult(A,X,Y);
@@ -63,7 +63,7 @@ public class TestCholeskyOuterSolver_B64 {
 
                 solver.solve(Y,X_found);
 
-                assertTrue(MatrixOps_B64.isEquals(X,X_found,UtilEjml.TEST_64F));
+                assertTrue(MatrixOps_B64.isEquals(X,X_found,UtilEjml.TEST_F64));
             }
         }
     }
@@ -75,7 +75,7 @@ public class TestCholeskyOuterSolver_B64 {
     public void testNegativeSolve() {
         CholeskyOuterSolver_B64 solver = new CholeskyOuterSolver_B64();
 
-        BlockMatrix64F X = MatrixOps_B64.createRandom(7,7,-1,1,rand,r);
+        BlockMatrix_F64 X = MatrixOps_B64.createRandom(7,7,-1,1,rand,r);
 
         assertFalse(solver.setA(X));
     }
@@ -85,18 +85,18 @@ public class TestCholeskyOuterSolver_B64 {
         CholeskyOuterSolver_B64 solver = new CholeskyOuterSolver_B64();
 
         for( int i = 1; i <= r*3; i++ ) {
-            BlockMatrix64F A = createMatrixSPD(i);
-            BlockMatrix64F A_inv = MatrixOps_B64.createRandom(i,i,-1,1,rand,r);
+            BlockMatrix_F64 A = createMatrixSPD(i);
+            BlockMatrix_F64 A_inv = MatrixOps_B64.createRandom(i,i,-1,1,rand,r);
 
             assertTrue(solver.setA(A.copy()));
 
             solver.invert(A_inv);
 
-            BlockMatrix64F B = new BlockMatrix64F(i,i,r);
+            BlockMatrix_F64 B = new BlockMatrix_F64(i,i,r);
 
             MatrixOps_B64.mult(A,A_inv,B);
 
-            assertTrue(GenericMatrixOps_F64.isIdentity(B, UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isIdentity(B, UtilEjml.TEST_F64));
         }
     }
 
@@ -104,8 +104,8 @@ public class TestCholeskyOuterSolver_B64 {
     public void testQuality() {
         CholeskyOuterSolver_B64 solver = new CholeskyOuterSolver_B64();
 
-        DenseMatrix64F A = CommonOps_D64.diag(5,3,2,1);
-        DenseMatrix64F B = CommonOps_D64.diag(5,3,2,0.001);
+        RowMatrix_F64 A = CommonOps_D64.diag(5,3,2,1);
+        RowMatrix_F64 B = CommonOps_D64.diag(5,3,2,0.001);
 
         assertTrue(solver.setA(MatrixOps_B64.convert(A,r)));
         double qualityA = (double)solver.quality();
@@ -121,8 +121,8 @@ public class TestCholeskyOuterSolver_B64 {
     public void testQuality_scale() {
         CholeskyOuterSolver_B64 solver = new CholeskyOuterSolver_B64();
 
-        DenseMatrix64F A = CommonOps_D64.diag(5,3,2,1);
-        DenseMatrix64F B = A.copy();
+        RowMatrix_F64 A = CommonOps_D64.diag(5,3,2,1);
+        RowMatrix_F64 B = A.copy();
         CommonOps_D64.scale(0.001,B);
 
         assertTrue(solver.setA(MatrixOps_B64.convert(A,r)));
@@ -131,7 +131,7 @@ public class TestCholeskyOuterSolver_B64 {
         assertTrue(solver.setA(MatrixOps_B64.convert(B,r)));
         double qualityB = (double)solver.quality();
 
-        assertEquals(qualityB,qualityA,UtilEjml.TEST_64F);
+        assertEquals(qualityB,qualityA,UtilEjml.TEST_F64);
     }
 
     @Test
@@ -140,10 +140,10 @@ public class TestCholeskyOuterSolver_B64 {
 
         for( int i = 1; i <= r*3; i++ ) {
             for( int j = 1; j <= r*3; j++ ) {
-                BlockMatrix64F A = createMatrixSPD(i);
-                BlockMatrix64F X = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
-                BlockMatrix64F Y = new BlockMatrix64F(i,j,r);
-                BlockMatrix64F X_found = new BlockMatrix64F(i,j,r);
+                BlockMatrix_F64 A = createMatrixSPD(i);
+                BlockMatrix_F64 X = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix_F64 Y = new BlockMatrix_F64(i,j,r);
+                BlockMatrix_F64 X_found = new BlockMatrix_F64(i,j,r);
 
                 // compute the expected solution directly
                 MatrixOps_B64.mult(A,X,Y);
@@ -152,15 +152,15 @@ public class TestCholeskyOuterSolver_B64 {
 
                 solver.solve(Y,null);
 
-                assertTrue(MatrixOps_B64.isEquals(X,Y,UtilEjml.TEST_64F));
+                assertTrue(MatrixOps_B64.isEquals(X,Y,UtilEjml.TEST_F64));
             }
         }
     }
 
     @Test
     public void modifiesA(){
-        BlockMatrix64F A = createMatrixSPD(4);
-        BlockMatrix64F A_orig = A.copy();
+        BlockMatrix_F64 A = createMatrixSPD(4);
+        BlockMatrix_F64 A_orig = A.copy();
 
         QrHouseHolderSolver_B64 solver = new QrHouseHolderSolver_B64();
 
@@ -173,15 +173,15 @@ public class TestCholeskyOuterSolver_B64 {
 
     @Test
     public void modifiesB(){
-        BlockMatrix64F A = createMatrixSPD(4);
+        BlockMatrix_F64 A = createMatrixSPD(4);
 
         QrHouseHolderSolver_B64 solver = new QrHouseHolderSolver_B64();
 
         assertTrue(solver.setA(A));
 
-        BlockMatrix64F B = MatrixOps_B64.createRandom(4,2,-1,1,rand,3);
-        BlockMatrix64F B_orig = B.copy();
-        BlockMatrix64F X = new BlockMatrix64F(A.numRows,B.numCols,3);
+        BlockMatrix_F64 B = MatrixOps_B64.createRandom(4,2,-1,1,rand,3);
+        BlockMatrix_F64 B_orig = B.copy();
+        BlockMatrix_F64 X = new BlockMatrix_F64(A.numRows,B.numCols,3);
 
         solver.solve(B,X);
 
@@ -190,8 +190,8 @@ public class TestCholeskyOuterSolver_B64 {
         assertTrue(modified == solver.modifiesB());
     }
 
-    protected BlockMatrix64F createMatrixSPD( int width ) {
-        DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(width,rand);
+    protected BlockMatrix_F64 createMatrixSPD(int width ) {
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(width,rand);
 
         return MatrixOps_B64.convert(A,r);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.RandomMatrices_D64;
@@ -36,22 +36,22 @@ import java.util.Random;
 public class BenchmarkSolveOver {
     private static final long SEED = 6;
     private static Random rand = new Random();
-    private static DenseMatrix64F A;
-    private static DenseMatrix64F B;
+    private static RowMatrix_F64 A;
+    private static RowMatrix_F64 B;
 
     private static boolean includeSet = false;
 
-    public static long solveBenchmark( LinearSolver<DenseMatrix64F> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<RowMatrix_F64> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DenseMatrix64F X = new DenseMatrix64F(A.numCols,B.numCols);
+        RowMatrix_F64 X = new RowMatrix_F64(A.numCols,B.numCols);
         RandomMatrices_D64.setRandom(A,rand);
         RandomMatrices_D64.setRandom(B,rand);
 
-        DenseMatrix64F B_tmp = new DenseMatrix64F(B.numRows,B.numCols);
+        RowMatrix_F64 B_tmp = new RowMatrix_F64(B.numRows,B.numCols);
 
         if( !includeSet ) solver.setA(A);
 
-        DenseMatrix64F A_copy = solver.modifiesA() ? A.copy() : A;
+        RowMatrix_F64 A_copy = solver.modifiesA() ? A.copy() : A;
 
         long prev = System.currentTimeMillis();
 
@@ -102,8 +102,8 @@ public class BenchmarkSolveOver {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
-            A = new DenseMatrix64F(N,width[i]);
-            B = new DenseMatrix64F(N,1);
+            A = new RowMatrix_F64(N,width[i]);
+            B = new RowMatrix_F64(N,1);
 
             runAlgorithms(trialsWith[i]);
         }
@@ -115,8 +115,8 @@ public class BenchmarkSolveOver {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
-            A = new DenseMatrix64F(N,width[i]);
-            B = new DenseMatrix64F(N,1);
+            A = new RowMatrix_F64(N,width[i]);
+            B = new RowMatrix_F64(N,1);
 
             runAlgorithms(trialsWith[i]);
         }

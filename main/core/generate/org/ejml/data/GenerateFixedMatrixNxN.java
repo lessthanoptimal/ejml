@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,7 +37,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
     }
 
     public void print( int dimen ) throws FileNotFoundException {
-        String className = classPreamble +dimen+"x"+dimen+"_64F";
+        String className = classPreamble +dimen+"x"+dimen+"_D64";
 
         setOutputFile(className);
 
@@ -200,7 +200,7 @@ public class GenerateFixedMatrixNxN extends CodeGeneratorBase{
                 "    public void set(Matrix original) {\n" +
                 "        if( original.getNumCols() != "+dimen+" || original.getNumRows() != "+dimen+" )\n" +
                 "            throw new IllegalArgumentException(\"Rows and/or columns do not match\");\n" +
-                "        RealMatrix64F m = (RealMatrix64F)original;\n" +
+                "        RealMatrix_F64 m = (RealMatrix_F64)original;\n" +
                 "        \n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {

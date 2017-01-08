@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -34,7 +34,7 @@ import java.util.Random;
 public class BenchmarkCholeskyDecomposition {
 
 
-    public static long choleskyL( DenseMatrix64F orig , int numTrials ) {
+    public static long choleskyL(RowMatrix_F64 orig , int numTrials ) {
 
         CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(true);
 
@@ -49,7 +49,7 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyU( DenseMatrix64F orig , int numTrials ) {
+    public static long choleskyU(RowMatrix_F64 orig , int numTrials ) {
 
         CholeskyDecompositionInner_D64 alg = new CholeskyDecompositionInner_D64(false);
 
@@ -64,7 +64,7 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyL_block( DenseMatrix64F orig , int numTrials ) {
+    public static long choleskyL_block(RowMatrix_F64 orig , int numTrials ) {
 
         CholeskyDecompositionBlock_D64 alg = new CholeskyDecompositionBlock_D64(
                 EjmlParameters.BLOCK_WIDTH_CHOL);
@@ -81,7 +81,7 @@ public class BenchmarkCholeskyDecomposition {
     }
 
 
-    public static long choleskyBlockU( DenseMatrix64F orig , int numTrials ) {
+    public static long choleskyBlockU(RowMatrix_F64 orig , int numTrials ) {
 
         CholeskyDecomposition_B64_to_D64 alg = new CholeskyDecomposition_B64_to_D64(false);
 
@@ -96,7 +96,7 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyBlockL( DenseMatrix64F orig , int numTrials ) {
+    public static long choleskyBlockL(RowMatrix_F64 orig , int numTrials ) {
 
         CholeskyDecomposition_B64_to_D64 alg = new CholeskyDecomposition_B64_to_D64(true);
 
@@ -111,7 +111,7 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyLDL( DenseMatrix64F orig , int numTrials ) {
+    public static long choleskyLDL(RowMatrix_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -126,7 +126,7 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
         System.out.println("Lower            = "+ choleskyL(mat,numTrials));
 //        System.out.println("Upper            = "+ choleskyU(mat,numTrials));
@@ -149,7 +149,7 @@ public class BenchmarkCholeskyDecomposition {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F symMat = RandomMatrices_D64.createSymmPosDef(w,rand);
+            RowMatrix_F64 symMat = RandomMatrices_D64.createSymmPosDef(w,rand);
             System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -34,7 +34,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<DenseMatrix64F> {
+public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<RowMatrix_F64> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
@@ -96,7 +96,7 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DenseMatrix64F getQ( DenseMatrix64F Q , boolean compact ) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean compact ) {
         if( compact ) {
             Q = UtilDecompositons_D64.checkIdentity(Q,numRows,minLength);
         } else {
@@ -123,7 +123,7 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
      * @param compact If true then a compact matrix is expected.
      */
     @Override
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
+    public RowMatrix_F64 getR(RowMatrix_F64 R, boolean compact) {
         if( compact ) {
             R = UtilDecompositons_D64.checkZerosLT(R,minLength,numCols);
         } else {
@@ -155,7 +155,7 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
      * </p>
      */
     @Override
-    public boolean decompose( DenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_F64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         convertToColumnMajor(A);
@@ -181,7 +181,7 @@ public class QRDecompositionHouseholderColumn_D64 implements QRDecomposition<Den
      *
      * @param A original matrix that is to be decomposed.
      */
-    protected void convertToColumnMajor(DenseMatrix64F A) {
+    protected void convertToColumnMajor(RowMatrix_F64 A) {
         for( int x = 0; x < numCols; x++ ) {
             double colQ[] = dataQR[x];
             for( int y = 0; y < numRows; y++ ) {

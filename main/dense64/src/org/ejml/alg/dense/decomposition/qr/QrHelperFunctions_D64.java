@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -209,10 +209,10 @@ public class QrHelperFunctions_D64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultR( DenseMatrix64F A , double u[] , double gamma ,
-                                         int colA0,
-                                         int w0, int w1 ,
-                                         double _temp[] )
+    public static void rank1UpdateMultR(RowMatrix_F64 A , double u[] , double gamma ,
+                                        int colA0,
+                                        int w0, int w1 ,
+                                        double _temp[] )
     {
 //        for( int i = colA0; i < A.numCols; i++ ) {
 //            double val = 0;
@@ -251,7 +251,7 @@ public class QrHelperFunctions_D64 {
         }
     }
 
-    public static void rank1UpdateMultR(DenseMatrix64F A,
+    public static void rank1UpdateMultR(RowMatrix_F64 A,
                                         double u[], int offsetU,
                                         double gamma,
                                         int colA0,
@@ -311,10 +311,10 @@ public class QrHelperFunctions_D64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL( DenseMatrix64F A , double u[] ,
-                                         double gamma ,
-                                         int colA0,
-                                         int w0 , int w1 )
+    public static void rank1UpdateMultL(RowMatrix_F64 A , double u[] ,
+                                        double gamma ,
+                                        int colA0,
+                                        int w0 , int w1 )
     {
         for( int i = colA0; i < A.numRows; i++ ) {
             int startIndex = i*A.numCols+w0;

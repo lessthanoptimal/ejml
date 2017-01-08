@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixFeatures_CD64;
@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridiagonalTests_CD64 {
 
     @Override
-    protected TridiagonalSimilarDecomposition_F64<CDenseMatrix64F> createDecomposition() {
+    protected TridiagonalSimilarDecomposition_F64<RowMatrix_C64> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_CD64();
     }
 
@@ -50,8 +50,8 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
     public void testHouseholderVectors()
     {
         int N = 5;
-        CDenseMatrix64F A = RandomMatrices_CD64.createHermitian(N,-1,1,rand);
-        CDenseMatrix64F B = new CDenseMatrix64F(N,N);
+        RowMatrix_C64 A = RandomMatrices_CD64.createHermitian(N,-1,1,rand);
+        RowMatrix_C64 B = new RowMatrix_C64(N,N);
 
 //        System.out.println("A");
 //        A.print();
@@ -61,11 +61,11 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
 
         assertTrue(safeDecomposition(decomp,A));
 
-        CDenseMatrix64F QT = decomp.getQT();
+        RowMatrix_C64 QT = decomp.getQT();
 
         double gammas[] = decomp.getGammas();
 
-        CDenseMatrix64F u = new CDenseMatrix64F(N,1);
+        RowMatrix_C64 u = new RowMatrix_C64(N,1);
 
         for( int i = 0; i < N-1; i++ ) {
 //            System.out.println("------- Column "+i);
@@ -79,26 +79,26 @@ public class TestTridiagonalDecompositionHouseholder_CD64 extends StandardTridia
                 u.data[j*2+1] = QT.getImag(i,j); // the reflector stored in the row will be the conjugate
             }
 
-            CDenseMatrix64F Q = SpecializedOps_CD64.createReflector(u,gammas[i]);
+            RowMatrix_C64 Q = SpecializedOps_CD64.createReflector(u,gammas[i]);
             CommonOps_CD64.mult(Q,A,B);
             CommonOps_CD64.mult(B,Q,A);
 
             // sanity check
-            assertTrue(MatrixFeatures_CD64.isHermitian(A,UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isHermitian(A,UtilEjml.TEST_F64));
 
             for( int j = i; j  < i+2; j++ ) {
-                assertTrue(Math.abs(A.getReal(j,i))> UtilEjml.TEST_64F);
+                assertTrue(Math.abs(A.getReal(j,i))> UtilEjml.TEST_F64);
                 if( j != i)
-                    assertTrue(Math.abs(A.getImag(j,i))> UtilEjml.TEST_64F);
+                    assertTrue(Math.abs(A.getImag(j,i))> UtilEjml.TEST_F64);
             }
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,A.getReal(j,i),UtilEjml.TEST_64F);
-                assertEquals(0,A.getImag(j,i),UtilEjml.TEST_64F);
+                assertEquals(0,A.getReal(j,i),UtilEjml.TEST_F64);
+                assertEquals(0,A.getImag(j,i),UtilEjml.TEST_F64);
             }
 
             for( int j = i+2; j < N; j++ ) {
-                assertEquals(0,A.getReal(i,j),UtilEjml.TEST_64F);
-                assertEquals(0,A.getImag(i,j),UtilEjml.TEST_64F);
+                assertEquals(0,A.getReal(i,j),UtilEjml.TEST_F64);
+                assertEquals(0,A.getImag(i,j),UtilEjml.TEST_F64);
             }
         }
     }

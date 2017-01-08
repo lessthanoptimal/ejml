@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
@@ -39,16 +39,16 @@ public class WatchedDoubleStepQREigenvector_D64 {
     WatchedDoubleStepQREigen_D64 implicit;
 
     // Q matrix from double step QR
-    DenseMatrix64F Q;
+    RowMatrix_F64 Q;
 
 
-    DenseMatrix64F eigenvectors[];
+    RowMatrix_F64 eigenvectors[];
 
-    DenseMatrix64F eigenvectorTemp;
+    RowMatrix_F64 eigenvectorTemp;
 
     LinearSolver solver;
 
-    Complex64F origEigenvalues[];
+    Complex_F64 origEigenvalues[];
     int N;
 
     int splits[];
@@ -59,22 +59,22 @@ public class WatchedDoubleStepQREigenvector_D64 {
     int indexVal;
     boolean onscript;
 
-    public boolean process(WatchedDoubleStepQREigen_D64 implicit , DenseMatrix64F A , DenseMatrix64F Q_h )
+    public boolean process(WatchedDoubleStepQREigen_D64 implicit , RowMatrix_F64 A , RowMatrix_F64 Q_h )
     {
         this.implicit = implicit;
 
         if( N != A.numRows ) {
             N = A.numRows;
-            Q = new DenseMatrix64F(N,N);
+            Q = new RowMatrix_F64(N,N);
             splits = new int[N];
-            origEigenvalues = new Complex64F[N];
-            eigenvectors = new DenseMatrix64F[N];
-            eigenvectorTemp = new DenseMatrix64F(N,1);
+            origEigenvalues = new Complex_F64[N];
+            eigenvectors = new RowMatrix_F64[N];
+            eigenvectorTemp = new RowMatrix_F64(N,1);
 
             solver = LinearSolverFactory_D64.linear(0);
         } else {
 //            UtilEjml.setnull(eigenvectors);
-            eigenvectors = new DenseMatrix64F[N];
+            eigenvectors = new RowMatrix_F64[N];
         }
         System.arraycopy(implicit.eigenvalues,0,origEigenvalues,0,N);
 
@@ -92,7 +92,7 @@ public class WatchedDoubleStepQREigenvector_D64 {
         return extractVectors(Q_h);
     }
 
-    public boolean extractVectors( DenseMatrix64F Q_h ) {
+    public boolean extractVectors( RowMatrix_F64 Q_h ) {
 
         Arrays.fill(eigenvectorTemp.data, 0);
         // extract eigenvectors from the shur matrix
@@ -100,7 +100,7 @@ public class WatchedDoubleStepQREigenvector_D64 {
         boolean triangular = true;
         for( int i = 0; i < N; i++ ) {
 
-            Complex64F c = implicit.eigenvalues[N-i-1];
+            Complex_F64 c = implicit.eigenvalues[N-i-1];
 
             if( triangular && !c.isReal() )
                 triangular = false;
@@ -112,9 +112,9 @@ public class WatchedDoubleStepQREigenvector_D64 {
 
         // translate the eigenvectors into the frame of the original matrix
         if( Q_h != null ) {
-            DenseMatrix64F temp = new DenseMatrix64F(N,1);
+            RowMatrix_F64 temp = new RowMatrix_F64(N,1);
             for( int i = 0; i < N; i++ ) {
-                DenseMatrix64F v = eigenvectors[i];
+                RowMatrix_F64 v = eigenvectors[i];
 
                 if( v != null ) {
                     CommonOps_D64.mult(Q_h,v,temp);
@@ -146,12 +146,12 @@ public class WatchedDoubleStepQREigenvector_D64 {
         eigenvectorTemp.reshape(N,1, false);
 
         for( int i = first; i < N; i++ ) {
-            Complex64F c = implicit.eigenvalues[N-i-1];
+            Complex_F64 c = implicit.eigenvalues[N-i-1];
 
             if( c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
                 eigenvectorTemp.data[i] = 1;
 
-                DenseMatrix64F v = new DenseMatrix64F(N,1);
+                RowMatrix_F64 v = new RowMatrix_F64(N,1);
                 CommonOps_D64.multTransA(Q,eigenvectorTemp,v);
                 eigenvectors[N-i-1] = v;
                 NormOps_D64.normalizeF(v);
@@ -161,7 +161,7 @@ public class WatchedDoubleStepQREigenvector_D64 {
         }
     }
 
-    private void solveUsingTriangle(double real, int index, DenseMatrix64F r ) {
+    private void solveUsingTriangle(double real, int index, RowMatrix_F64 r ) {
         for( int i = 0; i < index; i++ ) {
             implicit.A.add(i,i,-real);
         }
@@ -176,8 +176,8 @@ public class WatchedDoubleStepQREigenvector_D64 {
         }
     }
 
-    private void solveWithLU(double real, int index, DenseMatrix64F r ) {
-        DenseMatrix64F A = new DenseMatrix64F(index,index);
+    private void solveWithLU(double real, int index, RowMatrix_F64 r ) {
+        RowMatrix_F64 A = new RowMatrix_F64(index,index);
 
         CommonOps_D64.extract(implicit.A,0,index,0,index,A,0,0);
 
@@ -270,7 +270,7 @@ public class WatchedDoubleStepQREigenvector_D64 {
             if( implicit.steps > implicit.exceptionalThreshold/2  ) {
                 onscript = false;
             } else {
-                Complex64F a = origEigenvalues[indexVal];
+                Complex_F64 a = origEigenvalues[indexVal];
 
                 // if no splits are found perform an implicit step
                 if( a.isReal() ) {
@@ -304,7 +304,7 @@ public class WatchedDoubleStepQREigenvector_D64 {
         }
     }
 
-    public DenseMatrix64F getQ() {
+    public RowMatrix_F64 getQ() {
         return Q;
     }
 
@@ -312,11 +312,11 @@ public class WatchedDoubleStepQREigenvector_D64 {
         return implicit;
     }
 
-    public DenseMatrix64F[] getEigenvectors() {
+    public RowMatrix_F64[] getEigenvectors() {
         return eigenvectors;
     }
 
-    public Complex64F[] getEigenvalues() {
+    public Complex_F64[] getEigenvalues() {
         return implicit.eigenvalues;
     }
 }

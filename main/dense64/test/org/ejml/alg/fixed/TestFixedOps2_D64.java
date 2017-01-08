@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix2_64F;
-import org.ejml.data.FixedMatrix2x2_64F;
+import org.ejml.data.FixedMatrix2_F64;
+import org.ejml.data.FixedMatrix2x2_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,12 +36,12 @@ public class TestFixedOps2_D64 extends CompareFixedToCommonOps_D64 {
 
     @Test
     public void diag() {
-        FixedMatrix2x2_64F m = new FixedMatrix2x2_64F(1,2,3,4);
-        FixedMatrix2_64F found = new FixedMatrix2_64F();
+        FixedMatrix2x2_F64 m = new FixedMatrix2x2_F64(1,2,3,4);
+        FixedMatrix2_F64 found = new FixedMatrix2_F64();
 
         FixedOps2_D64.diag(m,found);
 
-        assertEquals(1,found.a1, UtilEjml.TEST_64F);
-        assertEquals(4,found.a2,UtilEjml.TEST_64F);
+        assertEquals(1,found.a1, UtilEjml.TEST_F64);
+        assertEquals(4,found.a2,UtilEjml.TEST_F64);
     }
 }

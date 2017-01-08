@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,7 +37,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveBin(RealMatrix64F A, String fileName)
+    public static void saveBin(RealMatrix_F64 A, String fileName)
         throws IOException
     {
         FileOutputStream fileStream = new FileOutputStream(fileName);
@@ -62,10 +62,10 @@ public class MatrixIO {
      * serialization.
      *
      * @param fileName The file being loaded.
-     * @return  DenseMatrix64F
+     * @return  RowMatrix_F64
      * @throws IOException
      */
-    public static <T extends RealMatrix64F> T loadBin(String fileName)
+    public static <T extends RealMatrix_F64> T loadBin(String fileName)
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
@@ -93,7 +93,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveCSV( RealMatrix64F A , String fileName )
+    public static void saveCSV(RealMatrix_F64 A , String fileName )
         throws IOException
     {
         PrintStream fileStream = new PrintStream(fileName);
@@ -114,16 +114,16 @@ public class MatrixIO {
      * each row is read in the subsequent lines.
      *
      * @param fileName The file being loaded.
-     * @return DenseMatrix64F
+     * @return RowMatrix_F64
      * @throws IOException
      */
-    public static DenseMatrix64F loadCSV( String fileName )
+    public static RowMatrix_F64 loadCSV(String fileName )
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
         ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
 
-        DenseMatrix64F ret = csv.read();
+        RowMatrix_F64 ret = csv.read();
 
         fileStream.close();
 
@@ -137,33 +137,33 @@ public class MatrixIO {
      * @param fileName The file being loaded.
      * @param numRows number of rows in the matrix.
      * @param numCols number of columns in the matrix.
-     * @return DenseMatrix64F
+     * @return RowMatrix_F64
      * @throws IOException
      */
-    public static DenseMatrix64F loadCSV( String fileName , int numRows , int numCols )
+    public static RowMatrix_F64 loadCSV(String fileName , int numRows , int numCols )
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
         ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
 
-        DenseMatrix64F ret = csv.readReal(numRows, numCols);
+        RowMatrix_F64 ret = csv.readReal(numRows, numCols);
 
         fileStream.close();
 
         return ret;
     }
 
-    public static void print( PrintStream out , RealMatrix64F mat ) {
+    public static void print( PrintStream out , RealMatrix_F64 mat ) {
         print(out,mat,6,3);
     }
 
-    public static void print(PrintStream out, RealMatrix64F mat , int numChar , int precision ) {
+    public static void print(PrintStream out, RealMatrix_F64 mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f ";
 
         print(out, mat,format);
     }
 
-    public static void print(PrintStream out , RealMatrix64F mat , String format ) {
+    public static void print(PrintStream out , RealMatrix_F64 mat , String format ) {
 
         String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense64" : "dense64 fixed";
 
@@ -179,17 +179,17 @@ public class MatrixIO {
         }
     }
 
-    public static void print( PrintStream out , RealMatrix32F mat ) {
+    public static void print( PrintStream out , RealMatrix_F32 mat ) {
         print(out,mat,6,3);
     }
 
-    public static void print(PrintStream out, RealMatrix32F mat , int numChar , int precision ) {
+    public static void print(PrintStream out, RealMatrix_F32 mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f ";
 
         print(out, mat,format);
     }
 
-    public static void print(PrintStream out , RealMatrix32F mat , String format ) {
+    public static void print(PrintStream out , RealMatrix_F32 mat , String format ) {
 
         String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense32" : "dense32 fixed";
 
@@ -205,8 +205,8 @@ public class MatrixIO {
         }
     }
 
-    public static void print( PrintStream out , RealMatrix64F mat , String format ,
-                              int row0 , int row1, int col0 , int col1 ) {
+    public static void print(PrintStream out , RealMatrix_F64 mat , String format ,
+                             int row0 , int row1, int col0 , int col1 ) {
         out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);
 
         format += " ";
@@ -219,8 +219,8 @@ public class MatrixIO {
         }
     }
 
-    public static void print( PrintStream out , RealMatrix32F mat , String format ,
-                              int row0 , int row1, int col0 , int col1 ) {
+    public static void print(PrintStream out , RealMatrix_F32 mat , String format ,
+                             int row0 , int row1, int col0 , int col1 ) {
         out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);
 
         format += " ";
@@ -233,27 +233,27 @@ public class MatrixIO {
         }
     }
 
-    public static void print( PrintStream out , ComplexMatrix64F mat ) {
+    public static void print( PrintStream out , Matrix_C64 mat ) {
         print(out,mat,6,3);
     }
 
-    public static void print( PrintStream out , ComplexMatrix32F mat ) {
+    public static void print( PrintStream out , Matrix_C32 mat ) {
         print(out,mat,6,3);
     }
 
-    public static void print(PrintStream out, ComplexMatrix64F mat , int numChar , int precision ) {
+    public static void print(PrintStream out, Matrix_C64 mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f + %"+numChar+"."+precision+"fi";
 
         print(out, mat,format);
     }
 
-    public static void print(PrintStream out, ComplexMatrix32F mat , int numChar , int precision ) {
+    public static void print(PrintStream out, Matrix_C32 mat , int numChar , int precision ) {
         String format = "%"+numChar+"."+precision+"f + %"+numChar+"."+precision+"fi";
 
         print(out, mat,format);
     }
 
-    public static void print(PrintStream out , ComplexMatrix64F mat , String format ) {
+    public static void print(PrintStream out , Matrix_C64 mat , String format ) {
 
         String type = "dense64";
 
@@ -261,7 +261,7 @@ public class MatrixIO {
 
         format += " ";
 
-        Complex64F c = new Complex64F();
+        Complex_F64 c = new Complex_F64();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
                 mat.get(y,x,c);
@@ -274,7 +274,7 @@ public class MatrixIO {
         }
     }
 
-    public static void print(PrintStream out , ComplexMatrix32F mat , String format ) {
+    public static void print(PrintStream out , Matrix_C32 mat , String format ) {
 
         String type = "dense32";
 
@@ -282,7 +282,7 @@ public class MatrixIO {
 
         format += " ";
 
-        Complex32F c = new Complex32F();
+        Complex_F32 c = new Complex_F32();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
                 mat.get(y,x,c);
@@ -297,7 +297,7 @@ public class MatrixIO {
 
 //    public static void main( String []args ) {
 //        Random rand = new Random(234234);
-//        DenseMatrix64F A = RandomMatrices.createRandom(50,70,rand);
+//        RowMatrix_F64 A = RandomMatrices.createRandom(50,70,rand);
 //
 //        SingularValueDecomposition decomp = DecompositionFactory.svd();
 //

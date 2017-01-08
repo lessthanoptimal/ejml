@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.factory;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -40,9 +40,9 @@ public class TestDecompositionFactory_D64 {
     @Test
     public void quality_eig() {
         // I'm assuming it can process this matrix with no problems
-        DenseMatrix64F A = RandomMatrices_D64.createSymmetric(5,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmetric(5,-1,1,rand);
 
-        EigenDecomposition_F64<DenseMatrix64F> eig = DecompositionFactory_D64.eig(A.numRows,true);
+        EigenDecomposition_F64<RowMatrix_F64> eig = DecompositionFactory_D64.eig(A.numRows,true);
 
         assertTrue(eig.decompose(A));
 
@@ -54,15 +54,15 @@ public class TestDecompositionFactory_D64 {
         double modQuality = DecompositionFactory_D64.quality(A,eig);
 
         assertTrue(origQuality < modQuality);
-        assertTrue(origQuality < UtilEjml.TEST_64F);
+        assertTrue(origQuality < UtilEjml.TEST_F64);
     }
 
     @Test
     public void quality_svd() {
         // I'm assuming it can process this matrix with no problems
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(4,5,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(4,5,rand);
 
-        SingularValueDecomposition_F64<DenseMatrix64F> svd = DecompositionFactory_D64.svd(A.numRows,A.numCols,true,true,false);
+        SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_D64.svd(A.numRows,A.numCols,true,true,false);
 
         assertTrue(svd.decompose(A));
 
@@ -74,6 +74,6 @@ public class TestDecompositionFactory_D64 {
         double modQuality = DecompositionFactory_D64.quality(A,svd);
 
         assertTrue(origQuality < modQuality);
-        assertTrue(origQuality < UtilEjml.TEST_64F);
+        assertTrue(origQuality < UtilEjml.TEST_F64);
     }
 }

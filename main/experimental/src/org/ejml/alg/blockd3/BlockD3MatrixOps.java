@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.blockd3;
 
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockD3Matrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 import java.util.Random;
 
@@ -30,7 +30,7 @@ import java.util.Random;
  */
 public class BlockD3MatrixOps {
 
-    public static BlockD3Matrix64F convert( DenseMatrix64F src , int blockLength )
+    public static BlockD3Matrix64F convert(RowMatrix_F64 src , int blockLength )
     {
         BlockD3Matrix64F ret = new BlockD3Matrix64F(src.numRows,src.numCols,blockLength);
 
@@ -39,7 +39,7 @@ public class BlockD3MatrixOps {
         return ret;
     }
 
-    public static BlockD3Matrix64F convert( DenseMatrix64F src )
+    public static BlockD3Matrix64F convert( RowMatrix_F64 src )
     {
         BlockD3Matrix64F ret = new BlockD3Matrix64F(src.numRows,src.numCols);
 
@@ -48,7 +48,7 @@ public class BlockD3MatrixOps {
         return ret;
     }
 
-    public static void convert( DenseMatrix64F src , BlockD3Matrix64F dst )
+    public static void convert(RowMatrix_F64 src , BlockD3Matrix64F dst )
     {
         if( src.numRows != dst.numRows || src.numCols != dst.numCols )
             throw new IllegalArgumentException("Must be the same size.");
@@ -78,7 +78,7 @@ public class BlockD3MatrixOps {
         }
     }
 
-    public static void convert( BlockD3Matrix64F src , DenseMatrix64F dst )
+    public static void convert( BlockD3Matrix64F src , RowMatrix_F64 dst )
     {
         if( dst.numRows != src.numRows || dst.numCols != src.numCols )
             throw new IllegalArgumentException("Must be the same size.");

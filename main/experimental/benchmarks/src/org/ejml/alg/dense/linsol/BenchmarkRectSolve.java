@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_D64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_D64;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -34,14 +34,14 @@ import java.util.Random;
 public class BenchmarkRectSolve {
     private static final long SEED = 6;
     private static final Random rand = new Random();
-    private static DenseMatrix64F A;
-    private static DenseMatrix64F B;
+    private static RowMatrix_F64 A;
+    private static RowMatrix_F64 B;
 
     private static final boolean includeSet = true;
 
-    public static long solveBenchmark( LinearSolver<DenseMatrix64F> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<RowMatrix_F64> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DenseMatrix64F X = new DenseMatrix64F(A.numCols,B.numCols);
+        RowMatrix_F64 X = new RowMatrix_F64(A.numCols,B.numCols);
         RandomMatrices_D64.setRandom(A,rand);
         RandomMatrices_D64.setRandom(B,rand);
 
@@ -79,7 +79,7 @@ public class BenchmarkRectSolve {
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
             A = RandomMatrices_D64.createRandom(w*2,w,rand);
-            B = new DenseMatrix64F(w*2,2);
+            B = new RowMatrix_F64(w*2,2);
 
             runAlgorithms(trials[i]);
         }
@@ -90,7 +90,7 @@ public class BenchmarkRectSolve {
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
             A = RandomMatrices_D64.createRandom(200,100,rand);
-            B = new DenseMatrix64F(200,w);
+            B = new RowMatrix_F64(200,w);
 
             runAlgorithms(trialsX[i]/80);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.simple;
 
 import org.ejml.EjmlUnitTests;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 /**
  * Unit testing functions for {@link SimpleMatrix}
@@ -34,7 +34,7 @@ public class SimpleUnitTests {
      * @param A Matrix
      */
     public static void assertCountable( SimpleMatrix A ) {
-        EjmlUnitTests.assertCountable((DenseMatrix64F)A.getMatrix());
+        EjmlUnitTests.assertCountable((RowMatrix_F64)A.getMatrix());
     }
 
     /**
@@ -68,7 +68,7 @@ public class SimpleUnitTests {
      * @param tol Tolerance
      */
     public static void assertEqualsUncountable( SimpleMatrix A , SimpleMatrix B , double tol ) {
-        EjmlUnitTests.assertEqualsUncountable((DenseMatrix64F)A.getMatrix(), (DenseMatrix64F)B.getMatrix(), tol);
+        EjmlUnitTests.assertEqualsUncountable((RowMatrix_F64)A.getMatrix(), (RowMatrix_F64)B.getMatrix(), tol);
     }
 
     /**
@@ -90,6 +90,6 @@ public class SimpleUnitTests {
      * @param tol Tolerance
      */
     public static void assertEquals( SimpleMatrix A , SimpleMatrix B , double tol ) {
-        EjmlUnitTests.assertEquals((DenseMatrix64F)A.getMatrix(), (DenseMatrix64F)B.getMatrix(), tol);
+        EjmlUnitTests.assertEquals((RowMatrix_F64)A.getMatrix(), (RowMatrix_F64)B.getMatrix(), tol);
     }
 }

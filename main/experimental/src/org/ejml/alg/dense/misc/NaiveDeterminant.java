@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix32F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F32;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -51,7 +51,7 @@ public class NaiveDeterminant {
      * @param mat The matrix whose determinant is computed.
      * @return The value of the determinant
      */
-    public static double leibniz( DenseMatrix64F mat )
+    public static double leibniz( RowMatrix_F64 mat )
     {
         PermuteArray perm = new PermuteArray( mat.numCols );
 
@@ -83,7 +83,7 @@ public class NaiveDeterminant {
      * @param mat The matrix that the determinant is to be computed from
      * @return The determinant.
      */
-    public static double recursive( DenseMatrix64F mat )
+    public static double recursive( RowMatrix_F64 mat )
     {
         if(mat.numRows == 1) {
             return mat.get(0);
@@ -96,7 +96,7 @@ public class NaiveDeterminant {
         double result = 0;
 
         for(int i = 0; i < mat.numRows; i++) {
-            DenseMatrix64F minorMat = new DenseMatrix64F(mat.numRows-1,mat.numRows-1);
+            RowMatrix_F64 minorMat = new RowMatrix_F64(mat.numRows-1,mat.numRows-1);
 
             for(int j = 1; j < mat.numRows; j++) {
                 for(int k = 0; k < mat.numRows; k++) {
@@ -119,7 +119,7 @@ public class NaiveDeterminant {
         return result;
     }
 
-    public static float recursive( DenseMatrix32F mat )
+    public static float recursive( RowMatrix_F32 mat )
     {
         if(mat.numRows == 1) {
             return mat.get(0);
@@ -132,7 +132,7 @@ public class NaiveDeterminant {
         float result = 0;
 
         for(int i = 0; i < mat.numRows; i++) {
-            DenseMatrix32F minorMat = new DenseMatrix32F(mat.numRows-1,mat.numRows-1);
+            RowMatrix_F32 minorMat = new RowMatrix_F32(mat.numRows-1,mat.numRows-1);
 
             for(int j = 1; j < mat.numRows; j++) {
                 for(int k = 0; k < mat.numRows; k++) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
 
@@ -32,11 +32,11 @@ import java.io.IOException;
 public class ExampleMatrixIO {
 
     public static void csv() {
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,new double[]{1,2,3,4,5,6});
+        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,new double[]{1,2,3,4,5,6});
 
         try {
             MatrixIO.saveCSV(A, "matrix_file.csv");
-            DenseMatrix64F B = MatrixIO.loadCSV("matrix_file.csv");
+            RowMatrix_F64 B = MatrixIO.loadCSV("matrix_file.csv");
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -56,11 +56,11 @@ public class ExampleMatrixIO {
     }
 
     public static void serializedBinary() {
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,new double[]{1,2,3,4,5,6});
+        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,new double[]{1,2,3,4,5,6});
 
         try {
             MatrixIO.saveBin(A, "matrix_file.data");
-            DenseMatrix64F B = MatrixIO.loadBin("matrix_file.data");
+            RowMatrix_F64 B = MatrixIO.loadBin("matrix_file.data");
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);

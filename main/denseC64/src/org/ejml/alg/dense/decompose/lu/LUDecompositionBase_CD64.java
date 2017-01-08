@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decompose.lu;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.ops.SpecializedOps_CD64;
 
@@ -34,9 +34,9 @@ import org.ejml.ops.SpecializedOps_CD64;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_CD64
-        implements LUDecomposition_F64<CDenseMatrix64F> {
+        implements LUDecomposition_F64<RowMatrix_C64> {
     // the decomposed matrix
-    protected CDenseMatrix64F LU;
+    protected RowMatrix_C64 LU;
 
     // it can decompose a matrix up to this size
     protected int maxWidth=-1;
@@ -54,11 +54,11 @@ public abstract class LUDecompositionBase_CD64
 
     // used by determinant
     protected double pivsign;
-    protected Complex64F det = new Complex64F();
+    protected Complex_F64 det = new Complex_F64();
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
-        LU = new CDenseMatrix64F(numRows,numCols);
+        LU = new RowMatrix_C64(numRows,numCols);
 
         this.dataLU = LU.data;
         maxWidth = Math.max(numRows,numCols);
@@ -68,7 +68,7 @@ public abstract class LUDecompositionBase_CD64
         pivot = new int[ maxWidth ];
     }
 
-    public CDenseMatrix64F getLU() {
+    public RowMatrix_C64 getLU() {
         return LU;
     }
 
@@ -91,7 +91,7 @@ public abstract class LUDecompositionBase_CD64
      * @param lower Where the lower triangular matrix is written to.
      */
     @Override
-    public CDenseMatrix64F getLower( CDenseMatrix64F lower )
+    public RowMatrix_C64 getLower(RowMatrix_C64 lower )
     {
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
@@ -136,7 +136,7 @@ public abstract class LUDecompositionBase_CD64
      * @param upper Where the upper triangular matrix is writen to.
      */
     @Override
-    public CDenseMatrix64F getUpper( CDenseMatrix64F upper )
+    public RowMatrix_C64 getUpper(RowMatrix_C64 upper )
     {
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
@@ -159,11 +159,11 @@ public abstract class LUDecompositionBase_CD64
         return upper;
     }
 
-    public CDenseMatrix64F getPivot( CDenseMatrix64F pivot ) {
+    public RowMatrix_C64 getPivot(RowMatrix_C64 pivot ) {
         return SpecializedOps_CD64.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
-    protected void decomposeCommonInit(CDenseMatrix64F a) {
+    protected void decomposeCommonInit(RowMatrix_C64 a) {
         if( a.numRows > maxWidth || a.numCols > maxWidth ) {
             setExpectedMaxSize(a.numRows,a.numCols);
         }
@@ -206,7 +206,7 @@ public abstract class LUDecompositionBase_CD64
      * @return The matrix's determinant.
      */
     @Override
-    public Complex64F computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         if( m != n )
             throw new IllegalArgumentException("Must be a square matrix.");
 

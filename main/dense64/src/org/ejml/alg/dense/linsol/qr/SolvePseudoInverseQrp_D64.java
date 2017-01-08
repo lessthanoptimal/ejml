@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -34,10 +34,10 @@ import org.ejml.ops.CommonOps_D64;
 public class SolvePseudoInverseQrp_D64 extends BaseLinearSolverQrp_D64 {
 
     // stores the orthogonal Q matrix from QR decomposition
-    private DenseMatrix64F Q=new DenseMatrix64F(1,1);
+    private RowMatrix_F64 Q=new RowMatrix_F64(1,1);
 
     // storage for basic solution
-    private DenseMatrix64F x_basic =new DenseMatrix64F(1,1);
+    private RowMatrix_F64 x_basic =new RowMatrix_F64(1,1);
 
     /**
      * Configure and provide decomposition
@@ -45,13 +45,13 @@ public class SolvePseudoInverseQrp_D64 extends BaseLinearSolverQrp_D64 {
      * @param decomposition Decomposition used.
      * @param norm2Solution If true the basic solution will be returned, false the minimal 2-norm solution.
      */
-    public SolvePseudoInverseQrp_D64(QRPDecomposition_F64<DenseMatrix64F> decomposition,
+    public SolvePseudoInverseQrp_D64(QRPDecomposition_F64<RowMatrix_F64> decomposition,
                                      boolean norm2Solution) {
         super(decomposition,norm2Solution);
     }
 
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         if( !super.setA(A))
             return false;
 
@@ -63,7 +63,7 @@ public class SolvePseudoInverseQrp_D64 extends BaseLinearSolverQrp_D64 {
     }
 
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decompose;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.ops.MatrixFeatures_CD64;
 import org.ejml.ops.RandomMatrices_CD64;
@@ -36,9 +36,9 @@ public class CheckDecompositionInterface_CD64 {
     /**
      * Performs a decomposition and makes sure the input matrix is not modified.
      */
-    public static boolean safeDecomposition( DecompositionInterface<CDenseMatrix64F> decomp , CDenseMatrix64F A ) {
+    public static boolean safeDecomposition(DecompositionInterface<RowMatrix_C64> decomp , RowMatrix_C64 A ) {
 
-        CDenseMatrix64F A_orig = decomp.inputModified() ? A.copy() : A;
+        RowMatrix_C64 A_orig = decomp.inputModified() ? A.copy() : A;
 
         return decomp.decompose(A_orig);
     }
@@ -50,9 +50,9 @@ public class CheckDecompositionInterface_CD64 {
      *
      * @param decomp
      */
-    public static void checkModifiedInput( DecompositionInterface<CDenseMatrix64F> decomp ) {
-        CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(4, new Random(0x434));
-        CDenseMatrix64F A_orig = A.copy();
+    public static void checkModifiedInput( DecompositionInterface<RowMatrix_C64> decomp ) {
+        RowMatrix_C64 A = RandomMatrices_CD64.createHermPosDef(4, new Random(0x434));
+        RowMatrix_C64 A_orig = A.copy();
 
         assertTrue(decomp.decompose(A));
 

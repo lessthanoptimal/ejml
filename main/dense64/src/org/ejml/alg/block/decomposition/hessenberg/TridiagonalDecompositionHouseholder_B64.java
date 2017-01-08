@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.alg.block.decomposition.hessenberg;
 
 import org.ejml.alg.block.MatrixMult_B64;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -47,24 +47,24 @@ import static org.ejml.alg.block.InnerMultiplication_B64.blockMultPlusTransA;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_B64
-        implements TridiagonalSimilarDecomposition_F64<BlockMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<BlockMatrix_F64> {
 
     // matrix which is being decomposed
     // householder vectors are stored along the upper triangle rows
-    protected BlockMatrix64F A;
+    protected BlockMatrix_F64 A;
     // temporary storage for block computations
-    protected BlockMatrix64F V = new BlockMatrix64F(1,1);
+    protected BlockMatrix_F64 V = new BlockMatrix_F64(1,1);
     // stores intermediate results in matrix multiplication
-    protected BlockMatrix64F tmp = new BlockMatrix64F(1,1);
+    protected BlockMatrix_F64 tmp = new BlockMatrix_F64(1,1);
     protected double gammas[] = new double[1];
 
     // temporary storage for zeros and ones in U
-    protected DenseMatrix64F zerosM = new DenseMatrix64F(1,1);
+    protected RowMatrix_F64 zerosM = new RowMatrix_F64(1,1);
 
     @Override
-    public BlockMatrix64F getT(BlockMatrix64F T) {
+    public BlockMatrix_F64 getT(BlockMatrix_F64 T) {
         if( T == null ) {
-            T = new BlockMatrix64F(A.numRows,A.numCols,A.blockLength);
+            T = new BlockMatrix_F64(A.numRows,A.numCols,A.blockLength);
         } else {
             if( T.numRows != A.numRows || T.numCols != A.numCols )
                 throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
@@ -84,17 +84,17 @@ public class TridiagonalDecompositionHouseholder_B64
     }
 
     @Override
-    public BlockMatrix64F getQ(BlockMatrix64F Q, boolean transposed) {
+    public BlockMatrix_F64 getQ(BlockMatrix_F64 Q, boolean transposed) {
         Q = QRDecompositionHouseholder_B64.initializeQ(Q, A.numRows, A.numCols, A.blockLength, false);
 
         int height = Math.min(A.blockLength,A.numRows);
         V.reshape(height,A.numCols,false);
         tmp.reshape(height,A.numCols,false);
 
-        D1Submatrix64F subQ = new D1Submatrix64F(Q);
-        D1Submatrix64F subU = new D1Submatrix64F(A);
-        D1Submatrix64F subW = new D1Submatrix64F(V);
-        D1Submatrix64F tmp = new D1Submatrix64F(this.tmp);
+        D1Submatrix_F64 subQ = new D1Submatrix_F64(Q);
+        D1Submatrix_F64 subU = new D1Submatrix_F64(A);
+        D1Submatrix_F64 subW = new D1Submatrix_F64(V);
+        D1Submatrix_F64 tmp = new D1Submatrix_F64(this.tmp);
 
 
         int N = A.numRows;
@@ -161,7 +161,7 @@ public class TridiagonalDecompositionHouseholder_B64
         return Q;
     }
 
-    private void copyZeros( D1Submatrix64F subU ) {
+    private void copyZeros( D1Submatrix_F64 subU ) {
         int N = Math.min(A.blockLength,subU.col1-subU.col0);
         for( int i = 0; i < N; i++ ) {
             // save the zeros
@@ -177,7 +177,7 @@ public class TridiagonalDecompositionHouseholder_B64
         }
     }
 
-    private void replaceZeros( D1Submatrix64F subU ) {
+    private void replaceZeros( D1Submatrix_F64 subU ) {
         int N = Math.min(A.blockLength,subU.col1-subU.col0);
         for( int i = 0; i < N; i++ ) {
             // save the zeros
@@ -201,15 +201,15 @@ public class TridiagonalDecompositionHouseholder_B64
     }
 
     @Override
-    public boolean decompose(BlockMatrix64F orig) {
+    public boolean decompose(BlockMatrix_F64 orig) {
         if( orig.numCols != orig.numRows )
             throw new IllegalArgumentException("Input matrix must be square.");
 
         init(orig);
 
-        D1Submatrix64F subA = new D1Submatrix64F(A);
-        D1Submatrix64F subV = new D1Submatrix64F(V);
-        D1Submatrix64F subU = new D1Submatrix64F(A);
+        D1Submatrix_F64 subA = new D1Submatrix_F64(A);
+        D1Submatrix_F64 subV = new D1Submatrix_F64(V);
+        D1Submatrix_F64 subU = new D1Submatrix_F64(A);
 
         int N = orig.numCols;
 
@@ -255,9 +255,9 @@ public class TridiagonalDecompositionHouseholder_B64
      * @param B row block vector
      * @param C
      */
-    public static void multPlusTransA( int blockLength ,
-                                       D1Submatrix64F A , D1Submatrix64F B ,
-                                       D1Submatrix64F C )
+    public static void multPlusTransA(int blockLength ,
+                                      D1Submatrix_F64 A , D1Submatrix_F64 B ,
+                                      D1Submatrix_F64 C )
     {
         int heightA = Math.min( blockLength , A.row1 - A.row0 );
 
@@ -278,7 +278,7 @@ public class TridiagonalDecompositionHouseholder_B64
         }
     }
 
-    private void init( BlockMatrix64F orig ) {
+    private void init( BlockMatrix_F64 orig ) {
         this.A = orig;
 
         int height = Math.min(A.blockLength,A.numRows);

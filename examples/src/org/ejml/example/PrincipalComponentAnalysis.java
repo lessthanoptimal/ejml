@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.CommonOps_D64;
@@ -56,13 +56,13 @@ import org.ejml.ops.SingularOps_D64;
 public class PrincipalComponentAnalysis {
 
     // principal component subspace is stored in the rows
-    private DenseMatrix64F V_t;
+    private RowMatrix_F64 V_t;
 
     // how many principal components are used
     private int numComponents;
 
     // where the data is stored
-    private DenseMatrix64F A = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 A = new RowMatrix_F64(1,1);
     private int sampleIndex;
 
     // mean values of each element across all the samples
@@ -136,13 +136,13 @@ public class PrincipalComponentAnalysis {
         }
 
         // Compute SVD and save time by not computing U
-        SingularValueDecomposition<DenseMatrix64F> svd =
+        SingularValueDecomposition<RowMatrix_F64> svd =
                 DecompositionFactory_D64.svd(A.numRows, A.numCols, false, true, false);
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 
         V_t = svd.getV(null,true);
-        DenseMatrix64F W = svd.getW(null);
+        RowMatrix_F64 W = svd.getW(null);
 
         // Singular values are in an arbitrary order initially
         SingularOps_D64.descendingOrder(null,false,W,V_t,true);
@@ -161,7 +161,7 @@ public class PrincipalComponentAnalysis {
         if( which < 0 || which >= numComponents )
             throw new IllegalArgumentException("Invalid component");
 
-        DenseMatrix64F v = new DenseMatrix64F(1,A.numCols);
+        RowMatrix_F64 v = new RowMatrix_F64(1,A.numCols);
         CommonOps_D64.extract(V_t,which,which+1,0,A.numCols,v,0,0);
 
         return v.data;
@@ -176,10 +176,10 @@ public class PrincipalComponentAnalysis {
     public double[] sampleToEigenSpace( double[] sampleData ) {
         if( sampleData.length != A.getNumCols() )
             throw new IllegalArgumentException("Unexpected sample length");
-        DenseMatrix64F mean = DenseMatrix64F.wrap(A.getNumCols(),1,this.mean);
+        RowMatrix_F64 mean = RowMatrix_F64.wrap(A.getNumCols(),1,this.mean);
 
-        DenseMatrix64F s = new DenseMatrix64F(A.getNumCols(),1,true,sampleData);
-        DenseMatrix64F r = new DenseMatrix64F(numComponents,1);
+        RowMatrix_F64 s = new RowMatrix_F64(A.getNumCols(),1,true,sampleData);
+        RowMatrix_F64 r = new RowMatrix_F64(numComponents,1);
 
         CommonOps_D64.subtract(s, mean, s);
 
@@ -198,12 +198,12 @@ public class PrincipalComponentAnalysis {
         if( eigenData.length != numComponents )
             throw new IllegalArgumentException("Unexpected sample length");
 
-        DenseMatrix64F s = new DenseMatrix64F(A.getNumCols(),1);
-        DenseMatrix64F r = DenseMatrix64F.wrap(numComponents,1,eigenData);
+        RowMatrix_F64 s = new RowMatrix_F64(A.getNumCols(),1);
+        RowMatrix_F64 r = RowMatrix_F64.wrap(numComponents,1,eigenData);
         
         CommonOps_D64.multTransA(V_t,r,s);
 
-        DenseMatrix64F mean = DenseMatrix64F.wrap(A.getNumCols(),1,this.mean);
+        RowMatrix_F64 mean = RowMatrix_F64.wrap(A.getNumCols(),1,this.mean);
         CommonOps_D64.add(s,mean,s);
 
         return s.data;
@@ -248,8 +248,8 @@ public class PrincipalComponentAnalysis {
         if( sample.length != A.numCols )
             throw new IllegalArgumentException("Expected input vector to be in sample space");
 
-        DenseMatrix64F dots = new DenseMatrix64F(numComponents,1);
-        DenseMatrix64F s = DenseMatrix64F.wrap(A.numCols,1,sample);
+        RowMatrix_F64 dots = new RowMatrix_F64(numComponents,1);
+        RowMatrix_F64 s = RowMatrix_F64.wrap(A.numCols,1,sample);
 
         CommonOps_D64.mult(V_t,s,dots);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,40 +22,40 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_D64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_D64;
 
 
 /**
- * Wrapper that allows {@link QRDecomposition}(BlockMatrix64F) to be used
- * as a {@link QRDecomposition}(DenseMatrix64F).
+ * Wrapper that allows {@link QRDecomposition}(BlockMatrix_F64) to be used
+ * as a {@link QRDecomposition}(RowMatrix_F64).
  *
  * @author Peter Abeles
  */
 public class QRDecomposition_B64_to_D64
-        extends BaseDecomposition_B64_to_D64 implements QRDecomposition<DenseMatrix64F>  {
+        extends BaseDecomposition_B64_to_D64 implements QRDecomposition<RowMatrix_F64>  {
 
     public QRDecomposition_B64_to_D64() {
         super(new QRDecompositionHouseholder_B64(), EjmlParameters.BLOCK_WIDTH);
     }
 
     @Override
-    public DenseMatrix64F getQ(DenseMatrix64F Q, boolean compact) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q, boolean compact) {
 
         int minLength = Math.min(Ablock.numRows,Ablock.numCols);
         if( Q == null  ) {
             if( compact ) {
-                Q = new DenseMatrix64F(Ablock.numRows,minLength);
+                Q = new RowMatrix_F64(Ablock.numRows,minLength);
                 CommonOps_D64.setIdentity(Q);
             } else {
-                Q = new DenseMatrix64F(Ablock.numRows,Ablock.numRows);
+                Q = new RowMatrix_F64(Ablock.numRows,Ablock.numRows);
                 CommonOps_D64.setIdentity(Q);
             }
         }
 
-        BlockMatrix64F Qblock = new BlockMatrix64F();
+        BlockMatrix_F64 Qblock = new BlockMatrix_F64();
         Qblock.numRows =  Q.numRows;
         Qblock.numCols =  Q.numCols;
         Qblock.blockLength = blockLength;
@@ -69,13 +69,13 @@ public class QRDecomposition_B64_to_D64
     }
 
     @Override
-    public DenseMatrix64F getR(DenseMatrix64F R, boolean compact) {
-        BlockMatrix64F Rblock;
+    public RowMatrix_F64 getR(RowMatrix_F64 R, boolean compact) {
+        BlockMatrix_F64 Rblock;
 
         Rblock = ((QRDecompositionHouseholder_B64)alg).getR(null,compact);
 
         if( R == null ) {
-            R = new DenseMatrix64F(Rblock.numRows,Rblock.numCols);
+            R = new RowMatrix_F64(Rblock.numRows,Rblock.numCols);
         }
         MatrixOps_B64.convert(Rblock,R);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.SpecializedOps_D64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -43,7 +43,7 @@ public class BidiagonalDecompositionNaive_D64 {
     private int min;
 
 
-    DenseMatrix64F u;
+    RowMatrix_F64 u;
 
     public SimpleMatrix getU() {
         return U;
@@ -63,24 +63,24 @@ public class BidiagonalDecompositionNaive_D64 {
      * @param A  The matrix that is being decomposed.  Not modified.
      * @return If it detects any errors or not.
      */
-    public boolean decompose( DenseMatrix64F A )
+    public boolean decompose( RowMatrix_F64 A )
     {
         init(A);
         return _decompose();
     }
 
-    protected void init(DenseMatrix64F A) {
+    protected void init(RowMatrix_F64 A) {
         m = A.numRows;
         n = A.numCols;
 
         min = Math.min(m,n);
 
-        U = SimpleMatrix.identity(m, DenseMatrix64F.class);
+        U = SimpleMatrix.identity(m, RowMatrix_F64.class);
         B = new SimpleMatrix(A);
-        V = SimpleMatrix.identity(n, DenseMatrix64F.class);
+        V = SimpleMatrix.identity(n, RowMatrix_F64.class);
 
         int max = Math.max(m,n);
-        u = new DenseMatrix64F(max,1);
+        u = new RowMatrix_F64(max,1);
     }
 
 

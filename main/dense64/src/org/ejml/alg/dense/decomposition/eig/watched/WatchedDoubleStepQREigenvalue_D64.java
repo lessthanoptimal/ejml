@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition.eig.watched;
 
 import org.ejml.alg.dense.decomposition.eig.EigenvalueExtractor_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -40,7 +40,7 @@ public class WatchedDoubleStepQREigenvalue_D64 implements EigenvalueExtractor_D6
         implicitQR = new WatchedDoubleStepQREigen_D64();
     }
 
-    public void setup( DenseMatrix64F A ) {
+    public void setup( RowMatrix_F64 A ) {
         implicitQR.setup(A);
         implicitQR.setQ(null);
 
@@ -49,7 +49,7 @@ public class WatchedDoubleStepQREigenvalue_D64 implements EigenvalueExtractor_D6
     }
 
     @Override
-    public boolean process(DenseMatrix64F origA) {
+    public boolean process(RowMatrix_F64 origA) {
         setup(origA);
 
         x1 = 0;
@@ -127,7 +127,7 @@ public class WatchedDoubleStepQREigenvalue_D64 implements EigenvalueExtractor_D6
     }
 
     @Override
-    public Complex64F[] getEigenvalues() {
+    public Complex_F64[] getEigenvalues() {
         return implicitQR.getEigenvalues();
     }
 

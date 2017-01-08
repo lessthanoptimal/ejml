@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.chol;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -48,20 +48,20 @@ public abstract class BaseCholeskySolveTests_D64 {
         testQuality_scale();
     }
 
-    public abstract LinearSolver<DenseMatrix64F> createSolver();
+    public abstract LinearSolver<RowMatrix_F64> createSolver();
 
-    public LinearSolver<DenseMatrix64F> createSafeSolver() {
-        LinearSolver<DenseMatrix64F> solver = createSolver();
-        return new LinearSolverSafe<DenseMatrix64F>(solver);
+    public LinearSolver<RowMatrix_F64> createSafeSolver() {
+        LinearSolver<RowMatrix_F64> solver = createSolver();
+        return new LinearSolverSafe<RowMatrix_F64>(solver);
     }
 
     @Test
     public void setA_dimensionCheck() {
 
-        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
 
         try {
-            DenseMatrix64F A = RandomMatrices_D64.createRandom(4,5,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createRandom(4,5,rand);
             assertTrue(solver.setA(A));
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -70,28 +70,28 @@ public abstract class BaseCholeskySolveTests_D64 {
     @Test
     public void solve_dimensionCheck() {
 
-        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
 
-        DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(4, rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(4, rand);
         assertTrue(solver.setA(A));
 
         try {
-            DenseMatrix64F x = RandomMatrices_D64.createRandom(4,3,rand);
-            DenseMatrix64F b = RandomMatrices_D64.createRandom(4,2,rand);
+            RowMatrix_F64 x = RandomMatrices_D64.createRandom(4,3,rand);
+            RowMatrix_F64 b = RandomMatrices_D64.createRandom(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            DenseMatrix64F x = RandomMatrices_D64.createRandom(5,2,rand);
-            DenseMatrix64F b = RandomMatrices_D64.createRandom(4,2,rand);
+            RowMatrix_F64 x = RandomMatrices_D64.createRandom(5,2,rand);
+            RowMatrix_F64 b = RandomMatrices_D64.createRandom(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            DenseMatrix64F x = RandomMatrices_D64.createRandom(5,2,rand);
-            DenseMatrix64F b = RandomMatrices_D64.createRandom(5,2,rand);
+            RowMatrix_F64 x = RandomMatrices_D64.createRandom(5,2,rand);
+            RowMatrix_F64 b = RandomMatrices_D64.createRandom(5,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -100,49 +100,49 @@ public abstract class BaseCholeskySolveTests_D64 {
     @Test
     public void testSolve() {
 
-        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(3,1,rand);
-        DenseMatrix64F A_orig = A.copy();
-        DenseMatrix64F B_orig = b.copy();
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 17, 97, 320);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(3,1,rand);
+        RowMatrix_F64 A_orig = A.copy();
+        RowMatrix_F64 B_orig = b.copy();
 
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
         // see if the input got modified
-        EjmlUnitTests.assertEquals(A,A_orig,UtilEjml.TEST_64F_SQ);
-        EjmlUnitTests.assertEquals(b,B_orig,UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(A,A_orig,UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(b,B_orig,UtilEjml.TEST_F64_SQ);
 
-        DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
+        RowMatrix_F64 x_expected = new RowMatrix_F64(3,1, true, 1, 2, 3);
 
-        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
     public void testInvert() {
 
-        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
 
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DenseMatrix64F found = new DenseMatrix64F(A.numRows,A.numCols);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        RowMatrix_F64 found = new RowMatrix_F64(A.numRows,A.numCols);
 
         assertTrue(solver.setA(A));
         solver.invert(found);
 
-        DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
+        RowMatrix_F64 A_inv = new RowMatrix_F64(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
 
-        EjmlUnitTests.assertEquals(A_inv,found,UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(A_inv,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
     public void testQuality() {
 
-        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
 
-        DenseMatrix64F A = CommonOps_D64.diag(3,2,1);
-        DenseMatrix64F B = CommonOps_D64.diag(3,2,0.001);
+        RowMatrix_F64 A = CommonOps_D64.diag(3,2,1);
+        RowMatrix_F64 B = CommonOps_D64.diag(3,2,0.001);
 
         assertTrue(solver.setA(A));
         double qualityA = (double)solver.quality();
@@ -156,10 +156,10 @@ public abstract class BaseCholeskySolveTests_D64 {
     @Test
     public void testQuality_scale() {
 
-        LinearSolver<DenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
 
-        DenseMatrix64F A = CommonOps_D64.diag(3,2,1);
-        DenseMatrix64F B = A.copy();
+        RowMatrix_F64 A = CommonOps_D64.diag(3,2,1);
+        RowMatrix_F64 B = A.copy();
         CommonOps_D64.scale(0.001,B);
 
         assertTrue(solver.setA(A));
@@ -168,6 +168,6 @@ public abstract class BaseCholeskySolveTests_D64 {
         assertTrue(solver.setA(B));
         double qualityB = (double)solver.quality();
 
-        assertEquals(qualityB,qualityA, UtilEjml.TEST_64F);
+        assertEquals(qualityB,qualityA, UtilEjml.TEST_F64);
     }
 }

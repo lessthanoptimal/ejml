@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.Matrix;
 
 /**
  * <p>
- * Cholesky LDL<sup>T<sup> decomposition for {@link org.ejml.data.DenseMatrix64F}.
+ * Cholesky LDL<sup>T<sup> decomposition.
  * <p>
  * <p>
  * A Cholesky LDL decomposition decomposes positive-definite symmetric matrices into:<br>

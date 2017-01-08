@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix4_64F;
-import org.ejml.data.FixedMatrix4x4_64F;
+import org.ejml.data.FixedMatrix4_F64;
+import org.ejml.data.FixedMatrix4x4_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 
 /**
@@ -30,7 +30,7 @@ import org.ejml.ops.MatrixFeatures_D64;
  * @author Peter Abeles
  */
 public class FixedFeatures4_D64 {
-    public static boolean isIdentical(FixedMatrix4x4_64F a , FixedMatrix4x4_64F b , double tol ) {
+    public static boolean isIdentical(FixedMatrix4x4_F64 a , FixedMatrix4x4_F64 b , double tol ) {
         if( !MatrixFeatures_D64.isIdentical(a.a11,b.a11,tol))
             return false;
         if( !MatrixFeatures_D64.isIdentical(a.a12,b.a12,tol))
@@ -66,7 +66,7 @@ public class FixedFeatures4_D64 {
         return true;
     }
 
-    public static boolean isIdentical(FixedMatrix4_64F a , FixedMatrix4_64F b , double tol ) {
+    public static boolean isIdentical(FixedMatrix4_F64 a , FixedMatrix4_F64 b , double tol ) {
         if( !MatrixFeatures_D64.isIdentical(a.a1,b.a1,tol))
             return false;
         if( !MatrixFeatures_D64.isIdentical(a.a2,b.a2,tol))
@@ -78,7 +78,7 @@ public class FixedFeatures4_D64 {
         return true;
     }
 
-    public static boolean hasUncountable(FixedMatrix4x4_64F a ) {
+    public static boolean hasUncountable(FixedMatrix4x4_F64 a ) {
         if( UtilEjml.isUncountable(a.a11+ a.a12+ a.a13+ a.a14))
             return true;
         if( UtilEjml.isUncountable(a.a21+ a.a22+ a.a23+ a.a24))
@@ -90,7 +90,7 @@ public class FixedFeatures4_D64 {
         return false;
     }
 
-    public static boolean hasUncountable(FixedMatrix4_64F a ) {
+    public static boolean hasUncountable(FixedMatrix4_F64 a ) {
         if( UtilEjml.isUncountable(a.a1))
             return true;
         if( UtilEjml.isUncountable(a.a2))

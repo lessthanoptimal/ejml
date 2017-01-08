@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decompose.lu;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 
 
 /**
@@ -39,7 +39,7 @@ public class LUDecompositionAlt_CD64 extends LUDecompositionBase_CD64 {
      * @param a The matrix that is to be decomposed.  Not modified.
      * @return true If the matrix can be decomposed and false if it can not.
      */
-    public boolean decompose( CDenseMatrix64F a )
+    public boolean decompose( RowMatrix_C64 a )
     {
         decomposeCommonInit(a);
 

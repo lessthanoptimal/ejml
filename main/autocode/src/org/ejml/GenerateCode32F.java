@@ -59,12 +59,9 @@ public class GenerateCode32F {
         converter.replacePattern("D64", "D32");
         converter.replacePattern("F64", "F32");
         converter.replacePattern("CD64", "CD32");
-        converter.replacePattern("64F", "32F");
         converter.replacePattern("64-bit", "32-bit");
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");
         converter.replacePattern("UtilEjml.EPS", "UtilEjml.F_EPS");
-        converter.replacePattern("UtilEjml.TEST_64F", "UtilEjml.TEST_32F");
-        converter.replacePattern("UtilEjml.TESTP_64F", "UtilEjml.TESTP_32F");
 
         converter.replaceStartsWith("Math.sqrt", "(float)Math.sqrt");
         converter.replaceStartsWith("Math.pow", "(float)Math.pow");

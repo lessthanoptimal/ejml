@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import java.io.Serializable;
  *
  * @author Peter Abeles
  */
-public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, RealMatrix64F {
+public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, RealMatrix_F64 {
 
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.

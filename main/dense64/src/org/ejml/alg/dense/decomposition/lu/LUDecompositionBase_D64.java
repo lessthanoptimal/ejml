@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decomposition.lu;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.ops.SpecializedOps_D64;
 
@@ -34,9 +34,9 @@ import org.ejml.ops.SpecializedOps_D64;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_D64
-        implements LUDecomposition_F64<DenseMatrix64F> {
+        implements LUDecomposition_F64<RowMatrix_F64> {
     // the decomposed matrix
-    protected DenseMatrix64F LU;
+    protected RowMatrix_F64 LU;
 
     // it can decompose a matrix up to this size
     protected int maxWidth=-1;
@@ -55,11 +55,11 @@ public abstract class LUDecompositionBase_D64
     // used by determinant
     protected double pivsign;
 
-    Complex64F det = new Complex64F();
+    Complex_F64 det = new Complex_F64();
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
-        LU = new DenseMatrix64F(numRows,numCols);
+        LU = new RowMatrix_F64(numRows,numCols);
 
         this.dataLU = LU.data;
         maxWidth = Math.max(numRows,numCols);
@@ -69,7 +69,7 @@ public abstract class LUDecompositionBase_D64
         pivot = new int[ maxWidth ];
     }
 
-    public DenseMatrix64F getLU() {
+    public RowMatrix_F64 getLU() {
         return LU;
     }
 
@@ -92,7 +92,7 @@ public abstract class LUDecompositionBase_D64
      * @param lower Where the lower triangular matrix is written to.
      */
     @Override
-    public DenseMatrix64F getLower( DenseMatrix64F lower )
+    public RowMatrix_F64 getLower(RowMatrix_F64 lower )
     {
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
@@ -123,7 +123,7 @@ public abstract class LUDecompositionBase_D64
      * @param upper Where the upper triangular matrix is writen to.
      */
     @Override
-    public DenseMatrix64F getUpper( DenseMatrix64F upper )
+    public RowMatrix_F64 getUpper(RowMatrix_F64 upper )
     {
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
@@ -139,11 +139,11 @@ public abstract class LUDecompositionBase_D64
         return upper;
     }
 
-    public DenseMatrix64F getPivot( DenseMatrix64F pivot ) {
+    public RowMatrix_F64 getPivot(RowMatrix_F64 pivot ) {
         return SpecializedOps_D64.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
-    protected void decomposeCommonInit(DenseMatrix64F a) {
+    protected void decomposeCommonInit(RowMatrix_F64 a) {
         if( a.numRows > maxWidth || a.numCols > maxWidth ) {
             setExpectedMaxSize(a.numRows,a.numCols);
         }
@@ -179,7 +179,7 @@ public abstract class LUDecompositionBase_D64
      * @return The matrix's determinant.
      */
     @Override
-    public Complex64F computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         if( m != n )
             throw new IllegalArgumentException("Must be a square matrix.");
 

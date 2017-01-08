@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.block.decomposition.chol;
 
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.D1Submatrix_F64;
 
 
 /**
@@ -29,7 +29,7 @@ import org.ejml.data.D1Submatrix64F;
 // TODO merge with CholeskyBlockHelper
 public class InnerCholesky_B64 {
 
-    public static boolean upper( D1Submatrix64F T )
+    public static boolean upper( D1Submatrix_F64 T )
     {
         int n = T.row1-T.row0;
         int indexT = T.row0* T.original.numCols + T.col0*n;
@@ -37,7 +37,7 @@ public class InnerCholesky_B64 {
         return upper(T.original.data,indexT,n);
     }
 
-    public static boolean lower( D1Submatrix64F T )
+    public static boolean lower( D1Submatrix_F64 T )
     {
         int n = T.row1-T.row0;
         int indexT = T.row0* T.original.numCols + T.col0*n;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml;
 
-import org.ejml.data.D1Matrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.D1Matrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -36,17 +36,17 @@ public class BenchmarkGenerics {
     private static class ImplDense implements ScaleDense
     {
         @Override
-        public void scale(double s, DenseMatrix64F mat) {
+        public void scale(double s, RowMatrix_F64 mat) {
             for( int i = 0; i < mat.data.length; i++ ) {
                 mat.data[i] *= s;
             }
         }
     }
 
-    private static class ImplGeneric implements ScaleGeneric<DenseMatrix64F>
+    private static class ImplGeneric implements ScaleGeneric<RowMatrix_F64>
     {
         @Override
-        public void scale(double s, DenseMatrix64F mat) {
+        public void scale(double s, RowMatrix_F64 mat) {
             for( int i = 0; i < mat.data.length; i++ ) {
                 mat.data[i] *= s;
             }
@@ -55,15 +55,15 @@ public class BenchmarkGenerics {
 
     private static interface ScaleDense
     {
-        public void scale( double s , DenseMatrix64F mat );
+        public void scale( double s , RowMatrix_F64 mat );
     }
 
-    private static interface ScaleGeneric<T extends D1Matrix64F>
+    private static interface ScaleGeneric<T extends D1Matrix_F64>
     {
         public void scale( double s , T mat );
     }
 
-    public static long benchmarkDense( DenseMatrix64F A , double scale , int trials ) {
+    public static long benchmarkDense(RowMatrix_F64 A , double scale , int trials ) {
         ScaleDense s = new ImplDense();
 
         long before = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class BenchmarkGenerics {
         return System.currentTimeMillis() - before;
     }
 
-    public static long benchmarkGeneric( DenseMatrix64F A , double scale , int trials ) {
+    public static long benchmarkGeneric(RowMatrix_F64 A , double scale , int trials ) {
         ImplGeneric s = new ImplGeneric();
 
         long before = System.currentTimeMillis();
@@ -91,7 +91,7 @@ public class BenchmarkGenerics {
 
 
     public static void main( String []args ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(10,10,new Random(234));
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(10,10,new Random(234));
 
         int N = 10000000;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,7 +45,7 @@ public class SimpleEVD <T extends SimpleBase>
     public SimpleEVD( Matrix mat )
     {
         this.mat = mat;
-        this.is64 = mat instanceof DenseMatrix64F;
+        this.is64 = mat instanceof RowMatrix_F64;
 
         if( is64) {
             eig = DecompositionFactory_D64.eig(mat.getNumCols(), true);
@@ -60,8 +60,8 @@ public class SimpleEVD <T extends SimpleBase>
     /**
      * Returns a list of all the eigenvalues
      */
-    public List<Complex64F> getEigenvalues() {
-        List<Complex64F> ret = new ArrayList<Complex64F>();
+    public List<Complex_F64> getEigenvalues() {
+        List<Complex_F64> ret = new ArrayList<Complex_F64>();
 
         if( is64 ) {
             EigenDecomposition_F64 d = (EigenDecomposition_F64)eig;
@@ -71,8 +71,8 @@ public class SimpleEVD <T extends SimpleBase>
         } else {
             EigenDecomposition_F32 d = (EigenDecomposition_F32)eig;
             for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
-                Complex32F c = d.getEigenvalue(i);
-                ret.add(new Complex64F(c.real, c.imaginary));
+                Complex_F32 c = d.getEigenvalue(i);
+                ret.add(new Complex_F64(c.real, c.imaginary));
             }
         }
 
@@ -103,12 +103,12 @@ public class SimpleEVD <T extends SimpleBase>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return An eigenvalue.
      */
-    public Complex64F getEigenvalue( int index ) {
+    public Complex_F64 getEigenvalue(int index ) {
         if( is64 )
             return ((EigenDecomposition_F64)eig).getEigenvalue(index);
         else {
-            Complex64F c = ((EigenDecomposition_F64)eig).getEigenvalue(index);
-            return new Complex64F(c.real, c.imaginary);
+            Complex_F64 c = ((EigenDecomposition_F64)eig).getEigenvalue(index);
+            return new Complex_F64(c.real, c.imaginary);
         }
     }
 
@@ -140,9 +140,9 @@ public class SimpleEVD <T extends SimpleBase>
      */
     public /**/double quality() {
         if (is64) {
-            return DecompositionFactory_D64.quality((DenseMatrix64F)mat, (EigenDecomposition_F64)eig);
+            return DecompositionFactory_D64.quality((RowMatrix_F64)mat, (EigenDecomposition_F64)eig);
         } else {
-            return DecompositionFactory_D32.quality((DenseMatrix32F)mat, (EigenDecomposition_F32)eig);
+            return DecompositionFactory_D32.quality((RowMatrix_F32)mat, (EigenDecomposition_F32)eig);
         }
     }
 

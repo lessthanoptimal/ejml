@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.ops.CommonOps_D64;
  */
 public class UtilDecompositons_D64 {
 
-    public static DenseMatrix64F checkIdentity(DenseMatrix64F A, int numRows, int numCols) {
+    public static RowMatrix_F64 checkIdentity(RowMatrix_F64 A, int numRows, int numCols) {
         if( A == null ) {
             return CommonOps_D64.identity(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -38,9 +38,9 @@ public class UtilDecompositons_D64 {
         return A;
     }
 
-    public static DenseMatrix64F checkZeros( DenseMatrix64F A , int numRows , int numCols) {
+    public static RowMatrix_F64 checkZeros(RowMatrix_F64 A , int numRows , int numCols) {
         if( A == null ) {
-            return new DenseMatrix64F(numRows,numCols);
+            return new RowMatrix_F64(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else
@@ -52,9 +52,9 @@ public class UtilDecompositons_D64 {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the lower triangular portion with zeros.
      */
-    public static DenseMatrix64F checkZerosLT( DenseMatrix64F A , int numRows , int numCols) {
+    public static RowMatrix_F64 checkZerosLT(RowMatrix_F64 A , int numRows , int numCols) {
         if( A == null ) {
-            return new DenseMatrix64F(numRows,numCols);
+            return new RowMatrix_F64(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else {
@@ -73,9 +73,9 @@ public class UtilDecompositons_D64 {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the upper triangular portion with zeros.
      */
-    public static DenseMatrix64F checkZerosUT( DenseMatrix64F A , int numRows , int numCols) {
+    public static RowMatrix_F64 checkZerosUT(RowMatrix_F64 A , int numRows , int numCols) {
         if( A == null ) {
-            return new DenseMatrix64F(numRows,numCols);
+            return new RowMatrix_F64(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else {

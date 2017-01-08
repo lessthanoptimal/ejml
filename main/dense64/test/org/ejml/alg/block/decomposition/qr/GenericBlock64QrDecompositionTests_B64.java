@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,8 +23,8 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_D64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 
 
 /**
- * Generic tests that test the compliance of an implementation of QRDecomposition(BlockMatrix64F).
+ * Generic tests that test the compliance of an implementation of QRDecomposition(BlockMatrix_F64).
  *
  * @author Peter Abeles
  */
@@ -67,19 +67,19 @@ public class GenericBlock64QrDecompositionTests_B64 {
     public void applyQTran() {
         for( int i = 1; i <= 3*r; i++ ) {
             for( int j = 1; j <= 3*r; j++ ) {
-                BlockMatrix64F A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix_F64 A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
 
                 assertTrue(alg.decompose(A.copy()));
 
-                BlockMatrix64F Q = alg.getQ(null,false);
+                BlockMatrix_F64 Q = alg.getQ(null,false);
 
-                BlockMatrix64F B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
-                BlockMatrix64F expected = new BlockMatrix64F(i,j,r);
+                BlockMatrix_F64 B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix_F64 expected = new BlockMatrix_F64(i,j,r);
 
                 MatrixOps_B64.multTransA(Q,B,expected);
                 alg.applyQTran(B);
 
-                assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_F64));
             }
         }
     }
@@ -91,19 +91,19 @@ public class GenericBlock64QrDecompositionTests_B64 {
     public void applyQ() {
         for( int i = 1; i <= 3*r; i++ ) {
             for( int j = 1; j <= 3*r; j++ ) {
-                BlockMatrix64F A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix_F64 A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
 
                 assertTrue(alg.decompose(A.copy()));
 
-                BlockMatrix64F Q = alg.getQ(null,false);
+                BlockMatrix_F64 Q = alg.getQ(null,false);
 
-                BlockMatrix64F B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
-                BlockMatrix64F expected = new BlockMatrix64F(i,j,r);
+                BlockMatrix_F64 B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                BlockMatrix_F64 expected = new BlockMatrix_F64(i,j,r);
 
                 MatrixOps_B64.mult(Q,B,expected);
                 alg.applyQ(B);
 
-                assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_D64.isIdentical(expected,B,UtilEjml.TEST_F64));
             }
         }
     }
@@ -121,19 +121,19 @@ public class GenericBlock64QrDecompositionTests_B64 {
     }
 
     private void checkSize( int numRows , int numCols ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
-        BlockMatrix64F Ab = MatrixOps_B64.convert(A,r);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
+        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
 
         QRDecompositionHouseholderTran_D64 algCheck = new QRDecompositionHouseholderTran_D64();
         assertTrue(algCheck.decompose(A));
 
         assertTrue(alg.decompose(Ab));
 
-        DenseMatrix64F expected = CommonOps_D64.transpose(algCheck.getQR(),null);
+        RowMatrix_F64 expected = CommonOps_D64.transpose(algCheck.getQR(),null);
 //        expected.print();
 //        Ab.print();
 
-        EjmlUnitTests.assertEquals(expected,Ab, UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(expected,Ab, UtilEjml.TEST_F64);
     }
 
     /**
@@ -152,17 +152,17 @@ public class GenericBlock64QrDecompositionTests_B64 {
     }
 
     private void checkFullDecomposition( int numRows , int numCols , boolean compact ) {
-        BlockMatrix64F A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+        BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
 
         assertTrue(alg.decompose(A.copy()));
 
-        BlockMatrix64F Q = alg.getQ(null,compact);
-        BlockMatrix64F R = alg.getR(null,compact);
+        BlockMatrix_F64 Q = alg.getQ(null,compact);
+        BlockMatrix_F64 R = alg.getR(null,compact);
 
-        BlockMatrix64F found = new BlockMatrix64F(numRows,numCols,r);
+        BlockMatrix_F64 found = new BlockMatrix_F64(numRows,numCols,r);
 
         MatrixOps_B64.mult(Q,R,found);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(A,found,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(A,found,UtilEjml.TEST_F64));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,14 +20,14 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.MatrixMult_B64;
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
 /**
  * <p>
- * QR decomposition for {@link BlockMatrix64F} using householder reflectors.  The decomposition is
+ * QR decomposition for {@link BlockMatrix_F64} using householder reflectors.  The decomposition is
  * performed by computing a QR decomposition for each block column as is normally done, see {@link org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_D64}.
  * The reflectors are then combined and applied to the remainder of the matrix.  This process is repeated
  * until all the block columns have been processed
@@ -58,26 +58,26 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  * @author Peter Abeles
  */
 public class QRDecompositionHouseholder_B64
-        implements QRDecomposition<BlockMatrix64F> {
+        implements QRDecomposition<BlockMatrix_F64> {
 
     // the input matrix which is overwritten with the decomposition.
     // Reflectors are stored in the lower triangular portion. The R matrix is stored
     // in the upper triangle portion
-    private BlockMatrix64F dataA;
+    private BlockMatrix_F64 dataA;
 
     // where the computed W matrix is stored
-    private BlockMatrix64F dataW = new BlockMatrix64F(1,1);
+    private BlockMatrix_F64 dataW = new BlockMatrix_F64(1,1);
     // Matrix used to store an intermediate calculation
-    private BlockMatrix64F dataWTA = new BlockMatrix64F(1,1);
+    private BlockMatrix_F64 dataWTA = new BlockMatrix_F64(1,1);
 
     // size of the inner matrix block.
     private int blockLength;
     
     // The submatrices which are being manipulated in each iteration
-    private D1Submatrix64F A = new D1Submatrix64F();
-    private D1Submatrix64F Y = new D1Submatrix64F();
-    private D1Submatrix64F W = new D1Submatrix64F(dataW);
-    private D1Submatrix64F WTA = new D1Submatrix64F(dataWTA);
+    private D1Submatrix_F64 A = new D1Submatrix_F64();
+    private D1Submatrix_F64 Y = new D1Submatrix_F64();
+    private D1Submatrix_F64 W = new D1Submatrix_F64(dataW);
+    private D1Submatrix_F64 WTA = new D1Submatrix_F64(dataWTA);
     private double temp[] = new double[1];
     // stores the computed gammas
     private double gammas[] = new double[1];
@@ -90,7 +90,7 @@ public class QRDecompositionHouseholder_B64
      *
      * @return Internal matrix used to store decomposition.
      */
-    public BlockMatrix64F getQR() {
+    public BlockMatrix_F64 getQR() {
         return dataA;
     }
 
@@ -115,7 +115,7 @@ public class QRDecompositionHouseholder_B64
      * @inheritDoc
      */
     @Override
-    public BlockMatrix64F getQ(BlockMatrix64F Q, boolean compact) {
+    public BlockMatrix_F64 getQ(BlockMatrix_F64 Q, boolean compact) {
         Q = initializeQ(Q, dataA.numRows , dataA.numCols  , blockLength , compact);
  
         applyQ(Q,true);
@@ -126,13 +126,13 @@ public class QRDecompositionHouseholder_B64
     /**
      * Sanity checks the input or declares a new matrix.  Return matrix is an identity matrix.
      */
-    public static BlockMatrix64F initializeQ(BlockMatrix64F Q,
+    public static BlockMatrix_F64 initializeQ(BlockMatrix_F64 Q,
                                               int numRows , int numCols , int blockLength ,
                                               boolean compact) {
         int minLength = Math.min(numRows,numCols);
         if( compact ) {
             if( Q == null ) {
-                Q = new BlockMatrix64F(numRows,minLength,blockLength);
+                Q = new BlockMatrix_F64(numRows,minLength,blockLength);
                 MatrixOps_B64.setIdentity(Q);
             } else {
                 if( Q.numRows != numRows || Q.numCols != minLength ) {
@@ -143,7 +143,7 @@ public class QRDecompositionHouseholder_B64
             }
         } else {
             if( Q == null ) {
-                Q = new BlockMatrix64F(numRows,numRows,blockLength);
+                Q = new BlockMatrix_F64(numRows,numRows,blockLength);
                 MatrixOps_B64.setIdentity(Q);
             } else {
                 if( Q.numRows != numRows || Q.numCols != numRows ) {
@@ -168,7 +168,7 @@ public class QRDecompositionHouseholder_B64
      *
      * @param B Matrix which Q is applied to.  Modified.
      */
-    public void applyQ( BlockMatrix64F B ) {
+    public void applyQ( BlockMatrix_F64 B ) {
         applyQ(B,false);
     }
 
@@ -179,10 +179,10 @@ public class QRDecompositionHouseholder_B64
      * @param B
      * @param isIdentity If B is an identity matrix.
      */
-    public void applyQ( BlockMatrix64F B , boolean isIdentity ) {
+    public void applyQ(BlockMatrix_F64 B , boolean isIdentity ) {
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
 
-        D1Submatrix64F subB = new D1Submatrix64F(B);
+        D1Submatrix_F64 subB = new D1Submatrix_F64(B);
 
         W.col0 = W.row0 = 0;
         Y.row1 = W.row1 = dataA.numRows;
@@ -232,10 +232,10 @@ public class QRDecompositionHouseholder_B64
      *
      * @param B Matrix which Q is applied to.  Modified.
      */
-    public void applyQTran( BlockMatrix64F B ) {
+    public void applyQTran( BlockMatrix_F64 B ) {
         int minDimen = Math.min(dataA.numCols,dataA.numRows);
 
-        D1Submatrix64F subB = new D1Submatrix64F(B);
+        D1Submatrix_F64 subB = new D1Submatrix_F64(B);
 
         W.col0 = W.row0 = 0;
         Y.row1 = W.row1 = dataA.numRows;
@@ -275,14 +275,14 @@ public class QRDecompositionHouseholder_B64
      * @inheritDoc
      */
     @Override
-    public BlockMatrix64F getR(BlockMatrix64F R, boolean compact) {
+    public BlockMatrix_F64 getR(BlockMatrix_F64 R, boolean compact) {
         int min = Math.min(dataA.numRows,dataA.numCols);
 
         if( R == null ) {
             if( compact ) {
-                R = new BlockMatrix64F(min,dataA.numCols,blockLength);
+                R = new BlockMatrix_F64(min,dataA.numCols,blockLength);
             } else {
-                R = new BlockMatrix64F(dataA.numRows,dataA.numCols,blockLength);
+                R = new BlockMatrix_F64(dataA.numRows,dataA.numCols,blockLength);
             }
         } else {
             if( compact ) {
@@ -304,7 +304,7 @@ public class QRDecompositionHouseholder_B64
      * @inheritDoc
      */
     @Override
-    public boolean decompose(BlockMatrix64F orig) {
+    public boolean decompose(BlockMatrix_F64 orig) {
         setup(orig);
 
         int m = Math.min(orig.numCols,orig.numRows);
@@ -334,7 +334,7 @@ public class QRDecompositionHouseholder_B64
      *
      * @param orig
      */
-    private void setup(BlockMatrix64F orig) {
+    private void setup(BlockMatrix_F64 orig) {
         blockLength = orig.blockLength;
         dataW.blockLength = blockLength;
         dataWTA.blockLength = blockLength;
@@ -365,7 +365,7 @@ public class QRDecompositionHouseholder_B64
      * where A is a submatrix of the input matrix.
      * </p>
      */
-    protected void updateA( D1Submatrix64F A )
+    protected void updateA( D1Submatrix_F64 A )
     {
         setW();
 

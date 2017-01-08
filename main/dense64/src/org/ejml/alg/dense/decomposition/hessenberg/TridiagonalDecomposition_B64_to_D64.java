@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decomposition.hessenberg;
 import org.ejml.EjmlParameters;
 import org.ejml.alg.block.decomposition.hessenberg.TridiagonalDecompositionHouseholder_B64;
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_D64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -34,7 +34,7 @@ import org.ejml.ops.CommonOps_D64;
  */
 public class TridiagonalDecomposition_B64_to_D64
         extends BaseDecomposition_B64_to_D64
-        implements TridiagonalSimilarDecomposition_F64<DenseMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<RowMatrix_F64> {
 
 
     public TridiagonalDecomposition_B64_to_D64() {
@@ -46,11 +46,11 @@ public class TridiagonalDecomposition_B64_to_D64
     }
 
     @Override
-    public DenseMatrix64F getT(DenseMatrix64F T) {
+    public RowMatrix_F64 getT(RowMatrix_F64 T) {
         int N = Ablock.numRows;
 
         if( T == null ) {
-            T = new DenseMatrix64F(N,N);
+            T = new RowMatrix_F64(N,N);
         } else {
             CommonOps_D64.fill(T, 0);
         }
@@ -71,12 +71,12 @@ public class TridiagonalDecomposition_B64_to_D64
     }
 
     @Override
-    public DenseMatrix64F getQ(DenseMatrix64F Q, boolean transposed) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q, boolean transposed) {
         if( Q == null ) {
-            Q = new DenseMatrix64F(Ablock.numRows,Ablock.numCols);
+            Q = new RowMatrix_F64(Ablock.numRows,Ablock.numCols);
         }
 
-        BlockMatrix64F Qblock = new BlockMatrix64F();
+        BlockMatrix_F64 Qblock = new BlockMatrix_F64();
         Qblock.numRows =  Q.numRows;
         Qblock.numCols =  Q.numCols;
         Qblock.blockLength = blockLength;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 import java.util.Random;
 
@@ -30,9 +30,9 @@ import static org.ejml.ops.CommonOps_D64.multAdd;
  * matrix is provided in the constructor.
  */
 public class CovarianceRandomDraw_D64 {
-    private DenseMatrix64F A;
+    private RowMatrix_F64 A;
     private Random rand;
-    private DenseMatrix64F r;
+    private RowMatrix_F64 r;
 
     /**
      * Creates a random distribution with the specified mean and covariance.  The references
@@ -41,9 +41,9 @@ public class CovarianceRandomDraw_D64 {
      * @param rand Used to create the random numbers for the draw. Reference is saved.
      * @param cov The covariance of the distribution.  Not modified.
      */
-    public CovarianceRandomDraw_D64(Random rand , DenseMatrix64F cov )
+    public CovarianceRandomDraw_D64(Random rand , RowMatrix_F64 cov )
     {
-        r = new DenseMatrix64F(cov.numRows,1);
+        r = new RowMatrix_F64(cov.numRows,1);
         CholeskyDecompositionInner_D64 cholesky = new CholeskyDecompositionInner_D64( true);
 
         if( cholesky.inputModified() )
@@ -58,7 +58,7 @@ public class CovarianceRandomDraw_D64 {
     /**
      * Makes a draw on the distribution.  The results are added to parameter 'x'
      */
-    public void next( DenseMatrix64F x )
+    public void next( RowMatrix_F64 x )
     {
         for( int i = 0; i < r.numRows; i++ ) {
             r.set(i,0, (double)rand.nextGaussian());

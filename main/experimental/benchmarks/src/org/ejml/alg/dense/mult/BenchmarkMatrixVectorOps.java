@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -33,8 +33,8 @@ public class BenchmarkMatrixVectorOps {
 
     static int TRIALS_MULT = 40000000;//40000000;
 
-    public static long mm_mult_small( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
+    public static long mm_mult_small(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                     RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -46,8 +46,8 @@ public class BenchmarkMatrixVectorOps {
         return curr-prev;
     }
 
-    public static long mm_multTranA_small( DenseMatrix64F matA , DenseMatrix64F matB ,
-                                  DenseMatrix64F matResult , int numTrials) {
+    public static long mm_multTranA_small(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                          RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -58,8 +58,8 @@ public class BenchmarkMatrixVectorOps {
         return curr-prev;
     }
 
-    public static long mm_multTranA_large( DenseMatrix64F matA , DenseMatrix64F matB ,
-                                  DenseMatrix64F matResult , int numTrials) {
+    public static long mm_multTranA_large(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                          RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -70,8 +70,8 @@ public class BenchmarkMatrixVectorOps {
         return curr-prev;
     }
 
-    public static long mv_mult( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
+    public static long mv_mult(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                               RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -82,8 +82,8 @@ public class BenchmarkMatrixVectorOps {
         return curr-prev;
     }
 
-    public static long mv_multTranA_small( DenseMatrix64F matA , DenseMatrix64F matB ,
-                             DenseMatrix64F matResult , int numTrials) {
+    public static long mv_multTranA_small(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                          RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -94,8 +94,8 @@ public class BenchmarkMatrixVectorOps {
         return curr-prev;
     }
 
-    public static long mv_multTranA_large( DenseMatrix64F matA , DenseMatrix64F matB ,
-                                        DenseMatrix64F matResult , int numTrials) {
+    public static long mv_multTranA_large(RowMatrix_F64 matA , RowMatrix_F64 matB ,
+                                          RowMatrix_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -109,10 +109,10 @@ public class BenchmarkMatrixVectorOps {
     public static void performTests( int numRows , int numCols ,
                                      int numTrials )
     {
-        DenseMatrix64F matA = RandomMatrices_D64.createRandom(numRows,numCols,rand);
-        DenseMatrix64F matA_tran = RandomMatrices_D64.createRandom(numCols,numRows,rand);
-        DenseMatrix64F matB = RandomMatrices_D64.createRandom(numCols,1,rand);
-        DenseMatrix64F matResult = RandomMatrices_D64.createRandom(numRows,1,rand);
+        RowMatrix_F64 matA = RandomMatrices_D64.createRandom(numRows,numCols,rand);
+        RowMatrix_F64 matA_tran = RandomMatrices_D64.createRandom(numCols,numRows,rand);
+        RowMatrix_F64 matB = RandomMatrices_D64.createRandom(numCols,1,rand);
+        RowMatrix_F64 matResult = RandomMatrices_D64.createRandom(numRows,1,rand);
 
 
         System.out.printf("Mult Vec:              %10d\n",

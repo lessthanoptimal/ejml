@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -31,7 +31,7 @@ import org.ejml.data.DenseMatrix64F;
 public class CholeskyDecompositionBlock_D64 extends CholeskyDecompositionCommon_D64 {
 
     private int blockWidth; // how wide the blocks should be
-    private DenseMatrix64F B; // row rectangular matrix
+    private RowMatrix_F64 B; // row rectangular matrix
 
     private CholeskyBlockHelper_D64 chol;
 
@@ -58,9 +58,9 @@ public class CholeskyDecompositionBlock_D64 extends CholeskyDecompositionCommon_
         // if the matrix that is being decomposed is smaller than the block we really don't
         // see the B matrix.
         if( numRows < blockWidth)
-            B = new DenseMatrix64F(0,0);
+            B = new RowMatrix_F64(0,0);
         else
-            B = new DenseMatrix64F(blockWidth,maxWidth);
+            B = new RowMatrix_F64(blockWidth,maxWidth);
 
         chol = new CholeskyBlockHelper_D64(blockWidth);
     }
@@ -146,9 +146,9 @@ public class CholeskyDecompositionBlock_D64 extends CholeskyDecompositionCommon_
      * @param B
      */
     public static void solveL_special( final double L[] ,
-                                       final DenseMatrix64F b_src,
+                                       final RowMatrix_F64 b_src,
                                        final int indexSrc , final int indexDst ,
-                                       final DenseMatrix64F B )
+                                       final RowMatrix_F64 B )
     {
         final double dataSrc[] = b_src.data;
 
@@ -205,8 +205,8 @@ public class CholeskyDecompositionBlock_D64 extends CholeskyDecompositionCommon_
      * @param c A matrix.
      * @param startIndexC start of the submatrix in c.
      */
-    public static void symmRankTranA_sub( DenseMatrix64F a , DenseMatrix64F c ,
-                                          int startIndexC )
+    public static void symmRankTranA_sub(RowMatrix_F64 a , RowMatrix_F64 c ,
+                                         int startIndexC )
     {
         // TODO update so that it doesn't modify/read parts that it shouldn't
         final double dataA[] = a.data;

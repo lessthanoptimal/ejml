@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,8 @@
 package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -50,12 +50,12 @@ public class TestVectorOps_B64 {
             int offset = width > 1 ? 1 : 0;
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Bb = Ab.copy();
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).scale(alpha);
 
-            VectorOps_B64.scale_row(r,new D1Submatrix64F(Ab),rowA, alpha, new D1Submatrix64F(Bb),rowB,offset,end);
+            VectorOps_B64.scale_row(r,new D1Submatrix_F64(Ab),rowA, alpha, new D1Submatrix_F64(Bb),rowB,offset,end);
 
             checkVector_row(rowB, end, offset, A, Bb, b);
         }
@@ -74,12 +74,12 @@ public class TestVectorOps_B64 {
             int offset = width > 1 ? 1 : 0;
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Bb = Ab.copy();
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).divide(alpha);
 
-            VectorOps_B64.div_row(r,new D1Submatrix64F(Ab),rowA, alpha, new D1Submatrix64F(Bb),rowB,offset,end);
+            VectorOps_B64.div_row(r,new D1Submatrix_F64(Ab),rowA, alpha, new D1Submatrix_F64(Bb),rowB,offset,end);
 
             checkVector_row(rowB, end, offset, A, Bb, b);
         }
@@ -101,18 +101,18 @@ public class TestVectorOps_B64 {
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0, 1.0,rand);
             SimpleMatrix B = SimpleMatrix.random_F64(r,width, -1.0, 1.0,rand);
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
-            BlockMatrix64F Cb = Ab.copy();
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
+            BlockMatrix_F64 Cb = Ab.copy();
 
             SimpleMatrix a = A.extractVector(true,rowA).scale(alpha);
             SimpleMatrix b = B.extractVector(true,rowB).scale(beta);
             SimpleMatrix c = a.plus(b);
 
             VectorOps_B64.add_row(r,
-                    new D1Submatrix64F(Ab),rowA, alpha,
-                    new D1Submatrix64F(Bb),rowB, beta ,
-                    new D1Submatrix64F(Cb),rowC, offset,end);
+                    new D1Submatrix_F64(Ab),rowA, alpha,
+                    new D1Submatrix_F64(Bb),rowB, beta ,
+                    new D1Submatrix_F64(Cb),rowC, offset,end);
 
             checkVector_row(rowC, end, offset, A, Cb, c);
         }
@@ -134,14 +134,14 @@ public class TestVectorOps_B64 {
             SimpleMatrix B = SimpleMatrix.random_F64(r,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(rowB,rowB+1,offset,SimpleMatrix.END);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
 
             double expected = (double)a.dot(b);
 
-            double found = VectorOps_B64.dot_row(r,new D1Submatrix64F(Ab),rowA, new D1Submatrix64F(Bb),rowB,offset,end);
+            double found = VectorOps_B64.dot_row(r,new D1Submatrix_F64(Ab),rowA, new D1Submatrix_F64(Bb),rowB,offset,end);
 
-            assertEquals(expected,found, UtilEjml.TEST_64F);
+            assertEquals(expected,found, UtilEjml.TEST_F64);
         }
     }
 
@@ -162,17 +162,17 @@ public class TestVectorOps_B64 {
             SimpleMatrix B = SimpleMatrix.random_F64(width,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(offset,SimpleMatrix.END,colB,colB+1);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
 
             double expected = (double)a.dot(b);
 
             double found = VectorOps_B64.dot_row_col(r,
-                    new D1Submatrix64F(Ab),rowA,
-                    new D1Submatrix64F(Bb),colB,
+                    new D1Submatrix_F64(Ab),rowA,
+                    new D1Submatrix_F64(Bb),colB,
                     offset,end);
 
-            assertEquals(expected,found,UtilEjml.TEST_64F);
+            assertEquals(expected,found,UtilEjml.TEST_F64);
         }
     }
 
@@ -189,21 +189,21 @@ public class TestVectorOps_B64 {
      */
     public static void checkVector_row(int row, int end, int offset,
                                        SimpleMatrix untouched,
-                                       BlockMatrix64F modMatrix, SimpleMatrix modVector) {
+                                       BlockMatrix_F64 modMatrix, SimpleMatrix modVector) {
         for( int i = 0; i < modMatrix.numRows; i++ ) {
             if( i == row ) {
                 for( int j = 0; j < offset; j++ ) {
-                    assertEquals(untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_64F);
+                    assertEquals(untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_F64);
                 }
                 for( int j = offset; j < end; j++ ) {
-                    assertEquals(modVector.get(j), modMatrix.get(i,j),UtilEjml.TEST_64F);
+                    assertEquals(modVector.get(j), modMatrix.get(i,j),UtilEjml.TEST_F64);
                 }
                 for( int j = end; j < modMatrix.numCols; j++ ) {
-                    assertEquals(untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_64F);
+                    assertEquals(untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_F64);
                 }
             } else {
                 for( int j = 0; j < modMatrix.numCols; j++ ) {
-                    assertEquals(i+" "+j, untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_64F);
+                    assertEquals(i+" "+j, untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_F64);
                 }
             }
         }

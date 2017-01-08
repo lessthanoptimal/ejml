@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -31,14 +31,14 @@ public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_D64 {
     SmartRotatorUpdate smartV = new SmartRotatorUpdate();
 
     @Override
-    public void setUt(DenseMatrix64F ut) {
+    public void setUt(RowMatrix_F64 ut) {
         super.setUt(ut);
         if(Ut != null )
             smartU.init(Ut);
     }
 
     @Override
-    public void setVt(DenseMatrix64F vt) {
+    public void setVt(RowMatrix_F64 vt) {
         super.setVt(vt);
         if(Vt != null )
             smartV.init(Vt);
@@ -46,7 +46,7 @@ public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_D64 {
 
 
     @Override
-    protected void updateRotator( DenseMatrix64F Q , int m, int n, double c, double s) {
+    protected void updateRotator(RowMatrix_F64 Q , int m, int n, double c, double s) {
         if( Q == smartU.getR() ) {
             smartU.update(m,n,c,s);
         } else if( Q == smartV.getR() ) {

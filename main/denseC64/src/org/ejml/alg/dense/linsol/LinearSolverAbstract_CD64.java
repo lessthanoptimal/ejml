@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -29,24 +29,24 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * </p>
  *
  * <p>
- * The extending class must explicity call {@link #_setA(org.ejml.data.CDenseMatrix64F)}
+ * The extending class must explicity call {@link #_setA(RowMatrix_C64)}
  * inside of its {@link #setA} function.
  * </p>
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract_CD64 implements LinearSolver<CDenseMatrix64F> {
+public abstract class LinearSolverAbstract_CD64 implements LinearSolver<RowMatrix_C64> {
 
-    protected CDenseMatrix64F A;
+    protected RowMatrix_C64 A;
     protected int numRows;
     protected int numCols;
     protected int stride;
 
-    public CDenseMatrix64F getA() {
+    public RowMatrix_C64 getA() {
         return A;
     }
 
-    protected void _setA(CDenseMatrix64F A) {
+    protected void _setA(RowMatrix_C64 A) {
         this.A = A;
         this.numRows = A.numRows;
         this.numCols = A.numCols;
@@ -54,7 +54,7 @@ public abstract class LinearSolverAbstract_CD64 implements LinearSolver<CDenseMa
     }
 
     @Override
-    public void invert(CDenseMatrix64F A_inv) {
+    public void invert(RowMatrix_C64 A_inv) {
         InvertUsingSolve_CD64.invert(this,A,A_inv);
     }
 }

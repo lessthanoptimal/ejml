@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.qr.QrUpdate_D64;
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 
@@ -35,7 +35,7 @@ public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements Adjusta
 
     private QrUpdate_D64 update;
 
-    private DenseMatrix64F A;
+    private RowMatrix_F64 A;
 
     public AdjLinearSolverQr_D64() {
         super( new QRDecompositionHouseholderColumn_D64() );
@@ -49,7 +49,7 @@ public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements Adjusta
         super.setMaxSize(maxRows,maxCols);
 
         update = new QrUpdate_D64(maxRows,maxCols,true);
-        A = new DenseMatrix64F(maxRows,maxCols);
+        A = new RowMatrix_F64(maxRows,maxCols);
     }
 
     /**
@@ -58,9 +58,9 @@ public class AdjLinearSolverQr_D64 extends LinearSolverQr_D64 implements Adjusta
      * @return The A matrix.
      */
     @Override
-    public DenseMatrix64F getA() {
+    public RowMatrix_F64 getA() {
         if( A.data.length < numRows*numCols ) {
-            A = new DenseMatrix64F(numRows,numCols);
+            A = new RowMatrix_F64(numRows,numCols);
         }
         A.reshape(numRows,numCols, false);
         CommonOps_D64.mult(Q,R,A);

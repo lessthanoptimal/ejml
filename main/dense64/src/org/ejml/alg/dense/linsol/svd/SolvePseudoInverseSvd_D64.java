@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.svd;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
@@ -42,13 +42,13 @@ import org.ejml.ops.CommonOps_D64;
  *
  * @author Peter Abeles
  */
-public class SolvePseudoInverseSvd_D64 implements LinearSolver<DenseMatrix64F> {
+public class SolvePseudoInverseSvd_D64 implements LinearSolver<RowMatrix_F64> {
 
     // Used to compute pseudo inverse
-    private SingularValueDecomposition_F64<DenseMatrix64F> svd;
+    private SingularValueDecomposition_F64<RowMatrix_F64> svd;
 
     // the results of the pseudo-inverse
-    private DenseMatrix64F pinv = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 pinv = new RowMatrix_F64(1,1);
 
     // relative threshold used to select singular values
     private double threshold = UtilEjml.EPS;
@@ -72,14 +72,14 @@ public class SolvePseudoInverseSvd_D64 implements LinearSolver<DenseMatrix64F> {
     }
 
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         pinv.reshape(A.numCols,A.numRows,false);
 
         if( !svd.decompose(A) )
             return false;
 
-        DenseMatrix64F U_t = svd.getU(null,true);
-        DenseMatrix64F V = svd.getV(null,false);
+        RowMatrix_F64 U_t = svd.getU(null,true);
+        RowMatrix_F64 V = svd.getV(null,false);
         double []S = svd.getSingularValues();
         int N = Math.min(A.numRows,A.numCols);
 
@@ -123,12 +123,12 @@ public class SolvePseudoInverseSvd_D64 implements LinearSolver<DenseMatrix64F> {
     }
 
     @Override
-    public void solve( DenseMatrix64F b, DenseMatrix64F x) {
+    public void solve(RowMatrix_F64 b, RowMatrix_F64 x) {
         CommonOps_D64.mult(pinv,b,x);
     }
 
     @Override
-    public void invert(DenseMatrix64F A_inv) {
+    public void invert(RowMatrix_F64 A_inv) {
         A_inv.set(pinv);
     }
 
@@ -143,7 +143,7 @@ public class SolvePseudoInverseSvd_D64 implements LinearSolver<DenseMatrix64F> {
     }
 
     @Override
-    public SingularValueDecomposition<DenseMatrix64F> getDecomposition() {
+    public SingularValueDecomposition<RowMatrix_F64> getDecomposition() {
         return svd;
     }
 
@@ -155,7 +155,7 @@ public class SolvePseudoInverseSvd_D64 implements LinearSolver<DenseMatrix64F> {
         this.threshold = threshold;
     }
 
-    public SingularValueDecomposition<DenseMatrix64F> getDecomposer() {
+    public SingularValueDecomposition<RowMatrix_F64> getDecomposer() {
         return svd;
     }
 }

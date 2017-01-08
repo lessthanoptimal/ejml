@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixFeatures_CD64;
@@ -48,20 +48,20 @@ public abstract class BaseCholeskySolveTests_CD64 {
         testQuality_scale();
     }
 
-    public abstract LinearSolver<CDenseMatrix64F> createSolver();
+    public abstract LinearSolver<RowMatrix_C64> createSolver();
 
-    public LinearSolver<CDenseMatrix64F> createSafeSolver() {
-        LinearSolver<CDenseMatrix64F> solver = createSolver();
-        return new LinearSolverSafe<CDenseMatrix64F>(solver);
+    public LinearSolver<RowMatrix_C64> createSafeSolver() {
+        LinearSolver<RowMatrix_C64> solver = createSolver();
+        return new LinearSolverSafe<RowMatrix_C64>(solver);
     }
 
     @Test
     public void setA_dimensionCheck() {
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver();
 
         try {
-            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(4, 5, rand);
+            RowMatrix_C64 A = RandomMatrices_CD64.createRandom(4, 5, rand);
             assertTrue(solver.setA(A));
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -70,28 +70,28 @@ public abstract class BaseCholeskySolveTests_CD64 {
     @Test
     public void solve_dimensionCheck() {
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver();
 
-        CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(4, rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createHermPosDef(4, rand);
         assertTrue(solver.setA(A));
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(4,3,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(4,2,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(4,3,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(5,2,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(4,2,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(5,2,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(5,2,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(5,2,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(5,2,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(5,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -100,59 +100,59 @@ public abstract class BaseCholeskySolveTests_CD64 {
     @Test
     public void testSolve() {
 
-        LinearSolver<CDenseMatrix64F> solver = createSolver();
+        LinearSolver<RowMatrix_C64> solver = createSolver();
 
         for (int N = 1; N <= 4; N++) {
-            CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(N,rand);
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(N,1,rand);
-            CDenseMatrix64F b = new CDenseMatrix64F(N,1);
-            CDenseMatrix64F x_expected = x.copy();
+            RowMatrix_C64 A = RandomMatrices_CD64.createHermPosDef(N,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(N,1,rand);
+            RowMatrix_C64 b = new RowMatrix_C64(N,1);
+            RowMatrix_C64 x_expected = x.copy();
 
             CommonOps_CD64.mult(A,x_expected,b);
 
-            CDenseMatrix64F A_orig = A.copy();
-            CDenseMatrix64F B_orig = b.copy();
+            RowMatrix_C64 A_orig = A.copy();
+            RowMatrix_C64 B_orig = b.copy();
 
             assertTrue(solver.setA(A));
             solver.solve(b,x);
 
-            assertTrue(MatrixFeatures_CD64.isIdentical(x, x_expected, UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentical(x, x_expected, UtilEjml.TEST_F64));
 
             // see if input was modified
-            assertEquals(!solver.modifiesA(), MatrixFeatures_CD64.isIdentical(A,A_orig,UtilEjml.TEST_64F));
-            assertEquals(!solver.modifiesB(), MatrixFeatures_CD64.isIdentical(b,B_orig,UtilEjml.TEST_64F));
+            assertEquals(!solver.modifiesA(), MatrixFeatures_CD64.isIdentical(A,A_orig,UtilEjml.TEST_F64));
+            assertEquals(!solver.modifiesB(), MatrixFeatures_CD64.isIdentical(b,B_orig,UtilEjml.TEST_F64));
         }
     }
 
     @Test
     public void testInvert() {
 
-        LinearSolver<CDenseMatrix64F> solver = createSolver();
+        LinearSolver<RowMatrix_C64> solver = createSolver();
 
         for (int N = 1; N <= 5; N++) {
-            CDenseMatrix64F A = RandomMatrices_CD64.createHermPosDef(N,rand);
-            CDenseMatrix64F A_orig = A.copy();
-            CDenseMatrix64F A_inv = new CDenseMatrix64F(N,N);
-            CDenseMatrix64F found = new CDenseMatrix64F(N,N);
+            RowMatrix_C64 A = RandomMatrices_CD64.createHermPosDef(N,rand);
+            RowMatrix_C64 A_orig = A.copy();
+            RowMatrix_C64 A_inv = new RowMatrix_C64(N,N);
+            RowMatrix_C64 found = new RowMatrix_C64(N,N);
 
             assertTrue(solver.setA(A));
             solver.invert(A_inv);
 
             CommonOps_CD64.mult(A_inv,A_orig,found);
-            assertTrue(MatrixFeatures_CD64.isIdentity(found, UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentity(found, UtilEjml.TEST_F64));
 
             // see if input was modified
-            assertEquals(!solver.modifiesA(), MatrixFeatures_CD64.isIdentical(A,A_orig,UtilEjml.TEST_64F));
+            assertEquals(!solver.modifiesA(), MatrixFeatures_CD64.isIdentical(A,A_orig,UtilEjml.TEST_F64));
         }
     }
 
     @Test
     public void testQuality() {
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver();
 
-        CDenseMatrix64F A = CommonOps_CD64.diag(3,0, 2,0, 1,0    );
-        CDenseMatrix64F B = CommonOps_CD64.diag(3,0, 2,0, 0.001,0);
+        RowMatrix_C64 A = CommonOps_CD64.diag(3,0, 2,0, 1,0    );
+        RowMatrix_C64 B = CommonOps_CD64.diag(3,0, 2,0, 0.001,0);
 
         assertTrue(solver.setA(A));
         double qualityA = (double)solver.quality();
@@ -166,10 +166,10 @@ public abstract class BaseCholeskySolveTests_CD64 {
     @Test
     public void testQuality_scale() {
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver();
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver();
 
-        CDenseMatrix64F A = CommonOps_CD64.diag(3,0 ,2,0 ,1,0);
-        CDenseMatrix64F B = A.copy();
+        RowMatrix_C64 A = CommonOps_CD64.diag(3,0 ,2,0 ,1,0);
+        RowMatrix_C64 B = A.copy();
         CommonOps_CD64.elementMultiply(B,0.001,0,B);
 
         assertTrue(solver.setA(A));
@@ -178,6 +178,6 @@ public abstract class BaseCholeskySolveTests_CD64 {
         assertTrue(solver.setA(B));
         double qualityB = (double)solver.quality();
 
-        assertEquals(qualityB,qualityA,UtilEjml.TEST_64F);
+        assertEquals(qualityB,qualityA,UtilEjml.TEST_F64);
     }
 }

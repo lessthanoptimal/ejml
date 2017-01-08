@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleBase;
 
@@ -45,7 +45,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
      * Wraps a StatisticsMatrix around 'm'.  Does NOT create a copy of 'm' but saves a reference
      * to it.
      */
-    public static StatisticsMatrix wrap( DenseMatrix64F m ) {
+    public static StatisticsMatrix wrap( RowMatrix_F64 m ) {
         StatisticsMatrix ret = new StatisticsMatrix();
         ret.mat = m;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,11 @@
 
 package org.ejml.alg.block;
 
+import org.ejml.data.BlockMatrix_F64;
+
 /**
  * <p>
- * Matrix multiplication for the inner row major blocks, typically inside of a {@link org.ejml.data.BlockMatrix64F}.
+ * Matrix multiplication for the inner row major blocks, typically inside of a {@link BlockMatrix_F64}.
  * </p>
  *
  * <p>

@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.chol;
 import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionCommon_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.SpecializedOps_CD64;
 
@@ -43,7 +43,7 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
     }
 
     @Override
-    public boolean setA(CDenseMatrix64F A) {
+    public boolean setA(RowMatrix_C64 A) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Matrix must be square");
 
@@ -81,7 +81,7 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve( CDenseMatrix64F B , CDenseMatrix64F X ) {
+    public void solve(RowMatrix_C64 B , RowMatrix_C64 X ) {
         if( B.numCols != X.numCols || B.numRows != n || X.numRows != n) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
@@ -127,7 +127,7 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
      * @param inv Where the value of the inverse will be stored.  Modified.
      */
     @Override
-    public void invert( CDenseMatrix64F inv ) {
+    public void invert( RowMatrix_C64 inv ) {
         if( inv.numRows != n || inv.numCols != n ) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
@@ -174,7 +174,7 @@ public class LinearSolverChol_CD64 extends LinearSolverAbstract_CD64 {
     }
 
     @Override
-    public CholeskyDecomposition_F64<CDenseMatrix64F> getDecomposition() {
+    public CholeskyDecomposition_F64<RowMatrix_C64> getDecomposition() {
         return decomposer;
     }
 }

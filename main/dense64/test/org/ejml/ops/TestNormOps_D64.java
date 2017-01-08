@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -36,10 +36,10 @@ public class TestNormOps_D64 {
 
     Random rand = new Random(234);
 
-    DenseMatrix64F zeroMatrix = new DenseMatrix64F(3,4);
-    DenseMatrix64F unzeroMatrix = new DenseMatrix64F(3,2, true, 0.2, 1, -2, 3, 6, 5);
-    DenseMatrix64F unzeroVector = new DenseMatrix64F(5,1, true, 0.3, 1, -2, 3, 4);
-    DenseMatrix64F squareMatrix = new DenseMatrix64F(2,2, true, 0.2, 1, -2, 3);
+    RowMatrix_F64 zeroMatrix = new RowMatrix_F64(3,4);
+    RowMatrix_F64 unzeroMatrix = new RowMatrix_F64(3,2, true, 0.2, 1, -2, 3, 6, 5);
+    RowMatrix_F64 unzeroVector = new RowMatrix_F64(5,1, true, 0.3, 1, -2, 3, 4);
+    RowMatrix_F64 squareMatrix = new RowMatrix_F64(2,2, true, 0.2, 1, -2, 3);
 
 
     /**
@@ -57,7 +57,7 @@ public class TestNormOps_D64 {
         assertEquals(3.4325,val,1e-3);
 
         // see if the other pseudo-inverse works
-        DenseMatrix64F trans = unzeroMatrix.copy();
+        RowMatrix_F64 trans = unzeroMatrix.copy();
         CommonOps_D64.transpose(trans);
         val = NormOps_D64.conditionP(trans,1);
 
@@ -101,7 +101,7 @@ public class TestNormOps_D64 {
 
     @Test
     public void normalizeF() {
-        DenseMatrix64F a = unzeroVector.copy();
+        RowMatrix_F64 a = unzeroVector.copy();
 
         NormOps_D64.normalizeF(a);
 
@@ -224,7 +224,7 @@ public class TestNormOps_D64 {
             SimpleMatrix A = SimpleMatrix.random_F64(5,5,-10,10,rand);
             double largest = (double)A.svd().getW().get(0);
 
-            assertEquals(largest, NormOps_D64.inducedP2(A.matrix_F64()), UtilEjml.TEST_64F);
+            assertEquals(largest, NormOps_D64.inducedP2(A.matrix_F64()), UtilEjml.TEST_F64);
         }
     }
 

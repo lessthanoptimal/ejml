@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.blockd3;
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockD3Matrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
@@ -52,12 +52,12 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(m,n,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(m,n,rand);
         BlockD3Matrix64F B = new BlockD3Matrix64F(A.numRows,A.numCols,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(A,B);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B, UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -73,12 +73,12 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkBlockToDense( int m , int n ) {
-        DenseMatrix64F A = new DenseMatrix64F(m,n);
+        RowMatrix_F64 A = new RowMatrix_F64(m,n);
         BlockD3Matrix64F B = BlockD3MatrixOps.random(m,n,-1,1,rand,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(B,A);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(A,B,UtilEjml.TEST_F64));
     }
 
         @Test
@@ -108,9 +108,9 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkMult(int m, int n, int o) {
-        DenseMatrix64F A_d = RandomMatrices_D64.createRandom(m, n,rand);
-        DenseMatrix64F B_d = RandomMatrices_D64.createRandom(n, o,rand);
-        DenseMatrix64F C_d = new DenseMatrix64F(m, o);
+        RowMatrix_F64 A_d = RandomMatrices_D64.createRandom(m, n,rand);
+        RowMatrix_F64 B_d = RandomMatrices_D64.createRandom(n, o,rand);
+        RowMatrix_F64 C_d = new RowMatrix_F64(m, o);
 
         BlockD3Matrix64F A_b = BlockD3MatrixOps.convert(A_d,BLOCK_LENGTH);
         BlockD3Matrix64F B_b = BlockD3MatrixOps.convert(B_d,BLOCK_LENGTH);
@@ -119,6 +119,6 @@ public class TestBlockD3MatrixOps {
         CommonOps_D64.mult(A_d,B_d,C_d);
         BlockD3MatrixOps.mult(A_b,B_b,C_b);
 
-        assertTrue( GenericMatrixOps_F64.isEquivalent(C_d,C_b,UtilEjml.TEST_64F));
+        assertTrue( GenericMatrixOps_F64.isEquivalent(C_d,C_b,UtilEjml.TEST_F64));
     }
 }

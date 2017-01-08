@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,20 +22,20 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64;
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_D64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
  * Wrapper around {@link org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64} that allows
- * it to process DenseMatrix64F.
+ * it to process RowMatrix_F64.
  *
  * @author Peter Abeles
  */
 public class CholeskyDecomposition_B64_to_D64
-        extends BaseDecomposition_B64_to_D64 implements CholeskyDecomposition_F64<DenseMatrix64F> {
+        extends BaseDecomposition_B64_to_D64 implements CholeskyDecomposition_F64<RowMatrix_F64> {
 
     public CholeskyDecomposition_B64_to_D64(boolean lower) {
         super(new CholeskyOuterForm_B64(lower), EjmlParameters.BLOCK_WIDTH);
@@ -47,11 +47,11 @@ public class CholeskyDecomposition_B64_to_D64
     }
 
     @Override
-    public DenseMatrix64F getT(DenseMatrix64F T) {
-        BlockMatrix64F T_block = ((CholeskyOuterForm_B64)alg).getT(null);
+    public RowMatrix_F64 getT(RowMatrix_F64 T) {
+        BlockMatrix_F64 T_block = ((CholeskyOuterForm_B64)alg).getT(null);
 
         if( T == null ) {
-            T = new DenseMatrix64F(T_block.numRows,T_block.numCols);
+            T = new RowMatrix_F64(T_block.numRows,T_block.numCols);
         }
 
         MatrixOps_B64.convert(T_block,T);
@@ -60,7 +60,7 @@ public class CholeskyDecomposition_B64_to_D64
     }
 
     @Override
-    public Complex64F computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         return ((CholeskyOuterForm_B64)alg).computeDeterminant();
     }
 }

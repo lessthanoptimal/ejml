@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -93,7 +93,7 @@ public class TestInnerMultiplication_B64 {
 
     /**
      * The inner block multiplication is in a row major format.  Test it against
-     * operations for DenseMatrix64F
+     * operations for RowMatrix_F64
      */
     private void checkBlockMult( int operationType , boolean transA , boolean transB , Method method,
                                  final int heightA, final int widthA, final int widthB )
@@ -103,16 +103,16 @@ public class TestInnerMultiplication_B64 {
         if( hasAlpha && operationType == -1 )
             fail("No point to minus and alpha");
 
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(heightA,widthA,rand);
-        DenseMatrix64F B = RandomMatrices_D64.createRandom(widthA,widthB,rand);
-        DenseMatrix64F C = new DenseMatrix64F(heightA,widthB);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(heightA,widthA,rand);
+        RowMatrix_F64 B = RandomMatrices_D64.createRandom(widthA,widthB,rand);
+        RowMatrix_F64 C = new RowMatrix_F64(heightA,widthB);
 
         if( operationType == -1 )
             CommonOps_D64.mult(-1,A,B,C);
         else
             CommonOps_D64.mult(A,B,C);
 
-        DenseMatrix64F C_found = new DenseMatrix64F(heightA,widthB);
+        RowMatrix_F64 C_found = new RowMatrix_F64(heightA,widthB);
         // if it is set then it should overwrite everything just fine
         if( operationType == 0)
             RandomMatrices_D64.setRandom(C_found,rand);
@@ -130,7 +130,7 @@ public class TestInnerMultiplication_B64 {
 
         invoke(method,alpha,A.data,B.data,C_found.data,0,0,0,A.numRows,A.numCols,C_found.numCols);
 
-        if( !MatrixFeatures_D64.isIdentical(C,C_found, UtilEjml.TEST_64F) ) {
+        if( !MatrixFeatures_D64.isIdentical(C,C_found, UtilEjml.TEST_F64) ) {
             C.print();
             C_found.print();
             System.out.println("Method "+method.getName());

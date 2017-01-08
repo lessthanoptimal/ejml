@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -33,7 +33,7 @@ public class TestLinearSolverQrHouseCol_CD64 extends GenericLinearSolverChecks_C
     }
 
     @Override
-    protected LinearSolver<CDenseMatrix64F> createSolver( CDenseMatrix64F A ) {
+    protected LinearSolver<RowMatrix_C64> createSolver(RowMatrix_C64 A ) {
         return new LinearSolverQrHouseCol_CD64();
     }
 }

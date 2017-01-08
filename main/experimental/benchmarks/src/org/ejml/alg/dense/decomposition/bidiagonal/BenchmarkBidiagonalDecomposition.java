@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkBidiagonalDecomposition {
 
 
-    public static long evaluate(BidiagonalDecomposition_F64<DenseMatrix64F> alg , DenseMatrix64F orig , int numTrials ) {
+    public static long evaluate(BidiagonalDecomposition_F64<RowMatrix_F64> alg , RowMatrix_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -49,7 +49,7 @@ public class BenchmarkBidiagonalDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
         if( numTrials <= 0 ) return;
         System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_D64(),mat,numTrials));
@@ -71,7 +71,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,w,rand);
+            RowMatrix_F64 mat = RandomMatrices_D64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -89,7 +89,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size w=%3d h=%3d for %12d trials\n",w,h,t);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices_D64.createRandom(h,w,rand);
+            RowMatrix_F64 mat = RandomMatrices_D64.createRandom(h,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }

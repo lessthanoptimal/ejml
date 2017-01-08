@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -32,7 +32,7 @@ import java.util.Random;
 public class BenchmarkHessenberg {
 
 
-    public static long basic( DenseMatrix64F orig , int numTrials ) {
+    public static long basic(RowMatrix_F64 orig , int numTrials ) {
 
         HessenbergSimilarDecomposition_D64 alg = new HessenbergSimilarDecomposition_D64();
 
@@ -47,7 +47,7 @@ public class BenchmarkHessenberg {
         return System.currentTimeMillis() - prev;
     }
 
-//    public static long alt( DenseMatrix64F orig , int numTrials ) {
+//    public static long alt( RowMatrix_F64 orig , int numTrials ) {
 //
 //        HessenbergSimilarDecompositionAlt alg = new HessenbergSimilarDecompositionAlt();
 //
@@ -62,7 +62,7 @@ public class BenchmarkHessenberg {
 //        return System.currentTimeMillis() - prev;
 //    }
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
         System.out.println("basic            = "+ basic(mat,numTrials));
 //        System.out.println("alt              = "+ alt(mat,numTrials));
@@ -81,7 +81,7 @@ public class BenchmarkHessenberg {
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,w,rand);
+            RowMatrix_F64 mat = RandomMatrices_D64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

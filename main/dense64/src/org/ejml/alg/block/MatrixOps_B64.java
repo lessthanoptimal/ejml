@@ -18,9 +18,9 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -30,7 +30,7 @@ import java.util.Random;
 
 
 /**
- * Various operations on {@link BlockMatrix64F}.
+ * Various operations on {@link BlockMatrix_F64}.
  *
  * @author Peter Abeles
  */
@@ -39,10 +39,10 @@ public class MatrixOps_B64 {
     /**
      * Converts a row major matrix into a row major block matrix.
      *
-     * @param src Original DenseMatrix64F.  Not modified.
-     * @param dst Equivalent BlockMatrix64F. Modified.
+     * @param src Original RowMatrix_F64.  Not modified.
+     * @param dst Equivalent BlockMatrix_F64. Modified.
      */
-    public static void convert( DenseMatrix64F src , BlockMatrix64F dst )
+    public static void convert(RowMatrix_F64 src , BlockMatrix_F64 dst )
     {
         ConvertMatrixStruct_F64.convert(src,dst);
     }
@@ -90,10 +90,10 @@ public class MatrixOps_B64 {
     /**
      * Converts a row major block matrix into a row major matrix.
      *
-     * @param src Original BlockMatrix64F..  Not modified.
-     * @param dst Equivalent DenseMatrix64F.  Modified.
+     * @param src Original BlockMatrix_F64..  Not modified.
+     * @param dst Equivalent RowMatrix_F64.  Modified.
      */
-    public static DenseMatrix64F convert( BlockMatrix64F src , DenseMatrix64F dst )
+    public static RowMatrix_F64 convert(BlockMatrix_F64 src , RowMatrix_F64 dst )
     {
         return ConvertMatrixStruct_F64.convert(src,dst);
     }
@@ -140,10 +140,10 @@ public class MatrixOps_B64 {
     /**
      * Converts the transpose of a row major matrix into a row major block matrix.
      *
-     * @param src Original DenseMatrix64F.  Not modified.
-     * @param dst Equivalent BlockMatrix64F. Modified.
+     * @param src Original RowMatrix_F64.  Not modified.
+     * @param dst Equivalent BlockMatrix_F64. Modified.
      */
-    public static void convertTranSrc( DenseMatrix64F src , BlockMatrix64F dst )
+    public static void convertTranSrc(RowMatrix_F64 src , BlockMatrix_F64 dst )
     {
         if( src.numRows != dst.numCols || src.numCols != dst.numRows )
             throw new IllegalArgumentException("Incompatible matrix shapes.");
@@ -170,7 +170,7 @@ public class MatrixOps_B64 {
 
     // This can be speed up by inlining the multBlock* calls, reducing number of multiplications
     // and other stuff.  doesn't seem to have any speed advantage over mult_reorder()
-    public static void mult( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
+    public static void mult(BlockMatrix_F64 A , BlockMatrix_F64 B , BlockMatrix_F64 C )
     {
         if( A.numCols != B.numRows )
             throw new IllegalArgumentException("Columns in A are incompatible with rows in B");
@@ -183,14 +183,14 @@ public class MatrixOps_B64 {
 
         final int blockLength = A.blockLength;
 
-        D1Submatrix64F Asub = new D1Submatrix64F(A,0, A.numRows, 0, A.numCols);
-        D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
-        D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
+        D1Submatrix_F64 Asub = new D1Submatrix_F64(A,0, A.numRows, 0, A.numCols);
+        D1Submatrix_F64 Bsub = new D1Submatrix_F64(B,0, B.numRows, 0, B.numCols);
+        D1Submatrix_F64 Csub = new D1Submatrix_F64(C,0, C.numRows, 0, C.numCols);
 
         MatrixMult_B64.mult(blockLength,Asub,Bsub,Csub);
     }
 
-    public static void multTransA( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
+    public static void multTransA(BlockMatrix_F64 A , BlockMatrix_F64 B , BlockMatrix_F64 C )
     {
         if( A.numRows != B.numRows )
             throw new IllegalArgumentException("Rows in A are incompatible with rows in B");
@@ -203,14 +203,14 @@ public class MatrixOps_B64 {
 
         final int blockLength = A.blockLength;
 
-        D1Submatrix64F Asub = new D1Submatrix64F(A,0, A.numRows, 0, A.numCols);
-        D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
-        D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
+        D1Submatrix_F64 Asub = new D1Submatrix_F64(A,0, A.numRows, 0, A.numCols);
+        D1Submatrix_F64 Bsub = new D1Submatrix_F64(B,0, B.numRows, 0, B.numCols);
+        D1Submatrix_F64 Csub = new D1Submatrix_F64(C,0, C.numRows, 0, C.numCols);
 
         MatrixMult_B64.multTransA(blockLength,Asub,Bsub,Csub);
     }
 
-    public static void multTransB( BlockMatrix64F A , BlockMatrix64F B , BlockMatrix64F C )
+    public static void multTransB(BlockMatrix_F64 A , BlockMatrix_F64 B , BlockMatrix_F64 C )
     {
         if( A.numCols != B.numCols )
             throw new IllegalArgumentException("Columns in A are incompatible with columns in B");
@@ -223,9 +223,9 @@ public class MatrixOps_B64 {
 
         final int blockLength = A.blockLength;
 
-        D1Submatrix64F Asub = new D1Submatrix64F(A,0, A.numRows, 0, A.numCols);
-        D1Submatrix64F Bsub = new D1Submatrix64F(B,0, B.numRows, 0, B.numCols);
-        D1Submatrix64F Csub = new D1Submatrix64F(C,0, C.numRows, 0, C.numCols);
+        D1Submatrix_F64 Asub = new D1Submatrix_F64(A,0, A.numRows, 0, A.numCols);
+        D1Submatrix_F64 Bsub = new D1Submatrix_F64(B,0, B.numRows, 0, B.numCols);
+        D1Submatrix_F64 Csub = new D1Submatrix_F64(C,0, C.numRows, 0, C.numCols);
 
         MatrixMult_B64.multTransB(blockLength,Asub,Bsub,Csub);
     }
@@ -236,7 +236,7 @@ public class MatrixOps_B64 {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static BlockMatrix64F transpose( BlockMatrix64F A , BlockMatrix64F A_tran )
+    public static BlockMatrix_F64 transpose(BlockMatrix_F64 A , BlockMatrix_F64 A_tran )
     {
         if( A_tran != null ) {
             if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows )
@@ -244,7 +244,7 @@ public class MatrixOps_B64 {
             if( A.blockLength != A_tran.blockLength )
                 throw new IllegalArgumentException("Incompatible block size.");
         } else {
-            A_tran = new BlockMatrix64F(A.numCols,A.numRows,A.blockLength);
+            A_tran = new BlockMatrix_F64(A.numCols,A.numRows,A.blockLength);
 
         }
 
@@ -267,9 +267,9 @@ public class MatrixOps_B64 {
     /**
      * Transposes an individual block inside a block matrix.
      */
-    private static void transposeBlock( BlockMatrix64F A , BlockMatrix64F A_tran,
-                                        int indexA , int indexC ,
-                                        int width , int height )
+    private static void transposeBlock(BlockMatrix_F64 A , BlockMatrix_F64 A_tran,
+                                       int indexA , int indexC ,
+                                       int width , int height )
     {
         for( int i = 0; i < height; i++ ) {
             int rowIndexC = indexC + i;
@@ -281,21 +281,21 @@ public class MatrixOps_B64 {
         }
     }
 
-    public static BlockMatrix64F createRandom( int numRows , int numCols ,
+    public static BlockMatrix_F64 createRandom(int numRows , int numCols ,
                                                double min , double max , Random rand )
     {
-        BlockMatrix64F ret = new BlockMatrix64F(numRows,numCols);
+        BlockMatrix_F64 ret = new BlockMatrix_F64(numRows,numCols);
 
         RandomMatrices_D64.setRandom(ret,min,max,rand);
 
         return ret;
     }
 
-    public static BlockMatrix64F createRandom( int numRows , int numCols ,
+    public static BlockMatrix_F64 createRandom(int numRows , int numCols ,
                                                double min , double max , Random rand ,
                                                int blockLength )
     {
-        BlockMatrix64F ret = new BlockMatrix64F(numRows,numCols,blockLength);
+        BlockMatrix_F64 ret = new BlockMatrix_F64(numRows,numCols,blockLength);
 
         RandomMatrices_D64.setRandom(ret,min,max,rand);
 
@@ -303,19 +303,19 @@ public class MatrixOps_B64 {
     }
 
 
-    public static BlockMatrix64F convert(DenseMatrix64F A , int blockLength ) {
-        BlockMatrix64F ret = new BlockMatrix64F(A.numRows,A.numCols,blockLength);
+    public static BlockMatrix_F64 convert(RowMatrix_F64 A , int blockLength ) {
+        BlockMatrix_F64 ret = new BlockMatrix_F64(A.numRows,A.numCols,blockLength);
         convert(A,ret);
         return ret;
     }
 
-    public static BlockMatrix64F convert(DenseMatrix64F A ) {
-        BlockMatrix64F ret = new BlockMatrix64F(A.numRows,A.numCols);
+    public static BlockMatrix_F64 convert(RowMatrix_F64 A ) {
+        BlockMatrix_F64 ret = new BlockMatrix_F64(A.numRows,A.numCols);
         convert(A,ret);
         return ret;
     }
 
-    public static boolean isEquals( BlockMatrix64F A , BlockMatrix64F B )
+    public static boolean isEquals(BlockMatrix_F64 A , BlockMatrix_F64 B )
     {
         if( A.blockLength != B.blockLength )
             return false;
@@ -323,7 +323,7 @@ public class MatrixOps_B64 {
         return MatrixFeatures_D64.isEquals(A,B);
     }
 
-    public static boolean isEquals( BlockMatrix64F A , BlockMatrix64F B , double tol )
+    public static boolean isEquals(BlockMatrix_F64 A , BlockMatrix_F64 B , double tol )
     {
         if( A.blockLength != B.blockLength )
             return false;
@@ -334,7 +334,7 @@ public class MatrixOps_B64 {
     /**
      * Sets either the upper or low triangle of a matrix to zero
      */
-    public static void zeroTriangle( boolean upper , BlockMatrix64F A )
+    public static void zeroTriangle( boolean upper , BlockMatrix_F64 A )
     {
         int blockLength = A.blockLength;
 
@@ -398,7 +398,7 @@ public class MatrixOps_B64 {
      * @param src The source matrix. Not modified.
      * @param dst The destination matrix. Modified.
      */
-    public static void copyTriangle( boolean upper , BlockMatrix64F src , BlockMatrix64F dst )
+    public static void copyTriangle(boolean upper , BlockMatrix_F64 src , BlockMatrix_F64 dst )
     {
         if( src.blockLength != dst.blockLength )
             throw new IllegalArgumentException("Block size is different");
@@ -476,7 +476,7 @@ public class MatrixOps_B64 {
      * @param A A matrix whose elements are about to be set. Modified.
      * @param value The value each element will have.
      */
-    public static void set( BlockMatrix64F A , double value ) {
+    public static void set(BlockMatrix_F64 A , double value ) {
         CommonOps_D64.fill(A, value);
     }
 
@@ -485,7 +485,7 @@ public class MatrixOps_B64 {
      *
      * @param A Block matrix.
      */
-    public static void setIdentity( BlockMatrix64F A )
+    public static void setIdentity( BlockMatrix_F64 A )
     {
         int minLength = Math.min(A.numRows,A.numCols);
 
@@ -516,8 +516,8 @@ public class MatrixOps_B64 {
      * @param blockLength Block length.
      * @return An identify matrix.
      */
-    public static BlockMatrix64F identity(int numRows, int numCols, int blockLength ) {
-        BlockMatrix64F A = new BlockMatrix64F(numRows,numCols,blockLength);
+    public static BlockMatrix_F64 identity(int numRows, int numCols, int blockLength ) {
+        BlockMatrix_F64 A = new BlockMatrix_F64(numRows,numCols,blockLength);
 
         int minLength = Math.min(numRows,numCols);
 
@@ -544,7 +544,7 @@ public class MatrixOps_B64 {
      * @param A Matrix.
      * @param B Matrix.
      */
-    public static void checkIdenticalShape( BlockMatrix64F A , BlockMatrix64F B ) {
+    public static void checkIdenticalShape(BlockMatrix_F64 A , BlockMatrix_F64 B ) {
         if( A.blockLength != B.blockLength )
             throw new IllegalArgumentException("Block size is different");
         if( A.numRows != B.numRows )
@@ -563,7 +563,7 @@ public class MatrixOps_B64 {
      * @param src Matrix which a submatrix is being extracted from. Not modified.
      * @param dst Where the submatrix is written to.  Its rows and columns be less than or equal to 'src'.  Modified.
      */
-    public static void extractAligned(BlockMatrix64F src, BlockMatrix64F dst) {
+    public static void extractAligned(BlockMatrix_F64 src, BlockMatrix_F64 dst) {
         if( src.blockLength != dst.blockLength )
             throw new IllegalArgumentException("Block size is different");
         if( src.numRows < dst.numRows )
@@ -601,7 +601,7 @@ public class MatrixOps_B64 {
      * @param A Submatrix.
      * @return If it is block aligned or not.
      */
-    public static boolean blockAligned( int blockLength , D1Submatrix64F A ) {
+    public static boolean blockAligned( int blockLength , D1Submatrix_F64 A ) {
         if( A.col0 % blockLength != 0 )
             return false;
         if( A.row0 % blockLength != 0 )

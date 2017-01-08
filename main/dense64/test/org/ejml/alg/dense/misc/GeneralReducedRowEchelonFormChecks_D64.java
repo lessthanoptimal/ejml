@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -72,21 +72,21 @@ public abstract class GeneralReducedRowEchelonFormChecks_D64 {
 
     @Test
     public void testSingular() {
-        DenseMatrix64F A = new DenseMatrix64F(3,4,true,1,2,3,4,3,5,6,7,2,4,6,8,-3,4,9,3);
+        RowMatrix_F64 A = new RowMatrix_F64(3,4,true,1,2,3,4,3,5,6,7,2,4,6,8,-3,4,9,3);
 
-        DenseMatrix64F found = A.copy();
+        RowMatrix_F64 found = A.copy();
         alg.reduce(found,3);
 
         checkRref(found,3);
 
-        DenseMatrix64F A1 = CommonOps_D64.extract(A,0,3,0,3);
-        DenseMatrix64F X = CommonOps_D64.extract(found,0,3,3,4);
-        DenseMatrix64F B = new DenseMatrix64F(3,1);
+        RowMatrix_F64 A1 = CommonOps_D64.extract(A,0,3,0,3);
+        RowMatrix_F64 X = CommonOps_D64.extract(found,0,3,3,4);
+        RowMatrix_F64 B = new RowMatrix_F64(3,1);
 
         CommonOps_D64.mult(A1,X,B);
 
         for( int i = 0; i < 3; i++ )
-            assertEquals(A.get(i,3),B.get(i,0), UtilEjml.TEST_64F);
+            assertEquals(A.get(i,3),B.get(i,0), UtilEjml.TEST_F64);
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_D64 {
      */
     @Test
     public void spotTests() {
-        DenseMatrix64F A = new DenseMatrix64F(4,6,true,
+        RowMatrix_F64 A = new RowMatrix_F64(4,6,true,
                 0,0,1,-1,-1,4,
                 2,4,2,4,2,4,
                 2,4,3,3,3,4,
@@ -105,8 +105,8 @@ public abstract class GeneralReducedRowEchelonFormChecks_D64 {
     }
 
     private void checkFormatRandom(int numRows, int numCols) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
-        DenseMatrix64F found = A.copy();
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
+        RowMatrix_F64 found = A.copy();
 
         alg.reduce(found,numCols);
 
@@ -114,22 +114,22 @@ public abstract class GeneralReducedRowEchelonFormChecks_D64 {
     }
 
     private void checkSolutionRandom(int numRows, int numCols , int solWidth ) {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
-        DenseMatrix64F found = A.copy();
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows,numCols,-1,1,rand);
+        RowMatrix_F64 found = A.copy();
 
         alg.reduce(found,solWidth);
 
         checkRref(found,solWidth);
 
-        DenseMatrix64F A1 = CommonOps_D64.extract(A,0,numRows,0,solWidth);
-        DenseMatrix64F X = CommonOps_D64.extract(found,0,solWidth,solWidth,numCols);
-        DenseMatrix64F B = new DenseMatrix64F(numRows,numCols-solWidth);
+        RowMatrix_F64 A1 = CommonOps_D64.extract(A,0,numRows,0,solWidth);
+        RowMatrix_F64 X = CommonOps_D64.extract(found,0,solWidth,solWidth,numCols);
+        RowMatrix_F64 B = new RowMatrix_F64(numRows,numCols-solWidth);
 
         CommonOps_D64.mult(A1,X,B);
 
         for( int i = 0; i < numRows; i++ )
             for( int j = 0; j < numCols-solWidth; j++ )
-                assertEquals(A.get(i,j+solWidth),B.get(i,j),UtilEjml.TEST_64F);
+                assertEquals(A.get(i,j+solWidth),B.get(i,j),UtilEjml.TEST_F64);
     }
 
 
@@ -137,7 +137,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_D64 {
      * Checks to see if the provided matrix is in reduced row echelon format
      * @param A
      */
-    private void checkRref( DenseMatrix64F A , int systemWidth ) {
+    private void checkRref(RowMatrix_F64 A , int systemWidth ) {
         int prevLeading = -1;
 
         for( int row = 0; row < A.numRows; row++ ) {
@@ -158,7 +158,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_D64 {
 
                     break;
                 } else {
-                    assertEquals("Should be all zeros before the leading 1", 0, val, UtilEjml.TEST_64F);
+                    assertEquals("Should be all zeros before the leading 1", 0, val, UtilEjml.TEST_F64);
                 }
             }
         }

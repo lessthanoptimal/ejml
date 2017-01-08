@@ -55,7 +55,7 @@ public class MatrixFeatures_CD64 {
      * @param tol Numerical tolerance.
      * @return True if they are the negative of each other within tolerance.
      */
-    public static boolean isNegative(CD1Matrix64F a, CD1Matrix64F b, double tol) {
+    public static boolean isNegative(D1Matrix_C64 a, D1Matrix_C64 b, double tol) {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
             throw new IllegalArgumentException("Matrix dimensions must match");
 
@@ -75,7 +75,7 @@ public class MatrixFeatures_CD64 {
      * @param m A matrix. Not modified.
      * @return True if any element in the matrix is NaN.
      */
-    public static boolean hasNaN( CD1Matrix64F m )
+    public static boolean hasNaN( D1Matrix_C64 m )
     {
         int length = m.getDataLength();
 
@@ -92,7 +92,7 @@ public class MatrixFeatures_CD64 {
      * @param m A matrix. Not modified.
      * @return True if any element in the matrix is NaN of Infinite.
      */
-    public static boolean hasUncountable( CD1Matrix64F m )
+    public static boolean hasUncountable( D1Matrix_C64 m )
     {
         int length = m.getDataLength();
 
@@ -119,7 +119,7 @@ public class MatrixFeatures_CD64 {
      * @param b A matrix. Not modified.
      * @return true if identical and false otherwise.
      */
-    public static boolean isEquals( CD1Matrix64F a, CD1Matrix64F b ) {
+    public static boolean isEquals(D1Matrix_C64 a, D1Matrix_C64 b ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }
@@ -143,7 +143,7 @@ public class MatrixFeatures_CD64 {
      * <p>
      * NOTE: If any of the elements are not countable then false is returned.<br>
      * NOTE: If a tolerance of zero is passed in this is equivalent to calling
-     * {@link #isEquals(org.ejml.data.CD1Matrix64F, org.ejml.data.CD1Matrix64F)}
+     * {@link #isEquals(D1Matrix_C64, D1Matrix_C64)}
      * </p>
      *
      * @param a A matrix. Not modified.
@@ -151,7 +151,7 @@ public class MatrixFeatures_CD64 {
      * @param tol How close to being identical each element needs to be.
      * @return true if equals and false otherwise.
      */
-    public static boolean isEquals( CD1Matrix64F a , CD1Matrix64F b , double tol )
+    public static boolean isEquals(D1Matrix_C64 a , D1Matrix_C64 b , double tol )
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
@@ -189,7 +189,7 @@ public class MatrixFeatures_CD64 {
      * @param tol Tolerance for equality.
      * @return true if identical and false otherwise.
      */
-    public static boolean isIdentical( CD1Matrix64F a, CD1Matrix64F b , double tol ) {
+    public static boolean isIdentical(D1Matrix_C64 a, D1Matrix_C64 b , double tol ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }
@@ -229,9 +229,9 @@ public class MatrixFeatures_CD64 {
      * @param tol Tolerance.
      * @return True if it is within tolerance to an identify matrix.
      */
-    public static boolean isIdentity( ComplexMatrix64F mat , double tol ) {
+    public static boolean isIdentity(Matrix_C64 mat , double tol ) {
         // see if the result is an identity matrix
-        Complex64F c = new Complex64F();
+        Complex_F64 c = new Complex_F64();
         for (int i = 0; i < mat.getNumRows(); i++) {
             for (int j = 0; j < mat.getNumCols(); j++) {
                 mat.get(i, j, c);
@@ -261,12 +261,12 @@ public class MatrixFeatures_CD64 {
      * @param tol Tolerance.
      * @return True if it passes the test.
      */
-    public static boolean isHermitian( CDenseMatrix64F Q , double tol ) {
+    public static boolean isHermitian(RowMatrix_C64 Q , double tol ) {
         if( Q.numCols != Q.numRows )
             return false;
 
-        Complex64F a = new Complex64F();
-        Complex64F b = new Complex64F();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
 
         for( int i = 0; i < Q.numCols; i++ ) {
             for( int j = i; j < Q.numCols; j++ ) {
@@ -295,17 +295,17 @@ public class MatrixFeatures_CD64 {
      * @param tol Tolerance.
      * @return True if it passes the test.
      */
-    public static boolean isUnitary( CDenseMatrix64F Q , double tol ) {
+    public static boolean isUnitary(RowMatrix_C64 Q , double tol ) {
         if( Q.numRows < Q.numCols ) {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
-        Complex64F prod = new Complex64F();
+        Complex_F64 prod = new Complex_F64();
 
-        CDenseMatrix64F u[] = CommonOps_CD64.columnsToVector(Q, null);
+        RowMatrix_C64 u[] = CommonOps_CD64.columnsToVector(Q, null);
 
         for( int i = 0; i < u.length; i++ ) {
-            CDenseMatrix64F a = u[i];
+            RowMatrix_C64 a = u[i];
 
             VectorVectorMult_CD64.innerProdH(a, a, prod);
 
@@ -338,7 +338,7 @@ public class MatrixFeatures_CD64 {
      *
      * @return True if it is positive definite and false if it is not.
      */
-    public static boolean isPositiveDefinite( CDenseMatrix64F A ) {
+    public static boolean isPositiveDefinite( RowMatrix_C64 A ) {
         if( A.numCols != A.numRows)
             return false;
 
@@ -363,7 +363,7 @@ public class MatrixFeatures_CD64 {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isUpperTriangle(CDenseMatrix64F A , int hessenberg , double tol ) {
+    public static boolean isUpperTriangle(RowMatrix_C64 A , int hessenberg , double tol ) {
         tol *= tol;
         for( int i = hessenberg+1; i < A.numRows; i++ ) {
             int maxCol = Math.min(i-hessenberg, A.numCols);
@@ -396,7 +396,7 @@ public class MatrixFeatures_CD64 {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isLowerTriangle(CDenseMatrix64F A , int hessenberg , double tol ) {
+    public static boolean isLowerTriangle(RowMatrix_C64 A , int hessenberg , double tol ) {
         tol *= tol;
         for( int i = 0; i < A.numRows-hessenberg-1; i++ ) {
             for( int j = i+hessenberg+1; j < A.numCols; j++ ) {
@@ -420,7 +420,7 @@ public class MatrixFeatures_CD64 {
      * @param m A matrix. Not modified.
      * @return True if all elements are zeros or false if not
      */
-    public static boolean isZeros( CD1Matrix64F m , double tol )
+    public static boolean isZeros(D1Matrix_C64 m , double tol )
     {
         int length = m.getNumElements()*2;
 

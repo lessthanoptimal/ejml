@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,9 +19,9 @@
 package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -99,15 +99,15 @@ public class TestMatrixMult_B64 {
      * Multiplies the two sub-matrices together.  Checks to see if the same result
      * is found when multiplied using the normal algorithm versus the submatrix one.
      */
-    private static void checkMult_submatrix( Method func , int operationType , boolean transA , boolean transB ,
-                                             D1Submatrix64F A , D1Submatrix64F B ) {
+    private static void checkMult_submatrix(Method func , int operationType , boolean transA , boolean transB ,
+                                            D1Submatrix_F64 A , D1Submatrix_F64 B ) {
         if( A.col0 % BLOCK_LENGTH != 0 || A.row0 % BLOCK_LENGTH != 0)
             throw new IllegalArgumentException("Submatrix A is not block aligned");
         if( B.col0 % BLOCK_LENGTH != 0 || B.row0 % BLOCK_LENGTH != 0)
             throw new IllegalArgumentException("Submatrix B is not block aligned");
 
-        BlockMatrix64F origA = MatrixOps_B64.createRandom(numRows,numCols,-1,1, rand, BLOCK_LENGTH);
-        BlockMatrix64F origB = MatrixOps_B64.createRandom(numCols,numRows,-1,1, rand, BLOCK_LENGTH);
+        BlockMatrix_F64 origA = MatrixOps_B64.createRandom(numRows,numCols,-1,1, rand, BLOCK_LENGTH);
+        BlockMatrix_F64 origB = MatrixOps_B64.createRandom(numCols,numRows,-1,1, rand, BLOCK_LENGTH);
 
         A.original = origA;
         B.original = origB;
@@ -116,10 +116,10 @@ public class TestMatrixMult_B64 {
 
         // offset it to make the test harder
         // randomize to see if its set or adding
-        BlockMatrix64F subC = MatrixOps_B64.createRandom(BLOCK_LENGTH +h, BLOCK_LENGTH +w, -1,1,rand, BLOCK_LENGTH);
-        D1Submatrix64F C = new D1Submatrix64F(subC, BLOCK_LENGTH, subC.numRows, BLOCK_LENGTH, subC.numCols);
+        BlockMatrix_F64 subC = MatrixOps_B64.createRandom(BLOCK_LENGTH +h, BLOCK_LENGTH +w, -1,1,rand, BLOCK_LENGTH);
+        D1Submatrix_F64 C = new D1Submatrix_F64(subC, BLOCK_LENGTH, subC.numRows, BLOCK_LENGTH, subC.numCols);
 
-        DenseMatrix64F rmC = multByExtract(operationType,A,B,C);
+        RowMatrix_F64 rmC = multByExtract(operationType,A,B,C);
 
         if( transA ) {
             origA = MatrixOps_B64.transpose(origA,null);
@@ -148,7 +148,7 @@ public class TestMatrixMult_B64 {
 //                System.out.println(i+" "+j);
                 double diff = Math.abs(subC.get(i,j) - rmC.get(i-C.row0,j-C.col0));
 //                System.out.println(subC.get(i,j)+" "+rmC.get(i-C.row0,j-C.col0));
-                if( diff >= UtilEjml.TEST_64F) {
+                if( diff >= UtilEjml.TEST_F64) {
                     subC.print();
                     rmC.print();
                     System.out.println(func.getName());
@@ -161,7 +161,7 @@ public class TestMatrixMult_B64 {
         }
     }
 
-    public static void transposeSub(D1Submatrix64F A) {
+    public static void transposeSub(D1Submatrix_F64 A) {
         int temp = A.col0;
         A.col0 = A.row0;
         A.row0 = temp;
@@ -170,13 +170,13 @@ public class TestMatrixMult_B64 {
         A.row1 = temp;
     }
 
-    private static D1Submatrix64F sub( int row0 , int col0 , int row1 , int col1 ) {
-        return new D1Submatrix64F(null,row0, row1, col0, col1);
+    private static D1Submatrix_F64 sub(int row0 , int col0 , int row1 , int col1 ) {
+        return new D1Submatrix_F64(null,row0, row1, col0, col1);
     }
 
-    private static DenseMatrix64F multByExtract( int operationType ,
-                                                 D1Submatrix64F subA , D1Submatrix64F subB ,
-                                                 D1Submatrix64F subC )
+    private static RowMatrix_F64 multByExtract(int operationType ,
+                                               D1Submatrix_F64 subA , D1Submatrix_F64 subB ,
+                                               D1Submatrix_F64 subC )
     {
         SimpleMatrix A = SimpleMatrix.wrap(subA.extract());
         SimpleMatrix B = SimpleMatrix.wrap(subB.extract());

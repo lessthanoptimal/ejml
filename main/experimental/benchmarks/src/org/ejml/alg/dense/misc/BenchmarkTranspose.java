@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.EjmlParameters;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 
@@ -32,7 +32,7 @@ import java.util.Random;
 public class BenchmarkTranspose {
     static Random rand = new Random(234);
 
-    public static long square( DenseMatrix64F mat , int numTrials) {
+    public static long square(RowMatrix_F64 mat , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -44,8 +44,8 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long block( DenseMatrix64F mat , int numTrials , int blockLength ) {
-        DenseMatrix64F tran = new DenseMatrix64F(mat.numCols,mat.numRows);
+    public static long block(RowMatrix_F64 mat , int numTrials , int blockLength ) {
+        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -57,8 +57,8 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long standard( DenseMatrix64F mat , int numTrials) {
-        DenseMatrix64F tran = new DenseMatrix64F(mat.numCols,mat.numRows);
+    public static long standard(RowMatrix_F64 mat , int numTrials) {
+        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -70,8 +70,8 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long common( DenseMatrix64F mat , int numTrials) {
-        DenseMatrix64F tran = new DenseMatrix64F(mat.numCols,mat.numRows);
+    public static long common(RowMatrix_F64 mat , int numTrials) {
+        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -96,7 +96,7 @@ public class BenchmarkTranspose {
 
     private static void evaluateMatrix( int length , int n) {
         System.out.println("*** Size "+length);
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(length,length,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(length,length,rand);
 
         System.out.println("---------- Square ----------------");
         System.out.println("In place  : "+square(A, n));

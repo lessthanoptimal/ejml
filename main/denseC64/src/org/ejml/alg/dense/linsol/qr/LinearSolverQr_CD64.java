@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decompose.TriangularSolver_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.SpecializedOps_CD64;
@@ -42,22 +42,22 @@ import org.ejml.ops.SpecializedOps_CD64;
  */
 public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
 
-    private QRDecomposition<CDenseMatrix64F> decomposer;
+    private QRDecomposition<RowMatrix_C64> decomposer;
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
-    protected CDenseMatrix64F Q;
-    protected CDenseMatrix64F Qt;
-    protected CDenseMatrix64F R;
+    protected RowMatrix_C64 Q;
+    protected RowMatrix_C64 Qt;
+    protected RowMatrix_C64 R;
 
-    private CDenseMatrix64F Y,Z;
+    private RowMatrix_C64 Y,Z;
 
     /**
      * Creates a linear solver that uses QR decomposition.
      *
      */
-    public LinearSolverQr_CD64(QRDecomposition<CDenseMatrix64F> decomposer) {
+    public LinearSolverQr_CD64(QRDecomposition<RowMatrix_C64> decomposer) {
         this.decomposer = decomposer;
     }
 
@@ -71,12 +71,12 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
     {
         this.maxRows = maxRows; this.maxCols = maxCols;
 
-        Q = new CDenseMatrix64F(maxRows,maxRows);
-        Qt = new CDenseMatrix64F(maxRows,maxRows);
-        R = new CDenseMatrix64F(maxRows,maxCols);
+        Q = new RowMatrix_C64(maxRows,maxRows);
+        Qt = new RowMatrix_C64(maxRows,maxRows);
+        R = new RowMatrix_C64(maxRows,maxCols);
 
-        Y = new CDenseMatrix64F(maxRows,1);
-        Z = new CDenseMatrix64F(maxRows,1);
+        Y = new RowMatrix_C64(maxRows,1);
+        Z = new RowMatrix_C64(maxRows,1);
     }
 
     /**
@@ -85,7 +85,7 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(CDenseMatrix64F A) {
+    public boolean setA(RowMatrix_C64 A) {
         if( A.numRows > maxRows || A.numCols > maxCols ) {
             setMaxSize(A.numRows,A.numCols);
         }
@@ -115,7 +115,7 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(CDenseMatrix64F B, CDenseMatrix64F X) {
+    public void solve(RowMatrix_C64 B, RowMatrix_C64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -161,19 +161,19 @@ public class LinearSolverQr_CD64 extends LinearSolverAbstract_CD64 {
     }
 
     @Override
-    public QRDecomposition<CDenseMatrix64F> getDecomposition() {
+    public QRDecomposition<RowMatrix_C64> getDecomposition() {
         return decomposer;
     }
 
-    public QRDecomposition<CDenseMatrix64F> getDecomposer() {
+    public QRDecomposition<RowMatrix_C64> getDecomposer() {
         return decomposer;
     }
 
-    public CDenseMatrix64F getQ() {
+    public RowMatrix_C64 getQ() {
         return Q;
     }
 
-    public CDenseMatrix64F getR() {
+    public RowMatrix_C64 getR() {
         return R;
     }
 }

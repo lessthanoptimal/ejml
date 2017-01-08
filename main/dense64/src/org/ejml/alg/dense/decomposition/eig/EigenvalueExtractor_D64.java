@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -27,9 +27,9 @@ import org.ejml.data.DenseMatrix64F;
  */
 public interface EigenvalueExtractor_D64 {
 
-    public boolean process( DenseMatrix64F A );
+    public boolean process( RowMatrix_F64 A );
 
     public int getNumberOfEigenvalues();
 
-    public Complex64F[] getEigenvalues();
+    public Complex_F64[] getEigenvalues();
 }

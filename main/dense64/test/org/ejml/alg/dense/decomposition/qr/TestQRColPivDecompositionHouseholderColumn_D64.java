@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -44,7 +44,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
      */
     @Test
     public void noPivot() {
-        DenseMatrix64F A = RandomMatrices_D64.createOrthogonal(6, 3, rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createOrthogonal(6, 3, rand);
 
         // make sure the columns have norms in descending magnitude
         for( int i = 0; i < A.numCols; i++ ) {
@@ -60,13 +60,13 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
         QRColPivDecompositionHouseholderColumn_D64 alg = new QRColPivDecompositionHouseholderColumn_D64();
         assertTrue(alg.decompose(A));
 
-        DenseMatrix64F Q = alg.getQ(null, false);
-        DenseMatrix64F R = alg.getR(null, false);
+        RowMatrix_F64 Q = alg.getQ(null, false);
+        RowMatrix_F64 R = alg.getR(null, false);
 
-        DenseMatrix64F found = new DenseMatrix64F(A.numRows,A.numCols);
+        RowMatrix_F64 found = new RowMatrix_F64(A.numRows,A.numCols);
         CommonOps_D64.mult(Q,R,found);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A,found, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A,found, UtilEjml.TEST_F64));
 
         // check the pivots
         int pivots[] = alg.getPivots();
@@ -74,8 +74,8 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
             assertEquals(i,pivots[i]);
         }
 
-        DenseMatrix64F P = alg.getPivotMatrix(null);
-        assertTrue(MatrixFeatures_D64.isIdentity(P, UtilEjml.TEST_64F));
+        RowMatrix_F64 P = alg.getPivotMatrix(null);
+        assertTrue(MatrixFeatures_D64.isIdentity(P, UtilEjml.TEST_F64));
     }
 
     /**
@@ -89,7 +89,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
 
             // construct a singular matrix from its SVD decomposition
             SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_D64.createOrthogonal(numRows,numRows,rand));
-            SimpleMatrix S = SimpleMatrix.diag( DenseMatrix64F.class, 1,2,3,4,5,6,7,8,9,10);
+            SimpleMatrix S = SimpleMatrix.diag( RowMatrix_F64.class, 1,2,3,4,5,6,7,8,9,10);
             SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_D64.createOrthogonal(numRows,numRows,rand));
 
             for( int i = 0; i < numSingular; i++ ) {
@@ -99,9 +99,9 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
             SimpleMatrix A = U.mult(S).mult(V.transpose());
 
             QRColPivDecompositionHouseholderColumn_D64 alg = new QRColPivDecompositionHouseholderColumn_D64();
-            assertTrue(alg.decompose((DenseMatrix64F)A.getMatrix()));
+            assertTrue(alg.decompose((RowMatrix_F64)A.getMatrix()));
 
-            checkDecomposition(false,(DenseMatrix64F)A.getMatrix(),alg);
+            checkDecomposition(false,(RowMatrix_F64)A.getMatrix(),alg);
         }
     }
 
@@ -123,7 +123,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
      */
     @Test
     public void testZeroMatrix() {
-        DenseMatrix64F A = new DenseMatrix64F(5,5);
+        RowMatrix_F64 A = new RowMatrix_F64(5,5);
 
         QRColPivDecompositionHouseholderColumn_D64 alg = new QRColPivDecompositionHouseholderColumn_D64();
         assertTrue(alg.decompose(A));
@@ -136,7 +136,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
     {
 
         for( int i = 0; i < 10; i++ ) {
-            DenseMatrix64F A = RandomMatrices_D64.createRandom(numRows, numCols, rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createRandom(numRows, numCols, rand);
 
             QRColPivDecompositionHouseholderColumn_D64 alg = new QRColPivDecompositionHouseholderColumn_D64();
             assertTrue(alg.decompose(A));
@@ -145,7 +145,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
         }
     }
 
-    private void checkDecomposition(boolean compact, DenseMatrix64F a,
+    private void checkDecomposition(boolean compact, RowMatrix_F64 a,
                                     QRColPivDecompositionHouseholderColumn_D64 alg) {
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null, compact));
         SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null, compact));
@@ -162,7 +162,7 @@ public class TestQRColPivDecompositionHouseholderColumn_D64 {
 //        System.out.println("asdfasdf");
 //        expected.print();
 //        found.print();
-        assertTrue(expected.isIdentical(found,UtilEjml.TEST_64F));
+        assertTrue(expected.isIdentical(found,UtilEjml.TEST_F64));
     }
 
 }

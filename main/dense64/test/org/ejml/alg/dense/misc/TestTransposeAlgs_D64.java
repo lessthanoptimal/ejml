@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.EjmlUnitTests;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
@@ -37,8 +37,8 @@ public class TestTransposeAlgs_D64 {
 
     @Test
     public void square() {
-        DenseMatrix64F mat = RandomMatrices_D64.createRandom(5,5,rand);
-        DenseMatrix64F matTran = mat.copy();
+        RowMatrix_F64 mat = RandomMatrices_D64.createRandom(5,5,rand);
+        RowMatrix_F64 matTran = mat.copy();
 
         TransposeAlgs_D64.square(matTran);
 
@@ -53,8 +53,8 @@ public class TestTransposeAlgs_D64 {
         // check various shapes to make sure blocking is handled correctly
         for( int numRows = 1; numRows < 15; numRows += 2 ) {
             for( int numCols = 1; numCols < 15; numCols += 2) {
-                DenseMatrix64F mat = RandomMatrices_D64.createRandom(numRows,numCols,rand);
-                DenseMatrix64F matTran = new DenseMatrix64F(numCols,numRows);
+                RowMatrix_F64 mat = RandomMatrices_D64.createRandom(numRows,numCols,rand);
+                RowMatrix_F64 matTran = new RowMatrix_F64(numCols,numRows);
 
                 TransposeAlgs_D64.block(mat,matTran,7);
 
@@ -68,8 +68,8 @@ public class TestTransposeAlgs_D64 {
 
     @Test
     public void standard() {
-        DenseMatrix64F mat = RandomMatrices_D64.createRandom(5,7,rand);
-        DenseMatrix64F matTran = new DenseMatrix64F(7,5);
+        RowMatrix_F64 mat = RandomMatrices_D64.createRandom(5,7,rand);
+        RowMatrix_F64 matTran = new RowMatrix_F64(7,5);
 
         TransposeAlgs_D64.standard(mat,matTran);
 

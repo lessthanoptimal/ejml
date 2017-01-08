@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 
 import java.util.Random;
@@ -28,7 +28,7 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class BenchmarkEigenDecomposition {
-    public static long watched( DenseMatrix64F orig , int numTrials ) {
+    public static long watched(RowMatrix_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -43,7 +43,7 @@ public class BenchmarkEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
         System.out.println("Watched            = "+ watched(mat,numTrials));
     }
@@ -60,7 +60,7 @@ public class BenchmarkEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            DenseMatrix64F symMat = RandomMatrices_D64.createRandom(w,w,rand);
+            RowMatrix_F64 symMat = RandomMatrices_D64.createRandom(w,w,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

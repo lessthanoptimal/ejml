@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,13 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixDimensionException;
 
 /**
  * <p>
- * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix64F}.
+ * This class contains various types of matrix matrix multiplication operations for {@link RowD1Matrix_F64}.
  * </p>
  * <p>
  * Two algorithms that are equivalent can often have very different runtime performance.
@@ -60,9 +60,9 @@ import org.ejml.ops.MatrixDimensionException;
 @SuppressWarnings("Duplicates")
 public class MatrixMatrixMult_D64 {
     /**
-     * @see CommonOps_D64#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void mult_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void mult_reorder(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -110,9 +110,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void mult_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void mult_small(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -144,9 +144,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#mult( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void mult_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void mult_aux(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -176,9 +176,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransA( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransA_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransA_reorder(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -219,9 +219,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransA( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransA_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransA_small(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -253,9 +253,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransAB( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransAB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransAB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -286,9 +286,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransAB( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransAB_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void multTransAB_aux(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -322,9 +322,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransB( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -356,9 +356,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAdd( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAdd( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAdd_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAdd_reorder(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -405,9 +405,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAdd( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAdd( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAdd_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAdd_small(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -439,9 +439,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAdd( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAdd( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAdd_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void multAdd_aux(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -471,9 +471,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransA( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransA_reorder( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransA_reorder(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -513,9 +513,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransA( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransA( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransA_small( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransA_small(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -547,9 +547,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransAB( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransAB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransAB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -580,9 +580,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransAB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransAB( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransAB_aux( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void multAddTransAB_aux(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -615,9 +615,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransB( org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransB( RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransB( RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -649,9 +649,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#mult(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void mult_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void mult_reorder(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -699,9 +699,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#mult(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void mult_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void mult_small(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -733,9 +733,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#mult(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void mult_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void mult_aux(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -765,9 +765,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransA(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransA_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransA_reorder(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -808,9 +808,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransA(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransA_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransA_small(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -842,9 +842,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransAB(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransAB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransAB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -875,9 +875,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransAB(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransAB_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void multTransAB_aux(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -911,9 +911,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multTransB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multTransB(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multTransB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multTransB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -945,9 +945,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAdd(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAdd(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAdd_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAdd_reorder(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -994,9 +994,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAdd(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAdd(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAdd_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAdd_small(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1028,9 +1028,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAdd(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAdd(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAdd_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void multAdd_aux(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1060,9 +1060,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransA(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransA_reorder( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransA_reorder(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1102,9 +1102,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransA(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransA(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransA_small( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransA_small(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1136,9 +1136,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransAB(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransAB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransAB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1169,9 +1169,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransAB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransAB(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransAB_aux( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c , double []aux )
+    public static void multAddTransAB_aux(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1204,9 +1204,9 @@ public class MatrixMatrixMult_D64 {
     }
 
     /**
-     * @see CommonOps_D64#multAddTransB(double,  org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#multAddTransB(double, RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
-    public static void multAddTransB( double alpha , RowD1Matrix64F a , RowD1Matrix64F b , RowD1Matrix64F c )
+    public static void multAddTransB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");

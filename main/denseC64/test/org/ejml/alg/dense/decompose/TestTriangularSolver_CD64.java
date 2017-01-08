@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixFeatures_CD64;
 import org.ejml.ops.RandomMatrices_CD64;
@@ -38,44 +38,44 @@ public class TestTriangularSolver_CD64 {
 
     @Test
     public void solveU() {
-        CDenseMatrix64F U = RandomMatrices_CD64.createRandom(3, 3, -1 ,1 ,rand);
+        RowMatrix_C64 U = RandomMatrices_CD64.createRandom(3, 3, -1 ,1 ,rand);
         for( int i = 0; i < U.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {
                 U.set(i,j,0,0);
             }
         }
 
-        CDenseMatrix64F X = RandomMatrices_CD64.createRandom(3, 1, -1 ,1 ,rand);
-        CDenseMatrix64F B = new CDenseMatrix64F(3,1);
+        RowMatrix_C64 X = RandomMatrices_CD64.createRandom(3, 1, -1 ,1 ,rand);
+        RowMatrix_C64 B = new RowMatrix_C64(3,1);
 
         CommonOps_CD64.mult(U, X, B);
 
         TriangularSolver_CD64.solveU(U.data,B.data,3);
 
-        assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_F64));
     }
 
     @Test
     public void solveL_diagReal() {
         for( int N = 1; N <= 4; N++ ) {
-            CDenseMatrix64F L = createLowerTriangleDiagReal(N);
+            RowMatrix_C64 L = createLowerTriangleDiagReal(N);
 
-            CDenseMatrix64F X = RandomMatrices_CD64.createRandom(N, 1, -1, 1, rand);
-            CDenseMatrix64F B = new CDenseMatrix64F(N, 1);
+            RowMatrix_C64 X = RandomMatrices_CD64.createRandom(N, 1, -1, 1, rand);
+            RowMatrix_C64 B = new RowMatrix_C64(N, 1);
 
             CommonOps_CD64.mult(L, X, B);
 
             TriangularSolver_CD64.solveL_diagReal(L.data, B.data, N);
 
-            assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_F64));
         }
     }
 
     /**
      * Creates a random complex lower triangular matrix with real diagonal elements
      */
-    private CDenseMatrix64F createLowerTriangleDiagReal(int n) {
-        CDenseMatrix64F L = RandomMatrices_CD64.createRandom(n, n, -1, 1, rand);
+    private RowMatrix_C64 createLowerTriangleDiagReal(int n) {
+        RowMatrix_C64 L = RandomMatrices_CD64.createRandom(n, n, -1, 1, rand);
         for (int i = 0; i < L.numRows; i++) {
             for (int j = i + 1; j < L.numCols; j++) {
                 L.set(i, j, 0, 0);
@@ -90,19 +90,19 @@ public class TestTriangularSolver_CD64 {
     @Test
     public void solveConjTranL_diagReal() {
         for( int N = 1; N <= 4; N++ ) {
-            CDenseMatrix64F L = createLowerTriangleDiagReal(N);
+            RowMatrix_C64 L = createLowerTriangleDiagReal(N);
 
-            CDenseMatrix64F L_ct = new CDenseMatrix64F(N, N);
+            RowMatrix_C64 L_ct = new RowMatrix_C64(N, N);
             CommonOps_CD64.transposeConjugate(L,L_ct);
 
-            CDenseMatrix64F X = RandomMatrices_CD64.createRandom(N, 1, -1, 1, rand);
-            CDenseMatrix64F B = new CDenseMatrix64F(N, 1);
+            RowMatrix_C64 X = RandomMatrices_CD64.createRandom(N, 1, -1, 1, rand);
+            RowMatrix_C64 B = new RowMatrix_C64(N, 1);
 
             CommonOps_CD64.mult(L_ct, X, B);
 
             TriangularSolver_CD64.solveConjTranL_diagReal(L.data, B.data, N);
 
-            assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentical(X, B, UtilEjml.TEST_F64));
         }
     }
 }

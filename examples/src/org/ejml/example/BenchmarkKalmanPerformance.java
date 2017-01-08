@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 import java.util.ArrayList;
@@ -40,16 +40,16 @@ public class BenchmarkKalmanPerformance {
     List<KalmanFilter> filters = new ArrayList<KalmanFilter>();
 
     public void run() {
-        DenseMatrix64F priorX = new DenseMatrix64F(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DenseMatrix64F priorP = CommonOps_D64.identity(9);
+        RowMatrix_F64 priorX = new RowMatrix_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
+        RowMatrix_F64 priorP = CommonOps_D64.identity(9);
 
-        DenseMatrix64F trueX = new DenseMatrix64F(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
+        RowMatrix_F64 trueX = new RowMatrix_F64(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
 
-        List<DenseMatrix64F> meas = createSimulatedMeas(trueX);
+        List<RowMatrix_F64> meas = createSimulatedMeas(trueX);
 
-        DenseMatrix64F F = createF(T);
-        DenseMatrix64F Q = createQ(T,0.1);
-        DenseMatrix64F H = createH();
+        RowMatrix_F64 F = createF(T);
+        RowMatrix_F64 Q = createQ(T,0.1);
+        RowMatrix_F64 H = createH();
 
         for(KalmanFilter f : filters ) {
 
@@ -71,18 +71,18 @@ public class BenchmarkKalmanPerformance {
         }
     }
 
-    private List<DenseMatrix64F> createSimulatedMeas( DenseMatrix64F x ) {
+    private List<RowMatrix_F64> createSimulatedMeas(RowMatrix_F64 x ) {
 
-        List<DenseMatrix64F> ret = new ArrayList<DenseMatrix64F>();
+        List<RowMatrix_F64> ret = new ArrayList<RowMatrix_F64>();
 
-        DenseMatrix64F F = createF(T);
-        DenseMatrix64F H = createH();
+        RowMatrix_F64 F = createF(T);
+        RowMatrix_F64 H = createH();
 
 //        UtilEjml.print(F);
 //        UtilEjml.print(H);
 
-        DenseMatrix64F x_next = new DenseMatrix64F(x);
-        DenseMatrix64F z = new DenseMatrix64F(H.numRows,1);
+        RowMatrix_F64 x_next = new RowMatrix_F64(x);
+        RowMatrix_F64 z = new RowMatrix_F64(H.numRows,1);
 
         for( int i = 0; i < MAX_STEPS; i++ ) {
             CommonOps_D64.mult(F,x,x_next);
@@ -95,18 +95,18 @@ public class BenchmarkKalmanPerformance {
     }
 
     private void processMeas( KalmanFilter f ,
-                              List<DenseMatrix64F> meas )
+                              List<RowMatrix_F64> meas )
     {
-        DenseMatrix64F R = CommonOps_D64.identity(measDOF);
+        RowMatrix_F64 R = CommonOps_D64.identity(measDOF);
 
-        for(DenseMatrix64F z : meas ) {
+        for(RowMatrix_F64 z : meas ) {
             f.predict();
             f.update(z,R);
         }
     }
 
 
-    public static DenseMatrix64F createF( double T ) {
+    public static RowMatrix_F64 createF(double T ) {
         double []a = new double[]{
                 1, 0 , 0 , T , 0 , 0 , 0.5*T*T , 0 , 0 ,
                 0, 1 , 0 , 0 , T , 0 , 0 , 0.5*T*T , 0 ,
@@ -118,11 +118,11 @@ public class BenchmarkKalmanPerformance {
                 0, 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 ,
                 0, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 };
 
-        return new DenseMatrix64F(9,9, true, a);
+        return new RowMatrix_F64(9,9, true, a);
     }
 
-    public static DenseMatrix64F createQ( double T , double var ) {
-        DenseMatrix64F Q = new DenseMatrix64F(9,9);
+    public static RowMatrix_F64 createQ(double T , double var ) {
+        RowMatrix_F64 Q = new RowMatrix_F64(9,9);
 
         double a00 = (1.0/4.0)*T*T*T*T*var;
         double a01 = (1.0/2.0)*T*T*T*var;
@@ -149,8 +149,8 @@ public class BenchmarkKalmanPerformance {
         return Q;
     }
 
-    public static DenseMatrix64F createH() {
-        DenseMatrix64F H = new DenseMatrix64F(measDOF,9);
+    public static RowMatrix_F64 createH() {
+        RowMatrix_F64 H = new RowMatrix_F64(measDOF,9);
         for( int i = 0; i < measDOF; i++ ) {
             H.set(i,i,1.0);
         }

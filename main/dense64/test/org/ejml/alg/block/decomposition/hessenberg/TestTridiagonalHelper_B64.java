@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,9 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_D64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
@@ -63,25 +63,25 @@ public class TestTridiagonalHelper_B64 {
             TridiagonalDecompositionHouseholderOrig_D64 decomp = new TridiagonalDecompositionHouseholderOrig_D64();
             decomp.decompose(A.matrix_F64());
 
-            D1Submatrix64F Ab = insertIntoBlock(offX,offY,A,r);
-            D1Submatrix64F V = new D1Submatrix64F(new BlockMatrix64F(r,offX+A.numCols(),r));
+            D1Submatrix_F64 Ab = insertIntoBlock(offX,offY,A,r);
+            D1Submatrix_F64 V = new D1Submatrix_F64(new BlockMatrix_F64(r,offX+A.numCols(),r));
             V.col0 = offX;
             V.row1 = Ab.row1-Ab.row0;
             int gammaOffset = offX;
             double gammas[] = new double[gammaOffset+A.numCols()];
             TridiagonalHelper_B64.tridiagUpperRow(r, Ab, gammas, V);
 
-            DenseMatrix64F expected = decomp.getQT();
+            RowMatrix_F64 expected = decomp.getQT();
 
             // see if the decomposed matrix is the same
             for( int i = 0; i < r; i++ ) {
                 for( int j = i; j < width; j++ ) {
-                    assertEquals(i+" "+j,expected.get(i,j),Ab.get(i,j), UtilEjml.TEST_64F);
+                    assertEquals(i+" "+j,expected.get(i,j),Ab.get(i,j), UtilEjml.TEST_F64);
                 }
             }
             // check the gammas
             for( int i = 0; i < Math.min(width-1,r); i++ ) {
-                assertEquals(decomp.getGamma(i+1),gammas[i+gammaOffset],UtilEjml.TEST_64F);
+                assertEquals(decomp.getGamma(i+1),gammas[i+gammaOffset],UtilEjml.TEST_F64);
             }
         }
     }
@@ -119,16 +119,16 @@ public class TestTridiagonalHelper_B64 {
             }
 
             // now compute it using the block matrix stuff
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Wb = new BlockMatrix64F(Ab.numRows,Ab.numCols,r);
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Wb = new BlockMatrix_F64(Ab.numRows,Ab.numCols,r);
 
-            D1Submatrix64F Ab_sub = new D1Submatrix64F(Ab);
-            D1Submatrix64F Wb_sub = new D1Submatrix64F(Wb);
+            D1Submatrix_F64 Ab_sub = new D1Submatrix_F64(Ab);
+            D1Submatrix_F64 Wb_sub = new D1Submatrix_F64(Wb);
 
             TridiagonalHelper_B64.computeW_row(r, Ab_sub, Wb_sub, betas, 0);
 
             // see if the result is the same
-            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.matrix_F64(),UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.matrix_F64(),UtilEjml.TEST_F64));
         }
     }
 
@@ -143,8 +143,8 @@ public class TestTridiagonalHelper_B64 {
                 SimpleMatrix A_orig = A.copy();
                 SimpleMatrix V = SimpleMatrix.random_F64(r,A.numCols(), -1.0 , 1.0 ,rand);
 
-                D1Submatrix64F Ab = insertIntoBlock(offY,offX,A,r);
-                D1Submatrix64F Vb = insertIntoBlock(0,offX,V,r);
+                D1Submatrix_F64 Ab = insertIntoBlock(offY,offX,A,r);
+                D1Submatrix_F64 Vb = insertIntoBlock(0,offX,V,r);
 
                 int row = r-1;
 
@@ -165,19 +165,19 @@ public class TestTridiagonalHelper_B64 {
 
                 // compare to manually computed solution
                 for( int i = row; i < A.numCols(); i++ ) {
-                    assertEquals(A.get(row,i),Ab.get(row,i),UtilEjml.TEST_64F);
+                    assertEquals(A.get(row,i),Ab.get(row,i),UtilEjml.TEST_F64);
                 }
             }
         }
     }
 
-    private static D1Submatrix64F insertIntoBlock( int offRow , int offCol , SimpleMatrix A , int r )
+    private static D1Submatrix_F64 insertIntoBlock(int offRow , int offCol , SimpleMatrix A , int r )
     {
-        DenseMatrix64F B = new DenseMatrix64F(offRow+A.numRows(),offCol+A.numCols());
+        RowMatrix_F64 B = new RowMatrix_F64(offRow+A.numRows(),offCol+A.numCols());
         CommonOps_D64.insert(A.matrix_F64(),B,offRow,offCol);
 
-        BlockMatrix64F C = MatrixOps_B64.convert(B,r);
-        return new D1Submatrix64F(C,offRow,C.numRows,offCol,C.numCols);
+        BlockMatrix_F64 C = MatrixOps_B64.convert(B,r);
+        return new D1Submatrix_F64(C,offRow,C.numRows,offCol,C.numCols);
     }
 
     @Test
@@ -186,8 +186,8 @@ public class TestTridiagonalHelper_B64 {
         // make a symmetric so that this mult will work
         A = A.transpose().mult(A);
 
-        BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-        BlockMatrix64F V = new BlockMatrix64F(r,Ab.numCols,r);
+        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+        BlockMatrix_F64 V = new BlockMatrix_F64(r,Ab.numCols,r);
 
         int row = 1;
 
@@ -199,11 +199,11 @@ public class TestTridiagonalHelper_B64 {
 
         SimpleMatrix v = A.mult(u).transpose();
 
-        TridiagonalHelper_B64.multA_u(r, new D1Submatrix64F(Ab),
-                new D1Submatrix64F(V), row);
+        TridiagonalHelper_B64.multA_u(r, new D1Submatrix_F64(Ab),
+                new D1Submatrix_F64(V), row);
 
         for( int i = row+1; i < A.numCols(); i++ ) {
-            assertEquals(v.get(i),V.get(row,i),UtilEjml.TEST_64F);
+            assertEquals(v.get(i),V.get(row,i),UtilEjml.TEST_F64);
         }
     }
 
@@ -252,13 +252,13 @@ public class TestTridiagonalHelper_B64 {
 
             y = y.scale(-gamma);
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Vb = MatrixOps_B64.convert(Vo.matrix_F64(),r);
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Vb = MatrixOps_B64.convert(Vo.matrix_F64(),r);
 
-            TridiagonalHelper_B64.computeY(r, new D1Submatrix64F(Ab), new D1Submatrix64F(Vb), row, gamma);
+            TridiagonalHelper_B64.computeY(r, new D1Submatrix_F64(Ab), new D1Submatrix_F64(Vb), row, gamma);
 
             for( int i = row+1; i < A.numCols(); i++ ) {
-                assertEquals(Vb.get(row,i),y.get(i),UtilEjml.TEST_64F);
+                assertEquals(Vb.get(row,i),y.get(i),UtilEjml.TEST_F64);
             }
         }
     }
@@ -281,14 +281,14 @@ public class TestTridiagonalHelper_B64 {
 
             SimpleMatrix v = y.plus(u.scale(-(gamma/2.0)*u.dot(y)));
 
-            BlockMatrix64F Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix64F Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
+            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            BlockMatrix_F64 Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
 
-            TridiagonalHelper_B64.computeRowOfV(r, new D1Submatrix64F(Ab), new D1Submatrix64F(Vb),
+            TridiagonalHelper_B64.computeRowOfV(r, new D1Submatrix_F64(Ab), new D1Submatrix_F64(Vb),
                     row, gamma);
 
             for( int i = row+1; i < A.numCols(); i++ ) {
-                assertEquals(Vb.get(row,i),v.get(i),UtilEjml.TEST_64F);
+                assertEquals(Vb.get(row,i),v.get(i),UtilEjml.TEST_F64);
             }
         }
     }

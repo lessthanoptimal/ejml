@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.Complex32F;
+import org.ejml.data.Complex_F32;
 import org.ejml.data.Matrix;
 
 
@@ -37,6 +37,6 @@ public interface CholeskyDecomposition_F32<MatrixType extends Matrix>
      *
      * @return The determinant.
      */
-    Complex32F computeDeterminant();
+    Complex_F32 computeDeterminant();
 
 }

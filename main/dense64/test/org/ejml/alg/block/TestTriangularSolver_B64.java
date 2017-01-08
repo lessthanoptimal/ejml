@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.D1Submatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
@@ -47,23 +47,23 @@ public class TestTriangularSolver_B64 {
         double temp[] = new double[r*r];
 
         for( int size = 1; size <= 9; size++ ) {
-            BlockMatrix64F T = MatrixOps_B64.createRandom(size,size,-1,1,rand,r);
+            BlockMatrix_F64 T = MatrixOps_B64.createRandom(size,size,-1,1,rand,r);
             MatrixOps_B64.zeroTriangle(true,T);
 
-            BlockMatrix64F T_inv = T.copy();
+            BlockMatrix_F64 T_inv = T.copy();
 
-            TriangularSolver_B64.invert(r,false,new D1Submatrix64F(T),new D1Submatrix64F(T_inv),temp);
+            TriangularSolver_B64.invert(r,false,new D1Submatrix_F64(T),new D1Submatrix_F64(T_inv),temp);
 
-            BlockMatrix64F C = new BlockMatrix64F(size,size,r);
+            BlockMatrix_F64 C = new BlockMatrix_F64(size,size,r);
 
             MatrixOps_B64.mult(T,T_inv,C);
 
-            assertTrue(GenericMatrixOps_F64.isIdentity(C,UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isIdentity(C,UtilEjml.TEST_F64));
 
             // see if passing in the same matrix instance twice messes it up or not
-            TriangularSolver_B64.invert(r,false,new D1Submatrix64F(T),new D1Submatrix64F(T),temp);
+            TriangularSolver_B64.invert(r,false,new D1Submatrix_F64(T),new D1Submatrix_F64(T),temp);
 
-            assertTrue(MatrixOps_B64.isEquals(T,T_inv, UtilEjml.TEST_64F));
+            assertTrue(MatrixOps_B64.isEquals(T,T_inv, UtilEjml.TEST_F64));
         }
     }
 
@@ -75,18 +75,18 @@ public class TestTriangularSolver_B64 {
         double temp[] = new double[r*r];
 
         for( int size = 1; size <= 9; size++ ) {
-            BlockMatrix64F T = MatrixOps_B64.createRandom(size,size,-1,1,rand,r);
+            BlockMatrix_F64 T = MatrixOps_B64.createRandom(size,size,-1,1,rand,r);
             MatrixOps_B64.zeroTriangle(true,T);
 
-            BlockMatrix64F T_inv = T.copy();
+            BlockMatrix_F64 T_inv = T.copy();
 
-            TriangularSolver_B64.invert(r,false,new D1Submatrix64F(T_inv),temp);
+            TriangularSolver_B64.invert(r,false,new D1Submatrix_F64(T_inv),temp);
 
-            BlockMatrix64F C = new BlockMatrix64F(size,size,r);
+            BlockMatrix_F64 C = new BlockMatrix_F64(size,size,r);
 
             MatrixOps_B64.mult(T,T_inv,C);
 
-            assertTrue(GenericMatrixOps_F64.isIdentity(C,UtilEjml.TEST_64F));
+            assertTrue(GenericMatrixOps_F64.isIdentity(C,UtilEjml.TEST_F64));
         }
     }
 
@@ -105,15 +105,15 @@ public class TestTriangularSolver_B64 {
             for( int triangleSize = 1; triangleSize <= 9; triangleSize++ ) {
                 for( int cols = 1; cols <= 9; cols++ ) {
 //                System.out.println("triangle "+triangleSize+" cols "+cols);
-                    BlockMatrix64F T = MatrixOps_B64.createRandom(triangleSize,triangleSize,-1,1,rand,r);
+                    BlockMatrix_F64 T = MatrixOps_B64.createRandom(triangleSize,triangleSize,-1,1,rand,r);
                     MatrixOps_B64.zeroTriangle(true,T);
 
                     if( upper ) {
                         T= MatrixOps_B64.transpose(T,null);
                     }
 
-                    BlockMatrix64F B = MatrixOps_B64.createRandom(triangleSize,cols,-1,1,rand,r);
-                    BlockMatrix64F Y = new BlockMatrix64F(B.numRows,B.numCols,r);
+                    BlockMatrix_F64 B = MatrixOps_B64.createRandom(triangleSize,cols,-1,1,rand,r);
+                    BlockMatrix_F64 Y = new BlockMatrix_F64(B.numRows,B.numCols,r);
 
                     checkSolve(T,B,Y,r,upper,false);
                     checkSolve(T,B,Y,r,upper,true);
@@ -131,11 +131,11 @@ public class TestTriangularSolver_B64 {
      * Checks to see if BlockTriangularSolver.solve produces the expected output given
      * these inputs.  The solution is computed directly.
      */
-    private void checkSolve( BlockMatrix64F T , BlockMatrix64F B , BlockMatrix64F Y ,
-                             int r , boolean upper , boolean transT )
+    private void checkSolve(BlockMatrix_F64 T , BlockMatrix_F64 B , BlockMatrix_F64 Y ,
+                            int r , boolean upper , boolean transT )
     {
         if( transT ) {
-            BlockMatrix64F T_tran = MatrixOps_B64.transpose(T,null);
+            BlockMatrix_F64 T_tran = MatrixOps_B64.transpose(T,null);
 
             // Compute Y directly from the expected result B
             MatrixOps_B64.mult(T_tran,B,Y);
@@ -145,19 +145,19 @@ public class TestTriangularSolver_B64 {
         }
 
         // Y is overwritten with the solution
-        TriangularSolver_B64.solve(r,upper,new D1Submatrix64F(T),new D1Submatrix64F(Y),transT);
+        TriangularSolver_B64.solve(r,upper,new D1Submatrix_F64(T),new D1Submatrix_F64(Y),transT);
 
-        assertTrue( MatrixOps_B64.isEquals(B,Y, UtilEjml.TEST_64F_SQ));
+        assertTrue( MatrixOps_B64.isEquals(B,Y, UtilEjml.TEST_F64_SQ));
     }
 
     /**
      * Checks to see if BlockTriangularSolver.solve produces the expected output given
      * these inputs.  The solution is computed directly.
      */
-    private void checkSolveUnaligned( BlockMatrix64F T , BlockMatrix64F B , BlockMatrix64F Y ,
-                                      int r , boolean upper , boolean transT )
+    private void checkSolveUnaligned(BlockMatrix_F64 T , BlockMatrix_F64 B , BlockMatrix_F64 Y ,
+                                     int r , boolean upper , boolean transT )
     {
-        BlockMatrix64F T2;
+        BlockMatrix_F64 T2;
 
         if( upper )
             T2 = MatrixOps_B64.createRandom(T.numRows+1,T.numCols,-1,1,rand,T.blockLength);
@@ -167,7 +167,7 @@ public class TestTriangularSolver_B64 {
         CommonOps_D64.insert(T,T2,0,0);
 
         if( transT ) {
-            BlockMatrix64F T_tran = MatrixOps_B64.transpose(T,null);
+            BlockMatrix_F64 T_tran = MatrixOps_B64.transpose(T,null);
 
             // Compute Y directly from the expected result B
             MatrixOps_B64.mult(T_tran,B,Y);
@@ -179,10 +179,10 @@ public class TestTriangularSolver_B64 {
         int size = T.numRows;
 
         // Y is overwritten with the solution
-        TriangularSolver_B64.solve(r,upper,new D1Submatrix64F(T2,0,size,0,size),new D1Submatrix64F(Y),transT);
+        TriangularSolver_B64.solve(r,upper,new D1Submatrix_F64(T2,0,size,0,size),new D1Submatrix_F64(Y),transT);
 
         assertTrue( "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols,
-                MatrixOps_B64.isEquals(B,Y, UtilEjml.TEST_64F_SQ));
+                MatrixOps_B64.isEquals(B,Y, UtilEjml.TEST_F64_SQ));
     }
 
 
@@ -206,9 +206,9 @@ public class TestTriangularSolver_B64 {
      */
     private void check_solveBlock_submatrix( boolean solveL , boolean transT , boolean transB ) {
         // compute expected solution
-        DenseMatrix64F L = createRandomLowerTriangular(3);
-        DenseMatrix64F B = RandomMatrices_D64.createRandom(3,5,rand);
-        DenseMatrix64F X = new DenseMatrix64F(3,5);
+        RowMatrix_F64 L = createRandomLowerTriangular(3);
+        RowMatrix_F64 B = RandomMatrices_D64.createRandom(3,5,rand);
+        RowMatrix_F64 X = new RowMatrix_F64(3,5);
 
         if( !solveL ) {
             CommonOps_D64.transpose(L);
@@ -221,19 +221,19 @@ public class TestTriangularSolver_B64 {
         CommonOps_D64.solve(L,B,X);
 
         // do it again using block matrices
-        BlockMatrix64F b_L = MatrixOps_B64.convert(L,3);
-        BlockMatrix64F b_B = MatrixOps_B64.convert(B,3);
+        BlockMatrix_F64 b_L = MatrixOps_B64.convert(L,3);
+        BlockMatrix_F64 b_B = MatrixOps_B64.convert(B,3);
 
-        D1Submatrix64F sub_L = new D1Submatrix64F(b_L,0, 3, 0, 3);
-        D1Submatrix64F sub_B = new D1Submatrix64F(b_B,0, 3, 0, 5);
+        D1Submatrix_F64 sub_L = new D1Submatrix_F64(b_L,0, 3, 0, 3);
+        D1Submatrix_F64 sub_B = new D1Submatrix_F64(b_B,0, 3, 0, 5);
 
         if( transT ) {
-            sub_L.original = MatrixOps_B64.transpose((BlockMatrix64F)sub_L.original,null);
+            sub_L.original = MatrixOps_B64.transpose((BlockMatrix_F64)sub_L.original,null);
             TestMatrixMult_B64.transposeSub(sub_L);
         }
 
         if( transB ) {
-            sub_B.original = b_B = MatrixOps_B64.transpose((BlockMatrix64F)sub_B.original,null);
+            sub_B.original = b_B = MatrixOps_B64.transpose((BlockMatrix_F64)sub_B.original,null);
             TestMatrixMult_B64.transposeSub(sub_B);
             CommonOps_D64.transpose(X);
         }
@@ -243,11 +243,11 @@ public class TestTriangularSolver_B64 {
 
         TriangularSolver_B64.solveBlock(3,!solveL,sub_L,sub_B,transT,transB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(X,b_B,UtilEjml.TEST_64F));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(X,b_B,UtilEjml.TEST_F64));
     }
 
-    private DenseMatrix64F createRandomLowerTriangular( int N ) {
-        DenseMatrix64F U = RandomMatrices_D64.createUpperTriangle(N,0,-1,1,rand);
+    private RowMatrix_F64 createRandomLowerTriangular(int N ) {
+        RowMatrix_F64 U = RandomMatrices_D64.createUpperTriangle(N,0,-1,1,rand);
 
         CommonOps_D64.transpose(U);
 

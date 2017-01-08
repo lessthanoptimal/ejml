@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
@@ -38,9 +38,9 @@ public class TestLinearSolverCholLDL_D64 {
 
     @Test
     public void testInverseAndSolve() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DenseMatrix64F b = new DenseMatrix64F(3,1, true, 17, 97, 320);
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(3,1,rand);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 17, 97, 320);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(3,1,rand);
 
         LinearSolverCholLDL_D64 solver = new LinearSolverCholLDL_D64();
         assertTrue(solver.setA(A));
@@ -48,10 +48,10 @@ public class TestLinearSolverCholLDL_D64 {
         solver.solve(b,x);
 
 
-        DenseMatrix64F A_inv = new DenseMatrix64F(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
-        DenseMatrix64F x_expected = new DenseMatrix64F(3,1, true, 1, 2, 3);
+        RowMatrix_F64 A_inv = new RowMatrix_F64(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
+        RowMatrix_F64 x_expected = new RowMatrix_F64(3,1, true, 1, 2, 3);
 
-        EjmlUnitTests.assertEquals(A_inv,A, UtilEjml.TEST_64F_SQ);
-        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F_SQ);
+        EjmlUnitTests.assertEquals(A_inv,A, UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64_SQ);
     }
 }

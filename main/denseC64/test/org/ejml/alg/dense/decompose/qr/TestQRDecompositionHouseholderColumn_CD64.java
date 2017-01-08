@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixFeatures_CD64;
@@ -43,7 +43,7 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
 
 
     @Override
-    protected QRDecomposition<CDenseMatrix64F> createQRDecomposition() {
+    protected QRDecomposition<RowMatrix_C64> createQRDecomposition() {
         return new QRDecompositionHouseholderColumn_CD64();
     }
 
@@ -64,31 +64,31 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(width,width,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(width,width,rand);
 
         qr.householder(w,A);
 
-        CDenseMatrix64F U = new CDenseMatrix64F(width-w,1);
+        RowMatrix_C64 U = new RowMatrix_C64(width-w,1);
         System.arraycopy(qr.dataQR[w],w*2,U.data,0,(width-w)*2);
 
         // it already wrote over the first element with tau. Make it 1 + 0i again
         U.set(0,0,1,0);
 
         // Q = I - gamma*u*u'
-        CDenseMatrix64F Q = SpecializedOps_CD64.householder(U,qr.getGamma());
+        RowMatrix_C64 Q = SpecializedOps_CD64.householder(U,qr.getGamma());
 
         // check the expected properties of Q
-        assertTrue(MatrixFeatures_CD64.isHermitian(Q, UtilEjml.TEST_64F));
-        assertTrue(MatrixFeatures_CD64.isUnitary(Q, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isHermitian(Q, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_CD64.isUnitary(Q, UtilEjml.TEST_F64));
 
-        CDenseMatrix64F result = new CDenseMatrix64F(Q.numRows,Q.numCols);
-        CDenseMatrix64F Asub = CommonOps_CD64.extract(A, w, width, w, width);
+        RowMatrix_C64 result = new RowMatrix_C64(Q.numRows,Q.numCols);
+        RowMatrix_C64 Asub = CommonOps_CD64.extract(A, w, width, w, width);
         CommonOps_CD64.mult(Q, Asub, result);
 
-        Complex64F a = new Complex64F();
+        Complex_F64 a = new Complex_F64();
         result.get(0,0,a);
-        assertEquals(-qr.tau.real, a.real, UtilEjml.TEST_64F);
-        assertEquals(-qr.tau.imaginary,a.imaginary, UtilEjml.TEST_64F);
+        assertEquals(-qr.tau.real, a.real, UtilEjml.TEST_F64);
+        assertEquals(-qr.tau.imaginary,a.imaginary, UtilEjml.TEST_F64);
 
         for( int i = 1; i < result.numRows; i++ ) {
             result.get(i,0,a);
@@ -113,18 +113,18 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
 
         double gamma = 0.2;
 
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(width,width,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(width,width,rand);
 
         qr.convertToColumnMajor(A);
 
         // compute the results using standard matrix operations
-        CDenseMatrix64F u_sub = CommonOps_CD64.extract(A, w, width, w, w+1);
-        CDenseMatrix64F A_sub = CommonOps_CD64.extract(A, w, width, w, width);
-        CDenseMatrix64F expected = new CDenseMatrix64F(u_sub.numRows,u_sub.numRows);
+        RowMatrix_C64 u_sub = CommonOps_CD64.extract(A, w, width, w, w+1);
+        RowMatrix_C64 A_sub = CommonOps_CD64.extract(A, w, width, w, width);
+        RowMatrix_C64 expected = new RowMatrix_C64(u_sub.numRows,u_sub.numRows);
 
         // Q = I - gamma*u*u'
         u_sub.set(0,0,1,0);
-        CDenseMatrix64F Q = SpecializedOps_CD64.householder(u_sub,gamma);
+        RowMatrix_C64 Q = SpecializedOps_CD64.householder(u_sub,gamma);
 
         CommonOps_CD64.mult(Q,A_sub,expected);
 
@@ -132,15 +132,15 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
 
         double[][] found = qr.getQR();
 
-        Complex64F a = new Complex64F();
-        Complex64F b = new Complex64F();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
 
         for( int i = w; i < width; i++ ) {
             A.get(i,w,a);
             b.set(found[w][i*2],found[w][i*2+1]);
 
-            assertEquals(a.real, b.real, UtilEjml.TEST_64F);
-            assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_64F);
+            assertEquals(a.real, b.real, UtilEjml.TEST_F64);
+            assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_F64);
         }
 
         // the right should be the same
@@ -150,8 +150,8 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
                 b.set(found[j][i*2],found[j][i*2+1]);
 //                found.get(i,j,b);
 
-                assertEquals(a.real, b.real, UtilEjml.TEST_64F);
-                assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_64F);
+                assertEquals(a.real, b.real, UtilEjml.TEST_F64);
+                assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_F64);
             }
         }
     }
@@ -165,13 +165,13 @@ public class TestQRDecompositionHouseholderColumn_CD64 extends GenericQrCheck_CD
             this.numRows = numRows;
         }
 
-        public void householder( int j , CDenseMatrix64F A ) {
+        public void householder( int j , RowMatrix_C64 A ) {
             convertToColumnMajor(A);
 
             super.householder(j);
         }
 
-        protected void convertToColumnMajor(CDenseMatrix64F A) {
+        protected void convertToColumnMajor(RowMatrix_C64 A) {
             super.convertToColumnMajor(A);
         }
 

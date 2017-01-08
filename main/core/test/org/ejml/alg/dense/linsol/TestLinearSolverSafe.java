@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
@@ -36,8 +36,8 @@ public class TestLinearSolverSafe {
 
     Random rand = new Random(234);
 
-    DenseMatrix64F Ainput = new DenseMatrix64F(1,1);
-    DenseMatrix64F Binput = new DenseMatrix64F(1,1);
+    RowMatrix_F64 Ainput = new RowMatrix_F64(1,1);
+    RowMatrix_F64 Binput = new RowMatrix_F64(1,1);
 
     /**
      * Checks to see if the input matrix is copied after multiple calls.  This was an actual bug.
@@ -47,7 +47,7 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(true,false);
         dummy.expectedA = 5;
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
         Ainput.set(0,5);
         s.setA(Ainput);
@@ -66,13 +66,13 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(false,true);
         dummy.expectedB = 5;
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
         Binput.set(0,5);
-        s.solve(Binput,new DenseMatrix64F(1,1));
+        s.solve(Binput,new RowMatrix_F64(1,1));
         // call it a second time and see if the input matrix has been reset to the
         // correct value
-        s.solve(Binput,new DenseMatrix64F(1,1));
+        s.solve(Binput,new RowMatrix_F64(1,1));
 
         assertTrue(dummy.passedin != Ainput);
     }
@@ -81,7 +81,7 @@ public class TestLinearSolverSafe {
     public void testSetA_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
         s.setA(Ainput);
 
@@ -92,7 +92,7 @@ public class TestLinearSolverSafe {
     public void testSetA_mod() {
         DummySolver dummy = new DummySolver(true,false);
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
         s.setA(Ainput);
 
@@ -103,9 +103,9 @@ public class TestLinearSolverSafe {
     public void testSolver_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
-        s.solve(Binput,new DenseMatrix64F(1,1));
+        s.solve(Binput,new RowMatrix_F64(1,1));
 
         assertTrue(dummy.passedin == Binput);
     }
@@ -114,9 +114,9 @@ public class TestLinearSolverSafe {
     public void testSolver_mod() {
         DummySolver dummy = new DummySolver(false,true);
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
-        s.solve(Binput,new DenseMatrix64F(1,1));
+        s.solve(Binput,new RowMatrix_F64(1,1));
 
         assertTrue(dummy.passedin != Binput);
     }
@@ -125,26 +125,26 @@ public class TestLinearSolverSafe {
     public void quality() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(dummy);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(dummy);
 
         assertTrue(s.quality()==dummy.quality());
     }
 
     @Test
     public void modifies() {
-        LinearSolver<DenseMatrix64F> s = new LinearSolverSafe<DenseMatrix64F>(null);
+        LinearSolver<RowMatrix_F64> s = new LinearSolverSafe<RowMatrix_F64>(null);
 
         assertFalse(s.modifiesA());
         assertFalse(s.modifiesB());
 
     }
 
-    private class DummySolver implements LinearSolver<DenseMatrix64F>
+    private class DummySolver implements LinearSolver<RowMatrix_F64>
     {
         boolean modifiesA;
         boolean modifiesB;
 
-        DenseMatrix64F passedin;
+        RowMatrix_F64 passedin;
 
         // the expected value of the input matrix
         double expectedA = Double.NaN;
@@ -156,12 +156,12 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public boolean setA(DenseMatrix64F A) {
+        public boolean setA(RowMatrix_F64 A) {
             passedin = A;
 
             // the input matrix has an expected input value
             if( !Double.isNaN(expectedA))
-                assertEquals(expectedA,A.get(0), UtilEjml.TEST_64F);
+                assertEquals(expectedA,A.get(0), UtilEjml.TEST_F64);
 
             if( modifiesA ) {
                 A.set(0,0,rand.nextDouble());
@@ -176,12 +176,12 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+        public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
             passedin = B;
 
             // the input matrix has an expected input value
             if( !Double.isNaN(expectedB))
-                assertEquals(expectedB,B.get(0),UtilEjml.TEST_64F);
+                assertEquals(expectedB,B.get(0),UtilEjml.TEST_F64);
 
             if( modifiesB ) {
                 B.set(0,0,rand.nextDouble());
@@ -189,7 +189,7 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public void invert(DenseMatrix64F A_inv) {
+        public void invert(RowMatrix_F64 A_inv) {
 
         }
 

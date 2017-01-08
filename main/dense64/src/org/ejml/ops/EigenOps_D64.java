@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,9 +21,9 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenPowerMethod_D64;
 import org.ejml.alg.dense.mult.VectorVectorMult_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.Eigenpair64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.Eigenpair_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -48,7 +48,7 @@ public class EigenOps_D64 {
      * @param eigenVector An eigen vector of A. Not modified.
      * @return The corresponding eigen value.
      */
-    public static double computeEigenValue( DenseMatrix64F A , DenseMatrix64F eigenVector )
+    public static double computeEigenValue(RowMatrix_F64 A , RowMatrix_F64 eigenVector )
     {
         double bottom = VectorVectorMult_D64.innerProd(eigenVector,eigenVector);
         double top = VectorVectorMult_D64.innerProdA(eigenVector,A,eigenVector);
@@ -75,15 +75,15 @@ public class EigenOps_D64 {
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
-    public static Eigenpair64F computeEigenVector( DenseMatrix64F A , double eigenvalue )
+    public static Eigenpair_F64 computeEigenVector(RowMatrix_F64 A , double eigenvalue )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Must be a square matrix.");
 
-        DenseMatrix64F M = new DenseMatrix64F(A.numRows,A.numCols);
+        RowMatrix_F64 M = new RowMatrix_F64(A.numRows,A.numCols);
 
-        DenseMatrix64F x = new DenseMatrix64F(A.numRows,1);
-        DenseMatrix64F b = new DenseMatrix64F(A.numRows,1);
+        RowMatrix_F64 x = new RowMatrix_F64(A.numRows,1);
+        RowMatrix_F64 b = new RowMatrix_F64(A.numRows,1);
 
         CommonOps_D64.fill(b, 1);
         
@@ -99,7 +99,7 @@ public class EigenOps_D64 {
         double prevError = Double.MAX_VALUE;
         boolean hasWorked = false;
 
-        LinearSolver<DenseMatrix64F> solver = LinearSolverFactory_D64.linear(M.numRows);
+        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_D64.linear(M.numRows);
 
         double perp = 0.0001;
 
@@ -130,7 +130,7 @@ public class EigenOps_D64 {
                 } else {
                     // otherwise assume that it was so accurate that the matrix was singular
                     // and return that result
-                    return new Eigenpair64F(eigenvalue,b);
+                    return new Eigenpair_F64(eigenvalue,b);
                 }
             } else {
                 hasWorked = true;
@@ -153,7 +153,7 @@ public class EigenOps_D64 {
                 } else {
                     // see if it has converged
                     if(error <= threshold || Math.abs(prevError-error) <= UtilEjml.EPS)
-                        return new Eigenpair64F(eigenvalue,b);
+                        return new Eigenpair_F64(eigenvalue,b);
 
                     // update everything
                     prevError = error;
@@ -182,7 +182,7 @@ public class EigenOps_D64 {
      * @param A A matrix.  Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
-    public static Eigenpair64F dominantEigenpair( DenseMatrix64F A ) {
+    public static Eigenpair_F64 dominantEigenpair(RowMatrix_F64 A ) {
 
         EigenPowerMethod_D64 power = new EigenPowerMethod_D64(A.numRows);
 
@@ -207,7 +207,7 @@ public class EigenOps_D64 {
      * @param bound Where the results are stored.  If null then a matrix will be declared. Modified.
      * @return Lower and upper bound in the first and second elements respectively.
      */
-    public static double [] boundLargestEigenValue( DenseMatrix64F A , double []bound ) {
+    public static double [] boundLargestEigenValue(RowMatrix_F64 A , double []bound ) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix.");
 
@@ -252,14 +252,14 @@ public class EigenOps_D64 {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return A diagonal matrix containing the eigenvalues.
      */
-    public static DenseMatrix64F createMatrixD( EigenDecomposition_F64 eig )
+    public static RowMatrix_F64 createMatrixD(EigenDecomposition_F64 eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
-        DenseMatrix64F D = new DenseMatrix64F( N , N );
+        RowMatrix_F64 D = new RowMatrix_F64( N , N );
 
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = eig.getEigenvalue(i);
+            Complex_F64 c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
                 D.set(i,i,c.real);
@@ -278,17 +278,17 @@ public class EigenOps_D64 {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return An m by m matrix containing eigenvectors in its columns.
      */
-    public static DenseMatrix64F createMatrixV( EigenDecomposition_F64<DenseMatrix64F> eig )
+    public static RowMatrix_F64 createMatrixV(EigenDecomposition_F64<RowMatrix_F64> eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
-        DenseMatrix64F V = new DenseMatrix64F( N , N );
+        RowMatrix_F64 V = new RowMatrix_F64( N , N );
 
         for( int i = 0; i < N; i++ ) {
-            Complex64F c = eig.getEigenvalue(i);
+            Complex_F64 c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
-                DenseMatrix64F v = eig.getEigenVector(i);
+                RowMatrix_F64 v = eig.getEigenVector(i);
 
                 if( v != null ) {
                     for( int j = 0; j < N; j++ ) {

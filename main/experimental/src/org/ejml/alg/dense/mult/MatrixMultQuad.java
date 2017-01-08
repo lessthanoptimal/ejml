@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 
 /**
@@ -35,7 +35,7 @@ public class MatrixMultQuad {
      * @param B Middle square matrix.  Size = (A.numCols,A.numCols)
      * @param out Output matrix.  Size = (A.numRows,A.numRows);
      */
-    public static void multQuad1( DenseMatrix64F A , DenseMatrix64F B , DenseMatrix64F out ) {
+    public static void multQuad1(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 out ) {
 
         if( A.numCols != B.numCols || A.numCols != B.numRows
                 || A.numRows != out.numRows || A.numRows != out.numCols )

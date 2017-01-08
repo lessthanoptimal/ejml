@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_D64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_D64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL_D64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -38,9 +38,9 @@ import java.util.Random;
 public class BenchmarkSolveSymPosDef {
 
 
-    public static long solve( LinearSolver solver , DenseMatrix64F A, DenseMatrix64F b , int numTrials ) {
+    public static long solve(LinearSolver solver , RowMatrix_F64 A, RowMatrix_F64 b , int numTrials ) {
 
-        DenseMatrix64F x = new DenseMatrix64F(A.numCols,b.numCols);
+        RowMatrix_F64 x = new RowMatrix_F64(A.numCols,b.numCols);
 
         if( !solver.setA(A) ) {
             throw new RuntimeException("Bad matrix");
@@ -55,7 +55,7 @@ public class BenchmarkSolveSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms( DenseMatrix64F A , DenseMatrix64F b ,int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 A , RowMatrix_F64 b , int numTrials )
     {
         System.out.println("Solve Cholesky         = "+solve(
                 new LinearSolverChol_D64(new CholeskyDecompositionInner_D64(true)),
@@ -77,10 +77,10 @@ public class BenchmarkSolveSymPosDef {
             System.out.printf("Matrix A size %3d for %12d trials\n",w,trials[i]);
 
             while( true ) {
-                DenseMatrix64F mat = RandomMatrices_D64.createRandom(w,w,rand);
-                DenseMatrix64F symMat = new DenseMatrix64F(w,w);
+                RowMatrix_F64 mat = RandomMatrices_D64.createRandom(w,w,rand);
+                RowMatrix_F64 symMat = new RowMatrix_F64(w,w);
                 CommonOps_D64.multTransA(mat,mat,symMat);
-                DenseMatrix64F b = RandomMatrices_D64.createRandom(w,w*2,rand);
+                RowMatrix_F64 b = RandomMatrices_D64.createRandom(w,w*2,rand);
 
                 if(CommonOps_D64.det(symMat) > 0 ) {
                     runAlgorithms(symMat,b,trials[i]);

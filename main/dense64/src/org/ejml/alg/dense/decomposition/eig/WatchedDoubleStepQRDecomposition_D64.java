@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decomposition.eig;
 import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_D64;
 import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvector_D64;
 import org.ejml.alg.dense.decomposition.hessenberg.HessenbergSimilarDecomposition_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 
@@ -42,13 +42,13 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
  */
 //TODO looks like there might be some pointless copying of arrays going on
 public class WatchedDoubleStepQRDecomposition_D64
-        implements EigenDecomposition_F64<DenseMatrix64F> {
+        implements EigenDecomposition_F64<RowMatrix_F64> {
 
     HessenbergSimilarDecomposition_D64 hessenberg;
     WatchedDoubleStepQREigenvalue_D64 algValue;
     WatchedDoubleStepQREigenvector_D64 algVector;
 
-    DenseMatrix64F H;
+    RowMatrix_F64 H;
 
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
@@ -62,7 +62,7 @@ public class WatchedDoubleStepQRDecomposition_D64
     }
 
     @Override
-    public boolean decompose(DenseMatrix64F A) {
+    public boolean decompose(RowMatrix_F64 A) {
 
         if( !hessenberg.decompose(A) )
             return false;
@@ -98,12 +98,12 @@ public class WatchedDoubleStepQRDecomposition_D64
     }
 
     @Override
-    public Complex64F getEigenvalue(int index) {
+    public Complex_F64 getEigenvalue(int index) {
         return algValue.getEigenvalues()[index];
     }
 
     @Override
-    public DenseMatrix64F getEigenVector(int index) {
+    public RowMatrix_F64 getEigenVector(int index) {
         return algVector.getEigenvectors()[index];
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.svd;
 
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_D64;
 import org.ejml.alg.dense.linsol.GenericSolvePseudoInverseChecks_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
@@ -34,13 +34,13 @@ public class TestSolvePseudoInverseSvd_D64 extends GenericLinearSolverChecks_D64
     }
 
     @Override
-    protected LinearSolver<DenseMatrix64F> createSolver( DenseMatrix64F A ) {
+    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A ) {
         return new SolvePseudoInverseSvd_D64(A.numRows,A.numCols);
     }
 
     @Test
     public void checkSingularBasic() {
-        LinearSolver<DenseMatrix64F> solver = new SolvePseudoInverseSvd_D64(10,10);
+        LinearSolver<RowMatrix_F64> solver = new SolvePseudoInverseSvd_D64(10,10);
         GenericSolvePseudoInverseChecks_D64 checks = new GenericSolvePseudoInverseChecks_D64(solver);
 
         checks.all();

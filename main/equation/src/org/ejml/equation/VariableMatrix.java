@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,15 +18,15 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 /**
- * Storage for {@link org.ejml.data.DenseMatrix64F matrix} type variables.
+ * Storage for {@link RowMatrix_F64 matrix} type variables.
  *
  * @author Peter Abeles
  */
 public class VariableMatrix extends Variable {
-    public DenseMatrix64F matrix;
+    public RowMatrix_F64 matrix;
 
     /**
      * If true then the matrix is dynamically resized to match the output of a function
@@ -38,13 +38,13 @@ public class VariableMatrix extends Variable {
      * it will be assignment.
      * @param matrix Matrix.
      */
-    public VariableMatrix(DenseMatrix64F matrix) {
+    public VariableMatrix(RowMatrix_F64 matrix) {
         super(VariableType.MATRIX);
         this.matrix = matrix;
     }
 
     public static VariableMatrix createTemp() {
-        VariableMatrix ret = new VariableMatrix(new DenseMatrix64F(1,1));
+        VariableMatrix ret = new VariableMatrix(new RowMatrix_F64(1,1));
         ret.setTemp(true);
         return ret;
     }

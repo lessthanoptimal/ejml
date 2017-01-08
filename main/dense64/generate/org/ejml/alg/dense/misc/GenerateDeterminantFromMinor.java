@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -63,7 +63,7 @@ public class GenerateDeterminantFromMinor {
                 "\n" +
                 "package org.ejml.alg.dense.misc;\n" +
                 "\n" +
-                "import org.ejml.data.RowD1Matrix64F;\n" +
+                "import org.ejml.data.RowD1Matrix_F64;\n" +
                 "\n" +
                 "\n" +
                 "/**\n" +
@@ -80,14 +80,14 @@ public class GenerateDeterminantFromMinor {
     }
 
     private void print2() {
-        stream.print("    public static double det2( RowD1Matrix64F mat )\n" +
+        stream.print("    public static double det2( RowD1Matrix_F64 mat )\n" +
                 "    {\n" +
                 "        return mat.get(0)*mat.get(3) - mat.get(1)*mat.get(2);\n" +
                 "    }\n\n");
     }
 
     private void print3() {
-        stream.print("    public static double det3( RowD1Matrix64F mat )\n" +
+        stream.print("    public static double det3( RowD1Matrix_F64 mat )\n" +
                 "    {\n" +
                 "        double a11 = mat.get( 0 );\n" +
                 "        double a12 = mat.get( 1 );\n" +
@@ -112,7 +112,7 @@ public class GenerateDeterminantFromMinor {
     {
         stream.print(
                 "    \n" +
-                        "    public static double det( RowD1Matrix64F mat ) {\n");
+                        "    public static double det( RowD1Matrix_F64 mat ) {\n");
         stream.print(
                 "        if( mat.numRows == 2 ) {\n" +
                 "            return det2(mat);\n");
@@ -132,7 +132,7 @@ public class GenerateDeterminantFromMinor {
 
     private void printFunction( int N )
     {
-        stream.print("    public static double det"+N+"( RowD1Matrix64F mat )\n" +
+        stream.print("    public static double det"+N+"( RowD1Matrix_F64 mat )\n" +
                 "    {\n");
 
         printFunctionInner(N);

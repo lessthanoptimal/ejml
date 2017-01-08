@@ -47,8 +47,8 @@ public class CommonOps_CD64 {
      * @param width The width and height of the identity matrix.
      * @return A new instance of an identity matrix.
      */
-    public static CDenseMatrix64F identity( int width ) {
-        CDenseMatrix64F A = new CDenseMatrix64F(width,width);
+    public static RowMatrix_C64 identity(int width ) {
+        RowMatrix_C64 A = new RowMatrix_C64(width,width);
 
         for (int i = 0; i < width; i++) {
             A.set(i,i,1,0);
@@ -69,8 +69,8 @@ public class CommonOps_CD64 {
      * @param height The height of the identity matrix.
      * @return A new instance of an identity matrix.
      */
-    public static CDenseMatrix64F identity( int width , int height) {
-        CDenseMatrix64F A = new CDenseMatrix64F(width,height);
+    public static RowMatrix_C64 identity(int width , int height) {
+        RowMatrix_C64 A = new RowMatrix_C64(width,height);
 
         int m = Math.min(width,height);
         for (int i = 0; i < m; i++) {
@@ -92,13 +92,13 @@ public class CommonOps_CD64 {
      * @param data Contains the values of the diagonal elements of the resulting matrix.
      * @return A new complex matrix.
      */
-    public static CDenseMatrix64F diag( double... data ) {
+    public static RowMatrix_C64 diag(double... data ) {
         if( data.length%2 == 1 )
             throw new IllegalArgumentException("must be an even number of arguments");
 
         int N = data.length/2;
 
-        CDenseMatrix64F m = new CDenseMatrix64F(N,N);
+        RowMatrix_C64 m = new RowMatrix_C64(N,N);
 
         int index = 0;
         for (int i = 0; i < N; i++) {
@@ -114,7 +114,7 @@ public class CommonOps_CD64 {
      * @param input Real matrix. Not modified.
      * @param output Complex matrix. Modified.
      */
-    public static void convert( D1Matrix64F input , CD1Matrix64F output ) {
+    public static void convert(D1Matrix_F64 input , D1Matrix_C64 output ) {
         if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
@@ -134,9 +134,9 @@ public class CommonOps_CD64 {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DenseMatrix64F stripReal( CD1Matrix64F input , DenseMatrix64F output ) {
+    public static RowMatrix_F64 stripReal(D1Matrix_C64 input , RowMatrix_F64 output ) {
         if( output == null ) {
-            output = new DenseMatrix64F(input.numRows,input.numCols);
+            output = new RowMatrix_F64(input.numRows,input.numCols);
         } else if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
@@ -155,9 +155,9 @@ public class CommonOps_CD64 {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DenseMatrix64F stripImaginary( CD1Matrix64F input , DenseMatrix64F output ) {
+    public static RowMatrix_F64 stripImaginary(D1Matrix_C64 input , RowMatrix_F64 output ) {
         if( output == null ) {
-            output = new DenseMatrix64F(input.numRows,input.numCols);
+            output = new RowMatrix_F64(input.numRows,input.numCols);
         } else if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
@@ -181,7 +181,7 @@ public class CommonOps_CD64 {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static void magnitude( CD1Matrix64F input , D1Matrix64F output ) {
+    public static void magnitude(D1Matrix_C64 input , D1Matrix_F64 output ) {
         if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
@@ -207,7 +207,7 @@ public class CommonOps_CD64 {
      * @param input Input matrix.  Not modified.
      * @param output The complex conjugate of the input matrix.  Modified.
      */
-    public static void conjugate( CD1Matrix64F input , CD1Matrix64F output ) {
+    public static void conjugate(D1Matrix_C64 input , D1Matrix_C64 output ) {
         if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
@@ -231,7 +231,7 @@ public class CommonOps_CD64 {
      * @param real The real component
      * @param imaginary The imaginary component
      */
-    public static void fill(CD1Matrix64F a, double real, double imaginary)
+    public static void fill(D1Matrix_C64 a, double real, double imaginary)
     {
         int N = a.getDataLength();
         for (int i = 0; i < N; i += 2) {
@@ -255,7 +255,7 @@ public class CommonOps_CD64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add( CD1Matrix64F a , CD1Matrix64F b , CD1Matrix64F c )
+    public static void add(D1Matrix_C64 a , D1Matrix_C64 b , D1Matrix_C64 c )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
@@ -284,7 +284,7 @@ public class CommonOps_CD64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void subtract( CD1Matrix64F a , CD1Matrix64F b , CD1Matrix64F c )
+    public static void subtract(D1Matrix_C64 a , D1Matrix_C64 b , D1Matrix_C64 c )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
@@ -309,7 +309,7 @@ public class CommonOps_CD64 {
      * @param alphaReal real component of scale factor
      * @param alphaImag imaginary component of scale factor
      */
-    public static void scale( double alphaReal, double alphaImag , CD1Matrix64F a )
+    public static void scale( double alphaReal, double alphaImag , D1Matrix_C64 a )
     {
         // on very small matrices (2 by 2) the call to getNumElements() can slow it down
         // slightly compared to other libraries since it involves an extra multiplication.
@@ -336,7 +336,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(CDenseMatrix64F a, CDenseMatrix64F b, CDenseMatrix64F c)
+    public static void mult(RowMatrix_C64 a, RowMatrix_C64 b, RowMatrix_C64 c)
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_CD64.mult_reorder(a, b, c);
@@ -359,7 +359,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( double realAlpha , double imgAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void mult(double realAlpha , double imgAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
             MatrixMatrixMult_CD64.mult_reorder(realAlpha,imgAlpha,a,b,c);
@@ -380,7 +380,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAdd(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
             MatrixMatrixMult_CD64.multAdd_reorder(a, b, c);
@@ -403,7 +403,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( double realAlpha , double imgAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAdd(double realAlpha , double imgAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
             MatrixMatrixMult_CD64.multAdd_reorder(realAlpha,imgAlpha,a,b,c);
@@ -424,7 +424,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransA(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
@@ -448,7 +448,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( double realAlpha , double imagAlpha, CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransA(double realAlpha , double imagAlpha, RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
@@ -471,7 +471,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         MatrixMatrixMult_CD64.multTransB(a, b, c);
     }
@@ -490,7 +490,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( double realAlpha , double imagAlpha, CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransB(double realAlpha , double imagAlpha, RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_CD64.multTransB(realAlpha,imagAlpha,a,b,c);
@@ -508,7 +508,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransAB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
             MatrixMatrixMult_CD64.multTransAB_aux(a, b, c, null);
@@ -531,7 +531,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransAB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
@@ -553,7 +553,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransA(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
@@ -577,7 +577,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransA(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
@@ -601,7 +601,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         MatrixMatrixMult_CD64.multAddTransB(a,b,c);
     }
@@ -620,7 +620,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_CD64.multAddTransB(realAlpha,imagAlpha,a,b,c);
@@ -638,7 +638,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransAB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
             MatrixMatrixMult_CD64.multAddTransAB_aux(a,b,c,null);
@@ -661,7 +661,7 @@ public class CommonOps_CD64 {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransAB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
@@ -677,16 +677,16 @@ public class CommonOps_CD64 {
      * <p>
      * For square matrices the transpose is truly in-place and does not require
      * additional memory.  For non-square matrices, internally a temporary matrix is declared and
-     * {@link #transpose(org.ejml.data.CDenseMatrix64F, org.ejml.data.CDenseMatrix64F)} is invoked.
+     * {@link #transpose(RowMatrix_C64, RowMatrix_C64)} is invoked.
      * </p>
      *
      * @param mat The matrix that is to be transposed. Modified.
      */
-    public static void transpose( CDenseMatrix64F mat ) {
+    public static void transpose( RowMatrix_C64 mat ) {
         if( mat.numCols == mat.numRows ){
             TransposeAlgs_CD64.square(mat);
         } else {
-            CDenseMatrix64F b = new CDenseMatrix64F(mat.numCols,mat.numRows);
+            RowMatrix_C64 b = new RowMatrix_C64(mat.numCols,mat.numRows);
             transpose(mat, b);
             mat.reshape(b.numRows, b.numCols);
             mat.set(b);
@@ -696,15 +696,15 @@ public class CommonOps_CD64 {
     /**
      * <p>Performs an "in-place" conjugate transpose.</p>
      *
-     * @see #transpose(org.ejml.data.CDenseMatrix64F)
+     * @see #transpose(RowMatrix_C64)
      *
      * @param mat The matrix that is to be transposed. Modified.
      */
-    public static void transposeConjugate( CDenseMatrix64F mat ) {
+    public static void transposeConjugate( RowMatrix_C64 mat ) {
         if( mat.numCols == mat.numRows ){
             TransposeAlgs_CD64.squareConjugate(mat);
         } else {
-            CDenseMatrix64F b = new CDenseMatrix64F(mat.numCols,mat.numRows);
+            RowMatrix_C64 b = new RowMatrix_C64(mat.numCols,mat.numRows);
             transposeConjugate(mat, b);
             mat.reshape(b.numRows, b.numCols);
             mat.set(b);
@@ -723,10 +723,10 @@ public class CommonOps_CD64 {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static CDenseMatrix64F transpose( CDenseMatrix64F input , CDenseMatrix64F output )
+    public static RowMatrix_C64 transpose(RowMatrix_C64 input , RowMatrix_C64 output )
     {
         if( output == null ) {
-            output = new CDenseMatrix64F(input.numCols,input.numRows);
+            output = new RowMatrix_C64(input.numCols,input.numRows);
         } else if( input.numCols != output.numRows || input.numRows != output.numCols ) {
             throw new IllegalArgumentException("Input and output shapes are not compatible");
         }
@@ -749,10 +749,10 @@ public class CommonOps_CD64 {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static CDenseMatrix64F transposeConjugate( CDenseMatrix64F input , CDenseMatrix64F output )
+    public static RowMatrix_C64 transposeConjugate(RowMatrix_C64 input , RowMatrix_C64 output )
     {
         if( output == null ) {
-            output = new CDenseMatrix64F(input.numCols,input.numRows);
+            output = new RowMatrix_C64(input.numCols,input.numRows);
         } else if( input.numCols != output.numRows || input.numRows != output.numCols ) {
             throw new IllegalArgumentException("Input and output shapes are not compatible");
         }
@@ -779,9 +779,9 @@ public class CommonOps_CD64 {
      * @param A The matrix that is to be inverted.  Results are stored here.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( CDenseMatrix64F A )
+    public static boolean invert( RowMatrix_C64 A )
     {
-        LinearSolver<CDenseMatrix64F> solver = LinearSolverFactory_CD64.lu(A.numRows);
+        LinearSolver<RowMatrix_C64> solver = LinearSolverFactory_CD64.lu(A.numRows);
 
         if( solver.setA(A) ) {
             solver.invert(A);
@@ -815,9 +815,9 @@ public class CommonOps_CD64 {
      * @param output Where the inverse matrix is stored.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( CDenseMatrix64F input , CDenseMatrix64F output )
+    public static boolean invert(RowMatrix_C64 input , RowMatrix_C64 output )
     {
-        LinearSolver<CDenseMatrix64F> solver = LinearSolverFactory_CD64.lu(input.numRows);
+        LinearSolver<RowMatrix_C64> solver = LinearSolverFactory_CD64.lu(input.numRows);
 
         if( solver.modifiesA() )
             input = input.copy();
@@ -856,9 +856,9 @@ public class CommonOps_CD64 {
      *
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean solve( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F x )
+    public static boolean solve(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 x )
     {
-        LinearSolver<CDenseMatrix64F> solver;
+        LinearSolver<RowMatrix_C64> solver;
         if( a.numCols == a.numRows ) {
             solver = LinearSolverFactory_CD64.lu(a.numRows);
         } else {
@@ -866,7 +866,7 @@ public class CommonOps_CD64 {
         }
 
         // make sure the inputs 'a' and 'b' are not modified
-        solver = new LinearSolverSafe<CDenseMatrix64F>(solver);
+        solver = new LinearSolverSafe<RowMatrix_C64>(solver);
 
         if( !solver.setA(a) )
             return false;
@@ -883,7 +883,7 @@ public class CommonOps_CD64 {
      * @param mat The matrix whose determinant is to be computed.  Not modified.
      * @return The determinant.
      */
-    public static Complex64F det( CDenseMatrix64F mat  )
+    public static Complex_F64 det(RowMatrix_C64 mat  )
     {
         LUDecompositionAlt_CD64 alg = new LUDecompositionAlt_CD64();
 
@@ -892,7 +892,7 @@ public class CommonOps_CD64 {
         }
 
         if( !alg.decompose(mat) )
-            return new Complex64F();
+            return new Complex_F64();
         return alg.computeDeterminant();
     }
 
@@ -906,7 +906,7 @@ public class CommonOps_CD64 {
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementMultiply( CD1Matrix64F input , double real , double imaginary, CD1Matrix64F output )
+    public static void elementMultiply(D1Matrix_C64 input , double real , double imaginary, D1Matrix_C64 output )
     {
         if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
@@ -932,7 +932,7 @@ public class CommonOps_CD64 {
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDivide( CD1Matrix64F input , double real , double imaginary, CD1Matrix64F output )
+    public static void elementDivide(D1Matrix_C64 input , double real , double imaginary, D1Matrix_C64 output )
     {
         if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
@@ -960,7 +960,7 @@ public class CommonOps_CD64 {
      * @param input The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDivide( double real , double imaginary, CD1Matrix64F input , CD1Matrix64F output )
+    public static void elementDivide(double real , double imaginary, D1Matrix_C64 input , D1Matrix_C64 output )
     {
         if( input.numCols != output.numCols || input.numRows != output.numRows ) {
             throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
@@ -988,7 +988,7 @@ public class CommonOps_CD64 {
      * @param a A matrix. Not modified.
      * @return The the minimum value out of all the real values.
      */
-    public static double elementMinReal( CD1Matrix64F a ) {
+    public static double elementMinReal( D1Matrix_C64 a ) {
         final int size = a.getDataLength();
 
         double min = a.data[0];
@@ -1012,7 +1012,7 @@ public class CommonOps_CD64 {
      * @param a A matrix. Not modified.
      * @return The the minimum value out of all the real values.
      */
-    public static double elementMinImaginary( CD1Matrix64F a ) {
+    public static double elementMinImaginary( D1Matrix_C64 a ) {
         final int size = a.getDataLength();
 
         double min = a.data[1];
@@ -1036,7 +1036,7 @@ public class CommonOps_CD64 {
      * @param a A matrix. Not modified.
      * @return The the minimum value out of all the real values.
      */
-    public static double elementMaxReal( CD1Matrix64F a ) {
+    public static double elementMaxReal( D1Matrix_C64 a ) {
         final int size = a.getDataLength();
 
         double max = a.data[0];
@@ -1060,7 +1060,7 @@ public class CommonOps_CD64 {
      * @param a A matrix. Not modified.
      * @return The the minimum value out of all the real values.
      */
-    public static double elementMaxImaginary( CD1Matrix64F a ) {
+    public static double elementMaxImaginary( D1Matrix_C64 a ) {
         final int size = a.getDataLength();
 
         double max = a.data[1];
@@ -1084,7 +1084,7 @@ public class CommonOps_CD64 {
      * @param a A matrix. Not modified.
      * @return The max magnitude squared
      */
-    public static double elementMaxMagnitude2( CD1Matrix64F a ) {
+    public static double elementMaxMagnitude2( D1Matrix_C64 a ) {
         final int size = a.getDataLength();
 
         double max = 0;
@@ -1108,7 +1108,7 @@ public class CommonOps_CD64 {
      *
      * @param mat A square matrix.
      */
-    public static void setIdentity( CDenseMatrix64F mat )
+    public static void setIdentity( RowMatrix_C64 mat )
     {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
@@ -1140,9 +1140,9 @@ public class CommonOps_CD64 {
      * @param srcY1 Stop row+1.
      * @return Extracted submatrix.
      */
-    public static CDenseMatrix64F extract( CDenseMatrix64F src,
-                                          int srcY0, int srcY1,
-                                          int srcX0, int srcX1 )
+    public static RowMatrix_C64 extract(RowMatrix_C64 src,
+                                        int srcY0, int srcY1,
+                                        int srcX0, int srcX1 )
     {
         if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
             throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
@@ -1152,7 +1152,7 @@ public class CommonOps_CD64 {
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
 
-        CDenseMatrix64F dst = new CDenseMatrix64F(h,w);
+        RowMatrix_C64 dst = new RowMatrix_C64(h,w);
 
         extract(src, srcY0, srcY1, srcX0, srcX1, dst, 0, 0);
 
@@ -1179,10 +1179,10 @@ public class CommonOps_CD64 {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract(CDenseMatrix64F src,
+    public static void extract(RowMatrix_C64 src,
                                int srcY0, int srcY1,
                                int srcX0, int srcX1,
-                               CDenseMatrix64F dst,
+                               RowMatrix_C64 dst,
                                int dstY0, int dstX0 )
     {
         int numRows = srcY1 - srcY0;
@@ -1202,23 +1202,23 @@ public class CommonOps_CD64 {
      * @param v Optional storage for columns.
      * @return An array of vectors.
      */
-    public static CDenseMatrix64F[] columnsToVector(CDenseMatrix64F A, CDenseMatrix64F[] v)
+    public static RowMatrix_C64[] columnsToVector(RowMatrix_C64 A, RowMatrix_C64[] v)
     {
-        CDenseMatrix64F []ret;
+        RowMatrix_C64[]ret;
         if( v == null || v.length < A.numCols ) {
-            ret = new CDenseMatrix64F[ A.numCols ];
+            ret = new RowMatrix_C64[ A.numCols ];
         } else {
             ret = v;
         }
 
         for( int i = 0; i < ret.length; i++ ) {
             if( ret[i] == null ) {
-                ret[i] = new CDenseMatrix64F(A.numRows,1);
+                ret[i] = new RowMatrix_C64(A.numRows,1);
             } else {
                 ret[i].reshape(A.numRows,1);
             }
 
-            CDenseMatrix64F u = ret[i];
+            RowMatrix_C64 u = ret[i];
 
             int indexU = 0;
             for( int j = 0; j < A.numRows; j++ ) {
@@ -1241,7 +1241,7 @@ public class CommonOps_CD64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the matrix.
      */
-    public static double elementMaxAbs( CDenseMatrix64F a ) {
+    public static double elementMaxAbs( RowMatrix_C64 a ) {
         final int size = a.getDataLength();
 
         double max = 0;

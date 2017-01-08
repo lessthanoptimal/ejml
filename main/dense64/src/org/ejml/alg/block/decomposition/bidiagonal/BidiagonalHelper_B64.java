@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.block.decomposition.bidiagonal;
 
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.D1Submatrix_F64;
 
 import static org.ejml.alg.block.decomposition.qr.BlockHouseHolder_B64.*;
 
@@ -37,7 +37,7 @@ public class BidiagonalHelper_B64 {
      */
 
     public static boolean bidiagOuterBlocks( final int blockLength ,
-                                             final D1Submatrix64F A ,
+                                             final D1Submatrix_F64 A ,
                                              final double gammasU[],
                                              final double gammasV[])
     {

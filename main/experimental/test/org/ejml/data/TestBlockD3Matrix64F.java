@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,9 +28,9 @@ public class TestBlockD3Matrix64F {
 
     @Test
     public void testGeneric() {
-        GenericTestsMatrix64F g;
-        g = new GenericTestsMatrix64F() {
-            protected RealMatrix64F createMatrix(int numRows, int numCols) {
+        GenericTestsMatrix_F64 g;
+        g = new GenericTestsMatrix_F64() {
+            protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
                 return new BlockD3Matrix64F(numRows,numCols,10);
             }
         };

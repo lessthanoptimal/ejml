@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_CD64;
 
@@ -37,13 +37,13 @@ import org.ejml.ops.CommonOps_CD64;
  * @author Peter Abeles
  */
 // TODO figure out why this is significantly slower than col
-public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDenseMatrix64F> {
+public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<RowMatrix_C64> {
 
     /**
      * Where the Q and R matrices are stored.  For speed reasons
      * this is transposed
      */
-    protected CDenseMatrix64F QR;
+    protected RowMatrix_C64 QR;
 
     // used internally to store temporary data
     protected double v[];
@@ -57,7 +57,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
     protected double gammas[];
     // local variables
     protected double gamma;
-    protected Complex64F tau = new Complex64F();
+    protected Complex_F64 tau = new Complex_F64();
 
     // did it encounter an error?
     protected boolean error;
@@ -69,7 +69,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
         int maxLength = Math.max(numCols,numRows);
 
         if( QR == null ) {
-            QR = new CDenseMatrix64F(numCols,numRows);
+            QR = new RowMatrix_C64(numCols,numRows);
             v = new double[ maxLength*2 ];
             gammas = new double[ minLength ];
         } else {
@@ -87,7 +87,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
     /**
      * Inner matrix that stores the decomposition
      */
-    public CDenseMatrix64F getQR() {
+    public RowMatrix_C64 getQR() {
         return QR;
     }
 
@@ -98,7 +98,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public CDenseMatrix64F getQ( CDenseMatrix64F Q , boolean compact ) {
+    public RowMatrix_C64 getQ(RowMatrix_C64 Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_CD64.checkIdentity(Q,numRows,minLength);
         else
@@ -128,7 +128,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      *
      * @param A Matrix that is being multiplied by Q.  Is modified.
      */
-    public void applyQ( CDenseMatrix64F A ) {
+    public void applyQ( RowMatrix_C64 A ) {
         if( A.numRows != numRows )
             throw new IllegalArgumentException("A must have at least "+numRows+" rows.");
 
@@ -152,7 +152,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      *
      * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
      */
-    public void applyTranQ( CDenseMatrix64F A ) {
+    public void applyTranQ( RowMatrix_C64 A ) {
         for( int j = 0; j < minLength; j++ ) {
             int diagIndex = (j*numRows+j)*2;
             double realBefore = QR.data[diagIndex];
@@ -175,7 +175,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      * @param compact
      */
     @Override
-    public CDenseMatrix64F getR(CDenseMatrix64F R, boolean compact) {
+    public RowMatrix_C64 getR(RowMatrix_C64 R, boolean compact) {
         if( compact )
             R = UtilDecompositons_CD64.checkZerosLT(R,minLength,numCols);
         else
@@ -204,7 +204,7 @@ public class QRDecompositionHouseholderTran_CD64 implements QRDecomposition<CDen
      * </p>
      */
     @Override
-    public boolean decompose( CDenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_C64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         CommonOps_CD64.transpose(A, QR);

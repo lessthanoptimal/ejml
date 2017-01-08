@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -29,30 +29,30 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * </p>
  *
  * <p>
- * The extending class must explicity call {@link #_setA(org.ejml.data.DenseMatrix64F)}
+ * The extending class must explicity call {@link #_setA(RowMatrix_F64)}
  * inside of its {@link #setA} function.
  * </p>
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract_D64 implements LinearSolver<DenseMatrix64F> {
+public abstract class LinearSolverAbstract_D64 implements LinearSolver<RowMatrix_F64> {
 
-    protected DenseMatrix64F A;
+    protected RowMatrix_F64 A;
     protected int numRows;
     protected int numCols;
 
-    public DenseMatrix64F getA() {
+    public RowMatrix_F64 getA() {
         return A;
     }
 
-    protected void _setA(DenseMatrix64F A) {
+    protected void _setA(RowMatrix_F64 A) {
         this.A = A;
         this.numRows = A.numRows;
         this.numCols = A.numCols;
     }
 
     @Override
-    public void invert(DenseMatrix64F A_inv) {
+    public void invert(RowMatrix_F64 A_inv) {
         InvertUsingSolve_D64.invert(this,A,A_inv);
     }
 }

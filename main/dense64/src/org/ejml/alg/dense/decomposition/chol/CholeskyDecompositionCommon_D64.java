@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.chol;
 
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
@@ -36,7 +36,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_D64
-        implements CholeskyDecomposition_F64<DenseMatrix64F> {
+        implements CholeskyDecomposition_F64<RowMatrix_F64> {
 
     // it can decompose a matrix up to this width
     protected int maxWidth=-1;
@@ -45,7 +45,7 @@ public abstract class CholeskyDecompositionCommon_D64
     protected int n;
 
     // the decomposed matrix
-    protected DenseMatrix64F T;
+    protected RowMatrix_F64 T;
     protected double[] t;
 
     // tempoary variable used by various functions
@@ -55,7 +55,7 @@ public abstract class CholeskyDecompositionCommon_D64
     protected boolean lower;
 
     // storage for computed determinant
-    protected Complex64F det = new Complex64F();
+    protected Complex_F64 det = new Complex_F64();
 
     /**
      * Specifies if a lower or upper variant should be constructed.
@@ -101,7 +101,7 @@ public abstract class CholeskyDecompositionCommon_D64
      * @return True if it was able to finish the decomposition.
      */
     @Override
-    public boolean decompose( DenseMatrix64F mat ) {
+    public boolean decompose( RowMatrix_F64 mat ) {
         if( mat.numRows > maxWidth ) {
             setExpectedMaxSize(mat.numRows,mat.numCols);
         } else if( mat.numRows != mat.numCols ) {
@@ -140,7 +140,7 @@ public abstract class CholeskyDecompositionCommon_D64
     protected abstract boolean decomposeUpper();
 
     @Override
-    public DenseMatrix64F getT( DenseMatrix64F T ) {
+    public RowMatrix_F64 getT(RowMatrix_F64 T ) {
 
         // write the values to T
         if( lower ) {
@@ -167,7 +167,7 @@ public abstract class CholeskyDecompositionCommon_D64
      *
      * @return A lower or upper triangular matrix.
      */
-    public DenseMatrix64F getT() {
+    public RowMatrix_F64 getT() {
         return T;
     }
 
@@ -176,7 +176,7 @@ public abstract class CholeskyDecompositionCommon_D64
     }
 
     @Override
-    public Complex64F computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         double prod = 1;
 
         int total = n*n;

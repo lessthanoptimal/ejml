@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd.implicitqr;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class TestSvdImplicitQrAlgorithm {
             for( int i = 0; i < N; i++ ) {
                 double val = 2.0*Math.cos( (i+1)*Math.PI/(2.0*N+1.0));
 
-                assertEquals(1,countNumFound(svd,val,UtilEjml.TEST_64F));
+                assertEquals(1,countNumFound(svd,val,UtilEjml.TEST_F64));
             }
         }
     }
@@ -80,11 +80,11 @@ public class TestSvdImplicitQrAlgorithm {
 
         assertTrue(svd.process());
 
-        assertEquals(1,countNumFound(svd,5,UtilEjml.TEST_64F));
-        assertEquals(1,countNumFound(svd,4,UtilEjml.TEST_64F));
-        assertEquals(1,countNumFound(svd,3,UtilEjml.TEST_64F));
-        assertEquals(1,countNumFound(svd,2,UtilEjml.TEST_64F));
-        assertEquals(1,countNumFound(svd,1,UtilEjml.TEST_64F));
+        assertEquals(1,countNumFound(svd,5,UtilEjml.TEST_F64));
+        assertEquals(1,countNumFound(svd,4,UtilEjml.TEST_F64));
+        assertEquals(1,countNumFound(svd,3,UtilEjml.TEST_F64));
+        assertEquals(1,countNumFound(svd,2,UtilEjml.TEST_F64));
+        assertEquals(1,countNumFound(svd,1,UtilEjml.TEST_F64));
     }
 
     /**
@@ -114,7 +114,7 @@ public class TestSvdImplicitQrAlgorithm {
 
     @Test
     public void knownCaseSquare() {
-        DenseMatrix64F A = UtilEjml.parseD64("-3   1   3  -3   0\n" +
+        RowMatrix_F64 A = UtilEjml.parseD64("-3   1   3  -3   0\n" +
                 "   2  -4   0  -2   0\n" +
                 "   1  -4   4   1  -3\n" +
                 "  -1  -3   2   2  -4\n" +
@@ -199,14 +199,14 @@ public class TestSvdImplicitQrAlgorithm {
         SimpleMatrix A_found = Ut.transpose().mult(W).mult(Vt);
 //            A_found.print();
 
-        assertEquals(diag[0],A_found.get(0,0),UtilEjml.TEST_64F);
+        assertEquals(diag[0],A_found.get(0,0),UtilEjml.TEST_F64);
         for( int i = 0; i < n-1; i++ ) {
-            assertEquals(diag[i+1],A_found.get(i+1,i+1),UtilEjml.TEST_64F);
-            assertEquals(off[i],A_found.get(i,i+1),UtilEjml.TEST_64F);
+            assertEquals(diag[i+1],A_found.get(i+1,i+1),UtilEjml.TEST_F64);
+            assertEquals(off[i],A_found.get(i,i+1),UtilEjml.TEST_F64);
         }
     }
 
-    public static SvdImplicitQrAlgorithm_D64 createHelper(DenseMatrix64F a ) {
+    public static SvdImplicitQrAlgorithm_D64 createHelper(RowMatrix_F64 a ) {
         BidiagonalDecompositionRow_D64 bidiag = new BidiagonalDecompositionRow_D64();
         assertTrue(bidiag.decompose(a.copy()));
         double diag[] = new double[a.numRows];

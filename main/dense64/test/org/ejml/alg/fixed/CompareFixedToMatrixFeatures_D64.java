@@ -19,9 +19,9 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.FixedMatrix64F;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.FixedMatrix_F64;
+import org.ejml.data.RealMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -104,7 +104,7 @@ public abstract class CompareFixedToMatrixFeatures_D64 {
         Class[] types = m.getParameterTypes();
 
         for( Class c : types ) {
-            if(FixedMatrix64F.class.isAssignableFrom(c))
+            if(FixedMatrix_F64.class.isAssignableFrom(c))
                 return true;
         }
         return false;
@@ -121,8 +121,8 @@ public abstract class CompareFixedToMatrixFeatures_D64 {
             return false;
 
         for (int i = 0; i < typesFixed.length; i++) {
-            if( RealMatrix64F.class.isAssignableFrom(typesFixed[i]) ) {
-                if( !RealMatrix64F.class.isAssignableFrom(typesCommon[i]) ) {
+            if( RealMatrix_F64.class.isAssignableFrom(typesFixed[i]) ) {
+                if( !RealMatrix_F64.class.isAssignableFrom(typesCommon[i]) ) {
                     return false;
                 }
             }
@@ -134,8 +134,8 @@ public abstract class CompareFixedToMatrixFeatures_D64 {
         if( returnFixed == returnCommon )
             return true;
 
-        if( RealMatrix64F.class.isAssignableFrom(returnFixed) &&
-                RealMatrix64F.class.isAssignableFrom(returnCommon) )
+        if( RealMatrix_F64.class.isAssignableFrom(returnFixed) &&
+                RealMatrix_F64.class.isAssignableFrom(returnCommon) )
             return true;
 
         return false;
@@ -173,23 +173,23 @@ public abstract class CompareFixedToMatrixFeatures_D64 {
 
     private void declareParamStandard(Class[] typesFixed, Object[] inputsFixed, Object[] inputsCommon) {
         for( int i = 0; i < typesFixed.length; i++ ) {
-            if(FixedMatrix64F.class.isAssignableFrom(typesFixed[i])) {
-                FixedMatrix64F f = null;
+            if(FixedMatrix_F64.class.isAssignableFrom(typesFixed[i])) {
+                FixedMatrix_F64 f = null;
                 try {
-                    f = (FixedMatrix64F)typesFixed[i].newInstance();
+                    f = (FixedMatrix_F64)typesFixed[i].newInstance();
                 } catch (InstantiationException e) {
                     throw new RuntimeException(e);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
-                DenseMatrix64F m = RandomMatrices_D64.createRandom(f.getNumRows(), f.getNumCols(), rand);
+                RowMatrix_F64 m = RandomMatrices_D64.createRandom(f.getNumRows(), f.getNumCols(), rand);
 
                 ConvertMatrixStruct_F64.convert(m, f);
                 inputsFixed[i] = f;
                 inputsCommon[i] = m;
             } else if( double.class == typesFixed[i] ) {
-                inputsFixed[i] = UtilEjml.TEST_64F;
-                inputsCommon[i] = UtilEjml.TEST_64F;
+                inputsFixed[i] = UtilEjml.TEST_F64;
+                inputsCommon[i] = UtilEjml.TEST_F64;
             } else if( int.class == typesFixed[i] ) {
                 inputsFixed[i] = 1;  // handle tailored towards extractRow and extractCol
                 inputsCommon[i] = 1;
@@ -200,15 +200,15 @@ public abstract class CompareFixedToMatrixFeatures_D64 {
     private boolean handleSpecialCase( String name , Class[] typesFixed , Object[] inputsFixed, Object[] inputsCommon ) {
         if( "mult".compareTo(name) == 0 ) {
             try {
-                FixedMatrix64F f = (FixedMatrix64F)typesFixed[0].newInstance();
+                FixedMatrix_F64 f = (FixedMatrix_F64)typesFixed[0].newInstance();
 
                 // see if it's a vector
                 if( f.getNumCols() == 1 || f.getNumRows() == 1  ) {
                     // swap the type of vector
 
                     declareParamStandard(typesFixed,inputsFixed,inputsCommon);
-                    DenseMatrix64F a = (DenseMatrix64F)inputsCommon[0];
-                    DenseMatrix64F b = (DenseMatrix64F)inputsCommon[2];
+                    RowMatrix_F64 a = (RowMatrix_F64)inputsCommon[0];
+                    RowMatrix_F64 b = (RowMatrix_F64)inputsCommon[2];
 
                     a.numRows=f.getNumCols(); a.numCols=f.getNumRows();
                     b.numRows=f.getNumCols(); b.numCols=f.getNumRows();
@@ -233,17 +233,17 @@ public abstract class CompareFixedToMatrixFeatures_D64 {
             double valA = ((Double)a).doubleValue();
             double valB = ((Double)b).doubleValue();
 
-            return Math.abs(valA-valB) < UtilEjml.TEST_64F;
-        } else if(FixedMatrix64F.class.isAssignableFrom(a.getClass()) ) {
-            DenseMatrix64F bb = (DenseMatrix64F)b;
+            return Math.abs(valA-valB) < UtilEjml.TEST_F64;
+        } else if(FixedMatrix_F64.class.isAssignableFrom(a.getClass()) ) {
+            RowMatrix_F64 bb = (RowMatrix_F64)b;
 
-            FixedMatrix64F f = (FixedMatrix64F)a;
-            DenseMatrix64F m = new DenseMatrix64F(f.getNumRows(),f.getNumCols());
+            FixedMatrix_F64 f = (FixedMatrix_F64)a;
+            RowMatrix_F64 m = new RowMatrix_F64(f.getNumRows(),f.getNumCols());
             ConvertMatrixStruct_F64.convert(f,m);
             m.numRows = bb.numRows;
             m.numCols = bb.numCols;
 
-            return MatrixFeatures_D64.isIdentical(m, bb, UtilEjml.TEST_64F);
+            return MatrixFeatures_D64.isIdentical(m, bb, UtilEjml.TEST_F64);
 
         } else if( Boolean.class == a.getClass() ) {
             return true;

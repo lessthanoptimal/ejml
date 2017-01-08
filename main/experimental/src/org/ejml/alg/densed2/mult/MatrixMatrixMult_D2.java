@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.alg.densed2.mult;
 
 import org.ejml.data.DenseD2Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixDimensionException;
 
@@ -29,7 +30,7 @@ import org.ejml.ops.MatrixDimensionException;
 public class MatrixMatrixMult_D2 {
 
     /**
-     * @see CommonOps_D64#mult(org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
     public static void mult_small( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c )
     {
@@ -61,7 +62,7 @@ public class MatrixMatrixMult_D2 {
     }
 
     /**
-     * @see CommonOps_D64#mult(org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F, org.ejml.data.RowD1Matrix64F)
+     * @see CommonOps_D64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
      */
     public static void mult_aux( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c , double []aux )
     {

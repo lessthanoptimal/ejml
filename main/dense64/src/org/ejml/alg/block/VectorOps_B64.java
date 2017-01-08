@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.D1Submatrix_F64;
 
 
 /**
@@ -55,8 +55,8 @@ public class VectorOps_B64 {
      * @param end Index at which the vectors end at.
      */
     public static void scale_row(final int blockLength,
-                                 D1Submatrix64F A, int rowA,
-                                 double alpha, D1Submatrix64F B, int rowB,
+                                 D1Submatrix_F64 A, int rowA,
+                                 double alpha, D1Submatrix_F64 B, int rowB,
                                  int offset, int end)
     {
         final double dataA[] = A.original.data;
@@ -114,8 +114,8 @@ public class VectorOps_B64 {
      * @param end Index at which the vectors end at.
      */
     public static void div_row(final int blockLength,
-                               D1Submatrix64F A, int rowA,
-                               double alpha, D1Submatrix64F B, int rowB,
+                               D1Submatrix_F64 A, int rowA,
+                               double alpha, D1Submatrix_F64 B, int rowB,
                                int offset, int end)
     {
         final double dataA[] = A.original.data;
@@ -177,11 +177,11 @@ public class VectorOps_B64 {
      * @param offset Index at which the vectors start at.
      * @param end Index at which the vectors end at.
      */
-    public static void add_row( final int blockLength ,
-                                D1Submatrix64F A , int rowA , double alpha ,
-                                D1Submatrix64F B , int rowB , double beta ,
-                                D1Submatrix64F C , int rowC ,
-                                int offset , int end ) {
+    public static void add_row(final int blockLength ,
+                               D1Submatrix_F64 A , int rowA , double alpha ,
+                               D1Submatrix_F64 B , int rowB , double beta ,
+                               D1Submatrix_F64 C , int rowC ,
+                               int offset , int end ) {
         final int heightA = Math.min(blockLength,A.row1-A.row0);
         final int heightB = Math.min(blockLength,B.row1-B.row0);
         final int heightC = Math.min(blockLength,C.row1-C.row0);
@@ -237,8 +237,8 @@ public class VectorOps_B64 {
      * @return Results of the dot product.
      */
     public static double dot_row(final int blockLength,
-                                 D1Submatrix64F A, int rowA,
-                                 D1Submatrix64F B, int rowB,
+                                 D1Submatrix_F64 A, int rowA,
+                                 D1Submatrix_F64 B, int rowB,
                                  int offset, int end) {
 
 
@@ -305,8 +305,8 @@ public class VectorOps_B64 {
      * @return Results of the dot product.
      */
     public static double dot_row_col(final int blockLength,
-                                     D1Submatrix64F A, int rowA,
-                                     D1Submatrix64F B, int colB,
+                                     D1Submatrix_F64 A, int rowA,
+                                     D1Submatrix_F64 B, int colB,
                                      int offset, int end) {
 
 

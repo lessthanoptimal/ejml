@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,33 +19,33 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 
 /**
- * Generic interface for wrapping a {@link BlockMatrix64F} decomposition for
- * processing of {@link org.ejml.data.DenseMatrix64F}.
+ * Generic interface for wrapping a {@link BlockMatrix_F64} decomposition for
+ * processing of {@link RowMatrix_F64}.
  *
  * @author Peter Abeles
  */
-public class BaseDecomposition_B64_to_D64 implements DecompositionInterface<DenseMatrix64F> {
+public class BaseDecomposition_B64_to_D64 implements DecompositionInterface<RowMatrix_F64> {
 
-    protected DecompositionInterface<BlockMatrix64F> alg;
+    protected DecompositionInterface<BlockMatrix_F64> alg;
 
     protected double[]tmp;
-    protected BlockMatrix64F Ablock = new BlockMatrix64F();
+    protected BlockMatrix_F64 Ablock = new BlockMatrix_F64();
     protected int blockLength;
 
-    public BaseDecomposition_B64_to_D64(DecompositionInterface<BlockMatrix64F> alg,
+    public BaseDecomposition_B64_to_D64(DecompositionInterface<BlockMatrix_F64> alg,
                                         int blockLength) {
         this.alg = alg;
         this.blockLength = blockLength;
     }
 
     @Override
-    public boolean decompose(DenseMatrix64F A) {
+    public boolean decompose(RowMatrix_F64 A) {
         Ablock.numRows = A.numRows;
         Ablock.numCols = A.numCols;
         Ablock.blockLength = blockLength;

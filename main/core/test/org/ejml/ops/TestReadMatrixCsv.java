@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -61,9 +61,9 @@ public class TestReadMatrixCsv {
 
         ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
 
-        CDenseMatrix64F expected = new CDenseMatrix64F(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
-        CDenseMatrix64F m = alg.read();
+        RowMatrix_C64 expected = new RowMatrix_C64(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
+        RowMatrix_C64 m = alg.read();
 
-        assertTrue(MatrixFeatures_CD64.isIdentical(expected,m, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_CD64.isIdentical(expected,m, UtilEjml.TEST_F64));
     }
 }

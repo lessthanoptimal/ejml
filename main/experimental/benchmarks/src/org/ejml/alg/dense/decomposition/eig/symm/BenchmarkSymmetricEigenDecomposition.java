@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.eig.symm;
 import org.ejml.alg.dense.decomposition.eig.SymmetricQRAlgorithmDecomposition_D64;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_D64;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecomposition_B64_to_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
@@ -34,11 +34,11 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class BenchmarkSymmetricEigenDecomposition {
-    public static long symmTogether( DenseMatrix64F orig , int numTrials ) {
+    public static long symmTogether(RowMatrix_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
-        TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp =  DecompositionFactory_D64.tridiagonal(orig.numRows);
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp =  DecompositionFactory_D64.tridiagonal(orig.numRows);
         SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         alg.setComputeVectorsWithValues(true);
@@ -52,11 +52,11 @@ public class BenchmarkSymmetricEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long symmSeparate( DenseMatrix64F orig , int numTrials ) {
+    public static long symmSeparate(RowMatrix_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
-        TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp =  DecompositionFactory_D64.tridiagonal(orig.numRows);
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp =  DecompositionFactory_D64.tridiagonal(orig.numRows);
         SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         alg.setComputeVectorsWithValues(false);
@@ -70,8 +70,8 @@ public class BenchmarkSymmetricEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long standardTridiag( DenseMatrix64F orig , int numTrials ) {
-        TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp = new TridiagonalDecompositionHouseholder_D64();
+    public static long standardTridiag(RowMatrix_F64 orig , int numTrials ) {
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = new TridiagonalDecompositionHouseholder_D64();
         SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         long prev = System.currentTimeMillis();
@@ -85,9 +85,9 @@ public class BenchmarkSymmetricEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long blockTridiag( DenseMatrix64F orig , int numTrials ) {
+    public static long blockTridiag(RowMatrix_F64 orig , int numTrials ) {
 
-        TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp = new TridiagonalDecomposition_B64_to_D64();
+        TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = new TridiagonalDecomposition_B64_to_D64();
         SymmetricQRAlgorithmDecomposition_D64 alg = new SymmetricQRAlgorithmDecomposition_D64(decomp,true);
 
         long prev = System.currentTimeMillis();
@@ -101,9 +101,9 @@ public class BenchmarkSymmetricEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long defaultSymm( DenseMatrix64F orig , int numTrials ) {
+    public static long defaultSymm(RowMatrix_F64 orig , int numTrials ) {
 
-        EigenDecomposition<DenseMatrix64F> alg = DecompositionFactory_D64.eig(orig.numCols, true, true);
+        EigenDecomposition<RowMatrix_F64> alg = DecompositionFactory_D64.eig(orig.numCols, true, true);
 
         long prev = System.currentTimeMillis();
 
@@ -117,7 +117,7 @@ public class BenchmarkSymmetricEigenDecomposition {
     }
 
 
-    private static void runAlgorithms( DenseMatrix64F mat , int numTrials )
+    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
     {
 //        System.out.println("Together            = "+ symmTogether(mat,numTrials));
 //        System.out.println("Separate            = "+ symmSeparate(mat,numTrials));
@@ -137,7 +137,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            DenseMatrix64F symMat = RandomMatrices_D64.createSymmetric(w,-1,1,rand);
+            RowMatrix_F64 symMat = RandomMatrices_D64.createSymmetric(w,-1,1,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

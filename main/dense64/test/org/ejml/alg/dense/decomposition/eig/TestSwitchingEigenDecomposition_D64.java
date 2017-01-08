@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ import org.junit.Test;
 public class TestSwitchingEigenDecomposition_D64 extends GeneralEigenDecompositionCheck_D64 {
     @Override
     public EigenDecomposition_F64 createDecomposition() {
-        return new SwitchingEigenDecomposition_D64(0,computeVectors, UtilEjml.TEST_64F);
+        return new SwitchingEigenDecomposition_D64(0,computeVectors, UtilEjml.TEST_F64);
     }
 
     @Test

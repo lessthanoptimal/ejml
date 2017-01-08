@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decompose.lu.LUDecompositionBase_CD64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 
 import java.util.Arrays;
 
@@ -38,7 +38,7 @@ public abstract class LinearSolverLuBase_CD64 extends LinearSolverAbstract_CD64 
     }
 
     @Override
-    public boolean setA(CDenseMatrix64F A) {
+    public boolean setA(RowMatrix_C64 A) {
         _setA(A);
 
         return decomp.decompose(A);
@@ -50,9 +50,9 @@ public abstract class LinearSolverLuBase_CD64 extends LinearSolverAbstract_CD64 
     }
 
     @Override
-    public void invert(CDenseMatrix64F A_inv) {
+    public void invert(RowMatrix_C64 A_inv) {
         double []vv = decomp._getVV();
-        CDenseMatrix64F LU = decomp.getLU();
+        RowMatrix_C64 LU = decomp.getLU();
 
         if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
             throw new IllegalArgumentException("Unexpected matrix dimension");

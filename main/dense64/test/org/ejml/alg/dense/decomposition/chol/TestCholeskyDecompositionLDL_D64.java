@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -43,21 +43,21 @@ public class TestCholeskyDecompositionLDL_D64 {
 
     @Test
     public void testDecompose() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
 
 
-        DenseMatrix64F L = new DenseMatrix64F(3,3, true, 1, 0, 0, 2, 1, 0, 4, 5, 1);
+        RowMatrix_F64 L = new RowMatrix_F64(3,3, true, 1, 0, 0, 2, 1, 0, 4, 5, 1);
 
         double D[] = new double[]{1,3,7};
 
         CholeskyDecompositionLDL_D64 cholesky = new CholeskyDecompositionLDL_D64();
         assertTrue(cholesky.decompose(A));
 
-        DenseMatrix64F foundL = cholesky.getL();
+        RowMatrix_F64 foundL = cholesky.getL();
 
-        EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_F64);
         for( int i = 0; i < D.length; i++ ) {
-            assertEquals(D[i],cholesky.getDiagonal()[i], UtilEjml.TEST_64F);
+            assertEquals(D[i],cholesky.getDiagonal()[i], UtilEjml.TEST_F64);
         }
     }
 
@@ -66,7 +66,7 @@ public class TestCholeskyDecompositionLDL_D64 {
      */
     @Test
     public void testNotPositiveDefinate() {
-        DenseMatrix64F A = new DenseMatrix64F(2,2, true, 1, -1, -1, -2);
+        RowMatrix_F64 A = new RowMatrix_F64(2,2, true, 1, -1, -1, -2);
 
         CholeskyDecompositionLDL_D64 alg = new CholeskyDecompositionLDL_D64();
         assertFalse(alg.decompose(A));

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixDimensionException;
 
@@ -33,7 +33,7 @@ import org.ejml.ops.MatrixDimensionException;
  */
 @SuppressWarnings("Duplicates")
 public class MatrixMatrixMult_CD64 {
-    public static void mult_reorder( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void mult_reorder(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -95,7 +95,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void mult_small( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void mult_small(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -140,7 +140,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void multTransA_reorder( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransA_reorder(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -188,7 +188,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransA_small( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransA_small(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -226,7 +226,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -264,7 +264,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransAB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -301,7 +301,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransAB_aux( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    public static void multTransAB_aux(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -346,7 +346,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAdd_reorder( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAdd_reorder(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -407,7 +407,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void multAdd_small( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAdd_small(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -452,7 +452,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void multAddTransA_reorder( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransA_reorder(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -499,7 +499,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransA_small( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransA_small(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -537,7 +537,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -575,7 +575,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransAB( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransAB(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -612,7 +612,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransAB_aux( CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    public static void multAddTransAB_aux(RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -656,7 +656,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void mult_reorder( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void mult_reorder(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -722,7 +722,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void mult_small( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void mult_small(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -767,7 +767,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void multTransA_reorder( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransA_reorder(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -820,7 +820,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransA_small( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransA_small(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -858,7 +858,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -896,7 +896,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransAB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multTransAB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -933,7 +933,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multTransAB_aux( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    public static void multTransAB_aux(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -978,7 +978,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAdd_reorder( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAdd_reorder(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1043,7 +1043,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void multAdd_small( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAdd_small(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1088,7 +1088,7 @@ public class MatrixMatrixMult_CD64 {
     }
 
 
-    public static void multAddTransA_reorder( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransA_reorder(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1140,7 +1140,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransA_small( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransA_small(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1178,7 +1178,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1216,7 +1216,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransAB( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c )
+    public static void multAddTransAB(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1253,7 +1253,7 @@ public class MatrixMatrixMult_CD64 {
         }
     }
 
-    public static void multAddTransAB_aux( double realAlpha , double imagAlpha , CDenseMatrix64F a , CDenseMatrix64F b , CDenseMatrix64F c , double []aux )
+    public static void multAddTransAB_aux(double realAlpha , double imagAlpha , RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.CheckDecompositionInterface_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.ops.MatrixFeatures_D64;
 import org.ejml.ops.RandomMatrices_D64;
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class GenericBidiagonalCheck_D64 {
     protected Random rand = new Random(0xff);
 
-    abstract protected BidiagonalDecomposition_F64<DenseMatrix64F> createQRDecomposition();
+    abstract protected BidiagonalDecomposition_F64<RowMatrix_F64> createQRDecomposition();
 
     @Test
     public void testModifiedInput() {
@@ -47,19 +47,19 @@ public abstract class GenericBidiagonalCheck_D64 {
 
     @Test
     public void testRandomMatrices() {
-        BidiagonalDecomposition_F64<DenseMatrix64F> decomp = createQRDecomposition();
+        BidiagonalDecomposition_F64<RowMatrix_F64> decomp = createQRDecomposition();
 
         for( int i = 0; i < 10; i++ ) {
             for( int N = 2;  N <= 10; N++ ) {
                 for( int tall = 0; tall <= 2; tall++ ) {
-                    DenseMatrix64F A = RandomMatrices_D64.createRandom(N+tall,N,rand);
+                    RowMatrix_F64 A = RandomMatrices_D64.createRandom(N+tall,N,rand);
 
                     assertTrue(decomp.decompose(A.copy()));
 
                     checkGeneric(A, decomp);
                 }
                 for( int wide = 1; wide <= 2; wide++ ) {
-                    DenseMatrix64F A = RandomMatrices_D64.createRandom(N,N+wide,rand);
+                    RowMatrix_F64 A = RandomMatrices_D64.createRandom(N,N+wide,rand);
 
                     assertTrue(decomp.decompose(A.copy()));
 
@@ -71,9 +71,9 @@ public abstract class GenericBidiagonalCheck_D64 {
 
     @Test
     public void testIdentity() {
-        SimpleMatrix A = SimpleMatrix.identity(5, DenseMatrix64F.class);
+        SimpleMatrix A = SimpleMatrix.identity(5, RowMatrix_F64.class);
 
-        BidiagonalDecomposition_F64<DenseMatrix64F> decomp = createQRDecomposition();
+        BidiagonalDecomposition_F64<RowMatrix_F64> decomp = createQRDecomposition();
 
         assertTrue(decomp.decompose(A.matrix_F64().copy()));
 
@@ -82,9 +82,9 @@ public abstract class GenericBidiagonalCheck_D64 {
 
     @Test
     public void testZero() {
-        SimpleMatrix A = new SimpleMatrix(5,5, DenseMatrix64F.class);
+        SimpleMatrix A = new SimpleMatrix(5,5, RowMatrix_F64.class);
 
-        BidiagonalDecomposition_F64<DenseMatrix64F> decomp = createQRDecomposition();
+        BidiagonalDecomposition_F64<RowMatrix_F64> decomp = createQRDecomposition();
 
         assertTrue(decomp.decompose(A.matrix_F64().copy()));
 
@@ -94,25 +94,25 @@ public abstract class GenericBidiagonalCheck_D64 {
     /**
      * Checks to see if the decomposition will reconstruct the original input matrix
      */
-    protected void checkGeneric(DenseMatrix64F a,
-                                BidiagonalDecomposition_F64<DenseMatrix64F> decomp) {
+    protected void checkGeneric(RowMatrix_F64 a,
+                                BidiagonalDecomposition_F64<RowMatrix_F64> decomp) {
         // check the full version
         SimpleMatrix U = SimpleMatrix.wrap(decomp.getU(null,false,false));
         SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));
         SimpleMatrix V = SimpleMatrix.wrap(decomp.getV(null,false,false));
 
-        DenseMatrix64F foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        RowMatrix_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
-        assertTrue(MatrixFeatures_D64.isIdentical(a,foundA,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(a,foundA,UtilEjml.TEST_F64));
 
         //       check with transpose
         SimpleMatrix Ut = SimpleMatrix.wrap(decomp.getU(null,true,false));
 
-        assertTrue(U.transpose().isIdentical(Ut, UtilEjml.TEST_64F));
+        assertTrue(U.transpose().isIdentical(Ut, UtilEjml.TEST_F64));
 
         SimpleMatrix Vt = SimpleMatrix.wrap(decomp.getV(null,true,false));
 
-        assertTrue(V.transpose().isIdentical(Vt,UtilEjml.TEST_64F));
+        assertTrue(V.transpose().isIdentical(Vt,UtilEjml.TEST_F64));
 
 //        U.print();
 //        V.print();
@@ -130,14 +130,14 @@ public abstract class GenericBidiagonalCheck_D64 {
 
         foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
-        assertTrue(MatrixFeatures_D64.isIdentical(a,foundA,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(a,foundA,UtilEjml.TEST_F64));
 
         //       check with transpose
         Ut = SimpleMatrix.wrap(decomp.getU(null,true,true));
         Vt = SimpleMatrix.wrap(decomp.getV(null,true,true));
 
-        assertTrue(U.transpose().isIdentical(Ut,UtilEjml.TEST_64F));
-        assertTrue(V.transpose().isIdentical(Vt,UtilEjml.TEST_64F));
+        assertTrue(U.transpose().isIdentical(Ut,UtilEjml.TEST_F64));
+        assertTrue(V.transpose().isIdentical(Vt,UtilEjml.TEST_F64));
     }
 
 }

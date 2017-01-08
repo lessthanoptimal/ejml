@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 /**
@@ -45,13 +45,13 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_D64
-        implements TridiagonalSimilarDecomposition_F64<DenseMatrix64F> {
+        implements TridiagonalSimilarDecomposition_F64<RowMatrix_F64> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores
      * the tridiagonal matrix.  The rows store householder vectors.
      */
-    private DenseMatrix64F QT;
+    private RowMatrix_F64 QT;
 
     // The size of the matrix
     private int N;
@@ -74,7 +74,7 @@ public class TridiagonalDecompositionHouseholder_D64
      * Returns the internal matrix where the decomposed results are stored.
      * @return
      */
-    public DenseMatrix64F getQT() {
+    public RowMatrix_F64 getQT() {
         return QT;
     }
 
@@ -96,7 +96,7 @@ public class TridiagonalDecompositionHouseholder_D64
      * @return The extracted T matrix.
      */
     @Override
-    public DenseMatrix64F getT( DenseMatrix64F T ) {
+    public RowMatrix_F64 getT(RowMatrix_F64 T ) {
         T = UtilDecompositons_D64.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
@@ -123,7 +123,7 @@ public class TridiagonalDecompositionHouseholder_D64
      * @return The extracted Q matrix.
      */
     @Override
-    public DenseMatrix64F getQ( DenseMatrix64F Q , boolean transposed ) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean transposed ) {
         Q = UtilDecompositons_D64.checkIdentity(Q,N,N);
 
         for( int i = 0; i < N; i++ ) w[i] = 0;
@@ -155,7 +155,7 @@ public class TridiagonalDecompositionHouseholder_D64
      * @param A Symmetric matrix that is going to be decomposed.  Not modified.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A ) {
+    public boolean decompose( RowMatrix_F64 A ) {
         init(A);
 
         for( int k = 1; k < N; k++ ) {
@@ -264,7 +264,7 @@ public class TridiagonalDecompositionHouseholder_D64
      *
      * @param A Matrix being decomposed.
      */
-    public void init( DenseMatrix64F A ) {
+    public void init( RowMatrix_F64 A ) {
         if( A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be square");
 

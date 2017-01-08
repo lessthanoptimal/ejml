@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.example;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.junit.Test;
 
@@ -48,12 +48,12 @@ public class TestCompareKalmanResults {
         all.add( new KalmanFilterEquation() );
         all.add( simple );
 
-        DenseMatrix64F priorX = new DenseMatrix64F(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DenseMatrix64F priorP = CommonOps_D64.identity(9);
+        RowMatrix_F64 priorX = new RowMatrix_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
+        RowMatrix_F64 priorP = CommonOps_D64.identity(9);
 
-        DenseMatrix64F F = BenchmarkKalmanPerformance.createF(T);
-        DenseMatrix64F Q = BenchmarkKalmanPerformance.createQ(T,0.1);
-        DenseMatrix64F H = BenchmarkKalmanPerformance.createH();
+        RowMatrix_F64 F = BenchmarkKalmanPerformance.createF(T);
+        RowMatrix_F64 Q = BenchmarkKalmanPerformance.createQ(T,0.1);
+        RowMatrix_F64 H = BenchmarkKalmanPerformance.createH();
 
 
         for( KalmanFilter f : all ) {
@@ -66,8 +66,8 @@ public class TestCompareKalmanResults {
             compareFilters(simple,f);
         }
 
-        DenseMatrix64F z = new DenseMatrix64F(H.numRows,1);
-        DenseMatrix64F R = CommonOps_D64.identity(H.numRows);
+        RowMatrix_F64 z = new RowMatrix_F64(H.numRows,1);
+        RowMatrix_F64 R = CommonOps_D64.identity(H.numRows);
 
         for( KalmanFilter f : all ) {
             f.update(z,R);
@@ -79,13 +79,13 @@ public class TestCompareKalmanResults {
     }
 
     private void compareFilters( KalmanFilter a, KalmanFilter b ) {
-            DenseMatrix64F testX = b.getState();
-            DenseMatrix64F testP = b.getCovariance();
+            RowMatrix_F64 testX = b.getState();
+            RowMatrix_F64 testP = b.getCovariance();
 
-            DenseMatrix64F X = a.getState();
-            DenseMatrix64F P = a.getCovariance();
+            RowMatrix_F64 X = a.getState();
+            RowMatrix_F64 P = a.getCovariance();
 
-            EjmlUnitTests.assertEquals(testX,X,UtilEjml.TEST_64F);
-            EjmlUnitTests.assertEquals(testP,P,UtilEjml.TEST_64F);
+            EjmlUnitTests.assertEquals(testX,X,UtilEjml.TEST_F64);
+            EjmlUnitTests.assertEquals(testP,P,UtilEjml.TEST_F64);
     }
 }

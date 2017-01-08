@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQREigenHelper_D64;
 import org.ejml.alg.dense.decomposition.eig.symm.SymmetricQrAlgorithm_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
@@ -44,11 +44,11 @@ import org.ejml.ops.CommonOps_D64;
  * @author Peter Abeles
  */
 public class SymmetricQRAlgorithmDecomposition_D64
-        implements EigenDecomposition_F64<DenseMatrix64F> {
+        implements EigenDecomposition_F64<RowMatrix_F64> {
 
     // computes a tridiagonal matrix whose eigenvalues are the same as the original
     // matrix and can be easily computed.
-    private TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp;
+    private TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp;
     // helper class for eigenvalue and eigenvector algorithms
     private SymmetricQREigenHelper_D64 helper;
     // computes the eigenvectors
@@ -68,14 +68,14 @@ public class SymmetricQRAlgorithmDecomposition_D64
     private double offSaved[];
 
     // temporary variable used to store/compute eigenvectors
-    private DenseMatrix64F V;
+    private RowMatrix_F64 V;
     // the extracted eigenvectors
-    private DenseMatrix64F eigenvectors[];
+    private RowMatrix_F64 eigenvectors[];
 
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
 
-    public SymmetricQRAlgorithmDecomposition_D64(TridiagonalSimilarDecomposition_F64<DenseMatrix64F> decomp,
+    public SymmetricQRAlgorithmDecomposition_D64(TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp,
                                                  boolean computeVectors) {
 
         this.decomp = decomp;
@@ -114,12 +114,12 @@ public class SymmetricQRAlgorithmDecomposition_D64
     }
 
     @Override
-    public Complex64F getEigenvalue(int index) {
-        return new Complex64F(values[index],0);
+    public Complex_F64 getEigenvalue(int index) {
+        return new Complex_F64(values[index],0);
     }
 
     @Override
-    public DenseMatrix64F getEigenVector(int index) {
+    public RowMatrix_F64 getEigenVector(int index) {
         return eigenvectors[index];
     }
 
@@ -131,7 +131,7 @@ public class SymmetricQRAlgorithmDecomposition_D64
      * @return true if it decomposed the matrix or false if an error was detected.  This will not catch all errors.
      */
     @Override
-    public boolean decompose(DenseMatrix64F orig) {
+    public boolean decompose(RowMatrix_F64 orig) {
         if( orig.numCols != orig.numRows )
             throw new IllegalArgumentException("Matrix must be square.");
         if( orig.numCols <= 0 )

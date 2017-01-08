@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 
 /**
  * @author Peter Abeles
@@ -38,7 +38,7 @@ public class NormOps_CD64 {
      * @param a The matrix whose norm is computed.  Not modified.
      * @return The norm's value.
      */
-    public static double normF( CDenseMatrix64F a ) {
+    public static double normF( RowMatrix_C64 a ) {
         double total = 0;
 
         double scale = CommonOps_CD64.elementMaxAbs(a);

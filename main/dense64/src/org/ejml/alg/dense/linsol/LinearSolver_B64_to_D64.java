@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,30 +20,30 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.linsol.chol.CholeskyOuterSolver_B64;
-import org.ejml.data.BlockMatrix64F;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
- * Wrapper that allows {@link org.ejml.interfaces.linsol.LinearSolver <BlockMatrix64F>} to implements {@link org.ejml.interfaces.linsol.LinearSolver}.  It works
- * by converting {@link DenseMatrix64F} into {@link BlockMatrix64F} and calling the equivalent
+ * Wrapper that allows {@link org.ejml.interfaces.linsol.LinearSolver <BlockMatrix_F64>} to implements {@link org.ejml.interfaces.linsol.LinearSolver}.  It works
+ * by converting {@link RowMatrix_F64} into {@link BlockMatrix_F64} and calling the equivalent
  * functions.  Since a local copy is made all input matrices are never modified.
  *
  * @author Peter Abeles
  */
-public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
-    protected LinearSolver<BlockMatrix64F> alg = new CholeskyOuterSolver_B64();
+public class LinearSolver_B64_to_D64 implements LinearSolver<RowMatrix_F64> {
+    protected LinearSolver<BlockMatrix_F64> alg = new CholeskyOuterSolver_B64();
 
     // block matrix copy of the system A matrix.
-    protected BlockMatrix64F blockA = new BlockMatrix64F(1,1);
+    protected BlockMatrix_F64 blockA = new BlockMatrix_F64(1,1);
     // block matrix copy of B matrix passed into solve
-    protected BlockMatrix64F blockB = new BlockMatrix64F(1,1);
+    protected BlockMatrix_F64 blockB = new BlockMatrix_F64(1,1);
     // block matrix copy of X matrix passed into solve
-    protected BlockMatrix64F blockX = new BlockMatrix64F(1,1);
+    protected BlockMatrix_F64 blockX = new BlockMatrix_F64(1,1);
 
-    public LinearSolver_B64_to_D64(LinearSolver<BlockMatrix64F> alg) {
+    public LinearSolver_B64_to_D64(LinearSolver<BlockMatrix_F64> alg) {
         this.alg = alg;
     }
 
@@ -54,7 +54,7 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
      * @return true if it can solve the system.
      */
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         blockA.reshape(A.numRows,A.numCols,false);
         MatrixOps_B64.convert(A,blockA);
 
@@ -73,7 +73,7 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
         blockB.reshape(B.numRows,B.numCols,false);
         blockX.reshape(X.numRows,X.numCols,false);
         MatrixOps_B64.convert(B,blockB);
@@ -90,7 +90,7 @@ public class LinearSolver_B64_to_D64 implements LinearSolver<DenseMatrix64F> {
      * @param A_inv Where the inverted matrix saved. Modified.
      */
     @Override
-    public void invert(DenseMatrix64F A_inv) {
+    public void invert(RowMatrix_F64 A_inv) {
         blockB.reshape(A_inv.numRows,A_inv.numCols,false);
 
         alg.invert(blockB);

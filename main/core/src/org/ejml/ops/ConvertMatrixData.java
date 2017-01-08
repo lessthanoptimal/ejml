@@ -26,50 +26,50 @@ import org.ejml.data.*;
  * @author Peter Abeles
  */
 public class ConvertMatrixData {
-    public static void convert(DenseMatrix64F src, DenseMatrix32F dst ) {
+    public static void convert(RowMatrix_F64 src, RowMatrix_F32 dst ) {
         int N = src.getNumElements();
         for (int i = 0; i < N; i++) {
             dst.data[i] = (float)src.data[i];
         }
     }
 
-    public static void convert(DenseMatrix32F src, DenseMatrix64F dst ) {
+    public static void convert(RowMatrix_F32 src, RowMatrix_F64 dst ) {
         int N = src.getNumElements();
         for (int i = 0; i < N; i++) {
             dst.data[i] = src.data[i];
         }
     }
 
-    public static void convert(FixedMatrix2x2_64F src, FixedMatrix2x2_32F dst ) {
+    public static void convert(FixedMatrix2x2_F64 src, FixedMatrix2x2_F32 dst ) {
         dst.a11 = (float)src.a11; dst.a12 = (float)src.a12;
         dst.a21 = (float)src.a21; dst.a22 = (float)src.a22;
     }
 
-    public static void convert(FixedMatrix3x3_64F src, FixedMatrix3x3_32F dst ) {
+    public static void convert(FixedMatrix3x3_F64 src, FixedMatrix3x3_F32 dst ) {
         dst.a11 = (float)src.a11; dst.a12 = (float)src.a12; dst.a13 = (float)src.a13;
         dst.a21 = (float)src.a21; dst.a22 = (float)src.a22; dst.a23 = (float)src.a23;
         dst.a31 = (float)src.a31; dst.a32 = (float)src.a32; dst.a33 = (float)src.a33;
     }
 
-    public static void convert(FixedMatrix4x4_64F src, FixedMatrix4x4_32F dst ) {
+    public static void convert(FixedMatrix4x4_F64 src, FixedMatrix4x4_F32 dst ) {
         dst.a11 = (float)src.a11; dst.a12 = (float)src.a12; dst.a13 = (float)src.a13; dst.a14 = (float)src.a14;
         dst.a21 = (float)src.a21; dst.a22 = (float)src.a22; dst.a23 = (float)src.a23; dst.a24 = (float)src.a24;
         dst.a31 = (float)src.a31; dst.a32 = (float)src.a32; dst.a33 = (float)src.a33; dst.a34 = (float)src.a34;
         dst.a41 = (float)src.a41; dst.a42 = (float)src.a42; dst.a43 = (float)src.a43; dst.a44 = (float)src.a44;
     }
 
-    public static void convert(FixedMatrix2x2_32F src, FixedMatrix2x2_64F dst ) {
+    public static void convert(FixedMatrix2x2_F32 src, FixedMatrix2x2_F64 dst ) {
         dst.a11 = src.a11; dst.a12 = src.a12;
         dst.a21 = src.a21; dst.a22 = src.a22;
     }
 
-    public static void convert(FixedMatrix3x3_32F src, FixedMatrix3x3_64F dst ) {
+    public static void convert(FixedMatrix3x3_F32 src, FixedMatrix3x3_F64 dst ) {
         dst.a11 = src.a11; dst.a12 = src.a12; dst.a13 = src.a13;
         dst.a21 = src.a21; dst.a22 = src.a22; dst.a23 = src.a23;
         dst.a31 = src.a31; dst.a32 = src.a32; dst.a33 = src.a33;
     }
 
-    public static void convert(FixedMatrix4x4_32F src, FixedMatrix4x4_64F dst ) {
+    public static void convert(FixedMatrix4x4_F32 src, FixedMatrix4x4_F64 dst ) {
         dst.a11 = src.a11; dst.a12 = src.a12; dst.a13 = src.a13; dst.a14 = src.a14;
         dst.a21 = src.a21; dst.a22 = src.a22; dst.a23 = src.a23; dst.a24 = src.a24;
         dst.a31 = src.a31; dst.a32 = src.a32; dst.a33 = src.a33; dst.a34 = src.a34;

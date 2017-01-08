@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
 
 
 /**
@@ -31,7 +31,7 @@ public class UnrolledDeterminantFromMinor_D64 {
     
     public static final int MAX = 6;
     
-    public static double det( RowD1Matrix64F mat ) {
+    public static double det( RowD1Matrix_F64 mat ) {
         switch( mat.numRows ) {
             case 2: return det2(mat);
             case 3: return det3(mat);
@@ -42,14 +42,14 @@ public class UnrolledDeterminantFromMinor_D64 {
         }
     }
 
-    public static double det2( RowD1Matrix64F mat )
+    public static double det2( RowD1Matrix_F64 mat )
     {
         double m[] = mat.data;
 
         return m[0]*m[3] - m[1]*m[2];
     }
 
-    public static double det3( RowD1Matrix64F mat )
+    public static double det3( RowD1Matrix_F64 mat )
     {
         double m[] = mat.data;
 
@@ -70,7 +70,7 @@ public class UnrolledDeterminantFromMinor_D64 {
         return a-b+c;
     }
 
-    public static double det4( RowD1Matrix64F mat )
+    public static double det4( RowD1Matrix_F64 mat )
     {
         double []data = mat.data;
 
@@ -95,7 +95,7 @@ public class UnrolledDeterminantFromMinor_D64 {
         return ret;
     }
 
-    public static double det5( RowD1Matrix64F mat )
+    public static double det5( RowD1Matrix_F64 mat )
     {
         double []data = mat.data;
 
@@ -141,7 +141,7 @@ public class UnrolledDeterminantFromMinor_D64 {
         return ret;
     }
 
-    public static double det6( RowD1Matrix64F mat )
+    public static double det6( RowD1Matrix_F64 mat )
     {
         double []data = mat.data;
 

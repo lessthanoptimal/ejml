@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 
 
 /**
@@ -113,7 +113,7 @@ public class QrHelperFunctions_CD64 {
      */
     public static double computeTauGammaAndDivide(final int start, final int stop,
                                                   final double[] x, final double max,
-                                                  Complex64F tau) {
+                                                  Complex_F64 tau) {
 
         int index = start*2;
         double nx = 0;
@@ -181,7 +181,7 @@ public class QrHelperFunctions_CD64 {
      * @param w1 last index + 1 in sub-array in u and row sub-matrix in A
      * @param _temp temporary storage.  Same size as u.
      */
-    public static void rank1UpdateMultR(CDenseMatrix64F A,
+    public static void rank1UpdateMultR(RowMatrix_C64 A,
                                         double u[], int offsetU,
                                         double gamma ,
                                         int colA0,
@@ -272,10 +272,10 @@ public class QrHelperFunctions_CD64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL( CDenseMatrix64F A , double u[] , int offsetU,
-                                         double gammaR ,
-                                         int colA0,
-                                         int w0 , int w1 )
+    public static void rank1UpdateMultL(RowMatrix_C64 A , double u[] , int offsetU,
+                                        double gammaR ,
+                                        int colA0,
+                                        int w0 , int w1 )
     {
         for( int i = colA0; i < A.numRows; i++ ) {
             int startIndex = (i*A.numCols+w0)*2;
@@ -316,7 +316,7 @@ public class QrHelperFunctions_CD64 {
      * @param u Output array storage
      * @param offsetU first index in U
      */
-    public static void extractHouseholderColumn( CDenseMatrix64F A ,
+    public static void extractHouseholderColumn( RowMatrix_C64 A ,
                                                  int row0 , int row1 ,
                                                  int col , double u[], int offsetU )
     {
@@ -340,7 +340,7 @@ public class QrHelperFunctions_CD64 {
      * @param u Output array storage
      * @param offsetU first index in U
      */
-    public static void extractHouseholderRow( CDenseMatrix64F A ,
+    public static void extractHouseholderRow( RowMatrix_C64 A ,
                                               int row ,
                                               int col0, int col1 , double u[], int offsetU )
     {
@@ -369,7 +369,7 @@ public class QrHelperFunctions_CD64 {
      * @param offsetU first index in U
      * @return magnitude of largest element
      */
-    public static double extractColumnAndMax( CDenseMatrix64F A ,
+    public static double extractColumnAndMax( RowMatrix_C64 A ,
                                               int row0 , int row1 ,
                                               int col , double u[], int offsetU) {
         int indexU = (offsetU+row0)*2;
@@ -403,7 +403,7 @@ public class QrHelperFunctions_CD64 {
      * @param col1 Last column in A + 1 to be copied
      * @return magnitude of largest element
      */
-    public static double computeRowMax( CDenseMatrix64F A ,
+    public static double computeRowMax( RowMatrix_C64 A ,
                                         int row , int col0 , int col1 ) {
         double max = 0;
 

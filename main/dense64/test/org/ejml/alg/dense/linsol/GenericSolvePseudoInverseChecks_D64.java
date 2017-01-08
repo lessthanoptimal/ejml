@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.MatrixFeatures_D64;
@@ -38,10 +38,10 @@ public class GenericSolvePseudoInverseChecks_D64 {
 
     Random rand = new Random(234);
 
-    LinearSolver<DenseMatrix64F> solver;
+    LinearSolver<RowMatrix_F64> solver;
 
-    public GenericSolvePseudoInverseChecks_D64(LinearSolver<DenseMatrix64F> solver) {
-        this.solver = new LinearSolverSafe<DenseMatrix64F>( solver );
+    public GenericSolvePseudoInverseChecks_D64(LinearSolver<RowMatrix_F64> solver) {
+        this.solver = new LinearSolverSafe<RowMatrix_F64>( solver );
     }
 
     public void all() {
@@ -57,12 +57,12 @@ public class GenericSolvePseudoInverseChecks_D64 {
      * Shouldn't blow if it the input matrix is zero.  But there is no solution...
      */
     public void zeroMatrix() {
-        DenseMatrix64F A = new DenseMatrix64F(3,3);
-        DenseMatrix64F y = new DenseMatrix64F(3,1,true,4,7,8);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3);
+        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,7,8);
 
         assertTrue(solver.setA(A));
 
-        DenseMatrix64F x = new DenseMatrix64F(3,1);
+        RowMatrix_F64 x = new RowMatrix_F64(3,1);
         solver.solve(y, x);
 
         assertFalse(MatrixFeatures_D64.hasUncountable(x));
@@ -73,19 +73,19 @@ public class GenericSolvePseudoInverseChecks_D64 {
      */
     public void underDetermined_wide_solve() {
         // create a matrix where two rows are linearly dependent
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,2,3,4);
+        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,1,2,3,2,3,4);
 
-        DenseMatrix64F y = new DenseMatrix64F(2,1,true,4,7);
+        RowMatrix_F64 y = new RowMatrix_F64(2,1,true,4,7);
         assertTrue(solver.setA(A));
 
-        DenseMatrix64F x = new DenseMatrix64F(3,1);
+        RowMatrix_F64 x = new RowMatrix_F64(3,1);
         solver.solve(y,x);
 
-        DenseMatrix64F found = new DenseMatrix64F(2,1);
+        RowMatrix_F64 found = new RowMatrix_F64(2,1);
         CommonOps_D64.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
-        assertTrue(MatrixFeatures_D64.isEquals(y, found, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isEquals(y, found, UtilEjml.TEST_F64));
     }
 
     /**
@@ -93,22 +93,22 @@ public class GenericSolvePseudoInverseChecks_D64 {
      */
     public void underDetermined_wide_inv() {
         // create a matrix where two rows are linearly dependent
-        DenseMatrix64F A = new DenseMatrix64F(2,3,true,1,2,3,2,3,4);
+        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,1,2,3,2,3,4);
 
-        DenseMatrix64F y = new DenseMatrix64F(2,1,true,4,7);
+        RowMatrix_F64 y = new RowMatrix_F64(2,1,true,4,7);
         assertTrue(solver.setA(A));
 
-        DenseMatrix64F x = new DenseMatrix64F(3,1);
+        RowMatrix_F64 x = new RowMatrix_F64(3,1);
         solver.solve(y,x);
 
         // now test the pseudo inverse
-        DenseMatrix64F A_pinv = new DenseMatrix64F(3,2);
-        DenseMatrix64F found = new DenseMatrix64F(3,1);
+        RowMatrix_F64 A_pinv = new RowMatrix_F64(3,2);
+        RowMatrix_F64 found = new RowMatrix_F64(3,1);
         solver.invert(A_pinv);
 
         CommonOps_D64.mult(A_pinv,y,found);
 
-        assertTrue(MatrixFeatures_D64.isEquals(x, found,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isEquals(x, found,UtilEjml.TEST_F64));
     }
 
     /**
@@ -116,19 +116,19 @@ public class GenericSolvePseudoInverseChecks_D64 {
      */
     public void underDetermined_tall_solve() {
         // create a matrix where two rows are linearly dependent
-        DenseMatrix64F A = new DenseMatrix64F(3,2,true,1,2,1,2,2,4);
+        RowMatrix_F64 A = new RowMatrix_F64(3,2,true,1,2,1,2,2,4);
 
-        DenseMatrix64F y = new DenseMatrix64F(3,1,true,4,4,8);
+        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,4,8);
         assertTrue(solver.setA(A));
 
-        DenseMatrix64F x = new DenseMatrix64F(2,1);
+        RowMatrix_F64 x = new RowMatrix_F64(2,1);
         solver.solve(y,x);
 
-        DenseMatrix64F found = new DenseMatrix64F(3,1);
+        RowMatrix_F64 found = new RowMatrix_F64(3,1);
         CommonOps_D64.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
-        assertTrue(MatrixFeatures_D64.isEquals(y, found, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isEquals(y, found, UtilEjml.TEST_F64));
     }
 
     /**
@@ -136,19 +136,19 @@ public class GenericSolvePseudoInverseChecks_D64 {
      */
     public void singular_solve() {
         // create a matrix where two rows are linearly dependent
-        DenseMatrix64F A = new DenseMatrix64F(3,3,true,1,2,3,2,3,4,2,3,4);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3,true,1,2,3,2,3,4,2,3,4);
 
-        DenseMatrix64F y = new DenseMatrix64F(3,1,true,4,7,7);
+        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,7,7);
         assertTrue(solver.setA(A));
 
-        DenseMatrix64F x = new DenseMatrix64F(3,1);
+        RowMatrix_F64 x = new RowMatrix_F64(3,1);
         solver.solve(y,x);
 
-        DenseMatrix64F found = new DenseMatrix64F(3,1);
+        RowMatrix_F64 found = new RowMatrix_F64(3,1);
         CommonOps_D64.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
-        assertTrue(MatrixFeatures_D64.isEquals(y, found, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isEquals(y, found, UtilEjml.TEST_F64));
     }
 
     /**
@@ -156,21 +156,21 @@ public class GenericSolvePseudoInverseChecks_D64 {
      */
     public void singular_inv() {
         // create a matrix where two rows are linearly dependent
-        DenseMatrix64F A = new DenseMatrix64F(3,3,true,1,2,3,2,3,4,2,3,4);
+        RowMatrix_F64 A = new RowMatrix_F64(3,3,true,1,2,3,2,3,4,2,3,4);
 
-        DenseMatrix64F y = new DenseMatrix64F(3,1,true,4,7,7);
+        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,7,7);
         assertTrue(solver.setA(A));
 
-        DenseMatrix64F x = new DenseMatrix64F(3,1);
+        RowMatrix_F64 x = new RowMatrix_F64(3,1);
         solver.solve(y,x);
 
         // now test the pseudo inverse
-        DenseMatrix64F A_pinv = new DenseMatrix64F(3,3);
-        DenseMatrix64F found = new DenseMatrix64F(3,1);
+        RowMatrix_F64 A_pinv = new RowMatrix_F64(3,3);
+        RowMatrix_F64 found = new RowMatrix_F64(3,1);
         solver.invert(A_pinv);
 
         CommonOps_D64.mult(A_pinv,y,found);
 
-        assertTrue(MatrixFeatures_D64.isEquals(x, found,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isEquals(x, found,UtilEjml.TEST_F64));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_D64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_D64;
@@ -55,26 +55,26 @@ import org.ejml.ops.SpecializedOps_D64;
 public class EigenPowerMethod_D64 {
 
     // used to determine convergence
-    private double tol = UtilEjml.TESTP_64F;
+    private double tol = UtilEjml.TESTP_F64;
 
 
-    private DenseMatrix64F q0,q1,q2;
+    private RowMatrix_F64 q0,q1,q2;
 
     private int maxIterations = 20;
 
-    private DenseMatrix64F B;
-    private DenseMatrix64F seed;
+    private RowMatrix_F64 B;
+    private RowMatrix_F64 seed;
 
     /**
      *
      * @param size The size of the matrix which can be processed.
      */
     public EigenPowerMethod_D64(int size ) {
-        q0 = new DenseMatrix64F(size,1);
-        q1 = new DenseMatrix64F(size,1);
-        q2 = new DenseMatrix64F(size,1);
+        q0 = new RowMatrix_F64(size,1);
+        q1 = new RowMatrix_F64(size,1);
+        q2 = new RowMatrix_F64(size,1);
 
-        B = new DenseMatrix64F(size,size);
+        B = new RowMatrix_F64(size,size);
     }
 
     /**
@@ -82,7 +82,7 @@ public class EigenPowerMethod_D64 {
      *
      * @param seed The initial seed vector in the iteration.
      */
-    public void setSeed(DenseMatrix64F seed) {
+    public void setSeed(RowMatrix_F64 seed) {
         this.seed = seed;
     }
 
@@ -104,7 +104,7 @@ public class EigenPowerMethod_D64 {
      * @param A The matrix. Not modified.
      * @return If it converged or not.
      */
-    public boolean computeDirect( DenseMatrix64F A ) {
+    public boolean computeDirect( RowMatrix_F64 A ) {
 
         initPower(A);
 
@@ -124,7 +124,7 @@ public class EigenPowerMethod_D64 {
     }
 
 
-    private void initPower(DenseMatrix64F A ) {
+    private void initPower(RowMatrix_F64 A ) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix.");
 
@@ -144,7 +144,7 @@ public class EigenPowerMethod_D64 {
      * to a non-dominant eigen vector.    At least in the case I looked at.  I haven't devoted
      * a lot of time into this issue...
      */
-    private boolean checkConverged(DenseMatrix64F A) {
+    private boolean checkConverged(RowMatrix_F64 A) {
         double worst = 0;
         double worst2 = 0;
         for( int j = 0; j < A.numRows; j++ ) {
@@ -155,7 +155,7 @@ public class EigenPowerMethod_D64 {
         }
 
         // swap vectors
-        DenseMatrix64F temp = q0;
+        RowMatrix_F64 temp = q0;
         q0 = q2;
         q2 = temp;
 
@@ -177,7 +177,7 @@ public class EigenPowerMethod_D64 {
      * @param alpha Shifting factor.
      * @return If it converged or not.
      */
-    public boolean computeShiftDirect( DenseMatrix64F A ,double alpha) {
+    public boolean computeShiftDirect(RowMatrix_F64 A , double alpha) {
         SpecializedOps_D64.addIdentity(A,B,-alpha);
 
         return computeDirect(B);
@@ -192,7 +192,7 @@ public class EigenPowerMethod_D64 {
      * @param alpha Shifting factor.
      * @return If it converged or not.
      */
-    public boolean computeShiftInvert( DenseMatrix64F A , double alpha ) {
+    public boolean computeShiftInvert(RowMatrix_F64 A , double alpha ) {
         initPower(A);
 
         LinearSolver solver = LinearSolverFactory_D64.linear(A.numCols);
@@ -213,7 +213,7 @@ public class EigenPowerMethod_D64 {
          return converged;
     }
 
-    public DenseMatrix64F getEigenVector() {
+    public RowMatrix_F64 getEigenVector() {
         return q0;
     }
 }

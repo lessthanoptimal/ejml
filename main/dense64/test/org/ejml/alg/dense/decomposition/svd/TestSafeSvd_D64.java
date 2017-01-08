@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RealMatrix64F;
+import org.ejml.data.RealMatrix_F64;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TestSafeSvd_D64 {
 
     @Test
     public void getSafety() {
-        DenseMatrix64F A = new DenseMatrix64F(3,4);
+        RowMatrix_F64 A = new RowMatrix_F64(3,4);
 
         // it will need to create a copy in this case
         Dummy dummy = new Dummy(2,true,true,2,3);
@@ -79,9 +79,9 @@ public class TestSafeSvd_D64 {
         assertEquals(3,decomp.numRows());
     }
 
-    protected static class Dummy implements SingularValueDecomposition_F64<DenseMatrix64F> {
+    protected static class Dummy implements SingularValueDecomposition_F64<RowMatrix_F64> {
 
-        RealMatrix64F passedInMatrix;
+        RealMatrix_F64 passedInMatrix;
 
         boolean compact;
         double singular[];
@@ -119,19 +119,19 @@ public class TestSafeSvd_D64 {
         }
 
         @Override
-        public DenseMatrix64F getU(DenseMatrix64F U, boolean transposed) {
+        public RowMatrix_F64 getU(RowMatrix_F64 U, boolean transposed) {
             getU_called = true;
             return null;
         }
 
         @Override
-        public DenseMatrix64F getV(DenseMatrix64F V, boolean transposed) {
+        public RowMatrix_F64 getV(RowMatrix_F64 V, boolean transposed) {
             getV_called = true;
             return null;
         }
 
         @Override
-        public DenseMatrix64F getW(DenseMatrix64F W) {
+        public RowMatrix_F64 getW(RowMatrix_F64 W) {
             getW_called = true;
             return null;
         }
@@ -147,7 +147,7 @@ public class TestSafeSvd_D64 {
         }
 
         @Override
-        public boolean decompose(DenseMatrix64F orig) {
+        public boolean decompose(RowMatrix_F64 orig) {
             this.passedInMatrix = orig;
             return true;
         }

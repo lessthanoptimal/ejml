@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.RandomMatrices_D64;
 import org.ejml.simple.SimpleMatrix;
@@ -40,7 +40,7 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
 
 
     @Override
-    protected QRDecomposition<DenseMatrix64F> createQRDecomposition() {
+    protected QRDecomposition<RowMatrix_F64> createQRDecomposition() {
         return new QRDecompositionHouseholder_D64();
     }
 
@@ -61,26 +61,26 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width, DenseMatrix64F.class );
+        SimpleMatrix A = new SimpleMatrix(width,width, RowMatrix_F64.class );
         RandomMatrices_D64.setRandom(A.matrix_F64(),rand);
 
         qr.householder(w,A.matrix_F64());
 
         SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU()).extractMatrix(w,width,0,1);
 
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DenseMatrix64F.class);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, RowMatrix_F64.class);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
 
         // check the expected properties of Q
-        assertTrue(Q.isIdentical(Q.transpose(),UtilEjml.TEST_64F_SQ));
-        assertTrue(Q.isIdentical(Q.invert(),UtilEjml.TEST_64F_SQ));
+        assertTrue(Q.isIdentical(Q.transpose(),UtilEjml.TEST_F64_SQ));
+        assertTrue(Q.isIdentical(Q.invert(),UtilEjml.TEST_F64_SQ));
 
         SimpleMatrix result = Q.mult(A.extractMatrix(w,width,w,width));
 
-        assertEquals(-qr.tau,result.get(0,0), UtilEjml.TEST_64F);
+        assertEquals(-qr.tau,result.get(0,0), UtilEjml.TEST_F64);
         for( int i = 1; i < width-w; i++ ) {
-            assertEquals(0,result.get(i,0),UtilEjml.TEST_64F_SQ);
+            assertEquals(0,result.get(i,0),UtilEjml.TEST_F64_SQ);
         }
     }
 
@@ -102,8 +102,8 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
         double gamma = 0.2;
         double tau = 0.75;
 
-        SimpleMatrix U = new SimpleMatrix(width,1, DenseMatrix64F.class);
-        SimpleMatrix A = new SimpleMatrix(width,width, DenseMatrix64F.class);
+        SimpleMatrix U = new SimpleMatrix(width,1, RowMatrix_F64.class);
+        SimpleMatrix A = new SimpleMatrix(width,width, RowMatrix_F64.class);
 
         RandomMatrices_D64.setRandom(U.matrix_F64(),rand);
         RandomMatrices_D64.setRandom(A.matrix_F64(),rand);
@@ -111,7 +111,7 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
         qr.getQR().set(A.matrix_F64());
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DenseMatrix64F.class);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, RowMatrix_F64.class);
 
         SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
@@ -119,12 +119,12 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
 
         qr.updateA(w,U.matrix_F64().getData(),gamma,tau);
 
-        DenseMatrix64F found = qr.getQR();
+        RowMatrix_F64 found = qr.getQR();
 
-        assertEquals(-tau,found.get(w,w),UtilEjml.TEST_64F);
+        assertEquals(-tau,found.get(w,w),UtilEjml.TEST_F64);
 
         for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found.get(i,w),UtilEjml.TEST_64F);
+            assertEquals(U.get(i,0),found.get(i,w),UtilEjml.TEST_F64);
         }
 
         // the right should be the same
@@ -133,7 +133,7 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
                 double a = (double)expected.get(i-w,j-w);
                 double b = found.get(i,j);
 
-                assertEquals(a,b,UtilEjml.TEST_64F_SQ);
+                assertEquals(a,b,UtilEjml.TEST_F64_SQ);
             }
         }
     }
@@ -147,7 +147,7 @@ public class TestQRDecompositionHouseholder_D64 extends GenericQrCheck_D64 {
             this.numCols = numCols;
         }
 
-        public void householder( int j , DenseMatrix64F A ) {
+        public void householder( int j , RowMatrix_F64 A ) {
             this.QR.set(A);
 
             super.householder(j);

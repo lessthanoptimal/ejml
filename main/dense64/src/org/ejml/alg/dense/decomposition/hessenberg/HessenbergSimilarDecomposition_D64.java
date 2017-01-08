@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 /**
@@ -46,9 +46,9 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
  */
 // TODO create a column based one similar to what was done for QR decomposition?
 public class HessenbergSimilarDecomposition_D64
-        implements DecompositionInterface<DenseMatrix64F> {
+        implements DecompositionInterface<RowMatrix_F64> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
-    private DenseMatrix64F QH;
+    private RowMatrix_F64 QH;
     // number of rows and columns of the matrix being decompose
     private int N;
 
@@ -81,7 +81,7 @@ public class HessenbergSimilarDecomposition_D64
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A )
+    public boolean decompose( RowMatrix_F64 A )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be square.");
@@ -110,7 +110,7 @@ public class HessenbergSimilarDecomposition_D64
      *
      * @return QH matrix.
      */
-    public DenseMatrix64F getQH() {
+    public RowMatrix_F64 getQH() {
         return QH;
     }
 
@@ -120,7 +120,7 @@ public class HessenbergSimilarDecomposition_D64
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public DenseMatrix64F getH( DenseMatrix64F H ) {
+    public RowMatrix_F64 getH(RowMatrix_F64 H ) {
         H = UtilDecompositons_D64.checkZeros(H,N,N);
 
         // copy the first row
@@ -141,7 +141,7 @@ public class HessenbergSimilarDecomposition_D64
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DenseMatrix64F getQ( DenseMatrix64F Q ) {
+    public RowMatrix_F64 getQ(RowMatrix_F64 Q ) {
         Q = UtilDecompositons_D64.checkIdentity(Q,N,N);
 
         for( int j = N-2; j >= 0; j-- ) {

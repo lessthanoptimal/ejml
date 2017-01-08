@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.SubmatrixOps_D64;
 import org.ejml.alg.dense.mult.VectorVectorMult_D64;
-import org.ejml.data.D1Matrix64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.DenseMatrixBool;
+import org.ejml.data.D1Matrix_F64;
+import org.ejml.data.RowMatrix_B;
+import org.ejml.data.RowMatrix_F64;
 
 import java.util.Random;
 
@@ -55,19 +55,19 @@ public class RandomMatrices_D64 {
      * @return Array of N random orthogonal vectors of unit length.
      */
     // is there a faster algorithm out there? This one is a bit sluggish
-    public static DenseMatrix64F[] createSpan( int dimen, int numVectors , Random rand ) {
+    public static RowMatrix_F64[] createSpan(int dimen, int numVectors , Random rand ) {
         if( dimen < numVectors )
             throw new IllegalArgumentException("The number of vectors must be less than or equal to the dimension");
 
-        DenseMatrix64F u[] = new DenseMatrix64F[numVectors];
+        RowMatrix_F64 u[] = new RowMatrix_F64[numVectors];
 
         u[0] = RandomMatrices_D64.createRandom(dimen,1,-1,1,rand);
         NormOps_D64.normalizeF(u[0]);
 
         for( int i = 1; i < numVectors; i++ ) {
 //            System.out.println(" i = "+i);
-            DenseMatrix64F a = new DenseMatrix64F(dimen,1);
-            DenseMatrix64F r=null;
+            RowMatrix_F64 a = new RowMatrix_F64(dimen,1);
+            RowMatrix_F64 r=null;
 
             for( int j = 0; j < i; j++ ) {
 //                System.out.println("j = "+j);
@@ -83,7 +83,7 @@ public class RandomMatrices_D64 {
 
 //                UtilEjml.print(a);
 
-                DenseMatrix64F t = a;
+                RowMatrix_F64 t = a;
                 a = r;
                 r = t;
 
@@ -107,10 +107,10 @@ public class RandomMatrices_D64 {
      * @param rand RNG
      * @return A random vector within the specified span.
      */
-    public static DenseMatrix64F createInSpan( DenseMatrix64F[] span , double min , double max , Random rand ) {
-        DenseMatrix64F A = new DenseMatrix64F(span.length,1);
+    public static RowMatrix_F64 createInSpan(RowMatrix_F64[] span , double min , double max , Random rand ) {
+        RowMatrix_F64 A = new RowMatrix_F64(span.length,1);
 
-        DenseMatrix64F B = new DenseMatrix64F(span[0].getNumElements(),1);
+        RowMatrix_F64 B = new RowMatrix_F64(span[0].getNumElements(),1);
 
         for( int i = 0; i < span.length; i++ ) {
             B.set(span[i]);
@@ -135,14 +135,14 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator used to create matrices.
      * @return A new isometric matrix.
      */
-    public static DenseMatrix64F createOrthogonal( int numRows , int numCols , Random rand ) {
+    public static RowMatrix_F64 createOrthogonal(int numRows , int numCols , Random rand ) {
         if( numRows < numCols ) {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
-        DenseMatrix64F u[] = createSpan(numRows,numCols,rand);
+        RowMatrix_F64 u[] = createSpan(numRows,numCols,rand);
 
-        DenseMatrix64F ret = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 ret = new RowMatrix_F64(numRows,numCols);
         for( int i = 0; i < numCols; i++ ) {
             SubmatrixOps_D64.setSubMatrix(u[i], ret, 0, 0, 0, i, numRows, 1);
         }
@@ -160,7 +160,7 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator.
      * @return A random diagonal matrix.
      */
-    public static DenseMatrix64F createDiagonal( int N , double min , double max , Random rand ) {
+    public static RowMatrix_F64 createDiagonal(int N , double min , double max , Random rand ) {
         return createDiagonal(N,N,min,max,rand);
     }
 
@@ -175,11 +175,11 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator.
      * @return A random diagonal matrix.
      */
-    public static DenseMatrix64F createDiagonal( int numRows , int numCols , double min , double max , Random rand ) {
+    public static RowMatrix_F64 createDiagonal(int numRows , int numCols , double min , double max , Random rand ) {
         if( max < min )
             throw new IllegalArgumentException("The max must be >= the min");
 
-        DenseMatrix64F ret = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 ret = new RowMatrix_F64(numRows,numCols);
 
         int N = Math.min(numRows,numCols);
 
@@ -205,12 +205,12 @@ public class RandomMatrices_D64 {
      * @param sv Singular values of the matrix.
      * @return A new matrix with the specified singular values.
      */
-    public static DenseMatrix64F createSingularValues(int numRows, int numCols,
-                                                      Random rand, double ...sv) {
-        DenseMatrix64F U = RandomMatrices_D64.createOrthogonal(numRows,numRows,rand);
-        DenseMatrix64F V = RandomMatrices_D64.createOrthogonal(numCols,numCols,rand);
+    public static RowMatrix_F64 createSingularValues(int numRows, int numCols,
+                                                     Random rand, double ...sv) {
+        RowMatrix_F64 U = RandomMatrices_D64.createOrthogonal(numRows,numRows,rand);
+        RowMatrix_F64 V = RandomMatrices_D64.createOrthogonal(numCols,numCols,rand);
 
-        DenseMatrix64F S = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 S = new RowMatrix_F64(numRows,numCols);
 
         int min = Math.min(numRows,numCols);
         min = Math.min(min,sv.length);
@@ -219,7 +219,7 @@ public class RandomMatrices_D64 {
             S.set(i,i,sv[i]);
         }
 
-        DenseMatrix64F tmp = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 tmp = new RowMatrix_F64(numRows,numCols);
         CommonOps_D64.mult(U,S,tmp);
         CommonOps_D64.multTransB(tmp,V,S);
 
@@ -234,11 +234,11 @@ public class RandomMatrices_D64 {
      * @param eigenvalues Set of real eigenvalues that the matrix will have.
      * @return A random matrix with the specified eigenvalues.
      */
-    public static DenseMatrix64F createEigenvaluesSymm( int num,  Random rand , double ...eigenvalues ) {
-        DenseMatrix64F V = RandomMatrices_D64.createOrthogonal(num,num,rand);
-        DenseMatrix64F D = CommonOps_D64.diag(eigenvalues);
+    public static RowMatrix_F64 createEigenvaluesSymm(int num, Random rand , double ...eigenvalues ) {
+        RowMatrix_F64 V = RandomMatrices_D64.createOrthogonal(num,num,rand);
+        RowMatrix_F64 D = CommonOps_D64.diag(eigenvalues);
 
-        DenseMatrix64F temp = new DenseMatrix64F(num,num);
+        RowMatrix_F64 temp = new RowMatrix_F64(num,num);
 
         CommonOps_D64.mult(V,D,temp);
         CommonOps_D64.multTransB(temp,V,D);
@@ -255,8 +255,8 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static DenseMatrix64F createRandom( int numRow , int numCol , Random rand ) {
-        DenseMatrix64F mat = new DenseMatrix64F(numRow,numCol);
+    public static RowMatrix_F64 createRandom(int numRow , int numCol , Random rand ) {
+        RowMatrix_F64 mat = new RowMatrix_F64(numRow,numCol);
 
         setRandom(mat, 0, 1, rand);
 
@@ -271,8 +271,8 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static DenseMatrixBool createRandomB( int numRow , int numCol , Random rand ) {
-        DenseMatrixBool mat = new DenseMatrixBool(numRow,numCol);
+    public static RowMatrix_B createRandomB(int numRow , int numCol , Random rand ) {
+        RowMatrix_B mat = new RowMatrix_B(numRow,numCol);
 
         setRandomB(mat, rand);
 
@@ -291,7 +291,7 @@ public class RandomMatrices_D64 {
      * @param max The maximum value each element can be..
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void addRandom( DenseMatrix64F A , double min , double max , Random rand ) {
+    public static void addRandom(RowMatrix_F64 A , double min , double max , Random rand ) {
         double d[] = A.getData();
         int size = A.getNumElements();
 
@@ -315,8 +315,8 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static DenseMatrix64F createRandom( int numRow , int numCol , double min , double max , Random rand ) {
-        DenseMatrix64F mat = new DenseMatrix64F(numRow,numCol);
+    public static RowMatrix_F64 createRandom(int numRow , int numCol , double min , double max , Random rand ) {
+        RowMatrix_F64 mat = new RowMatrix_F64(numRow,numCol);
 
         setRandom(mat,min,max,rand);
 
@@ -331,7 +331,7 @@ public class RandomMatrices_D64 {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom( DenseMatrix64F mat , Random rand )
+    public static void setRandom(RowMatrix_F64 mat , Random rand )
     {
         setRandom(mat,0,1,rand);
     }
@@ -346,7 +346,7 @@ public class RandomMatrices_D64 {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom( D1Matrix64F mat , double min , double max , Random rand )
+    public static void setRandom(D1Matrix_F64 mat , double min , double max , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getNumElements();
@@ -366,7 +366,7 @@ public class RandomMatrices_D64 {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandomB( DenseMatrixBool mat , Random rand )
+    public static void setRandomB(RowMatrix_B mat , Random rand )
     {
         boolean d[] = mat.data;
         int size = mat.getNumElements();
@@ -391,9 +391,9 @@ public class RandomMatrices_D64 {
      * @param stdev Standard deviation in the distribution
      * @param rand Random number generator used to fill the matrix.
      */
-    public static DenseMatrix64F createGaussian( int numRow , int numCol , double mean , double stdev , Random rand )
+    public static RowMatrix_F64 createGaussian(int numRow , int numCol , double mean , double stdev , Random rand )
     {
-        DenseMatrix64F m = new DenseMatrix64F(numRow,numCol);
+        RowMatrix_F64 m = new RowMatrix_F64(numRow,numCol);
         setGaussian(m,mean,stdev,rand);
         return m;
     }
@@ -409,7 +409,7 @@ public class RandomMatrices_D64 {
      * @param stdev Standard deviation in the distribution
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setGaussian( D1Matrix64F mat , double mean , double stdev , Random rand )
+    public static void setGaussian(D1Matrix_F64 mat , double mean , double stdev , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getNumElements();
@@ -426,10 +426,10 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator used to make the matrix.
      * @return The random symmetric  positive definite matrix.
      */
-    public static DenseMatrix64F createSymmPosDef(int width, Random rand) {
+    public static RowMatrix_F64 createSymmPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
-        DenseMatrix64F a = new DenseMatrix64F(width,1);
-        DenseMatrix64F b = new DenseMatrix64F(width,width);
+        RowMatrix_F64 a = new RowMatrix_F64(width,1);
+        RowMatrix_F64 b = new RowMatrix_F64(width,width);
 
         for( int i = 0; i < width; i++ ) {
             a.set(i,0,rand.nextDouble());
@@ -454,8 +454,8 @@ public class RandomMatrices_D64 {
      * @param rand Random number generator.
      * @return A symmetric matrix.
      */
-    public static DenseMatrix64F createSymmetric(int length, double min, double max, Random rand) {
-        DenseMatrix64F A = new DenseMatrix64F(length,length);
+    public static RowMatrix_F64 createSymmetric(int length, double min, double max, Random rand) {
+        RowMatrix_F64 A = new RowMatrix_F64(length,length);
 
         createSymmetric(A,min,max,rand);
 
@@ -471,7 +471,7 @@ public class RandomMatrices_D64 {
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
      */
-    public static void createSymmetric(DenseMatrix64F A, double min, double max, Random rand) {
+    public static void createSymmetric(RowMatrix_F64 A, double min, double max, Random rand) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
 
@@ -499,14 +499,14 @@ public class RandomMatrices_D64 {
      * @param rand random number generator used.
      * @return The randomly generated matrix.
      */
-    public static DenseMatrix64F createUpperTriangle( int dimen , int hessenberg , double min , double max , Random rand )
+    public static RowMatrix_F64 createUpperTriangle(int dimen , int hessenberg , double min , double max , Random rand )
     {
         if( hessenberg < 0 )
             throw new RuntimeException("hessenberg must be more than or equal to 0");
 
         double range = max-min;
 
-        DenseMatrix64F A = new DenseMatrix64F(dimen,dimen);
+        RowMatrix_F64 A = new RowMatrix_F64(dimen,dimen);
 
         for( int i = 0; i < dimen; i++ ) {
             int start = i <= hessenberg ? 0 : i-hessenberg;

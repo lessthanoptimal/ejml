@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -31,7 +31,7 @@ public class UnrolledInverseFromMinor_D64 {
     
     public static final int MAX = 5;
     
-    public static void inv( DenseMatrix64F mat , DenseMatrix64F inv ) {
+    public static void inv(RowMatrix_F64 mat , RowMatrix_F64 inv ) {
         double max = Math.abs(mat.data[0]);
         int N = mat.getNumElements();
         
@@ -49,7 +49,7 @@ public class UnrolledInverseFromMinor_D64 {
         }
     }
 
-    public static void inv2( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv2(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
     {
         double []data = mat.data;
 
@@ -73,7 +73,7 @@ public class UnrolledInverseFromMinor_D64 {
 
     }
 
-    public static void inv3( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv3(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
     {
         double []data = mat.data;
 
@@ -112,7 +112,7 @@ public class UnrolledInverseFromMinor_D64 {
 
     }
 
-    public static void inv4( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv4(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
     {
         double []data = mat.data;
 
@@ -172,7 +172,7 @@ public class UnrolledInverseFromMinor_D64 {
 
     }
 
-    public static void inv5( DenseMatrix64F mat , DenseMatrix64F inv , double scale )
+    public static void inv5(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
     {
         double []data = mat.data;
 

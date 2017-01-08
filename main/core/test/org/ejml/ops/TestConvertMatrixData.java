@@ -33,50 +33,50 @@ import static org.junit.Assert.assertTrue;
 public class TestConvertMatrixData {
     @Test
     public void DenseMatrix() {
-        DenseMatrix64F A = new DenseMatrix64F(2,2,true,1,2,3,4);
-        DenseMatrix32F B = new DenseMatrix32F(2,2);
-        DenseMatrix64F C = new DenseMatrix64F(2,2);
+        RowMatrix_F64 A = new RowMatrix_F64(2,2,true,1,2,3,4);
+        RowMatrix_F32 B = new RowMatrix_F32(2,2);
+        RowMatrix_F64 C = new RowMatrix_F64(2,2);
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(A,C, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
     public void FixedMatrix2x2() {
-        FixedMatrix2x2_64F A = new FixedMatrix2x2_64F(1,2,3,4);
-        FixedMatrix2x2_32F B = new FixedMatrix2x2_32F();
-        FixedMatrix2x2_64F C = new FixedMatrix2x2_64F();
+        FixedMatrix2x2_F64 A = new FixedMatrix2x2_F64(1,2,3,4);
+        FixedMatrix2x2_F32 B = new FixedMatrix2x2_F32();
+        FixedMatrix2x2_F64 C = new FixedMatrix2x2_F64();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures2_D64.isIdentical(A,C, UtilEjml.TEST_64F));
+        assertTrue(FixedFeatures2_D64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
     public void FixedMatrix3x3() {
-        FixedMatrix3x3_64F A = new FixedMatrix3x3_64F(1,2,3,4,5,6,7,8,9);
-        FixedMatrix3x3_32F B = new FixedMatrix3x3_32F();
-        FixedMatrix3x3_64F C = new FixedMatrix3x3_64F();
+        FixedMatrix3x3_F64 A = new FixedMatrix3x3_F64(1,2,3,4,5,6,7,8,9);
+        FixedMatrix3x3_F32 B = new FixedMatrix3x3_F32();
+        FixedMatrix3x3_F64 C = new FixedMatrix3x3_F64();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures3_D64.isIdentical(A,C, UtilEjml.TEST_64F));
+        assertTrue(FixedFeatures3_D64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
     public void FixedMatrix4x4() {
-        FixedMatrix4x4_64F A = new FixedMatrix4x4_64F(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6);
-        FixedMatrix4x4_32F B = new FixedMatrix4x4_32F();
-        FixedMatrix4x4_64F C = new FixedMatrix4x4_64F();
+        FixedMatrix4x4_F64 A = new FixedMatrix4x4_F64(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6);
+        FixedMatrix4x4_F32 B = new FixedMatrix4x4_F32();
+        FixedMatrix4x4_F64 C = new FixedMatrix4x4_F64();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures4_D64.isIdentical(A,C, UtilEjml.TEST_64F));
+        assertTrue(FixedFeatures4_D64.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
 }

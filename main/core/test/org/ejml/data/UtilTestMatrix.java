@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,21 +33,21 @@ import static org.junit.Assert.fail;
  */
 public class UtilTestMatrix {
 
-    public static void checkMat( DenseMatrix64F mat , double ...d )
+    public static void checkMat(RowMatrix_F64 mat , double ...d )
     {
         double data[] = mat.getData();
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
-            assertEquals(d[i],data[i], UtilEjml.TEST_64F);
+            assertEquals(d[i],data[i], UtilEjml.TEST_F64);
         }
     }
 
-    public static void checkMat( DenseMatrix32F mat , float ...d )
+    public static void checkMat(RowMatrix_F32 mat , float ...d )
     {
         float data[] = mat.getData();
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
-            assertEquals(d[i],data[i],UtilEjml.TEST_32F);
+            assertEquals(d[i],data[i],UtilEjml.TEST_F32);
         }
     }
 
@@ -118,9 +118,9 @@ public class UtilTestMatrix {
      * @param max The maximum value each element can be.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static DenseMatrix64F random64( int numRows , int numCols , double min , double max , Random rand )
+    public static RowMatrix_F64 random64(int numRows , int numCols , double min , double max , Random rand )
     {
-        DenseMatrix64F mat = new DenseMatrix64F(numRows,numCols);
+        RowMatrix_F64 mat = new RowMatrix_F64(numRows,numCols);
         double d[] = mat.getData();
         int size = mat.getNumElements();
 
@@ -142,9 +142,9 @@ public class UtilTestMatrix {
      * @param max The maximum value each element can be.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static DenseMatrix32F random32( int numRows , int numCols , float min , float max , Random rand )
+    public static RowMatrix_F32 random32(int numRows , int numCols , float min , float max , Random rand )
     {
-        DenseMatrix32F mat = new DenseMatrix32F(numRows,numCols);
+        RowMatrix_F32 mat = new RowMatrix_F32(numRows,numCols);
         float d[] = mat.getData();
         int size = mat.getNumElements();
 

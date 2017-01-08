@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
 
@@ -36,15 +36,15 @@ public class TestImplCommonOps_F64 {
 
     @Test
     public void extract() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5, 5, 0, 1, rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5, 5, 0, 1, rand);
 
-        DenseMatrix64F B = new DenseMatrix64F(3,3);
+        RowMatrix_F64 B = new RowMatrix_F64(3,3);
 
         ImplCommonOps_F64.extract(A, 1, 2, B, 1, 0,2,3);
 
         for( int i = 1; i < 3; i++ ) {
             for( int j = 2; j < 5; j++ ) {
-                assertEquals(A.get(i,j),B.get(i,j-2), UtilEjml.TEST_64F);
+                assertEquals(A.get(i,j),B.get(i,j-2), UtilEjml.TEST_F64);
             }
         }
     }

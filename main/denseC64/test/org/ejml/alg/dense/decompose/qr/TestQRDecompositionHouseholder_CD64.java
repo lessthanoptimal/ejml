@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 public class TestQRDecompositionHouseholder_CD64 extends GenericQrCheck_CD64 {
 
     @Override
-    protected QRDecomposition<CDenseMatrix64F> createQRDecomposition() {
+    protected QRDecomposition<RowMatrix_C64> createQRDecomposition() {
         return new QRDecompositionHouseholder_CD64();
     }
 }

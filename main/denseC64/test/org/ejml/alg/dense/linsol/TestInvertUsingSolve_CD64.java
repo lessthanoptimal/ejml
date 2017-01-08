@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CD64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CD64;
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixFeatures_CD64;
@@ -39,23 +39,23 @@ import static org.junit.Assert.assertTrue;
 public class TestInvertUsingSolve_CD64 {
 
     Random rand = new Random(0xff);
-    double tol = UtilEjml.TEST_64F;
+    double tol = UtilEjml.TEST_F64;
 
     /**
      * See if it can invert a matrix that is known to be invertable.
      */
     @Test
     public void invert() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
-        CDenseMatrix64F A_inv = RandomMatrices_CD64.createRandom(3, 3, rand);
+        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
+        RowMatrix_C64 A_inv = RandomMatrices_CD64.createRandom(3, 3, rand);
 
         LUDecompositionAlt_CD64 decomp = new LUDecompositionAlt_CD64();
-        LinearSolver<CDenseMatrix64F> solver = new LinearSolverLu_CD64(decomp);
+        LinearSolver<RowMatrix_C64> solver = new LinearSolverLu_CD64(decomp);
 
         solver.setA(A);
         InvertUsingSolve_CD64.invert(solver,A,A_inv);
 
-        CDenseMatrix64F I = RandomMatrices_CD64.createRandom(3,3,rand);
+        RowMatrix_C64 I = RandomMatrices_CD64.createRandom(3,3,rand);
 
         CommonOps_CD64.mult(A, A_inv, I);
 

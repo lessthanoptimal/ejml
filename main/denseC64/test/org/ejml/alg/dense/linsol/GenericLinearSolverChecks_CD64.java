@@ -20,8 +20,8 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_CD64;
 import org.ejml.ops.MatrixFeatures_CD64;
@@ -46,40 +46,40 @@ public abstract class GenericLinearSolverChecks_CD64 {
     protected boolean shouldFailSingular = true;
     protected boolean shouldWorkRectangle = true;
 
-    protected double tol = UtilEjml.TEST_64F;
+    protected double tol = UtilEjml.TEST_F64;
 
     @Test
     public void solve_dimensionCheck() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(10, 4, rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(10, 4, rand);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(4,2,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(9,2,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(4,2,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(9,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(4,3,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(10,2,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(4,3,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(5,2,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(10,2,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(5,2,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
 
         try {
-            CDenseMatrix64F x = RandomMatrices_CD64.createRandom(4,2,rand);
-            CDenseMatrix64F b = RandomMatrices_CD64.createRandom(10,1,rand);
+            RowMatrix_C64 x = RandomMatrices_CD64.createRandom(4,2,rand);
+            RowMatrix_C64 b = RandomMatrices_CD64.createRandom(10,1,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -90,10 +90,10 @@ public abstract class GenericLinearSolverChecks_CD64 {
      */
     @Test
     public void modifiesA() {
-        CDenseMatrix64F A_orig = RandomMatrices_CD64.createRandom(4,4,rand);
-        CDenseMatrix64F A = A_orig.copy();
+        RowMatrix_C64 A_orig = RandomMatrices_CD64.createRandom(4,4,rand);
+        RowMatrix_C64 A = A_orig.copy();
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -107,15 +107,15 @@ public abstract class GenericLinearSolverChecks_CD64 {
      */
     @Test
     public void modifiesB() {
-        CDenseMatrix64F A = RandomMatrices_CD64.createRandom(4,4,rand);
+        RowMatrix_C64 A = RandomMatrices_CD64.createRandom(4,4,rand);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
-        CDenseMatrix64F B = RandomMatrices_CD64.createRandom(4,2,rand);
-        CDenseMatrix64F B_orig = B.copy();
-        CDenseMatrix64F X = new CDenseMatrix64F(A.numRows,B.numCols);
+        RowMatrix_C64 B = RandomMatrices_CD64.createRandom(4,2,rand);
+        RowMatrix_C64 B_orig = B.copy();
+        RowMatrix_C64 X = new RowMatrix_C64(A.numRows,B.numCols);
 
         solver.solve(B,X);
 
@@ -129,10 +129,10 @@ public abstract class GenericLinearSolverChecks_CD64 {
      */
     @Test
     public void checkQuality() {
-        CDenseMatrix64F A_good = CommonOps_CD64.diag(4,0,3,0,2,0,1,0);
-        CDenseMatrix64F A_bad = CommonOps_CD64.diag(4,0,3,0,2,0,0.1,0);
+        RowMatrix_C64 A_good = CommonOps_CD64.diag(4,0,3,0,2,0,1,0);
+        RowMatrix_C64 A_bad = CommonOps_CD64.diag(4,0,3,0,2,0,0.1,0);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A_good);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A_good);
 
         assertTrue(solver.setA(A_good));
         double q_good;
@@ -148,7 +148,7 @@ public abstract class GenericLinearSolverChecks_CD64 {
 
         assertTrue(q_bad < q_good);
 
-        assertEquals(q_bad*10.0,q_good, UtilEjml.TEST_64F);
+        assertEquals(q_bad*10.0,q_good, UtilEjml.TEST_F64);
     }
 
     /**
@@ -156,11 +156,11 @@ public abstract class GenericLinearSolverChecks_CD64 {
      */
     @Test
     public void checkQuality_scale() {
-        CDenseMatrix64F A = CommonOps_CD64.diag(4,0,3,0,2,0,10,0);
-        CDenseMatrix64F Asmall = A.copy();
+        RowMatrix_C64 A = CommonOps_CD64.diag(4,0,3,0,2,0,10,0);
+        RowMatrix_C64 Asmall = A.copy();
         CommonOps_CD64.elementMultiply(Asmall, 0.01, 0, Asmall);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         double q;
@@ -174,7 +174,7 @@ public abstract class GenericLinearSolverChecks_CD64 {
         assertTrue(solver.setA(Asmall));
         double q_small = (double)solver.quality();
 
-        assertEquals(q_small,q,UtilEjml.TEST_64F);
+        assertEquals(q_small,q,UtilEjml.TEST_F64);
     }
 
     /**
@@ -182,20 +182,20 @@ public abstract class GenericLinearSolverChecks_CD64 {
      */
     @Test
     public void square_trivial() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
-        CDenseMatrix64F b = new CDenseMatrix64F(3,1, true, 18,0, 21.5,0, 4.9000,0);
-        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(3,1,rand);
+        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
+        RowMatrix_C64 b = new RowMatrix_C64(3,1, true, 18,0, 21.5,0, 4.9000,0);
+        RowMatrix_C64 x = RandomMatrices_CD64.createRandom(3,1,rand);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
-        CDenseMatrix64F found = new CDenseMatrix64F(3,1);
+        RowMatrix_C64 found = new RowMatrix_C64(3,1);
         CommonOps_CD64.mult(A,x,found);
 
-        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 1,0, 2,0, 3,0);
+        RowMatrix_C64 x_expected = new RowMatrix_C64(3,1, true, 1,0, 2,0, 3,0);
 
-        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64);
     }
 
     /**
@@ -205,25 +205,25 @@ public abstract class GenericLinearSolverChecks_CD64 {
      */
     @Test
     public void square_pivot() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
-        CDenseMatrix64F x_expected = new CDenseMatrix64F(3,1, true, 8,-2, 33,1.6, 15.5,-5.7);
-        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(3,1,rand);
-        CDenseMatrix64F b = RandomMatrices_CD64.createRandom(3,1,rand);
+        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
+        RowMatrix_C64 x_expected = new RowMatrix_C64(3,1, true, 8,-2, 33,1.6, 15.5,-5.7);
+        RowMatrix_C64 x = RandomMatrices_CD64.createRandom(3,1,rand);
+        RowMatrix_C64 b = RandomMatrices_CD64.createRandom(3,1,rand);
 
         CommonOps_CD64.mult(A,x_expected,b);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
-        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_64F);
+        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64);
     }
 
     @Test
     public void square_singular() {
-        CDenseMatrix64F A = new CDenseMatrix64F(3,3);
+        RowMatrix_C64 A = new RowMatrix_C64(3,3);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
     }
 
@@ -244,24 +244,24 @@ public abstract class GenericLinearSolverChecks_CD64 {
         }
 
         double vals[] = new double[t.length];
-        Complex64F a = new Complex64F(1,-1);
-        Complex64F b = new Complex64F(2,-0.4);
-        Complex64F c = new Complex64F(3,0.9);
+        Complex_F64 a = new Complex_F64(1,-1);
+        Complex_F64 b = new Complex_F64(2,-0.4);
+        Complex_F64 c = new Complex_F64(3,0.9);
 
         for( int i = 0; i < t.length; i+= 2 ) {
-            Complex64F T = new Complex64F(t[i],t[i+1]);
+            Complex_F64 T = new Complex_F64(t[i],t[i+1]);
 
-            Complex64F result = a.plus( b.times(T) ).plus( c.times(T.times(T)));
+            Complex_F64 result = a.plus( b.times(T) ).plus( c.times(T.times(T)));
 
             vals[i] = result.real;
             vals[i+1] = result.imaginary;
         }
 
-        CDenseMatrix64F B = new CDenseMatrix64F(t.length/2,1, true, vals);
-        CDenseMatrix64F A = createPolyA(t,3);
-        CDenseMatrix64F x = RandomMatrices_CD64.createRandom(3,1,rand);
+        RowMatrix_C64 B = new RowMatrix_C64(t.length/2,1, true, vals);
+        RowMatrix_C64 A = createPolyA(t,3);
+        RowMatrix_C64 x = RandomMatrices_CD64.createRandom(3,1,rand);
 
-        LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+        LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         solver.solve(B,x);
@@ -274,11 +274,11 @@ public abstract class GenericLinearSolverChecks_CD64 {
         assertEquals(c.imaginary,x.getImag(2, 0),tol);
     }
 
-    private CDenseMatrix64F createPolyA( double t[] , int dof ) {
-        CDenseMatrix64F A = new CDenseMatrix64F(t.length/2,dof);
+    private RowMatrix_C64 createPolyA(double t[] , int dof ) {
+        RowMatrix_C64 A = new RowMatrix_C64(t.length/2,dof);
 
-        Complex64F power = new Complex64F();
-        Complex64F T = new Complex64F();
+        Complex_F64 power = new Complex_F64();
+        Complex_F64 T = new Complex_F64();
 
         for( int j = 0; j < A.numRows; j++ ) {
             T.set(t[j*2],t[j*2+1]);
@@ -296,25 +296,25 @@ public abstract class GenericLinearSolverChecks_CD64 {
     @Test
     public void inverse() {
         for (int i = 2; i < 10; i++) {
-            CDenseMatrix64F A = RandomMatrices_CD64.createRandom(i,i,rand);
-            CDenseMatrix64F A_inv = RandomMatrices_CD64.createRandom(i,i,rand);
+            RowMatrix_C64 A = RandomMatrices_CD64.createRandom(i,i,rand);
+            RowMatrix_C64 A_inv = RandomMatrices_CD64.createRandom(i,i,rand);
 
-            LinearSolver<CDenseMatrix64F> solver = createSafeSolver(A);
+            LinearSolver<RowMatrix_C64> solver = createSafeSolver(A);
 
             assertTrue(solver.setA(A));
             solver.invert(A_inv);
 
-            CDenseMatrix64F I = RandomMatrices_CD64.createRandom(i,i,rand);
+            RowMatrix_C64 I = RandomMatrices_CD64.createRandom(i,i,rand);
 
             CommonOps_CD64.mult(A, A_inv, I);
 
-            assertTrue(MatrixFeatures_CD64.isIdentity(I,UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_CD64.isIdentity(I,UtilEjml.TEST_F64));
         }
     }
 
-    protected LinearSolver<CDenseMatrix64F>  createSafeSolver( CDenseMatrix64F A ) {
-        return new LinearSolverSafe<CDenseMatrix64F>( createSolver(A));
+    protected LinearSolver<RowMatrix_C64>  createSafeSolver(RowMatrix_C64 A ) {
+        return new LinearSolverSafe<RowMatrix_C64>( createSolver(A));
     }
 
-    protected abstract LinearSolver<CDenseMatrix64F> createSolver( CDenseMatrix64F A );
+    protected abstract LinearSolver<RowMatrix_C64> createSolver(RowMatrix_C64 A );
 }

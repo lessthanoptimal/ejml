@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,15 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.D1Submatrix64F;
+import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.D1Submatrix_F64;
 
 import static org.ejml.alg.block.InnerMultiplication_B64.blockMultMinus;
 
 
 /**
  * <p>
- * Contains triangular solvers for {@link org.ejml.data.BlockMatrix64F} block aligned sub-matrices.
+ * Contains triangular solvers for {@link BlockMatrix_F64} block aligned sub-matrices.
  * </p>
  *
  * <p>
@@ -49,8 +50,8 @@ public class TriangularSolver_B64 {
      */
     public static void invert( final int blockLength ,
                                final boolean upper ,
-                               final D1Submatrix64F T ,
-                               final D1Submatrix64F T_inv ,
+                               final D1Submatrix_F64 T ,
+                               final D1Submatrix_F64 T_inv ,
                                final double temp[] )
     {
         if( upper )
@@ -109,7 +110,7 @@ public class TriangularSolver_B64 {
      */
     public static void invert( final int blockLength ,
                                final boolean upper ,
-                               final D1Submatrix64F T ,
+                               final D1Submatrix_F64 T ,
                                final double temp[] )
     {
         if( upper )
@@ -171,8 +172,8 @@ public class TriangularSolver_B64 {
      */
     public static void solve( final int blockLength ,
                               final boolean upper ,
-                              final D1Submatrix64F T ,
-                              final D1Submatrix64F B ,
+                              final D1Submatrix_F64 T ,
+                              final D1Submatrix_F64 B ,
                               final boolean transT ) {
 
         if( upper ) {
@@ -201,8 +202,8 @@ public class TriangularSolver_B64 {
      * @param transB If B is transposed or not.
      */
     public static void solveBlock( final int blockLength ,
-                                   final boolean upper , final D1Submatrix64F T ,
-                                   final D1Submatrix64F B ,
+                                   final boolean upper , final D1Submatrix_F64 T ,
+                                   final D1Submatrix_F64 B ,
                                    final boolean transT ,final boolean transB )
     {
         int Trows = T.row1-T.row0;
@@ -293,14 +294,14 @@ public class TriangularSolver_B64 {
      * @param transL Is the triangular matrix transposed?
      */
     public static void solveL( final int blockLength ,
-                               final D1Submatrix64F L,
-                               final D1Submatrix64F B ,
+                               final D1Submatrix_F64 L,
+                               final D1Submatrix_F64 B ,
                                boolean transL ) {
 
-        D1Submatrix64F Y = new D1Submatrix64F(B.original);
+        D1Submatrix_F64 Y = new D1Submatrix_F64(B.original);
 
-        D1Submatrix64F Linner = new D1Submatrix64F(L.original);
-        D1Submatrix64F Binner = new D1Submatrix64F(B.original);
+        D1Submatrix_F64 Linner = new D1Submatrix_F64(L.original);
+        D1Submatrix_F64 Binner = new D1Submatrix_F64(B.original);
 
         int lengthL = B.row1 - B.row0;
 
@@ -411,8 +412,8 @@ public class TriangularSolver_B64 {
      * @param transR Is the triangular matrix transposed?
      */
     public static void solveR( final int blockLength ,
-                               final D1Submatrix64F R,
-                               final D1Submatrix64F B ,
+                               final D1Submatrix_F64 R,
+                               final D1Submatrix_F64 B ,
                                boolean transR ) {
 
         int lengthR = B.row1 - B.row0;
@@ -422,10 +423,10 @@ public class TriangularSolver_B64 {
             throw new IllegalArgumentException("Number of rows in R must be equal to the number of rows in B");
         }
 
-        D1Submatrix64F Y = new D1Submatrix64F(B.original);
+        D1Submatrix_F64 Y = new D1Submatrix_F64(B.original);
 
-        D1Submatrix64F Rinner = new D1Submatrix64F(R.original);
-        D1Submatrix64F Binner = new D1Submatrix64F(B.original);
+        D1Submatrix_F64 Rinner = new D1Submatrix_F64(R.original);
+        D1Submatrix_F64 Binner = new D1Submatrix_F64(B.original);
 
         int startI,stepI;
 

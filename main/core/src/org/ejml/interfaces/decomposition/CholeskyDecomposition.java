@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,12 @@
 
 package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.DenseMatrix64F;
 import org.ejml.data.Matrix;
 
 
 /**
  * <p>
- * Cholesky decomposition for {@link DenseMatrix64F}.  It decomposes positive-definite symmetric matrices (real)
+ * Cholesky decomposition.  It decomposes positive-definite symmetric matrices (real)
  * or hermitian-positive definite (complex) into either upper or lower triangles:<br>
  * <br>
  * L*L<sup>H</sup>=A<br>

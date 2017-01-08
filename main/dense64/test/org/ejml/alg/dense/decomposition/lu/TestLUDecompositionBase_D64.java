@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.DeterminantFromMinor_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.ops.CommonOps_D64;
 import org.ejml.ops.RandomMatrices_D64;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class TestLUDecompositionBase_D64 {
 
         int width = 10;
 
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(width,width,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(width,width,rand);
 
         DeterminantFromMinor_D64 minor = new DeterminantFromMinor_D64(width);
         double minorVal = minor.compute(A);
@@ -56,16 +56,16 @@ public class TestLUDecompositionBase_D64 {
         alg.decompose(A);
         double luVal = alg.computeDeterminant().real;
 
-        assertEquals(minorVal,luVal, UtilEjml.TEST_64F_SQ);
+        assertEquals(minorVal,luVal, UtilEjml.TEST_F64_SQ);
     }
 
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        DenseMatrix64F LU = RandomMatrices_D64.createRandom(width,width,rand);
+        RowMatrix_F64 LU = RandomMatrices_D64.createRandom(width,width,rand);
 
-        DenseMatrix64F L = new DenseMatrix64F(width,width);
-        DenseMatrix64F U = new DenseMatrix64F(width,width);
+        RowMatrix_F64 L = new RowMatrix_F64(width,width);
+        RowMatrix_F64 U = new RowMatrix_F64(width,width);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
@@ -82,9 +82,9 @@ public class TestLUDecompositionBase_D64 {
             }
         }
 
-        DenseMatrix64F x = RandomMatrices_D64.createRandom(width, 1, -1, 1, rand);
-        DenseMatrix64F tmp = new DenseMatrix64F(width,1);
-        DenseMatrix64F b = new DenseMatrix64F(width,1);
+        RowMatrix_F64 x = RandomMatrices_D64.createRandom(width, 1, -1, 1, rand);
+        RowMatrix_F64 tmp = new RowMatrix_F64(width,1);
+        RowMatrix_F64 b = new RowMatrix_F64(width,1);
 
         CommonOps_D64.mult(U, x, tmp);
         CommonOps_D64.mult(L,tmp,b);
@@ -97,7 +97,7 @@ public class TestLUDecompositionBase_D64 {
         alg._solveVectorInternal(b.data);
 
         for( int i = 0; i < width; i++ ) {
-            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_64F_SQ);
+            assertEquals(x.data[i],b.data[i],UtilEjml.TEST_F64_SQ);
         }
     }
 
@@ -108,13 +108,13 @@ public class TestLUDecompositionBase_D64 {
             m = n = width;
         }
 
-        void setLU( DenseMatrix64F LU ) {
+        void setLU( RowMatrix_F64 LU ) {
             this.LU = LU;
             this.dataLU = LU.data;
         }
 
         @Override
-        public boolean decompose(DenseMatrix64F orig) {
+        public boolean decompose(RowMatrix_F64 orig) {
             return false;
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decomposition.TriangularSolver_D64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_D64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.SpecializedOps_D64;
 
@@ -49,14 +49,14 @@ public class LinearSolverQrHouseCol_D64 extends LinearSolverAbstract_D64 {
 
     private QRDecompositionHouseholderColumn_D64 decomposer;
 
-    private DenseMatrix64F a = new DenseMatrix64F(1,1);
-    private DenseMatrix64F temp = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 a = new RowMatrix_F64(1,1);
+    private RowMatrix_F64 temp = new RowMatrix_F64(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
     private double[][] QR; // a column major QR matrix
-    private DenseMatrix64F R = new DenseMatrix64F(1,1);
+    private RowMatrix_F64 R = new RowMatrix_F64(1,1);
     private double gammas[];
 
     /**
@@ -77,7 +77,7 @@ public class LinearSolverQrHouseCol_D64 extends LinearSolverAbstract_D64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(DenseMatrix64F A) {
+    public boolean setA(RowMatrix_F64 A) {
         if( A.numRows < A.numCols )
             throw new IllegalArgumentException("Can't solve for wide systems.  More variables than equations.");
         if( A.numRows > maxRows || A.numCols > maxCols )
@@ -109,7 +109,7 @@ public class LinearSolverQrHouseCol_D64 extends LinearSolverAbstract_D64 {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(DenseMatrix64F B, DenseMatrix64F X) {
+    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -160,7 +160,7 @@ public class LinearSolverQrHouseCol_D64 extends LinearSolverAbstract_D64 {
     }
 
     @Override
-    public QRDecomposition<DenseMatrix64F> getDecomposition() {
+    public QRDecomposition<RowMatrix_F64> getDecomposition() {
         return decomposer;
     }
 }

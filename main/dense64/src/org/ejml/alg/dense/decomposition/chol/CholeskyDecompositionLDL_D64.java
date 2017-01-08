@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -42,7 +42,7 @@ import org.ejml.ops.CommonOps_D64;
  * @author Peter Abeles
  */
 public class CholeskyDecompositionLDL_D64
-        implements CholeskyLDLDecomposition_F64<DenseMatrix64F> {
+        implements CholeskyLDLDecomposition_F64<RowMatrix_F64> {
 
     // it can decompose a matrix up to this width
     private int maxWidth;
@@ -50,7 +50,7 @@ public class CholeskyDecompositionLDL_D64
     private int n;
 
     // the decomposed matrix
-    private DenseMatrix64F L;
+    private RowMatrix_F64 L;
     private double[] el;
 
     // the D vector
@@ -66,7 +66,7 @@ public class CholeskyDecompositionLDL_D64
 
         this.maxWidth = numRows;
 
-        this.L = new DenseMatrix64F(maxWidth,maxWidth);
+        this.L = new RowMatrix_F64(maxWidth,maxWidth);
         this.el = L.data;
 
         this.vv = new double[maxWidth];
@@ -86,7 +86,7 @@ public class CholeskyDecompositionLDL_D64
      * @param mat A symetric n by n positive definite matrix.
      * @return True if it was able to finish the decomposition.
      */
-    public boolean decompose( DenseMatrix64F mat ) {
+    public boolean decompose( RowMatrix_F64 mat ) {
         if( mat.numRows > maxWidth ) {
             setExpectedMaxSize(mat.numRows,mat.numCols);
         } else if( mat.numRows != mat.numCols ) {
@@ -149,7 +149,7 @@ public class CholeskyDecompositionLDL_D64
      *
      * @return A lower triangular matrix.
      */
-    public DenseMatrix64F getL() {
+    public RowMatrix_F64 getL() {
         return L;
     }
 
@@ -158,7 +158,7 @@ public class CholeskyDecompositionLDL_D64
     }
 
     @Override
-    public DenseMatrix64F getL(DenseMatrix64F L) {
+    public RowMatrix_F64 getL(RowMatrix_F64 L) {
         if( L == null ) {
             L = this.L.copy();
         } else {
@@ -169,7 +169,7 @@ public class CholeskyDecompositionLDL_D64
     }
 
     @Override
-    public DenseMatrix64F getD(DenseMatrix64F D) {
+    public RowMatrix_F64 getD(RowMatrix_F64 D) {
         return CommonOps_D64.diag(D,L.numCols,d);
     }
 }

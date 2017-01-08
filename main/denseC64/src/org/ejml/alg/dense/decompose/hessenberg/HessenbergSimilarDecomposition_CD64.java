@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CD64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CD64;
-import org.ejml.data.CDenseMatrix64F;
-import org.ejml.data.Complex64F;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 import java.util.Arrays;
@@ -49,9 +49,9 @@ import java.util.Arrays;
  */
 // TODO create a column based one similar to what was done for QR decomposition?
 public class HessenbergSimilarDecomposition_CD64
-        implements DecompositionInterface<CDenseMatrix64F> {
+        implements DecompositionInterface<RowMatrix_C64> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
-    private CDenseMatrix64F QH;
+    private RowMatrix_C64 QH;
     // number of rows and columns of the matrix being decompose
     private int N;
 
@@ -60,7 +60,7 @@ public class HessenbergSimilarDecomposition_CD64
     // temporary storage
     private double b[];
     private double u[];
-    private Complex64F tau = new Complex64F();
+    private Complex_F64 tau = new Complex_F64();
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
      * the specified size.
@@ -84,7 +84,7 @@ public class HessenbergSimilarDecomposition_CD64
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( CDenseMatrix64F A )
+    public boolean decompose( RowMatrix_C64 A )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be square.");
@@ -113,7 +113,7 @@ public class HessenbergSimilarDecomposition_CD64
      *
      * @return QH matrix.
      */
-    public CDenseMatrix64F getQH() {
+    public RowMatrix_C64 getQH() {
         return QH;
     }
 
@@ -123,7 +123,7 @@ public class HessenbergSimilarDecomposition_CD64
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public CDenseMatrix64F getH( CDenseMatrix64F H ) {
+    public RowMatrix_C64 getH(RowMatrix_C64 H ) {
         H = UtilDecompositons_CD64.checkZeros(H,N,N);
 
         // copy the first row
@@ -142,7 +142,7 @@ public class HessenbergSimilarDecomposition_CD64
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public CDenseMatrix64F getQ( CDenseMatrix64F Q ) {
+    public RowMatrix_C64 getQ(RowMatrix_C64 Q ) {
         Q = UtilDecompositons_CD64.checkIdentity(Q,N,N);
 
         Arrays.fill(u,0,N*2,0);

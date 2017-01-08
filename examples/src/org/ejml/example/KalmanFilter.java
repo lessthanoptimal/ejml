@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 
 /**
  * <p>
@@ -43,8 +43,8 @@ public interface KalmanFilter {
      * @param Q plant noise.
      * @param H measurement projection matrix.
      */
-    public void configure( DenseMatrix64F F, DenseMatrix64F Q ,
-                           DenseMatrix64F H);
+    void configure(RowMatrix_F64 F, RowMatrix_F64 Q ,
+                          RowMatrix_F64 H);
 
     /**
      * The prior state estimate and covariance.
@@ -52,12 +52,12 @@ public interface KalmanFilter {
      * @param x The estimated system state.
      * @param P The covariance of the estimated system state.
      */
-    public void setState( DenseMatrix64F x , DenseMatrix64F P );
+    void setState(RowMatrix_F64 x , RowMatrix_F64 P );
 
     /**
      * Predicts the state of the system forward one time step.
      */
-    public void predict();
+    void predict();
 
     /**
      * Updates the state provided the observation from a sensor.
@@ -65,19 +65,19 @@ public interface KalmanFilter {
      * @param z Measurement.
      * @param R Measurement covariance.
      */
-    public void update( DenseMatrix64F z , DenseMatrix64F R );
+    void update(RowMatrix_F64 z , RowMatrix_F64 R );
 
     /**
      * Returns the current estimated state of the system.
      *
      * @return The state.
      */
-    public DenseMatrix64F getState();
+    RowMatrix_F64 getState();
 
     /**
      * Returns the estimated state's covariance matrix.
      *
      * @return The covariance.
      */
-    public DenseMatrix64F getCovariance();
+    RowMatrix_F64 getCovariance();
 }

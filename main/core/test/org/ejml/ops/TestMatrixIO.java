@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,11 +37,11 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_binary() throws IOException {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(6,3,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(6,3,rand);
 
         MatrixIO.saveBin(A, "temp.mat");
 
-        DenseMatrix64F A_copy = MatrixIO.loadBin("temp.mat");
+        RowMatrix_F64 A_copy = MatrixIO.loadBin("temp.mat");
 
         assertTrue(A != A_copy);
         assertTrue(MatrixFeatures_D64.isEquals(A,A_copy));
@@ -54,11 +54,11 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_csv() throws IOException {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(6,3,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(6,3,rand);
 
         MatrixIO.saveCSV(A,"temp.csv");
 
-        DenseMatrix64F A_copy = MatrixIO.loadCSV("temp.csv");
+        RowMatrix_F64 A_copy = MatrixIO.loadCSV("temp.csv");
 
         assertTrue(A != A_copy);
         assertTrue(MatrixFeatures_D64.isEquals(A,A_copy));

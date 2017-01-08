@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,15 +38,15 @@ public class TestCovarianceRandomDraw_D64
      */
     @Test
     public void testStatistics() {
-        DenseMatrix64F orig_P = new DenseMatrix64F(new double[][]{{6,-2},{-2,10}});
+        RowMatrix_F64 orig_P = new RowMatrix_F64(new double[][]{{6,-2},{-2,10}});
 
         CovarianceRandomDraw_D64 dist = new CovarianceRandomDraw_D64(new Random(0xfeed),orig_P);
 
-        DenseMatrix64F draws[] = new DenseMatrix64F[N];
+        RowMatrix_F64 draws[] = new RowMatrix_F64[N];
 
         // sample the distribution
         for( int i = 0; i < N; i++ ) {
-            DenseMatrix64F x = new DenseMatrix64F(2,1);
+            RowMatrix_F64 x = new RowMatrix_F64(2,1);
             dist.next(x);
             draws[i] = x;
         }
@@ -67,8 +67,8 @@ public class TestCovarianceRandomDraw_D64
         assertEquals(0.0,raw_comp_x[1],0.1);
 
         // now the covariance
-        DenseMatrix64F comp_P = new DenseMatrix64F(2,2);
-        DenseMatrix64F temp = new DenseMatrix64F(2,1);
+        RowMatrix_F64 comp_P = new RowMatrix_F64(2,2);
+        RowMatrix_F64 temp = new RowMatrix_F64(2,1);
 
         for( int i = 0; i < N; i++ ) {
             temp.set(0,0,draws[i].get(0,0)-raw_comp_x[0]);
@@ -87,12 +87,12 @@ public class TestCovarianceRandomDraw_D64
      */
     @Test
     public void modifyInput() {
-        DenseMatrix64F orig_P = new DenseMatrix64F(new double[][]{{6,-2},{-2,10}});
-        DenseMatrix64F input = orig_P.copy();
+        RowMatrix_F64 orig_P = new RowMatrix_F64(new double[][]{{6,-2},{-2,10}});
+        RowMatrix_F64 input = orig_P.copy();
 
         CovarianceRandomDraw_D64 dist = new CovarianceRandomDraw_D64(new Random(0xfeed),input);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(input,orig_P, UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isIdentical(input,orig_P, UtilEjml.TEST_F64));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_D64;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.ops.CommonOps_D64;
 
@@ -32,10 +32,10 @@ import org.ejml.ops.CommonOps_D64;
  * @author Peter Abeles
  */
 public class BidiagonalDecompositionRow_D64
-        implements BidiagonalDecomposition_F64<DenseMatrix64F>
+        implements BidiagonalDecomposition_F64<RowMatrix_F64>
 {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
-    private DenseMatrix64F UBV;
+    private RowMatrix_F64 UBV;
 
     // number of rows
     private int m;
@@ -58,7 +58,7 @@ public class BidiagonalDecompositionRow_D64
      */
     public BidiagonalDecompositionRow_D64(int numElements) {
 
-        UBV = new DenseMatrix64F(numElements);
+        UBV = new RowMatrix_F64(numElements);
         gammasU = new double[ numElements ];
         gammasV = new double[ numElements ];
         b = new double[ numElements ];
@@ -77,7 +77,7 @@ public class BidiagonalDecompositionRow_D64
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( DenseMatrix64F A  )
+    public boolean decompose( RowMatrix_F64 A  )
     {
         init(A);
         return _decompose();
@@ -88,7 +88,7 @@ public class BidiagonalDecompositionRow_D64
      *
      * @param A The input matrix.  Not modified.
      */
-    protected void init(DenseMatrix64F A ) {
+    protected void init(RowMatrix_F64 A ) {
         UBV = A;
 
         m = UBV.numRows;
@@ -114,7 +114,7 @@ public class BidiagonalDecompositionRow_D64
      *
      * @return UBV matrix.
      */
-    public DenseMatrix64F getUBV() {
+    public RowMatrix_F64 getUBV() {
         return UBV;
     }
 
@@ -134,7 +134,7 @@ public class BidiagonalDecompositionRow_D64
      * @return The bidiagonal matrix.
      */
     @Override
-    public DenseMatrix64F getB( DenseMatrix64F B , boolean compact ) {
+    public RowMatrix_F64 getB(RowMatrix_F64 B , boolean compact ) {
         B = handleB(B, compact,m,n,min);
 
         //System.arraycopy(UBV.data, 0, B.data, 0, UBV.getNumElements());
@@ -150,20 +150,20 @@ public class BidiagonalDecompositionRow_D64
         return B;
     }
 
-    public static DenseMatrix64F handleB(DenseMatrix64F B, boolean compact,
-                                          int m , int n , int min ) {
+    public static RowMatrix_F64 handleB(RowMatrix_F64 B, boolean compact,
+                                        int m , int n , int min ) {
         int w = n > m ? min + 1 : min;
 
         if( compact ) {
             if( B == null ) {
-                B = new DenseMatrix64F(min,w);
+                B = new RowMatrix_F64(min,w);
             } else {
                 B.reshape(min,w, false);
                 B.zero();
             }
         } else {
             if( B == null ) {
-                B = new DenseMatrix64F(m,n);
+                B = new RowMatrix_F64(m,n);
             } else {
                 B.reshape(m,n, false);
                 B.zero();
@@ -179,7 +179,7 @@ public class BidiagonalDecompositionRow_D64
      * @return The extracted Q matrix.
      */
     @Override
-    public DenseMatrix64F getU( DenseMatrix64F U , boolean transpose , boolean compact ) {
+    public RowMatrix_F64 getU(RowMatrix_F64 U , boolean transpose , boolean compact ) {
         U = handleU(U, transpose, compact,m,n,min);
         CommonOps_D64.setIdentity(U);
 
@@ -199,25 +199,25 @@ public class BidiagonalDecompositionRow_D64
         return U;
     }
 
-    public static DenseMatrix64F handleU(DenseMatrix64F U,
-                                         boolean transpose, boolean compact,
-                                         int m, int n , int min ) {
+    public static RowMatrix_F64 handleU(RowMatrix_F64 U,
+                                        boolean transpose, boolean compact,
+                                        int m, int n , int min ) {
         if( compact ){
             if( transpose ) {
                 if( U == null )
-                    U = new DenseMatrix64F(min,m);
+                    U = new RowMatrix_F64(min,m);
                 else {
                     U.reshape(min,m, false);
                 }
             } else {
                 if( U == null )
-                    U = new DenseMatrix64F(m,min);
+                    U = new RowMatrix_F64(m,min);
                 else
                     U.reshape(m,min, false);
             }
         } else  {
             if( U == null )
-                U = new DenseMatrix64F(m,m);
+                U = new RowMatrix_F64(m,m);
             else
                 U.reshape(m,m, false);
         }
@@ -232,7 +232,7 @@ public class BidiagonalDecompositionRow_D64
      * @return The extracted Q matrix.
      */
     @Override
-    public DenseMatrix64F getV( DenseMatrix64F V , boolean transpose , boolean compact ) {
+    public RowMatrix_F64 getV(RowMatrix_F64 V , boolean transpose , boolean compact ) {
         V = handleV(V, transpose, compact,m,n,min);
         CommonOps_D64.setIdentity(V);
 
@@ -253,25 +253,25 @@ public class BidiagonalDecompositionRow_D64
         return V;
     }
 
-    public static DenseMatrix64F handleV(DenseMatrix64F V, boolean transpose, boolean compact,
-                                   int m , int n , int min ) {
+    public static RowMatrix_F64 handleV(RowMatrix_F64 V, boolean transpose, boolean compact,
+                                        int m , int n , int min ) {
         int w = n > m ? min + 1 : min;
 
         if( compact ) {
             if( transpose ) {
                 if( V == null ) {
-                    V = new DenseMatrix64F(w,n);
+                    V = new RowMatrix_F64(w,n);
                 } else
                     V.reshape(w,n, false);
             } else {
                 if( V == null ) {
-                    V = new DenseMatrix64F(n,w);
+                    V = new RowMatrix_F64(n,w);
                 } else
                     V.reshape(n,w, false);
             }
         } else {
             if( V == null ) {
-                V = new DenseMatrix64F(n,n);
+                V = new RowMatrix_F64(n,n);
             } else
                 V.reshape(n,n, false);
         }

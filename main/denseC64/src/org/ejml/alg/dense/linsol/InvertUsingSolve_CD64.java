@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.CDenseMatrix64F;
+import org.ejml.data.RowMatrix_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_CD64;
 
@@ -32,7 +32,7 @@ import org.ejml.ops.CommonOps_CD64;
  */
 public class InvertUsingSolve_CD64 {
 
-    public static void invert( LinearSolver<CDenseMatrix64F> solver , CDenseMatrix64F A , CDenseMatrix64F A_inv , CDenseMatrix64F storage) {
+    public static void invert(LinearSolver<RowMatrix_C64> solver , RowMatrix_C64 A , RowMatrix_C64 A_inv , RowMatrix_C64 storage) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
@@ -43,7 +43,7 @@ public class InvertUsingSolve_CD64 {
         solver.solve(storage,A_inv);
     }
 
-    public static void invert( LinearSolver<CDenseMatrix64F> solver , CDenseMatrix64F A , CDenseMatrix64F A_inv ) {
+    public static void invert(LinearSolver<RowMatrix_C64> solver , RowMatrix_C64 A , RowMatrix_C64 A_inv ) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");

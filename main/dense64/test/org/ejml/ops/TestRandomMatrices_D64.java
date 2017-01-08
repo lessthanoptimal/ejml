@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,9 +20,9 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult_D64;
-import org.ejml.data.Complex64F;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.DenseMatrixBool;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.RowMatrix_B;
+import org.ejml.data.RowMatrix_F64;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.factory.DecompositionFactory_D64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
@@ -50,18 +50,18 @@ public class TestRandomMatrices_D64 {
         // test with combinations of vectors and numbers
         for( int dimension = 3; dimension <= 5; dimension++ ) {
             for( int numVectors = 1; numVectors <= dimension; numVectors++ ) {
-                DenseMatrix64F span[] = RandomMatrices_D64.createSpan(dimension,numVectors,rand);
+                RowMatrix_F64 span[] = RandomMatrices_D64.createSpan(dimension,numVectors,rand);
 
                 assertEquals(numVectors,span.length);
 
                 for( int i = 0; i < span.length; i++ ) {
-                    DenseMatrix64F a = span[i];
+                    RowMatrix_F64 a = span[i];
 
-                    assertEquals(1, NormOps_D64.fastNormF(a), UtilEjml.TEST_64F);
+                    assertEquals(1, NormOps_D64.fastNormF(a), UtilEjml.TEST_F64);
 
                     for( int j = i+1; j < span.length; j++ ) {
                         double dot = VectorVectorMult_D64.innerProd(a,span[j]);
-                        assertEquals(0,dot,UtilEjml.TEST_64F);
+                        assertEquals(0,dot,UtilEjml.TEST_F64);
                     }
                 }
             }
@@ -70,14 +70,14 @@ public class TestRandomMatrices_D64 {
 
     @Test
     public void createInSpan() {
-        DenseMatrix64F span[] = RandomMatrices_D64.createSpan(5,5,rand);
+        RowMatrix_F64 span[] = RandomMatrices_D64.createSpan(5,5,rand);
 
-        DenseMatrix64F A = RandomMatrices_D64.createInSpan(span,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createInSpan(span,-1,1,rand);
 
         // reconstructed matrix
-        DenseMatrix64F R = new DenseMatrix64F(A.numRows,A.numCols);
+        RowMatrix_F64 R = new RowMatrix_F64(A.numRows,A.numCols);
 
-        DenseMatrix64F tmp = new DenseMatrix64F(A.numRows,A.numCols);
+        RowMatrix_F64 tmp = new RowMatrix_F64(A.numRows,A.numCols);
 
         // project the matrix into the span and recreate the original matrix
         for( int i = 0; i < 5; i++ ) {
@@ -90,27 +90,27 @@ public class TestRandomMatrices_D64 {
 
         double error = SpecializedOps_D64.diffNormF(A,R);
 
-        assertEquals( error , 0 , UtilEjml.TEST_64F );
+        assertEquals( error , 0 , UtilEjml.TEST_F64);
     }
 
     @Test
     public void createOrthogonal() {
         for( int numRows = 3; numRows <= 5; numRows++ ) {
             for( int numCols = 1; numCols <= numRows; numCols++ ) {
-                DenseMatrix64F Q = RandomMatrices_D64.createOrthogonal(numRows,numCols,rand);
+                RowMatrix_F64 Q = RandomMatrices_D64.createOrthogonal(numRows,numCols,rand);
 
                 assertEquals(Q.numRows,numRows);
                 assertEquals(Q.numCols,numCols);
 
                 assertTrue(CommonOps_D64.elementSum(Q) != 0);
-                assertTrue(MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_64F));
+                assertTrue(MatrixFeatures_D64.isOrthogonal(Q,UtilEjml.TEST_F64));
             }
         }
     }
 
     @Test
     public void createDiagonal_square() {
-        DenseMatrix64F A = RandomMatrices_D64.createDiagonal(5,1,10,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createDiagonal(5,1,10,rand);
 
         assertTrue(CommonOps_D64.elementSum(A) > 5 );
         for( int i = 0; i < A.numRows; i++ ) {
@@ -134,7 +134,7 @@ public class TestRandomMatrices_D64 {
     }
 
     public void testDiagonal( int numRows , int numCols ) {
-        DenseMatrix64F A = RandomMatrices_D64.createDiagonal(numRows,numCols,1,10,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createDiagonal(numRows,numCols,1,10,rand);
 
         assertEquals(A.getNumRows(), numRows);
         assertEquals(A.getNumCols(), numCols);
@@ -160,43 +160,43 @@ public class TestRandomMatrices_D64 {
 
         for( int numRows = 1; numRows <= 4; numRows++ ) {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
-                DenseMatrix64F A = RandomMatrices_D64.createSingularValues(numRows,numCols, rand, sv);
+                RowMatrix_F64 A = RandomMatrices_D64.createSingularValues(numRows,numCols, rand, sv);
 
-                SingularValueDecomposition_F64<DenseMatrix64F> svd =
+                SingularValueDecomposition_F64<RowMatrix_F64> svd =
                         DecompositionFactory_D64.svd(A.numRows,A.numCols,true,true,false);
                 assertTrue(svd.decompose(A));
 
                 int o = Math.min(numRows,numCols);
 
-                UtilTestMatrix.checkSameElements(UtilEjml.TEST_64F,o,sv,svd.getSingularValues());
+                UtilTestMatrix.checkSameElements(UtilEjml.TEST_F64,o,sv,svd.getSingularValues());
             }
         }
 
         // see if it fills in zeros when it is smaller than the dimension
-        DenseMatrix64F A = RandomMatrices_D64.createSingularValues(5,5, rand, sv);
+        RowMatrix_F64 A = RandomMatrices_D64.createSingularValues(5,5, rand, sv);
 
-        SingularValueDecomposition_F64<DenseMatrix64F> svd =
+        SingularValueDecomposition_F64<RowMatrix_F64> svd =
                 DecompositionFactory_D64.svd(A.numRows, A.numCols, true, true, false);
         assertTrue(svd.decompose(A));
 
-        UtilTestMatrix.checkSameElements(UtilEjml.TEST_64F, sv.length, sv, svd.getSingularValues());
-        assertEquals(0, svd.getSingularValues()[4], UtilEjml.TEST_64F);
+        UtilTestMatrix.checkSameElements(UtilEjml.TEST_F64, sv.length, sv, svd.getSingularValues());
+        assertEquals(0, svd.getSingularValues()[4], UtilEjml.TEST_F64);
     }
 
     @Test
     public void createEigenvaluesSymm() {
-        DenseMatrix64F A = RandomMatrices_D64.createEigenvaluesSymm(5,rand,1,2,3,4,5);
+        RowMatrix_F64 A = RandomMatrices_D64.createEigenvaluesSymm(5,rand,1,2,3,4,5);
 
         // this should be symmetric
-        assertTrue(MatrixFeatures_D64.isSymmetric(A,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isSymmetric(A,UtilEjml.TEST_F64));
 
         // decompose the matrix and extract its eigenvalues
-        EigenDecomposition_F64<DenseMatrix64F> eig = DecompositionFactory_D64.eig(A.numRows, true);
+        EigenDecomposition_F64<RowMatrix_F64> eig = DecompositionFactory_D64.eig(A.numRows, true);
         assertTrue(eig.decompose(A));
 
         double ev[] = new double[5];
         for( int i = 0; i < 5; i++ ) {
-            Complex64F e = eig.getEigenvalue(i);
+            Complex_F64 e = eig.getEigenvalue(i);
             assertTrue(e.isReal());
 
             ev[i] = e.real;
@@ -207,13 +207,13 @@ public class TestRandomMatrices_D64 {
 
         // see if they are what I expected them to be
         for( int i = 0; i < ev.length; i++ ) {
-            assertEquals(i+1.0,ev[i],UtilEjml.TEST_64F);
+            assertEquals(i+1.0,ev[i],UtilEjml.TEST_F64);
         }
     }
 
     @Test
     public void addRandom() {
-        DenseMatrix64F A = new DenseMatrix64F(3,4);
+        RowMatrix_F64 A = new RowMatrix_F64(3,4);
 
         CommonOps_D64.fill(A, -2.0);
 
@@ -226,28 +226,28 @@ public class TestRandomMatrices_D64 {
 
     @Test
     public void createRandom() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(5,4,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(5,4,rand);
 
         checkRandom1(A);
     }
 
     @Test
     public void createRandom_min_max() {
-        DenseMatrix64F A = RandomMatrices_D64.createRandom(30,20,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createRandom(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
 
     @Test
     public void setRandom() {
-        DenseMatrix64F A = new DenseMatrix64F(5,4);
+        RowMatrix_F64 A = new RowMatrix_F64(5,4);
 
         RandomMatrices_D64.setRandom(A,rand);
 
         checkRandom1(A);
     }
 
-    private void checkRandom1(DenseMatrix64F a) {
+    private void checkRandom1(RowMatrix_F64 a) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
@@ -267,7 +267,7 @@ public class TestRandomMatrices_D64 {
 
     @Test
     public void setRandomB() {
-        DenseMatrixBool A = new DenseMatrixBool(5,4);
+        RowMatrix_B A = new RowMatrix_B(5,4);
 
         RandomMatrices_D64.setRandomB(A,rand);
 
@@ -287,13 +287,13 @@ public class TestRandomMatrices_D64 {
 
     @Test
     public void setRandom_min_max() {
-        DenseMatrix64F A = new DenseMatrix64F(30,20);
+        RowMatrix_F64 A = new RowMatrix_F64(30,20);
         RandomMatrices_D64.setRandom(A,-1,1,rand);
 
         checkRandomRange(A);
     }
 
-    private void checkRandomRange(DenseMatrix64F a) {
+    private void checkRandomRange(RowMatrix_F64 a) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -319,21 +319,21 @@ public class TestRandomMatrices_D64 {
 
     @Test
     public void createGaussian() {
-        DenseMatrix64F A = RandomMatrices_D64.createGaussian(30, 20, 2, 0.5, rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createGaussian(30, 20, 2, 0.5, rand);
 
         checkGaussian(A);
     }
 
     @Test
     public void setGaussian() {
-        DenseMatrix64F A = new DenseMatrix64F(30,20);
+        RowMatrix_F64 A = new RowMatrix_F64(30,20);
 
         RandomMatrices_D64.setGaussian(A, 2, 0.5, rand);
 
         checkGaussian(A);
     }
 
-    private void checkGaussian(DenseMatrix64F a) {
+    private void checkGaussian(RowMatrix_F64 a) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -364,7 +364,7 @@ public class TestRandomMatrices_D64 {
     @Test
     public void createSymmPosDef() {
         for( int i = 0; i < 10; i++ ) {
-            DenseMatrix64F A = RandomMatrices_D64.createSymmPosDef(6+i,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createSymmPosDef(6+i,rand);
 
             assertTrue(MatrixFeatures_D64.isPositiveDefinite(A));
         }
@@ -372,9 +372,9 @@ public class TestRandomMatrices_D64 {
 
     @Test
     public void createSymmetric() {
-        DenseMatrix64F A = RandomMatrices_D64.createSymmetric(10,-1,1,rand);
+        RowMatrix_F64 A = RandomMatrices_D64.createSymmetric(10,-1,1,rand);
 
-        assertTrue(MatrixFeatures_D64.isSymmetric(A,UtilEjml.TEST_64F));
+        assertTrue(MatrixFeatures_D64.isSymmetric(A,UtilEjml.TEST_F64));
 
         // see if it has the expected range of elements
         double min = CommonOps_D64.elementMin(A);
@@ -387,9 +387,9 @@ public class TestRandomMatrices_D64 {
     @Test
     public void createUpperTriangle() {
         for( int hess = 0; hess < 3; hess++ ) {
-            DenseMatrix64F A = RandomMatrices_D64.createUpperTriangle(10,hess,-1,1,rand);
+            RowMatrix_F64 A = RandomMatrices_D64.createUpperTriangle(10,hess,-1,1,rand);
 
-            assertTrue(MatrixFeatures_D64.isUpperTriangle(A,hess,UtilEjml.TEST_64F));
+            assertTrue(MatrixFeatures_D64.isUpperTriangle(A,hess,UtilEjml.TEST_F64));
 
             // quick sanity check to make sure it could be proper
             assertTrue(A.get(hess,0) != 0 );

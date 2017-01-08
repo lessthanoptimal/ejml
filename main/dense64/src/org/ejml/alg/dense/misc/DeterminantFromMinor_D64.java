@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.data.RowD1Matrix64F;
+import org.ejml.data.RowD1Matrix_F64;
+import org.ejml.data.RowMatrix_F64;
 
 
 /**
@@ -62,7 +62,7 @@ public class DeterminantFromMinor_D64 {
     private int open[];
     private int numOpen;
     // a minor matrix which is created at the lowest level
-    private DenseMatrix64F tempMat;
+    private RowMatrix_F64 tempMat;
 
     private boolean dirty = false;
 
@@ -100,7 +100,7 @@ public class DeterminantFromMinor_D64 {
 
         open = new int[ width ];
 
-        tempMat = new DenseMatrix64F(minWidth-1,minWidth-1);
+        tempMat = new RowMatrix_F64(minWidth-1,minWidth-1);
     }
 
     /**
@@ -110,7 +110,7 @@ public class DeterminantFromMinor_D64 {
      * @param mat The matrix whose determinant is to be computed.
      * @return The determinant.
      */
-    public double compute( RowD1Matrix64F mat ) {
+    public double compute( RowD1Matrix_F64 mat ) {
         if( width != mat.numCols || width != mat.numRows ) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
@@ -222,7 +222,7 @@ public class DeterminantFromMinor_D64 {
         }
     }
 
-    private void createMinor( RowD1Matrix64F mat ) {
+    private void createMinor( RowD1Matrix_F64 mat ) {
 
         int w = minWidth-1;
         int firstRow = (width-w)*width;
