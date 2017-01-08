@@ -18,7 +18,6 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.CodeGeneratorBase;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.GenerateDeterminantFromMinor;
 import org.ejml.alg.dense.misc.GenerateInverseFromMinor;
@@ -30,12 +29,11 @@ import java.io.FileNotFoundException;
  *
  * @author Peter Abeles
  */
-public class GenerateFixedOps extends CodeGeneratorBase {
+public class GenerateFixedOps extends GenerateFixed {
 
-    String classPreamble = "FixedOps";
-
-    String nameMatrix;
-    String nameVector;
+    public GenerateFixedOps() {
+        super("FixedOps");
+    }
 
     @Override
     public void generate() throws FileNotFoundException {
@@ -105,12 +103,7 @@ public class GenerateFixedOps extends CodeGeneratorBase {
 
     public void printPreable( int dimen ) throws FileNotFoundException {
 
-        String className = classPreamble+dimen+"_D64";
-
-        nameMatrix = "FixedMatrix"+dimen+"x"+dimen+"_64F";
-        nameVector = "FixedMatrix"+dimen+"_64F";
-
-        setOutputFile(className);
+        setClassNames(dimen);
 
         out.print("import org.ejml.data."+nameVector+";\n" +
                 "import org.ejml.data."+nameMatrix+";\n" +

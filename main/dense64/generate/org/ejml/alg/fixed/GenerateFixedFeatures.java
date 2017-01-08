@@ -18,8 +18,6 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.CodeGeneratorBase;
-
 import java.io.FileNotFoundException;
 
 /**
@@ -27,12 +25,11 @@ import java.io.FileNotFoundException;
  *
  * @author Peter Abeles
  */
-public class GenerateFixedFeatures extends CodeGeneratorBase {
+public class GenerateFixedFeatures extends GenerateFixed {
 
-    String classPreamble = "FixedFeatures";
-
-    String nameMatrix;
-    String nameVector;
+    public GenerateFixedFeatures() {
+        super("FixedFeatures");
+    }
 
     @Override
     public void generate() throws FileNotFoundException {
@@ -50,16 +47,10 @@ public class GenerateFixedFeatures extends CodeGeneratorBase {
 
     public void printPreable( int dimen ) throws FileNotFoundException {
 
-        String className = classPreamble+dimen+"_D64";
-
-        nameMatrix = "FixedMatrix"+dimen+"x"+dimen+"_64F";
-        nameVector = "FixedMatrix"+dimen+"_64F";
-
-        setOutputFile(className);
+        setClassNames(dimen);
 
         out.print("import org.ejml.data."+nameVector+";\n" +
                 "import org.ejml.data."+nameMatrix+";\n" +
-                "import org.ejml.ops.MatrixFeatures_D64;\n" +
                 "import org.ejml.UtilEjml;\n" +
                 "\n" +
                 "/**\n" +

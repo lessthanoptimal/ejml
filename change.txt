@@ -16,6 +16,7 @@ Date format: year/month/day
 - Added support for 32-bit floats in SimpleMatrix
 - Massive refactoring to support auto coding of F32
 - Added FixedFeatures*
+- Added FixedNormOps*
 - New naming for matrices
   <Data Format>Matrix_<Float Format>
   <Data Format>  = Row, Fixed, Block

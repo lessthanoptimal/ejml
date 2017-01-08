@@ -18,28 +18,28 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_D64;
-import org.junit.Test;
+import org.ejml.CodeGeneratorBase;
+
+import java.io.FileNotFoundException;
 
 /**
  * @author Peter Abeles
  */
-public abstract class CompareFixedToCommonOps_D64 extends CompareFixed {
+public abstract class GenerateFixed extends CodeGeneratorBase {
+    protected String classPreamble;
 
-    public CompareFixedToCommonOps_D64(Class classFixed) {
-        super(classFixed, CommonOps_D64.class);
+    protected String nameMatrix;
+    protected String nameVector;
+
+    public GenerateFixed(String classPreamble) {
+        this.classPreamble = classPreamble;
     }
 
-    /**
-     * Compares equivalent functions in FixedOps to CommonOps.  Inputs are randomly generated
-     */
-    @Test
-    public void compareToCommonOps() {
-        int numExpected = 55;
-        if( N > UtilEjml.maxInverseSize ) {
-            numExpected -= 2;
-        }
-        compareToCommonOps(numExpected,1);
+    void setClassNames( int dimen ) throws FileNotFoundException {
+        String nameClass = classPreamble+dimen+"_D64";
+        nameMatrix = "FixedMatrix"+dimen+"x"+dimen+"_F64";
+        nameVector = "FixedMatrix"+dimen+"_F64";
+
+        setOutputFile(nameClass);
     }
 }

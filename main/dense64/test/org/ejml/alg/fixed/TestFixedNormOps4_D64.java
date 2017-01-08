@@ -18,28 +18,13 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_D64;
-import org.junit.Test;
-
 /**
  * @author Peter Abeles
  */
-public abstract class CompareFixedToCommonOps_D64 extends CompareFixed {
+public class TestFixedNormOps4_D64 extends CompareFixedToNormOps_D64 {
 
-    public CompareFixedToCommonOps_D64(Class classFixed) {
-        super(classFixed, CommonOps_D64.class);
+    public TestFixedNormOps4_D64() {
+        super(FixedNormOps4_D64.class);
     }
 
-    /**
-     * Compares equivalent functions in FixedOps to CommonOps.  Inputs are randomly generated
-     */
-    @Test
-    public void compareToCommonOps() {
-        int numExpected = 55;
-        if( N > UtilEjml.maxInverseSize ) {
-            numExpected -= 2;
-        }
-        compareToCommonOps(numExpected,1);
-    }
 }
