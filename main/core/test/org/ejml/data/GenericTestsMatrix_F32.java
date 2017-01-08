@@ -73,7 +73,7 @@ public abstract class GenericTestsMatrix_F32 {
             for( int j = 0; j < n; j++ ) {
                 float found = mat.get(i,j);
 
-                assertEquals(i* m +j,found, UtilEjml.TEST_F64);
+                assertEquals(i* m +j,found, UtilEjml.TEST_F32);
             }
         }
     }
@@ -102,7 +102,7 @@ public abstract class GenericTestsMatrix_F32 {
             for( int j = 0; j < n; j++ ) {
                 float found = mat.unsafe_get(i,j);
 
-                assertEquals(i* m +j,found,UtilEjml.TEST_F64);
+                assertEquals(i* m +j,found,UtilEjml.TEST_F32);
             }
         }
     }

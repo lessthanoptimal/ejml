@@ -162,7 +162,7 @@ public class TestRowMatrix_F64 {
 
         mat2.set(mat);
 
-        EjmlUnitTests.assertEquals(mat,mat2,1e-10);
+        EjmlUnitTests.assertEquals(mat,mat2,UtilEjml.TEST_F64);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class TestRowMatrix_F64 {
         RowMatrix_F64 Afound = new RowMatrix_F64(3,5);
         Afound.set(3,5, false, Atran.data);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,1e-10));
+        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -184,7 +184,7 @@ public class TestRowMatrix_F64 {
         RowMatrix_F64 Afound = new RowMatrix_F64(3,5);
         Afound.set(3,5, true, A.data);
 
-        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,1e-10));
+        assertTrue(MatrixFeatures_D64.isIdentical(Afound,A,UtilEjml.TEST_F64));
         assertTrue(A.data != Afound.data);
     }
 
@@ -200,7 +200,7 @@ public class TestRowMatrix_F64 {
         assertEquals(mat.getNumCols(),mat2.getNumCols());
         assertEquals(mat.getNumRows(),mat2.getNumRows());
 
-        EjmlUnitTests.assertEquals(mat,mat2,1e-10);
+        EjmlUnitTests.assertEquals(mat,mat2,UtilEjml.TEST_F64);
     }
 
     @Test

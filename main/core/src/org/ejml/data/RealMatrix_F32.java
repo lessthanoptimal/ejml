@@ -19,7 +19,7 @@
 package org.ejml.data;
 
 /**
- * Interface for all 32F real matrices.
+ * Interface for all 64F real matrices.
  *
  * @author Peter Abeles
  */

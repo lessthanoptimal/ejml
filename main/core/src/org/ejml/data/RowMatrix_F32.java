@@ -154,7 +154,7 @@ public class RowMatrix_F32 extends RowD1Matrix_F32 {
     public RowMatrix_F32(){}
 
     /**
-     * Creates a new RowMatrix_F32 which contains the same information as the provided Matrix32F.
+     * Creates a new RowMatrix_F32 which contains the same information as the provided Matrix64F.
      *
      * @param mat Matrix whose values will be copied.  Not modified.
      */

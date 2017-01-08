@@ -36,9 +36,9 @@ public class TestCD1Matrix_F32 {
 
         b.set(a);
         for (int i = 0; i < a.getDataLength(); i++) {
-            assertEquals(a.data[i],b.data[i], UtilEjml.TEST_F64);
+            assertEquals(a.data[i],b.data[i], UtilEjml.TEST_F32);
         }
-        assertEquals(9, b.getReal(1, 3), UtilEjml.TEST_F64);
+        assertEquals(9, b.getReal(1, 3), UtilEjml.TEST_F32);
     }
 
     @Test
