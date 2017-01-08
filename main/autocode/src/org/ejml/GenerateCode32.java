@@ -137,15 +137,16 @@ public class GenerateCode32 {
         }
     }
 
-    public static void recursiveDelete( String path ) {
-        File d = new File(path);
+    public static void recursiveDelete( File d , boolean first ) {
+        if( first )
+            System.out.println("Cleaning out "+d.getPath());
         if( !d.isDirectory() )
-            throw new RuntimeException("Expected directory");
+            throw new RuntimeException("Expected directory at "+d);
 
         File[] files = d.listFiles();
         for( File f : files ) {
             if( f.isDirectory() )
-                recursiveDelete(f.getPath());
+                recursiveDelete(f, false);
             if( !f.delete() )
                 throw new RuntimeException("Failed to delete "+f.getPath());
         }
@@ -176,8 +177,8 @@ public class GenerateCode32 {
 
         // remove any previously generated code
         for( String module : new String[]{"dense","denseC"}) {
-            recursiveDelete("main/"+module+"32/src");
-            recursiveDelete("main/"+module+"32/test");
+            recursiveDelete(new File(path,"main/"+module+"32/src"), true);
+            recursiveDelete(new File(path,"main/"+module+"32/test"), true);
 
             app.process(new File(path,"main/"+module+"64/src"), new File(path,"main/"+module+"32/src") );
             app.process(new File(path,"main/"+module+"64/test"), new File(path,"main/"+module+"32/test") );

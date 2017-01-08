@@ -93,6 +93,7 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
     public static void main( String args[] ) {
 
         // 12x12 multiply  standard:    2585  fixed6    1616 fixed3    1582
+        // 12x12 multiply  standard:    1929  fixed6    1062 fixed3    1055
         performTests(12,1500000);
     }
 }
