@@ -44,9 +44,6 @@ public class BenchmarkInverseFixed {
     private static RowMatrix_F64 dm4x4_a = new RowMatrix_F64(4,4);
     private static RowMatrix_F64 dm4x4_b = new RowMatrix_F64(4,4);
 
-    private static RowMatrix_F64 dm6x6_a = new RowMatrix_F64(6,6);
-    private static RowMatrix_F64 dm6x6_b = new RowMatrix_F64(6,6);
-
     private static FixedMatrix3x3_F64 fixed3x3_a = new FixedMatrix3x3_F64();
     private static FixedMatrix3x3_F64 fixed3x3_b = new FixedMatrix3x3_F64();
 
@@ -96,17 +93,11 @@ public class BenchmarkInverseFixed {
         RandomMatrices_R64.setRandom(dm4x4_a,rand);
         RandomMatrices_R64.setRandom(dm4x4_b,rand);
 
-        RandomMatrices_R64.setRandom(dm6x6_a,rand);
-        RandomMatrices_R64.setRandom(dm6x6_b,rand);
-
         ConvertMatrixStruct_F64.convert(dm3x3_a,fixed3x3_a);
         ConvertMatrixStruct_F64.convert(dm3x3_b,fixed3x3_b);
 
         ConvertMatrixStruct_F64.convert(dm4x4_a,fixed4x4_a);
         ConvertMatrixStruct_F64.convert(dm4x4_b,fixed4x4_b);
-
-        ConvertMatrixStruct_F64.convert(dm6x6_a,fixed6x6_a);
-        ConvertMatrixStruct_F64.convert(dm6x6_b,fixed6x6_b);
 
         int numTrials = 100000000;
 

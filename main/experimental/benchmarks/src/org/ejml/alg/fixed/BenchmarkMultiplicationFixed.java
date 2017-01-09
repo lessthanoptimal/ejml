@@ -132,10 +132,13 @@ public class BenchmarkMultiplicationFixed {
         ConvertMatrixStruct_F64.convert(dm6x6_b,fixed6x6_b);
         ConvertMatrixStruct_F64.convert(dm6x6_c,fixed6x6_c);
 
-        int numTrials = 30000000;
+        int numTrials = 100000000;
 
         System.out.println("Dense 3x3 = "+benchmark(dm3x3_a,dm3x3_b,dm3x3_c,numTrials));
         System.out.println("Fixed 3x3 = "+benchmark(fixed3x3_a,fixed3x3_b,fixed3x3_c,numTrials));
+
+        numTrials = 50000000;
+
 
         System.out.println("Dense 4x4 = "+benchmark(dm4x4_a,dm4x4_b,dm4x4_c,numTrials));
         System.out.println("Fixed 4x4 = "+benchmark(fixed4x4_a,fixed4x4_b,fixed4x4_c,numTrials));
