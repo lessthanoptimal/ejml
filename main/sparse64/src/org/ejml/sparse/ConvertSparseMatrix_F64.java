@@ -26,6 +26,8 @@ import org.ejml.data.SMatrixTriplet_F64;
 import java.util.Arrays;
 
 /**
+ * Contains functions for converting between dense and sparse matrix formats as well as sparse to sparse.
+ *
  * @author Peter Abeles
  */
 public class ConvertSparseMatrix_F64 {
@@ -39,7 +41,7 @@ public class ConvertSparseMatrix_F64 {
             for (int col = 0; col < src.getNumCols(); col++) {
                 double value = src.unsafe_get(row,col);
                 if( value != 0.0 )
-                    dst.add(row,col,value);
+                    dst.addItem(row,col,value);
             }
         }
 
@@ -57,7 +59,7 @@ public class ConvertSparseMatrix_F64 {
             for (int col = 0; col < src.numCols; col++) {
                 double value = src.data[index++];
                 if( value != 0.0 )
-                    dst.add(row,col,value);
+                    dst.addItem(row,col,value);
             }
         }
 
@@ -98,7 +100,7 @@ public class ConvertSparseMatrix_F64 {
         if( hist == null )
             hist = new int[ src.numCols ];
         else if( hist.length >= src.numCols )
-            Arrays.fill(hist,0, 0, src.numCols);
+            Arrays.fill(hist,0,src.numCols, 0);
         else
             throw new IllegalArgumentException("Length of hist must be at least numCols");
 
@@ -116,7 +118,7 @@ public class ConvertSparseMatrix_F64 {
         }
 
         // hist will now be used to store the number of times a row has been added to a column
-        Arrays.fill(hist,0,0, src.numCols);
+        Arrays.fill(hist,0,src.numCols, 0);
 
         // now write the row indexes and the values
         for (int i = 0; i < src.length; i++) {
@@ -133,7 +135,7 @@ public class ConvertSparseMatrix_F64 {
 
     public static SMatrixTriplet_F64 convert(SMatrixCC_F64 src , SMatrixTriplet_F64 dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.numElements );
+            dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.length );
         else
             dst.reshape( src.numRows , src.numCols );
 
@@ -143,7 +145,7 @@ public class ConvertSparseMatrix_F64 {
 
             for (int i = i0; i < i1; i++) {
                 int row = src.row_idx[i];
-                dst.add(row,col, src.data[i]);
+                dst.addItem(row,col, src.data[i]);
             }
             i0 = i1;
         }

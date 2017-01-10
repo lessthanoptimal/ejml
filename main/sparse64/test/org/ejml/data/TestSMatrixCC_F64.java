@@ -19,16 +19,63 @@
 package org.ejml.data;
 
 import org.ejml.sparse.ConvertSparseMatrix_F64;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
  */
 public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
 
+    public TestSMatrixCC_F64() {
+        assignable = false;
+    }
+
     @Override
-    public Matrix_F64 createSparse(SMatrixTriplet_F64 orig, int numRows, int numCols) {
-        SMatrixCC_F64 dst = new SMatrixCC_F64(numRows,numCols, numRows*numCols);
-        ConvertSparseMatrix_F64.convert(orig,dst,null);
-        return dst;
+    public Matrix_F64 createSparse(int numRows, int numCols) {
+        return new SMatrixCC_F64(numRows,numCols,10);
+    }
+
+    @Override
+    public Matrix_F64 createSparse(SMatrixTriplet_F64 orig) {
+        return ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null,null);
+    }
+
+    @Test
+    public void isRowOrderValid() {
+        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(3,5,6);
+
+        orig.addItem(0,0, 5);
+        orig.addItem(1,0, 6);
+        orig.addItem(2,0, 7);
+
+        orig.addItem(1,2, 5);
+
+        SMatrixCC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null,null);
+
+        // test positive case first
+        assertTrue(a.isRowOrderValid());
+
+        // test negative case second
+        a.row_idx[1] = 3;
+        assertFalse(a.isRowOrderValid());
+    }
+
+    @Test
+    public void reshape_row_col_length() {
+        SMatrixCC_F64 a = new SMatrixCC_F64(2,3,4);
+
+        a.reshape(1,2,3);
+        assertEquals(1,a.numRows);
+        assertEquals(2,a.numCols);
+        assertEquals(4,a.data.length);
+        assertEquals(0,a.length);
+
+        a.reshape(4,1,10);
+        assertEquals(4,a.numRows);
+        assertEquals(1,a.numCols);
+        assertEquals(10,a.data.length);
+        assertEquals(0,a.length);
     }
 }

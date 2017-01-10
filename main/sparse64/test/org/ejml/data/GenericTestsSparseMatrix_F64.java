@@ -18,7 +18,13 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
+import org.junit.Test;
+
 import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -27,7 +33,11 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
 {
     Random rand = new Random(234);
 
-    public abstract Matrix_F64 createSparse(SMatrixTriplet_F64 orig , int numRows , int numCols );
+    public boolean assignable = true;
+
+    public abstract Matrix_F64 createSparse( int numRows , int numCols );
+
+    public abstract Matrix_F64 createSparse(SMatrixTriplet_F64 orig);
 
     @Override
     protected Matrix_F64 createMatrix(int numRows, int numCols) {
@@ -38,10 +48,47 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                t.add(row,col, rand.nextGaussian());
+                t.addItem(row,col, rand.nextGaussian());
             }
         }
 
-        return createSparse(t,numRows,numCols);
+        return createSparse(t);
+    }
+
+    @Test
+    public void set() {
+        Matrix_F64 m = createSparse(3,4);
+
+        if( assignable ) {
+            m.set(1, 2, 10);
+            m.set(1, 2, 15);
+
+            assertEquals(15, m.get(1, 2), UtilEjml.TEST_F64);
+        } else {
+            try {
+                m.set(1,2,10);
+                fail("Should have thrown an exception");
+            } catch( RuntimeException ignore){}
+        }
+    }
+
+    @Test
+    public void get() {
+        SMatrixTriplet_F64 tmp = new SMatrixTriplet_F64(3,4,1);
+        tmp.addItem(1,2,5);
+
+        Matrix_F64 m = createSparse(tmp);
+
+        m.set(1,2, 5);
+
+        for (int row = 0; row < m.getNumRows(); row++) {
+            for (int col = 0; col < m.getNumCols(); col++) {
+                double found = m.get(row,col);
+                if( row == 1 && col == 2)
+                    assertEquals(5, found, UtilEjml.TEST_F64);
+                else
+                    assertEquals(0, found, UtilEjml.TEST_F64);
+            }
+        }
     }
 }

@@ -22,10 +22,11 @@ Date format: year/month/day
   * Fixed bugs in elementAbsMax() elementAbsMin() trace()
   * Improved the speed of element-wise max and min operations
 - New naming for matrices
-  <Format>Matrix_<Float Type>
-  <Format>  = Row, Fixed, Block
-  <Format> = F32, F64
-  e.g. DenseMatrix64F -> RowMatrix_F64
+  <D | S>Matrix_<Format>_<Float Type>
+  D = Dense, S = Sparse
+  <Format>     = Row, Fixed, Block
+  <Float Type> = F32, F64
+  e.g. DenseMatrix64F -> DMatrixRow_F64
 - Operation Naming scheme
   <Class Name>_<matrix type>
   <matrix type> = R32,R64   = dense row major real
@@ -44,21 +45,6 @@ Date format: year/month/day
                       ops to dense.ops
 - TODO gradle modules to have ejml-* in their name
 - TODO rename main to modules
-
-Change naming scheme again!
-
-RealMatrix_F64 -> Matrix_64
-   Matrix_CF64 -> Matrix_C64
-
-D = dense
-DMatrixRow_64
-DMatrixRow_C64
-DMatrixBlock_64
-DMatrixFixed_64
-
-S = Sparse
-SMatrixCC_64
-
 
 - TODO Sparse goal
        plus, minus, transpose, mult, solve triangle,

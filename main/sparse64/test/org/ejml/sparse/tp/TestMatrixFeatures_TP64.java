@@ -16,17 +16,23 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.cc;
+package org.ejml.sparse.tp;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.SMatrixCC_F64;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
-public class CommonOps_S64 {
+public class TestMatrixFeatures_TP64 {
+    @Test
+    public void isEquals() {
+        fail("Implement");
+    }
 
-    public static void mult(SMatrixCC_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c ) {
-
+    @Test
+    public void isEquals_tol() {
+        fail("Implement");
     }
 }

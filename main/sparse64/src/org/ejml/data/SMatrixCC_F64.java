@@ -23,7 +23,10 @@ package org.ejml.data;
  * <p>
  * Format:<br>
  * Row indexes for column j are stored in rol_idx[col_idx[j]] to rol_idx[col_idx[j+1]-1].  The values
- * for the corresponding elements are stored at data[col_idx[j]] to data[col_idx[j+1]-1].</p>
+ * for the corresponding elements are stored at data[col_idx[j]] to data[col_idx[j+1]-1].<br>
+ * <br>
+ * Row indexes must be specified in chronological order.
+ * </p>
  *
  *
  * TODO fully describe
@@ -32,31 +35,31 @@ package org.ejml.data;
  */
 public class SMatrixCC_F64 implements Matrix_F64 {
     /**
-     * Storage for non-zero values.  Only valid up to numElements-1.
+     * Storage for non-zero values.  Only valid up to length-1.
      */
     public double data[];
     /**
      * Length of data. Number of non-zero elements in the matrix
      */
-    public int numElements;
-    public int row_idx[];
+    public int length;
+    public int row_idx[]; // indexes are in chronological order
     public int col_idx[];
 
     public int numRows;
     public int numCols;
 
-    public SMatrixCC_F64(int numRows , int numCols , int numElements ) {
+    public SMatrixCC_F64(int numRows , int numCols , int length ) {
         this.numRows = numRows;
         this.numCols = numCols;
-        this.numElements = numElements;
+        this.length = length;
 
-        data = new double[ numElements ];
+        data = new double[ length ];
         col_idx = new int[ numCols+1 ];
-        row_idx = new int[ numElements ];
+        row_idx = new int[ length ];
     }
 
     public SMatrixCC_F64(SMatrixCC_F64 original ) {
-        this(original.numRows, original.numCols, original.numElements);
+        this(original.numRows, original.numCols, original.length);
 
         set(original);
     }
@@ -78,16 +81,16 @@ public class SMatrixCC_F64 implements Matrix_F64 {
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixCC_F64(numRows,numCols, numElements);
+        return (T)new SMatrixCC_F64(numRows,numCols, length);
     }
 
     @Override
     public void set(Matrix original) {
         SMatrixCC_F64 o = (SMatrixCC_F64)original;
-        reshape(o.numRows, o.numCols, o.numElements);
+        reshape(o.numRows, o.numCols, o.length);
 
-        System.arraycopy(o.data, 0, data, 0, numElements);
-        System.arraycopy(o.row_idx, 0, row_idx, 0, numElements);
+        System.arraycopy(o.data, 0, data, 0, length);
+        System.arraycopy(o.row_idx, 0, row_idx, 0, length);
         System.arraycopy(o.col_idx, 0, col_idx, 0, numCols);
     }
 
@@ -128,10 +131,10 @@ public class SMatrixCC_F64 implements Matrix_F64 {
 
     @Override
     public void unsafe_set(int row, int col, double val) {
-        int col0 = col_idx[col];
-        int col1 = col_idx[col+1];
+        int idx0 = col_idx[col];
+        int idx1 = col_idx[col+1];
 
-        for (int i = col0; i < col1; i++) {
+        for (int i = idx0; i < idx1; i++) {
             if( row_idx[i] == row ) {
                 data[i] = val;
                 return;
@@ -143,19 +146,36 @@ public class SMatrixCC_F64 implements Matrix_F64 {
 
     @Override
     public int getNumElements() {
-        return numElements;// TODO look at how this is used and decide if it can be re-defined
+        return length;
     }
 
-    public void reshape( int numRows , int numCols , int numElements ) {
-        if( numElements > data.length ) {
-            data = new double[ numElements ];
-            row_idx = new int[ numElements ];
+    public void reshape( int numRows , int numCols , int length ) {
+        if( length > data.length ) {
+            data = new double[ length ];
+            row_idx = new int[ length ];
         }
         if( numCols+1 > data.length ) {
             col_idx = new int[ numCols+1 ];
         }
         this.numRows = numRows;
         this.numCols = numCols;
-        this.numElements = numElements;
+        this.length = 0;
+    }
+
+    /**
+     * Checks the contract that row elements will be specified in chronomical order
+     * @return true if in order or false if invalid
+     */
+    public boolean isRowOrderValid() {
+        for (int j = 0; j < numCols; j++) {
+            int idx0 = col_idx[j];
+            int idx1 = col_idx[j+1];
+
+            for (int i = idx0+1; i < idx1; i++) {
+                if( row_idx[i-1] >= row_idx[i])
+                    return false;
+            }
+        }
+        return true;
     }
 }

@@ -23,21 +23,30 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixTriplet_F64 {
-
+public class SMatrixTriplet_F64 implements Matrix_F64
+{
     public Element[] data = new Element[0];
     public int length;
     public int numRows;
     public int numCols;
 
-    public SMatrixTriplet_F64(int maxLength) {
-        growData(maxLength);
+    public SMatrixTriplet_F64() {
     }
 
-    public SMatrixTriplet_F64(int numRows, int numCols, int maxLength ) {
-        this(maxLength);
+    /**
+     *
+     * @param numRows Number of rows in the matrix
+     * @param numCols Number of columns in the matrix
+     * @param initLength Initial maximum length of data array.
+     */
+    public SMatrixTriplet_F64(int numRows, int numCols, int initLength ) {
+        growData(initLength);
         this.numRows = numRows;
         this.numCols = numCols;
+    }
+
+    public SMatrixTriplet_F64( SMatrixTriplet_F64 orig ) {
+        set(orig);
     }
 
     public void reset() {
@@ -52,30 +61,53 @@ public class SMatrixTriplet_F64 {
         this.length = 0;
     }
 
-    public void add(int row , int col , double value ) {
+    public void addItem(int row , int col , double value ) {
         if( length == data.length ) {
             growData(( length*2 + 10 ));
         }
         data[length++].set(row,col, value);
     }
 
+    @Override
     public void set( int row , int col , double value ) {
-        Element e = find(row,col);
+        if( row < 0 || row >= numRows || col < 0 || col >= numCols )
+            throw new IllegalArgumentException("Outside of matrix bounds");
+
+        unsafe_set(row,col,value);
+    }
+
+    @Override
+    public void unsafe_set(int row, int col, double value) {
+        Element e = findItem(row,col);
         if( e == null )
-            add( row,col,value);
+            addItem( row,col,value);
         else
             e.value = value;
     }
 
+    @Override
+    public int getNumElements() {
+        return length;
+    }
+
+    @Override
     public double get( int row , int col ) {
-        Element e = find(row,col);
+        if( row < 0 || row >= numRows || col < 0 || col >= numCols )
+            throw new IllegalArgumentException("Outside of matrix bounds");
+
+        return unsafe_get(row,col);
+    }
+
+    @Override
+    public double unsafe_get(int row, int col) {
+        Element e = findItem(row,col);
         if( e == null )
             return 0;
         else
             return e.value;
     }
 
-    public Element find( int row , int col ) {
+    public Element findItem(int row , int col ) {
         for (int i = 0; i < length; i++) {
             Element e = data[i];
             if( e.row == row && e.col == col )
@@ -103,6 +135,42 @@ public class SMatrixTriplet_F64 {
         return length;
     }
 
+    @Override
+    public int getNumRows() {
+        return numRows;
+    }
+
+    @Override
+    public int getNumCols() {
+        return numCols;
+    }
+
+    @Override
+    public <T extends Matrix> T copy() {
+        return (T)new SMatrixTriplet_F64(this);
+    }
+
+    @Override
+    public <T extends Matrix> T createLike() {
+        return (T)new SMatrixTriplet_F64(numRows,numCols,length);
+    }
+
+    @Override
+    public void set(Matrix original) {
+        SMatrixTriplet_F64 orig = (SMatrixTriplet_F64)original;
+        reshape(orig.numRows,orig.numCols);
+        growData(orig.length);
+
+        for (int i = 0; i < length; i++) {
+            data[i].set(orig.data[i]);
+        }
+    }
+
+    @Override
+    public void print() {
+
+    }
+
     public static class Element {
         public int row,col;
         public double value;
@@ -111,6 +179,12 @@ public class SMatrixTriplet_F64 {
             this.row = row;
             this.col = col;
             this.value = value;
+        }
+
+        public void set( Element e ) {
+            row = e.row;
+            col = e.col;
+            value = e.value;
         }
     }
 }

@@ -20,8 +20,10 @@ package org.ejml.sparse;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.SMatrixCC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.ops.MatrixFeatures_R64;
+import org.ejml.sparse.tp.MatrixFeatures_TP64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -46,9 +48,12 @@ public class TestConvertSparseMatrix_F64 {
     public void DMatrixRow_SMatrixTriplet(DMatrixRow_F64 a , SMatrixTriplet_F64 b ) {
         b = ConvertSparseMatrix_F64.convert(a,b);
 
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+        assertEquals(2, b.length);
         for (int row = 0; row < a.numRows; row++) {
             for (int col = 0; col < a.numCols; col++) {
-                SMatrixTriplet_F64.Element e = b.find(row,col);
+                SMatrixTriplet_F64.Element e = b.findItem(row,col);
 
                 if( a.get(row,col) == 0.0 ) {
                     assertTrue( null == e );
@@ -59,7 +64,7 @@ public class TestConvertSparseMatrix_F64 {
         }
 
         // now try it the other direction
-        DMatrixRow_F64 c = ConvertSparseMatrix_F64.convert(b,null);
+        DMatrixRow_F64 c = ConvertSparseMatrix_F64.convert(b,(DMatrixRow_F64)null);
         assertTrue(MatrixFeatures_R64.isEquals(a,c, UtilEjml.TEST_F64));
 
         c = ConvertSparseMatrix_F64.convert(b,new DMatrixRow_F64(1,1));
@@ -68,6 +73,31 @@ public class TestConvertSparseMatrix_F64 {
 
     @Test
     public void SMatrixTriplet_SMatrixCC() {
+        SMatrixTriplet_F64 a = new SMatrixTriplet_F64(3,5,10);
 
+        a.addItem(1,0,4);
+        a.addItem(2,3,3.5);
+
+        SMatrixTriplet_SMatrixCC(a,(SMatrixCC_F64)null);
+        SMatrixTriplet_SMatrixCC(a,new SMatrixCC_F64(1,1,2));
+    }
+
+    public void SMatrixTriplet_SMatrixCC(SMatrixTriplet_F64 a , SMatrixCC_F64 b ) {
+        b = ConvertSparseMatrix_F64.convert(a,b, null);
+
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+        assertEquals(a.length, b.length);
+        for (int i = 0; i < a.length; i++) {
+            SMatrixTriplet_F64.Element e = a.data[i];
+            assertEquals(e.value, b.get(e.row, e.col), UtilEjml.TEST_F64);
+        }
+
+        // now try it the other direction
+        SMatrixTriplet_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixTriplet_F64)null);
+        assertTrue(MatrixFeatures_TP64.isEquals(a,c, UtilEjml.TEST_F64));
+
+        c = ConvertSparseMatrix_F64.convert(b,new SMatrixTriplet_F64(1,1,1));
+        assertTrue(MatrixFeatures_TP64.isEquals(a,c, UtilEjml.TEST_F64));
     }
 }

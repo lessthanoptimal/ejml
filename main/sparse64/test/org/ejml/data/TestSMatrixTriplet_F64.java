@@ -27,11 +27,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSMatrixTriplet_F64 {
+public class TestSMatrixTriplet_F64 extends GenericTestsSparseMatrix_F64 {
 
     @Test
     public void constructor() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(10);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,10);
 
         assertEquals(0,m.getLength());
         assertEquals(10,m.data.length);
@@ -41,8 +41,8 @@ public class TestSMatrixTriplet_F64 {
     }
 
     @Test
-    public void grow() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(10);
+    public void growData() {
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,10);
 
         m.growData(4);
         assertEquals(0,m.getLength());
@@ -57,11 +57,11 @@ public class TestSMatrixTriplet_F64 {
     }
 
     @Test
-    public void add() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(2);
+    public void addItem() {
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,2);
 
-        m.add(1,2,3);
-        m.add(1,3,4);
+        m.addItem(1,2,3);
+        m.addItem(1,3,4);
 
         assertEquals(2,m.length);
         assertEquals(2,m.data.length);
@@ -70,7 +70,7 @@ public class TestSMatrixTriplet_F64 {
         check(m.data[1],1,3,4);
 
         // now force it to grow
-        m.add(2,3,5);
+        m.addItem(2,3,5);
         assertEquals(3,m.length);
         assertTrue(m.data.length >= 3);
 
@@ -86,40 +86,22 @@ public class TestSMatrixTriplet_F64 {
     }
 
     @Test
-    public void find() {
+    public void findItem() {
         SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
 
-        m.add(1,2, 5);
+        m.addItem(1,2, 5);
 
-        assertTrue( null == m.find(0,1));
-        check( m.find(1,2), 1,2,5);
+        assertTrue( null == m.findItem(0,1));
+        check( m.findItem(1,2), 1,2,5);
     }
 
-    @Test
-    public void set() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
-
-        m.set( 1, 2, 10);
-        m.set( 1, 2, 15);
-
-        assertEquals(15, m.get(1,2), UtilEjml.TEST_F64);
+    @Override
+    public Matrix_F64 createSparse(int numRows, int numCols) {
+        return new SMatrixTriplet_F64(numRows,numCols,10);
     }
 
-    @Test
-    public void get() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
-
-        m.add(1,2, 5);
-        m.add(1,2, 7); // should return the first it finds
-
-        for (int row = 0; row < m.numRows; row++) {
-            for (int col = 0; col < m.numCols; col++) {
-                double found = m.get(row,col);
-                if( row == 1 && col == 2)
-                    assertEquals(5, found, UtilEjml.TEST_F64);
-                else
-                    assertEquals(0, found, UtilEjml.TEST_F64);
-            }
-        }
+    @Override
+    public Matrix_F64 createSparse(SMatrixTriplet_F64 orig) {
+        return new SMatrixTriplet_F64(orig);
     }
 }
