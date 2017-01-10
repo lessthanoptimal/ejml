@@ -19,11 +19,13 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.data.DMatrixFixed_F64;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Matrix_F64;
+import org.ejml.dense.block.MatrixOps_B64;
+import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;

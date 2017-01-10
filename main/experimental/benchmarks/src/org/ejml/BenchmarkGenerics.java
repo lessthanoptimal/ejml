@@ -20,7 +20,7 @@ package org.ejml;
 
 import org.ejml.data.D1Matrix_F64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.ops.RandomMatrices_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 
 import java.util.Random;
 
@@ -95,7 +95,7 @@ public class BenchmarkGenerics {
 
         int N = 10000000;
 
-        System.out.println("dense   = "+benchmarkDense(A,2.5,N));
+        System.out.println("row   = "+benchmarkDense(A,2.5,N));
         System.out.println("generic = "+benchmarkGeneric(A,2.5,N));
     }
 }

@@ -22,13 +22,13 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F32;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Matrix;
-import org.ejml.factory.DecompositionFactory_R32;
-import org.ejml.factory.DecompositionFactory_R64;
+import org.ejml.dense.row.SingularOps_R32;
+import org.ejml.dense.row.SingularOps_R64;
+import org.ejml.dense.row.factory.DecompositionFactory_R32;
+import org.ejml.dense.row.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F32;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-import org.ejml.ops.SingularOps_R32;
-import org.ejml.ops.SingularOps_R64;
 
 
 /**

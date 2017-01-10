@@ -18,10 +18,10 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.fixed.FixedOps3_F64;
 import org.ejml.data.DMatrixFixed3_F64;
 import org.ejml.data.DMatrixFixed3x3_F64;
 import org.ejml.data.DMatrixRow_F64;
+import org.ejml.dense.fixed.FixedOps3_F64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.simple.SimpleMatrix;
 

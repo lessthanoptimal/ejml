@@ -22,7 +22,7 @@ import org.ejml.data.D1Matrix_F64;
 import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Matrix_F64;
-import org.ejml.ops.CommonOps_R64;
+import org.ejml.dense.row.CommonOps_R64;
 
 
 /**

@@ -20,7 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.factory.DecompositionFactory_R64;
+import org.ejml.dense.row.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 /**

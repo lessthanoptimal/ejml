@@ -26,7 +26,7 @@ import org.ejml.data.SMatrixTriplet_F64;
 import java.util.Arrays;
 
 /**
- * Contains functions for converting between dense and sparse matrix formats as well as sparse to sparse.
+ * Contains functions for converting between row and sparse matrix formats as well as sparse to sparse.
  *
  * @author Peter Abeles
  */
@@ -129,6 +129,7 @@ public class ConvertSparseMatrix_F64 {
             dst.row_idx[index] = e.row;
             dst.data[index] = e.value;
         }
+        dst.length = src.length;
 
         return dst;
     }

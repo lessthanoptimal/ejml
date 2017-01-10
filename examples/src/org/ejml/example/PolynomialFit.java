@@ -18,9 +18,9 @@
 
 package org.ejml.example;
 
-import org.ejml.alg.dense.linsol.AdjustableLinearSolver_R64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.factory.LinearSolverFactory_R64;
+import org.ejml.dense.row.factory.LinearSolverFactory_R64;
+import org.ejml.dense.row.linsol.AdjustableLinearSolver_R64;
 
 /**
  * <p>

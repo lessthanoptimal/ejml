@@ -19,10 +19,11 @@
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.mult.VectorVectorMult_R32;
-import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.data.*;
-import org.ejml.ops.*;
+import org.ejml.dense.row.*;
+import org.ejml.dense.row.mult.VectorVectorMult_R32;
+import org.ejml.dense.row.mult.VectorVectorMult_R64;
+import org.ejml.ops.MatrixIO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

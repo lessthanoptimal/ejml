@@ -41,7 +41,7 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
 
         setOutputFile(className);
 
-        out.println("import org.ejml.ops.MatrixIO;\n\n"+
+        out.println("import MatrixIO;\n\n"+
                 "/**\n" +
                 " * Fixed sized "+dimen+" by "+className+" matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the\n" +
                 " * value of row = X and column = Y.\n" +

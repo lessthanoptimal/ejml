@@ -19,8 +19,8 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.ops.CommonOps_R64;
-import org.ejml.ops.NormOps_R64;
+import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.dense.row.NormOps_R64;
 
 /**
  * <p>

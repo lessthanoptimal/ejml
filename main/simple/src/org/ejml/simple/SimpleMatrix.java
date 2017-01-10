@@ -19,7 +19,9 @@
 package org.ejml.simple;
 
 import org.ejml.data.*;
-import org.ejml.ops.*;
+import org.ejml.dense.row.*;
+import org.ejml.ops.ConvertMatrixStruct_F32;
+import org.ejml.ops.ConvertMatrixStruct_F64;
 
 import java.util.Random;
 

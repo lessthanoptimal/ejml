@@ -18,13 +18,13 @@
 
 package org.ejml.equation;
 
-import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.factory.LinearSolverFactory_R64;
+import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.dense.row.NormOps_R64;
+import org.ejml.dense.row.factory.LinearSolverFactory_R64;
+import org.ejml.dense.row.mult.VectorVectorMult_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps_R64;
-import org.ejml.ops.MatrixFeatures_R64;
-import org.ejml.ops.NormOps_R64;
 
 import java.util.Arrays;
 import java.util.List;

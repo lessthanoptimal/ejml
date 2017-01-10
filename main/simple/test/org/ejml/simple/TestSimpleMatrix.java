@@ -22,9 +22,9 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.ops.CommonOps_R64;
-import org.ejml.ops.NormOps_R64;
-import org.ejml.ops.RandomMatrices_R64;
+import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.dense.row.NormOps_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;

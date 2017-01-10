@@ -19,10 +19,10 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.factory.LinearSolverFactory_R64;
+import org.ejml.dense.row.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
-import static org.ejml.ops.CommonOps_R64.*;
+import static org.ejml.dense.row.CommonOps_R64.*;
 
 /**
  * A Kalman filter that is implemented using the operations API, which is procedural.  Much of the excessive

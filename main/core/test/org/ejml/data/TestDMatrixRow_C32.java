@@ -20,9 +20,9 @@ package org.ejml.data;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_CR32;
-import org.ejml.ops.MatrixFeatures_CR32;
-import org.ejml.ops.RandomMatrices_CR32;
+import org.ejml.dense.row.CommonOps_CR32;
+import org.ejml.dense.row.MatrixFeatures_CR32;
+import org.ejml.dense.row.RandomMatrices_CR32;
 import org.junit.Test;
 
 import java.util.Random;

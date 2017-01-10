@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.ops.RandomMatrices_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 import org.ejml.simple.SimpleBase;
 
 import java.util.Random;

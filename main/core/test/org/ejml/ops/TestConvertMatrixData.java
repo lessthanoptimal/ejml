@@ -19,10 +19,11 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.alg.fixed.FixedFeatures2_F64;
-import org.ejml.alg.fixed.FixedFeatures3_F64;
-import org.ejml.alg.fixed.FixedFeatures4_F64;
 import org.ejml.data.*;
+import org.ejml.dense.fixed.FixedFeatures2_F64;
+import org.ejml.dense.fixed.FixedFeatures3_F64;
+import org.ejml.dense.fixed.FixedFeatures4_F64;
+import org.ejml.dense.row.MatrixFeatures_R64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

@@ -98,7 +98,7 @@ subprojects {
                         name 'EJML'
                         packaging 'pom'
                         // optionally artifactId can be defined here
-                        description 'A fast and easy to use dense matrix linear algebra library written in Java.'
+                        description 'A fast and easy to use dense and sparse matrix linear algebra library written in Java.'
                         url 'http://ejml.org/'
 
                         scm {

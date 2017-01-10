@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.ops.CommonOps_R64;
+import org.ejml.dense.row.CommonOps_R64;
 
 import java.util.ArrayList;
 import java.util.List;

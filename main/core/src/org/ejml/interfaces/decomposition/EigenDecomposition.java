@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,7 +39,7 @@ import org.ejml.data.Matrix;
  * </p>
  *
  * <p>
- * To create a new instance of {@link EigenDecomposition} use {@link org.ejml.factory.DecompositionFactory}. If the matrix
+ * To create a new instance of {@link EigenDecomposition} use {@link org.ejml.dense.row.factory.DecompositionFactory}. If the matrix
  * is known to be symmetric be sure to use the symmetric decomposition, which is much faster and more accurate
  * than the general purpose one.
  * </p>

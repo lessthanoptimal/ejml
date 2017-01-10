@@ -20,9 +20,9 @@ package org.ejml.equation;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.ops.CommonOps_R64;
-import org.ejml.ops.MatrixFeatures_R64;
-import org.ejml.ops.RandomMatrices_R64;
+import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.util.Random;

@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 
 /**
- * A dense matrix where the array is stored as a 2D array.
+ * A row matrix where the array is stored as a 2D array.
  *
  * @author Peter Abeles
  */

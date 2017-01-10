@@ -20,8 +20,8 @@ package org.ejml.example;
 
 import org.ejml.data.DMatrixRow_F64;
 
-import static org.ejml.ops.CommonOps_R64.*;
-import static org.ejml.ops.SpecializedOps_R64.diffNormF;
+import static org.ejml.dense.row.CommonOps_R64.*;
+import static org.ejml.dense.row.SpecializedOps_R64.diffNormF;
 
 /**
  * <p>

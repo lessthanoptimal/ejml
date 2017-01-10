@@ -28,9 +28,9 @@ import java.util.Arrays;
 
 /**
  * <p>
- * DMatrixRow_F64 is a dense matrix with real elements that are 64-bit floats.  A matrix
+ * DMatrixRow_F64 is a row matrix with real elements that are 64-bit floats.  A matrix
  * is the fundamental data structure in linear algebra.  Unlike a sparse matrix, there is no
- * compression in a dense matrix and every element is stored in memory.  This allows for fast
+ * compression in a row matrix and every element is stored in memory.  This allows for fast
  * reads and writes to the matrix.
  * </p>
  *

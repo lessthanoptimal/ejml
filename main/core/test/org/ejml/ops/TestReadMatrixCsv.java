@@ -20,6 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_C64;
+import org.ejml.dense.row.MatrixFeatures_CR64;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

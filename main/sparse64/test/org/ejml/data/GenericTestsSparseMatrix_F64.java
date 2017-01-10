@@ -43,7 +43,7 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
     protected Matrix_F64 createMatrix(int numRows, int numCols) {
 
         // define a sparse matrix with every element filled.  It should act low a slow and inefficient
-        // dense matrix now
+        // row matrix now
         SMatrixTriplet_F64 t = new SMatrixTriplet_F64(numRows,numCols,numRows*numCols);
 
         for (int row = 0; row < numRows; row++) {

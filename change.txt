@@ -38,11 +38,6 @@ Date format: year/month/day
   convert_to_ejml31.py
 
 - TODO Add support for matrix norms to Equations
-- TODO rename package alg.dense to dense.row
-                      alg.block to dense.block
-                      alg.fixed to dense.fixed
-                      move generic into dense
-                      ops to dense.ops
 - TODO gradle modules to have ejml-* in their name
 - TODO rename main to modules
 

@@ -19,6 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.data.DMatrixRow_F64;
+import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 import org.junit.Test;
 
 import java.io.File;

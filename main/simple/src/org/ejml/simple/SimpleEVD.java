@@ -19,8 +19,8 @@
 package org.ejml.simple;
 
 import org.ejml.data.*;
-import org.ejml.factory.DecompositionFactory_R32;
-import org.ejml.factory.DecompositionFactory_R64;
+import org.ejml.dense.row.factory.DecompositionFactory_R32;
+import org.ejml.dense.row.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F32;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;

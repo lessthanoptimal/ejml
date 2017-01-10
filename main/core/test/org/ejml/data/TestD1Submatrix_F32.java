@@ -19,9 +19,9 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.CommonOps_R32;
-import org.ejml.ops.MatrixFeatures_R32;
-import org.ejml.ops.RandomMatrices_R32;
+import org.ejml.dense.row.CommonOps_R32;
+import org.ejml.dense.row.MatrixFeatures_R32;
+import org.ejml.dense.row.RandomMatrices_R32;
 import org.junit.Test;
 
 import java.util.Random;

@@ -19,7 +19,7 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.ops.RandomMatrices_R32;
+import org.ejml.dense.row.RandomMatrices_R32;
 import org.junit.Test;
 
 import java.util.Random;

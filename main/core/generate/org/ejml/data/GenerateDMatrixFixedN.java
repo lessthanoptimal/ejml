@@ -41,7 +41,7 @@ public class GenerateDMatrixFixedN extends CodeGeneratorBase{
 
         setOutputFile(className);
 
-        out.print("import org.ejml.ops.MatrixIO;\n" +
+        out.print("import MatrixIO;\n" +
                 "\n" +
                 "/**\n" +
                 " * Fixed sized vector with "+dimen+" elements.  Can represent a "+dimen+" x 1 or 1 x "+dimen+" matrix, context dependent.\n" +

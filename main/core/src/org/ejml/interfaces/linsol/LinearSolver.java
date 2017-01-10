@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2016, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.interfaces.linsol;
 
+import org.ejml.LinearSolverSafe;
 import org.ejml.data.Matrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
@@ -60,7 +61,7 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
  * <b>IMPORTANT:</b> Depending upon the implementation, input matrices might be overwritten by
  * the solver.  This
  * reduces memory and computational requirements and give more control to the programmer.  If
- * the input matrices need to be not modified then {@link org.ejml.alg.dense.linsol.LinearSolverSafe} can be used.  The
+ * the input matrices need to be not modified then {@link LinearSolverSafe} can be used.  The
  * functions {@link #modifiesA()} and {@link #modifiesB()} specify which input matrices are being
  * modified.
  * </p>

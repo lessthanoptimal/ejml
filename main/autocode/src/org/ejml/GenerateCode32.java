@@ -170,7 +170,7 @@ public class GenerateCode32 {
                 "main/core/test/org/ejml/data",
                 "main/core/src/org/ejml/ops",
                 "main/core/test/org/ejml/ops",
-                "main/experimental/src/org/ejml/alg/dense/decomposition/bidiagonal/"
+                "main/experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
         };
 
         GenerateCode32 app = new GenerateCode32();
@@ -179,7 +179,7 @@ public class GenerateCode32 {
         }
 
         // remove any previously generated code
-        for( String module : new String[]{"dense","denseC"}) {
+        for( String module : new String[]{"row","denseC"}) {
             recursiveDelete(new File(path,"main/"+module+"32/src"), true);
             recursiveDelete(new File(path,"main/"+module+"32/test"), true);
 

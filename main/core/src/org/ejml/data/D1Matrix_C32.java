@@ -18,7 +18,7 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.MatrixDimensionException;
+import org.ejml.MatrixDimensionException;
 
 
 /**
