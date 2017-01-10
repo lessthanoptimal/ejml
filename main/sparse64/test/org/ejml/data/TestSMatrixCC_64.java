@@ -18,26 +18,17 @@
 
 package org.ejml.data;
 
-import org.junit.Test;
-
+import org.ejml.sparse.ConvertSparseMatrix_F64;
 
 /**
  * @author Peter Abeles
  */
-public class TestDenseD2Matrix64F {
+public class TestSMatrixCC_64 extends GenericTestsSparseMatrix_64 {
 
-    @Test
-    public void testGeneric() {
-        GenericTestsDenseMatrix_F64 g;
-        g = new GenericTestsDenseMatrix_F64() {
-            protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
-                return new DenseD2Matrix64F(numRows,numCols);
-            }
-        };
-
-        g.allTests();
+    @Override
+    public RealMatrix_F64 createSparse(SMatrixTriplet_64 orig, int numRows, int numCols) {
+        SMatrixCC_64 dst = new SMatrixCC_64(numRows,numCols, numRows*numCols);
+        ConvertSparseMatrix_F64.convert(orig,dst,null);
+        return dst;
     }
-
-
-
 }

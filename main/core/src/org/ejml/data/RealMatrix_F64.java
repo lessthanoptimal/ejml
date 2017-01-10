@@ -32,7 +32,7 @@ public interface RealMatrix_F64 extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double get(int row, int col);
+    double get(int row, int col);
 
     /**
      * Same as {@link #get} but does not perform bounds check on input parameters.  This results in about a 25%
@@ -44,7 +44,7 @@ public interface RealMatrix_F64 extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double unsafe_get(int row, int col);
+    double unsafe_get(int row, int col);
 
     /**
      * Sets the value of the specified matrix element.
@@ -53,7 +53,7 @@ public interface RealMatrix_F64 extends Matrix {
      * @param col Matrix element's column index.
      * @param val The element's new value.
      */
-    public void set(int row, int col, double val);
+    void set(int row, int col, double val);
 
     /**
      * Same as {@link #set} but does not perform bounds check on input parameters.  This results in about a 25%
@@ -65,7 +65,7 @@ public interface RealMatrix_F64 extends Matrix {
      * @param col Matrix element's column index.
      * @param val The element's new value.
      */
-    public void unsafe_set(int row, int col, double val);
+    void unsafe_set(int row, int col, double val);
 
     /**
      * Returns the number of elements in this matrix, which is the number of rows
@@ -73,5 +73,5 @@ public interface RealMatrix_F64 extends Matrix {
      *
      * @return Number of elements in this matrix.
      */
-    public int getNumElements();
+    int getNumElements();
 }

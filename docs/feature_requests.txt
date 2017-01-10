@@ -7,4 +7,3 @@ TODO MatrixMatrixMult
 
 TODO look at sparse matrix contribution
 TODO equations support for boolean matrices and inequalities
-TODO Neural network back propagation example?

@@ -37,17 +37,33 @@ Date format: year/month/day
   convert_to_ejml31.py
 
 - TODO Add support for matrix norms to Equations
+- TODO rename package alg.dense to dense.row
+                      alg.block to dense.block
+                      alg.fixed to dense.fixed
+                      move generic into dense
+                      ops to dense.ops
+- TODO gradle modules to have ejml-* in their name
+- TODO rename main to modules
 
 Change naming scheme again!
 
+RealMatrix_F64 -> Matrix_64
+   Matrix_CF64 -> Matrix_C64
+
 D = dense
-DMatrixRow_F64
-DMatrixBlock_F64
-DMatrixFixed_F64
+DMatrixRow_64
+DMatrixRow_C64
+DMatrixBlock_64
+DMatrixFixed_64
 
 S = Sparse
+SMatrixCC_64
 
 
+- TODO Sparse goal
+       plus, minus, transpose, mult, solve triangle,
+- TODO compare CC CR sparse formats and decide which one to focus on
+       implement mult and solve in both
 
 ----- Version 0.30
 

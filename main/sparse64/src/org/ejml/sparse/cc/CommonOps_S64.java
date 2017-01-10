@@ -16,28 +16,17 @@
  * limitations under the License.
  */
 
-package org.ejml.data;
+package org.ejml.sparse.cc;
 
-import org.junit.Test;
-
+import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.SMatrixCC_64;
 
 /**
  * @author Peter Abeles
  */
-public class TestDenseD2Matrix64F {
+public class CommonOps_S64 {
 
-    @Test
-    public void testGeneric() {
-        GenericTestsDenseMatrix_F64 g;
-        g = new GenericTestsDenseMatrix_F64() {
-            protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
-                return new DenseD2Matrix64F(numRows,numCols);
-            }
-        };
+    public static void mult(SMatrixCC_64 a , RowMatrix_F64 b , RowMatrix_F64 c ) {
 
-        g.allTests();
     }
-
-
-
 }

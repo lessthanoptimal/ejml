@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsMatrix_F64 {
+public abstract class GenericTestsDenseMatrix_F64 {
 
     protected abstract RealMatrix_F64 createMatrix(int numRows , int numCols );
 

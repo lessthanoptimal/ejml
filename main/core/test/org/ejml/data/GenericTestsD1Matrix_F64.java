@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsD1Matrix_F64 extends GenericTestsMatrix_F64 {
+public abstract class GenericTestsD1Matrix_F64 extends GenericTestsDenseMatrix_F64 {
 
     protected abstract D1Matrix_F64 createMatrix(int numRows , int numCols );
 

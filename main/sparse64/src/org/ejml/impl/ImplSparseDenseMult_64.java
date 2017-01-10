@@ -16,28 +16,23 @@
  * limitations under the License.
  */
 
-package org.ejml.data;
+package org.ejml.impl;
 
-import org.junit.Test;
-
+import org.ejml.data.SMatrixCC_64;
 
 /**
  * @author Peter Abeles
  */
-public class TestDenseD2Matrix64F {
+public class ImplSparseDenseMult_64 {
 
-    @Test
-    public void testGeneric() {
-        GenericTestsDenseMatrix_F64 g;
-        g = new GenericTestsDenseMatrix_F64() {
-            protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
-                return new DenseD2Matrix64F(numRows,numCols);
-            }
-        };
+    /**
+     * Multiplies a sparse matrix against a dense vector.
+     *
+     * @param a (Input) Matrix
+     * @param b (Input) Vector of length a.rows.  Not modified.
+     * @param c (Output) Vector of length a.rows. Not modified.
+     */
+    public static void mult(SMatrixCC_64 a , double[] b , double[] c ) {
 
-        g.allTests();
     }
-
-
-
 }

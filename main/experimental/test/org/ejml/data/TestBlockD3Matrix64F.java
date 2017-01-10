@@ -28,8 +28,8 @@ public class TestBlockD3Matrix64F {
 
     @Test
     public void testGeneric() {
-        GenericTestsMatrix_F64 g;
-        g = new GenericTestsMatrix_F64() {
+        GenericTestsDenseMatrix_F64 g;
+        g = new GenericTestsDenseMatrix_F64() {
             protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
                 return new BlockD3Matrix64F(numRows,numCols,10);
             }
