@@ -50,6 +50,7 @@ Date format: year/month/day
        plus, minus, transpose, mult, solve triangle,
 - TODO compare CC CR sparse formats and decide which one to focus on
        implement mult and solve in both
+       the difference might be sparse to dense ops
 
 ----- Version 0.30
 

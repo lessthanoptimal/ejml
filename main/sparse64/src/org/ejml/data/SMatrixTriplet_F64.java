@@ -161,6 +161,7 @@ public class SMatrixTriplet_F64 implements Matrix_F64
         reshape(orig.numRows,orig.numCols);
         growData(orig.length);
 
+        this.length = orig.length;
         for (int i = 0; i < length; i++) {
             data[i].set(orig.data[i]);
         }
