@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.cc.misc;
+package org.ejml.sparse.compcol;
 
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCC_F64;
 
 /**
  * @author Peter Abeles
  */
-public class ImplSparseCommonOps_F64 {
+public class CommonOps_CC64 {
 
-    public void transpose(SMatrixCC_F64 a , SMatrixCC_F64 b ) {
+    public static void mult(SMatrixCC_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c ) {
 
     }
 }

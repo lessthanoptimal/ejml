@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
-import org.ejml.sparse.tp.MatrixFeatures_TP64;
+import org.ejml.sparse.triplet.MatrixFeatures_TP64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

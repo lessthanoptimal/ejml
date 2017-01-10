@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.tp;
+package org.ejml.sparse.triplet;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.SMatrixTriplet_F64;

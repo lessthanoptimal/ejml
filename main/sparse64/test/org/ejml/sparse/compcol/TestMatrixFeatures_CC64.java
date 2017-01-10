@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.cc;
+package org.ejml.sparse.compcol;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.SMatrixCC_F64;
