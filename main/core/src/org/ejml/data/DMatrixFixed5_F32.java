@@ -105,7 +105,7 @@ public class DMatrixFixed5_F32 implements DMatrixFixed_F32 {
 
     @Override
     public void set(Matrix original) {
-        Matrix_32 m = (Matrix_32)original;
+        Matrix_F32 m = (Matrix_F32)original;
 
         if( m.getNumCols() == 1 && m.getNumRows() == 5 ) {
             a1 = m.get(0,0);

@@ -28,9 +28,9 @@ import java.util.Iterator;
  *
  * @author Peter Abeles
  */
-public class MatrixIterator_32 implements Iterator<Float> {
+public class MatrixIterator_F64 implements Iterator<Double> {
     // the matrix which is being iterated through
-    private D1Matrix_F32 a;
+    private D1Matrix_F64 a;
 
     // should it iterate through by row or by column
     private boolean rowMajor;
@@ -63,8 +63,8 @@ public class MatrixIterator_32 implements Iterator<Float> {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_32(D1Matrix_F32 a, boolean rowMajor,
-                             int minRow, int minCol, int maxRow, int maxCol
+    public MatrixIterator_F64(D1Matrix_F64 a, boolean rowMajor,
+                              int minRow, int minCol, int maxRow, int maxCol
     ) {
         if( maxCol < minCol )
             throw new IllegalArgumentException("maxCol has to be more than or equal to minCol");
@@ -96,7 +96,7 @@ public class MatrixIterator_32 implements Iterator<Float> {
     }
 
     @Override
-    public Float next() {
+    public Double next() {
         if( rowMajor ) {
             subRow = index / submatrixStride;
             subCol = index % submatrixStride;
@@ -135,7 +135,7 @@ public class MatrixIterator_32 implements Iterator<Float> {
      *
      * @param value The element's new value.
      */
-    public void set( float value ) {
+    public void set( double value ) {
         a.set(subRow+minRow,subCol+minCol,value);
     }
 }

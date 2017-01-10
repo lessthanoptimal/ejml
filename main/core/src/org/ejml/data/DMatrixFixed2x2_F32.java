@@ -101,7 +101,7 @@ public class DMatrixFixed2x2_F32 implements DMatrixFixed_F32 {
     public void set(Matrix original) {
         if( original.getNumCols() != 2 || original.getNumRows() != 2 )
             throw new IllegalArgumentException("Rows and/or columns do not match");
-        Matrix_32 m = (Matrix_32)original;
+        Matrix_F32 m = (Matrix_F32)original;
         
         a11 = m.get(0,0);
         a12 = m.get(0,1);

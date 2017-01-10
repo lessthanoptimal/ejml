@@ -116,7 +116,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_R64#mult(D1MatrixRow_64, D1MatrixRow_64, D1MatrixRow_64)
+     * @see CommonOps_R64#mult(D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
      *
      * @param b A matrix that is n by bn. Not modified.
      *
@@ -165,7 +165,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_R64#mult(D1MatrixRow_64, D1MatrixRow_64, D1MatrixRow_64)
+     * @see CommonOps_R64#mult(D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -563,7 +563,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Computes the trace of the matrix.
      * </p>
      *
-     * @see CommonOps_R64#trace(D1MatrixRow_64)
+     * @see CommonOps_R64#trace(D1MatrixRow_F64)
      *
      * @return The trace of the matrix.
      */
@@ -736,9 +736,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_64 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public MatrixIterator_F64 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator_64((DMatrixRow_F64)mat,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new MatrixIterator_F64((DMatrixRow_F64)mat,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**
@@ -823,7 +823,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix_64)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix_F64)}.
      * </p>
      *
      * @return String representation of the matrix.
@@ -1237,7 +1237,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Saves this matrix to a file as a serialized binary object.
      * </p>
      *
-     * @see MatrixIO#saveBin( Matrix_64, String)
+     * @see MatrixIO#saveBin( Matrix_F64, String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -1261,7 +1261,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public static SimpleMatrix loadBinary( String fileName )
             throws IOException {
-        Matrix_64 mat = MatrixIO.loadBin(fileName);
+        Matrix_F64 mat = MatrixIO.loadBin(fileName);
 
         // see if its a DMatrixRow_F64
         if( mat instanceof DMatrixRow_F64) {
@@ -1277,7 +1277,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Saves this matrix to a file in a CSV format.  For the file format see {@link MatrixIO}.
      * </p>
      *
-     * @see MatrixIO#saveBin( Matrix_64, String)
+     * @see MatrixIO#saveBin( Matrix_F64, String)
      *
      * @param fileName
      * @throws java.io.IOException
@@ -1301,7 +1301,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T loadCSV( String fileName )
             throws IOException {
-        Matrix_64 mat = MatrixIO.loadCSV(fileName);
+        Matrix_F64 mat = MatrixIO.loadCSV(fileName);
 
         T ret = createMatrix(1,1);
 

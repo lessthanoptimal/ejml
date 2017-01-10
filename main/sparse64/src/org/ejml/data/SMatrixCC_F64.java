@@ -30,7 +30,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixCC_64 implements Matrix_64 {
+public class SMatrixCC_F64 implements Matrix_F64 {
     /**
      * Storage for non-zero values.  Only valid up to numElements-1.
      */
@@ -45,7 +45,7 @@ public class SMatrixCC_64 implements Matrix_64 {
     public int numRows;
     public int numCols;
 
-    public SMatrixCC_64(int numRows , int numCols , int numElements ) {
+    public SMatrixCC_F64(int numRows , int numCols , int numElements ) {
         this.numRows = numRows;
         this.numCols = numCols;
         this.numElements = numElements;
@@ -55,7 +55,7 @@ public class SMatrixCC_64 implements Matrix_64 {
         row_idx = new int[ numElements ];
     }
 
-    public SMatrixCC_64(SMatrixCC_64 original ) {
+    public SMatrixCC_F64(SMatrixCC_F64 original ) {
         this(original.numRows, original.numCols, original.numElements);
 
         set(original);
@@ -73,17 +73,17 @@ public class SMatrixCC_64 implements Matrix_64 {
 
     @Override
     public <T extends Matrix> T copy() {
-        return (T)new SMatrixCC_64(this);
+        return (T)new SMatrixCC_F64(this);
     }
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixCC_64(numRows,numCols, numElements);
+        return (T)new SMatrixCC_F64(numRows,numCols, numElements);
     }
 
     @Override
     public void set(Matrix original) {
-        SMatrixCC_64 o = (SMatrixCC_64)original;
+        SMatrixCC_F64 o = (SMatrixCC_F64)original;
         reshape(o.numRows, o.numCols, o.numElements);
 
         System.arraycopy(o.data, 0, data, 0, numElements);

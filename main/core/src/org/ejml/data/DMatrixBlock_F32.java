@@ -156,7 +156,7 @@ public class DMatrixBlock_F32 extends D1Matrix_F32 {
         if( original instanceof DMatrixBlock_F32) {
             set((DMatrixBlock_F32)original);
         } else {
-            Matrix_32 m = (Matrix_32) original;
+            Matrix_F32 m = (Matrix_F32) original;
 
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numCols; j++) {

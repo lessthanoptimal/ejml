@@ -27,11 +27,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSMatrixTriplet_64 {
+public class TestSMatrixTriplet_F64 {
 
     @Test
     public void constructor() {
-        SMatrixTriplet_64 m = new SMatrixTriplet_64(10);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(10);
 
         assertEquals(0,m.getLength());
         assertEquals(10,m.data.length);
@@ -42,7 +42,7 @@ public class TestSMatrixTriplet_64 {
 
     @Test
     public void grow() {
-        SMatrixTriplet_64 m = new SMatrixTriplet_64(10);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(10);
 
         m.growData(4);
         assertEquals(0,m.getLength());
@@ -58,7 +58,7 @@ public class TestSMatrixTriplet_64 {
 
     @Test
     public void add() {
-        SMatrixTriplet_64 m = new SMatrixTriplet_64(2);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(2);
 
         m.add(1,2,3);
         m.add(1,3,4);
@@ -79,7 +79,7 @@ public class TestSMatrixTriplet_64 {
         check(m.data[2],2,3,5);
     }
 
-    private void check( SMatrixTriplet_64.Element e , int row , int col , double value ) {
+    private void check(SMatrixTriplet_F64.Element e , int row , int col , double value ) {
         assertEquals(row,e.row);
         assertEquals(col,e.col);
         assertEquals(value,e.value, UtilEjml.TEST_F64);
@@ -87,7 +87,7 @@ public class TestSMatrixTriplet_64 {
 
     @Test
     public void find() {
-        SMatrixTriplet_64 m = new SMatrixTriplet_64(3,4, 5);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
 
         m.add(1,2, 5);
 
@@ -97,7 +97,7 @@ public class TestSMatrixTriplet_64 {
 
     @Test
     public void set() {
-        SMatrixTriplet_64 m = new SMatrixTriplet_64(3,4, 5);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
 
         m.set( 1, 2, 10);
         m.set( 1, 2, 15);
@@ -107,7 +107,7 @@ public class TestSMatrixTriplet_64 {
 
     @Test
     public void get() {
-        SMatrixTriplet_64 m = new SMatrixTriplet_64(3,4, 5);
+        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
 
         m.add(1,2, 5);
         m.add(1,2, 7); // should return the first it finds

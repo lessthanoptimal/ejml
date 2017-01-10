@@ -67,7 +67,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void mult(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult_R64.mult(a, b, c);
@@ -91,7 +91,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void mult(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -113,7 +113,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multTransA(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numCols == 1 ) {
             // todo check a.numCols == 1 and do inner product?
@@ -144,7 +144,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multTransA(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -167,7 +167,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multTransB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numRows == 1 ) {
             MatrixVectorMult_R64.mult(a, b, c);
@@ -189,7 +189,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multTransB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_R64.multTransB(alpha,a,b,c);
@@ -207,7 +207,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multTransAB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numRows == 1) {
             // there are significantly faster algorithms when dealing with vectors
@@ -236,7 +236,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multTransAB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -280,7 +280,7 @@ public class CommonOps_R64 {
      * @param a The matrix being multiplied. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multInner(D1MatrixRow_64 a , D1MatrixRow_64 c )
+    public static void multInner(D1MatrixRow_F64 a , D1MatrixRow_F64 c )
     {
         if( a.numCols != c.numCols || a.numCols != c.numRows )
             throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the columns in 'a'");
@@ -307,7 +307,7 @@ public class CommonOps_R64 {
      * @param a The matrix being multiplied. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multOuter(D1MatrixRow_64 a , D1MatrixRow_64 c )
+    public static void multOuter(D1MatrixRow_F64 a , D1MatrixRow_F64 c )
     {
         if( a.numRows != c.numCols || a.numRows != c.numRows )
             throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the rows in 'a'");
@@ -327,7 +327,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAdd(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult_R64.multAdd(a, b, c);
@@ -353,7 +353,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAdd(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -375,7 +375,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAddTransA(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numCols == 1 ) {
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -406,7 +406,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAddTransA(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -429,7 +429,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAddTransB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         MatrixMatrixMult_R64.multAddTransB(a,b,c);
     }
@@ -447,7 +447,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAddTransB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_R64.multAddTransB(alpha,a,b,c);
@@ -465,7 +465,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAddTransAB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         if( b.numRows == 1 ) {
             // there are significantly faster algorithms when dealing with vectors
@@ -494,7 +494,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
+    public static void multAddTransAB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -609,7 +609,7 @@ public class CommonOps_R64 {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( D1MatrixRow_64 a ) {
+    public static double trace( D1MatrixRow_F64 a ) {
         int N = Math.min(a.numRows, a.numCols);
         double sum = 0;
         int index = 0;
@@ -850,7 +850,7 @@ public class CommonOps_R64 {
      *
      * @param mat A square matrix.
      */
-    public static void setIdentity( D1MatrixRow_64 mat )
+    public static void setIdentity( D1MatrixRow_F64 mat )
     {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
@@ -1032,10 +1032,10 @@ public class CommonOps_R64 {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract( Matrix_64 src,
+    public static void extract( Matrix_F64 src,
                                 int srcY0, int srcY1,
                                 int srcX0, int srcX1,
-                                Matrix_64 dst ,
+                                Matrix_F64 dst ,
                                 int dstY0, int dstX0 )
     {
         if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
@@ -1243,7 +1243,7 @@ public class CommonOps_R64 {
      * @param destY0 Start row for the copy into dest.
      * @param destX0 Start column for the copy into dest.
      */
-    public static void insert(Matrix_64 src, Matrix_64 dest, int destY0, int destX0) {
+    public static void insert(Matrix_F64 src, Matrix_F64 dest, int destY0, int destX0) {
         extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dest, destY0, destX0);
     }
 

@@ -93,7 +93,7 @@ public class DMatrixFixed3_F64 implements DMatrixFixed_F64 {
 
     @Override
     public void set(Matrix original) {
-        Matrix_64 m = (Matrix_64)original;
+        Matrix_F64 m = (Matrix_F64)original;
 
         if( m.getNumCols() == 1 && m.getNumRows() == 3 ) {
             a1 = m.get(0,0);

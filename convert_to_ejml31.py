@@ -33,10 +33,6 @@ print "Recursively apply search and replace to "+location
 def F(find,replace):
     findReplace(location,find,replace,"*.java")
 
-F("FixedMatrix","DMatrixFixed")
-F("BlockMatrix","DMatrixBlock")
-F("RowMatrix_","DMatrixRow_")
-
 def G(patA,patB):
     F(patA+"32F",patB+"_F32")
     F(patA+"64F",patB+"_F64")

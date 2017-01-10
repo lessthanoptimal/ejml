@@ -156,7 +156,7 @@ public class DMatrixBlock_F64 extends D1Matrix_F64 {
         if( original instanceof DMatrixBlock_F64) {
             set((DMatrixBlock_F64)original);
         } else {
-            Matrix_64 m = (Matrix_64) original;
+            Matrix_F64 m = (Matrix_F64) original;
 
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numCols; j++) {

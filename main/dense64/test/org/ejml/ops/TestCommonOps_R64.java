@@ -147,10 +147,10 @@ public class TestCommonOps_R64 {
             if( hasAlpha )
                 checkMethod = MatrixMatrixMult_R64.class.getMethod(
                         name,double.class,
-                        D1MatrixRow_64.class, D1MatrixRow_64.class,D1MatrixRow_64.class);
+                        D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
             else
                 checkMethod = MatrixMatrixMult_R64.class.getMethod(
-                        name, D1MatrixRow_64.class, D1MatrixRow_64.class,D1MatrixRow_64.class);
+                        name, D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
         } catch (NoSuchMethodException e) {
             checkMethod = null;
         }
@@ -159,10 +159,10 @@ public class TestCommonOps_R64 {
             if( hasAlpha )
                 checkMethod = MatrixMatrixMult_R64.class.getMethod(
                         name+"_reorder",double.class,
-                        D1MatrixRow_64.class, D1MatrixRow_64.class,D1MatrixRow_64.class);
+                        D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
             else
                 checkMethod = MatrixMatrixMult_R64.class.getMethod(
-                        name+"_reorder", D1MatrixRow_64.class, D1MatrixRow_64.class,D1MatrixRow_64.class);
+                        name+"_reorder", D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }

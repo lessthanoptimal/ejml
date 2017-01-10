@@ -23,5 +23,5 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public interface DMatrixFixed_F64 extends Matrix_64 {
+public interface DMatrixFixed_F64 extends Matrix_F64 {
 }

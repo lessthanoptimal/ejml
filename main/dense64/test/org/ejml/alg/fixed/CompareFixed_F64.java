@@ -21,7 +21,7 @@ package org.ejml.alg.fixed;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixFixed_F64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_64;
+import org.ejml.data.Matrix_F64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -116,8 +116,8 @@ public class CompareFixed_F64 {
             return false;
 
         for (int i = 0; i < typesFixed.length; i++) {
-            if( Matrix_64.class.isAssignableFrom(typesFixed[i]) ) {
-                if( !Matrix_64.class.isAssignableFrom(typesCommon[i]) ) {
+            if( Matrix_F64.class.isAssignableFrom(typesFixed[i]) ) {
+                if( !Matrix_F64.class.isAssignableFrom(typesCommon[i]) ) {
                     return false;
                 }
             }
@@ -129,8 +129,8 @@ public class CompareFixed_F64 {
         if( returnFixed == returnCommon )
             return true;
 
-        if( Matrix_64.class.isAssignableFrom(returnFixed) &&
-                Matrix_64.class.isAssignableFrom(returnCommon) )
+        if( Matrix_F64.class.isAssignableFrom(returnFixed) &&
+                Matrix_F64.class.isAssignableFrom(returnCommon) )
             return true;
 
         return false;

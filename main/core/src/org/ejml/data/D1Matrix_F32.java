@@ -25,7 +25,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public abstract class D1Matrix_F32 implements ReshapeMatrix, Matrix_32 {
+public abstract class D1Matrix_F32 implements ReshapeMatrix, Matrix_F32 {
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.
      */
@@ -233,9 +233,9 @@ public abstract class D1Matrix_F32 implements ReshapeMatrix, Matrix_32 {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_32 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public MatrixIterator_F32 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator_32(this,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new MatrixIterator_F32(this,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

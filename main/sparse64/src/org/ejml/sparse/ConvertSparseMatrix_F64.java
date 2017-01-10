@@ -19,9 +19,9 @@
 package org.ejml.sparse;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_64;
-import org.ejml.data.SMatrixCC_64;
-import org.ejml.data.SMatrixTriplet_64;
+import org.ejml.data.Matrix_F64;
+import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixTriplet_F64;
 
 import java.util.Arrays;
 
@@ -29,9 +29,9 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class ConvertSparseMatrix_F64 {
-    public static SMatrixTriplet_64 convert(Matrix_64 src , SMatrixTriplet_64 dst ) {
+    public static SMatrixTriplet_F64 convert(Matrix_F64 src , SMatrixTriplet_F64 dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_64(src.getNumRows(), src.getNumCols(), 1);
+            dst = new SMatrixTriplet_F64(src.getNumRows(), src.getNumCols(), 1);
         else
             dst.reshape(src.getNumRows(), src.getNumCols());
 
@@ -46,9 +46,9 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static SMatrixTriplet_64 convert( DMatrixRow_F64 src , SMatrixTriplet_64 dst ) {
+    public static SMatrixTriplet_F64 convert(DMatrixRow_F64 src , SMatrixTriplet_F64 dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_64(src.numRows, src.numCols,src.numRows*src.numCols);
+            dst = new SMatrixTriplet_F64(src.numRows, src.numCols,src.numRows*src.numCols);
         else
             dst.reshape(src.numRows, src.numCols);
 
@@ -64,7 +64,7 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static DMatrixRow_F64 convert( SMatrixTriplet_64 src , DMatrixRow_F64 dst ) {
+    public static DMatrixRow_F64 convert(SMatrixTriplet_F64 src , DMatrixRow_F64 dst ) {
         if( dst == null )
             dst = new DMatrixRow_F64(src.numRows, src.numCols);
         else {
@@ -73,7 +73,7 @@ public class ConvertSparseMatrix_F64 {
         }
 
         for (int i = 0; i < src.length; i++) {
-            SMatrixTriplet_64.Element e = src.data[i];
+            SMatrixTriplet_F64.Element e = src.data[i];
 
             dst.unsafe_set(e.row, e.col, e.value);
         }
@@ -88,9 +88,9 @@ public class ConvertSparseMatrix_F64 {
      * @param dst Destination. Will be a copy.  Modified.
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
-    public static SMatrixCC_64 convert( SMatrixTriplet_64 src , SMatrixCC_64 dst , int hist[] ) {
+    public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst , int hist[] ) {
         if( dst == null )
-            dst = new SMatrixCC_64(src.numRows, src.numCols , src.length);
+            dst = new SMatrixCC_F64(src.numRows, src.numCols , src.length);
         else
             dst.reshape(src.numRows, src.numCols, src.length);
 
@@ -103,7 +103,7 @@ public class ConvertSparseMatrix_F64 {
             throw new IllegalArgumentException("Length of hist must be at least numCols");
 
         for (int i = 0; i < src.length; i++) {
-            SMatrixTriplet_64.Element e = src.data[i];
+            SMatrixTriplet_F64.Element e = src.data[i];
 
             hist[e.col]++;
         }
@@ -120,7 +120,7 @@ public class ConvertSparseMatrix_F64 {
 
         // now write the row indexes and the values
         for (int i = 0; i < src.length; i++) {
-            SMatrixTriplet_64.Element e = src.data[i];
+            SMatrixTriplet_F64.Element e = src.data[i];
 
             int offset = hist[e.col]++;
             index = dst.col_idx[e.col] + offset;
@@ -131,9 +131,9 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static SMatrixTriplet_64 convert( SMatrixCC_64 src , SMatrixTriplet_64 dst ) {
+    public static SMatrixTriplet_F64 convert(SMatrixCC_F64 src , SMatrixTriplet_F64 dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_64(src.numRows, src.numCols, src.numElements );
+            dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.numElements );
         else
             dst.reshape( src.numRows , src.numCols );
 

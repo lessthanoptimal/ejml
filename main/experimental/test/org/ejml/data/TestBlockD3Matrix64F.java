@@ -30,7 +30,7 @@ public class TestBlockD3Matrix64F {
     public void testGeneric() {
         GenericTestsDenseMatrix_F64 g;
         g = new GenericTestsDenseMatrix_F64() {
-            protected Matrix_64 createMatrix(int numRows, int numCols) {
+            protected Matrix_F64 createMatrix(int numRows, int numCols) {
                 return new BlockD3Matrix64F(numRows,numCols,10);
             }
         };

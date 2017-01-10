@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_64;
+import org.ejml.data.Matrix_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -43,7 +43,7 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Matrix64F(Matrix_64 src , Matrix_64 dst , int numTrials) {
+    public static long extract_Matrix64F(Matrix_F64 src , Matrix_F64 dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 

@@ -23,7 +23,7 @@ import org.ejml.alg.block.MatrixOps_B32;
 import org.ejml.data.DMatrixBlock_F32;
 import org.ejml.data.DMatrixFixed_F32;
 import org.ejml.data.DMatrixRow_F32;
-import org.ejml.data.Matrix_32;
+import org.ejml.data.Matrix_F32;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +45,7 @@ public class TestConvertMatrixStruct_F32 {
         DMatrixRow_F32 a = new DMatrixRow_F32(2,3,true,1,2,3,4,5,6);
         DMatrixRow_F32 b = new DMatrixRow_F32(2,3);
 
-        ConvertMatrixStruct_F32.convert((Matrix_32)a,(Matrix_32)b);
+        ConvertMatrixStruct_F32.convert((Matrix_F32)a,(Matrix_F32)b);
 
         assertTrue(MatrixFeatures_R32.isIdentical(a,b,UtilEjml.TEST_F32));
     }
@@ -155,7 +155,7 @@ public class TestConvertMatrixStruct_F32 {
     }
 
 
-    private void checkIdentical(Matrix_32 a , Matrix_32 b ) {
+    private void checkIdentical(Matrix_F32 a , Matrix_F32 b ) {
         for( int i = 0; i < a.getNumRows(); i++  ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
                 assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_F32);
@@ -163,7 +163,7 @@ public class TestConvertMatrixStruct_F32 {
         }
     }
 
-    private void checkIdenticalV(Matrix_32 a , Matrix_32 b ) {
+    private void checkIdenticalV(Matrix_F32 a , Matrix_F32 b ) {
         boolean columnVectorA = a.getNumRows() > a.getNumCols();
         boolean columnVectorB = b.getNumRows() > b.getNumCols();
 

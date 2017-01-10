@@ -19,14 +19,14 @@
 package org.ejml.sparse.cc;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.SMatrixCC_64;
+import org.ejml.data.SMatrixCC_F64;
 
 /**
  * @author Peter Abeles
  */
 public class CommonOps_S64 {
 
-    public static void mult(SMatrixCC_64 a , DMatrixRow_F64 b , DMatrixRow_F64 c ) {
+    public static void mult(SMatrixCC_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c ) {
 
     }
 }

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
  */
 public abstract class GenericTestsMatrix_F32 {
 
-    protected abstract Matrix_32 createMatrix(int numRows , int numCols );
+    protected abstract Matrix_F32 createMatrix(int numRows , int numCols );
 
     public void allTests() {
         testGetNumRows();
@@ -38,13 +38,13 @@ public abstract class GenericTestsMatrix_F32 {
     }
 
     public void testGetNumRows() {
-        Matrix_32 mat = createMatrix(2,3);
+        Matrix_F32 mat = createMatrix(2,3);
 
         assertEquals(2,mat.getNumRows());
     }
 
     public void testGetNumCols() {
-        Matrix_32 mat = createMatrix(2,3);
+        Matrix_F32 mat = createMatrix(2,3);
 
         assertEquals(3,mat.getNumCols());
     }
@@ -61,7 +61,7 @@ public abstract class GenericTestsMatrix_F32 {
     }
 
     private void checkSetAndGet(int m, int n) {
-        Matrix_32 mat = createMatrix(m, n);
+        Matrix_F32 mat = createMatrix(m, n);
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {
@@ -90,7 +90,7 @@ public abstract class GenericTestsMatrix_F32 {
     }
 
     private void checkSetAndGet_unsafe(int m, int n) {
-        Matrix_32 mat = createMatrix(m, n);
+        Matrix_F32 mat = createMatrix(m, n);
 
         for( int i = 0; i < m; i++ ) {
             for( int j = 0; j < n; j++ ) {

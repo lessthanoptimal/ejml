@@ -16,16 +16,19 @@
  * limitations under the License.
  */
 
-package org.ejml.impl;
+package org.ejml.data;
 
-import org.ejml.data.SMatrixCC_64;
+import org.ejml.sparse.ConvertSparseMatrix_F64;
 
 /**
  * @author Peter Abeles
  */
-public class ImplSparseCommonOps_64 {
+public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
 
-    public void transpose(SMatrixCC_64 a , SMatrixCC_64 b ) {
-
+    @Override
+    public Matrix_F64 createSparse(SMatrixTriplet_F64 orig, int numRows, int numCols) {
+        SMatrixCC_F64 dst = new SMatrixCC_F64(numRows,numCols, numRows*numCols);
+        ConvertSparseMatrix_F64.convert(orig,dst,null);
+        return dst;
     }
 }

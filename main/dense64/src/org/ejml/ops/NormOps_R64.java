@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.D1MatrixRow_64;
+import org.ejml.data.D1MatrixRow_F64;
 import org.ejml.data.D1Matrix_F64;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
@@ -228,7 +228,7 @@ public class NormOps_R64 {
      * @param p p value.
      * @return The norm's value.
      */
-    public static double elementP(D1MatrixRow_64 A , double p ) {
+    public static double elementP(D1MatrixRow_F64 A , double p ) {
         if( p == 1 ) {
             return CommonOps_R64.elementSumAbs(A);
         } if( p == 2 ) {

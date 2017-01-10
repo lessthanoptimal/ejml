@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_64;
+import org.ejml.data.Matrix_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.junit.Test;
@@ -81,7 +81,7 @@ public class TestSafeSvd_R64 {
 
     protected static class Dummy implements SingularValueDecomposition_F64<DMatrixRow_F64> {
 
-        Matrix_64 passedInMatrix;
+        Matrix_F64 passedInMatrix;
 
         boolean compact;
         double singular[];

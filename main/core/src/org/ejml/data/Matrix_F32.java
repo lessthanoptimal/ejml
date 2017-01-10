@@ -23,7 +23,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public interface Matrix_64 extends Matrix {
+public interface Matrix_F32 extends Matrix {
 
     /**
      * Returns the value of value of the specified matrix element.
@@ -32,7 +32,7 @@ public interface Matrix_64 extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    double get(int row, int col);
+    float get(int row, int col);
 
     /**
      * Same as {@link #get} but does not perform bounds check on input parameters.  This results in about a 25%
@@ -44,7 +44,7 @@ public interface Matrix_64 extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    double unsafe_get(int row, int col);
+    float unsafe_get(int row, int col);
 
     /**
      * Sets the value of the specified matrix element.
@@ -53,7 +53,7 @@ public interface Matrix_64 extends Matrix {
      * @param col Matrix element's column index.
      * @param val The element's new value.
      */
-    void set(int row, int col, double val);
+    void set(int row, int col, float val);
 
     /**
      * Same as {@link #set} but does not perform bounds check on input parameters.  This results in about a 25%
@@ -65,7 +65,7 @@ public interface Matrix_64 extends Matrix {
      * @param col Matrix element's column index.
      * @param val The element's new value.
      */
-    void unsafe_set(int row, int col, double val);
+    void unsafe_set(int row, int col, float val);
 
     /**
      * Returns the number of elements in this matrix, which is the number of rows

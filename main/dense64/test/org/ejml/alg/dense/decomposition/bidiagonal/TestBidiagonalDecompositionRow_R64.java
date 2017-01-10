@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.D1MatrixRow_64;
+import org.ejml.data.D1MatrixRow_F64;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
@@ -100,7 +100,7 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
         DMatrixRow_F64 C = new DMatrixRow_F64(m,n);
         DMatrixRow_F64 u = new DMatrixRow_F64(m,1);
 
-        D1MatrixRow_64 UBV = alg.getUBV();
+        D1MatrixRow_F64 UBV = alg.getUBV();
 
         for( int i = 0; i < n; i++ ) {
             alg.computeU(i);
@@ -146,7 +146,7 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
         DMatrixRow_F64 C = new DMatrixRow_F64(m,n);
         DMatrixRow_F64 u = new DMatrixRow_F64(n,1);
 
-        D1MatrixRow_64 UBV = alg.getUBV();
+        D1MatrixRow_F64 UBV = alg.getUBV();
 
 //        A.print();
 

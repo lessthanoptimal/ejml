@@ -16,13 +16,16 @@
  * limitations under the License.
  */
 
-package org.ejml.data;
+package org.ejml.impl;
+
+import org.ejml.data.SMatrixCC_F64;
 
 /**
- * Interface for a row-major matrix that uses a single array internally.
- *
  * @author Peter Abeles
  */
-public abstract class D1MatrixRow_64 extends D1Matrix_F64 {
+public class ImplSparseCommonOps_F64 {
 
+    public void transpose(SMatrixCC_F64 a , SMatrixCC_F64 b ) {
+
+    }
 }

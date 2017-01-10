@@ -34,7 +34,7 @@ public class ConvertMatrixStruct_F32 {
      * @param input Input matrix.
      * @param output Output matrix.
      */
-    public static void convert(Matrix_32 input , Matrix_32 output ) {
+    public static void convert(Matrix_F32 input , Matrix_F32 output ) {
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
         if( input.getNumCols() != output.getNumCols() )

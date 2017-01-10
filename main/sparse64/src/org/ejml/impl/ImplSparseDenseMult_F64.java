@@ -18,12 +18,12 @@
 
 package org.ejml.impl;
 
-import org.ejml.data.SMatrixCC_64;
+import org.ejml.data.SMatrixCC_F64;
 
 /**
  * @author Peter Abeles
  */
-public class ImplSparseDenseMult_64 {
+public class ImplSparseDenseMult_F64 {
 
     /**
      * Multiplies a sparse matrix against a dense vector.
@@ -32,7 +32,7 @@ public class ImplSparseDenseMult_64 {
      * @param b (Input) Vector of length a.rows.  Not modified.
      * @param c (Output) Vector of length a.rows. Not modified.
      */
-    public static void mult(SMatrixCC_64 a , double[] b , double[] c ) {
+    public static void mult(SMatrixCC_F64 a , double[] b , double[] c ) {
 
     }
 }

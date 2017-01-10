@@ -23,18 +23,18 @@ import java.util.Random;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsSparseMatrix_64 extends GenericTestsDenseMatrix_F64
+public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatrix_F64
 {
     Random rand = new Random(234);
 
-    public abstract Matrix_64 createSparse(SMatrixTriplet_64 orig , int numRows , int numCols );
+    public abstract Matrix_F64 createSparse(SMatrixTriplet_F64 orig , int numRows , int numCols );
 
     @Override
-    protected Matrix_64 createMatrix(int numRows, int numCols) {
+    protected Matrix_F64 createMatrix(int numRows, int numCols) {
 
         // define a sparse matrix with every element filled.  It should act low a slow and inefficient
         // dense matrix now
-        SMatrixTriplet_64 t = new SMatrixTriplet_64(numRows,numCols,numRows*numCols);
+        SMatrixTriplet_F64 t = new SMatrixTriplet_F64(numRows,numCols,numRows*numCols);
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {

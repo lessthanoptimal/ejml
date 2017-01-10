@@ -50,7 +50,7 @@ import java.util.Arrays;
  * </pre>
  * @author Peter Abeles
  */
-public class DMatrixRow_F32 extends D1MatrixRow_32 {
+public class DMatrixRow_F32 extends D1MatrixRow_F32 {
 
     /**
      * <p>
@@ -158,7 +158,7 @@ public class DMatrixRow_F32 extends D1MatrixRow_32 {
      *
      * @param mat Matrix whose values will be copied.  Not modified.
      */
-    public DMatrixRow_F32(Matrix_32 mat) {
+    public DMatrixRow_F32(Matrix_F32 mat) {
         this(mat.getNumRows(),mat.getNumCols());
         for( int i = 0; i < numRows; i++ ) {
             for( int j = 0; j < numCols; j++ ) {
@@ -347,7 +347,7 @@ public class DMatrixRow_F32 extends D1MatrixRow_32 {
 
     @Override
     public void set(Matrix original) {
-        Matrix_32 m = (Matrix_32)original;
+        Matrix_F32 m = (Matrix_F32)original;
 
         reshape(original.getNumRows(),original.getNumCols());
 
@@ -388,7 +388,7 @@ public class DMatrixRow_F32 extends D1MatrixRow_32 {
     /**
      * <p>
      * Converts the array into a string format for display purposes.
-     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix_32)}.
+     * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, Matrix_F32)}.
      * </p>
      *
      * @return String representation of the matrix.

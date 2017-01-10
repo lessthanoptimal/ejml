@@ -20,7 +20,7 @@ package org.ejml.sparse;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.SMatrixTriplet_64;
+import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.junit.Test;
 
@@ -40,15 +40,15 @@ public class TestConvertSparseMatrix_F64 {
         a.set(2,3, -0.3);
 
         DMatrixRow_SMatrixTriplet(a,null);
-        DMatrixRow_SMatrixTriplet(a, new SMatrixTriplet_64(1,1,2));
+        DMatrixRow_SMatrixTriplet(a, new SMatrixTriplet_F64(1,1,2));
     }
 
-    public void DMatrixRow_SMatrixTriplet(DMatrixRow_F64 a , SMatrixTriplet_64 b ) {
+    public void DMatrixRow_SMatrixTriplet(DMatrixRow_F64 a , SMatrixTriplet_F64 b ) {
         b = ConvertSparseMatrix_F64.convert(a,b);
 
         for (int row = 0; row < a.numRows; row++) {
             for (int col = 0; col < a.numCols; col++) {
-                SMatrixTriplet_64.Element e = b.find(row,col);
+                SMatrixTriplet_F64.Element e = b.find(row,col);
 
                 if( a.get(row,col) == 0.0 ) {
                     assertTrue( null == e );

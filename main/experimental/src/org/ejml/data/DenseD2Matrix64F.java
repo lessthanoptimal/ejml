@@ -26,7 +26,7 @@ import java.io.Serializable;
  *
  * @author Peter Abeles
  */
-public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, Matrix_64 {
+public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, Matrix_F64 {
 
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.

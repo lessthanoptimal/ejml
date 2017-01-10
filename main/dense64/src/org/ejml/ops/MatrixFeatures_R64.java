@@ -342,7 +342,7 @@ public class MatrixFeatures_R64 {
      * @param tol How close to being identical each element needs to be.
      * @return true if equals and false otherwise.
      */
-    public static boolean isEqualsTriangle(Matrix_64 a, Matrix_64 b, boolean upper, double tol)
+    public static boolean isEqualsTriangle(Matrix_F64 a, Matrix_F64 b, boolean upper, double tol)
     {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
             return false;

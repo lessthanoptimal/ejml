@@ -137,7 +137,7 @@ public class DMatrixFixed3x3_F64 implements DMatrixFixed_F64 {
     public void set(Matrix original) {
         if( original.getNumCols() != 3 || original.getNumRows() != 3 )
             throw new IllegalArgumentException("Rows and/or columns do not match");
-        Matrix_64 m = (Matrix_64)original;
+        Matrix_F64 m = (Matrix_F64)original;
         
         a11 = m.get(0,0);
         a12 = m.get(0,1);

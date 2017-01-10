@@ -23,7 +23,7 @@ import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.data.DMatrixFixed_F64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_64;
+import org.ejml.data.Matrix_F64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +45,7 @@ public class TestConvertMatrixStruct_F64 {
         DMatrixRow_F64 a = new DMatrixRow_F64(2,3,true,1,2,3,4,5,6);
         DMatrixRow_F64 b = new DMatrixRow_F64(2,3);
 
-        ConvertMatrixStruct_F64.convert((Matrix_64)a,(Matrix_64)b);
+        ConvertMatrixStruct_F64.convert((Matrix_F64)a,(Matrix_F64)b);
 
         assertTrue(MatrixFeatures_R64.isIdentical(a,b,UtilEjml.TEST_F64));
     }
@@ -155,7 +155,7 @@ public class TestConvertMatrixStruct_F64 {
     }
 
 
-    private void checkIdentical(Matrix_64 a , Matrix_64 b ) {
+    private void checkIdentical(Matrix_F64 a , Matrix_F64 b ) {
         for( int i = 0; i < a.getNumRows(); i++  ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
                 assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_F64);
@@ -163,7 +163,7 @@ public class TestConvertMatrixStruct_F64 {
         }
     }
 
-    private void checkIdenticalV(Matrix_64 a , Matrix_64 b ) {
+    private void checkIdenticalV(Matrix_F64 a , Matrix_F64 b ) {
         boolean columnVectorA = a.getNumRows() > a.getNumCols();
         boolean columnVectorB = b.getNumRows() > b.getNumCols();
 

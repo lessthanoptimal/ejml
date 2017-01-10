@@ -23,18 +23,18 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixTriplet_64 {
+public class SMatrixTriplet_F64 {
 
     public Element[] data = new Element[0];
     public int length;
     public int numRows;
     public int numCols;
 
-    public SMatrixTriplet_64(int maxLength) {
+    public SMatrixTriplet_F64(int maxLength) {
         growData(maxLength);
     }
 
-    public SMatrixTriplet_64(int numRows, int numCols, int maxLength ) {
+    public SMatrixTriplet_F64(int numRows, int numCols, int maxLength ) {
         this(maxLength);
         this.numRows = numRows;
         this.numCols = numCols;

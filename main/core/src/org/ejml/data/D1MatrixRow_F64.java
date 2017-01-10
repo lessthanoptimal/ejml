@@ -18,17 +18,11 @@
 
 package org.ejml.data;
 
-import org.ejml.sparse.ConvertSparseMatrix_F64;
-
 /**
+ * Interface for a row-major matrix that uses a single array internally.
+ *
  * @author Peter Abeles
  */
-public class TestSMatrixCC_64 extends GenericTestsSparseMatrix_64 {
+public abstract class D1MatrixRow_F64 extends D1Matrix_F64 {
 
-    @Override
-    public Matrix_64 createSparse(SMatrixTriplet_64 orig, int numRows, int numCols) {
-        SMatrixCC_64 dst = new SMatrixCC_64(numRows,numCols, numRows*numCols);
-        ConvertSparseMatrix_F64.convert(orig,dst,null);
-        return dst;
-    }
 }

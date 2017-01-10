@@ -21,7 +21,7 @@ package org.ejml;
 import org.ejml.data.D1Matrix_F64;
 import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_64;
+import org.ejml.data.Matrix_F64;
 import org.ejml.ops.CommonOps_R64;
 
 
@@ -36,14 +36,14 @@ public class BenchmarkInstanceOf {
 
     public interface Stuff
     {
-        public void process( Stuff a, Matrix_64 M );
+        public void process( Stuff a, Matrix_F64 M );
     }
 
     public static class StuffA implements Stuff
     {
 
         @Override
-        public void process(Stuff a, Matrix_64 M) {
+        public void process(Stuff a, Matrix_F64 M) {
 
             if( M instanceof DMatrixBlock_F64) {
                 CommonOps_R64.scale(1.0,(DMatrixBlock_F64)M);
