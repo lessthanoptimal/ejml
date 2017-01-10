@@ -30,7 +30,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixCC_64 implements RealMatrix_F64 {
+public class SMatrixCC_64 implements Matrix_64 {
     /**
      * Storage for non-zero values.  Only valid up to numElements-1.
      */

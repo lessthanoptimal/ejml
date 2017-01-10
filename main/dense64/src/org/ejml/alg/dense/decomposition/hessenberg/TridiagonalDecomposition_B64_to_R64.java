@@ -21,8 +21,8 @@ package org.ejml.alg.dense.decomposition.hessenberg;
 import org.ejml.EjmlParameters;
 import org.ejml.alg.block.decomposition.hessenberg.TridiagonalDecompositionHouseholder_B64;
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_R64;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
 
@@ -34,7 +34,7 @@ import org.ejml.ops.CommonOps_R64;
  */
 public class TridiagonalDecomposition_B64_to_R64
         extends BaseDecomposition_B64_to_R64
-        implements TridiagonalSimilarDecomposition_F64<RowMatrix_F64> {
+        implements TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> {
 
 
     public TridiagonalDecomposition_B64_to_R64() {
@@ -46,11 +46,11 @@ public class TridiagonalDecomposition_B64_to_R64
     }
 
     @Override
-    public RowMatrix_F64 getT(RowMatrix_F64 T) {
+    public DMatrixRow_F64 getT(DMatrixRow_F64 T) {
         int N = Ablock.numRows;
 
         if( T == null ) {
-            T = new RowMatrix_F64(N,N);
+            T = new DMatrixRow_F64(N,N);
         } else {
             CommonOps_R64.fill(T, 0);
         }
@@ -71,12 +71,12 @@ public class TridiagonalDecomposition_B64_to_R64
     }
 
     @Override
-    public RowMatrix_F64 getQ(RowMatrix_F64 Q, boolean transposed) {
+    public DMatrixRow_F64 getQ(DMatrixRow_F64 Q, boolean transposed) {
         if( Q == null ) {
-            Q = new RowMatrix_F64(Ablock.numRows,Ablock.numCols);
+            Q = new DMatrixRow_F64(Ablock.numRows,Ablock.numCols);
         }
 
-        BlockMatrix_F64 Qblock = new BlockMatrix_F64();
+        DMatrixBlock_F64 Qblock = new DMatrixBlock_F64();
         Qblock.numRows =  Q.numRows;
         Qblock.numCols =  Q.numCols;
         Qblock.blockLength = blockLength;

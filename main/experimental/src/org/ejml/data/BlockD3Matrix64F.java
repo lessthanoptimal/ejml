@@ -27,7 +27,7 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
-public class BlockD3Matrix64F implements ReshapeMatrix, RealMatrix_F64 {
+public class BlockD3Matrix64F implements ReshapeMatrix, Matrix_64 {
     public int blockLength;
     public double[][][] blocks;
 

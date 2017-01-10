@@ -18,9 +18,9 @@
 
 package org.ejml.alg.dense.mult;
 
+import org.ejml.data.D1MatrixRow_64;
 import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.RowD1Matrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -154,7 +154,7 @@ public class VectorVectorMult_R64 {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProd(D1Matrix_F64 x, D1Matrix_F64 y, RowD1Matrix_F64 A ) {
+    public static void outerProd(D1Matrix_F64 x, D1Matrix_F64 y, D1MatrixRow_64 A ) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -189,7 +189,7 @@ public class VectorVectorMult_R64 {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void addOuterProd(double gamma , D1Matrix_F64 x, D1Matrix_F64 y, RowD1Matrix_F64 A ) {
+    public static void addOuterProd(double gamma , D1Matrix_F64 x, D1Matrix_F64 y, D1MatrixRow_64 A ) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -258,9 +258,9 @@ public class VectorVectorMult_R64 {
      * @param B A m by m matrix where the results are stored. Modified.
      */
     public static void rank1Update(double gamma,
-                                   RowMatrix_F64 A ,
-                                   RowMatrix_F64 u , RowMatrix_F64 w ,
-                                   RowMatrix_F64 B )
+                                   DMatrixRow_F64 A ,
+                                   DMatrixRow_F64 u , DMatrixRow_F64 w ,
+                                   DMatrixRow_F64 B )
     {
         int n = u.getNumElements();
 
@@ -289,9 +289,9 @@ public class VectorVectorMult_R64 {
      * @param u A vector with m elements.  Not modified.
      */
     public static void rank1Update( double gamma,
-                                    RowMatrix_F64 A ,
-                                    RowMatrix_F64 u ,
-                                    RowMatrix_F64 w )
+                                    DMatrixRow_F64 A ,
+                                    DMatrixRow_F64 u ,
+                                    DMatrixRow_F64 w )
     {
         int n = u.getNumElements();
 

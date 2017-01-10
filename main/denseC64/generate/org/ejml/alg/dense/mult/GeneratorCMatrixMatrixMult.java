@@ -37,7 +37,7 @@ public class GeneratorCMatrixMatrixMult {
         String preamble = CodeGeneratorMisc.COPYRIGHT +
                 "package org.ejml.alg.dense.mult;\n" +
                 "\n" +
-                "import org.ejml.data.RowMatrix_C64;\n" +
+                "import org.ejml.data.DMatrixRow_C64;\n" +
                 "import org.ejml.ops.CommonOps_CR64;\n" +
                 "import org.ejml.ops.MatrixDimensionException;\n" +
                 "\n" +
@@ -509,9 +509,9 @@ public class GeneratorCMatrixMatrixMult {
         if( hasAlpha ) ret += "double realAlpha , double imagAlpha , ";
 
         if( hasAux ) {
-            ret += "RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c , double []aux )\n";
+            ret += "DMatrixRow_C64 a , DMatrixRow_C64 b , DMatrixRow_C64 c , double []aux )\n";
         } else {
-            ret += "RowMatrix_C64 a , RowMatrix_C64 b , RowMatrix_C64 c )\n";
+            ret += "DMatrixRow_C64 a , DMatrixRow_C64 b , DMatrixRow_C64 c )\n";
         }
 
         ret += "    {\n";

@@ -18,10 +18,10 @@
 
 package org.ejml;
 
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.RealMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.Matrix_64;
 import org.ejml.ops.CommonOps_R64;
 
 
@@ -36,20 +36,20 @@ public class BenchmarkInstanceOf {
 
     public interface Stuff
     {
-        public void process( Stuff a, RealMatrix_F64 M );
+        public void process( Stuff a, Matrix_64 M );
     }
 
     public static class StuffA implements Stuff
     {
 
         @Override
-        public void process(Stuff a, RealMatrix_F64 M) {
+        public void process(Stuff a, Matrix_64 M) {
 
-            if( M instanceof BlockMatrix_F64) {
-                CommonOps_R64.scale(1.0,(BlockMatrix_F64)M);
-            } else if( M instanceof RowMatrix_F64) {
-                CommonOps_R64.scale(SCALE,(RowMatrix_F64)M);
-//                CommonOps.scale(0.5,(RowMatrix_F64)M);
+            if( M instanceof DMatrixBlock_F64) {
+                CommonOps_R64.scale(1.0,(DMatrixBlock_F64)M);
+            } else if( M instanceof DMatrixRow_F64) {
+                CommonOps_R64.scale(SCALE,(DMatrixRow_F64)M);
+//                CommonOps.scale(0.5,(DMatrixRow_F64)M);
             } else if(M instanceof D1Matrix_F64) {
                 CommonOps_R64.scale(1.0,(D1Matrix_F64)M);
             } else {
@@ -58,7 +58,7 @@ public class BenchmarkInstanceOf {
         }
     }
 
-    public static void withIfStatement( RowMatrix_F64 M )
+    public static void withIfStatement( DMatrixRow_F64 M )
     {
         if( M.numCols > 10 ) {
             CommonOps_R64.scale(2.0,M);
@@ -71,7 +71,7 @@ public class BenchmarkInstanceOf {
     }
 
 
-    public static long processInstanceOf(RowMatrix_F64 M , int N ) {
+    public static long processInstanceOf(DMatrixRow_F64 M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -82,7 +82,7 @@ public class BenchmarkInstanceOf {
         return System.currentTimeMillis() - before;
     }
 
-    public static long processDirect(RowMatrix_F64 M , int N ) {
+    public static long processDirect(DMatrixRow_F64 M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -94,7 +94,7 @@ public class BenchmarkInstanceOf {
         return System.currentTimeMillis() - before;
     }
 
-    public static long processIf(RowMatrix_F64 M , int N ) {
+    public static long processIf(DMatrixRow_F64 M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -107,7 +107,7 @@ public class BenchmarkInstanceOf {
 
 
     public static void main( String args[] ) {
-        RowMatrix_F64 A = new RowMatrix_F64(2,2,true,0.1,0.5,0.7,10.0);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,2,true,0.1,0.5,0.7,10.0);
 
         int N = 200000000;
 

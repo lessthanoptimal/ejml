@@ -19,7 +19,7 @@
 package org.ejml.factory;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -40,9 +40,9 @@ public class TestDecompositionFactory_R64 {
     @Test
     public void quality_eig() {
         // I'm assuming it can process this matrix with no problems
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(5,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(5,-1,1,rand);
 
-        EigenDecomposition_F64<RowMatrix_F64> eig = DecompositionFactory_R64.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRow_F64> eig = DecompositionFactory_R64.eig(A.numRows,true);
 
         assertTrue(eig.decompose(A));
 
@@ -60,9 +60,9 @@ public class TestDecompositionFactory_R64 {
     @Test
     public void quality_svd() {
         // I'm assuming it can process this matrix with no problems
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
 
-        SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
+        SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
 
         assertTrue(svd.decompose(A));
 

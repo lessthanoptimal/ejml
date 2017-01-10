@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
@@ -28,7 +28,7 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class BenchmarkEigenDecomposition {
-    public static long watched(RowMatrix_F64 orig , int numTrials ) {
+    public static long watched(DMatrixRow_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -43,7 +43,7 @@ public class BenchmarkEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
         System.out.println("Watched            = "+ watched(mat,numTrials));
     }
@@ -60,7 +60,7 @@ public class BenchmarkEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            RowMatrix_F64 symMat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRow_F64 symMat = RandomMatrices_R64.createRandom(w,w,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

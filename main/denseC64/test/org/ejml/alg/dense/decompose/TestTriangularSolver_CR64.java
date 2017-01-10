@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.MatrixFeatures_CR64;
 import org.ejml.ops.RandomMatrices_CR64;
@@ -38,15 +38,15 @@ public class TestTriangularSolver_CR64 {
 
     @Test
     public void solveU() {
-        RowMatrix_C64 U = RandomMatrices_CR64.createRandom(3, 3, -1 ,1 ,rand);
+        DMatrixRow_C64 U = RandomMatrices_CR64.createRandom(3, 3, -1 ,1 ,rand);
         for( int i = 0; i < U.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {
                 U.set(i,j,0,0);
             }
         }
 
-        RowMatrix_C64 X = RandomMatrices_CR64.createRandom(3, 1, -1 ,1 ,rand);
-        RowMatrix_C64 B = new RowMatrix_C64(3,1);
+        DMatrixRow_C64 X = RandomMatrices_CR64.createRandom(3, 1, -1 ,1 ,rand);
+        DMatrixRow_C64 B = new DMatrixRow_C64(3,1);
 
         CommonOps_CR64.mult(U, X, B);
 
@@ -58,10 +58,10 @@ public class TestTriangularSolver_CR64 {
     @Test
     public void solveL_diagReal() {
         for( int N = 1; N <= 4; N++ ) {
-            RowMatrix_C64 L = createLowerTriangleDiagReal(N);
+            DMatrixRow_C64 L = createLowerTriangleDiagReal(N);
 
-            RowMatrix_C64 X = RandomMatrices_CR64.createRandom(N, 1, -1, 1, rand);
-            RowMatrix_C64 B = new RowMatrix_C64(N, 1);
+            DMatrixRow_C64 X = RandomMatrices_CR64.createRandom(N, 1, -1, 1, rand);
+            DMatrixRow_C64 B = new DMatrixRow_C64(N, 1);
 
             CommonOps_CR64.mult(L, X, B);
 
@@ -74,8 +74,8 @@ public class TestTriangularSolver_CR64 {
     /**
      * Creates a random complex lower triangular matrix with real diagonal elements
      */
-    private RowMatrix_C64 createLowerTriangleDiagReal(int n) {
-        RowMatrix_C64 L = RandomMatrices_CR64.createRandom(n, n, -1, 1, rand);
+    private DMatrixRow_C64 createLowerTriangleDiagReal(int n) {
+        DMatrixRow_C64 L = RandomMatrices_CR64.createRandom(n, n, -1, 1, rand);
         for (int i = 0; i < L.numRows; i++) {
             for (int j = i + 1; j < L.numCols; j++) {
                 L.set(i, j, 0, 0);
@@ -90,13 +90,13 @@ public class TestTriangularSolver_CR64 {
     @Test
     public void solveConjTranL_diagReal() {
         for( int N = 1; N <= 4; N++ ) {
-            RowMatrix_C64 L = createLowerTriangleDiagReal(N);
+            DMatrixRow_C64 L = createLowerTriangleDiagReal(N);
 
-            RowMatrix_C64 L_ct = new RowMatrix_C64(N, N);
+            DMatrixRow_C64 L_ct = new DMatrixRow_C64(N, N);
             CommonOps_CR64.transposeConjugate(L,L_ct);
 
-            RowMatrix_C64 X = RandomMatrices_CR64.createRandom(N, 1, -1, 1, rand);
-            RowMatrix_C64 B = new RowMatrix_C64(N, 1);
+            DMatrixRow_C64 X = RandomMatrices_CR64.createRandom(N, 1, -1, 1, rand);
+            DMatrixRow_C64 B = new DMatrixRow_C64(N, 1);
 
             CommonOps_CR64.mult(L_ct, X, B);
 

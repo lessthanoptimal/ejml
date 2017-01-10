@@ -21,8 +21,8 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -51,14 +51,14 @@ public class TestCholeskyOuterForm_B64 {
     public void testUpper() {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(N,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_R64.chol(1,false);
+            CholeskyDecomposition_F64<DMatrixRow_F64> chol = DecompositionFactory_R64.chol(1,false);
             assertTrue(DecompositionFactory_R64.decomposeSafe(chol,A));
 
-            RowMatrix_F64 expectedT = chol.getT(null);
+            DMatrixRow_F64 expectedT = chol.getT(null);
 
-            BlockMatrix_F64 blockA = MatrixOps_B64.convert(A,bl);
+            DMatrixBlock_F64 blockA = MatrixOps_B64.convert(A,bl);
 
             CholeskyOuterForm_B64 blockChol = new CholeskyOuterForm_B64(false);
 
@@ -81,14 +81,14 @@ public class TestCholeskyOuterForm_B64 {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
 
-            RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(N,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(N,rand);
 
-            CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_R64.chol(1,true);
+            CholeskyDecomposition_F64<DMatrixRow_F64> chol = DecompositionFactory_R64.chol(1,true);
             assertTrue(DecompositionFactory_R64.decomposeSafe(chol, A));
 
-            RowMatrix_F64 expectedT = chol.getT(null);
+            DMatrixRow_F64 expectedT = chol.getT(null);
 
-            BlockMatrix_F64 blockA = MatrixOps_B64.convert(A,bl);
+            DMatrixBlock_F64 blockA = MatrixOps_B64.convert(A,bl);
 
             CholeskyOuterForm_B64 blockChol = new CholeskyOuterForm_B64(true);
 

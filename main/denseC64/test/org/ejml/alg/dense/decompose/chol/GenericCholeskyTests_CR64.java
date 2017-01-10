@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decompose.chol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.CheckDecompositionInterface_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.factory.DecompositionFactory_CR64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
@@ -45,7 +45,7 @@ public abstract class GenericCholeskyTests_CR64 {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition_F64<RowMatrix_C64> create(boolean lower );
+    public abstract CholeskyDecomposition_F64<DMatrixRow_C64> create(boolean lower );
 
     @Test
     public void checkModifyInput() {
@@ -58,9 +58,9 @@ public abstract class GenericCholeskyTests_CR64 {
      */
     @Test
     public void testNotPositiveDefinite() {
-        RowMatrix_C64 A = new RowMatrix_C64(2, 2, true, 1, 0, -1, 0, -1, 0, -2, 0);
+        DMatrixRow_C64 A = new DMatrixRow_C64(2, 2, true, 1, 0, -1, 0, -1, 0, -2, 0);
 
-        CholeskyDecomposition_F64<RowMatrix_C64> alg = create(true);
+        CholeskyDecomposition_F64<DMatrixRow_C64> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -84,15 +84,15 @@ public abstract class GenericCholeskyTests_CR64 {
     }
 
     private void checkWithDefinition(boolean lower, int size) {
-        RowMatrix_C64 A = RandomMatrices_CR64.createHermPosDef(size, rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createHermPosDef(size, rand);
 
-        CholeskyDecomposition_F64<RowMatrix_C64> cholesky = create(lower);
+        CholeskyDecomposition_F64<DMatrixRow_C64> cholesky = create(lower);
         assertTrue(DecompositionFactory_CR64.decomposeSafe(cholesky, A));
 
-        RowMatrix_C64 T = cholesky.getT(null);
-        RowMatrix_C64 T_trans = new RowMatrix_C64(size,size);
+        DMatrixRow_C64 T = cholesky.getT(null);
+        DMatrixRow_C64 T_trans = new DMatrixRow_C64(size,size);
         CommonOps_CR64.transposeConjugate(T, T_trans);
-        RowMatrix_C64 found = new RowMatrix_C64(size,size);
+        DMatrixRow_C64 found = new DMatrixRow_C64(size,size);
 
         if( lower ) {
             CommonOps_CR64.mult(T,T_trans,found);
@@ -120,10 +120,10 @@ public abstract class GenericCholeskyTests_CR64 {
 
     public void checkDeterminant( boolean lower , int size ) {
 
-        LUDecomposition_F64<RowMatrix_C64> lu = DecompositionFactory_CR64.lu(size,size);
-        CholeskyDecomposition_F64<RowMatrix_C64> cholesky = create(lower);
+        LUDecomposition_F64<DMatrixRow_C64> lu = DecompositionFactory_CR64.lu(size,size);
+        CholeskyDecomposition_F64<DMatrixRow_C64> cholesky = create(lower);
 
-        RowMatrix_C64 A = RandomMatrices_CR64.createHermPosDef(size, rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createHermPosDef(size, rand);
 
         assertTrue(DecompositionFactory_CR64.decomposeSafe(lu,A));
         assertTrue(DecompositionFactory_CR64.decomposeSafe(cholesky,A));
@@ -137,7 +137,7 @@ public abstract class GenericCholeskyTests_CR64 {
 
     @Test
     public void failZeros() {
-        RowMatrix_C64 A = new RowMatrix_C64(3,3);
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3);
 
         assertFalse(create(true).decompose(A));
         assertFalse(create(false).decompose(A));

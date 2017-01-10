@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
 
@@ -30,11 +30,11 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class LinearSolverUnrolled_R64 implements LinearSolver<RowMatrix_F64> {
-    RowMatrix_F64 A;
+public class LinearSolverUnrolled_R64 implements LinearSolver<DMatrixRow_F64> {
+    DMatrixRow_F64 A;
 
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         if( A.numRows != A.numCols)
             return false;
 
@@ -48,12 +48,12 @@ public class LinearSolverUnrolled_R64 implements LinearSolver<RowMatrix_F64> {
     }
 
     @Override
-    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
+    public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
         throw new RuntimeException("Not supported");
     }
 
     @Override
-    public void invert(RowMatrix_F64 A_inv) {
+    public void invert(DMatrixRow_F64 A_inv) {
         if( A.numRows == 1 )
             A_inv.set(0,  1.0/A.get(0));
         UnrolledInverseFromMinor_R64.inv(A,A_inv);

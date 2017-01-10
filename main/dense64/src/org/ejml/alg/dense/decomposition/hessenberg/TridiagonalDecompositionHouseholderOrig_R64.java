@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_R64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 /**
  * <p>
@@ -38,7 +38,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
      * upper tridiagonal portion of the matrix.  The householder vectors are stored
      * in the upper rows.
      */
-    RowMatrix_F64 QT;
+    DMatrixRow_F64 QT;
 
     // The size of the matrix
     int N;
@@ -52,7 +52,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
 
     public TridiagonalDecompositionHouseholderOrig_R64() {
         N = 1;
-        QT = new RowMatrix_F64(N,N);
+        QT = new DMatrixRow_F64(N,N);
         w = new double[N];
         b = new double[N];
         gammas = new double[N];
@@ -62,7 +62,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
      * Returns the interal matrix where the decomposed results are stored.
      * @return
      */
-    public RowMatrix_F64 getQT() {
+    public DMatrixRow_F64 getQT() {
         return QT;
     }
 
@@ -72,7 +72,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
      * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
-    public RowMatrix_F64 getT(RowMatrix_F64 T) {
+    public DMatrixRow_F64 getT(DMatrixRow_F64 T) {
         T = UtilDecompositons_R64.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
@@ -97,7 +97,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public RowMatrix_F64 getQ(RowMatrix_F64 Q ) {
+    public DMatrixRow_F64 getQ(DMatrixRow_F64 Q ) {
         Q = UtilDecompositons_R64.checkIdentity(Q,N,N);
 
         for( int i = 0; i < N; i++ ) w[i] = 0;
@@ -119,7 +119,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
      *
      * @param A Symmetric matrix that is going to be decomposed.  Not modified.
      */
-    public void decompose( RowMatrix_F64 A ) {
+    public void decompose( DMatrixRow_F64 A ) {
         init(A);
 
         for( int k = 1; k < N; k++ ) {
@@ -237,7 +237,7 @@ public class TridiagonalDecompositionHouseholderOrig_R64 {
      *
      * @param A Matrix being decomposed.
      */
-    public void init( RowMatrix_F64 A ) {
+    public void init( DMatrixRow_F64 A ) {
         if( A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be square");
 

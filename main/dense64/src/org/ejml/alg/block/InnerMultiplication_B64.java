@@ -18,11 +18,11 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 
 /**
  * <p>
- * Matrix multiplication for the inner row major blocks, typically inside of a {@link BlockMatrix_F64}.
+ * Matrix multiplication for the inner row major blocks, typically inside of a {@link DMatrixBlock_F64}.
  * </p>
  *
  * <p>

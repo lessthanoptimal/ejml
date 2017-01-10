@@ -23,7 +23,7 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionBlock_R64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_R64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_B64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CovarianceOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -38,9 +38,9 @@ import java.util.Random;
  */
 public class BenchmarkInvertSymPosDef {
 
-    public static long invertCovar(RowMatrix_F64 orig , int numTrials ) {
+    public static long invertCovar(DMatrixRow_F64 orig , int numTrials ) {
 
-        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
+        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -51,10 +51,10 @@ public class BenchmarkInvertSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertCholesky(LinearSolver<RowMatrix_F64> alg , RowMatrix_F64 orig , int numTrials ) {
+    public static long invertCholesky(LinearSolver<DMatrixRow_F64> alg , DMatrixRow_F64 orig , int numTrials ) {
 
-        alg = new LinearSolverSafe<RowMatrix_F64>(alg);
-        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
+        alg = new LinearSolverSafe<DMatrixRow_F64>(alg);
+        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -69,7 +69,7 @@ public class BenchmarkInvertSymPosDef {
     }
 
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
 
         System.out.println("invert covariance         = "+ invertCovar(mat,numTrials));
@@ -106,7 +106,7 @@ public class BenchmarkInvertSymPosDef {
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            RowMatrix_F64 symMat = RandomMatrices_R64.createSymmPosDef(w,rand);
+            DMatrixRow_F64 symMat = RandomMatrices_R64.createSymmPosDef(w,rand);
             System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

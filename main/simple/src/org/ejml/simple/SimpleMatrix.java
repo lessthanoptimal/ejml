@@ -26,7 +26,7 @@ import java.util.Random;
 
 /**
  * <p>
- * {@link SimpleMatrix} is a wrapper around {@link RowMatrix_F64} that provides an
+ * {@link SimpleMatrix} is a wrapper around {@link DMatrixRow_F64} that provides an
  * easy to use object oriented interface for performing matrix operations.  It is designed to be
  * more accessible to novice programmers and provide a way to rapidly code up solutions by simplifying
  * memory management and providing easy to use functions.
@@ -42,11 +42,11 @@ import java.util.Random;
  * </p>
  *
  * <p>
- * Working with both {@link RowMatrix_F64} and SimpleMatrix in the same code base is easy.
- * To access the internal RowMatrix_F64 in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
- * To turn a RowMatrix_F64 into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}.  Not
+ * Working with both {@link DMatrixRow_F64} and SimpleMatrix in the same code base is easy.
+ * To access the internal DMatrixRow_F64 in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
+ * To turn a DMatrixRow_F64 into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}.  Not
  * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
- * RowMatrix_F64.
+ * DMatrixRow_F64.
  * </p>
  *
  * <p>
@@ -106,7 +106,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Both are equivalent.
      * </p>
      *
-     * @see RowMatrix_F64#RowMatrix_F64(int, int, boolean, double...)
+     * @see DMatrixRow_F64#DMatrixRow_F64(int, int, boolean, double...)
      *
      * @param numRows The number of rows.
      * @param numCols The number of columns.
@@ -114,11 +114,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data The formatted 1D array. Not modified.
      */
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double ...data) {
-        mat = new RowMatrix_F64(numRows,numCols, rowMajor, data);
+        mat = new DMatrixRow_F64(numRows,numCols, rowMajor, data);
     }
 
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, float ...data) {
-        mat = new RowMatrix_F32(numRows,numCols, rowMajor, data);
+        mat = new DMatrixRow_F32(numRows,numCols, rowMajor, data);
     }
 
     /**
@@ -129,31 +129,31 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * data[ row ][ column ]
      * </p>
      *
-     * @see RowMatrix_F64#RowMatrix_F64(double[][])
+     * @see DMatrixRow_F64#DMatrixRow_F64(double[][])
      *
      * @param data 2D array representation of the matrix. Not modified.
      */
     public SimpleMatrix(double data[][]) {
-        mat = new RowMatrix_F64(data);
+        mat = new DMatrixRow_F64(data);
     }
 
     /**
      * Creates a new matrix that is initially set to zero with the specified dimensions.
      *
-     * @see RowMatrix_F64#RowMatrix_F64(int, int)
+     * @see DMatrixRow_F64#DMatrixRow_F64(int, int)
      *
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
      */
     public SimpleMatrix(int numRows, int numCols) {
-        mat = new RowMatrix_F64(numRows, numCols);
+        mat = new DMatrixRow_F64(numRows, numCols);
     }
 
     public SimpleMatrix(int numRows, int numCols, Class type) {
-        if( type == RowMatrix_F64.class )
-            mat = new RowMatrix_F64(numRows, numCols);
+        if( type == DMatrixRow_F64.class )
+            mat = new DMatrixRow_F64(numRows, numCols);
         else
-            mat = new RowMatrix_F32(numRows, numCols);
+            mat = new DMatrixRow_F32(numRows, numCols);
     }
 
     /**
@@ -171,13 +171,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param orig The original matrix whose value is copied.  Not modified.
      */
     public SimpleMatrix( Matrix orig ) {
-        if( orig instanceof BlockMatrix_F64) {
-            RowMatrix_F64 a = new RowMatrix_F64(orig.getNumRows(), orig.getNumCols());
-            ConvertMatrixStruct_F64.convert((BlockMatrix_F64) orig, a);
+        if( orig instanceof DMatrixBlock_F64) {
+            DMatrixRow_F64 a = new DMatrixRow_F64(orig.getNumRows(), orig.getNumCols());
+            ConvertMatrixStruct_F64.convert((DMatrixBlock_F64) orig, a);
             this.mat = a;
-        } else if( orig instanceof BlockMatrix_F32) {
-            RowMatrix_F32 a = new RowMatrix_F32(orig.getNumRows(),orig.getNumCols());
-            ConvertMatrixStruct_F32.convert((BlockMatrix_F32)orig, a);
+        } else if( orig instanceof DMatrixBlock_F32) {
+            DMatrixRow_F32 a = new DMatrixRow_F32(orig.getNumRows(),orig.getNumCols());
+            ConvertMatrixStruct_F32.convert((DMatrixBlock_F32)orig, a);
             this.mat = a;
         } else {
             this.mat = orig.copy();
@@ -190,10 +190,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public SimpleMatrix(){}
 
     /**
-     * Creates a new SimpleMatrix with the specified RowMatrix_F64 used as its internal matrix.  This means
-     * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in RowMatrix_F64.
+     * Creates a new SimpleMatrix with the specified DMatrixRow_F64 used as its internal matrix.  This means
+     * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in DMatrixRow_F64.
      *
-     * @param internalMat The internal RowMatrix_F64 of the returned SimpleMatrix. Will be modified.
+     * @param internalMat The internal DMatrixRow_F64 of the returned SimpleMatrix. Will be modified.
      */
     public static SimpleMatrix wrap( Matrix internalMat ) {
         SimpleMatrix ret = new SimpleMatrix();
@@ -212,7 +212,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width ) {
         SimpleMatrix ret = new SimpleMatrix(width,width);
 
-        CommonOps_R64.setIdentity((RowMatrix_F64)ret.mat);
+        CommonOps_R64.setIdentity((DMatrixRow_F64)ret.mat);
 
         return ret;
     }
@@ -220,10 +220,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public static SimpleMatrix identity( int width , Class type) {
         SimpleMatrix ret = new SimpleMatrix(width,width, type);
 
-        if( type == RowMatrix_F64.class )
-            CommonOps_R64.setIdentity((RowMatrix_F64)ret.mat);
+        if( type == DMatrixRow_F64.class )
+            CommonOps_R64.setIdentity((DMatrixRow_F64)ret.mat);
         else
-            CommonOps_R32.setIdentity((RowMatrix_F32)ret.mat);
+            CommonOps_R32.setIdentity((DMatrixRow_F32)ret.mat);
 
         return ret;
     }
@@ -244,14 +244,14 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @return A diagonal matrix.
      */
     public static SimpleMatrix diag( double ...vals ) {
-        RowMatrix_F64 m = CommonOps_R64.diag(vals);
+        DMatrixRow_F64 m = CommonOps_R64.diag(vals);
         SimpleMatrix ret = wrap(m);
         return ret;
     }
 
     public static SimpleMatrix diag( Class type, double ...vals ) {
         Matrix m;
-        if( type == RowMatrix_F64.class )
+        if( type == DMatrixRow_F64.class )
             m = CommonOps_R64.diag(vals);
         else {
             float f[] = new float[ vals.length ];
@@ -269,7 +269,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
      * </p>
      *
-     * @see RandomMatrices_R64#setRandom(RowMatrix_F64,java.util.Random)
+     * @see RandomMatrices_R64#setRandom(DMatrixRow_F64,java.util.Random)
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -279,13 +279,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix random_F64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)ret.mat,minValue,maxValue,rand);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
     public static SimpleMatrix random_F32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
-        SimpleMatrix ret = new SimpleMatrix(numRows,numCols, RowMatrix_F32.class);
-        RandomMatrices_R32.setRandom((RowMatrix_F32)ret.mat,minValue,maxValue,rand);
+        SimpleMatrix ret = new SimpleMatrix(numRows,numCols, DMatrixRow_F32.class);
+        RandomMatrices_R32.setRandom((DMatrixRow_F32)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
@@ -305,13 +305,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1);
 
         if( covariance.bits() == 64) {
-            CovarianceRandomDraw_R64 draw = new CovarianceRandomDraw_R64(random, (RowMatrix_F64)covariance.getMatrix());
+            CovarianceRandomDraw_R64 draw = new CovarianceRandomDraw_R64(random, (DMatrixRow_F64)covariance.getMatrix());
 
-            draw.next((RowMatrix_F64)found.getMatrix());
+            draw.next((DMatrixRow_F64)found.getMatrix());
         } else {
-            CovarianceRandomDraw_R32 draw = new CovarianceRandomDraw_R32(random, (RowMatrix_F32)covariance.getMatrix());
+            CovarianceRandomDraw_R32 draw = new CovarianceRandomDraw_R32(random, (DMatrixRow_F32)covariance.getMatrix());
 
-            draw.next((RowMatrix_F32)found.getMatrix());
+            draw.next((DMatrixRow_F32)found.getMatrix());
         }
 
         return found;
@@ -338,10 +338,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 //     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
 //     * </p>
 //     *
-//     * @see CommonOps#mult(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
-//     * @see CommonOps#multTransA(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
-//     * @see CommonOps#multTransB(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
-//     * @see CommonOps#multTransAB(RowMatrix_F64, RowMatrix_F64, RowMatrix_F64)
+//     * @see CommonOps#mult(DMatrixRow_F64, DMatrixRow_F64, DMatrixRow_F64)
+//     * @see CommonOps#multTransA(DMatrixRow_F64, DMatrixRow_F64, DMatrixRow_F64)
+//     * @see CommonOps#multTransB(DMatrixRow_F64, DMatrixRow_F64, DMatrixRow_F64)
+//     * @see CommonOps#multTransAB(DMatrixRow_F64, DMatrixRow_F64, DMatrixRow_F64)
 //     *
 //     * @param tranA If true matrix A is transposed.
 //     * @param tranB If true matrix B is transposed.

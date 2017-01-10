@@ -19,7 +19,7 @@
 package org.ejml;
 
 import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
@@ -107,7 +107,7 @@ public class BenchmarkInheritanceCall {
         }
     }
 
-    public static void multChild(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
+    public static void multChild(DMatrixRow_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c )
     {
         double dataA[] = a.data;
         double dataB[] = b.data;
@@ -149,9 +149,9 @@ public class BenchmarkInheritanceCall {
     public static void main( String args[] ) {
         Random rand = new Random(23234);
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(2,2,rand);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(2,2,rand);
-        RowMatrix_F64 C = new RowMatrix_F64(2,2);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(2,2,rand);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(2,2,rand);
+        DMatrixRow_F64 C = new DMatrixRow_F64(2,2);
 
         int N = 40000000;
 

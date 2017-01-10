@@ -21,8 +21,8 @@ package org.ejml.alg.block.linsol.chol;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.TriangularSolver_B64;
 import org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.SpecializedOps_R64;
@@ -47,7 +47,7 @@ import org.ejml.ops.SpecializedOps_R64;
  *
  * @author Peter Abeles
  */
-public class CholeskyOuterSolver_B64 implements LinearSolver<BlockMatrix_F64> {
+public class CholeskyOuterSolver_B64 implements LinearSolver<DMatrixBlock_F64> {
 
     // cholesky decomposition
     private CholeskyOuterForm_B64 decomposer = new CholeskyOuterForm_B64(true);
@@ -65,7 +65,7 @@ public class CholeskyOuterSolver_B64 implements LinearSolver<BlockMatrix_F64> {
      * @return If the matrix can be decomposed.  Will always return false of not SPD.
      */
     @Override
-    public boolean setA(BlockMatrix_F64 A) {
+    public boolean setA(DMatrixBlock_F64 A) {
         // Extract a lower triangular solution
         if( !decomposer.decompose(A) )
             return false;
@@ -85,7 +85,7 @@ public class CholeskyOuterSolver_B64 implements LinearSolver<BlockMatrix_F64> {
      * from B into X.
      */
     @Override
-    public void solve(BlockMatrix_F64 B, BlockMatrix_F64 X) {
+    public void solve(DMatrixBlock_F64 B, DMatrixBlock_F64 X) {
         if( B.blockLength != blockLength )
             throw new IllegalArgumentException("Unexpected blocklength in B.");
 
@@ -115,8 +115,8 @@ public class CholeskyOuterSolver_B64 implements LinearSolver<BlockMatrix_F64> {
     }
 
     @Override
-    public void invert(BlockMatrix_F64 A_inv) {
-        BlockMatrix_F64 T = decomposer.getT(null);
+    public void invert(DMatrixBlock_F64 A_inv) {
+        DMatrixBlock_F64 T = decomposer.getT(null);
         if( A_inv.numRows != T.numRows || A_inv.numCols != T.numCols )
             throw new IllegalArgumentException("Unexpected number or rows and/or columns");
 
@@ -152,7 +152,7 @@ public class CholeskyOuterSolver_B64 implements LinearSolver<BlockMatrix_F64> {
     }
 
     @Override
-    public CholeskyDecomposition_F64<BlockMatrix_F64> getDecomposition() {
+    public CholeskyDecomposition_F64<DMatrixBlock_F64> getDecomposition() {
         return decomposer;
     }
 }

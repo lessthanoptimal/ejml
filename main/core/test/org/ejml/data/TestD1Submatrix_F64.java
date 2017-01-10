@@ -39,7 +39,7 @@ public class TestD1Submatrix_F64 {
 
     @Test
     public void get() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,10,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,10,-1,1,rand);
 
         D1Submatrix_F64 S = new D1Submatrix_F64(A,2,4,1,10);
 
@@ -48,7 +48,7 @@ public class TestD1Submatrix_F64 {
 
     @Test
     public void set() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,10,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,10,-1,1,rand);
 
         D1Submatrix_F64 S = new D1Submatrix_F64(A,2,4,1,10);
 
@@ -59,13 +59,13 @@ public class TestD1Submatrix_F64 {
 
     @Test
     public void extract() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,10,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,10,-1,1,rand);
 
         D1Submatrix_F64 S = new D1Submatrix_F64(A,2,4,1,10);
 
-        RowMatrix_F64 M = S.extract();
+        DMatrixRow_F64 M = S.extract();
 
-        RowMatrix_F64 E = CommonOps_R64.extract(A,2,4,1,10);
+        DMatrixRow_F64 E = CommonOps_R64.extract(A,2,4,1,10);
 
         assertTrue(MatrixFeatures_R64.isEquals(E,M));
     }

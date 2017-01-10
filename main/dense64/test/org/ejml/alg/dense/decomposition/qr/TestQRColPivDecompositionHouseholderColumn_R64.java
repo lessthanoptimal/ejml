@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -44,7 +44,7 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
      */
     @Test
     public void noPivot() {
-        RowMatrix_F64 A = RandomMatrices_R64.createOrthogonal(6, 3, rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createOrthogonal(6, 3, rand);
 
         // make sure the columns have norms in descending magnitude
         for( int i = 0; i < A.numCols; i++ ) {
@@ -60,10 +60,10 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
         QRColPivDecompositionHouseholderColumn_R64 alg = new QRColPivDecompositionHouseholderColumn_R64();
         assertTrue(alg.decompose(A));
 
-        RowMatrix_F64 Q = alg.getQ(null, false);
-        RowMatrix_F64 R = alg.getR(null, false);
+        DMatrixRow_F64 Q = alg.getQ(null, false);
+        DMatrixRow_F64 R = alg.getR(null, false);
 
-        RowMatrix_F64 found = new RowMatrix_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 found = new DMatrixRow_F64(A.numRows,A.numCols);
         CommonOps_R64.mult(Q,R,found);
 
         assertTrue(MatrixFeatures_R64.isIdentical(A,found, UtilEjml.TEST_F64));
@@ -74,7 +74,7 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
             assertEquals(i,pivots[i]);
         }
 
-        RowMatrix_F64 P = alg.getPivotMatrix(null);
+        DMatrixRow_F64 P = alg.getPivotMatrix(null);
         assertTrue(MatrixFeatures_R64.isIdentity(P, UtilEjml.TEST_F64));
     }
 
@@ -89,7 +89,7 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
 
             // construct a singular matrix from its SVD decomposition
             SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_R64.createOrthogonal(numRows,numRows,rand));
-            SimpleMatrix S = SimpleMatrix.diag( RowMatrix_F64.class, 1,2,3,4,5,6,7,8,9,10);
+            SimpleMatrix S = SimpleMatrix.diag( DMatrixRow_F64.class, 1,2,3,4,5,6,7,8,9,10);
             SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_R64.createOrthogonal(numRows,numRows,rand));
 
             for( int i = 0; i < numSingular; i++ ) {
@@ -99,9 +99,9 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
             SimpleMatrix A = U.mult(S).mult(V.transpose());
 
             QRColPivDecompositionHouseholderColumn_R64 alg = new QRColPivDecompositionHouseholderColumn_R64();
-            assertTrue(alg.decompose((RowMatrix_F64)A.getMatrix()));
+            assertTrue(alg.decompose((DMatrixRow_F64)A.getMatrix()));
 
-            checkDecomposition(false,(RowMatrix_F64)A.getMatrix(),alg);
+            checkDecomposition(false,(DMatrixRow_F64)A.getMatrix(),alg);
         }
     }
 
@@ -123,7 +123,7 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
      */
     @Test
     public void testZeroMatrix() {
-        RowMatrix_F64 A = new RowMatrix_F64(5,5);
+        DMatrixRow_F64 A = new DMatrixRow_F64(5,5);
 
         QRColPivDecompositionHouseholderColumn_R64 alg = new QRColPivDecompositionHouseholderColumn_R64();
         assertTrue(alg.decompose(A));
@@ -136,7 +136,7 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
     {
 
         for( int i = 0; i < 10; i++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows, numCols, rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows, numCols, rand);
 
             QRColPivDecompositionHouseholderColumn_R64 alg = new QRColPivDecompositionHouseholderColumn_R64();
             assertTrue(alg.decompose(A));
@@ -145,7 +145,7 @@ public class TestQRColPivDecompositionHouseholderColumn_R64 {
         }
     }
 
-    private void checkDecomposition(boolean compact, RowMatrix_F64 a,
+    private void checkDecomposition(boolean compact, DMatrixRow_F64 a,
                                     QRColPivDecompositionHouseholderColumn_R64 alg) {
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null, compact));
         SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null, compact));

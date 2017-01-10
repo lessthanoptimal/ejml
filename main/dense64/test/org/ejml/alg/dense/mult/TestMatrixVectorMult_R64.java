@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -50,9 +50,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void mult() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(2,3, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
+        DMatrixRow_F64 a = new DMatrixRow_F64(2,3, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
 
         MatrixVectorMult_R64.mult(a,b,c);
 
@@ -62,9 +62,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void mult_zero() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(2,3, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
+        DMatrixRow_F64 a = new DMatrixRow_F64(2,3, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
 
         MatrixVectorMult_R64.mult(a,b,c);
 
@@ -74,9 +74,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void multAdd() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(2,3, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = new RowMatrix_F64(2,1, true, 2, 6);
+        DMatrixRow_F64 a = new DMatrixRow_F64(2,3, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = new DMatrixRow_F64(2,1, true, 2, 6);
 
         MatrixVectorMult_R64.multAdd(a,b,c);
 
@@ -86,9 +86,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void multTransA_small() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
+        DMatrixRow_F64 a = new DMatrixRow_F64(3,2, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
 
         MatrixVectorMult_R64.multTransA_small(a,b,c);
 
@@ -98,9 +98,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void multTransA_reorder() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
+        DMatrixRow_F64 a = new DMatrixRow_F64(3,2, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(2,1,rand);
 
         MatrixVectorMult_R64.multTransA_reorder(a,b,c);
 
@@ -110,9 +110,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void multAddTransA_small() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = new RowMatrix_F64(2,1, true, 2, 6);
+        DMatrixRow_F64 a = new DMatrixRow_F64(3,2, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = new DMatrixRow_F64(2,1, true, 2, 6);
 
         MatrixVectorMult_R64.multAddTransA_small(a,b,c);
 
@@ -122,9 +122,9 @@ public class TestMatrixVectorMult_R64 {
     @Test
     public void multAddTransA_reorder() {
         double d[] = new double[]{0,1,2,3,4,5};
-        RowMatrix_F64 a = new RowMatrix_F64(3,2, true, d);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, d);
-        RowMatrix_F64 c = new RowMatrix_F64(2,1, true, 2, 6);
+        DMatrixRow_F64 a = new DMatrixRow_F64(3,2, true, d);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, d);
+        DMatrixRow_F64 c = new DMatrixRow_F64(2,1, true, 2, 6);
 
         MatrixVectorMult_R64.multAddTransA_reorder(a,b,c);
 
@@ -157,9 +157,9 @@ public class TestMatrixVectorMult_R64 {
 
 //            System.out.println(name);
 
-            RowMatrix_F64 a = new RowMatrix_F64(rowsA,colsA);
-            RowMatrix_F64 b = new RowMatrix_F64(colsA,1);
-            RowMatrix_F64 c = RandomMatrices_R64.createRandom(rowsA,1,rand);
+            DMatrixRow_F64 a = new DMatrixRow_F64(rowsA,colsA);
+            DMatrixRow_F64 b = new DMatrixRow_F64(colsA,1);
+            DMatrixRow_F64 c = RandomMatrices_R64.createRandom(rowsA,1,rand);
 
             boolean add = name.contains("multAdd");
 
@@ -172,7 +172,7 @@ public class TestMatrixVectorMult_R64 {
                 CommonOps_R64.transpose(b);
             }
 
-            RowMatrix_F64 original = c.copy();
+            DMatrixRow_F64 original = c.copy();
             invoke(method,a,b,c);
 
             if( add ) {
@@ -187,7 +187,7 @@ public class TestMatrixVectorMult_R64 {
     }
 
     public static void invoke(Method func,
-                              RowMatrix_F64 a, RowMatrix_F64 b, RowMatrix_F64 c)
+                              DMatrixRow_F64 a, DMatrixRow_F64 b, DMatrixRow_F64 c)
             throws IllegalAccessException, InvocationTargetException {
         if( func.getParameterTypes().length == 3 ) {
             func.invoke(null, a, b, c);

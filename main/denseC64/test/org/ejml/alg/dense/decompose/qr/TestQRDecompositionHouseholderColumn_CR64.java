@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.MatrixFeatures_CR64;
@@ -43,7 +43,7 @@ public class TestQRDecompositionHouseholderColumn_CR64 extends GenericQrCheck_CR
 
 
     @Override
-    protected QRDecomposition<RowMatrix_C64> createQRDecomposition() {
+    protected QRDecomposition<DMatrixRow_C64> createQRDecomposition() {
         return new QRDecompositionHouseholderColumn_CR64();
     }
 
@@ -64,25 +64,25 @@ public class TestQRDecompositionHouseholderColumn_CR64 extends GenericQrCheck_CR
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(width,width,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(width,width,rand);
 
         qr.householder(w,A);
 
-        RowMatrix_C64 U = new RowMatrix_C64(width-w,1);
+        DMatrixRow_C64 U = new DMatrixRow_C64(width-w,1);
         System.arraycopy(qr.dataQR[w],w*2,U.data,0,(width-w)*2);
 
         // it already wrote over the first element with tau. Make it 1 + 0i again
         U.set(0,0,1,0);
 
         // Q = I - gamma*u*u'
-        RowMatrix_C64 Q = SpecializedOps_CR64.householder(U,qr.getGamma());
+        DMatrixRow_C64 Q = SpecializedOps_CR64.householder(U,qr.getGamma());
 
         // check the expected properties of Q
         assertTrue(MatrixFeatures_CR64.isHermitian(Q, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_CR64.isUnitary(Q, UtilEjml.TEST_F64));
 
-        RowMatrix_C64 result = new RowMatrix_C64(Q.numRows,Q.numCols);
-        RowMatrix_C64 Asub = CommonOps_CR64.extract(A, w, width, w, width);
+        DMatrixRow_C64 result = new DMatrixRow_C64(Q.numRows,Q.numCols);
+        DMatrixRow_C64 Asub = CommonOps_CR64.extract(A, w, width, w, width);
         CommonOps_CR64.mult(Q, Asub, result);
 
         Complex_F64 a = new Complex_F64();
@@ -113,18 +113,18 @@ public class TestQRDecompositionHouseholderColumn_CR64 extends GenericQrCheck_CR
 
         double gamma = 0.2;
 
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(width,width,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(width,width,rand);
 
         qr.convertToColumnMajor(A);
 
         // compute the results using standard matrix operations
-        RowMatrix_C64 u_sub = CommonOps_CR64.extract(A, w, width, w, w+1);
-        RowMatrix_C64 A_sub = CommonOps_CR64.extract(A, w, width, w, width);
-        RowMatrix_C64 expected = new RowMatrix_C64(u_sub.numRows,u_sub.numRows);
+        DMatrixRow_C64 u_sub = CommonOps_CR64.extract(A, w, width, w, w+1);
+        DMatrixRow_C64 A_sub = CommonOps_CR64.extract(A, w, width, w, width);
+        DMatrixRow_C64 expected = new DMatrixRow_C64(u_sub.numRows,u_sub.numRows);
 
         // Q = I - gamma*u*u'
         u_sub.set(0,0,1,0);
-        RowMatrix_C64 Q = SpecializedOps_CR64.householder(u_sub,gamma);
+        DMatrixRow_C64 Q = SpecializedOps_CR64.householder(u_sub,gamma);
 
         CommonOps_CR64.mult(Q,A_sub,expected);
 
@@ -165,13 +165,13 @@ public class TestQRDecompositionHouseholderColumn_CR64 extends GenericQrCheck_CR
             this.numRows = numRows;
         }
 
-        public void householder( int j , RowMatrix_C64 A ) {
+        public void householder( int j , DMatrixRow_C64 A ) {
             convertToColumnMajor(A);
 
             super.householder(j);
         }
 
-        protected void convertToColumnMajor(RowMatrix_C64 A) {
+        protected void convertToColumnMajor(DMatrixRow_C64 A) {
             super.convertToColumnMajor(A);
         }
 

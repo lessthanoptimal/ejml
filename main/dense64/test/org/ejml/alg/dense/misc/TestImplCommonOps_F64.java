@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -36,9 +36,9 @@ public class TestImplCommonOps_F64 {
 
     @Test
     public void extract() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5, 5, 0, 1, rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5, 5, 0, 1, rand);
 
-        RowMatrix_F64 B = new RowMatrix_F64(3,3);
+        DMatrixRow_F64 B = new DMatrixRow_F64(3,3);
 
         ImplCommonOps_F64.extract(A, 1, 2, B, 1, 0,2,3);
 

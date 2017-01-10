@@ -21,13 +21,13 @@ package org.ejml.alg.dense.linsol.chol;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.linsol.chol.CholeskyOuterSolver_B64;
 import org.ejml.alg.dense.linsol.LinearSolver_B64_to_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
- * A wrapper around {@link CholeskyDecomposition_F64}(BlockMatrix_F64) that allows
- * it to be easily used with {@link RowMatrix_F64}.
+ * A wrapper around {@link CholeskyDecomposition_F64}(DMatrixBlock_F64) that allows
+ * it to be easily used with {@link DMatrixRow_F64}.
  *
  * @author Peter Abeles
  */
@@ -45,7 +45,7 @@ public class LinearSolverChol_B64 extends LinearSolver_B64_to_R64 {
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
     @Override
-    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
+    public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
         blockB.reshape(B.numRows,B.numCols,false);
         MatrixOps_B64.convert(B,blockB);
 

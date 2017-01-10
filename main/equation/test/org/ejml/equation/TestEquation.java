@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -166,9 +166,9 @@ public class TestEquation {
         eq.alias(A, "A");
         eq.process("B=A");
 
-        RowMatrix_F64 B = eq.lookupMatrix("B");
+        DMatrixRow_F64 B = eq.lookupMatrix("B");
         assertTrue(A.getMatrix() != B);
-        assertTrue(MatrixFeatures_R64.isEquals((RowMatrix_F64)A.getMatrix(), B));
+        assertTrue(MatrixFeatures_R64.isEquals((DMatrixRow_F64)A.getMatrix(), B));
     }
 
     /**
@@ -317,7 +317,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("A=[1 2 3 4.5 6 7.7 8.8 9]");
-        RowMatrix_F64 found = eq.lookupMatrix("A");
+        DMatrixRow_F64 found = eq.lookupMatrix("A");
 
         double[] expected = new double[]{1,2,3,4.5,6,7.7,8.8,9};
 
@@ -331,7 +331,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("A=[ 2:2:10 12 14 ]");
-        RowMatrix_F64 found = eq.lookupMatrix("A");
+        DMatrixRow_F64 found = eq.lookupMatrix("A");
 
         assertEquals(7,found.getNumCols());
         assertEquals(1,found.getNumRows());
@@ -346,7 +346,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("A=[1 2 , 3, 4.5,-6 7]");
-        RowMatrix_F64 found = eq.lookupMatrix("A");
+        DMatrixRow_F64 found = eq.lookupMatrix("A");
 
         double[] expected = new double[]{1,2,3,4.5,-6,7};
 
@@ -704,9 +704,9 @@ public class TestEquation {
         ManagerTempVariables managerTemp = new ManagerTempVariables();
         eq.functions.setManagerTemp( managerTemp );
 
-        eq.alias(new RowMatrix_F64(1, 1), "A");
-        eq.alias(new RowMatrix_F64(1, 1), "B");
-        eq.alias(new RowMatrix_F64(1, 1), "C");
+        eq.alias(new DMatrixRow_F64(1, 1), "A");
+        eq.alias(new DMatrixRow_F64(1, 1), "B");
+        eq.alias(new DMatrixRow_F64(1, 1), "C");
 
         // handle empty case
         Sequence sequence = new Sequence();
@@ -740,9 +740,9 @@ public class TestEquation {
         ManagerTempVariables managerTemp = new ManagerTempVariables();
         eq.functions.setManagerTemp( managerTemp );
 
-        eq.alias(new RowMatrix_F64(1, 1), "A");
-        eq.alias(new RowMatrix_F64(1, 1), "B");
-        eq.alias(new RowMatrix_F64(1, 1), "C");
+        eq.alias(new DMatrixRow_F64(1, 1), "A");
+        eq.alias(new DMatrixRow_F64(1, 1), "B");
+        eq.alias(new DMatrixRow_F64(1, 1), "C");
 
         // give it an empty list
         TokenList tokens = eq.extractTokens("",managerTemp);
@@ -785,8 +785,8 @@ public class TestEquation {
         ManagerTempVariables managerTemp = new ManagerTempVariables();
         eq.functions.setManagerTemp( managerTemp );
 
-        eq.alias(new RowMatrix_F64(1, 1), "A");
-        eq.alias(new RowMatrix_F64(1, 1), "B");
+        eq.alias(new DMatrixRow_F64(1, 1), "A");
+        eq.alias(new DMatrixRow_F64(1, 1), "B");
 
         TokenList tokens = eq.extractTokens("A=A*B",managerTemp);
 
@@ -807,8 +807,8 @@ public class TestEquation {
     @Test
     public void lookupVariable() {
         Equation eq = new Equation();
-        eq.alias(new RowMatrix_F64(1, 1), "A");
-        eq.alias(new RowMatrix_F64(1, 1), "BSD");
+        eq.alias(new DMatrixRow_F64(1, 1), "A");
+        eq.alias(new DMatrixRow_F64(1, 1), "BSD");
 
         eq.lookupVariable("A");
         eq.lookupVariable("BSD");
@@ -977,8 +977,8 @@ public class TestEquation {
         Equation eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        eq.alias(new RowMatrix_F64(1,1),"A");
-        eq.alias(new RowMatrix_F64(1,1),"BSD");
+        eq.alias(new DMatrixRow_F64(1,1),"A");
+        eq.alias(new DMatrixRow_F64(1,1),"BSD");
 
         Variable v0 = eq.lookupVariable("A");
         Variable v1 = eq.lookupVariable("BSD");

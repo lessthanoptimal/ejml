@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.RealMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.Matrix_64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TestSafeSvd_R64 {
 
     @Test
     public void getSafety() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,4);
 
         // it will need to create a copy in this case
         Dummy dummy = new Dummy(2,true,true,2,3);
@@ -79,9 +79,9 @@ public class TestSafeSvd_R64 {
         assertEquals(3,decomp.numRows());
     }
 
-    protected static class Dummy implements SingularValueDecomposition_F64<RowMatrix_F64> {
+    protected static class Dummy implements SingularValueDecomposition_F64<DMatrixRow_F64> {
 
-        RealMatrix_F64 passedInMatrix;
+        Matrix_64 passedInMatrix;
 
         boolean compact;
         double singular[];
@@ -119,19 +119,19 @@ public class TestSafeSvd_R64 {
         }
 
         @Override
-        public RowMatrix_F64 getU(RowMatrix_F64 U, boolean transposed) {
+        public DMatrixRow_F64 getU(DMatrixRow_F64 U, boolean transposed) {
             getU_called = true;
             return null;
         }
 
         @Override
-        public RowMatrix_F64 getV(RowMatrix_F64 V, boolean transposed) {
+        public DMatrixRow_F64 getV(DMatrixRow_F64 V, boolean transposed) {
             getV_called = true;
             return null;
         }
 
         @Override
-        public RowMatrix_F64 getW(RowMatrix_F64 W) {
+        public DMatrixRow_F64 getW(DMatrixRow_F64 W) {
             getW_called = true;
             return null;
         }
@@ -147,7 +147,7 @@ public class TestSafeSvd_R64 {
         }
 
         @Override
-        public boolean decompose(RowMatrix_F64 orig) {
+        public boolean decompose(DMatrixRow_F64 orig) {
             this.passedInMatrix = orig;
             return true;
         }

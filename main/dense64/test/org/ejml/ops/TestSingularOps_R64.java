@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
@@ -223,9 +223,9 @@ public class TestSingularOps_R64 {
         int s = Math.min(numRows,numCols);
 
         // create a none compact SVD
-        RowMatrix_F64 U = new RowMatrix_F64(numRows,numRows);
-        RowMatrix_F64 W = new RowMatrix_F64(numRows,numCols);
-        RowMatrix_F64 V = new RowMatrix_F64(numCols,numCols);
+        DMatrixRow_F64 U = new DMatrixRow_F64(numRows,numRows);
+        DMatrixRow_F64 W = new DMatrixRow_F64(numRows,numCols);
+        DMatrixRow_F64 V = new DMatrixRow_F64(numCols,numCols);
 
         SingularOps_R64.checkSvdMatrixSize(U,false,W,V,false);
         CommonOps_R64.transpose(U);
@@ -233,9 +233,9 @@ public class TestSingularOps_R64 {
         SingularOps_R64.checkSvdMatrixSize(U,true,W,V,true);
 
         // compact SVD
-        U = new RowMatrix_F64(numRows,s);
-        W = new RowMatrix_F64(s,s);
-        V = new RowMatrix_F64(numCols,s);
+        U = new DMatrixRow_F64(numRows,s);
+        W = new DMatrixRow_F64(s,s);
+        V = new DMatrixRow_F64(numCols,s);
 
         SingularOps_R64.checkSvdMatrixSize(U,false,W,V,false);
         CommonOps_R64.transpose(U);
@@ -253,9 +253,9 @@ public class TestSingularOps_R64 {
         int s = Math.min(numRows,numCols);
 
         // create a none compact SVD
-        RowMatrix_F64 U = new RowMatrix_F64(numRows,s);
-        RowMatrix_F64 W = new RowMatrix_F64(numRows,numCols);
-        RowMatrix_F64 V = new RowMatrix_F64(numCols,s);
+        DMatrixRow_F64 U = new DMatrixRow_F64(numRows,s);
+        DMatrixRow_F64 W = new DMatrixRow_F64(numRows,numCols);
+        DMatrixRow_F64 V = new DMatrixRow_F64(numCols,s);
 
         try {
             SingularOps_R64.checkSvdMatrixSize(U,false,W,V,false);
@@ -264,9 +264,9 @@ public class TestSingularOps_R64 {
 
 
         // compact SVD
-        U = new RowMatrix_F64(numRows,s);
-        W = new RowMatrix_F64(s,s);
-        V = new RowMatrix_F64(numCols,s);
+        U = new DMatrixRow_F64(numRows,s);
+        W = new DMatrixRow_F64(s,s);
+        V = new DMatrixRow_F64(numCols,s);
 
         try {
             SingularOps_R64.checkSvdMatrixSize(U,true,W,V,true);
@@ -288,7 +288,7 @@ public class TestSingularOps_R64 {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_R64.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows(), A.numCols(),true,true,false);
+                SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.matrix_F64()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
@@ -333,7 +333,7 @@ public class TestSingularOps_R64 {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_R64.createRandom(numRows,numCols,rand));
 
-                SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows(), A.numCols(),true,true,false);
+                SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.matrix_F64()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
@@ -368,23 +368,23 @@ public class TestSingularOps_R64 {
      */
     @Test
     public void rank_and_nullity(){
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true,
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true,
                 -0.988228951897092, -1.086594333683141, -1.433160736952583,
                 -3.190200029661606, 0.190459703263404, -6.475629910954768,
                 1.400596416735888, 7.158603907761226, -0.778109120408813);
         rank_and_nullity(A,2,1);
 
         //wide matrix
-        A = new RowMatrix_F64(1,3,true,1,0,0);
+        A = new DMatrixRow_F64(1,3,true,1,0,0);
         rank_and_nullity(A,1,2);
 
         // tall matrix
-        A = new RowMatrix_F64(3,1,true,1,0,0);
+        A = new DMatrixRow_F64(3,1,true,1,0,0);
         rank_and_nullity(A,1,0);
     }
 
-    public void rank_and_nullity(RowMatrix_F64 A , int rank , int nullity ) {
-        SingularValueDecomposition_F64<RowMatrix_F64> alg = DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
+    public void rank_and_nullity(DMatrixRow_F64 A , int rank , int nullity ) {
+        SingularValueDecomposition_F64<DMatrixRow_F64> alg = DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
         assertTrue(alg.decompose(A));
 
         assertEquals(rank, SingularOps_R64.rank(alg, UtilEjml.EPS));
@@ -396,23 +396,23 @@ public class TestSingularOps_R64 {
      */
     @Test
     public void rank_and_nullity_noArgument(){
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true,
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true,
                 -0.988228951897092, -1.086594333683141, -1.433160736952583,
                 -3.190200029661606, 0.190459703263404, -6.475629910954768,
                 1.400596416735888, 7.158603907761226, -0.778109120408813);
         rank_and_nullity_noArgument(A, 2, 1);
 
         //wide matrix
-        A = new RowMatrix_F64(1,3,true,1,0,0);
+        A = new DMatrixRow_F64(1,3,true,1,0,0);
         rank_and_nullity_noArgument(A,1,2);
 
         // tall matrix
-        A = new RowMatrix_F64(3,1,true,1,0,0);
+        A = new DMatrixRow_F64(3,1,true,1,0,0);
         rank_and_nullity_noArgument(A,1,0);
     }
 
-    public void rank_and_nullity_noArgument(RowMatrix_F64 A , int rank , int nullity ) {
-        SingularValueDecomposition_F64<RowMatrix_F64> alg = DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
+    public void rank_and_nullity_noArgument(DMatrixRow_F64 A , int rank , int nullity ) {
+        SingularValueDecomposition_F64<DMatrixRow_F64> alg = DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
         assertTrue(alg.decompose(A));
 
         assertEquals(rank, SingularOps_R64.rank(alg));

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -34,18 +34,18 @@ import org.ejml.ops.MatrixFeatures_R64;
  * @author Peter Abeles
  */
 public class SwitchingEigenDecomposition_R64
-        implements EigenDecomposition_F64<RowMatrix_F64> {
+        implements EigenDecomposition_F64<DMatrixRow_F64> {
     // tolerance used in deciding if a matrix is symmetric or not
     private double tol;
 
-    EigenDecomposition_F64<RowMatrix_F64> symmetricAlg;
-    EigenDecomposition_F64<RowMatrix_F64> generalAlg;
+    EigenDecomposition_F64<DMatrixRow_F64> symmetricAlg;
+    EigenDecomposition_F64<DMatrixRow_F64> generalAlg;
 
     boolean symmetric;
     // should it compute eigenvectors or just eigenvalues?
     boolean computeVectors;
 
-    RowMatrix_F64 A = new RowMatrix_F64(1,1);
+    DMatrixRow_F64 A = new DMatrixRow_F64(1,1);
 
     /**
      *
@@ -76,7 +76,7 @@ public class SwitchingEigenDecomposition_R64
     }
 
     @Override
-    public RowMatrix_F64 getEigenVector(int index) {
+    public DMatrixRow_F64 getEigenVector(int index) {
         if( !computeVectors )
             throw new IllegalArgumentException("Configured to not compute eignevectors");
 
@@ -85,7 +85,7 @@ public class SwitchingEigenDecomposition_R64
     }
 
     @Override
-    public boolean decompose(RowMatrix_F64 orig) {
+    public boolean decompose(DMatrixRow_F64 orig) {
         A.set(orig);
 
         symmetric = MatrixFeatures_R64.isSymmetric(A,tol);

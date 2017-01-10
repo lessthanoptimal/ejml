@@ -22,9 +22,9 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -64,14 +64,14 @@ public class TestTridiagonalHelper_B64 {
             decomp.decompose(A.matrix_F64());
 
             D1Submatrix_F64 Ab = insertIntoBlock(offX,offY,A,r);
-            D1Submatrix_F64 V = new D1Submatrix_F64(new BlockMatrix_F64(r,offX+A.numCols(),r));
+            D1Submatrix_F64 V = new D1Submatrix_F64(new DMatrixBlock_F64(r,offX+A.numCols(),r));
             V.col0 = offX;
             V.row1 = Ab.row1-Ab.row0;
             int gammaOffset = offX;
             double gammas[] = new double[gammaOffset+A.numCols()];
             TridiagonalHelper_B64.tridiagUpperRow(r, Ab, gammas, V);
 
-            RowMatrix_F64 expected = decomp.getQT();
+            DMatrixRow_F64 expected = decomp.getQT();
 
             // see if the decomposed matrix is the same
             for( int i = 0; i < r; i++ ) {
@@ -119,8 +119,8 @@ public class TestTridiagonalHelper_B64 {
             }
 
             // now compute it using the block matrix stuff
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Wb = new BlockMatrix_F64(Ab.numRows,Ab.numCols,r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Wb = new DMatrixBlock_F64(Ab.numRows,Ab.numCols,r);
 
             D1Submatrix_F64 Ab_sub = new D1Submatrix_F64(Ab);
             D1Submatrix_F64 Wb_sub = new D1Submatrix_F64(Wb);
@@ -173,10 +173,10 @@ public class TestTridiagonalHelper_B64 {
 
     private static D1Submatrix_F64 insertIntoBlock(int offRow , int offCol , SimpleMatrix A , int r )
     {
-        RowMatrix_F64 B = new RowMatrix_F64(offRow+A.numRows(),offCol+A.numCols());
+        DMatrixRow_F64 B = new DMatrixRow_F64(offRow+A.numRows(),offCol+A.numCols());
         CommonOps_R64.insert(A.matrix_F64(),B,offRow,offCol);
 
-        BlockMatrix_F64 C = MatrixOps_B64.convert(B,r);
+        DMatrixBlock_F64 C = MatrixOps_B64.convert(B,r);
         return new D1Submatrix_F64(C,offRow,C.numRows,offCol,C.numCols);
     }
 
@@ -186,8 +186,8 @@ public class TestTridiagonalHelper_B64 {
         // make a symmetric so that this mult will work
         A = A.transpose().mult(A);
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-        BlockMatrix_F64 V = new BlockMatrix_F64(r,Ab.numCols,r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+        DMatrixBlock_F64 V = new DMatrixBlock_F64(r,Ab.numCols,r);
 
         int row = 1;
 
@@ -252,8 +252,8 @@ public class TestTridiagonalHelper_B64 {
 
             y = y.scale(-gamma);
 
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Vb = MatrixOps_B64.convert(Vo.matrix_F64(),r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Vb = MatrixOps_B64.convert(Vo.matrix_F64(),r);
 
             TridiagonalHelper_B64.computeY(r, new D1Submatrix_F64(Ab), new D1Submatrix_F64(Vb), row, gamma);
 
@@ -281,8 +281,8 @@ public class TestTridiagonalHelper_B64 {
 
             SimpleMatrix v = y.plus(u.scale(-(gamma/2.0)*u.dot(y)));
 
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
 
             TridiagonalHelper_B64.computeRowOfV(r, new D1Submatrix_F64(Ab), new D1Submatrix_F64(Vb),
                     row, gamma);

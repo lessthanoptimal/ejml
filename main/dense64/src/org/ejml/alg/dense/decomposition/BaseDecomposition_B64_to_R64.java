@@ -19,33 +19,33 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.alg.block.MatrixOps_B64;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 
 /**
- * Generic interface for wrapping a {@link BlockMatrix_F64} decomposition for
- * processing of {@link RowMatrix_F64}.
+ * Generic interface for wrapping a {@link DMatrixBlock_F64} decomposition for
+ * processing of {@link DMatrixRow_F64}.
  *
  * @author Peter Abeles
  */
-public class BaseDecomposition_B64_to_R64 implements DecompositionInterface<RowMatrix_F64> {
+public class BaseDecomposition_B64_to_R64 implements DecompositionInterface<DMatrixRow_F64> {
 
-    protected DecompositionInterface<BlockMatrix_F64> alg;
+    protected DecompositionInterface<DMatrixBlock_F64> alg;
 
     protected double[]tmp;
-    protected BlockMatrix_F64 Ablock = new BlockMatrix_F64();
+    protected DMatrixBlock_F64 Ablock = new DMatrixBlock_F64();
     protected int blockLength;
 
-    public BaseDecomposition_B64_to_R64(DecompositionInterface<BlockMatrix_F64> alg,
+    public BaseDecomposition_B64_to_R64(DecompositionInterface<DMatrixBlock_F64> alg,
                                         int blockLength) {
         this.alg = alg;
         this.blockLength = blockLength;
     }
 
     @Override
-    public boolean decompose(RowMatrix_F64 A) {
+    public boolean decompose(DMatrixRow_F64 A) {
         Ablock.numRows = A.numRows;
         Ablock.numCols = A.numCols;
         Ablock.blockLength = blockLength;

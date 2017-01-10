@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -32,8 +32,8 @@ public class BenchmarkMatrixMultProduct {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long multTransA(RowMatrix_F64 matA ,
-                                  RowMatrix_F64 matResult , int numTrials) {
+    public static long multTransA(DMatrixRow_F64 matA ,
+                                  DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -44,8 +44,8 @@ public class BenchmarkMatrixMultProduct {
         return curr-prev;
     }
 
-    public static long innerProd_small(RowMatrix_F64 matA ,
-                                       RowMatrix_F64 matResult , int numTrials) {
+    public static long innerProd_small(DMatrixRow_F64 matA ,
+                                       DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -56,8 +56,8 @@ public class BenchmarkMatrixMultProduct {
         return curr-prev;
     }
 
-    public static long innerProd_reorder(RowMatrix_F64 matA ,
-                                         RowMatrix_F64 matResult , int numTrials) {
+    public static long innerProd_reorder(DMatrixRow_F64 matA ,
+                                         DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -72,8 +72,8 @@ public class BenchmarkMatrixMultProduct {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" trials "+numTrials);
-        RowMatrix_F64 matA = RandomMatrices_R64.createRandom(numRows, numCols, rand);
-        RowMatrix_F64 matResult = RandomMatrices_R64.createRandom(numCols,numCols,rand);
+        DMatrixRow_F64 matA = RandomMatrices_R64.createRandom(numRows, numCols, rand);
+        DMatrixRow_F64 matResult = RandomMatrices_R64.createRandom(numCols,numCols,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 0,//multTransA(matA,matResult,numTrials),

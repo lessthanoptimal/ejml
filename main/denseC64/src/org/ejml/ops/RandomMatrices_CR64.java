@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.data.D1Matrix_C64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class RandomMatrices_CR64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static RowMatrix_C64 createRandom(int numRow , int numCol , Random rand ) {
+    public static DMatrixRow_C64 createRandom(int numRow , int numCol , Random rand ) {
         return createRandom(numRow,numCol,-1,1,rand);
     }
 
@@ -57,8 +57,8 @@ public class RandomMatrices_CR64 {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static RowMatrix_C64 createRandom(int numRow , int numCol , double min , double max , Random rand ) {
-        RowMatrix_C64 mat = new RowMatrix_C64(numRow,numCol);
+    public static DMatrixRow_C64 createRandom(int numRow , int numCol , double min , double max , Random rand ) {
+        DMatrixRow_C64 mat = new DMatrixRow_C64(numRow,numCol);
 
         setRandom(mat,min,max,rand);
 
@@ -73,7 +73,7 @@ public class RandomMatrices_CR64 {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom(RowMatrix_C64 mat , Random rand )
+    public static void setRandom(DMatrixRow_C64 mat , Random rand )
     {
         setRandom(mat,0,1,rand);
     }
@@ -107,11 +107,11 @@ public class RandomMatrices_CR64 {
      * @param rand Random number generator used to make the matrix.
      * @return The random symmetric  positive definite matrix.
      */
-    public static RowMatrix_C64 createHermPosDef(int width, Random rand) {
+    public static DMatrixRow_C64 createHermPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(width,1,rand);
-        RowMatrix_C64 b = new RowMatrix_C64(1,width);
-        RowMatrix_C64 c = new RowMatrix_C64(width,width);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(width,1,rand);
+        DMatrixRow_C64 b = new DMatrixRow_C64(1,width);
+        DMatrixRow_C64 c = new DMatrixRow_C64(width,width);
 
         CommonOps_CR64.transposeConjugate(a,b);
         CommonOps_CR64.mult(a, b, c);
@@ -132,8 +132,8 @@ public class RandomMatrices_CR64 {
      * @param rand Random number generator.
      * @return A symmetric matrix.
      */
-    public static RowMatrix_C64 createHermitian(int length, double min, double max, Random rand) {
-        RowMatrix_C64 A = new RowMatrix_C64(length,length);
+    public static DMatrixRow_C64 createHermitian(int length, double min, double max, Random rand) {
+        DMatrixRow_C64 A = new DMatrixRow_C64(length,length);
 
         setHermitian(A, min, max, rand);
 
@@ -148,7 +148,7 @@ public class RandomMatrices_CR64 {
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
      */
-    public static void setHermitian(RowMatrix_C64 A, double min, double max, Random rand) {
+    public static void setHermitian(DMatrixRow_C64 A, double min, double max, Random rand) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
 
@@ -179,14 +179,14 @@ public class RandomMatrices_CR64 {
 //     * @param rand random number generator used.
 //     * @return The randomly generated matrix.
 //     */
-//    public static RowMatrix_C64 createUpperTriangle( int dimen , int hessenberg , double min , double max , Random rand )
+//    public static DMatrixRow_C64 createUpperTriangle( int dimen , int hessenberg , double min , double max , Random rand )
 //    {
 //        if( hessenberg < 0 )
 //            throw new RuntimeException("hessenberg must be more than or equal to 0");
 //
 //        double range = max-min;
 //
-//        RowMatrix_C64 A = new RowMatrix_C64(dimen,dimen);
+//        DMatrixRow_C64 A = new DMatrixRow_C64(dimen,dimen);
 //
 //        for( int i = 0; i < dimen; i++ ) {
 //            int start = i <= hessenberg ? 0 : i-hessenberg;

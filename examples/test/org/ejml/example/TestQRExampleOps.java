@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -45,16 +45,16 @@ public class TestQRExampleOps {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
 
         QRExampleOperations alg = new QRExampleOperations();
 
         alg.decompose(A);
 
-        RowMatrix_F64 Q = alg.getQ();
-        RowMatrix_F64 R = alg.getR();
+        DMatrixRow_F64 Q = alg.getQ();
+        DMatrixRow_F64 R = alg.getR();
 
-        RowMatrix_F64 A_found = new RowMatrix_F64(numRows,numCols);
+        DMatrixRow_F64 A_found = new DMatrixRow_F64(numRows,numCols);
         CommonOps_R64.mult(Q,R,A_found);
 
         assertTrue( MatrixFeatures_R64.isIdentical(A,A_found, UtilEjml.TEST_F64));

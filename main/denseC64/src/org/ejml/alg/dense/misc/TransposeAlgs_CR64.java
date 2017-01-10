@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 /**
  * Algorithms for transposing dense complex matrices
@@ -32,7 +32,7 @@ public class TransposeAlgs_CR64 {
      *
      * @param mat The matrix that is transposed in-place.  Modified.
      */
-    public static void square( RowMatrix_C64 mat )
+    public static void square( DMatrixRow_C64 mat )
     {
         int index = 2;
         int rowStride = mat.getRowStride();
@@ -53,7 +53,7 @@ public class TransposeAlgs_CR64 {
         }
     }
 
-    public static void squareConjugate( RowMatrix_C64 mat )
+    public static void squareConjugate( DMatrixRow_C64 mat )
     {
         int index = 2;
         int rowStride = mat.getRowStride();
@@ -82,7 +82,7 @@ public class TransposeAlgs_CR64 {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standard(RowMatrix_C64 A, RowMatrix_C64 A_tran)
+    public static void standard(DMatrixRow_C64 A, DMatrixRow_C64 A_tran)
     {
         int index = 0;
         int rowStrideTran = A_tran.getRowStride();
@@ -105,7 +105,7 @@ public class TransposeAlgs_CR64 {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standardConjugate(RowMatrix_C64 A, RowMatrix_C64 A_tran)
+    public static void standardConjugate(DMatrixRow_C64 A, DMatrixRow_C64 A_tran)
     {
         int index = 0;
         int rowStrideTran = A_tran.getRowStride();

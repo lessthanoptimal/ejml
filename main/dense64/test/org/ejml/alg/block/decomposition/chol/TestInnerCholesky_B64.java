@@ -20,7 +20,7 @@ package org.ejml.alg.block.decomposition.chol;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -54,14 +54,14 @@ public class TestInnerCholesky_B64 {
      * Test a positive case where it should be able to decompose the matrix
      */
     private void checkDecompose(int n, boolean lower) {
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(n,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(n,rand);
 
-        // decompose a RowMatrix_F64 to find expected solution
-        CholeskyDecomposition_F64<RowMatrix_F64> chol = DecompositionFactory_R64.chol(n,lower);
+        // decompose a DMatrixRow_F64 to find expected solution
+        CholeskyDecomposition_F64<DMatrixRow_F64> chol = DecompositionFactory_R64.chol(n,lower);
 
         assertTrue(DecompositionFactory_R64.decomposeSafe(chol,A));
 
-        RowMatrix_F64 expected = chol.getT(null);
+        DMatrixRow_F64 expected = chol.getT(null);
 
         // copy the original data by an offset
         double data[] = new double[ A.getNumElements() + 2 ];
@@ -73,7 +73,7 @@ public class TestInnerCholesky_B64 {
         else
             assertTrue(InnerCholesky_B64.upper(data, 2, n));
 
-        RowMatrix_F64 found = new RowMatrix_F64(n, n);
+        DMatrixRow_F64 found = new DMatrixRow_F64(n, n);
         System.arraycopy(data,2,found.data,0,found.data.length);
 
         // set lower triangular potion to be zero so that it is exactly the same
@@ -84,7 +84,7 @@ public class TestInnerCholesky_B64 {
      * See if it fails when the matrix is not positive definite.
      */
     private void checkNotPositiveDefinite(int n, boolean lower) {
-        RowMatrix_F64 A = new RowMatrix_F64(n,n);
+        DMatrixRow_F64 A = new DMatrixRow_F64(n,n);
         for( int i = 0; i < n; i++ ) {
             for( int j = 0; j < n; j++ ) {
                 A.set(i,j,1);

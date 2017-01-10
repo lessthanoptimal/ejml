@@ -18,10 +18,10 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.FixedMatrix3x3_F64;
-import org.ejml.data.FixedMatrix4x4_F64;
-import org.ejml.data.FixedMatrix6x6_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixFixed3x3_F64;
+import org.ejml.data.DMatrixFixed4x4_F64;
+import org.ejml.data.DMatrixFixed6x6_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -38,22 +38,22 @@ import java.util.Random;
 public class BenchmarkInverseFixed {
     private static Random rand = new Random(234);
 
-    private static RowMatrix_F64 dm3x3_a = new RowMatrix_F64(3,3);
-    private static RowMatrix_F64 dm3x3_b = new RowMatrix_F64(3,3);
+    private static DMatrixRow_F64 dm3x3_a = new DMatrixRow_F64(3,3);
+    private static DMatrixRow_F64 dm3x3_b = new DMatrixRow_F64(3,3);
 
-    private static RowMatrix_F64 dm4x4_a = new RowMatrix_F64(4,4);
-    private static RowMatrix_F64 dm4x4_b = new RowMatrix_F64(4,4);
+    private static DMatrixRow_F64 dm4x4_a = new DMatrixRow_F64(4,4);
+    private static DMatrixRow_F64 dm4x4_b = new DMatrixRow_F64(4,4);
 
-    private static FixedMatrix3x3_F64 fixed3x3_a = new FixedMatrix3x3_F64();
-    private static FixedMatrix3x3_F64 fixed3x3_b = new FixedMatrix3x3_F64();
+    private static DMatrixFixed3x3_F64 fixed3x3_a = new DMatrixFixed3x3_F64();
+    private static DMatrixFixed3x3_F64 fixed3x3_b = new DMatrixFixed3x3_F64();
 
-    private static FixedMatrix4x4_F64 fixed4x4_a = new FixedMatrix4x4_F64();
-    private static FixedMatrix4x4_F64 fixed4x4_b = new FixedMatrix4x4_F64();
+    private static DMatrixFixed4x4_F64 fixed4x4_a = new DMatrixFixed4x4_F64();
+    private static DMatrixFixed4x4_F64 fixed4x4_b = new DMatrixFixed4x4_F64();
 
-    private static FixedMatrix6x6_F64 fixed6x6_a = new FixedMatrix6x6_F64();
-    private static FixedMatrix6x6_F64 fixed6x6_b = new FixedMatrix6x6_F64();
+    private static DMatrixFixed6x6_F64 fixed6x6_a = new DMatrixFixed6x6_F64();
+    private static DMatrixFixed6x6_F64 fixed6x6_b = new DMatrixFixed6x6_F64();
 
-    public static long benchmark(RowMatrix_F64 a, RowMatrix_F64 b , int numTrials ) {
+    public static long benchmark(DMatrixRow_F64 a, DMatrixRow_F64 b , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -64,7 +64,7 @@ public class BenchmarkInverseFixed {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(FixedMatrix3x3_F64 a, FixedMatrix3x3_F64 b , int numTrials ) {
+    public static long benchmark(DMatrixFixed3x3_F64 a, DMatrixFixed3x3_F64 b , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -75,7 +75,7 @@ public class BenchmarkInverseFixed {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(FixedMatrix4x4_F64 a, FixedMatrix4x4_F64 b , int numTrials ) {
+    public static long benchmark(DMatrixFixed4x4_F64 a, DMatrixFixed4x4_F64 b , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -50,14 +50,14 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatrix_C64> {
+public class QRDecompositionHouseholder_CR64 implements QRDecomposition<DMatrixRow_C64> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
      * upper triangular portion and Q on the lower bit.  Lower columns
      * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^H).
      */
-    protected RowMatrix_C64 QR;
+    protected DMatrixRow_C64 QR;
 
     // used internally to store temporary data
     protected double u[],v[];
@@ -86,7 +86,7 @@ public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatri
         int maxLength = Math.max(numRows,numCols);
 
         if( QR == null ) {
-            QR = new RowMatrix_C64(numRows,numCols);
+            QR = new DMatrixRow_C64(numRows,numCols);
             u = new double[ maxLength*2 ];
             v = new double[ maxLength*2 ];
             gammas = new double[ minLength ];
@@ -112,7 +112,7 @@ public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatri
      *
      * @return The combined Q R matrix.
      */
-    public RowMatrix_C64 getQR() {
+    public DMatrixRow_C64 getQR() {
         return QR;
     }
 
@@ -123,7 +123,7 @@ public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatri
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public RowMatrix_C64 getQ(RowMatrix_C64 Q , boolean compact ) {
+    public DMatrixRow_C64 getQ(DMatrixRow_C64 Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_CR64.checkIdentity(Q,numRows,minLength);
         else
@@ -144,7 +144,7 @@ public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatri
      * @param compact
      */
     @Override
-    public RowMatrix_C64 getR(RowMatrix_C64 R, boolean compact) {
+    public DMatrixRow_C64 getR(DMatrixRow_C64 R, boolean compact) {
         if( compact )
             R = UtilDecompositons_CR64.checkZerosLT(R,minLength,numCols);
         else
@@ -176,7 +176,7 @@ public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatri
      * </p>
      */
     @Override
-    public boolean decompose( RowMatrix_C64 A ) {
+    public boolean decompose( DMatrixRow_C64 A ) {
         commonSetup(A);
 
         for( int j = 0; j < minLength; j++ ) {
@@ -248,7 +248,7 @@ public class QRDecompositionHouseholder_CR64 implements QRDecomposition<RowMatri
      *
      * @param A
      */
-    protected void commonSetup(RowMatrix_C64 A) {
+    protected void commonSetup(DMatrixRow_C64 A) {
         setExpectedMaxSize(A.numRows,A.numCols);
 
         QR.set(A);

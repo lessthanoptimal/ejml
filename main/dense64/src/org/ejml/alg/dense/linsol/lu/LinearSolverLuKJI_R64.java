@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.SpecializedOps_R64;
 
 
@@ -41,7 +41,7 @@ public class LinearSolverLuKJI_R64 extends LinearSolverLuBase_R64 {
     }
 
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         boolean ret = super.setA(A);
 
         pivot = decomp.getPivot();
@@ -59,7 +59,7 @@ public class LinearSolverLuKJI_R64 extends LinearSolverLuBase_R64 {
      * @param x An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(RowMatrix_F64 b, RowMatrix_F64 x) {
+    public void solve(DMatrixRow_F64 b, DMatrixRow_F64 x) {
         if( b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }

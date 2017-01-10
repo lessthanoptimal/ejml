@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 import java.util.Random;
 
@@ -30,9 +30,9 @@ import static org.ejml.ops.CommonOps_R64.multAdd;
  * matrix is provided in the constructor.
  */
 public class CovarianceRandomDraw_R64 {
-    private RowMatrix_F64 A;
+    private DMatrixRow_F64 A;
     private Random rand;
-    private RowMatrix_F64 r;
+    private DMatrixRow_F64 r;
 
     /**
      * Creates a random distribution with the specified mean and covariance.  The references
@@ -41,9 +41,9 @@ public class CovarianceRandomDraw_R64 {
      * @param rand Used to create the random numbers for the draw. Reference is saved.
      * @param cov The covariance of the distribution.  Not modified.
      */
-    public CovarianceRandomDraw_R64(Random rand , RowMatrix_F64 cov )
+    public CovarianceRandomDraw_R64(Random rand , DMatrixRow_F64 cov )
     {
-        r = new RowMatrix_F64(cov.numRows,1);
+        r = new DMatrixRow_F64(cov.numRows,1);
         CholeskyDecompositionInner_R64 cholesky = new CholeskyDecompositionInner_R64( true);
 
         if( cholesky.inputModified() )
@@ -58,7 +58,7 @@ public class CovarianceRandomDraw_R64 {
     /**
      * Makes a draw on the distribution.  The results are added to parameter 'x'
      */
-    public void next( RowMatrix_F64 x )
+    public void next( DMatrixRow_F64 x )
     {
         for( int i = 0; i < r.numRows; i++ ) {
             r.set(i,0, (double)rand.nextGaussian());

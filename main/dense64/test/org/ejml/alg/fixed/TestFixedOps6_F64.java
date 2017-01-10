@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix6_F64;
-import org.ejml.data.FixedMatrix6x6_F64;
+import org.ejml.data.DMatrixFixed6_F64;
+import org.ejml.data.DMatrixFixed6x6_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,10 +36,10 @@ public class TestFixedOps6_F64 extends CompareFixedToCommonOps_F64 {
 
     @Test
     public void diag() {
-        FixedMatrix6x6_F64 m = new FixedMatrix6x6_F64();
+        DMatrixFixed6x6_F64 m = new DMatrixFixed6x6_F64();
         for( int i = 0; i < 36; i++ )
             m.set(i/6,i%6,i+1);
-        FixedMatrix6_F64 found = new FixedMatrix6_F64();
+        DMatrixFixed6_F64 found = new DMatrixFixed6_F64();
 
         FixedOps6_F64.diag(m,found);
 

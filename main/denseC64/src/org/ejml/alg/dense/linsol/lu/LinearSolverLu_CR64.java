@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decompose.lu.LUDecompositionBase_CR64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 
 /**
@@ -37,7 +37,7 @@ public class LinearSolverLu_CR64 extends LinearSolverLuBase_CR64 {
 
 
     @Override
-    public void solve(RowMatrix_C64 b, RowMatrix_C64 x) {
+    public void solve(DMatrixRow_C64 b, DMatrixRow_C64 x) {
         if( b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }

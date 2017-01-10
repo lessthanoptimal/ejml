@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class TestBaseDecomposition_B64_to_R64 {
     @Test
     public void inputModified() {
 
-        RowMatrix_F64 A = new RowMatrix_F64(25,20);
+        DMatrixRow_F64 A = new DMatrixRow_F64(25,20);
         for (int i = 0; i < A.data.length; i++) {
             A.data[i] = i;
         }
@@ -64,10 +64,10 @@ public class TestBaseDecomposition_B64_to_R64 {
         assertTrue(alg.decompose(A));
     }
 
-    private static class ModifyBlock implements DecompositionInterface<BlockMatrix_F64> {
+    private static class ModifyBlock implements DecompositionInterface<DMatrixBlock_F64> {
 
         @Override
-        public boolean decompose(BlockMatrix_F64 orig) {
+        public boolean decompose(DMatrixBlock_F64 orig) {
 
             // see if the input was correctly converted
             int val = 0;
@@ -89,10 +89,10 @@ public class TestBaseDecomposition_B64_to_R64 {
         }
     }
 
-    private static class DoNotModifyBlock implements DecompositionInterface<BlockMatrix_F64> {
+    private static class DoNotModifyBlock implements DecompositionInterface<DMatrixBlock_F64> {
 
         @Override
-        public boolean decompose(BlockMatrix_F64 orig) {
+        public boolean decompose(DMatrixBlock_F64 orig) {
             return true;
         }
 

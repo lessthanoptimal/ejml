@@ -18,8 +18,8 @@
 
 package org.ejml.simple;
 
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 
 /**
@@ -32,8 +32,8 @@ public class UtilSimpleMatrix {
      * @param A Block matrix that is being converted.  Not modified.
      * @return Equivalent SimpleMatrix.
      */
-    public static SimpleMatrix convertSimple( BlockMatrix_F64 A ) {
-        RowMatrix_F64 B = ConvertMatrixStruct_F64.convert(A, null);
+    public static SimpleMatrix convertSimple( DMatrixBlock_F64 A ) {
+        DMatrixRow_F64 B = ConvertMatrixStruct_F64.convert(A, null);
 
         return SimpleMatrix.wrap(B);
     }

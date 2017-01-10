@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.eig.symm;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 
@@ -38,7 +38,7 @@ public class SymmetricQrAlgorithm_R64 {
     private SymmetricQREigenHelper_R64 helper;
 
     // transpose of the orthogonal matrix
-    private RowMatrix_F64 Q;
+    private DMatrixRow_F64 Q;
 
     // the eigenvalues previously computed
     private double eigenvalues[];
@@ -68,11 +68,11 @@ public class SymmetricQrAlgorithm_R64 {
         this.maxIterations = maxIterations;
     }
 
-    public RowMatrix_F64 getQ() {
+    public DMatrixRow_F64 getQ() {
         return Q;
     }
 
-    public void setQ(RowMatrix_F64 q) {
+    public void setQ(DMatrixRow_F64 q) {
         Q = q;
     }
 

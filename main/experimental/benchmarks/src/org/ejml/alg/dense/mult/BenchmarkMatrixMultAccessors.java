@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
@@ -34,7 +34,7 @@ public class BenchmarkMatrixMultAccessors {
     /**
      * All reads/writes have been inline by hand
      */
-    public static long inlined(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
+    public static long inlined(DMatrixRow_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c )
     {
         long timeBefore = System.currentTimeMillis();
 
@@ -80,7 +80,7 @@ public class BenchmarkMatrixMultAccessors {
     /**
      * Wrapper functions with no bounds checking are used to access matrix internals
      */
-    public static long wrapped(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
+    public static long wrapped(DMatrixRow_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c )
     {
         long timeBefore = System.currentTimeMillis();
         double valA;
@@ -121,7 +121,7 @@ public class BenchmarkMatrixMultAccessors {
     /**
      * Only sets and gets that are by row and column are used.
      */
-    public static long access2d(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 c )
+    public static long access2d(DMatrixRow_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c )
     {
         long timeBefore = System.currentTimeMillis();
 
@@ -147,9 +147,9 @@ public class BenchmarkMatrixMultAccessors {
 
         int N = 1000;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(N,N,rand);
-        RowMatrix_F64 C = new RowMatrix_F64(N,N);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(N,N,rand);
+        DMatrixRow_F64 C = new DMatrixRow_F64(N,N);
 
         long timeInlined = inlined(A,B,C);
         long timeWrapped = wrapped(A,B,C);

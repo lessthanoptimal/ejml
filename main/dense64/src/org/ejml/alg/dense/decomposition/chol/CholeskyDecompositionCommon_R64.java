@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
@@ -36,7 +36,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_R64
-        implements CholeskyDecomposition_F64<RowMatrix_F64> {
+        implements CholeskyDecomposition_F64<DMatrixRow_F64> {
 
     // it can decompose a matrix up to this width
     protected int maxWidth=-1;
@@ -45,7 +45,7 @@ public abstract class CholeskyDecompositionCommon_R64
     protected int n;
 
     // the decomposed matrix
-    protected RowMatrix_F64 T;
+    protected DMatrixRow_F64 T;
     protected double[] t;
 
     // tempoary variable used by various functions
@@ -101,7 +101,7 @@ public abstract class CholeskyDecompositionCommon_R64
      * @return True if it was able to finish the decomposition.
      */
     @Override
-    public boolean decompose( RowMatrix_F64 mat ) {
+    public boolean decompose( DMatrixRow_F64 mat ) {
         if( mat.numRows > maxWidth ) {
             setExpectedMaxSize(mat.numRows,mat.numCols);
         } else if( mat.numRows != mat.numCols ) {
@@ -140,7 +140,7 @@ public abstract class CholeskyDecompositionCommon_R64
     protected abstract boolean decomposeUpper();
 
     @Override
-    public RowMatrix_F64 getT(RowMatrix_F64 T ) {
+    public DMatrixRow_F64 getT(DMatrixRow_F64 T ) {
 
         // write the values to T
         if( lower ) {
@@ -167,7 +167,7 @@ public abstract class CholeskyDecompositionCommon_R64
      *
      * @return A lower or upper triangular matrix.
      */
-    public RowMatrix_F64 getT() {
+    public DMatrixRow_F64 getT() {
         return T;
     }
 

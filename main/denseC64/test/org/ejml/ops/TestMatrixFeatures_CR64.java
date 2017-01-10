@@ -21,7 +21,7 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -37,7 +37,7 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isVector() {
-        RowMatrix_C64 a = new RowMatrix_C64(4,4);
+        DMatrixRow_C64 a = new DMatrixRow_C64(4,4);
 
         assertFalse(MatrixFeatures_CR64.isVector(a));
 
@@ -50,8 +50,8 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isNegative() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,5,rand);
-        RowMatrix_C64 b = a.copy();
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,5,rand);
+        DMatrixRow_C64 b = a.copy();
         CommonOps_CR64.scale(-1,0,b);
 
         // test the positive case first
@@ -67,7 +67,7 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void hasUncountable() {
-        RowMatrix_C64 a = new RowMatrix_C64(4,4);
+        DMatrixRow_C64 a = new DMatrixRow_C64(4,4);
 
         // check a negative case first
         assertFalse(MatrixFeatures_CR64.hasUncountable(a));
@@ -82,7 +82,7 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void hasNaN() {
-        RowMatrix_C64 m = new RowMatrix_C64(3,3);
+        DMatrixRow_C64 m = new DMatrixRow_C64(3,3);
         assertFalse(MatrixFeatures_CR64.hasNaN(m));
 
         m.set(1,2,-Double.NaN,0);
@@ -91,8 +91,8 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isEquals() {
-        RowMatrix_C64 m = RandomMatrices_CR64.createRandom(3,4,-1,1,rand);
-        RowMatrix_C64 n = m.copy();
+        DMatrixRow_C64 m = RandomMatrices_CR64.createRandom(3,4,-1,1,rand);
+        DMatrixRow_C64 n = m.copy();
 
         assertTrue(MatrixFeatures_CR64.isEquals(m,n));
 
@@ -109,8 +109,8 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isEquals_tol() {
-        RowMatrix_C64 m = RandomMatrices_CR64.createRandom(3,4,-1,1,rand);
-        RowMatrix_C64 n = m.copy();
+        DMatrixRow_C64 m = RandomMatrices_CR64.createRandom(3,4,-1,1,rand);
+        DMatrixRow_C64 n = m.copy();
 
         assertTrue(MatrixFeatures_CR64.isEquals(m,n,UtilEjml.TEST_F64));
 
@@ -147,8 +147,8 @@ public class TestMatrixFeatures_CR64 {
     }
 
     private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
-        RowMatrix_C64 A = new RowMatrix_C64(2,2);
-        RowMatrix_C64 B = new RowMatrix_C64(2,2);
+        DMatrixRow_C64 A = new DMatrixRow_C64(2,2);
+        DMatrixRow_C64 B = new DMatrixRow_C64(2,2);
         CommonOps_CR64.fill(A, valA,0);
         CommonOps_CR64.fill(B, valB,0);
 
@@ -162,7 +162,7 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isIdentity() {
-        RowMatrix_C64 m = CommonOps_CR64.diag(1,0,1,0,1,0);
+        DMatrixRow_C64 m = CommonOps_CR64.diag(1,0,1,0,1,0);
 
         assertTrue(MatrixFeatures_CR64.isIdentity(m,UtilEjml.TEST_F64));
 
@@ -185,7 +185,7 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isHermitian() {
-        RowMatrix_C64 A = new RowMatrix_C64(new double[][]{{1,0, 2,2.1},{2,-2.1 ,3,0}});
+        DMatrixRow_C64 A = new DMatrixRow_C64(new double[][]{{1,0, 2,2.1},{2,-2.1 ,3,0}});
 
         assertTrue(MatrixFeatures_CR64.isHermitian(A, UtilEjml.TEST_F64));
 
@@ -197,11 +197,11 @@ public class TestMatrixFeatures_CR64 {
     @Test
     public void isUnitary() {
         // create a reflector since it's unitary
-        RowMatrix_C64 u = RandomMatrices_CR64.createRandom(5,1,rand);
+        DMatrixRow_C64 u = RandomMatrices_CR64.createRandom(5,1,rand);
         Complex_F64 dot = new Complex_F64();
         VectorVectorMult_CR64.innerProdH(u, u,dot);
         double gamma = 2.0/dot.real;
-        RowMatrix_C64 A = SpecializedOps_CR64.householder(u,gamma);
+        DMatrixRow_C64 A = SpecializedOps_CR64.householder(u,gamma);
 
         assertTrue(MatrixFeatures_CR64.isUnitary(A, UtilEjml.TEST_F64));
 
@@ -220,9 +220,9 @@ public class TestMatrixFeatures_CR64 {
      */
     @Test
     public void isPositiveDefinite() {
-        RowMatrix_C64 a = new RowMatrix_C64(2,2,true,2,0,0,0,0,0,2,0);
-        RowMatrix_C64 b = new RowMatrix_C64(2,2,true,0,0,1,0,1,0,0,0);
-        RowMatrix_C64 c = new RowMatrix_C64(2,2);
+        DMatrixRow_C64 a = new DMatrixRow_C64(2,2,true,2,0,0,0,0,0,2,0);
+        DMatrixRow_C64 b = new DMatrixRow_C64(2,2,true,0,0,1,0,1,0,0,0);
+        DMatrixRow_C64 c = new DMatrixRow_C64(2,2);
 
         assertTrue(MatrixFeatures_CR64.isPositiveDefinite(a));
         assertFalse(MatrixFeatures_CR64.isPositiveDefinite(b));
@@ -237,7 +237,7 @@ public class TestMatrixFeatures_CR64 {
     public void isUpperTriangle() {
         // test matrices that are upper triangular to various degree hessenberg
         for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
-            RowMatrix_C64 A = new RowMatrix_C64(6,6);
+            DMatrixRow_C64 A = new DMatrixRow_C64(6,6);
             for( int i = 0; i < A.numRows; i++ ) {
                 int s = i <= hessenberg ? 0 : i-hessenberg;
 
@@ -266,7 +266,7 @@ public class TestMatrixFeatures_CR64 {
     public void isLowerTriangle() {
         // test matrices that are upper triangular to various degree hessenberg
         for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
-            RowMatrix_C64 A = new RowMatrix_C64(6,6);
+            DMatrixRow_C64 A = new DMatrixRow_C64(6,6);
             for( int i = 0; i < A.numRows; i++ ) {
                 int s = i <= hessenberg ? 0 : i-hessenberg;
 
@@ -295,7 +295,7 @@ public class TestMatrixFeatures_CR64 {
 
     @Test
     public void isZeros() {
-        RowMatrix_C64 a = new RowMatrix_C64(4,4);
+        DMatrixRow_C64 a = new DMatrixRow_C64(4,4);
         a.set(0, 0, 1, -1);
 
         assertFalse(MatrixFeatures_CR64.isZeros(a, 0.1));

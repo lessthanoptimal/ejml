@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -42,10 +42,10 @@ public class TestDeterminantFromMinor_R64 {
     public void compareTo4x4() {
         double[] mat = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
 
-        double val = NaiveDeterminant.recursive(new RowMatrix_F64(4,4,true,mat));
+        double val = NaiveDeterminant.recursive(new DMatrixRow_F64(4,4,true,mat));
 
         DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(4,3);
-        double minorVal = minor.compute(new RowMatrix_F64(4,4, true, mat));
+        double minorVal = minor.compute(new DMatrixRow_F64(4,4, true, mat));
 
         assertEquals(val,minorVal, UtilEjml.TEST_F64_SQ);
     }
@@ -58,7 +58,7 @@ public class TestDeterminantFromMinor_R64 {
         double[] mat = new double[]{5 ,-2, -4, 0.5, -0.3, 0.1, 91, 8, 66, 13, 1, -2, 10, -4, -0.01, -0.2, 7, -4, 0.8, -22, 5, 19, -23, 0.001, 87};
 
         DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(5);
-        double minorVal = minor.compute(new RowMatrix_F64(5,5, true, mat));
+        double minorVal = minor.compute(new DMatrixRow_F64(5,5, true, mat));
 
         assertEquals(-4745296.629148000851274 ,minorVal, 100*UtilEjml.TEST_F64_SQ);
     }
@@ -69,12 +69,12 @@ public class TestDeterminantFromMinor_R64 {
 
         int width = 10;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
 
         DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(width);
-        double minorVal = minor.compute(new RowMatrix_F64(width,width, true, A.data));
+        double minorVal = minor.compute(new DMatrixRow_F64(width,width, true, A.data));
 
-        double recVal = NaiveDeterminant.recursive(new RowMatrix_F64(width,width, true, A.data));
+        double recVal = NaiveDeterminant.recursive(new DMatrixRow_F64(width,width, true, A.data));
 
         assertEquals(recVal,minorVal,UtilEjml.TEST_F64_SQ);
     }
@@ -87,7 +87,7 @@ public class TestDeterminantFromMinor_R64 {
         Random rand = new Random(0xfff);
 
         for( int width = 5; width < 12; width++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
 
             LUDecompositionAlt_R64 lu = new LUDecompositionAlt_R64();
             lu.decompose(A);
@@ -95,7 +95,7 @@ public class TestDeterminantFromMinor_R64 {
             double luVal = lu.computeDeterminant().real;
 
             DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(width);
-            double minorVal = minor.compute(new RowMatrix_F64(width,width, true, A.data));
+            double minorVal = minor.compute(new DMatrixRow_F64(width,width, true, A.data));
 
             assertEquals(luVal,minorVal,UtilEjml.TEST_F64_SQ);
         }
@@ -110,7 +110,7 @@ public class TestDeterminantFromMinor_R64 {
 
         int width = 6;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
 
         DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(width);
         double first = minor.compute(A);
@@ -119,7 +119,7 @@ public class TestDeterminantFromMinor_R64 {
         assertEquals(first,second,1e-10);
 
         // does it produce the same results for a different matrix?
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(width,width,rand);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(width,width,rand);
         double third = minor.compute(B);
 
         assertFalse(first==third);

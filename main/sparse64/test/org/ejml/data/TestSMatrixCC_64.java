@@ -26,7 +26,7 @@ import org.ejml.sparse.ConvertSparseMatrix_F64;
 public class TestSMatrixCC_64 extends GenericTestsSparseMatrix_64 {
 
     @Override
-    public RealMatrix_F64 createSparse(SMatrixTriplet_64 orig, int numRows, int numCols) {
+    public Matrix_64 createSparse(SMatrixTriplet_64 orig, int numRows, int numCols) {
         SMatrixCC_64 dst = new SMatrixCC_64(numRows,numCols, numRows*numCols);
         ConvertSparseMatrix_F64.convert(orig,dst,null);
         return dst;

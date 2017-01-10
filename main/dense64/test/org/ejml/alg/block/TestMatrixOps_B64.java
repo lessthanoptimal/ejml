@@ -20,9 +20,9 @@ package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -57,8 +57,8 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        BlockMatrix_F64 B = new BlockMatrix_F64(A.numRows,A.numCols,BLOCK_LENGTH);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixBlock_F64 B = new DMatrixBlock_F64(A.numRows,A.numCols,BLOCK_LENGTH);
 
         MatrixOps_B64.convert(A,B);
 
@@ -76,11 +76,11 @@ public class TestMatrixOps_B64 {
 
     private void checkConvertInline_dense_to_block( int m , int n ) {
         double tmp[] = new double[BLOCK_LENGTH*n];
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        RowMatrix_F64 A_orig = A.copy();
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A_orig = A.copy();
 
         MatrixOps_B64.convertRowToBlock(m,n,BLOCK_LENGTH,A.data,tmp);
-        BlockMatrix_F64 B = BlockMatrix_F64.wrap(A.data,A.numRows,A.numCols,BLOCK_LENGTH);
+        DMatrixBlock_F64 B = DMatrixBlock_F64.wrap(A.data,A.numRows,A.numCols,BLOCK_LENGTH);
 
         assertTrue( GenericMatrixOps_F64.isEquivalent(A_orig,B,UtilEjml.TEST_F64));
     }
@@ -98,8 +98,8 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkBlockToDense( int m , int n ) {
-        RowMatrix_F64 A = new RowMatrix_F64(m,n);
-        BlockMatrix_F64 B = MatrixOps_B64.createRandom(m,n,-1,1,rand);
+        DMatrixRow_F64 A = new DMatrixRow_F64(m,n);
+        DMatrixBlock_F64 B = MatrixOps_B64.createRandom(m,n,-1,1,rand);
 
         MatrixOps_B64.convert(B,A);
 
@@ -117,11 +117,11 @@ public class TestMatrixOps_B64 {
 
     private void checkConvertInline_block_to_dense( int m , int n ) {
         double tmp[] = new double[BLOCK_LENGTH*n];
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(m,n,-1,1,rand,BLOCK_LENGTH);
-        BlockMatrix_F64 A_orig = A.copy();
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(m,n,-1,1,rand,BLOCK_LENGTH);
+        DMatrixBlock_F64 A_orig = A.copy();
 
         MatrixOps_B64.convertBlockToRow(m,n,BLOCK_LENGTH,A.data,tmp);
-        RowMatrix_F64 B = RowMatrix_F64.wrap(A.numRows,A.numCols,A.data);
+        DMatrixRow_F64 B = DMatrixRow_F64.wrap(A.numRows,A.numCols,A.data);
 
         assertTrue( GenericMatrixOps_F64.isEquivalent(A_orig,B,UtilEjml.TEST_F64));
     }
@@ -162,9 +162,9 @@ public class TestMatrixOps_B64 {
      */
     private void checkMultInput( Method func, boolean transA , boolean transB ) {
         // bad block size
-        BlockMatrix_F64 A = new BlockMatrix_F64(5,4,3);
-        BlockMatrix_F64 B = new BlockMatrix_F64(4,6,3);
-        BlockMatrix_F64 C = new BlockMatrix_F64(5,6,4);
+        DMatrixBlock_F64 A = new DMatrixBlock_F64(5,4,3);
+        DMatrixBlock_F64 B = new DMatrixBlock_F64(4,6,3);
+        DMatrixBlock_F64 C = new DMatrixBlock_F64(5,6,4);
 
         invokeErrorCheck(func, transA , transB , A, B, C);
         C.blockLength = 3;
@@ -188,7 +188,7 @@ public class TestMatrixOps_B64 {
     }
 
     private void invokeErrorCheck(Method func, boolean transA , boolean transB ,
-                                  BlockMatrix_F64 a, BlockMatrix_F64 b, BlockMatrix_F64 c) {
+                                  DMatrixBlock_F64 a, DMatrixBlock_F64 b, DMatrixBlock_F64 c) {
 
         if( transA )
             a = MatrixOps_B64.transpose(a,null);
@@ -269,13 +269,13 @@ public class TestMatrixOps_B64 {
 
     private void checkMult( Method func, boolean transA , boolean transB ,
                             int m, int n, int o) {
-        RowMatrix_F64 A_d = RandomMatrices_R64.createRandom(m, n,rand);
-        RowMatrix_F64 B_d = RandomMatrices_R64.createRandom(n, o,rand);
-        RowMatrix_F64 C_d = new RowMatrix_F64(m, o);
+        DMatrixRow_F64 A_d = RandomMatrices_R64.createRandom(m, n,rand);
+        DMatrixRow_F64 B_d = RandomMatrices_R64.createRandom(n, o,rand);
+        DMatrixRow_F64 C_d = new DMatrixRow_F64(m, o);
 
-        BlockMatrix_F64 A_b = MatrixOps_B64.convert(A_d,BLOCK_LENGTH);
-        BlockMatrix_F64 B_b = MatrixOps_B64.convert(B_d,BLOCK_LENGTH);
-        BlockMatrix_F64 C_b = MatrixOps_B64.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
+        DMatrixBlock_F64 A_b = MatrixOps_B64.convert(A_d,BLOCK_LENGTH);
+        DMatrixBlock_F64 B_b = MatrixOps_B64.convert(B_d,BLOCK_LENGTH);
+        DMatrixBlock_F64 C_b = MatrixOps_B64.createRandom(m, o, -1 , 1 , rand , BLOCK_LENGTH);
 
         if( transA )
             A_b= MatrixOps_B64.transpose(A_b,null);
@@ -311,9 +311,9 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkTranSrcBlockToDense( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        RowMatrix_F64 A_t = new RowMatrix_F64(n,m);
-        BlockMatrix_F64 B = new BlockMatrix_F64(n,m,BLOCK_LENGTH);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A_t = new DMatrixRow_F64(n,m);
+        DMatrixBlock_F64 B = new DMatrixBlock_F64(n,m,BLOCK_LENGTH);
 
         CommonOps_R64.transpose(A,A_t);
         MatrixOps_B64.convertTranSrc(A,B);
@@ -334,11 +334,11 @@ public class TestMatrixOps_B64 {
     }
 
     private void checkTranspose( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        RowMatrix_F64 A_t = new RowMatrix_F64(n,m);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A_t = new DMatrixRow_F64(n,m);
 
-        BlockMatrix_F64 B = new BlockMatrix_F64(A.numRows,A.numCols,BLOCK_LENGTH);
-        BlockMatrix_F64 B_t = new BlockMatrix_F64(n,m,BLOCK_LENGTH);
+        DMatrixBlock_F64 B = new DMatrixBlock_F64(A.numRows,A.numCols,BLOCK_LENGTH);
+        DMatrixBlock_F64 B_t = new DMatrixBlock_F64(n,m,BLOCK_LENGTH);
 
         MatrixOps_B64.convert(A,B);
 
@@ -354,7 +354,7 @@ public class TestMatrixOps_B64 {
 
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix_F64 B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                DMatrixBlock_F64 B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
                 MatrixOps_B64.zeroTriangle(true,B);
 
                 for( int i = 0; i < B.numRows; i++ ) {
@@ -376,7 +376,7 @@ public class TestMatrixOps_B64 {
 
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix_F64 B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                DMatrixBlock_F64 B = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
 
                 MatrixOps_B64.zeroTriangle(false,B);
 
@@ -400,8 +400,8 @@ public class TestMatrixOps_B64 {
         // test where src and dst are the same size
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
-                BlockMatrix_F64 B = new BlockMatrix_F64(numRows,numCols,r);
+                DMatrixBlock_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                DMatrixBlock_F64 B = new DMatrixBlock_F64(numRows,numCols,r);
 
                 MatrixOps_B64.copyTriangle(true,A,B);
 
@@ -429,10 +429,10 @@ public class TestMatrixOps_B64 {
         }
 
         // now the dst will be smaller than the source
-        BlockMatrix_F64 B = new BlockMatrix_F64(r+1,r+1,r);
+        DMatrixBlock_F64 B = new DMatrixBlock_F64(r+1,r+1,r);
         for( int numRows = 4; numRows <= 6; numRows += 1 ){
             for( int numCols = 4; numCols <= 6; numCols += 1 ){
-                BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                DMatrixBlock_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
                 CommonOps_R64.fill(B, 0);
 
                 MatrixOps_B64.copyTriangle(true,A,B);
@@ -467,7 +467,7 @@ public class TestMatrixOps_B64 {
 
         for( int numRows = 2; numRows <= 6; numRows += 2 ){
             for( int numCols = 2; numCols <= 6; numCols += 2 ){
-                BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+                DMatrixBlock_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
 
                 MatrixOps_B64.setIdentity(A);
 
@@ -485,7 +485,7 @@ public class TestMatrixOps_B64 {
 
     @Test
     public void convertSimple() {
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(4,6,-1,1,rand,3);
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(4,6,-1,1,rand,3);
 
         SimpleMatrix S = new SimpleMatrix(A);
 
@@ -502,7 +502,7 @@ public class TestMatrixOps_B64 {
     @Test
     public void identity() {
         // test square
-        BlockMatrix_F64 A = MatrixOps_B64.identity(4,4,3);
+        DMatrixBlock_F64 A = MatrixOps_B64.identity(4,4,3);
         assertTrue(GenericMatrixOps_F64.isIdentity(A,UtilEjml.TEST_F64));
 
         // test wide
@@ -516,8 +516,8 @@ public class TestMatrixOps_B64 {
 
     @Test
     public void extractAligned() {
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(10,11,-1,1,rand,3);
-        BlockMatrix_F64 B = new BlockMatrix_F64(9,11,3);
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(10,11,-1,1,rand,3);
+        DMatrixBlock_F64 B = new DMatrixBlock_F64(9,11,3);
 
         MatrixOps_B64.extractAligned(A,B);
 
@@ -531,7 +531,7 @@ public class TestMatrixOps_B64 {
     @Test
     public void blockAligned() {
         int r = 3;
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(10,11,-1,1,rand,r);
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(10,11,-1,1,rand,r);
 
         D1Submatrix_F64 S = new D1Submatrix_F64(A);
 

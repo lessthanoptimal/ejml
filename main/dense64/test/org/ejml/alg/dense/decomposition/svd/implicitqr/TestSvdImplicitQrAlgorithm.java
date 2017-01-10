@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd.implicitqr;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -114,7 +114,7 @@ public class TestSvdImplicitQrAlgorithm {
 
     @Test
     public void knownCaseSquare() {
-        RowMatrix_F64 A = UtilEjml.parse_R64("-3   1   3  -3   0\n" +
+        DMatrixRow_F64 A = UtilEjml.parse_R64("-3   1   3  -3   0\n" +
                 "   2  -4   0  -2   0\n" +
                 "   1  -4   4   1  -3\n" +
                 "  -1  -3   2   2  -4\n" +
@@ -206,7 +206,7 @@ public class TestSvdImplicitQrAlgorithm {
         }
     }
 
-    public static SvdImplicitQrAlgorithm_R64 createHelper(RowMatrix_F64 a ) {
+    public static SvdImplicitQrAlgorithm_R64 createHelper(DMatrixRow_F64 a ) {
         BidiagonalDecompositionRow_R64 bidiag = new BidiagonalDecompositionRow_R64();
         assertTrue(bidiag.decompose(a.copy()));
         double diag[] = new double[a.numRows];

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_R64;
 
@@ -36,13 +36,13 @@ import org.ejml.ops.CommonOps_R64;
  */
 // TODO remove QR Col and replace with this one?
 // -- On small matrices col seems to be about 10% faster
-public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMatrix_F64> {
+public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<DMatrixRow_F64> {
 
     /**
      * Where the Q and R matrices are stored.  For speed reasons
      * this is transposed
      */
-    protected RowMatrix_F64 QR;
+    protected DMatrixRow_F64 QR;
 
     // used internally to store temporary data
     protected double v[];
@@ -68,7 +68,7 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
         int maxLength = Math.max(numCols,numRows);
 
         if( QR == null ) {
-            QR = new RowMatrix_F64(numCols,numRows);
+            QR = new DMatrixRow_F64(numCols,numRows);
             v = new double[ maxLength ];
             gammas = new double[ minLength ];
         } else {
@@ -86,7 +86,7 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
     /**
      * Inner matrix that stores the decomposition
      */
-    public RowMatrix_F64 getQR() {
+    public DMatrixRow_F64 getQR() {
         return QR;
     }
 
@@ -97,7 +97,7 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean compact ) {
+    public DMatrixRow_F64 getQ(DMatrixRow_F64 Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
                 Q = CommonOps_R64.identity(numRows,minLength);
@@ -138,7 +138,7 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
      *
      * @param A Matrix that is being multiplied by Q.  Is modified.
      */
-    public void applyQ( RowMatrix_F64 A ) {
+    public void applyQ( DMatrixRow_F64 A ) {
         if( A.numRows != numRows )
             throw new IllegalArgumentException("A must have at least "+numRows+" rows.");
 
@@ -156,7 +156,7 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
      *
      * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
      */
-    public void applyTranQ( RowMatrix_F64 A ) {
+    public void applyTranQ( DMatrixRow_F64 A ) {
         for( int j = 0; j < minLength; j++ ) {
             int diagIndex = j*numRows+j;
             double before = QR.data[diagIndex];
@@ -173,12 +173,12 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
      * @param compact
      */
     @Override
-    public RowMatrix_F64 getR(RowMatrix_F64 R, boolean compact) {
+    public DMatrixRow_F64 getR(DMatrixRow_F64 R, boolean compact) {
         if( R == null ) {
             if( compact ) {
-                R = new RowMatrix_F64(minLength,numCols);
+                R = new DMatrixRow_F64(minLength,numCols);
             } else
-                R = new RowMatrix_F64(numRows,numCols);
+                R = new DMatrixRow_F64(numRows,numCols);
         } else {
             if( compact ) {
                 if( R.numCols != numCols || R.numRows != minLength )
@@ -219,7 +219,7 @@ public class QRDecompositionHouseholderTran_R64 implements QRDecomposition<RowMa
      * </p>
      */
     @Override
-    public boolean decompose( RowMatrix_F64 A ) {
+    public boolean decompose( DMatrixRow_F64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         CommonOps_R64.transpose(A,QR);

@@ -20,7 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -36,7 +36,7 @@ public class TestNormOps_CR64 {
 
     @Test
     public void normF() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(1,7,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(1,7,rand);
 
         Complex_F64 b = new Complex_F64();
         double total = 0;

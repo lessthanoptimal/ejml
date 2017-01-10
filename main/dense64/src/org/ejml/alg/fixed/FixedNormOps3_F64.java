@@ -18,8 +18,8 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.FixedMatrix3_F64;
-import org.ejml.data.FixedMatrix3x3_F64;
+import org.ejml.data.DMatrixFixed3_F64;
+import org.ejml.data.DMatrixFixed3x3_F64;
 
 /**
  * <p>Matrix norm related operations for fixed sized matrices of size 3.</p>
@@ -28,17 +28,17 @@ import org.ejml.data.FixedMatrix3x3_F64;
  * @author Peter Abeles
  */
 public class FixedNormOps3_F64 {
-    public static void normalizeF( FixedMatrix3x3_F64 M ) {
+    public static void normalizeF( DMatrixFixed3x3_F64 M ) {
         double val = normF(M);
         FixedOps3_F64.divide(M,val);
     }
 
-    public static void normalizeF( FixedMatrix3_F64 M ) {
+    public static void normalizeF( DMatrixFixed3_F64 M ) {
         double val = normF(M);
         FixedOps3_F64.divide(M,val);
     }
 
-    public static double fastNormF( FixedMatrix3x3_F64 M ) {
+    public static double fastNormF( DMatrixFixed3x3_F64 M ) {
         double sum = 0;
 
         sum += M.a11*M.a11 + M.a12*M.a12 + M.a13*M.a13;
@@ -48,12 +48,12 @@ public class FixedNormOps3_F64 {
         return Math.sqrt(sum);
     }
 
-    public static double fastNormF( FixedMatrix3_F64 M ) {
+    public static double fastNormF( DMatrixFixed3_F64 M ) {
         double sum = M.a1*M.a1 + M.a2*M.a2 + M.a3*M.a3;
         return Math.sqrt(sum);
     }
 
-    public static double normF( FixedMatrix3x3_F64 M ) {
+    public static double normF( DMatrixFixed3x3_F64 M ) {
         double scale = FixedOps3_F64.elementMaxAbs(M);
 
         if( scale == 0.0 )
@@ -71,7 +71,7 @@ public class FixedNormOps3_F64 {
         return scale * Math.sqrt(sum);
     }
 
-    public static double normF( FixedMatrix3_F64 M ) {
+    public static double normF( DMatrixFixed3_F64 M ) {
         double scale = FixedOps3_F64.elementMaxAbs(M);
 
         if( scale == 0.0 )

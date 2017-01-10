@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 /**
  * @author Peter Abeles
@@ -38,7 +38,7 @@ public class NormOps_CR64 {
      * @param a The matrix whose norm is computed.  Not modified.
      * @return The norm's value.
      */
-    public static double normF( RowMatrix_C64 a ) {
+    public static double normF( DMatrixRow_C64 a ) {
         double total = 0;
 
         double scale = CommonOps_CR64.elementMaxAbs(a);

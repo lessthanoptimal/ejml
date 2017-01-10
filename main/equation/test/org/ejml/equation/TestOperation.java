@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -65,10 +65,10 @@ public class TestOperation {
 
         eq.process("x=A/b");
 
-        RowMatrix_F64 tmp = new RowMatrix_F64(5,3);
-        CommonOps_R64.divide(2.5, (RowMatrix_F64)b.getMatrix(), tmp);
+        DMatrixRow_F64 tmp = new DMatrixRow_F64(5,3);
+        CommonOps_R64.divide(2.5, (DMatrixRow_F64)b.getMatrix(), tmp);
 
-        assertTrue(MatrixFeatures_R64.isIdentical(tmp, (RowMatrix_F64)x.getMatrix(), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_R64.isIdentical(tmp, (DMatrixRow_F64)x.getMatrix(), UtilEjml.TEST_F64));
     }
 
     @Test
@@ -272,7 +272,7 @@ public class TestOperation {
         eq.process("c=a.^b");
 
         SimpleMatrix expected = new SimpleMatrix(6,5);
-        CommonOps_R64.elementPower(a, (RowMatrix_F64)b.getMatrix(), (RowMatrix_F64)expected.getMatrix());
+        CommonOps_R64.elementPower(a, (DMatrixRow_F64)b.getMatrix(), (DMatrixRow_F64)expected.getMatrix());
         assertTrue(expected.isIdentical(c, UtilEjml.TEST_F64));
     }
 
@@ -573,8 +573,8 @@ public class TestOperation {
 
         eq.process("a=2.2-b");
 
-        RowMatrix_F64 expected = new RowMatrix_F64(3,4);
-        CommonOps_R64.subtract(2.2, (RowMatrix_F64)b.getMatrix(), expected);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(3,4);
+        CommonOps_R64.subtract(2.2, (DMatrixRow_F64)b.getMatrix(), expected);
         assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, UtilEjml.TEST_F64));
     }
 
@@ -595,7 +595,7 @@ public class TestOperation {
     public void copy_double_matrix() {
         Equation eq = new Equation();
 
-        RowMatrix_F64 src = new RowMatrix_F64(1,1,true,2.5);
+        DMatrixRow_F64 src = new DMatrixRow_F64(1,1,true,2.5);
         eq.alias(1.2,"a");
         eq.alias(src,"b");
 
@@ -604,7 +604,7 @@ public class TestOperation {
         assertEquals(2.5, eq.lookupDouble("a"), UtilEjml.TEST_F64);
 
         // pass in a none 1x1 matrix
-        eq.alias(new RowMatrix_F64(2, 1), "b");
+        eq.alias(new DMatrixRow_F64(2, 1), "b");
         try {
             eq.process("a=b");
             fail("Exception should have been thrown");
@@ -842,7 +842,7 @@ public class TestOperation {
 
         eq.alias(b,"b");
         eq.process("c=b(1 2)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         assertTrue(found.numRows == 1 && found.numCols == 2);
         assertEquals(b.get(1), found.get(0), UtilEjml.TEST_F64);
@@ -857,7 +857,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(1:3)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         assertTrue(found.numRows == 1 && found.numCols == 3);
         for (int i = 0; i < found.numCols; i++) {
@@ -873,7 +873,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(4:)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         assertTrue(found.numRows == 1 && found.numCols == b.getNumElements()-4);
         for (int i = 0; i < found.numCols; i++) {
@@ -889,7 +889,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(:)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         assertTrue(found.numRows == 1 && found.numCols == b.getNumElements());
         for (int i = 0; i < found.numCols; i++) {
@@ -905,7 +905,7 @@ public class TestOperation {
 
         eq.alias(b,"b");
         eq.process("c=b(1 2,1 0 2)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         int rows[] = new int[]{1,2};
         int cols[] = new int[]{1,0,2};
@@ -921,7 +921,7 @@ public class TestOperation {
 
         eq.alias(b,"b");
         eq.process("c=b(1:2,2:3)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         int rows[] = new int[]{1,2};
         int cols[] = new int[]{2,3};
@@ -937,7 +937,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(2:,1:)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         int rows[] = new int[]{2};
         int cols[] = new int[]{1,2,3};
@@ -953,7 +953,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(:,:)");
-        RowMatrix_F64 found = eq.lookupMatrix("c");
+        DMatrixRow_F64 found = eq.lookupMatrix("c");
 
         int rows[] = new int[]{0,1,2};
         int cols[] = new int[]{0,1,2,3};
@@ -1056,10 +1056,10 @@ public class TestOperation {
         eq.alias(a,"a",b,"b");
         eq.process("b=rref(a)");
 
-        RowMatrix_F64 expected = new RowMatrix_F64(4,3);
-        CommonOps_R64.rref((RowMatrix_F64)a.getMatrix(),-1,expected);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(4,3);
+        CommonOps_R64.rref((DMatrixRow_F64)a.getMatrix(),-1,expected);
 
-        assertTrue(MatrixFeatures_R64.isIdentical(expected,(RowMatrix_F64)b.getMatrix(),UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_R64.isIdentical(expected,(DMatrixRow_F64)b.getMatrix(),UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1199,7 +1199,7 @@ public class TestOperation {
         eq.process("B=max(A)");
 
         double found = eq.lookupDouble("B");
-        double expected = CommonOps_R64.elementMax((RowMatrix_F64)A.getMatrix());
+        double expected = CommonOps_R64.elementMax((DMatrixRow_F64)A.getMatrix());
         assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 
@@ -1241,7 +1241,7 @@ public class TestOperation {
         eq.process("B=min(A)");
 
         double found = eq.lookupDouble("B");
-        double expected = CommonOps_R64.elementMin((RowMatrix_F64)A.getMatrix());
+        double expected = CommonOps_R64.elementMin((DMatrixRow_F64)A.getMatrix());
         assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 
@@ -1383,7 +1383,7 @@ public class TestOperation {
         assertTrue(A.solve(b).isIdentical(x, UtilEjml.TEST_F64));
     }
 
-    private void checkSubMatrixArraysExtract(SimpleMatrix src, RowMatrix_F64 dst, int[] rows, int[] cols) {
+    private void checkSubMatrixArraysExtract(SimpleMatrix src, DMatrixRow_F64 dst, int[] rows, int[] cols) {
         assertTrue(dst.numRows == rows.length && dst.numCols == cols.length);
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < cols.length; j++) {

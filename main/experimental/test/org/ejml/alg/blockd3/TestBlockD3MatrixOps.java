@@ -21,7 +21,7 @@ package org.ejml.alg.blockd3;
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
 import org.ejml.data.BlockD3Matrix64F;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
         BlockD3Matrix64F B = new BlockD3Matrix64F(A.numRows,A.numCols,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(A,B);
@@ -73,7 +73,7 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkBlockToDense( int m , int n ) {
-        RowMatrix_F64 A = new RowMatrix_F64(m,n);
+        DMatrixRow_F64 A = new DMatrixRow_F64(m,n);
         BlockD3Matrix64F B = BlockD3MatrixOps.random(m,n,-1,1,rand,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(B,A);
@@ -108,9 +108,9 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkMult(int m, int n, int o) {
-        RowMatrix_F64 A_d = RandomMatrices_R64.createRandom(m, n,rand);
-        RowMatrix_F64 B_d = RandomMatrices_R64.createRandom(n, o,rand);
-        RowMatrix_F64 C_d = new RowMatrix_F64(m, o);
+        DMatrixRow_F64 A_d = RandomMatrices_R64.createRandom(m, n,rand);
+        DMatrixRow_F64 B_d = RandomMatrices_R64.createRandom(n, o,rand);
+        DMatrixRow_F64 C_d = new DMatrixRow_F64(m, o);
 
         BlockD3Matrix64F A_b = BlockD3MatrixOps.convert(A_d,BLOCK_LENGTH);
         BlockD3Matrix64F B_b = BlockD3MatrixOps.convert(B_d,BLOCK_LENGTH);

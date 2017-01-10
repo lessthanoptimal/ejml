@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig.watched;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
@@ -33,7 +33,7 @@ import java.util.Random;
  */
 public class WatchDoubleStepQR {
 
-    public static void watchFindEigen( RowMatrix_F64 A ) {
+    public static void watchFindEigen( DMatrixRow_F64 A ) {
         WatchedDoubleStepQREigenvalue_R64 alg = new WatchedDoubleStepQREigenvalue_R64();
 
 //        alg.implicitQR.printFound = true;
@@ -60,7 +60,7 @@ public class WatchDoubleStepQR {
 
         System.out.println("Eigenvectors.");
         for( int i = 0; i < A.numRows; i++ ) {
-            RowMatrix_F64 v = algVector.eigenvectors[i];
+            DMatrixRow_F64 v = algVector.eigenvectors[i];
 
             if( v != null )
                 v.print("%8.3e");
@@ -69,7 +69,7 @@ public class WatchDoubleStepQR {
         }
     }
 
-    public static void watchImplicitDouble( RowMatrix_F64 A ) {
+    public static void watchImplicitDouble( DMatrixRow_F64 A ) {
         WatchedDoubleStepQREigen_R64 alg = new WatchedDoubleStepQREigen_R64();
 
 //        alg.printHumps = true;
@@ -87,7 +87,7 @@ public class WatchDoubleStepQR {
         }
     }
 
-    public static void watchImplicitSingle( RowMatrix_F64 A ) {
+    public static void watchImplicitSingle( DMatrixRow_F64 A ) {
         WatchedDoubleStepQREigen_R64 alg = new WatchedDoubleStepQREigen_R64();
 
 //        alg.printHumps = true;
@@ -113,10 +113,10 @@ public class WatchDoubleStepQR {
         Random rand = new Random(23475);
 //        Random rand = new Random(235);
 
-        RowMatrix_F64 A = RandomMatrices_R64.createUpperTriangle(5,1,2,3,rand);
-//        RowMatrix_F64 A = RandomMatrices.createUpperTriangle(50,1,-2,2,rand);
-//        RowMatrix_F64 A = new RowMatrix_F64(5,5,new double[]{0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0},true);
-//        RowMatrix_F64 A = UtilEjml.parseMatrix("-0.951  0.845 -0.171 \n" +
+        DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(5,1,2,3,rand);
+//        DMatrixRow_F64 A = RandomMatrices.createUpperTriangle(50,1,-2,2,rand);
+//        DMatrixRow_F64 A = new DMatrixRow_F64(5,5,new double[]{0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0},true);
+//        DMatrixRow_F64 A = UtilEjml.parseMatrix("-0.951  0.845 -0.171 \n" +
 //                " 0.573 -0.720  0.264 \n" +
 //                " 0.000  0.552 -0.100",3);
 

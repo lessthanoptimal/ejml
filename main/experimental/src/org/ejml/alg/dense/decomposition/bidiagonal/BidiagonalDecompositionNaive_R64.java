@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.SpecializedOps_R64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -43,7 +43,7 @@ public class BidiagonalDecompositionNaive_R64 {
     private int min;
 
 
-    RowMatrix_F64 u;
+    DMatrixRow_F64 u;
 
     public SimpleMatrix getU() {
         return U;
@@ -63,24 +63,24 @@ public class BidiagonalDecompositionNaive_R64 {
      * @param A  The matrix that is being decomposed.  Not modified.
      * @return If it detects any errors or not.
      */
-    public boolean decompose( RowMatrix_F64 A )
+    public boolean decompose( DMatrixRow_F64 A )
     {
         init(A);
         return _decompose();
     }
 
-    protected void init(RowMatrix_F64 A) {
+    protected void init(DMatrixRow_F64 A) {
         m = A.numRows;
         n = A.numCols;
 
         min = Math.min(m,n);
 
-        U = SimpleMatrix.identity(m, RowMatrix_F64.class);
+        U = SimpleMatrix.identity(m, DMatrixRow_F64.class);
         B = new SimpleMatrix(A);
-        V = SimpleMatrix.identity(n, RowMatrix_F64.class);
+        V = SimpleMatrix.identity(n, DMatrixRow_F64.class);
 
         int max = Math.max(m,n);
-        u = new RowMatrix_F64(max,1);
+        u = new DMatrixRow_F64(max,1);
     }
 
 

@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionInner_R64;
 import org.ejml.alg.dense.decomposition.chol.CholeskyDecompositionLDL_R64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverCholLDL_R64;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -38,9 +38,9 @@ import java.util.Random;
 public class BenchmarkSolveSymPosDef {
 
 
-    public static long solve(LinearSolver solver , RowMatrix_F64 A, RowMatrix_F64 b , int numTrials ) {
+    public static long solve(LinearSolver solver , DMatrixRow_F64 A, DMatrixRow_F64 b , int numTrials ) {
 
-        RowMatrix_F64 x = new RowMatrix_F64(A.numCols,b.numCols);
+        DMatrixRow_F64 x = new DMatrixRow_F64(A.numCols,b.numCols);
 
         if( !solver.setA(A) ) {
             throw new RuntimeException("Bad matrix");
@@ -55,7 +55,7 @@ public class BenchmarkSolveSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(RowMatrix_F64 A , RowMatrix_F64 b , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 A , DMatrixRow_F64 b , int numTrials )
     {
         System.out.println("Solve Cholesky         = "+solve(
                 new LinearSolverChol_R64(new CholeskyDecompositionInner_R64(true)),
@@ -77,10 +77,10 @@ public class BenchmarkSolveSymPosDef {
             System.out.printf("Matrix A size %3d for %12d trials\n",w,trials[i]);
 
             while( true ) {
-                RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
-                RowMatrix_F64 symMat = new RowMatrix_F64(w,w);
+                DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+                DMatrixRow_F64 symMat = new DMatrixRow_F64(w,w);
                 CommonOps_R64.multTransA(mat,mat,symMat);
-                RowMatrix_F64 b = RandomMatrices_R64.createRandom(w,w*2,rand);
+                DMatrixRow_F64 b = RandomMatrices_R64.createRandom(w,w*2,rand);
 
                 if(CommonOps_R64.det(symMat) > 0 ) {
                     runAlgorithms(symMat,b,trials[i]);

@@ -18,14 +18,14 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.simple.SimpleMatrix;
 
 /**
  * A Kalman filter implemented using SimpleMatrix.  The code tends to be easier to
  * read and write, but the performance is degraded due to excessive creation/destruction of
  * memory and the use of more generic algorithms.  This also demonstrates how code can be
- * seamlessly implemented using both SimpleMatrix and RowMatrix_F64.  This allows code
+ * seamlessly implemented using both SimpleMatrix and DMatrixRow_F64.  This allows code
  * to be quickly prototyped or to be written either by novices or experts.
  *
  * @author Peter Abeles
@@ -39,14 +39,14 @@ public class KalmanFilterSimple implements KalmanFilter{
     private SimpleMatrix x,P;
 
     @Override
-    public void configure(RowMatrix_F64 F, RowMatrix_F64 Q, RowMatrix_F64 H) {
+    public void configure(DMatrixRow_F64 F, DMatrixRow_F64 Q, DMatrixRow_F64 H) {
         this.F = new SimpleMatrix(F);
         this.Q = new SimpleMatrix(Q);
         this.H = new SimpleMatrix(H);
     }
 
     @Override
-    public void setState(RowMatrix_F64 x, RowMatrix_F64 P) {
+    public void setState(DMatrixRow_F64 x, DMatrixRow_F64 P) {
         this.x = new SimpleMatrix(x);
         this.P = new SimpleMatrix(P);
     }
@@ -61,7 +61,7 @@ public class KalmanFilterSimple implements KalmanFilter{
     }
 
     @Override
-    public void update(RowMatrix_F64 _z, RowMatrix_F64 _R) {
+    public void update(DMatrixRow_F64 _z, DMatrixRow_F64 _R) {
         // a fast way to make the matrices usable by SimpleMatrix
         SimpleMatrix z = SimpleMatrix.wrap(_z);
         SimpleMatrix R = SimpleMatrix.wrap(_R);
@@ -83,12 +83,12 @@ public class KalmanFilterSimple implements KalmanFilter{
     }
 
     @Override
-    public RowMatrix_F64 getState() {
+    public DMatrixRow_F64 getState() {
         return x.getMatrix();
     }
 
     @Override
-    public RowMatrix_F64 getCovariance() {
+    public DMatrixRow_F64 getCovariance() {
         return P.getMatrix();
     }
 }

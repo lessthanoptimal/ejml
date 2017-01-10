@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvalu
 import org.ejml.alg.dense.decomposition.eig.watched.WatchedDoubleStepQREigenvector_R64;
 import org.ejml.alg.dense.decomposition.hessenberg.HessenbergSimilarDecomposition_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 
@@ -42,13 +42,13 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
  */
 //TODO looks like there might be some pointless copying of arrays going on
 public class WatchedDoubleStepQRDecomposition_R64
-        implements EigenDecomposition_F64<RowMatrix_F64> {
+        implements EigenDecomposition_F64<DMatrixRow_F64> {
 
     HessenbergSimilarDecomposition_R64 hessenberg;
     WatchedDoubleStepQREigenvalue_R64 algValue;
     WatchedDoubleStepQREigenvector_R64 algVector;
 
-    RowMatrix_F64 H;
+    DMatrixRow_F64 H;
 
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
@@ -62,7 +62,7 @@ public class WatchedDoubleStepQRDecomposition_R64
     }
 
     @Override
-    public boolean decompose(RowMatrix_F64 A) {
+    public boolean decompose(DMatrixRow_F64 A) {
 
         if( !hessenberg.decompose(A) )
             return false;
@@ -103,7 +103,7 @@ public class WatchedDoubleStepQRDecomposition_R64
     }
 
     @Override
-    public RowMatrix_F64 getEigenVector(int index) {
+    public DMatrixRow_F64 getEigenVector(int index) {
         return algVector.getEigenvectors()[index];
     }
 }

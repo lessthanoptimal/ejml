@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,15 +38,15 @@ public class TestCovarianceRandomDraw_R64
      */
     @Test
     public void testStatistics() {
-        RowMatrix_F64 orig_P = new RowMatrix_F64(new double[][]{{6,-2},{-2,10}});
+        DMatrixRow_F64 orig_P = new DMatrixRow_F64(new double[][]{{6,-2},{-2,10}});
 
         CovarianceRandomDraw_R64 dist = new CovarianceRandomDraw_R64(new Random(0xfeed),orig_P);
 
-        RowMatrix_F64 draws[] = new RowMatrix_F64[N];
+        DMatrixRow_F64 draws[] = new DMatrixRow_F64[N];
 
         // sample the distribution
         for( int i = 0; i < N; i++ ) {
-            RowMatrix_F64 x = new RowMatrix_F64(2,1);
+            DMatrixRow_F64 x = new DMatrixRow_F64(2,1);
             dist.next(x);
             draws[i] = x;
         }
@@ -67,8 +67,8 @@ public class TestCovarianceRandomDraw_R64
         assertEquals(0.0,raw_comp_x[1],0.1);
 
         // now the covariance
-        RowMatrix_F64 comp_P = new RowMatrix_F64(2,2);
-        RowMatrix_F64 temp = new RowMatrix_F64(2,1);
+        DMatrixRow_F64 comp_P = new DMatrixRow_F64(2,2);
+        DMatrixRow_F64 temp = new DMatrixRow_F64(2,1);
 
         for( int i = 0; i < N; i++ ) {
             temp.set(0,0,draws[i].get(0,0)-raw_comp_x[0]);
@@ -87,8 +87,8 @@ public class TestCovarianceRandomDraw_R64
      */
     @Test
     public void modifyInput() {
-        RowMatrix_F64 orig_P = new RowMatrix_F64(new double[][]{{6,-2},{-2,10}});
-        RowMatrix_F64 input = orig_P.copy();
+        DMatrixRow_F64 orig_P = new DMatrixRow_F64(new double[][]{{6,-2},{-2,10}});
+        DMatrixRow_F64 input = orig_P.copy();
 
         CovarianceRandomDraw_R64 dist = new CovarianceRandomDraw_R64(new Random(0xfeed),input);
 

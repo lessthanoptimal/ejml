@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix3_F64;
-import org.ejml.data.FixedMatrix3x3_F64;
+import org.ejml.data.DMatrixFixed3_F64;
+import org.ejml.data.DMatrixFixed3x3_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -40,8 +40,8 @@ public class TestFixedOps3_F64 extends CompareFixedToCommonOps_F64 {
 
     @Test
     public void diag() {
-        FixedMatrix3x3_F64 m = new FixedMatrix3x3_F64(1,2,3,4,5,6,7,8,9);
-        FixedMatrix3_F64 found = new FixedMatrix3_F64();
+        DMatrixFixed3x3_F64 m = new DMatrixFixed3x3_F64(1,2,3,4,5,6,7,8,9);
+        DMatrixFixed3_F64 found = new DMatrixFixed3_F64();
 
         FixedOps3_F64.diag(m,found);
 

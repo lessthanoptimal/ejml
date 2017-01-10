@@ -30,7 +30,7 @@ public class TestDenseD2Matrix64F {
     public void testGeneric() {
         GenericTestsDenseMatrix_F64 g;
         g = new GenericTestsDenseMatrix_F64() {
-            protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
+            protected Matrix_64 createMatrix(int numRows, int numCols) {
                 return new DenseD2Matrix64F(numRows,numCols);
             }
         };

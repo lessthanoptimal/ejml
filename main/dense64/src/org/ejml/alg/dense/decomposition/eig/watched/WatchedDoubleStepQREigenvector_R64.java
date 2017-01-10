@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
@@ -39,12 +39,12 @@ public class WatchedDoubleStepQREigenvector_R64 {
     WatchedDoubleStepQREigen_R64 implicit;
 
     // Q matrix from double step QR
-    RowMatrix_F64 Q;
+    DMatrixRow_F64 Q;
 
 
-    RowMatrix_F64 eigenvectors[];
+    DMatrixRow_F64 eigenvectors[];
 
-    RowMatrix_F64 eigenvectorTemp;
+    DMatrixRow_F64 eigenvectorTemp;
 
     LinearSolver solver;
 
@@ -59,22 +59,22 @@ public class WatchedDoubleStepQREigenvector_R64 {
     int indexVal;
     boolean onscript;
 
-    public boolean process(WatchedDoubleStepQREigen_R64 implicit , RowMatrix_F64 A , RowMatrix_F64 Q_h )
+    public boolean process(WatchedDoubleStepQREigen_R64 implicit , DMatrixRow_F64 A , DMatrixRow_F64 Q_h )
     {
         this.implicit = implicit;
 
         if( N != A.numRows ) {
             N = A.numRows;
-            Q = new RowMatrix_F64(N,N);
+            Q = new DMatrixRow_F64(N,N);
             splits = new int[N];
             origEigenvalues = new Complex_F64[N];
-            eigenvectors = new RowMatrix_F64[N];
-            eigenvectorTemp = new RowMatrix_F64(N,1);
+            eigenvectors = new DMatrixRow_F64[N];
+            eigenvectorTemp = new DMatrixRow_F64(N,1);
 
             solver = LinearSolverFactory_R64.linear(0);
         } else {
 //            UtilEjml.setnull(eigenvectors);
-            eigenvectors = new RowMatrix_F64[N];
+            eigenvectors = new DMatrixRow_F64[N];
         }
         System.arraycopy(implicit.eigenvalues,0,origEigenvalues,0,N);
 
@@ -92,7 +92,7 @@ public class WatchedDoubleStepQREigenvector_R64 {
         return extractVectors(Q_h);
     }
 
-    public boolean extractVectors( RowMatrix_F64 Q_h ) {
+    public boolean extractVectors( DMatrixRow_F64 Q_h ) {
 
         Arrays.fill(eigenvectorTemp.data, 0);
         // extract eigenvectors from the shur matrix
@@ -112,9 +112,9 @@ public class WatchedDoubleStepQREigenvector_R64 {
 
         // translate the eigenvectors into the frame of the original matrix
         if( Q_h != null ) {
-            RowMatrix_F64 temp = new RowMatrix_F64(N,1);
+            DMatrixRow_F64 temp = new DMatrixRow_F64(N,1);
             for( int i = 0; i < N; i++ ) {
-                RowMatrix_F64 v = eigenvectors[i];
+                DMatrixRow_F64 v = eigenvectors[i];
 
                 if( v != null ) {
                     CommonOps_R64.mult(Q_h,v,temp);
@@ -151,7 +151,7 @@ public class WatchedDoubleStepQREigenvector_R64 {
             if( c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
                 eigenvectorTemp.data[i] = 1;
 
-                RowMatrix_F64 v = new RowMatrix_F64(N,1);
+                DMatrixRow_F64 v = new DMatrixRow_F64(N,1);
                 CommonOps_R64.multTransA(Q,eigenvectorTemp,v);
                 eigenvectors[N-i-1] = v;
                 NormOps_R64.normalizeF(v);
@@ -161,7 +161,7 @@ public class WatchedDoubleStepQREigenvector_R64 {
         }
     }
 
-    private void solveUsingTriangle(double real, int index, RowMatrix_F64 r ) {
+    private void solveUsingTriangle(double real, int index, DMatrixRow_F64 r ) {
         for( int i = 0; i < index; i++ ) {
             implicit.A.add(i,i,-real);
         }
@@ -176,8 +176,8 @@ public class WatchedDoubleStepQREigenvector_R64 {
         }
     }
 
-    private void solveWithLU(double real, int index, RowMatrix_F64 r ) {
-        RowMatrix_F64 A = new RowMatrix_F64(index,index);
+    private void solveWithLU(double real, int index, DMatrixRow_F64 r ) {
+        DMatrixRow_F64 A = new DMatrixRow_F64(index,index);
 
         CommonOps_R64.extract(implicit.A,0,index,0,index,A,0,0);
 
@@ -304,7 +304,7 @@ public class WatchedDoubleStepQREigenvector_R64 {
         }
     }
 
-    public RowMatrix_F64 getQ() {
+    public DMatrixRow_F64 getQ() {
         return Q;
     }
 
@@ -312,7 +312,7 @@ public class WatchedDoubleStepQREigenvector_R64 {
         return implicit;
     }
 
-    public RowMatrix_F64[] getEigenvectors() {
+    public DMatrixRow_F64[] getEigenvectors() {
         return eigenvectors;
     }
 

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ import static org.ejml.alg.dense.decomposition.CheckDecompositionInterface_R64.c
 public class TestCholeskyDecompositionInner_R64 extends GenericCholeskyTests_R64 {
 
     @Override
-    public CholeskyDecomposition_F64<RowMatrix_F64> create(boolean lower) {
+    public CholeskyDecomposition_F64<DMatrixRow_F64> create(boolean lower) {
         return new CholeskyDecompositionInner_R64(lower);
     }
 

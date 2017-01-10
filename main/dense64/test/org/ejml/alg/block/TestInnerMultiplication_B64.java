@@ -19,7 +19,7 @@
 package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -93,7 +93,7 @@ public class TestInnerMultiplication_B64 {
 
     /**
      * The inner block multiplication is in a row major format.  Test it against
-     * operations for RowMatrix_F64
+     * operations for DMatrixRow_F64
      */
     private void checkBlockMult( int operationType , boolean transA , boolean transB , Method method,
                                  final int heightA, final int widthA, final int widthB )
@@ -103,16 +103,16 @@ public class TestInnerMultiplication_B64 {
         if( hasAlpha && operationType == -1 )
             fail("No point to minus and alpha");
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(heightA,widthA,rand);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(widthA,widthB,rand);
-        RowMatrix_F64 C = new RowMatrix_F64(heightA,widthB);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(heightA,widthA,rand);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(widthA,widthB,rand);
+        DMatrixRow_F64 C = new DMatrixRow_F64(heightA,widthB);
 
         if( operationType == -1 )
             CommonOps_R64.mult(-1,A,B,C);
         else
             CommonOps_R64.mult(A,B,C);
 
-        RowMatrix_F64 C_found = new RowMatrix_F64(heightA,widthB);
+        DMatrixRow_F64 C_found = new DMatrixRow_F64(heightA,widthB);
         // if it is set then it should overwrite everything just fine
         if( operationType == 0)
             RandomMatrices_R64.setRandom(C_found,rand);

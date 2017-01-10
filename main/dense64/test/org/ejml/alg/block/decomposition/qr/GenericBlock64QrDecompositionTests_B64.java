@@ -23,8 +23,8 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 
 
 /**
- * Generic tests that test the compliance of an implementation of QRDecomposition(BlockMatrix_F64).
+ * Generic tests that test the compliance of an implementation of QRDecomposition(DMatrixBlock_F64).
  *
  * @author Peter Abeles
  */
@@ -67,14 +67,14 @@ public class GenericBlock64QrDecompositionTests_B64 {
     public void applyQTran() {
         for( int i = 1; i <= 3*r; i++ ) {
             for( int j = 1; j <= 3*r; j++ ) {
-                BlockMatrix_F64 A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                DMatrixBlock_F64 A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
 
                 assertTrue(alg.decompose(A.copy()));
 
-                BlockMatrix_F64 Q = alg.getQ(null,false);
+                DMatrixBlock_F64 Q = alg.getQ(null,false);
 
-                BlockMatrix_F64 B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
-                BlockMatrix_F64 expected = new BlockMatrix_F64(i,j,r);
+                DMatrixBlock_F64 B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                DMatrixBlock_F64 expected = new DMatrixBlock_F64(i,j,r);
 
                 MatrixOps_B64.multTransA(Q,B,expected);
                 alg.applyQTran(B);
@@ -91,14 +91,14 @@ public class GenericBlock64QrDecompositionTests_B64 {
     public void applyQ() {
         for( int i = 1; i <= 3*r; i++ ) {
             for( int j = 1; j <= 3*r; j++ ) {
-                BlockMatrix_F64 A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                DMatrixBlock_F64 A = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
 
                 assertTrue(alg.decompose(A.copy()));
 
-                BlockMatrix_F64 Q = alg.getQ(null,false);
+                DMatrixBlock_F64 Q = alg.getQ(null,false);
 
-                BlockMatrix_F64 B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
-                BlockMatrix_F64 expected = new BlockMatrix_F64(i,j,r);
+                DMatrixBlock_F64 B = MatrixOps_B64.createRandom(i,j,-1,1,rand,r);
+                DMatrixBlock_F64 expected = new DMatrixBlock_F64(i,j,r);
 
                 MatrixOps_B64.mult(Q,B,expected);
                 alg.applyQ(B);
@@ -121,15 +121,15 @@ public class GenericBlock64QrDecompositionTests_B64 {
     }
 
     private void checkSize( int numRows , int numCols ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A,r);
 
         QRDecompositionHouseholderTran_R64 algCheck = new QRDecompositionHouseholderTran_R64();
         assertTrue(algCheck.decompose(A));
 
         assertTrue(alg.decompose(Ab));
 
-        RowMatrix_F64 expected = CommonOps_R64.transpose(algCheck.getQR(),null);
+        DMatrixRow_F64 expected = CommonOps_R64.transpose(algCheck.getQR(),null);
 //        expected.print();
 //        Ab.print();
 
@@ -152,14 +152,14 @@ public class GenericBlock64QrDecompositionTests_B64 {
     }
 
     private void checkFullDecomposition( int numRows , int numCols , boolean compact ) {
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(numRows,numCols,-1,1,rand,r);
 
         assertTrue(alg.decompose(A.copy()));
 
-        BlockMatrix_F64 Q = alg.getQ(null,compact);
-        BlockMatrix_F64 R = alg.getR(null,compact);
+        DMatrixBlock_F64 Q = alg.getQ(null,compact);
+        DMatrixBlock_F64 R = alg.getR(null,compact);
 
-        BlockMatrix_F64 found = new BlockMatrix_F64(numRows,numCols,r);
+        DMatrixBlock_F64 found = new DMatrixBlock_F64(numRows,numCols,r);
 
         MatrixOps_B64.mult(Q,R,found);
 

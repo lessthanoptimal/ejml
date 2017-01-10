@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -72,16 +72,16 @@ public abstract class GeneralReducedRowEchelonFormChecks_R64 {
 
     @Test
     public void testSingular() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,4,true,1,2,3,4,3,5,6,7,2,4,6,8,-3,4,9,3);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,4,true,1,2,3,4,3,5,6,7,2,4,6,8,-3,4,9,3);
 
-        RowMatrix_F64 found = A.copy();
+        DMatrixRow_F64 found = A.copy();
         alg.reduce(found,3);
 
         checkRref(found,3);
 
-        RowMatrix_F64 A1 = CommonOps_R64.extract(A,0,3,0,3);
-        RowMatrix_F64 X = CommonOps_R64.extract(found,0,3,3,4);
-        RowMatrix_F64 B = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 A1 = CommonOps_R64.extract(A,0,3,0,3);
+        DMatrixRow_F64 X = CommonOps_R64.extract(found,0,3,3,4);
+        DMatrixRow_F64 B = new DMatrixRow_F64(3,1);
 
         CommonOps_R64.mult(A1,X,B);
 
@@ -94,7 +94,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_R64 {
      */
     @Test
     public void spotTests() {
-        RowMatrix_F64 A = new RowMatrix_F64(4,6,true,
+        DMatrixRow_F64 A = new DMatrixRow_F64(4,6,true,
                 0,0,1,-1,-1,4,
                 2,4,2,4,2,4,
                 2,4,3,3,3,4,
@@ -105,8 +105,8 @@ public abstract class GeneralReducedRowEchelonFormChecks_R64 {
     }
 
     private void checkFormatRandom(int numRows, int numCols) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
-        RowMatrix_F64 found = A.copy();
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRow_F64 found = A.copy();
 
         alg.reduce(found,numCols);
 
@@ -114,16 +114,16 @@ public abstract class GeneralReducedRowEchelonFormChecks_R64 {
     }
 
     private void checkSolutionRandom(int numRows, int numCols , int solWidth ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
-        RowMatrix_F64 found = A.copy();
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRow_F64 found = A.copy();
 
         alg.reduce(found,solWidth);
 
         checkRref(found,solWidth);
 
-        RowMatrix_F64 A1 = CommonOps_R64.extract(A,0,numRows,0,solWidth);
-        RowMatrix_F64 X = CommonOps_R64.extract(found,0,solWidth,solWidth,numCols);
-        RowMatrix_F64 B = new RowMatrix_F64(numRows,numCols-solWidth);
+        DMatrixRow_F64 A1 = CommonOps_R64.extract(A,0,numRows,0,solWidth);
+        DMatrixRow_F64 X = CommonOps_R64.extract(found,0,solWidth,solWidth,numCols);
+        DMatrixRow_F64 B = new DMatrixRow_F64(numRows,numCols-solWidth);
 
         CommonOps_R64.mult(A1,X,B);
 
@@ -137,7 +137,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_R64 {
      * Checks to see if the provided matrix is in reduced row echelon format
      * @param A
      */
-    private void checkRref(RowMatrix_F64 A , int systemWidth ) {
+    private void checkRref(DMatrixRow_F64 A , int systemWidth ) {
         int prevLeading = -1;
 
         for( int row = 0; row < A.numRows; row++ ) {

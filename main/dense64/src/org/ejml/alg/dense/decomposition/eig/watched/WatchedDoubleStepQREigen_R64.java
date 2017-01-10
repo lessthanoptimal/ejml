@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenvalueSmall_F64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 
 import java.util.Random;
@@ -47,11 +47,11 @@ public class WatchedDoubleStepQREigen_R64 {
 
     private int N;
 
-    RowMatrix_F64 A;
-    private RowMatrix_F64 u;
+    DMatrixRow_F64 A;
+    private DMatrixRow_F64 u;
     private double gamma;
 
-    private RowMatrix_F64 _temp;
+    private DMatrixRow_F64 _temp;
 
     // how many steps did it take to find the eigenvalue
     int numStepsFind[];
@@ -81,13 +81,13 @@ public class WatchedDoubleStepQREigen_R64 {
 
     public boolean createR = true;
 
-    public RowMatrix_F64 Q;
+    public DMatrixRow_F64 Q;
 
     public void incrementSteps() {
         steps++;
     }
 
-    public void setQ( RowMatrix_F64 Q ) {
+    public void setQ( DMatrixRow_F64 Q ) {
         this.Q = Q;
     }
 
@@ -125,7 +125,7 @@ public class WatchedDoubleStepQREigen_R64 {
         return target <= 0.5*UtilEjml.EPS*(above+right);
     }
 
-    public void setup( RowMatrix_F64 A ) {
+    public void setup( DMatrixRow_F64 A ) {
         if( A.numRows != A.numCols )
             throw new RuntimeException("Must be square") ;
 
@@ -133,9 +133,9 @@ public class WatchedDoubleStepQREigen_R64 {
             N = A.numRows;
 
             this.A = A.copy();
-            u = new RowMatrix_F64(A.numRows,1);
+            u = new DMatrixRow_F64(A.numRows,1);
 
-            _temp = new RowMatrix_F64(A.numRows,1);
+            _temp = new DMatrixRow_F64(A.numRows,1);
             numStepsFind = new int[ A.numRows ];
         } else {
             this.A.set(A);

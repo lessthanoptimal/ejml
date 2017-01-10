@@ -20,8 +20,8 @@ package org.ejml.alg.block.decomposition.qr;
 
 import org.ejml.alg.block.InnerMultiplication_B64;
 import org.ejml.alg.block.VectorOps_B64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 
 /**
  *
@@ -32,7 +32,7 @@ import org.ejml.data.D1Submatrix_F64;
  * <p>
  * Assumptions:
  * <ul>
- *  <le> All submatrices are aligned along the inner blocks of the {@link BlockMatrix_F64}.
+ *  <le> All submatrices are aligned along the inner blocks of the {@link DMatrixBlock_F64}.
  *  <le> Some times vectors are assumed to have leading zeros and a one.
  * </ul>
  *

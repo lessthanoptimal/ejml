@@ -22,7 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.linsol.chol.LinearSolverChol_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class TestCholeskyDecompositionBlock_R64 extends GenericCholeskyTests_R64
     }
 
     @Override
-    public CholeskyDecomposition_F64<RowMatrix_F64> create(boolean lower) {
+    public CholeskyDecomposition_F64<DMatrixRow_F64> create(boolean lower) {
         if( !lower )
             throw new IllegalArgumentException("Doesn't support upper form");
 
@@ -67,7 +67,7 @@ public class TestCholeskyDecompositionBlock_R64 extends GenericCholeskyTests_R64
     public void testWithBlocks() {
         int W = 4;
         int B = 2;
-        checkBlockMatrix(W, B);
+        checkDMatrixBlock(W, B);
     }
 
     /**
@@ -77,7 +77,7 @@ public class TestCholeskyDecompositionBlock_R64 extends GenericCholeskyTests_R64
     public void testWithBlocksNotDivisible() {
         int W = 4;
         int B = 3;
-        checkBlockMatrix(W, B);
+        checkDMatrixBlock(W, B);
     }
 
     /**
@@ -87,24 +87,24 @@ public class TestCholeskyDecompositionBlock_R64 extends GenericCholeskyTests_R64
     public void testWithBlocksBiggerThanMatrix() {
         int W = 4;
         int B = 10;
-        checkBlockMatrix(W, B);
+        checkDMatrixBlock(W, B);
     }
 
-    private void checkBlockMatrix(int w, int b) {
-        RowMatrix_F64 A = new RowMatrix_F64(w, w, true, 4, 2, 6, 14, 2, 26, 13, 12, 6, 13, 29, 47, 14, 12, 47, 95);
+    private void checkDMatrixBlock(int w, int b) {
+        DMatrixRow_F64 A = new DMatrixRow_F64(w, w, true, 4, 2, 6, 14, 2, 26, 13, 12, 6, 13, 29, 47, 14, 12, 47, 95);
 
-        RowMatrix_F64 A_inv = new RowMatrix_F64(w, w);
-        RowMatrix_F64 A_inv_block = new RowMatrix_F64(w, w);
+        DMatrixRow_F64 A_inv = new DMatrixRow_F64(w, w);
+        DMatrixRow_F64 A_inv_block = new DMatrixRow_F64(w, w);
 
         CholeskyDecompositionBlock_R64 algBlock = new CholeskyDecompositionBlock_R64(b);
-        LinearSolver<RowMatrix_F64> solver = new LinearSolverChol_R64(algBlock);
-        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
+        LinearSolver<DMatrixRow_F64> solver = new LinearSolverChol_R64(algBlock);
+        solver = new LinearSolverSafe<DMatrixRow_F64>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv_block);
 
         CholeskyDecompositionInner_R64 alg = new CholeskyDecompositionInner_R64(true);
         solver = new LinearSolverChol_R64(alg);
-        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
+        solver = new LinearSolverSafe<DMatrixRow_F64>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 

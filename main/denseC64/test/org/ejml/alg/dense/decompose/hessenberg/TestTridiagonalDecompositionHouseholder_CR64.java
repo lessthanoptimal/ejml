@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.MatrixFeatures_CR64;
@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 public class TestTridiagonalDecompositionHouseholder_CR64 extends StandardTridiagonalTests_CR64 {
 
     @Override
-    protected TridiagonalSimilarDecomposition_F64<RowMatrix_C64> createDecomposition() {
+    protected TridiagonalSimilarDecomposition_F64<DMatrixRow_C64> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_CR64();
     }
 
@@ -50,8 +50,8 @@ public class TestTridiagonalDecompositionHouseholder_CR64 extends StandardTridia
     public void testHouseholderVectors()
     {
         int N = 5;
-        RowMatrix_C64 A = RandomMatrices_CR64.createHermitian(N,-1,1,rand);
-        RowMatrix_C64 B = new RowMatrix_C64(N,N);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createHermitian(N,-1,1,rand);
+        DMatrixRow_C64 B = new DMatrixRow_C64(N,N);
 
 //        System.out.println("A");
 //        A.print();
@@ -61,11 +61,11 @@ public class TestTridiagonalDecompositionHouseholder_CR64 extends StandardTridia
 
         assertTrue(safeDecomposition(decomp,A));
 
-        RowMatrix_C64 QT = decomp.getQT();
+        DMatrixRow_C64 QT = decomp.getQT();
 
         double gammas[] = decomp.getGammas();
 
-        RowMatrix_C64 u = new RowMatrix_C64(N,1);
+        DMatrixRow_C64 u = new DMatrixRow_C64(N,1);
 
         for( int i = 0; i < N-1; i++ ) {
 //            System.out.println("------- Column "+i);
@@ -79,7 +79,7 @@ public class TestTridiagonalDecompositionHouseholder_CR64 extends StandardTridia
                 u.data[j*2+1] = QT.getImag(i,j); // the reflector stored in the row will be the conjugate
             }
 
-            RowMatrix_C64 Q = SpecializedOps_CR64.createReflector(u,gammas[i]);
+            DMatrixRow_C64 Q = SpecializedOps_CR64.createReflector(u,gammas[i]);
             CommonOps_CR64.mult(Q,A,B);
             CommonOps_CR64.mult(B,Q,A);
 

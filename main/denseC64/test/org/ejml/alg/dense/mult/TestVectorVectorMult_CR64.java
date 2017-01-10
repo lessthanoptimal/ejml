@@ -21,7 +21,7 @@ package org.ejml.alg.dense.mult;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.RandomMatrices_CR64;
 import org.junit.Test;
@@ -38,10 +38,10 @@ public class TestVectorVectorMult_CR64 {
     @Test
     public void innerProd() {
 
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(1,6,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(6,1,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(1,6,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(6,1,rand);
 
-        RowMatrix_C64 c = new RowMatrix_C64(1,1);
+        DMatrixRow_C64 c = new DMatrixRow_C64(1,1);
 
         CommonOps_CR64.mult(a,b,c);
 
@@ -55,12 +55,12 @@ public class TestVectorVectorMult_CR64 {
     @Test
     public void innerProdH() {
 
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(1,6,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(6,1,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(1,6,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(6,1,rand);
 
         Complex_F64 found = VectorVectorMult_CR64.innerProdH(a, b, null);
 
-        RowMatrix_C64 c = new RowMatrix_C64(1,1);
+        DMatrixRow_C64 c = new DMatrixRow_C64(1,1);
 
         CommonOps_CR64.conjugate(b,b);
         CommonOps_CR64.mult(a,b,c);
@@ -73,11 +73,11 @@ public class TestVectorVectorMult_CR64 {
 
     @Test
     public void outerProd() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(6,1,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(1,6,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(6,1,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(1,6,rand);
 
-        RowMatrix_C64 expected = new RowMatrix_C64(6,6);
-        RowMatrix_C64 found = new RowMatrix_C64(6,6);
+        DMatrixRow_C64 expected = new DMatrixRow_C64(6,6);
+        DMatrixRow_C64 found = new DMatrixRow_C64(6,6);
 
         CommonOps_CR64.mult(a,b,expected);
         VectorVectorMult_CR64.outerProd(a,b,found);
@@ -87,11 +87,11 @@ public class TestVectorVectorMult_CR64 {
 
     @Test
     public void outerProdH() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(6,1,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(1,6,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(6,1,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(1,6,rand);
 
-        RowMatrix_C64 expected = new RowMatrix_C64(6,6);
-        RowMatrix_C64 found = new RowMatrix_C64(6,6);
+        DMatrixRow_C64 expected = new DMatrixRow_C64(6,6);
+        DMatrixRow_C64 found = new DMatrixRow_C64(6,6);
 
         VectorVectorMult_CR64.outerProdH(a, b, found);
         CommonOps_CR64.conjugate(b,b);

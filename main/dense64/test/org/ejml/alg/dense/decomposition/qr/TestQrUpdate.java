@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.alg.dense.mult.SubmatrixOps_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -66,12 +66,12 @@ public class TestQrUpdate {
     }
 
     private void checkRemove(int m, int n, int remove) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        RowMatrix_F64 Q = RandomMatrices_R64.createRandom(m,m,rand);
-        RowMatrix_F64 R = new RowMatrix_F64(m,n);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 Q = RandomMatrices_R64.createRandom(m,m,rand);
+        DMatrixRow_F64 R = new DMatrixRow_F64(m,n);
 
         // compute what the A matrix would look like without the row
-        RowMatrix_F64 A_e = RandomMatrices_R64.createRandom(m-1,n,rand);
+        DMatrixRow_F64 A_e = RandomMatrices_R64.createRandom(m-1,n,rand);
         SubmatrixOps_R64.setSubMatrix(A,A_e,0,0,0,0,remove,n);
         SubmatrixOps_R64.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
@@ -89,7 +89,7 @@ public class TestQrUpdate {
 
         assertTrue(MatrixFeatures_R64.isOrthogonal(update.getU_tran(),1e-6));
 
-        RowMatrix_F64 A_r = RandomMatrices_R64.createRandom(m-1,n,rand);
+        DMatrixRow_F64 A_r = RandomMatrices_R64.createRandom(m-1,n,rand);
         CommonOps_R64.mult(Q,R,A_r);
 
 
@@ -98,15 +98,15 @@ public class TestQrUpdate {
     }
 
     private void checkInsert(int m, int n, int insert) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        RowMatrix_F64 Q = RandomMatrices_R64.createRandom(m+1,m+1,rand);
-        RowMatrix_F64 R = new RowMatrix_F64(m+1,n);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 Q = RandomMatrices_R64.createRandom(m+1,m+1,rand);
+        DMatrixRow_F64 R = new DMatrixRow_F64(m+1,n);
 
         // the row that is to be inserted
         double row[] = new double[]{1,2,3};
 
         // create the modified A
-        RowMatrix_F64 A_e = RandomMatrices_R64.createRandom(m+1,n,rand);
+        DMatrixRow_F64 A_e = RandomMatrices_R64.createRandom(m+1,n,rand);
         SubmatrixOps_R64.setSubMatrix(A,A_e,0,0,0,0,insert,n);
         System.arraycopy(row, 0, A_e.data, insert * n, n);
         SubmatrixOps_R64.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
@@ -119,13 +119,13 @@ public class TestQrUpdate {
         R.reshape(m,n,false);
         decomp.getR(R,false);
 
-        RowMatrix_F64 Qmod = createQMod(Q,insert);
+        DMatrixRow_F64 Qmod = createQMod(Q,insert);
 
         QrUpdate_R64 update = new QrUpdate_R64(m+1,n);
 
         update.addRow(Q,R,row,insert,true);
 
-        RowMatrix_F64 Z = new RowMatrix_F64(m+1,m+1);
+        DMatrixRow_F64 Z = new DMatrixRow_F64(m+1,m+1);
         CommonOps_R64.multTransB(Qmod,update.getU_tran(),Z);
         // see if the U matrix has the expected features
         assertTrue(MatrixFeatures_R64.isOrthogonal(Z,1e-6));
@@ -133,15 +133,15 @@ public class TestQrUpdate {
         // see if the process that updates Q from U is valid
         assertTrue(MatrixFeatures_R64.isIdentical(Q,Z,1e-6));
 
-        RowMatrix_F64 A_r = RandomMatrices_R64.createRandom(m+1,n,rand);
+        DMatrixRow_F64 A_r = RandomMatrices_R64.createRandom(m+1,n,rand);
         CommonOps_R64.mult(Q,R,A_r);
 
         // see if the augmented A matrix is correct extracted from the adjusted Q and R matrices
         assertTrue(MatrixFeatures_R64.isIdentical(A_e,A_r,1e-6));
     }
 
-    public static RowMatrix_F64 createQMod(RowMatrix_F64 Q , int insertRow ) {
-        RowMatrix_F64 Qmod = new RowMatrix_F64(Q.numRows+1,Q.numCols+1);
+    public static DMatrixRow_F64 createQMod(DMatrixRow_F64 Q , int insertRow ) {
+        DMatrixRow_F64 Qmod = new DMatrixRow_F64(Q.numRows+1,Q.numCols+1);
 
         SubmatrixOps_R64.setSubMatrix(Q,Qmod,0,0,0,1,insertRow,Q.numCols);
         Qmod.set(insertRow,0,1);

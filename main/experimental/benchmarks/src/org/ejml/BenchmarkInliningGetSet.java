@@ -18,14 +18,14 @@
 
 package org.ejml;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
 
 
 /**
- * Test to see how well set and get are inlined in RowMatrix_F64.
+ * Test to see how well set and get are inlined in DMatrixRow_F64.
  *
  * @author Peter Abeles
  */
@@ -34,7 +34,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Bounds checks are performed on get(i,j)
      */
-    public static long benchGet(RowMatrix_F64 A , int n ) {
+    public static long benchGet(DMatrixRow_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -61,7 +61,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Unsafe version of get(i,j) with no bounds checking
      */
-    public static long getUnsafeGet(RowMatrix_F64 A , int n ) {
+    public static long getUnsafeGet(DMatrixRow_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -88,7 +88,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Get by index is used here.
      */
-    public static long get1D(RowMatrix_F64 A , int n ) {
+    public static long get1D(DMatrixRow_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -117,7 +117,7 @@ public class BenchmarkInliningGetSet {
     /**
      * Hand inlined version of get(i,j)
      */
-    public static long inlined(RowMatrix_F64 A , int n ) {
+    public static long inlined(DMatrixRow_F64 A , int n ) {
 
         long before = System.currentTimeMillis();
 
@@ -142,7 +142,7 @@ public class BenchmarkInliningGetSet {
     }
 
     public static void main( String args[] ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(1000,1000,new Random());
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(1000,1000,new Random());
 
         int N = 2000;
 

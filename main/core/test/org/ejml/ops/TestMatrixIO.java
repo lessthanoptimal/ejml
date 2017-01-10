@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,11 +37,11 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_binary() throws IOException {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
 
         MatrixIO.saveBin(A, "temp.mat");
 
-        RowMatrix_F64 A_copy = MatrixIO.loadBin("temp.mat");
+        DMatrixRow_F64 A_copy = MatrixIO.loadBin("temp.mat");
 
         assertTrue(A != A_copy);
         assertTrue(MatrixFeatures_R64.isEquals(A,A_copy));
@@ -54,11 +54,11 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_csv() throws IOException {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
 
         MatrixIO.saveCSV(A,"temp.csv");
 
-        RowMatrix_F64 A_copy = MatrixIO.loadCSV("temp.csv");
+        DMatrixRow_F64 A_copy = MatrixIO.loadCSV("temp.csv");
 
         assertTrue(A != A_copy);
         assertTrue(MatrixFeatures_R64.isEquals(A,A_copy));

@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleBase;
 
@@ -45,7 +45,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
      * Wraps a StatisticsMatrix around 'm'.  Does NOT create a copy of 'm' but saves a reference
      * to it.
      */
-    public static StatisticsMatrix wrap( RowMatrix_F64 m ) {
+    public static StatisticsMatrix wrap( DMatrixRow_F64 m ) {
         StatisticsMatrix ret = new StatisticsMatrix();
         ret.mat = m;
 

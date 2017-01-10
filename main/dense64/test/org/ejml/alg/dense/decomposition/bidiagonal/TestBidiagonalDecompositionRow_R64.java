@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowD1Matrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.D1MatrixRow_64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -77,7 +77,7 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
         assertTrue(naive.getV().isIdentical(V,UtilEjml.TEST_F64));
 
         // check the decomposition
-        RowMatrix_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        DMatrixRow_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
 //        A.print();
 //        foundA.print();
@@ -91,16 +91,16 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
         int m = 7;
         int n = 5;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
 
         DebugBidiagonal alg = new DebugBidiagonal(A);
 
-        RowMatrix_F64 B = new RowMatrix_F64(A);
+        DMatrixRow_F64 B = new DMatrixRow_F64(A);
 
-        RowMatrix_F64 C = new RowMatrix_F64(m,n);
-        RowMatrix_F64 u = new RowMatrix_F64(m,1);
+        DMatrixRow_F64 C = new DMatrixRow_F64(m,n);
+        DMatrixRow_F64 u = new DMatrixRow_F64(m,1);
 
-        RowD1Matrix_F64 UBV = alg.getUBV();
+        D1MatrixRow_64 UBV = alg.getUBV();
 
         for( int i = 0; i < n; i++ ) {
             alg.computeU(i);
@@ -108,7 +108,7 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
             SpecializedOps_R64.subvector(UBV,i+1,i,m-i-1,false,i+1,u);
             u.data[i] = 1;
 
-            RowMatrix_F64 Q = SpecializedOps_R64.createReflector(u,alg.getGammasU()[i]);
+            DMatrixRow_F64 Q = SpecializedOps_R64.createReflector(u,alg.getGammasU()[i]);
 
             CommonOps_R64.mult(Q,B,C);
 
@@ -137,16 +137,16 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
         int m = 7;
         int n = 5;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
 
         DebugBidiagonal alg = new DebugBidiagonal(A);
 
-        RowMatrix_F64 B = new RowMatrix_F64(A);
+        DMatrixRow_F64 B = new DMatrixRow_F64(A);
 
-        RowMatrix_F64 C = new RowMatrix_F64(m,n);
-        RowMatrix_F64 u = new RowMatrix_F64(n,1);
+        DMatrixRow_F64 C = new DMatrixRow_F64(m,n);
+        DMatrixRow_F64 u = new DMatrixRow_F64(n,1);
 
-        RowD1Matrix_F64 UBV = alg.getUBV();
+        D1MatrixRow_64 UBV = alg.getUBV();
 
 //        A.print();
 
@@ -157,7 +157,7 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
             SpecializedOps_R64.subvector(UBV,i,i+2,n-i-2,true,i+2,u);
             u.data[i+1] = 1;
 
-            RowMatrix_F64 Q = SpecializedOps_R64.createReflector(u,alg.getGammasV()[i]);
+            DMatrixRow_F64 Q = SpecializedOps_R64.createReflector(u,alg.getGammasV()[i]);
 
 //            Q.print();
 
@@ -184,14 +184,14 @@ public class TestBidiagonalDecompositionRow_R64 extends GenericBidiagonalCheck_R
     }
 
     @Override
-    protected BidiagonalDecomposition_F64<RowMatrix_F64> createQRDecomposition() {
+    protected BidiagonalDecomposition_F64<DMatrixRow_F64> createQRDecomposition() {
         return new BidiagonalDecompositionRow_R64();
     }
 
     private static class DebugBidiagonal extends BidiagonalDecompositionRow_R64 {
 
 
-        public DebugBidiagonal( RowMatrix_F64 A ) {
+        public DebugBidiagonal( DMatrixRow_F64 A ) {
             init(A.copy());
         }
 

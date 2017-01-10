@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 
@@ -27,18 +27,18 @@ import org.ejml.ops.CommonOps_R64;
  */
 public class SmartRotatorUpdate {
 
-    RowMatrix_F64 R;
+    DMatrixRow_F64 R;
     int mod[] = new int[ 1 ];
 
     public SmartRotatorUpdate() {
          
     }
 
-    public RowMatrix_F64 getR() {
+    public DMatrixRow_F64 getR() {
         return R;
     }
 
-    public void init( RowMatrix_F64 R ) {
+    public void init( DMatrixRow_F64 R ) {
         this.R = R;
         CommonOps_R64.setIdentity(R);
 

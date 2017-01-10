@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.MatrixFeatures_CR64;
 import org.ejml.ops.RandomMatrices_CR64;
 import org.junit.Test;
@@ -36,56 +36,56 @@ public class TestUtilDecompositons_CR64 {
 
     @Test
     public void checkIdentity_null() {
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkIdentity(null,4,3);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkIdentity(null,4,3);
         assertTrue(MatrixFeatures_CR64.isIdentity(A, UtilEjml.TEST_F64));
     }
 
     @Test
     public void checkIdentity_random() {
-        RowMatrix_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkIdentity(orig,4,3);
+        DMatrixRow_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkIdentity(orig,4,3);
         assertTrue(MatrixFeatures_CR64.isIdentity(A, UtilEjml.TEST_F64));
         assertTrue(A==orig);
     }
 
     @Test
     public void checkZeros_null() {
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkZeros(null,4,3);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkZeros(null,4,3);
         assertTrue(MatrixFeatures_CR64.isZeros(A, UtilEjml.TEST_F64));
     }
 
     @Test
     public void checkZeros_random() {
-        RowMatrix_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkZeros(orig,4,3);
+        DMatrixRow_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkZeros(orig,4,3);
         assertTrue(MatrixFeatures_CR64.isZeros(A, UtilEjml.TEST_F64));
         assertTrue(A==orig);
     }
 
     @Test
     public void checkZerosLT_null() {
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkZerosLT(null,4,3);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkZerosLT(null,4,3);
         assertTrue(MatrixFeatures_CR64.isUpperTriangle(A,0, UtilEjml.TEST_F64));
     }
 
     @Test
     public void checkZerosLT_random() {
-        RowMatrix_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkZerosLT(orig,4,3);
+        DMatrixRow_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkZerosLT(orig,4,3);
         assertTrue(MatrixFeatures_CR64.isUpperTriangle(A, 0, UtilEjml.TEST_F64));
         assertTrue(A==orig);
     }
 
     @Test
     public void checkZerosUT_null() {
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkZerosUT(null,4,3);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkZerosUT(null,4,3);
         assertTrue(MatrixFeatures_CR64.isLowerTriangle(A,0, UtilEjml.TEST_F64));
     }
 
     @Test
     public void checkZerosUT_random() {
-        RowMatrix_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
-        RowMatrix_C64 A = UtilDecompositons_CR64.checkZerosUT(orig,4,3);
+        DMatrixRow_C64 orig = RandomMatrices_CR64.createRandom(4,3,rand);
+        DMatrixRow_C64 A = UtilDecompositons_CR64.checkZerosUT(orig,4,3);
         assertTrue(MatrixFeatures_CR64.isLowerTriangle(A, 0, UtilEjml.TEST_F64));
         assertTrue(A==orig);
     }

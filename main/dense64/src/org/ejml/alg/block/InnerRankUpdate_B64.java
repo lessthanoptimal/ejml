@@ -18,12 +18,12 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 
 
 /**
- * Performs rank-n update operations on the inner blocks of a {@link BlockMatrix_F64}
+ * Performs rank-n update operations on the inner blocks of a {@link DMatrixBlock_F64}
  *
  * It is assumed and not checked that the submatrices are aligned along the matrix's blocks.
  *

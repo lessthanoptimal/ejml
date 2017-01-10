@@ -18,7 +18,7 @@
 
 package org.ejml;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -36,7 +36,7 @@ public class BenchmarkElement {
 
         double num = 2.5;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(10,10,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(10,10,rand);
 
         long timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.eig.symm;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
@@ -42,12 +42,12 @@ public class SymmetricEigenStressTest {
     Random rand = new Random(234234);
 
     public void checkMatrix( int N , long seed ) {
-        RowMatrix_F64 A = new RowMatrix_F64(N,N);
+        DMatrixRow_F64 A = new DMatrixRow_F64(N,N);
 
         Random localRand = new Random(seed);
         RandomMatrices_R64.createSymmetric(A,-1,1,localRand);
 
-        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRow_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
 
         System.out.println("Decomposing...");
 
@@ -55,13 +55,13 @@ public class SymmetricEigenStressTest {
             throw new RuntimeException("Decomposition failed");
         }
 
-        RowMatrix_F64 L = new RowMatrix_F64(N,1);
-        RowMatrix_F64 R = new RowMatrix_F64(N,1);
+        DMatrixRow_F64 L = new DMatrixRow_F64(N,1);
+        DMatrixRow_F64 R = new DMatrixRow_F64(N,1);
 
         for( int i = 0; i < N; i++ ) {
             Complex_F64 value = decomp.getEigenvalue(i);
 
-            RowMatrix_F64 vector = decomp.getEigenVector(i);
+            DMatrixRow_F64 vector = decomp.getEigenVector(i);
 
             if( !value.isReal())
                 throw new RuntimeException("Complex eigenvalue");
@@ -81,7 +81,7 @@ public class SymmetricEigenStressTest {
         System.out.println("N = "+N);
         EigenDecomposition_F64 decomp = DecompositionFactory_R64.eig(N,true);
 
-        RowMatrix_F64 A = new RowMatrix_F64(N,N);
+        DMatrixRow_F64 A = new DMatrixRow_F64(N,N);
 
         for( int i = 0; i < 1000; i++ ) {
             long seed = rand.nextLong();

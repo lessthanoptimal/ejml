@@ -24,7 +24,7 @@ import org.ejml.alg.dense.linsol.lu.LinearSolverLu_R64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_R64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_R64;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -37,14 +37,14 @@ import java.util.Random;
 public class BenchmarkSolveEq {
     private static final long SEED = 6;
     private static final Random rand = new Random();
-    private static RowMatrix_F64 A;
-    private static RowMatrix_F64 B;
+    private static DMatrixRow_F64 A;
+    private static DMatrixRow_F64 B;
 
     private static boolean includeSet = false;
 
-    public static long solveBenchmark(LinearSolver<RowMatrix_F64> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<DMatrixRow_F64> solver , int numTrials ) {
         rand.setSeed(SEED);
-        RowMatrix_F64 X = new RowMatrix_F64(B.numRows,B.numCols);
+        DMatrixRow_F64 X = new DMatrixRow_F64(B.numRows,B.numCols);
         RandomMatrices_R64.setRandom(A,rand);
         RandomMatrices_R64.setRandom(B,rand);
 
@@ -88,7 +88,7 @@ public class BenchmarkSolveEq {
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
             A = RandomMatrices_R64.createRandom(w,w,rand);
-            B = new RowMatrix_F64(w,2);
+            B = new DMatrixRow_F64(w,2);
 
             runAlgorithms(trials[i]);
         }
@@ -99,7 +99,7 @@ public class BenchmarkSolveEq {
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
             A = RandomMatrices_R64.createRandom(100,100,rand);
-            B = new RowMatrix_F64(100,w);
+            B = new DMatrixRow_F64(100,w);
 
             runAlgorithms(trialsX[i]/80);
         }

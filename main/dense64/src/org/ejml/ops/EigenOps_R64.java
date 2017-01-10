@@ -22,8 +22,8 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenPowerMethod_R64;
 import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.data.Complex_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Eigenpair_F64;
-import org.ejml.data.RowMatrix_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -48,7 +48,7 @@ public class EigenOps_R64 {
      * @param eigenVector An eigen vector of A. Not modified.
      * @return The corresponding eigen value.
      */
-    public static double computeEigenValue(RowMatrix_F64 A , RowMatrix_F64 eigenVector )
+    public static double computeEigenValue(DMatrixRow_F64 A , DMatrixRow_F64 eigenVector )
     {
         double bottom = VectorVectorMult_R64.innerProd(eigenVector,eigenVector);
         double top = VectorVectorMult_R64.innerProdA(eigenVector,A,eigenVector);
@@ -75,15 +75,15 @@ public class EigenOps_R64 {
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
-    public static Eigenpair_F64 computeEigenVector(RowMatrix_F64 A , double eigenvalue )
+    public static Eigenpair_F64 computeEigenVector(DMatrixRow_F64 A , double eigenvalue )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Must be a square matrix.");
 
-        RowMatrix_F64 M = new RowMatrix_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 M = new DMatrixRow_F64(A.numRows,A.numCols);
 
-        RowMatrix_F64 x = new RowMatrix_F64(A.numRows,1);
-        RowMatrix_F64 b = new RowMatrix_F64(A.numRows,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(A.numRows,1);
+        DMatrixRow_F64 b = new DMatrixRow_F64(A.numRows,1);
 
         CommonOps_R64.fill(b, 1);
         
@@ -99,7 +99,7 @@ public class EigenOps_R64 {
         double prevError = Double.MAX_VALUE;
         boolean hasWorked = false;
 
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.linear(M.numRows);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.linear(M.numRows);
 
         double perp = 0.0001;
 
@@ -182,7 +182,7 @@ public class EigenOps_R64 {
      * @param A A matrix.  Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
-    public static Eigenpair_F64 dominantEigenpair(RowMatrix_F64 A ) {
+    public static Eigenpair_F64 dominantEigenpair(DMatrixRow_F64 A ) {
 
         EigenPowerMethod_R64 power = new EigenPowerMethod_R64(A.numRows);
 
@@ -207,7 +207,7 @@ public class EigenOps_R64 {
      * @param bound Where the results are stored.  If null then a matrix will be declared. Modified.
      * @return Lower and upper bound in the first and second elements respectively.
      */
-    public static double [] boundLargestEigenValue(RowMatrix_F64 A , double []bound ) {
+    public static double [] boundLargestEigenValue(DMatrixRow_F64 A , double []bound ) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix.");
 
@@ -252,11 +252,11 @@ public class EigenOps_R64 {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return A diagonal matrix containing the eigenvalues.
      */
-    public static RowMatrix_F64 createMatrixD(EigenDecomposition_F64 eig )
+    public static DMatrixRow_F64 createMatrixD(EigenDecomposition_F64 eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
-        RowMatrix_F64 D = new RowMatrix_F64( N , N );
+        DMatrixRow_F64 D = new DMatrixRow_F64( N , N );
 
         for( int i = 0; i < N; i++ ) {
             Complex_F64 c = eig.getEigenvalue(i);
@@ -278,17 +278,17 @@ public class EigenOps_R64 {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return An m by m matrix containing eigenvectors in its columns.
      */
-    public static RowMatrix_F64 createMatrixV(EigenDecomposition_F64<RowMatrix_F64> eig )
+    public static DMatrixRow_F64 createMatrixV(EigenDecomposition_F64<DMatrixRow_F64> eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
-        RowMatrix_F64 V = new RowMatrix_F64( N , N );
+        DMatrixRow_F64 V = new DMatrixRow_F64( N , N );
 
         for( int i = 0; i < N; i++ ) {
             Complex_F64 c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
-                RowMatrix_F64 v = eig.getEigenVector(i);
+                DMatrixRow_F64 v = eig.getEigenVector(i);
 
                 if( v != null ) {
                     for( int j = 0; j < N; j++ ) {

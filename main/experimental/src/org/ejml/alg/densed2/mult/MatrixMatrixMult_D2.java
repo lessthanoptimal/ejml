@@ -18,8 +18,8 @@
 
 package org.ejml.alg.densed2.mult;
 
+import org.ejml.data.D1MatrixRow_64;
 import org.ejml.data.DenseD2Matrix64F;
-import org.ejml.data.RowD1Matrix_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixDimensionException;
 
@@ -30,7 +30,7 @@ import org.ejml.ops.MatrixDimensionException;
 public class MatrixMatrixMult_D2 {
 
     /**
-     * @see CommonOps_R64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
+     * @see CommonOps_R64#mult(D1MatrixRow_64, D1MatrixRow_64, D1MatrixRow_64)
      */
     public static void mult_small( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c )
     {
@@ -62,7 +62,7 @@ public class MatrixMatrixMult_D2 {
     }
 
     /**
-     * @see CommonOps_R64#mult(RowD1Matrix_F64, RowD1Matrix_F64, RowD1Matrix_F64)
+     * @see CommonOps_R64#mult(D1MatrixRow_64, D1MatrixRow_64, D1MatrixRow_64)
      */
     public static void mult_aux( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c , double []aux )
     {

@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.NormOps_R64;
 
@@ -35,7 +35,7 @@ import org.ejml.ops.NormOps_R64;
 public class QRExampleOperations {
 
     // where the QR decomposition is stored
-    private RowMatrix_F64 QR;
+    private DMatrixRow_F64 QR;
 
     // used for computing Q
     private double gammas[];
@@ -45,7 +45,7 @@ public class QRExampleOperations {
      *
      * @param A Matrix which is to be decomposed.  Not modified.
      */
-    public void decompose( RowMatrix_F64 A ) {
+    public void decompose( DMatrixRow_F64 A ) {
 
         this.QR = A.copy();
 
@@ -53,10 +53,10 @@ public class QRExampleOperations {
 
         gammas = new double[ A.numCols ];
 
-        RowMatrix_F64 A_small = new RowMatrix_F64(A.numRows,A.numCols);
-        RowMatrix_F64 A_mod = new RowMatrix_F64(A.numRows,A.numCols);
-        RowMatrix_F64 v = new RowMatrix_F64(A.numRows,1);
-        RowMatrix_F64 Q_k = new RowMatrix_F64(A.numRows,A.numRows);
+        DMatrixRow_F64 A_small = new DMatrixRow_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 A_mod = new DMatrixRow_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 v = new DMatrixRow_F64(A.numRows,1);
+        DMatrixRow_F64 Q_k = new DMatrixRow_F64(A.numRows,A.numRows);
 
         for( int i = 0; i < N; i++ ) {
             // reshape temporary variables
@@ -108,12 +108,12 @@ public class QRExampleOperations {
     /**
      * Returns the Q matrix.
      */
-    public RowMatrix_F64 getQ() {
-        RowMatrix_F64 Q = CommonOps_R64.identity(QR.numRows);
-        RowMatrix_F64 Q_k = new RowMatrix_F64(QR.numRows,QR.numRows);
-        RowMatrix_F64 u = new RowMatrix_F64(QR.numRows,1);
+    public DMatrixRow_F64 getQ() {
+        DMatrixRow_F64 Q = CommonOps_R64.identity(QR.numRows);
+        DMatrixRow_F64 Q_k = new DMatrixRow_F64(QR.numRows,QR.numRows);
+        DMatrixRow_F64 u = new DMatrixRow_F64(QR.numRows,1);
 
-        RowMatrix_F64 temp = new RowMatrix_F64(QR.numRows,QR.numRows);
+        DMatrixRow_F64 temp = new DMatrixRow_F64(QR.numRows,QR.numRows);
 
         int N = Math.min(QR.numCols,QR.numRows);
 
@@ -135,8 +135,8 @@ public class QRExampleOperations {
     /**
      * Returns the R matrix.
      */
-    public RowMatrix_F64 getR() {
-        RowMatrix_F64 R = new RowMatrix_F64(QR.numRows,QR.numCols);
+    public DMatrixRow_F64 getR() {
+        DMatrixRow_F64 R = new DMatrixRow_F64(QR.numRows,QR.numCols);
 
         int N = Math.min(QR.numCols,QR.numRows);
 

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
@@ -28,14 +28,14 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class SafeSvd_R64
-        implements SingularValueDecomposition_F64<RowMatrix_F64>
+        implements SingularValueDecomposition_F64<DMatrixRow_F64>
 {
     // the decomposition algorithm
-    SingularValueDecomposition_F64<RowMatrix_F64> alg;
+    SingularValueDecomposition_F64<DMatrixRow_F64> alg;
     // storage for the input if it would be modified
-    RowMatrix_F64 work = new RowMatrix_F64(1,1);
+    DMatrixRow_F64 work = new DMatrixRow_F64(1,1);
 
-    public SafeSvd_R64(SingularValueDecomposition_F64<RowMatrix_F64> alg) {
+    public SafeSvd_R64(SingularValueDecomposition_F64<DMatrixRow_F64> alg) {
         this.alg = alg;
     }
 
@@ -55,17 +55,17 @@ public class SafeSvd_R64
     }
 
     @Override
-    public RowMatrix_F64 getU(RowMatrix_F64 U, boolean transposed) {
+    public DMatrixRow_F64 getU(DMatrixRow_F64 U, boolean transposed) {
         return alg.getU(U,transposed);
     }
 
     @Override
-    public RowMatrix_F64 getV(RowMatrix_F64 V, boolean transposed) {
+    public DMatrixRow_F64 getV(DMatrixRow_F64 V, boolean transposed) {
         return alg.getV(V,transposed);
     }
 
     @Override
-    public RowMatrix_F64 getW(RowMatrix_F64 W) {
+    public DMatrixRow_F64 getW(DMatrixRow_F64 W) {
         return alg.getW(W);
     }
 
@@ -80,7 +80,7 @@ public class SafeSvd_R64
     }
 
     @Override
-    public boolean decompose(RowMatrix_F64 orig) {
+    public boolean decompose(DMatrixRow_F64 orig) {
         if( alg.inputModified() ) {
             work.reshape(orig.numRows,orig.numCols);
             work.set(orig);

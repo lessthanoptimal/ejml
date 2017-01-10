@@ -29,7 +29,7 @@ import org.ejml.alg.dense.linsol.chol.LinearSolverChol_R64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_R64;
 import org.ejml.alg.dense.linsol.qr.*;
 import org.ejml.alg.dense.linsol.svd.SolvePseudoInverseSvd_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -43,28 +43,28 @@ public class LinearSolverFactory_R64 {
     /**
      * Creates a linear solver using LU decomposition
      */
-    public static LinearSolver<RowMatrix_F64> lu(int numRows ) {
+    public static LinearSolver<DMatrixRow_F64> lu(int numRows ) {
         return linear(numRows);
     }
 
     /**
      * Creates a linear solver using Cholesky decomposition
      */
-    public static LinearSolver<RowMatrix_F64> chol(int numRows ) {
+    public static LinearSolver<DMatrixRow_F64> chol(int numRows ) {
         return symmPosDef(numRows);
     }
 
     /**
      * Creates a linear solver using QR decomposition
      */
-    public static LinearSolver<RowMatrix_F64> qr(int numRows , int numCols ) {
+    public static LinearSolver<DMatrixRow_F64> qr(int numRows , int numCols ) {
         return leastSquares(numRows,numCols);
     }
 
     /**
      * Creates a linear solver using QRP decomposition
      */
-    public static LinearSolver<RowMatrix_F64> qrp(boolean computeNorm2, boolean computeQ ) {
+    public static LinearSolver<DMatrixRow_F64> qrp(boolean computeNorm2, boolean computeQ ) {
         return leastSquaresQrPivot(computeNorm2,computeQ);
     }
 
@@ -74,7 +74,7 @@ public class LinearSolverFactory_R64 {
      * @param numRows The number of rows that the decomposition is optimized for.
      * @param numCols The number of columns that the decomposition is optimized for.
      */
-    public static LinearSolver<RowMatrix_F64> general(int numRows , int numCols ) {
+    public static LinearSolver<DMatrixRow_F64> general(int numRows , int numCols ) {
         if( numRows == numCols )
             return linear(numRows);
         else
@@ -86,7 +86,7 @@ public class LinearSolverFactory_R64 {
      *
      * @return A new linear solver.
      */
-    public static LinearSolver<RowMatrix_F64> linear(int matrixSize ) {
+    public static LinearSolver<DMatrixRow_F64> linear(int matrixSize ) {
         return new LinearSolverLu_R64(new LUDecompositionAlt_R64());
     }
 
@@ -98,7 +98,7 @@ public class LinearSolverFactory_R64 {
      * @param numCols The number of columns that the decomposition is optimized for.
      * @return A new least-squares solver for over determined systems.
      */
-    public static LinearSolver<RowMatrix_F64> leastSquares(int numRows , int numCols ) {
+    public static LinearSolver<DMatrixRow_F64> leastSquares(int numRows , int numCols ) {
         if(numCols < EjmlParameters.SWITCH_BLOCK64_QR )  {
             return new LinearSolverQrHouseCol_R64();
         } else {
@@ -114,7 +114,7 @@ public class LinearSolverFactory_R64 {
      *
      * @return A new solver for symmetric positive definite matrices.
      */
-    public static LinearSolver<RowMatrix_F64> symmPosDef(int matrixWidth ) {
+    public static LinearSolver<DMatrixRow_F64> symmPosDef(int matrixWidth ) {
         if(matrixWidth < EjmlParameters.SWITCH_BLOCK64_CHOLESKY )  {
             CholeskyDecompositionCommon_R64 decomp = new CholeskyDecompositionInner_R64(true);
             return new LinearSolverChol_R64(decomp);
@@ -153,7 +153,7 @@ public class LinearSolverFactory_R64 {
      * @param computeQ Should it precompute Q or use house holder.  Try false;
      * @return Pseudo inverse type solver using QR with column pivots.
      */
-    public static LinearSolver<RowMatrix_F64> leastSquaresQrPivot(boolean computeNorm2 , boolean computeQ ) {
+    public static LinearSolver<DMatrixRow_F64> leastSquaresQrPivot(boolean computeNorm2 , boolean computeQ ) {
         QRColPivDecompositionHouseholderColumn_R64 decomposition =
                 new QRColPivDecompositionHouseholderColumn_R64();
 
@@ -179,7 +179,7 @@ public class LinearSolverFactory_R64 {
      * @param useSVD If true SVD will be used, otherwise QR with column pivot will be used.
      * @return Solver for singular matrices.
      */
-    public static LinearSolver<RowMatrix_F64> pseudoInverse(boolean useSVD ) {
+    public static LinearSolver<DMatrixRow_F64> pseudoInverse(boolean useSVD ) {
         if( useSVD )
             return new SolvePseudoInverseSvd_R64();
         else

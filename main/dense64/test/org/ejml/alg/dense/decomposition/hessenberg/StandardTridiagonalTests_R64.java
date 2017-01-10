@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -40,7 +40,7 @@ public abstract class StandardTridiagonalTests_R64 {
 
     protected Random rand = new Random(2344);
 
-    protected abstract TridiagonalSimilarDecomposition_F64<RowMatrix_F64> createDecomposition();
+    protected abstract TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> createDecomposition();
 
     @Test
     public void fullTest() {
@@ -49,10 +49,10 @@ public abstract class StandardTridiagonalTests_R64 {
 
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_R64.createSymmetric(width,-1,1,rand));
 
-            TridiagonalSimilarDecomposition_F64<RowMatrix_F64> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> alg = createDecomposition();
 
 
-            assertTrue(safeDecomposition(alg,(RowMatrix_F64)A.getMatrix()));
+            assertTrue(safeDecomposition(alg,(DMatrixRow_F64)A.getMatrix()));
 
             // test the results using the decomposition's definition
             SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null,false));
@@ -61,7 +61,7 @@ public abstract class StandardTridiagonalTests_R64 {
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
             assertTrue("width = "+width, MatrixFeatures_R64.isIdentical(
-                    (RowMatrix_F64)A.getMatrix(),(RowMatrix_F64)A_found.getMatrix(),UtilEjml.TEST_F64));
+                    (DMatrixRow_F64)A.getMatrix(),(DMatrixRow_F64)A_found.getMatrix(),UtilEjml.TEST_F64));
         }
     }
 
@@ -69,13 +69,13 @@ public abstract class StandardTridiagonalTests_R64 {
     public void getDiagonal() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition_F64<RowMatrix_F64> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
-            RowMatrix_F64 T = alg.getT(null);
+            DMatrixRow_F64 T = alg.getT(null);
 
             double diag[] = new double[width];
             double off[] = new double[width];
@@ -93,14 +93,14 @@ public abstract class StandardTridiagonalTests_R64 {
     public void transposeFlagForQ() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition_F64<RowMatrix_F64> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
-            RowMatrix_F64 Q = alg.getQ(null,false);
-            RowMatrix_F64 Q_t = alg.getQ(null,true);
+            DMatrixRow_F64 Q = alg.getQ(null,false);
+            DMatrixRow_F64 Q_t = alg.getQ(null,true);
 
             for( int i = 0; i < Q.numRows; i++ ) {
                 for( int j = 0; j < Q.numCols; j++ ) {

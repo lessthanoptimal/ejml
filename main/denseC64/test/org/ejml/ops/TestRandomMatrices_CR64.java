@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -35,21 +35,21 @@ public class TestRandomMatrices_CR64 {
 
     @Test
     public void createRandom_min_max() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(30,20,-1,1,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
 
     @Test
     public void setRandom() {
-        RowMatrix_C64 A = new RowMatrix_C64(5,4);
+        DMatrixRow_C64 A = new DMatrixRow_C64(5,4);
 
         RandomMatrices_CR64.setRandom(A,rand);
 
         checkRandom1(A);
     }
 
-    private void checkRandom1(RowMatrix_C64 a) {
+    private void checkRandom1(DMatrixRow_C64 a) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
@@ -76,13 +76,13 @@ public class TestRandomMatrices_CR64 {
 
     @Test
     public void setRandom_min_max() {
-        RowMatrix_C64 A = new RowMatrix_C64(30,20);
+        DMatrixRow_C64 A = new DMatrixRow_C64(30,20);
         RandomMatrices_CR64.setRandom(A,-1,1,rand);
 
         checkRandomRange(A);
     }
 
-    private void checkRandomRange(RowMatrix_C64 a) {
+    private void checkRandomRange(DMatrixRow_C64 a) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -125,7 +125,7 @@ public class TestRandomMatrices_CR64 {
     @Test
     public void createHermPosDef() {
         for( int i = 1; i < 20; i++ ) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createHermPosDef(i, rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createHermPosDef(i, rand);
 
             assertTrue(MatrixFeatures_CR64.isPositiveDefinite(A));
         }
@@ -133,7 +133,7 @@ public class TestRandomMatrices_CR64 {
 
     @Test
     public void createHermitian() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createHermitian(10, -1, 1, rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createHermitian(10, -1, 1, rand);
 
         assertTrue(MatrixFeatures_CR64.isHermitian(A, UtilEjml.TEST_F64));
 
@@ -154,7 +154,7 @@ public class TestRandomMatrices_CR64 {
 //    @Test
 //    public void createUpperTriangle() {
 //        for( int hess = 0; hess < 3; hess++ ) {
-//            RowMatrix_C64 A = RandomMatrices_CR64.createUpperTriangle(10,hess,-1,1,rand);
+//            DMatrixRow_C64 A = RandomMatrices_CR64.createUpperTriangle(10,hess,-1,1,rand);
 //
 //            assertTrue(MatrixFeatures.isUpperTriangle(A,hess,UtilEjml.TEST_F64));
 //

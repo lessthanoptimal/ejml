@@ -23,8 +23,8 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.MatrixMatrixMult_CR64;
 import org.ejml.alg.dense.mult.TestMatrixMatrixMult_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_C64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,7 +43,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void identity_one() {
-        RowMatrix_C64 I = CommonOps_CR64.identity(4);
+        DMatrixRow_C64 I = CommonOps_CR64.identity(4);
         assertEquals(4,I.numRows);
         assertEquals(4,I.numCols);
 
@@ -52,7 +52,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void identity_two() {
-        RowMatrix_C64 I = CommonOps_CR64.identity(4,5);
+        DMatrixRow_C64 I = CommonOps_CR64.identity(4,5);
         assertEquals(4,I.numRows);
         assertEquals(5,I.numCols);
 
@@ -67,7 +67,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void diag() {
-        RowMatrix_C64 m = CommonOps_CR64.diag(1,2,3,4,5,6);
+        DMatrixRow_C64 m = CommonOps_CR64.diag(1,2,3,4,5,6);
 
         assertEquals(3,m.numRows);
         assertEquals(3,m.numCols);
@@ -91,8 +91,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void convert() {
-        RowMatrix_F64 input = RandomMatrices_R64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 output = new RowMatrix_C64(5,7);
+        DMatrixRow_F64 input = RandomMatrices_R64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 output = new DMatrixRow_C64(5,7);
 
         Complex_F64 a = new Complex_F64();
 
@@ -110,8 +110,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void stripReal() {
-        RowMatrix_C64 input = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_F64 output = new RowMatrix_F64(5,7);
+        DMatrixRow_C64 input = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_F64 output = new DMatrixRow_F64(5,7);
 
         Complex_F64 a = new Complex_F64();
 
@@ -128,8 +128,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void stripImaginary() {
-        RowMatrix_C64 input = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_F64 output = new RowMatrix_F64(5,7);
+        DMatrixRow_C64 input = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_F64 output = new DMatrixRow_F64(5,7);
 
         Complex_F64 a = new Complex_F64();
 
@@ -146,8 +146,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void magnitude() {
-        RowMatrix_C64 input = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_F64 output = new RowMatrix_F64(5,7);
+        DMatrixRow_C64 input = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_F64 output = new DMatrixRow_F64(5,7);
 
         Complex_F64 a = new Complex_F64();
 
@@ -164,8 +164,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void conjugate() {
-        RowMatrix_C64 matrix = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 found = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 matrix = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 found = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         CommonOps_CR64.conjugate(matrix,found);
 
@@ -180,7 +180,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void fill() {
-        RowMatrix_C64 matrix = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 matrix = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         CommonOps_CR64.fill(matrix,2,-1);
 
@@ -195,9 +195,9 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void add() {
-        RowMatrix_C64 matrixA = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 matrixB = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 matrixA = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 matrixB = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         Complex_F64 a = new Complex_F64();
         Complex_F64 b = new Complex_F64();
@@ -222,9 +222,9 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void subtract() {
-        RowMatrix_C64 matrixA = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 matrixB = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 matrixA = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 matrixB = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         Complex_F64 a = new Complex_F64();
         Complex_F64 b = new Complex_F64();
@@ -251,8 +251,8 @@ public class TestCommonOps_CR64 {
     public void scale() {
         Complex_F64 scale = new Complex_F64(2.5,0.4);
 
-        RowMatrix_C64 mat = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 orig = mat.copy();
+        DMatrixRow_C64 mat = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 orig = mat.copy();
 
         CommonOps_CR64.scale(scale.real, scale.imaginary, mat);
 
@@ -312,11 +312,11 @@ public class TestCommonOps_CR64 {
     public void multiply() {
         for (int i = 1; i < 10; i++) {
             for (int j = 1; j < 10; j++) {
-                RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,j,-1,1,rand);
+                DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,j,-1,1,rand);
                 for (int k = 1; k < 10; k++) {
-                    RowMatrix_C64 B = RandomMatrices_CR64.createRandom(j, k, -1, 1, rand);
-                    RowMatrix_C64 found = RandomMatrices_CR64.createRandom(i, k, -1, 1, rand);
-                    RowMatrix_C64 expected = TestMatrixMatrixMult_CR64.multiply(A, B, false, false);
+                    DMatrixRow_C64 B = RandomMatrices_CR64.createRandom(j, k, -1, 1, rand);
+                    DMatrixRow_C64 found = RandomMatrices_CR64.createRandom(i, k, -1, 1, rand);
+                    DMatrixRow_C64 expected = TestMatrixMatrixMult_CR64.multiply(A, B, false, false);
 
                     MatrixMatrixMult_CR64.mult_reorder(A, B, found);
 
@@ -329,8 +329,8 @@ public class TestCommonOps_CR64 {
     @Test
     public void transpose_one() {
 
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
-        RowMatrix_C64 b = a.copy();
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
+        DMatrixRow_C64 b = a.copy();
 
         CommonOps_CR64.transpose(b);
 
@@ -351,8 +351,8 @@ public class TestCommonOps_CR64 {
     @Test
     public void transposeConjugate_one() {
 
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
-        RowMatrix_C64 b = a.copy();
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
+        DMatrixRow_C64 b = a.copy();
 
         CommonOps_CR64.transposeConjugate(b);
 
@@ -373,8 +373,8 @@ public class TestCommonOps_CR64 {
     @Test
     public void transpose_two() {
 
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(5,4,-1,1,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(5,4,-1,1,rand);
 
         CommonOps_CR64.transpose(a, b);
 
@@ -395,8 +395,8 @@ public class TestCommonOps_CR64 {
     @Test
     public void transposeConjugate_two() {
 
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(5,4,-1,1,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(5,4,-1,1,rand);
 
         CommonOps_CR64.transposeConjugate(a, b);
 
@@ -417,10 +417,10 @@ public class TestCommonOps_CR64 {
     @Test
     public void invert_1() {
         for (int i = 1; i < 10; i++) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,i,rand);
-            RowMatrix_C64 A_orig = A.copy();
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,i,rand);
+            DMatrixRow_C64 A_orig = A.copy();
 
-            RowMatrix_C64 I = RandomMatrices_CR64.createRandom(i,i,rand);
+            DMatrixRow_C64 I = RandomMatrices_CR64.createRandom(i,i,rand);
 
             assertTrue(CommonOps_CR64.invert(A));
             CommonOps_CR64.mult(A_orig,A,I);
@@ -432,11 +432,11 @@ public class TestCommonOps_CR64 {
     @Test
     public void invert_2() {
         for (int i = 1; i < 10; i++) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i, i, rand);
-            RowMatrix_C64 A_orig = A.copy();
-            RowMatrix_C64 A_inv = new RowMatrix_C64(i, i);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i, i, rand);
+            DMatrixRow_C64 A_orig = A.copy();
+            DMatrixRow_C64 A_inv = new DMatrixRow_C64(i, i);
 
-            RowMatrix_C64 I = RandomMatrices_CR64.createRandom(i, i, rand);
+            DMatrixRow_C64 I = RandomMatrices_CR64.createRandom(i, i, rand);
 
             assertTrue(CommonOps_CR64.invert(A, A_inv));
             CommonOps_CR64.mult(A, A_inv, I);
@@ -450,17 +450,17 @@ public class TestCommonOps_CR64 {
     public void solve() {
         // square
         for (int i = 1; i < 10; i++) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i, i, rand);
-            RowMatrix_C64 B = RandomMatrices_CR64.createRandom(i, 1, rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i, i, rand);
+            DMatrixRow_C64 B = RandomMatrices_CR64.createRandom(i, 1, rand);
 
-            RowMatrix_C64 A_orig = A.copy();
-            RowMatrix_C64 B_orig = B.copy();
+            DMatrixRow_C64 A_orig = A.copy();
+            DMatrixRow_C64 B_orig = B.copy();
 
-            RowMatrix_C64 X = new RowMatrix_C64(i, 1);
+            DMatrixRow_C64 X = new DMatrixRow_C64(i, 1);
 
             assertTrue(CommonOps_CR64.solve(A, B, X));
 
-            RowMatrix_C64 found = new RowMatrix_C64(i, 1);
+            DMatrixRow_C64 found = new DMatrixRow_C64(i, 1);
 
             CommonOps_CR64.mult(A, X, found);
 
@@ -472,15 +472,15 @@ public class TestCommonOps_CR64 {
 
         // rectangular
         for (int i = 1; i < 10; i++) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(2*i, i, rand);
-            RowMatrix_C64 X = RandomMatrices_CR64.createRandom(i, 1, rand);
-            RowMatrix_C64 B = new RowMatrix_C64(2*i,1);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(2*i, i, rand);
+            DMatrixRow_C64 X = RandomMatrices_CR64.createRandom(i, 1, rand);
+            DMatrixRow_C64 B = new DMatrixRow_C64(2*i,1);
 
             CommonOps_CR64.mult(A,X,B);
 
-            RowMatrix_C64 A_orig = A.copy();
-            RowMatrix_C64 B_orig = B.copy();
-            RowMatrix_C64 X_expected = X.copy();
+            DMatrixRow_C64 A_orig = A.copy();
+            DMatrixRow_C64 B_orig = B.copy();
+            DMatrixRow_C64 X_expected = X.copy();
 
             assertTrue(CommonOps_CR64.solve(A, B, X));
 
@@ -493,12 +493,12 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void det() {
-        RowMatrix_C64 A = new RowMatrix_C64(3,3,true,
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3,true,
                 0.854634 , 0.445620,  0.082836 , 0.212460 , 0.623783 , 0.037631,
                 0.585408 , 0.768956 , 0.771067 , 0.897763 , 0.125793 , 0.432187,
                 0.303789 , 0.044497 , 0.151182 , 0.034471 , 0.526770 , 0.570333);
 
-        RowMatrix_C64 A_orig = A.copy();
+        DMatrixRow_C64 A_orig = A.copy();
 
         Complex_F64 found = CommonOps_CR64.det(A);
         // from octave
@@ -512,8 +512,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMultiply() {
-        RowMatrix_C64 in = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 in = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         Complex_F64 a = new Complex_F64(1.2,-0.3);
         Complex_F64 b = new Complex_F64();
@@ -537,8 +537,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementDivide_right() {
-        RowMatrix_C64 in = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 in = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         Complex_F64 a = new Complex_F64();
         Complex_F64 b = new Complex_F64(1.2,-0.3);
@@ -562,8 +562,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementDivide_left() {
-        RowMatrix_C64 in = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
-        RowMatrix_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 in = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
+        DMatrixRow_C64 out = RandomMatrices_CR64.createRandom(5,7,-1,1,rand);
 
         Complex_F64 a = new Complex_F64(1.2,-0.3);
         Complex_F64 b = new Complex_F64();
@@ -587,7 +587,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMinReal() {
-        RowMatrix_C64 m = new RowMatrix_C64(3,4);
+        DMatrixRow_C64 m = new DMatrixRow_C64(3,4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
         }
@@ -597,7 +597,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMinImaginary() {
-        RowMatrix_C64 m = new RowMatrix_C64(3,4);
+        DMatrixRow_C64 m = new DMatrixRow_C64(3,4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
         }
@@ -607,7 +607,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMaxReal() {
-        RowMatrix_C64 m = new RowMatrix_C64(3,4);
+        DMatrixRow_C64 m = new DMatrixRow_C64(3,4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
         }
@@ -617,7 +617,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMaxImaginary() {
-        RowMatrix_C64 m = new RowMatrix_C64(3,4);
+        DMatrixRow_C64 m = new DMatrixRow_C64(3,4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
         }
@@ -627,8 +627,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMaxMagnitude2() {
-        RowMatrix_C64 m = RandomMatrices_CR64.createRandom(4,5,-2,2,rand);
-        RowMatrix_F64 a = new RowMatrix_F64(m.numRows,m.numCols);
+        DMatrixRow_C64 m = RandomMatrices_CR64.createRandom(4,5,-2,2,rand);
+        DMatrixRow_F64 a = new DMatrixRow_F64(m.numRows,m.numCols);
 
         CommonOps_CR64.magnitude(m,a);
 
@@ -642,7 +642,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void setIdentity() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,5,-2,2,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,5,-2,2,rand);
 
         CommonOps_CR64.setIdentity(a);
 
@@ -663,8 +663,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void extract_simplified() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
-        RowMatrix_C64 b = CommonOps_CR64.extract(a,2,5,3,8);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
+        DMatrixRow_C64 b = CommonOps_CR64.extract(a,2,5,3,8);
 
         Complex_F64 ca = new Complex_F64();
         Complex_F64 cb = new Complex_F64();
@@ -682,8 +682,8 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void extract_complex() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
-        RowMatrix_C64 b = new RowMatrix_C64(6,7);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
+        DMatrixRow_C64 b = new DMatrixRow_C64(6,7);
 
         Complex_F64 ca = new Complex_F64();
         Complex_F64 cb = new Complex_F64();
@@ -703,14 +703,14 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void columnsToVector() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
-        RowMatrix_C64 v[] = CommonOps_CR64.columnsToVector(a,null);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
+        DMatrixRow_C64 v[] = CommonOps_CR64.columnsToVector(a,null);
 
         Complex_F64 ca = new Complex_F64();
         Complex_F64 cc = new Complex_F64();
 
         for (int i = 0; i < a.numCols; i++) {
-            RowMatrix_C64 c = v[i];
+            DMatrixRow_C64 c = v[i];
 
             assertEquals(c.numRows,a.numRows);
             assertEquals(1,c.numCols);
@@ -726,7 +726,7 @@ public class TestCommonOps_CR64 {
 
     @Test
     public void elementMaxAbs() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(10,12,-2,2,rand);
         a.set(5,6,10,12);
 
         double expected = Math.sqrt(10*10 + 12*12);

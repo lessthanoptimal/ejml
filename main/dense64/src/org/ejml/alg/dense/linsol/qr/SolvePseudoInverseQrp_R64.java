@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
 
@@ -34,10 +34,10 @@ import org.ejml.ops.CommonOps_R64;
 public class SolvePseudoInverseQrp_R64 extends BaseLinearSolverQrp_R64 {
 
     // stores the orthogonal Q matrix from QR decomposition
-    private RowMatrix_F64 Q=new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 Q=new DMatrixRow_F64(1,1);
 
     // storage for basic solution
-    private RowMatrix_F64 x_basic =new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 x_basic =new DMatrixRow_F64(1,1);
 
     /**
      * Configure and provide decomposition
@@ -45,13 +45,13 @@ public class SolvePseudoInverseQrp_R64 extends BaseLinearSolverQrp_R64 {
      * @param decomposition Decomposition used.
      * @param norm2Solution If true the basic solution will be returned, false the minimal 2-norm solution.
      */
-    public SolvePseudoInverseQrp_R64(QRPDecomposition_F64<RowMatrix_F64> decomposition,
+    public SolvePseudoInverseQrp_R64(QRPDecomposition_F64<DMatrixRow_F64> decomposition,
                                      boolean norm2Solution) {
         super(decomposition,norm2Solution);
     }
 
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         if( !super.setA(A))
             return false;
 
@@ -63,7 +63,7 @@ public class SolvePseudoInverseQrp_R64 extends BaseLinearSolverQrp_R64 {
     }
 
     @Override
-    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
+    public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )

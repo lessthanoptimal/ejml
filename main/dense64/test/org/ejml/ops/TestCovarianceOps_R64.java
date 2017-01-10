@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,7 +31,7 @@ public class TestCovarianceOps_R64 {
     @Test
     public void isValid() {
         // nothing is wrong with it
-        RowMatrix_F64 m = CommonOps_R64.identity(3);
+        DMatrixRow_F64 m = CommonOps_R64.identity(3);
         assertEquals(0, CovarianceOps_R64.isValid(m));
 
         // negative diagonal term

@@ -20,7 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -36,13 +36,13 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void createReflector() {
-        RowMatrix_F64 u = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 u = RandomMatrices_R64.createRandom(4,1,rand);
 
-        RowMatrix_F64 Q = SpecializedOps_R64.createReflector(u);
+        DMatrixRow_F64 Q = SpecializedOps_R64.createReflector(u);
 
         assertTrue(MatrixFeatures_R64.isOrthogonal(Q,UtilEjml.TEST_F64));
 
-        RowMatrix_F64 w = new RowMatrix_F64(4,1);
+        DMatrixRow_F64 w = new DMatrixRow_F64(4,1);
 
         CommonOps_R64.mult(Q,u,w);
 
@@ -51,16 +51,16 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void createReflector_gamma() {
-        RowMatrix_F64 u = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 u = RandomMatrices_R64.createRandom(4,1,rand);
         double gamma = 1.5;
-        RowMatrix_F64 Q = SpecializedOps_R64.createReflector(u,gamma);
+        DMatrixRow_F64 Q = SpecializedOps_R64.createReflector(u,gamma);
 
-        RowMatrix_F64 w = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 w = RandomMatrices_R64.createRandom(4,1,rand);
 
-        RowMatrix_F64 v_found = new RowMatrix_F64(4,1);
+        DMatrixRow_F64 v_found = new DMatrixRow_F64(4,1);
         CommonOps_R64.mult(Q,w,v_found);
 
-        RowMatrix_F64 v_exp = new RowMatrix_F64(4,1);
+        DMatrixRow_F64 v_exp = new DMatrixRow_F64(4,1);
 
         VectorVectorMult_R64.householder(-gamma,u,w,v_exp);
 
@@ -69,13 +69,13 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void copyChangeRow() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,2,rand);
 
-        RowMatrix_F64 B = A.copy();
+        DMatrixRow_F64 B = A.copy();
 
         int []order = new int[]{2,0,1};
 
-        RowMatrix_F64 C = SpecializedOps_R64.copyChangeRow(order,A,null);
+        DMatrixRow_F64 C = SpecializedOps_R64.copyChangeRow(order,A,null);
 
         // make sure it didn't modify A
         assertTrue(MatrixFeatures_R64.isIdentical(A,B,0));
@@ -95,9 +95,9 @@ public class TestSpecializedOps_R64 {
 
         for( int m = 2; m <= 6; m += 2 ) {
             for( int n = 2; n <= 6; n += 2 ) {
-                RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+                DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
 
-                RowMatrix_F64 B = SpecializedOps_R64.copyTriangle(A,null,true);
+                DMatrixRow_F64 B = SpecializedOps_R64.copyTriangle(A,null,true);
 
                 assertTrue(MatrixFeatures_R64.isEqualsTriangle(A,B, true, UtilEjml.TEST_F64));
                 assertFalse(MatrixFeatures_R64.isEquals(A,B,UtilEjml.TEST_F64));
@@ -112,9 +112,9 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void diffNormF() {
-        RowMatrix_F64 a = RandomMatrices_R64.createRandom(3,2,rand);
-        RowMatrix_F64 b = RandomMatrices_R64.createRandom(3,2,rand);
-        RowMatrix_F64 c = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 a = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 b = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(3,2,rand);
 
         CommonOps_R64.subtract(a, b, c);
         double expectedNorm = NormOps_R64.fastNormF(c);
@@ -125,9 +125,9 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void diffNormP1() {
-        RowMatrix_F64 a = RandomMatrices_R64.createRandom(3,2,rand);
-        RowMatrix_F64 b = RandomMatrices_R64.createRandom(3,2,rand);
-        RowMatrix_F64 c = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 a = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 b = RandomMatrices_R64.createRandom(3,2,rand);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(3,2,rand);
 
         CommonOps_R64.subtract(a, b, c);
         double expectedNorm = 0;
@@ -141,8 +141,8 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void addIdentity() {
-        RowMatrix_F64 M = RandomMatrices_R64.createRandom(4,4,rand);
-        RowMatrix_F64 A = M.copy();
+        DMatrixRow_F64 M = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 A = M.copy();
 
         SpecializedOps_R64.addIdentity(A,A,2.0);
         CommonOps_R64.subtractEquals(A, M);
@@ -154,9 +154,9 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void subvector() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
 
-        RowMatrix_F64 v = new RowMatrix_F64(7,1);
+        DMatrixRow_F64 v = new DMatrixRow_F64(7,1);
 
         // first extract a row vector
         SpecializedOps_R64.subvector(A,2,1,2,true,1,v);
@@ -178,14 +178,14 @@ public class TestSpecializedOps_R64 {
     @Test
     public void splitIntoVectors() {
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,5,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,5,rand);
 
         // column vectors
-        RowMatrix_F64 v[] = SpecializedOps_R64.splitIntoVectors(A,true);
+        DMatrixRow_F64 v[] = SpecializedOps_R64.splitIntoVectors(A,true);
 
         assertEquals(5,v.length);
         for( int i = 0; i < v.length; i++ ) {
-            RowMatrix_F64 a = v[i];
+            DMatrixRow_F64 a = v[i];
 
             assertEquals(3,a.getNumRows());
             assertEquals(1,a.getNumCols());
@@ -200,7 +200,7 @@ public class TestSpecializedOps_R64 {
 
         assertEquals(3,v.length);
         for( int i = 0; i < v.length; i++ ) {
-            RowMatrix_F64 a = v[i];
+            DMatrixRow_F64 a = v[i];
 
             assertEquals(1,a.getNumRows());
             assertEquals(5,a.getNumCols());
@@ -216,11 +216,11 @@ public class TestSpecializedOps_R64 {
     public void pivotMatrix() {
         int pivots[] = new int[]{1,0,3,2};
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,4,rand);
-        RowMatrix_F64 P = SpecializedOps_R64.pivotMatrix(null,pivots,4,false);
-        RowMatrix_F64 Pt = SpecializedOps_R64.pivotMatrix(null,pivots,4,true);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 P = SpecializedOps_R64.pivotMatrix(null,pivots,4,false);
+        DMatrixRow_F64 Pt = SpecializedOps_R64.pivotMatrix(null,pivots,4,true);
 
-        RowMatrix_F64 B = new RowMatrix_F64(4,4);
+        DMatrixRow_F64 B = new DMatrixRow_F64(4,4);
 
         // see if it swapped the rows
         CommonOps_R64.mult(P,A,B);
@@ -241,7 +241,7 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void diagProd() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3);
 
         A.set(0,0,1);
         A.set(1,1,2);
@@ -254,7 +254,7 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void elementDiagonalMaxAbs() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
 
         double expected = 0;
         for (int i = 0; i < 4; i++) {
@@ -269,7 +269,7 @@ public class TestSpecializedOps_R64 {
 
     @Test
     public void qualityTriangular() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,4,rand);
 
         double max = SpecializedOps_R64.elementDiagonalMaxAbs(A);
         double expected = 1.0;
@@ -283,7 +283,7 @@ public class TestSpecializedOps_R64 {
     
     @Test
     public void elementSumSq() {
-        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,1,2,3,4,5,6);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,3,true,1,2,3,4,5,6);
         
         double expected = 1+4+9+16+25+36;
         double found = SpecializedOps_R64.elementSumSq(A);

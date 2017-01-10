@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.alg.dense.decompose.chol.CholeskyDecompositionInner_CR64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolverChol_CR64 extends BaseCholeskySolveTests_CR64 {
 
     @Override
-    public LinearSolver<RowMatrix_C64> createSolver() {
+    public LinearSolver<DMatrixRow_C64> createSolver() {
         CholeskyDecompositionInner_CR64 alg = new CholeskyDecompositionInner_CR64(true);
         return new LinearSolverChol_CR64(alg);
     }

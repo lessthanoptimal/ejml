@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -38,10 +38,10 @@ public class GenericSolvePseudoInverseChecks_R64 {
 
     Random rand = new Random(234);
 
-    LinearSolver<RowMatrix_F64> solver;
+    LinearSolver<DMatrixRow_F64> solver;
 
-    public GenericSolvePseudoInverseChecks_R64(LinearSolver<RowMatrix_F64> solver) {
-        this.solver = new LinearSolverSafe<RowMatrix_F64>( solver );
+    public GenericSolvePseudoInverseChecks_R64(LinearSolver<DMatrixRow_F64> solver) {
+        this.solver = new LinearSolverSafe<DMatrixRow_F64>( solver );
     }
 
     public void all() {
@@ -57,12 +57,12 @@ public class GenericSolvePseudoInverseChecks_R64 {
      * Shouldn't blow if it the input matrix is zero.  But there is no solution...
      */
     public void zeroMatrix() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3);
-        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,7,8);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3);
+        DMatrixRow_F64 y = new DMatrixRow_F64(3,1,true,4,7,8);
 
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 x = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(3,1);
         solver.solve(y, x);
 
         assertFalse(MatrixFeatures_R64.hasUncountable(x));
@@ -73,15 +73,15 @@ public class GenericSolvePseudoInverseChecks_R64 {
      */
     public void underDetermined_wide_solve() {
         // create a matrix where two rows are linearly dependent
-        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,1,2,3,2,3,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,3,true,1,2,3,2,3,4);
 
-        RowMatrix_F64 y = new RowMatrix_F64(2,1,true,4,7);
+        DMatrixRow_F64 y = new DMatrixRow_F64(2,1,true,4,7);
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 x = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(3,1);
         solver.solve(y,x);
 
-        RowMatrix_F64 found = new RowMatrix_F64(2,1);
+        DMatrixRow_F64 found = new DMatrixRow_F64(2,1);
         CommonOps_R64.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
@@ -93,17 +93,17 @@ public class GenericSolvePseudoInverseChecks_R64 {
      */
     public void underDetermined_wide_inv() {
         // create a matrix where two rows are linearly dependent
-        RowMatrix_F64 A = new RowMatrix_F64(2,3,true,1,2,3,2,3,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,3,true,1,2,3,2,3,4);
 
-        RowMatrix_F64 y = new RowMatrix_F64(2,1,true,4,7);
+        DMatrixRow_F64 y = new DMatrixRow_F64(2,1,true,4,7);
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 x = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(3,1);
         solver.solve(y,x);
 
         // now test the pseudo inverse
-        RowMatrix_F64 A_pinv = new RowMatrix_F64(3,2);
-        RowMatrix_F64 found = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 A_pinv = new DMatrixRow_F64(3,2);
+        DMatrixRow_F64 found = new DMatrixRow_F64(3,1);
         solver.invert(A_pinv);
 
         CommonOps_R64.mult(A_pinv,y,found);
@@ -116,15 +116,15 @@ public class GenericSolvePseudoInverseChecks_R64 {
      */
     public void underDetermined_tall_solve() {
         // create a matrix where two rows are linearly dependent
-        RowMatrix_F64 A = new RowMatrix_F64(3,2,true,1,2,1,2,2,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,2,true,1,2,1,2,2,4);
 
-        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,4,8);
+        DMatrixRow_F64 y = new DMatrixRow_F64(3,1,true,4,4,8);
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 x = new RowMatrix_F64(2,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(2,1);
         solver.solve(y,x);
 
-        RowMatrix_F64 found = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 found = new DMatrixRow_F64(3,1);
         CommonOps_R64.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
@@ -136,15 +136,15 @@ public class GenericSolvePseudoInverseChecks_R64 {
      */
     public void singular_solve() {
         // create a matrix where two rows are linearly dependent
-        RowMatrix_F64 A = new RowMatrix_F64(3,3,true,1,2,3,2,3,4,2,3,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3,true,1,2,3,2,3,4,2,3,4);
 
-        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,7,7);
+        DMatrixRow_F64 y = new DMatrixRow_F64(3,1,true,4,7,7);
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 x = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(3,1);
         solver.solve(y,x);
 
-        RowMatrix_F64 found = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 found = new DMatrixRow_F64(3,1);
         CommonOps_R64.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
@@ -156,17 +156,17 @@ public class GenericSolvePseudoInverseChecks_R64 {
      */
     public void singular_inv() {
         // create a matrix where two rows are linearly dependent
-        RowMatrix_F64 A = new RowMatrix_F64(3,3,true,1,2,3,2,3,4,2,3,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3,true,1,2,3,2,3,4,2,3,4);
 
-        RowMatrix_F64 y = new RowMatrix_F64(3,1,true,4,7,7);
+        DMatrixRow_F64 y = new DMatrixRow_F64(3,1,true,4,7,7);
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 x = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 x = new DMatrixRow_F64(3,1);
         solver.solve(y,x);
 
         // now test the pseudo inverse
-        RowMatrix_F64 A_pinv = new RowMatrix_F64(3,3);
-        RowMatrix_F64 found = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 A_pinv = new DMatrixRow_F64(3,3);
+        DMatrixRow_F64 found = new DMatrixRow_F64(3,1);
         solver.invert(A_pinv);
 
         CommonOps_R64.mult(A_pinv,y,found);

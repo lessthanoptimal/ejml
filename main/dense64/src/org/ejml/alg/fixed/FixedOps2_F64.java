@@ -18,8 +18,8 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.FixedMatrix2_F64;
-import org.ejml.data.FixedMatrix2x2_F64;
+import org.ejml.data.DMatrixFixed2_F64;
+import org.ejml.data.DMatrixFixed2x2_F64;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 2 x 2 or 2 element vectors.</p>
@@ -43,7 +43,7 @@ public class FixedOps2_F64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c ) {
+    public static void add( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c ) {
         c.a11 = a.a11 + b.a11;
         c.a12 = a.a12 + b.a12;
         c.a21 = a.a21 + b.a21;
@@ -65,7 +65,7 @@ public class FixedOps2_F64 {
      * @param b A Vector. Not modified.
      * @param c A Vector where the results are stored. Modified.
      */
-    public static void add( FixedMatrix2_F64 a , FixedMatrix2_F64 b , FixedMatrix2_F64 c ) {
+    public static void add( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b , DMatrixFixed2_F64 c ) {
         c.a1 = a.a1 + b.a1;
         c.a2 = a.a2 + b.a2;
     }
@@ -80,7 +80,7 @@ public class FixedOps2_F64 {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void addEquals( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b ) {
+    public static void addEquals( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b ) {
         a.a11 += b.a11;
         a.a12 += b.a12;
         a.a21 += b.a21;
@@ -97,7 +97,7 @@ public class FixedOps2_F64 {
      * @param a A Vector. Modified.
      * @param b A Vector. Not modified.
      */
-    public static void addEquals( FixedMatrix2_F64 a , FixedMatrix2_F64 b ) {
+    public static void addEquals( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b ) {
         a.a1 += b.a1;
         a.a2 += b.a2;
     }
@@ -117,7 +117,7 @@ public class FixedOps2_F64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void subtract( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c ) {
+    public static void subtract( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c ) {
         c.a11 = a.a11 - b.a11;
         c.a12 = a.a12 - b.a12;
         c.a21 = a.a21 - b.a21;
@@ -139,7 +139,7 @@ public class FixedOps2_F64 {
      * @param b A Vector. Not modified.
      * @param c A Vector where the results are stored. Modified.
      */
-    public static void subtract( FixedMatrix2_F64 a , FixedMatrix2_F64 b , FixedMatrix2_F64 c ) {
+    public static void subtract( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b , DMatrixFixed2_F64 c ) {
         c.a1 = a.a1 - b.a1;
         c.a2 = a.a2 - b.a2;
     }
@@ -154,7 +154,7 @@ public class FixedOps2_F64 {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void subtractEquals( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b ) {
+    public static void subtractEquals( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b ) {
         a.a11 -= b.a11;
         a.a12 -= b.a12;
         a.a21 -= b.a21;
@@ -171,7 +171,7 @@ public class FixedOps2_F64 {
      * @param a A Vector. Modified.
      * @param b A Vector. Not modified.
      */
-    public static void subtractEquals( FixedMatrix2_F64 a , FixedMatrix2_F64 b ) {
+    public static void subtractEquals( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b ) {
         a.a1 -= b.a1;
         a.a2 -= b.a2;
     }
@@ -182,7 +182,7 @@ public class FixedOps2_F64 {
      *
      * @param m The matrix that is to be transposed. Modified.
      */
-    public static void transpose( FixedMatrix2x2_F64 m ) {
+    public static void transpose( DMatrixFixed2x2_F64 m ) {
         double tmp;
         tmp = m.a12; m.a12 = m.a21; m.a21 = tmp;
     }
@@ -199,9 +199,9 @@ public class FixedOps2_F64 {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static FixedMatrix2x2_F64 transpose( FixedMatrix2x2_F64 input , FixedMatrix2x2_F64 output ) {
+    public static DMatrixFixed2x2_F64 transpose( DMatrixFixed2x2_F64 input , DMatrixFixed2x2_F64 output ) {
         if( input == null )
-            input = new FixedMatrix2x2_F64();
+            input = new DMatrixFixed2x2_F64();
 
         output.a11 = input.a11;
         output.a12 = input.a21;
@@ -223,7 +223,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void mult( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 = a.a11*b.a11 + a.a12*b.a21;
         c.a12 = a.a11*b.a12 + a.a12*b.a22;
         c.a21 = a.a21*b.a11 + a.a22*b.a21;
@@ -242,7 +242,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multTransA( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 = a.a11*b.a11 + a.a21*b.a21;
         c.a12 = a.a11*b.a12 + a.a21*b.a22;
         c.a21 = a.a12*b.a11 + a.a22*b.a21;
@@ -261,7 +261,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multTransAB( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 = a.a11*b.a11 + a.a21*b.a12;
         c.a12 = a.a11*b.a21 + a.a21*b.a22;
         c.a21 = a.a12*b.a11 + a.a22*b.a12;
@@ -280,7 +280,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multTransB( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 = a.a11*b.a11 + a.a12*b.a12;
         c.a12 = a.a11*b.a21 + a.a12*b.a22;
         c.a21 = a.a21*b.a11 + a.a22*b.a12;
@@ -299,7 +299,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multAdd( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 += a.a11*b.a11 + a.a12*b.a21;
         c.a12 += a.a11*b.a12 + a.a12*b.a22;
         c.a21 += a.a21*b.a11 + a.a22*b.a21;
@@ -318,7 +318,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multAddTransA( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 += a.a11*b.a11 + a.a21*b.a21;
         c.a12 += a.a11*b.a12 + a.a21*b.a22;
         c.a21 += a.a12*b.a11 + a.a22*b.a21;
@@ -337,7 +337,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multAddTransAB( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 += a.a11*b.a11 + a.a21*b.a12;
         c.a12 += a.a11*b.a21 + a.a21*b.a22;
         c.a21 += a.a12*b.a11 + a.a22*b.a12;
@@ -356,7 +356,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c) {
+    public static void multAddTransB( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c) {
         c.a11 += a.a11*b.a11 + a.a12*b.a12;
         c.a12 += a.a11*b.a21 + a.a12*b.a22;
         c.a21 += a.a21*b.a11 + a.a22*b.a12;
@@ -375,7 +375,7 @@ public class FixedOps2_F64 {
      * @param b The right vector in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix2x2_F64 a , FixedMatrix2_F64 b , FixedMatrix2_F64 c) {
+    public static void mult( DMatrixFixed2x2_F64 a , DMatrixFixed2_F64 b , DMatrixFixed2_F64 c) {
         c.a1 = a.a11*b.a1 + a.a12*b.a2;
         c.a2 = a.a21*b.a1 + a.a22*b.a2;
     }
@@ -392,7 +392,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2_F64 c) {
+    public static void mult( DMatrixFixed2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2_F64 c) {
         c.a1 = a.a1*b.a11 + a.a2*b.a21;
         c.a2 = a.a1*b.a12 + a.a2*b.a22;
     }
@@ -409,7 +409,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @return The dot product
      */
-    public static double dot( FixedMatrix2_F64 a , FixedMatrix2_F64 b ) {
+    public static double dot( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b ) {
         return a.a1*b.a1 + a.a2*b.a2;
     }
 
@@ -419,7 +419,7 @@ public class FixedOps2_F64 {
      *
      * @param a A matrix.
      */
-    public static void setIdentity( FixedMatrix2x2_F64 a ) {
+    public static void setIdentity( DMatrixFixed2x2_F64 a ) {
         a.a11 = 1; a.a21 = 0;
         a.a12 = 0; a.a22 = 1;
     }
@@ -434,7 +434,7 @@ public class FixedOps2_F64 {
      * @param inv Inverted output matrix.  Modified.
      * @return true if it was successful or false if it failed.  Not always reliable.
      */
-    public static boolean invert( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 inv ) {
+    public static boolean invert( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 inv ) {
 
         double scale = 1.0/elementMaxAbs(a);
 
@@ -466,7 +466,7 @@ public class FixedOps2_F64 {
      * @param mat Input matrix.  Not modified.
      * @return The determinant.
      */
-    public static double det( FixedMatrix2x2_F64 mat ) {
+    public static double det( DMatrixFixed2x2_F64 mat ) {
 
         return mat.a11*mat.a22 - mat.a12*mat.a21;
     }
@@ -483,7 +483,7 @@ public class FixedOps2_F64 {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( FixedMatrix2x2_F64 a ) {
+    public static double trace( DMatrixFixed2x2_F64 a ) {
         return a.a11 + a.a22;
     }
 
@@ -497,7 +497,7 @@ public class FixedOps2_F64 {
      * @param input Matrix.  Not modified.
      * @param out Vector containing diagonal elements.  Modified.
      */
-    public static void diag( FixedMatrix2x2_F64 input , FixedMatrix2_F64 out ) {
+    public static void diag( DMatrixFixed2x2_F64 input , DMatrixFixed2_F64 out ) {
         out.a1 = input.a11;
         out.a2 = input.a22;
     }
@@ -512,7 +512,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMax( FixedMatrix2x2_F64 a ) {
+    public static double elementMax( DMatrixFixed2x2_F64 a ) {
         double max = a.a11;
         if( a.a12 > max ) max = a.a12;
         if( a.a21 > max ) max = a.a21;
@@ -531,7 +531,7 @@ public class FixedOps2_F64 {
      * @param a A vector. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMax( FixedMatrix2_F64 a ) {
+    public static double elementMax( DMatrixFixed2_F64 a ) {
         double max = a.a1;
         if( a.a2 > max ) max = a.a2;
 
@@ -548,7 +548,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the matrix.
      */
-    public static double elementMaxAbs( FixedMatrix2x2_F64 a ) {
+    public static double elementMaxAbs( DMatrixFixed2x2_F64 a ) {
         double max = Math.abs(a.a11);
         double tmp = Math.abs(a.a12); if( tmp > max ) max = tmp;
         tmp = Math.abs(a.a21); if( tmp > max ) max = tmp;
@@ -567,7 +567,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the vector.
      */
-    public static double elementMaxAbs( FixedMatrix2_F64 a ) {
+    public static double elementMaxAbs( DMatrixFixed2_F64 a ) {
         double max = Math.abs(a.a1);
         double tmp = Math.abs(a.a2); if( tmp > max ) max = tmp;
         tmp = Math.abs(a.a2); if( tmp > max ) max = tmp;
@@ -585,7 +585,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The value of element in the matrix with the minimum value.
      */
-    public static double elementMin( FixedMatrix2x2_F64 a ) {
+    public static double elementMin( DMatrixFixed2x2_F64 a ) {
         double min = a.a11;
         if( a.a12 < min ) min = a.a12;
         if( a.a21 < min ) min = a.a21;
@@ -604,7 +604,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The value of element in the vector with the minimum value.
      */
-    public static double elementMin( FixedMatrix2_F64 a ) {
+    public static double elementMin( DMatrixFixed2_F64 a ) {
         double min = a.a1;
         if( a.a2 < min ) min = a.a2;
 
@@ -621,7 +621,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMinAbs( FixedMatrix2x2_F64 a ) {
+    public static double elementMinAbs( DMatrixFixed2x2_F64 a ) {
         double min = Math.abs(a.a11);
         double tmp = Math.abs(a.a12); if( tmp < min ) min = tmp;
         tmp = Math.abs(a.a21); if( tmp < min ) min = tmp;
@@ -640,7 +640,7 @@ public class FixedOps2_F64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the vector.
      */
-    public static double elementMinAbs( FixedMatrix2_F64 a ) {
+    public static double elementMinAbs( DMatrixFixed2_F64 a ) {
         double min = Math.abs(a.a1);
         double tmp = Math.abs(a.a1); if( tmp < min ) min = tmp;
         tmp = Math.abs(a.a2); if( tmp < min ) min = tmp;
@@ -656,7 +656,7 @@ public class FixedOps2_F64 {
      * @param a The left matrix in the multiplication operation. Modified.
      * @param b The right matrix in the multiplication operation. Not modified.
      */
-    public static void elementMult( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b) {
+    public static void elementMult( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b) {
         a.a11 *= b.a11; a.a12 *= b.a12;
         a.a21 *= b.a21; a.a22 *= b.a22;
     }
@@ -669,7 +669,7 @@ public class FixedOps2_F64 {
      * @param a The left vector in the multiplication operation. Modified.
      * @param b The right vector in the multiplication operation. Not modified.
      */
-    public static void elementMult( FixedMatrix2_F64 a , FixedMatrix2_F64 b) {
+    public static void elementMult( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b) {
         a.a1 *= b.a1;
         a.a2 *= b.a2;
     }
@@ -683,7 +683,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementMult( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c ) {
+    public static void elementMult( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c ) {
         c.a11 = a.a11*b.a11; c.a12 = a.a12*b.a12;
         c.a21 = a.a21*b.a21; c.a22 = a.a22*b.a22;
     }
@@ -697,7 +697,7 @@ public class FixedOps2_F64 {
      * @param b The right vector in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementMult( FixedMatrix2_F64 a , FixedMatrix2_F64 b , FixedMatrix2_F64 c ) {
+    public static void elementMult( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b , DMatrixFixed2_F64 c ) {
         c.a1 = a.a1*b.a1;
         c.a2 = a.a2*b.a2;
     }
@@ -710,7 +710,7 @@ public class FixedOps2_F64 {
      * @param a The left matrix in the division operation. Modified.
      * @param b The right matrix in the division operation. Not modified.
      */
-    public static void elementDiv( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b) {
+    public static void elementDiv( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b) {
         a.a11 /= b.a11; a.a12 /= b.a12;
         a.a21 /= b.a21; a.a22 /= b.a22;
     }
@@ -723,7 +723,7 @@ public class FixedOps2_F64 {
      * @param a The left vector in the division operation. Modified.
      * @param b The right vector in the division operation. Not modified.
      */
-    public static void elementDiv( FixedMatrix2_F64 a , FixedMatrix2_F64 b) {
+    public static void elementDiv( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b) {
         a.a1 /= b.a1;
         a.a2 /= b.a2;
     }
@@ -737,7 +737,7 @@ public class FixedOps2_F64 {
      * @param b The right matrix in the division operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv( FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b , FixedMatrix2x2_F64 c ) {
+    public static void elementDiv( DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b , DMatrixFixed2x2_F64 c ) {
         c.a11 = a.a11/b.a11; c.a12 = a.a12/b.a12;
         c.a21 = a.a21/b.a21; c.a22 = a.a22/b.a22;
     }
@@ -751,7 +751,7 @@ public class FixedOps2_F64 {
      * @param b The right vector in the division operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv( FixedMatrix2_F64 a , FixedMatrix2_F64 b , FixedMatrix2_F64 c ) {
+    public static void elementDiv( DMatrixFixed2_F64 a , DMatrixFixed2_F64 b , DMatrixFixed2_F64 c ) {
         c.a1 = a.a1/b.a1;
         c.a2 = a.a2/b.a2;
     }
@@ -766,7 +766,7 @@ public class FixedOps2_F64 {
      * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , FixedMatrix2x2_F64 a ) {
+    public static void scale( double alpha , DMatrixFixed2x2_F64 a ) {
         a.a11 *= alpha; a.a12 *= alpha;
         a.a21 *= alpha; a.a22 *= alpha;
     }
@@ -781,7 +781,7 @@ public class FixedOps2_F64 {
      * @param a The vector that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , FixedMatrix2_F64 a ) {
+    public static void scale( double alpha , DMatrixFixed2_F64 a ) {
         a.a1 *= alpha;
         a.a2 *= alpha;
     }
@@ -797,7 +797,7 @@ public class FixedOps2_F64 {
      * @param a The matrix that is to be scaled.  Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
-    public static void scale( double alpha , FixedMatrix2x2_F64 a , FixedMatrix2x2_F64 b ) {
+    public static void scale( double alpha , DMatrixFixed2x2_F64 a , DMatrixFixed2x2_F64 b ) {
         b.a11 = a.a11*alpha; b.a12 = a.a12*alpha;
         b.a21 = a.a21*alpha; b.a22 = a.a22*alpha;
     }
@@ -813,7 +813,7 @@ public class FixedOps2_F64 {
      * @param a The vector that is to be scaled.  Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
-    public static void scale( double alpha , FixedMatrix2_F64 a , FixedMatrix2_F64 b ) {
+    public static void scale( double alpha , DMatrixFixed2_F64 a , DMatrixFixed2_F64 b ) {
         b.a1 = a.a1*alpha;
         b.a2 = a.a2*alpha;
     }
@@ -828,7 +828,7 @@ public class FixedOps2_F64 {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( FixedMatrix2x2_F64 a , double alpha ) {
+    public static void divide( DMatrixFixed2x2_F64 a , double alpha ) {
         a.a11 /= alpha; a.a12 /= alpha;
         a.a21 /= alpha; a.a22 /= alpha;
     }
@@ -843,7 +843,7 @@ public class FixedOps2_F64 {
      * @param a The vector whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( FixedMatrix2_F64 a , double alpha ) {
+    public static void divide( DMatrixFixed2_F64 a , double alpha ) {
         a.a1 /= alpha;
         a.a2 /= alpha;
     }
@@ -859,7 +859,7 @@ public class FixedOps2_F64 {
      * @param a The matrix whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( FixedMatrix2x2_F64 a , double alpha , FixedMatrix2x2_F64 b ) {
+    public static void divide( DMatrixFixed2x2_F64 a , double alpha , DMatrixFixed2x2_F64 b ) {
         b.a11 = a.a11/alpha; b.a12 = a.a12/alpha;
         b.a21 = a.a21/alpha; b.a22 = a.a22/alpha;
     }
@@ -875,7 +875,7 @@ public class FixedOps2_F64 {
      * @param a The vector whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( FixedMatrix2_F64 a , double alpha , FixedMatrix2_F64 b ) {
+    public static void divide( DMatrixFixed2_F64 a , double alpha , DMatrixFixed2_F64 b ) {
         b.a1 = a.a1/alpha;
         b.a2 = a.a2/alpha;
     }
@@ -889,7 +889,7 @@ public class FixedOps2_F64 {
      *
      * @param a A matrix. Modified.
      */
-    public static void changeSign( FixedMatrix2x2_F64 a )
+    public static void changeSign( DMatrixFixed2x2_F64 a )
     {
         a.a11 = -a.a11; a.a12 = -a.a12;
         a.a21 = -a.a21; a.a22 = -a.a22;
@@ -904,7 +904,7 @@ public class FixedOps2_F64 {
      *
      * @param a A vector. Modified.
      */
-    public static void changeSign( FixedMatrix2_F64 a )
+    public static void changeSign( DMatrixFixed2_F64 a )
     {
         a.a1 = -a.a1;
         a.a2 = -a.a2;
@@ -920,7 +920,7 @@ public class FixedOps2_F64 {
      * @param a A matrix whose elements are about to be set. Modified.
      * @param v The value each element will have.
      */
-    public static void fill( FixedMatrix2x2_F64 a , double v  ) {
+    public static void fill( DMatrixFixed2x2_F64 a , double v  ) {
         a.a11 = v; a.a12 = v;
         a.a21 = v; a.a22 = v;
     }
@@ -935,7 +935,7 @@ public class FixedOps2_F64 {
      * @param a A vector whose elements are about to be set. Modified.
      * @param v The value each element will have.
      */
-    public static void fill( FixedMatrix2_F64 a , double v  ) {
+    public static void fill( DMatrixFixed2_F64 a , double v  ) {
         a.a1 = v;
         a.a2 = v;
     }
@@ -947,8 +947,8 @@ public class FixedOps2_F64 {
      * @param out output. Storage for the extracted row. If null then a new vector will be returned.
      * @return The extracted row.
      */
-    public static FixedMatrix2_F64 extractRow( FixedMatrix2x2_F64 a , int row , FixedMatrix2_F64 out ) {
-        if( out == null) out = new FixedMatrix2_F64();
+    public static DMatrixFixed2_F64 extractRow( DMatrixFixed2x2_F64 a , int row , DMatrixFixed2_F64 out ) {
+        if( out == null) out = new DMatrixFixed2_F64();
         switch( row ) {
             case 0:
                 out.a1 = a.a11;
@@ -971,8 +971,8 @@ public class FixedOps2_F64 {
      * @param out output. Storage for the extracted column. If null then a new vector will be returned.
      * @return The extracted column.
      */
-    public static FixedMatrix2_F64 extractColumn( FixedMatrix2x2_F64 a , int column , FixedMatrix2_F64 out ) {
-        if( out == null) out = new FixedMatrix2_F64();
+    public static DMatrixFixed2_F64 extractColumn( DMatrixFixed2x2_F64 a , int column , DMatrixFixed2_F64 out ) {
+        if( out == null) out = new DMatrixFixed2_F64();
         switch( column ) {
             case 0:
                 out.a1 = a.a11;

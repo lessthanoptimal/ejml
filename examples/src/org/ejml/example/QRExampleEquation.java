@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.equation.Equation;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.NormOps_R64;
@@ -36,7 +36,7 @@ import org.ejml.ops.NormOps_R64;
 public class QRExampleEquation {
 
     // where the QR decomposition is stored
-    private RowMatrix_F64 QR;
+    private DMatrixRow_F64 QR;
 
     // used for computing Q
     private double gammas[];
@@ -46,7 +46,7 @@ public class QRExampleEquation {
      *
      * @param A Matrix which is to be decomposed.  Not modified.
      */
-    public void decompose( RowMatrix_F64 A ) {
+    public void decompose( DMatrixRow_F64 A ) {
 
         Equation eq = new Equation();
 
@@ -65,7 +65,7 @@ public class QRExampleEquation {
             eq.process("maxV=max(abs(v))");
 
             // Note that v is lazily created above.  Need direct access to it, which is done below.
-            RowMatrix_F64 v = eq.lookupMatrix("v");
+            DMatrixRow_F64 v = eq.lookupMatrix("v");
 
             double maxV = eq.lookupDouble("maxV");
             if( maxV > 0 && v.getNumElements() > 1 ) {
@@ -96,11 +96,11 @@ public class QRExampleEquation {
     /**
      * Returns the Q matrix.
      */
-    public RowMatrix_F64 getQ() {
+    public DMatrixRow_F64 getQ() {
         Equation eq = new Equation();
 
-        RowMatrix_F64 Q = CommonOps_R64.identity(QR.numRows);
-        RowMatrix_F64 u = new RowMatrix_F64(QR.numRows,1);
+        DMatrixRow_F64 Q = CommonOps_R64.identity(QR.numRows);
+        DMatrixRow_F64 u = new DMatrixRow_F64(QR.numRows,1);
 
         int N = Math.min(QR.numCols,QR.numRows);
 
@@ -120,8 +120,8 @@ public class QRExampleEquation {
     /**
      * Returns the R matrix.
      */
-    public RowMatrix_F64 getR() {
-        RowMatrix_F64 R = new RowMatrix_F64(QR.numRows,QR.numCols);
+    public DMatrixRow_F64 getR() {
+        DMatrixRow_F64 R = new DMatrixRow_F64(QR.numRows,QR.numCols);
         int N = Math.min(QR.numCols,QR.numRows);
 
         for( int i = 0; i < N; i++ ) {

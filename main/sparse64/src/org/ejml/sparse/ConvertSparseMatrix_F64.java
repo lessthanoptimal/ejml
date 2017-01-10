@@ -18,8 +18,8 @@
 
 package org.ejml.sparse;
 
-import org.ejml.data.RealMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.Matrix_64;
 import org.ejml.data.SMatrixCC_64;
 import org.ejml.data.SMatrixTriplet_64;
 
@@ -29,7 +29,7 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class ConvertSparseMatrix_F64 {
-    public static SMatrixTriplet_64 convert(RealMatrix_F64 src , SMatrixTriplet_64 dst ) {
+    public static SMatrixTriplet_64 convert(Matrix_64 src , SMatrixTriplet_64 dst ) {
         if( dst == null )
             dst = new SMatrixTriplet_64(src.getNumRows(), src.getNumCols(), 1);
         else
@@ -46,7 +46,7 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static SMatrixTriplet_64 convert( RowMatrix_F64 src , SMatrixTriplet_64 dst ) {
+    public static SMatrixTriplet_64 convert( DMatrixRow_F64 src , SMatrixTriplet_64 dst ) {
         if( dst == null )
             dst = new SMatrixTriplet_64(src.numRows, src.numCols,src.numRows*src.numCols);
         else
@@ -64,9 +64,9 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static RowMatrix_F64 convert( SMatrixTriplet_64 src , RowMatrix_F64 dst ) {
+    public static DMatrixRow_F64 convert( SMatrixTriplet_64 src , DMatrixRow_F64 dst ) {
         if( dst == null )
-            dst = new RowMatrix_F64(src.numRows, src.numCols);
+            dst = new DMatrixRow_F64(src.numRows, src.numCols);
         else {
             dst.reshape(src.numRows, src.numCols);
             dst.zero();

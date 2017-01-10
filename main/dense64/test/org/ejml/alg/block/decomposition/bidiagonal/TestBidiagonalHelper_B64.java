@@ -35,7 +35,7 @@ public class TestBidiagonalHelper_B64 {
     @Test
     public void bidiagOuterBlocks() {
 //        SimpleMatrix A = SimpleMatrix.random(r*2+r-1,r*2+r-1,-1,1,rand);
-//        BlockMatrix_F64 Ab = BlockMatrixOps.convert(A.getMatrix(),r);
+//        DMatrixBlock_F64 Ab = DMatrixBlockOps.convert(A.getMatrix(),r);
 //
 //        A.print();
 //        BidiagonalDecompositionRow decompTest = new BidiagonalDecompositionRow();

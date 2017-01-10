@@ -22,20 +22,20 @@ import org.ejml.EjmlParameters;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64;
 import org.ejml.alg.dense.decomposition.BaseDecomposition_B64_to_R64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
  * Wrapper around {@link org.ejml.alg.block.decomposition.chol.CholeskyOuterForm_B64} that allows
- * it to process RowMatrix_F64.
+ * it to process DMatrixRow_F64.
  *
  * @author Peter Abeles
  */
 public class CholeskyDecomposition_B64_to_R64
-        extends BaseDecomposition_B64_to_R64 implements CholeskyDecomposition_F64<RowMatrix_F64> {
+        extends BaseDecomposition_B64_to_R64 implements CholeskyDecomposition_F64<DMatrixRow_F64> {
 
     public CholeskyDecomposition_B64_to_R64(boolean lower) {
         super(new CholeskyOuterForm_B64(lower), EjmlParameters.BLOCK_WIDTH);
@@ -47,11 +47,11 @@ public class CholeskyDecomposition_B64_to_R64
     }
 
     @Override
-    public RowMatrix_F64 getT(RowMatrix_F64 T) {
-        BlockMatrix_F64 T_block = ((CholeskyOuterForm_B64)alg).getT(null);
+    public DMatrixRow_F64 getT(DMatrixRow_F64 T) {
+        DMatrixBlock_F64 T_block = ((CholeskyOuterForm_B64)alg).getT(null);
 
         if( T == null ) {
-            T = new RowMatrix_F64(T_block.numRows,T_block.numCols);
+            T = new DMatrixRow_F64(T_block.numRows,T_block.numCols);
         }
 
         MatrixOps_B64.convert(T_block,T);

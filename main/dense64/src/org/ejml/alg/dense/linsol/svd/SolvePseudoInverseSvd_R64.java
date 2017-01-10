@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol.svd;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
@@ -42,13 +42,13 @@ import org.ejml.ops.CommonOps_R64;
  *
  * @author Peter Abeles
  */
-public class SolvePseudoInverseSvd_R64 implements LinearSolver<RowMatrix_F64> {
+public class SolvePseudoInverseSvd_R64 implements LinearSolver<DMatrixRow_F64> {
 
     // Used to compute pseudo inverse
-    private SingularValueDecomposition_F64<RowMatrix_F64> svd;
+    private SingularValueDecomposition_F64<DMatrixRow_F64> svd;
 
     // the results of the pseudo-inverse
-    private RowMatrix_F64 pinv = new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 pinv = new DMatrixRow_F64(1,1);
 
     // relative threshold used to select singular values
     private double threshold = UtilEjml.EPS;
@@ -72,14 +72,14 @@ public class SolvePseudoInverseSvd_R64 implements LinearSolver<RowMatrix_F64> {
     }
 
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         pinv.reshape(A.numCols,A.numRows,false);
 
         if( !svd.decompose(A) )
             return false;
 
-        RowMatrix_F64 U_t = svd.getU(null,true);
-        RowMatrix_F64 V = svd.getV(null,false);
+        DMatrixRow_F64 U_t = svd.getU(null,true);
+        DMatrixRow_F64 V = svd.getV(null,false);
         double []S = svd.getSingularValues();
         int N = Math.min(A.numRows,A.numCols);
 
@@ -123,12 +123,12 @@ public class SolvePseudoInverseSvd_R64 implements LinearSolver<RowMatrix_F64> {
     }
 
     @Override
-    public void solve(RowMatrix_F64 b, RowMatrix_F64 x) {
+    public void solve(DMatrixRow_F64 b, DMatrixRow_F64 x) {
         CommonOps_R64.mult(pinv,b,x);
     }
 
     @Override
-    public void invert(RowMatrix_F64 A_inv) {
+    public void invert(DMatrixRow_F64 A_inv) {
         A_inv.set(pinv);
     }
 
@@ -143,7 +143,7 @@ public class SolvePseudoInverseSvd_R64 implements LinearSolver<RowMatrix_F64> {
     }
 
     @Override
-    public SingularValueDecomposition<RowMatrix_F64> getDecomposition() {
+    public SingularValueDecomposition<DMatrixRow_F64> getDecomposition() {
         return svd;
     }
 
@@ -155,7 +155,7 @@ public class SolvePseudoInverseSvd_R64 implements LinearSolver<RowMatrix_F64> {
         this.threshold = threshold;
     }
 
-    public SingularValueDecomposition<RowMatrix_F64> getDecomposer() {
+    public SingularValueDecomposition<DMatrixRow_F64> getDecomposer() {
         return svd;
     }
 }

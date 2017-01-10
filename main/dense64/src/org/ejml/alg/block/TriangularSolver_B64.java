@@ -18,15 +18,15 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 
 import static org.ejml.alg.block.InnerMultiplication_B64.blockMultMinus;
 
 
 /**
  * <p>
- * Contains triangular solvers for {@link BlockMatrix_F64} block aligned sub-matrices.
+ * Contains triangular solvers for {@link DMatrixBlock_F64} block aligned sub-matrices.
  * </p>
  *
  * <p>

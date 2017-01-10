@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.MatrixFeatures_CR64;
@@ -38,14 +38,14 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
 
     Random rand = new Random(0xff);
 
-    public abstract LUDecomposition<RowMatrix_C64> create(int numRows , int numCols );
+    public abstract LUDecomposition<DMatrixRow_C64> create(int numRows , int numCols );
 
     @Test
     public void testModifiedInput() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(4, 4, -1, 1, rand);
-        RowMatrix_C64 A_orig = A.copy();
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(4, 4, -1, 1, rand);
+        DMatrixRow_C64 A_orig = A.copy();
 
-        LUDecomposition<RowMatrix_C64> alg = create(4,4);
+        LUDecomposition<DMatrixRow_C64> alg = create(4,4);
         assertTrue(alg.decompose(A));
 
         boolean modified = !MatrixFeatures_CR64.isEquals(A,A_orig);
@@ -56,20 +56,20 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
     @Test
     public void testAllReal()
     {
-        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
 
-        LUDecomposition<RowMatrix_C64> alg = create(3,3);
+        LUDecomposition<DMatrixRow_C64> alg = create(3,3);
         assertTrue(alg.decompose(A.copy()));
 
         assertFalse(alg.isSingular());
 
-        RowMatrix_C64 L = alg.getLower(null);
-        RowMatrix_C64 U = alg.getUpper(null);
-        RowMatrix_C64 P = alg.getPivot(null);
+        DMatrixRow_C64 L = alg.getLower(null);
+        DMatrixRow_C64 U = alg.getUpper(null);
+        DMatrixRow_C64 P = alg.getPivot(null);
 
-        RowMatrix_C64 P_tran = new RowMatrix_C64(P.numCols,P.numRows);
-        RowMatrix_C64 PL = new RowMatrix_C64(P.numRows,P.numCols);
-        RowMatrix_C64 A_found = new RowMatrix_C64(A.numRows,A.numCols);
+        DMatrixRow_C64 P_tran = new DMatrixRow_C64(P.numCols,P.numRows);
+        DMatrixRow_C64 PL = new DMatrixRow_C64(P.numRows,P.numCols);
+        DMatrixRow_C64 A_found = new DMatrixRow_C64(A.numRows,A.numCols);
 
         CommonOps_CR64.transpose(P,P_tran);
         CommonOps_CR64.mult(P_tran, L, PL);
@@ -82,7 +82,7 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
     public void testDecomposition_square_real()
     {
         for( int i = 2; i <= 20; i++ ) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,i,-1,1,rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,i,-1,1,rand);
 
             for (int j = 1; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -96,7 +96,7 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
     public void testDecomposition_square_imaginary()
     {
         for( int i = 2; i <= 20; i++ ) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,i,-1,1,rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,i,-1,1,rand);
 
             for (int j = 0; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -110,7 +110,7 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
     public void testDecomposition_square()
     {
         for( int i = 2; i <= 20; i++ ) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,i,-1,1,rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,i,-1,1,rand);
 
             checkDecomposition(A);
         }
@@ -118,31 +118,31 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
 
     @Test
     public void testFat() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(2,3,-1,1,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(2,3,-1,1,rand);
 
         checkDecomposition(A);
     }
 
     @Test
     public void testTall() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(3,2,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(3,2,rand);
 
         checkDecomposition(A);
     }
 
     @Test
     public void zeroMatrix() {
-        RowMatrix_C64 A = new RowMatrix_C64(3,3);
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3);
 
-        LUDecomposition<RowMatrix_C64> alg = create(3,3);
+        LUDecomposition<DMatrixRow_C64> alg = create(3,3);
 
         assertTrue(alg.decompose(A));
         assertTrue(alg.isSingular());
 
-        RowMatrix_C64 L = alg.getLower(null);
-        RowMatrix_C64 U = alg.getUpper(null);
+        DMatrixRow_C64 L = alg.getLower(null);
+        DMatrixRow_C64 U = alg.getUpper(null);
 
-        RowMatrix_C64 A_found = new RowMatrix_C64(3,3);
+        DMatrixRow_C64 A_found = new DMatrixRow_C64(3,3);
         CommonOps_CR64.mult(L, U, A_found);
 
         assertFalse(MatrixFeatures_CR64.hasUncountable(A_found));
@@ -151,18 +151,18 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
 
     @Test
     public void testSingular(){
-        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 1,1, 2,2, 3,3, 2,2, 4,4, 6,6, 4,4, 4,4, 0,0);
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3, true, 1,1, 2,2, 3,3, 2,2, 4,4, 6,6, 4,4, 4,4, 0,0);
 
-        LUDecomposition<RowMatrix_C64> alg = create(3,3);
+        LUDecomposition<DMatrixRow_C64> alg = create(3,3);
         assertTrue(alg.decompose(A));
         assertTrue(alg.isSingular());
     }
 
     @Test
     public void testNearlySingular(){
-        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 1,1, 2,2, 3,3, 2,2, 4,4, 6.1,6.1, 4,4, 4,4, 0,0);
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3, true, 1,1, 2,2, 3,3, 2,2, 4,4, 6.1,6.1, 4,4, 4,4, 0,0);
 
-        LUDecomposition<RowMatrix_C64> alg = create(3,3);
+        LUDecomposition<DMatrixRow_C64> alg = create(3,3);
         assertTrue(alg.decompose(A));
         assertFalse(alg.isSingular());
     }
@@ -173,39 +173,39 @@ public abstract class GeneralLuDecompositionChecks_CR64 {
      */
     @Test
     public void getLower_getUpper() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(3,3,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(3,3,rand);
 
-        LUDecomposition<RowMatrix_C64> alg = create(3,3);
+        LUDecomposition<DMatrixRow_C64> alg = create(3,3);
 
         alg.decompose(A);
 
-        RowMatrix_C64 L_provided = RandomMatrices_CR64.createRandom(3,3,rand);
-        RowMatrix_C64 U_provided = RandomMatrices_CR64.createRandom(3,3,rand);
+        DMatrixRow_C64 L_provided = RandomMatrices_CR64.createRandom(3,3,rand);
+        DMatrixRow_C64 U_provided = RandomMatrices_CR64.createRandom(3,3,rand);
 
         assertTrue(L_provided == alg.getLower(L_provided));
         assertTrue(U_provided == alg.getUpper(U_provided));
 
-        RowMatrix_C64 L_ret = alg.getLower(null);
-        RowMatrix_C64 U_ret = alg.getUpper(null);
+        DMatrixRow_C64 L_ret = alg.getLower(null);
+        DMatrixRow_C64 U_ret = alg.getUpper(null);
 
         assertTrue(MatrixFeatures_CR64.isEquals(L_provided,L_ret));
         assertTrue(MatrixFeatures_CR64.isEquals(U_provided,U_ret));
     }
 
-    private void checkDecomposition(RowMatrix_C64 a) {
-        LUDecomposition<RowMatrix_C64> alg = create(a.numRows, a.numCols);
+    private void checkDecomposition(DMatrixRow_C64 a) {
+        LUDecomposition<DMatrixRow_C64> alg = create(a.numRows, a.numCols);
         assertTrue(alg.decompose(a.copy()));
 
         if( a.numRows <= a.numCols)
             assertFalse(alg.isSingular());
 
-        RowMatrix_C64 L = alg.getLower(null);
-        RowMatrix_C64 U = alg.getUpper(null);
-        RowMatrix_C64 P = alg.getPivot(null);
+        DMatrixRow_C64 L = alg.getLower(null);
+        DMatrixRow_C64 U = alg.getUpper(null);
+        DMatrixRow_C64 P = alg.getPivot(null);
 
-        RowMatrix_C64 P_tran  = new RowMatrix_C64(P.numCols,P.numRows);
-        RowMatrix_C64 PL      = new RowMatrix_C64(P_tran.numRows,L.numCols);
-        RowMatrix_C64 A_found = new RowMatrix_C64(a.numRows, a.numCols);
+        DMatrixRow_C64 P_tran  = new DMatrixRow_C64(P.numCols,P.numRows);
+        DMatrixRow_C64 PL      = new DMatrixRow_C64(P_tran.numRows,L.numCols);
+        DMatrixRow_C64 A_found = new DMatrixRow_C64(a.numRows, a.numCols);
 
         CommonOps_CR64.transpose(P, P_tran);
         CommonOps_CR64.mult(P_tran, L, PL);

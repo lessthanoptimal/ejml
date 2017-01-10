@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixDimensionException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -85,19 +85,19 @@ public class CheckMatrixVectorMultShape_R64 {
      * See if the function can be called with matrices of the correct size
      */
     private void checkPositive(Method func, boolean transA) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        RowMatrix_F64 A,B;
-        RowMatrix_F64 C = new RowMatrix_F64(2,1);
+        DMatrixRow_F64 A,B;
+        DMatrixRow_F64 C = new DMatrixRow_F64(2,1);
 
         if( transA ) {
-            A = new RowMatrix_F64(4,2);
+            A = new DMatrixRow_F64(4,2);
         } else {
-            A = new RowMatrix_F64(2,4);
+            A = new DMatrixRow_F64(2,4);
         }
 
         // should work for B as a column or row vector
-        B = new RowMatrix_F64(4,1);
+        B = new DMatrixRow_F64(4,1);
         func.invoke(null,A,B,C);
-        B = new RowMatrix_F64(1,4);
+        B = new DMatrixRow_F64(1,4);
         func.invoke(null,A,B,C);
     }
 
@@ -105,35 +105,35 @@ public class CheckMatrixVectorMultShape_R64 {
      * See if the function throws an exception when it is given bad inputs
      */
     private void checkNegative(Method func, boolean transA) throws NoSuchMethodException, IllegalAccessException {
-        RowMatrix_F64 A,B;
-        RowMatrix_F64 C = new RowMatrix_F64(2,1);
+        DMatrixRow_F64 A,B;
+        DMatrixRow_F64 C = new DMatrixRow_F64(2,1);
 
         if( transA ) {
-            A = new RowMatrix_F64(2,4);
+            A = new DMatrixRow_F64(2,4);
         } else {
-            A = new RowMatrix_F64(4,2);
+            A = new DMatrixRow_F64(4,2);
         }
 
         // see if it catched B not being a vector
-        B = new RowMatrix_F64(4,2);
+        B = new DMatrixRow_F64(4,2);
         invokeExpectFail(func, A, B, C);
         // B is not compatible with A
-        B = new RowMatrix_F64(3,1);
+        B = new DMatrixRow_F64(3,1);
         invokeExpectFail(func, A, B, C);
         // C is a row vector
-        B = new RowMatrix_F64(4,1);
-        C = new RowMatrix_F64(1,2);
+        B = new DMatrixRow_F64(4,1);
+        C = new DMatrixRow_F64(1,2);
         invokeExpectFail(func, A, B, C);
         // C is not a vector
-        C = new RowMatrix_F64(2,2);
+        C = new DMatrixRow_F64(2,2);
         invokeExpectFail(func, A, B, C);
         // C is not compatible with A
-        C = new RowMatrix_F64(3,1);
+        C = new DMatrixRow_F64(3,1);
         invokeExpectFail(func, A, B, C);
 
     }
 
-    private void invokeExpectFail(Method func, RowMatrix_F64 a, RowMatrix_F64 b, RowMatrix_F64 c) throws IllegalAccessException {
+    private void invokeExpectFail(Method func, DMatrixRow_F64 a, DMatrixRow_F64 b, DMatrixRow_F64 c) throws IllegalAccessException {
         try {
             func.invoke(null, b, a, c);
         } catch( InvocationTargetException e ) {

@@ -19,7 +19,7 @@
 package org.ejml.sparse;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixTriplet_64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class TestConvertSparseMatrix_F64 {
 
     @Test
     public void DMatrixRow_SMatrixTriplet() {
-        RowMatrix_F64 a = new RowMatrix_F64(3,5);
+        DMatrixRow_F64 a = new DMatrixRow_F64(3,5);
 
         a.set(0,0, 50);
         a.set(2,3, -0.3);
@@ -43,7 +43,7 @@ public class TestConvertSparseMatrix_F64 {
         DMatrixRow_SMatrixTriplet(a, new SMatrixTriplet_64(1,1,2));
     }
 
-    public void DMatrixRow_SMatrixTriplet(RowMatrix_F64 a , SMatrixTriplet_64 b ) {
+    public void DMatrixRow_SMatrixTriplet(DMatrixRow_F64 a , SMatrixTriplet_64 b ) {
         b = ConvertSparseMatrix_F64.convert(a,b);
 
         for (int row = 0; row < a.numRows; row++) {
@@ -59,10 +59,10 @@ public class TestConvertSparseMatrix_F64 {
         }
 
         // now try it the other direction
-        RowMatrix_F64 c = ConvertSparseMatrix_F64.convert(b,null);
+        DMatrixRow_F64 c = ConvertSparseMatrix_F64.convert(b,null);
         assertTrue(MatrixFeatures_R64.isEquals(a,c, UtilEjml.TEST_F64));
 
-        c = ConvertSparseMatrix_F64.convert(b,new RowMatrix_F64(1,1));
+        c = ConvertSparseMatrix_F64.convert(b,new DMatrixRow_F64(1,1));
         assertTrue(MatrixFeatures_R64.isEquals(a,c, UtilEjml.TEST_F64));
     }
 

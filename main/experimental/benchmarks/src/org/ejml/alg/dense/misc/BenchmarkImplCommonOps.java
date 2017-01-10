@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RealMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.Matrix_64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -30,7 +30,7 @@ import java.util.Random;
  */
 public class BenchmarkImplCommonOps {
 
-    public static long extract_RowMatrix_F64(RowMatrix_F64 src , RowMatrix_F64 dst ,
+    public static long extract_DMatrixRow_F64(DMatrixRow_F64 src , DMatrixRow_F64 dst ,
                                               int numTrials) {
 
         long prev = System.currentTimeMillis();
@@ -43,7 +43,7 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Matrix64F(RealMatrix_F64 src , RealMatrix_F64 dst , int numTrials) {
+    public static long extract_Matrix64F(Matrix_64 src , Matrix_64 dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -55,7 +55,7 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Common(RowMatrix_F64 src , RowMatrix_F64 dst , int numTrials) {
+    public static long extract_Common(DMatrixRow_F64 src , DMatrixRow_F64 dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -70,13 +70,13 @@ public class BenchmarkImplCommonOps {
     public static void benchmark( int N , int trials ) {
         Random rand = new Random(234);
 
-        RowMatrix_F64 src = new RowMatrix_F64(N,N);
-        RowMatrix_F64 dst = new RowMatrix_F64(N,N);
+        DMatrixRow_F64 src = new DMatrixRow_F64(N,N);
+        DMatrixRow_F64 dst = new DMatrixRow_F64(N,N);
 
         RandomMatrices_R64.addRandom(src,0,100,rand);
 
         System.out.println("N = "+N);
-        System.out.println("extract RowMatrix_F64 = "+extract_RowMatrix_F64(src,dst,trials));
+        System.out.println("extract DMatrixRow_F64 = "+extract_DMatrixRow_F64(src,dst,trials));
         System.out.println("extract Matrix64F      = "+extract_Matrix64F(src,dst,trials));
         System.out.println("extract Common         = "+extract_Common(src, dst, trials));
     }

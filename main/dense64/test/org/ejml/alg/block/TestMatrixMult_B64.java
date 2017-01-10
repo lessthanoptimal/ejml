@@ -19,9 +19,9 @@
 package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -106,8 +106,8 @@ public class TestMatrixMult_B64 {
         if( B.col0 % BLOCK_LENGTH != 0 || B.row0 % BLOCK_LENGTH != 0)
             throw new IllegalArgumentException("Submatrix B is not block aligned");
 
-        BlockMatrix_F64 origA = MatrixOps_B64.createRandom(numRows,numCols,-1,1, rand, BLOCK_LENGTH);
-        BlockMatrix_F64 origB = MatrixOps_B64.createRandom(numCols,numRows,-1,1, rand, BLOCK_LENGTH);
+        DMatrixBlock_F64 origA = MatrixOps_B64.createRandom(numRows,numCols,-1,1, rand, BLOCK_LENGTH);
+        DMatrixBlock_F64 origB = MatrixOps_B64.createRandom(numCols,numRows,-1,1, rand, BLOCK_LENGTH);
 
         A.original = origA;
         B.original = origB;
@@ -116,10 +116,10 @@ public class TestMatrixMult_B64 {
 
         // offset it to make the test harder
         // randomize to see if its set or adding
-        BlockMatrix_F64 subC = MatrixOps_B64.createRandom(BLOCK_LENGTH +h, BLOCK_LENGTH +w, -1,1,rand, BLOCK_LENGTH);
+        DMatrixBlock_F64 subC = MatrixOps_B64.createRandom(BLOCK_LENGTH +h, BLOCK_LENGTH +w, -1,1,rand, BLOCK_LENGTH);
         D1Submatrix_F64 C = new D1Submatrix_F64(subC, BLOCK_LENGTH, subC.numRows, BLOCK_LENGTH, subC.numCols);
 
-        RowMatrix_F64 rmC = multByExtract(operationType,A,B,C);
+        DMatrixRow_F64 rmC = multByExtract(operationType,A,B,C);
 
         if( transA ) {
             origA = MatrixOps_B64.transpose(origA,null);
@@ -174,7 +174,7 @@ public class TestMatrixMult_B64 {
         return new D1Submatrix_F64(null,row0, row1, col0, col1);
     }
 
-    private static RowMatrix_F64 multByExtract(int operationType ,
+    private static DMatrixRow_F64 multByExtract(int operationType ,
                                                D1Submatrix_F64 subA , D1Submatrix_F64 subB ,
                                                D1Submatrix_F64 subC )
     {

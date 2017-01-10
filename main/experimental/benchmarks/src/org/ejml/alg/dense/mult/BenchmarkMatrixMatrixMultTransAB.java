@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -41,8 +41,8 @@ public class BenchmarkMatrixMatrixMultTransAB {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                            RowMatrix_F64 matResult , int numTrials) {
+    public static long mult(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                            DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -53,8 +53,8 @@ public class BenchmarkMatrixMatrixMultTransAB {
         return curr-prev;
     }
 
-    public static long multSmall(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                                 RowMatrix_F64 matResult , int numTrials) {
+    public static long multSmall(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                                 DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -65,8 +65,8 @@ public class BenchmarkMatrixMatrixMultTransAB {
         return curr-prev;
     }
 
-    public static long multAux(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                               RowMatrix_F64 matResult , int numTrials) {
+    public static long multAux(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                               DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -80,9 +80,9 @@ public class BenchmarkMatrixMatrixMultTransAB {
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
     {
-        RowMatrix_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
-        RowMatrix_F64 matB = RandomMatrices_R64.createRandom(numCols,numK,rand);
-        RowMatrix_F64 matResult = RandomMatrices_R64.createRandom(numRows,numK,rand);
+        DMatrixRow_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+        DMatrixRow_F64 matB = RandomMatrices_R64.createRandom(numCols,numK,rand);
+        DMatrixRow_F64 matResult = RandomMatrices_R64.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d\n",
                 mult(matA,matB,matResult,numTrials),

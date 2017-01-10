@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.chol;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -48,20 +48,20 @@ public abstract class BaseCholeskySolveTests_R64 {
         testQuality_scale();
     }
 
-    public abstract LinearSolver<RowMatrix_F64> createSolver();
+    public abstract LinearSolver<DMatrixRow_F64> createSolver();
 
-    public LinearSolver<RowMatrix_F64> createSafeSolver() {
-        LinearSolver<RowMatrix_F64> solver = createSolver();
-        return new LinearSolverSafe<RowMatrix_F64>(solver);
+    public LinearSolver<DMatrixRow_F64> createSafeSolver() {
+        LinearSolver<DMatrixRow_F64> solver = createSolver();
+        return new LinearSolverSafe<DMatrixRow_F64>(solver);
     }
 
     @Test
     public void setA_dimensionCheck() {
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver();
 
         try {
-            RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,5,rand);
             assertTrue(solver.setA(A));
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -70,28 +70,28 @@ public abstract class BaseCholeskySolveTests_R64 {
     @Test
     public void solve_dimensionCheck() {
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver();
 
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(4, rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(4, rand);
         assertTrue(solver.setA(A));
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,3,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(4,2,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,3,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(5,2,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(4,2,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(5,2,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(5,2,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(5,2,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(5,2,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(5,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -100,13 +100,13 @@ public abstract class BaseCholeskySolveTests_R64 {
     @Test
     public void testSolve() {
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver();
 
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 17, 97, 320);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
-        RowMatrix_F64 A_orig = A.copy();
-        RowMatrix_F64 B_orig = b.copy();
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, 17, 97, 320);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 A_orig = A.copy();
+        DMatrixRow_F64 B_orig = b.copy();
 
         assertTrue(solver.setA(A));
         solver.solve(b,x);
@@ -115,7 +115,7 @@ public abstract class BaseCholeskySolveTests_R64 {
         EjmlUnitTests.assertEquals(A,A_orig,UtilEjml.TEST_F64_SQ);
         EjmlUnitTests.assertEquals(b,B_orig,UtilEjml.TEST_F64_SQ);
 
-        RowMatrix_F64 x_expected = new RowMatrix_F64(3,1, true, 1, 2, 3);
+        DMatrixRow_F64 x_expected = new DMatrixRow_F64(3,1, true, 1, 2, 3);
 
         EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64_SQ);
     }
@@ -123,15 +123,15 @@ public abstract class BaseCholeskySolveTests_R64 {
     @Test
     public void testInvert() {
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver();
 
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        RowMatrix_F64 found = new RowMatrix_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        DMatrixRow_F64 found = new DMatrixRow_F64(A.numRows,A.numCols);
 
         assertTrue(solver.setA(A));
         solver.invert(found);
 
-        RowMatrix_F64 A_inv = new RowMatrix_F64(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
+        DMatrixRow_F64 A_inv = new DMatrixRow_F64(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
 
         EjmlUnitTests.assertEquals(A_inv,found,UtilEjml.TEST_F64_SQ);
     }
@@ -139,10 +139,10 @@ public abstract class BaseCholeskySolveTests_R64 {
     @Test
     public void testQuality() {
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver();
 
-        RowMatrix_F64 A = CommonOps_R64.diag(3,2,1);
-        RowMatrix_F64 B = CommonOps_R64.diag(3,2,0.001);
+        DMatrixRow_F64 A = CommonOps_R64.diag(3,2,1);
+        DMatrixRow_F64 B = CommonOps_R64.diag(3,2,0.001);
 
         assertTrue(solver.setA(A));
         double qualityA = (double)solver.quality();
@@ -156,10 +156,10 @@ public abstract class BaseCholeskySolveTests_R64 {
     @Test
     public void testQuality_scale() {
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver();
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver();
 
-        RowMatrix_F64 A = CommonOps_R64.diag(3,2,1);
-        RowMatrix_F64 B = A.copy();
+        DMatrixRow_F64 A = CommonOps_R64.diag(3,2,1);
+        DMatrixRow_F64 B = A.copy();
         CommonOps_R64.scale(0.001,B);
 
         assertTrue(solver.setA(A));

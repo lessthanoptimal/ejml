@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.alg.dense.decomposition.UtilDecompositons_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -34,7 +34,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
-public class QRDecompositionHouseholderColumn_R64 implements QRDecomposition<RowMatrix_F64> {
+public class QRDecompositionHouseholderColumn_R64 implements QRDecomposition<DMatrixRow_F64> {
 
     /**
      * Where the Q and R matrices are stored.  R is stored in the
@@ -96,7 +96,7 @@ public class QRDecompositionHouseholderColumn_R64 implements QRDecomposition<Row
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean compact ) {
+    public DMatrixRow_F64 getQ(DMatrixRow_F64 Q , boolean compact ) {
         if( compact ) {
             Q = UtilDecompositons_R64.checkIdentity(Q,numRows,minLength);
         } else {
@@ -123,7 +123,7 @@ public class QRDecompositionHouseholderColumn_R64 implements QRDecomposition<Row
      * @param compact If true then a compact matrix is expected.
      */
     @Override
-    public RowMatrix_F64 getR(RowMatrix_F64 R, boolean compact) {
+    public DMatrixRow_F64 getR(DMatrixRow_F64 R, boolean compact) {
         if( compact ) {
             R = UtilDecompositons_R64.checkZerosLT(R,minLength,numCols);
         } else {
@@ -155,7 +155,7 @@ public class QRDecompositionHouseholderColumn_R64 implements QRDecomposition<Row
      * </p>
      */
     @Override
-    public boolean decompose( RowMatrix_F64 A ) {
+    public boolean decompose( DMatrixRow_F64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         convertToColumnMajor(A);
@@ -181,7 +181,7 @@ public class QRDecompositionHouseholderColumn_R64 implements QRDecomposition<Row
      *
      * @param A original matrix that is to be decomposed.
      */
-    protected void convertToColumnMajor(RowMatrix_F64 A) {
+    protected void convertToColumnMajor(DMatrixRow_F64 A) {
         for( int x = 0; x < numCols; x++ ) {
             double colQ[] = dataQR[x];
             for( int y = 0; y < numRows; y++ ) {

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionBase_R64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -36,7 +36,7 @@ public abstract class LinearSolverLuBase_R64 extends LinearSolverAbstract_R64 {
     }
 
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         _setA(A);
 
         return decomp.decompose(A);
@@ -48,9 +48,9 @@ public abstract class LinearSolverLuBase_R64 extends LinearSolverAbstract_R64 {
     }
 
     @Override
-    public void invert(RowMatrix_F64 A_inv) {
+    public void invert(DMatrixRow_F64 A_inv) {
         double []vv = decomp._getVV();
-        RowMatrix_F64 LU = decomp.getLU();
+        DMatrixRow_F64 LU = decomp.getLU();
 
         if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
             throw new IllegalArgumentException("Unexpected matrix dimension");
@@ -77,7 +77,7 @@ public abstract class LinearSolverLuBase_R64 extends LinearSolverAbstract_R64 {
      * @param b A matrix. Not modified.
      * @param x A matrix. Modified.
      */
-    public void improveSol(RowMatrix_F64 b , RowMatrix_F64 x )
+    public void improveSol(DMatrixRow_F64 b , DMatrixRow_F64 x )
     {
         if( b.numCols != x.numCols ) {
             throw new IllegalArgumentException("bad shapes");

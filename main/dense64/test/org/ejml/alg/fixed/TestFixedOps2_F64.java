@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix2_F64;
-import org.ejml.data.FixedMatrix2x2_F64;
+import org.ejml.data.DMatrixFixed2_F64;
+import org.ejml.data.DMatrixFixed2x2_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,8 +36,8 @@ public class TestFixedOps2_F64 extends CompareFixedToCommonOps_F64 {
 
     @Test
     public void diag() {
-        FixedMatrix2x2_F64 m = new FixedMatrix2x2_F64(1,2,3,4);
-        FixedMatrix2_F64 found = new FixedMatrix2_F64();
+        DMatrixFixed2x2_F64 m = new DMatrixFixed2x2_F64(1,2,3,4);
+        DMatrixFixed2_F64 found = new DMatrixFixed2_F64();
 
         FixedOps2_F64.diag(m,found);
 

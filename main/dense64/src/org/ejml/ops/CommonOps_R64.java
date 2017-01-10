@@ -67,7 +67,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void mult(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult_R64.mult(a, b, c);
@@ -91,7 +91,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void mult(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -113,7 +113,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multTransA(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numCols == 1 ) {
             // todo check a.numCols == 1 and do inner product?
@@ -144,7 +144,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multTransA(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -167,7 +167,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multTransB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numRows == 1 ) {
             MatrixVectorMult_R64.mult(a, b, c);
@@ -189,7 +189,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multTransB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_R64.multTransB(alpha,a,b,c);
@@ -207,7 +207,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multTransAB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numRows == 1) {
             // there are significantly faster algorithms when dealing with vectors
@@ -236,7 +236,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multTransAB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -280,7 +280,7 @@ public class CommonOps_R64 {
      * @param a The matrix being multiplied. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multInner(RowD1Matrix_F64 a , RowD1Matrix_F64 c )
+    public static void multInner(D1MatrixRow_64 a , D1MatrixRow_64 c )
     {
         if( a.numCols != c.numCols || a.numCols != c.numRows )
             throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the columns in 'a'");
@@ -307,7 +307,7 @@ public class CommonOps_R64 {
      * @param a The matrix being multiplied. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multOuter(RowD1Matrix_F64 a , RowD1Matrix_F64 c )
+    public static void multOuter(D1MatrixRow_64 a , D1MatrixRow_64 c )
     {
         if( a.numRows != c.numCols || a.numRows != c.numRows )
             throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the rows in 'a'");
@@ -327,7 +327,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAdd(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult_R64.multAdd(a, b, c);
@@ -353,7 +353,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAdd(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -375,7 +375,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAddTransA(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numCols == 1 ) {
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -406,7 +406,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAddTransA(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -429,7 +429,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAddTransB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         MatrixMatrixMult_R64.multAddTransB(a,b,c);
     }
@@ -447,7 +447,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAddTransB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_R64.multAddTransB(alpha,a,b,c);
@@ -465,7 +465,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAddTransAB(D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         if( b.numRows == 1 ) {
             // there are significantly faster algorithms when dealing with vectors
@@ -494,7 +494,7 @@ public class CommonOps_R64 {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(double alpha , RowD1Matrix_F64 a , RowD1Matrix_F64 b , RowD1Matrix_F64 c )
+    public static void multAddTransAB(double alpha , D1MatrixRow_64 a , D1MatrixRow_64 b , D1MatrixRow_64 c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -532,12 +532,12 @@ public class CommonOps_R64 {
      *
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean solve(RowMatrix_F64 a , RowMatrix_F64 b , RowMatrix_F64 x )
+    public static boolean solve(DMatrixRow_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 x )
     {
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.general(a.numRows,a.numCols);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.general(a.numRows,a.numCols);
 
         // make sure the inputs 'a' and 'b' are not modified
-        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
+        solver = new LinearSolverSafe<DMatrixRow_F64>(solver);
 
         if( !solver.setA(a) )
             return false;
@@ -552,16 +552,16 @@ public class CommonOps_R64 {
      * <p>
      * For square matrices the transpose is truly in-place and does not require
      * additional memory.  For non-square matrices, internally a temporary matrix is declared and
-     * {@link #transpose(RowMatrix_F64, RowMatrix_F64)} is invoked.
+     * {@link #transpose(DMatrixRow_F64, DMatrixRow_F64)} is invoked.
      * </p>
      *
      * @param mat The matrix that is to be transposed. Modified.
      */
-    public static void transpose( RowMatrix_F64 mat ) {
+    public static void transpose( DMatrixRow_F64 mat ) {
         if( mat.numCols == mat.numRows ){
             TransposeAlgs_R64.square(mat);
         } else {
-            RowMatrix_F64 b = new RowMatrix_F64(mat.numCols,mat.numRows);
+            DMatrixRow_F64 b = new DMatrixRow_F64(mat.numCols,mat.numRows);
             transpose(mat,b);
             mat.set(b);
         }
@@ -579,10 +579,10 @@ public class CommonOps_R64 {
      * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static RowMatrix_F64 transpose(RowMatrix_F64 A, RowMatrix_F64 A_tran)
+    public static DMatrixRow_F64 transpose(DMatrixRow_F64 A, DMatrixRow_F64 A_tran)
     {
         if( A_tran == null ) {
-            A_tran = new RowMatrix_F64(A.numCols,A.numRows);
+            A_tran = new DMatrixRow_F64(A.numCols,A.numRows);
         } else {
             if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
                 throw new IllegalArgumentException("Incompatible matrix dimensions");
@@ -609,7 +609,7 @@ public class CommonOps_R64 {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( RowD1Matrix_F64 a ) {
+    public static double trace( D1MatrixRow_64 a ) {
         int N = Math.min(a.numRows, a.numCols);
         double sum = 0;
         int index = 0;
@@ -629,7 +629,7 @@ public class CommonOps_R64 {
      * @param mat The matrix whose determinant is to be computed.  Not modified.
      * @return The determinant.
      */
-    public static double det( RowMatrix_F64 mat )
+    public static double det( DMatrixRow_F64 mat )
     {
 
         int numCol = mat.getNumCols();
@@ -676,7 +676,7 @@ public class CommonOps_R64 {
      * @param mat The matrix that is to be inverted.  Results are stored here.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( RowMatrix_F64 mat) {
+    public static boolean invert( DMatrixRow_F64 mat) {
         if( mat.numCols <= UnrolledInverseFromMinor_R64.MAX ) {
             if( mat.numCols != mat.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
@@ -723,7 +723,7 @@ public class CommonOps_R64 {
      * @param result Where the inverse matrix is stored.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert(RowMatrix_F64 mat, RowMatrix_F64 result ) {
+    public static boolean invert(DMatrixRow_F64 mat, DMatrixRow_F64 result ) {
         if( mat.numCols <= UnrolledInverseFromMinor_R64.MAX ) {
             if( mat.numCols != mat.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
@@ -763,9 +763,9 @@ public class CommonOps_R64 {
      * @param invA Where the computed pseudo inverse is stored. n by m.  Modified.
      * @return
      */
-    public static void pinv(RowMatrix_F64 A , RowMatrix_F64 invA )
+    public static void pinv(DMatrixRow_F64 A , DMatrixRow_F64 invA )
     {
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.pseudoInverse(true);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.pseudoInverse(true);
         if( solver.modifiesA())
             A = A.copy();
 
@@ -782,23 +782,23 @@ public class CommonOps_R64 {
      * @param v
      * @return An array of vectors.
      */
-    public static RowMatrix_F64[] columnsToVector(RowMatrix_F64 A, RowMatrix_F64[] v)
+    public static DMatrixRow_F64[] columnsToVector(DMatrixRow_F64 A, DMatrixRow_F64[] v)
     {
-        RowMatrix_F64[]ret;
+        DMatrixRow_F64[]ret;
         if( v == null || v.length < A.numCols ) {
-            ret = new RowMatrix_F64[ A.numCols ];
+            ret = new DMatrixRow_F64[ A.numCols ];
         } else {
             ret = v;
         }
 
         for( int i = 0; i < ret.length; i++ ) {
             if( ret[i] == null ) {
-                ret[i] = new RowMatrix_F64(A.numRows,1);
+                ret[i] = new DMatrixRow_F64(A.numRows,1);
             } else {
                 ret[i].reshape(A.numRows,1, false);
             }
 
-            RowMatrix_F64 u = ret[i];
+            DMatrixRow_F64 u = ret[i];
 
             for( int j = 0; j < A.numRows; j++ ) {
                 u.set(j,0, A.get(j,i));
@@ -815,11 +815,11 @@ public class CommonOps_R64 {
      * @param v
      * @return An array of vectors.
      */
-    public static RowMatrix_F64[] rowsToVector(RowMatrix_F64 A, RowMatrix_F64[] v)
+    public static DMatrixRow_F64[] rowsToVector(DMatrixRow_F64 A, DMatrixRow_F64[] v)
     {
-        RowMatrix_F64[]ret;
+        DMatrixRow_F64[]ret;
         if( v == null || v.length < A.numRows ) {
-            ret = new RowMatrix_F64[ A.numRows ];
+            ret = new DMatrixRow_F64[ A.numRows ];
         } else {
             ret = v;
         }
@@ -827,12 +827,12 @@ public class CommonOps_R64 {
 
         for( int i = 0; i < ret.length; i++ ) {
             if( ret[i] == null ) {
-                ret[i] = new RowMatrix_F64(A.numCols,1);
+                ret[i] = new DMatrixRow_F64(A.numCols,1);
             } else {
                 ret[i].reshape(A.numCols,1, false);
             }
 
-            RowMatrix_F64 u = ret[i];
+            DMatrixRow_F64 u = ret[i];
 
             for( int j = 0; j < A.numCols; j++ ) {
                 u.set(j,0, A.get(i,j));
@@ -850,7 +850,7 @@ public class CommonOps_R64 {
      *
      * @param mat A square matrix.
      */
-    public static void setIdentity( RowD1Matrix_F64 mat )
+    public static void setIdentity( D1MatrixRow_64 mat )
     {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
@@ -873,9 +873,9 @@ public class CommonOps_R64 {
      * @param width The width and height of the identity matrix.
      * @return A new instance of an identity matrix.
      */
-    public static RowMatrix_F64 identity(int width )
+    public static DMatrixRow_F64 identity(int width )
     {
-        RowMatrix_F64 ret = new RowMatrix_F64(width,width);
+        DMatrixRow_F64 ret = new DMatrixRow_F64(width,width);
 
         for( int i = 0; i < width; i++ ) {
             ret.set(i,i,1.0);
@@ -891,9 +891,9 @@ public class CommonOps_R64 {
      * @param numCols NUmber of columns in the matrix.
      * @return A matrix with diagonal elements equal to one.
      */
-    public static RowMatrix_F64 identity(int numRows , int numCols )
+    public static DMatrixRow_F64 identity(int numRows , int numCols )
     {
-        RowMatrix_F64 ret = new RowMatrix_F64(numRows,numCols);
+        DMatrixRow_F64 ret = new DMatrixRow_F64(numRows,numCols);
 
         int small = numRows < numCols ? numRows : numCols;
 
@@ -918,7 +918,7 @@ public class CommonOps_R64 {
      * @param diagEl Contains the values of the diagonal elements of the resulting matrix.
      * @return A new matrix.
      */
-    public static RowMatrix_F64 diag(double ...diagEl )
+    public static DMatrixRow_F64 diag(double ...diagEl )
     {
         return diag(null,diagEl.length,diagEl);
     }
@@ -926,10 +926,10 @@ public class CommonOps_R64 {
     /**
      * @see #diag(double...)
      */
-    public static RowMatrix_F64 diag(RowMatrix_F64 ret , int width , double ...diagEl )
+    public static DMatrixRow_F64 diag(DMatrixRow_F64 ret , int width , double ...diagEl )
     {
         if( ret == null ) {
-            ret = new RowMatrix_F64(width,width);
+            ret = new DMatrixRow_F64(width,width);
         } else {
             if( ret.numRows != width || ret.numCols != width )
                 throw new IllegalArgumentException("Unexpected matrix size");
@@ -960,9 +960,9 @@ public class CommonOps_R64 {
      * @param diagEl Contains the values of the diagonal elements of the resulting matrix.
      * @return A new matrix.
      */
-    public static RowMatrix_F64 diagR(int numRows , int numCols , double ...diagEl )
+    public static DMatrixRow_F64 diagR(int numRows , int numCols , double ...diagEl )
     {
-        RowMatrix_F64 ret = new RowMatrix_F64(numRows,numCols);
+        DMatrixRow_F64 ret = new DMatrixRow_F64(numRows,numCols);
 
         int o = Math.min(numRows,numCols);
 
@@ -986,7 +986,7 @@ public class CommonOps_R64 {
      * @param C Where the results of the operation are stored. Modified.
      * @return The results of the operation.
      */
-    public static void kron(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 C )
+    public static void kron(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 C )
     {
         int numColsC = A.numCols*B.numCols;
         int numRowsC = A.numRows*B.numRows;
@@ -1032,10 +1032,10 @@ public class CommonOps_R64 {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract( RealMatrix_F64 src,
+    public static void extract( Matrix_64 src,
                                 int srcY0, int srcY1,
                                 int srcX0, int srcX1,
-                                RealMatrix_F64 dst ,
+                                Matrix_64 dst ,
                                 int dstY0, int dstX0 )
     {
         if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
@@ -1052,8 +1052,8 @@ public class CommonOps_R64 {
             throw new IllegalArgumentException("dst is too small in columns");
 
         // interestingly, the performance is only different for small matrices but identical for larger ones
-        if( src instanceof RowMatrix_F64 && dst instanceof RowMatrix_F64) {
-            ImplCommonOps_R64.extract((RowMatrix_F64)src,srcY0,srcX0,(RowMatrix_F64)dst,dstY0,dstX0, h, w);
+        if( src instanceof DMatrixRow_F64 && dst instanceof DMatrixRow_F64) {
+            ImplCommonOps_R64.extract((DMatrixRow_F64)src,srcY0,srcX0,(DMatrixRow_F64)dst,dstY0,dstX0, h, w);
         } else {
             ImplCommonOps_F64.extract(src,srcY0,srcX0,dst,dstY0,dstX0, h, w);
         }
@@ -1077,7 +1077,7 @@ public class CommonOps_R64 {
      * @param srcY1 Stop row+1.
      * @return Extracted submatrix.
      */
-    public static RowMatrix_F64 extract(RowMatrix_F64 src,
+    public static DMatrixRow_F64 extract(DMatrixRow_F64 src,
                                         int srcY0, int srcY1,
                                         int srcX0, int srcX1 )
     {
@@ -1089,7 +1089,7 @@ public class CommonOps_R64 {
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
 
-        RowMatrix_F64 dst = new RowMatrix_F64(h,w);
+        DMatrixRow_F64 dst = new DMatrixRow_F64(h,w);
 
         ImplCommonOps_R64.extract(src,srcY0,srcX0,dst,0,0, h, w);
 
@@ -1107,9 +1107,9 @@ public class CommonOps_R64 {
      * @param colsSize maximum element in column array
      * @param dst output matrix.  Must be correct shape.
      */
-    public static void extract( RowMatrix_F64 src,
+    public static void extract( DMatrixRow_F64 src,
                                 int rows[] , int rowsSize ,
-                                int cols[] , int colsSize , RowMatrix_F64 dst ) {
+                                int cols[] , int colsSize , DMatrixRow_F64 dst ) {
         if( rowsSize != dst.numRows || colsSize != dst.numCols )
             throw new IllegalArgumentException("Unexpected number of rows and/or columns in dst matrix");
 
@@ -1130,7 +1130,7 @@ public class CommonOps_R64 {
      * @param length maximum element in row array
      * @param dst output matrix.  Must be a vector of the correct length.
      */
-    public static void extract(RowMatrix_F64 src, int indexes[] , int length , RowMatrix_F64 dst ) {
+    public static void extract(DMatrixRow_F64 src, int indexes[] , int length , DMatrixRow_F64 dst ) {
         if( !MatrixFeatures_R64.isVector(dst))
             throw new IllegalArgumentException("Dst must be a vector");
         if( length != dst.getNumElements())
@@ -1156,8 +1156,8 @@ public class CommonOps_R64 {
      * @param cols array of column indexes
      * @param colsSize maximum element in column array
      */
-    public static void insert( RowMatrix_F64 src ,
-                               RowMatrix_F64 dst ,
+    public static void insert( DMatrixRow_F64 src ,
+                               DMatrixRow_F64 dst ,
                                 int rows[] , int rowsSize ,
                                 int cols[] , int colsSize ) {
         if( rowsSize != src.numRows || colsSize != src.numCols )
@@ -1181,7 +1181,7 @@ public class CommonOps_R64 {
      * @param src Matrix whose diagonal elements are being extracted. Not modified.
      * @param dst A vector the results will be written into. Modified.
      */
-    public static void extractDiag(RowMatrix_F64 src, RowMatrix_F64 dst )
+    public static void extractDiag(DMatrixRow_F64 src, DMatrixRow_F64 dst )
     {
         int N = Math.min(src.numRows, src.numCols);
 
@@ -1203,9 +1203,9 @@ public class CommonOps_R64 {
      * @param out output. Storage for the extracted row. If null then a new vector will be returned.
      * @return The extracted row.
      */
-    public static RowMatrix_F64 extractRow(RowMatrix_F64 a , int row , RowMatrix_F64 out ) {
+    public static DMatrixRow_F64 extractRow(DMatrixRow_F64 a , int row , DMatrixRow_F64 out ) {
         if( out == null)
-            out = new RowMatrix_F64(1,a.numCols);
+            out = new DMatrixRow_F64(1,a.numCols);
         else if( !MatrixFeatures_R64.isVector(out) || out.getNumElements() != a.numCols )
             throw new IllegalArgumentException("Output must be a vector of length "+a.numCols);
 
@@ -1221,9 +1221,9 @@ public class CommonOps_R64 {
      * @param out output. Storage for the extracted column. If null then a new vector will be returned.
      * @return The extracted column.
      */
-    public static RowMatrix_F64 extractColumn(RowMatrix_F64 a , int column , RowMatrix_F64 out ) {
+    public static DMatrixRow_F64 extractColumn(DMatrixRow_F64 a , int column , DMatrixRow_F64 out ) {
         if( out == null)
-            out = new RowMatrix_F64(a.numRows,1);
+            out = new DMatrixRow_F64(a.numRows,1);
         else if( !MatrixFeatures_R64.isVector(out) || out.getNumElements() != a.numRows )
             throw new IllegalArgumentException("Output must be a vector of length "+a.numRows);
 
@@ -1243,7 +1243,7 @@ public class CommonOps_R64 {
      * @param destY0 Start row for the copy into dest.
      * @param destX0 Start column for the copy into dest.
      */
-    public static void insert(RealMatrix_F64 src, RealMatrix_F64 dest, int destY0, int destX0) {
+    public static void insert(Matrix_64 src, Matrix_64 dest, int destY0, int destX0) {
         extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dest, destY0, destX0);
     }
 
@@ -1595,9 +1595,9 @@ public class CommonOps_R64 {
      * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
      * @return Vector containing the sum of each row in the input.
      */
-    public static RowMatrix_F64 sumRows(RowMatrix_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 sumRows(DMatrixRow_F64 input , DMatrixRow_F64 output ) {
         if( output == null ) {
-            output = new RowMatrix_F64(input.numRows,1);
+            output = new DMatrixRow_F64(input.numRows,1);
         } else if( output.getNumElements() != input.numRows )
             throw new IllegalArgumentException("Output does not have enough elements to store the results");
 
@@ -1625,9 +1625,9 @@ public class CommonOps_R64 {
      * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
      * @return Vector containing the sum of each row in the input.
      */
-    public static RowMatrix_F64 sumCols(RowMatrix_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 sumCols(DMatrixRow_F64 input , DMatrixRow_F64 output ) {
         if( output == null ) {
-            output = new RowMatrix_F64(1,input.numCols);
+            output = new DMatrixRow_F64(1,input.numCols);
         } else if( output.getNumElements() != input.numCols )
             throw new IllegalArgumentException("Output does not have enough elements to store the results");
 
@@ -2155,16 +2155,16 @@ public class CommonOps_R64 {
      * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
      * @return Reduced echelon form of A
      */
-    public static RowMatrix_F64 rref(RowMatrix_F64 A , int numUnknowns, RowMatrix_F64 reduced ) {
+    public static DMatrixRow_F64 rref(DMatrixRow_F64 A , int numUnknowns, DMatrixRow_F64 reduced ) {
         if( reduced == null ) {
-            reduced = new RowMatrix_F64(A.numRows,A.numCols);
+            reduced = new DMatrixRow_F64(A.numRows,A.numCols);
         } else if( reduced.numCols != A.numCols || reduced.numRows != A.numRows )
             throw new IllegalArgumentException("'re' must have the same shape as the original input matrix");
 
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);
 
-        ReducedRowEchelonForm_F64<RowMatrix_F64> alg = new RrefGaussJordanRowPivot_R64();
+        ReducedRowEchelonForm_F64<DMatrixRow_F64> alg = new RrefGaussJordanRowPivot_R64();
         alg.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*Math.max(A.numRows,A.numCols));
 
         reduced.set(A);
@@ -2181,10 +2181,10 @@ public class CommonOps_R64 {
      * @param output (Optional) Storage for results.  Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
-    public static RowMatrix_B elementLessThan(RowMatrix_F64 A , double value , RowMatrix_B output )
+    public static DMatrixRow_B elementLessThan(DMatrixRow_F64 A , double value , DMatrixRow_B output )
     {
         if( output == null ) {
-            output = new RowMatrix_B(A.numRows,A.numCols);
+            output = new DMatrixRow_B(A.numRows,A.numCols);
         }
 
         output.reshape(A.numRows, A.numCols);
@@ -2206,10 +2206,10 @@ public class CommonOps_R64 {
      * @param output (Optional) Storage for results.  Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
-    public static RowMatrix_B elementLessThanOrEqual(RowMatrix_F64 A , double value , RowMatrix_B output )
+    public static DMatrixRow_B elementLessThanOrEqual(DMatrixRow_F64 A , double value , DMatrixRow_B output )
     {
         if( output == null ) {
-            output = new RowMatrix_B(A.numRows,A.numCols);
+            output = new DMatrixRow_B(A.numRows,A.numCols);
         }
 
         output.reshape(A.numRows, A.numCols);
@@ -2231,10 +2231,10 @@ public class CommonOps_R64 {
      * @param output (Optional) Storage for results.  Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
-    public static RowMatrix_B elementMoreThan(RowMatrix_F64 A , double value , RowMatrix_B output )
+    public static DMatrixRow_B elementMoreThan(DMatrixRow_F64 A , double value , DMatrixRow_B output )
     {
         if( output == null ) {
-            output = new RowMatrix_B(A.numRows,A.numCols);
+            output = new DMatrixRow_B(A.numRows,A.numCols);
         }
 
         output.reshape(A.numRows, A.numCols);
@@ -2256,10 +2256,10 @@ public class CommonOps_R64 {
      * @param output (Optional) Storage for results.  Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
-    public static RowMatrix_B elementMoreThanOrEqual(RowMatrix_F64 A , double value , RowMatrix_B output )
+    public static DMatrixRow_B elementMoreThanOrEqual(DMatrixRow_F64 A , double value , DMatrixRow_B output )
     {
         if( output == null ) {
-            output = new RowMatrix_B(A.numRows,A.numCols);
+            output = new DMatrixRow_B(A.numRows,A.numCols);
         }
 
         output.reshape(A.numRows, A.numCols);
@@ -2281,10 +2281,10 @@ public class CommonOps_R64 {
      * @param output (Optional) Storage for results.  Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
-    public static RowMatrix_B elementLessThan(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_B output )
+    public static DMatrixRow_B elementLessThan(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_B output )
     {
         if( output == null ) {
-            output = new RowMatrix_B(A.numRows,A.numCols);
+            output = new DMatrixRow_B(A.numRows,A.numCols);
         }
 
         output.reshape(A.numRows, A.numCols);
@@ -2306,10 +2306,10 @@ public class CommonOps_R64 {
      * @param output (Optional) Storage for results.  Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
-    public static RowMatrix_B elementLessThanOrEqual(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_B output )
+    public static DMatrixRow_B elementLessThanOrEqual(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_B output )
     {
         if( output == null ) {
-            output = new RowMatrix_B(A.numRows,A.numCols);
+            output = new DMatrixRow_B(A.numRows,A.numCols);
         }
 
         output.reshape(A.numRows, A.numCols);
@@ -2331,11 +2331,11 @@ public class CommonOps_R64 {
      * @param output Storage for output row vector. Can be null.  Will be reshaped.
      * @return Row vector with marked elements
      */
-    public static RowMatrix_F64 elements(RowMatrix_F64 A , RowMatrix_B marked , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 elements(DMatrixRow_F64 A , DMatrixRow_B marked , DMatrixRow_F64 output ) {
         if( A.numRows != marked.numRows || A.numCols != marked.numCols )
             throw new IllegalArgumentException("Input matrices must have the same shape");
         if( output == null )
-            output = new RowMatrix_F64(1,1);
+            output = new DMatrixRow_F64(1,1);
 
         output.reshape(countTrue(marked),1);
 
@@ -2356,7 +2356,7 @@ public class CommonOps_R64 {
      * @param A input matrix
      * @return number of true elements
      */
-    public static int countTrue(RowMatrix_B A) {
+    public static int countTrue(DMatrixRow_B A) {
         int total = 0;
 
         int N = A.getNumElements();

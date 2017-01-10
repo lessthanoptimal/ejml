@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionRow_R64;
 import org.ejml.alg.dense.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
 
@@ -38,7 +38,7 @@ import org.ejml.ops.CommonOps_R64;
  * @author Peter Abeles
  */
 public class SvdImplicitQrDecompose_UltimateS
-        implements SingularValueDecomposition_F64<RowMatrix_F64> {
+        implements SingularValueDecomposition_F64<DMatrixRow_F64> {
 
     private int numRows;
     private int numCols;
@@ -50,8 +50,8 @@ public class SvdImplicitQrDecompose_UltimateS
     private double diag[];
     private double off[];
 
-    private RowMatrix_F64 Ut;
-    private RowMatrix_F64 Vt;
+    private DMatrixRow_F64 Ut;
+    private DMatrixRow_F64 Vt;
 
     private double singularValues[];
     private int numSingular;
@@ -72,7 +72,7 @@ public class SvdImplicitQrDecompose_UltimateS
     private double offOld[];
 
     // Either a copy of the input matrix or a copy of it transposed
-    private RowMatrix_F64 A_mod = new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 A_mod = new DMatrixRow_F64(1,1);
 
     public SvdImplicitQrDecompose_UltimateS( boolean compact , boolean computeU , boolean computeV  ) {
         this.compact = compact;
@@ -96,38 +96,38 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public RowMatrix_F64 getU(RowMatrix_F64 U , boolean transpose) {
+    public DMatrixRow_F64 getU(DMatrixRow_F64 U , boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
         if( transpose )
             return Ut;
 
-        U = new RowMatrix_F64(Ut.numCols,Ut.numRows);
+        U = new DMatrixRow_F64(Ut.numCols,Ut.numRows);
         CommonOps_R64.transpose(Ut,U);
 
         return U;
     }
 
     @Override
-    public RowMatrix_F64 getV(RowMatrix_F64 V , boolean transpose ) {
+    public DMatrixRow_F64 getV(DMatrixRow_F64 V , boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
         if( transpose )
             return Vt;
 
-        V = new RowMatrix_F64(Vt.numCols,Vt.numRows);
+        V = new DMatrixRow_F64(Vt.numCols,Vt.numRows);
         CommonOps_R64.transpose(Vt,V);
 
         return V;
     }
 
     @Override
-    public RowMatrix_F64 getW(RowMatrix_F64 W ) {
+    public DMatrixRow_F64 getW(DMatrixRow_F64 W ) {
         int m = compact ? numSingular : numRows;
         int n = compact ? numSingular : numCols;
 
         if( W == null )
-            W = new RowMatrix_F64(m,n);
+            W = new DMatrixRow_F64(m,n);
         else {
             W.reshape(m,n, false);
             W.zero();
@@ -141,7 +141,7 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public boolean decompose(RowMatrix_F64 orig) {
+    public boolean decompose(DMatrixRow_F64 orig) {
         boolean transposed = orig.numCols > orig.numRows;
 
         init(orig, transposed);
@@ -166,7 +166,7 @@ public class SvdImplicitQrDecompose_UltimateS
         return false;
     }
 
-    private void init(RowMatrix_F64 orig, boolean transposed) {
+    private void init(DMatrixRow_F64 orig, boolean transposed) {
         if( transposed ) {
             computeU = prefComputeV;
             computeV = prefComputeU;
@@ -225,14 +225,14 @@ public class SvdImplicitQrDecompose_UltimateS
         System.out.println("  bidiag UV "+(pointB-pointA)+" qr UV "+(pointC-pointB));
 
         if( transposed ) {
-            RowMatrix_F64 temp = Vt;
+            DMatrixRow_F64 temp = Vt;
             Vt = Ut;
             Ut = temp;
         }
         return false;
     }
 
-    private boolean computeSingularValues(RowMatrix_F64 orig, boolean transposed) {
+    private boolean computeSingularValues(DMatrixRow_F64 orig, boolean transposed) {
         long pointA = System.currentTimeMillis();
 
         // change the matrix to bidiagonal form
@@ -262,7 +262,7 @@ public class SvdImplicitQrDecompose_UltimateS
         return ret;
     }
 
-    private boolean bidiagonalization(RowMatrix_F64 orig, boolean transposed) {
+    private boolean bidiagonalization(DMatrixRow_F64 orig, boolean transposed) {
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
             CommonOps_R64.transpose(orig,A_mod);

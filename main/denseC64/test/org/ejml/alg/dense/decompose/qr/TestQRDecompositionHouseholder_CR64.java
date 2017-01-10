@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decompose.qr;
 
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
 
@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 public class TestQRDecompositionHouseholder_CR64 extends GenericQrCheck_CR64 {
 
     @Override
-    protected QRDecomposition<RowMatrix_C64> createQRDecomposition() {
+    protected QRDecomposition<DMatrixRow_C64> createQRDecomposition() {
         return new QRDecompositionHouseholder_CR64();
     }
 }

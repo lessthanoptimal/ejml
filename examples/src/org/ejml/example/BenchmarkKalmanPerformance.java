@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 import java.util.ArrayList;
@@ -40,16 +40,16 @@ public class BenchmarkKalmanPerformance {
     List<KalmanFilter> filters = new ArrayList<KalmanFilter>();
 
     public void run() {
-        RowMatrix_F64 priorX = new RowMatrix_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        RowMatrix_F64 priorP = CommonOps_R64.identity(9);
+        DMatrixRow_F64 priorX = new DMatrixRow_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
+        DMatrixRow_F64 priorP = CommonOps_R64.identity(9);
 
-        RowMatrix_F64 trueX = new RowMatrix_F64(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
+        DMatrixRow_F64 trueX = new DMatrixRow_F64(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
 
-        List<RowMatrix_F64> meas = createSimulatedMeas(trueX);
+        List<DMatrixRow_F64> meas = createSimulatedMeas(trueX);
 
-        RowMatrix_F64 F = createF(T);
-        RowMatrix_F64 Q = createQ(T,0.1);
-        RowMatrix_F64 H = createH();
+        DMatrixRow_F64 F = createF(T);
+        DMatrixRow_F64 Q = createQ(T,0.1);
+        DMatrixRow_F64 H = createH();
 
         for(KalmanFilter f : filters ) {
 
@@ -71,18 +71,18 @@ public class BenchmarkKalmanPerformance {
         }
     }
 
-    private List<RowMatrix_F64> createSimulatedMeas(RowMatrix_F64 x ) {
+    private List<DMatrixRow_F64> createSimulatedMeas(DMatrixRow_F64 x ) {
 
-        List<RowMatrix_F64> ret = new ArrayList<RowMatrix_F64>();
+        List<DMatrixRow_F64> ret = new ArrayList<DMatrixRow_F64>();
 
-        RowMatrix_F64 F = createF(T);
-        RowMatrix_F64 H = createH();
+        DMatrixRow_F64 F = createF(T);
+        DMatrixRow_F64 H = createH();
 
 //        UtilEjml.print(F);
 //        UtilEjml.print(H);
 
-        RowMatrix_F64 x_next = new RowMatrix_F64(x);
-        RowMatrix_F64 z = new RowMatrix_F64(H.numRows,1);
+        DMatrixRow_F64 x_next = new DMatrixRow_F64(x);
+        DMatrixRow_F64 z = new DMatrixRow_F64(H.numRows,1);
 
         for( int i = 0; i < MAX_STEPS; i++ ) {
             CommonOps_R64.mult(F,x,x_next);
@@ -95,18 +95,18 @@ public class BenchmarkKalmanPerformance {
     }
 
     private void processMeas( KalmanFilter f ,
-                              List<RowMatrix_F64> meas )
+                              List<DMatrixRow_F64> meas )
     {
-        RowMatrix_F64 R = CommonOps_R64.identity(measDOF);
+        DMatrixRow_F64 R = CommonOps_R64.identity(measDOF);
 
-        for(RowMatrix_F64 z : meas ) {
+        for(DMatrixRow_F64 z : meas ) {
             f.predict();
             f.update(z,R);
         }
     }
 
 
-    public static RowMatrix_F64 createF(double T ) {
+    public static DMatrixRow_F64 createF(double T ) {
         double []a = new double[]{
                 1, 0 , 0 , T , 0 , 0 , 0.5*T*T , 0 , 0 ,
                 0, 1 , 0 , 0 , T , 0 , 0 , 0.5*T*T , 0 ,
@@ -118,11 +118,11 @@ public class BenchmarkKalmanPerformance {
                 0, 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 ,
                 0, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 };
 
-        return new RowMatrix_F64(9,9, true, a);
+        return new DMatrixRow_F64(9,9, true, a);
     }
 
-    public static RowMatrix_F64 createQ(double T , double var ) {
-        RowMatrix_F64 Q = new RowMatrix_F64(9,9);
+    public static DMatrixRow_F64 createQ(double T , double var ) {
+        DMatrixRow_F64 Q = new DMatrixRow_F64(9,9);
 
         double a00 = (1.0/4.0)*T*T*T*T*var;
         double a01 = (1.0/2.0)*T*T*T*var;
@@ -149,8 +149,8 @@ public class BenchmarkKalmanPerformance {
         return Q;
     }
 
-    public static RowMatrix_F64 createH() {
-        RowMatrix_F64 H = new RowMatrix_F64(measDOF,9);
+    public static DMatrixRow_F64 createH() {
+        DMatrixRow_F64 H = new DMatrixRow_F64(measDOF,9);
         for( int i = 0; i < measDOF; i++ ) {
             H.set(i,i,1.0);
         }

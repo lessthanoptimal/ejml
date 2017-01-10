@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
@@ -34,8 +34,8 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult1(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 tmp,
-                             RowMatrix_F64 expected , int numTrials) {
+    public static long mult1(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 tmp,
+                             DMatrixRow_F64 expected , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -47,8 +47,8 @@ public class BenchmarkMatrixMatrixMultQuad {
         return curr-prev;
     }
 
-    public static long quad1(RowMatrix_F64 A , RowMatrix_F64 B ,
-                             RowMatrix_F64 expected , int numTrials) {
+    public static long quad1(DMatrixRow_F64 A , DMatrixRow_F64 B ,
+                             DMatrixRow_F64 expected , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -61,10 +61,10 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     public static void performTests( int numRows , int numCols ,
                                      int numTrials ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,rand);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(numCols,numCols,rand);
-        RowMatrix_F64 out = RandomMatrices_R64.createRandom(numRows, numRows, rand);
-        RowMatrix_F64 tmp = new RowMatrix_F64(numRows,numCols);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(numCols,numCols,rand);
+        DMatrixRow_F64 out = RandomMatrices_R64.createRandom(numRows, numRows, rand);
+        DMatrixRow_F64 tmp = new DMatrixRow_F64(numRows,numCols);
 
         System.out.printf(numRows+"  "+numCols+"     Mult1: %7d  Quad1 %7d\n",
                 mult1(A,B,tmp,out,numTrials),

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 
@@ -52,10 +52,10 @@ import org.ejml.ops.CommonOps_R64;
 public class QrUpdate_R64 {
 
     // the decomposition that is being adjusted
-    private RowMatrix_F64 Q,R;
+    private DMatrixRow_F64 Q,R;
     // product of planar multiplications
-    private RowMatrix_F64 U_tran; // using transpose of U reduces cache misses
-    private RowMatrix_F64 Qm;
+    private DMatrixRow_F64 U_tran; // using transpose of U reduces cache misses
+    private DMatrixRow_F64 Qm;
 
     // used to temporarially store data
     private double r_row[];
@@ -115,8 +115,8 @@ public class QrUpdate_R64 {
         this.maxRows = maxRows;
         this.maxCols = maxCols;
 
-        U_tran = new RowMatrix_F64(maxRows,maxRows);
-        Qm = new RowMatrix_F64(maxRows,maxRows);
+        U_tran = new DMatrixRow_F64(maxRows,maxRows);
+        Qm = new DMatrixRow_F64(maxRows,maxRows);
 
         r_row = new double[ maxCols ];
     }
@@ -142,7 +142,7 @@ public class QrUpdate_R64 {
      * @param rowIndex Which row index it is to be inserted at.
      * @param resizeR Should the number of rows in R be changed?  The additional rows are all zero.
      */
-    public void addRow(RowMatrix_F64 Q , RowMatrix_F64 R , double []row , int rowIndex , boolean resizeR ) {
+    public void addRow(DMatrixRow_F64 Q , DMatrixRow_F64 R , double []row , int rowIndex , boolean resizeR ) {
         // memory management and check precoditions
         setQR(Q,R,1);
         m_m = m+1;
@@ -184,7 +184,7 @@ public class QrUpdate_R64 {
      * @param rowIndex Which index of the row that is being removed.
      * @param resizeR should the shape of R be adjusted?
      */
-    public void deleteRow(RowMatrix_F64 Q , RowMatrix_F64 R , int rowIndex , boolean resizeR ) {
+    public void deleteRow(DMatrixRow_F64 Q , DMatrixRow_F64 R , int rowIndex , boolean resizeR ) {
         setQR(Q,R,0);
         if( m - 1 < n ) {
             throw new IllegalArgumentException("Removing any row would make the system under determined.");
@@ -212,7 +212,7 @@ public class QrUpdate_R64 {
      * @param Q The Q matrix which is to be modified.  Is modified later and reference saved.
      * @param R The R matrix which is to be modified.  Is modified later and reference saved.
      */
-    private void setQR(RowMatrix_F64 Q , RowMatrix_F64 R , int growRows ) {
+    private void setQR(DMatrixRow_F64 Q , DMatrixRow_F64 R , int growRows ) {
         if( Q.numRows != Q.numCols ) {
             throw new IllegalArgumentException("Q should be square.");
         }
@@ -420,7 +420,7 @@ public class QrUpdate_R64 {
         }
     }
 
-    public RowMatrix_F64 getU_tran() {
+    public DMatrixRow_F64 getU_tran() {
         return U_tran;
     }
 }

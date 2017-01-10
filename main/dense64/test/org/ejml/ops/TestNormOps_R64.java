@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -36,10 +36,10 @@ public class TestNormOps_R64 {
 
     Random rand = new Random(234);
 
-    RowMatrix_F64 zeroMatrix = new RowMatrix_F64(3,4);
-    RowMatrix_F64 unzeroMatrix = new RowMatrix_F64(3,2, true, 0.2, 1, -2, 3, 6, 5);
-    RowMatrix_F64 unzeroVector = new RowMatrix_F64(5,1, true, 0.3, 1, -2, 3, 4);
-    RowMatrix_F64 squareMatrix = new RowMatrix_F64(2,2, true, 0.2, 1, -2, 3);
+    DMatrixRow_F64 zeroMatrix = new DMatrixRow_F64(3,4);
+    DMatrixRow_F64 unzeroMatrix = new DMatrixRow_F64(3,2, true, 0.2, 1, -2, 3, 6, 5);
+    DMatrixRow_F64 unzeroVector = new DMatrixRow_F64(5,1, true, 0.3, 1, -2, 3, 4);
+    DMatrixRow_F64 squareMatrix = new DMatrixRow_F64(2,2, true, 0.2, 1, -2, 3);
 
 
     /**
@@ -57,7 +57,7 @@ public class TestNormOps_R64 {
         assertEquals(3.4325,val,1e-3);
 
         // see if the other pseudo-inverse works
-        RowMatrix_F64 trans = unzeroMatrix.copy();
+        DMatrixRow_F64 trans = unzeroMatrix.copy();
         CommonOps_R64.transpose(trans);
         val = NormOps_R64.conditionP(trans,1);
 
@@ -101,7 +101,7 @@ public class TestNormOps_R64 {
 
     @Test
     public void normalizeF() {
-        RowMatrix_F64 a = unzeroVector.copy();
+        DMatrixRow_F64 a = unzeroVector.copy();
 
         NormOps_R64.normalizeF(a);
 

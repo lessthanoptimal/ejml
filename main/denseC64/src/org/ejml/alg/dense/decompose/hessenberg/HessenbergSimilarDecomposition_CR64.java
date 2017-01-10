@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decompose.hessenberg;
 import org.ejml.alg.dense.decompose.UtilDecompositons_CR64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 import java.util.Arrays;
@@ -49,9 +49,9 @@ import java.util.Arrays;
  */
 // TODO create a column based one similar to what was done for QR decomposition?
 public class HessenbergSimilarDecomposition_CR64
-        implements DecompositionInterface<RowMatrix_C64> {
+        implements DecompositionInterface<DMatrixRow_C64> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
-    private RowMatrix_C64 QH;
+    private DMatrixRow_C64 QH;
     // number of rows and columns of the matrix being decompose
     private int N;
 
@@ -84,7 +84,7 @@ public class HessenbergSimilarDecomposition_CR64
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( RowMatrix_C64 A )
+    public boolean decompose( DMatrixRow_C64 A )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be square.");
@@ -113,7 +113,7 @@ public class HessenbergSimilarDecomposition_CR64
      *
      * @return QH matrix.
      */
-    public RowMatrix_C64 getQH() {
+    public DMatrixRow_C64 getQH() {
         return QH;
     }
 
@@ -123,7 +123,7 @@ public class HessenbergSimilarDecomposition_CR64
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public RowMatrix_C64 getH(RowMatrix_C64 H ) {
+    public DMatrixRow_C64 getH(DMatrixRow_C64 H ) {
         H = UtilDecompositons_CR64.checkZeros(H,N,N);
 
         // copy the first row
@@ -142,7 +142,7 @@ public class HessenbergSimilarDecomposition_CR64
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public RowMatrix_C64 getQ(RowMatrix_C64 Q ) {
+    public DMatrixRow_C64 getQ(DMatrixRow_C64 Q ) {
         Q = UtilDecompositons_CR64.checkIdentity(Q,N,N);
 
         Arrays.fill(u,0,N*2,0);

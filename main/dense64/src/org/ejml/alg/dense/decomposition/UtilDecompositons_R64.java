@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.ops.CommonOps_R64;
  */
 public class UtilDecompositons_R64 {
 
-    public static RowMatrix_F64 checkIdentity(RowMatrix_F64 A, int numRows, int numCols) {
+    public static DMatrixRow_F64 checkIdentity(DMatrixRow_F64 A, int numRows, int numCols) {
         if( A == null ) {
             return CommonOps_R64.identity(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -38,9 +38,9 @@ public class UtilDecompositons_R64 {
         return A;
     }
 
-    public static RowMatrix_F64 checkZeros(RowMatrix_F64 A , int numRows , int numCols) {
+    public static DMatrixRow_F64 checkZeros(DMatrixRow_F64 A , int numRows , int numCols) {
         if( A == null ) {
-            return new RowMatrix_F64(numRows,numCols);
+            return new DMatrixRow_F64(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else
@@ -52,9 +52,9 @@ public class UtilDecompositons_R64 {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the lower triangular portion with zeros.
      */
-    public static RowMatrix_F64 checkZerosLT(RowMatrix_F64 A , int numRows , int numCols) {
+    public static DMatrixRow_F64 checkZerosLT(DMatrixRow_F64 A , int numRows , int numCols) {
         if( A == null ) {
-            return new RowMatrix_F64(numRows,numCols);
+            return new DMatrixRow_F64(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else {
@@ -73,9 +73,9 @@ public class UtilDecompositons_R64 {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the upper triangular portion with zeros.
      */
-    public static RowMatrix_F64 checkZerosUT(RowMatrix_F64 A , int numRows , int numCols) {
+    public static DMatrixRow_F64 checkZerosUT(DMatrixRow_F64 A , int numRows , int numCols) {
         if( A == null ) {
-            return new RowMatrix_F64(numRows,numCols);
+            return new DMatrixRow_F64(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
             throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
         else {

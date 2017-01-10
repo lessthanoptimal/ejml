@@ -18,8 +18,8 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.RowD1Matrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.D1MatrixRow_64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 
@@ -33,7 +33,7 @@ import org.ejml.ops.CommonOps_R64;
  */
 public class InvertUsingSolve_R64 {
 
-    public static void invert(LinearSolver<RowMatrix_F64> solver , RowD1Matrix_F64 A , RowMatrix_F64 A_inv , RowMatrix_F64 storage) {
+    public static void invert(LinearSolver<DMatrixRow_F64> solver , D1MatrixRow_64 A , DMatrixRow_F64 A_inv , DMatrixRow_F64 storage) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
@@ -44,7 +44,7 @@ public class InvertUsingSolve_R64 {
         solver.solve(storage,A_inv);
     }
 
-    public static void invert(LinearSolver<RowMatrix_F64> solver , RowD1Matrix_F64 A , RowMatrix_F64 A_inv ) {
+    public static void invert(LinearSolver<DMatrixRow_F64> solver , D1MatrixRow_64 A , DMatrixRow_F64 A_inv ) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");

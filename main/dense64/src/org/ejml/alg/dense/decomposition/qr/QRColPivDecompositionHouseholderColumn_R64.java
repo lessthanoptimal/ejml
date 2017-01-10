@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
 
@@ -44,7 +44,7 @@ import org.ejml.ops.CommonOps_R64;
  */
 public class QRColPivDecompositionHouseholderColumn_R64
         extends QRDecompositionHouseholderColumn_R64
-        implements QRPDecomposition_F64<RowMatrix_F64>
+        implements QRPDecomposition_F64<DMatrixRow_F64>
 {
     // the ordering of each column, the current column i is the original column pivots[i]
     protected int pivots[];
@@ -95,7 +95,7 @@ public class QRColPivDecompositionHouseholderColumn_R64
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public RowMatrix_F64 getQ(RowMatrix_F64 Q , boolean compact ) {
+    public DMatrixRow_F64 getQ(DMatrixRow_F64 Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
                 Q = CommonOps_R64.identity(numRows,minLength);
@@ -143,7 +143,7 @@ public class QRColPivDecompositionHouseholderColumn_R64
      * </p>
      */
     @Override
-    public boolean decompose( RowMatrix_F64 A ) {
+    public boolean decompose( DMatrixRow_F64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         convertToColumnMajor(A);
@@ -302,9 +302,9 @@ public class QRColPivDecompositionHouseholderColumn_R64
     }
 
     @Override
-    public RowMatrix_F64 getPivotMatrix(RowMatrix_F64 P) {
+    public DMatrixRow_F64 getPivotMatrix(DMatrixRow_F64 P) {
         if( P == null )
-            P = new RowMatrix_F64(numCols,numCols);
+            P = new DMatrixRow_F64(numCols,numCols);
         else if( P.numRows != numCols )
             throw new IllegalArgumentException("Number of rows must be "+numCols);
         else if( P.numCols != numCols )

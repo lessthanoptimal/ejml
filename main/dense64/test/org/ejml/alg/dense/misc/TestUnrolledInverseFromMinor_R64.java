@@ -22,7 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -45,10 +45,10 @@ public class TestUnrolledInverseFromMinor_R64 {
     public void compareToLU() {
 
         for(int N = 2; N <= UnrolledInverseFromMinor_R64.MAX; N++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
 
-            RowMatrix_F64 expected = new RowMatrix_F64(N,N);
-            RowMatrix_F64 found = new RowMatrix_F64(N,N);
+            DMatrixRow_F64 expected = new DMatrixRow_F64(N,N);
+            DMatrixRow_F64 found = new DMatrixRow_F64(N,N);
 
             // first compute inverse by LU
             LUDecompositionAlt_R64 alg = new LUDecompositionAlt_R64();

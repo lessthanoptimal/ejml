@@ -20,7 +20,7 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.ComplexMath_F64;
 import org.ejml.ops.MatrixFeatures_CR64;
@@ -87,14 +87,14 @@ public class TestMatrixMatrixMult_CR64 {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
                 for (int k = 1; k <= 4; k++) {
-                    RowMatrix_C64 A = transA ? RandomMatrices_CR64.createRandom(j,i,-1,1,rand) :
+                    DMatrixRow_C64 A = transA ? RandomMatrices_CR64.createRandom(j,i,-1,1,rand) :
                             RandomMatrices_CR64.createRandom(i,j,-1,1,rand);
-                    RowMatrix_C64 B = transB ? RandomMatrices_CR64.createRandom(k,j,-1,1,rand) :
+                    DMatrixRow_C64 B = transB ? RandomMatrices_CR64.createRandom(k,j,-1,1,rand) :
                             RandomMatrices_CR64.createRandom(j,k,-1,1,rand);
-                    RowMatrix_C64 C = RandomMatrices_CR64.createRandom(i,k,-1,1,rand);
+                    DMatrixRow_C64 C = RandomMatrices_CR64.createRandom(i,k,-1,1,rand);
 
-                    RowMatrix_C64 AB = multiply(A,B,transA,transB);
-                    RowMatrix_C64 expected = new RowMatrix_C64(i,k);
+                    DMatrixRow_C64 AB = multiply(A,B,transA,transB);
+                    DMatrixRow_C64 expected = new DMatrixRow_C64(i,k);
 
                     if( hasAlpha ) {
                         CommonOps_CR64.elementMultiply(AB,realAlpha,imgAlpha,AB);
@@ -116,7 +116,7 @@ public class TestMatrixMatrixMult_CR64 {
 
     public static void invoke(Method func,
                               double realAlpha, double imgAlpha,
-                              RowMatrix_C64 a, RowMatrix_C64 b, RowMatrix_C64 c)
+                              DMatrixRow_C64 a, DMatrixRow_C64 b, DMatrixRow_C64 c)
             throws IllegalAccessException, InvocationTargetException {
         if( func.getParameterTypes().length == 3 ) {
             func.invoke(null, a, b, c);
@@ -132,19 +132,19 @@ public class TestMatrixMatrixMult_CR64 {
         }
     }
 
-    public static RowMatrix_C64 multiply(RowMatrix_C64 A , RowMatrix_C64 B, boolean transA, boolean transB ) {
+    public static DMatrixRow_C64 multiply(DMatrixRow_C64 A , DMatrixRow_C64 B, boolean transA, boolean transB ) {
 
         if( transA ) {
-            RowMatrix_C64 A_h = new RowMatrix_C64(A.numCols, A.numRows);
+            DMatrixRow_C64 A_h = new DMatrixRow_C64(A.numCols, A.numRows);
             CommonOps_CR64.transposeConjugate(A,A_h);
             A = A_h;
         }
         if( transB ) {
-            RowMatrix_C64 B_h = new RowMatrix_C64(B.numCols, B.numRows);
+            DMatrixRow_C64 B_h = new DMatrixRow_C64(B.numCols, B.numRows);
             CommonOps_CR64.transposeConjugate(B,B_h);
             B = B_h;
         }
-        RowMatrix_C64 C = new RowMatrix_C64(A.numRows,B.numCols);
+        DMatrixRow_C64 C = new DMatrixRow_C64(A.numRows,B.numCols);
 
         Complex_F64 a = new Complex_F64();
         Complex_F64 b = new Complex_F64();

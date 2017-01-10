@@ -19,8 +19,8 @@
 package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -50,8 +50,8 @@ public class TestVectorOps_B64 {
             int offset = width > 1 ? 1 : 0;
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Bb = Ab.copy();
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).scale(alpha);
 
@@ -74,8 +74,8 @@ public class TestVectorOps_B64 {
             int offset = width > 1 ? 1 : 0;
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0 , 1.0 ,rand);
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Bb = Ab.copy();
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).divide(alpha);
 
@@ -101,9 +101,9 @@ public class TestVectorOps_B64 {
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width, -1.0, 1.0,rand);
             SimpleMatrix B = SimpleMatrix.random_F64(r,width, -1.0, 1.0,rand);
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
-            BlockMatrix_F64 Cb = Ab.copy();
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
+            DMatrixBlock_F64 Cb = Ab.copy();
 
             SimpleMatrix a = A.extractVector(true,rowA).scale(alpha);
             SimpleMatrix b = B.extractVector(true,rowB).scale(beta);
@@ -134,8 +134,8 @@ public class TestVectorOps_B64 {
             SimpleMatrix B = SimpleMatrix.random_F64(r,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(rowB,rowB+1,offset,SimpleMatrix.END);
 
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
 
             double expected = (double)a.dot(b);
 
@@ -162,8 +162,8 @@ public class TestVectorOps_B64 {
             SimpleMatrix B = SimpleMatrix.random_F64(width,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(offset,SimpleMatrix.END,colB,colB+1);
 
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Bb = MatrixOps_B64.convert(B.matrix_F64(),r);
 
             double expected = (double)a.dot(b);
 
@@ -189,7 +189,7 @@ public class TestVectorOps_B64 {
      */
     public static void checkVector_row(int row, int end, int offset,
                                        SimpleMatrix untouched,
-                                       BlockMatrix_F64 modMatrix, SimpleMatrix modVector) {
+                                       DMatrixBlock_F64 modMatrix, SimpleMatrix modVector) {
         for( int i = 0; i < modMatrix.numRows; i++ ) {
             if( i == row ) {
                 for( int j = 0; j < offset; j++ ) {

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -41,7 +41,7 @@ public class TestQRDecompositionHouseholderTran_R64 extends GenericQrCheck_R64 {
     Random rand = new Random(0xff);
 
     @Override
-    protected QRDecomposition<RowMatrix_F64> createQRDecomposition() {
+    protected QRDecomposition<DMatrixRow_F64> createQRDecomposition() {
         return new QRDecompositionHouseholderTran_R64();
     }
 
@@ -50,16 +50,16 @@ public class TestQRDecompositionHouseholderTran_R64 extends GenericQrCheck_R64 {
      */
     @Test
     public void applyQ() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
 
         QRDecompositionHouseholderTran_R64 alg = new QRDecompositionHouseholderTran_R64();
 
         assertTrue(alg.decompose(A));
 
-        RowMatrix_F64 Q = alg.getQ(null,false);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(5,2,rand);
+        DMatrixRow_F64 Q = alg.getQ(null,false);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(5,2,rand);
 
-        RowMatrix_F64 expected = new RowMatrix_F64(B.numRows,B.numCols);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(B.numRows,B.numCols);
         CommonOps_R64.mult(Q,B,expected);
 
         alg.applyQ(B);
@@ -72,16 +72,16 @@ public class TestQRDecompositionHouseholderTran_R64 extends GenericQrCheck_R64 {
      */
     @Test
     public void applyTranQ() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
 
         QRDecompositionHouseholderTran_R64 alg = new QRDecompositionHouseholderTran_R64();
 
         assertTrue(alg.decompose(A));
 
-        RowMatrix_F64 Q = alg.getQ(null,false);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(5,2,rand);
+        DMatrixRow_F64 Q = alg.getQ(null,false);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(5,2,rand);
 
-        RowMatrix_F64 expected = new RowMatrix_F64(B.numRows,B.numCols);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(B.numRows,B.numCols);
         CommonOps_R64.multTransA(Q,B,expected);
 
         alg.applyTranQ(B);
@@ -104,14 +104,14 @@ public class TestQRDecompositionHouseholderTran_R64 extends GenericQrCheck_R64 {
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width, RowMatrix_F64.class);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRow_F64.class);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)A.getMatrix(),rand);
 
-        qr.householder(w,(RowMatrix_F64)A.getMatrix());
+        qr.householder(w,(DMatrixRow_F64)A.getMatrix());
 
         SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU(w)).extractMatrix(w,width,0,1);
 
-        SimpleMatrix I = SimpleMatrix.identity(width-w, RowMatrix_F64.class);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRow_F64.class);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
 
@@ -144,25 +144,25 @@ public class TestQRDecompositionHouseholderTran_R64 extends GenericQrCheck_R64 {
         double gamma = 0.2;
         double tau = 0.75;
 
-        SimpleMatrix U = new SimpleMatrix(width,1, RowMatrix_F64.class);
-        SimpleMatrix A = new SimpleMatrix(width,width, RowMatrix_F64.class);
+        SimpleMatrix U = new SimpleMatrix(width,1, DMatrixRow_F64.class);
+        SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRow_F64.class);
 
-        RandomMatrices_R64.setRandom((RowMatrix_F64)U.getMatrix(),rand);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)U.getMatrix(),rand);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)A.getMatrix(),rand);
 
-        CommonOps_R64.transpose((RowMatrix_F64)A.getMatrix(),qr.getQR());
+        CommonOps_R64.transpose((DMatrixRow_F64)A.getMatrix(),qr.getQR());
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w, RowMatrix_F64.class);
+        SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRow_F64.class);
 
         SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
         u_sub.set(0,0,1);// assumed to be 1 in the algorithm
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,((RowMatrix_F64)U.getMatrix()).getData(),gamma,tau);
+        qr.updateA(w,((DMatrixRow_F64)U.getMatrix()).getData(),gamma,tau);
 
-        RowMatrix_F64 found = qr.getQR();
+        DMatrixRow_F64 found = qr.getQR();
 
         for( int i = w+1; i < width; i++ ) {
             assertEquals(U.get(i,0),found.get(w,i),UtilEjml.TEST_F64);
@@ -188,7 +188,7 @@ public class TestQRDecompositionHouseholderTran_R64 extends GenericQrCheck_R64 {
             this.numCols = numCols;
         }
 
-        public void householder( int j , RowMatrix_F64 A ) {
+        public void householder( int j , DMatrixRow_F64 A ) {
             CommonOps_R64.transpose(A,QR);
 
             super.householder(j);

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -27,7 +27,7 @@ import org.ejml.data.RowMatrix_F64;
  */
 public interface EigenvalueExtractor_R64 {
 
-    public boolean process( RowMatrix_F64 A );
+    public boolean process( DMatrixRow_F64 A );
 
     public int getNumberOfEigenvalues();
 

@@ -22,9 +22,9 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_R64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -50,13 +50,13 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
         for( int width = 1; width <= r*3; width++ ) {
 //            System.out.println("width = "+width);
             
-            RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
+            DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(width,-1,1,rand);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A,r);
 
             TridiagonalDecompositionHouseholderOrig_R64 decomp = new TridiagonalDecompositionHouseholderOrig_R64();
             decomp.decompose(A);
 
-            RowMatrix_F64 expected = decomp.getQT();
+            DMatrixRow_F64 expected = decomp.getQT();
 
             TridiagonalDecompositionHouseholder_B64 decompB = new TridiagonalDecompositionHouseholder_B64();
             assertTrue(decompB.decompose(Ab));
@@ -75,8 +75,8 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
                 assertEquals(decomp.getGamma(i+1),decompB.gammas[i],UtilEjml.TEST_F64);
             }
 
-            RowMatrix_F64 Q = decomp.getQ(null);
-            BlockMatrix_F64 Qb = decompB.getQ(null,false);
+            DMatrixRow_F64 Q = decomp.getQ(null);
+            DMatrixBlock_F64 Qb = decompB.getQ(null,false);
 
             EjmlUnitTests.assertEquals(Q,Qb,UtilEjml.TEST_F64);
         }
@@ -86,14 +86,14 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
     public void fullTest() {
         for( int width = 1; width <= r*3; width++ ) {
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_R64.createSymmetric(width,-1,1,rand));
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
 
             TridiagonalDecompositionHouseholder_B64 alg = new TridiagonalDecompositionHouseholder_B64();
 
             assertTrue(alg.decompose(Ab));
 
-            BlockMatrix_F64 Qb = alg.getQ(null,false);
-            BlockMatrix_F64 Tb = alg.getT(null);
+            DMatrixBlock_F64 Qb = alg.getQ(null,false);
+            DMatrixBlock_F64 Tb = alg.getT(null);
 
             SimpleMatrix Q = new SimpleMatrix(Qb);
             SimpleMatrix T = new SimpleMatrix(Tb);
@@ -112,9 +112,9 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
             SimpleMatrix U = SimpleMatrix.random_F64(r,width, -1.0, 1.0 ,rand);
             SimpleMatrix V = SimpleMatrix.random_F64(r,width, -1.0, 1.0 ,rand);
 
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
-            BlockMatrix_F64 Ub = MatrixOps_B64.convert(U.matrix_F64(),r);
-            BlockMatrix_F64 Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+            DMatrixBlock_F64 Ub = MatrixOps_B64.convert(U.matrix_F64(),r);
+            DMatrixBlock_F64 Vb = MatrixOps_B64.convert(V.matrix_F64(),r);
 
             SimpleMatrix expected = A.plus(U.transpose().mult(V));
 

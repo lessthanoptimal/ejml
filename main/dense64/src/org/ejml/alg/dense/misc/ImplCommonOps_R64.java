@@ -18,18 +18,18 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 /**
- * Implementations of common ops routines for {@link RowMatrix_F64}.  In general
+ * Implementations of common ops routines for {@link DMatrixRow_F64}.  In general
  * there is no need to directly invoke these functions.
  *
  * @author Peter Abeles
  */
 public class ImplCommonOps_R64 {
-    public static void extract(RowMatrix_F64 src,
+    public static void extract(DMatrixRow_F64 src,
                                int srcY0, int srcX0,
-                               RowMatrix_F64 dst,
+                               DMatrixRow_F64 dst,
                                int dstY0, int dstX0,
                                int numRows, int numCols)
     {

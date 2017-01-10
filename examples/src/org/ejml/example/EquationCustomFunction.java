@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.equation.*;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -78,8 +78,8 @@ public class EquationCustomFunction {
                     ret.op = new Operation("multTransA-mm") {
                         @Override
                         public void process() {
-                            RowMatrix_F64 mA = ((VariableMatrix)varA).matrix;
-                            RowMatrix_F64 mB = ((VariableMatrix)varB).matrix;
+                            DMatrixRow_F64 mA = ((VariableMatrix)varA).matrix;
+                            DMatrixRow_F64 mB = ((VariableMatrix)varB).matrix;
                             output.matrix.reshape(mA.numCols,mB.numCols);
 
                             CommonOps_R64.multTransA(mA,mB,output.matrix);

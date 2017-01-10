@@ -20,7 +20,7 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -69,8 +69,8 @@ public class TestMatrixMatrixMult_R64 {
 
             // make sure it checks that the c matrix is not a or b
             try {
-                RowMatrix_F64 a = new RowMatrix_F64(2,2);
-                RowMatrix_F64 b = new RowMatrix_F64(2,2);
+                DMatrixRow_F64 a = new DMatrixRow_F64(2,2);
+                DMatrixRow_F64 b = new DMatrixRow_F64(2,2);
                 invoke(method,2.0,a,b,a);
                 fail("An exception should have been thrown");
             } catch( InvocationTargetException e ) {
@@ -78,8 +78,8 @@ public class TestMatrixMatrixMult_R64 {
             }
 
             try {
-                RowMatrix_F64 a = new RowMatrix_F64(2,2);
-                RowMatrix_F64 b = new RowMatrix_F64(2,2);
+                DMatrixRow_F64 a = new DMatrixRow_F64(2,2);
+                DMatrixRow_F64 b = new DMatrixRow_F64(2,2);
                 invoke(method,2.0,a,b,b);
                 fail("An exception should have been thrown");
             } catch( InvocationTargetException e ) {
@@ -97,11 +97,11 @@ public class TestMatrixMatrixMult_R64 {
     @Test
     public void checkAllAgainstKnown() throws InvocationTargetException, IllegalAccessException {
         double d[] = new double[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
-        RowMatrix_F64 a_orig = new RowMatrix_F64(2,3, true, d);
-        RowMatrix_F64 b_orig = new RowMatrix_F64(3,4, true, d);
-        RowMatrix_F64 c_orig = RandomMatrices_R64.createRandom(2,4,rand);
+        DMatrixRow_F64 a_orig = new DMatrixRow_F64(2,3, true, d);
+        DMatrixRow_F64 b_orig = new DMatrixRow_F64(3,4, true, d);
+        DMatrixRow_F64 c_orig = RandomMatrices_R64.createRandom(2,4,rand);
 
-        RowMatrix_F64 r_orig = new RowMatrix_F64(2,4, true, 20, 23, 26, 29, 56, 68, 80, 92);
+        DMatrixRow_F64 r_orig = new DMatrixRow_F64(2,4, true, 20, 23, 26, 29, 56, 68, 80, 92);
 
         checkResults(a_orig,b_orig,c_orig,r_orig);
     }
@@ -121,11 +121,11 @@ public class TestMatrixMatrixMult_R64 {
         for( int i = 1; i <= 4; i++ ) {
             for( int j = 1; j <= 4; j++ ) {
                 for( int k = 1; k <= 4; k++ ) {
-                    RowMatrix_F64 a_orig = RandomMatrices_R64.createRandom(i,j, rand);
-                    RowMatrix_F64 b_orig = RandomMatrices_R64.createRandom(j,k, rand);
-                    RowMatrix_F64 c_orig = RandomMatrices_R64.createRandom(i,k, rand);
+                    DMatrixRow_F64 a_orig = RandomMatrices_R64.createRandom(i,j, rand);
+                    DMatrixRow_F64 b_orig = RandomMatrices_R64.createRandom(j,k, rand);
+                    DMatrixRow_F64 c_orig = RandomMatrices_R64.createRandom(i,k, rand);
 
-                    RowMatrix_F64 r_orig = RandomMatrices_R64.createRandom(i,k,rand);
+                    DMatrixRow_F64 r_orig = RandomMatrices_R64.createRandom(i,k,rand);
 
                     MatrixMatrixMult_R64.mult_small(a_orig,b_orig,r_orig);
 
@@ -139,10 +139,10 @@ public class TestMatrixMatrixMult_R64 {
      * Sees if all the matrix multiplications produce the expected results against the provided
      * known solution.
      */
-    private void checkResults( RowMatrix_F64 a_orig ,
-                               RowMatrix_F64 b_orig ,
-                               RowMatrix_F64 c_orig ,
-                               RowMatrix_F64 r_orig )
+    private void checkResults( DMatrixRow_F64 a_orig ,
+                               DMatrixRow_F64 b_orig ,
+                               DMatrixRow_F64 c_orig ,
+                               DMatrixRow_F64 r_orig )
             throws InvocationTargetException, IllegalAccessException
     {
         double alpha = 2.5;
@@ -158,9 +158,9 @@ public class TestMatrixMatrixMult_R64 {
             if( !name.contains("mult") )
                 continue;
 
-            RowMatrix_F64 a = a_orig.copy();
-            RowMatrix_F64 b = b_orig.copy();
-            RowMatrix_F64 c = c_orig.copy();
+            DMatrixRow_F64 a = a_orig.copy();
+            DMatrixRow_F64 b = b_orig.copy();
+            DMatrixRow_F64 c = c_orig.copy();
 
             boolean add = name.contains("multAdd");
             boolean hasAlpha = method.getGenericParameterTypes()[0] == double.class;
@@ -174,7 +174,7 @@ public class TestMatrixMatrixMult_R64 {
                 transpose(b);
             }
 
-            RowMatrix_F64 expected = r_orig.copy();
+            DMatrixRow_F64 expected = r_orig.copy();
             double []expectedData = expected.data;
 
             if( hasAlpha ) {
@@ -219,9 +219,9 @@ public class TestMatrixMatrixMult_R64 {
 
 //            System.out.println(name);
 
-            RowMatrix_F64 a = new RowMatrix_F64(rowsA,colsA);
-            RowMatrix_F64 b = new RowMatrix_F64(rowsB,colsB);
-            RowMatrix_F64 c = RandomMatrices_R64.createRandom(rowsA,colsB,rand);
+            DMatrixRow_F64 a = new DMatrixRow_F64(rowsA,colsA);
+            DMatrixRow_F64 b = new DMatrixRow_F64(rowsB,colsB);
+            DMatrixRow_F64 c = RandomMatrices_R64.createRandom(rowsA,colsB,rand);
 
             boolean add = name.contains("multAdd");
 
@@ -234,7 +234,7 @@ public class TestMatrixMatrixMult_R64 {
                 transpose(b);
             }
 
-            RowMatrix_F64 original = c.copy();
+            DMatrixRow_F64 original = c.copy();
             invoke(method,alpha,a,b,c);
 
             if( add ) {
@@ -248,15 +248,15 @@ public class TestMatrixMatrixMult_R64 {
         assertEquals(numChecked,32);
     }
 
-    private void transpose( RowMatrix_F64 a ) {
-        RowMatrix_F64 b = new RowMatrix_F64(a.numCols,a.numRows);
+    private void transpose( DMatrixRow_F64 a ) {
+        DMatrixRow_F64 b = new DMatrixRow_F64(a.numCols,a.numRows);
         CommonOps_R64.transpose(a,b);
         a.set(b);
     }
 
     public static void invoke(Method func,
                               double alpha,
-                              RowMatrix_F64 a, RowMatrix_F64 b, RowMatrix_F64 c)
+                              DMatrixRow_F64 a, DMatrixRow_F64 b, DMatrixRow_F64 c)
             throws IllegalAccessException, InvocationTargetException {
         if( func.getParameterTypes().length == 3 ) {
             func.invoke(null, a, b, c);

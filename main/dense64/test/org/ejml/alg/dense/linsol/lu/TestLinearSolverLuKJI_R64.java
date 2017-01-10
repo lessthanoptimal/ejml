@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.lu;
 
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -35,7 +35,7 @@ public class TestLinearSolverLuKJI_R64 extends GenericLinearSolverChecks_R64 {
     }
 
     @Override
-    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A ) {
+    protected LinearSolver<DMatrixRow_F64> createSolver(DMatrixRow_F64 A ) {
         LUDecompositionAlt_R64 decomp = new LUDecompositionAlt_R64();
 
         return new LinearSolverLuKJI_R64(decomp);

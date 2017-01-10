@@ -62,7 +62,7 @@ public class GenerateInverseFromMinor {
                 "\n" +
                 "package org.ejml.alg.dense.misc;\n" +
                 "\n" +
-                "import org.ejml.data.RowMatrix_F64;\n" +
+                "import org.ejml.data.DMatrixRow_F64;\n" +
                 "\n" +
                 "\n" +
                 "/**\n" +
@@ -82,7 +82,7 @@ public class GenerateInverseFromMinor {
     {
         stream.print(
                 "    \n" +
-                        "    public static void inv( RowMatrix_F64 mat , RowMatrix_F64 inv ) {\n");
+                        "    public static void inv( DMatrixRow_F64 mat , DMatrixRow_F64 inv ) {\n");
         stream.print("        double max = Math.abs(mat.data[0]);\n" +
                 "        int N = mat.getNumElements();\n" +
                 "        \n" +
@@ -105,7 +105,7 @@ public class GenerateInverseFromMinor {
 
     private void printFunction( int N )
     {
-        stream.print("    public static void inv"+N+"( RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )\n" +
+        stream.print("    public static void inv"+N+"( DMatrixRow_F64 mat , DMatrixRow_F64 inv , double scale )\n" +
                 "    {\n" +
                 "        double []data = mat.data;\n"+
                 "\n");

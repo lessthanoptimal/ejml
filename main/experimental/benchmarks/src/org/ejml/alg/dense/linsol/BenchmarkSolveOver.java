@@ -22,7 +22,7 @@ import org.ejml.alg.dense.linsol.qr.LinearSolverQrBlock64_R64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_R64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseTran_R64;
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouse_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.RandomMatrices_R64;
@@ -36,22 +36,22 @@ import java.util.Random;
 public class BenchmarkSolveOver {
     private static final long SEED = 6;
     private static Random rand = new Random();
-    private static RowMatrix_F64 A;
-    private static RowMatrix_F64 B;
+    private static DMatrixRow_F64 A;
+    private static DMatrixRow_F64 B;
 
     private static boolean includeSet = false;
 
-    public static long solveBenchmark(LinearSolver<RowMatrix_F64> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<DMatrixRow_F64> solver , int numTrials ) {
         rand.setSeed(SEED);
-        RowMatrix_F64 X = new RowMatrix_F64(A.numCols,B.numCols);
+        DMatrixRow_F64 X = new DMatrixRow_F64(A.numCols,B.numCols);
         RandomMatrices_R64.setRandom(A,rand);
         RandomMatrices_R64.setRandom(B,rand);
 
-        RowMatrix_F64 B_tmp = new RowMatrix_F64(B.numRows,B.numCols);
+        DMatrixRow_F64 B_tmp = new DMatrixRow_F64(B.numRows,B.numCols);
 
         if( !includeSet ) solver.setA(A);
 
-        RowMatrix_F64 A_copy = solver.modifiesA() ? A.copy() : A;
+        DMatrixRow_F64 A_copy = solver.modifiesA() ? A.copy() : A;
 
         long prev = System.currentTimeMillis();
 
@@ -102,8 +102,8 @@ public class BenchmarkSolveOver {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
-            A = new RowMatrix_F64(N,width[i]);
-            B = new RowMatrix_F64(N,1);
+            A = new DMatrixRow_F64(N,width[i]);
+            B = new DMatrixRow_F64(N,1);
 
             runAlgorithms(trialsWith[i]);
         }
@@ -115,8 +115,8 @@ public class BenchmarkSolveOver {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
-            A = new RowMatrix_F64(N,width[i]);
-            B = new RowMatrix_F64(N,1);
+            A = new DMatrixRow_F64(N,width[i]);
+            B = new DMatrixRow_F64(N,1);
 
             runAlgorithms(trialsWith[i]);
         }

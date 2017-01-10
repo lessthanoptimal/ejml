@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -36,9 +36,9 @@ public class CheckDecompositionInterface_R64 {
     /**
      * Performs a decomposition and makes sure the input matrix is not modified.
      */
-    public static boolean safeDecomposition(DecompositionInterface<RowMatrix_F64> decomp , RowMatrix_F64 A ) {
+    public static boolean safeDecomposition(DecompositionInterface<DMatrixRow_F64> decomp , DMatrixRow_F64 A ) {
 
-        RowMatrix_F64 A_orig = decomp.inputModified() ? A.copy() : A;
+        DMatrixRow_F64 A_orig = decomp.inputModified() ? A.copy() : A;
 
         return decomp.decompose(A_orig);
     }
@@ -50,9 +50,9 @@ public class CheckDecompositionInterface_R64 {
      *
      * @param decomp
      */
-    public static void checkModifiedInput( DecompositionInterface<RowMatrix_F64> decomp ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(4,new Random(0x434));
-        RowMatrix_F64 A_orig = A.copy();
+    public static void checkModifiedInput( DecompositionInterface<DMatrixRow_F64> decomp ) {
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(4,new Random(0x434));
+        DMatrixRow_F64 A_orig = A.copy();
 
         assertTrue(decomp.decompose(A));
 

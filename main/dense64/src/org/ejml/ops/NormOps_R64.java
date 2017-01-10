@@ -19,9 +19,9 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.D1MatrixRow_64;
 import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.RowD1Matrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
@@ -72,7 +72,7 @@ public class NormOps_R64 {
      *
      * @param A The matrix that is to be normalized.
      */
-    public static void normalizeF( RowMatrix_F64 A ) {
+    public static void normalizeF( DMatrixRow_F64 A ) {
         double val = normF(A);
 
         if( val == 0 )
@@ -99,21 +99,21 @@ public class NormOps_R64 {
      * @param p p-norm
      * @return The condition number.
      */
-    public static double conditionP(RowMatrix_F64 A , double p )
+    public static double conditionP(DMatrixRow_F64 A , double p )
     {
         if( p == 2 ) {
             return conditionP2(A);
         } else if( A.numRows == A.numCols ){
             // square matrices are the typical case
 
-            RowMatrix_F64 A_inv = new RowMatrix_F64(A.numRows,A.numCols);
+            DMatrixRow_F64 A_inv = new DMatrixRow_F64(A.numRows,A.numCols);
 
             if( !CommonOps_R64.invert(A,A_inv) )
                 throw new IllegalArgumentException("A can't be inverted.");
 
             return normP(A,p) * normP(A_inv,p);
         } else  {
-            RowMatrix_F64 pinv = new RowMatrix_F64(A.numCols,A.numRows);
+            DMatrixRow_F64 pinv = new DMatrixRow_F64(A.numCols,A.numRows);
             CommonOps_R64.pinv(A,pinv);
 
             return normP(A,p) * normP(pinv,p);
@@ -134,9 +134,9 @@ public class NormOps_R64 {
      * @param A The matrix.
      * @return The condition number.
      */
-    public static double conditionP2( RowMatrix_F64 A )
+    public static double conditionP2( DMatrixRow_F64 A )
     {
-        SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
 
         svd.decompose(A);
 
@@ -228,7 +228,7 @@ public class NormOps_R64 {
      * @param p p value.
      * @return The norm's value.
      */
-    public static double elementP(RowD1Matrix_F64 A , double p ) {
+    public static double elementP(D1MatrixRow_64 A , double p ) {
         if( p == 1 ) {
             return CommonOps_R64.elementSumAbs(A);
         } if( p == 2 ) {
@@ -286,7 +286,7 @@ public class NormOps_R64 {
      * @param p The p value of the p-norm.
      * @return The computed norm.
      */
-    public static double normP(RowMatrix_F64 A , double p ) {
+    public static double normP(DMatrixRow_F64 A , double p ) {
         if( p == 1 ) {
             return normP1(A);
         } else if( p == 2 ) {
@@ -309,7 +309,7 @@ public class NormOps_R64 {
      * @param p The p value of the p-norm.
      * @return The computed norm.
      */
-    public static double fastNormP(RowMatrix_F64 A , double p ) {
+    public static double fastNormP(DMatrixRow_F64 A , double p ) {
         if( p == 1 ) {
             return normP1(A);
         } else if( p == 2 ) {
@@ -330,7 +330,7 @@ public class NormOps_R64 {
      * @param A Matrix or vector.
      * @return The norm.
      */
-    public static double normP1( RowMatrix_F64 A ) {
+    public static double normP1( DMatrixRow_F64 A ) {
         if( MatrixFeatures_R64.isVector(A)) {
             return CommonOps_R64.elementSumAbs(A);
         } else {
@@ -344,7 +344,7 @@ public class NormOps_R64 {
      * @param A Matrix or vector.
      * @return The norm.
      */
-    public static double normP2( RowMatrix_F64 A ) {
+    public static double normP2( DMatrixRow_F64 A ) {
         if( MatrixFeatures_R64.isVector(A)) {
             return normF(A);
         } else {
@@ -359,7 +359,7 @@ public class NormOps_R64 {
      * @param A Matrix or vector.
      * @return The norm.
      */
-    public static double fastNormP2( RowMatrix_F64 A ) {
+    public static double fastNormP2( DMatrixRow_F64 A ) {
         if( MatrixFeatures_R64.isVector(A)) {
             return fastNormF(A);
         } else {
@@ -373,7 +373,7 @@ public class NormOps_R64 {
      * @param A Matrix or vector.
      * @return The norm.
      */
-    public static double normPInf( RowMatrix_F64 A ) {
+    public static double normPInf( DMatrixRow_F64 A ) {
         if( MatrixFeatures_R64.isVector(A)) {
             return CommonOps_R64.elementMaxAbs(A);
         } else {
@@ -391,7 +391,7 @@ public class NormOps_R64 {
      * @param A Matrix. Not modified.
      * @return The norm.
      */
-    public static double inducedP1( RowMatrix_F64 A ) {
+    public static double inducedP1( DMatrixRow_F64 A ) {
         double max = 0;
 
         int m = A.numRows;
@@ -418,8 +418,8 @@ public class NormOps_R64 {
      * @param A Matrix. Not modified.
      * @return The norm.
      */
-    public static double inducedP2( RowMatrix_F64 A ) {
-        SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
+    public static double inducedP2( DMatrixRow_F64 A ) {
+        SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");
@@ -440,7 +440,7 @@ public class NormOps_R64 {
      * @param A A matrix.
      * @return the norm.
      */
-    public static double inducedPInf( RowMatrix_F64 A ) {
+    public static double inducedPInf( DMatrixRow_F64 A ) {
         double max = 0;
 
         int m = A.numRows;

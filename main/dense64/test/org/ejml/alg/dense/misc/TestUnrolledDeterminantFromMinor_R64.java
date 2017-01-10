@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class TestUnrolledDeterminantFromMinor_R64 {
     @Test
     public void testAll() {
         for(int N = 2; N <= UnrolledDeterminantFromMinor_R64.MAX; N++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createRandom(N,N,rand);
 
             double unrolled = UnrolledDeterminantFromMinor_R64.det(A);
             LUDecompositionAlt_R64 alg = new LUDecompositionAlt_R64();

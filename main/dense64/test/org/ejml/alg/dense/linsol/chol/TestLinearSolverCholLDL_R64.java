@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.chol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -38,9 +38,9 @@ public class TestLinearSolverCholLDL_R64 {
 
     @Test
     public void testInverseAndSolve() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 17, 97, 320);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, 17, 97, 320);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
 
         LinearSolverCholLDL_R64 solver = new LinearSolverCholLDL_R64();
         assertTrue(solver.setA(A));
@@ -48,8 +48,8 @@ public class TestLinearSolverCholLDL_R64 {
         solver.solve(b,x);
 
 
-        RowMatrix_F64 A_inv = new RowMatrix_F64(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
-        RowMatrix_F64 x_expected = new RowMatrix_F64(3,1, true, 1, 2, 3);
+        DMatrixRow_F64 A_inv = new DMatrixRow_F64(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
+        DMatrixRow_F64 x_expected = new DMatrixRow_F64(3,1, true, 1, 2, 3);
 
         EjmlUnitTests.assertEquals(A_inv,A, UtilEjml.TEST_F64_SQ);
         EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64_SQ);

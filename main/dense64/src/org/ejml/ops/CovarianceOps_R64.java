@@ -21,7 +21,7 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
@@ -44,7 +44,7 @@ public class CovarianceOps_R64 {
 	 *
 	 * @return true if valid and false if invalid
      */
-    public static boolean isValidFast( RowMatrix_F64 cov ) {
+    public static boolean isValidFast( DMatrixRow_F64 cov ) {
         return MatrixFeatures_R64.isDiagonalPositive(cov);
     }
 
@@ -54,7 +54,7 @@ public class CovarianceOps_R64 {
      *
      * @return  0 = is valid 1 = failed positive diagonal, 2 = failed on symmetry, 2 = failed on positive definite
      */
-    public static int isValid( RowMatrix_F64 cov ) {
+    public static int isValid( DMatrixRow_F64 cov ) {
         if( !MatrixFeatures_R64.isDiagonalPositive(cov) )
             return 1;
 
@@ -74,7 +74,7 @@ public class CovarianceOps_R64 {
      * @param cov On input it is a covariance matrix, on output it is the inverse.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( RowMatrix_F64 cov ) {
+    public static boolean invert( DMatrixRow_F64 cov ) {
         return invert(cov,cov);
     }
 
@@ -86,7 +86,7 @@ public class CovarianceOps_R64 {
      * @param cov_inv The inverse of cov.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert(final RowMatrix_F64 cov , final RowMatrix_F64 cov_inv ) {
+    public static boolean invert(final DMatrixRow_F64 cov , final DMatrixRow_F64 cov_inv ) {
         if( cov.numCols <= 4 ) {
             if( cov.numCols != cov.numRows ) {
                 throw new IllegalArgumentException("Must be a square matrix.");
@@ -98,9 +98,9 @@ public class CovarianceOps_R64 {
                 cov_inv.data[0] = 1.0/cov_inv.data[0];
 
         } else {
-            LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.symmPosDef(cov.numRows);
+            LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.symmPosDef(cov.numRows);
             // wrap it to make sure the covariance is not modified.
-            solver = new LinearSolverSafe<RowMatrix_F64>(solver);
+            solver = new LinearSolverSafe<DMatrixRow_F64>(solver);
             if( !solver.setA(cov) )
                 return false;
             solver.invert(cov_inv);
@@ -116,8 +116,8 @@ public class CovarianceOps_R64 {
      * @param vector The random vector. Modified.
      * @param rand Random number generator.
      */
-    public static void randomVector( RowMatrix_F64 cov ,
-                                     RowMatrix_F64 vector ,
+    public static void randomVector( DMatrixRow_F64 cov ,
+                                     DMatrixRow_F64 vector ,
                                      Random rand  )
     {
         CovarianceRandomDraw_R64 rng = new CovarianceRandomDraw_R64(rand,cov);

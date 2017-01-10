@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 /**
  * Operations that involve multiplication of two vectors.
@@ -44,7 +44,7 @@ public class VectorVectorMult_CR64 {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static Complex_F64 innerProd(RowMatrix_C64 x, RowMatrix_C64 y , Complex_F64 output )
+    public static Complex_F64 innerProd(DMatrixRow_C64 x, DMatrixRow_C64 y , Complex_F64 output )
     {
         if( output == null )
             output = new Complex_F64();
@@ -86,7 +86,7 @@ public class VectorVectorMult_CR64 {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static Complex_F64 innerProdH(RowMatrix_C64 x, RowMatrix_C64 y , Complex_F64 output )
+    public static Complex_F64 innerProdH(DMatrixRow_C64 x, DMatrixRow_C64 y , Complex_F64 output )
     {
         if( output == null )
             output = new Complex_F64();
@@ -126,7 +126,7 @@ public class VectorVectorMult_CR64 {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProd(RowMatrix_C64 x, RowMatrix_C64 y, RowMatrix_C64 A ) {
+    public static void outerProd(DMatrixRow_C64 x, DMatrixRow_C64 y, DMatrixRow_C64 A ) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -162,7 +162,7 @@ public class VectorVectorMult_CR64 {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProdH(RowMatrix_C64 x, RowMatrix_C64 y, RowMatrix_C64 A ) {
+    public static void outerProdH(DMatrixRow_C64 x, DMatrixRow_C64 y, DMatrixRow_C64 A ) {
         int m = A.numRows;
         int n = A.numCols;
 

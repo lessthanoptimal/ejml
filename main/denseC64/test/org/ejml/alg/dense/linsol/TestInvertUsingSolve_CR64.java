@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decompose.lu.LUDecompositionAlt_CR64;
 import org.ejml.alg.dense.linsol.lu.LinearSolverLu_CR64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.MatrixFeatures_CR64;
@@ -46,16 +46,16 @@ public class TestInvertUsingSolve_CR64 {
      */
     @Test
     public void invert() {
-        RowMatrix_C64 A = new RowMatrix_C64(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
-        RowMatrix_C64 A_inv = RandomMatrices_CR64.createRandom(3, 3, rand);
+        DMatrixRow_C64 A = new DMatrixRow_C64(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
+        DMatrixRow_C64 A_inv = RandomMatrices_CR64.createRandom(3, 3, rand);
 
         LUDecompositionAlt_CR64 decomp = new LUDecompositionAlt_CR64();
-        LinearSolver<RowMatrix_C64> solver = new LinearSolverLu_CR64(decomp);
+        LinearSolver<DMatrixRow_C64> solver = new LinearSolverLu_CR64(decomp);
 
         solver.setA(A);
         InvertUsingSolve_CR64.invert(solver,A,A_inv);
 
-        RowMatrix_C64 I = RandomMatrices_CR64.createRandom(3,3,rand);
+        DMatrixRow_C64 I = RandomMatrices_CR64.createRandom(3,3,rand);
 
         CommonOps_CR64.mult(A, A_inv, I);
 

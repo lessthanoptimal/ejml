@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_R64;
 import org.ejml.alg.dense.decomposition.qr.QrUpdate_R64;
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 
@@ -35,7 +35,7 @@ public class AdjLinearSolverQr_R64 extends LinearSolverQr_R64 implements Adjusta
 
     private QrUpdate_R64 update;
 
-    private RowMatrix_F64 A;
+    private DMatrixRow_F64 A;
 
     public AdjLinearSolverQr_R64() {
         super( new QRDecompositionHouseholderColumn_R64() );
@@ -49,7 +49,7 @@ public class AdjLinearSolverQr_R64 extends LinearSolverQr_R64 implements Adjusta
         super.setMaxSize(maxRows,maxCols);
 
         update = new QrUpdate_R64(maxRows,maxCols,true);
-        A = new RowMatrix_F64(maxRows,maxCols);
+        A = new DMatrixRow_F64(maxRows,maxCols);
     }
 
     /**
@@ -58,9 +58,9 @@ public class AdjLinearSolverQr_R64 extends LinearSolverQr_R64 implements Adjusta
      * @return The A matrix.
      */
     @Override
-    public RowMatrix_F64 getA() {
+    public DMatrixRow_F64 getA() {
         if( A.data.length < numRows*numCols ) {
-            A = new RowMatrix_F64(numRows,numCols);
+            A = new DMatrixRow_F64(numRows,numCols);
         }
         A.reshape(numRows,numCols, false);
         CommonOps_R64.mult(Q,R,A);

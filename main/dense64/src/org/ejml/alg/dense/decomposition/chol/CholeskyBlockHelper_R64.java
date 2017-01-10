@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -32,7 +32,7 @@ import org.ejml.data.RowMatrix_F64;
 class CholeskyBlockHelper_R64 {
 
     // the decomposed matrix
-    private RowMatrix_F64 L;
+    private DMatrixRow_F64 L;
     private double[] el;
 
     /**
@@ -43,7 +43,7 @@ class CholeskyBlockHelper_R64 {
      */
     public CholeskyBlockHelper_R64(int widthMax) {
 
-        this.L = new RowMatrix_F64(widthMax,widthMax);
+        this.L = new DMatrixRow_F64(widthMax,widthMax);
         this.el = L.data;
     }
 
@@ -56,7 +56,7 @@ class CholeskyBlockHelper_R64 {
      * @param n The width of the submatrix that is to be inverted.
      * @return True if it was able to finish the decomposition.
      */
-    public boolean decompose(RowMatrix_F64 mat , int indexStart , int n ) {
+    public boolean decompose(DMatrixRow_F64 mat , int indexStart , int n ) {
         double m[] = mat.data;
 
         double el_ii;
@@ -101,7 +101,7 @@ class CholeskyBlockHelper_R64 {
      *
      * @return A lower triangular matrix.
      */
-    public RowMatrix_F64 getL() {
+    public DMatrixRow_F64 getL() {
         return L;
     }
 }

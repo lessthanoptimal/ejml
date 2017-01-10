@@ -21,7 +21,7 @@ package org.ejml.alg.block;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -44,14 +44,14 @@ public class TestInnerTriangularSolver_B64 {
 
     @Test
     public void testInvertLower_two() {
-        RowMatrix_F64 A = RandomMatrices_R64.createUpperTriangle(5,0,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(5,0,-1,1,rand);
         CommonOps_R64.transpose(A);
 
-        RowMatrix_F64 A_inv = A.copy();
+        DMatrixRow_F64 A_inv = A.copy();
 
         InnerTriangularSolver_B64.invertLower(A.data,A_inv.data,5,0,0);
 
-        RowMatrix_F64 S = new RowMatrix_F64(5,5);
+        DMatrixRow_F64 S = new DMatrixRow_F64(5,5);
         CommonOps_R64.mult(A,A_inv,S);
 
         assertTrue(GenericMatrixOps_F64.isIdentity(S,UtilEjml.TEST_F64));
@@ -64,14 +64,14 @@ public class TestInnerTriangularSolver_B64 {
 
     @Test
     public void testInvertLower_one() {
-        RowMatrix_F64 A = RandomMatrices_R64.createUpperTriangle(5,0,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(5,0,-1,1,rand);
         CommonOps_R64.transpose(A);
 
-        RowMatrix_F64 A_inv = A.copy();
+        DMatrixRow_F64 A_inv = A.copy();
 
         InnerTriangularSolver_B64.invertLower(A_inv.data,5,0);
 
-        RowMatrix_F64 S = new RowMatrix_F64(5,5);
+        DMatrixRow_F64 S = new DMatrixRow_F64(5,5);
         CommonOps_R64.mult(A,A_inv,S);
 
         assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
@@ -119,7 +119,7 @@ public class TestInnerTriangularSolver_B64 {
         int offsetL = 2;
         int offsetB = 3;
 
-        RowMatrix_F64 L = createRandomLowerTriangular(3);
+        DMatrixRow_F64 L = createRandomLowerTriangular(3);
 
         if( !solveL ) {
             CommonOps_R64.transpose(L);
@@ -129,12 +129,12 @@ public class TestInnerTriangularSolver_B64 {
             CommonOps_R64.transpose(L);
         }
 
-        RowMatrix_F64 L_inv = L.copy();
+        DMatrixRow_F64 L_inv = L.copy();
         UnrolledInverseFromMinor_R64.inv(L_inv,L_inv);
 
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(3,4,rand);
-        RowMatrix_F64 expected = RandomMatrices_R64.createRandom(3,4,rand);
-        RowMatrix_F64 found = B.copy();
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(3,4,rand);
+        DMatrixRow_F64 expected = RandomMatrices_R64.createRandom(3,4,rand);
+        DMatrixRow_F64 found = B.copy();
 
         // compute the expected solution
         CommonOps_R64.mult(L_inv,B,expected);
@@ -167,8 +167,8 @@ public class TestInnerTriangularSolver_B64 {
         assertTrue(MatrixFeatures_R64.isIdentical(expected,found,UtilEjml.TEST_F64));
     }
 
-    private RowMatrix_F64 createRandomLowerTriangular(int N ) {
-        RowMatrix_F64 U = RandomMatrices_R64.createUpperTriangle(N,0,-1,1,rand);
+    private DMatrixRow_F64 createRandomLowerTriangular(int N ) {
+        DMatrixRow_F64 U = RandomMatrices_R64.createUpperTriangle(N,0,-1,1,rand);
 
         CommonOps_R64.transpose(U);
 

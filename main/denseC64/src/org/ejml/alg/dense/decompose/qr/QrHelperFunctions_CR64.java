@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 
 /**
@@ -181,7 +181,7 @@ public class QrHelperFunctions_CR64 {
      * @param w1 last index + 1 in sub-array in u and row sub-matrix in A
      * @param _temp temporary storage.  Same size as u.
      */
-    public static void rank1UpdateMultR(RowMatrix_C64 A,
+    public static void rank1UpdateMultR(DMatrixRow_C64 A,
                                         double u[], int offsetU,
                                         double gamma ,
                                         int colA0,
@@ -272,7 +272,7 @@ public class QrHelperFunctions_CR64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL(RowMatrix_C64 A , double u[] , int offsetU,
+    public static void rank1UpdateMultL(DMatrixRow_C64 A , double u[] , int offsetU,
                                         double gammaR ,
                                         int colA0,
                                         int w0 , int w1 )
@@ -316,7 +316,7 @@ public class QrHelperFunctions_CR64 {
      * @param u Output array storage
      * @param offsetU first index in U
      */
-    public static void extractHouseholderColumn( RowMatrix_C64 A ,
+    public static void extractHouseholderColumn( DMatrixRow_C64 A ,
                                                  int row0 , int row1 ,
                                                  int col , double u[], int offsetU )
     {
@@ -340,7 +340,7 @@ public class QrHelperFunctions_CR64 {
      * @param u Output array storage
      * @param offsetU first index in U
      */
-    public static void extractHouseholderRow( RowMatrix_C64 A ,
+    public static void extractHouseholderRow( DMatrixRow_C64 A ,
                                               int row ,
                                               int col0, int col1 , double u[], int offsetU )
     {
@@ -369,7 +369,7 @@ public class QrHelperFunctions_CR64 {
      * @param offsetU first index in U
      * @return magnitude of largest element
      */
-    public static double extractColumnAndMax( RowMatrix_C64 A ,
+    public static double extractColumnAndMax( DMatrixRow_C64 A ,
                                               int row0 , int row1 ,
                                               int col , double u[], int offsetU) {
         int indexU = (offsetU+row0)*2;
@@ -403,7 +403,7 @@ public class QrHelperFunctions_CR64 {
      * @param col1 Last column in A + 1 to be copied
      * @return magnitude of largest element
      */
-    public static double computeRowMax( RowMatrix_C64 A ,
+    public static double computeRowMax( DMatrixRow_C64 A ,
                                         int row , int col0 , int col1 ) {
         double max = 0;
 

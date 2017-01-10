@@ -18,8 +18,8 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.FixedMatrix3_F64;
-import org.ejml.data.FixedMatrix3x3_F64;
+import org.ejml.data.DMatrixFixed3_F64;
+import org.ejml.data.DMatrixFixed3x3_F64;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 3 x 3 or 3 element vectors.</p>
@@ -43,7 +43,7 @@ public class FixedOps3_F64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c ) {
+    public static void add( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c ) {
         c.a11 = a.a11 + b.a11;
         c.a12 = a.a12 + b.a12;
         c.a13 = a.a13 + b.a13;
@@ -70,7 +70,7 @@ public class FixedOps3_F64 {
      * @param b A Vector. Not modified.
      * @param c A Vector where the results are stored. Modified.
      */
-    public static void add( FixedMatrix3_F64 a , FixedMatrix3_F64 b , FixedMatrix3_F64 c ) {
+    public static void add( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b , DMatrixFixed3_F64 c ) {
         c.a1 = a.a1 + b.a1;
         c.a2 = a.a2 + b.a2;
         c.a3 = a.a3 + b.a3;
@@ -86,7 +86,7 @@ public class FixedOps3_F64 {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void addEquals( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b ) {
+    public static void addEquals( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b ) {
         a.a11 += b.a11;
         a.a12 += b.a12;
         a.a13 += b.a13;
@@ -108,7 +108,7 @@ public class FixedOps3_F64 {
      * @param a A Vector. Modified.
      * @param b A Vector. Not modified.
      */
-    public static void addEquals( FixedMatrix3_F64 a , FixedMatrix3_F64 b ) {
+    public static void addEquals( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b ) {
         a.a1 += b.a1;
         a.a2 += b.a2;
         a.a3 += b.a3;
@@ -129,7 +129,7 @@ public class FixedOps3_F64 {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void subtract( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c ) {
+    public static void subtract( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c ) {
         c.a11 = a.a11 - b.a11;
         c.a12 = a.a12 - b.a12;
         c.a13 = a.a13 - b.a13;
@@ -156,7 +156,7 @@ public class FixedOps3_F64 {
      * @param b A Vector. Not modified.
      * @param c A Vector where the results are stored. Modified.
      */
-    public static void subtract( FixedMatrix3_F64 a , FixedMatrix3_F64 b , FixedMatrix3_F64 c ) {
+    public static void subtract( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b , DMatrixFixed3_F64 c ) {
         c.a1 = a.a1 - b.a1;
         c.a2 = a.a2 - b.a2;
         c.a3 = a.a3 - b.a3;
@@ -172,7 +172,7 @@ public class FixedOps3_F64 {
      * @param a A Matrix. Modified.
      * @param b A Matrix. Not modified.
      */
-    public static void subtractEquals( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b ) {
+    public static void subtractEquals( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b ) {
         a.a11 -= b.a11;
         a.a12 -= b.a12;
         a.a13 -= b.a13;
@@ -194,7 +194,7 @@ public class FixedOps3_F64 {
      * @param a A Vector. Modified.
      * @param b A Vector. Not modified.
      */
-    public static void subtractEquals( FixedMatrix3_F64 a , FixedMatrix3_F64 b ) {
+    public static void subtractEquals( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b ) {
         a.a1 -= b.a1;
         a.a2 -= b.a2;
         a.a3 -= b.a3;
@@ -206,7 +206,7 @@ public class FixedOps3_F64 {
      *
      * @param m The matrix that is to be transposed. Modified.
      */
-    public static void transpose( FixedMatrix3x3_F64 m ) {
+    public static void transpose( DMatrixFixed3x3_F64 m ) {
         double tmp;
         tmp = m.a12; m.a12 = m.a21; m.a21 = tmp;
         tmp = m.a13; m.a13 = m.a31; m.a31 = tmp;
@@ -225,9 +225,9 @@ public class FixedOps3_F64 {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static FixedMatrix3x3_F64 transpose( FixedMatrix3x3_F64 input , FixedMatrix3x3_F64 output ) {
+    public static DMatrixFixed3x3_F64 transpose( DMatrixFixed3x3_F64 input , DMatrixFixed3x3_F64 output ) {
         if( input == null )
-            input = new FixedMatrix3x3_F64();
+            input = new DMatrixFixed3x3_F64();
 
         output.a11 = input.a11;
         output.a12 = input.a21;
@@ -254,7 +254,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void mult( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 = a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31;
         c.a12 = a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32;
         c.a13 = a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33;
@@ -278,7 +278,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multTransA( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 = a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31;
         c.a12 = a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32;
         c.a13 = a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33;
@@ -302,7 +302,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multTransAB( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 = a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13;
         c.a12 = a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23;
         c.a13 = a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33;
@@ -326,7 +326,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multTransB( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 = a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13;
         c.a12 = a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23;
         c.a13 = a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33;
@@ -350,7 +350,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multAdd( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 += a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31;
         c.a12 += a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32;
         c.a13 += a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33;
@@ -374,7 +374,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multAddTransA( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 += a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31;
         c.a12 += a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32;
         c.a13 += a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33;
@@ -398,7 +398,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multAddTransAB( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 += a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13;
         c.a12 += a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23;
         c.a13 += a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33;
@@ -422,7 +422,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c) {
+    public static void multAddTransB( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c) {
         c.a11 += a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13;
         c.a12 += a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23;
         c.a13 += a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33;
@@ -446,7 +446,7 @@ public class FixedOps3_F64 {
      * @param b The right vector in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix3x3_F64 a , FixedMatrix3_F64 b , FixedMatrix3_F64 c) {
+    public static void mult( DMatrixFixed3x3_F64 a , DMatrixFixed3_F64 b , DMatrixFixed3_F64 c) {
         c.a1 = a.a11*b.a1 + a.a12*b.a2 + a.a13*b.a3;
         c.a2 = a.a21*b.a1 + a.a22*b.a2 + a.a23*b.a3;
         c.a3 = a.a31*b.a1 + a.a32*b.a2 + a.a33*b.a3;
@@ -464,7 +464,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( FixedMatrix3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3_F64 c) {
+    public static void mult( DMatrixFixed3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3_F64 c) {
         c.a1 = a.a1*b.a11 + a.a2*b.a21 + a.a3*b.a31;
         c.a2 = a.a1*b.a12 + a.a2*b.a22 + a.a3*b.a32;
         c.a3 = a.a1*b.a13 + a.a2*b.a23 + a.a3*b.a33;
@@ -482,7 +482,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @return The dot product
      */
-    public static double dot( FixedMatrix3_F64 a , FixedMatrix3_F64 b ) {
+    public static double dot( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b ) {
         return a.a1*b.a1 + a.a2*b.a2 + a.a3*b.a3;
     }
 
@@ -492,7 +492,7 @@ public class FixedOps3_F64 {
      *
      * @param a A matrix.
      */
-    public static void setIdentity( FixedMatrix3x3_F64 a ) {
+    public static void setIdentity( DMatrixFixed3x3_F64 a ) {
         a.a11 = 1; a.a21 = 0; a.a31 = 0;
         a.a12 = 0; a.a22 = 1; a.a32 = 0;
         a.a13 = 0; a.a23 = 0; a.a33 = 1;
@@ -508,7 +508,7 @@ public class FixedOps3_F64 {
      * @param inv Inverted output matrix.  Modified.
      * @return true if it was successful or false if it failed.  Not always reliable.
      */
-    public static boolean invert( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 inv ) {
+    public static boolean invert( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 inv ) {
 
         double scale = 1.0/elementMaxAbs(a);
 
@@ -555,7 +555,7 @@ public class FixedOps3_F64 {
      * @param mat Input matrix.  Not modified.
      * @return The determinant.
      */
-    public static double det( FixedMatrix3x3_F64 mat ) {
+    public static double det( DMatrixFixed3x3_F64 mat ) {
 
         double a = mat.a11*(mat.a22*mat.a33 - mat.a23*mat.a32);
         double b = mat.a12*(mat.a21*mat.a33 - mat.a23*mat.a31);
@@ -576,7 +576,7 @@ public class FixedOps3_F64 {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( FixedMatrix3x3_F64 a ) {
+    public static double trace( DMatrixFixed3x3_F64 a ) {
         return a.a11 + a.a22 + a.a33;
     }
 
@@ -590,7 +590,7 @@ public class FixedOps3_F64 {
      * @param input Matrix.  Not modified.
      * @param out Vector containing diagonal elements.  Modified.
      */
-    public static void diag( FixedMatrix3x3_F64 input , FixedMatrix3_F64 out ) {
+    public static void diag( DMatrixFixed3x3_F64 input , DMatrixFixed3_F64 out ) {
         out.a1 = input.a11;
         out.a2 = input.a22;
         out.a3 = input.a33;
@@ -606,7 +606,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMax( FixedMatrix3x3_F64 a ) {
+    public static double elementMax( DMatrixFixed3x3_F64 a ) {
         double max = a.a11;
         if( a.a12 > max ) max = a.a12;
         if( a.a13 > max ) max = a.a13;
@@ -630,7 +630,7 @@ public class FixedOps3_F64 {
      * @param a A vector. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMax( FixedMatrix3_F64 a ) {
+    public static double elementMax( DMatrixFixed3_F64 a ) {
         double max = a.a1;
         if( a.a2 > max ) max = a.a2;
         if( a.a3 > max ) max = a.a3;
@@ -648,7 +648,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the matrix.
      */
-    public static double elementMaxAbs( FixedMatrix3x3_F64 a ) {
+    public static double elementMaxAbs( DMatrixFixed3x3_F64 a ) {
         double max = Math.abs(a.a11);
         double tmp = Math.abs(a.a12); if( tmp > max ) max = tmp;
         tmp = Math.abs(a.a13); if( tmp > max ) max = tmp;
@@ -672,7 +672,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The max abs element value of the vector.
      */
-    public static double elementMaxAbs( FixedMatrix3_F64 a ) {
+    public static double elementMaxAbs( DMatrixFixed3_F64 a ) {
         double max = Math.abs(a.a1);
         double tmp = Math.abs(a.a2); if( tmp > max ) max = tmp;
         tmp = Math.abs(a.a2); if( tmp > max ) max = tmp;
@@ -691,7 +691,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The value of element in the matrix with the minimum value.
      */
-    public static double elementMin( FixedMatrix3x3_F64 a ) {
+    public static double elementMin( DMatrixFixed3x3_F64 a ) {
         double min = a.a11;
         if( a.a12 < min ) min = a.a12;
         if( a.a13 < min ) min = a.a13;
@@ -715,7 +715,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The value of element in the vector with the minimum value.
      */
-    public static double elementMin( FixedMatrix3_F64 a ) {
+    public static double elementMin( DMatrixFixed3_F64 a ) {
         double min = a.a1;
         if( a.a2 < min ) min = a.a2;
         if( a.a3 < min ) min = a.a3;
@@ -733,7 +733,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the matrix.
      */
-    public static double elementMinAbs( FixedMatrix3x3_F64 a ) {
+    public static double elementMinAbs( DMatrixFixed3x3_F64 a ) {
         double min = Math.abs(a.a11);
         double tmp = Math.abs(a.a12); if( tmp < min ) min = tmp;
         tmp = Math.abs(a.a13); if( tmp < min ) min = tmp;
@@ -757,7 +757,7 @@ public class FixedOps3_F64 {
      * @param a A matrix. Not modified.
      * @return The max element value of the vector.
      */
-    public static double elementMinAbs( FixedMatrix3_F64 a ) {
+    public static double elementMinAbs( DMatrixFixed3_F64 a ) {
         double min = Math.abs(a.a1);
         double tmp = Math.abs(a.a1); if( tmp < min ) min = tmp;
         tmp = Math.abs(a.a2); if( tmp < min ) min = tmp;
@@ -774,7 +774,7 @@ public class FixedOps3_F64 {
      * @param a The left matrix in the multiplication operation. Modified.
      * @param b The right matrix in the multiplication operation. Not modified.
      */
-    public static void elementMult( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b) {
+    public static void elementMult( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b) {
         a.a11 *= b.a11; a.a12 *= b.a12; a.a13 *= b.a13;
         a.a21 *= b.a21; a.a22 *= b.a22; a.a23 *= b.a23;
         a.a31 *= b.a31; a.a32 *= b.a32; a.a33 *= b.a33;
@@ -788,7 +788,7 @@ public class FixedOps3_F64 {
      * @param a The left vector in the multiplication operation. Modified.
      * @param b The right vector in the multiplication operation. Not modified.
      */
-    public static void elementMult( FixedMatrix3_F64 a , FixedMatrix3_F64 b) {
+    public static void elementMult( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b) {
         a.a1 *= b.a1;
         a.a2 *= b.a2;
         a.a3 *= b.a3;
@@ -803,7 +803,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementMult( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c ) {
+    public static void elementMult( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c ) {
         c.a11 = a.a11*b.a11; c.a12 = a.a12*b.a12; c.a13 = a.a13*b.a13;
         c.a21 = a.a21*b.a21; c.a22 = a.a22*b.a22; c.a23 = a.a23*b.a23;
         c.a31 = a.a31*b.a31; c.a32 = a.a32*b.a32; c.a33 = a.a33*b.a33;
@@ -818,7 +818,7 @@ public class FixedOps3_F64 {
      * @param b The right vector in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementMult( FixedMatrix3_F64 a , FixedMatrix3_F64 b , FixedMatrix3_F64 c ) {
+    public static void elementMult( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b , DMatrixFixed3_F64 c ) {
         c.a1 = a.a1*b.a1;
         c.a2 = a.a2*b.a2;
         c.a3 = a.a3*b.a3;
@@ -832,7 +832,7 @@ public class FixedOps3_F64 {
      * @param a The left matrix in the division operation. Modified.
      * @param b The right matrix in the division operation. Not modified.
      */
-    public static void elementDiv( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b) {
+    public static void elementDiv( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b) {
         a.a11 /= b.a11; a.a12 /= b.a12; a.a13 /= b.a13;
         a.a21 /= b.a21; a.a22 /= b.a22; a.a23 /= b.a23;
         a.a31 /= b.a31; a.a32 /= b.a32; a.a33 /= b.a33;
@@ -846,7 +846,7 @@ public class FixedOps3_F64 {
      * @param a The left vector in the division operation. Modified.
      * @param b The right vector in the division operation. Not modified.
      */
-    public static void elementDiv( FixedMatrix3_F64 a , FixedMatrix3_F64 b) {
+    public static void elementDiv( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b) {
         a.a1 /= b.a1;
         a.a2 /= b.a2;
         a.a3 /= b.a3;
@@ -861,7 +861,7 @@ public class FixedOps3_F64 {
      * @param b The right matrix in the division operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv( FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b , FixedMatrix3x3_F64 c ) {
+    public static void elementDiv( DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b , DMatrixFixed3x3_F64 c ) {
         c.a11 = a.a11/b.a11; c.a12 = a.a12/b.a12; c.a13 = a.a13/b.a13;
         c.a21 = a.a21/b.a21; c.a22 = a.a22/b.a22; c.a23 = a.a23/b.a23;
         c.a31 = a.a31/b.a31; c.a32 = a.a32/b.a32; c.a33 = a.a33/b.a33;
@@ -876,7 +876,7 @@ public class FixedOps3_F64 {
      * @param b The right vector in the division operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv( FixedMatrix3_F64 a , FixedMatrix3_F64 b , FixedMatrix3_F64 c ) {
+    public static void elementDiv( DMatrixFixed3_F64 a , DMatrixFixed3_F64 b , DMatrixFixed3_F64 c ) {
         c.a1 = a.a1/b.a1;
         c.a2 = a.a2/b.a2;
         c.a3 = a.a3/b.a3;
@@ -892,7 +892,7 @@ public class FixedOps3_F64 {
      * @param a The matrix that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , FixedMatrix3x3_F64 a ) {
+    public static void scale( double alpha , DMatrixFixed3x3_F64 a ) {
         a.a11 *= alpha; a.a12 *= alpha; a.a13 *= alpha;
         a.a21 *= alpha; a.a22 *= alpha; a.a23 *= alpha;
         a.a31 *= alpha; a.a32 *= alpha; a.a33 *= alpha;
@@ -908,7 +908,7 @@ public class FixedOps3_F64 {
      * @param a The vector that is to be scaled.  Modified.
      * @param alpha the amount each element is multiplied by.
      */
-    public static void scale( double alpha , FixedMatrix3_F64 a ) {
+    public static void scale( double alpha , DMatrixFixed3_F64 a ) {
         a.a1 *= alpha;
         a.a2 *= alpha;
         a.a3 *= alpha;
@@ -925,7 +925,7 @@ public class FixedOps3_F64 {
      * @param a The matrix that is to be scaled.  Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
-    public static void scale( double alpha , FixedMatrix3x3_F64 a , FixedMatrix3x3_F64 b ) {
+    public static void scale( double alpha , DMatrixFixed3x3_F64 a , DMatrixFixed3x3_F64 b ) {
         b.a11 = a.a11*alpha; b.a12 = a.a12*alpha; b.a13 = a.a13*alpha;
         b.a21 = a.a21*alpha; b.a22 = a.a22*alpha; b.a23 = a.a23*alpha;
         b.a31 = a.a31*alpha; b.a32 = a.a32*alpha; b.a33 = a.a33*alpha;
@@ -942,7 +942,7 @@ public class FixedOps3_F64 {
      * @param a The vector that is to be scaled.  Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
-    public static void scale( double alpha , FixedMatrix3_F64 a , FixedMatrix3_F64 b ) {
+    public static void scale( double alpha , DMatrixFixed3_F64 a , DMatrixFixed3_F64 b ) {
         b.a1 = a.a1*alpha;
         b.a2 = a.a2*alpha;
         b.a3 = a.a3*alpha;
@@ -958,7 +958,7 @@ public class FixedOps3_F64 {
      * @param a The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( FixedMatrix3x3_F64 a , double alpha ) {
+    public static void divide( DMatrixFixed3x3_F64 a , double alpha ) {
         a.a11 /= alpha; a.a12 /= alpha; a.a13 /= alpha;
         a.a21 /= alpha; a.a22 /= alpha; a.a23 /= alpha;
         a.a31 /= alpha; a.a32 /= alpha; a.a33 /= alpha;
@@ -974,7 +974,7 @@ public class FixedOps3_F64 {
      * @param a The vector whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
-    public static void divide( FixedMatrix3_F64 a , double alpha ) {
+    public static void divide( DMatrixFixed3_F64 a , double alpha ) {
         a.a1 /= alpha;
         a.a2 /= alpha;
         a.a3 /= alpha;
@@ -991,7 +991,7 @@ public class FixedOps3_F64 {
      * @param a The matrix whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( FixedMatrix3x3_F64 a , double alpha , FixedMatrix3x3_F64 b ) {
+    public static void divide( DMatrixFixed3x3_F64 a , double alpha , DMatrixFixed3x3_F64 b ) {
         b.a11 = a.a11/alpha; b.a12 = a.a12/alpha; b.a13 = a.a13/alpha;
         b.a21 = a.a21/alpha; b.a22 = a.a22/alpha; b.a23 = a.a23/alpha;
         b.a31 = a.a31/alpha; b.a32 = a.a32/alpha; b.a33 = a.a33/alpha;
@@ -1008,7 +1008,7 @@ public class FixedOps3_F64 {
      * @param a The vector whose elements are to be divided.  Not modified.
      * @param b Where the results are stored. Modified.
      */
-    public static void divide( FixedMatrix3_F64 a , double alpha , FixedMatrix3_F64 b ) {
+    public static void divide( DMatrixFixed3_F64 a , double alpha , DMatrixFixed3_F64 b ) {
         b.a1 = a.a1/alpha;
         b.a2 = a.a2/alpha;
         b.a3 = a.a3/alpha;
@@ -1023,7 +1023,7 @@ public class FixedOps3_F64 {
      *
      * @param a A matrix. Modified.
      */
-    public static void changeSign( FixedMatrix3x3_F64 a )
+    public static void changeSign( DMatrixFixed3x3_F64 a )
     {
         a.a11 = -a.a11; a.a12 = -a.a12; a.a13 = -a.a13;
         a.a21 = -a.a21; a.a22 = -a.a22; a.a23 = -a.a23;
@@ -1039,7 +1039,7 @@ public class FixedOps3_F64 {
      *
      * @param a A vector. Modified.
      */
-    public static void changeSign( FixedMatrix3_F64 a )
+    public static void changeSign( DMatrixFixed3_F64 a )
     {
         a.a1 = -a.a1;
         a.a2 = -a.a2;
@@ -1056,7 +1056,7 @@ public class FixedOps3_F64 {
      * @param a A matrix whose elements are about to be set. Modified.
      * @param v The value each element will have.
      */
-    public static void fill( FixedMatrix3x3_F64 a , double v  ) {
+    public static void fill( DMatrixFixed3x3_F64 a , double v  ) {
         a.a11 = v; a.a12 = v; a.a13 = v;
         a.a21 = v; a.a22 = v; a.a23 = v;
         a.a31 = v; a.a32 = v; a.a33 = v;
@@ -1072,7 +1072,7 @@ public class FixedOps3_F64 {
      * @param a A vector whose elements are about to be set. Modified.
      * @param v The value each element will have.
      */
-    public static void fill( FixedMatrix3_F64 a , double v  ) {
+    public static void fill( DMatrixFixed3_F64 a , double v  ) {
         a.a1 = v;
         a.a2 = v;
         a.a3 = v;
@@ -1085,8 +1085,8 @@ public class FixedOps3_F64 {
      * @param out output. Storage for the extracted row. If null then a new vector will be returned.
      * @return The extracted row.
      */
-    public static FixedMatrix3_F64 extractRow( FixedMatrix3x3_F64 a , int row , FixedMatrix3_F64 out ) {
-        if( out == null) out = new FixedMatrix3_F64();
+    public static DMatrixFixed3_F64 extractRow( DMatrixFixed3x3_F64 a , int row , DMatrixFixed3_F64 out ) {
+        if( out == null) out = new DMatrixFixed3_F64();
         switch( row ) {
             case 0:
                 out.a1 = a.a11;
@@ -1116,8 +1116,8 @@ public class FixedOps3_F64 {
      * @param out output. Storage for the extracted column. If null then a new vector will be returned.
      * @return The extracted column.
      */
-    public static FixedMatrix3_F64 extractColumn( FixedMatrix3x3_F64 a , int column , FixedMatrix3_F64 out ) {
-        if( out == null) out = new FixedMatrix3_F64();
+    public static DMatrixFixed3_F64 extractColumn( DMatrixFixed3x3_F64 a , int column , DMatrixFixed3_F64 out ) {
+        if( out == null) out = new DMatrixFixed3_F64();
         switch( column ) {
             case 0:
                 out.a1 = a.a11;

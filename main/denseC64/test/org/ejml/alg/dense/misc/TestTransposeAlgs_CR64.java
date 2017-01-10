@@ -20,7 +20,7 @@ package org.ejml.alg.dense.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.RandomMatrices_CR64;
 import org.junit.Test;
 
@@ -37,8 +37,8 @@ public class TestTransposeAlgs_CR64 {
 
     @Test
     public void square() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
-        RowMatrix_C64 b = a.copy();
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
+        DMatrixRow_C64 b = a.copy();
 
         TransposeAlgs_CR64.square(b);
 
@@ -58,8 +58,8 @@ public class TestTransposeAlgs_CR64 {
 
     @Test
     public void squareConjugate() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
-        RowMatrix_C64 b = a.copy();
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,4,-1,1,rand);
+        DMatrixRow_C64 b = a.copy();
 
         TransposeAlgs_CR64.squareConjugate(b);
 
@@ -79,8 +79,8 @@ public class TestTransposeAlgs_CR64 {
 
     @Test
     public void standard() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(5, 4, -1, 1, rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(5, 4, -1, 1, rand);
 
         TransposeAlgs_CR64.standard(a, b);
 
@@ -100,8 +100,8 @@ public class TestTransposeAlgs_CR64 {
 
     @Test
     public void standardConjugate() {
-        RowMatrix_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
-        RowMatrix_C64 b = RandomMatrices_CR64.createRandom(5, 4, -1, 1, rand);
+        DMatrixRow_C64 a = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
+        DMatrixRow_C64 b = RandomMatrices_CR64.createRandom(5, 4, -1, 1, rand);
 
         TransposeAlgs_CR64.standardConjugate(a, b);
 

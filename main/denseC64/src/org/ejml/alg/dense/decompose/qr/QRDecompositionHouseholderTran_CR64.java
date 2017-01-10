@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.CommonOps_CR64;
 
@@ -37,13 +37,13 @@ import org.ejml.ops.CommonOps_CR64;
  * @author Peter Abeles
  */
 // TODO figure out why this is significantly slower than col
-public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowMatrix_C64> {
+public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<DMatrixRow_C64> {
 
     /**
      * Where the Q and R matrices are stored.  For speed reasons
      * this is transposed
      */
-    protected RowMatrix_C64 QR;
+    protected DMatrixRow_C64 QR;
 
     // used internally to store temporary data
     protected double v[];
@@ -69,7 +69,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
         int maxLength = Math.max(numCols,numRows);
 
         if( QR == null ) {
-            QR = new RowMatrix_C64(numCols,numRows);
+            QR = new DMatrixRow_C64(numCols,numRows);
             v = new double[ maxLength*2 ];
             gammas = new double[ minLength ];
         } else {
@@ -87,7 +87,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
     /**
      * Inner matrix that stores the decomposition
      */
-    public RowMatrix_C64 getQR() {
+    public DMatrixRow_C64 getQR() {
         return QR;
     }
 
@@ -98,7 +98,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public RowMatrix_C64 getQ(RowMatrix_C64 Q , boolean compact ) {
+    public DMatrixRow_C64 getQ(DMatrixRow_C64 Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_CR64.checkIdentity(Q,numRows,minLength);
         else
@@ -128,7 +128,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
      *
      * @param A Matrix that is being multiplied by Q.  Is modified.
      */
-    public void applyQ( RowMatrix_C64 A ) {
+    public void applyQ( DMatrixRow_C64 A ) {
         if( A.numRows != numRows )
             throw new IllegalArgumentException("A must have at least "+numRows+" rows.");
 
@@ -152,7 +152,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
      *
      * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
      */
-    public void applyTranQ( RowMatrix_C64 A ) {
+    public void applyTranQ( DMatrixRow_C64 A ) {
         for( int j = 0; j < minLength; j++ ) {
             int diagIndex = (j*numRows+j)*2;
             double realBefore = QR.data[diagIndex];
@@ -175,7 +175,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
      * @param compact
      */
     @Override
-    public RowMatrix_C64 getR(RowMatrix_C64 R, boolean compact) {
+    public DMatrixRow_C64 getR(DMatrixRow_C64 R, boolean compact) {
         if( compact )
             R = UtilDecompositons_CR64.checkZerosLT(R,minLength,numCols);
         else
@@ -204,7 +204,7 @@ public class QRDecompositionHouseholderTran_CR64 implements QRDecomposition<RowM
      * </p>
      */
     @Override
-    public boolean decompose( RowMatrix_C64 A ) {
+    public boolean decompose( DMatrixRow_C64 A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
         CommonOps_CR64.transpose(A, QR);

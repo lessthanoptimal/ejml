@@ -81,8 +81,8 @@ public class D1Submatrix_F32 {
         original.set(row+row0,col+col0,value);
     }
 
-    public RowMatrix_F32 extract() {
-        RowMatrix_F32 ret = new RowMatrix_F32(row1-row0,col1-col0);
+    public DMatrixRow_F32 extract() {
+        DMatrixRow_F32 ret = new DMatrixRow_F32(row1-row0,col1-col0);
 
         for( int i = 0; i < ret.numRows; i++ ) {
             for( int j = 0; j < ret.numCols; j++ ) {

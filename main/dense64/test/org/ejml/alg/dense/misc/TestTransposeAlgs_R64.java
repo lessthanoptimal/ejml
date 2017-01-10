@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.EjmlUnitTests;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -37,8 +37,8 @@ public class TestTransposeAlgs_R64 {
 
     @Test
     public void square() {
-        RowMatrix_F64 mat = RandomMatrices_R64.createRandom(5,5,rand);
-        RowMatrix_F64 matTran = mat.copy();
+        DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(5,5,rand);
+        DMatrixRow_F64 matTran = mat.copy();
 
         TransposeAlgs_R64.square(matTran);
 
@@ -53,8 +53,8 @@ public class TestTransposeAlgs_R64 {
         // check various shapes to make sure blocking is handled correctly
         for( int numRows = 1; numRows < 15; numRows += 2 ) {
             for( int numCols = 1; numCols < 15; numCols += 2) {
-                RowMatrix_F64 mat = RandomMatrices_R64.createRandom(numRows,numCols,rand);
-                RowMatrix_F64 matTran = new RowMatrix_F64(numCols,numRows);
+                DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+                DMatrixRow_F64 matTran = new DMatrixRow_F64(numCols,numRows);
 
                 TransposeAlgs_R64.block(mat,matTran,7);
 
@@ -68,8 +68,8 @@ public class TestTransposeAlgs_R64 {
 
     @Test
     public void standard() {
-        RowMatrix_F64 mat = RandomMatrices_R64.createRandom(5,7,rand);
-        RowMatrix_F64 matTran = new RowMatrix_F64(7,5);
+        DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(5,7,rand);
+        DMatrixRow_F64 matTran = new DMatrixRow_F64(7,5);
 
         TransposeAlgs_R64.standard(mat,matTran);
 

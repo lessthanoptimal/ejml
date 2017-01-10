@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -39,7 +39,7 @@ public class LUDecompositionAlt_R64 extends LUDecompositionBase_R64 {
      * @param a The matrix that is to be decomposed.  Not modified.
      * @return true If the matrix can be decomposed and false if it can not.
      */
-    public boolean decompose( RowMatrix_F64 a )
+    public boolean decompose( DMatrixRow_F64 a )
     {
         decomposeCommonInit(a);
 

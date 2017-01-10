@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.lu;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.ComplexMath_F64;
 import org.ejml.ops.RandomMatrices_CR64;
@@ -48,7 +48,7 @@ public class TestLUDecompositionBase_CR64 {
 
         int width = 10;
 
-        RowMatrix_C64 LU = RandomMatrices_CR64.createRandom(width,width,-1,1,rand);
+        DMatrixRow_C64 LU = RandomMatrices_CR64.createRandom(width,width,-1,1,rand);
 
         Complex_F64 expected = new Complex_F64(1,0);
         Complex_F64 a = new Complex_F64();
@@ -73,10 +73,10 @@ public class TestLUDecompositionBase_CR64 {
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        RowMatrix_C64 LU = RandomMatrices_CR64.createRandom(width, width,-1,1, rand);
+        DMatrixRow_C64 LU = RandomMatrices_CR64.createRandom(width, width,-1,1, rand);
 
-        RowMatrix_C64 L = new RowMatrix_C64(width,width);
-        RowMatrix_C64 U = new RowMatrix_C64(width,width);
+        DMatrixRow_C64 L = new DMatrixRow_C64(width,width);
+        DMatrixRow_C64 U = new DMatrixRow_C64(width,width);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
@@ -95,9 +95,9 @@ public class TestLUDecompositionBase_CR64 {
             }
         }
 
-        RowMatrix_C64 x = RandomMatrices_CR64.createRandom(width, 1,-1,1, rand);
-        RowMatrix_C64 tmp = new RowMatrix_C64(width,1);
-        RowMatrix_C64 b = new RowMatrix_C64(width,1);
+        DMatrixRow_C64 x = RandomMatrices_CR64.createRandom(width, 1,-1,1, rand);
+        DMatrixRow_C64 tmp = new DMatrixRow_C64(width,1);
+        DMatrixRow_C64 b = new DMatrixRow_C64(width,1);
 
         CommonOps_CR64.mult(U, x, tmp);
         CommonOps_CR64.mult(L, tmp, b);
@@ -117,9 +117,9 @@ public class TestLUDecompositionBase_CR64 {
     @Test
     public void solveL() {
         int width = 10;
-        RowMatrix_C64 LU = RandomMatrices_CR64.createRandom(width, width,-1,1, rand);
+        DMatrixRow_C64 LU = RandomMatrices_CR64.createRandom(width, width,-1,1, rand);
 
-        RowMatrix_C64 L = new RowMatrix_C64(width,width);
+        DMatrixRow_C64 L = new DMatrixRow_C64(width,width);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
@@ -135,8 +135,8 @@ public class TestLUDecompositionBase_CR64 {
             }
         }
 
-        RowMatrix_C64 x = RandomMatrices_CR64.createRandom(width, 1,-1,1, rand);
-        RowMatrix_C64 b = new RowMatrix_C64(width,1);
+        DMatrixRow_C64 x = RandomMatrices_CR64.createRandom(width, 1,-1,1, rand);
+        DMatrixRow_C64 b = new DMatrixRow_C64(width,1);
 
         CommonOps_CR64.mult(L, x, b);
 
@@ -159,13 +159,13 @@ public class TestLUDecompositionBase_CR64 {
             m = n = width;
         }
 
-        void setLU( RowMatrix_C64 LU ) {
+        void setLU( DMatrixRow_C64 LU ) {
             this.LU = LU;
             this.dataLU = LU.data;
         }
 
         @Override
-        public boolean decompose(RowMatrix_C64 orig) {
+        public boolean decompose(DMatrixRow_C64 orig) {
             return false;
         }
     }

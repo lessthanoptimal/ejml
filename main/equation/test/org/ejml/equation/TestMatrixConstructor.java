@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -39,11 +39,11 @@ public class TestMatrixConstructor {
 
     @Test
     public void basicTest() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(10,8,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(10,8,rand);
 
-        RowMatrix_F64 B = CommonOps_R64.extract(A,0,5,0,3);
-        RowMatrix_F64 C = CommonOps_R64.extract(A,0,5,3,8);
-        RowMatrix_F64 D = CommonOps_R64.extract(A,5,10,0,8);
+        DMatrixRow_F64 B = CommonOps_R64.extract(A,0,5,0,3);
+        DMatrixRow_F64 C = CommonOps_R64.extract(A,0,5,3,8);
+        DMatrixRow_F64 D = CommonOps_R64.extract(A,5,10,0,8);
 
         MatrixConstructor alg = new MatrixConstructor(new ManagerTempVariables());
 
@@ -54,7 +54,7 @@ public class TestMatrixConstructor {
 
         alg.construct();
 
-        RowMatrix_F64 found = alg.getOutput().matrix;
+        DMatrixRow_F64 found = alg.getOutput().matrix;
         assertTrue(MatrixFeatures_R64.isIdentical(A, found, UtilEjml.TEST_F64));
     }
 
@@ -62,13 +62,13 @@ public class TestMatrixConstructor {
     public void setToRequiredSize_matrix() {
         MatrixConstructor alg = new MatrixConstructor(new ManagerTempVariables());
 
-        alg.addToRow(new VariableMatrix(new RowMatrix_F64(2, 3)));
-        alg.addToRow(new VariableMatrix(new RowMatrix_F64(2, 4)));
+        alg.addToRow(new VariableMatrix(new DMatrixRow_F64(2, 3)));
+        alg.addToRow(new VariableMatrix(new DMatrixRow_F64(2, 4)));
         alg.endRow();
-        alg.addToRow(new VariableMatrix(new RowMatrix_F64(1, 7)));
+        alg.addToRow(new VariableMatrix(new DMatrixRow_F64(1, 7)));
         alg.endRow();
 
-        RowMatrix_F64 a = new RowMatrix_F64(1,1);
+        DMatrixRow_F64 a = new DMatrixRow_F64(1,1);
 
         alg.setToRequiredSize(a);
 
@@ -84,7 +84,7 @@ public class TestMatrixConstructor {
         alg.addToRow(new VariableDouble(1));
         alg.endRow();
 
-        RowMatrix_F64 a = new RowMatrix_F64(1,1);
+        DMatrixRow_F64 a = new DMatrixRow_F64(1,1);
 
         alg.setToRequiredSize(a);
 

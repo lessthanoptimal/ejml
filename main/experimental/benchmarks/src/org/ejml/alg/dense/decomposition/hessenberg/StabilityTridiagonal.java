@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.hessenberg;
 
 import org.ejml.EjmlParameters;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
@@ -37,7 +37,7 @@ import java.util.Random;
 public class StabilityTridiagonal {
 
 
-    public static double evaluate(TridiagonalSimilarDecomposition_F64<RowMatrix_F64> alg , RowMatrix_F64 orig ) {
+    public static double evaluate(TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> alg , DMatrixRow_F64 orig ) {
 
         if( !DecompositionFactory_R64.decomposeSafe(alg,orig)) {
             throw new RuntimeException("Decomposition failed");
@@ -55,7 +55,7 @@ public class StabilityTridiagonal {
         return top/bottom;
     }
 
-    private static void runAlgorithms( RowMatrix_F64 mat  )
+    private static void runAlgorithms( DMatrixRow_F64 mat  )
     {
         System.out.println("tri             = "+ evaluate(new TridiagonalDecompositionHouseholder_R64(),mat));
         System.out.println("block           = "+ evaluate(new TridiagonalDecomposition_B64_to_R64(),mat));
@@ -70,8 +70,8 @@ public class StabilityTridiagonal {
             double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
             System.out.println("Square matrix");
-            RowMatrix_F64 orig = RandomMatrices_R64.createSymmetric(size,-1,1,rand);
-            RowMatrix_F64 mat = orig.copy();
+            DMatrixRow_F64 orig = RandomMatrices_R64.createSymmetric(size,-1,1,rand);
+            DMatrixRow_F64 mat = orig.copy();
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);

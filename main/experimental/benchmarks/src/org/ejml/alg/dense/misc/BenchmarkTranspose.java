@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.misc;
 
 import org.ejml.EjmlParameters;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -32,7 +32,7 @@ import java.util.Random;
 public class BenchmarkTranspose {
     static Random rand = new Random(234);
 
-    public static long square(RowMatrix_F64 mat , int numTrials) {
+    public static long square(DMatrixRow_F64 mat , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -44,8 +44,8 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long block(RowMatrix_F64 mat , int numTrials , int blockLength ) {
-        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
+    public static long block(DMatrixRow_F64 mat , int numTrials , int blockLength ) {
+        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -57,8 +57,8 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long standard(RowMatrix_F64 mat , int numTrials) {
-        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
+    public static long standard(DMatrixRow_F64 mat , int numTrials) {
+        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -70,8 +70,8 @@ public class BenchmarkTranspose {
         return curr-prev;
     }
 
-    public static long common(RowMatrix_F64 mat , int numTrials) {
-        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
+    public static long common(DMatrixRow_F64 mat , int numTrials) {
+        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -96,7 +96,7 @@ public class BenchmarkTranspose {
 
     private static void evaluateMatrix( int length , int n) {
         System.out.println("*** Size "+length);
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(length,length,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(length,length,rand);
 
         System.out.println("---------- Square ----------------");
         System.out.println("In place  : "+square(A, n));

@@ -119,7 +119,7 @@ public class MatrixFeatures_R64 {
      *
      * @return True if it is positive definite and false if it is not.
      */
-    public static boolean isPositiveDefinite( RowMatrix_F64 A ) {
+    public static boolean isPositiveDefinite( DMatrixRow_F64 A ) {
         if( !isSquare(A))
            return false;
 
@@ -143,11 +143,11 @@ public class MatrixFeatures_R64 {
      *
      * @return True if it is positive semidefinite and false if it is not.
      */
-    public static boolean isPositiveSemidefinite( RowMatrix_F64 A ) {
+    public static boolean isPositiveSemidefinite( DMatrixRow_F64 A ) {
         if( !isSquare(A))
            return false;
 
-        EigenDecomposition_F64<RowMatrix_F64> eig = DecompositionFactory_R64.eig(A.numCols,false);
+        EigenDecomposition_F64<DMatrixRow_F64> eig = DecompositionFactory_R64.eig(A.numCols,false);
         if( eig.inputModified() )
             A = A.copy();
         eig.decompose(A);
@@ -187,7 +187,7 @@ public class MatrixFeatures_R64 {
      * @param tol Tolerance for how similar two elements need to be.
      * @return true if it is symmetric and false if it is not.
      */
-    public static boolean isSymmetric(RowMatrix_F64 m , double tol ) {
+    public static boolean isSymmetric(DMatrixRow_F64 m , double tol ) {
         if( m.numCols != m.numRows )
             return false;
 
@@ -220,7 +220,7 @@ public class MatrixFeatures_R64 {
      * @param m A matrix. Not modified.
      * @return true if it is symmetric and false if it is not.
      */
-    public static boolean isSymmetric( RowMatrix_F64 m ) {
+    public static boolean isSymmetric( DMatrixRow_F64 m ) {
         return isSymmetric(m,0.0);
     }
 
@@ -237,7 +237,7 @@ public class MatrixFeatures_R64 {
      * @param tol Tolerance for being skew symmetric.
      * @return True if it is skew symmetric and false if it is not.
      */
-    public static boolean isSkewSymmetric(RowMatrix_F64 A , double tol ){
+    public static boolean isSkewSymmetric(DMatrixRow_F64 A , double tol ){
         if( A.numCols != A.numRows )
             return false;
 
@@ -262,7 +262,7 @@ public class MatrixFeatures_R64 {
      * @param a A matrix. Not modified.
      * @param b A matrix. Not modified.
      */
-    public static boolean isInverse(RowMatrix_F64 a , RowMatrix_F64 b , double tol ) {
+    public static boolean isInverse(DMatrixRow_F64 a , DMatrixRow_F64 b , double tol ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }
@@ -342,7 +342,7 @@ public class MatrixFeatures_R64 {
      * @param tol How close to being identical each element needs to be.
      * @return true if equals and false otherwise.
      */
-    public static boolean isEqualsTriangle(RealMatrix_F64 a, RealMatrix_F64 b, boolean upper, double tol)
+    public static boolean isEqualsTriangle(Matrix_64 a, Matrix_64 b, boolean upper, double tol)
     {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
             return false;
@@ -414,7 +414,7 @@ public class MatrixFeatures_R64 {
      * @param b A matrix. Not modified.
      * @return true if identical and false otherwise.
      */
-    public static boolean isEquals(RowMatrix_B a, RowMatrix_B b ) {
+    public static boolean isEquals(DMatrixRow_B a, DMatrixRow_B b ) {
         if( a.numRows != b.numRows || a.numCols != b.numCols ) {
             return false;
         }
@@ -489,16 +489,16 @@ public class MatrixFeatures_R64 {
      * @param tol Tolerance.
      * @return True if it passes the test.
      */
-    public static boolean isOrthogonal(RowMatrix_F64 Q , double tol )
+    public static boolean isOrthogonal(DMatrixRow_F64 Q , double tol )
     {
        if( Q.numRows < Q.numCols ) {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
-        RowMatrix_F64 u[] = CommonOps_R64.columnsToVector(Q, null);
+        DMatrixRow_F64 u[] = CommonOps_R64.columnsToVector(Q, null);
 
         for( int i = 0; i < u.length; i++ ) {
-            RowMatrix_F64 a = u[i];
+            DMatrixRow_F64 a = u[i];
 
             for( int j = i+1; j < u.length; j++ ) {
                 double val = VectorVectorMult_R64.innerProd(a,u[j]);
@@ -517,10 +517,10 @@ public class MatrixFeatures_R64 {
      * @param A Matrix whose rows are being tested for linear independence.
      * @return true if linearly independent and false otherwise.
      */
-    public static boolean isRowsLinearIndependent( RowMatrix_F64 A )
+    public static boolean isRowsLinearIndependent( DMatrixRow_F64 A )
     {
         // LU decomposition
-        LUDecomposition<RowMatrix_F64> lu = DecompositionFactory_R64.lu(A.numRows,A.numCols);
+        LUDecomposition<DMatrixRow_F64> lu = DecompositionFactory_R64.lu(A.numRows,A.numCols);
         if( lu.inputModified() )
             A = A.copy();
 
@@ -538,7 +538,7 @@ public class MatrixFeatures_R64 {
      * @param tol Tolerance.
      * @return True if it is within tolerance to an identify matrix.
      */
-    public static boolean isIdentity(RowMatrix_F64 mat , double tol )
+    public static boolean isIdentity(DMatrixRow_F64 mat , double tol )
     {
         // see if the result is an identity matrix
         int index = 0;
@@ -565,7 +565,7 @@ public class MatrixFeatures_R64 {
      * @param tol True if all the elements are within this tolerance.
      * @return true if the test passes.
      */
-    public static boolean isConstantVal(RowMatrix_F64 mat , double val , double tol )
+    public static boolean isConstantVal(DMatrixRow_F64 mat , double val , double tol )
     {
         // see if the result is an identity matrix
         int index = 0;
@@ -586,7 +586,7 @@ public class MatrixFeatures_R64 {
      * @param a A matrix. Not modified.
      * @return true if all the  diagonal elements are positive, false otherwise.
      */
-    public static boolean isDiagonalPositive( RowMatrix_F64 a ) {
+    public static boolean isDiagonalPositive( DMatrixRow_F64 a ) {
         for( int i = 0; i < a.numRows; i++ ) {
             if( !(a.get(i,i) >= 0) )
                 return false;
@@ -595,7 +595,7 @@ public class MatrixFeatures_R64 {
     }
 
     // TODO write this
-    public static boolean isFullRank( RowMatrix_F64 a ) {
+    public static boolean isFullRank( DMatrixRow_F64 a ) {
         throw new RuntimeException("Implement");
     }
 
@@ -639,7 +639,7 @@ public class MatrixFeatures_R64 {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isUpperTriangle(RowMatrix_F64 A , int hessenberg , double tol ) {
+    public static boolean isUpperTriangle(DMatrixRow_F64 A , int hessenberg , double tol ) {
         for( int i = hessenberg+1; i < A.numRows; i++ ) {
             int maxCol = Math.min(i-hessenberg, A.numCols);
             for( int j = 0; j < maxCol; j++ ) {
@@ -665,7 +665,7 @@ public class MatrixFeatures_R64 {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isLowerTriangle(RowMatrix_F64 A , int hessenberg , double tol ) {
+    public static boolean isLowerTriangle(DMatrixRow_F64 A , int hessenberg , double tol ) {
         for( int i = 0; i < A.numRows-hessenberg-1; i++ ) {
             for( int j = i+hessenberg+1; j < A.numCols; j++ ) {
                 if( !(Math.abs(A.unsafe_get(i,j)) <= tol) ) {
@@ -682,7 +682,7 @@ public class MatrixFeatures_R64 {
      * @param A Matrix whose rank is to be calculated.  Not modified.
      * @return The matrix's rank.
      */
-    public static int rank( RowMatrix_F64 A ) {
+    public static int rank( DMatrixRow_F64 A ) {
         return rank(A, UtilEjml.EPS*100);
     }
 
@@ -693,8 +693,8 @@ public class MatrixFeatures_R64 {
      * @param threshold The numerical threshold used to determine a singular value.
      * @return The matrix's rank.
      */
-    public static int rank(RowMatrix_F64 A , double threshold ) {
-        SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
+    public static int rank(DMatrixRow_F64 A , double threshold ) {
+        SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
 
         if( svd.inputModified() )
             A = A.copy();
@@ -711,7 +711,7 @@ public class MatrixFeatures_R64 {
      * @param A Matrix whose rank is to be calculated.  Not modified.
      * @return The matrix's nullity.
      */
-    public static int nullity( RowMatrix_F64 A ) {
+    public static int nullity( DMatrixRow_F64 A ) {
         return nullity(A, UtilEjml.EPS*100);
     }
 
@@ -722,8 +722,8 @@ public class MatrixFeatures_R64 {
      * @param threshold The numerical threshold used to determine a singular value.
      * @return The matrix's nullity.
      */
-    public static int nullity(RowMatrix_F64 A , double threshold ) {
-        SingularValueDecomposition_F64<RowMatrix_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
+    public static int nullity(DMatrixRow_F64 A , double threshold ) {
+        SingularValueDecomposition_F64<DMatrixRow_F64> svd = DecompositionFactory_R64.svd(A.numRows,A.numCols,false,false,true);
 
         if( svd.inputModified() )
             A = A.copy();

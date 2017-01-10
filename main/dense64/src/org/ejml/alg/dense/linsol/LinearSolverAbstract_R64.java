@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -29,30 +29,30 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * </p>
  *
  * <p>
- * The extending class must explicity call {@link #_setA(RowMatrix_F64)}
+ * The extending class must explicity call {@link #_setA(DMatrixRow_F64)}
  * inside of its {@link #setA} function.
  * </p>
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract_R64 implements LinearSolver<RowMatrix_F64> {
+public abstract class LinearSolverAbstract_R64 implements LinearSolver<DMatrixRow_F64> {
 
-    protected RowMatrix_F64 A;
+    protected DMatrixRow_F64 A;
     protected int numRows;
     protected int numCols;
 
-    public RowMatrix_F64 getA() {
+    public DMatrixRow_F64 getA() {
         return A;
     }
 
-    protected void _setA(RowMatrix_F64 A) {
+    protected void _setA(DMatrixRow_F64 A) {
         this.A = A;
         this.numRows = A.numRows;
         this.numCols = A.numCols;
     }
 
     @Override
-    public void invert(RowMatrix_F64 A_inv) {
+    public void invert(DMatrixRow_F64 A_inv) {
         InvertUsingSolve_R64.invert(this,A,A_inv);
     }
 }

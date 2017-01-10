@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 public class TestLinearSolverAbstract_R64 {
     @Test
     public void setA_getA() {
-        RowMatrix_F64 A = new RowMatrix_F64(1,1);
+        DMatrixRow_F64 A = new DMatrixRow_F64(1,1);
 
         MySolver s = new MySolver();
         s.setA(A);
@@ -46,7 +46,7 @@ public class TestLinearSolverAbstract_R64 {
     public void invert() {
         MySolver solver = new MySolver();
 
-        RowMatrix_F64 A = new RowMatrix_F64(1,1);
+        DMatrixRow_F64 A = new DMatrixRow_F64(1,1);
 
         solver.setA(A);
         solver.invert(A);
@@ -59,7 +59,7 @@ public class TestLinearSolverAbstract_R64 {
         boolean solveCalled = false;
 
         @Override
-        public boolean setA(RowMatrix_F64 A) {
+        public boolean setA(DMatrixRow_F64 A) {
             _setA(A);
 
             return true;
@@ -71,7 +71,7 @@ public class TestLinearSolverAbstract_R64 {
         }
 
         @Override
-        public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
+        public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
               solveCalled = true;
         }
 

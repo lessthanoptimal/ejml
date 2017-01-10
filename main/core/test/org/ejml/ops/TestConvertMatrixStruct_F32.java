@@ -20,10 +20,10 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.block.MatrixOps_B32;
-import org.ejml.data.BlockMatrix_F32;
-import org.ejml.data.FixedMatrix_F32;
-import org.ejml.data.RealMatrix_F32;
-import org.ejml.data.RowMatrix_F32;
+import org.ejml.data.DMatrixBlock_F32;
+import org.ejml.data.DMatrixFixed_F32;
+import org.ejml.data.DMatrixRow_F32;
+import org.ejml.data.Matrix_32;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,10 +42,10 @@ public class TestConvertMatrixStruct_F32 {
 
     @Test
     public void any_to_any() {
-        RowMatrix_F32 a = new RowMatrix_F32(2,3,true,1,2,3,4,5,6);
-        RowMatrix_F32 b = new RowMatrix_F32(2,3);
+        DMatrixRow_F32 a = new DMatrixRow_F32(2,3,true,1,2,3,4,5,6);
+        DMatrixRow_F32 b = new DMatrixRow_F32(2,3);
 
-        ConvertMatrixStruct_F32.convert((RealMatrix_F32)a,(RealMatrix_F32)b);
+        ConvertMatrixStruct_F32.convert((Matrix_32)a,(Matrix_32)b);
 
         assertTrue(MatrixFeatures_R32.isIdentical(a,b,UtilEjml.TEST_F32));
     }
@@ -61,12 +61,12 @@ public class TestConvertMatrixStruct_F32 {
                 continue;
             Class[]param = m.getParameterTypes();
 
-            if( !FixedMatrix_F32.class.isAssignableFrom(param[0]) ) {
+            if( !DMatrixFixed_F32.class.isAssignableFrom(param[0]) ) {
                 continue;
             }
 
-            FixedMatrix_F32 a = (FixedMatrix_F32)param[0].newInstance();
-            RowMatrix_F32 b = new RowMatrix_F32(a.getNumRows(),a.getNumCols());
+            DMatrixFixed_F32 a = (DMatrixFixed_F32)param[0].newInstance();
+            DMatrixRow_F32 b = new DMatrixRow_F32(a.getNumRows(),a.getNumCols());
 
             for( int i = 0; i < b.numRows; i++ ) {
                 for( int j = 0; j < b.numCols; j++ ) {
@@ -99,12 +99,12 @@ public class TestConvertMatrixStruct_F32 {
                 continue;
             Class[]param = m.getParameterTypes();
 
-            if( !FixedMatrix_F32.class.isAssignableFrom(param[1]) ) {
+            if( !DMatrixFixed_F32.class.isAssignableFrom(param[1]) ) {
                 continue;
             }
 
-            FixedMatrix_F32 b = (FixedMatrix_F32)param[1].newInstance();
-            RowMatrix_F32 a = new RowMatrix_F32(b.getNumRows(),b.getNumCols());
+            DMatrixFixed_F32 b = (DMatrixFixed_F32)param[1].newInstance();
+            DMatrixRow_F32 a = new DMatrixRow_F32(b.getNumRows(),b.getNumCols());
 
             for( int i = 0; i < a.numRows; i++ ) {
                 for( int j = 0; j < a.numCols; j++ ) {
@@ -130,8 +130,8 @@ public class TestConvertMatrixStruct_F32 {
     public void BM_to_DM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                BlockMatrix_F32 a = MatrixOps_B32.createRandom(rows,cols,-1,2,rand);
-                RowMatrix_F32 b = new RowMatrix_F32(rows,cols);
+                DMatrixBlock_F32 a = MatrixOps_B32.createRandom(rows,cols,-1,2,rand);
+                DMatrixRow_F32 b = new DMatrixRow_F32(rows,cols);
 
                 ConvertMatrixStruct_F32.convert(a,b);
 
@@ -144,8 +144,8 @@ public class TestConvertMatrixStruct_F32 {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                RowMatrix_F32 a = RandomMatrices_R32.createRandom(rows,cols,rand);
-                BlockMatrix_F32 b = new BlockMatrix_F32(rows,cols,3);
+                DMatrixRow_F32 a = RandomMatrices_R32.createRandom(rows,cols,rand);
+                DMatrixBlock_F32 b = new DMatrixBlock_F32(rows,cols,3);
 
                 ConvertMatrixStruct_F32.convert(a,b);
 
@@ -155,7 +155,7 @@ public class TestConvertMatrixStruct_F32 {
     }
 
 
-    private void checkIdentical(RealMatrix_F32 a , RealMatrix_F32 b ) {
+    private void checkIdentical(Matrix_32 a , Matrix_32 b ) {
         for( int i = 0; i < a.getNumRows(); i++  ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
                 assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_F32);
@@ -163,7 +163,7 @@ public class TestConvertMatrixStruct_F32 {
         }
     }
 
-    private void checkIdenticalV(RealMatrix_F32 a , RealMatrix_F32 b ) {
+    private void checkIdenticalV(Matrix_32 a , Matrix_32 b ) {
         boolean columnVectorA = a.getNumRows() > a.getNumCols();
         boolean columnVectorB = b.getNumRows() > b.getNumCols();
 

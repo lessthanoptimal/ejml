@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
 
@@ -27,7 +27,7 @@ import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
  */
 public class TestBidiagonalDecompositionTall_R64 extends GenericBidiagonalCheck_R64 {
     @Override
-    protected BidiagonalDecomposition_F64<RowMatrix_F64> createQRDecomposition() {
+    protected BidiagonalDecomposition_F64<DMatrixRow_F64> createQRDecomposition() {
         return new BidiagonalDecompositionTall_R64();
     }
 }

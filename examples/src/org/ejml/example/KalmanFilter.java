@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 /**
  * <p>
@@ -43,8 +43,8 @@ public interface KalmanFilter {
      * @param Q plant noise.
      * @param H measurement projection matrix.
      */
-    void configure(RowMatrix_F64 F, RowMatrix_F64 Q ,
-                          RowMatrix_F64 H);
+    void configure(DMatrixRow_F64 F, DMatrixRow_F64 Q ,
+                          DMatrixRow_F64 H);
 
     /**
      * The prior state estimate and covariance.
@@ -52,7 +52,7 @@ public interface KalmanFilter {
      * @param x The estimated system state.
      * @param P The covariance of the estimated system state.
      */
-    void setState(RowMatrix_F64 x , RowMatrix_F64 P );
+    void setState(DMatrixRow_F64 x , DMatrixRow_F64 P );
 
     /**
      * Predicts the state of the system forward one time step.
@@ -65,19 +65,19 @@ public interface KalmanFilter {
      * @param z Measurement.
      * @param R Measurement covariance.
      */
-    void update(RowMatrix_F64 z , RowMatrix_F64 R );
+    void update(DMatrixRow_F64 z , DMatrixRow_F64 R );
 
     /**
      * Returns the current estimated state of the system.
      *
      * @return The state.
      */
-    RowMatrix_F64 getState();
+    DMatrixRow_F64 getState();
 
     /**
      * Returns the estimated state's covariance matrix.
      *
      * @return The covariance.
      */
-    RowMatrix_F64 getCovariance();
+    DMatrixRow_F64 getCovariance();
 }

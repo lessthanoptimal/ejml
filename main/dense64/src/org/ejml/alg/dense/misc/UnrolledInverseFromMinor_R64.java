@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -31,7 +31,7 @@ public class UnrolledInverseFromMinor_R64 {
     
     public static final int MAX = 5;
     
-    public static void inv(RowMatrix_F64 mat , RowMatrix_F64 inv ) {
+    public static void inv(DMatrixRow_F64 mat , DMatrixRow_F64 inv ) {
         double max = Math.abs(mat.data[0]);
         int N = mat.getNumElements();
         
@@ -49,7 +49,7 @@ public class UnrolledInverseFromMinor_R64 {
         }
     }
 
-    public static void inv2(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
+    public static void inv2(DMatrixRow_F64 mat , DMatrixRow_F64 inv , double scale )
     {
         double []data = mat.data;
 
@@ -73,7 +73,7 @@ public class UnrolledInverseFromMinor_R64 {
 
     }
 
-    public static void inv3(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
+    public static void inv3(DMatrixRow_F64 mat , DMatrixRow_F64 inv , double scale )
     {
         double []data = mat.data;
 
@@ -112,7 +112,7 @@ public class UnrolledInverseFromMinor_R64 {
 
     }
 
-    public static void inv4(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
+    public static void inv4(DMatrixRow_F64 mat , DMatrixRow_F64 inv , double scale )
     {
         double []data = mat.data;
 
@@ -172,7 +172,7 @@ public class UnrolledInverseFromMinor_R64 {
 
     }
 
-    public static void inv5(RowMatrix_F64 mat , RowMatrix_F64 inv , double scale )
+    public static void inv5(DMatrixRow_F64 mat , DMatrixRow_F64 inv , double scale )
     {
         double []data = mat.data;
 

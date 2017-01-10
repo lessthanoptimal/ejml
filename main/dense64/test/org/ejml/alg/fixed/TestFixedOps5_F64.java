@@ -19,8 +19,8 @@
 package org.ejml.alg.fixed;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.FixedMatrix5_F64;
-import org.ejml.data.FixedMatrix5x5_F64;
+import org.ejml.data.DMatrixFixed5_F64;
+import org.ejml.data.DMatrixFixed5x5_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,8 +36,8 @@ public class TestFixedOps5_F64 extends CompareFixedToCommonOps_F64 {
 
     @Test
     public void diag() {
-        FixedMatrix5x5_F64 m = new FixedMatrix5x5_F64(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25);
-        FixedMatrix5_F64 found = new FixedMatrix5_F64();
+        DMatrixFixed5x5_F64 m = new DMatrixFixed5x5_F64(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25);
+        DMatrixFixed5_F64 found = new DMatrixFixed5_F64();
 
         FixedOps5_F64.diag(m,found);
 

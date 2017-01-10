@@ -45,7 +45,7 @@ public class SimpleEVD <T extends SimpleBase>
     public SimpleEVD( Matrix mat )
     {
         this.mat = mat;
-        this.is64 = mat instanceof RowMatrix_F64;
+        this.is64 = mat instanceof DMatrixRow_F64;
 
         if( is64) {
             eig = DecompositionFactory_R64.eig(mat.getNumCols(), true);
@@ -140,9 +140,9 @@ public class SimpleEVD <T extends SimpleBase>
      */
     public /**/double quality() {
         if (is64) {
-            return DecompositionFactory_R64.quality((RowMatrix_F64)mat, (EigenDecomposition_F64)eig);
+            return DecompositionFactory_R64.quality((DMatrixRow_F64)mat, (EigenDecomposition_F64)eig);
         } else {
-            return DecompositionFactory_R32.quality((RowMatrix_F32)mat, (EigenDecomposition_F32)eig);
+            return DecompositionFactory_R32.quality((DMatrixRow_F32)mat, (EigenDecomposition_F32)eig);
         }
     }
 

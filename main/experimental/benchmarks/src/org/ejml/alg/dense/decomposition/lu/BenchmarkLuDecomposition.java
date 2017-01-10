@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.lu;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkLuDecomposition {
 
 
-    public static void benchmark(LUDecomposition<RowMatrix_F64> lu , RowMatrix_F64 orig , int numTrials ) {
+    public static void benchmark(LUDecomposition<DMatrixRow_F64> lu , DMatrixRow_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
         for( long i = 0; i < numTrials; i++ ) {
@@ -47,7 +47,7 @@ public class BenchmarkLuDecomposition {
     }
 
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
         benchmark(new LUDecompositionAlt_R64(),mat,numTrials);
         benchmark(new LUDecompositionNR_R64(),mat,numTrials);
@@ -66,7 +66,7 @@ public class BenchmarkLuDecomposition {
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
 //            System.out.print("* Creating matrix ");
-            RowMatrix_F64 symMat = RandomMatrices_R64.createRandom(w,w,-1,1,rand);
+            DMatrixRow_F64 symMat = RandomMatrices_R64.createRandom(w,w,-1,1,rand);
 //            System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

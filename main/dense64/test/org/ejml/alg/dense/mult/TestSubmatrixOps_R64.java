@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.EjmlUnitTests;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 
@@ -30,8 +30,8 @@ public class TestSubmatrixOps_R64 {
 
     @Test
     public void setSubMatrix() {
-        RowMatrix_F64 A = new RowMatrix_F64(5,5);
-        RowMatrix_F64 B = new RowMatrix_F64(6,6);
+        DMatrixRow_F64 A = new DMatrixRow_F64(5,5);
+        DMatrixRow_F64 B = new DMatrixRow_F64(6,6);
 
         for( int i = 0; i < A.data.length; i++ ) {
             A.data[i] = 1;
@@ -40,7 +40,7 @@ public class TestSubmatrixOps_R64 {
         SubmatrixOps_R64.setSubMatrix(A,B,1,1,2,3,2,3);
 
         // create a matrix that should be identical to B
-        RowMatrix_F64 C = new RowMatrix_F64(6,6);
+        DMatrixRow_F64 C = new DMatrixRow_F64(6,6);
         for( int i = 2; i < 4; i++ ) {
             for( int j = 3; j < 6; j++ ) {
                 C.set(i,j,1);

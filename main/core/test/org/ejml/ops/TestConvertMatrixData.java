@@ -33,9 +33,9 @@ import static org.junit.Assert.assertTrue;
 public class TestConvertMatrixData {
     @Test
     public void DenseMatrix() {
-        RowMatrix_F64 A = new RowMatrix_F64(2,2,true,1,2,3,4);
-        RowMatrix_F32 B = new RowMatrix_F32(2,2);
-        RowMatrix_F64 C = new RowMatrix_F64(2,2);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,2,true,1,2,3,4);
+        DMatrixRow_F32 B = new DMatrixRow_F32(2,2);
+        DMatrixRow_F64 C = new DMatrixRow_F64(2,2);
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
@@ -44,10 +44,10 @@ public class TestConvertMatrixData {
     }
 
     @Test
-    public void FixedMatrix2x2() {
-        FixedMatrix2x2_F64 A = new FixedMatrix2x2_F64(1,2,3,4);
-        FixedMatrix2x2_F32 B = new FixedMatrix2x2_F32();
-        FixedMatrix2x2_F64 C = new FixedMatrix2x2_F64();
+    public void DMatrixFixed2x2() {
+        DMatrixFixed2x2_F64 A = new DMatrixFixed2x2_F64(1,2,3,4);
+        DMatrixFixed2x2_F32 B = new DMatrixFixed2x2_F32();
+        DMatrixFixed2x2_F64 C = new DMatrixFixed2x2_F64();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
@@ -56,10 +56,10 @@ public class TestConvertMatrixData {
     }
 
     @Test
-    public void FixedMatrix3x3() {
-        FixedMatrix3x3_F64 A = new FixedMatrix3x3_F64(1,2,3,4,5,6,7,8,9);
-        FixedMatrix3x3_F32 B = new FixedMatrix3x3_F32();
-        FixedMatrix3x3_F64 C = new FixedMatrix3x3_F64();
+    public void DMatrixFixed3x3() {
+        DMatrixFixed3x3_F64 A = new DMatrixFixed3x3_F64(1,2,3,4,5,6,7,8,9);
+        DMatrixFixed3x3_F32 B = new DMatrixFixed3x3_F32();
+        DMatrixFixed3x3_F64 C = new DMatrixFixed3x3_F64();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
@@ -68,10 +68,10 @@ public class TestConvertMatrixData {
     }
 
     @Test
-    public void FixedMatrix4x4() {
-        FixedMatrix4x4_F64 A = new FixedMatrix4x4_F64(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6);
-        FixedMatrix4x4_F32 B = new FixedMatrix4x4_F32();
-        FixedMatrix4x4_F64 C = new FixedMatrix4x4_F64();
+    public void DMatrixFixed4x4() {
+        DMatrixFixed4x4_F64 A = new DMatrixFixed4x4_F64(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6);
+        DMatrixFixed4x4_F32 B = new DMatrixFixed4x4_F32();
+        DMatrixFixed4x4_F64 C = new DMatrixFixed4x4_F64();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);

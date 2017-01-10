@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -43,17 +43,17 @@ public class TestCholeskyDecompositionLDL_R64 {
 
     @Test
     public void testDecompose() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
 
 
-        RowMatrix_F64 L = new RowMatrix_F64(3,3, true, 1, 0, 0, 2, 1, 0, 4, 5, 1);
+        DMatrixRow_F64 L = new DMatrixRow_F64(3,3, true, 1, 0, 0, 2, 1, 0, 4, 5, 1);
 
         double D[] = new double[]{1,3,7};
 
         CholeskyDecompositionLDL_R64 cholesky = new CholeskyDecompositionLDL_R64();
         assertTrue(cholesky.decompose(A));
 
-        RowMatrix_F64 foundL = cholesky.getL();
+        DMatrixRow_F64 foundL = cholesky.getL();
 
         EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_F64);
         for( int i = 0; i < D.length; i++ ) {
@@ -66,7 +66,7 @@ public class TestCholeskyDecompositionLDL_R64 {
      */
     @Test
     public void testNotPositiveDefinate() {
-        RowMatrix_F64 A = new RowMatrix_F64(2,2, true, 1, -1, -1, -2);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,2, true, 1, -1, -1, -2);
 
         CholeskyDecompositionLDL_R64 alg = new CholeskyDecompositionLDL_R64();
         assertFalse(alg.decompose(A));

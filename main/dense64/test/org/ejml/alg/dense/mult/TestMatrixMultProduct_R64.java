@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.mult;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
@@ -38,9 +38,9 @@ public class TestMatrixMultProduct_R64 {
 
     @Test
     public void outer() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(20, 10, rand);
-        RowMatrix_F64 found = new RowMatrix_F64(20,20);
-        RowMatrix_F64 expected = new RowMatrix_F64(20,20);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(20, 10, rand);
+        DMatrixRow_F64 found = new DMatrixRow_F64(20,20);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(20,20);
 
         MatrixMatrixMult_R64.multTransB(A, A, expected);
         MatrixMultProduct_R64.outer(A, found);
@@ -50,9 +50,9 @@ public class TestMatrixMultProduct_R64 {
 
     @Test
     public void inner_small() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(20, 10, rand);
-        RowMatrix_F64 found = new RowMatrix_F64(10,10);
-        RowMatrix_F64 expected = new RowMatrix_F64(10,10);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(20, 10, rand);
+        DMatrixRow_F64 found = new DMatrixRow_F64(10,10);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(10,10);
 
         MatrixMatrixMult_R64.multTransA_reorder(A,A,expected);
         MatrixMultProduct_R64.inner_small(A, found);
@@ -62,9 +62,9 @@ public class TestMatrixMultProduct_R64 {
 
     @Test
     public void inner_reorder() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(20,10,rand);
-        RowMatrix_F64 found = new RowMatrix_F64(10,10);
-        RowMatrix_F64 expected = new RowMatrix_F64(10,10);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(20,10,rand);
+        DMatrixRow_F64 found = new DMatrixRow_F64(10,10);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(10,10);
 
         MatrixMatrixMult_R64.multTransA_reorder(A,A,expected);
         MatrixMultProduct_R64.inner_reorder(A, found);
@@ -74,9 +74,9 @@ public class TestMatrixMultProduct_R64 {
 
     @Test
     public void inner_reorder_upper() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(20,10,rand);
-        RowMatrix_F64 found = new RowMatrix_F64(10,10);
-        RowMatrix_F64 expected = new RowMatrix_F64(10,10);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(20,10,rand);
+        DMatrixRow_F64 found = new DMatrixRow_F64(10,10);
+        DMatrixRow_F64 expected = new DMatrixRow_F64(10,10);
 
         MatrixMatrixMult_R64.multTransA_reorder(A,A,expected);
         MatrixMultProduct_R64.inner_reorder_upper(A, found);

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.alg.dense.decompose.lu.LUDecompositionBase_CR64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 
 /**
@@ -44,7 +44,7 @@ public class LUDecompositionNR_CR64 extends LUDecompositionBase_CR64 {
      * return true and still be singular.
      */
     @Override
-    public boolean decompose( RowMatrix_C64 orig ) {
+    public boolean decompose( DMatrixRow_C64 orig ) {
 //        if( orig.numCols != orig.numRows )
 //            throw new RuntimeException("Must be square");
         decomposeCommonInit(orig);

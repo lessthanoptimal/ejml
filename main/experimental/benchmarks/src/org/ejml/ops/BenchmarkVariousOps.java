@@ -18,7 +18,7 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -36,10 +36,10 @@ public class BenchmarkVariousOps {
     static int TRIALS_NORM = 10000000;
     static int TRIALS_DETERMINANT = 20000000;
 
-    public static long transposeEml(RowMatrix_F64 mat , int numTrials) {
+    public static long transposeEml(DMatrixRow_F64 mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
-        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
+        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
             CommonOps_R64.transpose(mat,tran);
@@ -49,7 +49,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-//    public static long transposeMtj( RowMatrix_F64 orig , int numTrials) {
+//    public static long transposeMtj( DMatrixRow_F64 orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
 //        long prev = System.currentTimeMillis();
@@ -64,7 +64,7 @@ public class BenchmarkVariousOps {
 //        return curr-prev;
 //    }
 
-    public static long scale(RowMatrix_F64 mat , int numTrials) {
+    public static long scale(DMatrixRow_F64 mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -76,8 +76,8 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-    public static long scale2(RowMatrix_F64 mat , int numTrials) {
-        RowMatrix_F64 result = mat.copy();
+    public static long scale2(DMatrixRow_F64 mat , int numTrials) {
+        DMatrixRow_F64 result = mat.copy();
 
         long prev = System.currentTimeMillis();
 
@@ -90,7 +90,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-//    public static long scaleMtj( RowMatrix_F64 orig , int numTrials) {
+//    public static long scaleMtj( DMatrixRow_F64 orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
 //        long prev = System.currentTimeMillis();
@@ -104,7 +104,7 @@ public class BenchmarkVariousOps {
 //        return curr-prev;
 //    }
 
-    public static long normEml(RowMatrix_F64 mat , int numTrials) {
+    public static long normEml(DMatrixRow_F64 mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -115,7 +115,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-    public static long determinant(RowMatrix_F64 mat , int numTrials) {
+    public static long determinant(DMatrixRow_F64 mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -126,7 +126,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-    public static long fillManual(RowMatrix_F64 mat , int numTrials) {
+    public static long fillManual(DMatrixRow_F64 mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -141,7 +141,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-    public static long fillArrays(RowMatrix_F64 mat , int numTrials) {
+    public static long fillArrays(DMatrixRow_F64 mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -152,7 +152,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-//    public static long normMtj( RowMatrix_F64 orig , int numTrials) {
+//    public static long normMtj( DMatrixRow_F64 orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
 //        long prev = System.currentTimeMillis();
@@ -167,7 +167,7 @@ public class BenchmarkVariousOps {
 
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
-        RowMatrix_F64 mat = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(4,4,rand);
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));

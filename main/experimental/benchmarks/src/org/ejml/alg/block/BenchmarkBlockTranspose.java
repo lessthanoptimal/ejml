@@ -18,8 +18,8 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -27,7 +27,7 @@ import java.util.Random;
 
 
 /**
- * Compare block against other transpose for RowMatrix_F64
+ * Compare block against other transpose for DMatrixRow_F64
  *
  *  @author Peter Abeles
  */
@@ -35,7 +35,7 @@ public class BenchmarkBlockTranspose {
 
     static Random rand = new Random(234);
 
-    public static long transposeDenseInPlace(RowMatrix_F64 mat , int numTrials) {
+    public static long transposeDenseInPlace(DMatrixRow_F64 mat , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -47,10 +47,10 @@ public class BenchmarkBlockTranspose {
         return curr-prev;
     }
 
-    public static long transposeDense(RowMatrix_F64 mat , int numTrials) {
+    public static long transposeDense(DMatrixRow_F64 mat , int numTrials) {
 
 
-        RowMatrix_F64 tran = new RowMatrix_F64(mat.numCols,mat.numRows);
+        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
@@ -62,10 +62,10 @@ public class BenchmarkBlockTranspose {
         return curr-prev;
     }
 
-    public static long transposeBlock(RowMatrix_F64 mat , int numTrials) {
+    public static long transposeBlock(DMatrixRow_F64 mat , int numTrials) {
 
-        BlockMatrix_F64 A = new BlockMatrix_F64(mat.numRows,mat.numCols);
-        BlockMatrix_F64 A_t = new BlockMatrix_F64(mat.numCols,mat.numRows);
+        DMatrixBlock_F64 A = new DMatrixBlock_F64(mat.numRows,mat.numCols);
+        DMatrixBlock_F64 A_t = new DMatrixBlock_F64(mat.numCols,mat.numRows);
 
         MatrixOps_B64.convert(mat,A);
 
@@ -81,7 +81,7 @@ public class BenchmarkBlockTranspose {
 
     public static void main( String args[] ) {
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5000,5000,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5000,5000,rand);
 
         int N = 5;
 

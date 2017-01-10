@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol.chol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -28,7 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolverChol_B64 extends BaseCholeskySolveTests_R64 {
 
     @Override
-    public LinearSolver<RowMatrix_F64> createSolver() {
+    public LinearSolver<DMatrixRow_F64> createSolver() {
         return new LinearSolverChol_B64();
     }
 }

@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
@@ -34,20 +34,20 @@ import static org.ejml.ops.CommonOps_R64.*;
 public class KalmanFilterOperations implements KalmanFilter{
 
     // kinematics description
-    private RowMatrix_F64 F,Q,H;
+    private DMatrixRow_F64 F,Q,H;
 
     // system state estimate
-    private RowMatrix_F64 x,P;
+    private DMatrixRow_F64 x,P;
 
     // these are predeclared for efficiency reasons
-    private RowMatrix_F64 a,b;
-    private RowMatrix_F64 y,S,S_inv,c,d;
-    private RowMatrix_F64 K;
+    private DMatrixRow_F64 a,b;
+    private DMatrixRow_F64 y,S,S_inv,c,d;
+    private DMatrixRow_F64 K;
 
-    private LinearSolver<RowMatrix_F64> solver;
+    private LinearSolver<DMatrixRow_F64> solver;
 
     @Override
-    public void configure(RowMatrix_F64 F, RowMatrix_F64 Q, RowMatrix_F64 H) {
+    public void configure(DMatrixRow_F64 F, DMatrixRow_F64 Q, DMatrixRow_F64 H) {
         this.F = F;
         this.Q = Q;
         this.H = H;
@@ -55,24 +55,24 @@ public class KalmanFilterOperations implements KalmanFilter{
         int dimenX = F.numCols;
         int dimenZ = H.numRows;
 
-        a = new RowMatrix_F64(dimenX,1);
-        b = new RowMatrix_F64(dimenX,dimenX);
-        y = new RowMatrix_F64(dimenZ,1);
-        S = new RowMatrix_F64(dimenZ,dimenZ);
-        S_inv = new RowMatrix_F64(dimenZ,dimenZ);
-        c = new RowMatrix_F64(dimenZ,dimenX);
-        d = new RowMatrix_F64(dimenX,dimenZ);
-        K = new RowMatrix_F64(dimenX,dimenZ);
+        a = new DMatrixRow_F64(dimenX,1);
+        b = new DMatrixRow_F64(dimenX,dimenX);
+        y = new DMatrixRow_F64(dimenZ,1);
+        S = new DMatrixRow_F64(dimenZ,dimenZ);
+        S_inv = new DMatrixRow_F64(dimenZ,dimenZ);
+        c = new DMatrixRow_F64(dimenZ,dimenX);
+        d = new DMatrixRow_F64(dimenX,dimenZ);
+        K = new DMatrixRow_F64(dimenX,dimenZ);
 
-        x = new RowMatrix_F64(dimenX,1);
-        P = new RowMatrix_F64(dimenX,dimenX);
+        x = new DMatrixRow_F64(dimenX,1);
+        P = new DMatrixRow_F64(dimenX,dimenX);
 
         // covariance matrices are symmetric positive semi-definite
         solver = LinearSolverFactory_R64.symmPosDef(dimenX);
     }
 
     @Override
-    public void setState(RowMatrix_F64 x, RowMatrix_F64 P) {
+    public void setState(DMatrixRow_F64 x, DMatrixRow_F64 P) {
         this.x.set(x);
         this.P.set(P);
     }
@@ -91,7 +91,7 @@ public class KalmanFilterOperations implements KalmanFilter{
     }
 
     @Override
-    public void update(RowMatrix_F64 z, RowMatrix_F64 R) {
+    public void update(DMatrixRow_F64 z, DMatrixRow_F64 R) {
         // y = z - H x
         mult(H,x,y);
         subtract(z, y, y);
@@ -118,12 +118,12 @@ public class KalmanFilterOperations implements KalmanFilter{
     }
 
     @Override
-    public RowMatrix_F64 getState() {
+    public DMatrixRow_F64 getState() {
         return x;
     }
 
     @Override
-    public RowMatrix_F64 getCovariance() {
+    public DMatrixRow_F64 getCovariance() {
         return P;
     }
 }

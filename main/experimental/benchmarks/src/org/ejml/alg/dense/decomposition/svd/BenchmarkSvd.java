@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkSvd {
 
 
-    public static String evaluate(SingularValueDecomposition<RowMatrix_F64> alg , RowMatrix_F64 orig , int numTrials ) {
+    public static String evaluate(SingularValueDecomposition<DMatrixRow_F64> alg , DMatrixRow_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -47,7 +47,7 @@ public class BenchmarkSvd {
         return diff+" (ms)  "+(numTrials/(diff/1000.0))+" (ops/sec)";
     }
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
 //        mat.print("%f");
         if( numTrials <= 0 ) return;
@@ -74,7 +74,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -91,7 +91,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
 
             System.out.print("* Creating matrix ");
-            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(2*w,w,rand);
+            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(2*w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }
@@ -108,7 +108,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
 
             System.out.print("* Creating matrix ");
-            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,2*w,rand);
+            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,2*w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

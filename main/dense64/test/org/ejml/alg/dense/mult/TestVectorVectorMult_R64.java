@@ -20,7 +20,7 @@ package org.ejml.alg.dense.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -42,8 +42,8 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void innerProduct() {
-        RowMatrix_F64 A = new RowMatrix_F64(4,1, true, 1, 2, 3, 4);
-        RowMatrix_F64 B = new RowMatrix_F64(4,1, true, -1, -2, -3, -4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(4,1, true, 1, 2, 3, 4);
+        DMatrixRow_F64 B = new DMatrixRow_F64(4,1, true, -1, -2, -3, -4);
 
         double val = VectorVectorMult_R64.innerProd(A,B);
 
@@ -52,11 +52,11 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void innerProdA() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,4,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
-        RowMatrix_F64 y = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,4,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 y = RandomMatrices_R64.createRandom(4,1,rand);
 
-        RowMatrix_F64 temp = new RowMatrix_F64(1,4);
+        DMatrixRow_F64 temp = new DMatrixRow_F64(1,4);
 
         // compute the expected result first
         CommonOps_R64.multTransA(x,A,temp);
@@ -69,14 +69,14 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void innerProdTranA() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,3,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
-        RowMatrix_F64 y = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,3,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 y = RandomMatrices_R64.createRandom(3,1,rand);
 
-        RowMatrix_F64 Atran = new RowMatrix_F64(3,3);
+        DMatrixRow_F64 Atran = new DMatrixRow_F64(3,3);
         CommonOps_R64.transpose(A,Atran);
 
-        RowMatrix_F64 temp = new RowMatrix_F64(1,3);
+        DMatrixRow_F64 temp = new DMatrixRow_F64(1,3);
 
         // compute the expected result first
         CommonOps_R64.multTransA(x,Atran,temp);
@@ -89,14 +89,14 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void outerProd() {
-        RowMatrix_F64 A = new RowMatrix_F64(4,1, true, 1, 2, 3, 4);
-        RowMatrix_F64 B = new RowMatrix_F64(4,1, true, -1, -2, -3, -4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(4,1, true, 1, 2, 3, 4);
+        DMatrixRow_F64 B = new DMatrixRow_F64(4,1, true, -1, -2, -3, -4);
 
-        RowMatrix_F64 C = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 C = RandomMatrices_R64.createRandom(4,4,rand);
         VectorVectorMult_R64.outerProd(A,B,C);
 
         // compare it against the equivalent matrix matrix multiply
-        RowMatrix_F64 D =  RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 D =  RandomMatrices_R64.createRandom(4,4,rand);
         MatrixMatrixMult_R64.multTransB(A,B,D);
 
         EjmlUnitTests.assertEquals(D,C,0);
@@ -104,16 +104,16 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void addOuterProd() {
-        RowMatrix_F64 A = new RowMatrix_F64(4,1, true, 1, 2, 3, 4);
-        RowMatrix_F64 B = new RowMatrix_F64(4,1, true, -1, -2, -3, -4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(4,1, true, 1, 2, 3, 4);
+        DMatrixRow_F64 B = new DMatrixRow_F64(4,1, true, -1, -2, -3, -4);
 
-        RowMatrix_F64 C = RandomMatrices_R64.createRandom(4,4,rand);
-        RowMatrix_F64 D =  C.copy();
+        DMatrixRow_F64 C = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 D =  C.copy();
 
         VectorVectorMult_R64.addOuterProd(1.0,A,B,C);
 
         // compare it against the equivalent matrix matrix multiply
-        RowMatrix_F64 E = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 E = RandomMatrices_R64.createRandom(4,4,rand);
         MatrixMatrixMult_R64.multTransB(A,B,E);
         CommonOps_R64.add(D,E,D);
 
@@ -133,17 +133,17 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void householder() {
-        RowMatrix_F64 u = RandomMatrices_R64.createRandom(4,1,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
-        RowMatrix_F64 y = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 u = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 y = RandomMatrices_R64.createRandom(4,1,rand);
 
 
         double gamma = 4.5;
 
         VectorVectorMult_R64.householder(gamma,u,x,y);
 
-        RowMatrix_F64 L = CommonOps_R64.identity(4,4);
-        RowMatrix_F64 y_exp = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 L = CommonOps_R64.identity(4,4);
+        DMatrixRow_F64 y_exp = RandomMatrices_R64.createRandom(4,1,rand);
 
         VectorVectorMult_R64.addOuterProd(gamma,u,u,L);
         CommonOps_R64.mult(L,x,y_exp);
@@ -153,9 +153,9 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void rank1Update_two_square() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(6,6,rand);
-        RowMatrix_F64 u = RandomMatrices_R64.createRandom(6,1,rand);
-        RowMatrix_F64 w = RandomMatrices_R64.createRandom(6,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(6,6,rand);
+        DMatrixRow_F64 u = RandomMatrices_R64.createRandom(6,1,rand);
+        DMatrixRow_F64 w = RandomMatrices_R64.createRandom(6,1,rand);
         double gamma = -45;
 
         SimpleMatrix _A = SimpleMatrix.wrap(A);
@@ -163,7 +163,7 @@ public class TestVectorVectorMult_R64 {
         SimpleMatrix _w = SimpleMatrix.wrap(w);
         
         SimpleMatrix expected = _A.plus(_u.mult(_w.transpose()).scale(gamma));
-        RowMatrix_F64 found = new RowMatrix_F64(6,6);
+        DMatrixRow_F64 found = new DMatrixRow_F64(6,6);
 
         VectorVectorMult_R64.rank1Update(gamma,A,u,w,found);
 
@@ -172,9 +172,9 @@ public class TestVectorVectorMult_R64 {
 
     @Test
     public void rank1Update_one_square() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(6,6,rand);
-        RowMatrix_F64 u = RandomMatrices_R64.createRandom(6,1,rand);
-        RowMatrix_F64 w = RandomMatrices_R64.createRandom(6,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(6,6,rand);
+        DMatrixRow_F64 u = RandomMatrices_R64.createRandom(6,1,rand);
+        DMatrixRow_F64 w = RandomMatrices_R64.createRandom(6,1,rand);
         double gamma = -45;
 
         SimpleMatrix _A = SimpleMatrix.wrap(A);
@@ -182,7 +182,7 @@ public class TestVectorVectorMult_R64 {
         SimpleMatrix _w = SimpleMatrix.wrap(w);
 
         SimpleMatrix expected = _A.plus(_u.mult(_w.transpose()).scale(gamma));
-        RowMatrix_F64 found = A.copy();
+        DMatrixRow_F64 found = A.copy();
 
         VectorVectorMult_R64.rank1Update(gamma,found,u,w);
 

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.lu;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.misc.DeterminantFromMinor_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class TestLUDecompositionBase_R64 {
 
         int width = 10;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(width,width,rand);
 
         DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(width);
         double minorVal = minor.compute(A);
@@ -62,10 +62,10 @@ public class TestLUDecompositionBase_R64 {
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        RowMatrix_F64 LU = RandomMatrices_R64.createRandom(width,width,rand);
+        DMatrixRow_F64 LU = RandomMatrices_R64.createRandom(width,width,rand);
 
-        RowMatrix_F64 L = new RowMatrix_F64(width,width);
-        RowMatrix_F64 U = new RowMatrix_F64(width,width);
+        DMatrixRow_F64 L = new DMatrixRow_F64(width,width);
+        DMatrixRow_F64 U = new DMatrixRow_F64(width,width);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
@@ -82,9 +82,9 @@ public class TestLUDecompositionBase_R64 {
             }
         }
 
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(width, 1, -1, 1, rand);
-        RowMatrix_F64 tmp = new RowMatrix_F64(width,1);
-        RowMatrix_F64 b = new RowMatrix_F64(width,1);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(width, 1, -1, 1, rand);
+        DMatrixRow_F64 tmp = new DMatrixRow_F64(width,1);
+        DMatrixRow_F64 b = new DMatrixRow_F64(width,1);
 
         CommonOps_R64.mult(U, x, tmp);
         CommonOps_R64.mult(L,tmp,b);
@@ -108,13 +108,13 @@ public class TestLUDecompositionBase_R64 {
             m = n = width;
         }
 
-        void setLU( RowMatrix_F64 LU ) {
+        void setLU( DMatrixRow_F64 LU ) {
             this.LU = LU;
             this.dataLU = LU.data;
         }
 
         @Override
-        public boolean decompose(RowMatrix_F64 orig) {
+        public boolean decompose(DMatrixRow_F64 orig) {
             return false;
         }
     }

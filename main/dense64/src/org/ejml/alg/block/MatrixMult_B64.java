@@ -18,14 +18,14 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 
 import static org.ejml.alg.block.InnerMultiplication_B64.*;
 
 /**
  * <p>
- * Matrix multiplication for {@link BlockMatrix_F64}.  All sub-matrices must be
+ * Matrix multiplication for {@link DMatrixBlock_F64}.  All sub-matrices must be
  * block aligned.
  * </p>
  * 
@@ -35,7 +35,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication on {@link BlockMatrix_F64} submatrices.<br>
+     * Performs a matrix multiplication on {@link DMatrixBlock_F64} submatrices.<br>
      * <br>
      * c = a * b <br>
      * <br>
@@ -81,7 +81,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication on {@link BlockMatrix_F64} submatrices.<br>
+     * Performs a matrix multiplication on {@link DMatrixBlock_F64} submatrices.<br>
      * <br>
      * c = c + a * b <br>
      * <br>
@@ -125,7 +125,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication on {@link BlockMatrix_F64} submatrices.<br>
+     * Performs a matrix multiplication on {@link DMatrixBlock_F64} submatrices.<br>
      * <br>
      * c = c - a * b <br>
      * <br>
@@ -194,7 +194,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication with a transpose on {@link BlockMatrix_F64} submatrices.<br>
+     * Performs a matrix multiplication with a transpose on {@link DMatrixBlock_F64} submatrices.<br>
      * <br>
      * c = a<sup>T</sup> * b <br>
      * <br>
@@ -291,7 +291,7 @@ public class MatrixMult_B64 {
 
     /**
      * <p>
-     * Performs a matrix multiplication with a transpose on {@link BlockMatrix_F64} submatrices.<br>
+     * Performs a matrix multiplication with a transpose on {@link DMatrixBlock_F64} submatrices.<br>
      * <br>
      * c = a * b <sup>T</sup> <br>
      * <br>

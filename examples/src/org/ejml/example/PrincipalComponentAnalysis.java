@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.CommonOps_R64;
@@ -56,13 +56,13 @@ import org.ejml.ops.SingularOps_R64;
 public class PrincipalComponentAnalysis {
 
     // principal component subspace is stored in the rows
-    private RowMatrix_F64 V_t;
+    private DMatrixRow_F64 V_t;
 
     // how many principal components are used
     private int numComponents;
 
     // where the data is stored
-    private RowMatrix_F64 A = new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 A = new DMatrixRow_F64(1,1);
     private int sampleIndex;
 
     // mean values of each element across all the samples
@@ -136,13 +136,13 @@ public class PrincipalComponentAnalysis {
         }
 
         // Compute SVD and save time by not computing U
-        SingularValueDecomposition<RowMatrix_F64> svd =
+        SingularValueDecomposition<DMatrixRow_F64> svd =
                 DecompositionFactory_R64.svd(A.numRows, A.numCols, false, true, false);
         if( !svd.decompose(A) )
             throw new RuntimeException("SVD failed");
 
         V_t = svd.getV(null,true);
-        RowMatrix_F64 W = svd.getW(null);
+        DMatrixRow_F64 W = svd.getW(null);
 
         // Singular values are in an arbitrary order initially
         SingularOps_R64.descendingOrder(null,false,W,V_t,true);
@@ -161,7 +161,7 @@ public class PrincipalComponentAnalysis {
         if( which < 0 || which >= numComponents )
             throw new IllegalArgumentException("Invalid component");
 
-        RowMatrix_F64 v = new RowMatrix_F64(1,A.numCols);
+        DMatrixRow_F64 v = new DMatrixRow_F64(1,A.numCols);
         CommonOps_R64.extract(V_t,which,which+1,0,A.numCols,v,0,0);
 
         return v.data;
@@ -176,10 +176,10 @@ public class PrincipalComponentAnalysis {
     public double[] sampleToEigenSpace( double[] sampleData ) {
         if( sampleData.length != A.getNumCols() )
             throw new IllegalArgumentException("Unexpected sample length");
-        RowMatrix_F64 mean = RowMatrix_F64.wrap(A.getNumCols(),1,this.mean);
+        DMatrixRow_F64 mean = DMatrixRow_F64.wrap(A.getNumCols(),1,this.mean);
 
-        RowMatrix_F64 s = new RowMatrix_F64(A.getNumCols(),1,true,sampleData);
-        RowMatrix_F64 r = new RowMatrix_F64(numComponents,1);
+        DMatrixRow_F64 s = new DMatrixRow_F64(A.getNumCols(),1,true,sampleData);
+        DMatrixRow_F64 r = new DMatrixRow_F64(numComponents,1);
 
         CommonOps_R64.subtract(s, mean, s);
 
@@ -198,12 +198,12 @@ public class PrincipalComponentAnalysis {
         if( eigenData.length != numComponents )
             throw new IllegalArgumentException("Unexpected sample length");
 
-        RowMatrix_F64 s = new RowMatrix_F64(A.getNumCols(),1);
-        RowMatrix_F64 r = RowMatrix_F64.wrap(numComponents,1,eigenData);
+        DMatrixRow_F64 s = new DMatrixRow_F64(A.getNumCols(),1);
+        DMatrixRow_F64 r = DMatrixRow_F64.wrap(numComponents,1,eigenData);
         
         CommonOps_R64.multTransA(V_t,r,s);
 
-        RowMatrix_F64 mean = RowMatrix_F64.wrap(A.getNumCols(),1,this.mean);
+        DMatrixRow_F64 mean = DMatrixRow_F64.wrap(A.getNumCols(),1,this.mean);
         CommonOps_R64.add(s,mean,s);
 
         return s.data;
@@ -248,8 +248,8 @@ public class PrincipalComponentAnalysis {
         if( sample.length != A.numCols )
             throw new IllegalArgumentException("Expected input vector to be in sample space");
 
-        RowMatrix_F64 dots = new RowMatrix_F64(numComponents,1);
-        RowMatrix_F64 s = RowMatrix_F64.wrap(A.numCols,1,sample);
+        DMatrixRow_F64 dots = new DMatrixRow_F64(numComponents,1);
+        DMatrixRow_F64 s = DMatrixRow_F64.wrap(A.numCols,1,sample);
 
         CommonOps_R64.mult(V_t,s,dots);
 

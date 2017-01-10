@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.svd.implicitqr;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenvalueSmall_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 import java.util.Random;
 
@@ -55,8 +55,8 @@ public class SvdImplicitQrAlgorithm_R64 {
 
     // U and V matrices in singular value decomposition.  Stored in the transpose
     // to reduce cache jumps
-    protected RowMatrix_F64 Ut;
-    protected RowMatrix_F64 Vt;
+    protected DMatrixRow_F64 Ut;
+    protected DMatrixRow_F64 Vt;
 
     // number of times it has performed an implicit step, the most costly part of the
     // algorithm
@@ -126,19 +126,19 @@ public class SvdImplicitQrAlgorithm_R64 {
 
     }
 
-    public RowMatrix_F64 getUt() {
+    public DMatrixRow_F64 getUt() {
         return Ut;
     }
 
-    public void setUt(RowMatrix_F64 ut) {
+    public void setUt(DMatrixRow_F64 ut) {
         Ut = ut;
     }
 
-    public RowMatrix_F64 getVt() {
+    public DMatrixRow_F64 getVt() {
         return Vt;
     }
 
-    public void setVt(RowMatrix_F64 vt) {
+    public void setVt(DMatrixRow_F64 vt) {
         Vt = vt;
     }
 
@@ -381,7 +381,7 @@ public class SvdImplicitQrAlgorithm_R64 {
      * @param c cosine of rotator.
      * @param s sine of rotator.
      */
-    protected void updateRotator(RowMatrix_F64 Q , int m, int n, double c, double s) {
+    protected void updateRotator(DMatrixRow_F64 Q , int m, int n, double c, double s) {
         int rowA = m*Q.numCols;
         int rowB = n*Q.numCols;
 

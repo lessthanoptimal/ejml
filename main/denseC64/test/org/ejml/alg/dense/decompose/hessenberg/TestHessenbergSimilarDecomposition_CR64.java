@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.MatrixFeatures_CR64;
 import org.ejml.ops.RandomMatrices_CR64;
@@ -41,25 +41,25 @@ public class TestHessenbergSimilarDecomposition_CR64 {
      */
     @Test
     public void testItAllTogether() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(5,5,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(5,5,rand);
 
         checkItAll(A);
     }
 
-    private void checkItAll(RowMatrix_C64 A) {
+    private void checkItAll(DMatrixRow_C64 A) {
         HessenbergSimilarDecomposition_CR64 decomp = new HessenbergSimilarDecomposition_CR64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
 
-        RowMatrix_C64 Q = decomp.getQ(null);
-        RowMatrix_C64 H = decomp.getH(null);
+        DMatrixRow_C64 Q = decomp.getQ(null);
+        DMatrixRow_C64 H = decomp.getH(null);
 //        System.out.println("-------- H ---------");
 //        UtilEjml.print(H,"%8.2e");
 //        System.out.println("-------- Q ---------");
 //        UtilEjml.print(Q,"%8.2e");
         assertTrue(MatrixFeatures_CR64.isUnitary(Q, UtilEjml.TEST_F64));
 
-        RowMatrix_C64 temp0 = new RowMatrix_C64(5,5);
+        DMatrixRow_C64 temp0 = new DMatrixRow_C64(5,5);
 
         CommonOps_CR64.mult(Q,H,temp0);
         CommonOps_CR64.transposeConjugate(Q);
@@ -80,8 +80,8 @@ public class TestHessenbergSimilarDecomposition_CR64 {
      */
     @Test
     public void testInputUnmodified() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(4,4,rand);
-        RowMatrix_C64 B = A.copy();
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(4,4,rand);
+        DMatrixRow_C64 B = A.copy();
 
         HessenbergSimilarDecomposition_CR64 decomp = new HessenbergSimilarDecomposition_CR64(A.numRows);
 
@@ -95,13 +95,13 @@ public class TestHessenbergSimilarDecomposition_CR64 {
      */
 //    @Test
 //    public void testNoChange() {
-//        RowMatrix_F64 A = RandomMatrices.createUpperTriangle(4,1,-1,1,rand);
+//        DMatrixRow_F64 A = RandomMatrices.createUpperTriangle(4,1,-1,1,rand);
 //
 //        HessenbergSimilarDecomposition decomp = new HessenbergSimilarDecomposition(A.numRows);
 //
 //        assertTrue(decomp.decompose(A));
 //
-//        RowMatrix_F64 H = decomp.getH(null);
+//        DMatrixRow_F64 H = decomp.getH(null);
 //
 //        assertTrue(MatrixFeatures.isIdentical(A,H,0));
 //    }
@@ -115,20 +115,20 @@ public class TestHessenbergSimilarDecomposition_CR64 {
     public void testHouseholderVectors()
     {
         int N = 5;
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(N,N,rand);
-        RowMatrix_C64 B = new RowMatrix_C64(N,N);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(N,N,rand);
+        DMatrixRow_C64 B = new DMatrixRow_C64(N,N);
 
         HessenbergSimilarDecomposition_CR64 decomp = new HessenbergSimilarDecomposition_CR64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
         
-        RowMatrix_C64 QH = decomp.getQH();
+        DMatrixRow_C64 QH = decomp.getQH();
 //        System.out.println("------------ QH -----------");
 //        UtilEjml.print(QH);
 
         double gammas[] = decomp.getGammas();
 
-        RowMatrix_C64 u = new RowMatrix_C64(N,1);
+        DMatrixRow_C64 u = new DMatrixRow_C64(N,1);
 
 //        UtilEjml.print(A);
 //        System.out.println("-------------------");
@@ -144,7 +144,7 @@ public class TestHessenbergSimilarDecomposition_CR64 {
                 u.data[j*2+1] = QH.getImag(j,i);
             }
 
-            RowMatrix_C64 Q = SpecializedOps_CR64.createReflector(u,gammas[i]);
+            DMatrixRow_C64 Q = SpecializedOps_CR64.createReflector(u,gammas[i]);
             CommonOps_CR64.multTransA(Q,A,B);
 //            System.out.println("----- u ------");
 //            UtilEjml.print(u);
@@ -175,20 +175,20 @@ public class TestHessenbergSimilarDecomposition_CR64 {
     @Test
     public void testH() {
         int N = 5;
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(N,N,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(N,N,rand);
 
         HessenbergSimilarDecomposition_CR64 decomp = new HessenbergSimilarDecomposition_CR64(A.numRows);
 
         assertTrue(safeDecomposition(decomp,A));
 
-        RowMatrix_C64 QH = decomp.getQH();
+        DMatrixRow_C64 QH = decomp.getQH();
 
         double gammas[] = decomp.getGammas();
 
-        RowMatrix_C64 u = new RowMatrix_C64(N,1);
+        DMatrixRow_C64 u = new DMatrixRow_C64(N,1);
 
-        RowMatrix_C64 Q = CommonOps_CR64.identity(N);
-        RowMatrix_C64 temp = new RowMatrix_C64(N,N);
+        DMatrixRow_C64 Q = CommonOps_CR64.identity(N);
+        DMatrixRow_C64 temp = new DMatrixRow_C64(N,N);
 
         for( int i = N-2; i >= 0; i-- ) {
             u.zero();
@@ -198,19 +198,19 @@ public class TestHessenbergSimilarDecomposition_CR64 {
                 u.data[j*2+1] = QH.getImag(j,i);
             }
 
-            RowMatrix_C64 Qi = SpecializedOps_CR64.createReflector(u,gammas[i]);
+            DMatrixRow_C64 Qi = SpecializedOps_CR64.createReflector(u,gammas[i]);
 
             CommonOps_CR64.mult(Qi,Q,temp);
             Q.set(temp);
         }
-        RowMatrix_C64 expectedH = new RowMatrix_C64(N,N);
+        DMatrixRow_C64 expectedH = new DMatrixRow_C64(N,N);
 
         CommonOps_CR64.multTransA(Q,A,temp);
         CommonOps_CR64.mult(temp,Q,expectedH);
 
 //        UtilEjml.print(expectedH);
 
-        RowMatrix_C64 foundH = decomp.getH(null);
+        DMatrixRow_C64 foundH = decomp.getH(null);
 
 //        UtilEjml.print(foundH);
 

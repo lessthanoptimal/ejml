@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig.symm;
 
 import org.ejml.alg.dense.decomposition.hessenberg.TridiagonalDecompositionHouseholder_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -104,7 +104,7 @@ public class TestSymmetricQrAlgorithm {
      */
     @Test
     public void multipleEigenvalues() {
-        RowMatrix_F64 A = new RowMatrix_F64(5,5, true, 2.191140, -0.098491, -0.397037, 0.367426, -0.208338, -0.098491, 2.776741, 0.623341, 0.624798, 0.401906, -0.397037, 0.623341, 3.571302, -0.239631, -0.264573, 0.367426, 0.624798, -0.239631, 3.625034, -0.162896, -0.208338, 0.401906, -0.264573, -0.162896, 3.835783);
+        DMatrixRow_F64 A = new DMatrixRow_F64(5,5, true, 2.191140, -0.098491, -0.397037, 0.367426, -0.208338, -0.098491, 2.776741, 0.623341, 0.624798, 0.401906, -0.397037, 0.623341, 3.571302, -0.239631, -0.264573, 0.367426, 0.624798, -0.239631, 3.625034, -0.162896, -0.208338, 0.401906, -0.264573, -0.162896, 3.835783);
 
         TridiagonalDecompositionHouseholder_R64 tridiag = new TridiagonalDecompositionHouseholder_R64();
         tridiag.decompose(A);

@@ -19,9 +19,9 @@
 package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.VectorVectorMult_R64;
+import org.ejml.data.D1MatrixRow_64;
 import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.RowD1Matrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -47,14 +47,14 @@ public class SpecializedOps_R64 {
      * @param u A vector. Not modified.
      * @return An orthogonal reflector.
      */
-    public static RowMatrix_F64 createReflector(RowD1Matrix_F64 u ) {
+    public static DMatrixRow_F64 createReflector(D1MatrixRow_64 u ) {
         if( !MatrixFeatures_R64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
         double norm = NormOps_R64.fastNormF(u);
         double gamma = -2.0/(norm*norm);
 
-        RowMatrix_F64 Q = CommonOps_R64.identity(u.getNumElements());
+        DMatrixRow_F64 Q = CommonOps_R64.identity(u.getNumElements());
         CommonOps_R64.multAddTransB(gamma,u,u,Q);
 
         return Q;
@@ -76,11 +76,11 @@ public class SpecializedOps_R64 {
      * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
      * @return An orthogonal reflector.
      */
-    public static RowMatrix_F64 createReflector(RowMatrix_F64 u , double gamma) {
+    public static DMatrixRow_F64 createReflector(DMatrixRow_F64 u , double gamma) {
         if( !MatrixFeatures_R64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
-        RowMatrix_F64 Q = CommonOps_R64.identity(u.getNumElements());
+        DMatrixRow_F64 Q = CommonOps_R64.identity(u.getNumElements());
         CommonOps_R64.multAddTransB(-gamma,u,u,Q);
 
         return Q;
@@ -93,10 +93,10 @@ public class SpecializedOps_R64 {
      * @param src The original matrix. Not modified.
      * @param dst A Matrix that is a row swapped copy of src. Modified.
      */
-    public static RowMatrix_F64 copyChangeRow(int order[] , RowMatrix_F64 src , RowMatrix_F64 dst )
+    public static DMatrixRow_F64 copyChangeRow(int order[] , DMatrixRow_F64 src , DMatrixRow_F64 dst )
     {
         if( dst == null ) {
-            dst = new RowMatrix_F64(src.numRows,src.numCols);
+            dst = new DMatrixRow_F64(src.numRows,src.numCols);
         } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
@@ -119,9 +119,9 @@ public class SpecializedOps_R64 {
      * @param upper If the upper or lower triangle should be copied.
      * @return The copied matrix.
      */
-    public static RowMatrix_F64 copyTriangle(RowMatrix_F64 src , RowMatrix_F64 dst , boolean upper ) {
+    public static DMatrixRow_F64 copyTriangle(DMatrixRow_F64 src , DMatrixRow_F64 dst , boolean upper ) {
         if( dst == null ) {
-            dst = new RowMatrix_F64(src.numRows,src.numCols);
+            dst = new DMatrixRow_F64(src.numRows,src.numCols);
         } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
@@ -168,7 +168,7 @@ public class SpecializedOps_R64 {
 
         final int size = a.getNumElements();
 
-        RowMatrix_F64 diff = new RowMatrix_F64(size,1);
+        DMatrixRow_F64 diff = new DMatrixRow_F64(size,1);
 
         for( int i = 0; i < size; i++ ) {
             diff.set(i , b.get(i) - a.get(i));
@@ -235,7 +235,7 @@ public class SpecializedOps_R64 {
      * @param B A square matrix that the results are saved to.  Modified.
      * @param alpha Scaling factor for the identity matrix.
      */
-    public static void addIdentity(RowD1Matrix_F64 A , RowD1Matrix_F64 B , double alpha )
+    public static void addIdentity(D1MatrixRow_64 A , D1MatrixRow_64 B , double alpha )
     {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("A must be square");
@@ -271,7 +271,7 @@ public class SpecializedOps_R64 {
      * @param offsetV First element in 'v' where the results are extracted to.
      * @param v Vector where the results are written to. Modified.
      */
-    public static void subvector(RowD1Matrix_F64 A, int rowA, int colA, int length , boolean row, int offsetV, RowD1Matrix_F64 v) {
+    public static void subvector(D1MatrixRow_64 A, int rowA, int colA, int length , boolean row, int offsetV, D1MatrixRow_64 v) {
         if( row ) {
             for( int i = 0; i < length; i++ ) {
                 v.set( offsetV +i , A.get(rowA,colA+i) );
@@ -290,7 +290,7 @@ public class SpecializedOps_R64 {
      * @param column If true then column vectors will be created.
      * @return Set of vectors.
      */
-    public static RowMatrix_F64[] splitIntoVectors(RowD1Matrix_F64 A , boolean column )
+    public static DMatrixRow_F64[] splitIntoVectors(D1MatrixRow_64 A , boolean column )
     {
         int w = column ? A.numCols : A.numRows;
 
@@ -299,10 +299,10 @@ public class SpecializedOps_R64 {
 
         int o = Math.max(M,N);
 
-        RowMatrix_F64[] ret  = new RowMatrix_F64[w];
+        DMatrixRow_F64[] ret  = new DMatrixRow_F64[w];
 
         for( int i = 0; i < w; i++ ) {
-            RowMatrix_F64 a = new RowMatrix_F64(M,N);
+            DMatrixRow_F64 a = new DMatrixRow_F64(M,N);
 
             if( column )
                 subvector(A,0,i,o,false,0,a);
@@ -331,10 +331,10 @@ public class SpecializedOps_R64 {
      * @param transposed If the transpose of the matrix is returned.
      * @return A pivot matrix.
      */
-    public static RowMatrix_F64 pivotMatrix(RowMatrix_F64 ret, int pivots[], int numPivots, boolean transposed ) {
+    public static DMatrixRow_F64 pivotMatrix(DMatrixRow_F64 ret, int pivots[], int numPivots, boolean transposed ) {
 
         if( ret == null ) {
-            ret = new RowMatrix_F64(numPivots, numPivots);
+            ret = new DMatrixRow_F64(numPivots, numPivots);
         } else {
             if( ret.numCols != numPivots || ret.numRows != numPivots )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
@@ -361,7 +361,7 @@ public class SpecializedOps_R64 {
      * @param T A matrix.
      * @return product of the diagonal elements.
      */
-    public static double diagProd( RowD1Matrix_F64 T )
+    public static double diagProd( D1MatrixRow_64 T )
     {
         double prod = 1.0;
         int N = Math.min(T.numRows,T.numCols);

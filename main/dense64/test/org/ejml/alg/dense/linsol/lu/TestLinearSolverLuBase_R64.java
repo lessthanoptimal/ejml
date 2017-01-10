@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.lu;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.junit.Test;
 
@@ -43,10 +43,10 @@ public class TestLinearSolverLuBase_R64 {
      */
     @Test
     public void testImproveSol_noharm() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 8, 33, 15.5);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
-        RowMatrix_F64 x_improved = new RowMatrix_F64(3,1);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, 8, 33, 15.5);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 x_improved = new DMatrixRow_F64(3,1);
 
         LUDecompositionAlt_R64 alg = new LUDecompositionAlt_R64();
 
@@ -57,7 +57,7 @@ public class TestLinearSolverLuBase_R64 {
         solver.solve(x,b);
         solver.improveSol(x_improved,b);
 
-//        RowMatrix_F64 x_truth = new RowMatrix_F64(3,1,new double[]{1,2,3});
+//        DMatrixRow_F64 x_truth = new DMatrixRow_F64(3,1,new double[]{1,2,3});
 
         EjmlUnitTests.assertEquals(x,x_improved, UtilEjml.TEST_F64);
     }

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.NormOps_R64;
 import org.junit.Test;
 
@@ -46,14 +46,14 @@ public class TestEigenPowerMethod_R64 {
                 0.850879 ,  0.104374 ,  0.247645 ,
                 0.069614 ,  0.155754  , 0.380435 };
 
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, dataA);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, dataA);
 
         EigenPowerMethod_R64 power = new EigenPowerMethod_R64(3);
         power.setOptions(100, UtilEjml.TEST_F64);
 
         assertTrue(power.computeDirect(A));
 
-        RowMatrix_F64 v = power.getEigenVector();
+        DMatrixRow_F64 v = power.getEigenVector();
 
         NormOps_R64.normalizeF(v);
 
@@ -69,14 +69,14 @@ public class TestEigenPowerMethod_R64 {
                 0.850879 ,  0.104374 ,  0.247645 ,
                 0.069614 ,  0.155754  , 0.380435 };
 
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, dataA);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, dataA);
 
         EigenPowerMethod_R64 power = new EigenPowerMethod_R64(3);
         power.setOptions(100, UtilEjml.TEST_F64);
 
         assertTrue(power.computeShiftDirect(A,0.2));
 
-        RowMatrix_F64 v = power.getEigenVector();
+        DMatrixRow_F64 v = power.getEigenVector();
 
         NormOps_R64.normalizeF(v);
 
@@ -92,7 +92,7 @@ public class TestEigenPowerMethod_R64 {
                 0.850879 ,  0.104374 ,  0.247645 ,
                 0.069614 ,  0.155754  , 0.380435 };
 
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, dataA);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, dataA);
 
         EigenPowerMethod_R64 power = new EigenPowerMethod_R64(3);
         power.setOptions(100, UtilEjml.TEST_F64);
@@ -100,7 +100,7 @@ public class TestEigenPowerMethod_R64 {
         // a tried a few values for psi until I found one that converged
         assertTrue(power.computeShiftInvert(A,1.1));
 
-        RowMatrix_F64 v = power.getEigenVector();
+        DMatrixRow_F64 v = power.getEigenVector();
 
         NormOps_R64.normalizeF(v);
 

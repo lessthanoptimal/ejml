@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.chol;
 
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -31,7 +31,7 @@ import org.ejml.data.RowMatrix_F64;
 public class CholeskyDecompositionBlock_R64 extends CholeskyDecompositionCommon_R64 {
 
     private int blockWidth; // how wide the blocks should be
-    private RowMatrix_F64 B; // row rectangular matrix
+    private DMatrixRow_F64 B; // row rectangular matrix
 
     private CholeskyBlockHelper_R64 chol;
 
@@ -58,9 +58,9 @@ public class CholeskyDecompositionBlock_R64 extends CholeskyDecompositionCommon_
         // if the matrix that is being decomposed is smaller than the block we really don't
         // see the B matrix.
         if( numRows < blockWidth)
-            B = new RowMatrix_F64(0,0);
+            B = new DMatrixRow_F64(0,0);
         else
-            B = new RowMatrix_F64(blockWidth,maxWidth);
+            B = new DMatrixRow_F64(blockWidth,maxWidth);
 
         chol = new CholeskyBlockHelper_R64(blockWidth);
     }
@@ -146,9 +146,9 @@ public class CholeskyDecompositionBlock_R64 extends CholeskyDecompositionCommon_
      * @param B
      */
     public static void solveL_special( final double L[] ,
-                                       final RowMatrix_F64 b_src,
+                                       final DMatrixRow_F64 b_src,
                                        final int indexSrc , final int indexDst ,
-                                       final RowMatrix_F64 B )
+                                       final DMatrixRow_F64 B )
     {
         final double dataSrc[] = b_src.data;
 
@@ -205,7 +205,7 @@ public class CholeskyDecompositionBlock_R64 extends CholeskyDecompositionCommon_
      * @param c A matrix.
      * @param startIndexC start of the submatrix in c.
      */
-    public static void symmRankTranA_sub(RowMatrix_F64 a , RowMatrix_F64 c ,
+    public static void symmRankTranA_sub(DMatrixRow_F64 a , DMatrixRow_F64 c ,
                                          int startIndexC )
     {
         // TODO update so that it doesn't modify/read parts that it shouldn't

@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.qr;
 
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.decomposition.qr.QRDecompositionHouseholder_B64;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -35,10 +35,10 @@ import java.util.Random;
  */
 public class BenchmarkQrDecomposition_R64 {
 
-    public static long generic(QRDecomposition<RowMatrix_F64> alg, RowMatrix_F64 orig , int numTrials ) {
+    public static long generic(QRDecomposition<DMatrixRow_F64> alg, DMatrixRow_F64 orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
-        RowMatrix_F64 B;
+        DMatrixRow_F64 B;
         for( long i = 0; i < numTrials; i++ ) {
             if( alg.inputModified())
                 B = orig.copy();
@@ -52,12 +52,12 @@ public class BenchmarkQrDecomposition_R64 {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long block(RowMatrix_F64 orig , int numTrials ) {
+    public static long block(DMatrixRow_F64 orig , int numTrials ) {
 
-        BlockMatrix_F64 A = MatrixOps_B64.convert(orig);
+        DMatrixBlock_F64 A = MatrixOps_B64.convert(orig);
         QRDecompositionHouseholder_B64 alg = new QRDecompositionHouseholder_B64();
 
-        BlockMatrix_F64 B;
+        DMatrixBlock_F64 B;
 
         long prev = System.currentTimeMillis();
 
@@ -74,7 +74,7 @@ public class BenchmarkQrDecomposition_R64 {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
 //        System.out.println("basic            = "+ generic( new QRDecompositionHouseholder(), mat,numTrials));
         System.out.println("column           = "+ generic( new QRDecompositionHouseholderColumn_R64() ,mat,numTrials));
@@ -94,7 +94,7 @@ public class BenchmarkQrDecomposition_R64 {
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
-            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w*4,w/1,rand);
+            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w*4,w/1,rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);
             runAlgorithms(mat,trials[i]);
         }

@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 
 /**
@@ -41,11 +41,11 @@ import org.ejml.factory.LinearSolverFactory_R64;
 public class PolynomialFit {
 
     // Vandermonde matrix
-    RowMatrix_F64 A;
+    DMatrixRow_F64 A;
     // matrix containing computed polynomial coefficients
-    RowMatrix_F64 coef;
+    DMatrixRow_F64 coef;
     // observation matrix
-    RowMatrix_F64 y;
+    DMatrixRow_F64 y;
 
     // solver used to compute
     AdjustableLinearSolver_R64 solver;
@@ -56,9 +56,9 @@ public class PolynomialFit {
      * @param degree The polynomial's degree which is to be fit to the observations.
      */
     public PolynomialFit( int degree ) {
-        coef = new RowMatrix_F64(degree+1,1);
-        A = new RowMatrix_F64(1,degree+1);
-        y = new RowMatrix_F64(1,1);
+        coef = new DMatrixRow_F64(degree+1,1);
+        A = new DMatrixRow_F64(1,degree+1);
+        y = new DMatrixRow_F64(1,1);
 
         // create a solver that allows elements to be added or removed efficiently
         solver = LinearSolverFactory_R64.adjustable();

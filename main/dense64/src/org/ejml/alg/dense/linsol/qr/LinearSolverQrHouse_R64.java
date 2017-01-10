@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholder_R64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.SpecializedOps_R64;
 
@@ -48,7 +48,7 @@ public class LinearSolverQrHouse_R64 extends LinearSolverAbstract_R64 {
 
     private int maxRows = -1;
 
-    private RowMatrix_F64 QR;
+    private DMatrixRow_F64 QR;
     private double gammas[];
 
     /**
@@ -73,7 +73,7 @@ public class LinearSolverQrHouse_R64 extends LinearSolverAbstract_R64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         if( A.numRows > maxRows ) {
             setMaxSize(A.numRows);
         }
@@ -100,7 +100,7 @@ public class LinearSolverQrHouse_R64 extends LinearSolverAbstract_R64 {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
+    public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )
@@ -158,7 +158,7 @@ public class LinearSolverQrHouse_R64 extends LinearSolverAbstract_R64 {
     }
 
     @Override
-    public QRDecomposition<RowMatrix_F64> getDecomposition() {
+    public QRDecomposition<DMatrixRow_F64> getDecomposition() {
         return decomposer;
     }
 }

@@ -20,8 +20,8 @@ package org.ejml.alg.dense.decomposition.eig;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Eigenpair_F64;
-import org.ejml.data.RowMatrix_F64;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.ops.*;
@@ -81,7 +81,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     public void checkSizeZero() {
         EigenDecomposition_F64 alg = createDecomposition();
 
-        assertFalse(alg.decompose(new RowMatrix_F64(0,0)));
+        assertFalse(alg.decompose(new DMatrixRow_F64(0,0)));
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
 //            System.out.println("N = "+N);
 
             for( int i = 0; i < 2; i++ ) {
-                RowMatrix_F64 A = RandomMatrices_R64.createRandom(N,N,-1,1,rand);
+                DMatrixRow_F64 A = RandomMatrices_R64.createRandom(N,N,-1,1,rand);
 
                 assertTrue(safeDecomposition(alg,A));
 
@@ -112,7 +112,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * are real.  Octave was used to test the known values.
      */
     public void checkKnownReal() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -153,7 +153,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
 //
 //        // build companion matrix
 //        int n = polynomial.length - 1;
-//        RowMatrix_F64 companion = new RowMatrix_F64(n, n);
+//        DMatrixRow_F64 companion = new DMatrixRow_F64(n, n);
 //        for (int i = 0; i < n; i++) {
 //            companion.set(i, n - 1, -polynomial[i] / polynomial[n]);
 //        }
@@ -189,7 +189,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
      */
     public void checkKnownReal_JustValue() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -204,7 +204,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
      */
     public void checkKnownSymmetric_JustValue() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true,
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true,
                 0.98139,   0.78650,   0.78564,
                 0.78650,   1.03207,   0.29794,
                 0.78564,   0.29794,   0.91926);
@@ -222,7 +222,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * are real and some are complex.
      */
     public void checkKnownComplex() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, -0.418284, 0.279875, 0.452912, -0.093748, -0.045179, 0.310949, 0.250513, -0.304077, -0.031414);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, -0.418284, 0.279875, 0.452912, -0.093748, -0.045179, 0.310949, 0.250513, -0.304077, -0.031414);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -240,7 +240,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     public void checkRandomSymmetric() {
         for( int N = 1; N <= 15; N++ ) {
             for( int i = 0; i < 20; i++ ) {
-                RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(N,-1,1,rand);
+                DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(N,-1,1,rand);
 
                 EigenDecomposition_F64 alg = createDecomposition();
 
@@ -256,7 +256,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * check for.  If it fails that check it will either loop forever or exit before converging.
      */
     public void checkExceptional() {
-        RowMatrix_F64 A = new RowMatrix_F64(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
+        DMatrixRow_F64 A = new DMatrixRow_F64(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -266,7 +266,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     }
 
     public void checkIdentity() {
-        RowMatrix_F64 I = CommonOps_R64.identity(4);
+        DMatrixRow_F64 I = CommonOps_R64.identity(4);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -281,7 +281,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     }
 
     public void checkAllZeros() {
-        RowMatrix_F64 A = new RowMatrix_F64(5,5);
+        DMatrixRow_F64 A = new DMatrixRow_F64(5,5);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -324,7 +324,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
         }
 
         for( int i = 0; i < 200; i++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createEigenvaluesSymm(ev.length,rand,ev);
+            DMatrixRow_F64 A = RandomMatrices_R64.createEigenvaluesSymm(ev.length,rand,ev);
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -342,7 +342,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
         EigenDecomposition_F64 alg = createDecomposition();
 
         for( int i = 0; i < 20; i++ ) {
-            RowMatrix_F64 A = symmetric ?
+            DMatrixRow_F64 A = symmetric ?
                     RandomMatrices_R64.createSymmetric(4,-1,1,rand) :
                     RandomMatrices_R64.createRandom(4,4,-1,1,rand);
 
@@ -361,7 +361,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
         EigenDecomposition_F64 alg = createDecomposition();
 
         for( int i = 0; i < 20; i++ ) {
-            RowMatrix_F64 A = symmetric ?
+            DMatrixRow_F64 A = symmetric ?
                     RandomMatrices_R64.createSymmetric(4,-1,1,rand) :
                     RandomMatrices_R64.createRandom(4,4,-1,1,rand);
 
@@ -391,7 +391,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * Preforms standard tests that can be performed on any decomposition without prior knowledge of
      * what the results should be.
      */
-    public void performStandardTests(EigenDecomposition_F64 alg , RowMatrix_F64 A , int numReal )
+    public void performStandardTests(EigenDecomposition_F64 alg , DMatrixRow_F64 A , int numReal )
     {
 
         // basic sanity tests
@@ -432,7 +432,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
                 {1, 0, 0},
                 {0.01, 0, -1},
                 {0.01, 1, 0}};
-        RowMatrix_F64 A = new RowMatrix_F64(matrix);
+        DMatrixRow_F64 A = new DMatrixRow_F64(matrix);
 
         EigenDecomposition_F64 alg = createDecomposition();
 
@@ -445,17 +445,17 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * Checks to see if an eigenvalue is complex then the eigenvector is null.  If it is real it
      * then checks to see if the equation A*v = lambda*v holds true.
      */
-    public void testPairsConsistent(EigenDecomposition_F64<RowMatrix_F64> alg , RowMatrix_F64 A )
+    public void testPairsConsistent(EigenDecomposition_F64<DMatrixRow_F64> alg , DMatrixRow_F64 A )
     {
 //        System.out.println("-------------------------------------------------------------------------");
         int N = alg.getNumberOfEigenvalues();
 
-        RowMatrix_F64 tempA = new RowMatrix_F64(N,1);
-        RowMatrix_F64 tempB = new RowMatrix_F64(N,1);
+        DMatrixRow_F64 tempA = new DMatrixRow_F64(N,1);
+        DMatrixRow_F64 tempB = new DMatrixRow_F64(N,1);
         
         for( int i = 0; i < N; i++ ) {
             Complex_F64 c = alg.getEigenvalue(i);
-            RowMatrix_F64 v = alg.getEigenVector(i);
+            DMatrixRow_F64 v = alg.getEigenVector(i);
 
             if( Double.isInfinite(c.real) || Double.isNaN(c.real) ||
                     Double.isInfinite(c.imaginary) || Double.isNaN(c.imaginary))
@@ -510,12 +510,12 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * eigenvalue
      */
     public void testEigenvalueConsistency( EigenDecomposition_F64 alg ,
-                                           RowMatrix_F64 A )
+                                           DMatrixRow_F64 A )
     {
         int N = alg.getNumberOfEigenvalues();
 
-        RowMatrix_F64 AV = new RowMatrix_F64(N,1);
-        RowMatrix_F64 LV = new RowMatrix_F64(N,1);
+        DMatrixRow_F64 AV = new DMatrixRow_F64(N,1);
+        DMatrixRow_F64 LV = new DMatrixRow_F64(N,1);
 
         for( int i = 0; i < N; i++ ) {
             Complex_F64 c = alg.getEigenvalue(i);
@@ -538,7 +538,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
      * See if eigenvalues cause the characteristic equation to have a value of zero
      */
     public void checkCharacteristicEquation( EigenDecomposition_F64 alg ,
-                                             RowMatrix_F64 A ) {
+                                             DMatrixRow_F64 A ) {
         int N = alg.getNumberOfEigenvalues();
 
         SimpleMatrix a = SimpleMatrix.wrap(A);
@@ -560,15 +560,15 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     /**
      * Checks to see if all the real eigenvectors are linearly independent of each other.
      */
-    public void testVectorsLinearlyIndependent( EigenDecomposition<RowMatrix_F64> alg ) {
+    public void testVectorsLinearlyIndependent( EigenDecomposition<DMatrixRow_F64> alg ) {
         int N = alg.getNumberOfEigenvalues();
 
         // create a matrix out of the eigenvectors
-        RowMatrix_F64 A = new RowMatrix_F64(N,N);
+        DMatrixRow_F64 A = new DMatrixRow_F64(N,N);
 
         int off = 0;
         for( int i = 0; i < N; i++ ) {
-            RowMatrix_F64 v = alg.getEigenVector(i);
+            DMatrixRow_F64 v = alg.getEigenVector(i);
 
             // it can only handle real eigenvectors
             if( v == null )
@@ -592,7 +592,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     /**
      * Sees if the pair of eigenvalue and eigenvector was found in the decomposition.
      */
-    public void testForEigenpair(EigenDecomposition_F64<RowMatrix_F64> alg , double valueReal ,
+    public void testForEigenpair(EigenDecomposition_F64<DMatrixRow_F64> alg , double valueReal ,
                                  double valueImg , double... vector )
     {
         int N = alg.getNumberOfEigenvalues();
@@ -605,8 +605,8 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
 
                 if( c.isReal() ) {
                     if( vector.length > 0 ) {
-                        RowMatrix_F64 v = alg.getEigenVector(i);
-                        RowMatrix_F64 e = new RowMatrix_F64(N,1, true, vector);
+                        DMatrixRow_F64 v = alg.getEigenVector(i);
+                        DMatrixRow_F64 e = new DMatrixRow_F64(N,1, true, vector);
 
                         double error = SpecializedOps_R64.diffNormF(e,v);
                         CommonOps_R64.changeSign(e);
@@ -628,7 +628,7 @@ public abstract class GeneralEigenDecompositionCheck_R64 {
     }
 
     public void testForEigenvalue( EigenDecomposition_F64 alg ,
-                                   RowMatrix_F64 A,
+                                   DMatrixRow_F64 A,
                                    double valueReal ,
                                    double valueImg , int numMatched )
     {

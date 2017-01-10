@@ -34,7 +34,7 @@ public class ConvertMatrixStruct_F64 {
      * @param input Input matrix.
      * @param output Output matrix.
      */
-    public static void convert(RealMatrix_F64 input , RealMatrix_F64 output ) {
+    public static void convert(Matrix_64 input , Matrix_64 output ) {
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
         if( input.getNumCols() != output.getNumCols() )
@@ -48,15 +48,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix2x2_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed2x2_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix2x2_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed2x2_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(2,2);
+            output = new DMatrixRow_F64(2,2);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -72,15 +72,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix3x3_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed3x3_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix3x3_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed3x3_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(3,3);
+            output = new DMatrixRow_F64(3,3);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -101,15 +101,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix4x4_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed4x4_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix4x4_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed4x4_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(4,4);
+            output = new DMatrixRow_F64(4,4);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -137,15 +137,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix5x5_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed5x5_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix5x5_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed5x5_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(5,5);
+            output = new DMatrixRow_F64(5,5);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -182,15 +182,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix6x6_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed6x6_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix6x6_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed6x6_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(6,6);
+            output = new DMatrixRow_F64(6,6);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -238,15 +238,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix2x2_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed2x2_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix2x2_F64 convert(RowMatrix_F64 input , FixedMatrix2x2_F64 output ) {
+    public static DMatrixFixed2x2_F64 convert(DMatrixRow_F64 input , DMatrixFixed2x2_F64 output ) {
         if( output == null)
-            output = new FixedMatrix2x2_F64();
+            output = new DMatrixFixed2x2_F64();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -262,15 +262,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix3x3_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed3x3_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix3x3_F64 convert(RowMatrix_F64 input , FixedMatrix3x3_F64 output ) {
+    public static DMatrixFixed3x3_F64 convert(DMatrixRow_F64 input , DMatrixFixed3x3_F64 output ) {
         if( output == null)
-            output = new FixedMatrix3x3_F64();
+            output = new DMatrixFixed3x3_F64();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -291,15 +291,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix4x4_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed4x4_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix4x4_F64 convert(RowMatrix_F64 input , FixedMatrix4x4_F64 output ) {
+    public static DMatrixFixed4x4_F64 convert(DMatrixRow_F64 input , DMatrixFixed4x4_F64 output ) {
         if( output == null)
-            output = new FixedMatrix4x4_F64();
+            output = new DMatrixFixed4x4_F64();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -327,15 +327,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix5x5_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed5x5_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix5x5_F64 convert(RowMatrix_F64 input , FixedMatrix5x5_F64 output ) {
+    public static DMatrixFixed5x5_F64 convert(DMatrixRow_F64 input , DMatrixFixed5x5_F64 output ) {
         if( output == null)
-            output = new FixedMatrix5x5_F64();
+            output = new DMatrixFixed5x5_F64();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -372,15 +372,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix6x6_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed6x6_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix6x6_F64 convert(RowMatrix_F64 input , FixedMatrix6x6_F64 output ) {
+    public static DMatrixFixed6x6_F64 convert(DMatrixRow_F64 input , DMatrixFixed6x6_F64 output ) {
         if( output == null)
-            output = new FixedMatrix6x6_F64();
+            output = new DMatrixFixed6x6_F64();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -428,15 +428,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix2_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed2_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix2_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed2_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(2,1);
+            output = new DMatrixRow_F64(2,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -451,15 +451,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix3_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed3_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix3_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed3_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(3,1);
+            output = new DMatrixRow_F64(3,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -475,15 +475,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix4_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed4_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix4_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed4_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(4,1);
+            output = new DMatrixRow_F64(4,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -500,15 +500,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix5_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed5_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix5_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed5_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(5,1);
+            output = new DMatrixRow_F64(5,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -526,15 +526,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link FixedMatrix6_F64} into {@link RowMatrix_F64}.
+     * Converts {@link DMatrixFixed6_F64} into {@link DMatrixRow_F64}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(FixedMatrix6_F64 input , RowMatrix_F64 output ) {
+    public static DMatrixRow_F64 convert(DMatrixFixed6_F64 input , DMatrixRow_F64 output ) {
         if( output == null)
-            output = new RowMatrix_F64(6,1);
+            output = new DMatrixRow_F64(6,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -553,15 +553,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix2_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed2_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix2_F64 convert(RowMatrix_F64 input , FixedMatrix2_F64 output ) {
+    public static DMatrixFixed2_F64 convert(DMatrixRow_F64 input , DMatrixFixed2_F64 output ) {
         if( output == null)
-            output = new FixedMatrix2_F64();
+            output = new DMatrixFixed2_F64();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -576,15 +576,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix3_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed3_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix3_F64 convert(RowMatrix_F64 input , FixedMatrix3_F64 output ) {
+    public static DMatrixFixed3_F64 convert(DMatrixRow_F64 input , DMatrixFixed3_F64 output ) {
         if( output == null)
-            output = new FixedMatrix3_F64();
+            output = new DMatrixFixed3_F64();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -600,15 +600,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix4_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed4_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix4_F64 convert(RowMatrix_F64 input , FixedMatrix4_F64 output ) {
+    public static DMatrixFixed4_F64 convert(DMatrixRow_F64 input , DMatrixFixed4_F64 output ) {
         if( output == null)
-            output = new FixedMatrix4_F64();
+            output = new DMatrixFixed4_F64();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -625,15 +625,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix5_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed5_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix5_F64 convert(RowMatrix_F64 input , FixedMatrix5_F64 output ) {
+    public static DMatrixFixed5_F64 convert(DMatrixRow_F64 input , DMatrixFixed5_F64 output ) {
         if( output == null)
-            output = new FixedMatrix5_F64();
+            output = new DMatrixFixed5_F64();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -651,15 +651,15 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link FixedMatrix6_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixFixed6_F64}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static FixedMatrix6_F64 convert(RowMatrix_F64 input , FixedMatrix6_F64 output ) {
+    public static DMatrixFixed6_F64 convert(DMatrixRow_F64 input , DMatrixFixed6_F64 output ) {
         if( output == null)
-            output = new FixedMatrix6_F64();
+            output = new DMatrixFixed6_F64();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -678,14 +678,14 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link RowMatrix_F64} into {@link BlockMatrix_F64}
+     * Converts {@link DMatrixRow_F64} into {@link DMatrixBlock_F64}
      *
      * Can't handle null output matrix since block size needs to be specified.
      *
      * @param src Input matrix.
      * @param dst Output matrix.
      */
-    public static void convert(RowMatrix_F64 src , BlockMatrix_F64 dst ) {
+    public static void convert(DMatrixRow_F64 src , DMatrixBlock_F64 dst ) {
         if( src.numRows != dst.numRows || src.numCols != dst.numCols )
             throw new IllegalArgumentException("Must be the same size.");
 
@@ -708,18 +708,18 @@ public class ConvertMatrixStruct_F64 {
     }
 
     /**
-     * Converts {@link BlockMatrix_F64} into {@link RowMatrix_F64}
+     * Converts {@link DMatrixBlock_F64} into {@link DMatrixRow_F64}
      *
      * @param src Input matrix.
      * @param dst Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static RowMatrix_F64 convert(BlockMatrix_F64 src , RowMatrix_F64 dst ) {
+    public static DMatrixRow_F64 convert(DMatrixBlock_F64 src , DMatrixRow_F64 dst ) {
         if( dst != null ) {
             if( dst.numRows != src.numRows || dst.numCols != src.numCols )
                 throw new IllegalArgumentException("Must be the same size.");
         } else {
-            dst = new RowMatrix_F64(src.numRows,src.numCols);
+            dst = new DMatrixRow_F64(src.numRows,src.numCols);
         }
 
         for( int i = 0; i < src.numRows; i += src.blockLength ) {

@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.svd;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.ops.CommonOps_R64;
@@ -40,11 +40,11 @@ public class StabilitySvdlDecomposition {
     private static boolean computeV = true;
 
 
-    public static double evaluate(SingularValueDecomposition<RowMatrix_F64> alg , RowMatrix_F64 orig ) {
+    public static double evaluate(SingularValueDecomposition<DMatrixRow_F64> alg , DMatrixRow_F64 orig ) {
 
-        RowMatrix_F64 U=null;
-        RowMatrix_F64 W;
-        RowMatrix_F64 Vt=null;
+        DMatrixRow_F64 U=null;
+        DMatrixRow_F64 W;
+        DMatrixRow_F64 Vt=null;
 
         if( !alg.decompose(orig.copy())) {
             return Double.NaN;
@@ -61,7 +61,7 @@ public class StabilitySvdlDecomposition {
         return DecompositionFactory_R64.quality(orig, U,W,Vt);
     }
 
-    private static void runAlgorithms( RowMatrix_F64 mat )
+    private static void runAlgorithms( DMatrixRow_F64 mat )
     {
         System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_R64(compact,computeU,computeV,false),mat));
         System.out.println("qr ult           = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(compact,computeU,computeV),mat));
@@ -75,8 +75,8 @@ public class StabilitySvdlDecomposition {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
 
-        RowMatrix_F64 orig = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
-        RowMatrix_F64 mat = orig.copy();
+        DMatrixRow_F64 orig = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRow_F64 mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("  Decomposition size %3d %d for %e scale\n",numRows,numCols,scales[i]);

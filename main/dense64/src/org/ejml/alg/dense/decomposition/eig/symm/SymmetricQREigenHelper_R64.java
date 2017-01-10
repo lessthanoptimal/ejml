@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.eig.symm;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.eig.EigenvalueSmall_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 import java.util.Random;
 
@@ -48,7 +48,7 @@ public class SymmetricQREigenHelper_R64 {
     protected EigenvalueSmall_F64 eigenSmall = new EigenvalueSmall_F64();
 
     // orthogonal matrix used in similar transform.  optional
-    protected RowMatrix_F64 Q;
+    protected DMatrixRow_F64 Q;
 
     // size of the matrix being processed
     protected int N;
@@ -88,7 +88,7 @@ public class SymmetricQREigenHelper_R64 {
         System.out.println();
     }
 
-    public void setQ(RowMatrix_F64 q) {
+    public void setQ(DMatrixRow_F64 q) {
         Q = q;
     }
 

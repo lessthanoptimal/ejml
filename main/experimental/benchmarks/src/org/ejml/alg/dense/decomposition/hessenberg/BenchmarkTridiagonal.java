@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.hessenberg;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.RandomMatrices_R64;
 
 import java.util.Random;
@@ -32,7 +32,7 @@ import java.util.Random;
 public class BenchmarkTridiagonal {
 
 
-    public static long basic(RowMatrix_F64 orig , int numTrials ) {
+    public static long basic(DMatrixRow_F64 orig , int numTrials ) {
 
         TridiagonalDecompositionHouseholder_R64 alg = new TridiagonalDecompositionHouseholder_R64();
 
@@ -50,7 +50,7 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long alt(RowMatrix_F64 orig , int numTrials ) {
+    public static long alt(DMatrixRow_F64 orig , int numTrials ) {
 
         TridiagonalDecompositionHouseholderOrig_R64 alg = new TridiagonalDecompositionHouseholderOrig_R64();
 
@@ -63,7 +63,7 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long block(RowMatrix_F64 orig , int numTrials ) {
+    public static long block(DMatrixRow_F64 orig , int numTrials ) {
 
 
         TridiagonalDecomposition_B64_to_R64 alg = new TridiagonalDecomposition_B64_to_R64();
@@ -82,7 +82,7 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
         System.out.println("basic            = "+ basic(mat,numTrials));
 //        System.out.println("alt              = "+ alt(mat,numTrials));
@@ -102,7 +102,7 @@ public class BenchmarkTridiagonal {
             System.out.printf("Processing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

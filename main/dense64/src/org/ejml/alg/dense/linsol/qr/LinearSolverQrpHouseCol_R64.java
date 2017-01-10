@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_R64;
 import org.ejml.alg.dense.decomposition.qr.QrHelperFunctions_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ public class LinearSolverQrpHouseCol_R64 extends BaseLinearSolverQrp_R64 {
     private QRColPivDecompositionHouseholderColumn_R64 decomposition;
 
     // storage for basic solution
-    private RowMatrix_F64 x_basic = new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 x_basic = new DMatrixRow_F64(1,1);
 
     public LinearSolverQrpHouseCol_R64(QRColPivDecompositionHouseholderColumn_R64 decomposition,
                                        boolean norm2Solution)
@@ -47,7 +47,7 @@ public class LinearSolverQrpHouseCol_R64 extends BaseLinearSolverQrp_R64 {
     }
 
     @Override
-    public void solve(RowMatrix_F64 B, RowMatrix_F64 X) {
+    public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X");
         else if( B.numRows != numRows || B.numCols != X.numCols )

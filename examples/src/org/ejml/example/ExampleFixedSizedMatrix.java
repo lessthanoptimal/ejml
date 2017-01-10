@@ -19,9 +19,9 @@
 package org.ejml.example;
 
 import org.ejml.alg.fixed.FixedOps3_F64;
-import org.ejml.data.FixedMatrix3_F64;
-import org.ejml.data.FixedMatrix3x3_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixFixed3_F64;
+import org.ejml.data.DMatrixFixed3x3_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -36,8 +36,8 @@ public class ExampleFixedSizedMatrix {
 
     public static void main( String args[] ) {
         // declare the matrix
-        FixedMatrix3x3_F64 a = new FixedMatrix3x3_F64();
-        FixedMatrix3x3_F64 b = new FixedMatrix3x3_F64();
+        DMatrixFixed3x3_F64 a = new DMatrixFixed3x3_F64();
+        DMatrixFixed3x3_F64 b = new DMatrixFixed3x3_F64();
 
         // Can assign values the usual way
         for( int i = 0; i < 3; i++ ) {
@@ -61,13 +61,13 @@ public class ExampleFixedSizedMatrix {
 
         // matrix-vector operations are also supported
         // Constructors for vectors and matrices can be used to initialize its value
-        FixedMatrix3_F64 v = new FixedMatrix3_F64(1,2,3);
-        FixedMatrix3_F64 result = new FixedMatrix3_F64();
+        DMatrixFixed3_F64 v = new DMatrixFixed3_F64(1,2,3);
+        DMatrixFixed3_F64 result = new DMatrixFixed3_F64();
 
         FixedOps3_F64.mult(a,v,result);
 
-        // Conversion into RowMatrix_F64 can also be done
-        RowMatrix_F64 dm = ConvertMatrixStruct_F64.convert(a,null);
+        // Conversion into DMatrixRow_F64 can also be done
+        DMatrixRow_F64 dm = ConvertMatrixStruct_F64.convert(a,null);
 
         dm.print();
 
@@ -75,7 +75,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        FixedMatrix3x3_F64 fv = ConvertMatrixStruct_F64.convert(sv.matrix_F64(),(FixedMatrix3x3_F64)null);
+        DMatrixFixed3x3_F64 fv = ConvertMatrixStruct_F64.convert(sv.matrix_F64(),(DMatrixFixed3x3_F64)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

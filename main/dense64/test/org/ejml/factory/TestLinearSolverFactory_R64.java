@@ -21,7 +21,7 @@ package org.ejml.factory;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_R64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -42,53 +42,53 @@ public class TestLinearSolverFactory_R64 {
 
     @Test
     public void general() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
-        RowMatrix_F64 y = new RowMatrix_F64(5,1);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 y = new DMatrixRow_F64(5,1);
 
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.general(A.numRows, A.numCols);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.general(A.numRows, A.numCols);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void linear() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4,4,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
-        RowMatrix_F64 y = new RowMatrix_F64(4,1);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 y = new DMatrixRow_F64(4,1);
 
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.linear(A.numRows);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.linear(A.numRows);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void leastSquares() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
-        RowMatrix_F64 y = new RowMatrix_F64(5,1);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 y = new DMatrixRow_F64(5,1);
 
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.leastSquares(A.numRows,A.numCols);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.leastSquares(A.numRows,A.numCols);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void symmetric() {
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(5,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(5,1,rand);
-        RowMatrix_F64 y = new RowMatrix_F64(5,1);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(5,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(5,1,rand);
+        DMatrixRow_F64 y = new DMatrixRow_F64(5,1);
 
-        LinearSolver<RowMatrix_F64> solver = LinearSolverFactory_R64.symmPosDef(A.numCols);
+        LinearSolver<DMatrixRow_F64> solver = LinearSolverFactory_R64.symmPosDef(A.numCols);
 
         standardTest(A, x, y, solver);
     }
 
     @Test
     public void adjustable() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
-        RowMatrix_F64 y = new RowMatrix_F64(5,1);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,1,rand);
+        DMatrixRow_F64 y = new DMatrixRow_F64(5,1);
 
         AdjustableLinearSolver_R64 solver = LinearSolverFactory_R64.adjustable();
 
@@ -99,7 +99,7 @@ public class TestLinearSolverFactory_R64 {
 
         // compute the adjusted solution
         y.numRows--;
-        RowMatrix_F64 x_adj = new RowMatrix_F64(4,1);
+        DMatrixRow_F64 x_adj = new DMatrixRow_F64(4,1);
         solver.solve(y,x_adj);
 
         // The solution should still be the same
@@ -110,13 +110,13 @@ public class TestLinearSolverFactory_R64 {
      * Given A and x it computes the value of y.  This is then compared against what the solver computes
      * x should be.
      */
-    private void standardTest(RowMatrix_F64 a, RowMatrix_F64 x, RowMatrix_F64 y,
-                              LinearSolver<RowMatrix_F64> solver) {
-        solver = new LinearSolverSafe<RowMatrix_F64>(solver);
+    private void standardTest(DMatrixRow_F64 a, DMatrixRow_F64 x, DMatrixRow_F64 y,
+                              LinearSolver<DMatrixRow_F64> solver) {
+        solver = new LinearSolverSafe<DMatrixRow_F64>(solver);
 
         CommonOps_R64.mult(a,x,y);
 
-        RowMatrix_F64 x_found = new RowMatrix_F64(x.numRows,1);
+        DMatrixRow_F64 x_found = new DMatrixRow_F64(x.numRows,1);
 
         assertTrue(solver.setA(a));
         solver.solve(y,x_found);

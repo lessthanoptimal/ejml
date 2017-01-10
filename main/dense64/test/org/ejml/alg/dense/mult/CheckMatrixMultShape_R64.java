@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixDimensionException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -107,18 +107,18 @@ public class CheckMatrixMultShape_R64 {
      */
     private void checkPositive(Method func, boolean transA, boolean transB ,
                                int m , int n , int o ) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        RowMatrix_F64 A,B;
-        RowMatrix_F64 C = new RowMatrix_F64(m,o);
+        DMatrixRow_F64 A,B;
+        DMatrixRow_F64 C = new DMatrixRow_F64(m,o);
 
         if( transA ) {
-            A = new RowMatrix_F64(n,m);
+            A = new DMatrixRow_F64(n,m);
         } else {
-            A = new RowMatrix_F64(m,n);
+            A = new DMatrixRow_F64(m,n);
         }
         if( transB ) {
-            B = new RowMatrix_F64(o,n);
+            B = new DMatrixRow_F64(o,n);
         } else {
-            B = new RowMatrix_F64(n,o);
+            B = new DMatrixRow_F64(n,o);
         }
 
         TestMatrixMatrixMult_R64.invoke(func, 2.0, A, B, C);
@@ -147,18 +147,18 @@ public class CheckMatrixMultShape_R64 {
     private void checkNegative(Method func,
                                int m_a , int n_a , int m_b , int n_b , int m_c , int n_c ,
                                boolean transA, boolean transB) throws NoSuchMethodException, IllegalAccessException {
-        RowMatrix_F64 A,B;
-        RowMatrix_F64 C = new RowMatrix_F64(m_c,n_c);
+        DMatrixRow_F64 A,B;
+        DMatrixRow_F64 C = new DMatrixRow_F64(m_c,n_c);
 
         if( transA ) {
-            A = new RowMatrix_F64(n_a,m_a);
+            A = new DMatrixRow_F64(n_a,m_a);
         } else {
-            A = new RowMatrix_F64(m_a,n_a);
+            A = new DMatrixRow_F64(m_a,n_a);
         }
         if( transB ) {
-            B = new RowMatrix_F64(n_b,m_b);
+            B = new DMatrixRow_F64(n_b,m_b);
         } else {
-            B = new RowMatrix_F64(m_b,n_b);
+            B = new DMatrixRow_F64(m_b,n_b);
         }
 
         try {

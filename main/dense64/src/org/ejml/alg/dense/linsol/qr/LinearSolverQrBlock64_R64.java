@@ -20,12 +20,12 @@ package org.ejml.alg.dense.linsol.qr;
 
 import org.ejml.alg.block.linsol.qr.QrHouseHolderSolver_B64;
 import org.ejml.alg.dense.linsol.LinearSolver_B64_to_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
  * Wrapper around {@link QrHouseHolderSolver_B64} that allows it to process
- * {@link RowMatrix_F64}.
+ * {@link DMatrixRow_F64}.
  *
  * @author Peter Abeles
  */

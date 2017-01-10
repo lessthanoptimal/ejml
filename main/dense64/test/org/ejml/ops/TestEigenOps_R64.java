@@ -20,7 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.junit.Test;
@@ -43,10 +43,10 @@ public class TestEigenOps_R64 {
      */
     @Test
     public void computeEigenValue() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3,
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3,
                 true, 0.053610, 0.030405, 0.892620, 0.090954, 0.074065, 0.875797, 0.105369, 0.928981, 0.965506);
 
-        RowMatrix_F64 u = new RowMatrix_F64(3,1,
+        DMatrixRow_F64 u = new DMatrixRow_F64(3,1,
                 true, -0.4502917, -0.4655377, -0.7619134);
 
         double value = EigenOps_R64.computeEigenValue(A,u);
@@ -60,7 +60,7 @@ public class TestEigenOps_R64 {
     @Test
     public void boundLargestEigenValue_markov() {
         // create the matrix
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,3,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,3,rand);
 
         for( int i = 0; i < 3; i++ ) {
             double total = 0;
@@ -81,15 +81,15 @@ public class TestEigenOps_R64 {
 
     @Test
     public void createMatrixV() {
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(3,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRow_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
 
-        RowMatrix_F64 V = EigenOps_R64.createMatrixV(decomp);
+        DMatrixRow_F64 V = EigenOps_R64.createMatrixV(decomp);
 
         for( int i = 0; i < 3; i++ ) {
-            RowMatrix_F64 v = decomp.getEigenVector(i);
+            DMatrixRow_F64 v = decomp.getEigenVector(i);
 
             for( int j = 0; j < 3; j++ ) {
                 assertEquals(V.get(j,i),v.get(j),UtilEjml.TEST_F64);
@@ -99,12 +99,12 @@ public class TestEigenOps_R64 {
 
     @Test
     public void createMatrixD() {
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(3,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRow_F64> decomp = DecompositionFactory_R64.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
 
-        RowMatrix_F64 D = EigenOps_R64.createMatrixD(decomp);
+        DMatrixRow_F64 D = EigenOps_R64.createMatrixD(decomp);
 
         for( int i = 0; i < 3; i++ ) {
             Complex_F64 e = decomp.getEigenvalue(i);

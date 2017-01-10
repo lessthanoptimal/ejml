@@ -18,11 +18,11 @@
 
 package org.ejml.alg.block;
 
-import org.ejml.data.BlockMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 
 /**
  * <p>
- * Contains triangular solvers for inner blocks of a {@link BlockMatrix_F64}.
+ * Contains triangular solvers for inner blocks of a {@link DMatrixBlock_F64}.
  * </p>
  *
  * <p>

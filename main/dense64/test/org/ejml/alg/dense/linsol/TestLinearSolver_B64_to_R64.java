@@ -19,8 +19,8 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.block.linsol.qr.QrHouseHolderSolver_B64;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
@@ -31,9 +31,9 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolver_B64_to_R64 extends GenericLinearSolverChecks_R64 {
 
     @Override
-    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A) {
+    protected LinearSolver<DMatrixRow_F64> createSolver(DMatrixRow_F64 A) {
 
-        LinearSolver<BlockMatrix_F64> solver = new QrHouseHolderSolver_B64();
+        LinearSolver<DMatrixBlock_F64> solver = new QrHouseHolderSolver_B64();
 
         return new LinearSolver_B64_to_R64(solver);
     }

@@ -20,8 +20,8 @@ package org.ejml.alg.block;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -61,8 +61,8 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix origA = SimpleMatrix.random_F64(lengthA,lengthA,-1.0 , 1.0 ,rand);
         SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA,-1.0 , 1.0 ,rand);
 
-        BlockMatrix_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
-        BlockMatrix_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
+        DMatrixBlock_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        DMatrixBlock_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
         D1Submatrix_F64 subA = new D1Submatrix_F64(blockA,0, origA.numRows(), 0, origA.numCols());
         D1Submatrix_F64 subB = new D1Submatrix_F64(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -92,8 +92,8 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_R64.createSymmPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA, -1.0 , 1.0 ,rand);
 
-        BlockMatrix_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
-        BlockMatrix_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
+        DMatrixBlock_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        DMatrixBlock_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
         D1Submatrix_F64 subA = new D1Submatrix_F64(blockA,0, origA.numRows(), 0, origA.numCols());
         D1Submatrix_F64 subB = new D1Submatrix_F64(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -120,8 +120,8 @@ public class TestInnerRankUpdate_B64 {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_R64.createSymmPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random_F64(lengthA,widthB, -1.0 , 1.0 ,rand);
 
-        BlockMatrix_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
-        BlockMatrix_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
+        DMatrixBlock_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
+        DMatrixBlock_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
 
         D1Submatrix_F64 subA = new D1Submatrix_F64(blockA,0, origA.numRows(), 0, origA.numCols());
         D1Submatrix_F64 subB = new D1Submatrix_F64(blockB,0, origB.numRows(), 0, origB.numCols());

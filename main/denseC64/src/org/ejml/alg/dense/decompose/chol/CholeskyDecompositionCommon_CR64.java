@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decompose.chol;
 
 import org.ejml.alg.dense.decompose.UtilDecompositons_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
@@ -36,13 +36,13 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_CR64
-        implements CholeskyDecomposition_F64<RowMatrix_C64> {
+        implements CholeskyDecomposition_F64<DMatrixRow_C64> {
 
     // width and height of the matrix
     protected int n;
 
     // the decomposed matrix
-    protected RowMatrix_C64 T;
+    protected DMatrixRow_C64 T;
     protected double[] t;
 
 
@@ -74,7 +74,7 @@ public abstract class CholeskyDecompositionCommon_CR64
      * {@inheritDoc}
      */
     @Override
-    public boolean decompose( RowMatrix_C64 mat ) {
+    public boolean decompose( DMatrixRow_C64 mat ) {
         if( mat.numRows != mat.numCols ) {
             throw new IllegalArgumentException("Must be a square matrix.");
         }
@@ -111,7 +111,7 @@ public abstract class CholeskyDecompositionCommon_CR64
     protected abstract boolean decomposeUpper();
 
     @Override
-    public RowMatrix_C64 getT(RowMatrix_C64 T ) {
+    public DMatrixRow_C64 getT(DMatrixRow_C64 T ) {
         // write the values to T
         if( lower ) {
             T = UtilDecompositons_CR64.checkZerosUT(T,n,n);
@@ -145,7 +145,7 @@ public abstract class CholeskyDecompositionCommon_CR64
      *
      * @return A lower or upper triangular matrix.
      */
-    public RowMatrix_C64 _getT() {
+    public DMatrixRow_C64 _getT() {
         return T;
     }
 

@@ -21,8 +21,8 @@ package org.ejml.alg.dense.mult;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.blockd3.BlockD3MatrixOps;
 import org.ejml.data.BlockD3Matrix64F;
-import org.ejml.data.BlockMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 
@@ -45,8 +45,8 @@ public class BenchmarkMatrixMatrixMult {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                            RowMatrix_F64 matResult , int numTrials) {
+    public static long mult(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                            DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -57,8 +57,8 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
-    public static long multSmall(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                                 RowMatrix_F64 matResult , int numTrials) {
+    public static long multSmall(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                                 DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -69,8 +69,8 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
-    public static long multAux(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                               RowMatrix_F64 matResult , int numTrials) {
+    public static long multAux(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                               DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -81,8 +81,8 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
-    public static long multReorder(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                                   RowMatrix_F64 matResult , int numTrials) {
+    public static long multReorder(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                                   DMatrixRow_F64 matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -93,11 +93,11 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
-    public static long multBlockNative(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                                       RowMatrix_F64 matResult , int numTrials) {
-        BlockMatrix_F64 blockA = MatrixOps_B64.convert(matA);
-        BlockMatrix_F64 blockB = MatrixOps_B64.convert(matB);
-        BlockMatrix_F64 blockC = new BlockMatrix_F64(matResult.numRows,matResult.numCols);
+    public static long multBlockNative(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                                       DMatrixRow_F64 matResult , int numTrials) {
+        DMatrixBlock_F64 blockA = MatrixOps_B64.convert(matA);
+        DMatrixBlock_F64 blockB = MatrixOps_B64.convert(matB);
+        DMatrixBlock_F64 blockC = new DMatrixBlock_F64(matResult.numRows,matResult.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -109,8 +109,8 @@ public class BenchmarkMatrixMatrixMult {
         return curr-prev;
     }
 
-    public static long multBlockD3Native(RowMatrix_F64 matA , RowMatrix_F64 matB ,
-                                         RowMatrix_F64 matResult , int numTrials) {
+    public static long multBlockD3Native(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
+                                         DMatrixRow_F64 matResult , int numTrials) {
         BlockD3Matrix64F blockA = BlockD3MatrixOps.convert(matA);
         BlockD3Matrix64F blockB = BlockD3MatrixOps.convert(matB);
         BlockD3Matrix64F blockC = new BlockD3Matrix64F(matResult.numRows,matResult.numCols);
@@ -130,9 +130,9 @@ public class BenchmarkMatrixMatrixMult {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" K = "+numK);
-        RowMatrix_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
-        RowMatrix_F64 matB = RandomMatrices_R64.createRandom(numCols,numK,rand);
-        RowMatrix_F64 matResult = RandomMatrices_R64.createRandom(numRows,numK,rand);
+        DMatrixRow_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
+        DMatrixRow_F64 matB = RandomMatrices_R64.createRandom(numCols,numK,rand);
+        DMatrixRow_F64 matResult = RandomMatrices_R64.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
                 0,//mult(matA,matB,matResult,numTrials),

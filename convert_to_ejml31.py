@@ -33,31 +33,37 @@ print "Recursively apply search and replace to "+location
 def F(find,replace):
     findReplace(location,find,replace,"*.java")
 
-F("DenseMatrix64F","RowMatrix_F64")
-F("DenseMatrix32F","RowMatrix_F32")
-F("BlockMatrix64F","BlockMatrix_F64")
-F("BlockMatrix32F","BlockMatrix_F32")
-F("ComplexMatrix64F","Matrix_C64")
-F("ComplexMatrix32F","Matrix_C32")
-F("CDenseMatrix64F","RowMatrix_C64")
-F("CDenseMatrix32F","RowMatrix_C32")
-F("Complex64F","Complex_F64")
-F("Complex32F","Complex_F32")
-F("ComplexPolar64F","ComplexPolar_F64")
-F("ComplexPolar32F","ComplexPolar_F32")
-F("ComplexMath64F","ComplexMath_F64")
-F("ComplexMath32F","ComplexMath_F32")
-F("DenseMatrixBool","RowMatrix_B")
-F("EigenPair64F","EigenPair_F64")
-F("EigenPair32F","EigenPair_F32")
+F("FixedMatrix","DMatrixFixed")
+F("BlockMatrix","DMatrixBlock")
+F("RowMatrix_","DMatrixRow_")
+
+def G(patA,patB):
+    F(patA+"32F",patB+"_F32")
+    F(patA+"64F",patB+"_F64")
+
+def H(patA,patB):
+    F(patA+"32F",patB+"_C32")
+    F(patA+"64F",patB+"_C64")
+
+G("DenseMatrix","DMatrixRow")
+G("BlockMatrix","DMatrixBlock")
+G("EigenPair","EigenPair")
+G("Complex","Complex")
+G("ComplexPolar","ComplexPolar")
+G("ComplexMath","ComplexMath")
+H("CDenseMatrix","DMatrixRow")
+H("ComplexMatrix","Matrix")
+
+F("DenseMatrixBool","DMatrixRow_B")
 
 for n in range(2,7):
     suf1 = str(n)
     suf2 = str(n)+"x"+str(n)
-    F("FixedMatrix"+suf1+"_64F","FixedMatrix"+suf1+"_F64")
-    F("FixedMatrix"+suf2+"_64F","FixedMatrix"+suf2+"_F64")
-    F("FixedMatrix"+suf1+"_32F","FixedMatrix"+suf1+"_F32")
-    F("FixedMatrix"+suf2+"_32F","FixedMatrix"+suf2+"_F32")
+
+    F("FixedMatrix"+suf1+"_64F","DMatrixFixed"+suf1+"_F64")
+    F("FixedMatrix"+suf2+"_64F","DMatrixFixed"+suf2+"_F64")
+    F("FixedMatrix"+suf1+"_32F","DMatrixFixed"+suf1+"_F32")
+    F("FixedMatrix"+suf2+"_32F","DMatrixFixed"+suf2+"_F32")
     F("FixedOps"+suf1+"\.","FixedOps"+suf1+"_F64\.")
 
 F("_D64","_R64")

@@ -29,10 +29,10 @@ import static org.junit.Assert.assertEquals;
 public class TestCD1Matrix_F32 {
     @Test
     public void set_matrix() {
-        D1Matrix_C32 a = new RowMatrix_C32(3,4);
+        D1Matrix_C32 a = new DMatrixRow_C32(3,4);
         a.set(1,3,9,2);
 
-        D1Matrix_C32 b = new RowMatrix_C32(3,4);
+        D1Matrix_C32 b = new DMatrixRow_C32(3,4);
 
         b.set(a);
         for (int i = 0; i < a.getDataLength(); i++) {
@@ -43,26 +43,26 @@ public class TestCD1Matrix_F32 {
 
     @Test
     public void getNumRows() {
-        D1Matrix_C32 a = new RowMatrix_C32(3,4);
+        D1Matrix_C32 a = new DMatrixRow_C32(3,4);
         assertEquals(3,a.getNumRows());
     }
 
     @Test
     public void getNumCols() {
-        D1Matrix_C32 a = new RowMatrix_C32(3,4);
+        D1Matrix_C32 a = new DMatrixRow_C32(3,4);
         assertEquals(4,a.getNumCols());
     }
 
     @Test
     public void setNumRows() {
-        D1Matrix_C32 a = new RowMatrix_C32(3,4);
+        D1Matrix_C32 a = new DMatrixRow_C32(3,4);
         a.setNumRows(6);
         assertEquals(6, a.getNumRows());
     }
 
     @Test
     public void setNumCols() {
-        D1Matrix_C32 a = new RowMatrix_C32(3,4);
+        D1Matrix_C32 a = new DMatrixRow_C32(3,4);
         a.setNumCols(6);
         assertEquals(6,a.getNumCols());
     }

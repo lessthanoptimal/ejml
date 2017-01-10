@@ -18,8 +18,8 @@
 
 package org.ejml.alg.fixed;
 
-import org.ejml.data.FixedMatrix5_F64;
-import org.ejml.data.FixedMatrix5x5_F64;
+import org.ejml.data.DMatrixFixed5_F64;
+import org.ejml.data.DMatrixFixed5x5_F64;
 
 /**
  * <p>Matrix norm related operations for fixed sized matrices of size 5.</p>
@@ -28,17 +28,17 @@ import org.ejml.data.FixedMatrix5x5_F64;
  * @author Peter Abeles
  */
 public class FixedNormOps5_F64 {
-    public static void normalizeF( FixedMatrix5x5_F64 M ) {
+    public static void normalizeF( DMatrixFixed5x5_F64 M ) {
         double val = normF(M);
         FixedOps5_F64.divide(M,val);
     }
 
-    public static void normalizeF( FixedMatrix5_F64 M ) {
+    public static void normalizeF( DMatrixFixed5_F64 M ) {
         double val = normF(M);
         FixedOps5_F64.divide(M,val);
     }
 
-    public static double fastNormF( FixedMatrix5x5_F64 M ) {
+    public static double fastNormF( DMatrixFixed5x5_F64 M ) {
         double sum = 0;
 
         sum += M.a11*M.a11 + M.a12*M.a12 + M.a13*M.a13 + M.a14*M.a14 + M.a15*M.a15;
@@ -50,12 +50,12 @@ public class FixedNormOps5_F64 {
         return Math.sqrt(sum);
     }
 
-    public static double fastNormF( FixedMatrix5_F64 M ) {
+    public static double fastNormF( DMatrixFixed5_F64 M ) {
         double sum = M.a1*M.a1 + M.a2*M.a2 + M.a3*M.a3 + M.a4*M.a4 + M.a5*M.a5;
         return Math.sqrt(sum);
     }
 
-    public static double normF( FixedMatrix5x5_F64 M ) {
+    public static double normF( DMatrixFixed5x5_F64 M ) {
         double scale = FixedOps5_F64.elementMaxAbs(M);
 
         if( scale == 0.0 )
@@ -77,7 +77,7 @@ public class FixedNormOps5_F64 {
         return scale * Math.sqrt(sum);
     }
 
-    public static double normF( FixedMatrix5_F64 M ) {
+    public static double normF( DMatrixFixed5_F64 M ) {
         double scale = FixedOps5_F64.elementMaxAbs(M);
 
         if( scale == 0.0 )

@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decomposition.eig.watched;
 
 import org.ejml.alg.dense.decomposition.eig.EigenvalueExtractor_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -40,7 +40,7 @@ public class WatchedDoubleStepQREigenvalue_R64 implements EigenvalueExtractor_R6
         implicitQR = new WatchedDoubleStepQREigen_R64();
     }
 
-    public void setup( RowMatrix_F64 A ) {
+    public void setup( DMatrixRow_F64 A ) {
         implicitQR.setup(A);
         implicitQR.setQ(null);
 
@@ -49,7 +49,7 @@ public class WatchedDoubleStepQREigenvalue_R64 implements EigenvalueExtractor_R6
     }
 
     @Override
-    public boolean process(RowMatrix_F64 origA) {
+    public boolean process(DMatrixRow_F64 origA) {
         setup(origA);
 
         x1 = 0;

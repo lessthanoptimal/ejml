@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol.svd;
 
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_R64;
 import org.ejml.alg.dense.linsol.GenericSolvePseudoInverseChecks_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
@@ -34,13 +34,13 @@ public class TestSolvePseudoInverseSvd_R64 extends GenericLinearSolverChecks_R64
     }
 
     @Override
-    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A ) {
+    protected LinearSolver<DMatrixRow_F64> createSolver(DMatrixRow_F64 A ) {
         return new SolvePseudoInverseSvd_R64(A.numRows,A.numCols);
     }
 
     @Test
     public void checkSingularBasic() {
-        LinearSolver<RowMatrix_F64> solver = new SolvePseudoInverseSvd_R64(10,10);
+        LinearSolver<DMatrixRow_F64> solver = new SolvePseudoInverseSvd_R64(10,10);
         GenericSolvePseudoInverseChecks_R64 checks = new GenericSolvePseudoInverseChecks_R64(solver);
 
         checks.all();

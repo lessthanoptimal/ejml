@@ -22,7 +22,7 @@ import org.ejml.alg.dense.decompose.TriangularSolver_CR64;
 import org.ejml.alg.dense.decompose.qr.QRDecompositionHouseholderColumn_CR64;
 import org.ejml.alg.dense.decompose.qr.QrHelperFunctions_CR64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_CR64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.SpecializedOps_CR64;
 
 
@@ -48,14 +48,14 @@ public class LinearSolverQrHouseCol_CR64 extends LinearSolverAbstract_CR64 {
 
     private QRDecompositionHouseholderColumn_CR64 decomposer;
 
-    private RowMatrix_C64 a = new RowMatrix_C64(1,1);
-    private RowMatrix_C64 temp = new RowMatrix_C64(1,1);
+    private DMatrixRow_C64 a = new DMatrixRow_C64(1,1);
+    private DMatrixRow_C64 temp = new DMatrixRow_C64(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
     private double[][] QR; // a column major QR matrix
-    private RowMatrix_C64 R = new RowMatrix_C64(1,1);
+    private DMatrixRow_C64 R = new DMatrixRow_C64(1,1);
     private double gammas[];
 
     /**
@@ -76,7 +76,7 @@ public class LinearSolverQrHouseCol_CR64 extends LinearSolverAbstract_CR64 {
      * @param A not modified.
      */
     @Override
-    public boolean setA(RowMatrix_C64 A) {
+    public boolean setA(DMatrixRow_C64 A) {
         if( A.numRows < A.numCols )
             throw new IllegalArgumentException("Can't solve for wide systems.  More variables than equations.");
         if( A.numRows > maxRows || A.numCols > maxCols )
@@ -108,7 +108,7 @@ public class LinearSolverQrHouseCol_CR64 extends LinearSolverAbstract_CR64 {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(RowMatrix_C64 B, RowMatrix_C64 X) {
+    public void solve(DMatrixRow_C64 B, DMatrixRow_C64 X) {
         if( X.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
         else if( B.numRows != numRows || B.numCols != X.numCols )

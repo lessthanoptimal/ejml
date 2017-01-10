@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.bidiagonal;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
@@ -56,12 +56,12 @@ import org.ejml.ops.CommonOps_R64;
  */
 // TODO optimize this code
 public class BidiagonalDecompositionTall_R64
-        implements BidiagonalDecomposition_F64<RowMatrix_F64>
+        implements BidiagonalDecomposition_F64<DMatrixRow_F64>
 {
-    QRPDecomposition_F64<RowMatrix_F64> decompQRP = DecompositionFactory_R64.qrp(500, 100); // todo this should be passed in
-    BidiagonalDecomposition_F64<RowMatrix_F64> decompBi = new BidiagonalDecompositionRow_R64();
+    QRPDecomposition_F64<DMatrixRow_F64> decompQRP = DecompositionFactory_R64.qrp(500, 100); // todo this should be passed in
+    BidiagonalDecomposition_F64<DMatrixRow_F64> decompBi = new BidiagonalDecompositionRow_R64();
 
-    RowMatrix_F64 B = new RowMatrix_F64(1,1);
+    DMatrixRow_F64 B = new DMatrixRow_F64(1,1);
 
     // number of rows
     int m;
@@ -80,7 +80,7 @@ public class BidiagonalDecompositionTall_R64
     }
 
     @Override
-    public RowMatrix_F64 getB(RowMatrix_F64 B, boolean compact) {
+    public DMatrixRow_F64 getB(DMatrixRow_F64 B, boolean compact) {
         B = BidiagonalDecompositionRow_R64.handleB(B, compact, m, n, min);
 
         B.set(0,0,this.B.get(0,0));
@@ -95,20 +95,20 @@ public class BidiagonalDecompositionTall_R64
     }
 
     @Override
-    public RowMatrix_F64 getU(RowMatrix_F64 U, boolean transpose, boolean compact) {
+    public DMatrixRow_F64 getU(DMatrixRow_F64 U, boolean transpose, boolean compact) {
         U = BidiagonalDecompositionRow_R64.handleU(U, false, compact, m, n, min);
 
         if( compact ) {
             // U = Q*U1
-            RowMatrix_F64 Q1 = decompQRP.getQ(null,true);
-            RowMatrix_F64 U1 = decompBi.getU(null,false,true);
+            DMatrixRow_F64 Q1 = decompQRP.getQ(null,true);
+            DMatrixRow_F64 U1 = decompBi.getU(null,false,true);
             CommonOps_R64.mult(Q1,U1,U);
         } else {
            // U = [Q1*U1 Q2]
-            RowMatrix_F64 Q = decompQRP.getQ(U,false);
-            RowMatrix_F64 U1 = decompBi.getU(null,false,true);
-            RowMatrix_F64 Q1 = CommonOps_R64.extract(Q,0,Q.numRows,0,min);
-            RowMatrix_F64 tmp = new RowMatrix_F64(Q1.numRows,U1.numCols);
+            DMatrixRow_F64 Q = decompQRP.getQ(U,false);
+            DMatrixRow_F64 U1 = decompBi.getU(null,false,true);
+            DMatrixRow_F64 Q1 = CommonOps_R64.extract(Q,0,Q.numRows,0,min);
+            DMatrixRow_F64 tmp = new DMatrixRow_F64(Q1.numRows,U1.numCols);
             CommonOps_R64.mult(Q1,U1,tmp);
             CommonOps_R64.insert(tmp,Q,0,0);
         }
@@ -120,12 +120,12 @@ public class BidiagonalDecompositionTall_R64
     }
 
     @Override
-    public RowMatrix_F64 getV(RowMatrix_F64 V, boolean transpose, boolean compact) {
+    public DMatrixRow_F64 getV(DMatrixRow_F64 V, boolean transpose, boolean compact) {
         return decompBi.getV(V,transpose,compact);
     }
 
     @Override
-    public boolean decompose(RowMatrix_F64 orig) {
+    public boolean decompose(DMatrixRow_F64 orig) {
 
         if( !decompQRP.decompose(orig) ) {
             return false;
@@ -140,8 +140,8 @@ public class BidiagonalDecompositionTall_R64
 
         // apply the column pivots.
         // TODO this is horribly inefficient
-        RowMatrix_F64 result = new RowMatrix_F64(min,n);
-        RowMatrix_F64 P = decompQRP.getPivotMatrix(null);
+        DMatrixRow_F64 result = new DMatrixRow_F64(min,n);
+        DMatrixRow_F64 P = decompQRP.getPivotMatrix(null);
         CommonOps_R64.multTransB(B, P, result);
         B.set(result);
 

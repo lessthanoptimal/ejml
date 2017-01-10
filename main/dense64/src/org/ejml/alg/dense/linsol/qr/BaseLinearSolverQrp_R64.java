@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
 import org.ejml.alg.dense.linsol.LinearSolverAbstract_R64;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -67,27 +67,27 @@ import org.ejml.ops.SpecializedOps_R64;
  */
 public abstract class BaseLinearSolverQrp_R64 extends LinearSolverAbstract_R64 {
 
-    QRPDecomposition_F64<RowMatrix_F64> decomposition;
+    QRPDecomposition_F64<DMatrixRow_F64> decomposition;
 
     // if true then only the basic solution will be found
     protected boolean norm2Solution;
 
-    protected RowMatrix_F64 Y = new RowMatrix_F64(1,1);
-    protected RowMatrix_F64 R = new RowMatrix_F64(1,1);
+    protected DMatrixRow_F64 Y = new DMatrixRow_F64(1,1);
+    protected DMatrixRow_F64 R = new DMatrixRow_F64(1,1);
     
     // stores sub-matrices inside the R matrix
-    protected RowMatrix_F64 R11 = new RowMatrix_F64(1,1);
+    protected DMatrixRow_F64 R11 = new DMatrixRow_F64(1,1);
     
     // store an identity matrix for computing the inverse
-    protected RowMatrix_F64 I = new RowMatrix_F64(1,1);
+    protected DMatrixRow_F64 I = new DMatrixRow_F64(1,1);
 
     // rank of the system matrix
     protected int rank;
 
-    protected LinearSolver<RowMatrix_F64> internalSolver = LinearSolverFactory_R64.leastSquares(1, 1);
+    protected LinearSolver<DMatrixRow_F64> internalSolver = LinearSolverFactory_R64.leastSquares(1, 1);
 
     // used to compute optimal 2-norm solution
-    private RowMatrix_F64 W = new RowMatrix_F64(1,1);
+    private DMatrixRow_F64 W = new DMatrixRow_F64(1,1);
 
     /**
      * Configures internal parameters.
@@ -95,18 +95,18 @@ public abstract class BaseLinearSolverQrp_R64 extends LinearSolverAbstract_R64 {
      * @param decomposition Used to solve the linear system.
      * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
      */
-    protected BaseLinearSolverQrp_R64(QRPDecomposition_F64<RowMatrix_F64> decomposition,
+    protected BaseLinearSolverQrp_R64(QRPDecomposition_F64<DMatrixRow_F64> decomposition,
                                       boolean norm2Solution)
     {
         this.decomposition = decomposition;
         this.norm2Solution = norm2Solution;
 
         if( internalSolver.modifiesA() )
-            internalSolver = new LinearSolverSafe<RowMatrix_F64>(internalSolver);
+            internalSolver = new LinearSolverSafe<DMatrixRow_F64>(internalSolver);
     }
 
     @Override
-    public boolean setA(RowMatrix_F64 A) {
+    public boolean setA(DMatrixRow_F64 A) {
         _setA(A);
 
         if( !decomposition.decompose(A) )
@@ -165,8 +165,8 @@ public abstract class BaseLinearSolverQrp_R64 extends LinearSolverAbstract_R64 {
      *
      * @param X basic solution, also output solution
      */
-    protected void upgradeSolution( RowMatrix_F64 X ) {
-        RowMatrix_F64 z = Y; // recycle Y
+    protected void upgradeSolution( DMatrixRow_F64 X ) {
+        DMatrixRow_F64 z = Y; // recycle Y
 
         // compute the z which will minimize the 2-norm of X
         // because of the identity matrix tacked onto the end 'A' should never be singular
@@ -180,7 +180,7 @@ public abstract class BaseLinearSolverQrp_R64 extends LinearSolverAbstract_R64 {
     }
 
     @Override
-    public void invert(RowMatrix_F64 A_inv) {
+    public void invert(DMatrixRow_F64 A_inv) {
         if( A_inv.numCols != numRows || A_inv.numRows != numCols )
             throw new IllegalArgumentException("Unexpected dimensions for A_inv");
 
@@ -190,7 +190,7 @@ public abstract class BaseLinearSolverQrp_R64 extends LinearSolverAbstract_R64 {
         solve(I, A_inv);
     }
 
-    public QRPDecomposition_F64<RowMatrix_F64> getDecomposition() {
+    public QRPDecomposition_F64<DMatrixRow_F64> getDecomposition() {
         return decomposition;
     }
 }

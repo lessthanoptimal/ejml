@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowD1Matrix_F64;
+import org.ejml.data.D1MatrixRow_64;
 
 
 /**
@@ -35,7 +35,7 @@ public class TransposeAlgs_R64 {
      *
      * @param mat The matrix that is transposed in-place.  Modified.
      */
-    public static void square( RowD1Matrix_F64 mat )
+    public static void square( D1MatrixRow_64 mat )
     {
         int index = 1;
         int indexEnd = mat.numCols;
@@ -62,7 +62,7 @@ public class TransposeAlgs_R64 {
      * @param A_tran Transposed matrix.  Modified.
      * @param blockLength Length of a block.
      */
-    public static void block(RowD1Matrix_F64 A , RowD1Matrix_F64 A_tran ,
+    public static void block(D1MatrixRow_64 A , D1MatrixRow_64 A_tran ,
                              final int blockLength )
     {
         for( int i = 0; i < A.numRows; i += blockLength ) {
@@ -100,7 +100,7 @@ public class TransposeAlgs_R64 {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standard(RowD1Matrix_F64 A, RowD1Matrix_F64 A_tran)
+    public static void standard(D1MatrixRow_64 A, D1MatrixRow_64 A_tran)
     {
         int index = 0;
         for( int i = 0; i < A_tran.numRows; i++ ) {

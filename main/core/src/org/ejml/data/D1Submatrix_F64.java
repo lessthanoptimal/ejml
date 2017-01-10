@@ -81,8 +81,8 @@ public class D1Submatrix_F64 {
         original.set(row+row0,col+col0,value);
     }
 
-    public RowMatrix_F64 extract() {
-        RowMatrix_F64 ret = new RowMatrix_F64(row1-row0,col1-col0);
+    public DMatrixRow_F64 extract() {
+        DMatrixRow_F64 ret = new DMatrixRow_F64(row1-row0,col1-col0);
 
         for( int i = 0; i < ret.numRows; i++ ) {
             for( int j = 0; j < ret.numCols; j++ ) {

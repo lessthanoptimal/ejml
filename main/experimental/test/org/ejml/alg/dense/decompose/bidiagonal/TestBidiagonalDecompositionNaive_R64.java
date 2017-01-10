@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.bidiagonal;
 
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.bidiagonal.BidiagonalDecompositionNaive_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -64,7 +64,7 @@ public class TestBidiagonalDecompositionNaive_R64 {
 //        U.mult(A).mult(V).print();
 
         // check the decomposition
-        RowMatrix_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        DMatrixRow_F64 foundA = U.mult(B).mult(V.transpose()).matrix_F64();
 
 //        A.print();
 //        foundA.print();

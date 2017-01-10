@@ -19,8 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_B;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_B;
+import org.ejml.data.DMatrixRow_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,7 +38,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void hasUncountable() {
-        RowMatrix_F64 a = new RowMatrix_F64(4,4);
+        DMatrixRow_F64 a = new DMatrixRow_F64(4,4);
 
         // check a negative case first
         assertFalse(MatrixFeatures_R64.hasUncountable(a));
@@ -53,7 +53,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isZeros() {
-        RowMatrix_F64 a = new RowMatrix_F64(4,4);
+        DMatrixRow_F64 a = new DMatrixRow_F64(4,4);
         a.set(0, 0, 1);
 
         assertFalse(MatrixFeatures_R64.isZeros(a, 0.1));
@@ -62,7 +62,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isVector() {
-        RowMatrix_F64 a = new RowMatrix_F64(4,4);
+        DMatrixRow_F64 a = new DMatrixRow_F64(4,4);
 
         assertFalse(MatrixFeatures_R64.isVector(a));
 
@@ -78,9 +78,9 @@ public class TestMatrixFeatures_R64 {
      */
     @Test
     public void isPositiveDefinite() {
-        RowMatrix_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
-        RowMatrix_F64 b = UtilEjml.parse_R64("0 1 1 0",2);
-        RowMatrix_F64 c = UtilEjml.parse_R64("0 0 0 0",2);
+        DMatrixRow_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
+        DMatrixRow_F64 b = UtilEjml.parse_R64("0 1 1 0",2);
+        DMatrixRow_F64 c = UtilEjml.parse_R64("0 0 0 0",2);
 
         assertTrue(MatrixFeatures_R64.isPositiveDefinite(a));
         assertFalse(MatrixFeatures_R64.isPositiveDefinite(b));
@@ -93,9 +93,9 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isPositiveSemidefinite() {
-        RowMatrix_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
-        RowMatrix_F64 b = UtilEjml.parse_R64("0 1 1 0",2);
-        RowMatrix_F64 c = UtilEjml.parse_R64("0 0 0 0", 2);
+        DMatrixRow_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
+        DMatrixRow_F64 b = UtilEjml.parse_R64("0 1 1 0",2);
+        DMatrixRow_F64 c = UtilEjml.parse_R64("0 0 0 0", 2);
 
         assertTrue(MatrixFeatures_R64.isPositiveSemidefinite(a));
         assertFalse(MatrixFeatures_R64.isPositiveSemidefinite(b));
@@ -108,7 +108,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isSquare() {
-        RowMatrix_F64 a = new RowMatrix_F64(5,4);
+        DMatrixRow_F64 a = new DMatrixRow_F64(5,4);
 
         assertFalse(MatrixFeatures_R64.isSquare(a));
 
@@ -118,7 +118,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isDiagonalPositive() {
-        RowMatrix_F64 m = CommonOps_R64.identity(3);
+        DMatrixRow_F64 m = CommonOps_R64.identity(3);
         assertTrue(MatrixFeatures_R64.isDiagonalPositive(m));
 
         m.set(1, 1, -1);
@@ -130,7 +130,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isSymmetric() {
-        RowMatrix_F64 m = CommonOps_R64.identity(3);
+        DMatrixRow_F64 m = CommonOps_R64.identity(3);
         m.set(1, 2, 5);m.set(2,1,5);
         assertTrue(MatrixFeatures_R64.isSymmetric(m));
 
@@ -143,7 +143,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isSkewSymmetric() {
-        RowMatrix_F64 m = CommonOps_R64.identity(3);
+        DMatrixRow_F64 m = CommonOps_R64.identity(3);
         m.set(1, 2, 5);m.set(2,1,-5);
         assertTrue(MatrixFeatures_R64.isSkewSymmetric(m, UtilEjml.TEST_F64));
 
@@ -161,8 +161,8 @@ public class TestMatrixFeatures_R64 {
                  "   1.304014  -1.880739   1.438741\n" +
                  "  -0.746918   1.382356  -0.520416";
 
-        RowMatrix_F64 m = parse_R64(a,3);
-        RowMatrix_F64 n = parse_R64(a,3);
+        DMatrixRow_F64 m = parse_R64(a,3);
+        DMatrixRow_F64 n = parse_R64(a,3);
 
         assertTrue(MatrixFeatures_R64.isEquals(m,n));
 
@@ -179,8 +179,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isEquals_boolean() {
-         RowMatrix_B a = new RowMatrix_B(3,4);
-         RowMatrix_B b = new RowMatrix_B(3,4);
+         DMatrixRow_B a = new DMatrixRow_B(3,4);
+         DMatrixRow_B b = new DMatrixRow_B(3,4);
 
          RandomMatrices_R64.setRandomB(a,rand);
          b.set(a);
@@ -197,8 +197,8 @@ public class TestMatrixFeatures_R64 {
                  "   1.304014  -1.880739   1.438741\n" +
                  "  -0.746918   1.382356  -0.520416";
 
-        RowMatrix_F64 m = parse_R64(a,3);
-        RowMatrix_F64 n = parse_R64(a,3);
+        DMatrixRow_F64 m = parse_R64(a,3);
+        DMatrixRow_F64 n = parse_R64(a,3);
 
         assertTrue(MatrixFeatures_R64.isEquals(m,n,UtilEjml.TEST_F64_SQ));
 
@@ -222,8 +222,8 @@ public class TestMatrixFeatures_R64 {
         // see if it works with different sized matrices
         for( int m = 2; m < 10; m+=3) {
             for( int n = 2; n < 10; n += 3 ) {
-                RowMatrix_F64 a = RandomMatrices_R64.createRandom(m,n,rand);
-                RowMatrix_F64 b = a.copy();
+                DMatrixRow_F64 a = RandomMatrices_R64.createRandom(m,n,rand);
+                DMatrixRow_F64 b = a.copy();
 
                 // make the bottom triangle not the same
                 b.set(m-1,0,0);
@@ -260,9 +260,9 @@ public class TestMatrixFeatures_R64 {
     }
 
     private void checkIdentical( double valA , double valB , double tol , boolean expected ) {
-        RowMatrix_F64 A = new RowMatrix_F64(2,2);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,2);
         CommonOps_R64.fill(A, valA);
-        RowMatrix_F64 B = new RowMatrix_F64(2,2);
+        DMatrixRow_F64 B = new DMatrixRow_F64(2,2);
         CommonOps_R64.fill(B, valB);
 
         assertEquals(expected, MatrixFeatures_R64.isIdentical(A,B,tol));
@@ -270,8 +270,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isInverse() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,3,-1,1,rand);
-        RowMatrix_F64 A_inv = A.copy();
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,3,-1,1,rand);
+        DMatrixRow_F64 A_inv = A.copy();
 
         CommonOps_R64.invert(A_inv);
 
@@ -289,10 +289,10 @@ public class TestMatrixFeatures_R64 {
      */
     @Test
     public void isInverse_nomodify() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(3,3,-1,1,rand);
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(3,3,-1,1,rand);
-        RowMatrix_F64 A_copy = A.copy();
-        RowMatrix_F64 B_copy = B.copy();
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(3,3,-1,1,rand);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(3,3,-1,1,rand);
+        DMatrixRow_F64 A_copy = A.copy();
+        DMatrixRow_F64 B_copy = B.copy();
 
         MatrixFeatures_R64.isInverse(A,B,UtilEjml.TEST_F64);
 
@@ -302,7 +302,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void hasNaN() {
-        RowMatrix_F64 m = new RowMatrix_F64(3,3);
+        DMatrixRow_F64 m = new DMatrixRow_F64(3,3);
         assertFalse(MatrixFeatures_R64.hasNaN(m));
 
         m.set(1,2,-Double.NaN);
@@ -315,7 +315,7 @@ public class TestMatrixFeatures_R64 {
         double c = Math.cos(0.1);
         double s = Math.sin(0.1);
 
-        RowMatrix_F64 A = new RowMatrix_F64(new double[][]{{c,s},{-s,c}});
+        DMatrixRow_F64 A = new DMatrixRow_F64(new double[][]{{c,s},{-s,c}});
 
         assertTrue(MatrixFeatures_R64.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
 
@@ -332,21 +332,21 @@ public class TestMatrixFeatures_R64 {
     @Test
     public void isRowsLinearIndependent() {
         // test a positive case
-        RowMatrix_F64 A = new RowMatrix_F64(2,3, true, 1, 2, 3, 2, 3, 4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(2,3, true, 1, 2, 3, 2, 3, 4);
         assertTrue(MatrixFeatures_R64.isRowsLinearIndependent(A));
 
         // make sure the input wasn't modified
-        RowMatrix_F64 A_copy = new RowMatrix_F64(2,3, true, 1, 2, 3, 2, 3, 4);
+        DMatrixRow_F64 A_copy = new DMatrixRow_F64(2,3, true, 1, 2, 3, 2, 3, 4);
         assertTrue(MatrixFeatures_R64.isIdentical(A,A_copy,UtilEjml.TEST_F64));
 
         // test negative case
-        A = new RowMatrix_F64(2,3, true, 1, 2, 3, 1, 2, 3);
+        A = new DMatrixRow_F64(2,3, true, 1, 2, 3, 1, 2, 3);
         assertFalse(MatrixFeatures_R64.isRowsLinearIndependent(A));
     }
 
     @Test
     public void isConstantVal() {
-        RowMatrix_F64 a = new RowMatrix_F64(3,4);
+        DMatrixRow_F64 a = new DMatrixRow_F64(3,4);
 
         CommonOps_R64.fill(a, 2.4);
 
@@ -359,7 +359,7 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isIdentity() {
-        RowMatrix_F64 I = CommonOps_R64.identity(4);
+        DMatrixRow_F64 I = CommonOps_R64.identity(4);
 
         assertTrue(MatrixFeatures_R64.isIdentity(I,UtilEjml.TEST_F64));
 
@@ -372,8 +372,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void isNegative() {
-        RowMatrix_F64 a = RandomMatrices_R64.createRandom(4,5,rand);
-        RowMatrix_F64 b = a.copy();
+        DMatrixRow_F64 a = RandomMatrices_R64.createRandom(4,5,rand);
+        DMatrixRow_F64 b = a.copy();
         CommonOps_R64.scale(-1,b);
 
         // test the positive case first
@@ -391,7 +391,7 @@ public class TestMatrixFeatures_R64 {
     public void isUpperTriangle() {
         // test matrices that are upper triangular to various degree hessenberg
         for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
-            RowMatrix_F64 A = new RowMatrix_F64(6,6);
+            DMatrixRow_F64 A = new DMatrixRow_F64(6,6);
             for( int i = 0; i < A.numRows; i++ ) {
                 int s = i <= hessenberg ? 0 : i-hessenberg;
 
@@ -420,7 +420,7 @@ public class TestMatrixFeatures_R64 {
     public void isLowerTriangle() {
         // test matrices that are upper triangular to various degree hessenberg
         for( int hessenberg = 0; hessenberg < 2; hessenberg++ ) {
-            RowMatrix_F64 A = new RowMatrix_F64(6,6);
+            DMatrixRow_F64 A = new DMatrixRow_F64(6,6);
             for( int i = 0; i < A.numRows; i++ ) {
                 int s = i <= hessenberg ? 0 : i-hessenberg;
 
@@ -449,8 +449,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void rank() {
-        RowMatrix_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
-        RowMatrix_F64 a_copy = a.copy();
+        DMatrixRow_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
+        DMatrixRow_F64 a_copy = a.copy();
 
         assertEquals(2, MatrixFeatures_R64.rank(a));
         // make sure the input wasn't modified
@@ -462,8 +462,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void rank_threshold() {
-        RowMatrix_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
-        RowMatrix_F64 a_copy = a.copy();
+        DMatrixRow_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
+        DMatrixRow_F64 a_copy = a.copy();
 
         assertEquals(2, MatrixFeatures_R64.rank(a,10 * UtilEjml.EPS));
         // make sure the input wasn't modified
@@ -479,8 +479,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void nullity() {
-        RowMatrix_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
-        RowMatrix_F64 a_copy = a.copy();
+        DMatrixRow_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
+        DMatrixRow_F64 a_copy = a.copy();
 
         assertEquals(0, MatrixFeatures_R64.nullity(a));
         // make sure the input wasn't modified
@@ -492,8 +492,8 @@ public class TestMatrixFeatures_R64 {
 
     @Test
     public void nullity_threshold() {
-        RowMatrix_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
-        RowMatrix_F64 a_copy = a.copy();
+        DMatrixRow_F64 a = UtilEjml.parse_R64("2 0 0 2",2);
+        DMatrixRow_F64 a_copy = a.copy();
 
         assertEquals(0, MatrixFeatures_R64.nullity(a, 10 * UtilEjml.EPS));
         // make sure the input wasn't modified

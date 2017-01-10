@@ -18,7 +18,7 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 import java.util.ArrayList;
@@ -112,7 +112,7 @@ public class MatrixConstructor {
         return output;
     }
 
-    protected void setToRequiredSize( RowMatrix_F64 matrix ) {
+    protected void setToRequiredSize( DMatrixRow_F64 matrix ) {
 
 
         int matrixRow = 0;
@@ -183,7 +183,7 @@ public class MatrixConstructor {
             }
         }
 
-        public RowMatrix_F64 getMatrix() {
+        public DMatrixRow_F64 getMatrix() {
             return ((VariableMatrix)variable).matrix;
         }
 

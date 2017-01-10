@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.misc;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 /**
@@ -26,7 +26,7 @@ import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
  *
  * @author Peter Abeles
  */
-public class RrefGaussJordanRowPivot_R64 implements ReducedRowEchelonForm_F64<RowMatrix_F64> {
+public class RrefGaussJordanRowPivot_R64 implements ReducedRowEchelonForm_F64<DMatrixRow_F64> {
 
     // tolerance for singular matrix
     double tol;
@@ -37,7 +37,7 @@ public class RrefGaussJordanRowPivot_R64 implements ReducedRowEchelonForm_F64<Ro
     }
 
     @Override
-    public void reduce(RowMatrix_F64 A , int coefficientColumns) {
+    public void reduce(DMatrixRow_F64 A , int coefficientColumns) {
         if( A.numCols < coefficientColumns)
             throw new IllegalArgumentException("The system must be at least as wide as A");
 
@@ -93,7 +93,7 @@ public class RrefGaussJordanRowPivot_R64 implements ReducedRowEchelonForm_F64<Ro
         }
     }
 
-    protected static void swapRows(RowMatrix_F64 A , int rowA , int rowB ) {
+    protected static void swapRows(DMatrixRow_F64 A , int rowA , int rowB ) {
         int indexA = rowA*A.numCols;
         int indexB = rowB*A.numCols;
 

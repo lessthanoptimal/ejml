@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.linsol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
@@ -30,7 +30,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public interface AdjustableLinearSolver_R64 extends LinearSolver<RowMatrix_F64> {
+public interface AdjustableLinearSolver_R64 extends LinearSolver<DMatrixRow_F64> {
 
 
     /**

@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.linsol.qr.LinearSolverQrHouseCol_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.factory.LinearSolverFactory_R64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
@@ -39,10 +39,10 @@ import java.util.Random;
  */
 public class BenchmarkInverseStability {
 
-    private RowMatrix_F64 b = new RowMatrix_F64(3,3);
+    private DMatrixRow_F64 b = new DMatrixRow_F64(3,3);
 
 
-    private double evaluateInverse(RowMatrix_F64 A , RowMatrix_F64 A_inv )
+    private double evaluateInverse(DMatrixRow_F64 A , DMatrixRow_F64 A_inv )
     {
         CommonOps_R64.mult(A,A_inv,b);
 
@@ -63,7 +63,7 @@ public class BenchmarkInverseStability {
 
     public void evaluateAll()
     {
-        List<LinearSolver<RowMatrix_F64>> solvers = new ArrayList<LinearSolver<RowMatrix_F64>>();
+        List<LinearSolver<DMatrixRow_F64>> solvers = new ArrayList<LinearSolver<DMatrixRow_F64>>();
         List<String> names = new ArrayList<String>();
 
 //        solvers.add(new GaussJordanNoPivot());
@@ -94,7 +94,7 @@ public class BenchmarkInverseStability {
         allTheBreaks(solvers,names);
     }
 
-    private void allTheBreaks(List<LinearSolver<RowMatrix_F64>> solvers , List<String> names )
+    private void allTheBreaks(List<LinearSolver<DMatrixRow_F64>> solvers , List<String> names )
     {
         System.out.println("Testing singular:");
         for( int i = 0; i < solvers.size(); i++ ) {
@@ -112,18 +112,18 @@ public class BenchmarkInverseStability {
         }
     }
 
-    private void breakNearlySingluar( String name , LinearSolver<RowMatrix_F64> alg ) {
+    private void breakNearlySingluar( String name , LinearSolver<DMatrixRow_F64> alg ) {
         double breakDelta = -1;
         int breakW = -1;
 
-        alg = new LinearSolverSafe<RowMatrix_F64>(alg);
+        alg = new LinearSolverSafe<DMatrixRow_F64>(alg);
 
         escape: for( int i = 0; i < 40; i++ ) {
 //            System.out.println("i = "+i);
             double delta = Math.pow(0.1,i);
             for( int w = 0; w < 6; w++ ) {
-                RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 1, 2, 3, 2, 4, 6, 4, 6, -2);
-                RowMatrix_F64 A_inv = new RowMatrix_F64(3,3);
+                DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 1, 2, 3, 2, 4, 6, 4, 6, -2);
+                DMatrixRow_F64 A_inv = new DMatrixRow_F64(3,3);
 
                 A.plus(w,  delta);
 
@@ -152,21 +152,21 @@ public class BenchmarkInverseStability {
 //        System.out.println(alg.getClass().getSimpleName()+" broke at "+breakDelta+" w = "+breakW);
     }
 
-    private void breakOverUnderFlow(String name , LinearSolver<RowMatrix_F64> alg , boolean overflow ) {
+    private void breakOverUnderFlow(String name , LinearSolver<DMatrixRow_F64> alg , boolean overflow ) {
         boolean madeBad= false;
 
-        RowMatrix_F64 A_orig = RandomMatrices_R64.createRandom(3,3,new Random(0x14));
+        DMatrixRow_F64 A_orig = RandomMatrices_R64.createRandom(3,3,new Random(0x14));
 
         int i;
         for( i = 0; i < 3000; i++ ) {
 //            System.out.println("i = "+i);
-            RowMatrix_F64 A = new RowMatrix_F64(A_orig);
+            DMatrixRow_F64 A = new DMatrixRow_F64(A_orig);
             if( overflow )
                 CommonOps_R64.scale(Math.pow(2,i),A);
             else
                 CommonOps_R64.scale(Math.pow(1.0/2,i),A);
 
-            RowMatrix_F64 A_inv = new RowMatrix_F64(A.numRows,A.numCols);
+            DMatrixRow_F64 A_inv = new DMatrixRow_F64(A.numRows,A.numCols);
 
             if(MatrixFeatures_R64.hasUncountable(A)) {
                 madeBad = true;

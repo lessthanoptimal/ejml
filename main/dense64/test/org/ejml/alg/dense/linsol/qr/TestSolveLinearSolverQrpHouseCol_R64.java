@@ -21,7 +21,7 @@ package org.ejml.alg.dense.linsol.qr;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_R64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_R64;
 import org.ejml.alg.dense.linsol.GenericSolvePseudoInverseChecks_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
@@ -34,13 +34,13 @@ public class TestSolveLinearSolverQrpHouseCol_R64 extends GenericLinearSolverChe
     }
 
     @Override
-    protected LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A ) {
+    protected LinearSolver<DMatrixRow_F64> createSolver(DMatrixRow_F64 A ) {
         return new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),true);
     }
 
     @Test
     public void checkSingularBasic() {
-        LinearSolver<RowMatrix_F64> solver =
+        LinearSolver<DMatrixRow_F64> solver =
                 new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),true);
         GenericSolvePseudoInverseChecks_R64 checks = new GenericSolvePseudoInverseChecks_R64(solver);
 
@@ -49,7 +49,7 @@ public class TestSolveLinearSolverQrpHouseCol_R64 extends GenericLinearSolverChe
 
     @Test
     public void checkSingularFull() {
-        LinearSolver<RowMatrix_F64> solver =
+        LinearSolver<DMatrixRow_F64> solver =
                 new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),false);
         GenericSolvePseudoInverseChecks_R64 checks = new GenericSolvePseudoInverseChecks_R64(solver);
 

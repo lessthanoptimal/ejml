@@ -20,7 +20,7 @@ package org.ejml.ops;
 
 import org.ejml.alg.dense.mult.VectorVectorMult_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 
 /**
  * @author Peter Abeles
@@ -38,14 +38,14 @@ public class SpecializedOps_CR64 {
      * @param u A vector. Not modified.
      * @return An orthogonal reflector.
      */
-    public static RowMatrix_C64 createReflector(RowMatrix_C64 u ) {
+    public static DMatrixRow_C64 createReflector(DMatrixRow_C64 u ) {
         if( !MatrixFeatures_CR64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
         double norm = NormOps_CR64.normF(u);
         double gamma = -2.0/(norm*norm);
 
-        RowMatrix_C64 Q = CommonOps_CR64.identity(u.getNumElements());
+        DMatrixRow_C64 Q = CommonOps_CR64.identity(u.getNumElements());
 
         CommonOps_CR64.multAddTransB(gamma,0,u,u,Q);
 
@@ -63,11 +63,11 @@ public class SpecializedOps_CR64 {
      * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
      * @return An orthogonal reflector.
      */
-    public static RowMatrix_C64 createReflector(RowMatrix_C64 u , double gamma) {
+    public static DMatrixRow_C64 createReflector(DMatrixRow_C64 u , double gamma) {
         if( !MatrixFeatures_CR64.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
-        RowMatrix_C64 Q = CommonOps_CR64.identity(u.getNumElements());
+        DMatrixRow_C64 Q = CommonOps_CR64.identity(u.getNumElements());
         CommonOps_CR64.multAddTransB(-gamma,0,u,u,Q);
 
         return Q;
@@ -89,10 +89,10 @@ public class SpecializedOps_CR64 {
      * @param transposed If the transpose of the matrix is returned.
      * @return A pivot matrix.
      */
-    public static RowMatrix_C64 pivotMatrix(RowMatrix_C64 ret, int pivots[], int numPivots, boolean transposed ) {
+    public static DMatrixRow_C64 pivotMatrix(DMatrixRow_C64 ret, int pivots[], int numPivots, boolean transposed ) {
 
         if( ret == null ) {
-            ret = new RowMatrix_C64(numPivots, numPivots);
+            ret = new DMatrixRow_C64(numPivots, numPivots);
         } else {
             if( ret.numCols != numPivots || ret.numRows != numPivots )
                 throw new IllegalArgumentException("Unexpected matrix dimension");
@@ -122,7 +122,7 @@ public class SpecializedOps_CR64 {
      * @param a A matrix. Not modified.
      * @return The max magnitude squared
      */
-    public static double elementDiagMaxMagnitude2(RowMatrix_C64 a) {
+    public static double elementDiagMaxMagnitude2(DMatrixRow_C64 a) {
         final int size = Math.min(a.numRows,a.numCols);
 
         int rowStride = a.getRowStride();
@@ -152,7 +152,7 @@ public class SpecializedOps_CR64 {
      *
      * @return the quality of the system.
      */
-    public static double qualityTriangular(RowMatrix_C64 T)
+    public static double qualityTriangular(DMatrixRow_C64 T)
     {
         int N = Math.min(T.numRows,T.numCols);
 
@@ -186,10 +186,10 @@ public class SpecializedOps_CR64 {
     /**
      * Q = I - gamma*u*u<sup>H</sup>
      */
-    public static RowMatrix_C64 householder(RowMatrix_C64 u , double gamma ) {
+    public static DMatrixRow_C64 householder(DMatrixRow_C64 u , double gamma ) {
         int N = u.getDataLength()/2;
         // u*u^H
-        RowMatrix_C64 uut = new RowMatrix_C64(N,N);
+        DMatrixRow_C64 uut = new DMatrixRow_C64(N,N);
         VectorVectorMult_CR64.outerProdH(u, u, uut);
         // foo = -gamma*u*u^H
         CommonOps_CR64.elementMultiply(uut,-gamma,0,uut);
@@ -213,8 +213,8 @@ public class SpecializedOps_CR64 {
      * @param x Input vector.  Unmodified.
      * @return The found householder reflector vector
      */
-    public static RowMatrix_C64 householderVector(RowMatrix_C64 x ) {
-        RowMatrix_C64 u = x.copy();
+    public static DMatrixRow_C64 householderVector(DMatrixRow_C64 x ) {
+        DMatrixRow_C64 u = x.copy();
 
         double max = CommonOps_CR64.elementMaxAbs(u);
 

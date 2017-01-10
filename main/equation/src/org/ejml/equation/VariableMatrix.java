@@ -18,15 +18,15 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 /**
- * Storage for {@link RowMatrix_F64 matrix} type variables.
+ * Storage for {@link DMatrixRow_F64 matrix} type variables.
  *
  * @author Peter Abeles
  */
 public class VariableMatrix extends Variable {
-    public RowMatrix_F64 matrix;
+    public DMatrixRow_F64 matrix;
 
     /**
      * If true then the matrix is dynamically resized to match the output of a function
@@ -38,13 +38,13 @@ public class VariableMatrix extends Variable {
      * it will be assignment.
      * @param matrix Matrix.
      */
-    public VariableMatrix(RowMatrix_F64 matrix) {
+    public VariableMatrix(DMatrixRow_F64 matrix) {
         super(VariableType.MATRIX);
         this.matrix = matrix;
     }
 
     public static VariableMatrix createTemp() {
-        VariableMatrix ret = new VariableMatrix(new RowMatrix_F64(1,1));
+        VariableMatrix ret = new VariableMatrix(new DMatrixRow_F64(1,1));
         ret.setTemp(true);
         return ret;
     }

@@ -62,7 +62,7 @@ public class GeneratorBlockInnerMultiplication {
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
-                " * Matrix multiplication for the inner row major blocks, typically inside of a {@link org.ejml.data.BlockMatrix_F64}.\n" +
+                " * Matrix multiplication for the inner row major blocks, typically inside of a {@link org.ejml.data.DMatrixBlock_F64}.\n" +
                 " * </p>\n" +
                 " *\n" +
                 " * <p>\n" +

@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
@@ -48,9 +48,9 @@ public class SingularOps_R64 {
      * @param tranV is V transposed or not.
      */
     // TODO the number of copies can probably be reduced here
-    public static void descendingOrder(RowMatrix_F64 U , boolean tranU ,
-                                       RowMatrix_F64 W ,
-                                       RowMatrix_F64 V , boolean tranV )
+    public static void descendingOrder(DMatrixRow_F64 U , boolean tranU ,
+                                       DMatrixRow_F64 W ,
+                                       DMatrixRow_F64 V , boolean tranV )
     {
         int numSingular = Math.min(W.numRows,W.numCols);
 
@@ -95,7 +95,7 @@ public class SingularOps_R64 {
 
     /**
      * <p>
-     * Similar to {@link #descendingOrder(RowMatrix_F64, boolean, RowMatrix_F64, RowMatrix_F64, boolean)}
+     * Similar to {@link #descendingOrder(DMatrixRow_F64, boolean, DMatrixRow_F64, DMatrixRow_F64, boolean)}
      * but takes in an array of singular values instead.
      * </p>
      *
@@ -106,10 +106,10 @@ public class SingularOps_R64 {
      * @param V Matrix. Modified.
      * @param tranV is V transposed or not.
      */
-    public static void descendingOrder(RowMatrix_F64 U , boolean tranU ,
+    public static void descendingOrder(DMatrixRow_F64 U , boolean tranU ,
                                        double singularValues[] ,
                                        int numSingularValues ,
-                                       RowMatrix_F64 V , boolean tranV )
+                                       DMatrixRow_F64 V , boolean tranV )
     {
 //        checkSvdMatrixSize(U, tranU, W, V, tranV);
 
@@ -154,7 +154,7 @@ public class SingularOps_R64 {
      * Checks to see if all the provided matrices are the expected size for an SVD.  If an error is encountered
      * then an exception is thrown.  This automatically handles compact and non-compact formats
      */
-    public static void checkSvdMatrixSize(RowMatrix_F64 U, boolean tranU, RowMatrix_F64 W, RowMatrix_F64 V, boolean tranV ) {
+    public static void checkSvdMatrixSize(DMatrixRow_F64 U, boolean tranU, DMatrixRow_F64 W, DMatrixRow_F64 V, boolean tranV ) {
         int numSingular = Math.min(W.numRows,W.numCols);
         boolean compact = W.numRows == W.numCols;
 
@@ -184,7 +184,7 @@ public class SingularOps_R64 {
         }
     }
 
-    private static void swapRowOrCol(RowMatrix_F64 M, boolean tran, int i, int bigIndex) {
+    private static void swapRowOrCol(DMatrixRow_F64 M, boolean tran, int i, int bigIndex) {
         double tmp;
         if( tran ) {
             // swap the rows
@@ -219,13 +219,13 @@ public class SingularOps_R64 {
      * @param tol Threshold for selecting singular values.  Try UtilEjml.EPS.
      * @return The null space.
      */
-    public static RowMatrix_F64 nullSpace(SingularValueDecomposition_F64<RowMatrix_F64> svd ,
-                                          RowMatrix_F64 nullSpace , double tol )
+    public static DMatrixRow_F64 nullSpace(SingularValueDecomposition_F64<DMatrixRow_F64> svd ,
+                                          DMatrixRow_F64 nullSpace , double tol )
     {
         int N = svd.numberOfSingularValues();
         double s[] = svd.getSingularValues();
 
-        RowMatrix_F64 V = svd.getV(null,true);
+        DMatrixRow_F64 V = svd.getV(null,true);
 
         if( V.numRows != svd.numCols() ) {
             throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");
@@ -242,7 +242,7 @@ public class SingularOps_R64 {
 
         // declare output data
         if( nullSpace == null ) {
-            nullSpace = new RowMatrix_F64(numVectors,svd.numCols());
+            nullSpace = new DMatrixRow_F64(numVectors,svd.numCols());
         } else {
             nullSpace.reshape(numVectors,svd.numCols());
         }
@@ -275,14 +275,14 @@ public class SingularOps_R64 {
      * @param nullVector Optional storage for a vector for the null space.  Modified.
      * @return Vector in V associated with smallest singular value..
      */
-    public static RowMatrix_F64 nullVector(SingularValueDecomposition_F64<RowMatrix_F64> svd ,
+    public static DMatrixRow_F64 nullVector(SingularValueDecomposition_F64<DMatrixRow_F64> svd ,
                                            boolean isRight ,
-                                           RowMatrix_F64 nullVector )
+                                           DMatrixRow_F64 nullVector )
     {
         int N = svd.numberOfSingularValues();
         double s[] = svd.getSingularValues();
 
-        RowMatrix_F64 A = isRight ? svd.getV(null,true) : svd.getU(null,false);
+        DMatrixRow_F64 A = isRight ? svd.getV(null,true) : svd.getU(null,false);
 
         if( isRight ) {
             if( A.numRows != svd.numCols() ) {
@@ -290,7 +290,7 @@ public class SingularOps_R64 {
             }
 
             if( nullVector == null ) {
-                nullVector = new RowMatrix_F64(svd.numCols(),1);
+                nullVector = new DMatrixRow_F64(svd.numCols(),1);
             }
         } else {
             if( A.numCols != svd.numRows() ) {
@@ -298,7 +298,7 @@ public class SingularOps_R64 {
             }
 
             if( nullVector == null ) {
-                nullVector = new RowMatrix_F64(svd.numRows(),1);
+                nullVector = new DMatrixRow_F64(svd.numRows(),1);
             }
         }
 

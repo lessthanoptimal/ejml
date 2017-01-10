@@ -21,7 +21,7 @@ package org.ejml.alg.dense.decomposition.qr;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.CheckDecompositionInterface_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.ops.MatrixFeatures_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -40,7 +40,7 @@ import static org.junit.Assert.fail;
 public abstract class GenericQrCheck_R64 {
     Random rand = new Random(0xff);
 
-    abstract protected QRDecomposition<RowMatrix_F64> createQRDecomposition();
+    abstract protected QRDecomposition<DMatrixRow_F64> createQRDecomposition();
 
     @Test
     public void testModifiedInput() {
@@ -61,32 +61,32 @@ public abstract class GenericQrCheck_R64 {
     }
 
     private void checkDecomposition(int height, int width, boolean compact ) {
-        QRDecomposition<RowMatrix_F64> alg = createQRDecomposition();
+        QRDecomposition<DMatrixRow_F64> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width, RowMatrix_F64.class);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRow_F64.class);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)A.getMatrix(),rand);
 
-        assertTrue(alg.decompose((RowMatrix_F64)A.copy().getMatrix()));
+        assertTrue(alg.decompose((DMatrixRow_F64)A.copy().getMatrix()));
 
         int minStride = Math.min(height,width);
 
-        SimpleMatrix Q = new SimpleMatrix(height,compact ? minStride : height, RowMatrix_F64.class);
-        alg.getQ((RowMatrix_F64)Q.getMatrix(), compact);
-        SimpleMatrix R = new SimpleMatrix(compact ? minStride : height,width, RowMatrix_F64.class);
-        alg.getR((RowMatrix_F64)R.getMatrix(), compact);
+        SimpleMatrix Q = new SimpleMatrix(height,compact ? minStride : height, DMatrixRow_F64.class);
+        alg.getQ((DMatrixRow_F64)Q.getMatrix(), compact);
+        SimpleMatrix R = new SimpleMatrix(compact ? minStride : height,width, DMatrixRow_F64.class);
+        alg.getR((DMatrixRow_F64)R.getMatrix(), compact);
 
 
         // see if Q has the expected properties
-        assertTrue(MatrixFeatures_R64.isOrthogonal((RowMatrix_F64)Q.getMatrix(), UtilEjml.TEST_F64_SQ));
+        assertTrue(MatrixFeatures_R64.isOrthogonal((DMatrixRow_F64)Q.getMatrix(), UtilEjml.TEST_F64_SQ));
 
 //        UtilEjml.print(alg.getQR());
 //        Q.print();
 //        R.print();
 
         // see if it has the expected properties
-        RowMatrix_F64 A_found = Q.mult(R).getMatrix();
+        DMatrixRow_F64 A_found = Q.mult(R).getMatrix();
 
-        EjmlUnitTests.assertEquals((RowMatrix_F64)A.getMatrix(),A_found,UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals((DMatrixRow_F64)A.getMatrix(),A_found,UtilEjml.TEST_F64_SQ);
         assertTrue(Q.transpose().mult(A).isIdentical(R,UtilEjml.TEST_F64_SQ));
     }
 
@@ -99,23 +99,23 @@ public abstract class GenericQrCheck_R64 {
         int width = 5;
         int height = 10;
 
-        QRDecomposition<RowMatrix_F64> alg = createQRDecomposition();
+        QRDecomposition<DMatrixRow_F64> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width, RowMatrix_F64.class);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRow_F64.class);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)A.getMatrix(),rand);
 
-        alg.decompose((RowMatrix_F64)A.getMatrix());
+        alg.decompose((DMatrixRow_F64)A.getMatrix());
 
         // get the results from a provided matrix
-        RowMatrix_F64 Q_provided = RandomMatrices_R64.createRandom(height,height,rand);
-        RowMatrix_F64 R_provided = RandomMatrices_R64.createRandom(height,width,rand);
+        DMatrixRow_F64 Q_provided = RandomMatrices_R64.createRandom(height,height,rand);
+        DMatrixRow_F64 R_provided = RandomMatrices_R64.createRandom(height,width,rand);
         
         assertTrue(R_provided == alg.getR(R_provided, false));
         assertTrue(Q_provided == alg.getQ(Q_provided, false));
 
         // get the results when no matrix is provided
-        RowMatrix_F64 Q_null = alg.getQ(null, false);
-        RowMatrix_F64 R_null = alg.getR(null,false);
+        DMatrixRow_F64 Q_null = alg.getQ(null, false);
+        DMatrixRow_F64 R_null = alg.getR(null,false);
 
         // see if they are the same
         assertTrue(MatrixFeatures_R64.isEquals(Q_provided,Q_null));
@@ -131,29 +131,29 @@ public abstract class GenericQrCheck_R64 {
         int width = 5;
         int height = 10;
 
-        QRDecomposition<RowMatrix_F64> alg = createQRDecomposition();
+        QRDecomposition<DMatrixRow_F64> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width, RowMatrix_F64.class);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRow_F64.class);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)A.getMatrix(),rand);
 
-        alg.decompose((RowMatrix_F64)A.getMatrix());
+        alg.decompose((DMatrixRow_F64)A.getMatrix());
 
         // check the case where it creates the matrix first
         assertTrue(alg.getR(null,true).numRows == width);
         assertTrue(alg.getR(null,false).numRows == height);
 
         // check the case where a matrix is provided
-        alg.getR(new RowMatrix_F64(width,width),true);
-        alg.getR(new RowMatrix_F64(height,width),false);
+        alg.getR(new DMatrixRow_F64(width,width),true);
+        alg.getR(new DMatrixRow_F64(height,width),false);
 
         // check some negative cases
         try {
-            alg.getR(new RowMatrix_F64(height,width),true);
+            alg.getR(new DMatrixRow_F64(height,width),true);
             fail("Should have thrown an exception");
         } catch( IllegalArgumentException e ) {}
 
         try {
-            alg.getR(new RowMatrix_F64(width-1,width),false);
+            alg.getR(new DMatrixRow_F64(width-1,width),false);
             fail("Should have thrown an exception");
         } catch( IllegalArgumentException e ) {}
     }
@@ -167,23 +167,23 @@ public abstract class GenericQrCheck_R64 {
         int height = 10;
         int width = 5;
 
-        QRDecomposition<RowMatrix_F64> alg = createQRDecomposition();
+        QRDecomposition<DMatrixRow_F64> alg = createQRDecomposition();
 
-        SimpleMatrix A = new SimpleMatrix(height,width, RowMatrix_F64.class);
-        RandomMatrices_R64.setRandom((RowMatrix_F64)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRow_F64.class);
+        RandomMatrices_R64.setRandom((DMatrixRow_F64)A.getMatrix(),rand);
 
-        alg.decompose((RowMatrix_F64)A.getMatrix());
+        alg.decompose((DMatrixRow_F64)A.getMatrix());
 
-        SimpleMatrix Q = new SimpleMatrix(height,width, RowMatrix_F64.class);
-        alg.getQ((RowMatrix_F64)Q.getMatrix(), true);
+        SimpleMatrix Q = new SimpleMatrix(height,width, DMatrixRow_F64.class);
+        alg.getQ((DMatrixRow_F64)Q.getMatrix(), true);
 
         // see if Q has the expected properties
-        assertTrue(MatrixFeatures_R64.isOrthogonal((RowMatrix_F64)Q.getMatrix(),UtilEjml.TEST_F64_SQ));
+        assertTrue(MatrixFeatures_R64.isOrthogonal((DMatrixRow_F64)Q.getMatrix(),UtilEjml.TEST_F64_SQ));
 
         // try to extract it with the wrong dimensions
-        Q = new SimpleMatrix(height,height, RowMatrix_F64.class);
+        Q = new SimpleMatrix(height,height, DMatrixRow_F64.class);
         try {
-            alg.getQ((RowMatrix_F64)Q.getMatrix(), true);
+            alg.getQ((DMatrixRow_F64)Q.getMatrix(), true);
             fail("Didn't fail");
         } catch( RuntimeException e ) {}
     }

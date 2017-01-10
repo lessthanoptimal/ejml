@@ -21,8 +21,8 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_B;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_B;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.factory.DecompositionFactory_R64;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
@@ -50,12 +50,12 @@ public class TestRandomMatrices_R64 {
         // test with combinations of vectors and numbers
         for( int dimension = 3; dimension <= 5; dimension++ ) {
             for( int numVectors = 1; numVectors <= dimension; numVectors++ ) {
-                RowMatrix_F64 span[] = RandomMatrices_R64.createSpan(dimension,numVectors,rand);
+                DMatrixRow_F64 span[] = RandomMatrices_R64.createSpan(dimension,numVectors,rand);
 
                 assertEquals(numVectors,span.length);
 
                 for( int i = 0; i < span.length; i++ ) {
-                    RowMatrix_F64 a = span[i];
+                    DMatrixRow_F64 a = span[i];
 
                     assertEquals(1, NormOps_R64.fastNormF(a), UtilEjml.TEST_F64);
 
@@ -70,14 +70,14 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void createInSpan() {
-        RowMatrix_F64 span[] = RandomMatrices_R64.createSpan(5,5,rand);
+        DMatrixRow_F64 span[] = RandomMatrices_R64.createSpan(5,5,rand);
 
-        RowMatrix_F64 A = RandomMatrices_R64.createInSpan(span,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createInSpan(span,-1,1,rand);
 
         // reconstructed matrix
-        RowMatrix_F64 R = new RowMatrix_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 R = new DMatrixRow_F64(A.numRows,A.numCols);
 
-        RowMatrix_F64 tmp = new RowMatrix_F64(A.numRows,A.numCols);
+        DMatrixRow_F64 tmp = new DMatrixRow_F64(A.numRows,A.numCols);
 
         // project the matrix into the span and recreate the original matrix
         for( int i = 0; i < 5; i++ ) {
@@ -97,7 +97,7 @@ public class TestRandomMatrices_R64 {
     public void createOrthogonal() {
         for( int numRows = 3; numRows <= 5; numRows++ ) {
             for( int numCols = 1; numCols <= numRows; numCols++ ) {
-                RowMatrix_F64 Q = RandomMatrices_R64.createOrthogonal(numRows,numCols,rand);
+                DMatrixRow_F64 Q = RandomMatrices_R64.createOrthogonal(numRows,numCols,rand);
 
                 assertEquals(Q.numRows,numRows);
                 assertEquals(Q.numCols,numCols);
@@ -110,7 +110,7 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void createDiagonal_square() {
-        RowMatrix_F64 A = RandomMatrices_R64.createDiagonal(5,1,10,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createDiagonal(5,1,10,rand);
 
         assertTrue(CommonOps_R64.elementSum(A) > 5 );
         for( int i = 0; i < A.numRows; i++ ) {
@@ -134,7 +134,7 @@ public class TestRandomMatrices_R64 {
     }
 
     public void testDiagonal( int numRows , int numCols ) {
-        RowMatrix_F64 A = RandomMatrices_R64.createDiagonal(numRows,numCols,1,10,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createDiagonal(numRows,numCols,1,10,rand);
 
         assertEquals(A.getNumRows(), numRows);
         assertEquals(A.getNumCols(), numCols);
@@ -160,9 +160,9 @@ public class TestRandomMatrices_R64 {
 
         for( int numRows = 1; numRows <= 4; numRows++ ) {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
-                RowMatrix_F64 A = RandomMatrices_R64.createSingularValues(numRows,numCols, rand, sv);
+                DMatrixRow_F64 A = RandomMatrices_R64.createSingularValues(numRows,numCols, rand, sv);
 
-                SingularValueDecomposition_F64<RowMatrix_F64> svd =
+                SingularValueDecomposition_F64<DMatrixRow_F64> svd =
                         DecompositionFactory_R64.svd(A.numRows,A.numCols,true,true,false);
                 assertTrue(svd.decompose(A));
 
@@ -173,9 +173,9 @@ public class TestRandomMatrices_R64 {
         }
 
         // see if it fills in zeros when it is smaller than the dimension
-        RowMatrix_F64 A = RandomMatrices_R64.createSingularValues(5,5, rand, sv);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSingularValues(5,5, rand, sv);
 
-        SingularValueDecomposition_F64<RowMatrix_F64> svd =
+        SingularValueDecomposition_F64<DMatrixRow_F64> svd =
                 DecompositionFactory_R64.svd(A.numRows, A.numCols, true, true, false);
         assertTrue(svd.decompose(A));
 
@@ -185,13 +185,13 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void createEigenvaluesSymm() {
-        RowMatrix_F64 A = RandomMatrices_R64.createEigenvaluesSymm(5,rand,1,2,3,4,5);
+        DMatrixRow_F64 A = RandomMatrices_R64.createEigenvaluesSymm(5,rand,1,2,3,4,5);
 
         // this should be symmetric
         assertTrue(MatrixFeatures_R64.isSymmetric(A,UtilEjml.TEST_F64));
 
         // decompose the matrix and extract its eigenvalues
-        EigenDecomposition_F64<RowMatrix_F64> eig = DecompositionFactory_R64.eig(A.numRows, true);
+        EigenDecomposition_F64<DMatrixRow_F64> eig = DecompositionFactory_R64.eig(A.numRows, true);
         assertTrue(eig.decompose(A));
 
         double ev[] = new double[5];
@@ -213,7 +213,7 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void addRandom() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,4);
 
         CommonOps_R64.fill(A, -2.0);
 
@@ -226,28 +226,28 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void createRandom() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5,4,rand);
 
         checkRandom1(A);
     }
 
     @Test
     public void createRandom_min_max() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(30,20,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
 
     @Test
     public void setRandom() {
-        RowMatrix_F64 A = new RowMatrix_F64(5,4);
+        DMatrixRow_F64 A = new DMatrixRow_F64(5,4);
 
         RandomMatrices_R64.setRandom(A,rand);
 
         checkRandom1(A);
     }
 
-    private void checkRandom1(RowMatrix_F64 a) {
+    private void checkRandom1(DMatrixRow_F64 a) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
@@ -267,7 +267,7 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void setRandomB() {
-        RowMatrix_B A = new RowMatrix_B(5,4);
+        DMatrixRow_B A = new DMatrixRow_B(5,4);
 
         RandomMatrices_R64.setRandomB(A,rand);
 
@@ -287,13 +287,13 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void setRandom_min_max() {
-        RowMatrix_F64 A = new RowMatrix_F64(30,20);
+        DMatrixRow_F64 A = new DMatrixRow_F64(30,20);
         RandomMatrices_R64.setRandom(A,-1,1,rand);
 
         checkRandomRange(A);
     }
 
-    private void checkRandomRange(RowMatrix_F64 a) {
+    private void checkRandomRange(DMatrixRow_F64 a) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -319,21 +319,21 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void createGaussian() {
-        RowMatrix_F64 A = RandomMatrices_R64.createGaussian(30, 20, 2, 0.5, rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createGaussian(30, 20, 2, 0.5, rand);
 
         checkGaussian(A);
     }
 
     @Test
     public void setGaussian() {
-        RowMatrix_F64 A = new RowMatrix_F64(30,20);
+        DMatrixRow_F64 A = new DMatrixRow_F64(30,20);
 
         RandomMatrices_R64.setGaussian(A, 2, 0.5, rand);
 
         checkGaussian(A);
     }
 
-    private void checkGaussian(RowMatrix_F64 a) {
+    private void checkGaussian(DMatrixRow_F64 a) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -364,7 +364,7 @@ public class TestRandomMatrices_R64 {
     @Test
     public void createSymmPosDef() {
         for( int i = 0; i < 10; i++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createSymmPosDef(6+i,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createSymmPosDef(6+i,rand);
 
             assertTrue(MatrixFeatures_R64.isPositiveDefinite(A));
         }
@@ -372,7 +372,7 @@ public class TestRandomMatrices_R64 {
 
     @Test
     public void createSymmetric() {
-        RowMatrix_F64 A = RandomMatrices_R64.createSymmetric(10,-1,1,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createSymmetric(10,-1,1,rand);
 
         assertTrue(MatrixFeatures_R64.isSymmetric(A,UtilEjml.TEST_F64));
 
@@ -387,7 +387,7 @@ public class TestRandomMatrices_R64 {
     @Test
     public void createUpperTriangle() {
         for( int hess = 0; hess < 3; hess++ ) {
-            RowMatrix_F64 A = RandomMatrices_R64.createUpperTriangle(10,hess,-1,1,rand);
+            DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(10,hess,-1,1,rand);
 
             assertTrue(MatrixFeatures_R64.isUpperTriangle(A,hess,UtilEjml.TEST_F64));
 

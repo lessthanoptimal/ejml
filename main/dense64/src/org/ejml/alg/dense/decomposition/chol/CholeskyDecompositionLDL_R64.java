@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.chol;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 import org.ejml.ops.CommonOps_R64;
 
@@ -42,7 +42,7 @@ import org.ejml.ops.CommonOps_R64;
  * @author Peter Abeles
  */
 public class CholeskyDecompositionLDL_R64
-        implements CholeskyLDLDecomposition_F64<RowMatrix_F64> {
+        implements CholeskyLDLDecomposition_F64<DMatrixRow_F64> {
 
     // it can decompose a matrix up to this width
     private int maxWidth;
@@ -50,7 +50,7 @@ public class CholeskyDecompositionLDL_R64
     private int n;
 
     // the decomposed matrix
-    private RowMatrix_F64 L;
+    private DMatrixRow_F64 L;
     private double[] el;
 
     // the D vector
@@ -66,7 +66,7 @@ public class CholeskyDecompositionLDL_R64
 
         this.maxWidth = numRows;
 
-        this.L = new RowMatrix_F64(maxWidth,maxWidth);
+        this.L = new DMatrixRow_F64(maxWidth,maxWidth);
         this.el = L.data;
 
         this.vv = new double[maxWidth];
@@ -86,7 +86,7 @@ public class CholeskyDecompositionLDL_R64
      * @param mat A symetric n by n positive definite matrix.
      * @return True if it was able to finish the decomposition.
      */
-    public boolean decompose( RowMatrix_F64 mat ) {
+    public boolean decompose( DMatrixRow_F64 mat ) {
         if( mat.numRows > maxWidth ) {
             setExpectedMaxSize(mat.numRows,mat.numCols);
         } else if( mat.numRows != mat.numCols ) {
@@ -149,7 +149,7 @@ public class CholeskyDecompositionLDL_R64
      *
      * @return A lower triangular matrix.
      */
-    public RowMatrix_F64 getL() {
+    public DMatrixRow_F64 getL() {
         return L;
     }
 
@@ -158,7 +158,7 @@ public class CholeskyDecompositionLDL_R64
     }
 
     @Override
-    public RowMatrix_F64 getL(RowMatrix_F64 L) {
+    public DMatrixRow_F64 getL(DMatrixRow_F64 L) {
         if( L == null ) {
             L = this.L.copy();
         } else {
@@ -169,7 +169,7 @@ public class CholeskyDecompositionLDL_R64
     }
 
     @Override
-    public RowMatrix_F64 getD(RowMatrix_F64 D) {
+    public DMatrixRow_F64 getD(DMatrixRow_F64 D) {
         return CommonOps_R64.diag(D,L.numCols,d);
     }
 }

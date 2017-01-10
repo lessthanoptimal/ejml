@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.linsol;
 
 import org.ejml.alg.dense.misc.UnrolledInverseFromMinor_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
@@ -36,8 +36,8 @@ import java.util.Random;
 public class BenchmarkInvertSquare {
 
 
-    public static long invertBenchmark(LinearSolver solver , RowMatrix_F64 orig , int numTrials ) {
-        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
+    public static long invertBenchmark(LinearSolver solver , DMatrixRow_F64 orig , int numTrials ) {
+        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -50,8 +50,8 @@ public class BenchmarkInvertSquare {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertUnrolledBenchmark(RowMatrix_F64 orig , int numTrials ) {
-        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
+    public static long invertUnrolledBenchmark(DMatrixRow_F64 orig , int numTrials ) {
+        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -62,8 +62,8 @@ public class BenchmarkInvertSquare {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertOpsBenchmark(RowMatrix_F64 orig , int numTrials ) {
-        RowMatrix_F64 A = new RowMatrix_F64(orig.numRows,orig.numCols);
+    public static long invertOpsBenchmark(DMatrixRow_F64 orig , int numTrials ) {
+        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -74,7 +74,7 @@ public class BenchmarkInvertSquare {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(RowMatrix_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
     {
 //        System.out.println("invert GJ No Pivot     = "+ invertBenchmark(
 //                new GaussJordanNoPivot(),mat,numTrials));
@@ -100,7 +100,7 @@ public class BenchmarkInvertSquare {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
-            RowMatrix_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
 
             runAlgorithms(mat,trials[i]);
         }

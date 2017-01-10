@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decompose.chol;
 
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.MatrixFeatures_CR64;
 import org.ejml.ops.RandomMatrices_CR64;
@@ -42,12 +42,12 @@ public class TestCholeskyDecompositionCommon_CR64 {
      */
     @Test
     public void getT() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createHermPosDef(N, rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createHermPosDef(N, rand);
 
-        CholeskyDecomposition_F64<RowMatrix_C64> cholesky = new Dummy(true);
+        CholeskyDecomposition_F64<DMatrixRow_C64> cholesky = new Dummy(true);
 
-        RowMatrix_C64 L_null = cholesky.getT(null);
-        RowMatrix_C64 L_provided = RandomMatrices_CR64.createRandom(N, N, rand);
+        DMatrixRow_C64 L_null = cholesky.getT(null);
+        DMatrixRow_C64 L_provided = RandomMatrices_CR64.createRandom(N, N, rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
         assertTrue(MatrixFeatures_CR64.isEquals(L_null, L_provided));

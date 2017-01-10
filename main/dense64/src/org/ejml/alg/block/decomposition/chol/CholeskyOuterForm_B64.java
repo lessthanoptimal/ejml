@@ -21,9 +21,9 @@ package org.ejml.alg.block.decomposition.chol;
 import org.ejml.alg.block.InnerRankUpdate_B64;
 import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.block.TriangularSolver_B64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.D1Submatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
@@ -38,12 +38,12 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  *
  * @author Peter Abeles
  */
-public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMatrix_F64> {
+public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<DMatrixBlock_F64> {
 
     // if it should compute an upper or lower triangular matrix
     private boolean lower = false;
     // The decomposed matrix.
-    private BlockMatrix_F64 T;
+    private DMatrixBlock_F64 T;
 
     // predeclare local work space
     private D1Submatrix_F64 subA = new D1Submatrix_F64();
@@ -69,7 +69,7 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMat
      * @return If it succeeded or not.
      */
     @Override
-    public boolean decompose(BlockMatrix_F64 A) {
+    public boolean decompose(DMatrixBlock_F64 A) {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("A must be square");
 
@@ -164,7 +164,7 @@ public class CholeskyOuterForm_B64 implements CholeskyDecomposition_F64<BlockMat
     }
 
     @Override
-    public BlockMatrix_F64 getT(BlockMatrix_F64 T) {
+    public DMatrixBlock_F64 getT(DMatrixBlock_F64 T) {
         if( T == null )
             return this.T;
         T.set(this.T);

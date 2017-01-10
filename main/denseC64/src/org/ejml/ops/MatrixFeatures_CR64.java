@@ -261,7 +261,7 @@ public class MatrixFeatures_CR64 {
      * @param tol Tolerance.
      * @return True if it passes the test.
      */
-    public static boolean isHermitian(RowMatrix_C64 Q , double tol ) {
+    public static boolean isHermitian(DMatrixRow_C64 Q , double tol ) {
         if( Q.numCols != Q.numRows )
             return false;
 
@@ -295,17 +295,17 @@ public class MatrixFeatures_CR64 {
      * @param tol Tolerance.
      * @return True if it passes the test.
      */
-    public static boolean isUnitary(RowMatrix_C64 Q , double tol ) {
+    public static boolean isUnitary(DMatrixRow_C64 Q , double tol ) {
         if( Q.numRows < Q.numCols ) {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
         Complex_F64 prod = new Complex_F64();
 
-        RowMatrix_C64 u[] = CommonOps_CR64.columnsToVector(Q, null);
+        DMatrixRow_C64 u[] = CommonOps_CR64.columnsToVector(Q, null);
 
         for( int i = 0; i < u.length; i++ ) {
-            RowMatrix_C64 a = u[i];
+            DMatrixRow_C64 a = u[i];
 
             VectorVectorMult_CR64.innerProdH(a, a, prod);
 
@@ -338,7 +338,7 @@ public class MatrixFeatures_CR64 {
      *
      * @return True if it is positive definite and false if it is not.
      */
-    public static boolean isPositiveDefinite( RowMatrix_C64 A ) {
+    public static boolean isPositiveDefinite( DMatrixRow_C64 A ) {
         if( A.numCols != A.numRows)
             return false;
 
@@ -363,7 +363,7 @@ public class MatrixFeatures_CR64 {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isUpperTriangle(RowMatrix_C64 A , int hessenberg , double tol ) {
+    public static boolean isUpperTriangle(DMatrixRow_C64 A , int hessenberg , double tol ) {
         tol *= tol;
         for( int i = hessenberg+1; i < A.numRows; i++ ) {
             int maxCol = Math.min(i-hessenberg, A.numCols);
@@ -396,7 +396,7 @@ public class MatrixFeatures_CR64 {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isLowerTriangle(RowMatrix_C64 A , int hessenberg , double tol ) {
+    public static boolean isLowerTriangle(DMatrixRow_C64 A , int hessenberg , double tol ) {
         tol *= tol;
         for( int i = 0; i < A.numRows-hessenberg-1; i++ ) {
             for( int j = i+hessenberg+1; j < A.numCols; j++ ) {

@@ -21,7 +21,7 @@ package org.ejml.ops;
 import org.ejml.UtilEjml;
 import org.ejml.alg.dense.mult.VectorVectorMult_CR64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -39,13 +39,13 @@ public class TestSpecializedOps_CR64 {
 
     @Test
     public void createReflector() {
-        RowMatrix_C64 u = RandomMatrices_CR64.createRandom(4,1,rand);
+        DMatrixRow_C64 u = RandomMatrices_CR64.createRandom(4,1,rand);
 
-        RowMatrix_C64 Q = SpecializedOps_CR64.createReflector(u);
+        DMatrixRow_C64 Q = SpecializedOps_CR64.createReflector(u);
 
         assertTrue(MatrixFeatures_CR64.isHermitian(Q, UtilEjml.TEST_F64));
 
-        RowMatrix_C64 w = new RowMatrix_C64(4,1);
+        DMatrixRow_C64 w = new DMatrixRow_C64(4,1);
 
         CommonOps_CR64.mult(Q,u,w);
 
@@ -54,11 +54,11 @@ public class TestSpecializedOps_CR64 {
 
     @Test
     public void createReflector_gamma() {
-        RowMatrix_C64 u = RandomMatrices_CR64.createRandom(4,1,rand);
+        DMatrixRow_C64 u = RandomMatrices_CR64.createRandom(4,1,rand);
         double gamma = 2.0/(double)Math.pow(NormOps_CR64.normF(u),2.0);
-        RowMatrix_C64 Q = SpecializedOps_CR64.createReflector(u,gamma);
+        DMatrixRow_C64 Q = SpecializedOps_CR64.createReflector(u,gamma);
 
-        RowMatrix_C64 w = new RowMatrix_C64(4,1);
+        DMatrixRow_C64 w = new DMatrixRow_C64(4,1);
         CommonOps_CR64.mult(Q,u,w);
 
         assertTrue(MatrixFeatures_CR64.isNegative(u,w,UtilEjml.TEST_F64));
@@ -68,11 +68,11 @@ public class TestSpecializedOps_CR64 {
     public void pivotMatrix() {
         int pivots[] = new int[]{1,0,3,2};
 
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(4,4,-1,-1,rand);
-        RowMatrix_C64 P = SpecializedOps_CR64.pivotMatrix(null,pivots,4,false);
-        RowMatrix_C64 Pt = SpecializedOps_CR64.pivotMatrix(null,pivots,4,true);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(4,4,-1,-1,rand);
+        DMatrixRow_C64 P = SpecializedOps_CR64.pivotMatrix(null,pivots,4,false);
+        DMatrixRow_C64 Pt = SpecializedOps_CR64.pivotMatrix(null,pivots,4,true);
 
-        RowMatrix_C64 B = new RowMatrix_C64(4,4);
+        DMatrixRow_C64 B = new DMatrixRow_C64(4,4);
 
         // see if it swapped the rows
         CommonOps_CR64.mult(P, A, B);
@@ -97,7 +97,7 @@ public class TestSpecializedOps_CR64 {
 
     @Test
     public void elementDiagMaxMagnitude2() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(4,5,-1,1,rand);
 
         Complex_F64 a = new Complex_F64();
 
@@ -114,7 +114,7 @@ public class TestSpecializedOps_CR64 {
 
     @Test
     public void qualityTriangular() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(4,4,-1,-1,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(4,4,-1,-1,rand);
 
         double max = Math.sqrt(SpecializedOps_CR64.elementDiagMaxMagnitude2(A));
 
@@ -137,38 +137,38 @@ public class TestSpecializedOps_CR64 {
 
     @Test
     public void householder() {
-        RowMatrix_C64 U = RandomMatrices_CR64.createRandom(6,1,rand);
+        DMatrixRow_C64 U = RandomMatrices_CR64.createRandom(6,1,rand);
         double gamma = 1.6;
 
         // Q = I - gamma*U*U^H
-        RowMatrix_C64 I = CommonOps_CR64.identity(6);
-        RowMatrix_C64 UUt = new RowMatrix_C64(6,6);
-        RowMatrix_C64 expected = new RowMatrix_C64(6,6);
+        DMatrixRow_C64 I = CommonOps_CR64.identity(6);
+        DMatrixRow_C64 UUt = new DMatrixRow_C64(6,6);
+        DMatrixRow_C64 expected = new DMatrixRow_C64(6,6);
 
         VectorVectorMult_CR64.outerProdH(U, U, UUt);
         CommonOps_CR64.elementMultiply(UUt,gamma,0,UUt);
         CommonOps_CR64.subtract(I,UUt,expected);
 
-        RowMatrix_C64 found = SpecializedOps_CR64.householder(U,gamma);
+        DMatrixRow_C64 found = SpecializedOps_CR64.householder(U,gamma);
 
         assertTrue(MatrixFeatures_CR64.isIdentical(expected,found,UtilEjml.TEST_F64));
     }
 
     @Test
     public void householderVector() {
-        RowMatrix_C64 x = RandomMatrices_CR64.createRandom(6, 1, rand);
+        DMatrixRow_C64 x = RandomMatrices_CR64.createRandom(6, 1, rand);
 
 //        x.set(0,0,0,0);
 
-        RowMatrix_C64 u = SpecializedOps_CR64.householderVector(x);
+        DMatrixRow_C64 u = SpecializedOps_CR64.householderVector(x);
         double gamma = 2.0/(double)Math.pow(NormOps_CR64.normF(u), 2.0);
 
         // Q = I - gamma*U*U^H
-        RowMatrix_C64 Q = CommonOps_CR64.identity(6);
+        DMatrixRow_C64 Q = CommonOps_CR64.identity(6);
 
         CommonOps_CR64.multAddTransB(-gamma,0,u,u,Q);
 
-        RowMatrix_C64 found = new RowMatrix_C64(x.numRows,x.numCols);
+        DMatrixRow_C64 found = new DMatrixRow_C64(x.numRows,x.numCols);
         CommonOps_CR64.mult(Q,x,found);
 
         Complex_F64 c = new Complex_F64();

@@ -23,9 +23,9 @@ import org.ejml.alg.block.MatrixOps_B64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderTran_R64;
 import org.ejml.alg.dense.mult.VectorVectorMult_R64;
 import org.ejml.alg.generic.GenericMatrixOps_F64;
-import org.ejml.data.BlockMatrix_F64;
 import org.ejml.data.D1Submatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixBlock_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.RandomMatrices_R64;
 import org.ejml.simple.SimpleMatrix;
@@ -51,8 +51,8 @@ public class TestBlockHouseHolder_B64 {
 
     @Test
     public void decomposeQR_block_col() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(r*2+r-1,r,-1,1,rand);
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(r*2+r-1,r,-1,1,rand);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A,r);
 
         QRDecompositionHouseholderTran_R64 algTest = new QRDecompositionHouseholderTran_R64();
         assertTrue(algTest.decompose(A));
@@ -60,7 +60,7 @@ public class TestBlockHouseHolder_B64 {
         double gammas[] = new double[A.numCols];
         BlockHouseHolder_B64.decomposeQR_block_col(r,new D1Submatrix_F64(Ab),gammas);
 
-        RowMatrix_F64 expected = CommonOps_R64.transpose(algTest.getQR(),null);
+        DMatrixRow_F64 expected = CommonOps_R64.transpose(algTest.getQR(),null);
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(expected,Ab,UtilEjml.TEST_F64));
     }
@@ -79,7 +79,7 @@ public class TestBlockHouseHolder_B64 {
         SimpleMatrix V = A.extractMatrix(0,A.numRows(),2,3);
         SimpleMatrix expected = V.minus(U.mult(U.transpose().mult(V)).scale(gamma));
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
 
         BlockHouseHolder_B64.rank1UpdateMultR_Col(r,new D1Submatrix_F64(Ab),1,gamma);
 
@@ -97,7 +97,7 @@ public class TestBlockHouseHolder_B64 {
         U.set(0,0,0);
         U.set(1,0,1);
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
 
         BlockHouseHolder_B64.rank1UpdateMultR_TopRow(r,new D1Submatrix_F64(Ab),1,gamma);
 
@@ -123,7 +123,7 @@ public class TestBlockHouseHolder_B64 {
 
         SimpleMatrix expected = A.minus( A.mult(U).mult(U.transpose()).scale(gamma) );
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
 
         BlockHouseHolder_B64.rank1UpdateMultL_Row(r,new D1Submatrix_F64(Ab),1,1,gamma);
 
@@ -146,7 +146,7 @@ public class TestBlockHouseHolder_B64 {
 
         SimpleMatrix expected = A.minus( A.mult(U).mult(U.transpose()).scale(gamma) );
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
 
         BlockHouseHolder_B64.rank1UpdateMultL_LeftCol(r,new D1Submatrix_F64(Ab),row,gamma,zeroOffset);
 
@@ -162,8 +162,8 @@ public class TestBlockHouseHolder_B64 {
      */
     @Test
     public void innerProdCol() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(r*2+r-1,r*3-1,-1,1,rand);
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(r*2+r-1,r*3-1,-1,1,rand);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A,r);
 
         int row = 0;
         int innerCol = 1;
@@ -173,8 +173,8 @@ public class TestBlockHouseHolder_B64 {
             int widthA = Math.min(r,A.numCols - (colA-colA%r));
             int widthB = Math.min(r,A.numCols - (colB-colB%r));
 
-            RowMatrix_F64 v0 = CommonOps_R64.extract(A,row,A.numRows,colA,colA+1);
-            RowMatrix_F64 v1 = CommonOps_R64.extract(A,row,A.numRows,colB,colB+1);
+            DMatrixRow_F64 v0 = CommonOps_R64.extract(A,row,A.numRows,colA,colA+1);
+            DMatrixRow_F64 v1 = CommonOps_R64.extract(A,row,A.numRows,colB,colB+1);
             for( int j = 0; j < innerCol; j++ ) {
                 v0.set(j,0.0);
             }
@@ -193,16 +193,16 @@ public class TestBlockHouseHolder_B64 {
 
     @Test
     public void innerProdRow() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(r*3-1,r*2+r-1,-1,1,rand);
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A,r);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(r*3-1,r*2+r-1,-1,1,rand);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A,r);
 
         int zeroOffset = 1;
         for( int rowBlock = 0; rowBlock < r*2; rowBlock+=r) {
             int rowA = 2;
             int rowB = 1;
 
-            RowMatrix_F64 v0 = CommonOps_R64.extract(A,rowBlock+rowA,rowBlock+rowA+1,0,A.numCols);
-            RowMatrix_F64 v1 = CommonOps_R64.extract(A,rowBlock+rowB,rowBlock+rowB+1,0,A.numCols);
+            DMatrixRow_F64 v0 = CommonOps_R64.extract(A,rowBlock+rowA,rowBlock+rowA+1,0,A.numCols);
+            DMatrixRow_F64 v1 = CommonOps_R64.extract(A,rowBlock+rowB,rowBlock+rowB+1,0,A.numCols);
             for( int j = 0; j < rowA+zeroOffset; j++ ) {
                 v0.set(j,0.0);
             }
@@ -223,8 +223,8 @@ public class TestBlockHouseHolder_B64 {
 
         double div = 1.5;
         int col = 1;
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r,-1,1,rand,r);
-        BlockMatrix_F64 A_orig = A.copy();
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r,-1,1,rand,r);
+        DMatrixBlock_F64 A_orig = A.copy();
 
         BlockHouseHolder_B64.divideElementsCol(r,new D1Submatrix_F64(A),col,div);
 
@@ -238,8 +238,8 @@ public class TestBlockHouseHolder_B64 {
 
         double div = 1.5;
         int row = 1;
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
-        BlockMatrix_F64 A_orig = A.copy();
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
+        DMatrixBlock_F64 A_orig = A.copy();
 
         BlockHouseHolder_B64.scale_row(r,new D1Submatrix_F64(A),new D1Submatrix_F64(A),row,1,div);
 
@@ -266,9 +266,9 @@ public class TestBlockHouseHolder_B64 {
 
             SimpleMatrix A = SimpleMatrix.random_F64(r,width,-1.0,1.0,rand);
             SimpleMatrix B = SimpleMatrix.random_F64(r,width,-1.0,1.0,rand);
-            BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
-            BlockMatrix_F64 Bb = MatrixOps_B64.convert((RowMatrix_F64)B.getMatrix(),r);
-            BlockMatrix_F64 Cb = Ab.copy();
+            DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
+            DMatrixBlock_F64 Bb = MatrixOps_B64.convert((DMatrixRow_F64)B.getMatrix(),r);
+            DMatrixBlock_F64 Cb = Ab.copy();
 
             // turn A into householder vectors
             for( int i = 0; i < A.numRows(); i++ ) {
@@ -301,8 +301,8 @@ public class TestBlockHouseHolder_B64 {
 
         double max = 1.5;
         int col = 1;
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r,-1,1,rand,r);
-        BlockMatrix_F64 A_orig = A.copy();
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r,-1,1,rand,r);
+        DMatrixBlock_F64 A_orig = A.copy();
 
         // manual alg
         double expected = 0;
@@ -329,8 +329,8 @@ public class TestBlockHouseHolder_B64 {
         double max = 1.5;
         int row = 1;
         int colStart = row+1;
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
-        BlockMatrix_F64 A_orig = A.copy();
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r*2+1,-1,1,rand,r);
+        DMatrixBlock_F64 A_orig = A.copy();
 
         // manual alg
         double expected = 0;
@@ -353,7 +353,7 @@ public class TestBlockHouseHolder_B64 {
 
     @Test
     public void testFindMaxCol() {
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r,-1,1,rand,r);
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r,-1,1,rand,r);
 
         // make sure it ignores the first element
         A.set(0,1,100000);
@@ -366,7 +366,7 @@ public class TestBlockHouseHolder_B64 {
 
     @Test
     public void testFindMaxRow() {
-        BlockMatrix_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r*2-1,-1,1,rand,r);
+        DMatrixBlock_F64 A = MatrixOps_B64.createRandom(r*2+r-1,r*2-1,-1,1,rand,r);
 
         // make sure it ignores the first element
         A.set(1,1,100000);
@@ -404,8 +404,8 @@ public class TestBlockHouseHolder_B64 {
         // now compute it using the block matrix stuff
         double temp[] = new double[ r ];
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
-        BlockMatrix_F64 Wb = new BlockMatrix_F64(Ab.numRows,Ab.numCols,r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Wb = new DMatrixBlock_F64(Ab.numRows,Ab.numCols,r);
 
         D1Submatrix_F64 Ab_sub = new D1Submatrix_F64(Ab);
         D1Submatrix_F64 Wb_sub = new D1Submatrix_F64(Wb);
@@ -413,7 +413,7 @@ public class TestBlockHouseHolder_B64 {
         BlockHouseHolder_B64.computeW_Column(r,Ab_sub,Wb_sub,temp,betas,0);
 
         // see if the result is the same
-        assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,(RowMatrix_F64)W.getMatrix(),UtilEjml.TEST_F64));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,(DMatrixRow_F64)W.getMatrix(),UtilEjml.TEST_F64));
     }
 
     @Test
@@ -422,8 +422,8 @@ public class TestBlockHouseHolder_B64 {
 
         double beta = 1.5;
 
-        BlockMatrix_F64 Wb = MatrixOps_B64.convert((RowMatrix_F64)W.getMatrix(),r);
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Wb = MatrixOps_B64.convert((DMatrixRow_F64)W.getMatrix(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
 
         D1Submatrix_F64 Wb_sub = new D1Submatrix_F64(Wb,0, W.numRows(), 0, r);
         D1Submatrix_F64 Yb_sub = new D1Submatrix_F64(Ab,0, A.numRows(), 0, r);
@@ -444,8 +444,8 @@ public class TestBlockHouseHolder_B64 {
 
         double beta = 2.5;
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert((RowMatrix_F64)A.getMatrix(),r);
-        BlockMatrix_F64 Aw = MatrixOps_B64.convert((RowMatrix_F64)W.getMatrix(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert((DMatrixRow_F64)A.getMatrix(),r);
+        DMatrixBlock_F64 Aw = MatrixOps_B64.convert((DMatrixRow_F64)W.getMatrix(),r);
 
         // need to extract only the elements in W that are currently being used when
         // computing the expected Z
@@ -472,7 +472,7 @@ public class TestBlockHouseHolder_B64 {
         // Y'*V
         SimpleMatrix expected = Y.transpose().mult(V);
 
-        BlockMatrix_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
+        DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
         double found[] = new double[ M ];
 
         BlockHouseHolder_B64.computeY_t_V(r,new D1Submatrix_F64(Ab,0, A.numRows(), 0, r),M,found);

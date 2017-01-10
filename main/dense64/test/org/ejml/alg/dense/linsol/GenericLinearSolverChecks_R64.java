@@ -20,7 +20,7 @@ package org.ejml.alg.dense.linsol;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -49,36 +49,36 @@ public abstract class GenericLinearSolverChecks_R64 {
 
     @Test
     public void solve_dimensionCheck() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(10,4,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(10,4,rand);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,2,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(9,2,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,2,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(9,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,3,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(10,2,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,3,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(5,2,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(10,2,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(5,2,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
 
         try {
-            RowMatrix_F64 x = RandomMatrices_R64.createRandom(4,2,rand);
-            RowMatrix_F64 b = RandomMatrices_R64.createRandom(10,1,rand);
+            DMatrixRow_F64 x = RandomMatrices_R64.createRandom(4,2,rand);
+            DMatrixRow_F64 b = RandomMatrices_R64.createRandom(10,1,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -89,10 +89,10 @@ public abstract class GenericLinearSolverChecks_R64 {
      */
     @Test
     public void modifiesA() {
-        RowMatrix_F64 A_orig = RandomMatrices_R64.createRandom(4,4,rand);
-        RowMatrix_F64 A = A_orig.copy();
+        DMatrixRow_F64 A_orig = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRow_F64 A = A_orig.copy();
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -106,15 +106,15 @@ public abstract class GenericLinearSolverChecks_R64 {
      */
     @Test
     public void modifiesB() {
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(4, 4, rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(4, 4, rand);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
-        RowMatrix_F64 B = RandomMatrices_R64.createRandom(4,2,rand);
-        RowMatrix_F64 B_orig = B.copy();
-        RowMatrix_F64 X = new RowMatrix_F64(A.numRows,B.numCols);
+        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(4,2,rand);
+        DMatrixRow_F64 B_orig = B.copy();
+        DMatrixRow_F64 X = new DMatrixRow_F64(A.numRows,B.numCols);
 
         solver.solve(B, X);
 
@@ -128,10 +128,10 @@ public abstract class GenericLinearSolverChecks_R64 {
      */
     @Test
     public void checkQuality() {
-        RowMatrix_F64 A_good = CommonOps_R64.diag(4,3,2,1);
-        RowMatrix_F64 A_bad = CommonOps_R64.diag(4, 3, 2, 0.1);
+        DMatrixRow_F64 A_good = CommonOps_R64.diag(4,3,2,1);
+        DMatrixRow_F64 A_bad = CommonOps_R64.diag(4, 3, 2, 0.1);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A_good);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A_good);
 
         assertTrue(solver.setA(A_good));
         double q_good;
@@ -155,11 +155,11 @@ public abstract class GenericLinearSolverChecks_R64 {
      */
     @Test
     public void checkQuality_scale() {
-        RowMatrix_F64 A = CommonOps_R64.diag(4,3,2,1);
-        RowMatrix_F64 Asmall = A.copy();
+        DMatrixRow_F64 A = CommonOps_R64.diag(4,3,2,1);
+        DMatrixRow_F64 Asmall = A.copy();
         CommonOps_R64.scale(0.01,Asmall);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         double q;
@@ -181,16 +181,16 @@ public abstract class GenericLinearSolverChecks_R64 {
      */
     @Test
     public void square_trivial() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 18, 21.5, 4.9000);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, 18, 21.5, 4.9000);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
 
-        RowMatrix_F64 x_expected = new RowMatrix_F64(3,1, true, 1, 2, 3);
+        DMatrixRow_F64 x_expected = new DMatrixRow_F64(3,1, true, 1, 2, 3);
 
         EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64);
     }
@@ -202,25 +202,25 @@ public abstract class GenericLinearSolverChecks_R64 {
      */
     @Test
     public void square_pivot() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        RowMatrix_F64 b = new RowMatrix_F64(3,1, true, 8, 33, 15.5);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        DMatrixRow_F64 b = new DMatrixRow_F64(3,1, true, 8, 33, 15.5);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
 
-        RowMatrix_F64 x_expected = new RowMatrix_F64(3,1, true, 1, 2, 3);
+        DMatrixRow_F64 x_expected = new DMatrixRow_F64(3,1, true, 1, 2, 3);
 
         EjmlUnitTests.assertEquals(x_expected, x, UtilEjml.TEST_F64);
     }
 
     @Test
     public void square_singular() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
     }
 
@@ -241,11 +241,11 @@ public abstract class GenericLinearSolverChecks_R64 {
             vals[i] = a + b*t[i] + c*t[i]*t[i];
         }
 
-        RowMatrix_F64 B = new RowMatrix_F64(7,1, true, vals);
-        RowMatrix_F64 A = createPolyA(t,3);
-        RowMatrix_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
+        DMatrixRow_F64 B = new DMatrixRow_F64(7,1, true, vals);
+        DMatrixRow_F64 A = createPolyA(t,3);
+        DMatrixRow_F64 x = RandomMatrices_R64.createRandom(3,1,rand);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         solver.solve(B,x);
@@ -255,8 +255,8 @@ public abstract class GenericLinearSolverChecks_R64 {
         assertEquals(c,x.get(2,0),tol);
     }
 
-    private RowMatrix_F64 createPolyA(double t[] , int dof ) {
-        RowMatrix_F64 A = new RowMatrix_F64(t.length,3);
+    private DMatrixRow_F64 createPolyA(double t[] , int dof ) {
+        DMatrixRow_F64 A = new DMatrixRow_F64(t.length,3);
 
         for( int j = 0; j < t.length; j++ ) {
             double val = t[j];
@@ -271,15 +271,15 @@ public abstract class GenericLinearSolverChecks_R64 {
 
     @Test
     public void inverse() {
-        RowMatrix_F64 A = new RowMatrix_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        RowMatrix_F64 A_inv = RandomMatrices_R64.createRandom(3, 3, rand);
+        DMatrixRow_F64 A = new DMatrixRow_F64(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        DMatrixRow_F64 A_inv = RandomMatrices_R64.createRandom(3, 3, rand);
 
-        LinearSolver<RowMatrix_F64> solver = createSafeSolver(A);
+        LinearSolver<DMatrixRow_F64> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
-        RowMatrix_F64 I = RandomMatrices_R64.createRandom(3,3,rand);
+        DMatrixRow_F64 I = RandomMatrices_R64.createRandom(3,3,rand);
 
         CommonOps_R64.mult(A,A_inv,I);
 
@@ -293,9 +293,9 @@ public abstract class GenericLinearSolverChecks_R64 {
         }
     }
 
-    protected LinearSolver<RowMatrix_F64>  createSafeSolver(RowMatrix_F64 A ) {
-        return new LinearSolverSafe<RowMatrix_F64>( createSolver(A));
+    protected LinearSolver<DMatrixRow_F64>  createSafeSolver(DMatrixRow_F64 A ) {
+        return new LinearSolverSafe<DMatrixRow_F64>( createSolver(A));
     }
 
-    protected abstract LinearSolver<RowMatrix_F64> createSolver(RowMatrix_F64 A );
+    protected abstract LinearSolver<DMatrixRow_F64> createSolver(DMatrixRow_F64 A );
 }

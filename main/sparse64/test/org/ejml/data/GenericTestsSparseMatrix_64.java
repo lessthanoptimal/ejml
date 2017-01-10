@@ -27,10 +27,10 @@ public abstract class GenericTestsSparseMatrix_64 extends GenericTestsDenseMatri
 {
     Random rand = new Random(234);
 
-    public abstract RealMatrix_F64 createSparse( SMatrixTriplet_64 orig , int numRows , int numCols );
+    public abstract Matrix_64 createSparse(SMatrixTriplet_64 orig , int numRows , int numCols );
 
     @Override
-    protected RealMatrix_F64 createMatrix(int numRows, int numCols) {
+    protected Matrix_64 createMatrix(int numRows, int numCols) {
 
         // define a sparse matrix with every element filled.  It should act low a slow and inefficient
         // dense matrix now

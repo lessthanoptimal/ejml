@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.mult;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.ops.CommonOps_R64;
 
 /**
@@ -35,7 +35,7 @@ public class MatrixMultQuad {
      * @param B Middle square matrix.  Size = (A.numCols,A.numCols)
      * @param out Output matrix.  Size = (A.numRows,A.numRows);
      */
-    public static void multQuad1(RowMatrix_F64 A , RowMatrix_F64 B , RowMatrix_F64 out ) {
+    public static void multQuad1(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 out ) {
 
         if( A.numCols != B.numCols || A.numCols != B.numRows
                 || A.numRows != out.numRows || A.numRows != out.numCols )

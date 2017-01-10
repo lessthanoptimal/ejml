@@ -20,7 +20,7 @@ package org.ejml.alg.dense.decompose.qr;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_C64;
+import org.ejml.data.DMatrixRow_C64;
 import org.ejml.ops.CommonOps_CR64;
 import org.ejml.ops.ComplexMath_F64;
 import org.ejml.ops.MatrixFeatures_CR64;
@@ -176,18 +176,18 @@ public class TestQrHelperFunctions_CR64 {
         }
 
         for (int i = 1; i < 12; i++) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,i,rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,i,rand);
 
             for (int j = 1; j <= i; j += 2) {
-                RowMatrix_C64 subA = CommonOps_CR64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                DMatrixRow_C64 subA = CommonOps_CR64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
                 System.arraycopy(u,(A.numRows-j)*2,subU,0,j*2);
-                RowMatrix_C64 expected = rank1UpdateMultR(subA, gamma,subU);
+                DMatrixRow_C64 expected = rank1UpdateMultR(subA, gamma,subU);
 
-                RowMatrix_C64 found = A.copy();
+                DMatrixRow_C64 found = A.copy();
                 QrHelperFunctions_CR64.rank1UpdateMultR(found, uoff, 1, gamma,
                         A.numRows - j, A.numRows - j, A.numRows, _temp);
 
-                RowMatrix_C64 subFound = CommonOps_CR64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                DMatrixRow_C64 subFound = CommonOps_CR64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
                 assertTrue(MatrixFeatures_CR64.isEquals(expected, subFound, UtilEjml.TEST_F64));
@@ -195,13 +195,13 @@ public class TestQrHelperFunctions_CR64 {
         }
     }
 
-    private RowMatrix_C64 rank1UpdateMultR(RowMatrix_C64 A , double gamma, double u[] ) {
-        RowMatrix_C64 U = new RowMatrix_C64(A.numCols,1);
+    private DMatrixRow_C64 rank1UpdateMultR(DMatrixRow_C64 A , double gamma, double u[] ) {
+        DMatrixRow_C64 U = new DMatrixRow_C64(A.numCols,1);
         U.data = u;
-        RowMatrix_C64 UUt = new RowMatrix_C64(A.numCols,A.numCols);
+        DMatrixRow_C64 UUt = new DMatrixRow_C64(A.numCols,A.numCols);
         CommonOps_CR64.multTransB(-gamma,0,U,U,UUt);
 
-        RowMatrix_C64 expected = A.copy();
+        DMatrixRow_C64 expected = A.copy();
         CommonOps_CR64.multAdd(UUt,A,expected);
 
         return expected;
@@ -218,18 +218,18 @@ public class TestQrHelperFunctions_CR64 {
         }
 
         for (int i = 1; i < 12; i++) {
-            RowMatrix_C64 A = RandomMatrices_CR64.createRandom(i,i,rand);
+            DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(i,i,rand);
 
             for (int j = 1; j <= i; j += 2) {
-                RowMatrix_C64 subA = CommonOps_CR64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                DMatrixRow_C64 subA = CommonOps_CR64.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
                 System.arraycopy(u,(A.numRows-j)*2,subU,0,j*2);
-                RowMatrix_C64 expected = rank1UpdateMultL(subA,gamma,subU);
+                DMatrixRow_C64 expected = rank1UpdateMultL(subA,gamma,subU);
 
-                RowMatrix_C64 found = A.copy();
+                DMatrixRow_C64 found = A.copy();
                 QrHelperFunctions_CR64.rank1UpdateMultL(found,u,0,gamma,
                         A.numRows-j,A.numRows-j,A.numRows);
 
-                RowMatrix_C64 subFound = CommonOps_CR64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
+                DMatrixRow_C64 subFound = CommonOps_CR64.extract(found,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
 
                 outsideIdentical(A, found, j);
                 assertTrue(MatrixFeatures_CR64.isEquals(expected, subFound, UtilEjml.TEST_F64));
@@ -237,19 +237,19 @@ public class TestQrHelperFunctions_CR64 {
         }
     }
 
-    private RowMatrix_C64 rank1UpdateMultL(RowMatrix_C64 A , double gamma, double u[] ) {
-        RowMatrix_C64 U = new RowMatrix_C64(A.numCols,1);
+    private DMatrixRow_C64 rank1UpdateMultL(DMatrixRow_C64 A , double gamma, double u[] ) {
+        DMatrixRow_C64 U = new DMatrixRow_C64(A.numCols,1);
         U.data = u;
-        RowMatrix_C64 UUt = new RowMatrix_C64(A.numCols,A.numCols);
+        DMatrixRow_C64 UUt = new DMatrixRow_C64(A.numCols,A.numCols);
         CommonOps_CR64.multTransB(-gamma,0,U,U,UUt);
 
-        RowMatrix_C64 expected = A.copy();
+        DMatrixRow_C64 expected = A.copy();
         CommonOps_CR64.multAdd(A,UUt,expected);
 
         return expected;
     }
 
-    private void outsideIdentical(RowMatrix_C64 A , RowMatrix_C64 B , int width ) {
+    private void outsideIdentical(DMatrixRow_C64 A , DMatrixRow_C64 B , int width ) {
 
         int outside = A.numRows-width;
 
@@ -265,7 +265,7 @@ public class TestQrHelperFunctions_CR64 {
 
     @Test
     public void extractHouseholderColumn() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(6,5,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(6,5,rand);
 
         double u[] = new double[6*2];
 
@@ -285,7 +285,7 @@ public class TestQrHelperFunctions_CR64 {
 
     @Test
     public void extractHouseholderRow() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(5,6,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(5,6,rand);
 
         double u[] = new double[6*2];
 
@@ -305,7 +305,7 @@ public class TestQrHelperFunctions_CR64 {
 
     @Test
     public void extractColumnAndMax() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(5,6,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(5,6,rand);
 
         A.set(2,1,10,0);
 
@@ -325,7 +325,7 @@ public class TestQrHelperFunctions_CR64 {
 
     @Test
     public void computeRowMax() {
-        RowMatrix_C64 A = RandomMatrices_CR64.createRandom(5,6,rand);
+        DMatrixRow_C64 A = RandomMatrices_CR64.createRandom(5,6,rand);
 
         A.set(1,2,10,0);
 

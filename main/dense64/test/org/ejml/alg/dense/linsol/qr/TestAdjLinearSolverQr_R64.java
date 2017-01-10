@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.AdjustableLinearSolver_R64;
 import org.ejml.alg.dense.linsol.GenericLinearSolverChecks_R64;
 import org.ejml.alg.dense.mult.SubmatrixOps_R64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -44,18 +44,18 @@ public class TestAdjLinearSolverQr_R64 extends GenericLinearSolverChecks_R64 {
         int m = 5;
         int n = 3;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
         double row[] = new double[]{1,2,3};
 
         // create the modified A
-        RowMatrix_F64 A_e = RandomMatrices_R64.createRandom(m+1,n,rand);
+        DMatrixRow_F64 A_e = RandomMatrices_R64.createRandom(m+1,n,rand);
         SubmatrixOps_R64.setSubMatrix(A,A_e,0,0,0,0,insert,n);
         System.arraycopy(row, 0, A_e.data, insert * n, n);
         SubmatrixOps_R64.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
 
         // Compute the solution to the modified  system
-        RowMatrix_F64 X = RandomMatrices_R64.createRandom(n,2,rand);
-        RowMatrix_F64 Y = new RowMatrix_F64(A_e.numRows,X.numCols);
+        DMatrixRow_F64 X = RandomMatrices_R64.createRandom(n,2,rand);
+        DMatrixRow_F64 Y = new DMatrixRow_F64(A_e.numRows,X.numCols);
         CommonOps_R64.mult(A_e,X,Y);
 
         // create the solver from A then add a A.  The solver
@@ -66,7 +66,7 @@ public class TestAdjLinearSolverQr_R64 extends GenericLinearSolverChecks_R64 {
         adjSolver.addRowToA(row,insert);
 
         // solve the system and see if it gets the expected solution
-        RowMatrix_F64 X_found = RandomMatrices_R64.createRandom(X.numRows,X.numCols,rand);
+        DMatrixRow_F64 X_found = RandomMatrices_R64.createRandom(X.numRows,X.numCols,rand);
         adjSolver.solve(Y,X_found);
 
         // see if they produce the same results
@@ -79,16 +79,16 @@ public class TestAdjLinearSolverQr_R64 extends GenericLinearSolverChecks_R64 {
         int m = 5;
         int n = 3;
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
 
         // create the modified A
-        RowMatrix_F64 A_e = RandomMatrices_R64.createRandom(m-1,n,rand);
+        DMatrixRow_F64 A_e = RandomMatrices_R64.createRandom(m-1,n,rand);
         SubmatrixOps_R64.setSubMatrix(A,A_e,0,0,0,0,remove,n);
         SubmatrixOps_R64.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
         // Compute the solution to the modified system
-        RowMatrix_F64 X = RandomMatrices_R64.createRandom(n,2,rand);
-        RowMatrix_F64 Y = new RowMatrix_F64(A_e.numRows,X.numCols);
+        DMatrixRow_F64 X = RandomMatrices_R64.createRandom(n,2,rand);
+        DMatrixRow_F64 Y = new DMatrixRow_F64(A_e.numRows,X.numCols);
         CommonOps_R64.mult(A_e,X,Y);
 
         // create the solver from the original system then modify it
@@ -100,7 +100,7 @@ public class TestAdjLinearSolverQr_R64 extends GenericLinearSolverChecks_R64 {
         // see if it produces the epected results
 
         // solve the system and see if it gets the expected solution
-        RowMatrix_F64 X_found = RandomMatrices_R64.createRandom(X.numRows,X.numCols,rand);
+        DMatrixRow_F64 X_found = RandomMatrices_R64.createRandom(X.numRows,X.numCols,rand);
         adjSolver.solve(Y,X_found);
 
         // see if they produce the same results
@@ -108,7 +108,7 @@ public class TestAdjLinearSolverQr_R64 extends GenericLinearSolverChecks_R64 {
     }
 
     @Override
-    protected LinearSolver createSolver( RowMatrix_F64 A ) {
+    protected LinearSolver createSolver( DMatrixRow_F64 A ) {
         return new AdjLinearSolverQr_R64();
     }
 }

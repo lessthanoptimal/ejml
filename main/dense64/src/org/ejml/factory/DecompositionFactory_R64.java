@@ -33,8 +33,8 @@ import org.ejml.alg.dense.decomposition.lu.LUDecompositionAlt_R64;
 import org.ejml.alg.dense.decomposition.qr.QRColPivDecompositionHouseholderColumn_R64;
 import org.ejml.alg.dense.decomposition.qr.QRDecompositionHouseholderColumn_R64;
 import org.ejml.alg.dense.decomposition.svd.SvdImplicitQrDecompose_R64;
-import org.ejml.data.RealMatrix_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.Matrix_64;
 import org.ejml.interfaces.decomposition.*;
 import org.ejml.ops.CommonOps_R64;
 import org.ejml.ops.EigenOps_R64;
@@ -70,7 +70,7 @@ public class DecompositionFactory_R64 {
      * @param lower should a lower or upper triangular matrix be used. If not sure set to true.
      * @return A new CholeskyDecomposition.
      */
-    public static CholeskyDecomposition_F64<RowMatrix_F64> chol(int matrixSize , boolean lower )
+    public static CholeskyDecomposition_F64<DMatrixRow_F64> chol(int matrixSize , boolean lower )
     {
         if( matrixSize < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
             return new CholeskyDecompositionInner_R64(lower);
@@ -89,7 +89,7 @@ public class DecompositionFactory_R64 {
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      * @return CholeskyLDLDecomposition_F64
      */
-    public static CholeskyLDLDecomposition_F64<RowMatrix_F64> cholLDL(int matrixSize ) {
+    public static CholeskyLDLDecomposition_F64<DMatrixRow_F64> cholLDL(int matrixSize ) {
         return new CholeskyDecompositionLDL_R64();
     }
 
@@ -101,7 +101,7 @@ public class DecompositionFactory_R64 {
      * @parm matrixWidth The matrix size that the decomposition should be optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition_F64<RowMatrix_F64> lu(int numRows , int numCol ) {
+    public static LUDecomposition_F64<DMatrixRow_F64> lu(int numRows , int numCol ) {
         return new LUDecompositionAlt_R64();
     }
 
@@ -118,7 +118,7 @@ public class DecompositionFactory_R64 {
      * @param compact Should it compute the SVD in compact form.  If not sure set to false.
      * @return
      */
-    public static SingularValueDecomposition_F64<RowMatrix_F64> svd(int numRows , int numCols ,
+    public static SingularValueDecomposition_F64<DMatrixRow_F64> svd(int numRows , int numCols ,
                                                                     boolean needU , boolean needV , boolean compact ) {
         // Don't allow the tall decomposition by default since it *might* be less stable
         return new SvdImplicitQrDecompose_R64(compact,needU,needV,false);
@@ -133,7 +133,7 @@ public class DecompositionFactory_R64 {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRDecomposition
      */
-    public static QRDecomposition<RowMatrix_F64> qr(int numRows , int numCols ) {
+    public static QRDecomposition<DMatrixRow_F64> qr(int numRows , int numCols ) {
         return new QRDecompositionHouseholderColumn_R64();
     }
 
@@ -146,7 +146,7 @@ public class DecompositionFactory_R64 {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRPDecomposition_F64
      */
-    public static QRPDecomposition_F64<RowMatrix_F64> qrp(int numRows , int numCols ) {
+    public static QRPDecomposition_F64<DMatrixRow_F64> qrp(int numRows , int numCols ) {
         return new QRColPivDecompositionHouseholderColumn_R64();
     }
 
@@ -161,7 +161,7 @@ public class DecompositionFactory_R64 {
      * @param needVectors Should eigenvectors be computed or not.  If not sure set to true.
      * @return A new EigenDecomposition
      */
-    public static EigenDecomposition_F64<RowMatrix_F64> eig(int matrixSize , boolean needVectors ) {
+    public static EigenDecomposition_F64<DMatrixRow_F64> eig(int matrixSize , boolean needVectors ) {
         return new SwitchingEigenDecomposition_R64(matrixSize,needVectors, UtilEjml.TEST_F64);
     }
 
@@ -176,10 +176,10 @@ public class DecompositionFactory_R64 {
      *                    then a general purpose algorithm is returned.
      * @return EVD for any matrix.
      */
-    public static EigenDecomposition_F64<RowMatrix_F64> eig(int matrixSize , boolean computeVectors ,
+    public static EigenDecomposition_F64<DMatrixRow_F64> eig(int matrixSize , boolean computeVectors ,
                                                             boolean isSymmetric ) {
         if( isSymmetric ) {
-            TridiagonalSimilarDecomposition_F64<RowMatrix_F64> decomp = DecompositionFactory_R64.tridiagonal(matrixSize);
+            TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> decomp = DecompositionFactory_R64.tridiagonal(matrixSize);
             return new SymmetricQRAlgorithmDecomposition_R64(decomp,computeVectors);
         } else
             return new WatchedDoubleStepQRDecomposition_R64(computeVectors);
@@ -202,17 +202,17 @@ public class DecompositionFactory_R64 {
      * @param svd The decomposition after processing 'orig'. Not modified.
      * @return The quality of the decomposition.
      */
-    public static double quality(RowMatrix_F64 orig , SingularValueDecomposition<RowMatrix_F64> svd )
+    public static double quality(DMatrixRow_F64 orig , SingularValueDecomposition<DMatrixRow_F64> svd )
     {
         return quality(orig,svd.getU(null,false),svd.getW(null),svd.getV(null,true));
     }
 
-    public static double quality(RowMatrix_F64 orig , RowMatrix_F64 U , RowMatrix_F64 W , RowMatrix_F64 Vt )
+    public static double quality(DMatrixRow_F64 orig , DMatrixRow_F64 U , DMatrixRow_F64 W , DMatrixRow_F64 Vt )
     {
         // foundA = U*W*Vt
-        RowMatrix_F64 UW = new RowMatrix_F64(U.numRows,W.numCols);
+        DMatrixRow_F64 UW = new DMatrixRow_F64(U.numRows,W.numCols);
         CommonOps_R64.mult(U,W,UW);
-        RowMatrix_F64 foundA = new RowMatrix_F64(UW.numRows,Vt.numCols);
+        DMatrixRow_F64 foundA = new DMatrixRow_F64(UW.numRows,Vt.numCols);
         CommonOps_R64.mult(UW,Vt,foundA);
 
         double normA = NormOps_R64.normF(foundA);
@@ -235,20 +235,20 @@ public class DecompositionFactory_R64 {
      * @param eig EVD of the original matrix. Not modified.
      * @return The quality of the decomposition.
      */
-    public static double quality(RowMatrix_F64 orig , EigenDecomposition_F64<RowMatrix_F64> eig )
+    public static double quality(DMatrixRow_F64 orig , EigenDecomposition_F64<DMatrixRow_F64> eig )
     {
-        RowMatrix_F64 A = orig;
-        RowMatrix_F64 V = EigenOps_R64.createMatrixV(eig);
-        RowMatrix_F64 D = EigenOps_R64.createMatrixD(eig);
+        DMatrixRow_F64 A = orig;
+        DMatrixRow_F64 V = EigenOps_R64.createMatrixV(eig);
+        DMatrixRow_F64 D = EigenOps_R64.createMatrixD(eig);
 
         // L = A*V
-        RowMatrix_F64 L = new RowMatrix_F64(A.numRows,V.numCols);
+        DMatrixRow_F64 L = new DMatrixRow_F64(A.numRows,V.numCols);
         CommonOps_R64.mult(A,V,L);
         // R = V*D
-        RowMatrix_F64 R = new RowMatrix_F64(V.numRows,D.numCols);
+        DMatrixRow_F64 R = new DMatrixRow_F64(V.numRows,D.numCols);
         CommonOps_R64.mult(V,D,R);
 
-        RowMatrix_F64 diff = new RowMatrix_F64(L.numRows,L.numCols);
+        DMatrixRow_F64 diff = new DMatrixRow_F64(L.numRows,L.numCols);
         CommonOps_R64.subtract(L,R,diff);
 
         double top = NormOps_R64.normF(diff);
@@ -265,7 +265,7 @@ public class DecompositionFactory_R64 {
      *
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      */
-    public static TridiagonalSimilarDecomposition_F64<RowMatrix_F64> tridiagonal(int matrixSize ) {
+    public static TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> tridiagonal(int matrixSize ) {
         if( matrixSize >= 1800 ) {
             return new TridiagonalDecomposition_B64_to_R64();
         } else {
@@ -282,7 +282,7 @@ public class DecompositionFactory_R64 {
      * @param <T> Matrix type.
      * @return If the decomposition was successful or not.
      */
-    public static <T extends RealMatrix_F64> boolean decomposeSafe(DecompositionInterface<T> decomp, T M ) {
+    public static <T extends Matrix_64> boolean decomposeSafe(DecompositionInterface<T> decomp, T M ) {
         if( decomp.inputModified() ) {
             return decomp.decompose(M.<T>copy());
         } else {

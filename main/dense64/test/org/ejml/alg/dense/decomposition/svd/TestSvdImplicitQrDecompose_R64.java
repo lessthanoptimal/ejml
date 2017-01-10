@@ -19,7 +19,7 @@
 package org.ejml.alg.dense.decomposition.svd;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.ops.MatrixFeatures_R64;
@@ -83,9 +83,9 @@ public class TestSvdImplicitQrDecompose_R64 extends StandardSvdChecks_R64 {
             for( int k = 0; k < 2; k++ ) {
                 compact = k == 0;
 
-                SingularValueDecomposition_F64<RowMatrix_F64> alg = new SvdImplicitQrDecompose_R64(compact,true,true,false);
+                SingularValueDecomposition_F64<DMatrixRow_F64> alg = new SvdImplicitQrDecompose_R64(compact,true,true,false);
 
-                RowMatrix_F64 A;
+                DMatrixRow_F64 A;
 
                 if( singular ) {
                     double sv[] = new double[ Math.min(numRows,numCols)];
@@ -94,16 +94,16 @@ public class TestSvdImplicitQrDecompose_R64 extends StandardSvdChecks_R64 {
 //                    sv[0] = 0;
 
                     A = RandomMatrices_R64.createSingularValues(numRows,numCols,rand,sv);
-//                    A = new RowMatrix_F64(numRows,numCols);
+//                    A = new DMatrixRow_F64(numRows,numCols);
                 } else {
                     A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
                 }
 
                 assertTrue(alg.decompose(A.copy()));
 
-                RowMatrix_F64 origU = alg.getU(null,false);
+                DMatrixRow_F64 origU = alg.getU(null,false);
                 double sv[] = alg.getSingularValues();
-                RowMatrix_F64 origV = alg.getV(null,false);
+                DMatrixRow_F64 origV = alg.getV(null,false);
 
                 for( int i = 0; i < 2; i++ ) {
                     needU = i == 0;
@@ -117,13 +117,13 @@ public class TestSvdImplicitQrDecompose_R64 extends StandardSvdChecks_R64 {
         }
     }
 
-    public void testPartial( RowMatrix_F64 A ,
-                             RowMatrix_F64 U ,
+    public void testPartial( DMatrixRow_F64 A ,
+                             DMatrixRow_F64 U ,
                              double sv[] ,
-                             RowMatrix_F64 V ,
+                             DMatrixRow_F64 V ,
                              boolean checkU , boolean checkV )
     {
-        SingularValueDecomposition_F64<RowMatrix_F64> alg = new SvdImplicitQrDecompose_R64(compact,checkU,checkV,false);
+        SingularValueDecomposition_F64<DMatrixRow_F64> alg = new SvdImplicitQrDecompose_R64(compact,checkU,checkV,false);
 
         assertTrue(alg.decompose(A.copy()));
 

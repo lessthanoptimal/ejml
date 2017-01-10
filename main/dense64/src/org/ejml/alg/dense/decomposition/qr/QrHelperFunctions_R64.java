@@ -18,7 +18,7 @@
 
 package org.ejml.alg.dense.decomposition.qr;
 
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 
 /**
@@ -209,7 +209,7 @@ public class QrHelperFunctions_R64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultR(RowMatrix_F64 A , double u[] , double gamma ,
+    public static void rank1UpdateMultR(DMatrixRow_F64 A , double u[] , double gamma ,
                                         int colA0,
                                         int w0, int w1 ,
                                         double _temp[] )
@@ -251,7 +251,7 @@ public class QrHelperFunctions_R64 {
         }
     }
 
-    public static void rank1UpdateMultR(RowMatrix_F64 A,
+    public static void rank1UpdateMultR(DMatrixRow_F64 A,
                                         double u[], int offsetU,
                                         double gamma,
                                         int colA0,
@@ -311,7 +311,7 @@ public class QrHelperFunctions_R64 {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL(RowMatrix_F64 A , double u[] ,
+    public static void rank1UpdateMultL(DMatrixRow_F64 A , double u[] ,
                                         double gamma ,
                                         int colA0,
                                         int w0 , int w1 )

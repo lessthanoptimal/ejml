@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.alg.dense.decomposition.TriangularSolver_R64;
 import org.ejml.alg.dense.decomposition.UtilDecompositons_R64;
 import org.ejml.data.Complex_F64;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.ops.SpecializedOps_R64;
 
@@ -34,9 +34,9 @@ import org.ejml.ops.SpecializedOps_R64;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_R64
-        implements LUDecomposition_F64<RowMatrix_F64> {
+        implements LUDecomposition_F64<DMatrixRow_F64> {
     // the decomposed matrix
-    protected RowMatrix_F64 LU;
+    protected DMatrixRow_F64 LU;
 
     // it can decompose a matrix up to this size
     protected int maxWidth=-1;
@@ -59,7 +59,7 @@ public abstract class LUDecompositionBase_R64
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
-        LU = new RowMatrix_F64(numRows,numCols);
+        LU = new DMatrixRow_F64(numRows,numCols);
 
         this.dataLU = LU.data;
         maxWidth = Math.max(numRows,numCols);
@@ -69,7 +69,7 @@ public abstract class LUDecompositionBase_R64
         pivot = new int[ maxWidth ];
     }
 
-    public RowMatrix_F64 getLU() {
+    public DMatrixRow_F64 getLU() {
         return LU;
     }
 
@@ -92,7 +92,7 @@ public abstract class LUDecompositionBase_R64
      * @param lower Where the lower triangular matrix is written to.
      */
     @Override
-    public RowMatrix_F64 getLower(RowMatrix_F64 lower )
+    public DMatrixRow_F64 getLower(DMatrixRow_F64 lower )
     {
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
@@ -123,7 +123,7 @@ public abstract class LUDecompositionBase_R64
      * @param upper Where the upper triangular matrix is writen to.
      */
     @Override
-    public RowMatrix_F64 getUpper(RowMatrix_F64 upper )
+    public DMatrixRow_F64 getUpper(DMatrixRow_F64 upper )
     {
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
@@ -139,11 +139,11 @@ public abstract class LUDecompositionBase_R64
         return upper;
     }
 
-    public RowMatrix_F64 getPivot(RowMatrix_F64 pivot ) {
+    public DMatrixRow_F64 getPivot(DMatrixRow_F64 pivot ) {
         return SpecializedOps_R64.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
-    protected void decomposeCommonInit(RowMatrix_F64 a) {
+    protected void decomposeCommonInit(DMatrixRow_F64 a) {
         if( a.numRows > maxWidth || a.numCols > maxWidth ) {
             setExpectedMaxSize(a.numRows,a.numCols);
         }

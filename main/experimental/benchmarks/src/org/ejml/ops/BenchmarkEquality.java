@@ -19,7 +19,7 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.RowMatrix_F64;
+import org.ejml.data.DMatrixRow_F64;
 
 import java.util.Random;
 
@@ -29,8 +29,8 @@ import java.util.Random;
  */
 public class BenchmarkEquality {
 
-    public static long equals( RowMatrix_F64 matA ,
-                               RowMatrix_F64 matB ,
+    public static long equals( DMatrixRow_F64 matA ,
+                               DMatrixRow_F64 matB ,
                                int numTrials) {
         boolean args = false;
         long prev = System.currentTimeMillis();
@@ -45,8 +45,8 @@ public class BenchmarkEquality {
         return curr-prev;
     }
 
-    public static long identical( RowMatrix_F64 matA ,
-                                  RowMatrix_F64 matB ,
+    public static long identical( DMatrixRow_F64 matA ,
+                                  DMatrixRow_F64 matB ,
                                   int numTrials) {
 
         boolean args = false;
@@ -65,8 +65,8 @@ public class BenchmarkEquality {
     public static void main( String args[] ) {
         Random rand = new Random(234234);
 
-        RowMatrix_F64 A = RandomMatrices_R64.createRandom(1000,2000,rand);
-        RowMatrix_F64 B = A.copy();
+        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(1000,2000,rand);
+        DMatrixRow_F64 B = A.copy();
 
         int N = 1000;
 
