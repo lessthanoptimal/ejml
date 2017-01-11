@@ -16,44 +16,49 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.triplet;
+package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.SMatrixCC_F64;
 
 /**
  * @author Peter Abeles
  */
-public class MatrixFeatures_TP64 {
+public class MatrixFeatures_O64 {
 
-    public static boolean isEquals(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b ) {
+    public static boolean isEquals(SMatrixCC_F64 a , SMatrixCC_F64 b ) {
         if( !isSameShape(a,b) )
             return false;
 
         for (int i = 0; i < a.length; i++) {
-            SMatrixTriplet_F64.Element ea = a.data[i];
-            SMatrixTriplet_F64.Element eb = b.findItem(ea.row, ea.col);
-
-            if( eb == null || ea.value != eb.value )
+            if( a.data[i] != b.data[i] || a.row_idx[i] != b.row_idx[i])
                 return false;
         }
         return true;
     }
 
-    public static boolean isEquals(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b , double tol ) {
+    public static boolean isEquals(SMatrixCC_F64 a , SMatrixCC_F64 b , double tol ) {
         if( !isSameShape(a,b) )
             return false;
 
         for (int i = 0; i < a.length; i++) {
-            SMatrixTriplet_F64.Element ea = a.data[i];
-            SMatrixTriplet_F64.Element eb = b.findItem(ea.row, ea.col);
-
-            if( eb == null || Math.abs(ea.value-eb.value) > tol )
+            if( Math.abs(a.data[i]-b.data[i]) > tol )
                 return false;
         }
         return true;
     }
 
-    public static boolean isSameShape(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b) {
-        return a.numRows == b.numRows && a.numCols == b.numCols && a.length == b.length;
+    public static boolean isSameShape(SMatrixCC_F64 a , SMatrixCC_F64 b) {
+        if( a.numRows == b.numRows && a.numCols == b.numCols && a.length == b.length ) {
+            for (int i = 0; i <= a.numCols; i++) {
+                if( a.col_idx[i] != b.col_idx[i] )
+                    return false;
+            }
+            for (int i = 0; i < a.length; i++) {
+                if( a.row_idx[i] != b.row_idx[i] )
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 }

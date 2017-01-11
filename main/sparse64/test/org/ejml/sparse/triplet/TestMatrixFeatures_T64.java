@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestMatrixFeatures_TP64 {
+public class TestMatrixFeatures_T64 {
     @Test
     public void isEquals() {
         SMatrixTriplet_F64 a = new SMatrixTriplet_F64(4,5,3);
@@ -38,17 +38,17 @@ public class TestMatrixFeatures_TP64 {
 
         SMatrixTriplet_F64 b = new SMatrixTriplet_F64(a);
 
-        assertTrue(MatrixFeatures_TP64.isEquals(a,b));
+        assertTrue(MatrixFeatures_T64.isEquals(a,b));
 
         b.numRows += 1;
-        assertFalse(MatrixFeatures_TP64.isEquals(a,b));
+        assertFalse(MatrixFeatures_T64.isEquals(a,b));
         b.numRows -= 1; b.numCols += 1;
-        assertFalse(MatrixFeatures_TP64.isEquals(a,b));
+        assertFalse(MatrixFeatures_T64.isEquals(a,b));
 
         // make it no longer exactly equal
         b.numCols -= 1;
         b.data[0].value += UtilEjml.TEST_F64*0.1;
-        assertFalse(MatrixFeatures_TP64.isEquals(a,b));
+        assertFalse(MatrixFeatures_T64.isEquals(a,b));
     }
 
     @Test
@@ -60,20 +60,20 @@ public class TestMatrixFeatures_TP64 {
 
         SMatrixTriplet_F64 b = new SMatrixTriplet_F64(a);
 
-        assertTrue(MatrixFeatures_TP64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
 
         b.numRows += 1;
-        assertFalse(MatrixFeatures_TP64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
         b.numRows -= 1; b.numCols += 1;
-        assertFalse(MatrixFeatures_TP64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
 
         // make it no longer exactly equal, but within tolerance
         b.numCols -= 1;
         b.data[0].value += UtilEjml.TEST_F64*0.1;
-        assertTrue(MatrixFeatures_TP64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
 
         // outside of tolerance
         b.data[0].value += UtilEjml.TEST_F64*10;
-        assertFalse(MatrixFeatures_TP64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
     }
 }

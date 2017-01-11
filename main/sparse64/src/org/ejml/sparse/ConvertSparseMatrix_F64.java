@@ -25,6 +25,8 @@ import org.ejml.data.SMatrixTriplet_F64;
 
 import java.util.Arrays;
 
+import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.colsum;
+
 /**
  * Contains functions for converting between row and sparse matrix formats as well as sparse to sparse.
  *
@@ -96,7 +98,6 @@ public class ConvertSparseMatrix_F64 {
         else
             dst.reshape(src.numRows, src.numCols, src.length);
 
-        // compute the number of elements in each columns
         if( hist == null )
             hist = new int[ src.numCols ];
         else if( hist.length >= src.numCols )
@@ -104,28 +105,19 @@ public class ConvertSparseMatrix_F64 {
         else
             throw new IllegalArgumentException("Length of hist must be at least numCols");
 
+        // compute the number of elements in each columns
         for (int i = 0; i < src.length; i++) {
-            SMatrixTriplet_F64.Element e = src.data[i];
-
-            hist[e.col]++;
+            hist[src.data[i].col]++;
         }
 
         // define col_idx
-        dst.col_idx[0] = 0;
-        int index = 0;
-        for (int i = 1; i < src.numCols; i++) {
-            dst.col_idx[i] = index += hist[i-1];
-        }
-
-        // hist will now be used to store the number of times a row has been added to a column
-        Arrays.fill(hist,0,src.numCols, 0);
+        colsum(dst,hist);
 
         // now write the row indexes and the values
         for (int i = 0; i < src.length; i++) {
             SMatrixTriplet_F64.Element e = src.data[i];
 
-            int offset = hist[e.col]++;
-            index = dst.col_idx[e.col] + offset;
+            int index = hist[e.col]++;
             dst.row_idx[index] = e.row;
             dst.data[index] = e.value;
         }

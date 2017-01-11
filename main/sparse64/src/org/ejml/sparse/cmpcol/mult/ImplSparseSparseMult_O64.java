@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.compcol.mult;
+package org.ejml.sparse.cmpcol.mult;
 
 import org.ejml.data.SMatrixCC_F64;
 
 /**
  * @author Peter Abeles
  */
-public class ImplSparseDenseMult_F64 {
+public class ImplSparseSparseMult_O64 {
 
     /**
      * Multiplies a sparse matrix against a row vector.

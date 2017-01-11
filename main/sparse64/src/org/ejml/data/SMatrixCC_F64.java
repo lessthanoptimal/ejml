@@ -150,16 +150,25 @@ public class SMatrixCC_F64 implements Matrix_F64 {
     }
 
     public void reshape( int numRows , int numCols , int length ) {
-        if( length > data.length ) {
-            data = new double[ length ];
-            row_idx = new int[ length ];
-        }
+        growMaxLength( length );
+
         if( numCols+1 > data.length ) {
             col_idx = new int[ numCols+1 ];
         }
         this.numRows = numRows;
         this.numCols = numCols;
-        this.length = 0;
+        this.length = length;
+    }
+
+    /**
+     * Increases the maximum size of the data array so that it can store sparse data up to 'length'.
+     * @param length Desired maximum length of sparse data
+     */
+    public void growMaxLength( int length ) {
+        if( length > data.length ) {
+            this.data = new double[ length ];
+            this.row_idx = new int[ length ];
+        }
     }
 
     /**
