@@ -6,6 +6,7 @@ Date format: year/month/day
 
 2017
 
+- Changed minimum Java version from 6 to 7
 - Added SimpleEVD.getEigenvalues()
 - Added SimpleSVD.getSingularValues()
 - Fixed issue with generics and SimpleEVD and SimpleSVD

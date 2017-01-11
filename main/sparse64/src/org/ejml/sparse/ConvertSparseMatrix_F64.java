@@ -85,6 +85,29 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
+    public static DMatrixRow_F64 convert(SMatrixCC_F64 src , DMatrixRow_F64 dst ) {
+        if( dst == null )
+            dst = new DMatrixRow_F64(src.numRows, src.numCols);
+        else {
+            dst.reshape(src.numRows, src.numCols);
+            dst.zero();
+        }
+
+        int idx0 = src.col_idx[0];
+        for (int j = 1; j <= src.numCols; j++) {
+            int idx1 = src.col_idx[j];
+
+            for (int i = idx0; i < idx1; i++) {
+                int row = src.row_idx[i];
+                double val = src.data[i];
+
+                dst.unsafe_set(row,j-1, val);
+            }
+        }
+
+        return dst;
+    }
+
     /**
      * Converts SMatrixTriplet_64 into a SMatrixCC_64.
      *
