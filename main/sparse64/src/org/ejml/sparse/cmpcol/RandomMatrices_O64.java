@@ -46,6 +46,6 @@ public class RandomMatrices_O64 {
 
         // easier to generate the matrix in triplet format first then convert it
         SMatrixTriplet_F64 triplet = RandomMatrices_T64.uniform(numRows, numCols, length, min, max, rand);
-        return ConvertSparseMatrix_F64.convert(triplet, (SMatrixCC_F64)null, null);
+        return ConvertSparseMatrix_F64.convert(triplet, (SMatrixCC_F64)null, null, null);
     }
 }

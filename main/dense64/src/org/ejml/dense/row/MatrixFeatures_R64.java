@@ -733,4 +733,21 @@ public class MatrixFeatures_R64 {
 
         return SingularOps_R64.nullity(svd,threshold);
     }
+
+    /**
+     * Counts the number of elements in A which are not zero.
+     * @param A A matrix
+     * @return number of non-zero elements
+     */
+    public static int countNonZero(DMatrixRow_F64 A){
+        int total = 0;
+        for (int row = 0, index=0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++,index++) {
+                if( A.data[index] != 0 ) {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
 }

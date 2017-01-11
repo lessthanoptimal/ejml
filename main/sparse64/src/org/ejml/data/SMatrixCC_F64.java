@@ -152,7 +152,7 @@ public class SMatrixCC_F64 implements Matrix_F64 {
     public void reshape( int numRows , int numCols , int length ) {
         growMaxLength( length );
 
-        if( numCols+1 > data.length ) {
+        if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
         }
         this.numRows = numRows;
@@ -168,6 +168,20 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         if( length > data.length ) {
             this.data = new double[ length ];
             this.row_idx = new int[ length ];
+        }
+    }
+
+    /**
+     * Increases the maximum length of data arrays and copies the old data
+     * @param length New maximum length
+     */
+    public void extendMaxLength( int length ) {
+        if( length > data.length ) {
+            double[] data = new double[ length ];
+            int[] row_idx = new int[ length ];
+
+            System.arraycopy(this.data,0,data,0,this.length);
+            System.arraycopy(this.row_idx,0,row_idx,0,this.length);
         }
     }
 

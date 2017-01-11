@@ -38,8 +38,8 @@ public class TestMatrixFeatures_O64 {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        SMatrixCC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null,null);
-        SMatrixCC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null,null);
+        SMatrixCC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null);
+        SMatrixCC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null);
 
         assertTrue(MatrixFeatures_O64.isEquals(a,b));
 
@@ -65,8 +65,8 @@ public class TestMatrixFeatures_O64 {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        SMatrixCC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null,null);
-        SMatrixCC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null,null);
+        SMatrixCC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null);
+        SMatrixCC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null);
 
         assertTrue(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
 

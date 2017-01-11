@@ -506,4 +506,22 @@ public class TestMatrixFeatures_R64 {
         a = UtilEjml.parse_R64("2 0 0 1e-20",2);
         assertEquals(0, MatrixFeatures_R64.nullity(a, Math.pow(UtilEjml.EPS, 10)));
     }
+
+    @Test
+    public void countNonZero() {
+        DMatrixRow_F64 a = RandomMatrices_R64.createRandom(10,5,rand);
+
+        a.set(0,3,0);
+        a.set(1,3,0);
+        a.set(2,3,0);
+
+        int found = MatrixFeatures_R64.countNonZero(a);
+        assertEquals(50-3, found);
+
+        a.set(1,3, Double.NaN);
+        assertEquals(50-3, found);
+
+        a.set(1,3, Double.POSITIVE_INFINITY);
+        assertEquals(50-3, found);
+    }
 }

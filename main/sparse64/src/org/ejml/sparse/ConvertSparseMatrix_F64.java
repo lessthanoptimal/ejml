@@ -22,6 +22,8 @@ import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Matrix_F64;
 import org.ejml.data.SMatrixCC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.sort.SortCoupledArray;
 
 import java.util.Arrays;
 
@@ -103,6 +105,40 @@ public class ConvertSparseMatrix_F64 {
 
                 dst.unsafe_set(row,j-1, val);
             }
+            idx0 = idx1;
+        }
+
+        return dst;
+    }
+
+    /**
+     *
+     *
+     * @param src Original matrix that is to be converted.
+     * @param dst Storage for the converted matrix.  If null a new instance will be returned.
+     * @return The converted matrix
+     */
+    public static SMatrixCC_F64 convert( DMatrixRow_F64 src , SMatrixCC_F64 dst ) {
+        int nonzero = MatrixFeatures_R64.countNonZero(src);
+
+        if( dst == null )
+            dst = new SMatrixCC_F64(src.numRows, src.numCols, nonzero);
+        else
+            dst.reshape(src.numRows, src.numCols, nonzero);
+        dst.length = 0;
+
+        dst.col_idx[0] = 0;
+        for (int col = 0; col < src.numCols; col++) {
+            for (int row = 0; row < src.numRows; row++) {
+                double value = src.data[row*src.numCols+col];
+                if( value == 0 )
+                    continue;
+
+                dst.row_idx[dst.length] = row;
+                dst.data[dst.length] = value;
+                dst.length += 1;
+            }
+            dst.col_idx[col+1] = dst.length;
         }
 
         return dst;
@@ -115,11 +151,15 @@ public class ConvertSparseMatrix_F64 {
      * @param dst Destination. Will be a copy.  Modified.
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
-    public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst , int hist[] ) {
+    public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst , int hist[] ,
+                                        SortCoupledArray sorter ) {
         if( dst == null )
             dst = new SMatrixCC_F64(src.numRows, src.numCols , src.length);
         else
             dst.reshape(src.numRows, src.numCols, src.length);
+
+        if( sorter == null )
+            sorter = new SortCoupledArray();
 
         if( hist == null )
             hist = new int[ src.numCols ];
@@ -146,7 +186,16 @@ public class ConvertSparseMatrix_F64 {
         }
         dst.length = src.length;
 
+        sorter.sort(dst.col_idx,dst.numCols+1,dst.row_idx,dst.data);
+
+        if( !dst.isRowOrderValid() )
+            throw new RuntimeException("Crap");
+
         return dst;
+    }
+
+    public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst ) {
+        return convert(src,dst,null,null);
     }
 
     public static SMatrixTriplet_F64 convert(SMatrixCC_F64 src , SMatrixTriplet_F64 dst ) {

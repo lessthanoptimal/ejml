@@ -51,7 +51,7 @@ Date format: year/month/day
 - TODO rename main to source?
 
 - TODO Sparse goal
-       transpose, mult, plus, minus, solve triangle, finally solve LU or QR
+       mult, plus, minus, solve triangle, finally solve LU or QR
 - TODO compare CC CR sparse formats and decide which one to focus on
        implement mult and solve in both
        the difference might be sparse to dense ops

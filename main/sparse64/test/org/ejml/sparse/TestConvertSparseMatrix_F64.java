@@ -18,12 +18,15 @@
 
 package org.ejml.sparse;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.sparse.cmpcol.MatrixFeatures_O64;
+import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.ejml.sparse.triplet.MatrixFeatures_T64;
 import org.ejml.sparse.triplet.RandomMatrices_T64;
 import org.junit.Test;
@@ -80,6 +83,34 @@ public class TestConvertSparseMatrix_F64 {
     }
 
     @Test
+    public void SMatrixCC_DMatrixRow() {
+        SMatrixCC_F64 a = RandomMatrices_O64.uniform(5,6,10,-1,1,rand);
+
+        SMatrixCC_DMatrixRow(a,null);
+        SMatrixCC_DMatrixRow(a,new DMatrixRow_F64(1,1));
+    }
+
+    public void SMatrixCC_DMatrixRow(SMatrixCC_F64 a , DMatrixRow_F64 b ) {
+        b = ConvertSparseMatrix_F64.convert(a,b);
+
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+
+        int found = MatrixFeatures_R64.countNonZero(b);
+        assertEquals(a.length, found);
+        EjmlUnitTests.assertEquals(a, b);
+
+        // now try it the other direction
+        SMatrixCC_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixCC_F64)null);
+        assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
+        assertTrue(c.isRowOrderValid());
+
+        c = ConvertSparseMatrix_F64.convert(b,new SMatrixCC_F64(1,1,1));
+        assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
+        assertTrue(c.isRowOrderValid());
+    }
+
+    @Test
     public void SMatrixTriplet_SMatrixCC() {
         SMatrixTriplet_F64 a = RandomMatrices_T64.uniform(5,6,10,-1,1,rand);
 
@@ -88,7 +119,7 @@ public class TestConvertSparseMatrix_F64 {
     }
 
     public void SMatrixTriplet_SMatrixCC(SMatrixTriplet_F64 a , SMatrixCC_F64 b ) {
-        b = ConvertSparseMatrix_F64.convert(a,b, null);
+        b = ConvertSparseMatrix_F64.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
