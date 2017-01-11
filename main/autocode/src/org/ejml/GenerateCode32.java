@@ -179,7 +179,7 @@ public class GenerateCode32 {
         }
 
         // remove any previously generated code
-        for( String module : new String[]{"row","denseC"}) {
+        for( String module : new String[]{"dense","denseC"}) {
             recursiveDelete(new File(path,"main/"+module+"32/src"), true);
             recursiveDelete(new File(path,"main/"+module+"32/test"), true);
 
