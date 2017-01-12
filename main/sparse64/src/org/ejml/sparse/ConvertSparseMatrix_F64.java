@@ -99,8 +99,8 @@ public class ConvertSparseMatrix_F64 {
             int idx1 = src.col_idx[j];
 
             for (int i = idx0; i < idx1; i++) {
-                int row = src.row_idx[i];
-                double val = src.data[i];
+                int row = src.nz_rows[i];
+                double val = src.nz_values[i];
 
                 dst.unsafe_set(row,j-1, val);
             }
@@ -133,8 +133,8 @@ public class ConvertSparseMatrix_F64 {
                 if( value == 0 )
                     continue;
 
-                dst.row_idx[dst.length] = row;
-                dst.data[dst.length] = value;
+                dst.nz_rows[dst.length] = row;
+                dst.nz_values[dst.length] = value;
                 dst.length += 1;
             }
             dst.col_idx[col+1] = dst.length;
@@ -180,15 +180,12 @@ public class ConvertSparseMatrix_F64 {
             SMatrixTriplet_F64.Element e = src.data[i];
 
             int index = hist[e.col]++;
-            dst.row_idx[index] = e.row;
-            dst.data[index] = e.value;
+            dst.nz_rows[index] = e.row;
+            dst.nz_values[index] = e.value;
         }
         dst.length = src.length;
 
-        sorter.sort(dst.col_idx,dst.numCols+1,dst.row_idx,dst.data);
-
-        if( !dst.isRowOrderValid() )
-            throw new RuntimeException("Crap");
+        sorter.sort(dst.col_idx,dst.numCols+1,dst.nz_rows,dst.nz_values);
 
         return dst;
     }
@@ -208,8 +205,8 @@ public class ConvertSparseMatrix_F64 {
             int i1 = src.col_idx[col+1];
 
             for (int i = i0; i < i1; i++) {
-                int row = src.row_idx[i];
-                dst.addItem(row,col, src.data[i]);
+                int row = src.nz_rows[i];
+                dst.addItem(row,col, src.nz_values[i]);
             }
             i0 = i1;
         }

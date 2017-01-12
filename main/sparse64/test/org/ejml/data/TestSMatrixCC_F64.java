@@ -58,7 +58,7 @@ public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
         assertTrue(a.isRowOrderValid());
 
         // test negative case second
-        a.row_idx[1] = 3;
+        a.nz_rows[1] = 3;
         assertFalse(a.isRowOrderValid());
     }
 
@@ -69,13 +69,13 @@ public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
         a.reshape(1,2,3);
         assertEquals(1,a.numRows);
         assertEquals(2,a.numCols);
-        assertEquals(4,a.data.length);
+        assertEquals(4,a.nz_values.length);
         assertEquals(3,a.length);
 
         a.reshape(4,1,10);
         assertEquals(4,a.numRows);
         assertEquals(1,a.numCols);
-        assertEquals(4,a.data.length);
+        assertEquals(4,a.nz_values.length);
         assertEquals(4,a.length);
     }
 }

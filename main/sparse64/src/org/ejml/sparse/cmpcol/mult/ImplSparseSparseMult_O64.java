@@ -57,8 +57,8 @@ public class ImplSparseSparseMult_O64 {
 
             // C(:,j) = sum_k A(:,k)*B(k,j)
             for (int bi = idx0; bi < idx1; bi++) {
-                int rowB = B.row_idx[bi];
-                double valB = B.data[bi];  // B(k,j)  k=rowB j=colB
+                int rowB = B.nz_rows[bi];
+                double valB = B.nz_values[bi];  // B(k,j)  k=rowB j=colB
 
                 multAddColA(A,rowB,valB,C,colB,x,w);
             }
@@ -68,7 +68,7 @@ public class ImplSparseSparseMult_O64 {
             int idxC1 = C.col_idx[colB+1];
 
             for (int i = idxC0; i < idxC1; i++) {
-                C.data[i] = x[C.row_idx[i]];
+                C.nz_values[i] = x[C.nz_rows[i]];
             }
 
             idx0 = idx1;
@@ -88,35 +88,20 @@ public class ImplSparseSparseMult_O64 {
         int idxA1 = A.col_idx[colA+1];
 
         for (int j = idxA0; j < idxA1; j++) {
-            int row = A.row_idx[j];
+            int row = A.nz_rows[j];
 
             if( w[row] < mark ) {
-                if( C.length >= C.row_idx.length ) {
+                if( C.length >= C.nz_rows.length ) {
                     C.growMaxLength(C.length*2+1,true);
                 }
 
                 w[row] = mark;
-                C.row_idx[C.length] = row;
+                C.nz_rows[C.length] = row;
                 C.col_idx[mark] = ++C.length;
-                x[row] = A.data[j]*alpha;
+                x[row] = A.nz_values[j]*alpha;
             } else {
-                x[row] += A.data[j]*alpha;
+                x[row] += A.nz_values[j]*alpha;
             }
-        }
-    }
-
-    /**
-     * Performs the performing operation x = x + A(:,i)*alpha
-     */
-    public static void multAddColA_noassign( SMatrixCC_F64 A , int colA ,
-                                             double alpha,
-                                             double x[] ) {
-        int idxA0 = A.col_idx[colA];
-        int idxA1 = A.col_idx[colA+1];
-
-        for (int j = idxA0; j < idxA1; j++) {
-            int row = A.row_idx[j];
-            x[row] += A.data[j]*alpha;
         }
     }
 }

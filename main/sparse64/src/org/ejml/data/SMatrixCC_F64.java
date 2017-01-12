@@ -37,12 +37,19 @@ public class SMatrixCC_F64 implements Matrix_F64 {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */
-    public double data[];
+    public double nz_values[];
     /**
-     * Length of data. Number of non-zero elements in the matrix
+     * Length of data. Number of non-zero values in the matrix
      */
     public int length;
-    public int row_idx[]; // indexes are in chronological order
+    /**
+     * Specifies which row a specific non-zero value corresponds to.
+     */
+    public int nz_rows[];
+    /**
+     * Stores the non-zero values belong to which column.  Column 'i' corresponds to indexes col_idx[i] to
+     * col_idx[i+1]-1, inclusive.
+     */
     public int col_idx[];
 
     public int numRows;
@@ -55,9 +62,9 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         this.numCols = numCols;
         this.length = length;
 
-        data = new double[ length ];
+        nz_values = new double[ length ];
         col_idx = new int[ numCols+1 ];
-        row_idx = new int[ length ];
+        nz_rows = new int[ length ];
     }
 
     public SMatrixCC_F64(SMatrixCC_F64 original ) {
@@ -91,8 +98,8 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         SMatrixCC_F64 o = (SMatrixCC_F64)original;
         reshape(o.numRows, o.numCols, o.length);
 
-        System.arraycopy(o.data, 0, data, 0, length);
-        System.arraycopy(o.row_idx, 0, row_idx, 0, length);
+        System.arraycopy(o.nz_values, 0, nz_values, 0, length);
+        System.arraycopy(o.nz_rows, 0, nz_rows, 0, length);
         System.arraycopy(o.col_idx, 0, col_idx, 0, numCols);
     }
 
@@ -123,8 +130,8 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         int col1 = col_idx[col+1];
 
         for (int i = col0; i < col1; i++) {
-            if( row_idx[i] == row ) {
-                return data[i];
+            if( nz_rows[i] == row ) {
+                return nz_values[i];
             }
         }
 
@@ -145,8 +152,8 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         int idx1 = col_idx[col+1];
 
         for (int i = idx0; i < idx1; i++) {
-            if( row_idx[i] == row ) {
-                data[i] = val;
+            if( nz_rows[i] == row ) {
+                nz_values[i] = val;
                 return;
             }
         }
@@ -163,7 +170,7 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         this.numRows = numRows;
         this.numCols = numCols;
         growMaxLength( length , false);
-        this.length = Math.min(data.length,length);
+        this.length = Math.min(nz_values.length,length);
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
@@ -179,17 +186,17 @@ public class SMatrixCC_F64 implements Matrix_F64 {
     public void growMaxLength( int length , boolean preserveValue ) {
         // don't increase the size beyound the max possible matrix size
         length = Math.min(numRows*numCols, length);
-        if( length > data.length ) {
+        if( length > nz_values.length ) {
             double[] data = new double[ length ];
             int[] row_idx = new int[ length ];
 
             if( preserveValue ) {
-                System.arraycopy(this.data, 0, data, 0, this.length);
-                System.arraycopy(this.row_idx, 0, row_idx, 0, this.length);
+                System.arraycopy(this.nz_values, 0, data, 0, this.length);
+                System.arraycopy(this.nz_rows, 0, row_idx, 0, this.length);
             }
 
-            this.data = data;
-            this.row_idx = row_idx;
+            this.nz_values = data;
+            this.nz_rows = row_idx;
         }
     }
 
@@ -203,7 +210,7 @@ public class SMatrixCC_F64 implements Matrix_F64 {
             int idx1 = col_idx[j+1];
 
             for (int i = idx0+1; i < idx1; i++) {
-                if( row_idx[i-1] >= row_idx[i])
+                if( nz_rows[i-1] >= nz_rows[i])
                     return false;
             }
         }

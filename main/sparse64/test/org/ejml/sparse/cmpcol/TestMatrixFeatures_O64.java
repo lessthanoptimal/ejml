@@ -47,14 +47,14 @@ public class TestMatrixFeatures_O64 {
         assertFalse(MatrixFeatures_O64.isEquals(a,b));
         b.numRows -= 1; b.numCols += 1;
         assertFalse(MatrixFeatures_O64.isEquals(a,b));
-        b.numCols -= 1; b.row_idx[1]++;
+        b.numCols -= 1; b.nz_rows[1]++;
         assertFalse(MatrixFeatures_O64.isEquals(a,b));
-        b.row_idx[1]--; b.col_idx[1]++;
+        b.nz_rows[1]--; b.col_idx[1]++;
         assertFalse(MatrixFeatures_O64.isEquals(a,b));
         b.col_idx[1]--;
 
         // make it no longer exactly equal
-        b.data[0] += UtilEjml.TEST_F64*0.1;
+        b.nz_values[0] += UtilEjml.TEST_F64*0.1;
         assertFalse(MatrixFeatures_O64.isEquals(a,b));
     }
 
@@ -74,18 +74,18 @@ public class TestMatrixFeatures_O64 {
         assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
         b.numRows -= 1; b.numCols += 1;
         assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
-        b.numCols -= 1; b.row_idx[1]++;
+        b.numCols -= 1; b.nz_rows[1]++;
         assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
-        b.row_idx[1]--; b.col_idx[1]++;
+        b.nz_rows[1]--; b.col_idx[1]++;
         assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
         b.col_idx[1]--;;
 
         // make it no longer exactly equal, but within tolerance
-        b.data[0] += UtilEjml.TEST_F64*0.1;
+        b.nz_values[0] += UtilEjml.TEST_F64*0.1;
         assertTrue(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
 
         // outside of tolerance
-        b.data[0] += UtilEjml.TEST_F64*10;
+        b.nz_values[0] += UtilEjml.TEST_F64*10;
         assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
     }
 }

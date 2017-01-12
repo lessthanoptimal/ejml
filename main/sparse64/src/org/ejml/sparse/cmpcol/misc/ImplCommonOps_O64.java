@@ -47,7 +47,7 @@ public class ImplCommonOps_O64 {
         for (int j = 1; j <= A.numCols; j++) {
             int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
-                work[A.row_idx[i]]++;
+                work[A.nz_rows[i]]++;
             }
             idx0 = idx1;
         }
@@ -61,10 +61,10 @@ public class ImplCommonOps_O64 {
             int col = j-1;
             int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
-                int row = A.row_idx[i];
+                int row = A.nz_rows[i];
                 int index = work[row]++;
-                C.row_idx[index] = col;
-                C.data[index] = A.data[i];
+                C.nz_rows[index] = col;
+                C.nz_values[index] = A.nz_values[i];
             }
             idx0 = idx1;
         }
@@ -114,8 +114,8 @@ public class ImplCommonOps_O64 {
             while( indexA < idxA1 || indexB < idxB1 ) {
                 int row;
                 if( indexA < idxA1 && indexB < idxB1 ) {
-                    int rowA = A.row_idx[indexA];
-                    int rowB = B.row_idx[indexB];
+                    int rowA = A.nz_rows[indexA];
+                    int rowB = B.nz_rows[indexB];
 
                     if( rowA < rowB ) {
                         row = rowA; indexA++;
@@ -125,16 +125,16 @@ public class ImplCommonOps_O64 {
                         row = rowA; indexA++; indexB++;
                     }
                 } else if( indexA < idxA1 ) {
-                    row = A.row_idx[indexA++];
+                    row = A.nz_rows[indexA++];
                 } else {
-                    row = B.row_idx[indexB++];
+                    row = B.nz_rows[indexB++];
                 }
 
-                if( C.length >= C.row_idx.length ) {
+                if( C.length >= C.nz_rows.length ) {
                     C.growMaxLength(C.length*2+1,true);
                 }
 
-                C.row_idx[C.length] = row;
+                C.nz_rows[C.length] = row;
                 C.col_idx[col+1] = ++C.length;
                 x[row] = 0;
             }
@@ -142,14 +142,14 @@ public class ImplCommonOps_O64 {
 
             // Add A
             for (int j = idxA0; j < idxA1; j++) {
-                int row = A.row_idx[j];
-                x[row] += A.data[j]*alpha;
+                int row = A.nz_rows[j];
+                x[row] += A.nz_values[j]*alpha;
             }
 
             // Add B
             for (int j = idxB0; j < idxB1; j++) {
-                int row = B.row_idx[j];
-                x[row] += B.data[j]*beta;
+                int row = B.nz_rows[j];
+                x[row] += B.nz_values[j]*beta;
             }
 
             // take the values in the dense vector 'x' and put them into 'C'
@@ -157,7 +157,7 @@ public class ImplCommonOps_O64 {
             int idxC1 = C.col_idx[col+1];
 
             for (int i = idxC0; i < idxC1; i++) {
-                C.data[i] = x[C.row_idx[i]];
+                C.nz_values[i] = x[C.nz_rows[i]];
             }
         }
     }

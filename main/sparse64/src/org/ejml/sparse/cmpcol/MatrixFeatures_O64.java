@@ -30,7 +30,7 @@ public class MatrixFeatures_O64 {
             return false;
 
         for (int i = 0; i < a.length; i++) {
-            if( a.data[i] != b.data[i] || a.row_idx[i] != b.row_idx[i])
+            if( a.nz_values[i] != b.nz_values[i] || a.nz_rows[i] != b.nz_rows[i])
                 return false;
         }
         return true;
@@ -41,7 +41,7 @@ public class MatrixFeatures_O64 {
             return false;
 
         for (int i = 0; i < a.length; i++) {
-            if( Math.abs(a.data[i]-b.data[i]) > tol )
+            if( Math.abs(a.nz_values[i]-b.nz_values[i]) > tol )
                 return false;
         }
         return true;
@@ -54,7 +54,7 @@ public class MatrixFeatures_O64 {
                     return false;
             }
             for (int i = 0; i < a.length; i++) {
-                if( a.row_idx[i] != b.row_idx[i] )
+                if( a.nz_rows[i] != b.nz_rows[i] )
                     return false;
             }
             return true;
