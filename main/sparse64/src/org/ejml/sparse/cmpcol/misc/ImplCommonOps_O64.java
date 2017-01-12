@@ -19,9 +19,12 @@
 package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.data.SMatrixCC_F64;
+import org.ejml.sparse.SortCoupledArray_F64;
 import org.ejml.sparse.cmpcol.CommonOps_O64;
 
 import java.util.Arrays;
+
+import static org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64.multAddColA;
 
 /**
  * Implementation class.  Not recommended for direct use.  Instead use {@link CommonOps_O64}
@@ -39,12 +42,7 @@ public class ImplCommonOps_O64 {
      * @param work Work space.  null or an array the size of the rows in 'a'
      */
     public static void transpose(SMatrixCC_F64 A , SMatrixCC_F64 C , int work[] ) {
-        // make sure enough memory has been declared
-        if( work == null )
-            work = new int[ A.numRows ];
-        else
-            Arrays.fill(work,0,A.numRows,0);
-
+        work = checkDeclareRows(A, work, true);
         C.length = A.length;
 
         // compute the histogram for each row in 'a'
@@ -90,8 +88,65 @@ public class ImplCommonOps_O64 {
         System.arraycopy(A.col_idx,0,histogram,0,A.numCols);
     }
 
-    public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C )
+    /**
+     * Performs matrix addition:<br>
+     * C = &alpha;A + &beta;B
+     *
+     * @param alpha scalar value multiplied against A
+     * @param A Matrix
+     * @param beta scalar value multiplied against B
+     * @param B Matrix
+     * @param C Output matrix.
+     * @param w (Optional) Work space.  null or as long as A.rows.
+     * @param x (Optional) Work space.  null or as long as A.rows.
+     * @param sorter (Optional) used to sort
+     */
+    public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C ,
+                           int w[], double x[] , SortCoupledArray_F64 sorter )
     {
+        x = checkDeclareRows(A, x);
+        w = checkDeclareRows(A, w, true);
+        if( sorter == null )
+            sorter = new SortCoupledArray_F64();
 
+        C.length = 0;
+
+        for (int col = 0; col < A.numCols; col++) {
+            C.col_idx[col] = C.length;
+
+            // Add A
+            multAddColA(A,col,alpha,C,col,x,w);
+
+            // Add B
+            multAddColA(B,col,beta,C,col,x,w);
+
+            // take the values in the dense vector 'x' and put them into 'C'
+            int idxC0 = C.col_idx[col];
+            int idxC1 = C.col_idx[col+1];
+
+            for (int i = idxC0; i < idxC1; i++) {
+                C.data[i] = x[C.row_idx[i]];
+            }
+        }
+
+        sorter.sort(C.col_idx,C.numCols+1,C.row_idx,C.data);
+    }
+
+    public static int[] checkDeclareRows(SMatrixCC_F64 A, int[] w, boolean fillZeros) {
+        if( w == null )
+            w = new int[A.numRows];
+        else if( w.length < A.numRows )
+            throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
+        else if( fillZeros )
+            Arrays.fill(w,0,A.numRows,0);
+        return w;
+    }
+
+    public static double[] checkDeclareRows(SMatrixCC_F64 A, double[] x) {
+        if( x == null )
+            x = new double[A.numRows];
+        else if( x.length < A.numRows )
+            throw new IllegalArgumentException("x needs to at least be as long as A.numRows");
+        return x;
     }
 }

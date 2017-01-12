@@ -56,4 +56,33 @@ public class TestImplCommonOps_O64 {
         }
         assertTrue(b.isRowOrderValid());
     }
+
+    @Test
+    public void add() {
+        double alpha = 1.5;
+        double beta = 2.3;
+
+        for( int numRows : new int[]{2,4,6,10}) {
+            for( int numCols : new int[]{2,4,6,10}) {
+                SMatrixCC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,7, -1, 1, rand);
+                SMatrixCC_F64 b = RandomMatrices_O64.uniform(numRows,numCols,8, -1, 1, rand);
+                SMatrixCC_F64 c = RandomMatrices_O64.uniform(numRows,numCols,3, -1, 1, rand);
+
+                ImplCommonOps_O64.add(alpha,a,beta,b,c,null,null, null);
+
+                for (int row = 0; row < numRows; row++) {
+                    for (int col = 0; col < numCols; col++) {
+                        double valA = a.get(row,col);
+                        double valB = b.get(row,col);
+                        double found = alpha*valA + beta*valB;
+
+                        double expected = c.get(row,col);
+
+                        assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
+                    }
+                }
+                assertTrue(c.isRowOrderValid());
+            }
+        }
+    }
 }

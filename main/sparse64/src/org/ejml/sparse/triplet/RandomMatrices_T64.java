@@ -46,6 +46,8 @@ public class RandomMatrices_T64 {
             selected[i] = i;
         }
 
+        length = Math.min(N,length);
+
         for (int i = 0; i < length-1; i++) {
             int s = rand.nextInt(N - i -1)+i+1;
             int tmp = selected[s];

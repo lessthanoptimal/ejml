@@ -106,6 +106,66 @@ public class TestCommonOps_O64 {
         }
     }
 
+    @Test
+    public void add_shapes() {
+        check_add(
+                uniform(5, 6, 5, rand),
+                uniform(5, 6, 5, rand),
+                uniform(5, 6, 5, rand), false);
+        check_add(
+                uniform(5, 6, 5*6, rand),
+                uniform(5, 6, 5*6, rand),
+                uniform(5, 6, 5*6, rand), false);
+        check_add(
+                uniform(5, 6, 0, rand),
+                uniform(5, 6, 0, rand),
+                uniform(5, 6, 0, rand), false);
+        check_add(
+                uniform(5, 6, 20, rand),
+                uniform(5, 6, 16, rand),
+                uniform(5, 6, 0, rand), false);
+        check_add(
+                uniform(5, 6, 5, rand),
+                uniform(5, 5, 5, rand),
+                uniform(5, 6, 5, rand), true);
+        check_add(
+                uniform(5, 6, 5, rand),
+                uniform(5, 6, 5, rand),
+                uniform(5, 5, 5, rand), true);
+        check_add(
+                uniform(5, 6, 5, rand),
+                uniform(4, 6, 5, rand),
+                uniform(5, 6, 5, rand), true);
+        check_add(
+                uniform(5, 6, 5, rand),
+                uniform(5, 6, 5, rand),
+                uniform(4, 6, 5, rand), true);
+
+    }
+
+    private void check_add(SMatrixCC_F64 A , SMatrixCC_F64 B, SMatrixCC_F64 C, boolean exception ) {
+        double alpha = 1.5;
+        double beta = -0.6;
+        try {
+            CommonOps_O64.add(alpha,A,beta,B,C,null,null,null);
+
+            if( exception )
+                fail("exception expected");
+            DMatrixRow_F64 denseA = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
+            DMatrixRow_F64 denseB = ConvertSparseMatrix_F64.convert(B,(DMatrixRow_F64)null);
+            DMatrixRow_F64 expected = new DMatrixRow_F64(A.numRows,B.numCols);
+
+            CommonOps_R64.add(alpha,denseA,beta,denseB,expected);
+
+            DMatrixRow_F64 found = ConvertSparseMatrix_F64.convert(C,(DMatrixRow_F64)null);
+            assertTrue(MatrixFeatures_R64.isIdentical(expected,found, UtilEjml.TEST_F64));
+
+        } catch( RuntimeException ignore){
+            if( !exception )
+                fail("no exception expected");
+        }
+    }
+
     public static void checkEquals(SMatrixCC_F64 A , DMatrixRow_F64 B , double tol ) {
         DMatrixRow_F64 denseA = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
 

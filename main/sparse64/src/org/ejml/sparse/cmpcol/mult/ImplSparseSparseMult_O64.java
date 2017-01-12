@@ -20,7 +20,7 @@ package org.ejml.sparse.cmpcol.mult;
 
 import org.ejml.data.SMatrixCC_F64;
 
-import java.util.Arrays;
+import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclareRows;
 
 /**
  * @author Peter Abeles
@@ -39,17 +39,8 @@ public class ImplSparseSparseMult_O64 {
     public static void mult(SMatrixCC_F64 A, SMatrixCC_F64 B, SMatrixCC_F64 C,
                             int w[], double x[])
     {
-        if( x == null )
-            x = new double[A.numRows];
-        else if( x.length < A.numRows )
-            throw new IllegalArgumentException("x needs to at least be as long as A.numRows");
-
-        if( w == null )
-            w = new int[A.numRows];
-        else if( w.length < A.numRows )
-            throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
-        else
-            Arrays.fill(w,0,A.numRows,0);
+        x = checkDeclareRows(A, x);
+        w = checkDeclareRows(A, w, true);
 
         C.length = 0;
 
@@ -85,10 +76,10 @@ public class ImplSparseSparseMult_O64 {
     }
 
     /**
-     * Performs the performing operation x = x + A(:,i)*beta
+     * Performs the performing operation x = x + A(:,i)*alpha
      */
-    private static void multAddColA( SMatrixCC_F64 A , int colA ,
-                                     double beta,
+    public static void multAddColA( SMatrixCC_F64 A , int colA ,
+                                     double alpha,
                                      SMatrixCC_F64 C, int colC,
                                      double x[] , int w[] ) {
         int mark = colC+1;
@@ -107,9 +98,9 @@ public class ImplSparseSparseMult_O64 {
                 w[row] = mark;
                 C.row_idx[C.length] = row;
                 C.col_idx[mark] = ++C.length;
-                x[row] = A.data[j]*beta;
+                x[row] = A.data[j]*alpha;
             } else {
-                x[row] += A.data[j]*beta;
+                x[row] += A.data[j]*alpha;
             }
         }
     }
