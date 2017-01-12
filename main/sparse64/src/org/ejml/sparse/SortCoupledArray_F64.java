@@ -16,12 +16,14 @@
  * limitations under the License.
  */
 
-package org.ejml.sort;
+package org.ejml.sparse;
+
+import org.ejml.ops.QuickSort_S32;
 
 /**
  * @author Peter Abeles
  */
-public class SortCoupledArray {
+public class SortCoupledArray_F64 {
 
     int tmp[] = new int[0];
 

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.sort;
+package org.ejml.ops;
 
 /**
  * An implementation of the quick sort algorithm from Numerical Recipes Third Edition

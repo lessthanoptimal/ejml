@@ -96,7 +96,15 @@ public class SMatrixCC_F64 implements Matrix_F64 {
 
     @Override
     public void print() {
-
+        System.out.println(getClass().getSimpleName()+" "+numRows+" x "+numCols);
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                System.out.printf("%6.3f",get(row,col));
+                if( col != numCols-1 )
+                    System.out.print(" ");
+            }
+            System.out.println();
+        }
     }
 
     @Override
@@ -150,38 +158,36 @@ public class SMatrixCC_F64 implements Matrix_F64 {
     }
 
     public void reshape( int numRows , int numCols , int length ) {
-        growMaxLength( length );
+        this.numRows = numRows;
+        this.numCols = numCols;
+        growMaxLength( length , false);
+        this.length = Math.min(data.length,length);
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
         }
-        this.numRows = numRows;
-        this.numCols = numCols;
-        this.length = length;
     }
 
     /**
      * Increases the maximum size of the data array so that it can store sparse data up to 'length'.
+     *
      * @param length Desired maximum length of sparse data
+     * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
      */
-    public void growMaxLength( int length ) {
-        if( length > data.length ) {
-            this.data = new double[ length ];
-            this.row_idx = new int[ length ];
-        }
-    }
-
-    /**
-     * Increases the maximum length of data arrays and copies the old data
-     * @param length New maximum length
-     */
-    public void extendMaxLength( int length ) {
+    public void growMaxLength( int length , boolean preserveValue ) {
+        // don't increase the size beyound the max possible matrix size
+        length = Math.min(numRows*numCols, length);
         if( length > data.length ) {
             double[] data = new double[ length ];
             int[] row_idx = new int[ length ];
 
-            System.arraycopy(this.data,0,data,0,this.length);
-            System.arraycopy(this.row_idx,0,row_idx,0,this.length);
+            if( preserveValue ) {
+                System.arraycopy(this.data, 0, data, 0, this.length);
+                System.arraycopy(this.row_idx, 0, row_idx, 0, this.length);
+            }
+
+            this.data = data;
+            this.row_idx = row_idx;
         }
     }
 

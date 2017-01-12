@@ -48,4 +48,8 @@ public class RandomMatrices_O64 {
         SMatrixTriplet_F64 triplet = RandomMatrices_T64.uniform(numRows, numCols, length, min, max, rand);
         return ConvertSparseMatrix_F64.convert(triplet, (SMatrixCC_F64)null, null, null);
     }
+
+    public static SMatrixCC_F64 uniform( int numRows , int numCols , int length , Random rand ) {
+        return uniform(numRows, numCols, length, -1,1,rand);
+    }
 }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.sort;
+package org.ejml.ops;
 
 import org.junit.Test;
 

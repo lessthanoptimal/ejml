@@ -23,7 +23,6 @@ import org.ejml.data.Matrix_F64;
 import org.ejml.data.SMatrixCC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
-import org.ejml.sort.SortCoupledArray;
 
 import java.util.Arrays;
 
@@ -152,14 +151,14 @@ public class ConvertSparseMatrix_F64 {
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
     public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst , int hist[] ,
-                                        SortCoupledArray sorter ) {
+                                        SortCoupledArray_F64 sorter ) {
         if( dst == null )
             dst = new SMatrixCC_F64(src.numRows, src.numCols , src.length);
         else
             dst.reshape(src.numRows, src.numCols, src.length);
 
         if( sorter == null )
-            sorter = new SortCoupledArray();
+            sorter = new SortCoupledArray_F64();
 
         if( hist == null )
             hist = new int[ src.numCols ];

@@ -18,23 +18,14 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCC_F64;
 import org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64;
+import org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64;
 
 /**
  * @author Peter Abeles
  */
 public class CommonOps_O64 {
-
-//    public static void orderRowIndexes( SMatrixCC_F64 a ) {
-//        int idx0 = a.col_idx[0];
-//        for (int j = 1; j <= a.numCols; j++) {
-//            int idx1 = a.col_idx[j];
-//
-//            Arrays.sort();
-//        }
-//    }
 
     /**
      * Perform matrix transpose
@@ -47,13 +38,27 @@ public class CommonOps_O64 {
         if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
 
-        a_t.growMaxLength(a.length);
+        a_t.growMaxLength(a.length, false);
         a_t.length = a.length;
 
         ImplCommonOps_O64.transpose(a, a_t, work);
     }
 
-    public static void mult(SMatrixCC_F64 a , DMatrixRow_F64 b , DMatrixRow_F64 c ) {
+    /**
+     * Performs matrix multiplication.  C = A*B
+     *
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param workA (Optional) Storage for internal work.  null or array of length A.numRows
+     * @param workB (Optional) Storage for internal work.  null or array of length A.numRows
+     */
+    public static void mult(SMatrixCC_F64 A , SMatrixCC_F64 B , SMatrixCC_F64 C ,
+                            int workA[], double workB[] )
+    {
+        if( A.numRows != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
 
+        ImplSparseSparseMult_O64.mult(A,B,C, workA, workB);
     }
 }

@@ -46,13 +46,11 @@ public class RandomMatrices_T64 {
             selected[i] = i;
         }
 
-        // select elements to NOT be in the output sparse matrix and move to the end of the list
-        int M = N-length;
-        for (int i = 0; i < M; i++) {
-            int s = rand.nextInt(N-i);
+        for (int i = 0; i < length-1; i++) {
+            int s = rand.nextInt(N - i -1)+i+1;
             int tmp = selected[s];
-            selected[s] = selected[N-i-1];
-            selected[N-i-1] = tmp;
+            selected[s] = selected[i];
+            selected[i] = tmp;
         }
 
         // Create a sparse matrix

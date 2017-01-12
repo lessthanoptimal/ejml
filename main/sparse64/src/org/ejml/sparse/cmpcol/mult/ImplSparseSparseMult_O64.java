@@ -27,33 +27,51 @@ import java.util.Arrays;
  */
 public class ImplSparseSparseMult_O64 {
 
-    public static void mult( SMatrixCC_F64 A , SMatrixCC_F64 B , SMatrixCC_F64 C , double x[] )
+    /**
+     * Performs matrix multiplication.  C = A*B
+     *
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param w (Optional) Storage for internal work.  null or array of length A.numRows
+     * @param x (Optional) Storage for internal work.  null or array of length A.numRows
+     */
+    public static void mult(SMatrixCC_F64 A, SMatrixCC_F64 B, SMatrixCC_F64 C,
+                            int w[], double x[])
     {
         if( x == null )
             x = new double[A.numRows];
         else if( x.length < A.numRows )
             throw new IllegalArgumentException("x needs to at least be as long as A.numRows");
 
+        if( w == null )
+            w = new int[A.numRows];
+        else if( w.length < A.numRows )
+            throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
+        else
+            Arrays.fill(w,0,A.numRows,0);
+
         C.length = 0;
 
-        // C(i,j) = sum_k A(i,k) * B(j,k)
+        // C(i,j) = sum_k A(i,k) * B(k,j)
         int idx0 = B.col_idx[0];
         for (int bj = 1; bj <= B.numCols; bj++) {
             int colB = bj-1;
             int idx1 = B.col_idx[bj];
+            if( idx0 == idx1 ) continue;
 
-            // C(:,j) = sum_k A(:,k)*B(j,k)
+            // C(:,j) = sum_k A(:,k)*B(k,j)
             Arrays.fill(x,0,A.numRows,0);
             for (int bi = idx0; bi < idx1; bi++) {
                 int rowB = B.row_idx[bi];
-                double valB = B.data[bi];  // B(j,k)  j=rowB k=colB
+                double valB = B.data[bi];  // B(k,j)  k=rowB j=colB
 
-                multAddColA(A,colB,valB,C,rowB,x);
+                multAddColA(A,rowB,valB,C,colB,x,w);
             }
 
             // take the values in the dense vector 'x' and put them into 'C'
             int idxC0 = C.col_idx[colB];
-            int idxC1 = C.col_idx[bj];
+            int idxC1 = C.col_idx[colB+1];
 
             for (int i = idxC0; i < idxC1; i++) {
                 C.data[i] = x[C.row_idx[i]];
@@ -63,22 +81,30 @@ public class ImplSparseSparseMult_O64 {
         }
     }
 
+    /**
+     * Performs the performing operation x = x + A(:,i)*beta
+     */
     public static void multAddColA( SMatrixCC_F64 A , int colA ,
                                     double beta,
                                     SMatrixCC_F64 C, int colC,
-                                    double x[] ) {
+                                    double x[] , int w[] ) {
+        int mark = colC+1;
+
         int idxA0 = A.col_idx[colA];
         int idxA1 = A.col_idx[colA+1];
 
-        int idxC0 = C.col_idx[colC];
-
         for (int j = idxA0; j < idxA1; j++) {
-            int jc = idxC0 + j-idxA0;
             int row = A.row_idx[j];
 
-            if( jc >= C.length ) {
-                C.length = jc+1;
-                C.row_idx[jc] = row;
+            if( w[row] < mark ) {
+                if( C.row_idx.length >= C.length ) {
+                    C.growMaxLength(Math.min(C.numRows*C.numCols,C.length*2+1),true);
+                }
+
+                w[row] = mark;
+                C.col_idx[mark] = C.length+1;
+                C.row_idx[C.length] = row;
+                C.length++;
             }
 
             x[row] += A.data[j]*beta;

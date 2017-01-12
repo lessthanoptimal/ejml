@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.sort;
+package org.ejml.sparse;
 
 import org.ejml.UtilEjml;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public class TestSortCoupledArray {
+public class TestSortCoupledArray_F64 {
 
     Random rand = new Random(234);
 
@@ -53,7 +53,7 @@ public class TestSortCoupledArray {
         int origA[] = dataA.clone();
         double origB[] = dataB.clone();
 
-        SortCoupledArray sorter = new SortCoupledArray();
+        SortCoupledArray_F64 sorter = new SortCoupledArray_F64();
 
         sorter.sort(bins,5,dataA,dataB);
 

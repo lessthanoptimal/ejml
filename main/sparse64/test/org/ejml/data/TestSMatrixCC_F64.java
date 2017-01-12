@@ -75,7 +75,7 @@ public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
         a.reshape(4,1,10);
         assertEquals(4,a.numRows);
         assertEquals(1,a.numCols);
-        assertEquals(10,a.data.length);
-        assertEquals(10,a.length);
+        assertEquals(4,a.data.length);
+        assertEquals(4,a.length);
     }
 }
