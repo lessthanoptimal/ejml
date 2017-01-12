@@ -78,7 +78,6 @@ public class ImplSparseSparseMult_O64 {
 
             for (int i = idxC0; i < idxC1; i++) {
                 C.data[i] = x[C.row_idx[i]];
-                x[C.row_idx[i]] = 0;
             }
 
             idx0 = idx1;
@@ -88,10 +87,10 @@ public class ImplSparseSparseMult_O64 {
     /**
      * Performs the performing operation x = x + A(:,i)*beta
      */
-    public static void multAddColA( SMatrixCC_F64 A , int colA ,
-                                    double beta,
-                                    SMatrixCC_F64 C, int colC,
-                                    double x[] , int w[] ) {
+    private static void multAddColA( SMatrixCC_F64 A , int colA ,
+                                     double beta,
+                                     SMatrixCC_F64 C, int colC,
+                                     double x[] , int w[] ) {
         int mark = colC+1;
 
         int idxA0 = A.col_idx[colA];
@@ -108,9 +107,10 @@ public class ImplSparseSparseMult_O64 {
                 w[row] = mark;
                 C.row_idx[C.length] = row;
                 C.col_idx[mark] = ++C.length;
+                x[row] = A.data[j]*beta;
+            } else {
+                x[row] += A.data[j]*beta;
             }
-
-            x[row] += A.data[j]*beta;
         }
     }
 }

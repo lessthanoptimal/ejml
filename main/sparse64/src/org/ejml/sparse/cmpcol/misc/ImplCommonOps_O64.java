@@ -34,42 +34,42 @@ public class ImplCommonOps_O64 {
     /**
      * Performs a matrix transpose.
      *
-     * @param a Original matrix.  Not modified.
-     * @param b Storage for transposed 'a'.  Assumed to be of the correct shape and length.
+     * @param A Original matrix.  Not modified.
+     * @param C Storage for transposed 'a'.  Assumed to be of the correct shape and length.
      * @param work Work space.  null or an array the size of the rows in 'a'
      */
-    public static void transpose(SMatrixCC_F64 a , SMatrixCC_F64 b , int work[] ) {
+    public static void transpose(SMatrixCC_F64 A , SMatrixCC_F64 C , int work[] ) {
         // make sure enough memory has been declared
         if( work == null )
-            work = new int[ a.numRows ];
+            work = new int[ A.numRows ];
         else
-            Arrays.fill(work,0,a.numRows,0);
+            Arrays.fill(work,0,A.numRows,0);
 
-        b.length = a.length;
+        C.length = A.length;
 
         // compute the histogram for each row in 'a'
-        int idx0 = a.col_idx[0];
-        for (int j = 1; j <= a.numCols; j++) {
-            int idx1 = a.col_idx[j];
+        int idx0 = A.col_idx[0];
+        for (int j = 1; j <= A.numCols; j++) {
+            int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
-                work[a.row_idx[i]]++;
+                work[A.row_idx[i]]++;
             }
             idx0 = idx1;
         }
 
         // construct col_idx in the transposed matrix
-        colsum(b,work);
+        colsum(C,work);
 
         // fill in the row indexes
-        idx0 = a.col_idx[0];
-        for (int j = 1; j <= a.numCols; j++) {
+        idx0 = A.col_idx[0];
+        for (int j = 1; j <= A.numCols; j++) {
             int col = j-1;
-            int idx1 = a.col_idx[j];
+            int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
-                int row = a.row_idx[i];
+                int row = A.row_idx[i];
                 int index = work[row]++;
-                b.row_idx[index] = col;
-                b.data[index] = a.data[i];
+                C.row_idx[index] = col;
+                C.data[index] = A.data[i];
             }
             idx0 = idx1;
         }
@@ -78,15 +78,20 @@ public class ImplCommonOps_O64 {
     /**
      * Given the histogram of columns compute the col_idx for the matrix.  Then overwrite histogram with
      * those values.
-     * @param a A matrix
+     * @param A A matrix
      * @param histogram histogram of column values in the sparse matrix
      */
-    public static void colsum( SMatrixCC_F64 a, int histogram[] ) {
-        a.col_idx[0] = 0;
+    public static void colsum( SMatrixCC_F64 A, int histogram[] ) {
+        A.col_idx[0] = 0;
         int index = 0;
-        for (int i = 1; i <= a.numCols; i++) {
-            a.col_idx[i] = index += histogram[i-1];
+        for (int i = 1; i <= A.numCols; i++) {
+            A.col_idx[i] = index += histogram[i-1];
         }
-        System.arraycopy(a.col_idx,0,histogram,0,a.numCols);
+        System.arraycopy(A.col_idx,0,histogram,0,A.numCols);
+    }
+
+    public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C )
+    {
+
     }
 }
