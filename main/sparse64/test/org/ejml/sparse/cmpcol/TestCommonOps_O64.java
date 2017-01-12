@@ -147,7 +147,7 @@ public class TestCommonOps_O64 {
         double alpha = 1.5;
         double beta = -0.6;
         try {
-            CommonOps_O64.add(alpha,A,beta,B,C,null,null,null);
+            CommonOps_O64.add(alpha,A,beta,B,C,null);
 
             if( exception )
                 fail("exception expected");

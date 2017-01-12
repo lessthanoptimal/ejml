@@ -104,4 +104,19 @@ public class ImplSparseSparseMult_O64 {
             }
         }
     }
+
+    /**
+     * Performs the performing operation x = x + A(:,i)*alpha
+     */
+    public static void multAddColA_noassign( SMatrixCC_F64 A , int colA ,
+                                             double alpha,
+                                             double x[] ) {
+        int idxA0 = A.col_idx[colA];
+        int idxA1 = A.col_idx[colA+1];
+
+        for (int j = idxA0; j < idxA1; j++) {
+            int row = A.row_idx[j];
+            x[row] += A.data[j]*alpha;
+        }
+    }
 }

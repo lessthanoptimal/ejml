@@ -19,7 +19,6 @@
 package org.ejml.sparse.cmpcol;
 
 import org.ejml.data.SMatrixCC_F64;
-import org.ejml.sparse.SortCoupledArray_F64;
 import org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64;
 import org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64;
 
@@ -72,16 +71,14 @@ public class CommonOps_O64 {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param workA (Optional) Work space.  null or as long as A.rows.
-     * @param workB (Optional) Work space.  null or as long as A.rows.
-     * @param sorter (Optional) used to sort inner elements
+     * @param workC (Optional) Work space.  null or as long as A.rows.
      */
     public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C ,
-                           int workA[], double workB[] , SortCoupledArray_F64 sorter )
+                           double workC[] )
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplCommonOps_O64.add(alpha,A,beta,B,C, workA, workB,sorter);
+        ImplCommonOps_O64.add(alpha,A,beta,B,C, workC);
     }
 }

@@ -19,12 +19,9 @@
 package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.data.SMatrixCC_F64;
-import org.ejml.sparse.SortCoupledArray_F64;
 import org.ejml.sparse.cmpcol.CommonOps_O64;
 
 import java.util.Arrays;
-
-import static org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64.multAddColA;
 
 /**
  * Implementation class.  Not recommended for direct use.  Instead use {@link CommonOps_O64}
@@ -97,28 +94,63 @@ public class ImplCommonOps_O64 {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param w (Optional) Work space.  null or as long as A.rows.
      * @param x (Optional) Work space.  null or as long as A.rows.
-     * @param sorter (Optional) used to sort
      */
     public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C ,
-                           int w[], double x[] , SortCoupledArray_F64 sorter )
+                           double x[] )
     {
         x = checkDeclareRows(A, x);
-        w = checkDeclareRows(A, w, true);
-        if( sorter == null )
-            sorter = new SortCoupledArray_F64();
 
         C.length = 0;
 
         for (int col = 0; col < A.numCols; col++) {
             C.col_idx[col] = C.length;
 
+            // construct the table now so that the row order will not need to be sorted later on
+            int idxA0 = A.col_idx[col], idxA1 = A.col_idx[col+1];
+            int idxB0 = B.col_idx[col], idxB1 = B.col_idx[col+1];
+            int indexA = idxA0, indexB = idxB0;
+
+            while( indexA < idxA1 || indexB < idxB1 ) {
+                int row;
+                if( indexA < idxA1 && indexB < idxB1 ) {
+                    int rowA = A.row_idx[indexA];
+                    int rowB = B.row_idx[indexB];
+
+                    if( rowA < rowB ) {
+                        row = rowA; indexA++;
+                    } else if( rowA > rowB ) {
+                        row = rowB; indexB++;
+                    } else {
+                        row = rowA; indexA++; indexB++;
+                    }
+                } else if( indexA < idxA1 ) {
+                    row = A.row_idx[indexA++];
+                } else {
+                    row = B.row_idx[indexB++];
+                }
+
+                if( C.length >= C.row_idx.length ) {
+                    C.growMaxLength(C.length*2+1,true);
+                }
+
+                C.row_idx[C.length] = row;
+                C.col_idx[col+1] = ++C.length;
+                x[row] = 0;
+            }
+
+
             // Add A
-            multAddColA(A,col,alpha,C,col,x,w);
+            for (int j = idxA0; j < idxA1; j++) {
+                int row = A.row_idx[j];
+                x[row] += A.data[j]*alpha;
+            }
 
             // Add B
-            multAddColA(B,col,beta,C,col,x,w);
+            for (int j = idxB0; j < idxB1; j++) {
+                int row = B.row_idx[j];
+                x[row] += B.data[j]*beta;
+            }
 
             // take the values in the dense vector 'x' and put them into 'C'
             int idxC0 = C.col_idx[col];
@@ -128,8 +160,6 @@ public class ImplCommonOps_O64 {
                 C.data[i] = x[C.row_idx[i]];
             }
         }
-
-        sorter.sort(C.col_idx,C.numCols+1,C.row_idx,C.data);
     }
 
     public static int[] checkDeclareRows(SMatrixCC_F64 A, int[] w, boolean fillZeros) {

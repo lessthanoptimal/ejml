@@ -68,7 +68,7 @@ public class TestImplCommonOps_O64 {
                 SMatrixCC_F64 b = RandomMatrices_O64.uniform(numRows,numCols,8, -1, 1, rand);
                 SMatrixCC_F64 c = RandomMatrices_O64.uniform(numRows,numCols,3, -1, 1, rand);
 
-                ImplCommonOps_O64.add(alpha,a,beta,b,c,null,null, null);
+                ImplCommonOps_O64.add(alpha,a,beta,b,c,null);
 
                 for (int row = 0; row < numRows; row++) {
                     for (int col = 0; col < numCols; col++) {
