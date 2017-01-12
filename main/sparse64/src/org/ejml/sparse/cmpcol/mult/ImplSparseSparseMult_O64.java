@@ -58,10 +58,13 @@ public class ImplSparseSparseMult_O64 {
         for (int bj = 1; bj <= B.numCols; bj++) {
             int colB = bj-1;
             int idx1 = B.col_idx[bj];
-            if( idx0 == idx1 ) continue;
+            C.col_idx[bj] = C.length;
+
+            if( idx0 == idx1 ) {
+                continue;
+            }
 
             // C(:,j) = sum_k A(:,k)*B(k,j)
-            Arrays.fill(x,0,A.numRows,0);
             for (int bi = idx0; bi < idx1; bi++) {
                 int rowB = B.row_idx[bi];
                 double valB = B.data[bi];  // B(k,j)  k=rowB j=colB
@@ -75,6 +78,7 @@ public class ImplSparseSparseMult_O64 {
 
             for (int i = idxC0; i < idxC1; i++) {
                 C.data[i] = x[C.row_idx[i]];
+                x[C.row_idx[i]] = 0;
             }
 
             idx0 = idx1;
@@ -97,14 +101,13 @@ public class ImplSparseSparseMult_O64 {
             int row = A.row_idx[j];
 
             if( w[row] < mark ) {
-                if( C.row_idx.length >= C.length ) {
-                    C.growMaxLength(Math.min(C.numRows*C.numCols,C.length*2+1),true);
+                if( C.length >= C.row_idx.length ) {
+                    C.growMaxLength(C.length*2+1,true);
                 }
 
                 w[row] = mark;
-                C.col_idx[mark] = C.length+1;
                 C.row_idx[C.length] = row;
-                C.length++;
+                C.col_idx[mark] = ++C.length;
             }
 
             x[row] += A.data[j]*beta;

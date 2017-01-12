@@ -158,7 +158,7 @@ public class MatrixIO {
     }
 
     public static void print(PrintStream out, Matrix_F64 mat , int numChar , int precision ) {
-        String format = "%"+numChar+"."+precision+"f ";
+        String format = "%"+numChar+"."+precision+"f";
 
         print(out, mat,format);
     }

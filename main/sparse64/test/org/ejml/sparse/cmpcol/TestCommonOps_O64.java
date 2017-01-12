@@ -86,27 +86,16 @@ public class TestCommonOps_O64 {
     }
 
     private void check_mult(SMatrixCC_F64 A , SMatrixCC_F64 B, SMatrixCC_F64 C, boolean exception ) {
-        System.out.println("rows "+A.numRows);System.out.flush();
         try {
-            long time0 = System.currentTimeMillis();
             CommonOps_O64.mult(A,B,C,null,null);
-            long time1 = System.currentTimeMillis();
 
-            System.out.println("seconds A "+(time1-time0)/1000.);System.out.flush();
             if( exception )
                 fail("exception expected");
             DMatrixRow_F64 denseA = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
             DMatrixRow_F64 denseB = ConvertSparseMatrix_F64.convert(B,(DMatrixRow_F64)null);
             DMatrixRow_F64 expected = new DMatrixRow_F64(A.numRows,B.numCols);
 
-            long time2 = System.currentTimeMillis();
-            System.out.println("seconds B "+(time2-time1)/1000.);System.out.flush();
-
             CommonOps_R64.mult(denseA,denseB,expected);
-
-            long time3 = System.currentTimeMillis();
-            System.out.println("seconds C "+(time3-time2)/1000.);System.out.flush();
-
 
             DMatrixRow_F64 found = ConvertSparseMatrix_F64.convert(C,(DMatrixRow_F64)null);
             assertTrue(MatrixFeatures_R64.isIdentical(expected,found, UtilEjml.TEST_F64));

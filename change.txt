@@ -45,13 +45,14 @@ Date format: year/month/day
   * Basic operation up to ??? TODO
 - A script hs been provided that will perform most of the refactorings:
   convert_to_ejml31.py
+- Fixed a minor printing glitch for dense matrices.  There was an extra space
 
 - TODO Add support for matrix norms to Equations
 - TODO gradle modules to have ejml-* in their name
 - TODO rename main to source?
 
 - TODO Sparse goal
-       mult, plus, minus, solve triangle, finally solve LU or QR
+       plus, minus, solve triangle, finally solve LU or QR
 - TODO compare CC CR sparse formats and decide which one to focus on
        implement mult and solve in both
        the difference might be sparse to dense ops

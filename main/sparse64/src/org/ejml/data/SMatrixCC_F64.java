@@ -49,6 +49,8 @@ public class SMatrixCC_F64 implements Matrix_F64 {
     public int numCols;
 
     public SMatrixCC_F64(int numRows , int numCols , int length ) {
+        length = Math.min(numCols*numRows,length);
+
         this.numRows = numRows;
         this.numCols = numCols;
         this.length = length;

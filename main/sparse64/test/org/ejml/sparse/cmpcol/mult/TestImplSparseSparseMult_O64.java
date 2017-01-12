@@ -40,9 +40,9 @@ public class TestImplSparseSparseMult_O64 {
     @Test
     public void mult() {
         for (int i = 0; i < 10; i++) {
-//            mult(24,30,20);
-//            mult(15,15,20);
-//            mult(15,15,5);
+            mult(24,30,20);
+            mult(15,15,20);
+            mult(15,15,5);
             mult(4,5,0);
         }
     }
