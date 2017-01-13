@@ -18,12 +18,12 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixCC_F64;
-import org.ejml.data.SMatrixTriplet_F64;
-import org.ejml.sparse.ConvertSparseMatrix_F64;
-import org.ejml.sparse.triplet.RandomMatrices_T64;
+import org.ejml.data.SMatrixCmpC_F64;
 
+import java.util.Arrays;
 import java.util.Random;
+
+import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.colsum;
 
 /**
  * @author Peter Abeles
@@ -41,15 +41,52 @@ public class RandomMatrices_O64 {
      * @param rand
      * @return
      */
-    public static SMatrixCC_F64 uniform( int numRows , int numCols , int length ,
-                                         double min , double max , Random rand ) {
+    public static SMatrixCmpC_F64 uniform(int numRows , int numCols , int length ,
+                                          double min , double max , Random rand ) {
 
-        // easier to generate the matrix in triplet format first then convert it
-        SMatrixTriplet_F64 triplet = RandomMatrices_T64.uniform(numRows, numCols, length, min, max, rand);
-        return ConvertSparseMatrix_F64.convert(triplet, (SMatrixCC_F64)null, null, null);
+        // Create a list of all the possible element values
+        int N = numCols*numRows;
+        if( N < 0 )
+            throw new IllegalArgumentException("matrix size is too large");
+        length = Math.min(N,length);
+
+        int selected[] = new int[N];
+        for (int i = 0; i < N; i++) {
+            selected[i] = i;
+        }
+
+        for (int i = 0; i < length; i++) {
+            int swapIdx = rand.nextInt(N);
+            int tmp = selected[swapIdx];
+            selected[swapIdx] = selected[i];
+            selected[i] = tmp;
+        }
+
+        // put the indexes in order
+        Arrays.sort(selected,0,length);
+
+        SMatrixCmpC_F64 ret = new SMatrixCmpC_F64(numRows,numCols,length);
+
+        // compute the number of elements in each column
+        int hist[] = new int[ numCols ];
+        for (int i = 0; i < length; i++) {
+            hist[selected[i]/numRows]++;
+        }
+
+        // define col_idx
+        colsum(ret,hist);
+
+        for (int i = 0; i < length; i++) {
+            int row = selected[i]%numRows;
+
+            ret.nz_rows[i] = row;
+            ret.nz_values[i] = rand.nextDouble()*(max-min)+min;
+        }
+
+        return ret;
     }
 
-    public static SMatrixCC_F64 uniform( int numRows , int numCols , int length , Random rand ) {
+    public static SMatrixCmpC_F64 uniform(int numRows , int numCols , int length , Random rand ) {
         return uniform(numRows, numCols, length, -1,1,rand);
     }
 }

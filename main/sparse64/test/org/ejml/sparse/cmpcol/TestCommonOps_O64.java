@@ -20,7 +20,7 @@ package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.dense.row.CommonOps_R64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
@@ -29,8 +29,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.ejml.sparse.cmpcol.RandomMatrices_O64.uniform;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -85,7 +84,7 @@ public class TestCommonOps_O64 {
                 uniform(6, 4, 7, rand), true);
     }
 
-    private void check_mult(SMatrixCC_F64 A , SMatrixCC_F64 B, SMatrixCC_F64 C, boolean exception ) {
+    private void check_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
         try {
             CommonOps_O64.mult(A,B,C,null,null);
 
@@ -143,7 +142,7 @@ public class TestCommonOps_O64 {
 
     }
 
-    private void check_add(SMatrixCC_F64 A , SMatrixCC_F64 B, SMatrixCC_F64 C, boolean exception ) {
+    private void check_add(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
         double alpha = 1.5;
         double beta = -0.6;
         try {
@@ -166,9 +165,112 @@ public class TestCommonOps_O64 {
         }
     }
 
-    public static void checkEquals(SMatrixCC_F64 A , DMatrixRow_F64 B , double tol ) {
-        DMatrixRow_F64 denseA = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
+    @Test
+    public void identity_r_c() {
+        identity_r_c(CommonOps_O64.identity(10,15));
+        identity_r_c(CommonOps_O64.identity(15,10));
+        identity_r_c(CommonOps_O64.identity(10,10));
+    }
 
-        assertTrue(MatrixFeatures_R64.isIdentical(denseA,B,tol));
+    public void identity_r_c( SMatrixCmpC_F64 A) {
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                if( row == col )
+                    assertEquals(1.0,A.get(row,col), UtilEjml.TEST_F64);
+                else
+                    assertEquals(0.0,A.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+
+    @Test
+    public void scale() {
+
+        double scale = 2.1;
+
+        for( int length : new int[]{0,2,6,15,30} ) {
+            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            DMatrixRow_F64  Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
+
+            SMatrixCmpC_F64 B = new SMatrixCmpC_F64(A.numRows,A.numCols,0);
+            DMatrixRow_F64 expected = new DMatrixRow_F64(A.numRows,A.numCols);
+
+            CommonOps_O64.scale(scale, A, B);
+            CommonOps_R64.scale(scale,Ad,expected);
+
+            DMatrixRow_F64 found = ConvertSparseMatrix_F64.convert(B,(DMatrixRow_F64)null);
+
+            assertTrue(MatrixFeatures_R64.isEquals(expected,found, UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
+    public void divide() {
+        double denominator = 2.1;
+
+        for( int length : new int[]{0,2,6,15,30} ) {
+            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            DMatrixRow_F64  Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
+
+            SMatrixCmpC_F64 B = new SMatrixCmpC_F64(A.numRows,A.numCols,0);
+            DMatrixRow_F64 expected = new DMatrixRow_F64(A.numRows,A.numCols);
+
+            CommonOps_O64.divide(A,denominator, B);
+            CommonOps_R64.divide(Ad,denominator, expected);
+
+            DMatrixRow_F64 found = ConvertSparseMatrix_F64.convert(B,(DMatrixRow_F64)null);
+
+            assertTrue(MatrixFeatures_R64.isEquals(expected,found, UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
+    public void elementMinAbs() {
+        for( int length : new int[]{0,2,6,15,30} ) {
+            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            DMatrixRow_F64 Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
+
+            double found = CommonOps_O64.elementMinAbs(A);
+            double expected = CommonOps_R64.elementMinAbs(Ad);
+
+            assertEquals(expected,found, UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
+    public void elementMaxAbs() {
+        for( int length : new int[]{0,2,6,15,30} ) {
+            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+
+            double found = CommonOps_O64.elementMaxAbs(A);
+            double expected = CommonOps_R64.elementMaxAbs(ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null));
+
+            assertEquals(expected,found, UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
+    public void elementMin() {
+        for( int length : new int[]{0,2,6,15,30} ) {
+            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,1,3,rand);
+
+            double found = CommonOps_O64.elementMin(A);
+            double expected = CommonOps_R64.elementMin(ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null));
+
+            assertEquals(expected,found, UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
+    public void elementMax() {
+        for( int length : new int[]{0,2,6,15,30} ) {
+            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,-2,-1,rand);
+
+            double found = CommonOps_O64.elementMax(A);
+            double expected = CommonOps_R64.elementMax(ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null));
+
+            assertEquals(expected,found, UtilEjml.TEST_F64);
+        }
     }
 }

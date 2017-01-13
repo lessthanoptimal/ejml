@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -37,7 +37,7 @@ public class TestRandomMatrices_O64 {
     @Test
     public void uniform() {
 
-        SMatrixCC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,10,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,10,-1,1,rand);
 
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);

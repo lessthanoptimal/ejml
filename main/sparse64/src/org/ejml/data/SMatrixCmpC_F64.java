@@ -33,7 +33,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixCC_F64 implements Matrix_F64 {
+public class SMatrixCmpC_F64 implements Matrix_F64 {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */
@@ -47,15 +47,15 @@ public class SMatrixCC_F64 implements Matrix_F64 {
      */
     public int nz_rows[];
     /**
-     * Stores the non-zero values belong to which column.  Column 'i' corresponds to indexes col_idx[i] to
-     * col_idx[i+1]-1, inclusive.
+     * Stores the range of indexes in the non-zero lists that belong to each column.  Column 'i' corresponds to
+     * indexes col_idx[i] to col_idx[i+1]-1, inclusive.
      */
     public int col_idx[];
 
     public int numRows;
     public int numCols;
 
-    public SMatrixCC_F64(int numRows , int numCols , int length ) {
+    public SMatrixCmpC_F64(int numRows , int numCols , int length ) {
         length = Math.min(numCols*numRows,length);
 
         this.numRows = numRows;
@@ -67,7 +67,7 @@ public class SMatrixCC_F64 implements Matrix_F64 {
         nz_rows = new int[ length ];
     }
 
-    public SMatrixCC_F64(SMatrixCC_F64 original ) {
+    public SMatrixCmpC_F64(SMatrixCmpC_F64 original ) {
         this(original.numRows, original.numCols, original.length);
 
         set(original);
@@ -85,17 +85,17 @@ public class SMatrixCC_F64 implements Matrix_F64 {
 
     @Override
     public <T extends Matrix> T copy() {
-        return (T)new SMatrixCC_F64(this);
+        return (T)new SMatrixCmpC_F64(this);
     }
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixCC_F64(numRows,numCols, length);
+        return (T)new SMatrixCmpC_F64(numRows,numCols, length);
     }
 
     @Override
     public void set(Matrix original) {
-        SMatrixCC_F64 o = (SMatrixCC_F64)original;
+        SMatrixCmpC_F64 o = (SMatrixCmpC_F64)original;
         reshape(o.numRows, o.numCols, o.length);
 
         System.arraycopy(o.nz_values, 0, nz_values, 0, length);
@@ -215,5 +215,15 @@ public class SMatrixCC_F64 implements Matrix_F64 {
             }
         }
         return true;
+    }
+
+    public void copyStructure( SMatrixCmpC_F64 orig ) {
+        reshape(orig.numRows, orig.numCols, orig.length);
+        System.arraycopy(orig.col_idx,0,col_idx,0,orig.numCols+1);
+        System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.length);
+    }
+
+    public boolean isFull() {
+        return length == numRows*numCols;
     }
 }

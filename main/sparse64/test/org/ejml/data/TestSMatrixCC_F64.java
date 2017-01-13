@@ -34,12 +34,12 @@ public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
 
     @Override
     public Matrix_F64 createSparse(int numRows, int numCols) {
-        return new SMatrixCC_F64(numRows,numCols,10);
+        return new SMatrixCmpC_F64(numRows,numCols,10);
     }
 
     @Override
     public Matrix_F64 createSparse(SMatrixTriplet_F64 orig) {
-        return ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null);
+        return ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
 
         orig.addItem(1,2, 5);
 
-        SMatrixCC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCC_F64)null);
+        SMatrixCmpC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
 
         // test positive case first
         assertTrue(a.isRowOrderValid());
@@ -64,7 +64,7 @@ public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
 
     @Test
     public void reshape_row_col_length() {
-        SMatrixCC_F64 a = new SMatrixCC_F64(2,3,4);
+        SMatrixCmpC_F64 a = new SMatrixCmpC_F64(2,3,4);
 
         a.reshape(1,2,3);
         assertEquals(1,a.numRows);

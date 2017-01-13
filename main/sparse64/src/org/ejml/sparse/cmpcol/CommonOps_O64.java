@@ -18,9 +18,11 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64;
 import org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64;
+
+import java.util.Arrays;
 
 /**
  * @author Peter Abeles
@@ -34,7 +36,7 @@ public class CommonOps_O64 {
      * @param a_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
      * @param work Optional work matrix.  null or of length a.numRows
      */
-    public static void transpose(SMatrixCC_F64 a , SMatrixCC_F64 a_t , int work[] ) {
+    public static void transpose(SMatrixCmpC_F64 a , SMatrixCmpC_F64 a_t , int work[] ) {
         if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
 
@@ -53,7 +55,7 @@ public class CommonOps_O64 {
      * @param workA (Optional) Storage for internal work.  null or array of length A.numRows
      * @param workB (Optional) Storage for internal work.  null or array of length A.numRows
      */
-    public static void mult(SMatrixCC_F64 A , SMatrixCC_F64 B , SMatrixCC_F64 C ,
+    public static void mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
                             int workA[], double workB[] )
     {
         if( A.numRows != C.numRows || B.numCols != C.numCols )
@@ -73,12 +75,109 @@ public class CommonOps_O64 {
      * @param C Output matrix.
      * @param workC (Optional) Work space.  null or as long as A.rows.
      */
-    public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C ,
+    public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
                            double workC[] )
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
         ImplCommonOps_O64.add(alpha,A,beta,B,C, workC);
+    }
+
+    public static SMatrixCmpC_F64 identity( int length ) {
+        return identity(length, length);
+    }
+
+    public static SMatrixCmpC_F64 identity( int numRows , int numCols ) {
+        int min = Math.min(numRows, numCols);
+        SMatrixCmpC_F64 A = new SMatrixCmpC_F64(numRows, numCols, min);
+
+        Arrays.fill(A.nz_values,0,min,1);
+        for (int i = 1; i <= min; i++) {
+            A.col_idx[i] = i;
+            A.nz_rows[i-1] = i-1;
+        }
+
+        return A;
+    }
+
+    public static void scale(double scalar, SMatrixCmpC_F64 A, SMatrixCmpC_F64 B) {
+        if( A.numRows != B.numRows || A.numCols != B.numCols )
+            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
+        B.copyStructure(A);
+
+        for( int i = 0; i < A.length; i++ ) {
+            B.nz_values[i] = A.nz_values[i]*scalar;
+        }
+    }
+
+    public static void divide(SMatrixCmpC_F64 A , double scalar , SMatrixCmpC_F64 B ) {
+        if( A.numRows != B.numRows || A.numCols != B.numCols )
+            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
+        B.copyStructure(A);
+
+        for( int i = 0; i < A.length; i++ ) {
+            B.nz_values[i] = A.nz_values[i]/scalar;
+        }
+    }
+
+    public static double elementMinAbs( SMatrixCmpC_F64 A ) {
+        if( A.length == 0)
+            return 0;
+
+        double min = A.isFull() ? Math.abs(A.nz_values[0]) : 0;
+        for( int i = 0; i < A.length; i++ ) {
+            double val = Math.abs(A.nz_values[i]);
+            if( val < min ) {
+                min = val;
+            }
+        }
+
+        return min;
+    }
+
+    public static double elementMaxAbs( SMatrixCmpC_F64 A ) {
+        if( A.length == 0)
+            return 0;
+
+        double max = A.isFull() ? Math.abs(A.nz_values[0]) : 0;
+        for( int i = 0; i < A.length; i++ ) {
+            double val = Math.abs(A.nz_values[i]);
+            if( val > max ) {
+                max = val;
+            }
+        }
+
+        return max;
+    }
+
+    public static double elementMin( SMatrixCmpC_F64 A ) {
+        if( A.length == 0)
+            return 0;
+
+        double min = A.isFull() ? A.nz_values[0] : 0;
+        for( int i = 0; i < A.length; i++ ) {
+            double val = A.nz_values[i];
+            if( val < min ) {
+                min = val;
+            }
+        }
+
+        return min;
+    }
+
+    public static double elementMax( SMatrixCmpC_F64 A ) {
+        if( A.length == 0)
+            return 0;
+
+        double max = A.isFull() ? A.nz_values[0] : 0;
+        for( int i = 0; i < A.length; i++ ) {
+            double val = A.nz_values[i];
+            if( val > max ) {
+                max = val;
+            }
+        }
+
+        return max;
     }
 }

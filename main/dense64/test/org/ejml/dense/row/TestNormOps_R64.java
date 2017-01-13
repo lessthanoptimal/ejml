@@ -49,19 +49,19 @@ public class TestNormOps_R64 {
     public void conditionP() {
         double val = NormOps_R64.conditionP(squareMatrix,1);
 
-        assertEquals(7.6923,val,1e-3);
+        assertEquals(7.6923,val,UtilEjml.TEST_F64_SQ);
 
         // check the non-square case
         val = NormOps_R64.conditionP(unzeroMatrix,1);
 
-        assertEquals(3.4325,val,1e-3);
+        assertEquals(3.4325,val,UtilEjml.TEST_F64_SQ);
 
         // see if the other pseudo-inverse works
         DMatrixRow_F64 trans = unzeroMatrix.copy();
         CommonOps_R64.transpose(trans);
         val = NormOps_R64.conditionP(trans,1);
 
-        assertEquals(3.4887,val,1e-3);
+        assertEquals(3.4887,val,UtilEjml.TEST_F64_SQ);
     }
 
     /**
@@ -71,7 +71,7 @@ public class TestNormOps_R64 {
     public void conditionP2() {
          double val = NormOps_R64.conditionP2(unzeroMatrix);
 
-        assertEquals(2.1655,val,1e-3);
+        assertEquals(2.1655,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.conditionP2(zeroMatrix));
     }
@@ -85,7 +85,7 @@ public class TestNormOps_R64 {
     public void elementP() {
          double val = NormOps_R64.elementP(unzeroMatrix,3.5);
 
-        assertEquals(6.9108,val,1e-3);
+        assertEquals(6.9108,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.elementP(zeroMatrix,3.5));
     }
@@ -94,7 +94,7 @@ public class TestNormOps_R64 {
     public void fastElementP() {
          double val = NormOps_R64.fastElementP(unzeroMatrix,3.5);
 
-        assertEquals(6.9108,val,1e-3);
+        assertEquals(6.9108,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.fastElementP(zeroMatrix,3.5));
     }
@@ -105,14 +105,14 @@ public class TestNormOps_R64 {
 
         NormOps_R64.normalizeF(a);
 
-        assertEquals(1, NormOps_R64.normF(a),1e-6);
+        assertEquals(1, NormOps_R64.normF(a),UtilEjml.TEST_F64);
     }
 
     @Test
     public void fastNormF() {
         double val = NormOps_R64.fastNormF(unzeroMatrix);
 
-        assertEquals(8.6626,val,1e-3);
+        assertEquals(8.6626,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.fastNormF(zeroMatrix));
     }
@@ -121,7 +121,7 @@ public class TestNormOps_R64 {
     public void normF() {
         double val = NormOps_R64.normF(unzeroMatrix);
 
-        assertEquals(8.6626,val,1e-3);
+        assertEquals(8.6626,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.normF(zeroMatrix));
     }
@@ -131,12 +131,12 @@ public class TestNormOps_R64 {
         // check induced matrix norm
         double found = NormOps_R64.fastNormP2(unzeroMatrix);
         double expected = NormOps_R64.inducedP2(unzeroMatrix);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
 
         // check vector norm
         found = NormOps_R64.fastNormP2(unzeroVector);
         expected = NormOps_R64.normF(unzeroVector);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -144,12 +144,12 @@ public class TestNormOps_R64 {
         // check induced matrix norm
         double found = NormOps_R64.normP(unzeroMatrix,2);
         double expected = NormOps_R64.inducedP2(unzeroMatrix);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
 
         // check vector norm
         found = NormOps_R64.normP(unzeroVector,2);
         expected = NormOps_R64.normF(unzeroVector);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -157,12 +157,12 @@ public class TestNormOps_R64 {
         // check induced matrix norm
         double found = NormOps_R64.fastNormP(unzeroMatrix,2);
         double expected = NormOps_R64.inducedP2(unzeroMatrix);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
 
         // check vector norm
         found = NormOps_R64.fastNormP(unzeroVector,2);
         expected = NormOps_R64.normF(unzeroVector);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -170,12 +170,12 @@ public class TestNormOps_R64 {
         // check induced matrix norm
         double found = NormOps_R64.normP1(unzeroMatrix);
         double expected = NormOps_R64.inducedP1(unzeroMatrix);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
 
         // check vector norm
         found = NormOps_R64.normP1(unzeroVector);
         expected = CommonOps_R64.elementSumAbs(unzeroVector);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -183,12 +183,12 @@ public class TestNormOps_R64 {
         // check induced matrix norm
         double found = NormOps_R64.normP2(unzeroMatrix);
         double expected = NormOps_R64.inducedP2(unzeroMatrix);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
 
         // check vector norm
         found = NormOps_R64.normP2(unzeroVector);
         expected = NormOps_R64.normF(unzeroVector);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
@@ -196,18 +196,18 @@ public class TestNormOps_R64 {
         // check induced matrix norm
         double found = NormOps_R64.normPInf(unzeroMatrix);
         double expected = NormOps_R64.inducedPInf(unzeroMatrix);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
 
         // check vector norm
         found = NormOps_R64.normPInf(unzeroVector);
         expected = CommonOps_R64.elementMaxAbs(unzeroVector);
-        assertEquals(expected,found,1e-3);
+        assertEquals(expected,found,UtilEjml.TEST_F64_SQ);
     }
 
     @Test
     public void inducedP1() {
         double val = NormOps_R64.inducedP1(unzeroMatrix);
-        assertEquals(9,val,1e-3);
+        assertEquals(9,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.inducedP1(zeroMatrix));
     }
@@ -215,7 +215,7 @@ public class TestNormOps_R64 {
     @Test
     public void inducedP2() {
         double val = NormOps_R64.inducedP2(unzeroMatrix);
-        assertEquals(7.8645,val,1e-3);
+        assertEquals(7.8645,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.inducedP2(zeroMatrix));
 
@@ -231,7 +231,7 @@ public class TestNormOps_R64 {
     @Test
     public void inducedPInf() {
         double val = NormOps_R64.inducedPInf(unzeroMatrix);
-        assertEquals(11,val,1e-3);
+        assertEquals(11,val,UtilEjml.TEST_F64_SQ);
 
         checkUncountable(NormOps_R64.inducedPInf(zeroMatrix));
     }

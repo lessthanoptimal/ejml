@@ -4,6 +4,7 @@ dependencies {
     compile project(':main:dense64')
     compile project(':main:denseC32')
     compile project(':main:denseC64')
+    compile project(':main:sparse64')
     compile project(':main:equation')
     compile project(':main:simple')
 }

@@ -21,7 +21,7 @@ package org.ejml.sparse;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 import org.ejml.dense.row.RandomMatrices_R64;
@@ -84,13 +84,13 @@ public class TestConvertSparseMatrix_F64 {
 
     @Test
     public void SMatrixCC_DMatrixRow() {
-        SMatrixCC_F64 a = RandomMatrices_O64.uniform(5,6,10,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(5,6,10,-1,1,rand);
 
         SMatrixCC_DMatrixRow(a,null);
         SMatrixCC_DMatrixRow(a,new DMatrixRow_F64(1,1));
     }
 
-    public void SMatrixCC_DMatrixRow(SMatrixCC_F64 a , DMatrixRow_F64 b ) {
+    public void SMatrixCC_DMatrixRow(SMatrixCmpC_F64 a , DMatrixRow_F64 b ) {
         b = ConvertSparseMatrix_F64.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
@@ -101,11 +101,11 @@ public class TestConvertSparseMatrix_F64 {
         EjmlUnitTests.assertEquals(a, b);
 
         // now try it the other direction
-        SMatrixCC_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixCC_F64)null);
+        SMatrixCmpC_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixCmpC_F64)null);
         assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
         assertTrue(c.isRowOrderValid());
 
-        c = ConvertSparseMatrix_F64.convert(b,new SMatrixCC_F64(1,1,1));
+        c = ConvertSparseMatrix_F64.convert(b,new SMatrixCmpC_F64(1,1,1));
         assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
         assertTrue(c.isRowOrderValid());
     }
@@ -114,11 +114,11 @@ public class TestConvertSparseMatrix_F64 {
     public void SMatrixTriplet_SMatrixCC() {
         SMatrixTriplet_F64 a = RandomMatrices_T64.uniform(5,6,10,-1,1,rand);
 
-        SMatrixTriplet_SMatrixCC(a,(SMatrixCC_F64)null);
-        SMatrixTriplet_SMatrixCC(a,new SMatrixCC_F64(1,1,2));
+        SMatrixTriplet_SMatrixCC(a,(SMatrixCmpC_F64)null);
+        SMatrixTriplet_SMatrixCC(a,new SMatrixCmpC_F64(1,1,2));
     }
 
-    public void SMatrixTriplet_SMatrixCC(SMatrixTriplet_F64 a , SMatrixCC_F64 b ) {
+    public void SMatrixTriplet_SMatrixCC(SMatrixTriplet_F64 a , SMatrixCmpC_F64 b ) {
         b = ConvertSparseMatrix_F64.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);

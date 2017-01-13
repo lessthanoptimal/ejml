@@ -19,7 +19,7 @@
 package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.junit.Test;
 
@@ -41,8 +41,8 @@ public class TestImplCommonOps_O64 {
 
     @Test
     public void transpose() {
-        SMatrixCC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,length, -1, 1, rand);
-        SMatrixCC_F64 b = RandomMatrices_O64.uniform(numCols,numRows,length, -1, 1, rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,length, -1, 1, rand);
+        SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(numCols,numRows,length, -1, 1, rand);
 
         ImplCommonOps_O64.transpose(a,b,null);
 
@@ -64,9 +64,9 @@ public class TestImplCommonOps_O64 {
 
         for( int numRows : new int[]{2,4,6,10}) {
             for( int numCols : new int[]{2,4,6,10}) {
-                SMatrixCC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,7, -1, 1, rand);
-                SMatrixCC_F64 b = RandomMatrices_O64.uniform(numRows,numCols,8, -1, 1, rand);
-                SMatrixCC_F64 c = RandomMatrices_O64.uniform(numRows,numCols,3, -1, 1, rand);
+                SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,7, -1, 1, rand);
+                SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(numRows,numCols,8, -1, 1, rand);
+                SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(numRows,numCols,3, -1, 1, rand);
 
                 ImplCommonOps_O64.add(alpha,a,beta,b,c,null);
 

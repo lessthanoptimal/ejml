@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.cmpcol.mult;
 
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 
 import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclareRows;
 
@@ -36,7 +36,7 @@ public class ImplSparseSparseMult_O64 {
      * @param w (Optional) Storage for internal work.  null or array of length A.numRows
      * @param x (Optional) Storage for internal work.  null or array of length A.numRows
      */
-    public static void mult(SMatrixCC_F64 A, SMatrixCC_F64 B, SMatrixCC_F64 C,
+    public static void mult(SMatrixCmpC_F64 A, SMatrixCmpC_F64 B, SMatrixCmpC_F64 C,
                             int w[], double x[])
     {
         x = checkDeclareRows(A, x);
@@ -78,10 +78,10 @@ public class ImplSparseSparseMult_O64 {
     /**
      * Performs the performing operation x = x + A(:,i)*alpha
      */
-    public static void multAddColA( SMatrixCC_F64 A , int colA ,
-                                     double alpha,
-                                     SMatrixCC_F64 C, int colC,
-                                     double x[] , int w[] ) {
+    public static void multAddColA(SMatrixCmpC_F64 A , int colA ,
+                                   double alpha,
+                                   SMatrixCmpC_F64 C, int colC,
+                                   double x[] , int w[] ) {
         int mark = colC+1;
 
         int idxA0 = A.col_idx[colA];

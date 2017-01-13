@@ -41,15 +41,17 @@ public class RandomMatrices_T64 {
                                              double min , double max , Random rand ) {
         // Create a list of all the possible element values
         int N = numCols*numRows;
+        if( N < 0 )
+            throw new IllegalArgumentException("matrix size is too large");
+        length = Math.min(N,length);
+
         int selected[] = new int[N];
         for (int i = 0; i < N; i++) {
             selected[i] = i;
         }
 
-        length = Math.min(N,length);
-
-        for (int i = 0; i < length-1; i++) {
-            int s = rand.nextInt(N - i -1)+i+1;
+        for (int i = 0; i < length; i++) {
+            int s = rand.nextInt(N);
             int tmp = selected[s];
             selected[s] = selected[i];
             selected[i] = tmp;

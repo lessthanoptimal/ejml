@@ -20,7 +20,7 @@ package org.ejml.sparse.cmpcol.mult;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.dense.row.CommonOps_R64;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
@@ -48,9 +48,9 @@ public class TestImplSparseSparseMult_O64 {
     }
 
     private void mult( int elementsA , int elementsB , int elementsC ) {
-        SMatrixCC_F64 a = RandomMatrices_O64.uniform(4,6,elementsA,-1,1,rand);
-        SMatrixCC_F64 b = RandomMatrices_O64.uniform(6,5,elementsB,-1,1,rand);
-        SMatrixCC_F64 c = RandomMatrices_O64.uniform(4,5,elementsC,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(4,6,elementsA,-1,1,rand);
+        SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(6,5,elementsB,-1,1,rand);
+        SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(4,5,elementsC,-1,1,rand);
 
         ImplSparseSparseMult_O64.mult(a,b,c, null, null);
 

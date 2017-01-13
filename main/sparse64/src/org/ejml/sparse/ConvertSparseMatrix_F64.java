@@ -20,7 +20,7 @@ package org.ejml.sparse;
 
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.Matrix_F64;
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 
@@ -86,7 +86,7 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static DMatrixRow_F64 convert(SMatrixCC_F64 src , DMatrixRow_F64 dst ) {
+    public static DMatrixRow_F64 convert(SMatrixCmpC_F64 src , DMatrixRow_F64 dst ) {
         if( dst == null )
             dst = new DMatrixRow_F64(src.numRows, src.numCols);
         else {
@@ -117,11 +117,11 @@ public class ConvertSparseMatrix_F64 {
      * @param dst Storage for the converted matrix.  If null a new instance will be returned.
      * @return The converted matrix
      */
-    public static SMatrixCC_F64 convert( DMatrixRow_F64 src , SMatrixCC_F64 dst ) {
+    public static SMatrixCmpC_F64 convert(DMatrixRow_F64 src , SMatrixCmpC_F64 dst ) {
         int nonzero = MatrixFeatures_R64.countNonZero(src);
 
         if( dst == null )
-            dst = new SMatrixCC_F64(src.numRows, src.numCols, nonzero);
+            dst = new SMatrixCmpC_F64(src.numRows, src.numCols, nonzero);
         else
             dst.reshape(src.numRows, src.numCols, nonzero);
         dst.length = 0;
@@ -150,10 +150,10 @@ public class ConvertSparseMatrix_F64 {
      * @param dst Destination. Will be a copy.  Modified.
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
-    public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst , int hist[] ,
-                                        SortCoupledArray_F64 sorter ) {
+    public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst , int hist[] ,
+                                          SortCoupledArray_F64 sorter ) {
         if( dst == null )
-            dst = new SMatrixCC_F64(src.numRows, src.numCols , src.length);
+            dst = new SMatrixCmpC_F64(src.numRows, src.numCols , src.length);
         else
             dst.reshape(src.numRows, src.numCols, src.length);
 
@@ -190,11 +190,11 @@ public class ConvertSparseMatrix_F64 {
         return dst;
     }
 
-    public static SMatrixCC_F64 convert(SMatrixTriplet_F64 src , SMatrixCC_F64 dst ) {
+    public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst ) {
         return convert(src,dst,null,null);
     }
 
-    public static SMatrixTriplet_F64 convert(SMatrixCC_F64 src , SMatrixTriplet_F64 dst ) {
+    public static SMatrixTriplet_F64 convert(SMatrixCmpC_F64 src , SMatrixTriplet_F64 dst ) {
         if( dst == null )
             dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.length );
         else

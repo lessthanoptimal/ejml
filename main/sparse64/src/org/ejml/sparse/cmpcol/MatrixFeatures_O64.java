@@ -18,14 +18,15 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.UtilEjml;
+import org.ejml.data.SMatrixCmpC_F64;
 
 /**
  * @author Peter Abeles
  */
 public class MatrixFeatures_O64 {
 
-    public static boolean isEquals(SMatrixCC_F64 a , SMatrixCC_F64 b ) {
+    public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b ) {
         if( !isSameShape(a,b) )
             return false;
 
@@ -36,7 +37,7 @@ public class MatrixFeatures_O64 {
         return true;
     }
 
-    public static boolean isEquals(SMatrixCC_F64 a , SMatrixCC_F64 b , double tol ) {
+    public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b , double tol ) {
         if( !isSameShape(a,b) )
             return false;
 
@@ -47,7 +48,7 @@ public class MatrixFeatures_O64 {
         return true;
     }
 
-    public static boolean isSameShape(SMatrixCC_F64 a , SMatrixCC_F64 b) {
+    public static boolean isSameShape(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b) {
         if( a.numRows == b.numRows && a.numCols == b.numCols && a.length == b.length ) {
             for (int i = 0; i <= a.numCols; i++) {
                 if( a.col_idx[i] != b.col_idx[i] )
@@ -60,5 +61,39 @@ public class MatrixFeatures_O64 {
             return true;
         }
         return false;
+    }
+
+    public static boolean hasUncountable( SMatrixCmpC_F64 A ) {
+        for( int i = 0; i < A.length; i++ ) {
+            if(UtilEjml.isUncountable(A.nz_values[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isZeros(SMatrixCmpC_F64 A , double tol ) {
+        for( int i = 0; i < A.length; i++ ) {
+            if(Math.abs(A.nz_values[i]) > tol) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isIdentity(SMatrixCmpC_F64 A , double tol ) {
+        if( A.numCols != A.numRows )
+            return false;
+
+        if( A.length != A.numCols )
+            return false;
+
+        for( int i = 1; i <= A.numCols; i++ ) {
+            if( A.col_idx[i] != i)
+                return false;
+            if( Math.abs(A.nz_values[i-1]-1) > tol )
+                return false;
+        }
+        return true;
     }
 }

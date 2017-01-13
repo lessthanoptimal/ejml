@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.cmpcol.misc;
 
-import org.ejml.data.SMatrixCC_F64;
+import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.sparse.cmpcol.CommonOps_O64;
 
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public class ImplCommonOps_O64 {
      * @param C Storage for transposed 'a'.  Assumed to be of the correct shape and length.
      * @param work Work space.  null or an array the size of the rows in 'a'
      */
-    public static void transpose(SMatrixCC_F64 A , SMatrixCC_F64 C , int work[] ) {
+    public static void transpose(SMatrixCmpC_F64 A , SMatrixCmpC_F64 C , int work[] ) {
         work = checkDeclareRows(A, work, true);
         C.length = A.length;
 
@@ -76,7 +76,7 @@ public class ImplCommonOps_O64 {
      * @param A A matrix
      * @param histogram histogram of column values in the sparse matrix
      */
-    public static void colsum( SMatrixCC_F64 A, int histogram[] ) {
+    public static void colsum(SMatrixCmpC_F64 A, int histogram[] ) {
         A.col_idx[0] = 0;
         int index = 0;
         for (int i = 1; i <= A.numCols; i++) {
@@ -96,7 +96,7 @@ public class ImplCommonOps_O64 {
      * @param C Output matrix.
      * @param x (Optional) Work space.  null or as long as A.rows.
      */
-    public static void add(double alpha , SMatrixCC_F64 A , double beta , SMatrixCC_F64 B , SMatrixCC_F64 C ,
+    public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
                            double x[] )
     {
         x = checkDeclareRows(A, x);
@@ -162,7 +162,7 @@ public class ImplCommonOps_O64 {
         }
     }
 
-    public static int[] checkDeclareRows(SMatrixCC_F64 A, int[] w, boolean fillZeros) {
+    public static int[] checkDeclareRows(SMatrixCmpC_F64 A, int[] w, boolean fillZeros) {
         if( w == null )
             w = new int[A.numRows];
         else if( w.length < A.numRows )
@@ -172,7 +172,7 @@ public class ImplCommonOps_O64 {
         return w;
     }
 
-    public static double[] checkDeclareRows(SMatrixCC_F64 A, double[] x) {
+    public static double[] checkDeclareRows(SMatrixCmpC_F64 A, double[] x) {
         if( x == null )
             x = new double[A.numRows];
         else if( x.length < A.numRows )
