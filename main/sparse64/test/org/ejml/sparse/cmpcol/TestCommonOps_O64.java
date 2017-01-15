@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static org.ejml.dense.row.RandomMatrices_R64.createRandom;
 import static org.ejml.sparse.cmpcol.RandomMatrices_O64.uniform;
 import static org.junit.Assert.*;
 
@@ -64,27 +65,27 @@ public class TestCommonOps_O64 {
     }
 
     @Test
-    public void mult_shapes() {
-        check_mult(
+    public void mult_s_s_shapes() {
+        check_s_s_mult(
                 uniform(5, 6, 5, rand),
                 uniform(6, 4, 7, rand),
                 uniform(5, 4, 7, rand), false);
 
-        check_mult(
+        check_s_s_mult(
                 uniform(5, 6, 5, rand),
                 uniform(6, 4, 7, rand),
                 uniform(5, 5, 7, rand), true);
-        check_mult(
+        check_s_s_mult(
                 uniform(5, 6, 5, rand),
                 uniform(6, 4, 7, rand),
                 uniform(6, 4, 7, rand), true);
-        check_mult(
+        check_s_s_mult(
                 uniform(5, 6, 5, rand),
                 uniform(6, 4, 7, rand),
                 uniform(6, 4, 7, rand), true);
     }
 
-    private void check_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
+    private void check_s_s_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
         try {
             CommonOps_O64.mult(A,B,C,null,null);
 
@@ -97,6 +98,46 @@ public class TestCommonOps_O64 {
             CommonOps_R64.mult(denseA,denseB,expected);
 
             DMatrixRow_F64 found = ConvertSparseMatrix_F64.convert(C,(DMatrixRow_F64)null);
+            assertTrue(MatrixFeatures_R64.isIdentical(expected,found, UtilEjml.TEST_F64));
+
+        } catch( RuntimeException ignore){
+            if( !exception )
+                fail("no exception expected");
+        }
+    }
+
+    @Test
+    public void mult_s_d_shapes() {
+        check_s_d_mult(
+                uniform(5, 6, 5, rand),
+                createRandom(6, 4, rand),
+                createRandom(5, 4, rand), false);
+
+        check_s_d_mult(
+                uniform(5, 6, 5, rand),
+                createRandom(6, 4, rand),
+                createRandom(5, 5, rand), true);
+        check_s_d_mult(
+                uniform(5, 6, 5, rand),
+                createRandom(6, 4, rand),
+                createRandom(6, 4, rand), true);
+        check_s_d_mult(
+                uniform(5, 6, 5, rand),
+                createRandom(6, 4, rand),
+                createRandom(6, 4, rand), true);
+    }
+
+    private void check_s_d_mult(SMatrixCmpC_F64 A , DMatrixRow_F64 B, DMatrixRow_F64 found, boolean exception ) {
+        try {
+            CommonOps_O64.mult(A,B,found);
+
+            if( exception )
+                fail("exception expected");
+            DMatrixRow_F64 denseA = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
+            DMatrixRow_F64 expected = new DMatrixRow_F64(A.numRows,B.numCols);
+
+            CommonOps_R64.mult(denseA,B,expected);
+
             assertTrue(MatrixFeatures_R64.isIdentical(expected,found, UtilEjml.TEST_F64));
 
         } catch( RuntimeException ignore){

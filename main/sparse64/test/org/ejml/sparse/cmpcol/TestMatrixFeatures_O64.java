@@ -19,6 +19,7 @@
 package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
@@ -140,8 +141,43 @@ public class TestMatrixFeatures_O64 {
 
             A.nz_values[0] = 1.1;
             assertFalse(MatrixFeatures_O64.isIdentity(A, UtilEjml.TEST_F64));
-
         }
+    }
+
+    @Test
+    public void isLowerTriangle() {
+        // normal triangular matrix
+        DMatrixRow_F64 D = new DMatrixRow_F64(4,4,true,
+                1,0,0,0, 1,1,0,0, 0,0,1,0 , 1,0,1,1 );
+        SMatrixCmpC_F64 L = ConvertSparseMatrix_F64.convert(D,(SMatrixCmpC_F64)null);
+
+        assertTrue(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+        L.nz_values[L.length-1] = UtilEjml.EPS;
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
+
+        // Hessenberg matrix of degree 1
+        D = new DMatrixRow_F64(4,4,true,
+                1,1,0,0, 1,1,1,0, 0,0,0,1 , 1,0,1,1 );
+        L = ConvertSparseMatrix_F64.convert(D,(SMatrixCmpC_F64)null);
+
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,2, UtilEjml.TEST_F64));
+        L.set(0,1,UtilEjml.EPS);
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+
+        // testing a case which failed.  first column was all zeros for hessenberg of 1
+        D = new DMatrixRow_F64(4,4,true,
+                0,1,0,0, 0,0,1,0, 0,0,0,1 , 0,0,0,1 );
+        L = ConvertSparseMatrix_F64.convert(D,(SMatrixCmpC_F64)null);
+
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isLowerTriangle(L,2, UtilEjml.TEST_F64));
+        L.set(0,1,1);
+        assertTrue(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+
     }
 
 }

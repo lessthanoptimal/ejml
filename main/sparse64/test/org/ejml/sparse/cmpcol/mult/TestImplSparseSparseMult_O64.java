@@ -22,6 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.dense.row.RandomMatrices_R64;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.junit.Test;
@@ -38,16 +39,16 @@ public class TestImplSparseSparseMult_O64 {
     Random rand = new Random(234);
 
     @Test
-    public void mult() {
+    public void mult_s_s() {
         for (int i = 0; i < 10; i++) {
-            mult(24,30,20);
-            mult(15,15,20);
-            mult(15,15,5);
-            mult(4,5,0);
+            mult_s_s(24,30,20);
+            mult_s_s(15,15,20);
+            mult_s_s(15,15,5);
+            mult_s_s(4,5,0);
         }
     }
 
-    private void mult( int elementsA , int elementsB , int elementsC ) {
+    private void mult_s_s(int elementsA , int elementsB , int elementsC ) {
         SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(4,6,elementsA,-1,1,rand);
         SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(6,5,elementsB,-1,1,rand);
         SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(4,5,elementsC,-1,1,rand);
@@ -63,6 +64,35 @@ public class TestImplSparseSparseMult_O64 {
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
                 assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void mult_s_d() {
+        for (int i = 0; i < 10; i++) {
+            mult_s_d(24);
+            mult_s_d(15);
+            mult_s_d(4);
+        }
+    }
+
+    private void mult_s_d(int elementsA) {
+        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(4,6,elementsA,-1,1,rand);
+        DMatrixRow_F64 b = RandomMatrices_R64.createRandom(6,5,-1,1,rand);
+        DMatrixRow_F64 c = RandomMatrices_R64.createRandom(4,5,-1,1,rand);
+
+        ImplSparseSparseMult_O64.mult(a,b,c);
+
+        DMatrixRow_F64 dense_a = ConvertSparseMatrix_F64.convert(a,(DMatrixRow_F64)null);
+        DMatrixRow_F64 expected_c = RandomMatrices_R64.createRandom(4,5,-1,1,rand);
+
+
+        CommonOps_R64.mult(dense_a, b, expected_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
             }
         }
     }

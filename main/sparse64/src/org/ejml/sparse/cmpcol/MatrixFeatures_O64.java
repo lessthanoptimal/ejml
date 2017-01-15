@@ -27,18 +27,18 @@ import org.ejml.data.SMatrixCmpC_F64;
 public class MatrixFeatures_O64 {
 
     public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b ) {
-        if( !isSameShape(a,b) )
+        if( !isSameStructure(a,b) )
             return false;
 
         for (int i = 0; i < a.length; i++) {
-            if( a.nz_values[i] != b.nz_values[i] || a.nz_rows[i] != b.nz_rows[i])
+            if( a.nz_values[i] != b.nz_values[i] )
                 return false;
         }
         return true;
     }
 
     public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b , double tol ) {
-        if( !isSameShape(a,b) )
+        if( !isSameStructure(a,b) )
             return false;
 
         for (int i = 0; i < a.length; i++) {
@@ -48,7 +48,14 @@ public class MatrixFeatures_O64 {
         return true;
     }
 
-    public static boolean isSameShape(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b) {
+    /**
+     * Checks to see if the two matrices have the same shape and same pattern of non-zero elements
+     *
+     * @param a Matrix
+     * @param b Matrix
+     * @return true if the structure is the same
+     */
+    public static boolean isSameStructure(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b) {
         if( a.numRows == b.numRows && a.numCols == b.numCols && a.length == b.length ) {
             for (int i = 0; i <= a.numCols; i++) {
                 if( a.col_idx[i] != b.col_idx[i] )
@@ -94,6 +101,51 @@ public class MatrixFeatures_O64 {
             if( Math.abs(A.nz_values[i-1]-1) > tol )
                 return false;
         }
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if a matrix is lower triangular or Hessenberg. A Hessenberg matrix of degree N
+     * has the following property:<br>
+     * <br>
+     * a<sub>ij</sub> &le; 0 for all i < j+N<br>
+     * <br>
+     * A triangular matrix is a Hessenberg matrix of degree 0.  Only the upper most diagonal elements are
+     * explicitly checked to see if they are non-zero
+     * </p>
+     * @param A Matrix being tested.  Not modified.
+     * @param hessenberg The degree of being hessenberg.
+     * @return If it is an upper triangular/hessenberg matrix or not.
+     */
+    public static boolean isLowerTriangle( SMatrixCmpC_F64 A , int hessenberg , double tol )
+    {
+        if( A.numCols != A.numRows )
+            return false;
+
+        // diagonal elements must be non-zero
+        if( A.length < A.numCols-hessenberg )
+            return false;
+
+        for (int col = 0; col < A.numCols; col++) {
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col+1];
+
+            // at least one element in each column
+            if( col >= hessenberg ) {
+                if (idx0 == idx1)
+                    return false;
+
+                // first element must be (i,i)
+                if (A.nz_rows[idx0] != Math.max(0, col - hessenberg))
+                    return false;
+            }
+
+            // diagonal elements must not be zero
+            if( col-hessenberg >= 0 && Math.abs(A.nz_values[idx0]) <= tol )
+                return false;
+        }
+
         return true;
     }
 }

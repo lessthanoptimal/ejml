@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.cmpcol;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.SMatrixCmpC_F64;
 import org.junit.Test;
 
@@ -58,5 +59,27 @@ public class TestRandomMatrices_O64 {
 
         assertEquals(10, count);
         assertTrue(a.isRowOrderValid());
+    }
+
+    @Test
+    public void createLowerTriangular() {
+
+        SMatrixCmpC_F64 L;
+        for (int trial = 0; trial < 20; trial++) {
+            for( int length : new int[]{0,2,6,12,20} ) {
+                L = RandomMatrices_O64.createLowerTriangular(6, 0, length,-1,1, rand);
+//            L.print();
+                assertEquals(Math.max(6,length),L.length);
+                assertTrue(L.isRowOrderValid());
+                assertTrue(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
+
+                L = RandomMatrices_O64.createLowerTriangular(6, 1, length,-1,1, rand);
+//                L.print();
+                assertEquals(Math.max(5,length),L.length);
+                assertTrue(L.isRowOrderValid());
+                assertTrue(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+            }
+
+        }
     }
 }

@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.cmpcol;
 
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64;
 import org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64;
@@ -62,6 +63,21 @@ public class CommonOps_O64 {
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
         ImplSparseSparseMult_O64.mult(A,B,C, workA, workB);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A*B
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param C Dense Matrix
+     */
+    public static void mult(SMatrixCmpC_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 C )
+    {
+        if( A.numRows != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_O64.mult(A,B,C);
     }
 
     /**

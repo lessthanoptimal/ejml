@@ -31,26 +31,26 @@ public class RandomMatrices_T64 {
      *
      * @param numRows Number of rows
      * @param numCols Number of columns
-     * @param length Number of elements filled in
+     * @param nz_total Total number of non-zero elements in the matrix
      * @param min Minimum value
      * @param max maximum value
      * @param rand Random number generated
      * @return Randomly generated matrix
      */
-    public static SMatrixTriplet_F64 uniform(int numRows , int numCols , int length ,
+    public static SMatrixTriplet_F64 uniform(int numRows , int numCols , int nz_total ,
                                              double min , double max , Random rand ) {
         // Create a list of all the possible element values
         int N = numCols*numRows;
         if( N < 0 )
             throw new IllegalArgumentException("matrix size is too large");
-        length = Math.min(N,length);
+        nz_total = Math.min(N,nz_total);
 
         int selected[] = new int[N];
         for (int i = 0; i < N; i++) {
             selected[i] = i;
         }
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < nz_total; i++) {
             int s = rand.nextInt(N);
             int tmp = selected[s];
             selected[s] = selected[i];
@@ -58,9 +58,9 @@ public class RandomMatrices_T64 {
         }
 
         // Create a sparse matrix
-        SMatrixTriplet_F64 ret = new SMatrixTriplet_F64(numRows,numCols,length);
+        SMatrixTriplet_F64 ret = new SMatrixTriplet_F64(numRows,numCols,nz_total);
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < nz_total; i++) {
             int row = selected[i]/numCols;
             int col = selected[i]%numCols;
 

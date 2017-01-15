@@ -108,7 +108,11 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
         System.out.println(getClass().getSimpleName()+" "+numRows+" x "+numCols);
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                System.out.printf("%6.3f",get(row,col));
+                int index = nz_index(row,col);
+                if( index >= 0 )
+                    System.out.printf("%6.3f",get(row,col));
+                else
+                    System.out.print("   *  ");
                 if( col != numCols-1 )
                     System.out.print(" ");
             }
@@ -126,16 +130,22 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
 
     @Override
     public double unsafe_get(int row, int col) {
+        int index = nz_index(row,col);
+        if( index >= 0 )
+            return nz_values[index];
+        return 0;
+    }
+
+    public int nz_index( int row , int col ) {
         int col0 = col_idx[col];
         int col1 = col_idx[col+1];
 
         for (int i = col0; i < col1; i++) {
             if( nz_rows[i] == row ) {
-                return nz_values[i];
+                return i;
             }
         }
-
-        return 0;
+        return -1;
     }
 
     @Override
@@ -209,8 +219,14 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
             int idx0 = col_idx[j];
             int idx1 = col_idx[j+1];
 
+            if( idx0 != idx1 && nz_rows[idx0] >= numRows )
+                return false;
+
             for (int i = idx0+1; i < idx1; i++) {
-                if( nz_rows[i-1] >= nz_rows[i])
+                int row = nz_rows[i];
+                if( nz_rows[i-1] >= row)
+                    return false;
+                if( row >= numRows )
                     return false;
             }
         }

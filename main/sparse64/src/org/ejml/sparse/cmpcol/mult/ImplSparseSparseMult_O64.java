@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.cmpcol.mult;
 
+import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
 
 import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclareRows;
@@ -101,6 +102,31 @@ public class ImplSparseSparseMult_O64 {
                 x[row] = A.nz_values[j]*alpha;
             } else {
                 x[row] += A.nz_values[j]*alpha;
+            }
+        }
+    }
+
+    public static void mult(SMatrixCmpC_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 C ) {
+
+        C.zero();
+
+        // C(i,j) = sum_k A(i,k) * B(k,j)
+        for (int k = 0; k < A.numCols; k++) {
+            int idx0 = A.col_idx[k  ];
+            int idx1 = A.col_idx[k+1];
+
+            for (int indexA = idx0; indexA < idx1; indexA++) {
+                int i = A.nz_rows[indexA];
+                double valueA = A.nz_values[indexA];
+
+                int indexB = k*B.numCols;
+                int indexC = i*C.numCols;
+                int end = indexB + B.numCols;
+
+//                for (int j = 0; j < B.numCols; j++) {
+                while (indexB < end ) {
+                    C.data[indexC++] += valueA*B.data[indexB++];
+                }
             }
         }
     }
