@@ -43,14 +43,14 @@ public class ImplSparseSparseMult_O64 {
         x = checkDeclareRows(A, x);
         w = checkDeclareRows(A, w, true);
 
-        C.length = 0;
+        C.nz_length = 0;
 
         // C(i,j) = sum_k A(i,k) * B(k,j)
         int idx0 = B.col_idx[0];
         for (int bj = 1; bj <= B.numCols; bj++) {
             int colB = bj-1;
             int idx1 = B.col_idx[bj];
-            C.col_idx[bj] = C.length;
+            C.col_idx[bj] = C.nz_length;
 
             if( idx0 == idx1 ) {
                 continue;
@@ -92,13 +92,13 @@ public class ImplSparseSparseMult_O64 {
             int row = A.nz_rows[j];
 
             if( w[row] < mark ) {
-                if( C.length >= C.nz_rows.length ) {
-                    C.growMaxLength(C.length*2+1,true);
+                if( C.nz_length >= C.nz_rows.length ) {
+                    C.growMaxLength(C.nz_length *2+1,true);
                 }
 
                 w[row] = mark;
-                C.nz_rows[C.length] = row;
-                C.col_idx[mark] = ++C.length;
+                C.nz_rows[C.nz_length] = row;
+                C.col_idx[mark] = ++C.nz_length;
                 x[row] = A.nz_values[j]*alpha;
             } else {
                 x[row] += A.nz_values[j]*alpha;

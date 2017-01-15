@@ -122,7 +122,7 @@ public class TestMatrixFeatures_O64 {
         assertTrue( MatrixFeatures_O64.isZeros(new SMatrixCmpC_F64(10,12,0), UtilEjml.TEST_F64));
 
         SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,4,12,rand);
-        for (int i = 0; i < A.length; i++) {
+        for (int i = 0; i < A.nz_length; i++) {
             A.nz_values[i] = UtilEjml.EPS;
         }
 
@@ -153,7 +153,7 @@ public class TestMatrixFeatures_O64 {
 
         assertTrue(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertFalse(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
-        L.nz_values[L.length-1] = UtilEjml.EPS;
+        L.nz_values[L.nz_length -1] = UtilEjml.EPS;
         assertFalse(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
 
         // Hessenberg matrix of degree 1

@@ -42,7 +42,7 @@ public class TestRandomMatrices_O64 {
 
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);
-        assertEquals(10,a.length);
+        assertEquals(10,a.nz_length);
 
         int count = 0;
         for (int row = 0; row < numRows; row++) {
@@ -69,13 +69,13 @@ public class TestRandomMatrices_O64 {
             for( int length : new int[]{0,2,6,12,20} ) {
                 L = RandomMatrices_O64.createLowerTriangular(6, 0, length,-1,1, rand);
 //            L.print();
-                assertEquals(Math.max(6,length),L.length);
+                assertEquals(Math.max(6,length),L.nz_length);
                 assertTrue(L.isRowOrderValid());
                 assertTrue(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
 
                 L = RandomMatrices_O64.createLowerTriangular(6, 1, length,-1,1, rand);
 //                L.print();
-                assertEquals(Math.max(5,length),L.length);
+                assertEquals(Math.max(5,length),L.nz_length);
                 assertTrue(L.isRowOrderValid());
                 assertTrue(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
             }

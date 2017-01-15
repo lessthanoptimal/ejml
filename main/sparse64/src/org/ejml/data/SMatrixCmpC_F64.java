@@ -41,7 +41,7 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
     /**
      * Length of data. Number of non-zero values in the matrix
      */
-    public int length;
+    public int nz_length;
     /**
      * Specifies which row a specific non-zero value corresponds to.
      */
@@ -55,20 +55,20 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
     public int numRows;
     public int numCols;
 
-    public SMatrixCmpC_F64(int numRows , int numCols , int length ) {
-        length = Math.min(numCols*numRows,length);
+    public SMatrixCmpC_F64(int numRows , int numCols , int nz_length) {
+        nz_length = Math.min(numCols*numRows, nz_length);
 
         this.numRows = numRows;
         this.numCols = numCols;
-        this.length = length;
+        this.nz_length = nz_length;
 
-        nz_values = new double[ length ];
+        nz_values = new double[nz_length];
         col_idx = new int[ numCols+1 ];
-        nz_rows = new int[ length ];
+        nz_rows = new int[nz_length];
     }
 
     public SMatrixCmpC_F64(SMatrixCmpC_F64 original ) {
-        this(original.numRows, original.numCols, original.length);
+        this(original.numRows, original.numCols, original.nz_length);
 
         set(original);
     }
@@ -90,22 +90,23 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixCmpC_F64(numRows,numCols, length);
+        return (T)new SMatrixCmpC_F64(numRows,numCols, nz_length);
     }
 
     @Override
     public void set(Matrix original) {
         SMatrixCmpC_F64 o = (SMatrixCmpC_F64)original;
-        reshape(o.numRows, o.numCols, o.length);
+        reshape(o.numRows, o.numCols, o.nz_length);
 
-        System.arraycopy(o.nz_values, 0, nz_values, 0, length);
-        System.arraycopy(o.nz_rows, 0, nz_rows, 0, length);
+        System.arraycopy(o.nz_values, 0, nz_values, 0, nz_length);
+        System.arraycopy(o.nz_rows, 0, nz_rows, 0, nz_length);
         System.arraycopy(o.col_idx, 0, col_idx, 0, numCols);
     }
 
     @Override
     public void print() {
-        System.out.println(getClass().getSimpleName()+" "+numRows+" x "+numCols);
+        System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
+                +" , nz_length = "+ nz_length);
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
                 int index = nz_index(row,col);
@@ -173,14 +174,14 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
 
     @Override
     public int getNumElements() {
-        return length;
+        return nz_length;
     }
 
     public void reshape( int numRows , int numCols , int length ) {
         this.numRows = numRows;
         this.numCols = numCols;
         growMaxLength( length , false);
-        this.length = Math.min(nz_values.length,length);
+        this.nz_length = Math.min(nz_values.length,length);
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
@@ -201,8 +202,8 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
             int[] row_idx = new int[ length ];
 
             if( preserveValue ) {
-                System.arraycopy(this.nz_values, 0, data, 0, this.length);
-                System.arraycopy(this.nz_rows, 0, row_idx, 0, this.length);
+                System.arraycopy(this.nz_values, 0, data, 0, this.nz_length);
+                System.arraycopy(this.nz_rows, 0, row_idx, 0, this.nz_length);
             }
 
             this.nz_values = data;
@@ -234,12 +235,12 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
     }
 
     public void copyStructure( SMatrixCmpC_F64 orig ) {
-        reshape(orig.numRows, orig.numCols, orig.length);
+        reshape(orig.numRows, orig.numCols, orig.nz_length);
         System.arraycopy(orig.col_idx,0,col_idx,0,orig.numCols+1);
-        System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.length);
+        System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.nz_length);
     }
 
     public boolean isFull() {
-        return length == numRows*numCols;
+        return nz_length == numRows*numCols;
     }
 }

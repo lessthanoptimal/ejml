@@ -191,7 +191,7 @@ public class MatrixIO {
 
     public static void print(PrintStream out , Matrix_F32 mat , String format ) {
 
-        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense32" : "dense32 fixed";
+        String type = mat.getClass().getSimpleName();
 
         out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 

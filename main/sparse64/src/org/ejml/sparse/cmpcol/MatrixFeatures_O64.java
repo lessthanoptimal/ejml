@@ -30,7 +30,7 @@ public class MatrixFeatures_O64 {
         if( !isSameStructure(a,b) )
             return false;
 
-        for (int i = 0; i < a.length; i++) {
+        for (int i = 0; i < a.nz_length; i++) {
             if( a.nz_values[i] != b.nz_values[i] )
                 return false;
         }
@@ -41,7 +41,7 @@ public class MatrixFeatures_O64 {
         if( !isSameStructure(a,b) )
             return false;
 
-        for (int i = 0; i < a.length; i++) {
+        for (int i = 0; i < a.nz_length; i++) {
             if( Math.abs(a.nz_values[i]-b.nz_values[i]) > tol )
                 return false;
         }
@@ -56,12 +56,12 @@ public class MatrixFeatures_O64 {
      * @return true if the structure is the same
      */
     public static boolean isSameStructure(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b) {
-        if( a.numRows == b.numRows && a.numCols == b.numCols && a.length == b.length ) {
+        if( a.numRows == b.numRows && a.numCols == b.numCols && a.nz_length == b.nz_length) {
             for (int i = 0; i <= a.numCols; i++) {
                 if( a.col_idx[i] != b.col_idx[i] )
                     return false;
             }
-            for (int i = 0; i < a.length; i++) {
+            for (int i = 0; i < a.nz_length; i++) {
                 if( a.nz_rows[i] != b.nz_rows[i] )
                     return false;
             }
@@ -71,7 +71,7 @@ public class MatrixFeatures_O64 {
     }
 
     public static boolean hasUncountable( SMatrixCmpC_F64 A ) {
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             if(UtilEjml.isUncountable(A.nz_values[i])) {
                 return true;
             }
@@ -80,7 +80,7 @@ public class MatrixFeatures_O64 {
     }
 
     public static boolean isZeros(SMatrixCmpC_F64 A , double tol ) {
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             if(Math.abs(A.nz_values[i]) > tol) {
                 return false;
             }
@@ -92,7 +92,7 @@ public class MatrixFeatures_O64 {
         if( A.numCols != A.numRows )
             return false;
 
-        if( A.length != A.numCols )
+        if( A.nz_length != A.numCols )
             return false;
 
         for( int i = 1; i <= A.numCols; i++ ) {
@@ -124,7 +124,7 @@ public class MatrixFeatures_O64 {
             return false;
 
         // diagonal elements must be non-zero
-        if( A.length < A.numCols-hessenberg )
+        if( A.nz_length < A.numCols-hessenberg )
             return false;
 
         for (int col = 0; col < A.numCols; col++) {

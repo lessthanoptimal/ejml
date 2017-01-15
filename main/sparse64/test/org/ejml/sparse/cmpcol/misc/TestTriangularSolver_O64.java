@@ -58,7 +58,7 @@ public class TestTriangularSolver_O64 {
     public void solveU_denseX() {
         for (int nz_size : new int[]{5, 8, 10, 20}) {
             SMatrixCmpC_F64 L = RandomMatrices_O64.createLowerTriangular(5, 0, nz_size, -1, 1, rand);
-            SMatrixCmpC_F64 U = new SMatrixCmpC_F64(5, 5, L.length);
+            SMatrixCmpC_F64 U = new SMatrixCmpC_F64(5, 5, L.nz_length);
             CommonOps_O64.transpose(L, U, null);
 
             DMatrixRow_F64 b = RandomMatrices_R64.createRandom(5, 1, rand);

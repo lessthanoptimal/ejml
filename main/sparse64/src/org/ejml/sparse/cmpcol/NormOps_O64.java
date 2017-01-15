@@ -28,7 +28,7 @@ public class NormOps_O64 {
     public static double fastNormF(SMatrixCmpC_F64 A ) {
         double total = 0;
 
-        for (int i = 0; i < A.length; i++) {
+        for (int i = 0; i < A.nz_length; i++) {
             double x = A.nz_values[i];
             total += x*x;
         }
@@ -40,7 +40,7 @@ public class NormOps_O64 {
         double total = 0;
         double max = CommonOps_O64.elementMaxAbs(A);
 
-        for (int i = 0; i < A.length; i++) {
+        for (int i = 0; i < A.nz_length; i++) {
             double x = A.nz_values[i]/max;
             total += x*x;
         }

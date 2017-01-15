@@ -97,7 +97,7 @@ public class TestConvertSparseMatrix_F64 {
         assertEquals(a.numCols, b.numCols);
 
         int found = MatrixFeatures_R64.countNonZero(b);
-        assertEquals(a.length, found);
+        assertEquals(a.nz_length, found);
         EjmlUnitTests.assertEquals(a, b);
 
         // now try it the other direction
@@ -123,7 +123,7 @@ public class TestConvertSparseMatrix_F64 {
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
-        assertEquals(a.length, b.length);
+        assertEquals(a.length, b.nz_length);
         for (int i = 0; i < a.length; i++) {
             SMatrixTriplet_F64.Element e = a.data[i];
             assertEquals(e.value, b.get(e.row, e.col), UtilEjml.TEST_F64);

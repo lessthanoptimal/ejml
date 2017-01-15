@@ -40,7 +40,7 @@ public class ImplCommonOps_O64 {
      */
     public static void transpose(SMatrixCmpC_F64 A , SMatrixCmpC_F64 C , int work[] ) {
         work = checkDeclareRows(A, work, true);
-        C.length = A.length;
+        C.nz_length = A.nz_length;
 
         // compute the histogram for each row in 'a'
         int idx0 = A.col_idx[0];
@@ -101,10 +101,10 @@ public class ImplCommonOps_O64 {
     {
         x = checkDeclareRows(A, x);
 
-        C.length = 0;
+        C.nz_length = 0;
 
         for (int col = 0; col < A.numCols; col++) {
-            C.col_idx[col] = C.length;
+            C.col_idx[col] = C.nz_length;
 
             // construct the table now so that the row order will not need to be sorted later on
             int idxA0 = A.col_idx[col], idxA1 = A.col_idx[col+1];
@@ -130,12 +130,12 @@ public class ImplCommonOps_O64 {
                     row = B.nz_rows[indexB++];
                 }
 
-                if( C.length >= C.nz_rows.length ) {
-                    C.growMaxLength(C.length*2+1,true);
+                if( C.nz_length >= C.nz_rows.length ) {
+                    C.growMaxLength(C.nz_length *2+1,true);
                 }
 
-                C.nz_rows[C.length] = row;
-                C.col_idx[col+1] = ++C.length;
+                C.nz_rows[C.nz_length] = row;
+                C.col_idx[col+1] = ++C.nz_length;
                 x[row] = 0;
             }
 

@@ -41,8 +41,8 @@ public class CommonOps_O64 {
         if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
 
-        a_t.growMaxLength(a.length, false);
-        a_t.length = a.length;
+        a_t.growMaxLength(a.nz_length, false);
+        a_t.nz_length = a.nz_length;
 
         ImplCommonOps_O64.transpose(a, a_t, work);
     }
@@ -122,7 +122,7 @@ public class CommonOps_O64 {
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
         B.copyStructure(A);
 
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             B.nz_values[i] = A.nz_values[i]*scalar;
         }
     }
@@ -132,17 +132,17 @@ public class CommonOps_O64 {
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
         B.copyStructure(A);
 
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             B.nz_values[i] = A.nz_values[i]/scalar;
         }
     }
 
     public static double elementMinAbs( SMatrixCmpC_F64 A ) {
-        if( A.length == 0)
+        if( A.nz_length == 0)
             return 0;
 
         double min = A.isFull() ? Math.abs(A.nz_values[0]) : 0;
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             double val = Math.abs(A.nz_values[i]);
             if( val < min ) {
                 min = val;
@@ -153,11 +153,11 @@ public class CommonOps_O64 {
     }
 
     public static double elementMaxAbs( SMatrixCmpC_F64 A ) {
-        if( A.length == 0)
+        if( A.nz_length == 0)
             return 0;
 
         double max = A.isFull() ? Math.abs(A.nz_values[0]) : 0;
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             double val = Math.abs(A.nz_values[i]);
             if( val > max ) {
                 max = val;
@@ -168,11 +168,11 @@ public class CommonOps_O64 {
     }
 
     public static double elementMin( SMatrixCmpC_F64 A ) {
-        if( A.length == 0)
+        if( A.nz_length == 0)
             return 0;
 
         double min = A.isFull() ? A.nz_values[0] : 0;
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             double val = A.nz_values[i];
             if( val < min ) {
                 min = val;
@@ -183,11 +183,11 @@ public class CommonOps_O64 {
     }
 
     public static double elementMax( SMatrixCmpC_F64 A ) {
-        if( A.length == 0)
+        if( A.nz_length == 0)
             return 0;
 
         double max = A.isFull() ? A.nz_values[0] : 0;
-        for( int i = 0; i < A.length; i++ ) {
+        for(int i = 0; i < A.nz_length; i++ ) {
             double val = A.nz_values[i];
             if( val > max ) {
                 max = val;

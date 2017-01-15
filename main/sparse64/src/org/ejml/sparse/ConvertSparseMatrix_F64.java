@@ -124,7 +124,7 @@ public class ConvertSparseMatrix_F64 {
             dst = new SMatrixCmpC_F64(src.numRows, src.numCols, nonzero);
         else
             dst.reshape(src.numRows, src.numCols, nonzero);
-        dst.length = 0;
+        dst.nz_length = 0;
 
         dst.col_idx[0] = 0;
         for (int col = 0; col < src.numCols; col++) {
@@ -133,11 +133,11 @@ public class ConvertSparseMatrix_F64 {
                 if( value == 0 )
                     continue;
 
-                dst.nz_rows[dst.length] = row;
-                dst.nz_values[dst.length] = value;
-                dst.length += 1;
+                dst.nz_rows[dst.nz_length] = row;
+                dst.nz_values[dst.nz_length] = value;
+                dst.nz_length += 1;
             }
-            dst.col_idx[col+1] = dst.length;
+            dst.col_idx[col+1] = dst.nz_length;
         }
 
         return dst;
@@ -183,7 +183,7 @@ public class ConvertSparseMatrix_F64 {
             dst.nz_rows[index] = e.row;
             dst.nz_values[index] = e.value;
         }
-        dst.length = src.length;
+        dst.nz_length = src.length;
 
         sorter.sort(dst.col_idx,dst.numCols+1,dst.nz_rows,dst.nz_values);
 
@@ -196,7 +196,7 @@ public class ConvertSparseMatrix_F64 {
 
     public static SMatrixTriplet_F64 convert(SMatrixCmpC_F64 src , SMatrixTriplet_F64 dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.length );
+            dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.nz_length);
         else
             dst.reshape( src.numRows , src.numCols );
 
