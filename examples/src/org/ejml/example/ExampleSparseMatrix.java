@@ -46,6 +46,7 @@ public class ExampleSparseMatrix {
 
         SMatrixCmpC_F64 Z = RandomMatrices_O64.uniform(20,5,20,rand);
         Z.print();
+        Z.printNonZero();
 
         // Create a 100000x1000 matrix that is 5% filled
         SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(ROWS,COLS,(int)(N*0.05),rand);

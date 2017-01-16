@@ -23,10 +23,10 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixTriplet_F64 implements Matrix_F64
+public class SMatrixTriplet_F64 implements SMatrix_F64
 {
-    public Element[] data = new Element[0];
-    public int length;
+    public Element[] nz_data = new Element[0];
+    public int nz_length;
     public int numRows;
     public int numCols;
 
@@ -50,7 +50,7 @@ public class SMatrixTriplet_F64 implements Matrix_F64
     }
 
     public void reset() {
-        length = 0;
+        nz_length = 0;
         numRows = 0;
         numCols = 0;
     }
@@ -58,14 +58,20 @@ public class SMatrixTriplet_F64 implements Matrix_F64
     public void reshape( int numRows , int numCols ) {
         this.numRows = numRows;
         this.numCols = numCols;
-        this.length = 0;
+        this.nz_length = 0;
+    }
+
+    @Override
+    public void reshape(int numRows, int numCols, int nz_length) {
+        reshape(numRows, numCols);
+        growData(nz_length);
     }
 
     public void addItem(int row , int col , double value ) {
-        if( length == data.length ) {
-            growData(( length*2 + 10 ));
+        if( nz_length == nz_data.length ) {
+            growData(( nz_length *2 + 10 ));
         }
-        data[length++].set(row,col, value);
+        nz_data[nz_length++].set(row,col, value);
     }
 
     @Override
@@ -87,7 +93,7 @@ public class SMatrixTriplet_F64 implements Matrix_F64
 
     @Override
     public int getNumElements() {
-        return length;
+        return nz_length;
     }
 
     @Override
@@ -108,8 +114,8 @@ public class SMatrixTriplet_F64 implements Matrix_F64
     }
 
     public Element findItem(int row , int col ) {
-        for (int i = 0; i < length; i++) {
-            Element e = data[i];
+        for (int i = 0; i < nz_length; i++) {
+            Element e = nz_data[i];
             if( e.row == row && e.col == col )
                 return e;
         }
@@ -118,21 +124,21 @@ public class SMatrixTriplet_F64 implements Matrix_F64
 
     /**
      * Will resize the array and keep all the old data
-     * @param maxLength New maximum length of data
+     * @param max_nz_length New maximum length of data
      */
-    public void growData( int maxLength ) {
-        if( data.length < maxLength ) {
-            Element[] tmp = new Element[maxLength];
-            System.arraycopy(data,0,tmp,0,data.length);
-            for (int i = data.length; i < maxLength; i++) {
+    public void growData( int max_nz_length ) {
+        if( nz_data.length < max_nz_length ) {
+            Element[] tmp = new Element[max_nz_length];
+            System.arraycopy(nz_data,0,tmp,0, nz_data.length);
+            for (int i = nz_data.length; i < max_nz_length; i++) {
                 tmp[i] = new Element();
             }
-            data = tmp;
+            nz_data = tmp;
         }
     }
 
     public int getLength() {
-        return length;
+        return nz_length;
     }
 
     @Override
@@ -152,24 +158,48 @@ public class SMatrixTriplet_F64 implements Matrix_F64
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixTriplet_F64(numRows,numCols,length);
+        return (T)new SMatrixTriplet_F64(numRows,numCols, nz_length);
     }
 
     @Override
     public void set(Matrix original) {
         SMatrixTriplet_F64 orig = (SMatrixTriplet_F64)original;
         reshape(orig.numRows,orig.numCols);
-        growData(orig.length);
+        growData(orig.nz_length);
 
-        this.length = orig.length;
-        for (int i = 0; i < length; i++) {
-            data[i].set(orig.data[i]);
+        this.nz_length = orig.nz_length;
+        for (int i = 0; i < nz_length; i++) {
+            nz_data[i].set(orig.nz_data[i]);
         }
     }
 
     @Override
     public void print() {
+        System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
+                +" , nz_length = "+ nz_length);
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                Element e = findItem(row,col);
+                if( e != null )
+                    System.out.printf("%6.3f",e.value);
+                else
+                    System.out.print("   *  ");
+                if( col != numCols-1 )
+                    System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
 
+    @Override
+    public void printNonZero() {
+        System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
+                +" , nz_length = "+ nz_length);
+
+        for (int i = 0; i < nz_length; i++) {
+            Element e = nz_data[i];
+            System.out.printf("%d %d %f\n",e.row,e.col,e.value);
+        }
     }
 
     public static class Element {

@@ -43,7 +43,7 @@ public class TestRandomMatrices_T64 {
 
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);
-        assertEquals(10,a.length);
+        assertEquals(10,a.nz_length);
 
         int count = 0;
         for (int row = 0; row < numRows; row++) {

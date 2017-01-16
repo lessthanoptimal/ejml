@@ -77,8 +77,8 @@ public class ConvertSparseMatrix_F64 {
             dst.zero();
         }
 
-        for (int i = 0; i < src.length; i++) {
-            SMatrixTriplet_F64.Element e = src.data[i];
+        for (int i = 0; i < src.nz_length; i++) {
+            SMatrixTriplet_F64.Element e = src.nz_data[i];
 
             dst.unsafe_set(e.row, e.col, e.value);
         }
@@ -153,9 +153,9 @@ public class ConvertSparseMatrix_F64 {
     public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst , int hist[] ,
                                           SortCoupledArray_F64 sorter ) {
         if( dst == null )
-            dst = new SMatrixCmpC_F64(src.numRows, src.numCols , src.length);
+            dst = new SMatrixCmpC_F64(src.numRows, src.numCols , src.nz_length);
         else
-            dst.reshape(src.numRows, src.numCols, src.length);
+            dst.reshape(src.numRows, src.numCols, src.nz_length);
 
         if( sorter == null )
             sorter = new SortCoupledArray_F64();
@@ -168,22 +168,22 @@ public class ConvertSparseMatrix_F64 {
             throw new IllegalArgumentException("Length of hist must be at least numCols");
 
         // compute the number of elements in each columns
-        for (int i = 0; i < src.length; i++) {
-            hist[src.data[i].col]++;
+        for (int i = 0; i < src.nz_length; i++) {
+            hist[src.nz_data[i].col]++;
         }
 
         // define col_idx
         colsum(dst,hist);
 
         // now write the row indexes and the values
-        for (int i = 0; i < src.length; i++) {
-            SMatrixTriplet_F64.Element e = src.data[i];
+        for (int i = 0; i < src.nz_length; i++) {
+            SMatrixTriplet_F64.Element e = src.nz_data[i];
 
             int index = hist[e.col]++;
             dst.nz_rows[index] = e.row;
             dst.nz_values[index] = e.value;
         }
-        dst.nz_length = src.length;
+        dst.nz_length = src.nz_length;
 
         sorter.sort(dst.col_idx,dst.numCols+1,dst.nz_rows,dst.nz_values);
 

@@ -33,7 +33,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixCmpC_F64 implements Matrix_F64 {
+public class SMatrixCmpC_F64 implements SMatrix_F64 {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */
@@ -122,6 +122,24 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
     }
 
     @Override
+    public void printNonZero() {
+        System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
+                +" , nz_length = "+ nz_length);
+
+        for (int col = 0; col < numCols; col++) {
+            int idx0 = col_idx[col];
+            int idx1 = col_idx[col+1];
+
+            for (int i = idx0; i < idx1; i++) {
+                int row = nz_rows[i];
+                double value = nz_values[i];
+
+                System.out.printf("%d %d %f\n",row,col,value);
+            }
+        }
+    }
+
+    @Override
     public double get(int row, int col) {
         if( row < 0 || row >= numRows || col < 0 || col >= numCols )
             throw new IllegalArgumentException("Outside of matrix bounds");
@@ -177,11 +195,12 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
         return nz_length;
     }
 
-    public void reshape( int numRows , int numCols , int length ) {
+    @Override
+    public void reshape( int numRows , int numCols , int nz_length ) {
         this.numRows = numRows;
         this.numCols = numCols;
-        growMaxLength( length , false);
-        this.nz_length = Math.min(nz_values.length,length);
+        growMaxLength( nz_length , false);
+        this.nz_length = Math.min(nz_values.length,nz_length);
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
@@ -191,15 +210,15 @@ public class SMatrixCmpC_F64 implements Matrix_F64 {
     /**
      * Increases the maximum size of the data array so that it can store sparse data up to 'length'.
      *
-     * @param length Desired maximum length of sparse data
+     * @param nz_values Desired maximum length of sparse data
      * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
      */
-    public void growMaxLength( int length , boolean preserveValue ) {
+    public void growMaxLength( int nz_values , boolean preserveValue ) {
         // don't increase the size beyound the max possible matrix size
-        length = Math.min(numRows*numCols, length);
-        if( length > nz_values.length ) {
-            double[] data = new double[ length ];
-            int[] row_idx = new int[ length ];
+        nz_values = Math.min(numRows*numCols, nz_values);
+        if( nz_values > this.nz_values.length ) {
+            double[] data = new double[ nz_values ];
+            int[] row_idx = new int[ nz_values ];
 
             if( preserveValue ) {
                 System.arraycopy(this.nz_values, 0, data, 0, this.nz_length);

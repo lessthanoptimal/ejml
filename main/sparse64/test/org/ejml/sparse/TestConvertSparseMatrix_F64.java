@@ -61,7 +61,7 @@ public class TestConvertSparseMatrix_F64 {
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
-        assertEquals(5*6-4, b.length);
+        assertEquals(5*6-4, b.nz_length);
         for (int row = 0; row < a.numRows; row++) {
             for (int col = 0; col < a.numCols; col++) {
                 SMatrixTriplet_F64.Element e = b.findItem(row,col);
@@ -123,9 +123,9 @@ public class TestConvertSparseMatrix_F64 {
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
-        assertEquals(a.length, b.nz_length);
-        for (int i = 0; i < a.length; i++) {
-            SMatrixTriplet_F64.Element e = a.data[i];
+        assertEquals(a.nz_length, b.nz_length);
+        for (int i = 0; i < a.nz_length; i++) {
+            SMatrixTriplet_F64.Element e = a.nz_data[i];
             assertEquals(e.value, b.get(e.row, e.col), UtilEjml.TEST_F64);
         }
         assertTrue(b.isRowOrderValid());

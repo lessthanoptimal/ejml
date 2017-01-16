@@ -29,8 +29,8 @@ public class MatrixFeatures_T64 {
         if( !isSameShape(a,b) )
             return false;
 
-        for (int i = 0; i < a.length; i++) {
-            SMatrixTriplet_F64.Element ea = a.data[i];
+        for (int i = 0; i < a.nz_length; i++) {
+            SMatrixTriplet_F64.Element ea = a.nz_data[i];
             SMatrixTriplet_F64.Element eb = b.findItem(ea.row, ea.col);
 
             if( eb == null || ea.value != eb.value )
@@ -43,8 +43,8 @@ public class MatrixFeatures_T64 {
         if( !isSameShape(a,b) )
             return false;
 
-        for (int i = 0; i < a.length; i++) {
-            SMatrixTriplet_F64.Element ea = a.data[i];
+        for (int i = 0; i < a.nz_length; i++) {
+            SMatrixTriplet_F64.Element ea = a.nz_data[i];
             SMatrixTriplet_F64.Element eb = b.findItem(ea.row, ea.col);
 
             if( eb == null || Math.abs(ea.value-eb.value) > tol )
@@ -54,6 +54,6 @@ public class MatrixFeatures_T64 {
     }
 
     public static boolean isSameShape(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b) {
-        return a.numRows == b.numRows && a.numCols == b.numCols && a.length == b.length;
+        return a.numRows == b.numRows && a.numCols == b.numCols && a.nz_length == b.nz_length;
     }
 }

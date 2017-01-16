@@ -47,7 +47,7 @@ public class TestMatrixFeatures_T64 {
 
         // make it no longer exactly equal
         b.numCols -= 1;
-        b.data[0].value += UtilEjml.TEST_F64*0.1;
+        b.nz_data[0].value += UtilEjml.TEST_F64*0.1;
         assertFalse(MatrixFeatures_T64.isEquals(a,b));
     }
 
@@ -69,11 +69,11 @@ public class TestMatrixFeatures_T64 {
 
         // make it no longer exactly equal, but within tolerance
         b.numCols -= 1;
-        b.data[0].value += UtilEjml.TEST_F64*0.1;
+        b.nz_data[0].value += UtilEjml.TEST_F64*0.1;
         assertTrue(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
 
         // outside of tolerance
-        b.data[0].value += UtilEjml.TEST_F64*10;
+        b.nz_data[0].value += UtilEjml.TEST_F64*10;
         assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
     }
 }

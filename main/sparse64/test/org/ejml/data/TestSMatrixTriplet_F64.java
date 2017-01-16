@@ -34,9 +34,9 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseMatrix_F64 {
         SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,10);
 
         assertEquals(0,m.getLength());
-        assertEquals(10,m.data.length);
-        for (int i = 0; i < m.data.length; i++) {
-            assertTrue(m.data[i] != null);
+        assertEquals(10,m.nz_data.length);
+        for (int i = 0; i < m.nz_data.length; i++) {
+            assertTrue(m.nz_data[i] != null);
         }
     }
 
@@ -46,13 +46,13 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseMatrix_F64 {
 
         m.growData(4);
         assertEquals(0,m.getLength());
-        assertEquals(10,m.data.length);
+        assertEquals(10,m.nz_data.length);
 
         m.growData(12);
         assertEquals(0,m.getLength());
-        assertEquals(12,m.data.length);
-        for (int i = 0; i < m.data.length; i++) {
-            assertTrue(m.data[i] != null);
+        assertEquals(12,m.nz_data.length);
+        for (int i = 0; i < m.nz_data.length; i++) {
+            assertTrue(m.nz_data[i] != null);
         }
     }
 
@@ -63,20 +63,20 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseMatrix_F64 {
         m.addItem(1,2,3);
         m.addItem(1,3,4);
 
-        assertEquals(2,m.length);
-        assertEquals(2,m.data.length);
+        assertEquals(2,m.nz_length);
+        assertEquals(2,m.nz_data.length);
 
-        check(m.data[0],1,2,3);
-        check(m.data[1],1,3,4);
+        check(m.nz_data[0],1,2,3);
+        check(m.nz_data[1],1,3,4);
 
         // now force it to grow
         m.addItem(2,3,5);
-        assertEquals(3,m.length);
-        assertTrue(m.data.length >= 3);
+        assertEquals(3,m.nz_length);
+        assertTrue(m.nz_data.length >= 3);
 
-        check(m.data[0],1,2,3);
-        check(m.data[1],1,3,4);
-        check(m.data[2],2,3,5);
+        check(m.nz_data[0],1,2,3);
+        check(m.nz_data[1],1,3,4);
+        check(m.nz_data[2],2,3,5);
     }
 
     private void check(SMatrixTriplet_F64.Element e , int row , int col , double value ) {
