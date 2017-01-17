@@ -31,7 +31,7 @@ public class MatrixFeatures_T64 {
 
         for (int i = 0; i < a.nz_length; i++) {
             SMatrixTriplet_F64.Element ea = a.nz_data[i];
-            SMatrixTriplet_F64.Element eb = b.findItem(ea.row, ea.col);
+            SMatrixTriplet_F64.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
 
             if( eb == null || ea.value != eb.value )
                 return false;
@@ -45,7 +45,7 @@ public class MatrixFeatures_T64 {
 
         for (int i = 0; i < a.nz_length; i++) {
             SMatrixTriplet_F64.Element ea = a.nz_data[i];
-            SMatrixTriplet_F64.Element eb = b.findItem(ea.row, ea.col);
+            SMatrixTriplet_F64.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
 
             if( eb == null || Math.abs(ea.value-eb.value) > tol )
                 return false;

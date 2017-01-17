@@ -314,4 +314,24 @@ public class TestCommonOps_O64 {
             assertEquals(expected,found, UtilEjml.TEST_F64);
         }
     }
+
+    @Test
+    public void diag() {
+        double d[] = new double[]{1.2,2.2,3.3};
+
+        SMatrixCmpC_F64 A = CommonOps_O64.diag(d);
+
+        assertEquals(3,A.numRows);
+        assertEquals(3,A.numCols);
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if( row != col ) {
+                    assertEquals(0,A.get(row,col), UtilEjml.TEST_F64);
+                } else {
+                    assertEquals(d[row],A.get(row,col), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
 }

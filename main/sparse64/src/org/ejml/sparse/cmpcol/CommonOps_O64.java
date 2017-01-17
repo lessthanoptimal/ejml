@@ -196,4 +196,17 @@ public class CommonOps_O64 {
 
         return max;
     }
+
+    public static SMatrixCmpC_F64 diag( double... values ) {
+        int N = values.length;
+        SMatrixCmpC_F64 A = new SMatrixCmpC_F64(N,N,N);
+
+        for (int i = 0; i < N; i++) {
+            A.col_idx[i+1] = i+1;
+            A.nz_rows[i] = i;
+            A.nz_values[i] = values[i];
+        }
+
+        return A;
+    }
 }

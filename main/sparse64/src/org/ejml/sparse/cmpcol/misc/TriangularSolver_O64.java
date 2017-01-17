@@ -20,6 +20,8 @@ package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.data.SMatrixCmpC_F64;
 
+import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclare;
+
 /**
  * @author Peter Abeles
  */
@@ -74,15 +76,81 @@ public class TriangularSolver_O64 {
         }
     }
 
-    // TODO modify algorithm so that G does not get modified
-    // TODO pick a better name
-    public static void reach( SMatrixCmpC_F64 G , SMatrixCmpC_F64 B , int k, int xi[] )
+    /**
+     * <p>Determines which elements in 'X' will be non-zero when the system below is solved for.</p>
+     * G*X = B
+     *
+     * <p>xi will contain a list of ordered row indexes in B which will be modified starting at xi[top] to xi[n-1].  top
+     * is the value returned by this function.</p>
+     *
+     * <p>See cs_reach in dsparse library to understand the algorithm.  This code follow the spirit but not
+     * the details because of differences in the contract.</p>
+     *
+     * @param G (Input) Lower triangular system matrix.  Diagonal elements are assumed to be not zero.  Not modified.
+     * @param B (Input) Matrix B. Not modified.
+     * @param colB Column in B being solved for
+     * @param xi (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
+     * @param w Work space array used internally.
+     * @return Returns the index of the first element in the xi list.  Also known as top.
+     */
+    public static int searchNzRowsInB( SMatrixCmpC_F64 G , SMatrixCmpC_F64 B , int colB, int xi[] , int w[])
     {
+        if( xi.length < B.numRows )
+            throw new IllegalArgumentException("xi must be at least this long: "+B.numRows);
+        w = checkDeclare(B.numRows,w,true);
 
+        // use 'w' as a marker to know which rows in B have been examined.  0 = unexamined and 1 = examined
+        int idx0 = B.col_idx[colB];
+        int idx1 = B.col_idx[colB+1];
+
+        int top = G.numRows;
+        for (int i = idx0; i < idx1; i++) {
+            int rowB = B.nz_rows[i];
+
+            if( w[rowB] == 0 ) {
+                top = searchNzRowsInB_DFS(rowB,G,top,xi,w);
+            }
+        }
+
+        return top;
     }
 
-    static void reach_dfs( int j , SMatrixCmpC_F64 G , int top , int x[], int pstack[] )
+    /**
+     * Given the first row in B it performs a DFS seeing which elements in 'B' will be not zero.  A row=i in 'B' will
+     * be not zero if any element in row=(j < i) in G is not zero
+     */
+    private static int searchNzRowsInB_DFS( int rowB , SMatrixCmpC_F64 G , int top , int xi[], int w[] )
     {
+        w[rowB] = 1;  // mark this row as being examined
+        int head = 0; // put the selected row into the FILO stack
+        xi[head] = rowB; // use the head of xi to store where the stack it's searching.  The tail is where
+                         // the graph ordered list of rows in B is stored.
+        while( head >= 0 ) {
+            // the column in G being examined
+            int G_col = xi[head--];
 
+            // See if there are any children which have yet to be examined
+            boolean done = true;
+
+            int idx0 = G.col_idx[G_col];
+            int idx1 = G.col_idx[G_col+1];
+
+            for (int j = idx0; j < idx1; j++) {
+                int jrow = G.nz_rows[j];
+                if( w[jrow] == 0 ) {
+                    w[jrow] = 1;
+                    xi[++head] = jrow;
+                    done = false;
+                }
+            }
+
+            if( done ) {
+                xi[--top] = G_col;
+            }
+
+        }
+        return top;
     }
+
+
 }

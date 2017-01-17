@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -71,6 +72,70 @@ public class TestTriangularSolver_O64 {
 
             assertTrue(MatrixFeatures_R64.isIdentical(found, b, UtilEjml.TEST_F64));
         }
+    }
+
+    /**
+     * Test a simple case where A is diagonal
+     */
+    @Test
+    public void searchNzRowsInB_diag() {
+        SMatrixCmpC_F64 A = CommonOps_O64.diag(1,2,3);
+        SMatrixCmpC_F64 B = RandomMatrices_O64.uniform(3,1,3,-1,1,rand);
+
+        int xi[] = new int[A.numCols];
+
+        // A is diagonal and B is filled in
+        int top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+
+        assertEquals(0,top);
+        for (int i = 0; i < 3; i++) {
+            assertEquals(2-i,xi[i]);
+        }
+
+        // A is diagonal and B is empty
+        B = new SMatrixCmpC_F64(3,1,3);
+        top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(3,top);
+
+        // A is diagonal and B has element 1 not zero
+        B.set(1,0,2.0);
+        top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(2,top);
+        assertEquals(1,xi[2]);
+
+        // A is diagonal with one missing and B is full
+        A.remove(1,1);
+        B = RandomMatrices_O64.uniform(3,1,3,-1,1,rand);
+        top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(0,top);
+        for (int i = 0; i < 3; i++) {
+            assertEquals(i,xi[i]);
+        }
+
+        // A is diagonal with one missing and B is missing the same element
+        B.remove(1,0);
+        top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(1,top);
+        assertEquals(2,xi[1]);
+        assertEquals(0,xi[2]);
+
+    }
+
+    /**
+     * A is triangular
+     */
+    @Test
+    public void searchNzRowsInB_triangle() {
+
+    }
+
+
+    /**
+     * hand constructed system and verify that the results are as expected
+     */
+    @Test
+    public void searchNzRowsInB_case0() {
+
     }
 
 }

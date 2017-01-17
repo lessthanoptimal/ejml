@@ -21,7 +21,7 @@ package org.ejml.sparse.cmpcol.mult;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
 
-import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclareRows;
+import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclare;
 
 /**
  * @author Peter Abeles
@@ -40,8 +40,8 @@ public class ImplSparseSparseMult_O64 {
     public static void mult(SMatrixCmpC_F64 A, SMatrixCmpC_F64 B, SMatrixCmpC_F64 C,
                             int w[], double x[])
     {
-        x = checkDeclareRows(A, x);
-        w = checkDeclareRows(A, w, true);
+        x = checkDeclare(A.numRows, x);
+        w = checkDeclare(A.numRows, w, true);
 
         C.nz_length = 0;
 

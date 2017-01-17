@@ -64,7 +64,7 @@ public class TestConvertSparseMatrix_F64 {
         assertEquals(5*6-4, b.nz_length);
         for (int row = 0; row < a.numRows; row++) {
             for (int col = 0; col < a.numCols; col++) {
-                SMatrixTriplet_F64.Element e = b.findItem(row,col);
+                SMatrixTriplet_F64.Element e = b.nz_data[b.nz_index(row,col)];
 
                 if( a.get(row,col) == 0.0 ) {
                     assertTrue( null == e );

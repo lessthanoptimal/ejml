@@ -38,4 +38,16 @@ public interface SMatrix_F64 extends Matrix_F64 {
      * @param nz_length Number of non-zero elements
      */
     void reshape( int numRows , int numCols , int nz_length );
+
+    /**
+     * Reduces the size of internal data structures to their minimal size.  No information is lost bu
+     */
+    void shrinkArrays();
+
+    /**
+     * If the specified element is non-zero it is removed from the structure
+     * @param row the row
+     * @param col the column
+     */
+    void remove( int row , int col );
 }

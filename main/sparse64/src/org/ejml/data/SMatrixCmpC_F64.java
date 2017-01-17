@@ -177,18 +177,19 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
 
     @Override
     public void unsafe_set(int row, int col, double val) {
-        int idx0 = col_idx[col];
-        int idx1 = col_idx[col+1];
-
-        for (int i = idx0; i < idx1; i++) {
-            if( nz_rows[i] == row ) {
-                nz_values[i] = val;
-                return;
-            }
+        int index = nz_index(row,col);
+        if( index >= 0 ) {
+            nz_values[index] = val;
+        } else {
+            throw new RuntimeException("Need to implement the ability to insert an element");
         }
-
-        throw new IllegalArgumentException("Setting of zero elements is not currently supported");
     }
+
+    @Override
+    public void remove( int row , int col ) {
+        throw new RuntimeException("Implement");
+    }
+
 
     @Override
     public int getNumElements() {
@@ -204,6 +205,20 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
+        }
+    }
+
+    @Override
+    public void shrinkArrays() {
+        if( nz_length < nz_values.length ) {
+            double tmp_values[] = new double[nz_length];
+            int tmp_rows[] = new int[nz_length];
+
+            System.arraycopy(this.nz_values,0,tmp_values,0,nz_length);
+            System.arraycopy(this.nz_rows,0,tmp_rows,0,nz_length);
+
+            this.nz_values = tmp_values;
+            this.nz_rows = tmp_rows;
         }
     }
 

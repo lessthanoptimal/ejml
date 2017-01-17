@@ -91,4 +91,9 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
             }
         }
     }
+
+    @Test
+    public void remove() {
+        fail("Implement");
+    }
 }

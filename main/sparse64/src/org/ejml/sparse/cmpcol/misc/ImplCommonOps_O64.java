@@ -39,7 +39,7 @@ public class ImplCommonOps_O64 {
      * @param work Work space.  null or an array the size of the rows in 'a'
      */
     public static void transpose(SMatrixCmpC_F64 A , SMatrixCmpC_F64 C , int work[] ) {
-        work = checkDeclareRows(A, work, true);
+        work = checkDeclare(A.numRows, work, true);
         C.nz_length = A.nz_length;
 
         // compute the histogram for each row in 'a'
@@ -99,7 +99,7 @@ public class ImplCommonOps_O64 {
     public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
                            double x[] )
     {
-        x = checkDeclareRows(A, x);
+        x = checkDeclare(A.numRows, x);
 
         C.nz_length = 0;
 
@@ -162,20 +162,20 @@ public class ImplCommonOps_O64 {
         }
     }
 
-    public static int[] checkDeclareRows(SMatrixCmpC_F64 A, int[] w, boolean fillZeros) {
+    public static int[] checkDeclare( int N, int[] w, boolean fillZeros) {
         if( w == null )
-            w = new int[A.numRows];
-        else if( w.length < A.numRows )
+            w = new int[N];
+        else if( w.length < N )
             throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
         else if( fillZeros )
-            Arrays.fill(w,0,A.numRows,0);
+            Arrays.fill(w,0,N,0);
         return w;
     }
 
-    public static double[] checkDeclareRows(SMatrixCmpC_F64 A, double[] x) {
+    public static double[] checkDeclare( int N, double[] x) {
         if( x == null )
-            x = new double[A.numRows];
-        else if( x.length < A.numRows )
+            x = new double[N];
+        else if( x.length < N )
             throw new IllegalArgumentException("x needs to at least be as long as A.numRows");
         return x;
     }

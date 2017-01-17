@@ -91,8 +91,8 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseMatrix_F64 {
 
         m.addItem(1,2, 5);
 
-        assertTrue( null == m.findItem(0,1));
-        check( m.findItem(1,2), 1,2,5);
+        assertTrue( -1 == m.nz_index(0,1));
+        check( m.nz_data[m.nz_index(1,2)], 1,2,5);
     }
 
     @Override

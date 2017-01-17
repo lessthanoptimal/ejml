@@ -84,11 +84,11 @@ public class SMatrixTriplet_F64 implements SMatrix_F64
 
     @Override
     public void unsafe_set(int row, int col, double value) {
-        Element e = findItem(row,col);
-        if( e == null )
+        int index = nz_index(row,col);
+        if( index < 0 )
             addItem( row,col,value);
         else
-            e.value = value;
+            nz_data[index].value = value;
     }
 
     @Override
@@ -106,20 +106,20 @@ public class SMatrixTriplet_F64 implements SMatrix_F64
 
     @Override
     public double unsafe_get(int row, int col) {
-        Element e = findItem(row,col);
-        if( e == null )
+        int index = nz_index(row,col);
+        if( index < 0 )
             return 0;
         else
-            return e.value;
+            return nz_data[index].value;
     }
 
-    public Element findItem(int row , int col ) {
+    public int nz_index(int row , int col ) {
         for (int i = 0; i < nz_length; i++) {
             Element e = nz_data[i];
             if( e.row == row && e.col == col )
-                return e;
+                return i;
         }
-        return null;
+        return -1;
     }
 
     /**
@@ -174,14 +174,37 @@ public class SMatrixTriplet_F64 implements SMatrix_F64
     }
 
     @Override
+    public void shrinkArrays() {
+        if( nz_length < nz_data.length ) {
+            Element tmp_data[] = new Element[nz_length];
+
+            System.arraycopy(this.nz_data,0,tmp_data,0,nz_length);
+
+            this.nz_data = tmp_data;
+        }
+    }
+
+    @Override
+    public void remove(int row, int col) {
+        int where = nz_index(row,col);
+        if( where >= 0 ) {
+            Element e = nz_data[where];
+            for (int i = where; i < nz_length-1; i++) {
+                nz_data[i] = nz_data[i+1];
+            }
+            nz_data[nz_length-1] = e;
+        }
+    }
+
+    @Override
     public void print() {
         System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
                 +" , nz_length = "+ nz_length);
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                Element e = findItem(row,col);
-                if( e != null )
-                    System.out.printf("%6.3f",e.value);
+                int index = nz_index(row,col);
+                if( index >= 0 )
+                    System.out.printf("%6.3f",nz_data[index].value);
                 else
                     System.out.print("   *  ");
                 if( col != numCols-1 )
