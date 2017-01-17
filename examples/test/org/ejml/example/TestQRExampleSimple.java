@@ -42,7 +42,7 @@ public class TestQRExampleSimple {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        SimpleMatrix A = SimpleMatrix.random_F64(numRows,numCols,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random64(numRows,numCols,-1,1,rand);
 
         QRExampleSimple alg = new QRExampleSimple();
 

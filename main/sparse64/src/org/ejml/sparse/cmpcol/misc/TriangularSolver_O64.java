@@ -73,4 +73,16 @@ public class TriangularSolver_O64 {
             idx1 = idx0;
         }
     }
+
+    // TODO modify algorithm so that G does not get modified
+    // TODO pick a better name
+    public static void reach( SMatrixCmpC_F64 G , SMatrixCmpC_F64 B , int k, int xi[] )
+    {
+
+    }
+
+    static void reach_dfs( int j , SMatrixCmpC_F64 G , int top , int x[], int pstack[] )
+    {
+
+    }
 }

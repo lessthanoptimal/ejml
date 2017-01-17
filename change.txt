@@ -48,6 +48,7 @@ Date format: year/month/day
 - Fixed a minor printing glitch for dense matrices.  There was an extra space
 
 - TODO Add support for matrix norms to Equations
+- TODO Support math in submatrix notation in Equations.  E.g. A(i+1,:) = FOO
 - TODO gradle modules to have ejml-* in their name
 - TODO rename main to source?
 

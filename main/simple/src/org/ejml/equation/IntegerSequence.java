@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,7 +38,7 @@ public interface IntegerSequence {
      *
      * @param maxIndex Largest possible value in the sequence. or < 0 if unknown
      */
-    void initialize( int maxIndex );
+    void initialize(int maxIndex);
 
     int next();
 
@@ -211,7 +211,7 @@ public interface IntegerSequence {
             TokenList.Token t = start;
             do {
                 if( t.getVariable().getType() == VariableType.SCALAR ) {
-                    sequences.add( new IntegerSequence.Explicit(t));
+                    sequences.add( new Explicit(t));
                 } else if( t.getVariable().getType() == VariableType.INTEGER_SEQUENCE ) {
                     sequences.add( ((VariableIntegerSequence)t.getVariable()).sequence );
                 } else {

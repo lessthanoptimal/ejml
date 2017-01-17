@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,12 +19,14 @@
 package org.ejml.equation;
 
 /**
- * List of the types of variables.
+ * Variable which stores/describes a sequence of integers
  *
  * @author Peter Abeles
  */
-public enum VariableType {
-    MATRIX,
-    SCALAR,
-    INTEGER_SEQUENCE
+public class VariableIntegerSequence extends Variable {
+    IntegerSequence sequence;
+    protected VariableIntegerSequence(IntegerSequence sequence) {
+        super(VariableType.INTEGER_SEQUENCE);
+        this.sequence = sequence;
+    }
 }

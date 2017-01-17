@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,14 +19,22 @@
 package org.ejml.equation;
 
 /**
- * Variable which stores/describes a sequence of integers
+ * Instance of a variable created at compile time.  This base class only specifies the type of variable which it is.
  *
  * @author Peter Abeles
  */
-public class VariableIntegerSequence extends Variable {
-    IntegerSequence sequence;
-    protected VariableIntegerSequence(IntegerSequence sequence) {
-        super(VariableType.INTEGER_SEQUENCE);
-        this.sequence = sequence;
+public class Variable {
+    public VariableType type;
+
+    protected Variable(VariableType type) {
+        this.type = type;
+    }
+
+    public VariableType getType() {
+        return type;
+    }
+
+    public String toString() {
+        return "VAR_"  + type;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,28 +19,12 @@
 package org.ejml.equation;
 
 /**
- * A function is an operator with the following syntax "<Name>( Input )"
+ * List of the types of variables.
  *
  * @author Peter Abeles
  */
-public class Function {
-    /**
-     * Name of operator and the string it looks for when parsing
-     */
-    public String name;
-
-    public Function(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "Function{" +
-                "name='" + name + '\'' +
-                '}';
-    }
+public enum VariableType {
+    MATRIX,
+    SCALAR,
+    INTEGER_SEQUENCE
 }

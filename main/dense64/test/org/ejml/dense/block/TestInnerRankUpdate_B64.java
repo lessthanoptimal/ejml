@@ -58,8 +58,8 @@ public class TestInnerRankUpdate_B64 {
 
     private void checkRankNUpdate(int lengthA, int heightB) {
         double alpha = -2.0;
-        SimpleMatrix origA = SimpleMatrix.random_F64(lengthA,lengthA,-1.0 , 1.0 ,rand);
-        SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA,-1.0 , 1.0 ,rand);
+        SimpleMatrix origA = SimpleMatrix.random64(lengthA,lengthA,-1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA,-1.0 , 1.0 ,rand);
 
         DMatrixBlock_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
         DMatrixBlock_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
@@ -90,7 +90,7 @@ public class TestInnerRankUpdate_B64 {
 
     private void checkSymmRankNMinus_U(int lengthA, int heightB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_R64.createSymmPosDef(lengthA,rand));
-        SimpleMatrix origB = SimpleMatrix.random_F64(heightB,lengthA, -1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA, -1.0 , 1.0 ,rand);
 
         DMatrixBlock_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
         DMatrixBlock_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);
@@ -118,7 +118,7 @@ public class TestInnerRankUpdate_B64 {
 
     private void checkSymmRankNMinus_L(int lengthA, int widthB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_R64.createSymmPosDef(lengthA,rand));
-        SimpleMatrix origB = SimpleMatrix.random_F64(lengthA,widthB, -1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random64(lengthA,widthB, -1.0 , 1.0 ,rand);
 
         DMatrixBlock_F64 blockA = MatrixOps_B64.convert(origA.matrix_F64(),N);
         DMatrixBlock_F64 blockB = MatrixOps_B64.convert(origB.matrix_F64(),N);

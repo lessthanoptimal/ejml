@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,12 +19,28 @@
 package org.ejml.equation;
 
 /**
- * Exception generated for parse errors in {@link Equation}
+ * A function is an operator with the following syntax "<Name>( Input )"
  *
  * @author Peter Abeles
  */
-public class ParseError extends RuntimeException {
-    public ParseError(String message) {
-        super(message);
+public class Function {
+    /**
+     * Name of operator and the string it looks for when parsing
+     */
+    public String name;
+
+    public Function(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Function{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

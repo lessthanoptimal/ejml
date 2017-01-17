@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,20 +19,12 @@
 package org.ejml.equation;
 
 /**
- * Variable which stores an instance of double.
+ * Exception generated for parse errors in {@link Equation}
  *
  * @author Peter Abeles
  */
-public class VariableDouble extends VariableScalar {
-    public double value;
-
-    public VariableDouble(double value) {
-        super( Type.DOUBLE );
-        this.value = value;
-    }
-
-    @Override
-    public double getDouble() {
-        return value;
+public class ParseError extends RuntimeException {
+    public ParseError(String message) {
+        super(message);
     }
 }

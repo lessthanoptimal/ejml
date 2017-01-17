@@ -23,6 +23,7 @@ import org.ejml.data.*;
 import org.ejml.dense.row.*;
 import org.ejml.dense.row.mult.VectorVectorMult_R32;
 import org.ejml.dense.row.mult.VectorVectorMult_R64;
+import org.ejml.equation.Equation;
 import org.ejml.ops.MatrixIO;
 
 import java.io.ByteArrayOutputStream;
@@ -1231,6 +1232,70 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             CommonOps_R32.changeSign((DMatrixRow_F32)A.getMatrix());
         }
         return A;
+    }
+
+    /**
+     * <p>Allows you to perform an equation in-place on this matrix by specifying the right hand side.  For information on how to define an equation
+     * see {@link org.ejml.equation.Equation}.  The variable sequence alternates between variable and it's label String.
+     * This matrix is by default labeled as 'A', but is a string is the first object in 'variables' then it will take
+     * on that value.  The variable passed in can be any data type supported by Equation can be passed in.
+     * This includes matrices and scalars.</p>
+     *
+     * Examples:<br>
+     * <pre>
+     * perform("A = A + B",matrix,"B");     // Simple matrix addition
+     * perform("A(5,:) = B",matrix,"B");    // Insert a row defined by B into A
+     * perform("A = [A;A]");                // stack A twice
+     * perform("Q = B + 2","Q",matrix,"B"); // Specify the name of 'this' as Q
+     * </pre>
+     *
+     * @param equation String representing the symbol equation
+     * @param variables List of variable names and variables
+     */
+    public void equation(String equation , Object ...variables ) {
+        if( variables.length >= 25 )
+            throw new IllegalArgumentException("Too many variables!  At most 25");
+
+        if( !(mat instanceof DMatrixRow_F64))
+            return;
+
+        Equation eq = new Equation();
+
+        String nameThis = "A";
+        int offset = 0;
+        if( variables.length > 0 && variables[0] instanceof String ) {
+            nameThis = (String)variables[0];
+            offset = 1;
+
+            if( variables.length%2 != 1 )
+                throw new IllegalArgumentException("Expected and odd length for variables");
+        } else {
+            if( variables.length%2 != 0 )
+                throw new IllegalArgumentException("Expected and even length for variables");
+        }
+        eq.alias((DMatrixRow_F64)mat,nameThis);
+
+        for( int i = offset; i < variables.length; i += 2 ) {
+            if( !(variables[i+1] instanceof String))
+                throw new IllegalArgumentException("String expected at variables index "+i);
+            Object o = variables[i];
+            String name = (String)variables[i+1];
+
+            if( SimpleBase.class.isAssignableFrom(o.getClass())) {
+                eq.alias(((SimpleBase)o).matrix_F64(),name);
+            } else if( o instanceof DMatrixRow_F64) {
+                eq.alias((DMatrixRow_F64)o, name);
+            } else if( o instanceof Double ){
+                eq.alias((Double)o,name);
+            } else if( o instanceof Integer ){
+                eq.alias((Integer)o,name);
+            } else {
+                String type = o == null ? "null" : o.getClass().getSimpleName();
+                throw new IllegalArgumentException("Variable type not supported by Equation! "+type);
+            }
+        }
+
+        eq.process(equation);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -80,8 +80,14 @@ public class QRExampleSimple {
                 A_small = A_small.plus(-gamma,v.mult(v.transpose()).mult(A_small));
 
                 // save the results
-                QR.insertIntoThis(i,i,A_small);
-                QR.insertIntoThis(i+1,i,v.extractMatrix(1,END,0,1));
+//                QR.insertIntoThis(i,i,A_small);
+//                QR.insertIntoThis(i+1,i,v.extractMatrix(1,END,0,1));
+
+                // Alternatively, the two lines above can be replaced with in-place equations
+                // READ THE JAVADOC TO UNDERSTAND HOW THIS WORKS!
+                QR.equation("QR(i:,i:) = A","QR",i,"i",A_small,"A");
+                QR.equation("QR(j:,i) = v(1:,0)","QR",i,"i",i+1,"j",v,"v");
+                // TODO future use i+1 instead of j in equation string
 
                 // save gamma for recomputing Q later on
                 gammas[i] = gamma;

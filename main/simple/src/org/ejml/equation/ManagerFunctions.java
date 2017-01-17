@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -349,13 +349,13 @@ public class ManagerFunctions {
      * Creates new instances of functions from a single variable
      */
     public static interface Input1 {
-        Operation.Info create( Variable A , ManagerTempVariables manager );
+        Operation.Info create(Variable A, ManagerTempVariables manager);
     }
 
     /**
      * Creates a new instance of functions from two variables
      */
     public static interface InputN {
-        Operation.Info create( List<Variable> inputs , ManagerTempVariables manager );
+        Operation.Info create(List<Variable> inputs, ManagerTempVariables manager);
     }
 }

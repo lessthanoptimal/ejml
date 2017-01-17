@@ -170,8 +170,7 @@ def javadocProjects = [
         ':main:dense64',
         ':main:denseC32',
         ':main:denseC64',
-        ':main:core',
-        ':main:equation'
+        ':main:core'
 ]
 task alljavadoc(type: Javadoc) {
     // only include source code in src directory to avoid including 3rd party code which some projects do as a hack

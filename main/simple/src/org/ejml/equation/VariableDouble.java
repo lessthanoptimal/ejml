@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2015, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,22 +19,20 @@
 package org.ejml.equation;
 
 /**
- * Instance of a variable created at compile time.  This base class only specifies the type of variable which it is.
+ * Variable which stores an instance of double.
  *
  * @author Peter Abeles
  */
-public class Variable {
-    public VariableType type;
+public class VariableDouble extends VariableScalar {
+    public double value;
 
-    protected Variable(VariableType type) {
-        this.type = type;
+    public VariableDouble(double value) {
+        super( Type.DOUBLE );
+        this.value = value;
     }
 
-    public VariableType getType() {
-        return type;
-    }
-
-    public String toString() {
-        return "VAR_"  + type;
+    @Override
+    public double getDouble() {
+        return value;
     }
 }

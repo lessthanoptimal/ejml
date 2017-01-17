@@ -108,9 +108,9 @@ public class TestTridiagonalDecompositionHouseholder_B64 {
     @Test
     public void multPlusTransA() {
         for( int width = r+1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.random_F64(width,width, -1.0, 1.0,rand);
-            SimpleMatrix U = SimpleMatrix.random_F64(r,width, -1.0, 1.0 ,rand);
-            SimpleMatrix V = SimpleMatrix.random_F64(r,width, -1.0, 1.0 ,rand);
+            SimpleMatrix A = SimpleMatrix.random64(width,width, -1.0, 1.0,rand);
+            SimpleMatrix U = SimpleMatrix.random64(r,width, -1.0, 1.0 ,rand);
+            SimpleMatrix V = SimpleMatrix.random64(r,width, -1.0, 1.0 ,rand);
 
             DMatrixBlock_F64 Ab = MatrixOps_B64.convert(A.matrix_F64(),r);
             DMatrixBlock_F64 Ub = MatrixOps_B64.convert(U.matrix_F64(),r);

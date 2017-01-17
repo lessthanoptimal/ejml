@@ -279,13 +279,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param maxValue Upper bound
      * @param rand The random number generator that's used to fill the matrix.  @return The new random matrix.
      */
-    public static SimpleMatrix random_F64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
+    public static SimpleMatrix random64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
         RandomMatrices_R64.setRandom((DMatrixRow_F64)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
-    public static SimpleMatrix random_F32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
+    public static SimpleMatrix random32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols, DMatrixRow_F32.class);
         RandomMatrices_R32.setRandom((DMatrixRow_F32)ret.mat,minValue,maxValue,rand);
         return ret;

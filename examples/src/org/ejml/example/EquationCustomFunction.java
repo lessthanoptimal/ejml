@@ -41,8 +41,8 @@ public class EquationCustomFunction {
         eq.getFunctions().add("multTransA",createMultTransA());
 
         SimpleMatrix A = new SimpleMatrix(1,1); // will be resized
-        SimpleMatrix B = SimpleMatrix.random_F64(3,4,-1,1,rand);
-        SimpleMatrix C = SimpleMatrix.random_F64(3,4,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random64(3,4,-1,1,rand);
+        SimpleMatrix C = SimpleMatrix.random64(3,4,-1,1,rand);
 
         eq.alias(A,"A",B,"B",C,"C");
 

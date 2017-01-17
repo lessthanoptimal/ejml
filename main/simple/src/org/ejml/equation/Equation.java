@@ -283,7 +283,7 @@ public class Equation {
      */
     public void alias( double value , String name ) {
         if( isReserved(name))
-            throw new RuntimeException("Reserved word or contains a reserved character");
+            throw new RuntimeException("Reserved word or contains a reserved character. '"+name+"'");
 
         VariableDouble old = (VariableDouble)variables.get(name);
         if( old == null ) {
