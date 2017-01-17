@@ -154,6 +154,29 @@ public class TestEquation {
             }
         }
     }
+    @Test
+    public void compile_assign_submatrix_IndexMath() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+
+        eq.alias(A, "A");
+
+        // single element
+        eq.process("A(1+2,2-1)=0.5");
+
+        assertEquals(A.get(3, 1), 0.5, UtilEjml.TEST_F64);
+
+        // multiple elements
+        eq.process("A(1-1:2,2:4+1-2)=0.5");
+
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 2; j <= 3; j++) {
+                assertEquals(A.get(i, j), 0.5, UtilEjml.TEST_F64);
+            }
+        }
+    }
+
 
     /**
      * Lazily declare a variable.  Which means it is not explicitly aliased
@@ -278,6 +301,22 @@ public class TestEquation {
         Variable v = eq.lookupVariable("A");
         assertTrue(v instanceof VariableDouble);
         assertEquals(eq.lookupDouble("A"), B.get(1, 2), UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void compile_parentheses_extract_IndexMath() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random64(8, 8, -1, 1, rand);
+
+        eq.alias(A, "A");
+        eq.alias(B, "B");
+        eq.alias(1,"i");
+
+        Sequence sequence = eq.compile("A=B(2-i:7,1:(6+i))");
+        sequence.perform();
+        assertTrue(A.isIdentical(B.extractMatrix(1,8,1,8), 1e-15));
     }
 
     @Test
