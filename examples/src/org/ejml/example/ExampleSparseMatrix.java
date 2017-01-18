@@ -39,23 +39,24 @@ public class ExampleSparseMatrix {
 
     public static int ROWS = 100000;
     public static int COLS = 1000;
+    public static int XCOLS = 1;
     public static int N = ROWS*COLS;
 
     public static void main(String[] args) {
         Random rand = new Random(234);
 
-        SMatrixCmpC_F64 Z = RandomMatrices_O64.uniform(20,5,20,rand);
+        SMatrixCmpC_F64 Z = RandomMatrices_O64.rectangle(20,5,20,rand);
         Z.print();
         Z.printNonZero();
 
         // Create a 100000x1000 matrix that is 5% filled
-        SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(ROWS,COLS,(int)(N*0.05),rand);
+        SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(ROWS,COLS,(int)(N*0.05),rand);
         //          1000x1 matrix that is 70% filled
-        SMatrixCmpC_F64 x = RandomMatrices_O64.uniform(COLS,1,(int)(COLS*0.7),rand);
+        SMatrixCmpC_F64 x = RandomMatrices_O64.rectangle(COLS,XCOLS,(int)(XCOLS*COLS*0.7),rand);
 
         System.out.println("Done generating random matrices");
         // storage for the initial solution
-        SMatrixCmpC_F64 y = new SMatrixCmpC_F64(ROWS,1,0);
+        SMatrixCmpC_F64 y = new SMatrixCmpC_F64(ROWS,XCOLS,0);
 
         // To demonstration how to perform sparse math let's multiply:
         //                  y=A*x
