@@ -19,9 +19,11 @@
 package org.ejml.data;
 
 import org.ejml.sparse.ConvertSparseMatrix_F64;
+import org.ejml.sparse.cmpcol.CommonOps_O64;
+import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -58,5 +60,22 @@ public class TestSMatrixCmpC_F64 extends GenericTestsSparseMatrix_F64 {
         assertEquals(1,a.numCols);
         assertEquals(4,a.nz_values.length);
         assertEquals(4,a.nz_length);
+    }
+
+    @Test
+    public void sortIndices() {
+        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(5,4,20,-1,1,rand);
+
+        // make sure it's not sorted correctly
+        a.nz_rows[0]=2;
+        a.nz_rows[2]=0;
+        assertFalse(CommonOps_O64.checkIndicesSorted(a));
+        a.indicesSorted = false;
+
+        // now sort it and see if its fixed
+        a.sortIndices(null);
+
+        assertTrue(CommonOps_O64.checkIndicesSorted(a));
+        assertTrue(a.indicesSorted);
     }
 }

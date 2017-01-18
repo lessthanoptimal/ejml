@@ -38,7 +38,7 @@ public class TestRandomMatrices_O64 {
     @Test
     public void uniform() {
 
-        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,10,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(numRows,numCols,10,-1,1,rand);
 
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);
@@ -67,13 +67,13 @@ public class TestRandomMatrices_O64 {
         SMatrixCmpC_F64 L;
         for (int trial = 0; trial < 20; trial++) {
             for( int length : new int[]{0,2,6,12,20} ) {
-                L = RandomMatrices_O64.createLowerTriangular(6, 0, length,-1,1, rand);
+                L = RandomMatrices_O64.triangleLower(6, 0, length,-1,1, rand);
 //            L.print();
                 assertEquals(Math.max(6,length),L.nz_length);
                 assertTrue(CommonOps_O64.checkSortedFlag(L));
                 assertTrue(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
 
-                L = RandomMatrices_O64.createLowerTriangular(6, 1, length,-1,1, rand);
+                L = RandomMatrices_O64.triangleLower(6, 1, length,-1,1, rand);
 //                L.print();
                 assertEquals(Math.max(5,length),L.nz_length);
                 assertTrue(CommonOps_O64.checkSortedFlag(L));

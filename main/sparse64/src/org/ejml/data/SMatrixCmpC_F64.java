@@ -114,7 +114,8 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
 
         System.arraycopy(o.nz_values, 0, nz_values, 0, nz_length);
         System.arraycopy(o.nz_rows, 0, nz_rows, 0, nz_length);
-        System.arraycopy(o.col_idx, 0, col_idx, 0, numCols);
+        System.arraycopy(o.col_idx, 0, col_idx, 0, numCols+1);
+        this.indicesSorted = o.indicesSorted;
     }
 
     @Override
@@ -314,6 +315,7 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
             sorter = new SortCoupledArray_F64();
 
         sorter.quick(col_idx,numCols+1,nz_rows,nz_values);
+        indicesSorted = true;
     }
 
     public void copyStructure( SMatrixCmpC_F64 orig ) {

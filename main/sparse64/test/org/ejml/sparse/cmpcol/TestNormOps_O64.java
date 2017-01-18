@@ -39,7 +39,7 @@ public class TestNormOps_O64 {
     @Test
     public void fastNormF() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,6,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,6,length,rand);
             DMatrixRow_F64  Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
 
             double found = NormOps_O64.fastNormF(A);
@@ -52,7 +52,7 @@ public class TestNormOps_O64 {
     @Test
     public void normF() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,6,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,6,length,rand);
             DMatrixRow_F64  Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
 
             double found = NormOps_O64.normF(A);

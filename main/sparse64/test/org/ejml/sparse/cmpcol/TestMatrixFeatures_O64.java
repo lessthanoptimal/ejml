@@ -47,6 +47,7 @@ public class TestMatrixFeatures_O64 {
         SMatrixCmpC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
         SMatrixCmpC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
 
+        a.sortIndices(null); b.sortIndices(null);
         assertTrue(MatrixFeatures_O64.isEquals(a,b));
 
         b.numRows += 1;
@@ -65,6 +66,25 @@ public class TestMatrixFeatures_O64 {
     }
 
     @Test
+    public void isEqualsSort_tol() {
+        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(4,5,3);
+        orig.addItem(3,1,2.5);
+        orig.addItem(2,4,2.7);
+        orig.addItem(2,2,1.5);
+
+        SMatrixCmpC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
+
+        orig = new SMatrixTriplet_F64(4,5,3);
+        orig.addItem(3,1,2.5);
+        orig.addItem(2,2,1.5);
+        orig.addItem(2,4,2.7);
+        SMatrixCmpC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
+
+        // these require sorting and this will fail if not
+        assertTrue(MatrixFeatures_O64.isEqualsSort(a,b, UtilEjml.TEST_F64));
+    }
+
+    @Test
     public void isEquals_tol() {
         SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(4,5,3);
         orig.addItem(3,1,2.5);
@@ -74,31 +94,31 @@ public class TestMatrixFeatures_O64 {
         SMatrixCmpC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
         SMatrixCmpC_F64 b = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
 
-        assertTrue(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
 
         b.numRows += 1;
-        assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
         b.numRows -= 1; b.numCols += 1;
-        assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
         b.numCols -= 1; b.nz_rows[1]++;
-        assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
         b.nz_rows[1]--; b.col_idx[1]++;
-        assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
         b.col_idx[1]--;;
 
         // make it no longer exactly equal, but within tolerance
         b.nz_values[0] += UtilEjml.TEST_F64*0.1;
-        assertTrue(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
 
         // outside of tolerance
         b.nz_values[0] += UtilEjml.TEST_F64*10;
-        assertFalse(MatrixFeatures_O64.isEquals(a,b,UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_O64.isEqualsSort(a,b,UtilEjml.TEST_F64));
     }
 
     @Test
     public void hasUncountable() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,6,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,6,length,rand);
 
             assertFalse(MatrixFeatures_O64.hasUncountable(A));
 
@@ -121,7 +141,7 @@ public class TestMatrixFeatures_O64 {
     public void isZeros() {
         assertTrue( MatrixFeatures_O64.isZeros(new SMatrixCmpC_F64(10,12,0), UtilEjml.TEST_F64));
 
-        SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,4,12,rand);
+        SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,4,12,rand);
         for (int i = 0; i < A.nz_length; i++) {
             A.nz_values[i] = UtilEjml.EPS;
         }

@@ -41,13 +41,14 @@ public class RandomMatrices_O64 {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static SMatrixCmpC_F64 uniform(int numRows , int numCols , int nz_total ,
-                                          double min , double max , Random rand ) {
+    public static SMatrixCmpC_F64 rectangle(int numRows , int numCols , int nz_total ,
+                                            double min , double max , Random rand ) {
 
         nz_total = Math.min(numCols*numRows,nz_total);
         int[] selected = selectElements(numRows*numCols, nz_total, rand);
 
         SMatrixCmpC_F64 ret = new SMatrixCmpC_F64(numRows,numCols,nz_total);
+        ret.indicesSorted = true;
 
         // compute the number of elements in each column
         int hist[] = new int[ numCols ];
@@ -90,8 +91,8 @@ public class RandomMatrices_O64 {
         return selected;
     }
 
-    public static SMatrixCmpC_F64 uniform(int numRows , int numCols , int nz_total , Random rand ) {
-        return uniform(numRows, numCols, nz_total, -1,1,rand);
+    public static SMatrixCmpC_F64 rectangle(int numRows , int numCols , int nz_total , Random rand ) {
+        return rectangle(numRows, numCols, nz_total, -1,1,rand);
     }
 
     /**
@@ -106,8 +107,8 @@ public class RandomMatrices_O64 {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static SMatrixCmpC_F64 createLowerTriangular( int dimen , int hessenberg, int nz_total,
-                                                         double min , double max , Random rand ) {
+    public static SMatrixCmpC_F64 triangleLower(int dimen , int hessenberg, int nz_total,
+                                                double min , double max , Random rand ) {
 
         // number of elements which are along the diagonal
         int diag_total = dimen-hessenberg;
@@ -172,5 +173,14 @@ public class RandomMatrices_O64 {
         }
 
         return L;
+    }
+
+    public static SMatrixCmpC_F64 triangleUpper(int dimen , int hessenberg, int nz_total,
+                                                double min , double max , Random rand ) {
+        SMatrixCmpC_F64 L = triangleLower(dimen, hessenberg, nz_total, min, max, rand);
+        SMatrixCmpC_F64 U = L.createLike();
+
+        CommonOps_O64.transpose(L,U,null);
+        return U;
     }
 }

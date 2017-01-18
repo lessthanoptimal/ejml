@@ -85,7 +85,7 @@ public class TestConvertSparseMatrix_F64 {
 
     @Test
     public void SMatrixCC_DMatrixRow() {
-        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(5,6,10,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(5,6,10,-1,1,rand);
 
         SMatrixCC_DMatrixRow(a,null);
         SMatrixCC_DMatrixRow(a,new DMatrixRow_F64(1,1));
@@ -103,11 +103,11 @@ public class TestConvertSparseMatrix_F64 {
 
         // now try it the other direction
         SMatrixCmpC_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixCmpC_F64)null);
-        assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_O64.isEqualsSort(a,c, UtilEjml.TEST_F64));
         assertTrue(CommonOps_O64.checkIndicesSorted(c));
 
         c = ConvertSparseMatrix_F64.convert(b,new SMatrixCmpC_F64(1,1,1));
-        assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_O64.isEqualsSort(a,c, UtilEjml.TEST_F64));
         assertTrue(CommonOps_O64.checkIndicesSorted(c));
     }
 

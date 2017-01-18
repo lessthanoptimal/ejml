@@ -27,10 +27,11 @@ import org.ejml.data.SMatrixCmpC_F64;
 public class MatrixFeatures_O64 {
 
     public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b ) {
+        if( !a.indicesSorted || !b.indicesSorted )
+            throw new IllegalArgumentException("Inputs must have sorted indices");
+
         if( !isSameStructure(a,b) )
             return false;
-        if( a.indicesSorted && b.indicesSorted )
-            throw new IllegalArgumentException("Inputs must have sorted indices");
 
         for (int i = 0; i < a.nz_length; i++) {
             if( a.nz_values[i] != b.nz_values[i] )
@@ -40,10 +41,25 @@ public class MatrixFeatures_O64 {
     }
 
     public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b , double tol ) {
+        if( !a.indicesSorted || !b.indicesSorted )
+            throw new IllegalArgumentException("Inputs must have sorted indices");
         if( !isSameStructure(a,b) )
             return false;
-        if( a.indicesSorted && b.indicesSorted )
-            throw new IllegalArgumentException("Inputs must have sorted indices");
+
+        for (int i = 0; i < a.nz_length; i++) {
+            if( Math.abs(a.nz_values[i]-b.nz_values[i]) > tol )
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean isEqualsSort(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b , double tol ) {
+        if( !a.indicesSorted )
+            a.sortIndices(null);
+        if( !b.indicesSorted )
+            b.sortIndices(null);
+        if( !isSameStructure(a,b) )
+            return false;
 
         for (int i = 0; i < a.nz_length; i++) {
             if( Math.abs(a.nz_values[i]-b.nz_values[i]) > tol )

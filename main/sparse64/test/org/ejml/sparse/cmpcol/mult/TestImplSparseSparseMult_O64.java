@@ -51,9 +51,9 @@ public class TestImplSparseSparseMult_O64 {
     }
 
     private void mult_s_s(int elementsA , int elementsB , int elementsC ) {
-        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(4,6,elementsA,-1,1,rand);
-        SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(6,5,elementsB,-1,1,rand);
-        SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(4,5,elementsC,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(4,6,elementsA,-1,1,rand);
+        SMatrixCmpC_F64 b = RandomMatrices_O64.rectangle(6,5,elementsB,-1,1,rand);
+        SMatrixCmpC_F64 c = RandomMatrices_O64.rectangle(4,5,elementsC,-1,1,rand);
 
         ImplSparseSparseMult_O64.mult(a,b,c, null, null);
         assertTrue(CommonOps_O64.checkSortedFlag(c));
@@ -81,7 +81,7 @@ public class TestImplSparseSparseMult_O64 {
     }
 
     private void mult_s_d(int elementsA) {
-        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(4,6,elementsA,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(4,6,elementsA,-1,1,rand);
         DMatrixRow_F64 b = RandomMatrices_R64.createRandom(6,5,-1,1,rand);
         DMatrixRow_F64 c = RandomMatrices_R64.createRandom(4,5,-1,1,rand);
 

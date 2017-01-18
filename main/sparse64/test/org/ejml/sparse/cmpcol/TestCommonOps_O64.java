@@ -30,7 +30,6 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.ejml.dense.row.RandomMatrices_R64.createRandom;
-import static org.ejml.sparse.cmpcol.RandomMatrices_O64.uniform;
 import static org.junit.Assert.*;
 
 /**
@@ -63,23 +62,23 @@ public class TestCommonOps_O64 {
     @Test
     public void transpose_shapes() {
         CommonOps_O64.transpose(
-                uniform(5,5,5,rand),
-                uniform(5,5,7,rand),null);
+                RandomMatrices_O64.rectangle(5,5,5,rand),
+                RandomMatrices_O64.rectangle(5,5,7,rand),null);
         CommonOps_O64.transpose(
-                uniform(4,5,5,rand),
-                uniform(5,4,7,rand),null);
+                RandomMatrices_O64.rectangle(4,5,5,rand),
+                RandomMatrices_O64.rectangle(5,4,7,rand),null);
 
         try {
             CommonOps_O64.transpose(
-                    uniform(4,5,5,rand),
-                    uniform(6,4,7,rand),null);
+                    RandomMatrices_O64.rectangle(4,5,5,rand),
+                    RandomMatrices_O64.rectangle(6,4,7,rand),null);
             fail("exception expected");
         } catch( RuntimeException ignore){}
 
         try {
             CommonOps_O64.transpose(
-                    uniform(4,5,5,rand),
-                    uniform(5,5,7,rand),null);
+                    RandomMatrices_O64.rectangle(4,5,5,rand),
+                    RandomMatrices_O64.rectangle(5,5,7,rand),null);
             fail("exception expected");
         } catch( RuntimeException ignore){}
 
@@ -88,22 +87,22 @@ public class TestCommonOps_O64 {
     @Test
     public void mult_s_s_shapes() {
         check_s_s_mult(
-                uniform(5, 6, 5, rand),
-                uniform(6, 4, 7, rand),
-                uniform(5, 4, 7, rand), false);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(6, 4, 7, rand),
+                RandomMatrices_O64.rectangle(5, 4, 7, rand), false);
 
         check_s_s_mult(
-                uniform(5, 6, 5, rand),
-                uniform(6, 4, 7, rand),
-                uniform(5, 5, 7, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(6, 4, 7, rand),
+                RandomMatrices_O64.rectangle(5, 5, 7, rand), true);
         check_s_s_mult(
-                uniform(5, 6, 5, rand),
-                uniform(6, 4, 7, rand),
-                uniform(6, 4, 7, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(6, 4, 7, rand),
+                RandomMatrices_O64.rectangle(6, 4, 7, rand), true);
         check_s_s_mult(
-                uniform(5, 6, 5, rand),
-                uniform(6, 4, 7, rand),
-                uniform(6, 4, 7, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(6, 4, 7, rand),
+                RandomMatrices_O64.rectangle(6, 4, 7, rand), true);
     }
 
     private void check_s_s_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
@@ -132,20 +131,20 @@ public class TestCommonOps_O64 {
     @Test
     public void mult_s_d_shapes() {
         check_s_d_mult(
-                uniform(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
                 createRandom(6, 4, rand),
                 createRandom(5, 4, rand), false);
 
         check_s_d_mult(
-                uniform(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
                 createRandom(6, 4, rand),
                 createRandom(5, 5, rand), true);
         check_s_d_mult(
-                uniform(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
                 createRandom(6, 4, rand),
                 createRandom(6, 4, rand), true);
         check_s_d_mult(
-                uniform(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
                 createRandom(6, 4, rand),
                 createRandom(6, 4, rand), true);
     }
@@ -172,37 +171,37 @@ public class TestCommonOps_O64 {
     @Test
     public void add_shapes() {
         check_add(
-                uniform(5, 6, 5, rand),
-                uniform(5, 6, 5, rand),
-                uniform(5, 6, 5, rand), false);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand), false);
         check_add(
-                uniform(5, 6, 5*6, rand),
-                uniform(5, 6, 5*6, rand),
-                uniform(5, 6, 5*6, rand), false);
+                RandomMatrices_O64.rectangle(5, 6, 5*6, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5*6, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5*6, rand), false);
         check_add(
-                uniform(5, 6, 0, rand),
-                uniform(5, 6, 0, rand),
-                uniform(5, 6, 0, rand), false);
+                RandomMatrices_O64.rectangle(5, 6, 0, rand),
+                RandomMatrices_O64.rectangle(5, 6, 0, rand),
+                RandomMatrices_O64.rectangle(5, 6, 0, rand), false);
         check_add(
-                uniform(5, 6, 20, rand),
-                uniform(5, 6, 16, rand),
-                uniform(5, 6, 0, rand), false);
+                RandomMatrices_O64.rectangle(5, 6, 20, rand),
+                RandomMatrices_O64.rectangle(5, 6, 16, rand),
+                RandomMatrices_O64.rectangle(5, 6, 0, rand), false);
         check_add(
-                uniform(5, 6, 5, rand),
-                uniform(5, 5, 5, rand),
-                uniform(5, 6, 5, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 5, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand), true);
         check_add(
-                uniform(5, 6, 5, rand),
-                uniform(5, 6, 5, rand),
-                uniform(5, 5, 5, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 5, 5, rand), true);
         check_add(
-                uniform(5, 6, 5, rand),
-                uniform(4, 6, 5, rand),
-                uniform(5, 6, 5, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(4, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand), true);
         check_add(
-                uniform(5, 6, 5, rand),
-                uniform(5, 6, 5, rand),
-                uniform(4, 6, 5, rand), true);
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(5, 6, 5, rand),
+                RandomMatrices_O64.rectangle(4, 6, 5, rand), true);
 
     }
 
@@ -256,7 +255,7 @@ public class TestCommonOps_O64 {
         double scale = 2.1;
 
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,5,length,rand);
             DMatrixRow_F64  Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
 
             SMatrixCmpC_F64 B = new SMatrixCmpC_F64(A.numRows,A.numCols,0);
@@ -276,7 +275,7 @@ public class TestCommonOps_O64 {
         double denominator = 2.1;
 
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,5,length,rand);
             DMatrixRow_F64  Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
 
             SMatrixCmpC_F64 B = new SMatrixCmpC_F64(A.numRows,A.numCols,0);
@@ -294,7 +293,7 @@ public class TestCommonOps_O64 {
     @Test
     public void elementMinAbs() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,5,length,rand);
             DMatrixRow_F64 Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
 
             double found = CommonOps_O64.elementMinAbs(A);
@@ -307,7 +306,7 @@ public class TestCommonOps_O64 {
     @Test
     public void elementMaxAbs() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,5,length,rand);
 
             double found = CommonOps_O64.elementMaxAbs(A);
             double expected = CommonOps_R64.elementMaxAbs(ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null));
@@ -319,7 +318,7 @@ public class TestCommonOps_O64 {
     @Test
     public void elementMin() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,1,3,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,5,length,1,3,rand);
 
             double found = CommonOps_O64.elementMin(A);
             double expected = CommonOps_R64.elementMin(ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null));
@@ -331,7 +330,7 @@ public class TestCommonOps_O64 {
     @Test
     public void elementMax() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_O64.uniform(6,5,length,-2,-1,rand);
+            SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(6,5,length,-2,-1,rand);
 
             double found = CommonOps_O64.elementMax(A);
             double expected = CommonOps_R64.elementMax(ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null));

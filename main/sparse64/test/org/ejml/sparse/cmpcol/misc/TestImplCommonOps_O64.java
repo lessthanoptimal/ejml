@@ -42,8 +42,8 @@ public class TestImplCommonOps_O64 {
 
     @Test
     public void transpose() {
-        SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,length, -1, 1, rand);
-        SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(numCols,numRows,length, -1, 1, rand);
+        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(numRows,numCols,length, -1, 1, rand);
+        SMatrixCmpC_F64 b = RandomMatrices_O64.rectangle(numCols,numRows,length, -1, 1, rand);
 
         ImplCommonOps_O64.transpose(a,b,null);
 
@@ -65,9 +65,9 @@ public class TestImplCommonOps_O64 {
 
         for( int numRows : new int[]{2,4,6,10}) {
             for( int numCols : new int[]{2,4,6,10}) {
-                SMatrixCmpC_F64 a = RandomMatrices_O64.uniform(numRows,numCols,7, -1, 1, rand);
-                SMatrixCmpC_F64 b = RandomMatrices_O64.uniform(numRows,numCols,8, -1, 1, rand);
-                SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(numRows,numCols,3, -1, 1, rand);
+                SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(numRows,numCols,7, -1, 1, rand);
+                SMatrixCmpC_F64 b = RandomMatrices_O64.rectangle(numRows,numCols,8, -1, 1, rand);
+                SMatrixCmpC_F64 c = RandomMatrices_O64.rectangle(numRows,numCols,3, -1, 1, rand);
 
                 ImplCommonOps_O64.add(alpha,a,beta,b,c,null, null);
 

@@ -20,6 +20,8 @@ package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.data.SMatrixCmpC_F64;
 
+import java.util.Arrays;
+
 import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_O64.checkDeclare;
 
 /**
@@ -77,6 +79,96 @@ public class TriangularSolver_O64 {
     }
 
     /**
+     * Computes the solution to the triangular system.  Inputs are both sparse but the output is dense.
+     *
+     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param lower true for lower triangular and false for upper
+     * @param B (Input) Matrix.  Not modified.
+     * @param X (Output) Solution
+     * @param x (Optional) Storage for work space.  length = G.numRows
+     * @param xi (Optional) Storage for work space.  length = B.numRows
+     * @param w (Optional) Storage for work space.  length = B.numRows*2
+     */
+    public static void solve(SMatrixCmpC_F64 G, boolean lower,
+                             SMatrixCmpC_F64 B, SMatrixCmpC_F64 X, double x[], int xi[], int w[])
+    {
+        x = checkDeclare(G.numRows,x);
+        xi = checkDeclare(G.numRows,xi,false);
+        w = checkDeclare(B.numRows*2,w,B.numRows);
+
+        X.nz_length = 0;
+        X.col_idx[0] = 0;
+        X.indicesSorted = false;
+
+        for (int colB = 0; colB < B.numCols; colB++) {
+            int top = solve(G,lower,B,colB, x, xi, w);
+
+            int nz_count = X.numRows-top;
+            if( X.nz_values.length < X.nz_length + nz_count) {
+                X.growMaxLength(X.nz_length*2 + nz_count,true);
+            }
+
+            for (int p = top; p < X.numRows; p++,X.nz_length++) {
+                X.nz_rows[X.nz_length] = xi[p];
+                X.nz_values[X.nz_length] = x[xi[p]];
+            }
+            X.col_idx[colB+1] = X.nz_length;
+        }
+    }
+
+    /**
+     * Computes the solution to a triangular system.  Only a single column in B is solved for.
+     *
+     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param lower true for lower triangular and false for upper
+     * @param B (Input) Matrix.  Not modified.
+     * @param colB The column in B which is solved for
+     * @param x (Output) Storage for dense solution.  length = G.numRows
+     * @param xi (Optional) Storage for work space.  length = B.numRows
+     * @param w (Optional) Storage for work space.  length = B.numRows(2
+     * @return Return number of zeros in 'x', ignoring cancellations.
+     */
+    public static int solve(SMatrixCmpC_F64 G, boolean lower,
+                            SMatrixCmpC_F64 B, int colB, double x[], int xi[], int w[])
+    {
+        xi = checkDeclare(G.numRows,xi,false);
+        w = checkDeclare(B.numRows*2,w,B.numRows);
+
+        int top = searchNzRowsInB(G,B,colB,xi,w);
+
+        // sparse clear of x
+        for( int p = top; p < G.numRows; p++ )
+            x[xi[p]] = 0;
+
+        // copy B into X
+        int idxB0 = B.col_idx[colB];
+        int idxB1 = B.col_idx[colB+1];
+        for( int p = idxB0; p < idxB1; p++ )
+            x[B.nz_rows[p]] = B.nz_values[p];
+
+        for (int px = top; px < G.numRows; px++) {
+            int j = xi[px];
+            if( j < 0 )
+                continue;
+            int p,q;
+            if( lower ) {
+                x[j] /= G.nz_values[G.col_idx[j]];
+                p = G.col_idx[j]+1;
+                q = G.col_idx[j+1];
+            } else {
+                x[j] /= G.nz_values[G.col_idx[j+1]-1];
+                p = G.col_idx[j];
+                q = G.col_idx[j+1]-1;
+            }
+            for(;p<q;p++) {
+                x[G.nz_rows[p]] -= G.nz_values[p]*x[j];
+            }
+        }
+
+        return top;
+    }
+
+    /**
      * <p>Determines which elements in 'X' will be non-zero when the system below is solved for.</p>
      * G*X = B
      *
@@ -90,14 +182,16 @@ public class TriangularSolver_O64 {
      * @param B (Input) Matrix B. Not modified.
      * @param colB Column in B being solved for
      * @param xi (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
-     * @param w (Optional) Work space array used internally.  Must be of size B.numRows*2 or null
+     * @param w Work space array used internally.  Must be of size B.numRows*2
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
     public static int searchNzRowsInB( SMatrixCmpC_F64 G , SMatrixCmpC_F64 B , int colB, int xi[] , int w[])
     {
         if( xi.length < B.numRows )
             throw new IllegalArgumentException("xi must be at least this long: "+B.numRows);
-        w = checkDeclare(B.numRows*2,w,B.numRows);
+        if( w.length < B.numRows*2 )
+            throw new IllegalArgumentException("xi must be at least this long: "+B.numRows*2);
+        Arrays.fill(w,0,B.numRows,0);
 
         // use 'w' as a marker to know which rows in B have been examined.  0 = unexamined and 1 = examined
         int idx0 = B.col_idx[colB];
