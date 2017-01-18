@@ -122,15 +122,16 @@ public class CommonOps_O64 {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param workC (Optional) Work space.  null or as long as A.rows.
+     * @param work0 (Optional) Work space of length A.rows.  Null to declare internally
+     * @param work1 (Optional) Work space of length A.rows.  Null to declare internally
      */
     public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
-                           double workC[] )
+                           double work0[] , int work1[] )
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplCommonOps_O64.add(alpha,A,beta,B,C, workC);
+        ImplCommonOps_O64.add(alpha,A,beta,B,C, work0, work1);
     }
 
     public static SMatrixCmpC_F64 identity( int length ) {

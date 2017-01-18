@@ -210,7 +210,7 @@ public class TestCommonOps_O64 {
         double alpha = 1.5;
         double beta = -0.6;
         try {
-            CommonOps_O64.add(alpha,A,beta,B,C,null);
+            CommonOps_O64.add(alpha,A,beta,B,C,null, null);
             assertTrue(CommonOps_O64.checkSortedFlag(C));
 
             if( exception )

@@ -45,7 +45,7 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
      */
     public int nz_length;
     /**
-     * Specifies which row a specific non-zero value corresponds to.  If they are sorted with in each column
+     * Specifies which row a specific non-zero value corresponds to.  If they are sorted or not with in each column
      * is specified by the {@link #indicesSorted} flag.
      */
     public int nz_rows[];

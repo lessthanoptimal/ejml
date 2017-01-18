@@ -23,6 +23,8 @@ import org.ejml.sparse.cmpcol.CommonOps_O64;
 
 import java.util.Arrays;
 
+import static org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_O64.multAddColA;
+
 /**
  * Implementation class.  Not recommended for direct use.  Instead use {@link CommonOps_O64}
  * instead.
@@ -94,12 +96,14 @@ public class ImplCommonOps_O64 {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param x (Optional) Work space.  null or as long as A.rows.
+     * @param x (Optional) Work space of length A.rows.  Null to declare internally
+     * @param w (Optional) Work space of length A.rows.  Null to declare internally
      */
     public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
-                           double x[] )
+                           double x[] , int w[] )
     {
         x = checkDeclare(A.numRows, x);
+        w = checkDeclare(A.numRows, w, true);
 
         C.indicesSorted = false;
         C.nz_length = 0;
@@ -107,51 +111,8 @@ public class ImplCommonOps_O64 {
         for (int col = 0; col < A.numCols; col++) {
             C.col_idx[col] = C.nz_length;
 
-            // construct the table now so that the row order will not need to be sorted later on
-            int idxA0 = A.col_idx[col], idxA1 = A.col_idx[col+1];
-            int idxB0 = B.col_idx[col], idxB1 = B.col_idx[col+1];
-            int indexA = idxA0, indexB = idxB0;
-
-            while( indexA < idxA1 || indexB < idxB1 ) {
-                int row;
-                if( indexA < idxA1 && indexB < idxB1 ) {
-                    int rowA = A.nz_rows[indexA];
-                    int rowB = B.nz_rows[indexB];
-
-                    if( rowA < rowB ) {
-                        row = rowA; indexA++;
-                    } else if( rowA > rowB ) {
-                        row = rowB; indexB++;
-                    } else {
-                        row = rowA; indexA++; indexB++;
-                    }
-                } else if( indexA < idxA1 ) {
-                    row = A.nz_rows[indexA++];
-                } else {
-                    row = B.nz_rows[indexB++];
-                }
-
-                if( C.nz_length >= C.nz_rows.length ) {
-                    C.growMaxLength(C.nz_length *2+1,true);
-                }
-
-                C.nz_rows[C.nz_length] = row;
-                C.col_idx[col+1] = ++C.nz_length;
-                x[row] = 0;
-            }
-
-
-            // Add A
-            for (int j = idxA0; j < idxA1; j++) {
-                int row = A.nz_rows[j];
-                x[row] += A.nz_values[j]*alpha;
-            }
-
-            // Add B
-            for (int j = idxB0; j < idxB1; j++) {
-                int row = B.nz_rows[j];
-                x[row] += B.nz_values[j]*beta;
-            }
+            multAddColA(A,col,alpha,C,col,x,w);
+            multAddColA(B,col,beta,C,col,x,w);
 
             // take the values in the dense vector 'x' and put them into 'C'
             int idxC0 = C.col_idx[col];
