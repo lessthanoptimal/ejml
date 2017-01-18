@@ -189,11 +189,17 @@ public class SMatrixTriplet_F64 implements SMatrix_F64
         int where = nz_index(row,col);
         if( where >= 0 ) {
             Element e = nz_data[where];
-            for (int i = where; i < nz_length-1; i++) {
+            nz_length -= 1;
+            for (int i = where; i < nz_length; i++) {
                 nz_data[i] = nz_data[i+1];
             }
-            nz_data[nz_length-1] = e;
+            nz_data[nz_length] = e;
         }
+    }
+
+    @Override
+    public void zero() {
+        nz_length = 0;
     }
 
     @Override

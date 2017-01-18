@@ -26,20 +26,21 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public class TestSMatrixCC_F64 extends GenericTestsSparseMatrix_F64 {
-
-    public TestSMatrixCC_F64() {
-        assignable = false;
-    }
+public class TestSMatrixCmpC_F64 extends GenericTestsSparseMatrix_F64 {
 
     @Override
-    public Matrix_F64 createSparse(int numRows, int numCols) {
+    public SMatrix_F64 createSparse(int numRows, int numCols) {
         return new SMatrixCmpC_F64(numRows,numCols,10);
     }
 
     @Override
-    public Matrix_F64 createSparse(SMatrixTriplet_F64 orig) {
+    public SMatrix_F64 createSparse(SMatrixTriplet_F64 orig) {
         return ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
+    }
+
+    @Override
+    public boolean isStructureValid(SMatrix_F64 m) {
+        return ((SMatrixCmpC_F64)m).isRowOrderValid();
     }
 
     @Test

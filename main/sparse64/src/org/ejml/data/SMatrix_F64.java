@@ -50,4 +50,9 @@ public interface SMatrix_F64 extends Matrix_F64 {
      * @param col the column
      */
     void remove( int row , int col );
+
+    /**
+     * Sets all elements to zero by removing the sparse graph
+     */
+    void zero();
 }

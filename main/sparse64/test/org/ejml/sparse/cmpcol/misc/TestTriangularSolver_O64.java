@@ -23,6 +23,7 @@ import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.sparse.ConvertSparseMatrix_F64;
 import org.ejml.sparse.cmpcol.CommonOps_O64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.junit.Test;
@@ -109,7 +110,7 @@ public class TestTriangularSolver_O64 {
         top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
         assertEquals(0,top);
         for (int i = 0; i < 3; i++) {
-            assertEquals(i,xi[i]);
+            assertEquals(2-i,xi[i]);
         }
 
         // A is diagonal with one missing and B is missing the same element
@@ -122,11 +123,36 @@ public class TestTriangularSolver_O64 {
     }
 
     /**
-     * A is triangular
+     * A is filled in triangular
      */
     @Test
     public void searchNzRowsInB_triangle() {
+        SMatrixCmpC_F64 A = RandomMatrices_O64.createLowerTriangular(4,0,16, -1,1,rand);
+        SMatrixCmpC_F64 B = RandomMatrices_O64.uniform(4,1,4,-1,1,rand);
 
+        int xi[] = new int[A.numCols];
+
+        int top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(0,top);
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i,xi[i]);
+        }
+
+        // Add a hole which should be filled in
+        B.remove(1,0);
+        top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(0,top);
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i,xi[i]);
+        }
+
+        // add a hole on top.  This should not be filled in nor the one below it
+        B.remove(0,0);
+        top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(2,top);
+        for (int i = 0; i < 2; i++) {
+            assertEquals(i+2,xi[i]);
+        }
     }
 
 
@@ -135,7 +161,25 @@ public class TestTriangularSolver_O64 {
      */
     @Test
     public void searchNzRowsInB_case0() {
+        DMatrixRow_F64 D = UtilEjml.parse_R64(
+                "1 0 0 0 0 " +
+                        "1 1 0 0 0 "+
+                        "0 1 1 0 0 " +
+                        "1 0 0 1 0 " +
+                        "0 1 0 0 1",5);
 
+        SMatrixCmpC_F64 A = ConvertSparseMatrix_F64.convert(D,(SMatrixCmpC_F64)null);
+
+        SMatrixCmpC_F64 B = RandomMatrices_O64.uniform(5,1,4,-1,1,rand);
+
+        int xi[] = new int[A.numCols];
+        int top = TriangularSolver_O64.searchNzRowsInB(A,B,0,xi,null);
+        assertEquals(0,top);
+        assertEquals(0,xi[0]); // hand traced through
+        assertEquals(3,xi[1]);
+        assertEquals(1,xi[2]);
+        assertEquals(4,xi[3]);
+        assertEquals(2,xi[4]);
     }
 
 }

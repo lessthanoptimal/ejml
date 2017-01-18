@@ -90,14 +90,14 @@ public class TriangularSolver_O64 {
      * @param B (Input) Matrix B. Not modified.
      * @param colB Column in B being solved for
      * @param xi (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
-     * @param w Work space array used internally.
+     * @param w (Optional) Work space array used internally.  Must be of size B.numRows*2 or null
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
     public static int searchNzRowsInB( SMatrixCmpC_F64 G , SMatrixCmpC_F64 B , int colB, int xi[] , int w[])
     {
         if( xi.length < B.numRows )
             throw new IllegalArgumentException("xi must be at least this long: "+B.numRows);
-        w = checkDeclare(B.numRows,w,true);
+        w = checkDeclare(B.numRows*2,w,B.numRows);
 
         // use 'w' as a marker to know which rows in B have been examined.  0 = unexamined and 1 = examined
         int idx0 = B.col_idx[colB];
@@ -121,30 +121,37 @@ public class TriangularSolver_O64 {
      */
     private static int searchNzRowsInB_DFS( int rowB , SMatrixCmpC_F64 G , int top , int xi[], int w[] )
     {
-        w[rowB] = 1;  // mark this row as being examined
+        int N = G.numRows;
         int head = 0; // put the selected row into the FILO stack
         xi[head] = rowB; // use the head of xi to store where the stack it's searching.  The tail is where
                          // the graph ordered list of rows in B is stored.
         while( head >= 0 ) {
             // the column in G being examined
-            int G_col = xi[head--];
+            int G_col = xi[head];
+
+            if( w[G_col] == 0) {
+                w[G_col] = 1;
+                w[N+head] = G.col_idx[G_col]; // mark which child in the loop below it's examining
+            }
 
             // See if there are any children which have yet to be examined
             boolean done = true;
 
-            int idx0 = G.col_idx[G_col];
+            int idx0 = w[N+head];
             int idx1 = G.col_idx[G_col+1];
 
             for (int j = idx0; j < idx1; j++) {
                 int jrow = G.nz_rows[j];
                 if( w[jrow] == 0 ) {
-                    w[jrow] = 1;
+                    w[N+head] = j+1; // mark that it has processed up to this point
                     xi[++head] = jrow;
                     done = false;
+                    break;          // It's a DFS so break and continue down
                 }
             }
 
             if( done ) {
+                head--;
                 xi[--top] = G_col;
             }
 

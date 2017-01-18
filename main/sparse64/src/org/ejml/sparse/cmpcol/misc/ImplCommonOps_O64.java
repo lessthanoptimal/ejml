@@ -172,6 +172,16 @@ public class ImplCommonOps_O64 {
         return w;
     }
 
+    public static int[] checkDeclare( int N, int[] w, int fillToM ) {
+        if( w == null )
+            w = new int[N];
+        else if( w.length < N )
+            throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
+        else if( fillToM > 0 )
+            Arrays.fill(w,0,fillToM,0);
+        return w;
+    }
+
     public static double[] checkDeclare( int N, double[] x) {
         if( x == null )
             x = new double[N];

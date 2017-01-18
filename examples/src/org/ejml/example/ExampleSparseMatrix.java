@@ -61,8 +61,10 @@ public class ExampleSparseMatrix {
         //                  y=A*x
         // Optional storage is set to null so that it will declare it internally
         long before = System.currentTimeMillis();
+        int []workA = new int[A.numRows];
+        double []workB = new double[A.numRows];
         for (int i = 0; i < 100; i++) {
-            CommonOps_O64.mult(A,x,y,null,null);
+            CommonOps_O64.mult(A,x,y,workA,workB);
         }
         long after = System.currentTimeMillis();
 

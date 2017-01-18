@@ -64,12 +64,12 @@ public class TestConvertSparseMatrix_F64 {
         assertEquals(5*6-4, b.nz_length);
         for (int row = 0; row < a.numRows; row++) {
             for (int col = 0; col < a.numCols; col++) {
-                SMatrixTriplet_F64.Element e = b.nz_data[b.nz_index(row,col)];
+                int index = b.nz_index(row,col);
 
                 if( a.get(row,col) == 0.0 ) {
-                    assertTrue( null == e );
+                    assertTrue( -1 == index );
                 } else {
-                    assertEquals( a.get(row,col), e.value, UtilEjml.TEST_F64);
+                    assertEquals( a.get(row,col), b.nz_data[index].value, UtilEjml.TEST_F64);
                 }
             }
         }

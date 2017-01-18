@@ -23,8 +23,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -35,9 +34,11 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
 
     public boolean assignable = true;
 
-    public abstract Matrix_F64 createSparse( int numRows , int numCols );
+    public abstract SMatrix_F64 createSparse( int numRows , int numCols );
 
-    public abstract Matrix_F64 createSparse(SMatrixTriplet_F64 orig);
+    public abstract SMatrix_F64 createSparse(SMatrixTriplet_F64 orig);
+
+    public abstract boolean isStructureValid( SMatrix_F64 m );
 
     @Override
     protected Matrix_F64 createMatrix(int numRows, int numCols) {
@@ -57,13 +58,37 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
 
     @Test
     public void set() {
-        Matrix_F64 m = createSparse(3,4);
+        SMatrix_F64 m = createSparse(3,4);
 
         if( assignable ) {
+            SMatrix_F64 orig = m.copy();
+
             m.set(1, 2, 10);
             m.set(1, 2, 15);
 
             assertEquals(15, m.get(1, 2), UtilEjml.TEST_F64);
+
+            // make sure nothing else was modified
+            for (int row = 0; row < m.getNumRows(); row++) {
+                for (int col = 0; col < m.getNumCols(); col++) {
+                    if( row != 1 && col != 2 )
+                        assertEquals(orig.get(row,col),m.get(row,col), UtilEjml.TEST_F64);
+                }
+            }
+
+            assertTrue(isStructureValid(m));
+
+            // another test case.  empty matrix
+            m.zero();
+            m.set(1, 2, 15);
+            assertEquals(15, m.get(1, 2), UtilEjml.TEST_F64);
+            for (int row = 0; row < m.getNumRows(); row++) {
+                for (int col = 0; col < m.getNumCols(); col++) {
+                    if( row != 1 && col != 2 )
+                        assertEquals(0,m.get(row,col), UtilEjml.TEST_F64);
+                }
+            }
+
         } else {
             try {
                 m.set(1,2,10);
@@ -77,7 +102,7 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
         SMatrixTriplet_F64 tmp = new SMatrixTriplet_F64(3,4,1);
         tmp.addItem(1,2,5);
 
-        Matrix_F64 m = createSparse(tmp);
+        SMatrix_F64 m = createSparse(tmp);
 
         m.set(1,2, 5);
 
@@ -94,6 +119,14 @@ public abstract class GenericTestsSparseMatrix_F64 extends GenericTestsDenseMatr
 
     @Test
     public void remove() {
-        fail("Implement");
+        SMatrix_F64 m = (SMatrix_F64)createMatrix(3,4);
+
+        assertTrue( m.get(1,2) != 0 );
+        m.remove(1,2);
+        assertTrue( m.get(1,2) == 0 );
+        m.remove(1,2); // see if it blows up if it removes nothing
+        assertTrue( m.get(1,2) == 0 );
+
+        assertTrue(isStructureValid(m));
     }
 }

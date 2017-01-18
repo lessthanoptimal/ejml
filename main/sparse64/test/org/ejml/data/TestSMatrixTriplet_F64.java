@@ -96,12 +96,17 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseMatrix_F64 {
     }
 
     @Override
-    public Matrix_F64 createSparse(int numRows, int numCols) {
+    public SMatrix_F64 createSparse(int numRows, int numCols) {
         return new SMatrixTriplet_F64(numRows,numCols,10);
     }
 
     @Override
-    public Matrix_F64 createSparse(SMatrixTriplet_F64 orig) {
+    public SMatrix_F64 createSparse(SMatrixTriplet_F64 orig) {
         return new SMatrixTriplet_F64(orig);
+    }
+
+    @Override
+    public boolean isStructureValid(SMatrix_F64 m) {
+        return true;
     }
 }

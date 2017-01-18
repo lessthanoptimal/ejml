@@ -62,6 +62,7 @@ public class GenerateCode32 {
         converter.replacePattern("C64", "C32");
         converter.replacePattern("CR64", "CR32");
         converter.replacePattern("CB64", "CB32");
+        converter.replacePattern("random64", "random32");
         converter.replacePattern("64-bit", "32-bit");
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");
         converter.replacePattern("UtilEjml.EPS", "UtilEjml.F_EPS");

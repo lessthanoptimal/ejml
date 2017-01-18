@@ -160,8 +160,11 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
         int col1 = col_idx[col+1];
 
         for (int i = col0; i < col1; i++) {
-            if( nz_rows[i] == row ) {
+            int ri = nz_rows[i];
+            if( ri == row ) {
                 return i;
+            } else if( ri > row ) { // the indexes are ordered.
+                break;
             }
         }
         return -1;
@@ -181,15 +184,58 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
         if( index >= 0 ) {
             nz_values[index] = val;
         } else {
-            throw new RuntimeException("Need to implement the ability to insert an element");
+
+            int idx0 = col_idx[col];
+            int idx1 = col_idx[col+1];
+
+            for( index = idx0; index < idx1; index++ ) {
+                if( nz_rows[index] < row) {
+                    break;
+                }
+            }
+
+            // shift all the col_idx after this point by 1
+            for (int i = col+1; i <= numCols; i++) {
+                col_idx[i]++;
+            }
+
+            // shift the two non-zero arrays
+            if( nz_length >= nz_values.length )
+                growMaxLength(nz_length*2+1, true);
+
+            for (int i = nz_length-1; i > index; i--) {
+                nz_rows[i] = nz_rows[i-1];
+                nz_values[i] = nz_values[i-1];
+            }
+            nz_rows[index] = row;
+            nz_values[index] = col;
+            nz_length++;
         }
     }
 
     @Override
     public void remove( int row , int col ) {
-        throw new RuntimeException("Implement");
+        int index = nz_index(row,col);
+
+        if( index < 0 ) // it's not in the nz structure
+            return;
+
+        // shift all the col_idx after this point by -1
+        for (int i = col+1; i <= numCols; i++) {
+            col_idx[i]--;
+        }
+
+        nz_length--;
+        for (int i = index; i < nz_length; i++) {
+            nz_rows[i] = nz_rows[i+1];
+            nz_values[i] = nz_values[i+1];
+        }
     }
 
+    @Override
+    public void zero() {
+        nz_length = 0;
+    }
 
     @Override
     public int getNumElements() {
@@ -223,17 +269,18 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
     }
 
     /**
-     * Increases the maximum size of the data array so that it can store sparse data up to 'length'.
+     * Increases the maximum size of the data array so that it can store sparse data up to 'length'.  The class
+     * parameter nz_length is not modified by this function call.
      *
-     * @param nz_values Desired maximum length of sparse data
+     * @param nz_length Desired maximum length of sparse data
      * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
      */
-    public void growMaxLength( int nz_values , boolean preserveValue ) {
+    public void growMaxLength( int nz_length , boolean preserveValue ) {
         // don't increase the size beyound the max possible matrix size
-        nz_values = Math.min(numRows*numCols, nz_values);
-        if( nz_values > this.nz_values.length ) {
-            double[] data = new double[ nz_values ];
-            int[] row_idx = new int[ nz_values ];
+        nz_length = Math.min(numRows*numCols, nz_length);
+        if( nz_length > this.nz_values.length ) {
+            double[] data = new double[ nz_length ];
+            int[] row_idx = new int[ nz_length ];
 
             if( preserveValue ) {
                 System.arraycopy(this.nz_values, 0, data, 0, this.nz_length);
