@@ -150,15 +150,11 @@ public class ConvertSparseMatrix_F64 {
      * @param dst Destination. Will be a copy.  Modified.
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
-    public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst , int hist[] ,
-                                          SortCoupledArray_F64 sorter ) {
+    public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst , int hist[] ) {
         if( dst == null )
             dst = new SMatrixCmpC_F64(src.numRows, src.numCols , src.nz_length);
         else
             dst.reshape(src.numRows, src.numCols, src.nz_length);
-
-        if( sorter == null )
-            sorter = new SortCoupledArray_F64();
 
         if( hist == null )
             hist = new int[ src.numCols ];
@@ -184,14 +180,13 @@ public class ConvertSparseMatrix_F64 {
             dst.nz_values[index] = e.value;
         }
         dst.nz_length = src.nz_length;
-
-        sorter.sort(dst.col_idx,dst.numCols+1,dst.nz_rows,dst.nz_values);
+        dst.indicesSorted = false;
 
         return dst;
     }
 
     public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst ) {
-        return convert(src,dst,null,null);
+        return convert(src,dst,null);
     }
 
     public static SMatrixTriplet_F64 convert(SMatrixCmpC_F64 src , SMatrixTriplet_F64 dst ) {

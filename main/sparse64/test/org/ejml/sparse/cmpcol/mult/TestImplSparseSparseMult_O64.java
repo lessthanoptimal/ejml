@@ -24,6 +24,7 @@ import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.dense.row.CommonOps_R64;
 import org.ejml.dense.row.RandomMatrices_R64;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
+import org.ejml.sparse.cmpcol.CommonOps_O64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.junit.Test;
 
@@ -55,7 +56,7 @@ public class TestImplSparseSparseMult_O64 {
         SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(4,5,elementsC,-1,1,rand);
 
         ImplSparseSparseMult_O64.mult(a,b,c, null, null);
-        assertTrue(c.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkSortedFlag(c));
 
         DMatrixRow_F64 dense_a = ConvertSparseMatrix_F64.convert(a,(DMatrixRow_F64)null);
         DMatrixRow_F64 dense_b = ConvertSparseMatrix_F64.convert(b,(DMatrixRow_F64)null);
@@ -88,7 +89,6 @@ public class TestImplSparseSparseMult_O64 {
 
         DMatrixRow_F64 dense_a = ConvertSparseMatrix_F64.convert(a,(DMatrixRow_F64)null);
         DMatrixRow_F64 expected_c = RandomMatrices_R64.createRandom(4,5,-1,1,rand);
-
 
         CommonOps_R64.mult(dense_a, b, expected_c);
 

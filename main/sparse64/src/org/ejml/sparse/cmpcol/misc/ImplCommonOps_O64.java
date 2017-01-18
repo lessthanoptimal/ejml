@@ -101,6 +101,7 @@ public class ImplCommonOps_O64 {
     {
         x = checkDeclare(A.numRows, x);
 
+        C.indicesSorted = false;
         C.nz_length = 0;
 
         for (int col = 0; col < A.numCols; col++) {

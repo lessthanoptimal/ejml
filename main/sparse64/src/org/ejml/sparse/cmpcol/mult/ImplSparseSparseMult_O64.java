@@ -38,11 +38,12 @@ public class ImplSparseSparseMult_O64 {
      * @param x (Optional) Storage for internal work.  null or array of length A.numRows
      */
     public static void mult(SMatrixCmpC_F64 A, SMatrixCmpC_F64 B, SMatrixCmpC_F64 C,
-                            int w[], double x[])
+                            int w[], double x[] )
     {
         x = checkDeclare(A.numRows, x);
         w = checkDeclare(A.numRows, w, true);
 
+        C.indicesSorted = false;
         C.nz_length = 0;
 
         // C(i,j) = sum_k A(i,k) * B(k,j)
@@ -74,7 +75,9 @@ public class ImplSparseSparseMult_O64 {
 
             idx0 = idx1;
         }
+
     }
+
 
     /**
      * Performs the performing operation x = x + A(:,i)*alpha

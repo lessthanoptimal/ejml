@@ -20,6 +20,7 @@ package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.sparse.cmpcol.CommonOps_O64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.junit.Test;
 
@@ -54,7 +55,7 @@ public class TestImplCommonOps_O64 {
                 assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
             }
         }
-        assertTrue(b.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkSortedFlag(b));
     }
 
     @Test
@@ -81,7 +82,7 @@ public class TestImplCommonOps_O64 {
                         assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
                     }
                 }
-                assertTrue(c.isRowOrderValid());
+                assertTrue(CommonOps_O64.checkSortedFlag(c));
             }
         }
     }

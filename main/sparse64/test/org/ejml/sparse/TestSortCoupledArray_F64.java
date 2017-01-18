@@ -55,7 +55,7 @@ public class TestSortCoupledArray_F64 {
 
         SortCoupledArray_F64 sorter = new SortCoupledArray_F64();
 
-        sorter.sort(bins,5,dataA,dataB);
+        sorter.quick(bins,5,dataA,dataB);
 
         for (int i = 1; i < bins.length; i++) {
             int idx0 = bins[i-1];

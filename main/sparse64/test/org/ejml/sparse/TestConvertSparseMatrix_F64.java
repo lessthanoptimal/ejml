@@ -25,6 +25,7 @@ import org.ejml.data.SMatrixCmpC_F64;
 import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.sparse.cmpcol.CommonOps_O64;
 import org.ejml.sparse.cmpcol.MatrixFeatures_O64;
 import org.ejml.sparse.cmpcol.RandomMatrices_O64;
 import org.ejml.sparse.triplet.MatrixFeatures_T64;
@@ -103,11 +104,11 @@ public class TestConvertSparseMatrix_F64 {
         // now try it the other direction
         SMatrixCmpC_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixCmpC_F64)null);
         assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
-        assertTrue(c.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkIndicesSorted(c));
 
         c = ConvertSparseMatrix_F64.convert(b,new SMatrixCmpC_F64(1,1,1));
         assertTrue(MatrixFeatures_O64.isEquals(a,c, UtilEjml.TEST_F64));
-        assertTrue(c.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkIndicesSorted(c));
     }
 
     @Test
@@ -128,7 +129,7 @@ public class TestConvertSparseMatrix_F64 {
             SMatrixTriplet_F64.Element e = a.nz_data[i];
             assertEquals(e.value, b.get(e.row, e.col), UtilEjml.TEST_F64);
         }
-        assertTrue(b.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkSortedFlag(b));
 
         // now try it the other direction
         SMatrixTriplet_F64 c = ConvertSparseMatrix_F64.convert(b,(SMatrixTriplet_F64)null);

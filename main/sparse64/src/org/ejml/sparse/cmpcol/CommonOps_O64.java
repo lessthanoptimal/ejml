@@ -31,6 +31,35 @@ import java.util.Arrays;
 public class CommonOps_O64 {
 
     /**
+     * Checks to see if row indicies are sorted into ascending order.  O(N)
+     * @return true if sorted and false if not
+     */
+    public static boolean checkIndicesSorted( SMatrixCmpC_F64 A ) {
+        for (int j = 0; j < A.numCols; j++) {
+            int idx0 = A.col_idx[j];
+            int idx1 = A.col_idx[j+1];
+
+            if( idx0 != idx1 && A.nz_rows[idx0] >= A.numRows )
+                return false;
+
+            for (int i = idx0+1; i < idx1; i++) {
+                int row = A.nz_rows[i];
+                if( A.nz_rows[i-1] >= row)
+                    return false;
+                if( row >= A.numRows )
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkSortedFlag( SMatrixCmpC_F64 A ) {
+        if( A.indicesSorted )
+            return checkIndicesSorted(A);
+        return true;
+    }
+
+    /**
      * Perform matrix transpose
      *
      * @param a Input matrix.  Not modified
@@ -45,6 +74,10 @@ public class CommonOps_O64 {
         a_t.nz_length = a.nz_length;
 
         ImplCommonOps_O64.transpose(a, a_t, work);
+    }
+
+    public static void mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ) {
+        mult(A,B,C,null,null);
     }
 
     /**

@@ -47,8 +47,12 @@ Date format: year/month/day
   convert_to_ejml31.py
 - Fixed a minor printing glitch for dense matrices.  There was an extra space
 
+Equations
 - TODO Add support for matrix norms to Equations
 - TODO Support math in submatrix notation in Equations.  E.g. A(i+1,:) = FOO
+- TODO Add support for sum(A) sum(A,0) rows and sum(A,1) columns
+
+Misc
 - TODO gradle modules to have ejml-* in their name
 - TODO rename main to source?
 
@@ -57,6 +61,38 @@ Date format: year/month/day
 - TODO compare CC CR sparse formats and decide which one to focus on
        implement mult and solve in both
        the difference might be sparse to dense ops
+
+Sorting row indices in sparse matrix
+- Algs which are slower because of that
+   * mult by about 30%
+   * addition by ?
+   * triplet to csc
+
+- Algs which require or are better because of sorting
+   * equals
+
+
+Matrix Name       Op-Suffice              Data Type
+------------------------------------------------------------------------
+MatrixRMaj_64            _DR64      Dense Row-Major real double
+MatrixRMaj_64C           _DR64C     Dense Row-Major complex double
+MatrixRMaj_32C           _DR32C     Dense Row-Major complex float
+MatrixBlock_64           _DB64      Dense Block Row-Major Real double
+MatrixBlock_64C          _DB64C
+Matrix3x3_64                        Dense Fixed Sized 3x3 real double
+Matrix3_64                          Dense Fixed Sized 3 real double
+MatrixSparseCSC_64       _SC64      Sparse Compressed Column real double
+MatrixSparseCSC_64C      _SC64C
+MatrixSparseTriplet_64   _ST64      Sparse Triplet real double
+MatrixSparseTriplet_64C  _ST64C
+MatrixSparseSkyline_64   _SK64      Sparse Skyline real double  (future)
+
+
+Generic Types:
+-----------------
+MatrixDense_64
+MatrixSparse_64
+
 
 ----- Version 0.30
 

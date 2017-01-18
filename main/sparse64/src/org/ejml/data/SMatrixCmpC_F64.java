@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import org.ejml.sparse.SortCoupledArray_F64;
+
 /**
  * <p>Compressed Column (CC) sparse matrix format.   Only non-zero elements are stored.</p>
  * <p>
@@ -43,7 +45,8 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
      */
     public int nz_length;
     /**
-     * Specifies which row a specific non-zero value corresponds to.
+     * Specifies which row a specific non-zero value corresponds to.  If they are sorted with in each column
+     * is specified by the {@link #indicesSorted} flag.
      */
     public int nz_rows[];
     /**
@@ -52,8 +55,19 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
      */
     public int col_idx[];
 
+    /**
+     * Number of rows in the matrix
+     */
     public int numRows;
+    /**
+     * Number of columns in the matrix
+     */
     public int numCols;
+
+    /**
+     * Flag that's used to indicate of the row indices are sorted or not.
+     */
+    public boolean indicesSorted=false;
 
     public SMatrixCmpC_F64(int numRows , int numCols , int nz_length) {
         nz_length = Math.min(numCols*numRows, nz_length);
@@ -163,8 +177,6 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
             int ri = nz_rows[i];
             if( ri == row ) {
                 return i;
-            } else if( ri > row ) { // the indexes are ordered.
-                break;
             }
         }
         return -1;
@@ -292,33 +304,26 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
         }
     }
 
+
     /**
-     * Checks the contract that row elements will be specified in chronomical order
-     * @return true if in order or false if invalid
+     * Sorts the row indices in ascending order.
+     * @param sorter (Optional) Used to sort rows.  If null a new instance will be declared internally.
      */
-    public boolean isRowOrderValid() {
-        for (int j = 0; j < numCols; j++) {
-            int idx0 = col_idx[j];
-            int idx1 = col_idx[j+1];
+    public void sortIndices(SortCoupledArray_F64 sorter ) {
+        if( sorter == null )
+            sorter = new SortCoupledArray_F64();
 
-            if( idx0 != idx1 && nz_rows[idx0] >= numRows )
-                return false;
-
-            for (int i = idx0+1; i < idx1; i++) {
-                int row = nz_rows[i];
-                if( nz_rows[i-1] >= row)
-                    return false;
-                if( row >= numRows )
-                    return false;
-            }
-        }
-        return true;
+        sorter.quick(col_idx,numCols+1,nz_rows,nz_values);
     }
 
     public void copyStructure( SMatrixCmpC_F64 orig ) {
         reshape(orig.numRows, orig.numCols, orig.nz_length);
         System.arraycopy(orig.col_idx,0,col_idx,0,orig.numCols+1);
         System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.nz_length);
+    }
+
+    public boolean isIndicesSorted() {
+        return indicesSorted;
     }
 
     public boolean isFull() {

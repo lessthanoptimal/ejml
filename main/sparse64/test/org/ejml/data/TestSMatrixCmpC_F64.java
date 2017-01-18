@@ -21,7 +21,7 @@ package org.ejml.data;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Abeles
@@ -40,27 +40,7 @@ public class TestSMatrixCmpC_F64 extends GenericTestsSparseMatrix_F64 {
 
     @Override
     public boolean isStructureValid(SMatrix_F64 m) {
-        return ((SMatrixCmpC_F64)m).isRowOrderValid();
-    }
-
-    @Test
-    public void isRowOrderValid() {
-        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(3,5,6);
-
-        orig.addItem(0,0, 5);
-        orig.addItem(1,0, 6);
-        orig.addItem(2,0, 7);
-
-        orig.addItem(1,2, 5);
-
-        SMatrixCmpC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
-
-        // test positive case first
-        assertTrue(a.isRowOrderValid());
-
-        // test negative case second
-        a.nz_rows[1] = 3;
-        assertFalse(a.isRowOrderValid());
+        return true;
     }
 
     @Test

@@ -58,7 +58,7 @@ public class TestRandomMatrices_O64 {
         }
 
         assertEquals(10, count);
-        assertTrue(a.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkSortedFlag(a));
     }
 
     @Test
@@ -70,13 +70,13 @@ public class TestRandomMatrices_O64 {
                 L = RandomMatrices_O64.createLowerTriangular(6, 0, length,-1,1, rand);
 //            L.print();
                 assertEquals(Math.max(6,length),L.nz_length);
-                assertTrue(L.isRowOrderValid());
+                assertTrue(CommonOps_O64.checkSortedFlag(L));
                 assertTrue(MatrixFeatures_O64.isLowerTriangle(L,0, UtilEjml.TEST_F64));
 
                 L = RandomMatrices_O64.createLowerTriangular(6, 1, length,-1,1, rand);
 //                L.print();
                 assertEquals(Math.max(5,length),L.nz_length);
-                assertTrue(L.isRowOrderValid());
+                assertTrue(CommonOps_O64.checkSortedFlag(L));
                 assertTrue(MatrixFeatures_O64.isLowerTriangle(L,1, UtilEjml.TEST_F64));
             }
 

@@ -21,6 +21,7 @@ package org.ejml.sparse.cmpcol;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRow_F64;
 import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.SMatrixTriplet_F64;
 import org.ejml.dense.row.CommonOps_R64;
 import org.ejml.dense.row.MatrixFeatures_R64;
 import org.ejml.sparse.ConvertSparseMatrix_F64;
@@ -38,6 +39,26 @@ import static org.junit.Assert.*;
 public class TestCommonOps_O64 {
 
     Random rand = new Random(234);
+
+    @Test
+    public void isRowOrderValid() {
+        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(3,5,6);
+
+        orig.addItem(0,0, 5);
+        orig.addItem(1,0, 6);
+        orig.addItem(2,0, 7);
+
+        orig.addItem(1,2, 5);
+
+        SMatrixCmpC_F64 a = ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
+
+        // test positive case first
+        assertTrue(CommonOps_O64.checkIndicesSorted(a));
+
+        // test negative case second
+        a.nz_rows[1] = 3;
+        assertFalse(CommonOps_O64.checkIndicesSorted(a));
+    }
 
     @Test
     public void transpose_shapes() {
@@ -88,7 +109,8 @@ public class TestCommonOps_O64 {
     private void check_s_s_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
         try {
             CommonOps_O64.mult(A,B,C,null,null);
-            assertTrue(C.isRowOrderValid());
+            assertTrue(CommonOps_O64.checkSortedFlag(C));
+
 
             if( exception )
                 fail("exception expected");
@@ -189,7 +211,7 @@ public class TestCommonOps_O64 {
         double beta = -0.6;
         try {
             CommonOps_O64.add(alpha,A,beta,B,C,null);
-            assertTrue(C.isRowOrderValid());
+            assertTrue(CommonOps_O64.checkSortedFlag(C));
 
             if( exception )
                 fail("exception expected");
@@ -216,7 +238,7 @@ public class TestCommonOps_O64 {
     }
 
     public void identity_r_c( SMatrixCmpC_F64 A) {
-        assertTrue(A.isRowOrderValid());
+        assertTrue(CommonOps_O64.checkSortedFlag(A));
         for (int row = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++) {
                 if( row == col )

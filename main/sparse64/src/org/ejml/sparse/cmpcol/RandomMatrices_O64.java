@@ -65,9 +65,6 @@ public class RandomMatrices_O64 {
             ret.nz_values[i] = rand.nextDouble()*(max-min)+min;
         }
 
-        if( !ret.isRowOrderValid() )
-            throw new RuntimeException("ASdASD");
-
         return ret;
     }
 
