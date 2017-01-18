@@ -88,6 +88,7 @@ public class TestCommonOps_O64 {
     private void check_s_s_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
         try {
             CommonOps_O64.mult(A,B,C,null,null);
+            assertTrue(C.isRowOrderValid());
 
             if( exception )
                 fail("exception expected");
@@ -188,6 +189,7 @@ public class TestCommonOps_O64 {
         double beta = -0.6;
         try {
             CommonOps_O64.add(alpha,A,beta,B,C,null);
+            assertTrue(C.isRowOrderValid());
 
             if( exception )
                 fail("exception expected");
@@ -214,6 +216,7 @@ public class TestCommonOps_O64 {
     }
 
     public void identity_r_c( SMatrixCmpC_F64 A) {
+        assertTrue(A.isRowOrderValid());
         for (int row = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++) {
                 if( row == col )

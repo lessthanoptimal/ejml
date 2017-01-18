@@ -30,6 +30,7 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -54,6 +55,7 @@ public class TestImplSparseSparseMult_O64 {
         SMatrixCmpC_F64 c = RandomMatrices_O64.uniform(4,5,elementsC,-1,1,rand);
 
         ImplSparseSparseMult_O64.mult(a,b,c, null, null);
+        assertTrue(c.isRowOrderValid());
 
         DMatrixRow_F64 dense_a = ConvertSparseMatrix_F64.convert(a,(DMatrixRow_F64)null);
         DMatrixRow_F64 dense_b = ConvertSparseMatrix_F64.convert(b,(DMatrixRow_F64)null);

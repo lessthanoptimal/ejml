@@ -113,6 +113,9 @@ public class CommonOps_O64 {
             A.col_idx[i] = i;
             A.nz_rows[i-1] = i-1;
         }
+        for (int i = min+1; i <= numCols; i++) {
+            A.col_idx[i] = min;
+        }
 
         return A;
     }
