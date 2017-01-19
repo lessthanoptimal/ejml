@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestCDMatrixD1 {
+public class TestZMatrixD1 {
     @Test
     public void set_matrix() {
         ZMatrixD1 a = new ZMatrixRMaj(3,4);

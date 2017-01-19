@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestCFMatrixD1 {
+public class TestCMatrixD1 {
     @Test
     public void set_matrix() {
         CMatrixD1 a = new CMatrixRMaj(3,4);
