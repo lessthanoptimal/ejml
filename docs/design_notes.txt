@@ -18,11 +18,11 @@ the number of permutations.
 
 Block Cholesky Decomposition
 ---------------------------
-The DenseMatrix64F based CholeskyDecompositionBlock class is easier to tune and offers equivalent
+The DMatrixRMaj based CholeskyDecompositionBlock class is easier to tune and offers equivalent
 performance to BlockMatrix64F based BlockCholeskyOuter class. CholeskyDecompositionBlock achieves
 optimal performance with munch smaller block sizes, but its performance actually degrades when
 larger blocks that are optimal for BlockMatrix64F algorithms are used.  CholeskyDecompositionBlock
-also works directly with DenseMatrix64F and avoids the need to convert matrix types.
+also works directly with DMatrixRMaj and avoids the need to convert matrix types.
 
 Block matrix solver is much faster than the row-major solver.
 

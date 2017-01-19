@@ -31,7 +31,7 @@ public interface ZMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @param output Storage for the complex number
      */
-    public void get( int row , int col , Complex_F64 output );
+    void get( int row , int col , Complex_F64 output );
 
     /**
      * Set's the complex value of the matrix's element
@@ -41,7 +41,7 @@ public interface ZMatrix extends Matrix {
      * @param real The real component
      * @param imaginary The imaginary component
      */
-    public void set( int row , int col , double real , double imaginary );
+    void set( int row , int col , double real , double imaginary );
 
     /**
      * Returns the real component of the matrix's element.
@@ -50,7 +50,7 @@ public interface ZMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double getReal(int row, int col);
+    double getReal(int row, int col);
 
 
     /**
@@ -60,7 +60,7 @@ public interface ZMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @param val  The element's new value.
      */
-    public void setReal(int row, int col, double val);
+    void setReal(int row, int col, double val);
 
     /**
      * Returns the imaginary component of the matrix's element.
@@ -69,7 +69,7 @@ public interface ZMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @return The specified element's value.
      */
-    public double getImag(int row, int col);
+    double getImag(int row, int col);
 
 
     /**
@@ -79,13 +79,13 @@ public interface ZMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @param val  The element's new value.
      */
-    public void setImag(int row, int col, double val);
+    void setImag(int row, int col, double val);
 
     /**
      * Returns the number of elements in the internal data array
      *
      * @return Number of elements in the data array.
      */
-    public int getDataLength();
+    int getDataLength();
 
 }

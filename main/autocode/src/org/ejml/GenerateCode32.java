@@ -33,11 +33,18 @@ public class GenerateCode32 {
 
     private ConvertFile32From64 converter;
 
-    List<String> suffices64 = new ArrayList<String>();
-    List<String> suffices32 = new ArrayList<String>();
+    // prefixes and suffices for files which are to be converted
+    List<String> suffices64 = new ArrayList<>();
+    List<String> suffices32 = new ArrayList<>();
+    List<String> prefix64 = new ArrayList<>();
+    List<String> prefix32 = new ArrayList<>();
 
+    // file name keyword black list - ignore files with these names
+    List<String> blacklist = new ArrayList<>();
 
     public GenerateCode32() {
+
+        blacklist.add("MatrixSparse");
 
         String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF3","DF4","DF5","DF6"};
 
@@ -51,6 +58,21 @@ public class GenerateCode32 {
             suffices32.add("_F"+suffice);
             suffices64.add("_Z"+suffice);
             suffices32.add("_C"+suffice);
+        }
+
+        prefix64.add("DMatrix");
+        prefix32.add("FMatrix");
+        prefix64.add("ZMatrix");
+        prefix32.add("CMatrix");
+        prefix64.add("DSubmatrix");
+        prefix32.add("FSubmatrix");
+        prefix64.add("ConvertDMatrix");
+        prefix32.add("ConvertFMatrix");
+
+        int N = prefix64.size();
+        for (int i = 0; i < N; i++) {
+            prefix64.add("Test"+prefix64.get(i));
+            prefix32.add("Test"+prefix32.get(i));
         }
 
         converter = new ConvertFile32From64(false);
@@ -70,6 +92,7 @@ public class GenerateCode32 {
         converter.replacePattern("DEigen", "FEigen");
         converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
+        converter.replacePattern("DSubmatrix", "FSubmatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
 
         converter.replacePattern("F64", "F32");
@@ -117,7 +140,20 @@ public class GenerateCode32 {
         for( File f : files ) {
             String n = f.getName();
 
+            boolean blacklisted = false;
+            for (int i = 0; i < blacklist.size(); i++) {
+                if( n.contains(blacklist.get(i))) {
+                    blacklisted = true;
+                    break;
+                }
+            }
+
+            if( blacklisted )
+                continue;
+
             int matchedIndex = -1;
+
+            boolean suffix = true;
 
             for (int i = 0; i < suffices64.size(); i++) {
                 String s = suffices64.get(i);
@@ -127,13 +163,32 @@ public class GenerateCode32 {
                 }
             }
 
+            if( matchedIndex == -1 ) {
+                for (int i = 0; i < prefix64.size(); i++) {
+                    String s = prefix64.get(i);
+                    if( n.startsWith( s ) && n.endsWith(".java") ) {
+                        matchedIndex = i;
+                        suffix = false;
+                        break;
+                    }
+                }
+            }
+
             if( matchedIndex == -1 )
                 continue;
 
-            String s64 = suffices64.get(matchedIndex);
-            String s32 = suffices32.get(matchedIndex);
+            if( suffix ) {
+                String s64 = suffices64.get(matchedIndex);
+                String s32 = suffices32.get(matchedIndex);
 
-            n = n.substring(0, n.length() - s64.length()-5) + s32+".java";
+                n = n.substring(0, n.length() - s64.length() - 5) + s32 + ".java";
+            } else {
+                String s64 = prefix64.get(matchedIndex);
+                String s32 = prefix32.get(matchedIndex);
+
+                n = s32 + n.substring(s64.length(),n.length());
+            }
+
             try {
                 System.out.println( "Generating " + n );
                 converter.process(f,new File(outputDirectory,n));

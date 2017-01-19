@@ -23,7 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 6 by FMatrix6x6 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateDMatrixFixedNxN</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedNxN</p>
  *
  * @author Peter Abeles
  */
@@ -40,87 +40,27 @@ public class FMatrix6x6 implements FMatrixFixed {
     }
 
     public FMatrix6x6( float a11, float a12, float a13, float a14, float a15, float a16,
-                               float a21, float a22, float a23, float a24, float a25, float a26,
-                               float a31, float a32, float a33, float a34, float a35, float a36,
-                               float a41, float a42, float a43, float a44, float a45, float a46,
-                               float a51, float a52, float a53, float a54, float a55, float a56,
-                               float a61, float a62, float a63, float a64, float a65, float a66)
+                       float a21, float a22, float a23, float a24, float a25, float a26,
+                       float a31, float a32, float a33, float a34, float a35, float a36,
+                       float a41, float a42, float a43, float a44, float a45, float a46,
+                       float a51, float a52, float a53, float a54, float a55, float a56,
+                       float a61, float a62, float a63, float a64, float a65, float a66)
     {
-        this.a11 = a11;
-        this.a12 = a12;
-        this.a13 = a13;
-        this.a14 = a14;
-        this.a15 = a15;
-        this.a16 = a16;
-        this.a21 = a21;
-        this.a22 = a22;
-        this.a23 = a23;
-        this.a24 = a24;
-        this.a25 = a25;
-        this.a26 = a26;
-        this.a31 = a31;
-        this.a32 = a32;
-        this.a33 = a33;
-        this.a34 = a34;
-        this.a35 = a35;
-        this.a36 = a36;
-        this.a41 = a41;
-        this.a42 = a42;
-        this.a43 = a43;
-        this.a44 = a44;
-        this.a45 = a45;
-        this.a46 = a46;
-        this.a51 = a51;
-        this.a52 = a52;
-        this.a53 = a53;
-        this.a54 = a54;
-        this.a55 = a55;
-        this.a56 = a56;
-        this.a61 = a61;
-        this.a62 = a62;
-        this.a63 = a63;
-        this.a64 = a64;
-        this.a65 = a65;
-        this.a66 = a66;
+        this.a11 = a11; this.a12 = a12; this.a13 = a13; this.a14 = a14; this.a15 = a15; this.a16 = a16;
+        this.a21 = a21; this.a22 = a22; this.a23 = a23; this.a24 = a24; this.a25 = a25; this.a26 = a26;
+        this.a31 = a31; this.a32 = a32; this.a33 = a33; this.a34 = a34; this.a35 = a35; this.a36 = a36;
+        this.a41 = a41; this.a42 = a42; this.a43 = a43; this.a44 = a44; this.a45 = a45; this.a46 = a46;
+        this.a51 = a51; this.a52 = a52; this.a53 = a53; this.a54 = a54; this.a55 = a55; this.a56 = a56;
+        this.a61 = a61; this.a62 = a62; this.a63 = a63; this.a64 = a64; this.a65 = a65; this.a66 = a66;
     }
 
     public FMatrix6x6( FMatrix6x6 o ) {
-        this.a11 = o.a11;
-        this.a12 = o.a12;
-        this.a13 = o.a13;
-        this.a14 = o.a14;
-        this.a15 = o.a15;
-        this.a16 = o.a16;
-        this.a21 = o.a21;
-        this.a22 = o.a22;
-        this.a23 = o.a23;
-        this.a24 = o.a24;
-        this.a25 = o.a25;
-        this.a26 = o.a26;
-        this.a31 = o.a31;
-        this.a32 = o.a32;
-        this.a33 = o.a33;
-        this.a34 = o.a34;
-        this.a35 = o.a35;
-        this.a36 = o.a36;
-        this.a41 = o.a41;
-        this.a42 = o.a42;
-        this.a43 = o.a43;
-        this.a44 = o.a44;
-        this.a45 = o.a45;
-        this.a46 = o.a46;
-        this.a51 = o.a51;
-        this.a52 = o.a52;
-        this.a53 = o.a53;
-        this.a54 = o.a54;
-        this.a55 = o.a55;
-        this.a56 = o.a56;
-        this.a61 = o.a61;
-        this.a62 = o.a62;
-        this.a63 = o.a63;
-        this.a64 = o.a64;
-        this.a65 = o.a65;
-        this.a66 = o.a66;
+        this.a11 = o.a11; this.a12 = o.a12; this.a13 = o.a13; this.a14 = o.a14; this.a15 = o.a15; this.a16 = o.a16;
+        this.a21 = o.a21; this.a22 = o.a22; this.a23 = o.a23; this.a24 = o.a24; this.a25 = o.a25; this.a26 = o.a26;
+        this.a31 = o.a31; this.a32 = o.a32; this.a33 = o.a33; this.a34 = o.a34; this.a35 = o.a35; this.a36 = o.a36;
+        this.a41 = o.a41; this.a42 = o.a42; this.a43 = o.a43; this.a44 = o.a44; this.a45 = o.a45; this.a46 = o.a46;
+        this.a51 = o.a51; this.a52 = o.a52; this.a53 = o.a53; this.a54 = o.a54; this.a55 = o.a55; this.a56 = o.a56;
+        this.a61 = o.a61; this.a62 = o.a62; this.a63 = o.a63; this.a64 = o.a64; this.a65 = o.a65; this.a66 = o.a66;
     }
 
     @Override

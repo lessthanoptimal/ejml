@@ -31,32 +31,32 @@ public interface Matrix extends Serializable {
      *
      * @return Number of rows.
      */
-    public int getNumRows();
+    int getNumRows();
 
     /**
      * Returns the number of columns in this matrix.
      *
      * @return Number of columns.
      */
-    public int getNumCols();
+    int getNumCols();
 
     /**
      * Creates an exact copy of the matrix
      */
-    public <T extends Matrix> T copy();
+    <T extends Matrix> T copy();
 
     /**
      * Creates a new matrix with the same shape as this matrix
      */
-    public <T extends Matrix> T createLike();
+    <T extends Matrix> T createLike();
 
     /**
      * Sets this matrix to be identical to the 'original' matrix passed in.
      */
-    public void set( Matrix original );
+    void set( Matrix original );
 
     /**
      * Prints the matrix to standard out.
      */
-    public void print();
+    void print();
 }

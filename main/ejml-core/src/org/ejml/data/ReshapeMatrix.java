@@ -30,5 +30,5 @@ public interface ReshapeMatrix extends Matrix{
      * @param numRows The new number of rows in the matrix.
      * @param numCols The new number of columns in the matrix.
      */
-    public void reshape( int numRows , int numCols );
+    void reshape( int numRows , int numCols );
 }

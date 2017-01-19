@@ -22,7 +22,7 @@ import org.ejml.ops.MatrixIO;
 
 /**
  * Fixed sized vector with 2 elements.  Can represent a 2 x 1 or 1 x 2 matrix, context dependent.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateDMatrixFixedN</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedN</p>
  *
  * @author Peter Abeles
  */

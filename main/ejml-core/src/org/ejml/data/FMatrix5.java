@@ -22,7 +22,7 @@ import org.ejml.ops.MatrixIO;
 
 /**
  * Fixed sized vector with 5 elements.  Can represent a 5 x 1 or 1 x 5 matrix, context dependent.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateDMatrixFixedN</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedN</p>
  *
  * @author Peter Abeles
  */

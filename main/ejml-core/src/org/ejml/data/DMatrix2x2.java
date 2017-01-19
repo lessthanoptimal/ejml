@@ -23,7 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 2 by DMatrix2x2 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateDMatrixFixedNxN</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedNxN</p>
  *
  * @author Peter Abeles
  */
@@ -36,19 +36,15 @@ public class DMatrix2x2 implements DMatrixFixed {
     }
 
     public DMatrix2x2( double a11, double a12,
-                               double a21, double a22)
+                       double a21, double a22)
     {
-        this.a11 = a11;
-        this.a12 = a12;
-        this.a21 = a21;
-        this.a22 = a22;
+        this.a11 = a11; this.a12 = a12;
+        this.a21 = a21; this.a22 = a22;
     }
 
     public DMatrix2x2( DMatrix2x2 o ) {
-        this.a11 = o.a11;
-        this.a12 = o.a12;
-        this.a21 = o.a21;
-        this.a22 = o.a22;
+        this.a11 = o.a11; this.a12 = o.a12;
+        this.a21 = o.a21; this.a22 = o.a22;
     }
 
     @Override

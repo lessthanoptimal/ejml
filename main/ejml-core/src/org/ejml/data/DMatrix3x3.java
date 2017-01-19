@@ -23,7 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 3 by DMatrix3x3 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateDMatrixFixedNxN</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedNxN</p>
  *
  * @author Peter Abeles
  */
@@ -37,30 +37,18 @@ public class DMatrix3x3 implements DMatrixFixed {
     }
 
     public DMatrix3x3( double a11, double a12, double a13,
-                               double a21, double a22, double a23,
-                               double a31, double a32, double a33)
+                       double a21, double a22, double a23,
+                       double a31, double a32, double a33)
     {
-        this.a11 = a11;
-        this.a12 = a12;
-        this.a13 = a13;
-        this.a21 = a21;
-        this.a22 = a22;
-        this.a23 = a23;
-        this.a31 = a31;
-        this.a32 = a32;
-        this.a33 = a33;
+        this.a11 = a11; this.a12 = a12; this.a13 = a13;
+        this.a21 = a21; this.a22 = a22; this.a23 = a23;
+        this.a31 = a31; this.a32 = a32; this.a33 = a33;
     }
 
     public DMatrix3x3( DMatrix3x3 o ) {
-        this.a11 = o.a11;
-        this.a12 = o.a12;
-        this.a13 = o.a13;
-        this.a21 = o.a21;
-        this.a22 = o.a22;
-        this.a23 = o.a23;
-        this.a31 = o.a31;
-        this.a32 = o.a32;
-        this.a33 = o.a33;
+        this.a11 = o.a11; this.a12 = o.a12; this.a13 = o.a13;
+        this.a21 = o.a21; this.a22 = o.a22; this.a23 = o.a23;
+        this.a31 = o.a31; this.a32 = o.a32; this.a33 = o.a33;
     }
 
     @Override

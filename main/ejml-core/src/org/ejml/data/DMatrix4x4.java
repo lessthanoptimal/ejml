@@ -23,7 +23,7 @@ import org.ejml.ops.MatrixIO;
 /**
  * Fixed sized 4 by DMatrix4x4 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateDMatrixFixedNxN</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedNxN</p>
  *
  * @author Peter Abeles
  */
@@ -38,45 +38,21 @@ public class DMatrix4x4 implements DMatrixFixed {
     }
 
     public DMatrix4x4( double a11, double a12, double a13, double a14,
-                               double a21, double a22, double a23, double a24,
-                               double a31, double a32, double a33, double a34,
-                               double a41, double a42, double a43, double a44)
+                       double a21, double a22, double a23, double a24,
+                       double a31, double a32, double a33, double a34,
+                       double a41, double a42, double a43, double a44)
     {
-        this.a11 = a11;
-        this.a12 = a12;
-        this.a13 = a13;
-        this.a14 = a14;
-        this.a21 = a21;
-        this.a22 = a22;
-        this.a23 = a23;
-        this.a24 = a24;
-        this.a31 = a31;
-        this.a32 = a32;
-        this.a33 = a33;
-        this.a34 = a34;
-        this.a41 = a41;
-        this.a42 = a42;
-        this.a43 = a43;
-        this.a44 = a44;
+        this.a11 = a11; this.a12 = a12; this.a13 = a13; this.a14 = a14;
+        this.a21 = a21; this.a22 = a22; this.a23 = a23; this.a24 = a24;
+        this.a31 = a31; this.a32 = a32; this.a33 = a33; this.a34 = a34;
+        this.a41 = a41; this.a42 = a42; this.a43 = a43; this.a44 = a44;
     }
 
     public DMatrix4x4( DMatrix4x4 o ) {
-        this.a11 = o.a11;
-        this.a12 = o.a12;
-        this.a13 = o.a13;
-        this.a14 = o.a14;
-        this.a21 = o.a21;
-        this.a22 = o.a22;
-        this.a23 = o.a23;
-        this.a24 = o.a24;
-        this.a31 = o.a31;
-        this.a32 = o.a32;
-        this.a33 = o.a33;
-        this.a34 = o.a34;
-        this.a41 = o.a41;
-        this.a42 = o.a42;
-        this.a43 = o.a43;
-        this.a44 = o.a44;
+        this.a11 = o.a11; this.a12 = o.a12; this.a13 = o.a13; this.a14 = o.a14;
+        this.a21 = o.a21; this.a22 = o.a22; this.a23 = o.a23; this.a24 = o.a24;
+        this.a31 = o.a31; this.a32 = o.a32; this.a33 = o.a33; this.a34 = o.a34;
+        this.a41 = o.a41; this.a42 = o.a42; this.a43 = o.a43; this.a44 = o.a44;
     }
 
     @Override

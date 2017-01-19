@@ -25,9 +25,9 @@ import java.io.FileNotFoundException;
 /**
  * @author Peter Abeles
  */
-public class GenerateDMatrixFixedN extends CodeGeneratorBase{
+public class GenerateMatrixFixedN extends CodeGeneratorBase{
 
-    String classPreamble = "DMatrixFixed";
+    String classPreamble = "DMatrix";
 
     @Override
     public void generate() throws FileNotFoundException {
@@ -37,11 +37,11 @@ public class GenerateDMatrixFixedN extends CodeGeneratorBase{
     }
 
     public void print( int dimen ) throws FileNotFoundException {
-        String className = classPreamble +dimen+"_F64";
+        String className = classPreamble +dimen;
 
         setOutputFile(className);
 
-        out.print("import MatrixIO;\n" +
+        out.print("import org.ejml.ops.MatrixIO;\n" +
                 "\n" +
                 "/**\n" +
                 " * Fixed sized vector with "+dimen+" elements.  Can represent a "+dimen+" x 1 or 1 x "+dimen+" matrix, context dependent.\n" +
@@ -163,7 +163,7 @@ public class GenerateDMatrixFixedN extends CodeGeneratorBase{
     private void printSetMatrix(int dimen) {
         out.print("    @Override\n" +
                 "    public void set(Matrix original) {\n" +
-                "        RealDMatrix m = (RealDMatrix)original;\n" +
+                "        DMatrix m = (DMatrix)original;\n" +
                 "\n" +
                 "        if( m.getNumCols() == 1 && m.getNumRows() == "+dimen+" ) {\n");
         for (int i = 0; i < dimen; i++) {
@@ -200,7 +200,7 @@ public class GenerateDMatrixFixedN extends CodeGeneratorBase{
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        GenerateDMatrixFixedN app = new GenerateDMatrixFixedN();
+        GenerateMatrixFixedN app = new GenerateMatrixFixedN();
 
         app.generate();
     }

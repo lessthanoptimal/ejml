@@ -25,9 +25,9 @@ import java.io.FileNotFoundException;
 /**
  * @author Peter Abeles
  */
-public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
+public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
 
-    String classPreamble = "DMatrixFixed";
+    String classPreamble = "DMatrix";
 
     @Override
     public void generate() throws FileNotFoundException {
@@ -37,11 +37,11 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
     }
 
     public void print( int dimen ) throws FileNotFoundException {
-        String className = classPreamble +dimen+"x"+dimen+"_F64";
+        String className = classPreamble +dimen+"x"+dimen;
 
         setOutputFile(className);
 
-        out.println("import MatrixIO;\n\n"+
+        out.println("import org.ejml.ops.MatrixIO;\n\n"+
                 "/**\n" +
                 " * Fixed sized "+dimen+" by "+className+" matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the\n" +
                 " * value of row = X and column = Y.\n" +
@@ -138,7 +138,7 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
             if( y == 1 )
                 out.print("( ");
             else
-                out.print("                               ");
+                out.print("                       ");
             for( int x = 1; x <= dimen; x++ ) {
                 out.print("double a"+y+""+x);
                 if( x != dimen )
@@ -153,9 +153,11 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
 
     private void printSetFromParam(int dimen, String prefix) {
         for( int y = 1; y <= dimen; y++ ) {
+            out.print("       ");
             for( int x = 1; x <= dimen; x++ ) {
-                out.println("        this.a"+y+""+x+" = "+prefix+"a"+y+""+x+";");
+                out.print(" this.a"+y+""+x+" = "+prefix+"a"+y+""+x+";");
             }
+            out.println();
         }
     }
 
@@ -200,7 +202,7 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
                 "    public void set(Matrix original) {\n" +
                 "        if( original.getNumCols() != "+dimen+" || original.getNumRows() != "+dimen+" )\n" +
                 "            throw new IllegalArgumentException(\"Rows and/or columns do not match\");\n" +
-                "        RealDMatrix m = (RealDMatrix)original;\n" +
+                "        DMatrix m = (DMatrix)original;\n" +
                 "        \n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
@@ -211,7 +213,7 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        GenerateDMatrixFixedNxN app = new GenerateDMatrixFixedNxN();
+        GenerateMatrixFixedNxN app = new GenerateMatrixFixedNxN();
 
         app.generate();
     }
