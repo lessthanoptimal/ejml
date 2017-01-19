@@ -79,6 +79,37 @@ After that has finished running all the standard commands will work as well as t
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar
 
 ==========================================================================
+## Matrix and Class Names
+
+EJML supports a variety of different matrix types and uses the following pattern for matrix class names:
+
+<pre>Patterns:
+
+<data type>Matrix<structure>
+<data type>MatrixSparse<structure>
+
+Description:
+
+<data type> is a single character
+  'D' for real double 
+  'F' for real float 
+  'Z' for complex double
+  'C' for complex float
+  'B' for binary
+<structure> is the name the internal data structure.
+
+Matrix Suffix   Abreviation   Description
+=========================================================================
+   RMaj            RM         dense row-major
+   RBlock          RB         dense block row-major
+   NxN             FN         dense fixed sized matrix of size N
+   N               FN         dense fixed sized vector of length N  
+   CSC             CC         compressed sparse column
+   Triplet         TR         triplet</pre>
+   
+Algorthms which operate on a specific matrix type have a suffix that's 5 characters, e.g. _DDRM.  The first letter 'D' is the data type, the second letter 'D' is for dense (sparse is 'S'), and the last two letters are an abbreviation for the structure.
+      
+==========================================================================
 ## File System
 
 * **docs/** :
