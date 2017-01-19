@@ -64,6 +64,8 @@ public class GenerateCode32 {
         prefix32.add("FMatrix");
         prefix64.add("ZMatrix");
         prefix32.add("CMatrix");
+        prefix64.add("DEigen");
+        prefix32.add("FEigen");
         prefix64.add("DSubmatrix");
         prefix32.add("FSubmatrix");
         prefix64.add("ConvertDMatrix");
@@ -92,7 +94,6 @@ public class GenerateCode32 {
         converter.replacePattern("DEigen", "FEigen");
         converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
-        converter.replacePattern("DSubmatrix", "FSubmatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
 
         converter.replacePattern("F64", "F32");
