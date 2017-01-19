@@ -66,12 +66,12 @@ public class TestQrUpdate {
     }
 
     private void checkRemove(int m, int n, int remove) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
-        DMatrixRMaj Q = RandomMatrices_DDRM.createRandom(m,m,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
+        DMatrixRMaj Q = RandomMatrices_DDRM.rectangle(m,m,rand);
         DMatrixRMaj R = new DMatrixRMaj(m,n);
 
         // compute what the A matrix would look like without the row
-        DMatrixRMaj A_e = RandomMatrices_DDRM.createRandom(m-1,n,rand);
+        DMatrixRMaj A_e = RandomMatrices_DDRM.rectangle(m-1,n,rand);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,0,0,0,0,remove,n);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
@@ -89,7 +89,7 @@ public class TestQrUpdate {
 
         assertTrue(MatrixFeatures_DDRM.isOrthogonal(update.getU_tran(),1e-6));
 
-        DMatrixRMaj A_r = RandomMatrices_DDRM.createRandom(m-1,n,rand);
+        DMatrixRMaj A_r = RandomMatrices_DDRM.rectangle(m-1,n,rand);
         CommonOps_DDRM.mult(Q,R,A_r);
 
 
@@ -98,15 +98,15 @@ public class TestQrUpdate {
     }
 
     private void checkInsert(int m, int n, int insert) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
-        DMatrixRMaj Q = RandomMatrices_DDRM.createRandom(m+1,m+1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
+        DMatrixRMaj Q = RandomMatrices_DDRM.rectangle(m+1,m+1,rand);
         DMatrixRMaj R = new DMatrixRMaj(m+1,n);
 
         // the row that is to be inserted
         double row[] = new double[]{1,2,3};
 
         // create the modified A
-        DMatrixRMaj A_e = RandomMatrices_DDRM.createRandom(m+1,n,rand);
+        DMatrixRMaj A_e = RandomMatrices_DDRM.rectangle(m+1,n,rand);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,0,0,0,0,insert,n);
         System.arraycopy(row, 0, A_e.data, insert * n, n);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
@@ -133,7 +133,7 @@ public class TestQrUpdate {
         // see if the process that updates Q from U is valid
         assertTrue(MatrixFeatures_DDRM.isIdentical(Q,Z,1e-6));
 
-        DMatrixRMaj A_r = RandomMatrices_DDRM.createRandom(m+1,n,rand);
+        DMatrixRMaj A_r = RandomMatrices_DDRM.rectangle(m+1,n,rand);
         CommonOps_DDRM.mult(Q,R,A_r);
 
         // see if the augmented A matrix is correct extracted from the adjusted Q and R matrices

@@ -44,7 +44,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM {
      */
     @Test
     public void noPivot() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createOrthogonal(6, 3, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.orthogonal(6, 3, rand);
 
         // make sure the columns have norms in descending magnitude
         for( int i = 0; i < A.numCols; i++ ) {
@@ -88,9 +88,9 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM {
         for( int numSingular = 0; numSingular < numRows-1; numSingular++ )  {
 
             // construct a singular matrix from its SVD decomposition
-            SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numRows,numRows,rand));
+            SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,numRows,rand));
             SimpleMatrix S = SimpleMatrix.diag( DMatrixRMaj.class, 1,2,3,4,5,6,7,8,9,10);
-            SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numRows,numRows,rand));
+            SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,numRows,rand));
 
             for( int i = 0; i < numSingular; i++ ) {
                 S.set(i,i,0);
@@ -136,7 +136,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM {
     {
 
         for( int i = 0; i < 10; i++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows, numCols, rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(numRows, numCols, rand);
 
             QRColPivDecompositionHouseholderColumn_DDRM alg = new QRColPivDecompositionHouseholderColumn_DDRM();
             assertTrue(alg.decompose(A));

@@ -52,9 +52,9 @@ public class TestVectorVectorMult_DDRM {
 
     @Test
     public void innerProdA() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,4,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
-        DMatrixRMaj y = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
+        DMatrixRMaj y = RandomMatrices_DDRM.rectangle(4,1,rand);
 
         DMatrixRMaj temp = new DMatrixRMaj(1,4);
 
@@ -69,9 +69,9 @@ public class TestVectorVectorMult_DDRM {
 
     @Test
     public void innerProdTranA() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,3,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
-        DMatrixRMaj y = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,3,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
+        DMatrixRMaj y = RandomMatrices_DDRM.rectangle(3,1,rand);
 
         DMatrixRMaj Atran = new DMatrixRMaj(3,3);
         CommonOps_DDRM.transpose(A,Atran);
@@ -92,11 +92,11 @@ public class TestVectorVectorMult_DDRM {
         DMatrixRMaj A = new DMatrixRMaj(4,1, true, 1, 2, 3, 4);
         DMatrixRMaj B = new DMatrixRMaj(4,1, true, -1, -2, -3, -4);
 
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4,4,rand);
         VectorVectorMult_DDRM.outerProd(A,B,C);
 
         // compare it against the equivalent matrix matrix multiply
-        DMatrixRMaj D =  RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj D =  RandomMatrices_DDRM.rectangle(4,4,rand);
         MatrixMatrixMult_DDRM.multTransB(A,B,D);
 
         EjmlUnitTests.assertEquals(D,C,0);
@@ -107,20 +107,20 @@ public class TestVectorVectorMult_DDRM {
         DMatrixRMaj A = new DMatrixRMaj(4,1, true, 1, 2, 3, 4);
         DMatrixRMaj B = new DMatrixRMaj(4,1, true, -1, -2, -3, -4);
 
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj D =  C.copy();
 
         VectorVectorMult_DDRM.addOuterProd(1.0,A,B,C);
 
         // compare it against the equivalent matrix matrix multiply
-        DMatrixRMaj E = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj E = RandomMatrices_DDRM.rectangle(4,4,rand);
         MatrixMatrixMult_DDRM.multTransB(A,B,E);
         CommonOps_DDRM.add(D,E,D);
 
         assertTrue(MatrixFeatures_DDRM.isEquals(D,C));
 
         // now try it with another gamma
-        C = RandomMatrices_DDRM.createRandom(4,4,rand);
+        C = RandomMatrices_DDRM.rectangle(4,4,rand);
         D = C.copy();
 
         VectorVectorMult_DDRM.addOuterProd(2.5,A,B,C);
@@ -133,9 +133,9 @@ public class TestVectorVectorMult_DDRM {
 
     @Test
     public void householder() {
-        DMatrixRMaj u = RandomMatrices_DDRM.createRandom(4,1,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,1,rand);
-        DMatrixRMaj y = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj u = RandomMatrices_DDRM.rectangle(4,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
+        DMatrixRMaj y = RandomMatrices_DDRM.rectangle(4,1,rand);
 
 
         double gamma = 4.5;
@@ -143,7 +143,7 @@ public class TestVectorVectorMult_DDRM {
         VectorVectorMult_DDRM.householder(gamma,u,x,y);
 
         DMatrixRMaj L = CommonOps_DDRM.identity(4,4);
-        DMatrixRMaj y_exp = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj y_exp = RandomMatrices_DDRM.rectangle(4,1,rand);
 
         VectorVectorMult_DDRM.addOuterProd(gamma,u,u,L);
         CommonOps_DDRM.mult(L,x,y_exp);
@@ -153,9 +153,9 @@ public class TestVectorVectorMult_DDRM {
 
     @Test
     public void rank1Update_two_square() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(6,6,rand);
-        DMatrixRMaj u = RandomMatrices_DDRM.createRandom(6,1,rand);
-        DMatrixRMaj w = RandomMatrices_DDRM.createRandom(6,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,6,rand);
+        DMatrixRMaj u = RandomMatrices_DDRM.rectangle(6,1,rand);
+        DMatrixRMaj w = RandomMatrices_DDRM.rectangle(6,1,rand);
         double gamma = -45;
 
         SimpleMatrix _A = SimpleMatrix.wrap(A);
@@ -172,9 +172,9 @@ public class TestVectorVectorMult_DDRM {
 
     @Test
     public void rank1Update_one_square() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(6,6,rand);
-        DMatrixRMaj u = RandomMatrices_DDRM.createRandom(6,1,rand);
-        DMatrixRMaj w = RandomMatrices_DDRM.createRandom(6,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,6,rand);
+        DMatrixRMaj u = RandomMatrices_DDRM.rectangle(6,1,rand);
+        DMatrixRMaj w = RandomMatrices_DDRM.rectangle(6,1,rand);
         double gamma = -45;
 
         SimpleMatrix _A = SimpleMatrix.wrap(A);

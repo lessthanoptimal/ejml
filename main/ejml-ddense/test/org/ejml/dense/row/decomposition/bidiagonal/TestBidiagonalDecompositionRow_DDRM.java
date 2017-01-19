@@ -52,7 +52,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
     }
 
     private void checkNaive(int m, int n) {
-        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createRandom(m,n,rand));
+        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(m,n,rand));
 
         BidiagonalDecompositionRow_DDRM decomp = new BidiagonalDecompositionRow_DDRM();
         BidiagonalDecompositionNaive_DDRM naive = new BidiagonalDecompositionNaive_DDRM();
@@ -91,7 +91,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         int m = 7;
         int n = 5;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
 
         DebugBidiagonal alg = new DebugBidiagonal(A);
 
@@ -137,7 +137,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         int m = 7;
         int n = 5;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
 
         DebugBidiagonal alg = new DebugBidiagonal(A);
 

@@ -113,7 +113,7 @@ public class WatchDoubleStepQR {
         Random rand = new Random(23475);
 //        Random rand = new Random(235);
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(5,1,2,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5,1,2,3,rand);
 //        DMatrixRMaj A = RandomMatrices.createUpperTriangle(50,1,-2,2,rand);
 //        DMatrixRMaj A = new DMatrixRMaj(5,5,new double[]{0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0},true);
 //        DMatrixRMaj A = UtilEjml.parseMatrix("-0.951  0.845 -0.171 \n" +

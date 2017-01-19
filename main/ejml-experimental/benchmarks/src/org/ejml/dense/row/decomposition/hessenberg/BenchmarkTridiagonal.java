@@ -102,7 +102,7 @@ public class BenchmarkTridiagonal {
             System.out.printf("Processing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

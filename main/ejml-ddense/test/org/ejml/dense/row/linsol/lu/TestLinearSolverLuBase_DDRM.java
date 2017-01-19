@@ -45,7 +45,7 @@ public class TestLinearSolverLuBase_DDRM {
     public void testImproveSol_noharm() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 8, 33, 15.5);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
         DMatrixRMaj x_improved = new DMatrixRMaj(3,1);
 
         LUDecompositionAlt_DDRM alg = new LUDecompositionAlt_DDRM();

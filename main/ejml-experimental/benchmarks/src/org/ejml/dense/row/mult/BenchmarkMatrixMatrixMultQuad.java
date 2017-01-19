@@ -61,9 +61,9 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     public static void performTests( int numRows , int numCols ,
                                      int numTrials ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(numCols,numCols,rand);
-        DMatrixRMaj out = RandomMatrices_DDRM.createRandom(numRows, numRows, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(numRows,numCols,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(numCols,numCols,rand);
+        DMatrixRMaj out = RandomMatrices_DDRM.rectangle(numRows, numRows, rand);
         DMatrixRMaj tmp = new DMatrixRMaj(numRows,numCols);
 
         System.out.printf(numRows+"  "+numCols+"     Mult1: %7d  Quad1 %7d\n",

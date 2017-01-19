@@ -72,7 +72,7 @@ public class BenchmarkQrDecomposition_ZDRM {
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < size.length; i++ ) {
             int w = size[i];
-            ZMatrixRMaj mat = RandomMatrices_ZDRM.createRandom(w * 4, w / 1, rand);
+            ZMatrixRMaj mat = RandomMatrices_ZDRM.rectangle(w * 4, w / 1, rand);
              System.out.printf("Decomposing size [ %5d  , %5d ] for %12d trials\n",mat.numRows,mat.numCols,trials[i]);
             runAlgorithms(mat,trials[i]);
         }

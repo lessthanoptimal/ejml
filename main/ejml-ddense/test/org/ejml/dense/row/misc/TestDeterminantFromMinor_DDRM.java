@@ -69,7 +69,7 @@ public class TestDeterminantFromMinor_DDRM {
 
         int width = 10;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(width,width,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(width,width,rand);
 
         DeterminantFromMinor_DDRM minor = new DeterminantFromMinor_DDRM(width);
         double minorVal = minor.compute(new DMatrixRMaj(width,width, true, A.data));
@@ -87,7 +87,7 @@ public class TestDeterminantFromMinor_DDRM {
         Random rand = new Random(0xfff);
 
         for( int width = 5; width < 12; width++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(width,width,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(width,width,rand);
 
             LUDecompositionAlt_DDRM lu = new LUDecompositionAlt_DDRM();
             lu.decompose(A);
@@ -110,7 +110,7 @@ public class TestDeterminantFromMinor_DDRM {
 
         int width = 6;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(width,width,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(width,width,rand);
 
         DeterminantFromMinor_DDRM minor = new DeterminantFromMinor_DDRM(width);
         double first = minor.compute(A);
@@ -119,7 +119,7 @@ public class TestDeterminantFromMinor_DDRM {
         assertEquals(first,second,1e-10);
 
         // does it produce the same results for a different matrix?
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(width,width,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(width,width,rand);
         double third = minor.compute(B);
 
         assertFalse(first==third);

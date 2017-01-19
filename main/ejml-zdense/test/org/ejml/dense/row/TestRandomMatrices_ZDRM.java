@@ -34,22 +34,22 @@ public class TestRandomMatrices_ZDRM {
     Random rand = new Random(234);
 
     @Test
-    public void createRandom_min_max() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(30,20,-1,1,rand);
+    public void rectangle_min_max() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
 
     @Test
-    public void setRandom() {
+    public void fillUniform() {
         ZMatrixRMaj A = new ZMatrixRMaj(5,4);
 
-        RandomMatrices_ZDRM.setRandom(A,rand);
+        RandomMatrices_ZDRM.fillUniform(A,rand);
 
-        checkRandom1(A);
+        checkUniform1(A);
     }
 
-    private void checkRandom1(ZMatrixRMaj a) {
+    private void checkUniform1(ZMatrixRMaj a) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
@@ -75,9 +75,9 @@ public class TestRandomMatrices_ZDRM {
     }
 
     @Test
-    public void setRandom_min_max() {
+    public void fillUniform_min_max() {
         ZMatrixRMaj A = new ZMatrixRMaj(30,20);
-        RandomMatrices_ZDRM.setRandom(A,-1,1,rand);
+        RandomMatrices_ZDRM.fillUniform(A,-1,1,rand);
 
         checkRandomRange(A);
     }
@@ -123,17 +123,17 @@ public class TestRandomMatrices_ZDRM {
 
 
     @Test
-    public void createHermPosDef() {
+    public void hermitianPosDef() {
         for( int i = 1; i < 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(i, rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(i, rand);
 
             assertTrue(MatrixFeatures_ZDRM.isPositiveDefinite(A));
         }
     }
 
     @Test
-    public void createHermitian() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermitian(10, -1, 1, rand);
+    public void hermitian() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(10, -1, 1, rand);
 
         assertTrue(MatrixFeatures_ZDRM.isHermitian(A, UtilEjml.TEST_F64));
 

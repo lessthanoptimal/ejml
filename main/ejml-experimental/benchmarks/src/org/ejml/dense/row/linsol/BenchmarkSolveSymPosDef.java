@@ -77,10 +77,10 @@ public class BenchmarkSolveSymPosDef {
             System.out.printf("Matrix A size %3d for %12d trials\n",w,trials[i]);
 
             while( true ) {
-                DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
+                DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(w,w,rand);
                 DMatrixRMaj symMat = new DMatrixRMaj(w,w);
                 CommonOps_DDRM.multTransA(mat,mat,symMat);
-                DMatrixRMaj b = RandomMatrices_DDRM.createRandom(w,w*2,rand);
+                DMatrixRMaj b = RandomMatrices_DDRM.rectangle(w,w*2,rand);
 
                 if(CommonOps_DDRM.det(symMat) > 0 ) {
                     runAlgorithms(symMat,b,trials[i]);

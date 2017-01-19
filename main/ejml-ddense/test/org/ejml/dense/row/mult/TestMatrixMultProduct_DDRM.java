@@ -38,7 +38,7 @@ public class TestMatrixMultProduct_DDRM {
 
     @Test
     public void outer() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(20, 10, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
         DMatrixRMaj found = new DMatrixRMaj(20,20);
         DMatrixRMaj expected = new DMatrixRMaj(20,20);
 
@@ -50,7 +50,7 @@ public class TestMatrixMultProduct_DDRM {
 
     @Test
     public void inner_small() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(20, 10, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
         DMatrixRMaj found = new DMatrixRMaj(10,10);
         DMatrixRMaj expected = new DMatrixRMaj(10,10);
 
@@ -62,7 +62,7 @@ public class TestMatrixMultProduct_DDRM {
 
     @Test
     public void inner_reorder() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(20,10,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
         DMatrixRMaj found = new DMatrixRMaj(10,10);
         DMatrixRMaj expected = new DMatrixRMaj(10,10);
 
@@ -74,7 +74,7 @@ public class TestMatrixMultProduct_DDRM {
 
     @Test
     public void inner_reorder_upper() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(20,10,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
         DMatrixRMaj found = new DMatrixRMaj(10,10);
         DMatrixRMaj expected = new DMatrixRMaj(10,10);
 

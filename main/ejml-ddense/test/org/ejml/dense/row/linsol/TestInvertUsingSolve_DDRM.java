@@ -46,7 +46,7 @@ public class TestInvertUsingSolve_DDRM {
     @Test
     public void invert() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DMatrixRMaj A_inv = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3,3,rand);
 
         LUDecompositionAlt_DDRM decomp = new LUDecompositionAlt_DDRM();
         LinearSolver solver = new LinearSolverLu_DDRM(decomp);
@@ -54,7 +54,7 @@ public class TestInvertUsingSolve_DDRM {
         solver.setA(A);
         InvertUsingSolve_DDRM.invert(solver,A,A_inv);
 
-        DMatrixRMaj I = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj I = RandomMatrices_DDRM.rectangle(3,3,rand);
 
         CommonOps_DDRM.mult(A,A_inv,I);
 

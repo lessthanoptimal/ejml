@@ -79,9 +79,9 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
 
     public static void performTests( int size , int numTrials )
     {
-        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(size,size,rand);
-        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(size,size,rand);
-        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(size,size,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.rectangle(size,size,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.rectangle(size,size,rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.rectangle(size,size,rand);
 
         System.out.printf("12x12 multiply  standard: %7d  fixed6 %7d fixed3 %7d\n",
                 mult(matA,matB,matResult,numTrials),

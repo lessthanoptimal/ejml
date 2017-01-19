@@ -304,8 +304,8 @@ public class BenchmarkMultAndAddOps {
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
         int N = 2;
-        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(N,N,rand);
-        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(N,N,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.rectangle(N,N,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.rectangle(N,N,rand);
         DMatrixRMaj matC,matD;
 
         performMultTests(matA,matB,matB,matA,TRIALS_MULT*10);
@@ -314,18 +314,18 @@ public class BenchmarkMultAndAddOps {
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
-        matA = RandomMatrices_DDRM.createRandom(1000,1000,rand);
-        matB = RandomMatrices_DDRM.createRandom(1000,1000,rand);
+        matA = RandomMatrices_DDRM.rectangle(1000,1000,rand);
+        matB = RandomMatrices_DDRM.rectangle(1000,1000,rand);
 
         performMultTests(matA,matB,matB,matA,1);
         performAddTests(matA,matB,matB,matA,500);
 
         System.out.println();
         System.out.println("Large Not Square Matrix Results:") ;
-        matA = RandomMatrices_DDRM.createRandom(600,1000,rand);
-        matB = RandomMatrices_DDRM.createRandom(1000,600,rand);
-        matC = RandomMatrices_DDRM.createRandom(600,1000,rand);
-        matD = RandomMatrices_DDRM.createRandom(1000,600,rand);
+        matA = RandomMatrices_DDRM.rectangle(600,1000,rand);
+        matB = RandomMatrices_DDRM.rectangle(1000,600,rand);
+        matC = RandomMatrices_DDRM.rectangle(600,1000,rand);
+        matD = RandomMatrices_DDRM.rectangle(1000,600,rand);
 
         performMultTests(matA,matB,matC,matD,1);
         performAddTests(matA,matB,matC,matD,1000);

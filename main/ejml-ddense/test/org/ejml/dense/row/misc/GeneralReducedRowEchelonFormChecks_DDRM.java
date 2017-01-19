@@ -105,7 +105,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM {
     }
 
     private void checkFormatRandom(int numRows, int numCols) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(numRows,numCols,-1,1,rand);
         DMatrixRMaj found = A.copy();
 
         alg.reduce(found,numCols);
@@ -114,7 +114,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM {
     }
 
     private void checkSolutionRandom(int numRows, int numCols , int solWidth ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(numRows,numCols,-1,1,rand);
         DMatrixRMaj found = A.copy();
 
         alg.reduce(found,solWidth);

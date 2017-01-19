@@ -36,7 +36,7 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void createReflector() {
-        DMatrixRMaj u = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj u = RandomMatrices_DDRM.rectangle(4,1,rand);
 
         DMatrixRMaj Q = SpecializedOps_DDRM.createReflector(u);
 
@@ -51,11 +51,11 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void createReflector_gamma() {
-        DMatrixRMaj u = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj u = RandomMatrices_DDRM.rectangle(4,1,rand);
         double gamma = 1.5;
         DMatrixRMaj Q = SpecializedOps_DDRM.createReflector(u,gamma);
 
-        DMatrixRMaj w = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj w = RandomMatrices_DDRM.rectangle(4,1,rand);
 
         DMatrixRMaj v_found = new DMatrixRMaj(4,1);
         CommonOps_DDRM.mult(Q,w,v_found);
@@ -69,7 +69,7 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void copyChangeRow() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,2,rand);
 
         DMatrixRMaj B = A.copy();
 
@@ -95,7 +95,7 @@ public class TestSpecializedOps_DDRM {
 
         for( int m = 2; m <= 6; m += 2 ) {
             for( int n = 2; n <= 6; n += 2 ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+                DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
 
                 DMatrixRMaj B = SpecializedOps_DDRM.copyTriangle(A,null,true);
 
@@ -112,9 +112,9 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void diffNormF() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(3,2,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(3,2,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(3,2,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(3,2,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(3,2,rand);
 
         CommonOps_DDRM.subtract(a, b, c);
         double expectedNorm = NormOps_DDRM.fastNormF(c);
@@ -125,9 +125,9 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void diffNormP1() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(3,2,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(3,2,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(3,2,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(3,2,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(3,2,rand);
 
         CommonOps_DDRM.subtract(a, b, c);
         double expectedNorm = 0;
@@ -141,7 +141,7 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void addIdentity() {
-        DMatrixRMaj M = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj M = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj A = M.copy();
 
         SpecializedOps_DDRM.addIdentity(A,A,2.0);
@@ -154,7 +154,7 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void subvector() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
 
         DMatrixRMaj v = new DMatrixRMaj(7,1);
 
@@ -178,7 +178,7 @@ public class TestSpecializedOps_DDRM {
     @Test
     public void splitIntoVectors() {
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,5,rand);
 
         // column vectors
         DMatrixRMaj v[] = SpecializedOps_DDRM.splitIntoVectors(A,true);
@@ -216,7 +216,7 @@ public class TestSpecializedOps_DDRM {
     public void pivotMatrix() {
         int pivots[] = new int[]{1,0,3,2};
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj P = SpecializedOps_DDRM.pivotMatrix(null,pivots,4,false);
         DMatrixRMaj Pt = SpecializedOps_DDRM.pivotMatrix(null,pivots,4,true);
 
@@ -254,7 +254,7 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void elementDiagonalMaxAbs() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
 
         double expected = 0;
         for (int i = 0; i < 4; i++) {
@@ -269,7 +269,7 @@ public class TestSpecializedOps_DDRM {
 
     @Test
     public void qualityTriangular() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,4,rand);
 
         double max = SpecializedOps_DDRM.elementDiagonalMaxAbs(A);
         double expected = 1.0;

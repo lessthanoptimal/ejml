@@ -40,8 +40,8 @@ public class RandomMatrices_ZDRM {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static ZMatrixRMaj createRandom(int numRow , int numCol , Random rand ) {
-        return createRandom(numRow,numCol,-1,1,rand);
+    public static ZMatrixRMaj rectangle(int numRow , int numCol , Random rand ) {
+        return rectangle(numRow,numCol,-1,1,rand);
     }
 
     /**
@@ -57,10 +57,10 @@ public class RandomMatrices_ZDRM {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static ZMatrixRMaj createRandom(int numRow , int numCol , double min , double max , Random rand ) {
+    public static ZMatrixRMaj rectangle(int numRow , int numCol , double min , double max , Random rand ) {
         ZMatrixRMaj mat = new ZMatrixRMaj(numRow,numCol);
 
-        setRandom(mat,min,max,rand);
+        fillUniform(mat,min,max,rand);
 
         return mat;
     }
@@ -73,9 +73,9 @@ public class RandomMatrices_ZDRM {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom(ZMatrixRMaj mat , Random rand )
+    public static void fillUniform(ZMatrixRMaj mat , Random rand )
     {
-        setRandom(mat,0,1,rand);
+        fillUniform(mat,0,1,rand);
     }
 
     /**
@@ -88,7 +88,7 @@ public class RandomMatrices_ZDRM {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom(ZMatrixD1 mat , double min , double max , Random rand )
+    public static void fillUniform(ZMatrixD1 mat , double min , double max , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getDataLength();
@@ -107,9 +107,9 @@ public class RandomMatrices_ZDRM {
      * @param rand Random number generator used to make the matrix.
      * @return The random symmetric  positive definite matrix.
      */
-    public static ZMatrixRMaj createHermPosDef(int width, Random rand) {
+    public static ZMatrixRMaj hermitianPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(width,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(width,1,rand);
         ZMatrixRMaj b = new ZMatrixRMaj(1,width);
         ZMatrixRMaj c = new ZMatrixRMaj(width,width);
 
@@ -132,10 +132,10 @@ public class RandomMatrices_ZDRM {
      * @param rand Random number generator.
      * @return A symmetric matrix.
      */
-    public static ZMatrixRMaj createHermitian(int length, double min, double max, Random rand) {
+    public static ZMatrixRMaj hermitian(int length, double min, double max, Random rand) {
         ZMatrixRMaj A = new ZMatrixRMaj(length,length);
 
-        setHermitian(A, min, max, rand);
+        fillHermitian(A, min, max, rand);
 
         return A;
     }
@@ -148,7 +148,7 @@ public class RandomMatrices_ZDRM {
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
      */
-    public static void setHermitian(ZMatrixRMaj A, double min, double max, Random rand) {
+    public static void fillHermitian(ZMatrixRMaj A, double min, double max, Random rand) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
 

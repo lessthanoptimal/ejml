@@ -48,7 +48,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
 
         for( int width = 1; width < 20; width += 2 ) {
 
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createHermitian(width,-1,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(width,-1,1,rand);
 
             TridiagonalSimilarDecompositionD<ZMatrixRMaj> alg = createDecomposition();
 
@@ -73,7 +73,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
     public void getDiagonal() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createHermitian(width,-1,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(width,-1,1,rand);
 
             TridiagonalSimilarDecompositionD<ZMatrixRMaj> alg = createDecomposition();
 
@@ -100,7 +100,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
     public void transposeFlagForQ() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createHermitian(width,-1,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(width,-1,1,rand);
 
             TridiagonalSimilarDecompositionD<ZMatrixRMaj> alg = createDecomposition();
 

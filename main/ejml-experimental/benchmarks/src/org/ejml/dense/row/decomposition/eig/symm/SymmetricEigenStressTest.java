@@ -45,7 +45,7 @@ public class SymmetricEigenStressTest {
         DMatrixRMaj A = new DMatrixRMaj(N,N);
 
         Random localRand = new Random(seed);
-        RandomMatrices_DDRM.createSymmetric(A,-1,1,localRand);
+        RandomMatrices_DDRM.symmetric(A,-1,1,localRand);
 
         EigenDecompositionD<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
 
@@ -89,7 +89,7 @@ public class SymmetricEigenStressTest {
 
             Random localRand = new Random(seed);
 
-            RandomMatrices_DDRM.createSymmetric(A,-1,1,localRand);
+            RandomMatrices_DDRM.symmetric(A,-1,1,localRand);
 
             if( !decomp.decompose(A) ) {
                 System.out.println("Decomposition failed");

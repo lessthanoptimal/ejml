@@ -36,7 +36,7 @@ public class BenchmarkElement {
 
         double num = 2.5;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,10,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,10,rand);
 
         long timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {
@@ -46,7 +46,7 @@ public class BenchmarkElement {
 
         System.out.println("div = "+(timeAfter-timeBefore));
 
-        A = RandomMatrices_DDRM.createRandom(10,10,rand);
+        A = RandomMatrices_DDRM.rectangle(10,10,rand);
 
         timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {

@@ -98,7 +98,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 //            System.out.println("N = "+N);
 
             for( int i = 0; i < 2; i++ ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N,-1,1,rand);
+                DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,-1,1,rand);
 
                 assertTrue(safeDecomposition(alg,A));
 
@@ -240,7 +240,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkRandomSymmetric() {
         for( int N = 1; N <= 15; N++ ) {
             for( int i = 0; i < 20; i++ ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(N,-1,1,rand);
+                DMatrixRMaj A = RandomMatrices_DDRM.symmetric(N,-1,1,rand);
 
                 EigenDecompositionD alg = createDecomposition();
 
@@ -324,7 +324,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
         }
 
         for( int i = 0; i < 200; i++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createEigenvaluesSymm(ev.length,rand,ev);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetricWithEigenvalues(ev.length,rand,ev);
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -343,8 +343,8 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
         for( int i = 0; i < 20; i++ ) {
             DMatrixRMaj A = symmetric ?
-                    RandomMatrices_DDRM.createSymmetric(4,-1,1,rand) :
-                    RandomMatrices_DDRM.createRandom(4,4,-1,1,rand);
+                    RandomMatrices_DDRM.symmetric(4,-1,1,rand) :
+                    RandomMatrices_DDRM.rectangle(4,4,-1,1,rand);
 
             CommonOps_DDRM.scale( Math.pow(UtilEjml.EPS,12) ,A);
 
@@ -362,8 +362,8 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
         for( int i = 0; i < 20; i++ ) {
             DMatrixRMaj A = symmetric ?
-                    RandomMatrices_DDRM.createSymmetric(4,-1,1,rand) :
-                    RandomMatrices_DDRM.createRandom(4,4,-1,1,rand);
+                    RandomMatrices_DDRM.symmetric(4,-1,1,rand) :
+                    RandomMatrices_DDRM.rectangle(4,4,-1,1,rand);
 
             CommonOps_DDRM.scale( Math.pow(UtilEjml.EPS,-2) ,A);
 

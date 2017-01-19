@@ -52,7 +52,7 @@ public class TestMatrixVectorMult_DDRM {
         double d[] = new double[]{0,1,2,3,4,5};
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, d);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
 
         MatrixVectorMult_DDRM.mult(a,b,c);
 
@@ -64,7 +64,7 @@ public class TestMatrixVectorMult_DDRM {
         double d[] = new double[]{0,1,2,3,4,5};
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, d);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
 
         MatrixVectorMult_DDRM.mult(a,b,c);
 
@@ -88,7 +88,7 @@ public class TestMatrixVectorMult_DDRM {
         double d[] = new double[]{0,1,2,3,4,5};
         DMatrixRMaj a = new DMatrixRMaj(3,2, true, d);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
 
         MatrixVectorMult_DDRM.multTransA_small(a,b,c);
 
@@ -100,7 +100,7 @@ public class TestMatrixVectorMult_DDRM {
         double d[] = new double[]{0,1,2,3,4,5};
         DMatrixRMaj a = new DMatrixRMaj(3,2, true, d);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
 
         MatrixVectorMult_DDRM.multTransA_reorder(a,b,c);
 
@@ -159,7 +159,7 @@ public class TestMatrixVectorMult_DDRM {
 
             DMatrixRMaj a = new DMatrixRMaj(rowsA,colsA);
             DMatrixRMaj b = new DMatrixRMaj(colsA,1);
-            DMatrixRMaj c = RandomMatrices_DDRM.createRandom(rowsA,1,rand);
+            DMatrixRMaj c = RandomMatrices_DDRM.rectangle(rowsA,1,rand);
 
             boolean add = name.contains("multAdd");
 

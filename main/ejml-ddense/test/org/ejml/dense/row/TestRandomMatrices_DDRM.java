@@ -46,11 +46,11 @@ public class TestRandomMatrices_DDRM {
      * Checks to see if all the vectors are orthogonal and of unit length.
      */
     @Test
-    public void createSpan() {
+    public void span() {
         // test with combinations of vectors and numbers
         for( int dimension = 3; dimension <= 5; dimension++ ) {
             for( int numVectors = 1; numVectors <= dimension; numVectors++ ) {
-                DMatrixRMaj span[] = RandomMatrices_DDRM.createSpan(dimension,numVectors,rand);
+                DMatrixRMaj span[] = RandomMatrices_DDRM.span(dimension,numVectors,rand);
 
                 assertEquals(numVectors,span.length);
 
@@ -69,10 +69,10 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createInSpan() {
-        DMatrixRMaj span[] = RandomMatrices_DDRM.createSpan(5,5,rand);
+    public void insideSpan() {
+        DMatrixRMaj span[] = RandomMatrices_DDRM.span(5,5,rand);
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createInSpan(span,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.insideSpan(span,-1,1,rand);
 
         // reconstructed matrix
         DMatrixRMaj R = new DMatrixRMaj(A.numRows,A.numCols);
@@ -94,10 +94,10 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createOrthogonal() {
+    public void orthogonal() {
         for( int numRows = 3; numRows <= 5; numRows++ ) {
             for( int numCols = 1; numCols <= numRows; numCols++ ) {
-                DMatrixRMaj Q = RandomMatrices_DDRM.createOrthogonal(numRows,numCols,rand);
+                DMatrixRMaj Q = RandomMatrices_DDRM.orthogonal(numRows,numCols,rand);
 
                 assertEquals(Q.numRows,numRows);
                 assertEquals(Q.numCols,numCols);
@@ -109,8 +109,8 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createDiagonal_square() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createDiagonal(5,1,10,rand);
+    public void diagonal_square() {
+        DMatrixRMaj A = RandomMatrices_DDRM.diagonal(5,1,10,rand);
 
         assertTrue(CommonOps_DDRM.elementSum(A) > 5 );
         for( int i = 0; i < A.numRows; i++ ) {
@@ -127,14 +127,14 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createDiagonal_general() {
+    public void diagonal_general() {
         testDiagonal(5,3);
         testDiagonal(3,5);
         testDiagonal(3, 3);
     }
 
     public void testDiagonal( int numRows , int numCols ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createDiagonal(numRows,numCols,1,10,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.diagonal(numRows,numCols,1,10,rand);
 
         assertEquals(A.getNumRows(), numRows);
         assertEquals(A.getNumCols(), numCols);
@@ -154,13 +154,13 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createSingularValues() {
+    public void singleValues() {
         // check case when sv is more than or equal to the matrix dimension
         double sv[] = new double[]{8.2,6.2,4.1,2};
 
         for( int numRows = 1; numRows <= 4; numRows++ ) {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.createSingularValues(numRows,numCols, rand, sv);
+                DMatrixRMaj A = RandomMatrices_DDRM.singleValues(numRows,numCols, rand, sv);
 
                 SingularValueDecompositionD<DMatrixRMaj> svd =
                         DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
@@ -173,7 +173,7 @@ public class TestRandomMatrices_DDRM {
         }
 
         // see if it fills in zeros when it is smaller than the dimension
-        DMatrixRMaj A = RandomMatrices_DDRM.createSingularValues(5,5, rand, sv);
+        DMatrixRMaj A = RandomMatrices_DDRM.singleValues(5,5, rand, sv);
 
         SingularValueDecompositionD<DMatrixRMaj> svd =
                 DecompositionFactory_DDRM.svd(A.numRows, A.numCols, true, true, false);
@@ -184,8 +184,8 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createEigenvaluesSymm() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createEigenvaluesSymm(5,rand,1,2,3,4,5);
+    public void symmetricWithEigenvalues() {
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricWithEigenvalues(5,rand,1,2,3,4,5);
 
         // this should be symmetric
         assertTrue(MatrixFeatures_DDRM.isSymmetric(A,UtilEjml.TEST_F64));
@@ -212,12 +212,12 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void addRandom() {
+    public void addUniform() {
         DMatrixRMaj A = new DMatrixRMaj(3,4);
 
         CommonOps_DDRM.fill(A, -2.0);
 
-        RandomMatrices_DDRM.addRandom(A, 1, 2, rand);
+        RandomMatrices_DDRM.addUniform(A, 1, 2, rand);
 
         for( int i = 0; i < A.getNumElements(); i++ ) {
             assertTrue(A.get(i) >= -1 && A.get(i) <= 0);
@@ -225,29 +225,29 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createRandom() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,4,rand);
+    public void rectangle() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
 
-        checkRandom1(A);
+        fillUniform1(A);
     }
 
     @Test
-    public void createRandom_min_max() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(30,20,-1,1,rand);
+    public void rectangle_min_max() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(30,20,-1,1,rand);
 
         checkRandomRange(A);
     }
 
     @Test
-    public void setRandom() {
+    public void fillUniform() {
         DMatrixRMaj A = new DMatrixRMaj(5,4);
 
-        RandomMatrices_DDRM.setRandom(A,rand);
+        RandomMatrices_DDRM.fillUniform(A,rand);
 
-        checkRandom1(A);
+        fillUniform1(A);
     }
 
-    private void checkRandom1(DMatrixRMaj a) {
+    private void fillUniform1(DMatrixRMaj a) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
@@ -286,9 +286,9 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void setRandom_min_max() {
+    public void fillUniform_min_max() {
         DMatrixRMaj A = new DMatrixRMaj(30,20);
-        RandomMatrices_DDRM.setRandom(A,-1,1,rand);
+        RandomMatrices_DDRM.fillUniform(A,-1,1,rand);
 
         checkRandomRange(A);
     }
@@ -318,17 +318,17 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createGaussian() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createGaussian(30, 20, 2, 0.5, rand);
+    public void rectangleGaussian() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangleGaussian(30, 20, 2, 0.5, rand);
 
         checkGaussian(A);
     }
 
     @Test
-    public void setGaussian() {
+    public void fillGaussian() {
         DMatrixRMaj A = new DMatrixRMaj(30,20);
 
-        RandomMatrices_DDRM.setGaussian(A, 2, 0.5, rand);
+        RandomMatrices_DDRM.fillGaussian(A, 2, 0.5, rand);
 
         checkGaussian(A);
     }
@@ -362,17 +362,17 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createSymmPosDef() {
+    public void symmetricPosDef() {
         for( int i = 0; i < 10; i++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(6+i,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(6+i,rand);
 
             assertTrue(MatrixFeatures_DDRM.isPositiveDefinite(A));
         }
     }
 
     @Test
-    public void createSymmetric() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(10,-1,1,rand);
+    public void symmetric() {
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(10,-1,1,rand);
 
         assertTrue(MatrixFeatures_DDRM.isSymmetric(A,UtilEjml.TEST_F64));
 
@@ -385,9 +385,9 @@ public class TestRandomMatrices_DDRM {
     }
 
     @Test
-    public void createUpperTriangle() {
+    public void triangularUpper() {
         for( int hess = 0; hess < 3; hess++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(10,hess,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(10,hess,-1,1,rand);
 
             assertTrue(MatrixFeatures_DDRM.isUpperTriangle(A,hess,UtilEjml.TEST_F64));
 

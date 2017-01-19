@@ -53,7 +53,7 @@ public class TestNaiveDeterminant {
         Random rand = new Random(0xff);
 
         for( int i = 1; i <= 5; i++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(i,i,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(i,i,rand);
 
             double expected = NaiveDeterminant.recursive(A);
             double found = NaiveDeterminant.leibniz(A);

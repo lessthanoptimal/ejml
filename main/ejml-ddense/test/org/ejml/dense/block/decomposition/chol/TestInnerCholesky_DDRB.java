@@ -54,7 +54,7 @@ public class TestInnerCholesky_DDRB {
      * Test a positive case where it should be able to decompose the matrix
      */
     private void checkDecompose(int n, boolean lower) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(n,rand);
 
         // decompose a DMatrixRMaj to find expected solution
         CholeskyDecompositionD<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(n,lower);

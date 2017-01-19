@@ -91,7 +91,7 @@ public class BenchmarkGenerics {
 
 
     public static void main( String []args ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,10,new Random(234));
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,10,new Random(234));
 
         int N = 10000000;
 

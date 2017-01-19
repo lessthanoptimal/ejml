@@ -191,7 +191,7 @@ public class TestCholeskyOuterSolver_DDRB {
     }
 
     protected DMatrixRBlock createMatrixSPD(int width ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(width,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(width,rand);
 
         return MatrixOps_DDRB.convert(A,r);
     }

@@ -48,7 +48,7 @@ public class TestLUDecompositionBase_ZDRM {
 
         int width = 10;
 
-        ZMatrixRMaj LU = RandomMatrices_ZDRM.createRandom(width,width,-1,1,rand);
+        ZMatrixRMaj LU = RandomMatrices_ZDRM.rectangle(width,width,-1,1,rand);
 
         ZComplex expected = new ZComplex(1,0);
         ZComplex a = new ZComplex();
@@ -73,7 +73,7 @@ public class TestLUDecompositionBase_ZDRM {
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        ZMatrixRMaj LU = RandomMatrices_ZDRM.createRandom(width, width,-1,1, rand);
+        ZMatrixRMaj LU = RandomMatrices_ZDRM.rectangle(width, width,-1,1, rand);
 
         ZMatrixRMaj L = new ZMatrixRMaj(width,width);
         ZMatrixRMaj U = new ZMatrixRMaj(width,width);
@@ -95,7 +95,7 @@ public class TestLUDecompositionBase_ZDRM {
             }
         }
 
-        ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(width, 1,-1,1, rand);
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(width, 1,-1,1, rand);
         ZMatrixRMaj tmp = new ZMatrixRMaj(width,1);
         ZMatrixRMaj b = new ZMatrixRMaj(width,1);
 
@@ -117,7 +117,7 @@ public class TestLUDecompositionBase_ZDRM {
     @Test
     public void solveL() {
         int width = 10;
-        ZMatrixRMaj LU = RandomMatrices_ZDRM.createRandom(width, width,-1,1, rand);
+        ZMatrixRMaj LU = RandomMatrices_ZDRM.rectangle(width, width,-1,1, rand);
 
         ZMatrixRMaj L = new ZMatrixRMaj(width,width);
 
@@ -135,7 +135,7 @@ public class TestLUDecompositionBase_ZDRM {
             }
         }
 
-        ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(width, 1,-1,1, rand);
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(width, 1,-1,1, rand);
         ZMatrixRMaj b = new ZMatrixRMaj(width,1);
 
         CommonOps_ZDRM.mult(L, x, b);

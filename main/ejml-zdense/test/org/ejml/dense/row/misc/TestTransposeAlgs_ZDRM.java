@@ -37,7 +37,7 @@ public class TestTransposeAlgs_ZDRM {
 
     @Test
     public void square() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,4,-1,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,4,-1,1,rand);
         ZMatrixRMaj b = a.copy();
 
         TransposeAlgs_ZDRM.square(b);
@@ -58,7 +58,7 @@ public class TestTransposeAlgs_ZDRM {
 
     @Test
     public void squareConjugate() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,4,-1,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,4,-1,1,rand);
         ZMatrixRMaj b = a.copy();
 
         TransposeAlgs_ZDRM.squareConjugate(b);
@@ -79,8 +79,8 @@ public class TestTransposeAlgs_ZDRM {
 
     @Test
     public void standard() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,5,-1,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(5, 4, -1, 1, rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,5,-1,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5, 4, -1, 1, rand);
 
         TransposeAlgs_ZDRM.standard(a, b);
 
@@ -100,8 +100,8 @@ public class TestTransposeAlgs_ZDRM {
 
     @Test
     public void standardConjugate() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,5,-1,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(5, 4, -1, 1, rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,5,-1,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5, 4, -1, 1, rand);
 
         TransposeAlgs_ZDRM.standardConjugate(a, b);
 

@@ -62,7 +62,7 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
         DebugQR qr = new DebugQR(width,width);
 
         SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         qr.householder(w,(DMatrixRMaj)A.getMatrix());
 
@@ -104,8 +104,8 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
         SimpleMatrix U = new SimpleMatrix(width,1, DMatrixRMaj.class);
         SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
 
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)U.getMatrix(),rand);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)U.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         qr.convertToColumnMajor((DMatrixRMaj)A.getMatrix());
 

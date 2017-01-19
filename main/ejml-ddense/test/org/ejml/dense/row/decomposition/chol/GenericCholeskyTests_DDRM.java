@@ -101,7 +101,7 @@ public abstract class GenericCholeskyTests_DDRM {
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj L_null = cholesky.getT(null);
-        DMatrixRMaj L_provided = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj L_provided = RandomMatrices_DDRM.rectangle(3,3,rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
         assertTrue(MatrixFeatures_DDRM.isEquals(L_null,L_provided));
@@ -127,7 +127,7 @@ public abstract class GenericCholeskyTests_DDRM {
     }
 
     private void checkWithDefinition(boolean lower, int size) {
-        SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices_DDRM.createSymmPosDef(size,rand));
+        SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices_DDRM.symmetricPosDef(size,rand));
 
         CholeskyDecompositionD<DMatrixRMaj> cholesky = create(lower);
         assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky,(DMatrixRMaj)A.getMatrix()));
@@ -164,7 +164,7 @@ public abstract class GenericCholeskyTests_DDRM {
         LUDecompositionD<DMatrixRMaj> lu = DecompositionFactory_DDRM.lu(size,size);
         CholeskyDecompositionD<DMatrixRMaj> cholesky = create(lower);
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(size,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(size,rand);
 
         assertTrue(DecompositionFactory_DDRM.decomposeSafe(lu,A));
         assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky,A));

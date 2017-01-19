@@ -130,9 +130,9 @@ public class BenchmarkMatrixMatrixMult {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" K = "+numK);
-        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
-        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(numCols,numK,rand);
-        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(numRows,numK,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.rectangle(numRows,numCols,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.rectangle(numCols,numK,rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.rectangle(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d  Block %7d  BlockD3 %7d\n",
                 0,//mult(matA,matB,matResult,numTrials),

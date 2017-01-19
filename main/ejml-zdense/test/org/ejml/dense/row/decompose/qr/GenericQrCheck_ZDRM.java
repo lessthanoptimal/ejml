@@ -44,7 +44,7 @@ public abstract class GenericQrCheck_ZDRM {
     public void testModifiedInput() {
         QRDecomposition<ZMatrixRMaj> alg = createQRDecomposition();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(6, 4, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(6, 4, rand);
         ZMatrixRMaj A_orig = A.copy();
 
         assertTrue(alg.decompose(A));
@@ -70,7 +70,7 @@ public abstract class GenericQrCheck_ZDRM {
     private void checkDecomposition(int height, int width, boolean compact ) {
         QRDecomposition<ZMatrixRMaj> alg = createQRDecomposition();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(height,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(height,width,rand);
 
         assertTrue(alg.decompose(A.copy()));
 
@@ -103,7 +103,7 @@ public abstract class GenericQrCheck_ZDRM {
 
         QRDecomposition<ZMatrixRMaj> alg = createQRDecomposition();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(height,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(height,width,rand);
 
         // cause the pathological situation
         A.set(0,0,0,0);
@@ -139,13 +139,13 @@ public abstract class GenericQrCheck_ZDRM {
 
         QRDecomposition<ZMatrixRMaj> alg = createQRDecomposition();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(height,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(height,width,rand);
 
         alg.decompose(A);
 
         // get the results from a provided matrix
-        ZMatrixRMaj Q_provided = RandomMatrices_ZDRM.createRandom(height,height,rand);
-        ZMatrixRMaj R_provided = RandomMatrices_ZDRM.createRandom(height,width,rand);
+        ZMatrixRMaj Q_provided = RandomMatrices_ZDRM.rectangle(height,height,rand);
+        ZMatrixRMaj R_provided = RandomMatrices_ZDRM.rectangle(height,width,rand);
 
         assertTrue(R_provided == alg.getR(R_provided, false));
         assertTrue(Q_provided == alg.getQ(Q_provided, false));
@@ -170,7 +170,7 @@ public abstract class GenericQrCheck_ZDRM {
 
         QRDecomposition<ZMatrixRMaj> alg = createQRDecomposition();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(height,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(height,width,rand);
 
         alg.decompose(A);
 
@@ -205,7 +205,7 @@ public abstract class GenericQrCheck_ZDRM {
 
         QRDecomposition<ZMatrixRMaj> alg = createQRDecomposition();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(height,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(height,width,rand);
 
         alg.decompose(A);
 

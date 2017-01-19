@@ -73,7 +73,7 @@ public class BenchmarkImplCommonOps {
         DMatrixRMaj src = new DMatrixRMaj(N,N);
         DMatrixRMaj dst = new DMatrixRMaj(N,N);
 
-        RandomMatrices_DDRM.addRandom(src,0,100,rand);
+        RandomMatrices_DDRM.addUniform(src,0,100,rand);
 
         System.out.println("N = "+N);
         System.out.println("extract DMatrixRMaj = "+extract_DMatrixRMaj(src,dst,trials));

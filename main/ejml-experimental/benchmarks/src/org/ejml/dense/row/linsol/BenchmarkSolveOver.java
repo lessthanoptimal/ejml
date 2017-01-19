@@ -44,8 +44,8 @@ public class BenchmarkSolveOver {
     public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
         DMatrixRMaj X = new DMatrixRMaj(A.numCols,B.numCols);
-        RandomMatrices_DDRM.setRandom(A,rand);
-        RandomMatrices_DDRM.setRandom(B,rand);
+        RandomMatrices_DDRM.fillUniform(A,rand);
+        RandomMatrices_DDRM.fillUniform(B,rand);
 
         DMatrixRMaj B_tmp = new DMatrixRMaj(B.numRows,B.numCols);
 

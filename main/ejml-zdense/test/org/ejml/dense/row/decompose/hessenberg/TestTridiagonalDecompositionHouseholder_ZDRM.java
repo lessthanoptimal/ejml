@@ -50,7 +50,7 @@ public class TestTridiagonalDecompositionHouseholder_ZDRM extends StandardTridia
     public void testHouseholderVectors()
     {
         int N = 5;
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermitian(N,-1,1,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(N,-1,1,rand);
         ZMatrixRMaj B = new ZMatrixRMaj(N,N);
 
 //        System.out.println("A");

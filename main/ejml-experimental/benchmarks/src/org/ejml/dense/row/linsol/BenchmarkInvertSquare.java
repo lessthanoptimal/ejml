@@ -100,7 +100,7 @@ public class BenchmarkInvertSquare {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
-            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(w,w,rand);
 
             runAlgorithms(mat,trials[i]);
         }

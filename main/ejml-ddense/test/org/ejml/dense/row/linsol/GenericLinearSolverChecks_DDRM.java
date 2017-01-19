@@ -50,36 +50,36 @@ public abstract class GenericLinearSolverChecks_DDRM {
 
     @Test
     public void solve_dimensionCheck() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,4,rand);
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,2,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(9,2,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,2,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(9,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,3,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(10,2,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,3,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(5,2,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(10,2,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,2,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,2,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(10,1,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,2,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10,1,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -90,7 +90,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
      */
     @Test
     public void modifiesA() {
-        DMatrixRMaj A_orig = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj A_orig = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj A = A_orig.copy();
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
@@ -107,13 +107,13 @@ public abstract class GenericLinearSolverChecks_DDRM {
      */
     @Test
     public void modifiesB() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4, 4, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 4, rand);
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(4,2,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(4,2,rand);
         DMatrixRMaj B_orig = B.copy();
         DMatrixRMaj X = new DMatrixRMaj(A.numRows,B.numCols);
 
@@ -184,7 +184,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
     public void square_trivial() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 18, 21.5, 4.9000);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
@@ -205,7 +205,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
     public void square_pivot() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 8, 33, 15.5);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
@@ -244,7 +244,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
 
         DMatrixRMaj B = new DMatrixRMaj(7,1, true, vals);
         DMatrixRMaj A = createPolyA(t,3);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
@@ -273,14 +273,14 @@ public abstract class GenericLinearSolverChecks_DDRM {
     @Test
     public void inverse() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DMatrixRMaj A_inv = RandomMatrices_DDRM.createRandom(3, 3, rand);
+        DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3, 3, rand);
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
-        DMatrixRMaj I = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj I = RandomMatrices_DDRM.rectangle(3,3,rand);
 
         CommonOps_DDRM.mult(A,A_inv,I);
 

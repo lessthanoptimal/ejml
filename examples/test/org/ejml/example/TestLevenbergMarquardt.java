@@ -47,7 +47,7 @@ public class TestLevenbergMarquardt {
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        DMatrixRMaj X = RandomMatrices_DDRM.createRandom(NUM_PTS,1,rand);
+        DMatrixRMaj X = RandomMatrices_DDRM.rectangle(NUM_PTS,1,rand);
 
         DMatrixRMaj numJacobian = new DMatrixRMaj(3,NUM_PTS);
         DMatrixRMaj analyticalJacobian = new DMatrixRMaj(3,NUM_PTS);
@@ -83,7 +83,7 @@ public class TestLevenbergMarquardt {
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        DMatrixRMaj X = RandomMatrices_DDRM.createRandom(numPoints,1,rand);
+        DMatrixRMaj X = RandomMatrices_DDRM.rectangle(numPoints,1,rand);
         DMatrixRMaj Y = new DMatrixRMaj(numPoints,1);
         func.compute(param,X,Y);
 

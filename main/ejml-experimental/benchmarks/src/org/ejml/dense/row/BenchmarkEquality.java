@@ -65,7 +65,7 @@ public class BenchmarkEquality {
     public static void main( String args[] ) {
         Random rand = new Random(234234);
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(1000,2000,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(1000,2000,rand);
         DMatrixRMaj B = A.copy();
 
         int N = 1000;

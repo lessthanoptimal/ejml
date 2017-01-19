@@ -80,7 +80,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
     public void testDecomposition2()
     {
         for( int i = 2; i <= 20; i++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(i,i,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(i,i,-1,1,rand);
 
             LUDecomposition<DMatrixRMaj> alg = create(i,i);
             assertTrue(alg.decompose(A));
@@ -145,8 +145,8 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
 
         alg.decompose(A);
 
-        DMatrixRMaj L_provided = RandomMatrices_DDRM.createRandom(3,3,rand);
-        DMatrixRMaj U_provided = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj L_provided = RandomMatrices_DDRM.rectangle(3,3,rand);
+        DMatrixRMaj U_provided = RandomMatrices_DDRM.rectangle(3,3,rand);
 
         assertTrue(L_provided == alg.getLower(L_provided));
         assertTrue(U_provided == alg.getUpper(U_provided));

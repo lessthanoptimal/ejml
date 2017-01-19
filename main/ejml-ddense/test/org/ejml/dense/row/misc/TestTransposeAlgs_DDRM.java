@@ -37,7 +37,7 @@ public class TestTransposeAlgs_DDRM {
 
     @Test
     public void square() {
-        DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(5,5,rand);
+        DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(5,5,rand);
         DMatrixRMaj matTran = mat.copy();
 
         TransposeAlgs_DDRM.square(matTran);
@@ -53,7 +53,7 @@ public class TestTransposeAlgs_DDRM {
         // check various shapes to make sure blocking is handled correctly
         for( int numRows = 1; numRows < 15; numRows += 2 ) {
             for( int numCols = 1; numCols < 15; numCols += 2) {
-                DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
+                DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(numRows,numCols,rand);
                 DMatrixRMaj matTran = new DMatrixRMaj(numCols,numRows);
 
                 TransposeAlgs_DDRM.block(mat,matTran,7);
@@ -68,7 +68,7 @@ public class TestTransposeAlgs_DDRM {
 
     @Test
     public void standard() {
-        DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(5,7,rand);
+        DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(5,7,rand);
         DMatrixRMaj matTran = new DMatrixRMaj(7,5);
 
         TransposeAlgs_DDRM.standard(mat,matTran);

@@ -170,7 +170,7 @@ public class BenchmarkDeterminant {
 
             System.out.println("Dimension = "+i+"  trials = "+numTrials);
 
-            mat = RandomMatrices_DDRM.createRandom(i,i,rand);
+            mat = RandomMatrices_DDRM.rectangle(i,i,rand);
 
             System.out.println("  Auto         = "+computeAuto(mat,numTrials));
 //            System.out.println("  Minor         = "+computeMinor(mat,numTrials));

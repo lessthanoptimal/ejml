@@ -107,7 +107,7 @@ public class BenchmarkInvertSymPosDef {
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRMaj symMat = RandomMatrices_DDRM.createSymmPosDef(w,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.symmetricPosDef(w,rand);
             System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

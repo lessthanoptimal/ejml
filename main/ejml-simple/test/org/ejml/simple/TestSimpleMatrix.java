@@ -82,7 +82,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void constructor_dense() {
-        DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(3,2,rand);
         SimpleMatrix s = new SimpleMatrix(mat);
 
         assertTrue( mat != s.getMatrix() );
@@ -100,7 +100,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void wrap() {
-        DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(3,2,rand);
 
         SimpleMatrix s = SimpleMatrix.wrap(mat);
 

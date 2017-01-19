@@ -45,7 +45,7 @@ public class TestTriangularSolver_DSCC {
     public void solveL_denseX() {
         for (int nz_size : new int[]{5, 8, 10, 20}) {
             DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5, 1, rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 1, rand);
             DMatrixRMaj x = b.copy();
 
             TriangularSolver_DSCC.solveL(L, x.data);
@@ -64,7 +64,7 @@ public class TestTriangularSolver_DSCC {
             DMatrixSparseCSC U = new DMatrixSparseCSC(5, 5, L.nz_length);
             CommonOps_DSCC.transpose(L, U, null);
 
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5, 1, rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 1, rand);
             DMatrixRMaj x = b.copy();
 
             TriangularSolver_DSCC.solveU(U, x.data);

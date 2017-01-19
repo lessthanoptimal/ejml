@@ -41,7 +41,7 @@ public class TestHessenbergSimilarDecomposition_ZDRM {
      */
     @Test
     public void testItAllTogether() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(5,5,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5,5,rand);
 
         checkItAll(A);
     }
@@ -80,7 +80,7 @@ public class TestHessenbergSimilarDecomposition_ZDRM {
      */
     @Test
     public void testInputUnmodified() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4,4,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,4,rand);
         ZMatrixRMaj B = A.copy();
 
         HessenbergSimilarDecomposition_ZDRM decomp = new HessenbergSimilarDecomposition_ZDRM(A.numRows);
@@ -115,7 +115,7 @@ public class TestHessenbergSimilarDecomposition_ZDRM {
     public void testHouseholderVectors()
     {
         int N = 5;
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(N,N,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(N,N,rand);
         ZMatrixRMaj B = new ZMatrixRMaj(N,N);
 
         HessenbergSimilarDecomposition_ZDRM decomp = new HessenbergSimilarDecomposition_ZDRM(A.numRows);
@@ -175,7 +175,7 @@ public class TestHessenbergSimilarDecomposition_ZDRM {
     @Test
     public void testH() {
         int N = 5;
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(N,N,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(N,N,rand);
 
         HessenbergSimilarDecomposition_ZDRM decomp = new HessenbergSimilarDecomposition_ZDRM(A.numRows);
 

@@ -91,7 +91,7 @@ public abstract class StandardSvdChecks_DDRM {
     }
 
     public void testWide() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,20,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,20,-1,1,rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -100,7 +100,7 @@ public abstract class StandardSvdChecks_DDRM {
     }
 
     public void testTall() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(21,5,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(21,5,-1,1,rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -138,7 +138,7 @@ public abstract class StandardSvdChecks_DDRM {
     }
 
     public void testLarger() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(200,200,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(200,200,-1,1,rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -151,7 +151,7 @@ public abstract class StandardSvdChecks_DDRM {
      * cause a zero to appear unexpectedly and thus a divided by zero.
      */
     public void testVerySmallValue() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,5,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5,-1,1,rand);
 
         CommonOps_DDRM.scale( Math.pow(UtilEjml.EPS, 12) ,A);
 
@@ -167,7 +167,7 @@ public abstract class StandardSvdChecks_DDRM {
 
         for( int i = 1; i < 10; i++ ) {
             for( int j = 1; j < 10; j++ ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.createRandom(i,j,-1,1,rand);
+                DMatrixRMaj A = RandomMatrices_DDRM.rectangle(i,j,-1,1,rand);
 
                 assertTrue(alg.decompose(A));
 
@@ -180,7 +180,7 @@ public abstract class StandardSvdChecks_DDRM {
      * Makes sure transposed flag is correctly handled.
      */
     public void checkGetU_Transpose() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5, 7, -1, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 7, -1, 1, rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -199,7 +199,7 @@ public abstract class StandardSvdChecks_DDRM {
      * Makes sure the optional storage parameter is handled correctly
      */
     public void checkGetU_Storage() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,7,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,7,-1,1,rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -233,7 +233,7 @@ public abstract class StandardSvdChecks_DDRM {
      * Makes sure transposed flag is correctly handled.
      */
     public void checkGetV_Transpose() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,7,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,7,-1,1,rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -252,7 +252,7 @@ public abstract class StandardSvdChecks_DDRM {
      * Makes sure the optional storage parameter is handled correctly
      */
     public void checkGetV_Storage() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,7,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,7,-1,1,rand);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
@@ -291,12 +291,12 @@ public abstract class StandardSvdChecks_DDRM {
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
 
         // first the larger one
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,10,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,10,-1,1,rand);
         assertTrue(alg.decompose(A));
         checkComponents(alg,A);
 
         // then the smaller one
-        A = RandomMatrices_DDRM.createRandom(5,5,-1,1,rand);
+        A = RandomMatrices_DDRM.rectangle(5,5,-1,1,rand);
         assertTrue(alg.decompose(A));
         checkComponents(alg,A);
     }

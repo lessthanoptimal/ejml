@@ -47,7 +47,7 @@ public class TestLUDecompositionBase_DDRM {
 
         int width = 10;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(width,width,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(width,width,rand);
 
         DeterminantFromMinor_DDRM minor = new DeterminantFromMinor_DDRM(width);
         double minorVal = minor.compute(A);
@@ -62,7 +62,7 @@ public class TestLUDecompositionBase_DDRM {
     @Test
     public void _solveVectorInternal() {
         int width = 10;
-        DMatrixRMaj LU = RandomMatrices_DDRM.createRandom(width,width,rand);
+        DMatrixRMaj LU = RandomMatrices_DDRM.rectangle(width,width,rand);
 
         DMatrixRMaj L = new DMatrixRMaj(width,width);
         DMatrixRMaj U = new DMatrixRMaj(width,width);
@@ -82,7 +82,7 @@ public class TestLUDecompositionBase_DDRM {
             }
         }
 
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(width, 1, -1, 1, rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(width, 1, -1, 1, rand);
         DMatrixRMaj tmp = new DMatrixRMaj(width,1);
         DMatrixRMaj b = new DMatrixRMaj(width,1);
 

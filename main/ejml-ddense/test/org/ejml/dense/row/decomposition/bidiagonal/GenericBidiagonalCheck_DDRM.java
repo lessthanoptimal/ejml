@@ -52,14 +52,14 @@ public abstract class GenericBidiagonalCheck_DDRM {
         for( int i = 0; i < 10; i++ ) {
             for( int N = 2;  N <= 10; N++ ) {
                 for( int tall = 0; tall <= 2; tall++ ) {
-                    DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N+tall,N,rand);
+                    DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N+tall,N,rand);
 
                     assertTrue(decomp.decompose(A.copy()));
 
                     checkGeneric(A, decomp);
                 }
                 for( int wide = 1; wide <= 2; wide++ ) {
-                    DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N+wide,rand);
+                    DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N+wide,rand);
 
                     assertTrue(decomp.decompose(A.copy()));
 

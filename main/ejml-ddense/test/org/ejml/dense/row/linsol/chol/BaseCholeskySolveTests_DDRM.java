@@ -61,7 +61,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
         LinearSolver<DMatrixRMaj> solver = createSafeSolver();
 
         try {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,5,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
             assertTrue(solver.setA(A));
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -72,26 +72,26 @@ public abstract class BaseCholeskySolveTests_DDRM {
 
         LinearSolver<DMatrixRMaj> solver = createSafeSolver();
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(4, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(4, rand);
         assertTrue(solver.setA(A));
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,3,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(4,2,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,3,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(5,2,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(4,2,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,2,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.createRandom(5,2,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5,2,rand);
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,2,rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -104,7 +104,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
 
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 17, 97, 320);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
         DMatrixRMaj A_orig = A.copy();
         DMatrixRMaj B_orig = b.copy();
 

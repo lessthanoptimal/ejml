@@ -64,7 +64,7 @@ public abstract class GenericQrCheck_DDRM {
         QRDecomposition<DMatrixRMaj> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         assertTrue(alg.decompose((DMatrixRMaj)A.copy().getMatrix()));
 
@@ -102,13 +102,13 @@ public abstract class GenericQrCheck_DDRM {
         QRDecomposition<DMatrixRMaj> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         alg.decompose((DMatrixRMaj)A.getMatrix());
 
         // get the results from a provided matrix
-        DMatrixRMaj Q_provided = RandomMatrices_DDRM.createRandom(height,height,rand);
-        DMatrixRMaj R_provided = RandomMatrices_DDRM.createRandom(height,width,rand);
+        DMatrixRMaj Q_provided = RandomMatrices_DDRM.rectangle(height,height,rand);
+        DMatrixRMaj R_provided = RandomMatrices_DDRM.rectangle(height,width,rand);
         
         assertTrue(R_provided == alg.getR(R_provided, false));
         assertTrue(Q_provided == alg.getQ(Q_provided, false));
@@ -134,7 +134,7 @@ public abstract class GenericQrCheck_DDRM {
         QRDecomposition<DMatrixRMaj> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         alg.decompose((DMatrixRMaj)A.getMatrix());
 
@@ -170,7 +170,7 @@ public abstract class GenericQrCheck_DDRM {
         QRDecomposition<DMatrixRMaj> alg = createQRDecomposition();
 
         SimpleMatrix A = new SimpleMatrix(height,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         alg.decompose((DMatrixRMaj)A.getMatrix());
 

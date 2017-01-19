@@ -50,7 +50,7 @@ public class TestTridiagonalDecompositionHouseholder_DDRB {
         for( int width = 1; width <= r*3; width++ ) {
 //            System.out.println("width = "+width);
             
-            DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(width,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetric(width,-1,1,rand);
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A,r);
 
             TridiagonalDecompositionHouseholderOrig_DDRM decomp = new TridiagonalDecompositionHouseholderOrig_DDRM();
@@ -85,7 +85,7 @@ public class TestTridiagonalDecompositionHouseholder_DDRB {
     @Test
     public void fullTest() {
         for( int width = 1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetric(width,-1,1,rand));
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
 
             TridiagonalDecompositionHouseholder_DDRB alg = new TridiagonalDecompositionHouseholder_DDRB();

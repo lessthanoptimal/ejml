@@ -42,12 +42,12 @@ public class TestCholeskyDecompositionCommon_ZDRM {
      */
     @Test
     public void getT() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(N, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N, rand);
 
         CholeskyDecompositionD<ZMatrixRMaj> cholesky = new Dummy(true);
 
         ZMatrixRMaj L_null = cholesky.getT(null);
-        ZMatrixRMaj L_provided = RandomMatrices_ZDRM.createRandom(N, N, rand);
+        ZMatrixRMaj L_provided = RandomMatrices_ZDRM.rectangle(N, N, rand);
         assertTrue( L_provided == cholesky.getT(L_provided));
 
         assertTrue(MatrixFeatures_ZDRM.isEquals(L_null, L_provided));
@@ -57,7 +57,7 @@ public class TestCholeskyDecompositionCommon_ZDRM {
 
         public Dummy(boolean lower) {
             super(lower);
-            T = RandomMatrices_ZDRM.createRandom(N,N,rand);
+            T = RandomMatrices_ZDRM.rectangle(N,N,rand);
             n = N;
         }
 

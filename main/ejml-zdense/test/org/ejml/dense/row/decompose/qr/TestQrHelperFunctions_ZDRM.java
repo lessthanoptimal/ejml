@@ -176,7 +176,7 @@ public class TestQrHelperFunctions_ZDRM {
         }
 
         for (int i = 1; i < 12; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,rand);
 
             for (int j = 1; j <= i; j += 2) {
                 ZMatrixRMaj subA = CommonOps_ZDRM.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
@@ -218,7 +218,7 @@ public class TestQrHelperFunctions_ZDRM {
         }
 
         for (int i = 1; i < 12; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,rand);
 
             for (int j = 1; j <= i; j += 2) {
                 ZMatrixRMaj subA = CommonOps_ZDRM.extract(A,A.numRows-j,A.numRows,A.numRows-j,A.numRows);
@@ -265,7 +265,7 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void extractHouseholderColumn() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(6,5,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(6,5,rand);
 
         double u[] = new double[6*2];
 
@@ -285,7 +285,7 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void extractHouseholderRow() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(5,6,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5,6,rand);
 
         double u[] = new double[6*2];
 
@@ -305,7 +305,7 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void extractColumnAndMax() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(5,6,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5,6,rand);
 
         A.set(2,1,10,0);
 
@@ -325,7 +325,7 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void computeRowMax() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(5,6,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5,6,rand);
 
         A.set(1,2,10,0);
 

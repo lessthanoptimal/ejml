@@ -71,13 +71,13 @@ public class TestSingularOps_DDRM {
         double singularValues[] = new double[minLength];
 
         if( compact ) {
-            U = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numRows,minLength,rand));
-            W = SimpleMatrix.wrap(RandomMatrices_DDRM.createDiagonal(minLength,minLength,0,1,rand));
-            V = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numCols,minLength,rand));
+            U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,minLength,rand));
+            W = SimpleMatrix.wrap(RandomMatrices_DDRM.diagonal(minLength,minLength,0,1,rand));
+            V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numCols,minLength,rand));
         } else {
-            U = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numRows,numRows,rand));
-            W = SimpleMatrix.wrap(RandomMatrices_DDRM.createDiagonal(numRows,numCols,0,1,rand));
-            V = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numCols,numCols,rand));
+            U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,numRows,rand));
+            W = SimpleMatrix.wrap(RandomMatrices_DDRM.diagonal(numRows,numCols,0,1,rand));
+            V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numCols,numCols,rand));
         }
 
         // Compute A
@@ -124,9 +124,9 @@ public class TestSingularOps_DDRM {
         int minLength = Math.min(numRows,numCols);
         double singularValues[] = new double[minLength];
 
-        U = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numRows,minLength,rand));
-        S = SimpleMatrix.wrap(RandomMatrices_DDRM.createDiagonal(minLength,minLength,0,1,rand));
-        V = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numCols,minLength,rand));
+        U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,minLength,rand));
+        S = SimpleMatrix.wrap(RandomMatrices_DDRM.diagonal(minLength,minLength,0,1,rand));
+        V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numCols,minLength,rand));
 
         // Compute A
         SimpleMatrix A=U.mult(S).mult(V.transpose());
@@ -179,9 +179,9 @@ public class TestSingularOps_DDRM {
 
         SimpleMatrix U,S,V;
 
-        U = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numRows,minLength,rand));
-        S = SimpleMatrix.wrap(RandomMatrices_DDRM.createDiagonal(minLength,minLength,0,1,rand));
-        V = SimpleMatrix.wrap(RandomMatrices_DDRM.createOrthogonal(numCols,minLength,rand));
+        U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,minLength,rand));
+        S = SimpleMatrix.wrap(RandomMatrices_DDRM.diagonal(minLength,minLength,0,1,rand));
+        V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numCols,minLength,rand));
 
         // put in a NaN
         S.set(2,2,Double.NaN);
@@ -286,7 +286,7 @@ public class TestSingularOps_DDRM {
             for( int numCols = 2; numCols < 10; numCols++ ) {
                 // construct a matrix with a null space by decomposition a random matrix
                 // and setting one of its singular values to zero
-                SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createRandom(numRows,numCols,rand));
+                SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(numRows,numCols,rand));
 
                 SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.matrix_F64()));
@@ -331,7 +331,7 @@ public class TestSingularOps_DDRM {
 
                 // construct a matrix with a null space by decomposition a random matrix
                 // and setting one of its singular values to zero
-                SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createRandom(numRows,numCols,rand));
+                SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(numRows,numCols,rand));
 
                 SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.matrix_F64()));

@@ -40,7 +40,7 @@ public class TestUnrolledDeterminantFromMinor_DDRM {
     @Test
     public void testAll() {
         for(int N = 2; N <= UnrolledDeterminantFromMinor_DDRM.MAX; N++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
 
             double unrolled = UnrolledDeterminantFromMinor_DDRM.det(A);
             LUDecompositionAlt_DDRM alg = new LUDecompositionAlt_DDRM();

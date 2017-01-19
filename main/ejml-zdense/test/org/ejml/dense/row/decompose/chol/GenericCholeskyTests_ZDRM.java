@@ -84,7 +84,7 @@ public abstract class GenericCholeskyTests_ZDRM {
     }
 
     private void checkWithDefinition(boolean lower, int size) {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(size, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(size, rand);
 
         CholeskyDecompositionD<ZMatrixRMaj> cholesky = create(lower);
         assertTrue(DecompositionFactory_ZDRM.decomposeSafe(cholesky, A));
@@ -123,7 +123,7 @@ public abstract class GenericCholeskyTests_ZDRM {
         LUDecompositionD<ZMatrixRMaj> lu = DecompositionFactory_ZDRM.lu(size,size);
         CholeskyDecompositionD<ZMatrixRMaj> cholesky = create(lower);
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(size, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(size, rand);
 
         assertTrue(DecompositionFactory_ZDRM.decomposeSafe(lu,A));
         assertTrue(DecompositionFactory_ZDRM.decomposeSafe(cholesky,A));

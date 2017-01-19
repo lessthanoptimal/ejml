@@ -36,7 +36,7 @@ public class TestNormOps_ZDRM {
 
     @Test
     public void normF() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(1,7,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,7,rand);
 
         ZComplex b = new ZComplex();
         double total = 0;

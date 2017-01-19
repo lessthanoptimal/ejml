@@ -51,36 +51,36 @@ public abstract class GenericLinearSolverChecks_ZDRM {
 
     @Test
     public void solve_dimensionCheck() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(10, 4, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(10, 4, rand);
 
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(4,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(9,2,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(4,2,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(9,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(4,3,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(10,2,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(4,3,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(5,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(10,2,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(5,2,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(10,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(4,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(10,1,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(4,2,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(10,1,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -91,7 +91,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
      */
     @Test
     public void modifiesA() {
-        ZMatrixRMaj A_orig = RandomMatrices_ZDRM.createRandom(4,4,rand);
+        ZMatrixRMaj A_orig = RandomMatrices_ZDRM.rectangle(4,4,rand);
         ZMatrixRMaj A = A_orig.copy();
 
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
@@ -108,13 +108,13 @@ public abstract class GenericLinearSolverChecks_ZDRM {
      */
     @Test
     public void modifiesB() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4,4,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,4,rand);
 
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
-        ZMatrixRMaj B = RandomMatrices_ZDRM.createRandom(4,2,rand);
+        ZMatrixRMaj B = RandomMatrices_ZDRM.rectangle(4,2,rand);
         ZMatrixRMaj B_orig = B.copy();
         ZMatrixRMaj X = new ZMatrixRMaj(A.numRows,B.numCols);
 
@@ -185,7 +185,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     public void square_trivial() {
         ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
         ZMatrixRMaj b = new ZMatrixRMaj(3,1, true, 18,0, 21.5,0, 4.9000,0);
-        ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(3,1,rand);
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(3,1,rand);
 
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
@@ -208,8 +208,8 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     public void square_pivot() {
         ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
         ZMatrixRMaj x_expected = new ZMatrixRMaj(3,1, true, 8,-2, 33,1.6, 15.5,-5.7);
-        ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(3,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(3,1,rand);
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(3,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(3,1,rand);
 
         CommonOps_ZDRM.mult(A,x_expected,b);
 
@@ -260,7 +260,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
 
         ZMatrixRMaj B = new ZMatrixRMaj(t.length/2,1, true, vals);
         ZMatrixRMaj A = createPolyA(t,3);
-        ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(3,1,rand);
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(3,1,rand);
 
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
@@ -297,15 +297,15 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     @Test
     public void inverse() {
         for (int i = 2; i < 10; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,rand);
-            ZMatrixRMaj A_inv = RandomMatrices_ZDRM.createRandom(i,i,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,rand);
+            ZMatrixRMaj A_inv = RandomMatrices_ZDRM.rectangle(i,i,rand);
 
             LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
 
             assertTrue(solver.setA(A));
             solver.invert(A_inv);
 
-            ZMatrixRMaj I = RandomMatrices_ZDRM.createRandom(i,i,rand);
+            ZMatrixRMaj I = RandomMatrices_ZDRM.rectangle(i,i,rand);
 
             CommonOps_ZDRM.mult(A, A_inv, I);
 

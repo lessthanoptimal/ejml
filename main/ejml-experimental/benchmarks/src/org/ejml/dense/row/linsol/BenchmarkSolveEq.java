@@ -45,8 +45,8 @@ public class BenchmarkSolveEq {
     public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
         DMatrixRMaj X = new DMatrixRMaj(B.numRows,B.numCols);
-        RandomMatrices_DDRM.setRandom(A,rand);
-        RandomMatrices_DDRM.setRandom(B,rand);
+        RandomMatrices_DDRM.fillUniform(A,rand);
+        RandomMatrices_DDRM.fillUniform(B,rand);
 
         if( !includeSet ) solver.setA(A);
 
@@ -87,7 +87,7 @@ public class BenchmarkSolveEq {
             int w = size[i];
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_DDRM.createRandom(w,w,rand);
+            A = RandomMatrices_DDRM.rectangle(w,w,rand);
             B = new DMatrixRMaj(w,2);
 
             runAlgorithms(trials[i]);
@@ -98,7 +98,7 @@ public class BenchmarkSolveEq {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_DDRM.createRandom(100,100,rand);
+            A = RandomMatrices_DDRM.rectangle(100,100,rand);
             B = new DMatrixRMaj(100,w);
 
             runAlgorithms(trialsX[i]/80);

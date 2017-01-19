@@ -47,7 +47,7 @@ public abstract class StandardTridiagonalTests_DDRM {
 
         for( int width = 1; width < 20; width += 2 ) {
 
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetric(width,-1,1,rand));
 
             TridiagonalSimilarDecompositionD<DMatrixRMaj> alg = createDecomposition();
 
@@ -69,7 +69,7 @@ public abstract class StandardTridiagonalTests_DDRM {
     public void getDiagonal() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(width,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetric(width,-1,1,rand);
 
             TridiagonalSimilarDecompositionD<DMatrixRMaj> alg = createDecomposition();
 
@@ -93,7 +93,7 @@ public abstract class StandardTridiagonalTests_DDRM {
     public void transposeFlagForQ() {
         for( int width = 1; width < 20; width += 2 ) {
 
-            DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(width,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetric(width,-1,1,rand);
 
             TridiagonalSimilarDecompositionD<DMatrixRMaj> alg = createDecomposition();
 

@@ -71,7 +71,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -89,7 +89,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size w=%3d h=%3d for %12d trials\n",w,h,t);
 
             System.out.print("* Creating matrix ");
-            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(h,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(h,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }

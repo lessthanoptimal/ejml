@@ -51,7 +51,7 @@ public class CheckDecompositionInterface_DDRM {
      * @param decomp
      */
     public static void checkModifiedInput( DecompositionInterface<DMatrixRMaj> decomp ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(4,new Random(0x434));
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(4,new Random(0x434));
         DMatrixRMaj A_orig = A.copy();
 
         assertTrue(decomp.decompose(A));

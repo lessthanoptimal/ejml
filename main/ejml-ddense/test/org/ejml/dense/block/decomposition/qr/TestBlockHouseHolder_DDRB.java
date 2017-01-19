@@ -51,7 +51,7 @@ public class TestBlockHouseHolder_DDRB {
 
     @Test
     public void decomposeQR_block_col() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(r*2+r-1,r,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*2+r-1,r,-1,1,rand);
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A,r);
 
         QRDecompositionHouseholderTran_DDRM algTest = new QRDecompositionHouseholderTran_DDRM();
@@ -162,7 +162,7 @@ public class TestBlockHouseHolder_DDRB {
      */
     @Test
     public void innerProdCol() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(r*2+r-1,r*3-1,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*2+r-1,r*3-1,-1,1,rand);
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A,r);
 
         int row = 0;
@@ -193,7 +193,7 @@ public class TestBlockHouseHolder_DDRB {
 
     @Test
     public void innerProdRow() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(r*3-1,r*2+r-1,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*3-1,r*2+r-1,-1,1,rand);
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A,r);
 
         int zeroOffset = 1;

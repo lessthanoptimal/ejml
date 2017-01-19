@@ -51,7 +51,7 @@ public class TestCholeskyOuterForm_DDRB {
     public void testUpper() {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(N,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(N,rand);
 
             CholeskyDecompositionD<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(1,false);
             assertTrue(DecompositionFactory_DDRM.decomposeSafe(chol,A));
@@ -81,7 +81,7 @@ public class TestCholeskyOuterForm_DDRB {
         // test against various different sizes
         for( int N = bl-2; N <= 13; N += 2 ) {
 
-            DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(N,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(N,rand);
 
             CholeskyDecompositionD<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(1,true);
             assertTrue(DecompositionFactory_DDRM.decomposeSafe(chol, A));

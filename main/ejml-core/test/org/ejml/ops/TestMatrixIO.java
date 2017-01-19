@@ -39,7 +39,7 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_binary() throws IOException {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(6,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,3,rand);
 
         MatrixIO.saveBin(A, "temp.mat");
 
@@ -56,7 +56,7 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_csv() throws IOException {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(6,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,3,rand);
 
         MatrixIO.saveCSV(A,"temp.csv");
 

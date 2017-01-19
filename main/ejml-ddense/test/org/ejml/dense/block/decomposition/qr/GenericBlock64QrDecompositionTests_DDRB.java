@@ -121,7 +121,7 @@ public class GenericBlock64QrDecompositionTests_DDRB {
     }
 
     private void checkSize( int numRows , int numCols ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(numRows,numCols,-1,1,rand);
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A,r);
 
         QRDecompositionHouseholderTran_DDRM algCheck = new QRDecompositionHouseholderTran_DDRM();

@@ -93,10 +93,10 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
 //                        sv[i] = rand.nextDouble()*2;
 //                    sv[0] = 0;
 
-                    A = RandomMatrices_DDRM.createSingularValues(numRows,numCols,rand,sv);
+                    A = RandomMatrices_DDRM.singleValues(numRows,numCols,rand,sv);
 //                    A = new DMatrixRMaj(numRows,numCols);
                 } else {
-                    A = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
+                    A = RandomMatrices_DDRM.rectangle(numRows,numCols,-1,1,rand);
                 }
 
                 assertTrue(alg.decompose(A.copy()));

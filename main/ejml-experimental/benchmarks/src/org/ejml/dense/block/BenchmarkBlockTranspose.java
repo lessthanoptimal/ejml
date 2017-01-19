@@ -81,7 +81,7 @@ public class BenchmarkBlockTranspose {
 
     public static void main( String args[] ) {
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5000,5000,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5000,5000,rand);
 
         int N = 5;
 

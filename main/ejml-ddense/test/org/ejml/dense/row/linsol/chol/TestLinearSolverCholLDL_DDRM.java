@@ -40,7 +40,7 @@ public class TestLinearSolverCholLDL_DDRM {
     public void testInverseAndSolve() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 17, 97, 320);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
         LinearSolverCholLDL_DDRM solver = new LinearSolverCholLDL_DDRM();
         assertTrue(solver.setA(A));

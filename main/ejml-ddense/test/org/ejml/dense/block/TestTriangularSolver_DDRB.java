@@ -207,7 +207,7 @@ public class TestTriangularSolver_DDRB {
     private void check_solveBlock_submatrix( boolean solveL , boolean transT , boolean transB ) {
         // compute expected solution
         DMatrixRMaj L = createRandomLowerTriangular(3);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,5,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,5,rand);
         DMatrixRMaj X = new DMatrixRMaj(3,5);
 
         if( !solveL ) {
@@ -247,7 +247,7 @@ public class TestTriangularSolver_DDRB {
     }
 
     private DMatrixRMaj createRandomLowerTriangular(int N ) {
-        DMatrixRMaj U = RandomMatrices_DDRM.createUpperTriangle(N,0,-1,1,rand);
+        DMatrixRMaj U = RandomMatrices_DDRM.triangularUpper(N,0,-1,1,rand);
 
         CommonOps_DDRM.transpose(U);
 

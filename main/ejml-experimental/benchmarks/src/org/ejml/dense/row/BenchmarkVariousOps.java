@@ -167,7 +167,7 @@ public class BenchmarkVariousOps {
 
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
-        DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(4,4,rand);
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));
@@ -186,7 +186,7 @@ public class BenchmarkVariousOps {
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
-        mat = RandomMatrices_DDRM.createRandom(2000,2000,rand);
+        mat = RandomMatrices_DDRM.rectangle(2000,2000,rand);
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,100));
 //        System.out.printf("Scale:             eml = %10d\n",

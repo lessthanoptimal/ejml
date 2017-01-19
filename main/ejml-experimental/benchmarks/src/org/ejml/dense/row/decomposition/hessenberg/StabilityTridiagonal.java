@@ -70,7 +70,7 @@ public class StabilityTridiagonal {
             double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
             System.out.println("Square matrix");
-            DMatrixRMaj orig = RandomMatrices_DDRM.createSymmetric(size,-1,1,rand);
+            DMatrixRMaj orig = RandomMatrices_DDRM.symmetric(size,-1,1,rand);
             DMatrixRMaj mat = orig.copy();
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {

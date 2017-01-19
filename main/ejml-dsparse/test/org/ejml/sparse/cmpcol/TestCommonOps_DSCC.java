@@ -24,12 +24,12 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.ConvertDMatrixSparse;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.ejml.dense.row.RandomMatrices_DDRM.createRandom;
 import static org.junit.Assert.*;
 
 /**
@@ -132,21 +132,21 @@ public class TestCommonOps_DSCC {
     public void mult_s_d_shapes() {
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                createRandom(6, 4, rand),
-                createRandom(5, 4, rand), false);
+                RandomMatrices_DDRM.rectangle(6, 4, rand),
+                RandomMatrices_DDRM.rectangle(5, 4, rand), false);
 
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                createRandom(6, 4, rand),
-                createRandom(5, 5, rand), true);
+                RandomMatrices_DDRM.rectangle(6, 4, rand),
+                RandomMatrices_DDRM.rectangle(5, 5, rand), true);
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                createRandom(6, 4, rand),
-                createRandom(6, 4, rand), true);
+                RandomMatrices_DDRM.rectangle(6, 4, rand),
+                RandomMatrices_DDRM.rectangle(6, 4, rand), true);
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                createRandom(6, 4, rand),
-                createRandom(6, 4, rand), true);
+                RandomMatrices_DDRM.rectangle(6, 4, rand),
+                RandomMatrices_DDRM.rectangle(6, 4, rand), true);
     }
 
     private void check_s_d_mult(DMatrixSparseCSC A , DMatrixRMaj B, DMatrixRMaj found, boolean exception ) {

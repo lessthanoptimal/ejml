@@ -73,7 +73,7 @@ public class StabilityCholeksyDecomposition {
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                DMatrixRMaj mat = RandomMatrices_DDRM.createSymmPosDef(size,rand);
+                DMatrixRMaj mat = RandomMatrices_DDRM.symmetricPosDef(size,rand);
                 CommonOps_DDRM.scale(scales[i],mat);
                 runAlgorithms(mat);
             }

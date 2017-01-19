@@ -87,11 +87,11 @@ public class TestMatrixMatrixMult_ZDRM {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
                 for (int k = 1; k <= 4; k++) {
-                    ZMatrixRMaj A = transA ? RandomMatrices_ZDRM.createRandom(j,i,-1,1,rand) :
-                            RandomMatrices_ZDRM.createRandom(i,j,-1,1,rand);
-                    ZMatrixRMaj B = transB ? RandomMatrices_ZDRM.createRandom(k,j,-1,1,rand) :
-                            RandomMatrices_ZDRM.createRandom(j,k,-1,1,rand);
-                    ZMatrixRMaj C = RandomMatrices_ZDRM.createRandom(i,k,-1,1,rand);
+                    ZMatrixRMaj A = transA ? RandomMatrices_ZDRM.rectangle(j,i,-1,1,rand) :
+                            RandomMatrices_ZDRM.rectangle(i,j,-1,1,rand);
+                    ZMatrixRMaj B = transB ? RandomMatrices_ZDRM.rectangle(k,j,-1,1,rand) :
+                            RandomMatrices_ZDRM.rectangle(j,k,-1,1,rand);
+                    ZMatrixRMaj C = RandomMatrices_ZDRM.rectangle(i,k,-1,1,rand);
 
                     ZMatrixRMaj AB = multiply(A,B,transA,transB);
                     ZMatrixRMaj expected = new ZMatrixRMaj(i,k);

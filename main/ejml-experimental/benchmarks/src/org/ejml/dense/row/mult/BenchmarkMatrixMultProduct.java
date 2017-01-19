@@ -72,8 +72,8 @@ public class BenchmarkMatrixMultProduct {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" trials "+numTrials);
-        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(numRows, numCols, rand);
-        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(numCols,numCols,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.rectangle(numRows, numCols, rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.rectangle(numCols,numCols,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 0,//multTransA(matA,matResult,numTrials),

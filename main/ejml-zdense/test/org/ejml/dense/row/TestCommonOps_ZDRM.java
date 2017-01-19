@@ -92,7 +92,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void convert() {
-        DMatrixRMaj input = RandomMatrices_DDRM.createRandom(5,7,-1,1,rand);
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(5,7,-1,1,rand);
         ZMatrixRMaj output = new ZMatrixRMaj(5,7);
 
         ZComplex a = new ZComplex();
@@ -111,7 +111,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void stripReal() {
-        ZMatrixRMaj input = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj input = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
         DMatrixRMaj output = new DMatrixRMaj(5,7);
 
         ZComplex a = new ZComplex();
@@ -129,7 +129,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void stripImaginary() {
-        ZMatrixRMaj input = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj input = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
         DMatrixRMaj output = new DMatrixRMaj(5,7);
 
         ZComplex a = new ZComplex();
@@ -147,7 +147,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void magnitude() {
-        ZMatrixRMaj input = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj input = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
         DMatrixRMaj output = new DMatrixRMaj(5,7);
 
         ZComplex a = new ZComplex();
@@ -165,8 +165,8 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void conjugate() {
-        ZMatrixRMaj matrix = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj found = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj matrix = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj found = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         CommonOps_ZDRM.conjugate(matrix,found);
 
@@ -181,7 +181,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void fill() {
-        ZMatrixRMaj matrix = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj matrix = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         CommonOps_ZDRM.fill(matrix,2,-1);
 
@@ -196,9 +196,9 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void add() {
-        ZMatrixRMaj matrixA = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj matrixB = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj matrixA = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj matrixB = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         ZComplex a = new ZComplex();
         ZComplex b = new ZComplex();
@@ -223,9 +223,9 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void subtract() {
-        ZMatrixRMaj matrixA = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj matrixB = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj matrixA = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj matrixB = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         ZComplex a = new ZComplex();
         ZComplex b = new ZComplex();
@@ -252,7 +252,7 @@ public class TestCommonOps_ZDRM {
     public void scale() {
         ZComplex scale = new ZComplex(2.5,0.4);
 
-        ZMatrixRMaj mat = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj mat = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
         ZMatrixRMaj orig = mat.copy();
 
         CommonOps_ZDRM.scale(scale.real, scale.imaginary, mat);
@@ -313,10 +313,10 @@ public class TestCommonOps_ZDRM {
     public void multiply() {
         for (int i = 1; i < 10; i++) {
             for (int j = 1; j < 10; j++) {
-                ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,j,-1,1,rand);
+                ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,j,-1,1,rand);
                 for (int k = 1; k < 10; k++) {
-                    ZMatrixRMaj B = RandomMatrices_ZDRM.createRandom(j, k, -1, 1, rand);
-                    ZMatrixRMaj found = RandomMatrices_ZDRM.createRandom(i, k, -1, 1, rand);
+                    ZMatrixRMaj B = RandomMatrices_ZDRM.rectangle(j, k, -1, 1, rand);
+                    ZMatrixRMaj found = RandomMatrices_ZDRM.rectangle(i, k, -1, 1, rand);
                     ZMatrixRMaj expected = TestMatrixMatrixMult_ZDRM.multiply(A, B, false, false);
 
                     MatrixMatrixMult_ZDRM.mult_reorder(A, B, found);
@@ -330,7 +330,7 @@ public class TestCommonOps_ZDRM {
     @Test
     public void transpose_one() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,4,-1,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,4,-1,1,rand);
         ZMatrixRMaj b = a.copy();
 
         CommonOps_ZDRM.transpose(b);
@@ -352,7 +352,7 @@ public class TestCommonOps_ZDRM {
     @Test
     public void transposeConjugate_one() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,4,-1,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,4,-1,1,rand);
         ZMatrixRMaj b = a.copy();
 
         CommonOps_ZDRM.transposeConjugate(b);
@@ -374,8 +374,8 @@ public class TestCommonOps_ZDRM {
     @Test
     public void transpose_two() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,5,-1,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(5,4,-1,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,5,-1,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5,4,-1,1,rand);
 
         CommonOps_ZDRM.transpose(a, b);
 
@@ -396,8 +396,8 @@ public class TestCommonOps_ZDRM {
     @Test
     public void transposeConjugate_two() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,5,-1,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(5,4,-1,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,5,-1,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5,4,-1,1,rand);
 
         CommonOps_ZDRM.transposeConjugate(a, b);
 
@@ -418,10 +418,10 @@ public class TestCommonOps_ZDRM {
     @Test
     public void invert_1() {
         for (int i = 1; i < 10; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,rand);
             ZMatrixRMaj A_orig = A.copy();
 
-            ZMatrixRMaj I = RandomMatrices_ZDRM.createRandom(i,i,rand);
+            ZMatrixRMaj I = RandomMatrices_ZDRM.rectangle(i,i,rand);
 
             assertTrue(CommonOps_ZDRM.invert(A));
             CommonOps_ZDRM.mult(A_orig,A,I);
@@ -433,11 +433,11 @@ public class TestCommonOps_ZDRM {
     @Test
     public void invert_2() {
         for (int i = 1; i < 10; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i, i, rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, rand);
             ZMatrixRMaj A_orig = A.copy();
             ZMatrixRMaj A_inv = new ZMatrixRMaj(i, i);
 
-            ZMatrixRMaj I = RandomMatrices_ZDRM.createRandom(i, i, rand);
+            ZMatrixRMaj I = RandomMatrices_ZDRM.rectangle(i, i, rand);
 
             assertTrue(CommonOps_ZDRM.invert(A, A_inv));
             CommonOps_ZDRM.mult(A, A_inv, I);
@@ -451,8 +451,8 @@ public class TestCommonOps_ZDRM {
     public void solve() {
         // square
         for (int i = 1; i < 10; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i, i, rand);
-            ZMatrixRMaj B = RandomMatrices_ZDRM.createRandom(i, 1, rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, rand);
+            ZMatrixRMaj B = RandomMatrices_ZDRM.rectangle(i, 1, rand);
 
             ZMatrixRMaj A_orig = A.copy();
             ZMatrixRMaj B_orig = B.copy();
@@ -473,8 +473,8 @@ public class TestCommonOps_ZDRM {
 
         // rectangular
         for (int i = 1; i < 10; i++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(2*i, i, rand);
-            ZMatrixRMaj X = RandomMatrices_ZDRM.createRandom(i, 1, rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(2*i, i, rand);
+            ZMatrixRMaj X = RandomMatrices_ZDRM.rectangle(i, 1, rand);
             ZMatrixRMaj B = new ZMatrixRMaj(2*i,1);
 
             CommonOps_ZDRM.mult(A,X,B);
@@ -513,8 +513,8 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void elementMultiply() {
-        ZMatrixRMaj in = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         ZComplex a = new ZComplex(1.2,-0.3);
         ZComplex b = new ZComplex();
@@ -538,8 +538,8 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void elementDivide_right() {
-        ZMatrixRMaj in = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         ZComplex a = new ZComplex();
         ZComplex b = new ZComplex(1.2,-0.3);
@@ -563,8 +563,8 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void elementDivide_left() {
-        ZMatrixRMaj in = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
-        ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
+        ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5,7,-1,1,rand);
 
         ZComplex a = new ZComplex(1.2,-0.3);
         ZComplex b = new ZComplex();
@@ -628,7 +628,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void elementMaxMagnitude2() {
-        ZMatrixRMaj m = RandomMatrices_ZDRM.createRandom(4,5,-2,2,rand);
+        ZMatrixRMaj m = RandomMatrices_ZDRM.rectangle(4,5,-2,2,rand);
         DMatrixRMaj a = new DMatrixRMaj(m.numRows,m.numCols);
 
         CommonOps_ZDRM.magnitude(m,a);
@@ -643,7 +643,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void setIdentity() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,5,-2,2,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,5,-2,2,rand);
 
         CommonOps_ZDRM.setIdentity(a);
 
@@ -664,7 +664,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void extract_simplified() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10,12,-2,2,rand);
         ZMatrixRMaj b = CommonOps_ZDRM.extract(a,2,5,3,8);
 
         ZComplex ca = new ZComplex();
@@ -683,7 +683,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void extract_complex() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10,12,-2,2,rand);
         ZMatrixRMaj b = new ZMatrixRMaj(6,7);
 
         ZComplex ca = new ZComplex();
@@ -704,7 +704,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void columnsToVector() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10,12,-2,2,rand);
         ZMatrixRMaj v[] = CommonOps_ZDRM.columnsToVector(a,null);
 
         ZComplex ca = new ZComplex();
@@ -727,7 +727,7 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void elementMaxAbs() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10,12,-2,2,rand);
         a.set(5,6,10,12);
 
         double expected = Math.sqrt(10*10 + 12*12);

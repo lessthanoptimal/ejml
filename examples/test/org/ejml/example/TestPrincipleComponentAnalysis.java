@@ -50,7 +50,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices_DDRM.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_DDRM.rectangle(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 
@@ -92,7 +92,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices_DDRM.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_DDRM.rectangle(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 
@@ -133,7 +133,7 @@ public class TestPrincipleComponentAnalysis {
         pca.setup(M,N);
 
         for( int i = 0; i < M; i++ ) {
-            obs[i] = RandomMatrices_DDRM.createRandom(N,1,-1,1,rand).data;
+            obs[i] = RandomMatrices_DDRM.rectangle(N,1,-1,1,rand).data;
             pca.addSample(obs[i]);
         }
 

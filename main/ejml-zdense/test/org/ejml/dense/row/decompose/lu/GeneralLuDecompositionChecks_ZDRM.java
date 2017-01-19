@@ -42,7 +42,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
 
     @Test
     public void testModifiedInput() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4, 4, -1, 1, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4, 4, -1, 1, rand);
         ZMatrixRMaj A_orig = A.copy();
 
         LUDecomposition<ZMatrixRMaj> alg = create(4,4);
@@ -82,7 +82,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
     public void testDecomposition_square_real()
     {
         for( int i = 2; i <= 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,-1,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,-1,1,rand);
 
             for (int j = 1; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -96,7 +96,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
     public void testDecomposition_square_imaginary()
     {
         for( int i = 2; i <= 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,-1,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,-1,1,rand);
 
             for (int j = 0; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -110,7 +110,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
     public void testDecomposition_square()
     {
         for( int i = 2; i <= 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(i,i,-1,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,-1,1,rand);
 
             checkDecomposition(A);
         }
@@ -118,14 +118,14 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
 
     @Test
     public void testFat() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(2,3,-1,1,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(2,3,-1,1,rand);
 
         checkDecomposition(A);
     }
 
     @Test
     public void testTall() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(3,2,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3,2,rand);
 
         checkDecomposition(A);
     }
@@ -173,14 +173,14 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
      */
     @Test
     public void getLower_getUpper() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(3,3,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3,3,rand);
 
         LUDecomposition<ZMatrixRMaj> alg = create(3,3);
 
         alg.decompose(A);
 
-        ZMatrixRMaj L_provided = RandomMatrices_ZDRM.createRandom(3,3,rand);
-        ZMatrixRMaj U_provided = RandomMatrices_ZDRM.createRandom(3,3,rand);
+        ZMatrixRMaj L_provided = RandomMatrices_ZDRM.rectangle(3,3,rand);
+        ZMatrixRMaj U_provided = RandomMatrices_ZDRM.rectangle(3,3,rand);
 
         assertTrue(L_provided == alg.getLower(L_provided));
         assertTrue(U_provided == alg.getUpper(U_provided));

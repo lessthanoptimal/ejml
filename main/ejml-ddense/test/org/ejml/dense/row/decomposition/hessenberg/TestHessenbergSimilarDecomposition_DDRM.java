@@ -41,7 +41,7 @@ public class TestHessenbergSimilarDecomposition_DDRM {
      */
     @Test
     public void testItAllTogether() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5,rand);
 
         checkItAll(A);
     }
@@ -79,7 +79,7 @@ public class TestHessenbergSimilarDecomposition_DDRM {
      */
     @Test
     public void testInputUnmodified() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj B = A.copy();
 
         HessenbergSimilarDecomposition_DDRM decomp = new HessenbergSimilarDecomposition_DDRM(A.numRows);
@@ -114,7 +114,7 @@ public class TestHessenbergSimilarDecomposition_DDRM {
     public void testHouseholderVectors()
     {
         int N = 5;
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
         DMatrixRMaj B = new DMatrixRMaj(N,N);
 
         HessenbergSimilarDecomposition_DDRM decomp = new HessenbergSimilarDecomposition_DDRM(A.numRows);
@@ -168,7 +168,7 @@ public class TestHessenbergSimilarDecomposition_DDRM {
     @Test
     public void testH() {
         int N = 5;
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
 
         HessenbergSimilarDecomposition_DDRM decomp = new HessenbergSimilarDecomposition_DDRM(A.numRows);
 

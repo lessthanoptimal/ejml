@@ -58,7 +58,7 @@ public class TestTridiagonalHelper_DDRB {
 //            System.out.println("********* width "+width);
 
             // create a random symmetric matrix
-            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createSymmetric(width,-1,1,rand));
+            SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetric(width,-1,1,rand));
 
             TridiagonalDecompositionHouseholderOrig_DDRM decomp = new TridiagonalDecompositionHouseholderOrig_DDRM();
             decomp.decompose(A.matrix_F64());

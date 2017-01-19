@@ -61,7 +61,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver();
 
         try {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4, 5, rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4, 5, rand);
             assertTrue(solver.setA(A));
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -72,26 +72,26 @@ public abstract class BaseCholeskySolveTests_ZDRM {
 
         LinearSolver<ZMatrixRMaj> solver = createSafeSolver();
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(4, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(4, rand);
         assertTrue(solver.setA(A));
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(4,3,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(4,2,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(4,3,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(5,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(4,2,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(5,2,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(4,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(5,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(5,2,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(5,2,rand);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5,2,rand);
             solver.solve(b,x);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -103,8 +103,8 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         LinearSolver<ZMatrixRMaj> solver = createSolver();
 
         for (int N = 1; N <= 4; N++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(N,rand);
-            ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(N,1,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N,rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(N,1,rand);
             ZMatrixRMaj b = new ZMatrixRMaj(N,1);
             ZMatrixRMaj x_expected = x.copy();
 
@@ -130,7 +130,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         LinearSolver<ZMatrixRMaj> solver = createSolver();
 
         for (int N = 1; N <= 5; N++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(N,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N,rand);
             ZMatrixRMaj A_orig = A.copy();
             ZMatrixRMaj A_inv = new ZMatrixRMaj(N,N);
             ZMatrixRMaj found = new ZMatrixRMaj(N,N);

@@ -44,7 +44,7 @@ public class TestInnerTriangularSolver_DDRB {
 
     @Test
     public void testInvertLower_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(5,0,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5,0,-1,1,rand);
         CommonOps_DDRM.transpose(A);
 
         DMatrixRMaj A_inv = A.copy();
@@ -64,7 +64,7 @@ public class TestInnerTriangularSolver_DDRB {
 
     @Test
     public void testInvertLower_one() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(5,0,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5,0,-1,1,rand);
         CommonOps_DDRM.transpose(A);
 
         DMatrixRMaj A_inv = A.copy();
@@ -132,8 +132,8 @@ public class TestInnerTriangularSolver_DDRB {
         DMatrixRMaj L_inv = L.copy();
         UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,4,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,4,rand);
         DMatrixRMaj found = B.copy();
 
         // compute the expected solution
@@ -168,7 +168,7 @@ public class TestInnerTriangularSolver_DDRB {
     }
 
     private DMatrixRMaj createRandomLowerTriangular(int N ) {
-        DMatrixRMaj U = RandomMatrices_DDRM.createUpperTriangle(N,0,-1,1,rand);
+        DMatrixRMaj U = RandomMatrices_DDRM.triangularUpper(N,0,-1,1,rand);
 
         CommonOps_DDRM.transpose(U);
 

@@ -42,8 +42,8 @@ public class TestLinearSolverFactory_DDRM {
 
     @Test
     public void general() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
         LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(A.numRows, A.numCols);
@@ -53,8 +53,8 @@ public class TestLinearSolverFactory_DDRM {
 
     @Test
     public void linear() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,4,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,4,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(4,1);
 
         LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.linear(A.numRows);
@@ -64,8 +64,8 @@ public class TestLinearSolverFactory_DDRM {
 
     @Test
     public void leastSquares() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
         LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.leastSquares(A.numRows,A.numCols);
@@ -75,8 +75,8 @@ public class TestLinearSolverFactory_DDRM {
 
     @Test
     public void symmetric() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(5,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(5,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(5,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
         LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(A.numCols);
@@ -86,8 +86,8 @@ public class TestLinearSolverFactory_DDRM {
 
     @Test
     public void adjustable() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj x = RandomMatrices_DDRM.createRandom(4,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
         AdjustableLinearSolver_DDRM solver = LinearSolverFactory_DDRM.adjustable();

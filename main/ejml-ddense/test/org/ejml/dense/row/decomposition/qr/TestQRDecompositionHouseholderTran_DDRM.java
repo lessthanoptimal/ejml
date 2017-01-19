@@ -50,14 +50,14 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
      */
     @Test
     public void applyQ() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
 
         QRDecompositionHouseholderTran_DDRM alg = new QRDecompositionHouseholderTran_DDRM();
 
         assertTrue(alg.decompose(A));
 
         DMatrixRMaj Q = alg.getQ(null,false);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(5,2,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,2,rand);
 
         DMatrixRMaj expected = new DMatrixRMaj(B.numRows,B.numCols);
         CommonOps_DDRM.mult(Q,B,expected);
@@ -72,14 +72,14 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
      */
     @Test
     public void applyTranQ() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
 
         QRDecompositionHouseholderTran_DDRM alg = new QRDecompositionHouseholderTran_DDRM();
 
         assertTrue(alg.decompose(A));
 
         DMatrixRMaj Q = alg.getQ(null,false);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(5,2,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,2,rand);
 
         DMatrixRMaj expected = new DMatrixRMaj(B.numRows,B.numCols);
         CommonOps_DDRM.multTransA(Q,B,expected);
@@ -105,7 +105,7 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
         DebugQR qr = new DebugQR(width,width);
 
         SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         qr.householder(w,(DMatrixRMaj)A.getMatrix());
 
@@ -147,8 +147,8 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
         SimpleMatrix U = new SimpleMatrix(width,1, DMatrixRMaj.class);
         SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
 
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)U.getMatrix(),rand);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)U.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
 
         CommonOps_DDRM.transpose((DMatrixRMaj)A.getMatrix(),qr.getQR());
 

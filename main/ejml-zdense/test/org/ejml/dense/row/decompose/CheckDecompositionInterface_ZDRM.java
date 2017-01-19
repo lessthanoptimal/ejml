@@ -51,7 +51,7 @@ public class CheckDecompositionInterface_ZDRM {
      * @param decomp
      */
     public static void checkModifiedInput( DecompositionInterface<ZMatrixRMaj> decomp ) {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(4, new Random(0x434));
+        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(4, new Random(0x434));
         ZMatrixRMaj A_orig = A.copy();
 
         assertTrue(decomp.decompose(A));

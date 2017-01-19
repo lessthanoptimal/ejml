@@ -89,7 +89,7 @@ public class TestInnerRankUpdate_DDRB {
     }
 
     private void checkSymmRankNMinus_U(int lengthA, int heightB) {
-        SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.createSymmPosDef(lengthA,rand));
+        SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA, -1.0 , 1.0 ,rand);
 
         DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.matrix_F64(),N);
@@ -117,7 +117,7 @@ public class TestInnerRankUpdate_DDRB {
     }
 
     private void checkSymmRankNMinus_L(int lengthA, int widthB) {
-        SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.createSymmPosDef(lengthA,rand));
+        SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random64(lengthA,widthB, -1.0 , 1.0 ,rand);
 
         DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.matrix_F64(),N);

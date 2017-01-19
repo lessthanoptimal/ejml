@@ -167,7 +167,7 @@ public class TestDMatrixRMaj {
 
     @Test
     public void set_ColumnMajor() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,5,rand);
 
         DMatrixRMaj Atran = A.copy();
         CommonOps_DDRM.transpose(Atran);
@@ -179,7 +179,7 @@ public class TestDMatrixRMaj {
 
     @Test
     public void set_RowMajor() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,5,rand);
 
         DMatrixRMaj Afound = new DMatrixRMaj(3,5);
         Afound.set(3,5, true, A.data);

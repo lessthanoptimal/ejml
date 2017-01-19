@@ -39,7 +39,7 @@ public class TestDSubmatrixD1 {
 
     @Test
     public void get() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,10,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,10,-1,1,rand);
 
         DSubmatrixD1 S = new DSubmatrixD1(A,2,4,1,10);
 
@@ -48,7 +48,7 @@ public class TestDSubmatrixD1 {
 
     @Test
     public void set() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,10,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,10,-1,1,rand);
 
         DSubmatrixD1 S = new DSubmatrixD1(A,2,4,1,10);
 
@@ -59,7 +59,7 @@ public class TestDSubmatrixD1 {
 
     @Test
     public void extract() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,10,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,10,-1,1,rand);
 
         DSubmatrixD1 S = new DSubmatrixD1(A,2,4,1,10);
 

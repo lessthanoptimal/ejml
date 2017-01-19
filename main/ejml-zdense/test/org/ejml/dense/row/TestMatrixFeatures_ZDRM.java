@@ -50,7 +50,7 @@ public class TestMatrixFeatures_ZDRM {
 
     @Test
     public void isNegative() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(4,5,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4,5,rand);
         ZMatrixRMaj b = a.copy();
         CommonOps_ZDRM.scale(-1,0,b);
 
@@ -91,7 +91,7 @@ public class TestMatrixFeatures_ZDRM {
 
     @Test
     public void isEquals() {
-        ZMatrixRMaj m = RandomMatrices_ZDRM.createRandom(3,4,-1,1,rand);
+        ZMatrixRMaj m = RandomMatrices_ZDRM.rectangle(3,4,-1,1,rand);
         ZMatrixRMaj n = m.copy();
 
         assertTrue(MatrixFeatures_ZDRM.isEquals(m,n));
@@ -109,7 +109,7 @@ public class TestMatrixFeatures_ZDRM {
 
     @Test
     public void isEquals_tol() {
-        ZMatrixRMaj m = RandomMatrices_ZDRM.createRandom(3,4,-1,1,rand);
+        ZMatrixRMaj m = RandomMatrices_ZDRM.rectangle(3,4,-1,1,rand);
         ZMatrixRMaj n = m.copy();
 
         assertTrue(MatrixFeatures_ZDRM.isEquals(m,n,UtilEjml.TEST_F64));
@@ -197,7 +197,7 @@ public class TestMatrixFeatures_ZDRM {
     @Test
     public void isUnitary() {
         // create a reflector since it's unitary
-        ZMatrixRMaj u = RandomMatrices_ZDRM.createRandom(5,1,rand);
+        ZMatrixRMaj u = RandomMatrices_ZDRM.rectangle(5,1,rand);
         ZComplex dot = new ZComplex();
         VectorVectorMult_ZDRM.innerProdH(u, u,dot);
         double gamma = 2.0/dot.real;

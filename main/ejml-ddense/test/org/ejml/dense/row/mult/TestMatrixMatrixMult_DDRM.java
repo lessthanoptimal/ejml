@@ -99,7 +99,7 @@ public class TestMatrixMatrixMult_DDRM {
         double d[] = new double[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
         DMatrixRMaj a_orig = new DMatrixRMaj(2,3, true, d);
         DMatrixRMaj b_orig = new DMatrixRMaj(3,4, true, d);
-        DMatrixRMaj c_orig = RandomMatrices_DDRM.createRandom(2,4,rand);
+        DMatrixRMaj c_orig = RandomMatrices_DDRM.rectangle(2,4,rand);
 
         DMatrixRMaj r_orig = new DMatrixRMaj(2,4, true, 20, 23, 26, 29, 56, 68, 80, 92);
 
@@ -121,11 +121,11 @@ public class TestMatrixMatrixMult_DDRM {
         for( int i = 1; i <= 4; i++ ) {
             for( int j = 1; j <= 4; j++ ) {
                 for( int k = 1; k <= 4; k++ ) {
-                    DMatrixRMaj a_orig = RandomMatrices_DDRM.createRandom(i,j, rand);
-                    DMatrixRMaj b_orig = RandomMatrices_DDRM.createRandom(j,k, rand);
-                    DMatrixRMaj c_orig = RandomMatrices_DDRM.createRandom(i,k, rand);
+                    DMatrixRMaj a_orig = RandomMatrices_DDRM.rectangle(i,j, rand);
+                    DMatrixRMaj b_orig = RandomMatrices_DDRM.rectangle(j,k, rand);
+                    DMatrixRMaj c_orig = RandomMatrices_DDRM.rectangle(i,k, rand);
 
-                    DMatrixRMaj r_orig = RandomMatrices_DDRM.createRandom(i,k,rand);
+                    DMatrixRMaj r_orig = RandomMatrices_DDRM.rectangle(i,k,rand);
 
                     MatrixMatrixMult_DDRM.mult_small(a_orig,b_orig,r_orig);
 
@@ -221,7 +221,7 @@ public class TestMatrixMatrixMult_DDRM {
 
             DMatrixRMaj a = new DMatrixRMaj(rowsA,colsA);
             DMatrixRMaj b = new DMatrixRMaj(rowsB,colsB);
-            DMatrixRMaj c = RandomMatrices_DDRM.createRandom(rowsA,colsB,rand);
+            DMatrixRMaj c = RandomMatrices_DDRM.rectangle(rowsA,colsB,rand);
 
             boolean add = name.contains("multAdd");
 

@@ -52,7 +52,7 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
         BlockD3Matrix64F B = new BlockD3Matrix64F(A.numRows,A.numCols,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(A,B);
@@ -108,8 +108,8 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkMult(int m, int n, int o) {
-        DMatrixRMaj A_d = RandomMatrices_DDRM.createRandom(m, n,rand);
-        DMatrixRMaj B_d = RandomMatrices_DDRM.createRandom(n, o,rand);
+        DMatrixRMaj A_d = RandomMatrices_DDRM.rectangle(m, n,rand);
+        DMatrixRMaj B_d = RandomMatrices_DDRM.rectangle(n, o,rand);
         DMatrixRMaj C_d = new DMatrixRMaj(m, o);
 
         BlockD3Matrix64F A_b = BlockD3MatrixOps.convert(A_d,BLOCK_LENGTH);

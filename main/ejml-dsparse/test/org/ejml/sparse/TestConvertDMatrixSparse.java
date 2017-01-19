@@ -46,7 +46,7 @@ public class TestConvertDMatrixSparse {
 
     @Test
     public void DMatrixRow_SMatrixTriplet() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(5,6,-1,1,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
 
         a.set(4,3, 0);
         a.set(1,3, 0);

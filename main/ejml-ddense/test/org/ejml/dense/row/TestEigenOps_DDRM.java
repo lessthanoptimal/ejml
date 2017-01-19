@@ -60,7 +60,7 @@ public class TestEigenOps_DDRM {
     @Test
     public void boundLargestEigenValue_markov() {
         // create the matrix
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,3,rand);
 
         for( int i = 0; i < 3; i++ ) {
             double total = 0;
@@ -81,7 +81,7 @@ public class TestEigenOps_DDRM {
 
     @Test
     public void createMatrixV() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(3,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(3,-1,1,rand);
 
         EigenDecompositionD<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
@@ -99,7 +99,7 @@ public class TestEigenOps_DDRM {
 
     @Test
     public void createMatrixD() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(3,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(3,-1,1,rand);
 
         EigenDecompositionD<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));

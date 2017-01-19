@@ -76,8 +76,8 @@ public class TestTriangularSolver_DDRM {
         DMatrixRMaj L_inv = L.copy();
         UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,1,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,1,rand);
         DMatrixRMaj found = B.copy();
 
         TriangularSolver_DDRM.solveL(L.data,found.data,3);
@@ -88,7 +88,7 @@ public class TestTriangularSolver_DDRM {
     }
 
     private DMatrixRMaj createRandomLowerTriangular() {
-        DMatrixRMaj L = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj L = RandomMatrices_DDRM.rectangle(3,3,rand);
         for( int i = 0; i < L.numRows; i++ ) {
             for( int j = i+1; j < L.numCols; j++ ) {
                 L.set(i,j,0);
@@ -104,8 +104,8 @@ public class TestTriangularSolver_DDRM {
         DMatrixRMaj L_inv = L.copy();
         UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,4,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,4,rand);
         DMatrixRMaj found = B.copy();
 
         TriangularSolver_DDRM.solveL(L.data,found.data,3,4);
@@ -118,8 +118,8 @@ public class TestTriangularSolver_DDRM {
     public void solveTranL() {
         DMatrixRMaj L = createRandomLowerTriangular();
 
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,1,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,1,rand);
         DMatrixRMaj found = B.copy();
 
         TriangularSolver_DDRM.solveTranL(L.data,found.data,3);
@@ -134,7 +134,7 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void solveU() {
-        DMatrixRMaj U = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj U = RandomMatrices_DDRM.rectangle(3,3,rand);
         for( int i = 0; i < U.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {
                 U.set(i,j,0);
@@ -144,8 +144,8 @@ public class TestTriangularSolver_DDRM {
         DMatrixRMaj U_inv = U.copy();
         UnrolledInverseFromMinor_DDRM.inv(U_inv,U_inv);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,1,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(3,1,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,1,rand);
         DMatrixRMaj found = B.copy();
 
         TriangularSolver_DDRM.solveU(U.data,found.data,3);
@@ -158,7 +158,7 @@ public class TestTriangularSolver_DDRM {
     public void solveU_submatrix() {
 
         // create U and B.  Insert into a larger matrix
-        DMatrixRMaj U_orig = RandomMatrices_DDRM.createRandom(3,3,rand);
+        DMatrixRMaj U_orig = RandomMatrices_DDRM.rectangle(3,3,rand);
         for( int i = 0; i < U_orig.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {
                 U_orig.set(i,j,0);
@@ -168,7 +168,7 @@ public class TestTriangularSolver_DDRM {
         CommonOps_DDRM.insert(U_orig,U,2,3);
         
         
-        DMatrixRMaj B_orig = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj B_orig = RandomMatrices_DDRM.rectangle(3,2,rand);
 
         DMatrixRMaj B = new DMatrixRMaj(4,5);
         CommonOps_DDRM.insert(B_orig,B,1,2);
@@ -177,7 +177,7 @@ public class TestTriangularSolver_DDRM {
         DMatrixRMaj U_inv = U_orig.copy();
         UnrolledInverseFromMinor_DDRM.inv(U_inv,U_inv);
 
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(3,2,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,2,rand);
 
         int startU = 2*U.numCols+3;
         int strideU = U.numCols;

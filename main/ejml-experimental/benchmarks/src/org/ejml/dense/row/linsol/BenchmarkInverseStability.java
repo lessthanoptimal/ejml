@@ -156,7 +156,7 @@ public class BenchmarkInverseStability {
     private void breakOverUnderFlow(String name , LinearSolver<DMatrixRMaj> alg , boolean overflow ) {
         boolean madeBad= false;
 
-        DMatrixRMaj A_orig = RandomMatrices_DDRM.createRandom(3,3,new Random(0x14));
+        DMatrixRMaj A_orig = RandomMatrices_DDRM.rectangle(3,3,new Random(0x14));
 
         int i;
         for( i = 0; i < 3000; i++ ) {

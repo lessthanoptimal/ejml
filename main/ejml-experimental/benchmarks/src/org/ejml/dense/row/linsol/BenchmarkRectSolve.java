@@ -42,8 +42,8 @@ public class BenchmarkRectSolve {
     public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
         DMatrixRMaj X = new DMatrixRMaj(A.numCols,B.numCols);
-        RandomMatrices_DDRM.setRandom(A,rand);
-        RandomMatrices_DDRM.setRandom(B,rand);
+        RandomMatrices_DDRM.fillUniform(A,rand);
+        RandomMatrices_DDRM.fillUniform(B,rand);
 
         if( !includeSet ) solver.setA(A);
 
@@ -78,7 +78,7 @@ public class BenchmarkRectSolve {
             int w = size[i];
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_DDRM.createRandom(w*2,w,rand);
+            A = RandomMatrices_DDRM.rectangle(w*2,w,rand);
             B = new DMatrixRMaj(w*2,2);
 
             runAlgorithms(trials[i]);
@@ -89,7 +89,7 @@ public class BenchmarkRectSolve {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_DDRM.createRandom(200,100,rand);
+            A = RandomMatrices_DDRM.rectangle(200,100,rand);
             B = new DMatrixRMaj(200,w);
 
             runAlgorithms(trialsX[i]/80);

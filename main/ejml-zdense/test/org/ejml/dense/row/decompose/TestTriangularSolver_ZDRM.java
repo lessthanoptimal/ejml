@@ -38,14 +38,14 @@ public class TestTriangularSolver_ZDRM {
 
     @Test
     public void solveU() {
-        ZMatrixRMaj U = RandomMatrices_ZDRM.createRandom(3, 3, -1 ,1 ,rand);
+        ZMatrixRMaj U = RandomMatrices_ZDRM.rectangle(3, 3, -1 ,1 ,rand);
         for( int i = 0; i < U.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {
                 U.set(i,j,0,0);
             }
         }
 
-        ZMatrixRMaj X = RandomMatrices_ZDRM.createRandom(3, 1, -1 ,1 ,rand);
+        ZMatrixRMaj X = RandomMatrices_ZDRM.rectangle(3, 1, -1 ,1 ,rand);
         ZMatrixRMaj B = new ZMatrixRMaj(3,1);
 
         CommonOps_ZDRM.mult(U, X, B);
@@ -60,7 +60,7 @@ public class TestTriangularSolver_ZDRM {
         for( int N = 1; N <= 4; N++ ) {
             ZMatrixRMaj L = createLowerTriangleDiagReal(N);
 
-            ZMatrixRMaj X = RandomMatrices_ZDRM.createRandom(N, 1, -1, 1, rand);
+            ZMatrixRMaj X = RandomMatrices_ZDRM.rectangle(N, 1, -1, 1, rand);
             ZMatrixRMaj B = new ZMatrixRMaj(N, 1);
 
             CommonOps_ZDRM.mult(L, X, B);
@@ -75,7 +75,7 @@ public class TestTriangularSolver_ZDRM {
      * Creates a random complex lower triangular matrix with real diagonal elements
      */
     private ZMatrixRMaj createLowerTriangleDiagReal(int n) {
-        ZMatrixRMaj L = RandomMatrices_ZDRM.createRandom(n, n, -1, 1, rand);
+        ZMatrixRMaj L = RandomMatrices_ZDRM.rectangle(n, n, -1, 1, rand);
         for (int i = 0; i < L.numRows; i++) {
             for (int j = i + 1; j < L.numCols; j++) {
                 L.set(i, j, 0, 0);
@@ -95,7 +95,7 @@ public class TestTriangularSolver_ZDRM {
             ZMatrixRMaj L_ct = new ZMatrixRMaj(N, N);
             CommonOps_ZDRM.transposeConjugate(L,L_ct);
 
-            ZMatrixRMaj X = RandomMatrices_ZDRM.createRandom(N, 1, -1, 1, rand);
+            ZMatrixRMaj X = RandomMatrices_ZDRM.rectangle(N, 1, -1, 1, rand);
             ZMatrixRMaj B = new ZMatrixRMaj(N, 1);
 
             CommonOps_ZDRM.mult(L_ct, X, B);

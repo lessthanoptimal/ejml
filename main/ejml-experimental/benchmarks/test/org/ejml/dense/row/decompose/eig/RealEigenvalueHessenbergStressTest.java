@@ -65,7 +65,7 @@ public class RealEigenvalueHessenbergStressTest {
 
             long startTime = System.currentTimeMillis();
             for( int i = 0; i < 100; i++ ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(n,1,-1,1,rand);
+                DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(n,1,-1,1,rand);
 
                 extractor.process(A);
 
@@ -174,13 +174,13 @@ public class RealEigenvalueHessenbergStressTest {
         for( int n = 3; n < 100; n++ ) {
             System.out.println("Matrix size = "+n);
 
-            DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(n,1,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(n,1,-1,1,rand);
             if( !extractor.process(A) ){
                 throw new RuntimeException("Failed!");
             }
             while( isAllComplex()) {
                 System.out.println("Trying to find a matrix that isn't all complex number");
-                A = RandomMatrices_DDRM.createUpperTriangle(n,1,-1,1,rand);
+                A = RandomMatrices_DDRM.triangularUpper(n,1,-1,1,rand);
                 extractor.process(A);
             }
 

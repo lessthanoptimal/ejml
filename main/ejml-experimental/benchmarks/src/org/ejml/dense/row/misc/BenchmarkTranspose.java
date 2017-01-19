@@ -96,7 +96,7 @@ public class BenchmarkTranspose {
 
     private static void evaluateMatrix( int length , int n) {
         System.out.println("*** Size "+length);
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(length,length,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(length,length,rand);
 
         System.out.println("---------- Square ----------------");
         System.out.println("In place  : "+square(A, n));
@@ -109,7 +109,7 @@ public class BenchmarkTranspose {
         System.out.println("Common    : "+common(A, n));
         System.out.println();
         System.out.println("---------- Tall ----------------");
-        A = RandomMatrices_DDRM.createRandom(2*length,length,rand);
+        A = RandomMatrices_DDRM.rectangle(2*length,length,rand);
         System.out.println("Block     : "+block(A, n,EjmlParameters.BLOCK_WIDTH));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));
@@ -117,7 +117,7 @@ public class BenchmarkTranspose {
         System.out.println("Standard  : "+standard(A, n));
         System.out.println("Common    : "+common(A, n));
         System.out.println("---------- Wide ----------------");
-        A = RandomMatrices_DDRM.createRandom(length,2*length,rand);
+        A = RandomMatrices_DDRM.rectangle(length,2*length,rand);
         System.out.println("Block     : "+block(A, n, EjmlParameters.BLOCK_WIDTH));
         System.out.println("Block 20  : "+block(A, n, 20));
         System.out.println("Block 30  : "+block(A, n, 30));

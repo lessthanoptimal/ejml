@@ -103,8 +103,8 @@ public class TestInnerMultiplication_DDRB {
         if( hasAlpha && operationType == -1 )
             fail("No point to minus and alpha");
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(heightA,widthA,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(widthA,widthB,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(heightA,widthA,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(widthA,widthB,rand);
         DMatrixRMaj C = new DMatrixRMaj(heightA,widthB);
 
         if( operationType == -1 )
@@ -115,7 +115,7 @@ public class TestInnerMultiplication_DDRB {
         DMatrixRMaj C_found = new DMatrixRMaj(heightA,widthB);
         // if it is set then it should overwrite everything just fine
         if( operationType == 0)
-            RandomMatrices_DDRM.setRandom(C_found,rand);
+            RandomMatrices_DDRM.fillUniform(C_found,rand);
 
         if( transA )
             CommonOps_DDRM.transpose(A);

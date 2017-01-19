@@ -142,7 +142,7 @@ public class BenchmarkInliningGetSet {
     }
 
     public static void main( String args[] ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(1000,1000,new Random());
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(1000,1000,new Random());
 
         int N = 2000;
 

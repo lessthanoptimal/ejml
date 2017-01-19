@@ -57,7 +57,7 @@ public class TestMatrixOps_DDRB {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
         DMatrixRBlock B = new DMatrixRBlock(A.numRows,A.numCols,BLOCK_LENGTH);
 
         MatrixOps_DDRB.convert(A,B);
@@ -76,7 +76,7 @@ public class TestMatrixOps_DDRB {
 
     private void checkConvertInline_dense_to_block( int m , int n ) {
         double tmp[] = new double[BLOCK_LENGTH*n];
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
         DMatrixRMaj A_orig = A.copy();
 
         MatrixOps_DDRB.convertRowToBlock(m,n,BLOCK_LENGTH,A.data,tmp);
@@ -269,8 +269,8 @@ public class TestMatrixOps_DDRB {
 
     private void checkMult( Method func, boolean transA , boolean transB ,
                             int m, int n, int o) {
-        DMatrixRMaj A_d = RandomMatrices_DDRM.createRandom(m, n,rand);
-        DMatrixRMaj B_d = RandomMatrices_DDRM.createRandom(n, o,rand);
+        DMatrixRMaj A_d = RandomMatrices_DDRM.rectangle(m, n,rand);
+        DMatrixRMaj B_d = RandomMatrices_DDRM.rectangle(n, o,rand);
         DMatrixRMaj C_d = new DMatrixRMaj(m, o);
 
         DMatrixRBlock A_b = MatrixOps_DDRB.convert(A_d,BLOCK_LENGTH);
@@ -311,7 +311,7 @@ public class TestMatrixOps_DDRB {
     }
 
     private void checkTranSrcBlockToDense( int m , int n ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
         DMatrixRMaj A_t = new DMatrixRMaj(n,m);
         DMatrixRBlock B = new DMatrixRBlock(n,m,BLOCK_LENGTH);
 
@@ -334,7 +334,7 @@ public class TestMatrixOps_DDRB {
     }
 
     private void checkTranspose( int m , int n ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
         DMatrixRMaj A_t = new DMatrixRMaj(n,m);
 
         DMatrixRBlock B = new DMatrixRBlock(A.numRows,A.numCols,BLOCK_LENGTH);

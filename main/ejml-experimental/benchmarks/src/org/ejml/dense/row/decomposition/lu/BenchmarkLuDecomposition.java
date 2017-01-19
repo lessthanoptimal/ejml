@@ -66,7 +66,7 @@ public class BenchmarkLuDecomposition {
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
 //            System.out.print("* Creating matrix ");
-            DMatrixRMaj symMat = RandomMatrices_DDRM.createRandom(w,w,-1,1,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.rectangle(w,w,-1,1,rand);
 //            System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

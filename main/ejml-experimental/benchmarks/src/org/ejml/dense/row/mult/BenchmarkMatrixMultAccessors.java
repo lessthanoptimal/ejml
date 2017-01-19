@@ -147,8 +147,8 @@ public class BenchmarkMatrixMultAccessors {
 
         int N = 1000;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(N,N,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(N,N,rand);
         DMatrixRMaj C = new DMatrixRMaj(N,N);
 
         long timeInlined = inlined(A,B,C);

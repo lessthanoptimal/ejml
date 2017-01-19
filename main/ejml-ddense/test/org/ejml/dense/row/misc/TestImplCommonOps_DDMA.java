@@ -36,7 +36,7 @@ public class TestImplCommonOps_DDMA {
 
     @Test
     public void extract() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5, 5, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
 
         DMatrixRMaj B = new DMatrixRMaj(3,3);
 

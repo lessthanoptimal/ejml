@@ -39,7 +39,7 @@ public class TestMatrixConstructor {
 
     @Test
     public void basicTest() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,8,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,8,rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extract(A,0,5,0,3);
         DMatrixRMaj C = CommonOps_DDRM.extract(A,0,5,3,8);

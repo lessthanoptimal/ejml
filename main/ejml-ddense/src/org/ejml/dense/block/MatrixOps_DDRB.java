@@ -286,7 +286,7 @@ public class MatrixOps_DDRB {
     {
         DMatrixRBlock ret = new DMatrixRBlock(numRows,numCols);
 
-        RandomMatrices_DDRM.setRandom(ret,min,max,rand);
+        RandomMatrices_DDRM.fillUniform(ret,min,max,rand);
 
         return ret;
     }
@@ -297,7 +297,7 @@ public class MatrixOps_DDRB {
     {
         DMatrixRBlock ret = new DMatrixRBlock(numRows,numCols,blockLength);
 
-        RandomMatrices_DDRM.setRandom(ret,min,max,rand);
+        RandomMatrices_DDRM.fillUniform(ret,min,max,rand);
 
         return ret;
     }

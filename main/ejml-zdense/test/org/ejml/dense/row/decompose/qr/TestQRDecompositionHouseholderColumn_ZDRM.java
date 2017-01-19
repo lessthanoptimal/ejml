@@ -64,7 +64,7 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(width,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(width,width,rand);
 
         qr.householder(w,A);
 
@@ -113,7 +113,7 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
 
         double gamma = 0.2;
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(width,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(width,width,rand);
 
         qr.convertToColumnMajor(A);
 

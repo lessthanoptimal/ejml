@@ -146,7 +146,7 @@ public class TestConvertDMatrixStruct {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                DMatrixRMaj a = RandomMatrices_DDRM.createRandom(rows,cols,rand);
+                DMatrixRMaj a = RandomMatrices_DDRM.rectangle(rows,cols,rand);
                 DMatrixRBlock b = new DMatrixRBlock(rows,cols,3);
 
                 ConvertDMatrixStruct.convert(a,b);

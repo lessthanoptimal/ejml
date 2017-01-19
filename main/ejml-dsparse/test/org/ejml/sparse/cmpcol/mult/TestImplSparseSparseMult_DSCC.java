@@ -82,13 +82,13 @@ public class TestImplSparseSparseMult_DSCC {
 
     private void mult_s_d(int elementsA) {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(6,5,-1,1,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(4,5,-1,1,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6,5,-1,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
         ImplSparseSparseMult_DSCC.mult(a,b,c);
 
         DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj expected_c = RandomMatrices_DDRM.createRandom(4,5,-1,1,rand);
+        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
         CommonOps_DDRM.mult(dense_a, b, expected_c);
 

@@ -80,9 +80,9 @@ public class BenchmarkMatrixMatrixMultTransAB {
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
     {
-        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
-        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(numCols,numK,rand);
-        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(numRows,numK,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.rectangle(numRows,numCols,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.rectangle(numCols,numK,rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.rectangle(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d\n",
                 mult(matA,matB,matResult,numTrials),

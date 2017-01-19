@@ -44,17 +44,17 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         int m = 5;
         int n = 3;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
         double row[] = new double[]{1,2,3};
 
         // create the modified A
-        DMatrixRMaj A_e = RandomMatrices_DDRM.createRandom(m+1,n,rand);
+        DMatrixRMaj A_e = RandomMatrices_DDRM.rectangle(m+1,n,rand);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,0,0,0,0,insert,n);
         System.arraycopy(row, 0, A_e.data, insert * n, n);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
 
         // Compute the solution to the modified  system
-        DMatrixRMaj X = RandomMatrices_DDRM.createRandom(n,2,rand);
+        DMatrixRMaj X = RandomMatrices_DDRM.rectangle(n,2,rand);
         DMatrixRMaj Y = new DMatrixRMaj(A_e.numRows,X.numCols);
         CommonOps_DDRM.mult(A_e,X,Y);
 
@@ -66,7 +66,7 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         adjSolver.addRowToA(row,insert);
 
         // solve the system and see if it gets the expected solution
-        DMatrixRMaj X_found = RandomMatrices_DDRM.createRandom(X.numRows,X.numCols,rand);
+        DMatrixRMaj X_found = RandomMatrices_DDRM.rectangle(X.numRows,X.numCols,rand);
         adjSolver.solve(Y,X_found);
 
         // see if they produce the same results
@@ -79,15 +79,15 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         int m = 5;
         int n = 3;
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m,n,rand);
 
         // create the modified A
-        DMatrixRMaj A_e = RandomMatrices_DDRM.createRandom(m-1,n,rand);
+        DMatrixRMaj A_e = RandomMatrices_DDRM.rectangle(m-1,n,rand);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,0,0,0,0,remove,n);
         SubmatrixOps_DDRM.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
         // Compute the solution to the modified system
-        DMatrixRMaj X = RandomMatrices_DDRM.createRandom(n,2,rand);
+        DMatrixRMaj X = RandomMatrices_DDRM.rectangle(n,2,rand);
         DMatrixRMaj Y = new DMatrixRMaj(A_e.numRows,X.numCols);
         CommonOps_DDRM.mult(A_e,X,Y);
 
@@ -100,7 +100,7 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         // see if it produces the epected results
 
         // solve the system and see if it gets the expected solution
-        DMatrixRMaj X_found = RandomMatrices_DDRM.createRandom(X.numRows,X.numCols,rand);
+        DMatrixRMaj X_found = RandomMatrices_DDRM.rectangle(X.numRows,X.numCols,rand);
         adjSolver.solve(Y,X_found);
 
         // see if they produce the same results

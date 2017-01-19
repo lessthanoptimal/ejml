@@ -177,14 +177,14 @@ public class TestCommonOps_DDRM {
         // check various sizes
         for( int i = 1; i < 40; i++ ) {
             DMatrixRMaj a;
-            if( tranA ) a = RandomMatrices_DDRM.createRandom(i+1,i,rand);
-            else  a = RandomMatrices_DDRM.createRandom(i,i+1,rand);
+            if( tranA ) a = RandomMatrices_DDRM.rectangle(i+1,i,rand);
+            else  a = RandomMatrices_DDRM.rectangle(i,i+1,rand);
 
             DMatrixRMaj b;
-            if( tranB ) b = RandomMatrices_DDRM.createRandom(i,i+1,rand);
-            else  b = RandomMatrices_DDRM.createRandom(i+1,i,rand);
+            if( tranB ) b = RandomMatrices_DDRM.rectangle(i,i+1,rand);
+            else  b = RandomMatrices_DDRM.rectangle(i+1,i,rand);
 
-            DMatrixRMaj c = RandomMatrices_DDRM.createRandom(i,i,rand);
+            DMatrixRMaj c = RandomMatrices_DDRM.rectangle(i,i,rand);
             DMatrixRMaj c_alt = c.copy();
 
             if( hasAlpha ) {
@@ -202,14 +202,14 @@ public class TestCommonOps_DDRM {
         // check various sizes column vector
         for( int i = 1; i < 4; i++ ) {
             DMatrixRMaj a;
-            if( tranA ) a = RandomMatrices_DDRM.createRandom(i,i+1,rand);
-            else  a = RandomMatrices_DDRM.createRandom(i+1,i,rand);
+            if( tranA ) a = RandomMatrices_DDRM.rectangle(i,i+1,rand);
+            else  a = RandomMatrices_DDRM.rectangle(i+1,i,rand);
 
             DMatrixRMaj b;
-            if( tranB ) b = RandomMatrices_DDRM.createRandom(1,i,rand);
-            else  b = RandomMatrices_DDRM.createRandom(i,1,rand);
+            if( tranB ) b = RandomMatrices_DDRM.rectangle(1,i,rand);
+            else  b = RandomMatrices_DDRM.rectangle(i,1,rand);
 
-            DMatrixRMaj c = RandomMatrices_DDRM.createRandom(i+1,1,rand);
+            DMatrixRMaj c = RandomMatrices_DDRM.rectangle(i+1,1,rand);
             DMatrixRMaj c_alt = c.copy();
 
             if( hasAlpha ) {
@@ -249,7 +249,7 @@ public class TestCommonOps_DDRM {
         DMatrixRMaj a = tranA ? new DMatrixRMaj(colsA,rowsA) : new DMatrixRMaj(rowsA,colsA);
         DMatrixRMaj b = tranB ? new DMatrixRMaj(colsB,rowsB) : new DMatrixRMaj(rowsB,colsB);
 
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(rowsA,colsB,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(rowsA,colsB,rand);
 
         if( hasAlpha ) {
             method.invoke(null,2.0,a,b,c);
@@ -269,8 +269,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void dot() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(10, 1, rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(1,10,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10, 1, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(1,10,rand);
 
         double found = CommonOps_DDRM.dot(a, b);
 
@@ -284,9 +284,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void multInner() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(10,4,rand);
-        DMatrixRMaj found = RandomMatrices_DDRM.createRandom(4,4,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(4, 4, rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10,4,rand);
+        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(4,4,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(4, 4, rand);
 
         CommonOps_DDRM.multTransA(a, a, expected);
         CommonOps_DDRM.multInner(a,found);
@@ -296,9 +296,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void multOuter() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(10,4,rand);
-        DMatrixRMaj found = RandomMatrices_DDRM.createRandom(10,10,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.createRandom(10,10,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10,4,rand);
+        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10,10,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(10,10,rand);
 
         CommonOps_DDRM.multTransB(a, a, expected);
         CommonOps_DDRM.multOuter(a, found);
@@ -308,8 +308,8 @@ public class TestCommonOps_DDRM {
     
     @Test
     public void elementMult_two() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5,4,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj a_orig = a.copy();
 
         CommonOps_DDRM.elementMult(a, b);
@@ -321,9 +321,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementMult_three() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(5, 4, rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5, 4, rand);
 
         CommonOps_DDRM.elementMult(a, b, c);
 
@@ -334,8 +334,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementDiv_two() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5,4,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj a_orig = a.copy();
 
         CommonOps_DDRM.elementDiv(a, b);
@@ -347,9 +347,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementDiv_three() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5,4,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(5, 4, rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5, 4, rand);
 
         CommonOps_DDRM.elementDiv(a, b, c);
 
@@ -361,9 +361,9 @@ public class TestCommonOps_DDRM {
     @Test
     public void solve() {
         DMatrixRMaj a = new DMatrixRMaj(2,2, true, 1, 2, 7, -3);
-        DMatrixRMaj b = RandomMatrices_DDRM.createRandom(2,5,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,5,rand);
-        DMatrixRMaj c_exp = RandomMatrices_DDRM.createRandom(2,5,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(2,5,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,5,rand);
+        DMatrixRMaj c_exp = RandomMatrices_DDRM.rectangle(2,5,rand);
 
         assertTrue(CommonOps_DDRM.solve(a,b,c));
         LUDecompositionAlt_DDRM alg = new LUDecompositionAlt_DDRM();
@@ -410,11 +410,11 @@ public class TestCommonOps_DDRM {
         assertEquals(12, CommonOps_DDRM.trace(mat), 1e-6);
 
         // non square
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(4,3,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(4,3,rand);
         CommonOps_DDRM.insert(mat, B, 0, 0);
         assertEquals(12, CommonOps_DDRM.trace(B), 1e-6);
 
-        B = RandomMatrices_DDRM.createRandom(3,4,rand);
+        B = RandomMatrices_DDRM.rectangle(3,4,rand);
         CommonOps_DDRM.insert(mat, B, 0, 0);
         assertEquals(12, CommonOps_DDRM.trace(B), 1e-6);
 
@@ -423,7 +423,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void invert() {
         for( int i = 1; i <= 10; i++ ) {
-            DMatrixRMaj a = RandomMatrices_DDRM.createRandom(i,i,rand);
+            DMatrixRMaj a = RandomMatrices_DDRM.rectangle(i,i,rand);
 
             LUDecompositionAlt_DDRM lu = new LUDecompositionAlt_DDRM();
             LinearSolverLu_DDRM solver = new LinearSolverLu_DDRM(lu);
@@ -476,7 +476,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void columnsToVectors() {
-        DMatrixRMaj M = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj M = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         DMatrixRMaj v[] = CommonOps_DDRM.columnsToVector(M, null);
 
@@ -516,7 +516,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void setIdentity() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4, 4, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 4, rand);
 
         CommonOps_DDRM.setIdentity(A);
 
@@ -573,8 +573,8 @@ public class TestCommonOps_DDRM {
             for( int j = 1; j <= 3; j++ ) {
                 for( int k = 1; k <= 3; k++ ) {
                     for( int l = 1; l <= 3; l++ ) {
-                        A = RandomMatrices_DDRM.createRandom(i,j,rand);
-                        B = RandomMatrices_DDRM.createRandom(k,l,rand);
+                        A = RandomMatrices_DDRM.rectangle(i,j,rand);
+                        B = RandomMatrices_DDRM.rectangle(k,l,rand);
                         C = new DMatrixRMaj(A.numRows*B.numRows,A.numCols*B.numCols);
 
                         CommonOps_DDRM.kron(A,B,C);
@@ -589,7 +589,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extract() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,5, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
         DMatrixRMaj B = new DMatrixRMaj(2,3);
 
@@ -604,7 +604,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extract_ret() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,5, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extract(A,1,3,2,5);
 
@@ -620,7 +620,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extract_array_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,5, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
         int rows[] = new int[6];
         rows[0] = 2;
@@ -643,7 +643,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extract_array_one() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,5, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
         int indexes[] = new int[6];
         indexes[0] = 2;
@@ -662,7 +662,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void insert_array_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(2,1, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,1, 0, 1, rand);
 
         int rows[] = new int[6];
         rows[0] = 2;
@@ -683,7 +683,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extractDiag() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(3,4, 0, 1, rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(3,4, 0, 1, rand);
 
         for( int i = 0; i < 3; i++ ) {
             a.set(i,i,i+1);
@@ -699,7 +699,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extractRow() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,6, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,6, 0, 1, rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extractRow(A, 3, null);
 
@@ -713,7 +713,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void extractColumn() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5,6, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,6, 0, 1, rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extractColumn(A, 3, null);
 
@@ -771,7 +771,7 @@ public class TestCommonOps_DDRM {
     public void add() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2,3, true, 5, 4, 3, 2, 1, 0);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.add(a,b,c);
 
@@ -784,7 +784,7 @@ public class TestCommonOps_DDRM {
     public void add_beta() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2,3, true, 5, 4, 3, 2, 1, 0);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.add(a,2.0,b,c);
 
@@ -797,7 +797,7 @@ public class TestCommonOps_DDRM {
     public void add_alpha_beta() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2,3, true, 5, 4, 3, 2, 1, 0);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.add(2.0,a,2.0,b,c);
 
@@ -810,7 +810,7 @@ public class TestCommonOps_DDRM {
     public void add_alpha() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2,3, true, 5, 4, 3, 2, 1, 0);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.add(2.0,a,b,c);
 
@@ -822,7 +822,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void add_scalar_c() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.add(a, 2.0, c);
 
@@ -854,7 +854,7 @@ public class TestCommonOps_DDRM {
     public void subtract_matrix_matrix() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2,3, true, 5, 5, 5, 5, 5, 5);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.subtract(a, b, c);
 
@@ -866,7 +866,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void subtract_matrix_double() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.subtract(a, 2, c);
 
@@ -877,7 +877,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void subtract_double_matrix() {
         DMatrixRMaj a = new DMatrixRMaj(2,3, true, 0, 1, 2, 3, 4, 5);
-        DMatrixRMaj c = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         CommonOps_DDRM.subtract(2, a, c);
 
@@ -989,7 +989,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void changeSign_one() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(2,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,3,rand);
         DMatrixRMaj A_orig = A.copy();
 
         CommonOps_DDRM.changeSign(A);
@@ -1001,8 +1001,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void changeSign_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(2,3,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(2, 3, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,3,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
         CommonOps_DDRM.changeSign(A, B);
 
@@ -1081,7 +1081,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementSum() {
-        DMatrixRMaj M = RandomMatrices_DDRM.createRandom(5,5,rand);
+        DMatrixRMaj M = RandomMatrices_DDRM.rectangle(5,5,rand);
         // make it smaller than the original size to make sure it is bounding
         // the summation correctly
         M.reshape(4, 3, false);
@@ -1098,7 +1098,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementSumAbs() {
-        DMatrixRMaj M = RandomMatrices_DDRM.createRandom(5,5,rand);
+        DMatrixRMaj M = RandomMatrices_DDRM.rectangle(5,5,rand);
         // make it smaller than the original size to make sure it is bounding
         // the summation correctly
         M.reshape(4, 3, false);
@@ -1115,9 +1115,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementPower_mm() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4, 5, rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(4, 5, rand);
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(4, 5, rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         CommonOps_DDRM.elementPower(A, B, C);
 
@@ -1130,8 +1130,8 @@ public class TestCommonOps_DDRM {
     @Test
     public void elementPower_ms() {
         double a = 1.3;
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(4, 5, rand);
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(4, 5, rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         CommonOps_DDRM.elementPower(a, B, C);
 
@@ -1143,9 +1143,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementPower_sm() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
         double b = 1.1;
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         CommonOps_DDRM.elementPower(A, b, C);
 
@@ -1157,8 +1157,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementLog() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4, 5, rand);
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         CommonOps_DDRM.elementLog(A, C);
 
@@ -1170,8 +1170,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementExp() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4, 5, rand);
-        DMatrixRMaj C = RandomMatrices_DDRM.createRandom(4, 5, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         CommonOps_DDRM.elementExp(A, C);
 
@@ -1183,7 +1183,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void sumRows() {
-        DMatrixRMaj input = RandomMatrices_DDRM.createRandom(4,5,rand);
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
         DMatrixRMaj output = new DMatrixRMaj(4,1);
 
         assertTrue( output == CommonOps_DDRM.sumRows(input,output));
@@ -1204,7 +1204,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void sumCols() {
-        DMatrixRMaj input = RandomMatrices_DDRM.createRandom(4,5,rand);
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
         DMatrixRMaj output = new DMatrixRMaj(1,5);
 
         assertTrue( output == CommonOps_DDRM.sumCols(input, output));
@@ -1313,8 +1313,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementLessThan_matrix() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,4,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,4,rand);
         BMatrixRMaj expected = new BMatrixRMaj(3,4);
         BMatrixRMaj found = new BMatrixRMaj(3,4);
 
@@ -1330,8 +1330,8 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elementLessThanOrEqual_matrix() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,4,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,4,rand);
         BMatrixRMaj expected = new BMatrixRMaj(3,4);
         BMatrixRMaj found = new BMatrixRMaj(3,4);
 
@@ -1347,9 +1347,9 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void elements() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
 
-        BMatrixRMaj B = RandomMatrices_DDRM.createRandomB(3, 4, rand);
+        BMatrixRMaj B = RandomMatrices_DDRM.randomBinary(3, 4, rand);
 
         DMatrixRMaj found = CommonOps_DDRM.elements(A, B, null);
 
@@ -1367,7 +1367,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void countTrue() {
-        BMatrixRMaj B = RandomMatrices_DDRM.createRandomB(4, 5, rand);
+        BMatrixRMaj B = RandomMatrices_DDRM.randomBinary(4, 5, rand);
 
 
         int index = 0;

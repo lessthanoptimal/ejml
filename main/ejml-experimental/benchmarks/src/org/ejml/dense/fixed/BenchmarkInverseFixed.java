@@ -87,11 +87,11 @@ public class BenchmarkInverseFixed {
     }
 
     public static void main( String arg[] ) {
-        RandomMatrices_DDRM.setRandom(dm3x3_a,rand);
-        RandomMatrices_DDRM.setRandom(dm3x3_b,rand);
+        RandomMatrices_DDRM.fillUniform(dm3x3_a,rand);
+        RandomMatrices_DDRM.fillUniform(dm3x3_b,rand);
 
-        RandomMatrices_DDRM.setRandom(dm4x4_a,rand);
-        RandomMatrices_DDRM.setRandom(dm4x4_b,rand);
+        RandomMatrices_DDRM.fillUniform(dm4x4_a,rand);
+        RandomMatrices_DDRM.fillUniform(dm4x4_b,rand);
 
         ConvertDMatrixStruct.convert(dm3x3_a,fixed3x3_a);
         ConvertDMatrixStruct.convert(dm3x3_b,fixed3x3_b);

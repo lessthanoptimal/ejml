@@ -60,7 +60,7 @@ public class BenchmarkEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            DMatrixRMaj symMat = RandomMatrices_DDRM.createRandom(w,w,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.rectangle(w,w,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

@@ -181,7 +181,7 @@ public class CompareFixed_DDRM {
                     throw new RuntimeException(e);
                 }
 
-                DMatrixRMaj m = RandomMatrices_DDRM.createRandom(f.getNumRows(), f.getNumCols(), -1,1,rand);
+                DMatrixRMaj m = RandomMatrices_DDRM.rectangle(f.getNumRows(), f.getNumCols(), -1,1,rand);
 
                 ConvertDMatrixStruct.convert(m, f);
                 inputsFixed[i] = f;

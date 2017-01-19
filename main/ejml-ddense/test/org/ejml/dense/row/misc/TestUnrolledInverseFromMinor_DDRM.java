@@ -45,7 +45,7 @@ public class TestUnrolledInverseFromMinor_DDRM {
     public void compareToLU() {
 
         for(int N = 2; N <= UnrolledInverseFromMinor_DDRM.MAX; N++ ) {
-            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(N,N,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
 
             DMatrixRMaj expected = new DMatrixRMaj(N,N);
             DMatrixRMaj found = new DMatrixRMaj(N,N);

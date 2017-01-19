@@ -91,7 +91,7 @@ public class BenchmarkSolvePseudoInverse {
                 singularValues[j] = 10+w-j;
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_DDRM.createSingularValues(w, w, rand, singularValues);
+            A = RandomMatrices_DDRM.singleValues(w, w, rand, singularValues);
             B = new DMatrixRMaj(w,2);
 
             runAlgorithms(trials[i]);
@@ -102,7 +102,7 @@ public class BenchmarkSolvePseudoInverse {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_DDRM.createRandom(100,100,rand);
+            A = RandomMatrices_DDRM.rectangle(100,100,rand);
             B = new DMatrixRMaj(100,w);
 
             runAlgorithms(trialsX[i]/80);

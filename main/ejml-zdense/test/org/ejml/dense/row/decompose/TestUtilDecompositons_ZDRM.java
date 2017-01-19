@@ -42,7 +42,7 @@ public class TestUtilDecompositons_ZDRM {
 
     @Test
     public void checkIdentity_random() {
-        ZMatrixRMaj orig = RandomMatrices_ZDRM.createRandom(4,3,rand);
+        ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkIdentity(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isIdentity(A, UtilEjml.TEST_F64));
         assertTrue(A==orig);
@@ -56,7 +56,7 @@ public class TestUtilDecompositons_ZDRM {
 
     @Test
     public void checkZeros_random() {
-        ZMatrixRMaj orig = RandomMatrices_ZDRM.createRandom(4,3,rand);
+        ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZeros(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isZeros(A, UtilEjml.TEST_F64));
         assertTrue(A==orig);
@@ -70,7 +70,7 @@ public class TestUtilDecompositons_ZDRM {
 
     @Test
     public void checkZerosLT_random() {
-        ZMatrixRMaj orig = RandomMatrices_ZDRM.createRandom(4,3,rand);
+        ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZerosLT(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isUpperTriangle(A, 0, UtilEjml.TEST_F64));
         assertTrue(A==orig);
@@ -84,7 +84,7 @@ public class TestUtilDecompositons_ZDRM {
 
     @Test
     public void checkZerosUT_random() {
-        ZMatrixRMaj orig = RandomMatrices_ZDRM.createRandom(4,3,rand);
+        ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZerosUT(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isLowerTriangle(A, 0, UtilEjml.TEST_F64));
         assertTrue(A==orig);

@@ -109,10 +109,10 @@ public class BenchmarkMatrixVectorOps {
     public static void performTests( int numRows , int numCols ,
                                      int numTrials )
     {
-        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
-        DMatrixRMaj matA_tran = RandomMatrices_DDRM.createRandom(numCols,numRows,rand);
-        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(numCols,1,rand);
-        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(numRows,1,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.rectangle(numRows,numCols,rand);
+        DMatrixRMaj matA_tran = RandomMatrices_DDRM.rectangle(numCols,numRows,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.rectangle(numCols,1,rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.rectangle(numRows,1,rand);
 
 
         System.out.printf("Mult Vec:              %10d\n",

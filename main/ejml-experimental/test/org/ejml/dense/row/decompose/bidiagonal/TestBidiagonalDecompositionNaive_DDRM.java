@@ -47,7 +47,7 @@ public class TestBidiagonalDecompositionNaive_DDRM {
     }
 
     private void checkAgainstRandom(int m, int n) {
-        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createRandom(m,n,rand));
+        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(m,n,rand));
 
         BidiagonalDecompositionNaive_DDRM decomp = new BidiagonalDecompositionNaive_DDRM();
 

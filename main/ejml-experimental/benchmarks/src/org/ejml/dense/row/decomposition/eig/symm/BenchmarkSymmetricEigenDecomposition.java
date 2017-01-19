@@ -137,7 +137,7 @@ public class BenchmarkSymmetricEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            DMatrixRMaj symMat = RandomMatrices_DDRM.createSymmetric(w,-1,1,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.symmetric(w,-1,1,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

@@ -271,7 +271,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
      * </p>
      *
-     * @see RandomMatrices_DDRM#setRandom(DMatrixRMaj,java.util.Random)
+     * @see RandomMatrices_DDRM#fillUniform(DMatrixRMaj,java.util.Random)
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -281,7 +281,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix random64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
-        RandomMatrices_DDRM.setRandom((DMatrixRMaj)ret.mat,minValue,maxValue,rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 

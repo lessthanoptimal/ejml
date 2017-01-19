@@ -40,7 +40,7 @@ public class TestDecompositionFactory_DDRM {
     @Test
     public void quality_eig() {
         // I'm assuming it can process this matrix with no problems
-        DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(5,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(5,-1,1,rand);
 
         EigenDecompositionD<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numRows,true);
 
@@ -60,7 +60,7 @@ public class TestDecompositionFactory_DDRM {
     @Test
     public void quality_svd() {
         // I'm assuming it can process this matrix with no problems
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,5,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
 
         SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
 

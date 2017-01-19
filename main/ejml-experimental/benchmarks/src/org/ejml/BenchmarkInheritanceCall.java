@@ -149,8 +149,8 @@ public class BenchmarkInheritanceCall {
     public static void main( String args[] ) {
         Random rand = new Random(23234);
 
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(2,2,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(2,2,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,2,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2,2,rand);
         DMatrixRMaj C = new DMatrixRMaj(2,2);
 
         int N = 40000000;

@@ -109,8 +109,8 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
         int N = 500;
 
         // create two vectors whose elements are drawn from uniform distributions
-        StatisticsMatrix A = StatisticsMatrix.wrap(RandomMatrices_DDRM.createRandom(N,1,0,1,rand));
-        StatisticsMatrix B = StatisticsMatrix.wrap(RandomMatrices_DDRM.createRandom(N,1,1,2,rand));
+        StatisticsMatrix A = StatisticsMatrix.wrap(RandomMatrices_DDRM.rectangle(N,1,0,1,rand));
+        StatisticsMatrix B = StatisticsMatrix.wrap(RandomMatrices_DDRM.rectangle(N,1,1,2,rand));
 
         // the mean should be about 0.5
         System.out.println("Mean of A is               "+A.mean());

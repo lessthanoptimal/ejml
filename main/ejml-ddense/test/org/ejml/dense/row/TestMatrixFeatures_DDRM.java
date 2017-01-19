@@ -222,7 +222,7 @@ public class TestMatrixFeatures_DDRM {
         // see if it works with different sized matrices
         for( int m = 2; m < 10; m+=3) {
             for( int n = 2; n < 10; n += 3 ) {
-                DMatrixRMaj a = RandomMatrices_DDRM.createRandom(m,n,rand);
+                DMatrixRMaj a = RandomMatrices_DDRM.rectangle(m,n,rand);
                 DMatrixRMaj b = a.copy();
 
                 // make the bottom triangle not the same
@@ -270,7 +270,7 @@ public class TestMatrixFeatures_DDRM {
 
     @Test
     public void isInverse() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,3,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,3,-1,1,rand);
         DMatrixRMaj A_inv = A.copy();
 
         CommonOps_DDRM.invert(A_inv);
@@ -289,8 +289,8 @@ public class TestMatrixFeatures_DDRM {
      */
     @Test
     public void isInverse_nomodify() {
-        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(3,3,-1,1,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(3,3,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,3,-1,1,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,3,-1,1,rand);
         DMatrixRMaj A_copy = A.copy();
         DMatrixRMaj B_copy = B.copy();
 
@@ -372,7 +372,7 @@ public class TestMatrixFeatures_DDRM {
 
     @Test
     public void isNegative() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(4,5,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(4,5,rand);
         DMatrixRMaj b = a.copy();
         CommonOps_DDRM.scale(-1,b);
 
@@ -509,7 +509,7 @@ public class TestMatrixFeatures_DDRM {
 
     @Test
     public void countNonZero() {
-        DMatrixRMaj a = RandomMatrices_DDRM.createRandom(10,5,rand);
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10,5,rand);
 
         a.set(0,3,0);
         a.set(1,3,0);

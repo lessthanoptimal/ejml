@@ -51,14 +51,14 @@ public class TestQRDecompositionHouseholderTran_ZDRM extends GenericQrCheck_ZDRM
      */
     @Test
     public void applyQ() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(5, 4, rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5, 4, rand);
 
         QRDecompositionHouseholderTran_ZDRM alg = new QRDecompositionHouseholderTran_ZDRM();
 
         assertTrue(alg.decompose(A));
 
         ZMatrixRMaj Q = alg.getQ(null,false);
-        ZMatrixRMaj B = RandomMatrices_ZDRM.createRandom(5,2,rand);
+        ZMatrixRMaj B = RandomMatrices_ZDRM.rectangle(5,2,rand);
 
         ZMatrixRMaj expected = new ZMatrixRMaj(B.numRows,B.numCols);
         CommonOps_ZDRM.mult(Q,B,expected);
@@ -73,14 +73,14 @@ public class TestQRDecompositionHouseholderTran_ZDRM extends GenericQrCheck_ZDRM
      */
     @Test
     public void applyTranQ() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(5,4,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5,4,rand);
 
         QRDecompositionHouseholderTran_ZDRM alg = new QRDecompositionHouseholderTran_ZDRM();
 
         assertTrue(alg.decompose(A));
 
         ZMatrixRMaj Q = alg.getQ(null,false);
-        ZMatrixRMaj B = RandomMatrices_ZDRM.createRandom(5,2,rand);
+        ZMatrixRMaj B = RandomMatrices_ZDRM.rectangle(5,2,rand);
 
         ZMatrixRMaj expected = new ZMatrixRMaj(B.numRows,B.numCols);
         CommonOps_ZDRM.transposeConjugate(Q);
@@ -106,7 +106,7 @@ public class TestQRDecompositionHouseholderTran_ZDRM extends GenericQrCheck_ZDRM
     private void checkSubHouse(int w , int width) {
         DebugQR qr = new DebugQR(width,width);
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(width,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(width,width,rand);
 
         qr.householder(w,A);
         ZMatrixRMaj U = qr.getU(w);
@@ -150,7 +150,7 @@ public class TestQRDecompositionHouseholderTran_ZDRM extends GenericQrCheck_ZDRM
 
         double gamma = 0.2;
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(width,width,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(width,width,rand);
         CommonOps_ZDRM.transpose(A, qr.QR);
 
         // compute the results using standard matrix operations

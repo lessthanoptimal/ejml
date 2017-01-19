@@ -40,7 +40,7 @@ public class TestSpecializedOps_ZDRM {
 
     @Test
     public void createReflector() {
-        ZMatrixRMaj u = RandomMatrices_ZDRM.createRandom(4,1,rand);
+        ZMatrixRMaj u = RandomMatrices_ZDRM.rectangle(4,1,rand);
 
         ZMatrixRMaj Q = SpecializedOps_ZDRM.createReflector(u);
 
@@ -55,7 +55,7 @@ public class TestSpecializedOps_ZDRM {
 
     @Test
     public void createReflector_gamma() {
-        ZMatrixRMaj u = RandomMatrices_ZDRM.createRandom(4,1,rand);
+        ZMatrixRMaj u = RandomMatrices_ZDRM.rectangle(4,1,rand);
         double gamma = 2.0/(double)Math.pow(NormOps_ZDRM.normF(u),2.0);
         ZMatrixRMaj Q = SpecializedOps_ZDRM.createReflector(u,gamma);
 
@@ -69,7 +69,7 @@ public class TestSpecializedOps_ZDRM {
     public void pivotMatrix() {
         int pivots[] = new int[]{1,0,3,2};
 
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4,4,-1,-1,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,4,-1,-1,rand);
         ZMatrixRMaj P = SpecializedOps_ZDRM.pivotMatrix(null,pivots,4,false);
         ZMatrixRMaj Pt = SpecializedOps_ZDRM.pivotMatrix(null,pivots,4,true);
 
@@ -98,7 +98,7 @@ public class TestSpecializedOps_ZDRM {
 
     @Test
     public void elementDiagMaxMagnitude2() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4,5,-1,1,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,5,-1,1,rand);
 
         ZComplex a = new ZComplex();
 
@@ -115,7 +115,7 @@ public class TestSpecializedOps_ZDRM {
 
     @Test
     public void qualityTriangular() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4,4,-1,-1,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,4,-1,-1,rand);
 
         double max = Math.sqrt(SpecializedOps_ZDRM.elementDiagMaxMagnitude2(A));
 
@@ -138,7 +138,7 @@ public class TestSpecializedOps_ZDRM {
 
     @Test
     public void householder() {
-        ZMatrixRMaj U = RandomMatrices_ZDRM.createRandom(6,1,rand);
+        ZMatrixRMaj U = RandomMatrices_ZDRM.rectangle(6,1,rand);
         double gamma = 1.6;
 
         // Q = I - gamma*U*U^H
@@ -157,7 +157,7 @@ public class TestSpecializedOps_ZDRM {
 
     @Test
     public void householderVector() {
-        ZMatrixRMaj x = RandomMatrices_ZDRM.createRandom(6, 1, rand);
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(6, 1, rand);
 
 //        x.set(0,0,0,0);
 

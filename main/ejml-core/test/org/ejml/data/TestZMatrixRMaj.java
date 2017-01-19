@@ -188,7 +188,7 @@ public class TestZMatrixRMaj {
 
     @Test
     public void set_array() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(3,4,rand);
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3,4,rand);
 
         ZMatrixRMaj B = new ZMatrixRMaj(1,1);
         B.set(3,4,true,A.data);

@@ -38,8 +38,8 @@ public class TestVectorVectorMult_ZDRM {
     @Test
     public void innerProd() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(1,6,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(6,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,6,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6,1,rand);
 
         ZMatrixRMaj c = new ZMatrixRMaj(1,1);
 
@@ -55,8 +55,8 @@ public class TestVectorVectorMult_ZDRM {
     @Test
     public void innerProdH() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(1,6,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(6,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,6,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6,1,rand);
 
         ZComplex found = VectorVectorMult_ZDRM.innerProdH(a, b, null);
 
@@ -73,8 +73,8 @@ public class TestVectorVectorMult_ZDRM {
 
     @Test
     public void outerProd() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(6,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(1,6,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(6,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(1,6,rand);
 
         ZMatrixRMaj expected = new ZMatrixRMaj(6,6);
         ZMatrixRMaj found = new ZMatrixRMaj(6,6);
@@ -87,8 +87,8 @@ public class TestVectorVectorMult_ZDRM {
 
     @Test
     public void outerProdH() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(6,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.createRandom(1,6,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(6,1,rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(1,6,rand);
 
         ZMatrixRMaj expected = new ZMatrixRMaj(6,6);
         ZMatrixRMaj found = new ZMatrixRMaj(6,6);

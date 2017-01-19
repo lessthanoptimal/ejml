@@ -71,7 +71,7 @@ public class StabilityBidiagonalDecomposition {
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
 
-            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(size,size,-1,1,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(size,size,-1,1,rand);
             CommonOps_DDRM.scale(scales[i],mat);
             runAlgorithms(mat);
         }
@@ -88,7 +88,7 @@ public class StabilityBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %e singular\n",size,sv[0]);
 
 //            System.out.print("* Creating matrix ");
-            DMatrixRMaj mat = RandomMatrices_DDRM.createSingularValues(size,size,rand,sv);
+            DMatrixRMaj mat = RandomMatrices_DDRM.singleValues(size,size,rand,sv);
             CommonOps_DDRM.scale(scales[i],mat);
 //            System.out.println("  Done.");
             runAlgorithms(mat);

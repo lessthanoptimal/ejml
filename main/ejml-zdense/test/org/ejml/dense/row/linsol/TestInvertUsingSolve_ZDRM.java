@@ -47,7 +47,7 @@ public class TestInvertUsingSolve_ZDRM {
     @Test
     public void invert() {
         ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
-        ZMatrixRMaj A_inv = RandomMatrices_ZDRM.createRandom(3, 3, rand);
+        ZMatrixRMaj A_inv = RandomMatrices_ZDRM.rectangle(3, 3, rand);
 
         LUDecompositionAlt_ZDRM decomp = new LUDecompositionAlt_ZDRM();
         LinearSolver<ZMatrixRMaj> solver = new LinearSolverLu_ZDRM(decomp);
@@ -55,7 +55,7 @@ public class TestInvertUsingSolve_ZDRM {
         solver.setA(A);
         InvertUsingSolve_ZDRM.invert(solver,A,A_inv);
 
-        ZMatrixRMaj I = RandomMatrices_ZDRM.createRandom(3,3,rand);
+        ZMatrixRMaj I = RandomMatrices_ZDRM.rectangle(3,3,rand);
 
         CommonOps_ZDRM.mult(A, A_inv, I);
 

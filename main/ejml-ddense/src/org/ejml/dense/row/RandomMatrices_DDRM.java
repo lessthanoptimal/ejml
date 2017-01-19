@@ -55,13 +55,13 @@ public class RandomMatrices_DDRM {
      * @return Array of N random orthogonal vectors of unit length.
      */
     // is there a faster algorithm out there? This one is a bit sluggish
-    public static DMatrixRMaj[] createSpan(int dimen, int numVectors , Random rand ) {
+    public static DMatrixRMaj[] span(int dimen, int numVectors , Random rand ) {
         if( dimen < numVectors )
             throw new IllegalArgumentException("The number of vectors must be less than or equal to the dimension");
 
         DMatrixRMaj u[] = new DMatrixRMaj[numVectors];
 
-        u[0] = RandomMatrices_DDRM.createRandom(dimen,1,-1,1,rand);
+        u[0] = RandomMatrices_DDRM.rectangle(dimen,1,-1,1,rand);
         NormOps_DDRM.normalizeF(u[0]);
 
         for( int i = 1; i < numVectors; i++ ) {
@@ -72,7 +72,7 @@ public class RandomMatrices_DDRM {
             for( int j = 0; j < i; j++ ) {
 //                System.out.println("j = "+j);
                 if( j == 0 )
-                    r = RandomMatrices_DDRM.createRandom(dimen,1,-1,1,rand);
+                    r = RandomMatrices_DDRM.rectangle(dimen,1,-1,1,rand);
 
                 // find a vector that is normal to vector j
                 // u[i] = (1/2)*(r + Q[j]*r)
@@ -107,7 +107,7 @@ public class RandomMatrices_DDRM {
      * @param rand RNG
      * @return A random vector within the specified span.
      */
-    public static DMatrixRMaj createInSpan(DMatrixRMaj[] span , double min , double max , Random rand ) {
+    public static DMatrixRMaj insideSpan(DMatrixRMaj[] span , double min , double max , Random rand ) {
         DMatrixRMaj A = new DMatrixRMaj(span.length,1);
 
         DMatrixRMaj B = new DMatrixRMaj(span[0].getNumElements(),1);
@@ -135,12 +135,12 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator used to create matrices.
      * @return A new isometric matrix.
      */
-    public static DMatrixRMaj createOrthogonal(int numRows , int numCols , Random rand ) {
+    public static DMatrixRMaj orthogonal(int numRows , int numCols , Random rand ) {
         if( numRows < numCols ) {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
-        DMatrixRMaj u[] = createSpan(numRows,numCols,rand);
+        DMatrixRMaj u[] = span(numRows,numCols,rand);
 
         DMatrixRMaj ret = new DMatrixRMaj(numRows,numCols);
         for( int i = 0; i < numCols; i++ ) {
@@ -160,8 +160,8 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator.
      * @return A random diagonal matrix.
      */
-    public static DMatrixRMaj createDiagonal(int N , double min , double max , Random rand ) {
-        return createDiagonal(N,N,min,max,rand);
+    public static DMatrixRMaj diagonal(int N , double min , double max , Random rand ) {
+        return diagonal(N,N,min,max,rand);
     }
 
     /**
@@ -175,7 +175,7 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator.
      * @return A random diagonal matrix.
      */
-    public static DMatrixRMaj createDiagonal(int numRows , int numCols , double min , double max , Random rand ) {
+    public static DMatrixRMaj diagonal(int numRows , int numCols , double min , double max , Random rand ) {
         if( max < min )
             throw new IllegalArgumentException("The max must be >= the min");
 
@@ -205,10 +205,10 @@ public class RandomMatrices_DDRM {
      * @param sv Singular values of the matrix.
      * @return A new matrix with the specified singular values.
      */
-    public static DMatrixRMaj createSingularValues(int numRows, int numCols,
-                                                     Random rand, double ...sv) {
-        DMatrixRMaj U = RandomMatrices_DDRM.createOrthogonal(numRows,numRows,rand);
-        DMatrixRMaj V = RandomMatrices_DDRM.createOrthogonal(numCols,numCols,rand);
+    public static DMatrixRMaj singleValues(int numRows, int numCols,
+                                           Random rand, double ...sv) {
+        DMatrixRMaj U = RandomMatrices_DDRM.orthogonal(numRows,numRows,rand);
+        DMatrixRMaj V = RandomMatrices_DDRM.orthogonal(numCols,numCols,rand);
 
         DMatrixRMaj S = new DMatrixRMaj(numRows,numCols);
 
@@ -234,8 +234,8 @@ public class RandomMatrices_DDRM {
      * @param eigenvalues Set of real eigenvalues that the matrix will have.
      * @return A random matrix with the specified eigenvalues.
      */
-    public static DMatrixRMaj createEigenvaluesSymm(int num, Random rand , double ...eigenvalues ) {
-        DMatrixRMaj V = RandomMatrices_DDRM.createOrthogonal(num,num,rand);
+    public static DMatrixRMaj symmetricWithEigenvalues(int num, Random rand , double ...eigenvalues ) {
+        DMatrixRMaj V = RandomMatrices_DDRM.orthogonal(num,num,rand);
         DMatrixRMaj D = CommonOps_DDRM.diag(eigenvalues);
 
         DMatrixRMaj temp = new DMatrixRMaj(num,num);
@@ -255,10 +255,10 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static DMatrixRMaj createRandom(int numRow , int numCol , Random rand ) {
+    public static DMatrixRMaj rectangle(int numRow , int numCol , Random rand ) {
         DMatrixRMaj mat = new DMatrixRMaj(numRow,numCol);
 
-        setRandom(mat, 0, 1, rand);
+        fillUniform(mat, 0, 1, rand);
 
         return mat;
     }
@@ -271,7 +271,7 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static BMatrixRMaj createRandomB(int numRow , int numCol , Random rand ) {
+    public static BMatrixRMaj randomBinary(int numRow , int numCol , Random rand ) {
         BMatrixRMaj mat = new BMatrixRMaj(numRow,numCol);
 
         setRandomB(mat, rand);
@@ -291,7 +291,7 @@ public class RandomMatrices_DDRM {
      * @param max The maximum value each element can be..
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void addRandom(DMatrixRMaj A , double min , double max , Random rand ) {
+    public static void addUniform(DMatrixRMaj A , double min , double max , Random rand ) {
         double d[] = A.getData();
         int size = A.getNumElements();
 
@@ -315,10 +315,10 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator used to fill the matrix.
      * @return The randomly generated matrix.
      */
-    public static DMatrixRMaj createRandom(int numRow , int numCol , double min , double max , Random rand ) {
+    public static DMatrixRMaj rectangle(int numRow , int numCol , double min , double max , Random rand ) {
         DMatrixRMaj mat = new DMatrixRMaj(numRow,numCol);
 
-        setRandom(mat,min,max,rand);
+        fillUniform(mat,min,max,rand);
 
         return mat;
     }
@@ -331,9 +331,9 @@ public class RandomMatrices_DDRM {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom(DMatrixRMaj mat , Random rand )
+    public static void fillUniform(DMatrixRMaj mat , Random rand )
     {
-        setRandom(mat,0,1,rand);
+        fillUniform(mat,0,1,rand);
     }
 
     /**
@@ -346,7 +346,7 @@ public class RandomMatrices_DDRM {
      * @param mat The matrix who is to be randomized. Modified.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setRandom(DMatrixD1 mat , double min , double max , Random rand )
+    public static void fillUniform(DMatrixD1 mat , double min , double max , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getNumElements();
@@ -391,10 +391,10 @@ public class RandomMatrices_DDRM {
      * @param stdev Standard deviation in the distribution
      * @param rand Random number generator used to fill the matrix.
      */
-    public static DMatrixRMaj createGaussian(int numRow , int numCol , double mean , double stdev , Random rand )
+    public static DMatrixRMaj rectangleGaussian(int numRow , int numCol , double mean , double stdev , Random rand )
     {
         DMatrixRMaj m = new DMatrixRMaj(numRow,numCol);
-        setGaussian(m,mean,stdev,rand);
+        fillGaussian(m,mean,stdev,rand);
         return m;
     }
 
@@ -409,7 +409,7 @@ public class RandomMatrices_DDRM {
      * @param stdev Standard deviation in the distribution
      * @param rand Random number generator used to fill the matrix.
      */
-    public static void setGaussian(DMatrixD1 mat , double mean , double stdev , Random rand )
+    public static void fillGaussian(DMatrixD1 mat , double mean , double stdev , Random rand )
     {
         double d[] = mat.getData();
         int size = mat.getNumElements();
@@ -426,7 +426,7 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator used to make the matrix.
      * @return The random symmetric  positive definite matrix.
      */
-    public static DMatrixRMaj createSymmPosDef(int width, Random rand) {
+    public static DMatrixRMaj symmetricPosDef(int width, Random rand) {
         // This is not formally proven to work.  It just seems to work.
         DMatrixRMaj a = new DMatrixRMaj(width,1);
         DMatrixRMaj b = new DMatrixRMaj(width,width);
@@ -454,10 +454,10 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator.
      * @return A symmetric matrix.
      */
-    public static DMatrixRMaj createSymmetric(int length, double min, double max, Random rand) {
+    public static DMatrixRMaj symmetric(int length, double min, double max, Random rand) {
         DMatrixRMaj A = new DMatrixRMaj(length,length);
 
-        createSymmetric(A,min,max,rand);
+        symmetric(A,min,max,rand);
 
         return A;
     }
@@ -471,7 +471,7 @@ public class RandomMatrices_DDRM {
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
      */
-    public static void createSymmetric(DMatrixRMaj A, double min, double max, Random rand) {
+    public static void symmetric(DMatrixRMaj A, double min, double max, Random rand) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
 
@@ -499,7 +499,7 @@ public class RandomMatrices_DDRM {
      * @param rand random number generator used.
      * @return The randomly generated matrix.
      */
-    public static DMatrixRMaj createUpperTriangle(int dimen , int hessenberg , double min , double max , Random rand )
+    public static DMatrixRMaj triangularUpper(int dimen , int hessenberg , double min , double max , Random rand )
     {
         if( hessenberg < 0 )
             throw new RuntimeException("hessenberg must be more than or equal to 0");
