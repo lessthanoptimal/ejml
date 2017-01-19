@@ -176,11 +176,11 @@ public class GenerateCode32 {
         System.out.println("Path to project root: "+path);
 
         String coreDir[] = new String[]{
-                "main/core/src/org/ejml/data",
-                "main/core/test/org/ejml/data",
-                "main/core/src/org/ejml/ops",
-                "main/core/test/org/ejml/ops",
-                "main/experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
+                "main/ejml-core/src/org/ejml/data",
+                "main/ejml-core/test/org/ejml/data",
+                "main/ejml-core/src/org/ejml/ops",
+                "main/ejml-core/test/org/ejml/ops",
+                "main/ejml-experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
         };
 
         GenerateCode32 app = new GenerateCode32();
@@ -189,12 +189,12 @@ public class GenerateCode32 {
         }
 
         // remove any previously generated code
-        for( String module : new String[]{"dense","denseC"}) {
-            recursiveDelete(new File(path,"main/"+module+"32/src"), true);
-            recursiveDelete(new File(path,"main/"+module+"32/test"), true);
+        for( String module : new String[]{"dense","dense"}) {
+            recursiveDelete(new File(path,"main/ejml-f"+module+"/src"), true);
+            recursiveDelete(new File(path,"main/ejml-c"+module+"/test"), true);
 
-            app.process(new File(path,"main/"+module+"64/src"), new File(path,"main/"+module+"32/src") );
-            app.process(new File(path,"main/"+module+"64/test"), new File(path,"main/"+module+"32/test") );
+            app.process(new File(path,"main/ejml-d"+module+"/src"), new File(path,"main/ejml-f"+module+"/src") );
+            app.process(new File(path,"main/ejml-z"+module+"/test"), new File(path,"main/ejml-c"+module+"/test") );
         }
     }
 }

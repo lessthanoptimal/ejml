@@ -47,7 +47,7 @@ public class TestQRExampleOps {
     private void checkMatrix( int numRows , int numCols ) {
         DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
 
-        QRExampleOperations alg = new QRExampleOperations();
+        QRExampleProcedural alg = new QRExampleProcedural();
 
         alg.decompose(A);
 

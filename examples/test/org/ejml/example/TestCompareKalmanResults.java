@@ -44,7 +44,7 @@ public class TestCompareKalmanResults {
         KalmanFilterSimple simple = new KalmanFilterSimple();
 
         List<KalmanFilter> all = new ArrayList<KalmanFilter>();
-        all.add( new KalmanFilterOperations() );
+        all.add( new KalmanFilterProcedural() );
         all.add( new KalmanFilterEquation() );
         all.add( simple );
 

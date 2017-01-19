@@ -11,7 +11,7 @@
 
 Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating real/complex/dense/sparse matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime, clean API, and multiple interfaces. EJML is free, written in 100% Java and has been released under an Apache v2.0 license.
 
-EJML has three distinct ways to interact with it: 1) procedural, 2) SimpleMatrix, and 3) Equations. Procedural provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
+EJML has three distinct ways to interact with it: 1) operations, 2) SimpleMatrix, and 3) Equations. Operations provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms with a procedural API. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
 The following functionality is provided:
 
 * Basic operators (addition, multiplication, ...)
