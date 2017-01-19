@@ -83,7 +83,8 @@ After that has finished running all the standard commands will work as well as t
 
 EJML supports a variety of different matrix types and uses the following pattern for matrix class names:
 
-<pre>Patterns:
+```
+Patterns:
 
 <data type>Matrix<structure>
 <data type>MatrixSparse<structure>
@@ -105,7 +106,8 @@ Matrix Suffix   Abreviation   Description
    NxN             FN         dense fixed sized matrix of size N
    N               FN         dense fixed sized vector of length N  
    CSC             CC         compressed sparse column
-   Triplet         TR         triplet</pre>
+   Triplet         TR         triplet
+```
    
 Algorthms which operate on a specific matrix type have a suffix that's 5 characters, e.g. _DDRM.  The first letter 'D' is the data type, the second letter 'D' is for dense (sparse is 'S'), and the last two letters are an abbreviation for the structure.
       
