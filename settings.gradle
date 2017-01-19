@@ -1,3 +1,3 @@
-include 'main:core','main:experimental','main:dense64','main:denseC64',
-        'main:simple','examples',"main:all",'main:dense32','main:denseC32','main:autocode',
-        'main:sparse64'
+include 'main:ejml-core','main:ejml-experimental','main:ejml-ddense','main:ejml-zdense',
+        'main:ejml-simple','examples',"main:ejml-all",'main:ejml-fdense','main:ejml-cdense','main:autocode',
+        'main:ejml-dsparse'

@@ -129,11 +129,14 @@ subprojects {
 }
 
 def allModules = [
-        ':main:core',
-        ':main:dense64',
-        ':main:denseC64',
-        ':main:equation',
-        ':main:simple'
+        ':main:ejml-core',
+        ':main:ejml-ddense',
+        ':main:ejml-dsparse',
+        ':main:ejml-fdense',
+        ':main:ejml-zdense',
+        ':main:ejml-cdense',
+        ':main:ejml-simple',
+        ':main:ejml-experimental',
 ]
 
 // Creates a directory with all the comiled jars
@@ -166,11 +169,13 @@ idea {
 }
 
 def javadocProjects = [
-        ':main:dense32',
-        ':main:dense64',
-        ':main:denseC32',
-        ':main:denseC64',
-        ':main:core'
+        ':main:ejml-core',
+        ':main:ejml-ddense',
+        ':main:ejml-dsparse',
+        ':main:ejml-fdense',
+        ':main:ejml-zdense',
+        ':main:ejml-cdense',
+        ':main:ejml-simple'
 ]
 task alljavadoc(type: Javadoc) {
     // only include source code in src directory to avoid including 3rd party code which some projects do as a hack

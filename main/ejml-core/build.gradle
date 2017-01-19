@@ -1,0 +1,7 @@
+dependencies {
+    testCompile project(':main:ejml-fdense')
+    testCompile project(':main:ejml-cdense')
+    testCompile project(':main:ejml-ddense')
+    testCompile project(':main:ejml-zdense')
+    testCompile project(':main:ejml-experimental')
+}

@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':main:ejml-core')
+    compile project(':main:ejml-fdense')
+    compile project(':main:ejml-ddense')
+    testCompile project(':main:ejml-experimental')
+    testCompile project(':main:ejml-core').sourceSets.test.output
+}
