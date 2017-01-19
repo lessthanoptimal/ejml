@@ -146,7 +146,7 @@ public class TestConvertMatrixStruct_F32 {
     public void DM_to_BM() {
         for( int rows = 1; rows <= 8; rows++ ) {
             for( int cols = 1; cols <= 8; cols++ ) {
-                FMatrixRMaj a = RandomMatrices_FDRM.createRandom(rows,cols,rand);
+                FMatrixRMaj a = RandomMatrices_FDRM.rectangle(rows,cols,rand);
                 FMatrixRBlock b = new FMatrixRBlock(rows,cols,3);
 
                 ConvertFMatrixStruct.convert(a,b);

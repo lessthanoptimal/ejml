@@ -167,7 +167,7 @@ public class TestFMatrixRMaj {
 
     @Test
     public void set_ColumnMajor() {
-        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,5,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.rectangle(3,5,rand);
 
         FMatrixRMaj Atran = A.copy();
         CommonOps_FDRM.transpose(Atran);
@@ -179,7 +179,7 @@ public class TestFMatrixRMaj {
 
     @Test
     public void set_RowMajor() {
-        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,5,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.rectangle(3,5,rand);
 
         FMatrixRMaj Afound = new FMatrixRMaj(3,5);
         Afound.set(3,5, true, A.data);

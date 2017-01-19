@@ -287,7 +287,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 
     public static SimpleMatrix random32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols, FMatrixRMaj.class);
-        RandomMatrices_FDRM.setRandom((FMatrixRMaj)ret.mat,minValue,maxValue,rand);
+        RandomMatrices_FDRM.fillUniform((FMatrixRMaj)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 

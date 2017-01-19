@@ -39,7 +39,7 @@ public class TestFSubmatrixD1 {
 
     @Test
     public void get() {
-        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(5,10,-1,1,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.rectangle(5,10,-1,1,rand);
 
         FSubmatrixD1 S = new FSubmatrixD1(A,2,4,1,10);
 
@@ -48,7 +48,7 @@ public class TestFSubmatrixD1 {
 
     @Test
     public void set() {
-        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(5,10,-1,1,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.rectangle(5,10,-1,1,rand);
 
         FSubmatrixD1 S = new FSubmatrixD1(A,2,4,1,10);
 
@@ -59,7 +59,7 @@ public class TestFSubmatrixD1 {
 
     @Test
     public void extract() {
-        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(5,10,-1,1,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.rectangle(5,10,-1,1,rand);
 
         FSubmatrixD1 S = new FSubmatrixD1(A,2,4,1,10);
 

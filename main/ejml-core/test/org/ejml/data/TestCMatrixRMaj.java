@@ -188,7 +188,7 @@ public class TestCMatrixRMaj {
 
     @Test
     public void set_array() {
-        CMatrixRMaj A = RandomMatrices_CDRM.createRandom(3,4,rand);
+        CMatrixRMaj A = RandomMatrices_CDRM.rectangle(3,4,rand);
 
         CMatrixRMaj B = new CMatrixRMaj(1,1);
         B.set(3,4,true,A.data);
