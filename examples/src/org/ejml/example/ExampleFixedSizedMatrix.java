@@ -22,7 +22,7 @@ import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.fixed.CommonOps_DDF3;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -67,7 +67,7 @@ public class ExampleFixedSizedMatrix {
         CommonOps_DDF3.mult(a,v,result);
 
         // Conversion into DMatrixRMaj can also be done
-        DMatrixRMaj dm = ConvertMatrixStruct_F64.convert(a,null);
+        DMatrixRMaj dm = ConvertDMatrixStruct.convert(a,null);
 
         dm.print();
 
@@ -75,7 +75,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        DMatrix3x3 fv = ConvertMatrixStruct_F64.convert(sv.matrix_F64(),(DMatrix3x3)null);
+        DMatrix3x3 fv = ConvertDMatrixStruct.convert(sv.matrix_F64(),(DMatrix3x3)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 public class GenerateFixedFeatures extends GenerateFixed {
 
     public GenerateFixedFeatures() {
-        super("FixedFeatures");
+        super("MatrixFeatures_DDF");
     }
 
     @Override

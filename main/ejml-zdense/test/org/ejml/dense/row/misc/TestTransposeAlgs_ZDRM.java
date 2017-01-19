@@ -19,7 +19,7 @@
 package org.ejml.dense.row.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.junit.Test;
@@ -42,8 +42,8 @@ public class TestTransposeAlgs_ZDRM {
 
         TransposeAlgs_ZDRM.square(b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -63,8 +63,8 @@ public class TestTransposeAlgs_ZDRM {
 
         TransposeAlgs_ZDRM.squareConjugate(b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -84,8 +84,8 @@ public class TestTransposeAlgs_ZDRM {
 
         TransposeAlgs_ZDRM.standard(a, b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
@@ -105,8 +105,8 @@ public class TestTransposeAlgs_ZDRM {
 
         TransposeAlgs_ZDRM.standardConjugate(a, b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {

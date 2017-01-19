@@ -20,8 +20,8 @@ package org.ejml.simple;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -499,7 +499,7 @@ public class TestSimpleMatrix {
         assertEquals(4,evd.getNumberOfEigenvalues());
 
         for( int i = 0; i < 4; i++ ) {
-            Complex_F64 c = evd.getEigenvalue(i);
+            ZComplex c = evd.getEigenvalue(i);
             assertTrue(c != null );
             evd.getEigenVector(i);
         }

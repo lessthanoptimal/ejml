@@ -20,8 +20,8 @@ package org.ejml.simple;
 
 import org.ejml.data.*;
 import org.ejml.dense.row.*;
-import org.ejml.ops.ConvertMatrixStruct_F32;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.ConvertFMatrixStruct;
 
 import java.util.Random;
 
@@ -175,11 +175,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public SimpleMatrix( Matrix orig ) {
         if( orig instanceof DMatrixRBlock) {
             DMatrixRMaj a = new DMatrixRMaj(orig.getNumRows(), orig.getNumCols());
-            ConvertMatrixStruct_F64.convert((DMatrixRBlock) orig, a);
+            ConvertDMatrixStruct.convert((DMatrixRBlock) orig, a);
             this.mat = a;
         } else if( orig instanceof FMatrixRBlock) {
             FMatrixRMaj a = new FMatrixRMaj(orig.getNumRows(),orig.getNumCols());
-            ConvertMatrixStruct_F32.convert((FMatrixRBlock)orig, a);
+            ConvertFMatrixStruct.convert((FMatrixRBlock)orig, a);
             this.mat = a;
         } else {
             this.mat = orig.copy();

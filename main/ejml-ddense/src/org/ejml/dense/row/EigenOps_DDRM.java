@@ -19,13 +19,13 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
+import org.ejml.data.DEigenpair;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.Eigenpair_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.decomposition.eig.EigenPowerMethod_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -75,7 +75,7 @@ public class EigenOps_DDRM {
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
-    public static Eigenpair_F64 computeEigenVector(DMatrixRMaj A , double eigenvalue )
+    public static DEigenpair computeEigenVector(DMatrixRMaj A , double eigenvalue )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Must be a square matrix.");
@@ -130,7 +130,7 @@ public class EigenOps_DDRM {
                 } else {
                     // otherwise assume that it was so accurate that the matrix was singular
                     // and return that result
-                    return new Eigenpair_F64(eigenvalue,b);
+                    return new DEigenpair(eigenvalue,b);
                 }
             } else {
                 hasWorked = true;
@@ -153,7 +153,7 @@ public class EigenOps_DDRM {
                 } else {
                     // see if it has converged
                     if(error <= threshold || Math.abs(prevError-error) <= UtilEjml.EPS)
-                        return new Eigenpair_F64(eigenvalue,b);
+                        return new DEigenpair(eigenvalue,b);
 
                     // update everything
                     prevError = error;
@@ -182,7 +182,7 @@ public class EigenOps_DDRM {
      * @param A A matrix.  Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
-    public static Eigenpair_F64 dominantEigenpair(DMatrixRMaj A ) {
+    public static DEigenpair dominantEigenpair(DMatrixRMaj A ) {
 
         EigenPowerMethod_DDRM power = new EigenPowerMethod_DDRM(A.numRows);
 
@@ -252,14 +252,14 @@ public class EigenOps_DDRM {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return A diagonal matrix containing the eigenvalues.
      */
-    public static DMatrixRMaj createMatrixD(EigenDecomposition_F64 eig )
+    public static DMatrixRMaj createMatrixD(EigenDecompositionD eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
         DMatrixRMaj D = new DMatrixRMaj( N , N );
 
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = eig.getEigenvalue(i);
+            ZComplex c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
                 D.set(i,i,c.real);
@@ -278,14 +278,14 @@ public class EigenOps_DDRM {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return An m by m matrix containing eigenvectors in its columns.
      */
-    public static DMatrixRMaj createMatrixV(EigenDecomposition_F64<DMatrixRMaj> eig )
+    public static DMatrixRMaj createMatrixV(EigenDecompositionD<DMatrixRMaj> eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
         DMatrixRMaj V = new DMatrixRMaj( N , N );
 
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = eig.getEigenvalue(i);
+            ZComplex c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
                 DMatrixRMaj v = eig.getEigenVector(i);

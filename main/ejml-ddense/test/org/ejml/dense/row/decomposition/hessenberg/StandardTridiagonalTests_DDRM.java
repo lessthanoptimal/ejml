@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public abstract class StandardTridiagonalTests_DDRM {
 
     protected Random rand = new Random(2344);
 
-    protected abstract TridiagonalSimilarDecomposition_F64<DMatrixRMaj> createDecomposition();
+    protected abstract TridiagonalSimilarDecompositionD<DMatrixRMaj> createDecomposition();
 
     @Test
     public void fullTest() {
@@ -49,7 +49,7 @@ public abstract class StandardTridiagonalTests_DDRM {
 
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.createSymmetric(width,-1,1,rand));
 
-            TridiagonalSimilarDecomposition_F64<DMatrixRMaj> alg = createDecomposition();
+            TridiagonalSimilarDecompositionD<DMatrixRMaj> alg = createDecomposition();
 
 
             assertTrue(safeDecomposition(alg,(DMatrixRMaj)A.getMatrix()));
@@ -71,7 +71,7 @@ public abstract class StandardTridiagonalTests_DDRM {
 
             DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition_F64<DMatrixRMaj> alg = createDecomposition();
+            TridiagonalSimilarDecompositionD<DMatrixRMaj> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -95,7 +95,7 @@ public abstract class StandardTridiagonalTests_DDRM {
 
             DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(width,-1,1,rand);
 
-            TridiagonalSimilarDecomposition_F64<DMatrixRMaj> alg = createDecomposition();
+            TridiagonalSimilarDecompositionD<DMatrixRMaj> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 

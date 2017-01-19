@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.decomposition.eig;
 
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 
 
 /**
@@ -26,8 +26,8 @@ import org.ejml.data.Complex_F64;
  */
 public class EigenvalueSmall_F64 {
 
-    public Complex_F64 value0 = new Complex_F64();
-    public Complex_F64 value1 = new Complex_F64();
+    public ZComplex value0 = new ZComplex();
+    public ZComplex value1 = new ZComplex();
 
     // if |a11-a22| >> |a12+a21| there might be a better way.  see pg371
     public void value2x2( double a11 , double a12, double a21 , double a22 )

@@ -19,10 +19,10 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 import org.junit.Test;
 
 import java.util.Random;
@@ -83,7 +83,7 @@ public class TestEigenOps_DDRM {
     public void createMatrixV() {
         DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
+        EigenDecompositionD<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
 
         DMatrixRMaj V = EigenOps_DDRM.createMatrixV(decomp);
@@ -101,13 +101,13 @@ public class TestEigenOps_DDRM {
     public void createMatrixD() {
         DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(3,-1,1,rand);
 
-        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
+        EigenDecompositionD<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
         assertTrue(decomp.decompose(A));
 
         DMatrixRMaj D = EigenOps_DDRM.createMatrixD(decomp);
 
         for( int i = 0; i < 3; i++ ) {
-            Complex_F64 e = decomp.getEigenvalue(i);
+            ZComplex e = decomp.getEigenvalue(i);
 
             if( e.isReal() ) {
                 assertEquals(e.real,D.get(i,i),1e-10);

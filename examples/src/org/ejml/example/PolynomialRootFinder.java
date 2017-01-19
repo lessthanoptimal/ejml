@@ -18,10 +18,10 @@
 
 package org.ejml.example;
 
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 
 /**
  * <p>
@@ -59,7 +59,7 @@ public class PolynomialRootFinder {
      * @param coefficients Coefficients of the polynomial.
      * @return The roots of the polynomial
      */
-    public static Complex_F64[] findRoots(double... coefficients) {
+    public static ZComplex[] findRoots(double... coefficients) {
         int N = coefficients.length-1;
 
         // Construct the companion matrix
@@ -74,11 +74,11 @@ public class PolynomialRootFinder {
         }
 
         // use generalized eigenvalue decomposition to find the roots
-        EigenDecomposition_F64<DMatrixRMaj> evd =  DecompositionFactory_DDRM.eig(N,false);
+        EigenDecompositionD<DMatrixRMaj> evd =  DecompositionFactory_DDRM.eig(N,false);
 
         evd.decompose(c);
 
-        Complex_F64[] roots = new Complex_F64[N];
+        ZComplex[] roots = new ZComplex[N];
 
         for( int i = 0; i < N; i++ ) {
             roots[i] = evd.getEigenvalue(i);

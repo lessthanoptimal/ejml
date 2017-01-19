@@ -21,7 +21,7 @@ package org.ejml.dense.fixed;
 /**
  * @author Peter Abeles
  */
-public class TestMatrixFeatures_DDF2 extends CompareFixedToMatrixFeatures_F64 {
+public class TestMatrixFeatures_DDF2 extends CompareFixedToMatrixFeatures_DDRM {
 
     public TestMatrixFeatures_DDF2() {
         super(MatrixFeatures_DDF2.class);

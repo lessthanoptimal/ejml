@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.decomposition.eig;
 
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 import org.junit.Test;
 
 
@@ -29,7 +29,7 @@ public class TestSymmetricQRAlgorithmDecomposition_DDRM extends GeneralEigenDeco
     boolean together;
 
     @Override
-    public EigenDecomposition_F64 createDecomposition() {
+    public EigenDecompositionD createDecomposition() {
         SymmetricQRAlgorithmDecomposition_DDRM alg = new SymmetricQRAlgorithmDecomposition_DDRM(computeVectors);
         if( computeVectors )
             alg.setComputeVectorsWithValues(together);

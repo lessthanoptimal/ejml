@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.decompose.qr;
 
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
@@ -71,7 +71,7 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
 
     // the computed gamma for Q_k matrix
     protected double gammas[];
-    protected Complex_F64 tau = new Complex_F64();
+    protected ZComplex tau = new ZComplex();
 
 
     // did it encounter an error?

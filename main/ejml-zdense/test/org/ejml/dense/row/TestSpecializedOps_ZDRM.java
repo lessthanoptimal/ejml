@@ -19,10 +19,10 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
-import org.ejml.ops.ComplexMath_F64;
+import org.ejml.ops.ComplexMathZ;
 import org.junit.Test;
 
 import java.util.Random;
@@ -100,7 +100,7 @@ public class TestSpecializedOps_ZDRM {
     public void elementDiagMaxMagnitude2() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.createRandom(4,5,-1,1,rand);
 
-        Complex_F64 a = new Complex_F64();
+        ZComplex a = new ZComplex();
 
         double expected = 0;
         for (int i = 0; i < 4; i++) {
@@ -119,15 +119,15 @@ public class TestSpecializedOps_ZDRM {
 
         double max = Math.sqrt(SpecializedOps_ZDRM.elementDiagMaxMagnitude2(A));
 
-        Complex_F64 a = new Complex_F64();
-        Complex_F64 tmp = new Complex_F64();
-        Complex_F64 total = new Complex_F64(1,0);
+        ZComplex a = new ZComplex();
+        ZComplex tmp = new ZComplex();
+        ZComplex total = new ZComplex(1,0);
         for (int i = 0; i < 4; i++) {
             A.get(i,i,a);
             a.real /= max;
             a.imaginary /= max;
 
-            ComplexMath_F64.multiply(total,a,tmp);
+            ComplexMathZ.multiply(total,a,tmp);
             total.set(tmp);
         }
         double expected = total.getMagnitude();
@@ -172,7 +172,7 @@ public class TestSpecializedOps_ZDRM {
         ZMatrixRMaj found = new ZMatrixRMaj(x.numRows,x.numCols);
         CommonOps_ZDRM.mult(Q,x,found);
 
-        Complex_F64 c = new Complex_F64();
+        ZComplex c = new ZComplex();
         found.get(0,0,c);
         assertTrue(c.real != 0);
         assertTrue(c.imaginary != 0 );

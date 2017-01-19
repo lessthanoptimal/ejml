@@ -39,7 +39,7 @@ public class GenerateCode32 {
 
     public GenerateCode32() {
 
-        String[] sufficeRoot = new String[]{"DRM","DRB","SCC","STL","DF3","DF4","DF5","DF6"};
+        String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF3","DF4","DF5","DF6"};
 
         suffices64.add("_DDRB_to_DDRM");
         suffices64.add("_F64");
@@ -48,8 +48,8 @@ public class GenerateCode32 {
 
         for( String suffice : sufficeRoot ) {
             suffices64.add("_D"+suffice);
-            suffices64.add("_Z"+suffice);
             suffices32.add("_F"+suffice);
+            suffices64.add("_Z"+suffice);
             suffices32.add("_C"+suffice);
         }
 
@@ -67,8 +67,13 @@ public class GenerateCode32 {
 
         converter.replacePattern("DMatrix", "FMatrix");
         converter.replacePattern("DSubmatrix", "FSubmatrix");
+        converter.replacePattern("DEigen", "FEigen");
+        converter.replacePattern("EchelonFormD","EchelonFormF");
+        converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
+        converter.replacePattern("DecompositionD", "DecompositionF");
+        converter.replacePattern("MathZ", "MathC");
 
         converter.replacePattern("F64", "F32");
         converter.replacePattern("random64", "random32");
@@ -189,11 +194,15 @@ public class GenerateCode32 {
         }
 
         // remove any previously generated code
-        for( String module : new String[]{"dense","dense"}) {
+        for( String module : new String[]{"dense"}) {
             recursiveDelete(new File(path,"main/ejml-f"+module+"/src"), true);
+            recursiveDelete(new File(path,"main/ejml-c"+module+"/src"), true);
+            recursiveDelete(new File(path,"main/ejml-f"+module+"/test"), true);
             recursiveDelete(new File(path,"main/ejml-c"+module+"/test"), true);
 
             app.process(new File(path,"main/ejml-d"+module+"/src"), new File(path,"main/ejml-f"+module+"/src") );
+            app.process(new File(path,"main/ejml-z"+module+"/src"), new File(path,"main/ejml-c"+module+"/src") );
+            app.process(new File(path,"main/ejml-d"+module+"/test"), new File(path,"main/ejml-f"+module+"/test") );
             app.process(new File(path,"main/ejml-z"+module+"/test"), new File(path,"main/ejml-c"+module+"/test") );
         }
     }

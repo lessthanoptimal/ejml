@@ -22,8 +22,8 @@ import org.ejml.data.*;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_FDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F32;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
+import org.ejml.interfaces.decomposition.EigenDecompositionF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,19 +60,19 @@ public class SimpleEVD <T extends SimpleBase>
     /**
      * Returns a list of all the eigenvalues
      */
-    public List<Complex_F64> getEigenvalues() {
-        List<Complex_F64> ret = new ArrayList<Complex_F64>();
+    public List<ZComplex> getEigenvalues() {
+        List<ZComplex> ret = new ArrayList<ZComplex>();
 
         if( is64 ) {
-            EigenDecomposition_F64 d = (EigenDecomposition_F64)eig;
+            EigenDecompositionD d = (EigenDecompositionD)eig;
             for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
                 ret.add(d.getEigenvalue(i));
             }
         } else {
-            EigenDecomposition_F32 d = (EigenDecomposition_F32)eig;
+            EigenDecompositionF d = (EigenDecompositionF)eig;
             for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
-                Complex_F32 c = d.getEigenvalue(i);
-                ret.add(new Complex_F64(c.real, c.imaginary));
+                CComplex c = d.getEigenvalue(i);
+                ret.add(new ZComplex(c.real, c.imaginary));
             }
         }
 
@@ -103,12 +103,12 @@ public class SimpleEVD <T extends SimpleBase>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return An eigenvalue.
      */
-    public Complex_F64 getEigenvalue(int index ) {
+    public ZComplex getEigenvalue(int index ) {
         if( is64 )
-            return ((EigenDecomposition_F64)eig).getEigenvalue(index);
+            return ((EigenDecompositionD)eig).getEigenvalue(index);
         else {
-            Complex_F64 c = ((EigenDecomposition_F64)eig).getEigenvalue(index);
-            return new Complex_F64(c.real, c.imaginary);
+            ZComplex c = ((EigenDecompositionD)eig).getEigenvalue(index);
+            return new ZComplex(c.real, c.imaginary);
         }
     }
 
@@ -140,9 +140,9 @@ public class SimpleEVD <T extends SimpleBase>
      */
     public /**/double quality() {
         if (is64) {
-            return DecompositionFactory_DDRM.quality((DMatrixRMaj)mat, (EigenDecomposition_F64)eig);
+            return DecompositionFactory_DDRM.quality((DMatrixRMaj)mat, (EigenDecompositionD)eig);
         } else {
-            return DecompositionFactory_FDRM.quality((FMatrixRMaj)mat, (EigenDecomposition_F32)eig);
+            return DecompositionFactory_FDRM.quality((FMatrixRMaj)mat, (EigenDecompositionF)eig);
         }
     }
 

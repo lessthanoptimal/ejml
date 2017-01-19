@@ -18,13 +18,13 @@
 
 package org.ejml.dense.block.decomposition.chol;
 
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.block.InnerRankUpdate_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.TriangularSolver_DDRB;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 
 
 /**
@@ -38,7 +38,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  *
  * @author Peter Abeles
  */
-public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrixRBlock> {
+public class CholeskyOuterForm_DDRB implements CholeskyDecompositionD<DMatrixRBlock> {
 
     // if it should compute an upper or lower triangular matrix
     private boolean lower = false;
@@ -51,7 +51,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
     private DSubmatrixD1 subC = new DSubmatrixD1();
 
     // storage for the determinant
-    private Complex_F64 det = new Complex_F64();
+    private ZComplex det = new ZComplex();
 
     /**
      * Creates a new BlockCholeskyOuterForm
@@ -173,7 +173,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
     }
 
     @Override
-    public Complex_F64 computeDeterminant() {
+    public ZComplex computeDeterminant() {
         double prod = 1.0;
 
         int blockLength = T.blockLength;

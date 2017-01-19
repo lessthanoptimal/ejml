@@ -107,7 +107,7 @@ public class CMatrixRMaj extends CMatrixD1 {
     }
 
     @Override
-    public void get(int row, int col, Complex_F32 output) {
+    public void get(int row, int col, CComplex output) {
         int index = row*numCols*2 + col*2;
         output.real = data[index];
         output.imaginary = data[index+1];
@@ -165,7 +165,7 @@ public class CMatrixRMaj extends CMatrixD1 {
 
         CMatrix n = (CMatrix)original;
 
-        Complex_F32 c = new Complex_F32();
+        CComplex c = new CComplex();
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 n.get(i,j,c);

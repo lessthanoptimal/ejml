@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row;
 
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
@@ -47,7 +47,7 @@ public class SpecializedOps_DDRM {
      * @param u A vector. Not modified.
      * @return An orthogonal reflector.
      */
-    public static DMatrixRMaj createReflector(D1MatrixRow_F64 u ) {
+    public static DMatrixRMaj createReflector(DMatrix1Row u ) {
         if( !MatrixFeatures_DDRM.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
@@ -235,7 +235,7 @@ public class SpecializedOps_DDRM {
      * @param B A square matrix that the results are saved to.  Modified.
      * @param alpha Scaling factor for the identity matrix.
      */
-    public static void addIdentity(D1MatrixRow_F64 A , D1MatrixRow_F64 B , double alpha )
+    public static void addIdentity(DMatrix1Row A , DMatrix1Row B , double alpha )
     {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("A must be square");
@@ -271,7 +271,7 @@ public class SpecializedOps_DDRM {
      * @param offsetV First element in 'v' where the results are extracted to.
      * @param v Vector where the results are written to. Modified.
      */
-    public static void subvector(D1MatrixRow_F64 A, int rowA, int colA, int length , boolean row, int offsetV, D1MatrixRow_F64 v) {
+    public static void subvector(DMatrix1Row A, int rowA, int colA, int length , boolean row, int offsetV, DMatrix1Row v) {
         if( row ) {
             for( int i = 0; i < length; i++ ) {
                 v.set( offsetV +i , A.get(rowA,colA+i) );
@@ -290,7 +290,7 @@ public class SpecializedOps_DDRM {
      * @param column If true then column vectors will be created.
      * @return Set of vectors.
      */
-    public static DMatrixRMaj[] splitIntoVectors(D1MatrixRow_F64 A , boolean column )
+    public static DMatrixRMaj[] splitIntoVectors(DMatrix1Row A , boolean column )
     {
         int w = column ? A.numCols : A.numRows;
 
@@ -361,7 +361,7 @@ public class SpecializedOps_DDRM {
      * @param T A matrix.
      * @return product of the diagonal elements.
      */
-    public static double diagProd( D1MatrixRow_F64 T )
+    public static double diagProd( DMatrix1Row T )
     {
         double prod = 1.0;
         int N = Math.min(T.numRows,T.numCols);

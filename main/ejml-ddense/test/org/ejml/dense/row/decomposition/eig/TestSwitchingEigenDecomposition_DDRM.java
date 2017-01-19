@@ -19,7 +19,7 @@
 package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 import org.junit.Test;
 
 
@@ -28,7 +28,7 @@ import org.junit.Test;
  */
 public class TestSwitchingEigenDecomposition_DDRM extends GeneralEigenDecompositionCheck_DDRM {
     @Override
-    public EigenDecomposition_F64 createDecomposition() {
+    public EigenDecompositionD createDecomposition() {
         return new SwitchingEigenDecomposition_DDRM(0,computeVectors, UtilEjml.TEST_F64);
     }
 

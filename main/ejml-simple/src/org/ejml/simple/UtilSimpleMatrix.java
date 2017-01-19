@@ -20,7 +20,7 @@ package org.ejml.simple;
 
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 /**
  * @author Peter Abeles
@@ -33,7 +33,7 @@ public class UtilSimpleMatrix {
      * @return Equivalent SimpleMatrix.
      */
     public static SimpleMatrix convertSimple( DMatrixRBlock A ) {
-        DMatrixRMaj B = ConvertMatrixStruct_F64.convert(A, null);
+        DMatrixRMaj B = ConvertDMatrixStruct.convert(A, null);
 
         return SimpleMatrix.wrap(B);
     }

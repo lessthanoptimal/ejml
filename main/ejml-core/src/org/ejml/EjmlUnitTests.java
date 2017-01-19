@@ -164,7 +164,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEquals(Complex_F64 a , Complex_F64 b , double tol ) {
+    public static void assertEquals(ZComplex a , ZComplex b , double tol ) {
         assertTrue(!Double.isNaN(a.real) && !Double.isNaN(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(!Double.isInfinite(a.real) && !Double.isInfinite(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(Math.abs( a.real-b.real) <= tol,"real a = "+a.real+" b = "+b.real);
@@ -174,7 +174,7 @@ public class EjmlUnitTests {
         assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
     }
 
-    public static void assertEquals(Complex_F32 a , Complex_F32 b , float tol ) {
+    public static void assertEquals(CComplex a , CComplex b , float tol ) {
         assertTrue(!Float.isNaN(a.real) && !Float.isNaN(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(!Float.isInfinite(a.real) && !Float.isInfinite(b.real) ,"real a = "+a.real+" b = "+b.real);
         assertTrue(Math.abs( a.real-b.real) <= tol,"real a = "+a.real+" b = "+b.real);
@@ -187,8 +187,8 @@ public class EjmlUnitTests {
     public static void assertEquals(ZMatrix A , ZMatrix B , double tol ) {
         assertShape(A,B);
 
-        Complex_F64 a = new Complex_F64();
-        Complex_F64 b = new Complex_F64();
+        ZComplex a = new ZComplex();
+        ZComplex b = new ZComplex();
 
         for( int i = 0; i < A.getNumRows(); i++ ){
             for( int j = 0; j < A.getNumCols(); j++ ) {
@@ -210,8 +210,8 @@ public class EjmlUnitTests {
     public static void assertEquals(CMatrix A , CMatrix B , float tol ) {
         assertShape(A, B);
 
-        Complex_F32 a = new Complex_F32();
-        Complex_F32 b = new Complex_F32();
+        CComplex a = new CComplex();
+        CComplex b = new CComplex();
 
         for (int i = 0; i < A.getNumRows(); i++) {
             for (int j = 0; j < A.getNumCols(); j++) {

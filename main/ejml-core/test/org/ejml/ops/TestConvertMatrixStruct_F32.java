@@ -47,14 +47,14 @@ public class TestConvertMatrixStruct_F32 {
         FMatrixRMaj a = new FMatrixRMaj(2,3,true,1,2,3,4,5,6);
         FMatrixRMaj b = new FMatrixRMaj(2,3);
 
-        ConvertMatrixStruct_F32.convert((FMatrix)a,(FMatrix)b);
+        ConvertFMatrixStruct.convert((FMatrix)a,(FMatrix)b);
 
         assertTrue(MatrixFeatures_FDRM.isIdentical(a,b,UtilEjml.TEST_F32));
     }
 
     @Test
     public void checkAll_Fixed_to_DM() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertMatrixStruct_F32.class.getMethods();
+        Method[] methods = ConvertFMatrixStruct.class.getMethods();
 
         int numFound = 0;
 
@@ -92,7 +92,7 @@ public class TestConvertMatrixStruct_F32 {
 
     @Test
     public void checkAll_DM_to_Fixed() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertMatrixStruct_F32.class.getMethods();
+        Method[] methods = ConvertFMatrixStruct.class.getMethods();
 
         int numFound = 0;
 
@@ -135,7 +135,7 @@ public class TestConvertMatrixStruct_F32 {
                 FMatrixRBlock a = MatrixOps_FDRB.createRandom(rows,cols,-1,2,rand);
                 FMatrixRMaj b = new FMatrixRMaj(rows,cols);
 
-                ConvertMatrixStruct_F32.convert(a,b);
+                ConvertFMatrixStruct.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -149,7 +149,7 @@ public class TestConvertMatrixStruct_F32 {
                 FMatrixRMaj a = RandomMatrices_FDRM.createRandom(rows,cols,rand);
                 FMatrixRBlock b = new FMatrixRBlock(rows,cols,3);
 
-                ConvertMatrixStruct_F32.convert(a,b);
+                ConvertFMatrixStruct.convert(a,b);
 
                 checkIdentical(a,b);
             }

@@ -23,9 +23,9 @@ import org.ejml.data.*;
 import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 import org.ejml.interfaces.decomposition.LUDecomposition;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
 
 
 /**
@@ -147,13 +147,13 @@ public class MatrixFeatures_DDRM {
         if( !isSquare(A))
            return false;
 
-        EigenDecomposition_F64<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numCols,false);
+        EigenDecompositionD<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numCols,false);
         if( eig.inputModified() )
             A = A.copy();
         eig.decompose(A);
 
         for( int i = 0; i < A.numRows; i++ ) {
-            Complex_F64 v = eig.getEigenvalue(i);
+            ZComplex v = eig.getEigenvalue(i);
 
             if( v.getReal() < 0 )
                 return false;
@@ -694,7 +694,7 @@ public class MatrixFeatures_DDRM {
      * @return The matrix's rank.
      */
     public static int rank(DMatrixRMaj A , double threshold ) {
-        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
 
         if( svd.inputModified() )
             A = A.copy();
@@ -723,7 +723,7 @@ public class MatrixFeatures_DDRM {
      * @return The matrix's nullity.
      */
     public static int nullity(DMatrixRMaj A , double threshold ) {
-        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
 
         if( svd.inputModified() )
             A = A.copy();

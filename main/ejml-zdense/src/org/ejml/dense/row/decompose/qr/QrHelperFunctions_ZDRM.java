@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.decompose.qr;
 
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 
 
@@ -113,7 +113,7 @@ public class QrHelperFunctions_ZDRM {
      */
     public static double computeTauGammaAndDivide(final int start, final int stop,
                                                   final double[] x, final double max,
-                                                  Complex_F64 tau) {
+                                                  ZComplex tau) {
 
         int index = start*2;
         double nx = 0;

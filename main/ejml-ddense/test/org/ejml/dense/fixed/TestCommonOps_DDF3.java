@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestCommonOps_DDF3 extends CompareFixedToCommonOps_F64 {
+public class TestCommonOps_DDF3 extends CompareFixedToCommonOps_DDRM {
 
     Random rand = new Random(234);
 

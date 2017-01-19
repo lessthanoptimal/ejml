@@ -20,7 +20,7 @@ package org.ejml.dense.row.decomposition.svd;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
 
 /**
  * Wraps around a {@link SingularValueDecomposition} and ensures that the input is not modified.
@@ -28,14 +28,14 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class SafeSvd_DDRM
-        implements SingularValueDecomposition_F64<DMatrixRMaj>
+        implements SingularValueDecompositionD<DMatrixRMaj>
 {
     // the decomposition algorithm
-    SingularValueDecomposition_F64<DMatrixRMaj> alg;
+    SingularValueDecompositionD<DMatrixRMaj> alg;
     // storage for the input if it would be modified
     DMatrixRMaj work = new DMatrixRMaj(1,1);
 
-    public SafeSvd_DDRM(SingularValueDecomposition_F64<DMatrixRMaj> alg) {
+    public SafeSvd_DDRM(SingularValueDecompositionD<DMatrixRMaj> alg) {
         this.alg = alg;
     }
 

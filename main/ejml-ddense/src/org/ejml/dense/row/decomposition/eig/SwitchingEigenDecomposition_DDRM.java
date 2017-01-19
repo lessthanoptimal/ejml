@@ -19,11 +19,11 @@
 package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 
 
 /**
@@ -34,12 +34,12 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
  * @author Peter Abeles
  */
 public class SwitchingEigenDecomposition_DDRM
-        implements EigenDecomposition_F64<DMatrixRMaj> {
+        implements EigenDecompositionD<DMatrixRMaj> {
     // tolerance used in deciding if a matrix is symmetric or not
     private double tol;
 
-    EigenDecomposition_F64<DMatrixRMaj> symmetricAlg;
-    EigenDecomposition_F64<DMatrixRMaj> generalAlg;
+    EigenDecompositionD<DMatrixRMaj> symmetricAlg;
+    EigenDecompositionD<DMatrixRMaj> generalAlg;
 
     boolean symmetric;
     // should it compute eigenvectors or just eigenvalues?
@@ -70,7 +70,7 @@ public class SwitchingEigenDecomposition_DDRM
     }
 
     @Override
-    public Complex_F64 getEigenvalue(int index) {
+    public ZComplex getEigenvalue(int index) {
         return symmetric ? symmetricAlg.getEigenvalue(index) :
                 generalAlg.getEigenvalue(index);
     }

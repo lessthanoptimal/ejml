@@ -21,7 +21,7 @@ package org.ejml.dense.row.decompose.chol;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 import org.junit.Test;
 
 import java.util.Random;
@@ -44,7 +44,7 @@ public class TestCholeskyDecompositionCommon_ZDRM {
     public void getT() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.createHermPosDef(N, rand);
 
-        CholeskyDecomposition_F64<ZMatrixRMaj> cholesky = new Dummy(true);
+        CholeskyDecompositionD<ZMatrixRMaj> cholesky = new Dummy(true);
 
         ZMatrixRMaj L_null = cholesky.getT(null);
         ZMatrixRMaj L_provided = RandomMatrices_ZDRM.createRandom(N, N, rand);

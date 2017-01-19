@@ -24,7 +24,7 @@ import org.ejml.data.DMatrix6x6;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Random;
 
@@ -120,17 +120,17 @@ public class BenchmarkMultiplicationFixed {
         RandomMatrices_DDRM.setRandom(dm6x6_b,rand);
         RandomMatrices_DDRM.setRandom(dm6x6_c,rand);
 
-        ConvertMatrixStruct_F64.convert(dm3x3_a,fixed3x3_a);
-        ConvertMatrixStruct_F64.convert(dm3x3_b,fixed3x3_b);
-        ConvertMatrixStruct_F64.convert(dm3x3_c,fixed3x3_c);
+        ConvertDMatrixStruct.convert(dm3x3_a,fixed3x3_a);
+        ConvertDMatrixStruct.convert(dm3x3_b,fixed3x3_b);
+        ConvertDMatrixStruct.convert(dm3x3_c,fixed3x3_c);
 
-        ConvertMatrixStruct_F64.convert(dm4x4_a,fixed4x4_a);
-        ConvertMatrixStruct_F64.convert(dm4x4_b,fixed4x4_b);
-        ConvertMatrixStruct_F64.convert(dm4x4_c,fixed4x4_c);
+        ConvertDMatrixStruct.convert(dm4x4_a,fixed4x4_a);
+        ConvertDMatrixStruct.convert(dm4x4_b,fixed4x4_b);
+        ConvertDMatrixStruct.convert(dm4x4_c,fixed4x4_c);
 
-        ConvertMatrixStruct_F64.convert(dm6x6_a,fixed6x6_a);
-        ConvertMatrixStruct_F64.convert(dm6x6_b,fixed6x6_b);
-        ConvertMatrixStruct_F64.convert(dm6x6_c,fixed6x6_c);
+        ConvertDMatrixStruct.convert(dm6x6_a,fixed6x6_a);
+        ConvertDMatrixStruct.convert(dm6x6_b,fixed6x6_b);
+        ConvertDMatrixStruct.convert(dm6x6_c,fixed6x6_c);
 
         int numTrials = 100000000;
 

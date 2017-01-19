@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 
@@ -154,7 +154,7 @@ public class VectorVectorMult_DDRM {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProd(DMatrixD1 x, DMatrixD1 y, D1MatrixRow_F64 A ) {
+    public static void outerProd(DMatrixD1 x, DMatrixD1 y, DMatrix1Row A ) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -189,7 +189,7 @@ public class VectorVectorMult_DDRM {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void addOuterProd(double gamma , DMatrixD1 x, DMatrixD1 y, D1MatrixRow_F64 A ) {
+    public static void addOuterProd(double gamma , DMatrixD1 x, DMatrixD1 y, DMatrix1Row A ) {
         int m = A.numRows;
         int n = A.numCols;
 

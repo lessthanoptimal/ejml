@@ -32,7 +32,7 @@ import java.io.FileNotFoundException;
 public class GenerateFixedOps extends GenerateFixed {
 
     public GenerateFixedOps() {
-        super("FixedOps");
+        super("CommonOps_DDF");
     }
 
     @Override

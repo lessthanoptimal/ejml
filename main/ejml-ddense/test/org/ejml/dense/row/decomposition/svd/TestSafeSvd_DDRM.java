@@ -21,7 +21,7 @@ package org.ejml.dense.row.decomposition.svd;
 import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -79,7 +79,7 @@ public class TestSafeSvd_DDRM {
         assertEquals(3,decomp.numRows());
     }
 
-    protected static class Dummy implements SingularValueDecomposition_F64<DMatrixRMaj> {
+    protected static class Dummy implements SingularValueDecompositionD<DMatrixRMaj> {
 
         DMatrix passedInMatrix;
 

@@ -21,7 +21,7 @@ package org.ejml.dense.row.decomposition.qr;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+import org.ejml.interfaces.decomposition.QRPDecompositionD;
 
 /**
  * <p>
@@ -44,7 +44,7 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
  */
 public class QRColPivDecompositionHouseholderColumn_DDRM
         extends QRDecompositionHouseholderColumn_DDRM
-        implements QRPDecomposition_F64<DMatrixRMaj>
+        implements QRPDecompositionD<DMatrixRMaj>
 {
     // the ordering of each column, the current column i is the original column pivots[i]
     protected int pivots[];

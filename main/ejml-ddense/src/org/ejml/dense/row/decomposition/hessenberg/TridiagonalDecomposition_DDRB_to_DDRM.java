@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.decomposition.hessenberg.TridiagonalDecompositionHouseholder_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
 
 
 /**
@@ -34,7 +34,7 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
  */
 public class TridiagonalDecomposition_DDRB_to_DDRM
         extends BaseDecomposition_DDRB_to_DDRM
-        implements TridiagonalSimilarDecomposition_F64<DMatrixRMaj> {
+        implements TridiagonalSimilarDecompositionD<DMatrixRMaj> {
 
 
     public TridiagonalDecomposition_DDRB_to_DDRM() {

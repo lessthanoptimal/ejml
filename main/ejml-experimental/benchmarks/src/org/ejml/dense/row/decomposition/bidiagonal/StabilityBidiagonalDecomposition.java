@@ -21,7 +21,7 @@ package org.ejml.dense.row.decomposition.bidiagonal;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -35,7 +35,7 @@ import java.util.Random;
 public class StabilityBidiagonalDecomposition {
 
 
-    public static double evaluate(BidiagonalDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
+    public static double evaluate(BidiagonalDecompositionD<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
         if( !alg.decompose(orig.copy())) {
             return Double.NaN;

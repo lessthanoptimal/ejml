@@ -20,12 +20,12 @@ package org.ejml.dense.row;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.MatrixMatrixMult_ZDRM;
 import org.ejml.dense.row.mult.TestMatrixMatrixMult_ZDRM;
-import org.ejml.ops.ComplexMath_F64;
+import org.ejml.ops.ComplexMathZ;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -73,7 +73,7 @@ public class TestCommonOps_ZDRM {
         assertEquals(3,m.numRows);
         assertEquals(3,m.numCols);
 
-        Complex_F64 a = new Complex_F64();
+        ZComplex a = new ZComplex();
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -95,7 +95,7 @@ public class TestCommonOps_ZDRM {
         DMatrixRMaj input = RandomMatrices_DDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj output = new ZMatrixRMaj(5,7);
 
-        Complex_F64 a = new Complex_F64();
+        ZComplex a = new ZComplex();
 
         CommonOps_ZDRM.convert(input, output);
 
@@ -114,7 +114,7 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj input = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         DMatrixRMaj output = new DMatrixRMaj(5,7);
 
-        Complex_F64 a = new Complex_F64();
+        ZComplex a = new ZComplex();
 
         CommonOps_ZDRM.stripReal(input, output);
 
@@ -132,7 +132,7 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj input = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         DMatrixRMaj output = new DMatrixRMaj(5,7);
 
-        Complex_F64 a = new Complex_F64();
+        ZComplex a = new ZComplex();
 
         CommonOps_ZDRM.stripImaginary(input, output);
 
@@ -150,7 +150,7 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj input = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         DMatrixRMaj output = new DMatrixRMaj(5,7);
 
-        Complex_F64 a = new Complex_F64();
+        ZComplex a = new ZComplex();
 
         CommonOps_ZDRM.magnitude(input, output);
 
@@ -200,10 +200,10 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj matrixB = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
 
-        Complex_F64 a = new Complex_F64();
-        Complex_F64 b = new Complex_F64();
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex a = new ZComplex();
+        ZComplex b = new ZComplex();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         CommonOps_ZDRM.add(matrixA, matrixB, out);
 
@@ -213,7 +213,7 @@ public class TestCommonOps_ZDRM {
                 matrixB.get(i,j,b);
                 out.get(i,j,found);
 
-                ComplexMath_F64.plus(a, b, expected);
+                ComplexMathZ.plus(a, b, expected);
 
                 assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
@@ -227,10 +227,10 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj matrixB = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
 
-        Complex_F64 a = new Complex_F64();
-        Complex_F64 b = new Complex_F64();
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex a = new ZComplex();
+        ZComplex b = new ZComplex();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         CommonOps_ZDRM.subtract(matrixA, matrixB, out);
 
@@ -240,7 +240,7 @@ public class TestCommonOps_ZDRM {
                 matrixB.get(i,j,b);
                 out.get(i,j,found);
 
-                ComplexMath_F64.minus(a, b, expected);
+                ComplexMathZ.minus(a, b, expected);
 
                 assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
@@ -250,21 +250,21 @@ public class TestCommonOps_ZDRM {
 
     @Test
     public void scale() {
-        Complex_F64 scale = new Complex_F64(2.5,0.4);
+        ZComplex scale = new ZComplex(2.5,0.4);
 
         ZMatrixRMaj mat = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj orig = mat.copy();
 
         CommonOps_ZDRM.scale(scale.real, scale.imaginary, mat);
 
-        Complex_F64 value = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex value = new ZComplex();
+        ZComplex expected = new ZComplex();
         for (int i = 0; i < mat.numRows; i++) {
             for (int j = 0; j < mat.numCols; j++) {
 //                System.out.println("i "+i+" j "+j);
                 orig.get(i,j,value);
 
-                ComplexMath_F64.multiply(scale,value,expected);
+                ComplexMathZ.multiply(scale,value,expected);
                 assertEquals(expected.real, mat.getReal(i,j), UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary, mat.getImag(i,j), UtilEjml.TEST_F64);
             }
@@ -335,8 +335,8 @@ public class TestCommonOps_ZDRM {
 
         CommonOps_ZDRM.transpose(b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -357,8 +357,8 @@ public class TestCommonOps_ZDRM {
 
         CommonOps_ZDRM.transposeConjugate(b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -379,8 +379,8 @@ public class TestCommonOps_ZDRM {
 
         CommonOps_ZDRM.transpose(a, b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
@@ -401,8 +401,8 @@ public class TestCommonOps_ZDRM {
 
         CommonOps_ZDRM.transposeConjugate(a, b);
 
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
@@ -501,9 +501,9 @@ public class TestCommonOps_ZDRM {
 
         ZMatrixRMaj A_orig = A.copy();
 
-        Complex_F64 found = CommonOps_ZDRM.det(A);
+        ZComplex found = CommonOps_ZDRM.det(A);
         // from octave
-        Complex_F64 expected = new Complex_F64(-0.40548 , 0.54188);
+        ZComplex expected = new ZComplex(-0.40548 , 0.54188);
 
         assertEquals(expected.real,found.real,1e-3);
         assertEquals(expected.imaginary,found.imaginary,1e-3);
@@ -516,10 +516,10 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj in = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
 
-        Complex_F64 a = new Complex_F64(1.2,-0.3);
-        Complex_F64 b = new Complex_F64();
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex a = new ZComplex(1.2,-0.3);
+        ZComplex b = new ZComplex();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         CommonOps_ZDRM.elementMultiply(in,a.real,a.imaginary,out);
 
@@ -528,7 +528,7 @@ public class TestCommonOps_ZDRM {
                 in.get(i,j,b);
                 out.get(i,j,found);
 
-                ComplexMath_F64.multiply(a,b,expected);
+                ComplexMathZ.multiply(a,b,expected);
 
                 assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
@@ -541,10 +541,10 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj in = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
 
-        Complex_F64 a = new Complex_F64();
-        Complex_F64 b = new Complex_F64(1.2,-0.3);
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex a = new ZComplex();
+        ZComplex b = new ZComplex(1.2,-0.3);
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         CommonOps_ZDRM.elementDivide(in,b.real,b.imaginary,out);
 
@@ -553,7 +553,7 @@ public class TestCommonOps_ZDRM {
                 in.get(i,j,a);
                 out.get(i,j,found);
 
-                ComplexMath_F64.divide(a,b,expected);
+                ComplexMathZ.divide(a,b,expected);
 
                 assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
@@ -566,10 +566,10 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj in = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.createRandom(5,7,-1,1,rand);
 
-        Complex_F64 a = new Complex_F64(1.2,-0.3);
-        Complex_F64 b = new Complex_F64();
-        Complex_F64 found = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex a = new ZComplex(1.2,-0.3);
+        ZComplex b = new ZComplex();
+        ZComplex found = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         CommonOps_ZDRM.elementDivide(a.real,a.imaginary,in,out);
 
@@ -578,7 +578,7 @@ public class TestCommonOps_ZDRM {
                 in.get(i,j,b);
                 out.get(i,j,found);
 
-                ComplexMath_F64.divide(a,b,expected);
+                ComplexMathZ.divide(a,b,expected);
 
                 assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);
@@ -647,7 +647,7 @@ public class TestCommonOps_ZDRM {
 
         CommonOps_ZDRM.setIdentity(a);
 
-        Complex_F64 c = new Complex_F64();
+        ZComplex c = new ZComplex();
         for (int i = 0; i < a.numRows; i++) {
             for (int j = 0; j < a.numCols; j++) {
                 a.get(i,j,c);
@@ -667,8 +667,8 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
         ZMatrixRMaj b = CommonOps_ZDRM.extract(a,2,5,3,8);
 
-        Complex_F64 ca = new Complex_F64();
-        Complex_F64 cb = new Complex_F64();
+        ZComplex ca = new ZComplex();
+        ZComplex cb = new ZComplex();
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
@@ -686,8 +686,8 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
         ZMatrixRMaj b = new ZMatrixRMaj(6,7);
 
-        Complex_F64 ca = new Complex_F64();
-        Complex_F64 cb = new Complex_F64();
+        ZComplex ca = new ZComplex();
+        ZComplex cb = new ZComplex();
 
         CommonOps_ZDRM.extract(a,2,5,3,7,b,1,2);
 
@@ -707,8 +707,8 @@ public class TestCommonOps_ZDRM {
         ZMatrixRMaj a = RandomMatrices_ZDRM.createRandom(10,12,-2,2,rand);
         ZMatrixRMaj v[] = CommonOps_ZDRM.columnsToVector(a,null);
 
-        Complex_F64 ca = new Complex_F64();
-        Complex_F64 cc = new Complex_F64();
+        ZComplex ca = new ZComplex();
+        ZComplex cc = new ZComplex();
 
         for (int i = 0; i < a.numCols; i++) {
             ZMatrixRMaj c = v[i];

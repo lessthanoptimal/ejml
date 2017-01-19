@@ -26,7 +26,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.SingularOps_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -41,7 +41,7 @@ public abstract class StandardSvdChecks_DDRM {
 
     Random rand = new Random(73675);
 
-    public abstract SingularValueDecomposition_F64<DMatrixRMaj> createSvd();
+    public abstract SingularValueDecompositionD<DMatrixRMaj> createSvd();
 
     boolean omitVerySmallValues = false;
 
@@ -76,7 +76,7 @@ public abstract class StandardSvdChecks_DDRM {
     {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
 
-        SingularValueDecomposition_F64<DMatrixRMaj> alg = createSvd();
+        SingularValueDecompositionD<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         assertEquals(3, SingularOps_DDRM.rank(alg, UtilEjml.EPS));
@@ -114,7 +114,7 @@ public abstract class StandardSvdChecks_DDRM {
             for( int j = 1; j <= 16; j += 5 ) {
                 DMatrixRMaj A = new DMatrixRMaj(i,j);
 
-                SingularValueDecomposition_F64<DMatrixRMaj> alg = createSvd();
+                SingularValueDecompositionD<DMatrixRMaj> alg = createSvd();
                 assertTrue(alg.decompose(A));
 
                 int min = Math.min(i,j);
@@ -129,7 +129,7 @@ public abstract class StandardSvdChecks_DDRM {
     public void testIdentity() {
         DMatrixRMaj A = CommonOps_DDRM.identity(6,6);
 
-        SingularValueDecomposition_F64<DMatrixRMaj> alg = createSvd();
+        SingularValueDecompositionD<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
 
         assertEquals(6,checkOccurrence(1,alg.getSingularValues(),6),UtilEjml.TEST_F64_SQ);

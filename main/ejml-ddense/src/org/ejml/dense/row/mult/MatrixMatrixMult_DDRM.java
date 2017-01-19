@@ -19,12 +19,12 @@
 package org.ejml.dense.row.mult;
 
 import org.ejml.MatrixDimensionException;
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.dense.row.CommonOps_DDRM;
 
 /**
  * <p>
- * This class contains various types of matrix matrix multiplication operations for {@link D1MatrixRow_F64}.
+ * This class contains various types of matrix matrix multiplication operations for {@link DMatrix1Row}.
  * </p>
  * <p>
  * Two algorithms that are equivalent can often have very different runtime performance.
@@ -60,9 +60,9 @@ import org.ejml.dense.row.CommonOps_DDRM;
 @SuppressWarnings("Duplicates")
 public class MatrixMatrixMult_DDRM {
     /**
-     * @see CommonOps_DDRM#mult( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void mult_reorder(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void mult_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -110,9 +110,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void mult_small(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void mult_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -144,9 +144,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void mult_aux(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void mult_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -176,9 +176,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransA_reorder(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransA_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -219,9 +219,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransA_small(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransA_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -253,9 +253,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransAB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -286,9 +286,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransAB_aux(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void multTransAB_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -322,9 +322,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransB( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -356,9 +356,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAdd( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAdd_reorder(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAdd_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -405,9 +405,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAdd( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAdd_small(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAdd_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -439,9 +439,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAdd( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAdd_aux(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void multAdd_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -471,9 +471,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransA_reorder(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransA_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -513,9 +513,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransA_small(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransA_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -547,9 +547,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransAB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -580,9 +580,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransAB_aux(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void multAddTransAB_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -615,9 +615,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransB( D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -649,9 +649,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void mult_reorder(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void mult_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -699,9 +699,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void mult_small(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void mult_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -733,9 +733,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void mult_aux(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void mult_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -765,9 +765,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransA_reorder(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransA_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -808,9 +808,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransA_small(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransA_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -842,9 +842,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransAB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -875,9 +875,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransAB_aux(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void multTransAB_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -911,9 +911,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransB(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multTransB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multTransB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -945,9 +945,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAdd(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAdd_reorder(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAdd_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -994,9 +994,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAdd(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAdd_small(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAdd_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1028,9 +1028,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAdd(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAdd_aux(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void multAdd_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1060,9 +1060,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransA_reorder(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransA_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1102,9 +1102,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransA_small(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransA_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1136,9 +1136,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransAB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1169,9 +1169,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransAB_aux(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c , double []aux )
+    public static void multAddTransAB_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1204,9 +1204,9 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransB(double, D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#multAddTransB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static void multAddTransB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");

@@ -32,7 +32,7 @@ import org.ejml.dense.row.mult.MatrixMultProduct_DDRM;
 import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
+import org.ejml.interfaces.linsol.ReducedRowEchelonFormD;
 
 import java.util.Arrays;
 
@@ -67,7 +67,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void mult(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult_DDRM.mult(a, b, c);
@@ -91,7 +91,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void mult(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -113,7 +113,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransA(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numCols == 1 ) {
             // todo check a.numCols == 1 and do inner product?
@@ -144,7 +144,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransA(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -167,7 +167,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numRows == 1 ) {
             MatrixVectorMult_DDRM.mult(a, b, c);
@@ -189,7 +189,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_DDRM.multTransB(alpha,a,b,c);
@@ -207,7 +207,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numRows == 1) {
             // there are significantly faster algorithms when dealing with vectors
@@ -236,7 +236,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -280,7 +280,7 @@ public class CommonOps_DDRM {
      * @param a The matrix being multiplied. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multInner(D1MatrixRow_F64 a , D1MatrixRow_F64 c )
+    public static void multInner(DMatrix1Row a , DMatrix1Row c )
     {
         if( a.numCols != c.numCols || a.numCols != c.numRows )
             throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the columns in 'a'");
@@ -307,7 +307,7 @@ public class CommonOps_DDRM {
      * @param a The matrix being multiplied. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multOuter(D1MatrixRow_F64 a , D1MatrixRow_F64 c )
+    public static void multOuter(DMatrix1Row a , DMatrix1Row c )
     {
         if( a.numRows != c.numCols || a.numRows != c.numRows )
             throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the rows in 'a'");
@@ -327,7 +327,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAdd(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numCols == 1 ) {
             MatrixVectorMult_DDRM.multAdd(a, b, c);
@@ -353,7 +353,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAdd(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -375,7 +375,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransA(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numCols == 1 ) {
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -406,7 +406,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransA(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
@@ -429,7 +429,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         MatrixMatrixMult_DDRM.multAddTransB(a,b,c);
     }
@@ -447,7 +447,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_DDRM.multAddTransB(alpha,a,b,c);
@@ -465,7 +465,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( b.numRows == 1 ) {
             // there are significantly faster algorithms when dealing with vectors
@@ -494,7 +494,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(double alpha , D1MatrixRow_F64 a , D1MatrixRow_F64 b , D1MatrixRow_F64 c )
+    public static void multAddTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
@@ -609,7 +609,7 @@ public class CommonOps_DDRM {
      *
      * @param a A square matrix.  Not modified.
      */
-    public static double trace( D1MatrixRow_F64 a ) {
+    public static double trace( DMatrix1Row a ) {
         int N = Math.min(a.numRows, a.numCols);
         double sum = 0;
         int index = 0;
@@ -850,7 +850,7 @@ public class CommonOps_DDRM {
      *
      * @param mat A square matrix.
      */
-    public static void setIdentity( D1MatrixRow_F64 mat )
+    public static void setIdentity( DMatrix1Row mat )
     {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
@@ -1055,7 +1055,7 @@ public class CommonOps_DDRM {
         if( src instanceof DMatrixRMaj && dst instanceof DMatrixRMaj) {
             ImplCommonOps_DDRM.extract((DMatrixRMaj)src,srcY0,srcX0,(DMatrixRMaj)dst,dstY0,dstX0, h, w);
         } else {
-            ImplCommonOps_F64.extract(src,srcY0,srcX0,dst,dstY0,dstX0, h, w);
+            ImplCommonOps_DDMA.extract(src,srcY0,srcX0,dst,dstY0,dstX0, h, w);
         }
     }
 
@@ -2164,7 +2164,7 @@ public class CommonOps_DDRM {
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);
 
-        ReducedRowEchelonForm_F64<DMatrixRMaj> alg = new RrefGaussJordanRowPivot_DDRM();
+        ReducedRowEchelonFormD<DMatrixRMaj> alg = new RrefGaussJordanRowPivot_DDRM();
         alg.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*Math.max(A.numRows,A.numCols));
 
         reduced.set(A);

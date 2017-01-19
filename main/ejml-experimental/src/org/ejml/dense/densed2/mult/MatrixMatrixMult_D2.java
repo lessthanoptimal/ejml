@@ -19,7 +19,7 @@
 package org.ejml.dense.densed2.mult;
 
 import org.ejml.MatrixDimensionException;
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DenseD2Matrix64F;
 import org.ejml.dense.row.CommonOps_DDRM;
 
@@ -30,7 +30,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 public class MatrixMatrixMult_D2 {
 
     /**
-     * @see CommonOps_DDRM#mult(D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
     public static void mult_small( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c )
     {
@@ -62,7 +62,7 @@ public class MatrixMatrixMult_D2 {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
     public static void mult_aux( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c , double []aux )
     {

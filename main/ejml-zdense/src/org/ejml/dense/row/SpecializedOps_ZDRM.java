@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row;
 
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
 
@@ -221,7 +221,7 @@ public class SpecializedOps_ZDRM {
         CommonOps_ZDRM.elementDivide(u, max, 0, u);
 
         double nx = NormOps_ZDRM.normF(u);
-        Complex_F64 c = new Complex_F64();
+        ZComplex c = new ZComplex();
         u.get(0,0,c);
 
         double realTau,imagTau;

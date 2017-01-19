@@ -233,9 +233,9 @@ public abstract class FMatrixD1 implements ReshapeMatrix, FMatrix {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_F32 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public FMatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator_F32(this,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new FMatrixIterator(this,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

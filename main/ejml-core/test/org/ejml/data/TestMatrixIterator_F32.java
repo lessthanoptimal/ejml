@@ -39,7 +39,7 @@ public class TestMatrixIterator_F32 {
     public void allRow() {
         FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
-        MatrixIterator_F32 iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
+        FMatrixIterator iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
 
         for( int i = 0; i < A.numRows; i++ ) {
             for( int j = 0; j < A.numCols; j++ ) {
@@ -54,7 +54,7 @@ public class TestMatrixIterator_F32 {
     public void allCol() {
         FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
-        MatrixIterator_F32 iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
+        FMatrixIterator iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
 
         for( int j = 0; j < A.numCols; j++ ) {
             for( int i = 0; i < A.numRows; i++ ) {
@@ -69,7 +69,7 @@ public class TestMatrixIterator_F32 {
     public void subRow() {
         FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
-        MatrixIterator_F32 iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
+        FMatrixIterator iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
 
         for( int i = 1; i < A.numRows-1; i++ ) {
             for( int j = 2; j < A.numCols; j++ ) {
@@ -85,7 +85,7 @@ public class TestMatrixIterator_F32 {
     public void subCol() {
         FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
-        MatrixIterator_F32 iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
+        FMatrixIterator iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
 
         for( int j = 2; j < A.numCols; j++ ) {
             for( int i = 1; i < A.numRows-1; i++ ) {

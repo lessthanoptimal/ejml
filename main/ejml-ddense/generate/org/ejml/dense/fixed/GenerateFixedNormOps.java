@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 public class GenerateFixedNormOps extends GenerateFixed {
 
     public GenerateFixedNormOps() {
-        super("FixedNormOps");
+        super("NormOps_DDF");
     }
 
     @Override

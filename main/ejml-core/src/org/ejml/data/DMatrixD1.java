@@ -233,9 +233,9 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_F64 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public DMatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator_F64(this,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new DMatrixIterator(this,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

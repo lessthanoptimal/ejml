@@ -19,12 +19,12 @@
 package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
+import org.ejml.data.DEigenpair;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.Eigenpair_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.*;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -40,7 +40,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
     Random rand = new Random(895723);
 
-    public abstract EigenDecomposition_F64 createDecomposition();
+    public abstract EigenDecompositionD createDecomposition();
 
     boolean computeVectors;
 
@@ -79,7 +79,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     }
 
     public void checkSizeZero() {
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertFalse(alg.decompose(new DMatrixRMaj(0,0)));
     }
@@ -91,7 +91,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkRandom() {
         int sizes[] = new int[]{1,2,5,10,20,50,100,200};
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         for( int s = 2; s < sizes.length; s++ ) {
             int N = sizes[s];
@@ -114,7 +114,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkKnownReal() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
         performStandardTests(alg,A,-1);
@@ -191,7 +191,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkKnownReal_JustValue() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
 
@@ -208,7 +208,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
                 0.98139,   0.78650,   0.78564,
                 0.78650,   1.03207,   0.29794,
                 0.78564,   0.29794,   0.91926);
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
 
@@ -224,7 +224,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkKnownComplex() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, -0.418284, 0.279875, 0.452912, -0.093748, -0.045179, 0.310949, 0.250513, -0.304077, -0.031414);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
         performStandardTests(alg,A,-1);
@@ -242,7 +242,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
             for( int i = 0; i < 20; i++ ) {
                 DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(N,-1,1,rand);
 
-                EigenDecomposition_F64 alg = createDecomposition();
+                EigenDecompositionD alg = createDecomposition();
 
                 assertTrue(safeDecomposition(alg,A));
 
@@ -258,7 +258,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkExceptional() {
         DMatrixRMaj A = new DMatrixRMaj(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
 
@@ -268,7 +268,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkIdentity() {
         DMatrixRMaj I = CommonOps_DDRM.identity(4);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,I));
 
@@ -283,7 +283,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkAllZeros() {
         DMatrixRMaj A = new DMatrixRMaj(5,5);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
 
@@ -292,7 +292,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     }
 
     public void checkWithSomeRepeatedValuesSymm() {
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         checkSymmetricMatrix(alg,2,-3,-3,-3);
         checkSymmetricMatrix(alg,2,-3,2,2);
@@ -301,7 +301,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
     public void checkWithSingularSymm() {
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         checkSymmetricMatrix(alg,1,0,1,2);
     }
@@ -310,7 +310,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
      * Creates a random symmetric matrix with the specified eigenvalues.  It then
      * checks to see if it has the expected results.
      */
-    private void checkSymmetricMatrix(EigenDecomposition_F64 alg , double ...ev ) {
+    private void checkSymmetricMatrix(EigenDecompositionD alg , double ...ev ) {
         int numRepeated[] = new int[ ev.length ];
 
         for( int i = 0; i < ev.length ; i++ ) {
@@ -339,7 +339,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     public void checkSmallValue( boolean symmetric) {
 
 //        System.out.println("Symmetric = "+symmetric);
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         for( int i = 0; i < 20; i++ ) {
             DMatrixRMaj A = symmetric ?
@@ -358,7 +358,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
     public void checkLargeValue( boolean symmetric) {
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         for( int i = 0; i < 20; i++ ) {
             DMatrixRMaj A = symmetric ?
@@ -376,10 +376,10 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     /**
      * If the eigenvalues are all known, real, and the same this can be used to check them.
      */
-    public void testEigenvalues(EigenDecomposition_F64 alg , double expected ) {
+    public void testEigenvalues(EigenDecompositionD alg , double expected ) {
 
         for( int i = 0; i < alg.getNumberOfEigenvalues(); i++ ) {
-            Complex_F64 c = alg.getEigenvalue(i);
+            ZComplex c = alg.getEigenvalue(i);
 
             assertTrue(c.isReal());
 
@@ -391,7 +391,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
      * Preforms standard tests that can be performed on any decomposition without prior knowledge of
      * what the results should be.
      */
-    public void performStandardTests(EigenDecomposition_F64 alg , DMatrixRMaj A , int numReal )
+    public void performStandardTests(EigenDecompositionD alg , DMatrixRMaj A , int numReal )
     {
 
         // basic sanity tests
@@ -399,7 +399,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
         if( numReal >= 0 ) {
             for( int i = 0; i < A.numRows; i++ ) {
-                Complex_F64 v = alg.getEigenvalue(i);
+                ZComplex v = alg.getEigenvalue(i);
 
                 assertFalse( Double.isNaN(v.getReal() ));
                 if( v.isReal() )
@@ -434,7 +434,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
                 {0.01, 1, 0}};
         DMatrixRMaj A = new DMatrixRMaj(matrix);
 
-        EigenDecomposition_F64 alg = createDecomposition();
+        EigenDecompositionD alg = createDecomposition();
 
         assertTrue(safeDecomposition(alg,A));
 
@@ -445,7 +445,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
      * Checks to see if an eigenvalue is complex then the eigenvector is null.  If it is real it
      * then checks to see if the equation A*v = lambda*v holds true.
      */
-    public void testPairsConsistent(EigenDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj A )
+    public void testPairsConsistent(EigenDecompositionD<DMatrixRMaj> alg , DMatrixRMaj A )
     {
 //        System.out.println("-------------------------------------------------------------------------");
         int N = alg.getNumberOfEigenvalues();
@@ -454,7 +454,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
         DMatrixRMaj tempB = new DMatrixRMaj(N,1);
         
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = alg.getEigenvalue(i);
+            ZComplex c = alg.getEigenvalue(i);
             DMatrixRMaj v = alg.getEigenVector(i);
 
             if( Double.isInfinite(c.real) || Double.isNaN(c.real) ||
@@ -482,7 +482,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
                     System.out.println("Original matrix:");
                     A.print();
                     System.out.println("Eigenvalue = "+c.real);
-                    Eigenpair_F64 p = EigenOps_DDRM.computeEigenVector(A,c.real);
+                    DEigenpair p = EigenOps_DDRM.computeEigenVector(A,c.real);
                     p.vector.print();
                     v.print();
 
@@ -509,7 +509,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
      * Takes a real eigenvalue and computes its eigenvector.  then sees if it is similar to the adjusted
      * eigenvalue
      */
-    public void testEigenvalueConsistency( EigenDecomposition_F64 alg ,
+    public void testEigenvalueConsistency( EigenDecompositionD alg ,
                                            DMatrixRMaj A )
     {
         int N = alg.getNumberOfEigenvalues();
@@ -518,10 +518,10 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
         DMatrixRMaj LV = new DMatrixRMaj(N,1);
 
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = alg.getEigenvalue(i);
+            ZComplex c = alg.getEigenvalue(i);
 
             if( c.isReal() ) {
-                Eigenpair_F64 p = EigenOps_DDRM.computeEigenVector(A,c.getReal());
+                DEigenpair p = EigenOps_DDRM.computeEigenVector(A,c.getReal());
 
                 if( p != null ) {
                     CommonOps_DDRM.mult(A,p.vector,AV);
@@ -537,14 +537,14 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     /**
      * See if eigenvalues cause the characteristic equation to have a value of zero
      */
-    public void checkCharacteristicEquation( EigenDecomposition_F64 alg ,
+    public void checkCharacteristicEquation( EigenDecompositionD alg ,
                                              DMatrixRMaj A ) {
         int N = alg.getNumberOfEigenvalues();
 
         SimpleMatrix a = SimpleMatrix.wrap(A);
 
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = alg.getEigenvalue(i);
+            ZComplex c = alg.getEigenvalue(i);
 
             if( c.isReal() ) {
                 // test using the characteristic equation
@@ -592,14 +592,14 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
     /**
      * Sees if the pair of eigenvalue and eigenvector was found in the decomposition.
      */
-    public void testForEigenpair(EigenDecomposition_F64<DMatrixRMaj> alg , double valueReal ,
+    public void testForEigenpair(EigenDecompositionD<DMatrixRMaj> alg , double valueReal ,
                                  double valueImg , double... vector )
     {
         int N = alg.getNumberOfEigenvalues();
 
         int numMatched = 0;
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = alg.getEigenvalue(i);
+            ZComplex c = alg.getEigenvalue(i);
 
             if( Math.abs(c.real-valueReal) < UtilEjml.TEST_F64_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_F64_SQ) {
 
@@ -627,7 +627,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
         assertEquals(1,numMatched);
     }
 
-    public void testForEigenvalue( EigenDecomposition_F64 alg ,
+    public void testForEigenvalue( EigenDecompositionD alg ,
                                    DMatrixRMaj A,
                                    double valueReal ,
                                    double valueImg , int numMatched )
@@ -636,7 +636,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
 
         int numFound = 0;
         for( int i = 0; i < N; i++ ) {
-            Complex_F64 c = alg.getEigenvalue(i);
+            ZComplex c = alg.getEigenvalue(i);
 
             if( Math.abs(c.real-valueReal) < UtilEjml.TEST_F64_SQ && Math.abs(c.imaginary-valueImg) < UtilEjml.TEST_F64_SQ) {
                 numFound++;

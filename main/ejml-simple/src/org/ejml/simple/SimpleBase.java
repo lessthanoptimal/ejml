@@ -118,7 +118,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#mult(D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      *
      * @param b A matrix that is n by bn. Not modified.
      *
@@ -167,7 +167,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#mult(D1MatrixRow_F64, D1MatrixRow_F64, D1MatrixRow_F64)
+     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      *
      * @param b m by n matrix. Not modified.
      *
@@ -565,7 +565,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Computes the trace of the matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#trace(D1MatrixRow_F64)
+     * @see CommonOps_DDRM#trace(DMatrix1Row)
      *
      * @return The trace of the matrix.
      */
@@ -738,9 +738,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_F64 iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
+    public DMatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
-        return new MatrixIterator_F64((DMatrixRMaj)mat,rowMajor, minRow, minCol, maxRow, maxCol);
+        return new DMatrixIterator((DMatrixRMaj)mat,rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**

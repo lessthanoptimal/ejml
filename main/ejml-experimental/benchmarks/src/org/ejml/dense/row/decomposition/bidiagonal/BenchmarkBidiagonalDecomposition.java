@@ -20,7 +20,7 @@ package org.ejml.dense.row.decomposition.bidiagonal;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
 
 import java.util.Random;
 
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkBidiagonalDecomposition {
 
 
-    public static long evaluate(BidiagonalDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig , int numTrials ) {
+    public static long evaluate(BidiagonalDecompositionD<DMatrixRMaj> alg , DMatrixRMaj orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 

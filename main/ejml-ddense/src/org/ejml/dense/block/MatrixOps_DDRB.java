@@ -24,7 +24,7 @@ import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Random;
 
@@ -44,7 +44,7 @@ public class MatrixOps_DDRB {
      */
     public static void convert(DMatrixRMaj src , DMatrixRBlock dst )
     {
-        ConvertMatrixStruct_F64.convert(src,dst);
+        ConvertDMatrixStruct.convert(src,dst);
     }
 
     /**
@@ -95,7 +95,7 @@ public class MatrixOps_DDRB {
      */
     public static DMatrixRMaj convert(DMatrixRBlock src , DMatrixRMaj dst )
     {
-        return ConvertMatrixStruct_F64.convert(src,dst);
+        return ConvertDMatrixStruct.convert(src,dst);
     }
 
     /**

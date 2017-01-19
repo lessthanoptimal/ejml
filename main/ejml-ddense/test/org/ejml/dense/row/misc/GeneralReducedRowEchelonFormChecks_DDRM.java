@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
+import org.ejml.interfaces.linsol.ReducedRowEchelonFormD;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,9 +38,9 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM {
 
     Random rand = new Random(234);
 
-    ReducedRowEchelonForm_F64 alg;
+    ReducedRowEchelonFormD alg;
 
-    public GeneralReducedRowEchelonFormChecks_DDRM(ReducedRowEchelonForm_F64 alg) {
+    public GeneralReducedRowEchelonFormChecks_DDRM(ReducedRowEchelonFormD alg) {
         this.alg = alg;
     }
 

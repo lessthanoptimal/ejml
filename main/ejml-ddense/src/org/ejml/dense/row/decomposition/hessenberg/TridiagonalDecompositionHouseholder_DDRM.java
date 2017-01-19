@@ -21,11 +21,11 @@ package org.ejml.dense.row.decomposition.hessenberg;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
 
 /**
  * <p>
- * Performs a {@link TridiagonalSimilarDecomposition_F64 similar tridiagonal decomposition} on a square symmetric input matrix.
+ * Performs a {@link TridiagonalSimilarDecompositionD similar tridiagonal decomposition} on a square symmetric input matrix.
  * Householder vectors perform the similar operation and the symmetry is taken advantage
  * of for good performance.
  * </p>
@@ -45,7 +45,7 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_DDRM
-        implements TridiagonalSimilarDecomposition_F64<DMatrixRMaj> {
+        implements TridiagonalSimilarDecompositionD<DMatrixRMaj> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores

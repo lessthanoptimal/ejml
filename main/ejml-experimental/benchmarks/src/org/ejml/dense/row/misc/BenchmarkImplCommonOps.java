@@ -48,7 +48,7 @@ public class BenchmarkImplCommonOps {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            ImplCommonOps_F64.extract(src,0,0,dst,0,0, src.getNumRows(), src.getNumCols());
+            ImplCommonOps_DDMA.extract(src,0,0,dst,0,0, src.getNumRows(), src.getNumCols());
         }
         long curr = System.currentTimeMillis();
 

@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 import org.junit.Test;
 
 import java.util.Random;
@@ -57,7 +57,7 @@ public class TestInnerCholesky_DDRB {
         DMatrixRMaj A = RandomMatrices_DDRM.createSymmPosDef(n,rand);
 
         // decompose a DMatrixRMaj to find expected solution
-        CholeskyDecomposition_F64<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(n,lower);
+        CholeskyDecompositionD<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(n,lower);
 
         assertTrue(DecompositionFactory_DDRM.decomposeSafe(chol,A));
 

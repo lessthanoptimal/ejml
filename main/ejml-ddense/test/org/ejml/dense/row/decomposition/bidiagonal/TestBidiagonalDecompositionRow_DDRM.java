@@ -19,13 +19,13 @@
 package org.ejml.dense.row.decomposition.bidiagonal;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -100,7 +100,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         DMatrixRMaj C = new DMatrixRMaj(m,n);
         DMatrixRMaj u = new DMatrixRMaj(m,1);
 
-        D1MatrixRow_F64 UBV = alg.getUBV();
+        DMatrix1Row UBV = alg.getUBV();
 
         for( int i = 0; i < n; i++ ) {
             alg.computeU(i);
@@ -146,7 +146,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         DMatrixRMaj C = new DMatrixRMaj(m,n);
         DMatrixRMaj u = new DMatrixRMaj(n,1);
 
-        D1MatrixRow_F64 UBV = alg.getUBV();
+        DMatrix1Row UBV = alg.getUBV();
 
 //        A.print();
 
@@ -184,7 +184,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
     }
 
     @Override
-    protected BidiagonalDecomposition_F64<DMatrixRMaj> createQRDecomposition() {
+    protected BidiagonalDecompositionD<DMatrixRMaj> createQRDecomposition() {
         return new BidiagonalDecompositionRow_DDRM();
     }
 

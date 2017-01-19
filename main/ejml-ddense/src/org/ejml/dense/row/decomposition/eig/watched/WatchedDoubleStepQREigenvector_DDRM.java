@@ -19,8 +19,8 @@
 package org.ejml.dense.row.decomposition.eig.watched;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
@@ -48,7 +48,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
 
     LinearSolver solver;
 
-    Complex_F64 origEigenvalues[];
+    ZComplex origEigenvalues[];
     int N;
 
     int splits[];
@@ -67,7 +67,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
             N = A.numRows;
             Q = new DMatrixRMaj(N,N);
             splits = new int[N];
-            origEigenvalues = new Complex_F64[N];
+            origEigenvalues = new ZComplex[N];
             eigenvectors = new DMatrixRMaj[N];
             eigenvectorTemp = new DMatrixRMaj(N,1);
 
@@ -100,7 +100,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         boolean triangular = true;
         for( int i = 0; i < N; i++ ) {
 
-            Complex_F64 c = implicit.eigenvalues[N-i-1];
+            ZComplex c = implicit.eigenvalues[N-i-1];
 
             if( triangular && !c.isReal() )
                 triangular = false;
@@ -146,7 +146,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         eigenvectorTemp.reshape(N,1, false);
 
         for( int i = first; i < N; i++ ) {
-            Complex_F64 c = implicit.eigenvalues[N-i-1];
+            ZComplex c = implicit.eigenvalues[N-i-1];
 
             if( c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
                 eigenvectorTemp.data[i] = 1;
@@ -270,7 +270,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
             if( implicit.steps > implicit.exceptionalThreshold/2  ) {
                 onscript = false;
             } else {
-                Complex_F64 a = origEigenvalues[indexVal];
+                ZComplex a = origEigenvalues[indexVal];
 
                 // if no splits are found perform an implicit step
                 if( a.isReal() ) {
@@ -316,7 +316,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         return eigenvectors;
     }
 
-    public Complex_F64[] getEigenvalues() {
+    public ZComplex[] getEigenvalues() {
         return implicit.eigenvalues;
     }
 }

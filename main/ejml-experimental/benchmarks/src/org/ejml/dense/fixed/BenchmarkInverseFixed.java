@@ -24,7 +24,7 @@ import org.ejml.data.DMatrix6x6;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertMatrixStruct_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Random;
 
@@ -93,11 +93,11 @@ public class BenchmarkInverseFixed {
         RandomMatrices_DDRM.setRandom(dm4x4_a,rand);
         RandomMatrices_DDRM.setRandom(dm4x4_b,rand);
 
-        ConvertMatrixStruct_F64.convert(dm3x3_a,fixed3x3_a);
-        ConvertMatrixStruct_F64.convert(dm3x3_b,fixed3x3_b);
+        ConvertDMatrixStruct.convert(dm3x3_a,fixed3x3_a);
+        ConvertDMatrixStruct.convert(dm3x3_b,fixed3x3_b);
 
-        ConvertMatrixStruct_F64.convert(dm4x4_a,fixed4x4_a);
-        ConvertMatrixStruct_F64.convert(dm4x4_b,fixed4x4_b);
+        ConvertDMatrixStruct.convert(dm4x4_a,fixed4x4_a);
+        ConvertDMatrixStruct.convert(dm4x4_b,fixed4x4_b);
 
         int numTrials = 100000000;
 

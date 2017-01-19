@@ -19,7 +19,7 @@
 package org.ejml.dense.row.decompose.chol;
 
 import org.ejml.data.ZMatrixRMaj;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 public class TestCholeskyDecompositionInner_ZDRM extends GenericCholeskyTests_ZDRM {
 
     @Override
-    public CholeskyDecomposition_F64<ZMatrixRMaj> create(boolean lower) {
+    public CholeskyDecompositionD<ZMatrixRMaj> create(boolean lower) {
         return new CholeskyDecompositionInner_ZDRM(lower);
     }
 }

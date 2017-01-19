@@ -23,7 +23,7 @@ import org.ejml.LinearSolverSafe;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
 
@@ -46,7 +46,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
     }
 
     @Override
-    public CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower) {
+    public CholeskyDecompositionD<DMatrixRMaj> create(boolean lower) {
         if( !lower )
             throw new IllegalArgumentException("Doesn't support upper form");
 

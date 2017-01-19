@@ -36,9 +36,9 @@ public abstract class GenerateFixed extends CodeGeneratorBase {
     }
 
     void setClassNames( int dimen ) throws FileNotFoundException {
-        String nameClass = classPreamble+dimen+"_F64";
-        nameMatrix = "DMatrixFixed"+dimen+"x"+dimen+"_F64";
-        nameVector = "DMatrixFixed"+dimen+"_F64";
+        String nameClass = classPreamble+dimen;
+        nameMatrix = "DMatrix"+dimen+"x"+dimen;
+        nameVector = "DMatrix"+dimen;
 
         setOutputFile(nameClass);
     }

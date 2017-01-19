@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+import org.ejml.interfaces.decomposition.QRPDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -54,7 +54,7 @@ public class StabilityQRDecomposition {
         return A.minus(A_found).normF()/A.normF();
     }
 
-    public static double evaluate(QRPDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
+    public static double evaluate(QRPDecompositionD<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
         if( !decomposeSafe(alg,orig)) {
             return Double.NaN;

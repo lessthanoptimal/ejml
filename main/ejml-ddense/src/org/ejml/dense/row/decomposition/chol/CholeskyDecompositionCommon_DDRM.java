@@ -19,10 +19,10 @@
 package org.ejml.dense.row.decomposition.chol;
 
 
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 
 
 /**
@@ -32,11 +32,11 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * decomposition is provided in other classes.
  * </p>
  *
- * @see CholeskyDecomposition_F64
+ * @see CholeskyDecompositionD
  * @author Peter Abeles
  */
 public abstract class CholeskyDecompositionCommon_DDRM
-        implements CholeskyDecomposition_F64<DMatrixRMaj> {
+        implements CholeskyDecompositionD<DMatrixRMaj> {
 
     // it can decompose a matrix up to this width
     protected int maxWidth=-1;
@@ -55,7 +55,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
     protected boolean lower;
 
     // storage for computed determinant
-    protected Complex_F64 det = new Complex_F64();
+    protected ZComplex det = new ZComplex();
 
     /**
      * Specifies if a lower or upper variant should be constructed.
@@ -176,7 +176,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
     }
 
     @Override
-    public Complex_F64 computeDeterminant() {
+    public ZComplex computeDeterminant() {
         double prod = 1;
 
         int total = n*n;

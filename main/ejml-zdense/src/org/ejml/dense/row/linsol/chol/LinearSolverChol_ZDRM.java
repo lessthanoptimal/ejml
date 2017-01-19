@@ -23,7 +23,7 @@ import org.ejml.dense.row.SpecializedOps_ZDRM;
 import org.ejml.dense.row.decompose.TriangularSolver_ZDRM;
 import org.ejml.dense.row.decompose.chol.CholeskyDecompositionCommon_ZDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_ZDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
 
 import java.util.Arrays;
 
@@ -174,7 +174,7 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
     }
 
     @Override
-    public CholeskyDecomposition_F64<ZMatrixRMaj> getDecomposition() {
+    public CholeskyDecompositionD<ZMatrixRMaj> getDecomposition() {
         return decomposer;
     }
 }

@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.data.D1MatrixRow_F64;
  */
 public class SubmatrixOps_DDRM {
 
-    public static void setSubMatrix(D1MatrixRow_F64 src , D1MatrixRow_F64 dst ,
+    public static void setSubMatrix(DMatrix1Row src , DMatrix1Row dst ,
                                     int srcRow , int srcCol , int dstRow , int dstCol ,
                                     int numSubRows, int numSubCols )
     {

@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.misc;
 
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 
 
 /**
@@ -31,7 +31,7 @@ public class UnrolledDeterminantFromMinor_DDRM {
     
     public static final int MAX = 6;
     
-    public static double det( D1MatrixRow_F64 mat ) {
+    public static double det( DMatrix1Row mat ) {
         switch( mat.numRows ) {
             case 2: return det2(mat);
             case 3: return det3(mat);
@@ -42,14 +42,14 @@ public class UnrolledDeterminantFromMinor_DDRM {
         }
     }
 
-    public static double det2( D1MatrixRow_F64 mat )
+    public static double det2( DMatrix1Row mat )
     {
         double m[] = mat.data;
 
         return m[0]*m[3] - m[1]*m[2];
     }
 
-    public static double det3( D1MatrixRow_F64 mat )
+    public static double det3( DMatrix1Row mat )
     {
         double m[] = mat.data;
 
@@ -70,7 +70,7 @@ public class UnrolledDeterminantFromMinor_DDRM {
         return a-b+c;
     }
 
-    public static double det4( D1MatrixRow_F64 mat )
+    public static double det4( DMatrix1Row mat )
     {
         double []data = mat.data;
 
@@ -95,7 +95,7 @@ public class UnrolledDeterminantFromMinor_DDRM {
         return ret;
     }
 
-    public static double det5( D1MatrixRow_F64 mat )
+    public static double det5( DMatrix1Row mat )
     {
         double []data = mat.data;
 
@@ -141,7 +141,7 @@ public class UnrolledDeterminantFromMinor_DDRM {
         return ret;
     }
 
-    public static double det6( D1MatrixRow_F64 mat )
+    public static double det6( DMatrix1Row mat )
     {
         double []data = mat.data;
 

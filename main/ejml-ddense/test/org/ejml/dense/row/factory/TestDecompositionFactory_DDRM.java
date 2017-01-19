@@ -21,8 +21,8 @@ package org.ejml.dense.row.factory;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
-import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.ejml.interfaces.decomposition.EigenDecompositionD;
+import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
 import org.junit.Test;
 
 import java.util.Random;
@@ -42,7 +42,7 @@ public class TestDecompositionFactory_DDRM {
         // I'm assuming it can process this matrix with no problems
         DMatrixRMaj A = RandomMatrices_DDRM.createSymmetric(5,-1,1,rand);
 
-        EigenDecomposition_F64<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numRows,true);
+        EigenDecompositionD<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numRows,true);
 
         assertTrue(eig.decompose(A));
 
@@ -62,7 +62,7 @@ public class TestDecompositionFactory_DDRM {
         // I'm assuming it can process this matrix with no problems
         DMatrixRMaj A = RandomMatrices_DDRM.createRandom(4,5,rand);
 
-        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
+        SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
 
         assertTrue(svd.decompose(A));
 

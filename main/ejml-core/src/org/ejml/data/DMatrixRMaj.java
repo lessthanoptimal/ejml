@@ -50,7 +50,7 @@ import java.util.Arrays;
  * </pre>
  * @author Peter Abeles
  */
-public class DMatrixRMaj extends D1MatrixRow_F64 {
+public class DMatrixRMaj extends DMatrix1Row {
 
     /**
      * <p>

@@ -19,7 +19,7 @@
 package org.ejml.dense.row.mult;
 
 import org.ejml.MatrixDimensionException;
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -60,7 +60,7 @@ public class MatrixVectorMult_DDRM {
      * @param B A vector that has length n. Not modified.
      * @param C A column vector that has length m. Modified.
      */
-    public static void mult(D1MatrixRow_F64 A, DMatrixD1 B, DMatrixD1 C)
+    public static void mult(DMatrix1Row A, DMatrixD1 B, DMatrixD1 C)
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -116,7 +116,7 @@ public class MatrixVectorMult_DDRM {
      * @param B A vector that has length n. Not modified.
      * @param C A column vector that has length m. Modified.
      */
-    public static void multAdd(D1MatrixRow_F64 A , DMatrixD1 B , DMatrixD1 C )
+    public static void multAdd(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
 
         if( C.numCols != 1 ) {
@@ -176,7 +176,7 @@ public class MatrixVectorMult_DDRM {
      * @param B A that has length m and is a column. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multTransA_small(D1MatrixRow_F64 A , DMatrixD1 B , DMatrixD1 C )
+    public static void multTransA_small(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -217,7 +217,7 @@ public class MatrixVectorMult_DDRM {
      * @param B A Vector that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multTransA_reorder(D1MatrixRow_F64 A , DMatrixD1 B , DMatrixD1 C )
+    public static void multTransA_reorder(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -276,7 +276,7 @@ public class MatrixVectorMult_DDRM {
      * @param B A vector that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multAddTransA_small(D1MatrixRow_F64 A , DMatrixD1 B , DMatrixD1 C )
+    public static void multAddTransA_small(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");
@@ -317,7 +317,7 @@ public class MatrixVectorMult_DDRM {
      * @param B A vector that has length m. Not modified.
      * @param C A column vector that has length n. Modified.
      */
-    public static void multAddTransA_reorder(D1MatrixRow_F64 A , DMatrixD1 B , DMatrixD1 C )
+    public static void multAddTransA_reorder(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
         if( C.numCols != 1 ) {
             throw new MatrixDimensionException("C is not a column vector");

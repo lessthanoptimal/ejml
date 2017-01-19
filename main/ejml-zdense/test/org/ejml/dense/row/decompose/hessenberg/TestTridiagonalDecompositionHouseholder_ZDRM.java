@@ -24,7 +24,7 @@ import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.dense.row.SpecializedOps_ZDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
 import org.junit.Test;
 
 import static org.ejml.dense.row.decompose.CheckDecompositionInterface_ZDRM.safeDecomposition;
@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 public class TestTridiagonalDecompositionHouseholder_ZDRM extends StandardTridiagonalTests_ZDRM {
 
     @Override
-    protected TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> createDecomposition() {
+    protected TridiagonalSimilarDecompositionD<ZMatrixRMaj> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_ZDRM();
     }
 

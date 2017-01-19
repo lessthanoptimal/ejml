@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.misc;
 
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixRMaj;
 
 
@@ -110,7 +110,7 @@ public class DeterminantFromMinor_DDRM {
      * @param mat The matrix whose determinant is to be computed.
      * @return The determinant.
      */
-    public double compute( D1MatrixRow_F64 mat ) {
+    public double compute( DMatrix1Row mat ) {
         if( width != mat.numCols || width != mat.numRows ) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
@@ -222,7 +222,7 @@ public class DeterminantFromMinor_DDRM {
         }
     }
 
-    private void createMinor( D1MatrixRow_F64 mat ) {
+    private void createMinor( DMatrix1Row mat ) {
 
         int w = minWidth-1;
         int firstRow = (width-w)*width;

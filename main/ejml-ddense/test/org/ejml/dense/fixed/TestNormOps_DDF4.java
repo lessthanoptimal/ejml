@@ -21,7 +21,7 @@ package org.ejml.dense.fixed;
 /**
  * @author Peter Abeles
  */
-public class TestNormOps_DDF4 extends CompareFixedToNormOps_F64 {
+public class TestNormOps_DDF4 extends CompareFixedToNormOps_DDRM {
 
     public TestNormOps_DDF4() {
         super(NormOps_DDF4.class);

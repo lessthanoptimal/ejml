@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class GenericBidiagonalCheck_DDRM {
     protected Random rand = new Random(0xff);
 
-    abstract protected BidiagonalDecomposition_F64<DMatrixRMaj> createQRDecomposition();
+    abstract protected BidiagonalDecompositionD<DMatrixRMaj> createQRDecomposition();
 
     @Test
     public void testModifiedInput() {
@@ -47,7 +47,7 @@ public abstract class GenericBidiagonalCheck_DDRM {
 
     @Test
     public void testRandomMatrices() {
-        BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
+        BidiagonalDecompositionD<DMatrixRMaj> decomp = createQRDecomposition();
 
         for( int i = 0; i < 10; i++ ) {
             for( int N = 2;  N <= 10; N++ ) {
@@ -73,7 +73,7 @@ public abstract class GenericBidiagonalCheck_DDRM {
     public void testIdentity() {
         SimpleMatrix A = SimpleMatrix.identity(5, DMatrixRMaj.class);
 
-        BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
+        BidiagonalDecompositionD<DMatrixRMaj> decomp = createQRDecomposition();
 
         assertTrue(decomp.decompose(A.matrix_F64().copy()));
 
@@ -84,7 +84,7 @@ public abstract class GenericBidiagonalCheck_DDRM {
     public void testZero() {
         SimpleMatrix A = new SimpleMatrix(5,5, DMatrixRMaj.class);
 
-        BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
+        BidiagonalDecompositionD<DMatrixRMaj> decomp = createQRDecomposition();
 
         assertTrue(decomp.decompose(A.matrix_F64().copy()));
 
@@ -95,7 +95,7 @@ public abstract class GenericBidiagonalCheck_DDRM {
      * Checks to see if the decomposition will reconstruct the original input matrix
      */
     protected void checkGeneric(DMatrixRMaj a,
-                                BidiagonalDecomposition_F64<DMatrixRMaj> decomp) {
+                                BidiagonalDecompositionD<DMatrixRMaj> decomp) {
         // check the full version
         SimpleMatrix U = SimpleMatrix.wrap(decomp.getU(null,false,false));
         SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));

@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decompose.eig;
 
-import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ZComplex;
 import org.ejml.dense.row.*;
 import org.ejml.dense.row.decomposition.eig.EigenvalueExtractor_DDRM;
 import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_DDRM;
@@ -86,7 +86,7 @@ public class RealEigenvalueHessenbergStressTest {
     }
 
     private int checkEigenvalues(DMatrixRMaj a ) {
-        Complex_F64[]ev = extractor.getEigenvalues();
+        ZComplex[]ev = extractor.getEigenvalues();
 
 //        a.print("%14.5e");
 
@@ -99,7 +99,7 @@ public class RealEigenvalueHessenbergStressTest {
                 continue;
 
             DMatrixRMaj v = EigenOps_DDRM.computeEigenVector(a,ev[j].real).vector;
-            Complex_F64 c = ev[j];
+            ZComplex c = ev[j];
 
             if( v == null || MatrixFeatures_DDRM.hasUncountable(v)) {
                 a.print("%f");
@@ -221,7 +221,7 @@ public class RealEigenvalueHessenbergStressTest {
         assertEquals(5,extractor.getNumberOfEigenvalues());
 
         for( int i = 0 ; i < 5; i++ ) {
-            Complex_F64 c = extractor.getEigenvalues()[i];
+            ZComplex c = extractor.getEigenvalues()[i];
 
             assertEquals(0,c.imaginary,1e-12);
             assertEquals(0,c.getReal(),1e-12);
@@ -238,7 +238,7 @@ public class RealEigenvalueHessenbergStressTest {
         assertEquals(5,extractor.getNumberOfEigenvalues());
 
         for( int i = 0 ; i < 5; i++ ) {
-            Complex_F64 c = extractor.getEigenvalues()[i];
+            ZComplex c = extractor.getEigenvalues()[i];
 
             assertEquals(0,c.imaginary,1e-12);
             assertEquals(0,c.getReal(),1e-12);
@@ -266,7 +266,7 @@ public class RealEigenvalueHessenbergStressTest {
 
         assertEquals(5,extractor.getNumberOfEigenvalues());
         for( int i = 0 ; i < 5; i++ ) {
-            Complex_F64 c = extractor.getEigenvalues()[i];
+            ZComplex c = extractor.getEigenvalues()[i];
 
             assertEquals(0,c.imaginary,1e-12);
             assertEquals(0,c.getReal(),1e-12);
@@ -295,7 +295,7 @@ public class RealEigenvalueHessenbergStressTest {
 
         assertEquals(5,extractor.getNumberOfEigenvalues());
         for( int i = 0 ; i < 5; i++ ) {
-            Complex_F64 c = extractor.getEigenvalues()[i];
+            ZComplex c = extractor.getEigenvalues()[i];
 
             assertEquals(0,c.imaginary,1e-12);
             assertEquals(0,c.getReal(),1e-12);
@@ -328,7 +328,7 @@ public class RealEigenvalueHessenbergStressTest {
     }
 
     private boolean hasComplex() {
-        Complex_F64[]ev = extractor.getEigenvalues();
+        ZComplex[]ev = extractor.getEigenvalues();
 
         for( int j = 0; j < extractor.getNumberOfEigenvalues(); j++ ) {
             if( ev[j].getImaginary() != 0 )
@@ -339,7 +339,7 @@ public class RealEigenvalueHessenbergStressTest {
     }
 
     private boolean isAllComplex() {
-        Complex_F64[]ev = extractor.getEigenvalues();
+        ZComplex[]ev = extractor.getEigenvalues();
 
         for( int j = 0; j < extractor.getNumberOfEigenvalues(); j++ ) {
             if( ev[j].getImaginary() == 0 )

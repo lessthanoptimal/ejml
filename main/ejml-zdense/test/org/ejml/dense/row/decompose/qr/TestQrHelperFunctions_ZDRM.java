@@ -19,12 +19,12 @@
 package org.ejml.dense.row.decompose.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.ops.ComplexMath_F64;
+import org.ejml.ops.ComplexMathZ;
 import org.junit.Test;
 
 import java.util.Random;
@@ -73,9 +73,9 @@ public class TestQrHelperFunctions_ZDRM {
         }
         double found[] = u.clone();
 
-        Complex_F64 A = new Complex_F64(rand.nextDouble(),rand.nextDouble());
-        Complex_F64 U = new Complex_F64();
-        Complex_F64 expected = new Complex_F64();
+        ZComplex A = new ZComplex(rand.nextDouble(),rand.nextDouble());
+        ZComplex U = new ZComplex();
+        ZComplex expected = new ZComplex();
 
         int j = 3;
         int numRows = 8;
@@ -89,7 +89,7 @@ public class TestQrHelperFunctions_ZDRM {
             if( i >= j+startU && i < numRows+startU ) {
                 U.real = u[index];
                 U.imaginary = u[index + 1];
-                ComplexMath_F64.divide(U, A, expected);
+                ComplexMathZ.divide(U, A, expected);
 
                 assertEquals(expected.real, found[index], UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary, found[index + 1], UtilEjml.TEST_F64);
@@ -111,14 +111,14 @@ public class TestQrHelperFunctions_ZDRM {
         int j = 2;
         int numRows = 6;
 
-        Complex_F64 expectedTau = new Complex_F64();
+        ZComplex expectedTau = new ZComplex();
         double expectedGamma = 0;
         double[] expectedU = u.clone();
 
         for (int i = j; i < numRows; i++) {
-            Complex_F64 U = new Complex_F64(u[i*2],u[i*2+1]);
-            Complex_F64 div = new Complex_F64();
-            ComplexMath_F64.divide(U,new Complex_F64(max,0),div);
+            ZComplex U = new ZComplex(u[i*2],u[i*2+1]);
+            ZComplex div = new ZComplex();
+            ComplexMathZ.divide(U,new ZComplex(max,0),div);
 
             expectedU[i*2] = div.real;
             expectedU[i*2+1] = div.imaginary;
@@ -140,16 +140,16 @@ public class TestQrHelperFunctions_ZDRM {
 
         //
         double normU = 1;
-        Complex_F64 B = new Complex_F64(realU0,imagU0);
+        ZComplex B = new ZComplex(realU0,imagU0);
         for (int i = j+1; i < numRows; i++) {
-            Complex_F64 A = new Complex_F64( expectedU[i*2], expectedU[i*2+1]);
-            Complex_F64 result = new Complex_F64();
-            ComplexMath_F64.divide(A,B,result);
+            ZComplex A = new ZComplex( expectedU[i*2], expectedU[i*2+1]);
+            ZComplex result = new ZComplex();
+            ComplexMathZ.divide(A,B,result);
             normU += result.getMagnitude2();
         }
         expectedGamma = 2.0/normU;
 
-        Complex_F64 foundTau = new Complex_F64();
+        ZComplex foundTau = new ZComplex();
         double[] foundU = u.clone();
         double foundGamma = QrHelperFunctions_ZDRM.computeTauGammaAndDivide(j,numRows,foundU,max,foundTau);
 

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Peter Abeles
  */
-public class TestCommonOps_DDF6 extends CompareFixedToCommonOps_F64 {
+public class TestCommonOps_DDF6 extends CompareFixedToCommonOps_DDRM {
 
     public TestCommonOps_DDF6() {
         super(CommonOps_DDF6.class);

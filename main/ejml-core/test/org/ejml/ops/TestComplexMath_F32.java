@@ -19,8 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ComplexPolar_F32;
-import org.ejml.data.Complex_F32;
+import org.ejml.data.CComplex;
+import org.ejml.data.CComplexPolar;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,10 +31,10 @@ import static org.junit.Assert.assertEquals;
 public class TestComplexMath_F32 {
     @Test
     public void conj() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
 
-        ComplexMath_F32.conj(a, b);
+        ComplexMathC.conj(a, b);
 
         assertEquals(a.real, b.real, UtilEjml.TEST_F32);
         assertEquals(-a.imaginary, b.imaginary, UtilEjml.TEST_F32);
@@ -42,11 +42,11 @@ public class TestComplexMath_F32 {
 
     @Test
     public void plus() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
-        Complex_F32 c = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
+        CComplex c = new CComplex();
 
-        ComplexMath_F32.plus(a, b, c);
+        ComplexMathC.plus(a, b, c);
 
         assertEquals(-1, c.real, UtilEjml.TEST_F32);
         assertEquals(9, c.imaginary, UtilEjml.TEST_F32);
@@ -54,11 +54,11 @@ public class TestComplexMath_F32 {
 
     @Test
     public void minus() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
-        Complex_F32 c = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
+        CComplex c = new CComplex();
 
-        ComplexMath_F32.minus(a, b, c);
+        ComplexMathC.minus(a, b, c);
 
         assertEquals(5, c.real, UtilEjml.TEST_F32);
         assertEquals(-3, c.imaginary, UtilEjml.TEST_F32);
@@ -66,11 +66,11 @@ public class TestComplexMath_F32 {
 
     @Test
     public void multiply() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
-        Complex_F32 c = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
+        CComplex c = new CComplex();
 
-        ComplexMath_F32.multiply(a, b, c);
+        ComplexMathC.multiply(a, b, c);
 
         assertEquals(-24, c.real, UtilEjml.TEST_F32);
         assertEquals(3, c.imaginary, UtilEjml.TEST_F32);
@@ -78,11 +78,11 @@ public class TestComplexMath_F32 {
 
     @Test
     public void divide() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
-        Complex_F32 c = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
+        CComplex c = new CComplex();
 
-        ComplexMath_F32.divide(a, b, c);
+        ComplexMathC.divide(a, b, c);
 
         assertEquals(0.26666666666f, c.real, UtilEjml.TEST_F32);
         assertEquals(-0.466666666666f, c.imaginary, UtilEjml.TEST_F32);
@@ -93,12 +93,12 @@ public class TestComplexMath_F32 {
      */
     @Test
     public void convert() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        ComplexPolar_F32 b = new ComplexPolar_F32();
-        Complex_F32 c = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplexPolar b = new CComplexPolar();
+        CComplex c = new CComplex();
 
-        ComplexMath_F32.convert(a, b);
-        ComplexMath_F32.convert(b, c);
+        ComplexMathC.convert(a, b);
+        ComplexMathC.convert(b, c);
 
         assertEquals(a.real, c.real, UtilEjml.TEST_F32);
         assertEquals(a.imaginary, c.imaginary, UtilEjml.TEST_F32);
@@ -106,19 +106,19 @@ public class TestComplexMath_F32 {
 
     @Test
     public void mult_polar() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
-        Complex_F32 expected = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
+        CComplex expected = new CComplex();
 
-        ComplexMath_F32.multiply(a, b, expected);
+        ComplexMathC.multiply(a, b, expected);
 
-        ComplexPolar_F32 pa = new ComplexPolar_F32(a);
-        ComplexPolar_F32 pb = new ComplexPolar_F32(b);
-        ComplexPolar_F32 pc = new ComplexPolar_F32();
+        CComplexPolar pa = new CComplexPolar(a);
+        CComplexPolar pb = new CComplexPolar(b);
+        CComplexPolar pc = new CComplexPolar();
 
-        ComplexMath_F32.multiply(pa, pb, pc);
+        ComplexMathC.multiply(pa, pb, pc);
 
-        Complex_F32 found = pc.toStandard();
+        CComplex found = pc.toStandard();
 
         assertEquals(expected.real, found.real, UtilEjml.TEST_F32);
         assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F32);
@@ -126,19 +126,19 @@ public class TestComplexMath_F32 {
 
     @Test
     public void div_polar() {
-        Complex_F32 a = new Complex_F32(2, 3);
-        Complex_F32 b = new Complex_F32(-3, 6);
-        Complex_F32 expected = new Complex_F32();
+        CComplex a = new CComplex(2, 3);
+        CComplex b = new CComplex(-3, 6);
+        CComplex expected = new CComplex();
 
-        ComplexMath_F32.divide(a, b, expected);
+        ComplexMathC.divide(a, b, expected);
 
-        ComplexPolar_F32 pa = new ComplexPolar_F32(a);
-        ComplexPolar_F32 pb = new ComplexPolar_F32(b);
-        ComplexPolar_F32 pc = new ComplexPolar_F32();
+        CComplexPolar pa = new CComplexPolar(a);
+        CComplexPolar pb = new CComplexPolar(b);
+        CComplexPolar pc = new CComplexPolar();
 
-        ComplexMath_F32.divide(pa, pb, pc);
+        ComplexMathC.divide(pa, pb, pc);
 
-        Complex_F32 found = pc.toStandard();
+        CComplex found = pc.toStandard();
 
         assertEquals(expected.real, found.real, UtilEjml.TEST_F32);
         assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F32);
@@ -146,14 +146,14 @@ public class TestComplexMath_F32 {
 
     @Test
     public void pow() {
-        ComplexPolar_F32 a = new ComplexPolar_F32(2, 0.2f);
-        ComplexPolar_F32 expected = new ComplexPolar_F32();
-        ComplexPolar_F32 found = new ComplexPolar_F32();
+        CComplexPolar a = new CComplexPolar(2, 0.2f);
+        CComplexPolar expected = new CComplexPolar();
+        CComplexPolar found = new CComplexPolar();
 
-        ComplexMath_F32.multiply(a, a, expected);
-        ComplexMath_F32.multiply(a, expected, expected);
+        ComplexMathC.multiply(a, a, expected);
+        ComplexMathC.multiply(a, expected, expected);
 
-        ComplexMath_F32.pow(a, 3, found);
+        ComplexMathC.pow(a, 3, found);
 
         assertEquals(expected.r, found.r, UtilEjml.TEST_F32);
         assertEquals(expected.theta, found.theta, UtilEjml.TEST_F32);
@@ -161,19 +161,19 @@ public class TestComplexMath_F32 {
 
     @Test
     public void root_polar() {
-        ComplexPolar_F32 expected = new ComplexPolar_F32(2, 0.2f);
-        ComplexPolar_F32 root = new ComplexPolar_F32();
-        ComplexPolar_F32 found = new ComplexPolar_F32();
+        CComplexPolar expected = new CComplexPolar(2, 0.2f);
+        CComplexPolar root = new CComplexPolar();
+        CComplexPolar found = new CComplexPolar();
 
         // compute the square root of a complex number then see if the
         // roots equal the output
         for (int i = 0; i < 2; i++) {
-            ComplexMath_F32.root(expected, 2, 0, root);
+            ComplexMathC.root(expected, 2, 0, root);
 
-            ComplexMath_F32.multiply(root, root, found);
+            ComplexMathC.multiply(root, root, found);
 
-            Complex_F32 e = expected.toStandard();
-            Complex_F32 f = found.toStandard();
+            CComplex e = expected.toStandard();
+            CComplex f = found.toStandard();
 
             assertEquals(e.real, f.real, UtilEjml.TEST_F32);
             assertEquals(e.imaginary, f.imaginary, UtilEjml.TEST_F32);
@@ -182,16 +182,16 @@ public class TestComplexMath_F32 {
 
     @Test
     public void root_standard() {
-        Complex_F32 expected = new Complex_F32(2, 0.2f);
-        Complex_F32 root = new Complex_F32();
-        Complex_F32 found = new Complex_F32();
+        CComplex expected = new CComplex(2, 0.2f);
+        CComplex root = new CComplex();
+        CComplex found = new CComplex();
 
         // compute the square root of a complex number then see if the
         // roots equal the output
         for (int i = 0; i < 2; i++) {
-            ComplexMath_F32.root(expected, 2, 0, root);
+            ComplexMathC.root(expected, 2, 0, root);
 
-            ComplexMath_F32.multiply(root, root, found);
+            ComplexMathC.multiply(root, root, found);
 
             assertEquals(expected.real, found.real, UtilEjml.TEST_F32);
             assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F32);
@@ -200,20 +200,20 @@ public class TestComplexMath_F32 {
 
     @Test
     public void sqrt_standard() {
-        Complex_F32 input = new Complex_F32(2, 0.2f);
-        Complex_F32 root = new Complex_F32();
-        Complex_F32 found = new Complex_F32();
+        CComplex input = new CComplex(2, 0.2f);
+        CComplex root = new CComplex();
+        CComplex found = new CComplex();
 
-        ComplexMath_F32.sqrt(input, root);
-        ComplexMath_F32.multiply(root, root, found);
+        ComplexMathC.sqrt(input, root);
+        ComplexMathC.multiply(root, root, found);
 
         assertEquals(input.real, found.real, UtilEjml.TEST_F32);
         assertEquals(input.imaginary, found.imaginary, UtilEjml.TEST_F32);
 
-        input = new Complex_F32(2, -0.2f);
+        input = new CComplex(2, -0.2f);
 
-        ComplexMath_F32.sqrt(input, root);
-        ComplexMath_F32.multiply(root, root, found);
+        ComplexMathC.sqrt(input, root);
+        ComplexMathC.multiply(root, root, found);
 
         assertEquals(input.real, found.real, UtilEjml.TEST_F32);
         assertEquals(input.imaginary, found.imaginary, UtilEjml.TEST_F32);

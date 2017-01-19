@@ -147,10 +147,10 @@ public class TestCommonOps_DDRM {
             if( hasAlpha )
                 checkMethod = MatrixMatrixMult_DDRM.class.getMethod(
                         name,double.class,
-                        D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
+                        DMatrix1Row.class, DMatrix1Row.class,DMatrix1Row.class);
             else
                 checkMethod = MatrixMatrixMult_DDRM.class.getMethod(
-                        name, D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
+                        name, DMatrix1Row.class, DMatrix1Row.class,DMatrix1Row.class);
         } catch (NoSuchMethodException e) {
             checkMethod = null;
         }
@@ -159,10 +159,10 @@ public class TestCommonOps_DDRM {
             if( hasAlpha )
                 checkMethod = MatrixMatrixMult_DDRM.class.getMethod(
                         name+"_reorder",double.class,
-                        D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
+                        DMatrix1Row.class, DMatrix1Row.class,DMatrix1Row.class);
             else
                 checkMethod = MatrixMatrixMult_DDRM.class.getMethod(
-                        name+"_reorder", D1MatrixRow_F64.class, D1MatrixRow_F64.class,D1MatrixRow_F64.class);
+                        name+"_reorder", DMatrix1Row.class, DMatrix1Row.class,DMatrix1Row.class);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }

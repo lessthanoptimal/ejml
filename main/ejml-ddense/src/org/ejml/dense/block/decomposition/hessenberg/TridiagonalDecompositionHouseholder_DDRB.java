@@ -24,7 +24,7 @@ import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.MatrixMult_DDRB;
 import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
 
 import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
 
@@ -47,7 +47,7 @@ import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_DDRB
-        implements TridiagonalSimilarDecomposition_F64<DMatrixRBlock> {
+        implements TridiagonalSimilarDecompositionD<DMatrixRBlock> {
 
     // matrix which is being decomposed
     // householder vectors are stored along the upper triangle rows

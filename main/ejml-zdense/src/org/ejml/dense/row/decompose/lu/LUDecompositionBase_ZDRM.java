@@ -19,12 +19,12 @@
 package org.ejml.dense.row.decompose.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
+import org.ejml.data.ZComplex;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.SpecializedOps_ZDRM;
 import org.ejml.dense.row.decompose.TriangularSolver_ZDRM;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
-import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUDecompositionD;
 
 
 /**
@@ -34,7 +34,7 @@ import org.ejml.interfaces.decomposition.LUDecomposition_F64;
  * @author Peter Abeles
  */
 public abstract class LUDecompositionBase_ZDRM
-        implements LUDecomposition_F64<ZMatrixRMaj> {
+        implements LUDecompositionD<ZMatrixRMaj> {
     // the decomposed matrix
     protected ZMatrixRMaj LU;
 
@@ -54,7 +54,7 @@ public abstract class LUDecompositionBase_ZDRM
 
     // used by determinant
     protected double pivsign;
-    protected Complex_F64 det = new Complex_F64();
+    protected ZComplex det = new ZComplex();
 
     public void setExpectedMaxSize( int numRows , int numCols )
     {
@@ -206,7 +206,7 @@ public abstract class LUDecompositionBase_ZDRM
      * @return The matrix's determinant.
      */
     @Override
-    public Complex_F64 computeDeterminant() {
+    public ZComplex computeDeterminant() {
         if( m != n )
             throw new IllegalArgumentException("Must be a square matrix.");
 

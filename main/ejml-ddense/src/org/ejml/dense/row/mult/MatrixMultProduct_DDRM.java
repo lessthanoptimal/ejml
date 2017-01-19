@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.D1MatrixRow_F64;
+import org.ejml.data.DMatrix1Row;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import org.ejml.data.D1MatrixRow_F64;
  */
 public class MatrixMultProduct_DDRM {
 
-    public static void outer(D1MatrixRow_F64 a, D1MatrixRow_F64 c) {
+    public static void outer(DMatrix1Row a, DMatrix1Row c) {
         for( int i = 0; i < a.numRows; i++ ) {
             int indexC1 = i*c.numCols+i;
             int indexC2 = indexC1;
@@ -60,7 +60,7 @@ public class MatrixMultProduct_DDRM {
 //        }
     }
     
-    public static void inner_small(D1MatrixRow_F64 a, D1MatrixRow_F64 c) {
+    public static void inner_small(DMatrix1Row a, DMatrix1Row c) {
 
         for( int i = 0; i < a.numCols; i++ ) {
             for( int j = i; j < a.numCols; j++ ) {
@@ -88,7 +88,7 @@ public class MatrixMultProduct_DDRM {
 //        }
     }
 
-    public static void inner_reorder(D1MatrixRow_F64 a, D1MatrixRow_F64 c) {
+    public static void inner_reorder(DMatrix1Row a, DMatrix1Row c) {
 
         for( int i = 0; i < a.numCols; i++ ) {
             int indexC = i*c.numCols+i;
@@ -129,7 +129,7 @@ public class MatrixMultProduct_DDRM {
 //        }
     }
 
-    public static void inner_reorder_upper(D1MatrixRow_F64 a, D1MatrixRow_F64 c) {
+    public static void inner_reorder_upper(DMatrix1Row a, DMatrix1Row c) {
         for( int i = 0; i < a.numCols; i++ ) {
             int indexC = i*c.numCols+i;
             double valAi = a.data[i];

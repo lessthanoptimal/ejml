@@ -31,7 +31,7 @@ public interface CMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @param output Storage for the complex number
      */
-    public void get( int row , int col , Complex_F32 output );
+    public void get( int row , int col , CComplex output );
 
     /**
      * Set's the complex value of the matrix's element
