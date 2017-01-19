@@ -28,24 +28,24 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsSparseDMatrix extends GenericTestsDMatrix
+public abstract class GenericDMatrixSparse extends GenericTestsDMatrix
 {
     Random rand = new Random(234);
 
     public boolean assignable = true;
 
-    public abstract SDMatrix createSparse( int numRows , int numCols );
+    public abstract DMatrixSparse createSparse(int numRows , int numCols );
 
-    public abstract SDMatrix createSparse(SMatrixTriplet_F64 orig);
+    public abstract DMatrixSparse createSparse(DMatrixSparseTriplet orig);
 
-    public abstract boolean isStructureValid( SDMatrix m );
+    public abstract boolean isStructureValid( DMatrixSparse m );
 
     @Override
     protected DMatrix createMatrix(int numRows, int numCols) {
 
         // define a sparse matrix with every element filled.  It should act low a slow and inefficient
         // row matrix now
-        SMatrixTriplet_F64 t = new SMatrixTriplet_F64(numRows,numCols,numRows*numCols);
+        DMatrixSparseTriplet t = new DMatrixSparseTriplet(numRows,numCols,numRows*numCols);
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
@@ -58,10 +58,10 @@ public abstract class GenericTestsSparseDMatrix extends GenericTestsDMatrix
 
     @Test
     public void set() {
-        SDMatrix m = createSparse(3,4);
+        DMatrixSparse m = createSparse(3,4);
 
         if( assignable ) {
-            SDMatrix orig = m.copy();
+            DMatrixSparse orig = m.copy();
 
             m.set(1, 2, 10);
             m.set(1, 2, 15);
@@ -99,10 +99,10 @@ public abstract class GenericTestsSparseDMatrix extends GenericTestsDMatrix
 
     @Test
     public void get() {
-        SMatrixTriplet_F64 tmp = new SMatrixTriplet_F64(3,4,1);
+        DMatrixSparseTriplet tmp = new DMatrixSparseTriplet(3,4,1);
         tmp.addItem(1,2,5);
 
-        SDMatrix m = createSparse(tmp);
+        DMatrixSparse m = createSparse(tmp);
 
         m.set(1,2, 5);
 
@@ -119,7 +119,7 @@ public abstract class GenericTestsSparseDMatrix extends GenericTestsDMatrix
 
     @Test
     public void remove() {
-        SDMatrix m = (SDMatrix)createMatrix(3,4);
+        DMatrixSparse m = (DMatrixSparse)createMatrix(3,4);
 
         assertTrue( m.get(1,2) != 0 );
         m.remove(1,2);

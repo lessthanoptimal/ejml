@@ -21,15 +21,15 @@ package org.ejml.sparse;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 import org.ejml.sparse.cmpcol.MatrixFeatures_DSCC;
 import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
-import org.ejml.sparse.triplet.MatrixFeatures_T64;
-import org.ejml.sparse.triplet.RandomMatrices_T64;
+import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
+import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.Test;
 
 import java.util.Random;
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestConvertSparseDMatrix {
+public class TestConvertDMatrixSparse {
 
     Random rand = new Random(234);
 
@@ -54,11 +54,11 @@ public class TestConvertSparseDMatrix {
         a.set(2,0, 0);
 
         DMatrixRow_SMatrixTriplet(a,null);
-        DMatrixRow_SMatrixTriplet(a, new SMatrixTriplet_F64(1,1,2));
+        DMatrixRow_SMatrixTriplet(a, new DMatrixSparseTriplet(1,1,2));
     }
 
-    public void DMatrixRow_SMatrixTriplet(DMatrixRMaj a , SMatrixTriplet_F64 b ) {
-        b = ConvertSparseDMatrix.convert(a,b);
+    public void DMatrixRow_SMatrixTriplet(DMatrixRMaj a , DMatrixSparseTriplet b ) {
+        b = ConvertDMatrixSparse.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
@@ -76,23 +76,23 @@ public class TestConvertSparseDMatrix {
         }
 
         // now try it the other direction
-        DMatrixRMaj c = ConvertSparseDMatrix.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj c = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
         assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
 
-        c = ConvertSparseDMatrix.convert(b,new DMatrixRMaj(1,1));
+        c = ConvertDMatrixSparse.convert(b,new DMatrixRMaj(1,1));
         assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
     }
 
     @Test
     public void SMatrixCC_DMatrixRow() {
-        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(5,6,10,-1,1,rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,6,10,-1,1,rand);
 
         SMatrixCC_DMatrixRow(a,null);
         SMatrixCC_DMatrixRow(a,new DMatrixRMaj(1,1));
     }
 
-    public void SMatrixCC_DMatrixRow(SMatrixCmpC_F64 a , DMatrixRMaj b ) {
-        b = ConvertSparseDMatrix.convert(a,b);
+    public void SMatrixCC_DMatrixRow(DMatrixSparseCSC a , DMatrixRMaj b ) {
+        b = ConvertDMatrixSparse.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
@@ -102,40 +102,40 @@ public class TestConvertSparseDMatrix {
         EjmlUnitTests.assertEquals(a, b);
 
         // now try it the other direction
-        SMatrixCmpC_F64 c = ConvertSparseDMatrix.convert(b,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC c = ConvertDMatrixSparse.convert(b,(DMatrixSparseCSC)null);
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,c, UtilEjml.TEST_F64));
         assertTrue(CommonOps_DSCC.checkIndicesSorted(c));
 
-        c = ConvertSparseDMatrix.convert(b,new SMatrixCmpC_F64(1,1,1));
+        c = ConvertDMatrixSparse.convert(b,new DMatrixSparseCSC(1,1,1));
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,c, UtilEjml.TEST_F64));
         assertTrue(CommonOps_DSCC.checkIndicesSorted(c));
     }
 
     @Test
     public void SMatrixTriplet_SMatrixCC() {
-        SMatrixTriplet_F64 a = RandomMatrices_T64.uniform(5,6,10,-1,1,rand);
+        DMatrixSparseTriplet a = RandomMatrices_DSTL.uniform(5,6,10,-1,1,rand);
 
-        SMatrixTriplet_SMatrixCC(a,(SMatrixCmpC_F64)null);
-        SMatrixTriplet_SMatrixCC(a,new SMatrixCmpC_F64(1,1,2));
+        SMatrixTriplet_SMatrixCC(a,(DMatrixSparseCSC)null);
+        SMatrixTriplet_SMatrixCC(a,new DMatrixSparseCSC(1,1,2));
     }
 
-    public void SMatrixTriplet_SMatrixCC(SMatrixTriplet_F64 a , SMatrixCmpC_F64 b ) {
-        b = ConvertSparseDMatrix.convert(a,b);
+    public void SMatrixTriplet_SMatrixCC(DMatrixSparseTriplet a , DMatrixSparseCSC b ) {
+        b = ConvertDMatrixSparse.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
         assertEquals(a.nz_length, b.nz_length);
         for (int i = 0; i < a.nz_length; i++) {
-            SMatrixTriplet_F64.Element e = a.nz_data[i];
+            DMatrixSparseTriplet.Element e = a.nz_data[i];
             assertEquals(e.value, b.get(e.row, e.col), UtilEjml.TEST_F64);
         }
         assertTrue(CommonOps_DSCC.checkSortedFlag(b));
 
         // now try it the other direction
-        SMatrixTriplet_F64 c = ConvertSparseDMatrix.convert(b,(SMatrixTriplet_F64)null);
-        assertTrue(MatrixFeatures_T64.isEquals(a,c, UtilEjml.TEST_F64));
+        DMatrixSparseTriplet c = ConvertDMatrixSparse.convert(b,(DMatrixSparseTriplet)null);
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,c, UtilEjml.TEST_F64));
 
-        c = ConvertSparseDMatrix.convert(b,new SMatrixTriplet_F64(1,1,1));
-        assertTrue(MatrixFeatures_T64.isEquals(a,c, UtilEjml.TEST_F64));
+        c = ConvertDMatrixSparse.convert(b,new DMatrixSparseTriplet(1,1,1));
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,c, UtilEjml.TEST_F64));
     }
 }

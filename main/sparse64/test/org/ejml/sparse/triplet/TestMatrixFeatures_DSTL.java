@@ -19,7 +19,7 @@
 package org.ejml.sparse.triplet;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -28,52 +28,52 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestMatrixFeatures_T64 {
+public class TestMatrixFeatures_DSTL {
     @Test
     public void isEquals() {
-        SMatrixTriplet_F64 a = new SMatrixTriplet_F64(4,5,3);
+        DMatrixSparseTriplet a = new DMatrixSparseTriplet(4,5,3);
         a.addItem(3,1,2.5);
         a.addItem(2,4,2.7);
         a.addItem(2,2,1.5);
 
-        SMatrixTriplet_F64 b = new SMatrixTriplet_F64(a);
+        DMatrixSparseTriplet b = new DMatrixSparseTriplet(a);
 
-        assertTrue(MatrixFeatures_T64.isEquals(a,b));
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,b));
 
         b.numRows += 1;
-        assertFalse(MatrixFeatures_T64.isEquals(a,b));
+        assertFalse(MatrixFeatures_DSTL.isEquals(a,b));
         b.numRows -= 1; b.numCols += 1;
-        assertFalse(MatrixFeatures_T64.isEquals(a,b));
+        assertFalse(MatrixFeatures_DSTL.isEquals(a,b));
 
         // make it no longer exactly equal
         b.numCols -= 1;
         b.nz_data[0].value += UtilEjml.TEST_F64*0.1;
-        assertFalse(MatrixFeatures_T64.isEquals(a,b));
+        assertFalse(MatrixFeatures_DSTL.isEquals(a,b));
     }
 
     @Test
     public void isEquals_tol() {
-        SMatrixTriplet_F64 a = new SMatrixTriplet_F64(4,5,3);
+        DMatrixSparseTriplet a = new DMatrixSparseTriplet(4,5,3);
         a.addItem(3,1,2.5);
         a.addItem(2,4,2.7);
         a.addItem(2,2,1.5);
 
-        SMatrixTriplet_F64 b = new SMatrixTriplet_F64(a);
+        DMatrixSparseTriplet b = new DMatrixSparseTriplet(a);
 
-        assertTrue(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
 
         b.numRows += 1;
-        assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
         b.numRows -= 1; b.numCols += 1;
-        assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
 
         // make it no longer exactly equal, but within tolerance
         b.numCols -= 1;
         b.nz_data[0].value += UtilEjml.TEST_F64*0.1;
-        assertTrue(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
 
         // outside of tolerance
         b.nz_data[0].value += UtilEjml.TEST_F64*10;
-        assertFalse(MatrixFeatures_T64.isEquals(a,b, UtilEjml.TEST_F64));
+        assertFalse(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
     }
 }

@@ -35,7 +35,7 @@ import org.ejml.sparse.SortCoupledArray_F64;
  *
  * @author Peter Abeles
  */
-public class SMatrixCmpC_F64 implements SDMatrix {
+public class DMatrixSparseCSC implements DMatrixSparse {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */
@@ -69,7 +69,7 @@ public class SMatrixCmpC_F64 implements SDMatrix {
      */
     public boolean indicesSorted=false;
 
-    public SMatrixCmpC_F64(int numRows , int numCols , int nz_length) {
+    public DMatrixSparseCSC(int numRows , int numCols , int nz_length) {
         nz_length = Math.min(numCols*numRows, nz_length);
 
         this.numRows = numRows;
@@ -81,7 +81,7 @@ public class SMatrixCmpC_F64 implements SDMatrix {
         nz_rows = new int[nz_length];
     }
 
-    public SMatrixCmpC_F64(SMatrixCmpC_F64 original ) {
+    public DMatrixSparseCSC(DMatrixSparseCSC original ) {
         this(original.numRows, original.numCols, original.nz_length);
 
         set(original);
@@ -99,17 +99,17 @@ public class SMatrixCmpC_F64 implements SDMatrix {
 
     @Override
     public <T extends Matrix> T copy() {
-        return (T)new SMatrixCmpC_F64(this);
+        return (T)new DMatrixSparseCSC(this);
     }
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixCmpC_F64(numRows,numCols, nz_length);
+        return (T)new DMatrixSparseCSC(numRows,numCols, nz_length);
     }
 
     @Override
     public void set(Matrix original) {
-        SMatrixCmpC_F64 o = (SMatrixCmpC_F64)original;
+        DMatrixSparseCSC o = (DMatrixSparseCSC)original;
         reshape(o.numRows, o.numCols, o.nz_length);
 
         System.arraycopy(o.nz_values, 0, nz_values, 0, nz_length);
@@ -318,7 +318,7 @@ public class SMatrixCmpC_F64 implements SDMatrix {
         indicesSorted = true;
     }
 
-    public void copyStructure( SMatrixCmpC_F64 orig ) {
+    public void copyStructure( DMatrixSparseCSC orig ) {
         reshape(orig.numRows, orig.numCols, orig.nz_length);
         System.arraycopy(orig.col_idx,0,col_idx,0,orig.numCols+1);
         System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.nz_length);

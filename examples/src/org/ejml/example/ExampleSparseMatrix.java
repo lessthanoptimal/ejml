@@ -19,10 +19,10 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 import org.ejml.sparse.cmpcol.NormOps_DSCC;
 import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
@@ -45,18 +45,18 @@ public class ExampleSparseMatrix {
     public static void main(String[] args) {
         Random rand = new Random(234);
 
-        SMatrixCmpC_F64 Z = RandomMatrices_DSCC.rectangle(20,5,20,rand);
+        DMatrixSparseCSC Z = RandomMatrices_DSCC.rectangle(20,5,20,rand);
         Z.print();
         Z.printNonZero();
 
         // Create a 100000x1000 matrix that is 5% filled
-        SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(ROWS,COLS,(int)(N*0.05),rand);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS,COLS,(int)(N*0.05),rand);
         //          1000x1 matrix that is 70% filled
-        SMatrixCmpC_F64 x = RandomMatrices_DSCC.rectangle(COLS,XCOLS,(int)(XCOLS*COLS*0.7),rand);
+        DMatrixSparseCSC x = RandomMatrices_DSCC.rectangle(COLS,XCOLS,(int)(XCOLS*COLS*0.7),rand);
 
         System.out.println("Done generating random matrices");
         // storage for the initial solution
-        SMatrixCmpC_F64 y = new SMatrixCmpC_F64(ROWS,XCOLS,0);
+        DMatrixSparseCSC y = new DMatrixSparseCSC(ROWS,XCOLS,0);
 
         // To demonstration how to perform sparse math let's multiply:
         //                  y=A*x
@@ -71,8 +71,8 @@ public class ExampleSparseMatrix {
 
         System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  time = "+(after-before)+" ms");
 
-        DMatrixRMaj Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
-        DMatrixRMaj xd = ConvertSparseDMatrix.convert(x,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj xd = ConvertDMatrixSparse.convert(x,(DMatrixRMaj)null);
         DMatrixRMaj yd = new DMatrixRMaj(y.numRows,y.numCols);
 
         before = System.currentTimeMillis();

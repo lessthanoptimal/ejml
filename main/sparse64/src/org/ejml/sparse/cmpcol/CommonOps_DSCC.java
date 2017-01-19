@@ -19,7 +19,7 @@
 package org.ejml.sparse.cmpcol;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.cmpcol.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.cmpcol.mult.ImplSparseSparseMult_DSCC;
 
@@ -34,7 +34,7 @@ public class CommonOps_DSCC {
      * Checks to see if row indicies are sorted into ascending order.  O(N)
      * @return true if sorted and false if not
      */
-    public static boolean checkIndicesSorted( SMatrixCmpC_F64 A ) {
+    public static boolean checkIndicesSorted( DMatrixSparseCSC A ) {
         for (int j = 0; j < A.numCols; j++) {
             int idx0 = A.col_idx[j];
             int idx1 = A.col_idx[j+1];
@@ -53,7 +53,7 @@ public class CommonOps_DSCC {
         return true;
     }
 
-    public static boolean checkSortedFlag( SMatrixCmpC_F64 A ) {
+    public static boolean checkSortedFlag( DMatrixSparseCSC A ) {
         if( A.indicesSorted )
             return checkIndicesSorted(A);
         return true;
@@ -66,7 +66,7 @@ public class CommonOps_DSCC {
      * @param a_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
      * @param work Optional work matrix.  null or of length a.numRows
      */
-    public static void transpose(SMatrixCmpC_F64 a , SMatrixCmpC_F64 a_t , int work[] ) {
+    public static void transpose(DMatrixSparseCSC a , DMatrixSparseCSC a_t , int work[] ) {
         if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
 
@@ -76,7 +76,7 @@ public class CommonOps_DSCC {
         ImplCommonOps_DSCC.transpose(a, a_t, work);
     }
 
-    public static void mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ) {
+    public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
         mult(A,B,C,null,null);
     }
 
@@ -89,7 +89,7 @@ public class CommonOps_DSCC {
      * @param workA (Optional) Storage for internal work.  null or array of length A.numRows
      * @param workB (Optional) Storage for internal work.  null or array of length A.numRows
      */
-    public static void mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
+    public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                             int workA[], double workB[] )
     {
         if( A.numRows != C.numRows || B.numCols != C.numCols )
@@ -105,7 +105,7 @@ public class CommonOps_DSCC {
      * @param B Dense Matrix
      * @param C Dense Matrix
      */
-    public static void mult(SMatrixCmpC_F64 A , DMatrixRMaj B , DMatrixRMaj C )
+    public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numRows != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
@@ -125,7 +125,7 @@ public class CommonOps_DSCC {
      * @param work0 (Optional) Work space of length A.rows.  Null to declare internally
      * @param work1 (Optional) Work space of length A.rows.  Null to declare internally
      */
-    public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
+    public static void add(double alpha , DMatrixSparseCSC A , double beta , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                            double work0[] , int work1[] )
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
@@ -134,13 +134,13 @@ public class CommonOps_DSCC {
         ImplCommonOps_DSCC.add(alpha,A,beta,B,C, work0, work1);
     }
 
-    public static SMatrixCmpC_F64 identity( int length ) {
+    public static DMatrixSparseCSC identity(int length ) {
         return identity(length, length);
     }
 
-    public static SMatrixCmpC_F64 identity( int numRows , int numCols ) {
+    public static DMatrixSparseCSC identity(int numRows , int numCols ) {
         int min = Math.min(numRows, numCols);
-        SMatrixCmpC_F64 A = new SMatrixCmpC_F64(numRows, numCols, min);
+        DMatrixSparseCSC A = new DMatrixSparseCSC(numRows, numCols, min);
 
         Arrays.fill(A.nz_values,0,min,1);
         for (int i = 1; i <= min; i++) {
@@ -154,7 +154,7 @@ public class CommonOps_DSCC {
         return A;
     }
 
-    public static void scale(double scalar, SMatrixCmpC_F64 A, SMatrixCmpC_F64 B) {
+    public static void scale(double scalar, DMatrixSparseCSC A, DMatrixSparseCSC B) {
         if( A.numRows != B.numRows || A.numCols != B.numCols )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
         B.copyStructure(A);
@@ -164,7 +164,7 @@ public class CommonOps_DSCC {
         }
     }
 
-    public static void divide(SMatrixCmpC_F64 A , double scalar , SMatrixCmpC_F64 B ) {
+    public static void divide(DMatrixSparseCSC A , double scalar , DMatrixSparseCSC B ) {
         if( A.numRows != B.numRows || A.numCols != B.numCols )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
         B.copyStructure(A);
@@ -174,7 +174,7 @@ public class CommonOps_DSCC {
         }
     }
 
-    public static double elementMinAbs( SMatrixCmpC_F64 A ) {
+    public static double elementMinAbs( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
 
@@ -189,7 +189,7 @@ public class CommonOps_DSCC {
         return min;
     }
 
-    public static double elementMaxAbs( SMatrixCmpC_F64 A ) {
+    public static double elementMaxAbs( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
 
@@ -204,7 +204,7 @@ public class CommonOps_DSCC {
         return max;
     }
 
-    public static double elementMin( SMatrixCmpC_F64 A ) {
+    public static double elementMin( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
 
@@ -219,7 +219,7 @@ public class CommonOps_DSCC {
         return min;
     }
 
-    public static double elementMax( SMatrixCmpC_F64 A ) {
+    public static double elementMax( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
 
@@ -234,9 +234,9 @@ public class CommonOps_DSCC {
         return max;
     }
 
-    public static SMatrixCmpC_F64 diag( double... values ) {
+    public static DMatrixSparseCSC diag(double... values ) {
         int N = values.length;
-        SMatrixCmpC_F64 A = new SMatrixCmpC_F64(N,N,N);
+        DMatrixSparseCSC A = new DMatrixSparseCSC(N,N,N);
 
         for (int i = 0; i < N; i++) {
             A.col_idx[i+1] = i+1;

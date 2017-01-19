@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.cmpcol.misc;
 
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 
 import java.util.Arrays;
 
@@ -35,7 +35,7 @@ public class TriangularSolver_DSCC {
      * @param L Lower triangular matrix.  Diagonal elements are assumed to be non-zero
      * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
      */
-    public static void solveL(SMatrixCmpC_F64 L , double []x )
+    public static void solveL(DMatrixSparseCSC L , double []x )
     {
         final int N = L.numCols;
 
@@ -60,7 +60,7 @@ public class TriangularSolver_DSCC {
      * @param U Upper triangular matrix.  Diagonal elements are assumed to be non-zero
      * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
      */
-    public static void solveU(SMatrixCmpC_F64 U , double []x )
+    public static void solveU(DMatrixSparseCSC U , double []x )
     {
         final int N = U.numCols;
 
@@ -89,8 +89,8 @@ public class TriangularSolver_DSCC {
      * @param xi (Optional) Storage for work space.  length = B.numRows
      * @param w (Optional) Storage for work space.  length = B.numRows*2
      */
-    public static void solve(SMatrixCmpC_F64 G, boolean lower,
-                             SMatrixCmpC_F64 B, SMatrixCmpC_F64 X, double x[], int xi[], int w[])
+    public static void solve(DMatrixSparseCSC G, boolean lower,
+                             DMatrixSparseCSC B, DMatrixSparseCSC X, double x[], int xi[], int w[])
     {
         x = checkDeclare(G.numRows,x);
         xi = checkDeclare(G.numRows,xi,false);
@@ -128,8 +128,8 @@ public class TriangularSolver_DSCC {
      * @param w (Optional) Storage for work space.  length = B.numRows(2
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
-    public static int solve(SMatrixCmpC_F64 G, boolean lower,
-                            SMatrixCmpC_F64 B, int colB, double x[], int xi[], int w[])
+    public static int solve(DMatrixSparseCSC G, boolean lower,
+                            DMatrixSparseCSC B, int colB, double x[], int xi[], int w[])
     {
         xi = checkDeclare(G.numRows,xi,false);
         w = checkDeclare(B.numRows*2,w,B.numRows);
@@ -185,7 +185,7 @@ public class TriangularSolver_DSCC {
      * @param w Work space array used internally.  Must be of size B.numRows*2
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
-    public static int searchNzRowsInB( SMatrixCmpC_F64 G , SMatrixCmpC_F64 B , int colB, int xi[] , int w[])
+    public static int searchNzRowsInB(DMatrixSparseCSC G , DMatrixSparseCSC B , int colB, int xi[] , int w[])
     {
         if( xi.length < B.numRows )
             throw new IllegalArgumentException("xi must be at least this long: "+B.numRows);
@@ -213,7 +213,7 @@ public class TriangularSolver_DSCC {
      * Given the first row in B it performs a DFS seeing which elements in 'B' will be not zero.  A row=i in 'B' will
      * be not zero if any element in row=(j < i) in G is not zero
      */
-    private static int searchNzRowsInB_DFS( int rowB , SMatrixCmpC_F64 G , int top , int xi[], int w[] )
+    private static int searchNzRowsInB_DFS(int rowB , DMatrixSparseCSC G , int top , int xi[], int w[] )
     {
         int N = G.numRows;
         int head = 0; // put the selected row into the FILO stack

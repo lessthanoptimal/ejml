@@ -21,10 +21,10 @@ package org.ejml.sparse.cmpcol.misc;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class TestTriangularSolver_DSCC {
     @Test
     public void solveL_denseX() {
         for (int nz_size : new int[]{5, 8, 10, 20}) {
-            SMatrixCmpC_F64 L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
+            DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
             DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5, 1, rand);
             DMatrixRMaj x = b.copy();
 
@@ -60,8 +60,8 @@ public class TestTriangularSolver_DSCC {
     @Test
     public void solveU_denseX() {
         for (int nz_size : new int[]{5, 8, 10, 20}) {
-            SMatrixCmpC_F64 L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
-            SMatrixCmpC_F64 U = new SMatrixCmpC_F64(5, 5, L.nz_length);
+            DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
+            DMatrixSparseCSC U = new DMatrixSparseCSC(5, 5, L.nz_length);
             CommonOps_DSCC.transpose(L, U, null);
 
             DMatrixRMaj b = RandomMatrices_DDRM.createRandom(5, 1, rand);
@@ -87,12 +87,12 @@ public class TestTriangularSolver_DSCC {
             for (int nz_size : new int[]{5, 8, 10, 20}) {
                 int lengthX = rand.nextInt(3)+3;
 
-                SMatrixCmpC_F64 G;
+                DMatrixSparseCSC G;
                 if( lower)
                     G = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
                 else
                     G = RandomMatrices_DSCC.triangleUpper(5, 0, nz_size, -1, 1, rand);
-                SMatrixCmpC_F64 b = RandomMatrices_DSCC.rectangle(5, 1,lengthX, rand);
+                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 1,lengthX, rand);
                 DMatrixRMaj x = new DMatrixRMaj(b.numRows,b.numCols);
 
                 int ret = TriangularSolver_DSCC.solve(G,lower, b,0, x.data, null, null);
@@ -101,7 +101,7 @@ public class TestTriangularSolver_DSCC {
                 DMatrixRMaj found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
 
-                DMatrixRMaj expected = ConvertSparseDMatrix.convert(b,(DMatrixRMaj)null);
+                DMatrixRMaj expected = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
                 assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64));
             }
         }
@@ -119,17 +119,17 @@ public class TestTriangularSolver_DSCC {
                 nz_size = 8;
                 int lengthX = rand.nextInt(3)+3;
 
-                SMatrixCmpC_F64 G;
+                DMatrixSparseCSC G;
                 if( lower)
                     G = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
                 else
                     G = RandomMatrices_DSCC.triangleUpper(5, 0, nz_size, -1, 1, rand);
-                SMatrixCmpC_F64 b = RandomMatrices_DSCC.rectangle(5, 2,lengthX*2, rand);
-                SMatrixCmpC_F64 x = new SMatrixCmpC_F64(b.numRows,b.numCols,1);
+                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 2,lengthX*2, rand);
+                DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
 
                 TriangularSolver_DSCC.solve(G,lower,b,x, null, null, null);
 
-                SMatrixCmpC_F64 found = x.createLike();
+                DMatrixSparseCSC found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
 
                 // Don't use a sparse test since the solution might contain 0 values due to cancellations
@@ -144,8 +144,8 @@ public class TestTriangularSolver_DSCC {
      */
     @Test
     public void searchNzRowsInB_diag() {
-        SMatrixCmpC_F64 A = CommonOps_DSCC.diag(1,2,3);
-        SMatrixCmpC_F64 B = RandomMatrices_DSCC.rectangle(3,1,3,-1,1,rand);
+        DMatrixSparseCSC A = CommonOps_DSCC.diag(1,2,3);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(3,1,3,-1,1,rand);
 
         int xi[] = new int[A.numCols];
         int w[] = new int[B.numRows*2];
@@ -159,7 +159,7 @@ public class TestTriangularSolver_DSCC {
         }
 
         // A is diagonal and B is empty
-        B = new SMatrixCmpC_F64(3,1,3);
+        B = new DMatrixSparseCSC(3,1,3);
         top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,xi,w);
         assertEquals(3,top);
 
@@ -192,8 +192,8 @@ public class TestTriangularSolver_DSCC {
      */
     @Test
     public void searchNzRowsInB_triangle() {
-        SMatrixCmpC_F64 A = RandomMatrices_DSCC.triangleLower(4,0,16, -1,1,rand);
-        SMatrixCmpC_F64 B = RandomMatrices_DSCC.rectangle(4,1,4,-1,1,rand);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.triangleLower(4,0,16, -1,1,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(4,1,4,-1,1,rand);
 
         int xi[] = new int[A.numCols];
         int w[] = new int[B.numRows*2];
@@ -234,9 +234,9 @@ public class TestTriangularSolver_DSCC {
                         "1 0 0 1 0 " +
                         "0 1 0 0 1",5);
 
-        SMatrixCmpC_F64 A = ConvertSparseDMatrix.convert(D,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC A = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
 
-        SMatrixCmpC_F64 B = RandomMatrices_DSCC.rectangle(5,1,4,-1,1,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,1,4,-1,1,rand);
 
         int xi[] = new int[A.numCols];
         int w[] = new int[B.numRows*2];

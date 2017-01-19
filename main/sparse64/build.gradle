@@ -7,6 +7,6 @@ dependencies {
 
 idea {
     module {
-        name = "EJML Sparse 64"
+        name = "EJML DSparse"
     }
 }

@@ -18,7 +18,7 @@
 
 package org.ejml.data;
 
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -28,26 +28,26 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public class TestSMatrixCmpC_F64 extends GenericTestsSparseDMatrix {
+public class TestDMatrixSparseCSC extends GenericDMatrixSparse {
 
     @Override
-    public SDMatrix createSparse(int numRows, int numCols) {
-        return new SMatrixCmpC_F64(numRows,numCols,10);
+    public DMatrixSparse createSparse(int numRows, int numCols) {
+        return new DMatrixSparseCSC(numRows,numCols,10);
     }
 
     @Override
-    public SDMatrix createSparse(SMatrixTriplet_F64 orig) {
-        return ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
+    public DMatrixSparse createSparse(DMatrixSparseTriplet orig) {
+        return ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
     }
 
     @Override
-    public boolean isStructureValid(SDMatrix m) {
+    public boolean isStructureValid(DMatrixSparse m) {
         return true;
     }
 
     @Test
     public void reshape_row_col_length() {
-        SMatrixCmpC_F64 a = new SMatrixCmpC_F64(2,3,4);
+        DMatrixSparseCSC a = new DMatrixSparseCSC(2,3,4);
 
         a.reshape(1,2,3);
         assertEquals(1,a.numRows);
@@ -64,7 +64,7 @@ public class TestSMatrixCmpC_F64 extends GenericTestsSparseDMatrix {
 
     @Test
     public void sortIndices() {
-        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
 
         // make sure it's not sorted correctly
         a.nz_rows[0]=2;

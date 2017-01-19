@@ -6,6 +6,6 @@ dependencies {
 
 idea {
     module {
-        name = "EJML Dense 32"
+        name = "EJML FDense"
     }
 }

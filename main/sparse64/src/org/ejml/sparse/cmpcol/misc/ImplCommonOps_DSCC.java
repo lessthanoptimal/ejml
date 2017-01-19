@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.cmpcol.misc;
 
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class ImplCommonOps_DSCC {
      * @param C Storage for transposed 'a'.  Assumed to be of the correct shape and length.
      * @param work Work space.  null or an array the size of the rows in 'a'
      */
-    public static void transpose(SMatrixCmpC_F64 A , SMatrixCmpC_F64 C , int work[] ) {
+    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , int work[] ) {
         work = checkDeclare(A.numRows, work, true);
         C.nz_length = A.nz_length;
 
@@ -78,7 +78,7 @@ public class ImplCommonOps_DSCC {
      * @param A A matrix
      * @param histogram histogram of column values in the sparse matrix
      */
-    public static void colsum(SMatrixCmpC_F64 A, int histogram[] ) {
+    public static void colsum(DMatrixSparseCSC A, int histogram[] ) {
         A.col_idx[0] = 0;
         int index = 0;
         for (int i = 1; i <= A.numCols; i++) {
@@ -99,7 +99,7 @@ public class ImplCommonOps_DSCC {
      * @param x (Optional) Work space of length A.rows.  Null to declare internally
      * @param w (Optional) Work space of length A.rows.  Null to declare internally
      */
-    public static void add(double alpha , SMatrixCmpC_F64 A , double beta , SMatrixCmpC_F64 B , SMatrixCmpC_F64 C ,
+    public static void add(double alpha , DMatrixSparseCSC A , double beta , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                            double x[] , int w[] )
     {
         x = checkDeclare(A.numRows, x);

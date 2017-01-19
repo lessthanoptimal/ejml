@@ -19,7 +19,7 @@
 package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,7 +38,7 @@ public class TestRandomMatrices_DSCC {
     @Test
     public void uniform() {
 
-        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(numRows,numCols,10,-1,1,rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,10,-1,1,rand);
 
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);
@@ -64,7 +64,7 @@ public class TestRandomMatrices_DSCC {
     @Test
     public void createLowerTriangular() {
 
-        SMatrixCmpC_F64 L;
+        DMatrixSparseCSC L;
         for (int trial = 0; trial < 20; trial++) {
             for( int length : new int[]{0,2,6,12,20} ) {
                 L = RandomMatrices_DSCC.triangleLower(6, 0, length,-1,1, rand);

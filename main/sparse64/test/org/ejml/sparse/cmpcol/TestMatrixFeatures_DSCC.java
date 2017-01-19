@@ -20,9 +20,9 @@ package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
-import org.ejml.data.SMatrixTriplet_F64;
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.junit.Test;
 
 import java.util.Random;
@@ -39,13 +39,13 @@ public class TestMatrixFeatures_DSCC {
 
     @Test
     public void isEquals() {
-        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(4,5,3);
+        DMatrixSparseTriplet orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        SMatrixCmpC_F64 a = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
-        SMatrixCmpC_F64 b = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
 
         a.sortIndices(null); b.sortIndices(null);
         assertTrue(MatrixFeatures_DSCC.isEquals(a,b));
@@ -67,18 +67,18 @@ public class TestMatrixFeatures_DSCC {
 
     @Test
     public void isEqualsSort_tol() {
-        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(4,5,3);
+        DMatrixSparseTriplet orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        SMatrixCmpC_F64 a = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
 
-        orig = new SMatrixTriplet_F64(4,5,3);
+        orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,2,1.5);
         orig.addItem(2,4,2.7);
-        SMatrixCmpC_F64 b = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC b = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
 
         // these require sorting and this will fail if not
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b, UtilEjml.TEST_F64));
@@ -86,13 +86,13 @@ public class TestMatrixFeatures_DSCC {
 
     @Test
     public void isEquals_tol() {
-        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(4,5,3);
+        DMatrixSparseTriplet orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        SMatrixCmpC_F64 a = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
-        SMatrixCmpC_F64 b = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b,UtilEjml.TEST_F64));
 
@@ -118,7 +118,7 @@ public class TestMatrixFeatures_DSCC {
     @Test
     public void hasUncountable() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,6,length,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,6,length,rand);
 
             assertFalse(MatrixFeatures_DSCC.hasUncountable(A));
 
@@ -139,9 +139,9 @@ public class TestMatrixFeatures_DSCC {
 
     @Test
     public void isZeros() {
-        assertTrue( MatrixFeatures_DSCC.isZeros(new SMatrixCmpC_F64(10,12,0), UtilEjml.TEST_F64));
+        assertTrue( MatrixFeatures_DSCC.isZeros(new DMatrixSparseCSC(10,12,0), UtilEjml.TEST_F64));
 
-        SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,4,12,rand);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,4,12,rand);
         for (int i = 0; i < A.nz_length; i++) {
             A.nz_values[i] = UtilEjml.EPS;
         }
@@ -152,7 +152,7 @@ public class TestMatrixFeatures_DSCC {
     @Test
     public void isIdentity() {
         for( int length : new int[]{1,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = CommonOps_DSCC.identity(length);
+            DMatrixSparseCSC A = CommonOps_DSCC.identity(length);
 
             assertTrue(MatrixFeatures_DSCC.isIdentity(A, UtilEjml.TEST_F64));
 
@@ -169,7 +169,7 @@ public class TestMatrixFeatures_DSCC {
         // normal triangular matrix
         DMatrixRMaj D = new DMatrixRMaj(4,4,true,
                 1,0,0,0, 1,1,0,0, 0,0,1,0 , 1,0,1,1 );
-        SMatrixCmpC_F64 L = ConvertSparseDMatrix.convert(D,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC L = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
 
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -179,7 +179,7 @@ public class TestMatrixFeatures_DSCC {
         // Hessenberg matrix of degree 1
         D = new DMatrixRMaj(4,4,true,
                 1,1,0,0, 1,1,1,0, 0,0,0,1 , 1,0,1,1 );
-        L = ConvertSparseDMatrix.convert(D,(SMatrixCmpC_F64)null);
+        L = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
 
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -190,7 +190,7 @@ public class TestMatrixFeatures_DSCC {
         // testing a case which failed.  first column was all zeros for hessenberg of 1
         D = new DMatrixRMaj(4,4,true,
                 0,1,0,0, 0,0,1,0, 0,0,0,1 , 0,0,0,1 );
-        L = ConvertSparseDMatrix.convert(D,(SMatrixCmpC_F64)null);
+        L = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
 
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));

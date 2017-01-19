@@ -18,20 +18,20 @@
 
 package org.ejml.sparse.triplet;
 
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseTriplet;
 
 /**
  * @author Peter Abeles
  */
-public class MatrixFeatures_T64 {
+public class MatrixFeatures_DSTL {
 
-    public static boolean isEquals(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b ) {
+    public static boolean isEquals(DMatrixSparseTriplet a , DMatrixSparseTriplet b ) {
         if( !isSameShape(a,b) )
             return false;
 
         for (int i = 0; i < a.nz_length; i++) {
-            SMatrixTriplet_F64.Element ea = a.nz_data[i];
-            SMatrixTriplet_F64.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
+            DMatrixSparseTriplet.Element ea = a.nz_data[i];
+            DMatrixSparseTriplet.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
 
             if( eb == null || ea.value != eb.value )
                 return false;
@@ -39,13 +39,13 @@ public class MatrixFeatures_T64 {
         return true;
     }
 
-    public static boolean isEquals(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b , double tol ) {
+    public static boolean isEquals(DMatrixSparseTriplet a , DMatrixSparseTriplet b , double tol ) {
         if( !isSameShape(a,b) )
             return false;
 
         for (int i = 0; i < a.nz_length; i++) {
-            SMatrixTriplet_F64.Element ea = a.nz_data[i];
-            SMatrixTriplet_F64.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
+            DMatrixSparseTriplet.Element ea = a.nz_data[i];
+            DMatrixSparseTriplet.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
 
             if( eb == null || Math.abs(ea.value-eb.value) > tol )
                 return false;
@@ -53,7 +53,7 @@ public class MatrixFeatures_T64 {
         return true;
     }
 
-    public static boolean isSameShape(SMatrixTriplet_F64 a , SMatrixTriplet_F64 b) {
+    public static boolean isSameShape(DMatrixSparseTriplet a , DMatrixSparseTriplet b) {
         return a.numRows == b.numRows && a.numCols == b.numCols && a.nz_length == b.nz_length;
     }
 }

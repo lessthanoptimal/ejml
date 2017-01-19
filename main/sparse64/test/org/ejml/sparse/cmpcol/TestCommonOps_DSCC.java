@@ -20,11 +20,11 @@ package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.junit.Test;
 
 import java.util.Random;
@@ -41,7 +41,7 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void isRowOrderValid() {
-        SMatrixTriplet_F64 orig = new SMatrixTriplet_F64(3,5,6);
+        DMatrixSparseTriplet orig = new DMatrixSparseTriplet(3,5,6);
 
         orig.addItem(0,0, 5);
         orig.addItem(1,0, 6);
@@ -49,7 +49,7 @@ public class TestCommonOps_DSCC {
 
         orig.addItem(1,2, 5);
 
-        SMatrixCmpC_F64 a = ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
+        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
 
         // test positive case first
         assertTrue(CommonOps_DSCC.checkIndicesSorted(a));
@@ -105,7 +105,7 @@ public class TestCommonOps_DSCC {
                 RandomMatrices_DSCC.rectangle(6, 4, 7, rand), true);
     }
 
-    private void check_s_s_mult(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
+    private void check_s_s_mult(DMatrixSparseCSC A , DMatrixSparseCSC B, DMatrixSparseCSC C, boolean exception ) {
         try {
             CommonOps_DSCC.mult(A,B,C,null,null);
             assertTrue(CommonOps_DSCC.checkSortedFlag(C));
@@ -113,13 +113,13 @@ public class TestCommonOps_DSCC {
 
             if( exception )
                 fail("exception expected");
-            DMatrixRMaj denseA = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
-            DMatrixRMaj denseB = ConvertSparseDMatrix.convert(B,(DMatrixRMaj)null);
+            DMatrixRMaj denseA = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
+            DMatrixRMaj denseB = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
 
             CommonOps_DDRM.mult(denseA,denseB,expected);
 
-            DMatrixRMaj found = ConvertSparseDMatrix.convert(C,(DMatrixRMaj)null);
+            DMatrixRMaj found = ConvertDMatrixSparse.convert(C,(DMatrixRMaj)null);
             assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found, UtilEjml.TEST_F64));
 
         } catch( RuntimeException ignore){
@@ -149,13 +149,13 @@ public class TestCommonOps_DSCC {
                 createRandom(6, 4, rand), true);
     }
 
-    private void check_s_d_mult(SMatrixCmpC_F64 A , DMatrixRMaj B, DMatrixRMaj found, boolean exception ) {
+    private void check_s_d_mult(DMatrixSparseCSC A , DMatrixRMaj B, DMatrixRMaj found, boolean exception ) {
         try {
             CommonOps_DSCC.mult(A,B,found);
 
             if( exception )
                 fail("exception expected");
-            DMatrixRMaj denseA = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+            DMatrixRMaj denseA = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
 
             CommonOps_DDRM.mult(denseA,B,expected);
@@ -205,7 +205,7 @@ public class TestCommonOps_DSCC {
 
     }
 
-    private void check_add(SMatrixCmpC_F64 A , SMatrixCmpC_F64 B, SMatrixCmpC_F64 C, boolean exception ) {
+    private void check_add(DMatrixSparseCSC A , DMatrixSparseCSC B, DMatrixSparseCSC C, boolean exception ) {
         double alpha = 1.5;
         double beta = -0.6;
         try {
@@ -214,13 +214,13 @@ public class TestCommonOps_DSCC {
 
             if( exception )
                 fail("exception expected");
-            DMatrixRMaj denseA = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
-            DMatrixRMaj denseB = ConvertSparseDMatrix.convert(B,(DMatrixRMaj)null);
+            DMatrixRMaj denseA = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
+            DMatrixRMaj denseB = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
 
             CommonOps_DDRM.add(alpha,denseA,beta,denseB,expected);
 
-            DMatrixRMaj found = ConvertSparseDMatrix.convert(C,(DMatrixRMaj)null);
+            DMatrixRMaj found = ConvertDMatrixSparse.convert(C,(DMatrixRMaj)null);
             assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found, UtilEjml.TEST_F64));
 
         } catch( RuntimeException ignore){
@@ -236,7 +236,7 @@ public class TestCommonOps_DSCC {
         identity_r_c(CommonOps_DSCC.identity(10,10));
     }
 
-    public void identity_r_c( SMatrixCmpC_F64 A) {
+    public void identity_r_c( DMatrixSparseCSC A) {
         assertTrue(CommonOps_DSCC.checkSortedFlag(A));
         for (int row = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++) {
@@ -255,16 +255,16 @@ public class TestCommonOps_DSCC {
         double scale = 2.1;
 
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
-            DMatrixRMaj  Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
+            DMatrixRMaj  Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
 
-            SMatrixCmpC_F64 B = new SMatrixCmpC_F64(A.numRows,A.numCols,0);
+            DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows,A.numCols,0);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows,A.numCols);
 
             CommonOps_DSCC.scale(scale, A, B);
             CommonOps_DDRM.scale(scale,Ad,expected);
 
-            DMatrixRMaj found = ConvertSparseDMatrix.convert(B,(DMatrixRMaj)null);
+            DMatrixRMaj found = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
         }
@@ -275,16 +275,16 @@ public class TestCommonOps_DSCC {
         double denominator = 2.1;
 
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
-            DMatrixRMaj  Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
+            DMatrixRMaj  Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
 
-            SMatrixCmpC_F64 B = new SMatrixCmpC_F64(A.numRows,A.numCols,0);
+            DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows,A.numCols,0);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows,A.numCols);
 
             CommonOps_DSCC.divide(A,denominator, B);
             CommonOps_DDRM.divide(Ad,denominator, expected);
 
-            DMatrixRMaj found = ConvertSparseDMatrix.convert(B,(DMatrixRMaj)null);
+            DMatrixRMaj found = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
         }
@@ -293,8 +293,8 @@ public class TestCommonOps_DSCC {
     @Test
     public void elementMinAbs() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
-            DMatrixRMaj Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
+            DMatrixRMaj Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
 
             double found = CommonOps_DSCC.elementMinAbs(A);
             double expected = CommonOps_DDRM.elementMinAbs(Ad);
@@ -306,10 +306,10 @@ public class TestCommonOps_DSCC {
     @Test
     public void elementMaxAbs() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
 
             double found = CommonOps_DSCC.elementMaxAbs(A);
-            double expected = CommonOps_DDRM.elementMaxAbs(ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null));
+            double expected = CommonOps_DDRM.elementMaxAbs(ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null));
 
             assertEquals(expected,found, UtilEjml.TEST_F64);
         }
@@ -318,10 +318,10 @@ public class TestCommonOps_DSCC {
     @Test
     public void elementMin() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,5,length,1,3,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,1,3,rand);
 
             double found = CommonOps_DSCC.elementMin(A);
-            double expected = CommonOps_DDRM.elementMin(ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null));
+            double expected = CommonOps_DDRM.elementMin(ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null));
 
             assertEquals(expected,found, UtilEjml.TEST_F64);
         }
@@ -330,10 +330,10 @@ public class TestCommonOps_DSCC {
     @Test
     public void elementMax() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,5,length,-2,-1,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,-2,-1,rand);
 
             double found = CommonOps_DSCC.elementMax(A);
-            double expected = CommonOps_DDRM.elementMax(ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null));
+            double expected = CommonOps_DDRM.elementMax(ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null));
 
             assertEquals(expected,found, UtilEjml.TEST_F64);
         }
@@ -343,7 +343,7 @@ public class TestCommonOps_DSCC {
     public void diag() {
         double d[] = new double[]{1.2,2.2,3.3};
 
-        SMatrixCmpC_F64 A = CommonOps_DSCC.diag(d);
+        DMatrixSparseCSC A = CommonOps_DSCC.diag(d);
 
         assertEquals(3,A.numRows);
         assertEquals(3,A.numCols);

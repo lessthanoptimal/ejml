@@ -18,14 +18,14 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 
 /**
  * @author Peter Abeles
  */
 public class NormOps_DSCC {
 
-    public static double fastNormF(SMatrixCmpC_F64 A ) {
+    public static double fastNormF(DMatrixSparseCSC A ) {
         double total = 0;
 
         for (int i = 0; i < A.nz_length; i++) {
@@ -36,7 +36,7 @@ public class NormOps_DSCC {
         return Math.sqrt(total);
     }
 
-    public static double normF(SMatrixCmpC_F64 A ) {
+    public static double normF(DMatrixSparseCSC A ) {
         double total = 0;
         double max = CommonOps_DSCC.elementMaxAbs(A);
 

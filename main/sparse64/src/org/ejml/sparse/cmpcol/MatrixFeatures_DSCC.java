@@ -19,14 +19,14 @@
 package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 
 /**
  * @author Peter Abeles
  */
 public class MatrixFeatures_DSCC {
 
-    public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b ) {
+    public static boolean isEquals(DMatrixSparseCSC a , DMatrixSparseCSC b ) {
         if( !a.indicesSorted || !b.indicesSorted )
             throw new IllegalArgumentException("Inputs must have sorted indices");
 
@@ -40,7 +40,7 @@ public class MatrixFeatures_DSCC {
         return true;
     }
 
-    public static boolean isEquals(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b , double tol ) {
+    public static boolean isEquals(DMatrixSparseCSC a , DMatrixSparseCSC b , double tol ) {
         if( !a.indicesSorted || !b.indicesSorted )
             throw new IllegalArgumentException("Inputs must have sorted indices");
         if( !isSameStructure(a,b) )
@@ -53,7 +53,7 @@ public class MatrixFeatures_DSCC {
         return true;
     }
 
-    public static boolean isEqualsSort(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b , double tol ) {
+    public static boolean isEqualsSort(DMatrixSparseCSC a , DMatrixSparseCSC b , double tol ) {
         if( !a.indicesSorted )
             a.sortIndices(null);
         if( !b.indicesSorted )
@@ -75,7 +75,7 @@ public class MatrixFeatures_DSCC {
      * @param b Matrix
      * @return true if the structure is the same
      */
-    public static boolean isSameStructure(SMatrixCmpC_F64 a , SMatrixCmpC_F64 b) {
+    public static boolean isSameStructure(DMatrixSparseCSC a , DMatrixSparseCSC b) {
         if( a.numRows == b.numRows && a.numCols == b.numCols && a.nz_length == b.nz_length) {
             for (int i = 0; i <= a.numCols; i++) {
                 if( a.col_idx[i] != b.col_idx[i] )
@@ -90,7 +90,7 @@ public class MatrixFeatures_DSCC {
         return false;
     }
 
-    public static boolean hasUncountable( SMatrixCmpC_F64 A ) {
+    public static boolean hasUncountable( DMatrixSparseCSC A ) {
         for(int i = 0; i < A.nz_length; i++ ) {
             if(UtilEjml.isUncountable(A.nz_values[i])) {
                 return true;
@@ -99,7 +99,7 @@ public class MatrixFeatures_DSCC {
         return false;
     }
 
-    public static boolean isZeros(SMatrixCmpC_F64 A , double tol ) {
+    public static boolean isZeros(DMatrixSparseCSC A , double tol ) {
         for(int i = 0; i < A.nz_length; i++ ) {
             if(Math.abs(A.nz_values[i]) > tol) {
                 return false;
@@ -108,7 +108,7 @@ public class MatrixFeatures_DSCC {
         return true;
     }
 
-    public static boolean isIdentity(SMatrixCmpC_F64 A , double tol ) {
+    public static boolean isIdentity(DMatrixSparseCSC A , double tol ) {
         if( A.numCols != A.numRows )
             return false;
 
@@ -138,7 +138,7 @@ public class MatrixFeatures_DSCC {
      * @param hessenberg The degree of being hessenberg.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isLowerTriangle( SMatrixCmpC_F64 A , int hessenberg , double tol )
+    public static boolean isLowerTriangle(DMatrixSparseCSC A , int hessenberg , double tol )
     {
         if( A.numCols != A.numRows )
             return false;

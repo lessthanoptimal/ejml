@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.triplet;
 
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.junit.Test;
 
 import java.util.Random;
@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Peter Abeles
  */
-public class TestRandomMatrices_T64 {
+public class TestRandomMatrices_DSTL {
 
     Random rand = new Random(324);
 
@@ -39,7 +39,7 @@ public class TestRandomMatrices_T64 {
     @Test
     public void uniform() {
 
-        SMatrixTriplet_F64 a = RandomMatrices_T64.uniform(numRows,numCols,10,-1,1,rand);
+        DMatrixSparseTriplet a = RandomMatrices_DSTL.uniform(numRows,numCols,10,-1,1,rand);
 
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);

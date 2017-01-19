@@ -23,7 +23,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public interface SDMatrix extends DMatrix {
+public interface DMatrixSparse extends DMatrix {
 
     /**
      * Prints to standard out the non-zero elements only.

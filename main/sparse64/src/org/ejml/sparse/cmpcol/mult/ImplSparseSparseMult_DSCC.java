@@ -19,7 +19,7 @@
 package org.ejml.sparse.cmpcol.mult;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 
 import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_DSCC.checkDeclare;
 
@@ -37,7 +37,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param w (Optional) Storage for internal work.  null or array of length A.numRows
      * @param x (Optional) Storage for internal work.  null or array of length A.numRows
      */
-    public static void mult(SMatrixCmpC_F64 A, SMatrixCmpC_F64 B, SMatrixCmpC_F64 C,
+    public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
                             int w[], double x[] )
     {
         x = checkDeclare(A.numRows, x);
@@ -82,9 +82,9 @@ public class ImplSparseSparseMult_DSCC {
     /**
      * Performs the performing operation x = x + A(:,i)*alpha
      */
-    public static void multAddColA(SMatrixCmpC_F64 A , int colA ,
+    public static void multAddColA(DMatrixSparseCSC A , int colA ,
                                    double alpha,
-                                   SMatrixCmpC_F64 C, int colC,
+                                   DMatrixSparseCSC C, int colC,
                                    double x[] , int w[] ) {
         int mark = colC+1;
 
@@ -109,7 +109,7 @@ public class ImplSparseSparseMult_DSCC {
         }
     }
 
-    public static void mult(SMatrixCmpC_F64 A , DMatrixRMaj B , DMatrixRMaj C ) {
+    public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
 
         C.zero();
 

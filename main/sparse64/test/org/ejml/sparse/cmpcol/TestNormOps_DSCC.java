@@ -20,9 +20,9 @@ package org.ejml.sparse.cmpcol;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.NormOps_DDRM;
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.junit.Test;
 
 import java.util.Random;
@@ -39,8 +39,8 @@ public class TestNormOps_DSCC {
     @Test
     public void fastNormF() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,6,length,rand);
-            DMatrixRMaj  Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,6,length,rand);
+            DMatrixRMaj  Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
 
             double found = NormOps_DSCC.fastNormF(A);
             double expected = NormOps_DDRM.fastNormF(Ad);
@@ -52,8 +52,8 @@ public class TestNormOps_DSCC {
     @Test
     public void normF() {
         for( int length : new int[]{0,2,6,15,30} ) {
-            SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(6,6,length,rand);
-            DMatrixRMaj  Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,6,length,rand);
+            DMatrixRMaj  Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
 
             double found = NormOps_DSCC.normF(A);
             double expected = NormOps_DDRM.normF(Ad);

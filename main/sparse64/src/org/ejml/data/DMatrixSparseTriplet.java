@@ -23,14 +23,14 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixTriplet_F64 implements SDMatrix
+public class DMatrixSparseTriplet implements DMatrixSparse
 {
     public Element[] nz_data = new Element[0];
     public int nz_length;
     public int numRows;
     public int numCols;
 
-    public SMatrixTriplet_F64() {
+    public DMatrixSparseTriplet() {
     }
 
     /**
@@ -39,13 +39,13 @@ public class SMatrixTriplet_F64 implements SDMatrix
      * @param numCols Number of columns in the matrix
      * @param initLength Initial maximum length of data array.
      */
-    public SMatrixTriplet_F64(int numRows, int numCols, int initLength ) {
+    public DMatrixSparseTriplet(int numRows, int numCols, int initLength ) {
         growData(initLength);
         this.numRows = numRows;
         this.numCols = numCols;
     }
 
-    public SMatrixTriplet_F64( SMatrixTriplet_F64 orig ) {
+    public DMatrixSparseTriplet(DMatrixSparseTriplet orig ) {
         set(orig);
     }
 
@@ -153,17 +153,17 @@ public class SMatrixTriplet_F64 implements SDMatrix
 
     @Override
     public <T extends Matrix> T copy() {
-        return (T)new SMatrixTriplet_F64(this);
+        return (T)new DMatrixSparseTriplet(this);
     }
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new SMatrixTriplet_F64(numRows,numCols, nz_length);
+        return (T)new DMatrixSparseTriplet(numRows,numCols, nz_length);
     }
 
     @Override
     public void set(Matrix original) {
-        SMatrixTriplet_F64 orig = (SMatrixTriplet_F64)original;
+        DMatrixSparseTriplet orig = (DMatrixSparseTriplet)original;
         reshape(orig.numRows,orig.numCols);
         growData(orig.nz_length);
 

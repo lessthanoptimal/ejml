@@ -19,7 +19,7 @@
 package org.ejml.sparse.cmpcol.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -42,8 +42,8 @@ public class TestImplCommonOps_DSCC {
 
     @Test
     public void transpose() {
-        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(numRows,numCols,length, -1, 1, rand);
-        SMatrixCmpC_F64 b = RandomMatrices_DSCC.rectangle(numCols,numRows,length, -1, 1, rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,length, -1, 1, rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numCols,numRows,length, -1, 1, rand);
 
         ImplCommonOps_DSCC.transpose(a,b,null);
 
@@ -65,9 +65,9 @@ public class TestImplCommonOps_DSCC {
 
         for( int numRows : new int[]{2,4,6,10}) {
             for( int numCols : new int[]{2,4,6,10}) {
-                SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(numRows,numCols,7, -1, 1, rand);
-                SMatrixCmpC_F64 b = RandomMatrices_DSCC.rectangle(numRows,numCols,8, -1, 1, rand);
-                SMatrixCmpC_F64 c = RandomMatrices_DSCC.rectangle(numRows,numCols,3, -1, 1, rand);
+                DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,7, -1, 1, rand);
+                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numRows,numCols,8, -1, 1, rand);
+                DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(numRows,numCols,3, -1, 1, rand);
 
                 ImplCommonOps_DSCC.add(alpha,a,beta,b,c,null, null);
 

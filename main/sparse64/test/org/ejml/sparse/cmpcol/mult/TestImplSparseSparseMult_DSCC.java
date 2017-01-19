@@ -20,10 +20,10 @@ package org.ejml.sparse.cmpcol.mult;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.ConvertDMatrixSparse;
 import org.ejml.sparse.cmpcol.CommonOps_DSCC;
 import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -51,15 +51,15 @@ public class TestImplSparseSparseMult_DSCC {
     }
 
     private void mult_s_s(int elementsA , int elementsB , int elementsC ) {
-        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
-        SMatrixCmpC_F64 b = RandomMatrices_DSCC.rectangle(6,5,elementsB,-1,1,rand);
-        SMatrixCmpC_F64 c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,5,elementsB,-1,1,rand);
+        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
 
         ImplSparseSparseMult_DSCC.mult(a,b,c, null, null);
         assertTrue(CommonOps_DSCC.checkSortedFlag(c));
 
-        DMatrixRMaj dense_a = ConvertSparseDMatrix.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertSparseDMatrix.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
         DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
 
         CommonOps_DDRM.mult(dense_a, dense_b, dense_c);
@@ -81,13 +81,13 @@ public class TestImplSparseSparseMult_DSCC {
     }
 
     private void mult_s_d(int elementsA) {
-        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
         DMatrixRMaj b = RandomMatrices_DDRM.createRandom(6,5,-1,1,rand);
         DMatrixRMaj c = RandomMatrices_DDRM.createRandom(4,5,-1,1,rand);
 
         ImplSparseSparseMult_DSCC.mult(a,b,c);
 
-        DMatrixRMaj dense_a = ConvertSparseDMatrix.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj expected_c = RandomMatrices_DDRM.createRandom(4,5,-1,1,rand);
 
         CommonOps_DDRM.mult(dense_a, b, expected_c);

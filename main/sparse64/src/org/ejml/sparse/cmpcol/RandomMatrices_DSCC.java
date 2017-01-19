@@ -18,7 +18,7 @@
 
 package org.ejml.sparse.cmpcol;
 
-import org.ejml.data.SMatrixCmpC_F64;
+import org.ejml.data.DMatrixSparseCSC;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -41,13 +41,13 @@ public class RandomMatrices_DSCC {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static SMatrixCmpC_F64 rectangle(int numRows , int numCols , int nz_total ,
-                                            double min , double max , Random rand ) {
+    public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total ,
+                                             double min , double max , Random rand ) {
 
         nz_total = Math.min(numCols*numRows,nz_total);
         int[] selected = selectElements(numRows*numCols, nz_total, rand);
 
-        SMatrixCmpC_F64 ret = new SMatrixCmpC_F64(numRows,numCols,nz_total);
+        DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows,numCols,nz_total);
         ret.indicesSorted = true;
 
         // compute the number of elements in each column
@@ -91,7 +91,7 @@ public class RandomMatrices_DSCC {
         return selected;
     }
 
-    public static SMatrixCmpC_F64 rectangle(int numRows , int numCols , int nz_total , Random rand ) {
+    public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total , Random rand ) {
         return rectangle(numRows, numCols, nz_total, -1,1,rand);
     }
 
@@ -107,8 +107,8 @@ public class RandomMatrices_DSCC {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static SMatrixCmpC_F64 triangleLower(int dimen , int hessenberg, int nz_total,
-                                                double min , double max , Random rand ) {
+    public static DMatrixSparseCSC triangleLower(int dimen , int hessenberg, int nz_total,
+                                                 double min , double max , Random rand ) {
 
         // number of elements which are along the diagonal
         int diag_total = dimen-hessenberg;
@@ -134,7 +134,7 @@ public class RandomMatrices_DSCC {
 
         int[] selected = selectElements(N-diag_total, off_total, rand);
 
-        SMatrixCmpC_F64 L = new SMatrixCmpC_F64(dimen,dimen,nz_total);
+        DMatrixSparseCSC L = new DMatrixSparseCSC(dimen,dimen,nz_total);
 
         // compute the number of elements in each column
         int hist[] = new int[ dimen ];
@@ -175,10 +175,10 @@ public class RandomMatrices_DSCC {
         return L;
     }
 
-    public static SMatrixCmpC_F64 triangleUpper(int dimen , int hessenberg, int nz_total,
-                                                double min , double max , Random rand ) {
-        SMatrixCmpC_F64 L = triangleLower(dimen, hessenberg, nz_total, min, max, rand);
-        SMatrixCmpC_F64 U = L.createLike();
+    public static DMatrixSparseCSC triangleUpper(int dimen , int hessenberg, int nz_total,
+                                                 double min , double max , Random rand ) {
+        DMatrixSparseCSC L = triangleLower(dimen, hessenberg, nz_total, min, max, rand);
+        DMatrixSparseCSC U = L.createLike();
 
         CommonOps_DSCC.transpose(L,U,null);
         return U;

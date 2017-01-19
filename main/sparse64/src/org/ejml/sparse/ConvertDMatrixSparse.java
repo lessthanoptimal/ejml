@@ -20,8 +20,8 @@ package org.ejml.sparse;
 
 import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.SMatrixCmpC_F64;
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 
 import java.util.Arrays;
@@ -33,10 +33,10 @@ import static org.ejml.sparse.cmpcol.misc.ImplCommonOps_DSCC.colsum;
  *
  * @author Peter Abeles
  */
-public class ConvertSparseDMatrix {
-    public static SMatrixTriplet_F64 convert(DMatrix src , SMatrixTriplet_F64 dst ) {
+public class ConvertDMatrixSparse {
+    public static DMatrixSparseTriplet convert(DMatrix src , DMatrixSparseTriplet dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_F64(src.getNumRows(), src.getNumCols(), 1);
+            dst = new DMatrixSparseTriplet(src.getNumRows(), src.getNumCols(), 1);
         else
             dst.reshape(src.getNumRows(), src.getNumCols());
 
@@ -51,9 +51,9 @@ public class ConvertSparseDMatrix {
         return dst;
     }
 
-    public static SMatrixTriplet_F64 convert(DMatrixRMaj src , SMatrixTriplet_F64 dst ) {
+    public static DMatrixSparseTriplet convert(DMatrixRMaj src , DMatrixSparseTriplet dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_F64(src.numRows, src.numCols,src.numRows*src.numCols);
+            dst = new DMatrixSparseTriplet(src.numRows, src.numCols,src.numRows*src.numCols);
         else
             dst.reshape(src.numRows, src.numCols);
 
@@ -69,7 +69,7 @@ public class ConvertSparseDMatrix {
         return dst;
     }
 
-    public static DMatrixRMaj convert(SMatrixTriplet_F64 src , DMatrixRMaj dst ) {
+    public static DMatrixRMaj convert(DMatrixSparseTriplet src , DMatrixRMaj dst ) {
         if( dst == null )
             dst = new DMatrixRMaj(src.numRows, src.numCols);
         else {
@@ -78,7 +78,7 @@ public class ConvertSparseDMatrix {
         }
 
         for (int i = 0; i < src.nz_length; i++) {
-            SMatrixTriplet_F64.Element e = src.nz_data[i];
+            DMatrixSparseTriplet.Element e = src.nz_data[i];
 
             dst.unsafe_set(e.row, e.col, e.value);
         }
@@ -86,7 +86,7 @@ public class ConvertSparseDMatrix {
         return dst;
     }
 
-    public static DMatrixRMaj convert(SMatrixCmpC_F64 src , DMatrixRMaj dst ) {
+    public static DMatrixRMaj convert(DMatrixSparseCSC src , DMatrixRMaj dst ) {
         if( dst == null )
             dst = new DMatrixRMaj(src.numRows, src.numCols);
         else {
@@ -117,11 +117,11 @@ public class ConvertSparseDMatrix {
      * @param dst Storage for the converted matrix.  If null a new instance will be returned.
      * @return The converted matrix
      */
-    public static SMatrixCmpC_F64 convert(DMatrixRMaj src , SMatrixCmpC_F64 dst ) {
+    public static DMatrixSparseCSC convert(DMatrixRMaj src , DMatrixSparseCSC dst ) {
         int nonzero = MatrixFeatures_DDRM.countNonZero(src);
 
         if( dst == null )
-            dst = new SMatrixCmpC_F64(src.numRows, src.numCols, nonzero);
+            dst = new DMatrixSparseCSC(src.numRows, src.numCols, nonzero);
         else
             dst.reshape(src.numRows, src.numCols, nonzero);
         dst.nz_length = 0;
@@ -150,9 +150,9 @@ public class ConvertSparseDMatrix {
      * @param dst Destination. Will be a copy.  Modified.
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
-    public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst , int hist[] ) {
+    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , DMatrixSparseCSC dst , int hist[] ) {
         if( dst == null )
-            dst = new SMatrixCmpC_F64(src.numRows, src.numCols , src.nz_length);
+            dst = new DMatrixSparseCSC(src.numRows, src.numCols , src.nz_length);
         else
             dst.reshape(src.numRows, src.numCols, src.nz_length);
 
@@ -173,7 +173,7 @@ public class ConvertSparseDMatrix {
 
         // now write the row indexes and the values
         for (int i = 0; i < src.nz_length; i++) {
-            SMatrixTriplet_F64.Element e = src.nz_data[i];
+            DMatrixSparseTriplet.Element e = src.nz_data[i];
 
             int index = hist[e.col]++;
             dst.nz_rows[index] = e.row;
@@ -185,13 +185,13 @@ public class ConvertSparseDMatrix {
         return dst;
     }
 
-    public static SMatrixCmpC_F64 convert(SMatrixTriplet_F64 src , SMatrixCmpC_F64 dst ) {
+    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , DMatrixSparseCSC dst ) {
         return convert(src,dst,null);
     }
 
-    public static SMatrixTriplet_F64 convert(SMatrixCmpC_F64 src , SMatrixTriplet_F64 dst ) {
+    public static DMatrixSparseTriplet convert(DMatrixSparseCSC src , DMatrixSparseTriplet dst ) {
         if( dst == null )
-            dst = new SMatrixTriplet_F64(src.numRows, src.numCols, src.nz_length);
+            dst = new DMatrixSparseTriplet(src.numRows, src.numCols, src.nz_length);
         else
             dst.reshape( src.numRows , src.numCols );
 

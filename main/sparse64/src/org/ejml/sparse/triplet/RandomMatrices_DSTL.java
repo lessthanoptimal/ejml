@@ -18,14 +18,14 @@
 
 package org.ejml.sparse.triplet;
 
-import org.ejml.data.SMatrixTriplet_F64;
+import org.ejml.data.DMatrixSparseTriplet;
 
 import java.util.Random;
 
 /**
  * @author Peter Abeles
  */
-public class RandomMatrices_T64 {
+public class RandomMatrices_DSTL {
     /**
      * Randomly generates matrix with the specified number of matrix elements filled with values from min to max.
      *
@@ -37,8 +37,8 @@ public class RandomMatrices_T64 {
      * @param rand Random number generated
      * @return Randomly generated matrix
      */
-    public static SMatrixTriplet_F64 uniform(int numRows , int numCols , int nz_total ,
-                                             double min , double max , Random rand ) {
+    public static DMatrixSparseTriplet uniform(int numRows , int numCols , int nz_total ,
+                                               double min , double max , Random rand ) {
         // Create a list of all the possible element values
         int N = numCols*numRows;
         if( N < 0 )
@@ -58,7 +58,7 @@ public class RandomMatrices_T64 {
         }
 
         // Create a sparse matrix
-        SMatrixTriplet_F64 ret = new SMatrixTriplet_F64(numRows,numCols,nz_total);
+        DMatrixSparseTriplet ret = new DMatrixSparseTriplet(numRows,numCols,nz_total);
 
         for (int i = 0; i < nz_total; i++) {
             int row = selected[i]/numCols;

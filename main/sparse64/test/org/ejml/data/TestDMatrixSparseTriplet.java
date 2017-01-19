@@ -27,11 +27,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSMatrixTriplet_F64 extends GenericTestsSparseDMatrix {
+public class TestDMatrixSparseTriplet extends GenericDMatrixSparse {
 
     @Test
     public void constructor() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,10);
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1,1,10);
 
         assertEquals(0,m.getLength());
         assertEquals(10,m.nz_data.length);
@@ -42,7 +42,7 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseDMatrix {
 
     @Test
     public void growData() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,10);
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1,1,10);
 
         m.growData(4);
         assertEquals(0,m.getLength());
@@ -58,7 +58,7 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseDMatrix {
 
     @Test
     public void addItem() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(1,1,2);
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1,1,2);
 
         m.addItem(1,2,3);
         m.addItem(1,3,4);
@@ -79,7 +79,7 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseDMatrix {
         check(m.nz_data[2],2,3,5);
     }
 
-    private void check(SMatrixTriplet_F64.Element e , int row , int col , double value ) {
+    private void check(DMatrixSparseTriplet.Element e , int row , int col , double value ) {
         assertEquals(row,e.row);
         assertEquals(col,e.col);
         assertEquals(value,e.value, UtilEjml.TEST_F64);
@@ -87,7 +87,7 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseDMatrix {
 
     @Test
     public void findItem() {
-        SMatrixTriplet_F64 m = new SMatrixTriplet_F64(3,4, 5);
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(3,4, 5);
 
         m.addItem(1,2, 5);
 
@@ -96,17 +96,17 @@ public class TestSMatrixTriplet_F64 extends GenericTestsSparseDMatrix {
     }
 
     @Override
-    public SDMatrix createSparse(int numRows, int numCols) {
-        return new SMatrixTriplet_F64(numRows,numCols,10);
+    public DMatrixSparse createSparse(int numRows, int numCols) {
+        return new DMatrixSparseTriplet(numRows,numCols,10);
     }
 
     @Override
-    public SDMatrix createSparse(SMatrixTriplet_F64 orig) {
-        return new SMatrixTriplet_F64(orig);
+    public DMatrixSparse createSparse(DMatrixSparseTriplet orig) {
+        return new DMatrixSparseTriplet(orig);
     }
 
     @Override
-    public boolean isStructureValid(SDMatrix m) {
+    public boolean isStructureValid(DMatrixSparse m) {
         return true;
     }
 }

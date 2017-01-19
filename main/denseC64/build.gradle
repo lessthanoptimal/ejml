@@ -6,6 +6,6 @@ dependencies {
 
 idea {
     module {
-        name = "EJML Dense C64"
+        name = "EJML ZDense"
     }
 }
