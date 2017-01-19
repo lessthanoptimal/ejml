@@ -120,7 +120,7 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
 
     @Override
     public void print() {
-        System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
+        System.out.println(getClass().getSimpleName()+"\nnumRows = "+numRows+" , numCols = "+numCols
                 +" , nz_length = "+ nz_length);
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
@@ -138,7 +138,7 @@ public class SMatrixCmpC_F64 implements SMatrix_F64 {
 
     @Override
     public void printNonZero() {
-        System.out.println(getClass().getSimpleName()+" , numRows = "+numRows+" , numCols = "+numCols
+        System.out.println(getClass().getSimpleName()+"\nnumRows = "+numRows+" , numCols = "+numCols
                 +" , nz_length = "+ nz_length);
 
         for (int col = 0; col < numCols; col++) {

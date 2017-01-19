@@ -46,10 +46,12 @@ Date format: year/month/day
 - A script hs been provided that will perform most of the refactorings:
   convert_to_ejml31.py
 - Fixed a minor printing glitch for dense matrices.  There was an extra space
+- Equations
+  * Assignment to a submatrix now works with variables
+    A((2+i):10,1:20) = 5   <--- this works now
 
 Equations
 - TODO Add support for matrix norms to Equations
-- TODO Support math in submatrix notation in Equations.  E.g. A(i+1,:) = FOO
 - TODO Add support for sum(A) sum(A,0) rows and sum(A,1) columns
 
 Misc
@@ -58,18 +60,18 @@ Misc
 
 Matrix Name       Op-Suffice              Data Type
 ------------------------------------------------------------------------
-MatrixRMaj_64            _DR64      Dense Row-Major real double
-MatrixRMaj_64C           _DR64C     Dense Row-Major complex double
-MatrixRMaj_32C           _DR32C     Dense Row-Major complex float
-MatrixBlock_64           _DB64      Dense Block Row-Major Real double
-MatrixBlock_64C          _DB64C
-Matrix3x3_64                        Dense Fixed Sized 3x3 real double
-Matrix3_64                          Dense Fixed Sized 3 real double
-MatrixSparseCSC_64       _SC64      Sparse Compressed Column real double
-MatrixSparseCSC_64C      _SC64C
-MatrixSparseTriplet_64   _ST64      Sparse Triplet real double
-MatrixSparseTriplet_64C  _ST64C
-MatrixSparseSkyline_64   _SK64      Sparse Skyline real double  (future)
+DMatrixRMaj           _DDRM      Dense Row-Major real double
+ZMatrixRMaj           _ZDRM      Dense Row-Major complex double
+CMatrixRMaj           _CDRM      Dense Row-Major complex float
+DMatrixBlock          _DDBL      Dense Block Row-Major Real double
+ZMatrixBlock          _DDBL
+DMatrix3x3                       Dense Fixed Sized 3x3 real double
+DMatrix3                         Dense Fixed Sized 3 real double
+DMatrixSparseCSC      _DSCC      Sparse Compressed Column real double
+ZMatrixSparseCSC      _ZSCC
+DMatrixSparseTriplet  _DSTL      Sparse Triplet real double
+ZMatrixSparseTriplet  _ZSTL
+DMatrixSparseSkyline  _DSSK      Sparse Skyline real double  (future)
 
 
 Generic Types:

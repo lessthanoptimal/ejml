@@ -393,6 +393,9 @@ public class Equation {
             TokenList tokensRight = tokens.extractSubList(t1.next, tokens.last);
             checkForUnknownVariables(tokensRight);
             handleParentheses(tokensRight, sequence);
+            if( tokensRight.size() > 1 ) {
+                parseBlockNoParentheses(tokensRight, sequence, false);
+            }
 
             // see if it needs to be parsed more
             if (tokensRight.size() != 1)
@@ -533,49 +536,44 @@ public class Equation {
      *
      * Example of assign range:
      *    a(0:3,4:5) = blah
+     *    a((0+2):3,4:5) = blah
      */
     private List<Variable> parseAssignRange(Sequence sequence, TokenList tokens, TokenList.Token t0) {
-        List<Variable> range;
-        TokenList.Token t1 = t0.next;
-        if( t1.getType() == Type.SYMBOL ) {
-            if( t1.symbol == Symbol.ASSIGN ) {
-                range = null; // copy into the entire matrix
-            } else if( t1.symbol == Symbol.PAREN_LEFT ) {
-                // find the right parentheses
-                TokenList.Token t2 = t1.next;
-                while( t2 != null && t2.symbol != Symbol.PAREN_RIGHT ) {
-                    t2 = t2.next;
-                }
-
-                if( t2 == null )
-                    throw new ParseError("Could not find closing )");
-
-                TokenList.Token n = t2.next;
-                TokenList sublist = tokens.extractSubList(t1.next,t2.previous);
-                // need to remove paren also
-                tokens.remove(t1);
-                tokens.remove(t2);
-
-                List<TokenList.Token> inputs = parseParameterCommaBlock(sublist, sequence);
-                if (inputs.isEmpty())
-                    throw new ParseError("Empty function input parameters");
-
-                range = new ArrayList<Variable>();
-                addSubMatrixVariables(inputs, range);
-                if( range.size() != 1 && range.size() != 2 ) {
-                    throw new ParseError("Unexpected number of range variables.  1 or 2 expected");
-                }
-
-                t1 = n;
-                if( t1 == null || t1.symbol != Symbol.ASSIGN )
-                    throw new ParseError("Expected assign after sub-matrix");
-            } else {
-                throw new ParseError("Expected assignment '=' or submatrix of variable being assigned '('");
-            }
-        } else {
-            throw new ParseError("Expecting symbol after first variable");
+        // find assignment symbol
+        TokenList.Token tokenAssign = t0.next;
+        while( tokenAssign != null && tokenAssign.symbol != Symbol.ASSIGN ) {
+            tokenAssign = tokenAssign.next;
         }
-        return range;
+
+        if( tokenAssign == null )
+            throw new ParseError("Can't find assignment operator");
+
+        // see if it is a sub matrix before
+        if( tokenAssign.previous.symbol == Symbol.PAREN_RIGHT ) {
+            TokenList.Token start = t0.next;
+            if( start.symbol != Symbol.PAREN_LEFT )
+                throw new ParseError(("Expected left param for assignment"));
+            TokenList.Token end = tokenAssign.previous;
+            TokenList subTokens = tokens.extractSubList(start,end);
+            subTokens.remove(subTokens.getFirst());
+            subTokens.remove(subTokens.getLast());
+
+            handleParentheses(subTokens,sequence);
+
+            List<TokenList.Token> inputs = parseParameterCommaBlock(subTokens, sequence);
+
+            if (inputs.isEmpty())
+                throw new ParseError("Empty function input parameters");
+
+            List<Variable> range = new ArrayList<>();
+            addSubMatrixVariables(inputs, range);
+            if( range.size() != 1 && range.size() != 2 ) {
+                throw new ParseError("Unexpected number of range variables.  1 or 2 expected");
+            }
+            return range;
+        }
+
+        return null;
     }
 
     /**
@@ -637,10 +635,6 @@ public class Equation {
 
         if( !left.isEmpty())
             throw new ParseError("Dangling ( parentheses");
-
-        if( tokens.size() > 1 ) {
-            parseBlockNoParentheses(tokens, sequence, false);
-        }
     }
 
     /**
@@ -768,7 +762,7 @@ public class Equation {
         }
 
         // First create sequences from anything involving a colon
-        parseSequencesWithColons(tokens);
+        parseSequencesWithColons(tokens, sequence );
 
         // process operators depending on their priority
         parseNegOp(tokens, sequence);
@@ -822,7 +816,8 @@ public class Equation {
      * 2:
      * 2:4:
      */
-    protected void parseSequencesWithColons(TokenList tokens ) {
+    protected void parseSequencesWithColons(TokenList tokens , Sequence sequence ) {
+
         TokenList.Token t = tokens.getFirst();
         if( t == null )
             return;
@@ -867,8 +862,8 @@ public class Equation {
                     state = 3;
                 } else {
                     // create for sequence with start and stop elements only
-                    IntegerSequence sequence = new IntegerSequence.For(start,null,prev);
-                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+                    IntegerSequence numbers = new IntegerSequence.For(start,null,prev);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(numbers);
                     replaceSequence(tokens, varSequence, start, prev );
                     if( t != null )
                         t = t.previous;
@@ -878,13 +873,13 @@ public class Equation {
                 // var:var: ?
                 if( isVariableInteger(t) ) {
                     // create 'for' sequence with three variables
-                    IntegerSequence sequence = new IntegerSequence.For(start,middle,t);
-                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
+                    IntegerSequence numbers = new IntegerSequence.For(start,middle,t);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(numbers);
                     t = replaceSequence(tokens, varSequence, start, t);
                 } else {
                     // array range with 2 elements
-                    IntegerSequence range = new IntegerSequence.Range(start,middle);
-                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(range);
+                    IntegerSequence numbers = new IntegerSequence.Range(start,middle);
+                    VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(numbers);
                     replaceSequence(tokens, varSequence, start, prev);
                 }
                 state = 0;
@@ -900,6 +895,7 @@ public class Equation {
             t = t.next;
         }
     }
+
 
     /**
      * Searches for a sequence of integers
