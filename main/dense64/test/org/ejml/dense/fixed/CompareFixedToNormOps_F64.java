@@ -18,7 +18,7 @@
 
 package org.ejml.dense.fixed;
 
-import org.ejml.dense.row.NormOps_R64;
+import org.ejml.dense.row.NormOps_DDRM;
 import org.junit.Test;
 
 /**
@@ -27,7 +27,7 @@ import org.junit.Test;
 public abstract class CompareFixedToNormOps_F64 extends CompareFixed_F64 {
 
     public CompareFixedToNormOps_F64(Class classFixed) {
-        super(classFixed, NormOps_R64.class);
+        super(classFixed, NormOps_DDRM.class);
     }
 
     @Test

@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.eig;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -28,11 +28,11 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class BenchmarkEigenDecomposition {
-    public static long watched(DMatrixRow_F64 orig , int numTrials ) {
+    public static long watched(DMatrixRMaj orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
-        WatchedDoubleStepQRDecomposition_R64 alg = new WatchedDoubleStepQRDecomposition_R64(true);
+        WatchedDoubleStepQRDecomposition_DDRM alg = new WatchedDoubleStepQRDecomposition_DDRM(true);
 
         for( long i = 0; i < numTrials; i++ ) {
             if( !alg.decompose(orig) ) {
@@ -43,7 +43,7 @@ public class BenchmarkEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
         System.out.println("Watched            = "+ watched(mat,numTrials));
     }
@@ -60,7 +60,7 @@ public class BenchmarkEigenDecomposition {
 
             System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
 
-            DMatrixRow_F64 symMat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.createRandom(w,w,rand);
 
             runAlgorithms(symMat,trials[i]);
         }

@@ -18,13 +18,13 @@
 
 package org.ejml.dense.row.linsol;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_R64;
-import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionLDL_R64;
-import org.ejml.dense.row.linsol.chol.LinearSolverCholLDL_R64;
-import org.ejml.dense.row.linsol.chol.LinearSolverChol_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
+import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionLDL_DDRM;
+import org.ejml.dense.row.linsol.chol.LinearSolverCholLDL_DDRM;
+import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Random;
@@ -38,9 +38,9 @@ import java.util.Random;
 public class BenchmarkSolveSymPosDef {
 
 
-    public static long solve(LinearSolver solver , DMatrixRow_F64 A, DMatrixRow_F64 b , int numTrials ) {
+    public static long solve(LinearSolver solver , DMatrixRMaj A, DMatrixRMaj b , int numTrials ) {
 
-        DMatrixRow_F64 x = new DMatrixRow_F64(A.numCols,b.numCols);
+        DMatrixRMaj x = new DMatrixRMaj(A.numCols,b.numCols);
 
         if( !solver.setA(A) ) {
             throw new RuntimeException("Bad matrix");
@@ -55,13 +55,13 @@ public class BenchmarkSolveSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 A , DMatrixRow_F64 b , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj A , DMatrixRMaj b , int numTrials )
     {
         System.out.println("Solve Cholesky         = "+solve(
-                new LinearSolverChol_R64(new CholeskyDecompositionInner_R64(true)),
+                new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true)),
                 A,b,numTrials));
         System.out.println("Solve Cholesky LDL     = "+solve(
-                new LinearSolverCholLDL_R64(new CholeskyDecompositionLDL_R64()),
+                new LinearSolverCholLDL_DDRM(new CholeskyDecompositionLDL_DDRM()),
                 A,b,numTrials));
     }
 
@@ -77,12 +77,12 @@ public class BenchmarkSolveSymPosDef {
             System.out.printf("Matrix A size %3d for %12d trials\n",w,trials[i]);
 
             while( true ) {
-                DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
-                DMatrixRow_F64 symMat = new DMatrixRow_F64(w,w);
-                CommonOps_R64.multTransA(mat,mat,symMat);
-                DMatrixRow_F64 b = RandomMatrices_R64.createRandom(w,w*2,rand);
+                DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
+                DMatrixRMaj symMat = new DMatrixRMaj(w,w);
+                CommonOps_DDRM.multTransA(mat,mat,symMat);
+                DMatrixRMaj b = RandomMatrices_DDRM.createRandom(w,w*2,rand);
 
-                if(CommonOps_R64.det(symMat) > 0 ) {
+                if(CommonOps_DDRM.det(symMat) > 0 ) {
                     runAlgorithms(symMat,b,trials[i]);
                     break;
                 }

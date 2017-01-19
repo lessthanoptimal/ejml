@@ -19,10 +19,10 @@
 package org.ejml.example;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.MatrixFeatures_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.Test;
 
 import java.util.Random;
@@ -44,19 +44,19 @@ public class TestQRExampleEquation {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
 
         QRExampleEquation alg = new QRExampleEquation();
 
         alg.decompose(A);
 
-        DMatrixRow_F64 Q = alg.getQ();
-        DMatrixRow_F64 R = alg.getR();
+        DMatrixRMaj Q = alg.getQ();
+        DMatrixRMaj R = alg.getR();
 
-        DMatrixRow_F64 A_found = new DMatrixRow_F64(numRows,numCols);
-        CommonOps_R64.mult(Q,R,A_found);
+        DMatrixRMaj A_found = new DMatrixRMaj(numRows,numCols);
+        CommonOps_DDRM.mult(Q,R,A_found);
 
-        assertTrue( MatrixFeatures_R64.isIdentical(A,A_found, UtilEjml.TEST_F64));
+        assertTrue( MatrixFeatures_DDRM.isIdentical(A,A_found, UtilEjml.TEST_F64));
     }
 
 

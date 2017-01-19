@@ -18,9 +18,9 @@
 
 package org.ejml;
 
-import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixD1;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -36,17 +36,17 @@ public class BenchmarkGenerics {
     private static class ImplDense implements ScaleDense
     {
         @Override
-        public void scale(double s, DMatrixRow_F64 mat) {
+        public void scale(double s, DMatrixRMaj mat) {
             for( int i = 0; i < mat.data.length; i++ ) {
                 mat.data[i] *= s;
             }
         }
     }
 
-    private static class ImplGeneric implements ScaleGeneric<DMatrixRow_F64>
+    private static class ImplGeneric implements ScaleGeneric<DMatrixRMaj>
     {
         @Override
-        public void scale(double s, DMatrixRow_F64 mat) {
+        public void scale(double s, DMatrixRMaj mat) {
             for( int i = 0; i < mat.data.length; i++ ) {
                 mat.data[i] *= s;
             }
@@ -55,15 +55,15 @@ public class BenchmarkGenerics {
 
     private static interface ScaleDense
     {
-        public void scale( double s , DMatrixRow_F64 mat );
+        public void scale( double s , DMatrixRMaj mat );
     }
 
-    private static interface ScaleGeneric<T extends D1Matrix_F64>
+    private static interface ScaleGeneric<T extends DMatrixD1>
     {
         public void scale( double s , T mat );
     }
 
-    public static long benchmarkDense(DMatrixRow_F64 A , double scale , int trials ) {
+    public static long benchmarkDense(DMatrixRMaj A , double scale , int trials ) {
         ScaleDense s = new ImplDense();
 
         long before = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class BenchmarkGenerics {
         return System.currentTimeMillis() - before;
     }
 
-    public static long benchmarkGeneric(DMatrixRow_F64 A , double scale , int trials ) {
+    public static long benchmarkGeneric(DMatrixRMaj A , double scale , int trials ) {
         ImplGeneric s = new ImplGeneric();
 
         long before = System.currentTimeMillis();
@@ -91,7 +91,7 @@ public class BenchmarkGenerics {
 
 
     public static void main( String []args ) {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(10,10,new Random(234));
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,10,new Random(234));
 
         int N = 10000000;
 

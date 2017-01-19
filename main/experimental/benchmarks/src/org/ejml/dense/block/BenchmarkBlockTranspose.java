@@ -18,16 +18,16 @@
 
 package org.ejml.dense.block;
 
-import org.ejml.data.DMatrixBlock_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRBlock;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
 
 /**
- * Compare block against other transpose for DMatrixRow_F64
+ * Compare block against other transpose for DMatrixRMaj
  *
  *  @author Peter Abeles
  */
@@ -35,44 +35,44 @@ public class BenchmarkBlockTranspose {
 
     static Random rand = new Random(234);
 
-    public static long transposeDenseInPlace(DMatrixRow_F64 mat , int numTrials) {
+    public static long transposeDenseInPlace(DMatrixRMaj mat , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.transpose(mat);
+            CommonOps_DDRM.transpose(mat);
         }
         long curr = System.currentTimeMillis();
 
         return curr-prev;
     }
 
-    public static long transposeDense(DMatrixRow_F64 mat , int numTrials) {
+    public static long transposeDense(DMatrixRMaj mat , int numTrials) {
 
 
-        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
+        DMatrixRMaj tran = new DMatrixRMaj(mat.numCols,mat.numRows);
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.transpose(mat,tran);
+            CommonOps_DDRM.transpose(mat,tran);
         }
         long curr = System.currentTimeMillis();
 
         return curr-prev;
     }
 
-    public static long transposeBlock(DMatrixRow_F64 mat , int numTrials) {
+    public static long transposeBlock(DMatrixRMaj mat , int numTrials) {
 
-        DMatrixBlock_F64 A = new DMatrixBlock_F64(mat.numRows,mat.numCols);
-        DMatrixBlock_F64 A_t = new DMatrixBlock_F64(mat.numCols,mat.numRows);
+        DMatrixRBlock A = new DMatrixRBlock(mat.numRows,mat.numCols);
+        DMatrixRBlock A_t = new DMatrixRBlock(mat.numCols,mat.numRows);
 
-        MatrixOps_B64.convert(mat,A);
+        MatrixOps_DDRB.convert(mat,A);
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixOps_B64.transpose(A,A_t);
+            MatrixOps_DDRB.transpose(A,A_t);
         }
         long curr = System.currentTimeMillis();
 
@@ -81,7 +81,7 @@ public class BenchmarkBlockTranspose {
 
     public static void main( String args[] ) {
 
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5000,5000,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5000,5000,rand);
 
         int N = 5;
 

@@ -18,8 +18,8 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrixRow_F32;
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.FMatrixRMaj;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -117,7 +117,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static DMatrixRow_F64 parse_R64(String s , int numColumns )
+    public static DMatrixRMaj parse_DDRM(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 
@@ -127,7 +127,7 @@ public class UtilEjml {
         // covert it from string to doubles
         int numRows = (vals.length-start) / numColumns;
 
-        DMatrixRow_F64 ret = new DMatrixRow_F64(numRows,numColumns);
+        DMatrixRMaj ret = new DMatrixRMaj(numRows,numColumns);
 
         int index = start;
         for( int i = 0; i < numRows; i++ ) {
@@ -142,7 +142,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
-    public static DMatrixRow_F32 parse_R32(String s , int numColumns )
+    public static FMatrixRMaj parse_FDRM(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
 
@@ -152,7 +152,7 @@ public class UtilEjml {
         // covert it from string to doubles
         int numRows = (vals.length-start) / numColumns;
 
-        DMatrixRow_F32 ret = new DMatrixRow_F32(numRows,numColumns);
+        FMatrixRMaj ret = new FMatrixRMaj(numRows,numColumns);
 
         int index = start;
         for( int i = 0; i < numRows; i++ ) {

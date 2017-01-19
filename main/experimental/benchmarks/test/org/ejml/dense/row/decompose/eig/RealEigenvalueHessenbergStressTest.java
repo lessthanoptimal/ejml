@@ -19,10 +19,10 @@
 package org.ejml.dense.row.decompose.eig;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.*;
-import org.ejml.dense.row.decomposition.eig.EigenvalueExtractor_R64;
-import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_R64;
+import org.ejml.dense.row.decomposition.eig.EigenvalueExtractor_DDRM;
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_DDRM;
 
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class RealEigenvalueHessenbergStressTest {
 
     Random rand = new Random(0x3434);
 
-    EigenvalueExtractor_R64 extractor;
+    EigenvalueExtractor_DDRM extractor;
 
 //    public RealEigenvalueStressTest(EigenvalueExtractor extractor) {
 //        this.extractor = extractor;
@@ -49,7 +49,7 @@ public class RealEigenvalueHessenbergStressTest {
     int numCantFindEigenvector;
 
     public RealEigenvalueHessenbergStressTest() {
-        extractor = new WatchedDoubleStepQREigenvalue_R64();
+        extractor = new WatchedDoubleStepQREigenvalue_DDRM();
     }
 
     public void evaluateRandom() {
@@ -65,7 +65,7 @@ public class RealEigenvalueHessenbergStressTest {
 
             long startTime = System.currentTimeMillis();
             for( int i = 0; i < 100; i++ ) {
-                DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(n,1,-1,1,rand);
+                DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(n,1,-1,1,rand);
 
                 extractor.process(A);
 
@@ -85,7 +85,7 @@ public class RealEigenvalueHessenbergStressTest {
         System.out.println("Num couldn't find eigenvector = "+numCantFindEigenvector);
     }
 
-    private int checkEigenvalues(DMatrixRow_F64 a ) {
+    private int checkEigenvalues(DMatrixRMaj a ) {
         Complex_F64[]ev = extractor.getEigenvalues();
 
 //        a.print("%14.5e");
@@ -98,14 +98,14 @@ public class RealEigenvalueHessenbergStressTest {
             if( ev[j].imaginary != 0 )
                 continue;
 
-            DMatrixRow_F64 v = EigenOps_R64.computeEigenVector(a,ev[j].real).vector;
+            DMatrixRMaj v = EigenOps_DDRM.computeEigenVector(a,ev[j].real).vector;
             Complex_F64 c = ev[j];
 
-            if( v == null || MatrixFeatures_R64.hasUncountable(v)) {
+            if( v == null || MatrixFeatures_DDRM.hasUncountable(v)) {
                 a.print("%f");
                 System.out.println("Can't find eigen vector?!?!");
                 numCantFindEigenvector++;
-                EigenOps_R64.computeEigenVector(a,ev[j].real);
+                EigenOps_DDRM.computeEigenVector(a,ev[j].real);
                 continue;
             }
 
@@ -115,7 +115,7 @@ public class RealEigenvalueHessenbergStressTest {
 //                System.out.println("Failed on this matrix:");
 //                a.print("%f");
                 numFailed++;
-                EigenOps_R64.computeEigenVector(a,ev[j].real);
+                EigenOps_DDRM.computeEigenVector(a,ev[j].real);
             }
 
             totalError += error;
@@ -127,7 +127,7 @@ public class RealEigenvalueHessenbergStressTest {
         return numFailed;
     }
 
-    private double computeError(DMatrixRow_F64 A, DMatrixRow_F64 v , double eigenvalue ) {
+    private double computeError(DMatrixRMaj A, DMatrixRMaj v , double eigenvalue ) {
 
         if( v == null ) {   
             throw new RuntimeException("WTF crappy tool");
@@ -137,13 +137,13 @@ public class RealEigenvalueHessenbergStressTest {
 //        System.out.println("Eigen value = "+eigenvalue);
 //        NormOps.normalizeF(v);
 //        v.print();
-        DMatrixRow_F64 l = new DMatrixRow_F64(A.numRows,1);
+        DMatrixRMaj l = new DMatrixRMaj(A.numRows,1);
 
-        CommonOps_R64.mult(A,v,l);
-        CommonOps_R64.scale(eigenvalue,v);
+        CommonOps_DDRM.mult(A,v,l);
+        CommonOps_DDRM.scale(eigenvalue,v);
 
-        double top = SpecializedOps_R64.diffNormF(l,v);
-        double bottom = NormOps_R64.normF(v);
+        double top = SpecializedOps_DDRM.diffNormF(l,v);
+        double bottom = NormOps_DDRM.normF(v);
 
         if( Double.isNaN(top) || Double.isInfinite(top) || Double.isNaN(bottom) || Double.isInfinite(bottom) )
             System.out.println("bad stuff");
@@ -174,13 +174,13 @@ public class RealEigenvalueHessenbergStressTest {
         for( int n = 3; n < 100; n++ ) {
             System.out.println("Matrix size = "+n);
 
-            DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(n,1,-1,1,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(n,1,-1,1,rand);
             if( !extractor.process(A) ){
                 throw new RuntimeException("Failed!");
             }
             while( isAllComplex()) {
                 System.out.println("Trying to find a matrix that isn't all complex number");
-                A = RandomMatrices_R64.createUpperTriangle(n,1,-1,1,rand);
+                A = RandomMatrices_DDRM.createUpperTriangle(n,1,-1,1,rand);
                 extractor.process(A);
             }
 
@@ -188,9 +188,9 @@ public class RealEigenvalueHessenbergStressTest {
                 double s = scales[indexScale];
 
                 System.out.println("Scale = "+s);
-                DMatrixRow_F64 B = A.copy();
+                DMatrixRMaj B = A.copy();
 
-                CommonOps_R64.scale(s,B);
+                CommonOps_DDRM.scale(s,B);
 
                 if( !extractor.process(B) ) {
                     System.out.println("  Failed to converge.");
@@ -212,7 +212,7 @@ public class RealEigenvalueHessenbergStressTest {
      * See if a totally zero matrix messes it up
      */
     public void testMatrix0() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(5,5);
+        DMatrixRMaj A = new DMatrixRMaj(5,5);
 
         if( !extractor.process(A) ){
             throw new RuntimeException("Failed!");
@@ -229,7 +229,7 @@ public class RealEigenvalueHessenbergStressTest {
     }
 
     public void testMatrixNegHessenberg() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(5,5, true, 0, 1, 2, 3, 5, 0, 0, 4, 9, 3, 0, 0, 0, -1, 3, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0);
+        DMatrixRMaj A = new DMatrixRMaj(5,5, true, 0, 1, 2, 3, 5, 0, 0, 4, 9, 3, 0, 0, 0, -1, 3, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0);
 
         if( !extractor.process(A) ){
             throw new RuntimeException("Failed!");
@@ -249,7 +249,7 @@ public class RealEigenvalueHessenbergStressTest {
      * Special case that requires exceptional shifts to work
      */
     public void testMatrixExceptional() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
+        DMatrixRMaj A = new DMatrixRMaj(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
         if( !extractor.process(A) ){
             throw new RuntimeException("Failed!");
         }
@@ -259,7 +259,7 @@ public class RealEigenvalueHessenbergStressTest {
     }
 
     public void testMatrixZeroButUpperDiag() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(5,5, true, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4, 0);
+        DMatrixRMaj A = new DMatrixRMaj(5,5, true, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4, 0);
         if( !extractor.process(A) ){
             throw new RuntimeException("Failed!");
         }
@@ -275,7 +275,7 @@ public class RealEigenvalueHessenbergStressTest {
 
     public void testMatrixVerySmallButUpperDiag() {
 
-        DMatrixRow_F64 A = new DMatrixRow_F64(5,5);
+        DMatrixRMaj A = new DMatrixRMaj(5,5);
 
         for( int i = 0; i < 5; i++ ) {
             int start = i < 2 ? 0 : i-1;
@@ -304,7 +304,7 @@ public class RealEigenvalueHessenbergStressTest {
 
     public void testMatrixAlmostAllOnes() {
 
-        DMatrixRow_F64 A = new DMatrixRow_F64(5,5);
+        DMatrixRMaj A = new DMatrixRMaj(5,5);
 
         for( int i = 0; i < 5; i++ ) {
             int start = i < 2 ? 0 : i-1;

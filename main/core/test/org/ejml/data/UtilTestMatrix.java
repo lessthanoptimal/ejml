@@ -33,7 +33,7 @@ import static org.junit.Assert.fail;
  */
 public class UtilTestMatrix {
 
-    public static void checkMat(DMatrixRow_F64 mat , double ...d )
+    public static void checkMat(DMatrixRMaj mat , double ...d )
     {
         double data[] = mat.getData();
 
@@ -42,7 +42,7 @@ public class UtilTestMatrix {
         }
     }
 
-    public static void checkMat(DMatrixRow_F32 mat , float ...d )
+    public static void checkMat(FMatrixRMaj mat , float ...d )
     {
         float data[] = mat.getData();
 
@@ -118,9 +118,9 @@ public class UtilTestMatrix {
      * @param max The maximum value each element can be.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static DMatrixRow_F64 random64(int numRows , int numCols , double min , double max , Random rand )
+    public static DMatrixRMaj random64(int numRows , int numCols , double min , double max , Random rand )
     {
-        DMatrixRow_F64 mat = new DMatrixRow_F64(numRows,numCols);
+        DMatrixRMaj mat = new DMatrixRMaj(numRows,numCols);
         double d[] = mat.getData();
         int size = mat.getNumElements();
 
@@ -142,9 +142,9 @@ public class UtilTestMatrix {
      * @param max The maximum value each element can be.
      * @param rand Random number generator used to fill the matrix.
      */
-    public static DMatrixRow_F32 random32(int numRows , int numCols , float min , float max , Random rand )
+    public static FMatrixRMaj random32(int numRows , int numCols , float min , float max , Random rand )
     {
-        DMatrixRow_F32 mat = new DMatrixRow_F32(numRows,numCols);
+        FMatrixRMaj mat = new FMatrixRMaj(numRows,numCols);
         float d[] = mat.getData();
         int size = mat.getNumElements();
 

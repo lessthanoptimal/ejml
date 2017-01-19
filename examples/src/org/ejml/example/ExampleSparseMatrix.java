@@ -18,14 +18,14 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.SMatrixCmpC_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.NormOps_R64;
-import org.ejml.sparse.ConvertSparseMatrix_F64;
-import org.ejml.sparse.cmpcol.CommonOps_O64;
-import org.ejml.sparse.cmpcol.NormOps_O64;
-import org.ejml.sparse.cmpcol.RandomMatrices_O64;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.NormOps_DDRM;
+import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.cmpcol.CommonOps_DSCC;
+import org.ejml.sparse.cmpcol.NormOps_DSCC;
+import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
 
 import java.util.Random;
 
@@ -45,14 +45,14 @@ public class ExampleSparseMatrix {
     public static void main(String[] args) {
         Random rand = new Random(234);
 
-        SMatrixCmpC_F64 Z = RandomMatrices_O64.rectangle(20,5,20,rand);
+        SMatrixCmpC_F64 Z = RandomMatrices_DSCC.rectangle(20,5,20,rand);
         Z.print();
         Z.printNonZero();
 
         // Create a 100000x1000 matrix that is 5% filled
-        SMatrixCmpC_F64 A = RandomMatrices_O64.rectangle(ROWS,COLS,(int)(N*0.05),rand);
+        SMatrixCmpC_F64 A = RandomMatrices_DSCC.rectangle(ROWS,COLS,(int)(N*0.05),rand);
         //          1000x1 matrix that is 70% filled
-        SMatrixCmpC_F64 x = RandomMatrices_O64.rectangle(COLS,XCOLS,(int)(XCOLS*COLS*0.7),rand);
+        SMatrixCmpC_F64 x = RandomMatrices_DSCC.rectangle(COLS,XCOLS,(int)(XCOLS*COLS*0.7),rand);
 
         System.out.println("Done generating random matrices");
         // storage for the initial solution
@@ -65,22 +65,22 @@ public class ExampleSparseMatrix {
         int []workA = new int[A.numRows];
         double []workB = new double[A.numRows];
         for (int i = 0; i < 100; i++) {
-            CommonOps_O64.mult(A,x,y,workA,workB);
+            CommonOps_DSCC.mult(A,x,y,workA,workB);
         }
         long after = System.currentTimeMillis();
 
-        System.out.println("norm = "+ NormOps_O64.fastNormF(y)+"  time = "+(after-before)+" ms");
+        System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  time = "+(after-before)+" ms");
 
-        DMatrixRow_F64 Ad = ConvertSparseMatrix_F64.convert(A,(DMatrixRow_F64)null);
-        DMatrixRow_F64 xd = ConvertSparseMatrix_F64.convert(x,(DMatrixRow_F64)null);
-        DMatrixRow_F64 yd = new DMatrixRow_F64(y.numRows,y.numCols);
+        DMatrixRMaj Ad = ConvertSparseDMatrix.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj xd = ConvertSparseDMatrix.convert(x,(DMatrixRMaj)null);
+        DMatrixRMaj yd = new DMatrixRMaj(y.numRows,y.numCols);
 
         before = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
-            CommonOps_R64.mult(Ad, xd, yd);
+            CommonOps_DDRM.mult(Ad, xd, yd);
         }
         after = System.currentTimeMillis();
-        System.out.println("norm = "+ NormOps_R64.fastNormF(yd)+"  time = "+(after-before)+" ms");
+        System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  time = "+(after-before)+" ms");
 
     }
 }

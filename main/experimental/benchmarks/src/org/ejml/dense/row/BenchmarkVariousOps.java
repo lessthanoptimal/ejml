@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -36,20 +36,20 @@ public class BenchmarkVariousOps {
     static int TRIALS_NORM = 10000000;
     static int TRIALS_DETERMINANT = 20000000;
 
-    public static long transposeEml(DMatrixRow_F64 mat , int numTrials) {
+    public static long transposeEml(DMatrixRMaj mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
-        DMatrixRow_F64 tran = new DMatrixRow_F64(mat.numCols,mat.numRows);
+        DMatrixRMaj tran = new DMatrixRMaj(mat.numCols,mat.numRows);
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.transpose(mat,tran);
+            CommonOps_DDRM.transpose(mat,tran);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-//    public static long transposeMtj( DMatrixRow_F64 orig , int numTrials) {
+//    public static long transposeMtj( DMatrixRMaj orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
 //        long prev = System.currentTimeMillis();
@@ -64,33 +64,33 @@ public class BenchmarkVariousOps {
 //        return curr-prev;
 //    }
 
-    public static long scale(DMatrixRow_F64 mat , int numTrials) {
+    public static long scale(DMatrixRMaj mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.scale(10,mat);
-            CommonOps_R64.scale(0.1,mat);
+            CommonOps_DDRM.scale(10,mat);
+            CommonOps_DDRM.scale(0.1,mat);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long scale2(DMatrixRow_F64 mat , int numTrials) {
-        DMatrixRow_F64 result = mat.copy();
+    public static long scale2(DMatrixRMaj mat , int numTrials) {
+        DMatrixRMaj result = mat.copy();
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.scale(10,mat,result);
-            CommonOps_R64.scale(0.1,mat,result);
+            CommonOps_DDRM.scale(10,mat,result);
+            CommonOps_DDRM.scale(0.1,mat,result);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-//    public static long scaleMtj( DMatrixRow_F64 orig , int numTrials) {
+//    public static long scaleMtj( DMatrixRMaj orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
 //        long prev = System.currentTimeMillis();
@@ -104,29 +104,29 @@ public class BenchmarkVariousOps {
 //        return curr-prev;
 //    }
 
-    public static long normEml(DMatrixRow_F64 mat , int numTrials) {
+    public static long normEml(DMatrixRMaj mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            NormOps_R64.normF(mat);
+            NormOps_DDRM.normF(mat);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long determinant(DMatrixRow_F64 mat , int numTrials) {
+    public static long determinant(DMatrixRMaj mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.det(mat);
+            CommonOps_DDRM.det(mat);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long fillManual(DMatrixRow_F64 mat , int numTrials) {
+    public static long fillManual(DMatrixRMaj mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -141,7 +141,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-    public static long fillArrays(DMatrixRow_F64 mat , int numTrials) {
+    public static long fillArrays(DMatrixRMaj mat , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -152,7 +152,7 @@ public class BenchmarkVariousOps {
         return curr-prev;
     }
 
-//    public static long normMtj( DMatrixRow_F64 orig , int numTrials) {
+//    public static long normMtj( DMatrixRMaj orig , int numTrials) {
 //        DenseMatrix mat = UtilMatrixToolkitsJava.convertToMtj(orig);
 //
 //        long prev = System.currentTimeMillis();
@@ -167,7 +167,7 @@ public class BenchmarkVariousOps {
 
     public static void main( String args[] ) {
         System.out.println("Small Matrix Results:") ;
-        DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(4,4,rand);
+        DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(4,4,rand);
 
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,TRIALS_TRANSPOSE));
@@ -186,7 +186,7 @@ public class BenchmarkVariousOps {
 
         System.out.println();
         System.out.println("Large Matrix Results:") ;
-        mat = RandomMatrices_R64.createRandom(2000,2000,rand);
+        mat = RandomMatrices_DDRM.createRandom(2000,2000,rand);
 //        System.out.printf("Transpose:         eml = %10d\n",
 //                transposeEml(mat,100));
 //        System.out.printf("Scale:             eml = %10d\n",

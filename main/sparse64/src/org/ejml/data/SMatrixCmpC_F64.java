@@ -35,7 +35,7 @@ import org.ejml.sparse.SortCoupledArray_F64;
  *
  * @author Peter Abeles
  */
-public class SMatrixCmpC_F64 implements SMatrix_F64 {
+public class SMatrixCmpC_F64 implements SDMatrix {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */

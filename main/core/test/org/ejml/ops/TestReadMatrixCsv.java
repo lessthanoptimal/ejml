@@ -19,8 +19,8 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRow_C64;
-import org.ejml.dense.row.MatrixFeatures_CR64;
+import org.ejml.data.ZMatrixRMaj;
+import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -62,9 +62,9 @@ public class TestReadMatrixCsv {
 
         ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
 
-        DMatrixRow_C64 expected = new DMatrixRow_C64(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
-        DMatrixRow_C64 m = alg.read();
+        ZMatrixRMaj expected = new ZMatrixRMaj(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
+        ZMatrixRMaj m = alg.read();
 
-        assertTrue(MatrixFeatures_CR64.isIdentical(expected,m, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_ZDRM.isIdentical(expected,m, UtilEjml.TEST_F64));
     }
 }

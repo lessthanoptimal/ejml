@@ -18,8 +18,8 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.simple.SimpleBase;
 
 import java.util.Random;
@@ -45,7 +45,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
      * Wraps a StatisticsMatrix around 'm'.  Does NOT create a copy of 'm' but saves a reference
      * to it.
      */
-    public static StatisticsMatrix wrap( DMatrixRow_F64 m ) {
+    public static StatisticsMatrix wrap( DMatrixRMaj m ) {
         StatisticsMatrix ret = new StatisticsMatrix();
         ret.mat = m;
 
@@ -109,8 +109,8 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
         int N = 500;
 
         // create two vectors whose elements are drawn from uniform distributions
-        StatisticsMatrix A = StatisticsMatrix.wrap(RandomMatrices_R64.createRandom(N,1,0,1,rand));
-        StatisticsMatrix B = StatisticsMatrix.wrap(RandomMatrices_R64.createRandom(N,1,1,2,rand));
+        StatisticsMatrix A = StatisticsMatrix.wrap(RandomMatrices_DDRM.createRandom(N,1,0,1,rand));
+        StatisticsMatrix B = StatisticsMatrix.wrap(RandomMatrices_DDRM.createRandom(N,1,1,2,rand));
 
         // the mean should be about 0.5
         System.out.println("Mean of A is               "+A.mean());

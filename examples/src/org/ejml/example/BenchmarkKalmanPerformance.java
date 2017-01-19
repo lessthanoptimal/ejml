@@ -18,8 +18,8 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +40,16 @@ public class BenchmarkKalmanPerformance {
     List<KalmanFilter> filters = new ArrayList<KalmanFilter>();
 
     public void run() {
-        DMatrixRow_F64 priorX = new DMatrixRow_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DMatrixRow_F64 priorP = CommonOps_R64.identity(9);
+        DMatrixRMaj priorX = new DMatrixRMaj(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
+        DMatrixRMaj priorP = CommonOps_DDRM.identity(9);
 
-        DMatrixRow_F64 trueX = new DMatrixRow_F64(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
+        DMatrixRMaj trueX = new DMatrixRMaj(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
 
-        List<DMatrixRow_F64> meas = createSimulatedMeas(trueX);
+        List<DMatrixRMaj> meas = createSimulatedMeas(trueX);
 
-        DMatrixRow_F64 F = createF(T);
-        DMatrixRow_F64 Q = createQ(T,0.1);
-        DMatrixRow_F64 H = createH();
+        DMatrixRMaj F = createF(T);
+        DMatrixRMaj Q = createQ(T,0.1);
+        DMatrixRMaj H = createH();
 
         for(KalmanFilter f : filters ) {
 
@@ -71,22 +71,22 @@ public class BenchmarkKalmanPerformance {
         }
     }
 
-    private List<DMatrixRow_F64> createSimulatedMeas(DMatrixRow_F64 x ) {
+    private List<DMatrixRMaj> createSimulatedMeas(DMatrixRMaj x ) {
 
-        List<DMatrixRow_F64> ret = new ArrayList<DMatrixRow_F64>();
+        List<DMatrixRMaj> ret = new ArrayList<DMatrixRMaj>();
 
-        DMatrixRow_F64 F = createF(T);
-        DMatrixRow_F64 H = createH();
+        DMatrixRMaj F = createF(T);
+        DMatrixRMaj H = createH();
 
 //        UtilEjml.print(F);
 //        UtilEjml.print(H);
 
-        DMatrixRow_F64 x_next = new DMatrixRow_F64(x);
-        DMatrixRow_F64 z = new DMatrixRow_F64(H.numRows,1);
+        DMatrixRMaj x_next = new DMatrixRMaj(x);
+        DMatrixRMaj z = new DMatrixRMaj(H.numRows,1);
 
         for( int i = 0; i < MAX_STEPS; i++ ) {
-            CommonOps_R64.mult(F,x,x_next);
-            CommonOps_R64.mult(H,x_next,z);
+            CommonOps_DDRM.mult(F,x,x_next);
+            CommonOps_DDRM.mult(H,x_next,z);
             ret.add(z.copy());
             x.set(x_next);
         }
@@ -95,18 +95,18 @@ public class BenchmarkKalmanPerformance {
     }
 
     private void processMeas( KalmanFilter f ,
-                              List<DMatrixRow_F64> meas )
+                              List<DMatrixRMaj> meas )
     {
-        DMatrixRow_F64 R = CommonOps_R64.identity(measDOF);
+        DMatrixRMaj R = CommonOps_DDRM.identity(measDOF);
 
-        for(DMatrixRow_F64 z : meas ) {
+        for(DMatrixRMaj z : meas ) {
             f.predict();
             f.update(z,R);
         }
     }
 
 
-    public static DMatrixRow_F64 createF(double T ) {
+    public static DMatrixRMaj createF(double T ) {
         double []a = new double[]{
                 1, 0 , 0 , T , 0 , 0 , 0.5*T*T , 0 , 0 ,
                 0, 1 , 0 , 0 , T , 0 , 0 , 0.5*T*T , 0 ,
@@ -118,11 +118,11 @@ public class BenchmarkKalmanPerformance {
                 0, 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 ,
                 0, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 };
 
-        return new DMatrixRow_F64(9,9, true, a);
+        return new DMatrixRMaj(9,9, true, a);
     }
 
-    public static DMatrixRow_F64 createQ(double T , double var ) {
-        DMatrixRow_F64 Q = new DMatrixRow_F64(9,9);
+    public static DMatrixRMaj createQ(double T , double var ) {
+        DMatrixRMaj Q = new DMatrixRMaj(9,9);
 
         double a00 = (1.0/4.0)*T*T*T*T*var;
         double a01 = (1.0/2.0)*T*T*T*var;
@@ -149,8 +149,8 @@ public class BenchmarkKalmanPerformance {
         return Q;
     }
 
-    public static DMatrixRow_F64 createH() {
-        DMatrixRow_F64 H = new DMatrixRow_F64(measDOF,9);
+    public static DMatrixRMaj createH() {
+        DMatrixRMaj H = new DMatrixRMaj(measDOF,9);
         for( int i = 0; i < measDOF; i++ ) {
             H.set(i,i,1.0);
         }

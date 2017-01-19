@@ -18,7 +18,7 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.junit.Test;
@@ -35,8 +35,8 @@ public class TestLinearSolverSafe {
 
     Random rand = new Random(234);
 
-    DMatrixRow_F64 Ainput = new DMatrixRow_F64(1,1);
-    DMatrixRow_F64 Binput = new DMatrixRow_F64(1,1);
+    DMatrixRMaj Ainput = new DMatrixRMaj(1,1);
+    DMatrixRMaj Binput = new DMatrixRMaj(1,1);
 
     /**
      * Checks to see if the input matrix is copied after multiple calls.  This was an actual bug.
@@ -46,7 +46,7 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(true,false);
         dummy.expectedA = 5;
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         Ainput.set(0,5);
         s.setA(Ainput);
@@ -65,13 +65,13 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(false,true);
         dummy.expectedB = 5;
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         Binput.set(0,5);
-        s.solve(Binput,new DMatrixRow_F64(1,1));
+        s.solve(Binput,new DMatrixRMaj(1,1));
         // call it a second time and see if the input matrix has been reset to the
         // correct value
-        s.solve(Binput,new DMatrixRow_F64(1,1));
+        s.solve(Binput,new DMatrixRMaj(1,1));
 
         assertTrue(dummy.passedin != Ainput);
     }
@@ -80,7 +80,7 @@ public class TestLinearSolverSafe {
     public void testSetA_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         s.setA(Ainput);
 
@@ -91,7 +91,7 @@ public class TestLinearSolverSafe {
     public void testSetA_mod() {
         DummySolver dummy = new DummySolver(true,false);
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         s.setA(Ainput);
 
@@ -102,9 +102,9 @@ public class TestLinearSolverSafe {
     public void testSolver_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
-        s.solve(Binput,new DMatrixRow_F64(1,1));
+        s.solve(Binput,new DMatrixRMaj(1,1));
 
         assertTrue(dummy.passedin == Binput);
     }
@@ -113,9 +113,9 @@ public class TestLinearSolverSafe {
     public void testSolver_mod() {
         DummySolver dummy = new DummySolver(false,true);
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
-        s.solve(Binput,new DMatrixRow_F64(1,1));
+        s.solve(Binput,new DMatrixRMaj(1,1));
 
         assertTrue(dummy.passedin != Binput);
     }
@@ -124,26 +124,26 @@ public class TestLinearSolverSafe {
     public void quality() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(dummy);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         assertTrue(s.quality()==dummy.quality());
     }
 
     @Test
     public void modifies() {
-        LinearSolver<DMatrixRow_F64> s = new LinearSolverSafe<DMatrixRow_F64>(null);
+        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(null);
 
         assertFalse(s.modifiesA());
         assertFalse(s.modifiesB());
 
     }
 
-    private class DummySolver implements LinearSolver<DMatrixRow_F64>
+    private class DummySolver implements LinearSolver<DMatrixRMaj>
     {
         boolean modifiesA;
         boolean modifiesB;
 
-        DMatrixRow_F64 passedin;
+        DMatrixRMaj passedin;
 
         // the expected value of the input matrix
         double expectedA = Double.NaN;
@@ -155,7 +155,7 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public boolean setA(DMatrixRow_F64 A) {
+        public boolean setA(DMatrixRMaj A) {
             passedin = A;
 
             // the input matrix has an expected input value
@@ -175,7 +175,7 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public void solve(DMatrixRow_F64 B, DMatrixRow_F64 X) {
+        public void solve(DMatrixRMaj B, DMatrixRMaj X) {
             passedin = B;
 
             // the input matrix has an expected input value
@@ -188,7 +188,7 @@ public class TestLinearSolverSafe {
         }
 
         @Override
-        public void invert(DMatrixRow_F64 A_inv) {
+        public void invert(DMatrixRMaj A_inv) {
 
         }
 

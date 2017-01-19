@@ -33,7 +33,7 @@ import org.ejml.data.Matrix;
  * <ul>
  * <li> Can decompose rectangular matrices. </li>
  * <li> Numerically stable solutions to least-squares problem, but not as stable as SVD </li>
- * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.dense.row.linsol.qr.AdjLinearSolverQr_R64} </li>
+ * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.dense.row.linsol.qr.AdjLinearSolverQr_DDRM} </li>
  * </ul>
  * </p>
  * <p>
@@ -44,8 +44,8 @@ import org.ejml.data.Matrix;
  * </ul>
  * </p>
 
- * @see org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholder_R64
- * @see org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_R64
+ * @see org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholder_DDRM
+ * @see org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_DDRM
  *
  * @author Peter Abeles
  */

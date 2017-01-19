@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.hessenberg;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -32,9 +32,9 @@ import java.util.Random;
 public class BenchmarkTridiagonal {
 
 
-    public static long basic(DMatrixRow_F64 orig , int numTrials ) {
+    public static long basic(DMatrixRMaj orig , int numTrials ) {
 
-        TridiagonalDecompositionHouseholder_R64 alg = new TridiagonalDecompositionHouseholder_R64();
+        TridiagonalDecompositionHouseholder_DDRM alg = new TridiagonalDecompositionHouseholder_DDRM();
 
         long prev = System.currentTimeMillis();
 
@@ -50,9 +50,9 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long alt(DMatrixRow_F64 orig , int numTrials ) {
+    public static long alt(DMatrixRMaj orig , int numTrials ) {
 
-        TridiagonalDecompositionHouseholderOrig_R64 alg = new TridiagonalDecompositionHouseholderOrig_R64();
+        TridiagonalDecompositionHouseholderOrig_DDRM alg = new TridiagonalDecompositionHouseholderOrig_DDRM();
 
         long prev = System.currentTimeMillis();
 
@@ -63,10 +63,10 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long block(DMatrixRow_F64 orig , int numTrials ) {
+    public static long block(DMatrixRMaj orig , int numTrials ) {
 
 
-        TridiagonalDecomposition_B64_to_R64 alg = new TridiagonalDecomposition_B64_to_R64();
+        TridiagonalDecomposition_DDRB_to_DDRM alg = new TridiagonalDecomposition_DDRB_to_DDRM();
 
         long prev = System.currentTimeMillis();
 
@@ -82,7 +82,7 @@ public class BenchmarkTridiagonal {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
         System.out.println("basic            = "+ basic(mat,numTrials));
 //        System.out.println("alt              = "+ alt(mat,numTrials));
@@ -102,7 +102,7 @@ public class BenchmarkTridiagonal {
             System.out.printf("Processing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

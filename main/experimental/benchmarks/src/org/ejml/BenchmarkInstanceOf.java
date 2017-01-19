@@ -18,11 +18,11 @@
 
 package org.ejml;
 
-import org.ejml.data.D1Matrix_F64;
-import org.ejml.data.DMatrixBlock_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_F64;
-import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.data.DMatrix;
+import org.ejml.data.DMatrixD1;
+import org.ejml.data.DMatrixRBlock;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 
 /**
@@ -36,42 +36,42 @@ public class BenchmarkInstanceOf {
 
     public interface Stuff
     {
-        public void process( Stuff a, Matrix_F64 M );
+        public void process( Stuff a, DMatrix M );
     }
 
     public static class StuffA implements Stuff
     {
 
         @Override
-        public void process(Stuff a, Matrix_F64 M) {
+        public void process(Stuff a, DMatrix M) {
 
-            if( M instanceof DMatrixBlock_F64) {
-                CommonOps_R64.scale(1.0,(DMatrixBlock_F64)M);
-            } else if( M instanceof DMatrixRow_F64) {
-                CommonOps_R64.scale(SCALE,(DMatrixRow_F64)M);
-//                CommonOps.scale(0.5,(DMatrixRow_F64)M);
-            } else if(M instanceof D1Matrix_F64) {
-                CommonOps_R64.scale(1.0,(D1Matrix_F64)M);
+            if( M instanceof DMatrixRBlock) {
+                CommonOps_DDRM.scale(1.0,(DMatrixRBlock)M);
+            } else if( M instanceof DMatrixRMaj) {
+                CommonOps_DDRM.scale(SCALE,(DMatrixRMaj)M);
+//                CommonOps.scale(0.5,(DMatrixRMaj)M);
+            } else if(M instanceof DMatrixD1) {
+                CommonOps_DDRM.scale(1.0,(DMatrixD1)M);
             } else {
                throw new IllegalArgumentException("Who knows");
             }
         }
     }
 
-    public static void withIfStatement( DMatrixRow_F64 M )
+    public static void withIfStatement( DMatrixRMaj M )
     {
         if( M.numCols > 10 ) {
-            CommonOps_R64.scale(2.0,M);
+            CommonOps_DDRM.scale(2.0,M);
         } else if( M.numRows > 12 ) {
-            CommonOps_R64.scale(2.0,M);
+            CommonOps_DDRM.scale(2.0,M);
         } else {
-            CommonOps_R64.scale(SCALE,M);
+            CommonOps_DDRM.scale(SCALE,M);
 //            CommonOps.scale(0.5,M);
         }
     }
 
 
-    public static long processInstanceOf(DMatrixRow_F64 M , int N ) {
+    public static long processInstanceOf(DMatrixRMaj M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -82,19 +82,19 @@ public class BenchmarkInstanceOf {
         return System.currentTimeMillis() - before;
     }
 
-    public static long processDirect(DMatrixRow_F64 M , int N ) {
+    public static long processDirect(DMatrixRMaj M , int N ) {
 
         long before = System.currentTimeMillis();
 
         for( int i = 0; i < N; i++ ) {
-            CommonOps_R64.scale(SCALE,M);
+            CommonOps_DDRM.scale(SCALE,M);
 //            CommonOps.scale(0.5,M);
         }
 
         return System.currentTimeMillis() - before;
     }
 
-    public static long processIf(DMatrixRow_F64 M , int N ) {
+    public static long processIf(DMatrixRMaj M , int N ) {
 
         long before = System.currentTimeMillis();
 
@@ -107,7 +107,7 @@ public class BenchmarkInstanceOf {
 
 
     public static void main( String args[] ) {
-        DMatrixRow_F64 A = new DMatrixRow_F64(2,2,true,0.1,0.5,0.7,10.0);
+        DMatrixRMaj A = new DMatrixRMaj(2,2,true,0.1,0.5,0.7,10.0);
 
         int N = 200000000;
 

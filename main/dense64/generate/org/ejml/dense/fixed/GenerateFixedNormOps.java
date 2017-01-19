@@ -54,7 +54,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
 
         out.print("import org.ejml.data."+nameVector+";\n" +
                 "import org.ejml.data."+nameMatrix+";\n" +
-                "import MatrixFeatures_R64;\n" +
+                "import MatrixFeatures_DDRM;\n" +
                 "import org.ejml.UtilEjml;\n" +
                 "\n" +
                 "/**\n" +
@@ -69,13 +69,13 @@ public class GenerateFixedNormOps extends GenerateFixed {
     private void normalizeF(int dimen ){
         out.print("    public static void normalizeF( "+nameMatrix+" M ) {\n" +
                 "        double val = normF(M);\n" +
-                "        FixedOps"+dimen+"_R64.divide(M,val);\n" +
+                "        FixedOps"+dimen+"_DDRM.divide(M,val);\n" +
                 "    }\n\n");
     }
     private void normalizeF_vector(int dimen ){
         out.print("    public static void normalizeF( "+nameVector+" M ) {\n" +
                 "        double val = normF(M);\n" +
-                "        FixedOps"+dimen+"_R64.divide(M,val);\n" +
+                "        FixedOps"+dimen+"_DDRM.divide(M,val);\n" +
                 "    }\n\n");
     }
 
@@ -117,7 +117,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
 
     private void normF(int dimen ) {
         out.print("    public static double normF( "+nameMatrix+" M ) {\n" +
-                "        double scale = FixedOps"+dimen+"_R64.elementMaxAbs(M);\n" +
+                "        double scale = FixedOps"+dimen+"_DDRM.elementMaxAbs(M);\n" +
                 "\n" +
                 "        if( scale == 0.0 )\n" +
                 "            return 0.0;\n" +
@@ -154,7 +154,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
 
     private void normF_vector(int dimen ) {
         out.print("    public static double normF( "+nameVector+" M ) {\n" +
-                "        double scale = FixedOps"+dimen+"_R64.elementMaxAbs(M);\n" +
+                "        double scale = FixedOps"+dimen+"_DDRM.elementMaxAbs(M);\n" +
                 "\n" +
                 "        if( scale == 0.0 )\n" +
                 "            return 0.0;\n" +

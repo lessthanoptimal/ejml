@@ -18,10 +18,10 @@
 
 package org.ejml.dense.row.linsol;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.misc.UnrolledInverseFromMinor_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.misc.UnrolledInverseFromMinor_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Random;
@@ -36,8 +36,8 @@ import java.util.Random;
 public class BenchmarkInvertSquare {
 
 
-    public static long invertBenchmark(LinearSolver solver , DMatrixRow_F64 orig , int numTrials ) {
-        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
+    public static long invertBenchmark(LinearSolver solver , DMatrixRMaj orig , int numTrials ) {
+        DMatrixRMaj A = new DMatrixRMaj(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
@@ -50,38 +50,38 @@ public class BenchmarkInvertSquare {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertUnrolledBenchmark(DMatrixRow_F64 orig , int numTrials ) {
-        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
+    public static long invertUnrolledBenchmark(DMatrixRMaj orig , int numTrials ) {
+        DMatrixRMaj A = new DMatrixRMaj(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            UnrolledInverseFromMinor_R64.inv(orig,A);
+            UnrolledInverseFromMinor_DDRM.inv(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertOpsBenchmark(DMatrixRow_F64 orig , int numTrials ) {
-        DMatrixRow_F64 A = new DMatrixRow_F64(orig.numRows,orig.numCols);
+    public static long invertOpsBenchmark(DMatrixRMaj orig , int numTrials ) {
+        DMatrixRMaj A = new DMatrixRMaj(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.invert(orig,A);
+            CommonOps_DDRM.invert(orig,A);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
 //        System.out.println("invert GJ No Pivot     = "+ invertBenchmark(
 //                new GaussJordanNoPivot(),mat,numTrials));
 //        System.out.println("invert GJ              = "+ invertBenchmark(
 //                new GaussJordan(mat.numRows),mat,numTrials));
 //        System.out.println("invert LU              = "+ invertBenchmark(
-//                new LinearSolverLu(new LUDecompositionAlt_R64()),mat,numTrials));
+//                new LinearSolverLu(new LUDecompositionAlt_DDRM()),mat,numTrials));
 //        System.out.println("invert LU  NR          = "+ invertBenchmark(
 //                new LinearSolverLu(new LUDecompositionNR()),mat,numTrials));
 //        System.out.println("invert Ops             = "+
@@ -100,7 +100,7 @@ public class BenchmarkInvertSquare {
             int w = size[i];
 
             System.out.printf("Inverting size %3d for %12d trials\n",w,trials[i]);
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
 
             runAlgorithms(mat,trials[i]);
         }

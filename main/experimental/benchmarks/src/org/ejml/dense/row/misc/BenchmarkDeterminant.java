@@ -18,9 +18,9 @@
 
 package org.ejml.dense.row.misc;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 
 import java.util.Random;
 
@@ -33,14 +33,14 @@ public class BenchmarkDeterminant {
     static int TOTAL_TRIALS = 50000000;
 
 
-    public static long computeAuto(DMatrixRow_F64 mat , int numTrials )
+    public static long computeAuto(DMatrixRMaj mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
         double total = 0;
 
         for( int i = 0; i < numTrials; i++ ) {
-            total += UnrolledDeterminantFromMinor_R64.det(mat);
+            total += UnrolledDeterminantFromMinor_DDRM.det(mat);
         }
 
         long after = System.currentTimeMillis();
@@ -51,14 +51,14 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeFixed4x4( DMatrixRow_F64 mat )
+    public static long computeFixed4x4( DMatrixRMaj mat )
     {
         long before = System.currentTimeMillis();
 
         double total = 0;
 
         for( int i = 0; i < TOTAL_TRIALS; i++ ) {
-            total += UnrolledDeterminantFromMinor_R64.det4(mat);
+            total += UnrolledDeterminantFromMinor_DDRM.det4(mat);
         }
 
         long after = System.currentTimeMillis();
@@ -69,11 +69,11 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeMinor4x4( DMatrixRow_F64 mat )
+    public static long computeMinor4x4( DMatrixRMaj mat )
     {
         long before = System.currentTimeMillis();
 
-        DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(4,5);
+        DeterminantFromMinor_DDRM minor = new DeterminantFromMinor_DDRM(4,5);
 
         double total = 0;
 
@@ -89,11 +89,11 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeLU(DMatrixRow_F64 mat , int numTrials )
+    public static long computeLU(DMatrixRMaj mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
-        LUDecompositionAlt_R64 alg = new LUDecompositionAlt_R64();
+        LUDecompositionAlt_DDRM alg = new LUDecompositionAlt_DDRM();
 
         double total = 0;
 
@@ -111,11 +111,11 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeMinor(DMatrixRow_F64 mat , int numTrials )
+    public static long computeMinor(DMatrixRMaj mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
-        DeterminantFromMinor_R64 minor = new DeterminantFromMinor_R64(mat.numRows,5);
+        DeterminantFromMinor_DDRM minor = new DeterminantFromMinor_DDRM(mat.numRows,5);
 
         double total = 0;
 
@@ -132,7 +132,7 @@ public class BenchmarkDeterminant {
         return after-before;
     }
 
-    public static long computeLeibniz(DMatrixRow_F64 mat , int numTrials )
+    public static long computeLeibniz(DMatrixRMaj mat , int numTrials )
     {
         long before = System.currentTimeMillis();
 
@@ -155,7 +155,7 @@ public class BenchmarkDeterminant {
     public static void main( String args[] ) {
         double[] d = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
 
-        DMatrixRow_F64 mat = new DMatrixRow_F64(4,4, true, d);
+        DMatrixRMaj mat = new DMatrixRMaj(4,4, true, d);
 
 //        System.out.println("Fixed 4x4       = "+computeFixed4x4(mat));
 //        System.out.println("Auto 4x4       = "+computeAuto(mat,TOTAL_TRIALS));
@@ -170,7 +170,7 @@ public class BenchmarkDeterminant {
 
             System.out.println("Dimension = "+i+"  trials = "+numTrials);
 
-            mat = RandomMatrices_R64.createRandom(i,i,rand);
+            mat = RandomMatrices_DDRM.createRandom(i,i,rand);
 
             System.out.println("  Auto         = "+computeAuto(mat,numTrials));
 //            System.out.println("  Minor         = "+computeMinor(mat,numTrials));

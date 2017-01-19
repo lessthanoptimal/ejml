@@ -28,9 +28,9 @@ public class TestDenseD2Matrix64F {
 
     @Test
     public void testGeneric() {
-        GenericTestsDenseMatrix_F64 g;
-        g = new GenericTestsDenseMatrix_F64() {
-            protected Matrix_F64 createMatrix(int numRows, int numCols) {
+        GenericTestsDMatrix g;
+        g = new GenericTestsDMatrix() {
+            protected DMatrix createMatrix(int numRows, int numCols) {
                 return new DenseD2Matrix64F(numRows,numCols);
             }
         };

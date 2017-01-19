@@ -18,16 +18,16 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_R64;
-import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_DDRM;
+import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
 /**
  * <p>
- * Similar to {@link SvdImplicitQrDecompose_R64} but it employs the
+ * Similar to {@link SvdImplicitQrDecompose_DDRM} but it employs the
  * ultimate shift strategy.  Ultimate shift involves first computing singular values then uses those
  * to quickly compute the U and W matrices.  For EVD this strategy seems to work very well, but for
  * this problem it needs to have little benefit and makes the code more complex.
@@ -38,20 +38,20 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class SvdImplicitQrDecompose_UltimateS
-        implements SingularValueDecomposition_F64<DMatrixRow_F64> {
+        implements SingularValueDecomposition_F64<DMatrixRMaj> {
 
     private int numRows;
     private int numCols;
     private int smallSide;
 
-    private BidiagonalDecompositionRow_R64 bidiag = new BidiagonalDecompositionRow_R64();
-    private SvdImplicitQrAlgorithm_R64 qralg = new SvdImplicitQrAlgorithmSmart();
+    private BidiagonalDecompositionRow_DDRM bidiag = new BidiagonalDecompositionRow_DDRM();
+    private SvdImplicitQrAlgorithm_DDRM qralg = new SvdImplicitQrAlgorithmSmart();
 
     private double diag[];
     private double off[];
 
-    private DMatrixRow_F64 Ut;
-    private DMatrixRow_F64 Vt;
+    private DMatrixRMaj Ut;
+    private DMatrixRMaj Vt;
 
     private double singularValues[];
     private int numSingular;
@@ -72,7 +72,7 @@ public class SvdImplicitQrDecompose_UltimateS
     private double offOld[];
 
     // Either a copy of the input matrix or a copy of it transposed
-    private DMatrixRow_F64 A_mod = new DMatrixRow_F64(1,1);
+    private DMatrixRMaj A_mod = new DMatrixRMaj(1,1);
 
     public SvdImplicitQrDecompose_UltimateS( boolean compact , boolean computeU , boolean computeV  ) {
         this.compact = compact;
@@ -96,38 +96,38 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public DMatrixRow_F64 getU(DMatrixRow_F64 U , boolean transpose) {
+    public DMatrixRMaj getU(DMatrixRMaj U , boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
         if( transpose )
             return Ut;
 
-        U = new DMatrixRow_F64(Ut.numCols,Ut.numRows);
-        CommonOps_R64.transpose(Ut,U);
+        U = new DMatrixRMaj(Ut.numCols,Ut.numRows);
+        CommonOps_DDRM.transpose(Ut,U);
 
         return U;
     }
 
     @Override
-    public DMatrixRow_F64 getV(DMatrixRow_F64 V , boolean transpose ) {
+    public DMatrixRMaj getV(DMatrixRMaj V , boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
         if( transpose )
             return Vt;
 
-        V = new DMatrixRow_F64(Vt.numCols,Vt.numRows);
-        CommonOps_R64.transpose(Vt,V);
+        V = new DMatrixRMaj(Vt.numCols,Vt.numRows);
+        CommonOps_DDRM.transpose(Vt,V);
 
         return V;
     }
 
     @Override
-    public DMatrixRow_F64 getW(DMatrixRow_F64 W ) {
+    public DMatrixRMaj getW(DMatrixRMaj W ) {
         int m = compact ? numSingular : numRows;
         int n = compact ? numSingular : numCols;
 
         if( W == null )
-            W = new DMatrixRow_F64(m,n);
+            W = new DMatrixRMaj(m,n);
         else {
             W.reshape(m,n, false);
             W.zero();
@@ -141,7 +141,7 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public boolean decompose(DMatrixRow_F64 orig) {
+    public boolean decompose(DMatrixRMaj orig) {
         boolean transposed = orig.numCols > orig.numRows;
 
         init(orig, transposed);
@@ -166,7 +166,7 @@ public class SvdImplicitQrDecompose_UltimateS
         return false;
     }
 
-    private void init(DMatrixRow_F64 orig, boolean transposed) {
+    private void init(DMatrixRMaj orig, boolean transposed) {
         if( transposed ) {
             computeU = prefComputeV;
             computeV = prefComputeU;
@@ -212,8 +212,8 @@ public class SvdImplicitQrDecompose_UltimateS
         if( computeV )
             qralg.setVt(Vt);
 
-        CommonOps_R64.setIdentity(Ut);
-        CommonOps_R64.setIdentity(Vt);
+        CommonOps_DDRM.setIdentity(Ut);
+        CommonOps_DDRM.setIdentity(Vt);
 
         long pointB = System.currentTimeMillis();
 
@@ -225,14 +225,14 @@ public class SvdImplicitQrDecompose_UltimateS
         System.out.println("  bidiag UV "+(pointB-pointA)+" qr UV "+(pointC-pointB));
 
         if( transposed ) {
-            DMatrixRow_F64 temp = Vt;
+            DMatrixRMaj temp = Vt;
             Vt = Ut;
             Ut = temp;
         }
         return false;
     }
 
-    private boolean computeSingularValues(DMatrixRow_F64 orig, boolean transposed) {
+    private boolean computeSingularValues(DMatrixRMaj orig, boolean transposed) {
         long pointA = System.currentTimeMillis();
 
         // change the matrix to bidiagonal form
@@ -262,10 +262,10 @@ public class SvdImplicitQrDecompose_UltimateS
         return ret;
     }
 
-    private boolean bidiagonalization(DMatrixRow_F64 orig, boolean transposed) {
+    private boolean bidiagonalization(DMatrixRMaj orig, boolean transposed) {
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
-            CommonOps_R64.transpose(orig,A_mod);
+            CommonOps_DDRM.transpose(orig,A_mod);
         } else {
             A_mod.reshape(orig.numRows,orig.numCols,false);
             A_mod.set(orig);

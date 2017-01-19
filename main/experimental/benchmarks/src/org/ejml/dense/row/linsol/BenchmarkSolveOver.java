@@ -18,13 +18,13 @@
 
 package org.ejml.dense.row.linsol;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.factory.LinearSolverFactory_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrBlock64_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseTran_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrBlock64_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseTran_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Random;
@@ -36,22 +36,22 @@ import java.util.Random;
 public class BenchmarkSolveOver {
     private static final long SEED = 6;
     private static Random rand = new Random();
-    private static DMatrixRow_F64 A;
-    private static DMatrixRow_F64 B;
+    private static DMatrixRMaj A;
+    private static DMatrixRMaj B;
 
     private static boolean includeSet = false;
 
-    public static long solveBenchmark(LinearSolver<DMatrixRow_F64> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DMatrixRow_F64 X = new DMatrixRow_F64(A.numCols,B.numCols);
-        RandomMatrices_R64.setRandom(A,rand);
-        RandomMatrices_R64.setRandom(B,rand);
+        DMatrixRMaj X = new DMatrixRMaj(A.numCols,B.numCols);
+        RandomMatrices_DDRM.setRandom(A,rand);
+        RandomMatrices_DDRM.setRandom(B,rand);
 
-        DMatrixRow_F64 B_tmp = new DMatrixRow_F64(B.numRows,B.numCols);
+        DMatrixRMaj B_tmp = new DMatrixRMaj(B.numRows,B.numCols);
 
         if( !includeSet ) solver.setA(A);
 
-        DMatrixRow_F64 A_copy = solver.modifiesA() ? A.copy() : A;
+        DMatrixRMaj A_copy = solver.modifiesA() ? A.copy() : A;
 
         long prev = System.currentTimeMillis();
 
@@ -78,15 +78,15 @@ public class BenchmarkSolveOver {
     private static void runAlgorithms( int numTrials )
     {
         System.out.println("  solve QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse_R64(),numTrials));
+                new LinearSolverQrHouse_DDRM(),numTrials));
         System.out.println("  solve QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol_R64(),numTrials));
+                new LinearSolverQrHouseCol_DDRM(),numTrials));
         System.out.println("  solve QR tran        = "+ solveBenchmark(
-                new LinearSolverQrHouseTran_R64(),numTrials));
+                new LinearSolverQrHouseTran_DDRM(),numTrials));
         System.out.println("  solve QR Block64      = "+ solveBenchmark(
-                new LinearSolverQrBlock64_R64(),numTrials));
+                new LinearSolverQrBlock64_DDRM(),numTrials));
         System.out.println("  Selected              = "+ solveBenchmark(
-                LinearSolverFactory_R64.leastSquares(A.numRows, A.numCols),numTrials));
+                LinearSolverFactory_DDRM.leastSquares(A.numRows, A.numCols),numTrials));
 //        System.out.println("  solve PInv            = "+ solveBenchmark(
 //                new SolvePseudoInverse(),numTrials));
     }
@@ -102,8 +102,8 @@ public class BenchmarkSolveOver {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
-            A = new DMatrixRow_F64(N,width[i]);
-            B = new DMatrixRow_F64(N,1);
+            A = new DMatrixRMaj(N,width[i]);
+            B = new DMatrixRMaj(N,1);
 
             runAlgorithms(trialsWith[i]);
         }
@@ -115,8 +115,8 @@ public class BenchmarkSolveOver {
             int N = width[i]*3;
 
             System.out.printf("height %d Width = %d   trials = %d\n",N,width[i],trialsWith[i]);
-            A = new DMatrixRow_F64(N,width[i]);
-            B = new DMatrixRow_F64(N,1);
+            A = new DMatrixRMaj(N,width[i]);
+            B = new DMatrixRMaj(N,1);
 
             runAlgorithms(trialsWith[i]);
         }

@@ -18,9 +18,9 @@
 
 package org.ejml.data;
 
-import org.ejml.sparse.ConvertSparseMatrix_F64;
-import org.ejml.sparse.cmpcol.CommonOps_O64;
-import org.ejml.sparse.cmpcol.RandomMatrices_O64;
+import org.ejml.sparse.ConvertSparseDMatrix;
+import org.ejml.sparse.cmpcol.CommonOps_DSCC;
+import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -28,20 +28,20 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public class TestSMatrixCmpC_F64 extends GenericTestsSparseMatrix_F64 {
+public class TestSMatrixCmpC_F64 extends GenericTestsSparseDMatrix {
 
     @Override
-    public SMatrix_F64 createSparse(int numRows, int numCols) {
+    public SDMatrix createSparse(int numRows, int numCols) {
         return new SMatrixCmpC_F64(numRows,numCols,10);
     }
 
     @Override
-    public SMatrix_F64 createSparse(SMatrixTriplet_F64 orig) {
-        return ConvertSparseMatrix_F64.convert(orig,(SMatrixCmpC_F64)null);
+    public SDMatrix createSparse(SMatrixTriplet_F64 orig) {
+        return ConvertSparseDMatrix.convert(orig,(SMatrixCmpC_F64)null);
     }
 
     @Override
-    public boolean isStructureValid(SMatrix_F64 m) {
+    public boolean isStructureValid(SDMatrix m) {
         return true;
     }
 
@@ -64,18 +64,18 @@ public class TestSMatrixCmpC_F64 extends GenericTestsSparseMatrix_F64 {
 
     @Test
     public void sortIndices() {
-        SMatrixCmpC_F64 a = RandomMatrices_O64.rectangle(5,4,20,-1,1,rand);
+        SMatrixCmpC_F64 a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
 
         // make sure it's not sorted correctly
         a.nz_rows[0]=2;
         a.nz_rows[2]=0;
-        assertFalse(CommonOps_O64.checkIndicesSorted(a));
+        assertFalse(CommonOps_DSCC.checkIndicesSorted(a));
         a.indicesSorted = false;
 
         // now sort it and see if its fixed
         a.sortIndices(null);
 
-        assertTrue(CommonOps_O64.checkIndicesSorted(a));
+        assertTrue(CommonOps_DSCC.checkIndicesSorted(a));
         assertTrue(a.indicesSorted);
     }
 }

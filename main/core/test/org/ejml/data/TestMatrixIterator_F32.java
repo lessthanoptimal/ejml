@@ -19,7 +19,7 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
-import org.ejml.dense.row.RandomMatrices_R32;
+import org.ejml.dense.row.RandomMatrices_FDRM;
 import org.junit.Test;
 
 import java.util.Random;
@@ -37,7 +37,7 @@ public class TestMatrixIterator_F32 {
 
     @Test
     public void allRow() {
-        DMatrixRow_F32 A = RandomMatrices_R32.createRandom(3,6,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
         MatrixIterator_F32 iter = A.iterator(true,0, 0, A.numRows-1, A.numCols-1);
 
@@ -52,7 +52,7 @@ public class TestMatrixIterator_F32 {
 
     @Test
     public void allCol() {
-        DMatrixRow_F32 A = RandomMatrices_R32.createRandom(3,6,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
         MatrixIterator_F32 iter = A.iterator(false,0, 0, A.numRows-1, A.numCols-1);
 
@@ -67,7 +67,7 @@ public class TestMatrixIterator_F32 {
 
     @Test
     public void subRow() {
-        DMatrixRow_F32 A = RandomMatrices_R32.createRandom(3,6,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
         MatrixIterator_F32 iter = A.iterator(true,1, 2 , A.numRows-2, A.numCols-1);
 
@@ -83,7 +83,7 @@ public class TestMatrixIterator_F32 {
 
     @Test
     public void subCol() {
-        DMatrixRow_F32 A = RandomMatrices_R32.createRandom(3,6,rand);
+        FMatrixRMaj A = RandomMatrices_FDRM.createRandom(3,6,rand);
 
         MatrixIterator_F32 iter = A.iterator(false,1, 2 , A.numRows-2, A.numCols-1);
 

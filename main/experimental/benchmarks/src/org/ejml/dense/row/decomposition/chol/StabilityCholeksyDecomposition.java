@@ -19,10 +19,10 @@
 package org.ejml.dense.row.decomposition.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.factory.DecompositionFactory_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -37,9 +37,9 @@ import java.util.Random;
 public class StabilityCholeksyDecomposition {
 
 
-    public static double evaluate(CholeskyDecomposition_F64<DMatrixRow_F64> alg , DMatrixRow_F64 orig ) {
+    public static double evaluate(CholeskyDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
-        if( !DecompositionFactory_R64.decomposeSafe(alg,orig)) {
+        if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig)) {
             return Double.NaN;
         }
 
@@ -54,11 +54,11 @@ public class StabilityCholeksyDecomposition {
         return top/bottom;
     }
 
-    private static void runAlgorithms( DMatrixRow_F64 mat  )
+    private static void runAlgorithms( DMatrixRMaj mat  )
     {
-        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner_R64(),mat));
-        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock_R64(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
-        System.out.println("block64           = "+ evaluate(new CholeskyDecomposition_B64_to_R64(true),mat));
+        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner_DDRM(),mat));
+        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock_DDRM(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
+        System.out.println("block64           = "+ evaluate(new CholeskyDecomposition_DDRB_to_DDRM(true),mat));
 
     }
 
@@ -73,8 +73,8 @@ public class StabilityCholeksyDecomposition {
             // results vary significantly depending if it starts from a small or large matrix
             for( int i = 0; i < scales.length; i++ ) {
                 System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                DMatrixRow_F64 mat = RandomMatrices_R64.createSymmPosDef(size,rand);
-                CommonOps_R64.scale(scales[i],mat);
+                DMatrixRMaj mat = RandomMatrices_DDRM.createSymmPosDef(size,rand);
+                CommonOps_DDRM.scale(scales[i],mat);
                 runAlgorithms(mat);
             }
         }

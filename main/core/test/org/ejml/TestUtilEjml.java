@@ -18,7 +18,7 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.junit.Test;
 
 import java.util.Random;
@@ -52,7 +52,7 @@ public class TestUtilEjml {
         String a = "-0.779094   1.682750\n" +
                  "   1.304014  -1.880739\n";
 
-        DMatrixRow_F64 m = UtilEjml.parse_R64(a,2);
+        DMatrixRMaj m = UtilEjml.parse_DDRM(a,2);
 
         assertEquals(2,m.numCols);
         assertEquals(2,m.numRows);
@@ -65,7 +65,7 @@ public class TestUtilEjml {
         a = " -0.779094   1.682750  5\n" +
            "   1.304014  -1.880739  8\n";
 
-        m = UtilEjml.parse_R64(a,3);
+        m = UtilEjml.parse_DDRM(a,3);
         assertEquals(3,m.numCols);
         assertEquals(2,m.numRows);
         assertEquals(-0.779094 , m.get(0,0) , 1e-5);

@@ -18,9 +18,9 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.MatrixFeatures_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.Test;
 
 import java.io.File;
@@ -39,14 +39,14 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_binary() throws IOException {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(6,3,rand);
 
         MatrixIO.saveBin(A, "temp.mat");
 
-        DMatrixRow_F64 A_copy = MatrixIO.loadBin("temp.mat");
+        DMatrixRMaj A_copy = MatrixIO.loadBin("temp.mat");
 
         assertTrue(A != A_copy);
-        assertTrue(MatrixFeatures_R64.isEquals(A,A_copy));
+        assertTrue(MatrixFeatures_DDRM.isEquals(A,A_copy));
 
         // clean up
         File f = new File("temp.mat");
@@ -56,14 +56,14 @@ public class TestMatrixIO {
 
     @Test
     public void load_save_csv() throws IOException {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(6,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(6,3,rand);
 
         MatrixIO.saveCSV(A,"temp.csv");
 
-        DMatrixRow_F64 A_copy = MatrixIO.loadCSV("temp.csv");
+        DMatrixRMaj A_copy = MatrixIO.loadCSV("temp.csv");
 
         assertTrue(A != A_copy);
-        assertTrue(MatrixFeatures_R64.isEquals(A,A_copy));
+        assertTrue(MatrixFeatures_DDRM.isEquals(A,A_copy));
 
         // clean up
         File f = new File("temp.csv");

@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.bidiagonal;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
 import java.util.Random;
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkBidiagonalDecomposition {
 
 
-    public static long evaluate(BidiagonalDecomposition_F64<DMatrixRow_F64> alg , DMatrixRow_F64 orig , int numTrials ) {
+    public static long evaluate(BidiagonalDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -49,11 +49,11 @@ public class BenchmarkBidiagonalDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
         if( numTrials <= 0 ) return;
-        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_R64(),mat,numTrials));
-        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_R64(),mat,numTrials));
+        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_DDRM(),mat,numTrials));
+        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_DDRM(),mat,numTrials));
     }
 
     public static void main( String args [] ) {
@@ -71,7 +71,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -89,7 +89,7 @@ public class BenchmarkBidiagonalDecomposition {
             System.out.printf("Decomposition size w=%3d h=%3d for %12d trials\n",w,h,t);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(h,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(h,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }

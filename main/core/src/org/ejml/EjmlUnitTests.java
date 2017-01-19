@@ -34,7 +34,7 @@ public class EjmlUnitTests {
      *
      * @param A Matrix
      */
-    public static void assertCountable( Matrix_F64 A ) {
+    public static void assertCountable( DMatrix A ) {
         for( int i = 0; i < A.getNumRows(); i++ ){
             for( int j = 0; j < A.getNumCols(); j++ ) {
                 assertTrue(  !Double.isNaN(A.get(i,j)) , "NaN found at "+i+" "+j );
@@ -88,7 +88,7 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEqualsUncountable(Matrix_F64 A , Matrix_F64 B , double tol ) {
+    public static void assertEqualsUncountable(DMatrix A , DMatrix B , double tol ) {
         assertShape(A, B);
 
         for (int i = 0; i < A.getNumRows(); i++) {
@@ -109,10 +109,10 @@ public class EjmlUnitTests {
     }
 
     public static void assertEquals( Matrix A , Matrix B ) {
-        if( A instanceof Matrix_F64) {
-            assertEquals((Matrix_F64)A, (Matrix_F64)B, UtilEjml.TEST_F64);
+        if( A instanceof DMatrix) {
+            assertEquals((DMatrix)A, (DMatrix)B, UtilEjml.TEST_F64);
         } else {
-            assertEquals((Matrix_F32)A, (Matrix_F32)B, UtilEjml.TEST_F32);
+            assertEquals((FMatrix)A, (FMatrix)B, UtilEjml.TEST_F32);
         }
     }
 
@@ -134,7 +134,7 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEquals(Matrix_F64 A , Matrix_F64 B , double tol ) {
+    public static void assertEquals(DMatrix A , DMatrix B , double tol ) {
         assertShape(A,B);
 
         for( int i = 0; i < A.getNumRows(); i++ ){
@@ -149,7 +149,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEquals(Matrix_F32 A , Matrix_F32 B , float tol ) {
+    public static void assertEquals(FMatrix A , FMatrix B , float tol ) {
         assertShape(A,B);
 
         for( int i = 0; i < A.getNumRows(); i++ ){
@@ -184,7 +184,7 @@ public class EjmlUnitTests {
         assertTrue(Math.abs( a.imaginary-b.imaginary) <= tol,"imaginary a = "+a.imaginary+" b = "+b.imaginary);
     }
 
-    public static void assertEquals(Matrix_C64 A , Matrix_C64 B , double tol ) {
+    public static void assertEquals(ZMatrix A , ZMatrix B , double tol ) {
         assertShape(A,B);
 
         Complex_F64 a = new Complex_F64();
@@ -207,7 +207,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEquals(Matrix_C32 A , Matrix_C32 B , float tol ) {
+    public static void assertEquals(CMatrix A , CMatrix B , float tol ) {
         assertShape(A, B);
 
         Complex_F32 a = new Complex_F32();
@@ -247,7 +247,7 @@ public class EjmlUnitTests {
      * @param B Matrix B
      * @param tol Tolerance
      */
-    public static void assertEqualsTrans(Matrix_F64 A , Matrix_F64 B , double tol ) {
+    public static void assertEqualsTrans(DMatrix A , DMatrix B , double tol ) {
         assertShape(A,B.getNumCols(),B.getNumRows());
 
         for( int i = 0; i < A.getNumRows(); i++ ){
@@ -262,7 +262,7 @@ public class EjmlUnitTests {
         }
     }
 
-    public static void assertEqualsTrans(Matrix_F32 A , Matrix_F32 B , double tol ) {
+    public static void assertEqualsTrans(FMatrix A , FMatrix B , double tol ) {
         assertShape(A,B.getNumCols(),B.getNumRows());
 
         for( int i = 0; i < A.getNumRows(); i++ ){

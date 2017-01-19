@@ -23,7 +23,7 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public class SMatrixTriplet_F64 implements SMatrix_F64
+public class SMatrixTriplet_F64 implements SDMatrix
 {
     public Element[] nz_data = new Element[0];
     public int nz_length;

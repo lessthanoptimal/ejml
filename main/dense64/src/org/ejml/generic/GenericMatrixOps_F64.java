@@ -18,7 +18,7 @@
 
 package org.ejml.generic;
 
-import org.ejml.data.Matrix_F64;
+import org.ejml.data.DMatrix;
 
 import java.util.Random;
 
@@ -27,7 +27,7 @@ import java.util.Random;
  */
 public class GenericMatrixOps_F64 {
 
-//    public static DenseD2Matrix64F convertToD2( DMatrixRow_F64 orig ) {
+//    public static DenseD2Matrix64F convertToD2( DMatrixRMaj orig ) {
 //        DenseD2Matrix64F ret = new DenseD2Matrix64F(orig.getNumRows(),orig.getNumCols());
 //
 //        copy(orig,ret);
@@ -35,7 +35,7 @@ public class GenericMatrixOps_F64 {
 //        return ret;
 //    }
 
-    public static boolean isEquivalent(Matrix_F64 a , Matrix_F64 b , double tol )
+    public static boolean isEquivalent(DMatrix a , DMatrix b , double tol )
     {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
             return false;
@@ -60,7 +60,7 @@ public class GenericMatrixOps_F64 {
      * @param tol How close to zero or one each element needs to be.
      * @return If it is within tolerance to an identity matrix.
      */
-    public static boolean isIdentity(Matrix_F64 a , double tol )
+    public static boolean isIdentity(DMatrix a , double tol )
     {
         for( int i = 0; i < a.getNumRows(); i++ ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {
@@ -76,7 +76,7 @@ public class GenericMatrixOps_F64 {
         return true;
     }
 
-    public static boolean isEquivalentTriangle(boolean upper , Matrix_F64 a , Matrix_F64 b , double tol )
+    public static boolean isEquivalentTriangle(boolean upper , DMatrix a , DMatrix b , double tol )
     {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
             return false;
@@ -104,7 +104,7 @@ public class GenericMatrixOps_F64 {
         return true;
     }
 
-    public static void copy(Matrix_F64 from , Matrix_F64 to )
+    public static void copy(DMatrix from , DMatrix to )
     {
         int numCols = from.getNumCols();
         int numRows = from.getNumRows();
@@ -116,7 +116,7 @@ public class GenericMatrixOps_F64 {
         }
     }
 
-    public static void setRandom(Matrix_F64 a , double min , double max , Random rand )
+    public static void setRandom(DMatrix a , double min , double max , Random rand )
     {
         for( int i = 0; i < a.getNumRows(); i++ ) {
             for( int j = 0; j < a.getNumCols(); j++ ) {

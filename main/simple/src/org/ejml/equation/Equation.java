@@ -18,7 +18,7 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ import static org.ejml.equation.TokenList.Type;
  * <pre>
  * eq.alias(A,"A", B,"B");
  * eq.process("C = A*B");
- * DMatrixRow_F64 C = eq.lookupMatrix("C");
+ * DMatrixRMaj C = eq.lookupMatrix("C");
  * </pre>
  * In this case 'C' was lazily declared.  To access the variable, or any others, you can use one of the lookup*()
  * functions.
@@ -261,7 +261,7 @@ public class Equation {
      * @param variable Matrix which is to be assigned to name
      * @param name The name of the variable
      */
-    public void alias(DMatrixRow_F64 variable , String name ) {
+    public void alias(DMatrixRMaj variable , String name ) {
         if( isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character");
         VariableMatrix old = (VariableMatrix)variables.get(name);
@@ -334,8 +334,8 @@ public class Equation {
                 alias(((Integer)args[i]).intValue(),(String)args[i+1]);
             } else if( args[i].getClass() == Double.class ) {
                 alias(((Double)args[i]).doubleValue(),(String)args[i+1]);
-            } else if( args[i].getClass() == DMatrixRow_F64.class ) {
-                alias((DMatrixRow_F64)args[i],(String)args[i+1]);
+            } else if( args[i].getClass() == DMatrixRMaj.class ) {
+                alias((DMatrixRMaj)args[i],(String)args[i+1]);
             } else if( args[i].getClass() == SimpleMatrix.class ) {
                 alias((SimpleMatrix)args[i],(String)args[i+1]);
             } else {
@@ -505,7 +505,7 @@ public class Equation {
         if( t0.getType() == Type.WORD ) {
             switch( variableRight.getType()) {
                 case MATRIX:
-                    alias(new DMatrixRow_F64(1,1),t0.getWord());
+                    alias(new DMatrixRMaj(1,1),t0.getWord());
                     break;
 
                 case SCALAR:
@@ -1262,7 +1262,7 @@ public class Equation {
         return macros.get(token);
     }
 
-    public DMatrixRow_F64 lookupMatrix(String token) {
+    public DMatrixRMaj lookupMatrix(String token) {
         return ((VariableMatrix)variables.get(token)).matrix;
     }
 
@@ -1274,7 +1274,7 @@ public class Equation {
         Variable v = variables.get(token);
 
         if( v instanceof VariableMatrix ) {
-            DMatrixRow_F64 m = ((VariableMatrix)v).matrix;
+            DMatrixRMaj m = ((VariableMatrix)v).matrix;
             if( m.numCols == 1 && m.numRows == 1 ) {
                 return m.get(0,0);
             } else {

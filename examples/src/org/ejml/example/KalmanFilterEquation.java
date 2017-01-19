@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.equation.Equation;
 import org.ejml.equation.Sequence;
 
@@ -30,7 +30,7 @@ import org.ejml.equation.Sequence;
 public class KalmanFilterEquation implements KalmanFilter{
 
     // system state estimate
-    private DMatrixRow_F64 x,P;
+    private DMatrixRMaj x,P;
 
     private Equation eq;
 
@@ -39,11 +39,11 @@ public class KalmanFilterEquation implements KalmanFilter{
     Sequence updateY,updateK,updateX,updateP;
 
     @Override
-    public void configure(DMatrixRow_F64 F, DMatrixRow_F64 Q, DMatrixRow_F64 H) {
+    public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
         int dimenX = F.numCols;
 
-        x = new DMatrixRow_F64(dimenX,1);
-        P = new DMatrixRow_F64(dimenX,dimenX);
+        x = new DMatrixRMaj(dimenX,1);
+        P = new DMatrixRMaj(dimenX,dimenX);
 
         eq = new Equation();
 
@@ -52,8 +52,8 @@ public class KalmanFilterEquation implements KalmanFilter{
         eq.alias(x,"x",P,"P",Q,"Q",F,"F",H,"H");
 
         // Dummy matrix place holder to avoid compiler errors.  Will be replaced later on
-        eq.alias(new DMatrixRow_F64(1,1),"z");
-        eq.alias(new DMatrixRow_F64(1,1),"R");
+        eq.alias(new DMatrixRMaj(1,1),"z");
+        eq.alias(new DMatrixRMaj(1,1),"R");
 
         // Pre-compile so that it doesn't have to compile it each time it's invoked.  More cumbersome
         // but for small matrices the overhead is significant
@@ -67,7 +67,7 @@ public class KalmanFilterEquation implements KalmanFilter{
     }
 
     @Override
-    public void setState(DMatrixRow_F64 x, DMatrixRow_F64 P) {
+    public void setState(DMatrixRMaj x, DMatrixRMaj P) {
         this.x.set(x);
         this.P.set(P);
     }
@@ -79,7 +79,7 @@ public class KalmanFilterEquation implements KalmanFilter{
     }
 
     @Override
-    public void update(DMatrixRow_F64 z, DMatrixRow_F64 R) {
+    public void update(DMatrixRMaj z, DMatrixRMaj R) {
 
         // Alias will overwrite the reference to the previous matrices with the same name
         eq.alias(z,"z"); eq.alias(R,"R");
@@ -91,12 +91,12 @@ public class KalmanFilterEquation implements KalmanFilter{
     }
 
     @Override
-    public DMatrixRow_F64 getState() {
+    public DMatrixRMaj getState() {
         return x;
     }
 
     @Override
-    public DMatrixRow_F64 getCovariance() {
+    public DMatrixRMaj getCovariance() {
         return P;
     }
 }

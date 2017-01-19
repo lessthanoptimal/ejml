@@ -18,14 +18,14 @@
 
 package org.ejml.dense.row.linsol;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_R64;
-import org.ejml.dense.row.linsol.lu.LinearSolverLuKJI_R64;
-import org.ejml.dense.row.linsol.lu.LinearSolverLu_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_R64;
-import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
+import org.ejml.dense.row.linsol.lu.LinearSolverLuKJI_DDRM;
+import org.ejml.dense.row.linsol.lu.LinearSolverLu_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_DDRM;
+import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Random;
@@ -37,16 +37,16 @@ import java.util.Random;
 public class BenchmarkSolveEq {
     private static final long SEED = 6;
     private static final Random rand = new Random();
-    private static DMatrixRow_F64 A;
-    private static DMatrixRow_F64 B;
+    private static DMatrixRMaj A;
+    private static DMatrixRMaj B;
 
     private static boolean includeSet = false;
 
-    public static long solveBenchmark(LinearSolver<DMatrixRow_F64> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DMatrixRow_F64 X = new DMatrixRow_F64(B.numRows,B.numCols);
-        RandomMatrices_R64.setRandom(A,rand);
-        RandomMatrices_R64.setRandom(B,rand);
+        DMatrixRMaj X = new DMatrixRMaj(B.numRows,B.numCols);
+        RandomMatrices_DDRM.setRandom(A,rand);
+        RandomMatrices_DDRM.setRandom(B,rand);
 
         if( !includeSet ) solver.setA(A);
 
@@ -64,15 +64,15 @@ public class BenchmarkSolveEq {
     private static void runAlgorithms( int numTrials )
     {
         System.out.println("solve LU A            = "+ solveBenchmark(
-                new LinearSolverLu_R64(new LUDecompositionAlt_R64()),numTrials));
+                new LinearSolverLu_DDRM(new LUDecompositionAlt_DDRM()),numTrials));
         System.out.println("solve LU B            = "+ solveBenchmark(
-                new LinearSolverLuKJI_R64(new LUDecompositionAlt_R64()),numTrials));
+                new LinearSolverLuKJI_DDRM(new LUDecompositionAlt_DDRM()),numTrials));
         System.out.println("solve QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse_R64(),numTrials));
+                new LinearSolverQrHouse_DDRM(),numTrials));
         System.out.println("solve QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol_R64(),numTrials));
+                new LinearSolverQrHouseCol_DDRM(),numTrials));
         System.out.println("solve PInv            = "+ solveBenchmark(
-                new SolvePseudoInverseSvd_R64(),numTrials));
+                new SolvePseudoInverseSvd_DDRM(),numTrials));
 //        System.out.println("solve SVD             = "+ solveBenchmark(
 //                new LinearSolverSvd(new SvdNumericalRecipes(A.numRows,A.numCols)),numTrials/8));
     }
@@ -87,8 +87,8 @@ public class BenchmarkSolveEq {
             int w = size[i];
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_R64.createRandom(w,w,rand);
-            B = new DMatrixRow_F64(w,2);
+            A = RandomMatrices_DDRM.createRandom(w,w,rand);
+            B = new DMatrixRMaj(w,2);
 
             runAlgorithms(trials[i]);
         }
@@ -98,8 +98,8 @@ public class BenchmarkSolveEq {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_R64.createRandom(100,100,rand);
-            B = new DMatrixRow_F64(100,w);
+            A = RandomMatrices_DDRM.createRandom(100,100,rand);
+            B = new DMatrixRMaj(100,w);
 
             runAlgorithms(trialsX[i]/80);
         }

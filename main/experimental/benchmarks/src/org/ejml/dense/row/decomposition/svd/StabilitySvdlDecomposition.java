@@ -18,10 +18,10 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.factory.DecompositionFactory_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 
 import java.util.Random;
@@ -40,11 +40,11 @@ public class StabilitySvdlDecomposition {
     private static boolean computeV = true;
 
 
-    public static double evaluate(SingularValueDecomposition<DMatrixRow_F64> alg , DMatrixRow_F64 orig ) {
+    public static double evaluate(SingularValueDecomposition<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
-        DMatrixRow_F64 U=null;
-        DMatrixRow_F64 W;
-        DMatrixRow_F64 Vt=null;
+        DMatrixRMaj U=null;
+        DMatrixRMaj W;
+        DMatrixRMaj Vt=null;
 
         if( !alg.decompose(orig.copy())) {
             return Double.NaN;
@@ -58,12 +58,12 @@ public class StabilitySvdlDecomposition {
 
         // I'm not sure how to test quality of U or V is not computed.
 
-        return DecompositionFactory_R64.quality(orig, U,W,Vt);
+        return DecompositionFactory_DDRM.quality(orig, U,W,Vt);
     }
 
-    private static void runAlgorithms( DMatrixRow_F64 mat )
+    private static void runAlgorithms( DMatrixRMaj mat )
     {
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_R64(compact,computeU,computeV,false),mat));
+        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_DDRM(compact,computeU,computeV,false),mat));
         System.out.println("qr ult           = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(compact,computeU,computeV),mat));
     }
 
@@ -75,12 +75,12 @@ public class StabilitySvdlDecomposition {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
 
-        DMatrixRow_F64 orig = RandomMatrices_R64.createRandom(numRows,numCols,-1,1,rand);
-        DMatrixRow_F64 mat = orig.copy();
+        DMatrixRMaj orig = RandomMatrices_DDRM.createRandom(numRows,numCols,-1,1,rand);
+        DMatrixRMaj mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("  Decomposition size %3d %d for %e scale\n",numRows,numCols,scales[i]);
-            CommonOps_R64.scale(scales[i],orig,mat);
+            CommonOps_DDRM.scale(scales[i],orig,mat);
             runAlgorithms(mat);
         }
 

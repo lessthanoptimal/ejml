@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 
 /**
@@ -27,20 +27,20 @@ import org.ejml.dense.row.CommonOps_R64;
  */
 public class SmartRotatorUpdate {
 
-    DMatrixRow_F64 R;
+    DMatrixRMaj R;
     int mod[] = new int[ 1 ];
 
     public SmartRotatorUpdate() {
          
     }
 
-    public DMatrixRow_F64 getR() {
+    public DMatrixRMaj getR() {
         return R;
     }
 
-    public void init( DMatrixRow_F64 R ) {
+    public void init( DMatrixRMaj R ) {
         this.R = R;
-        CommonOps_R64.setIdentity(R);
+        CommonOps_DDRM.setIdentity(R);
 
         int a = Math.min(R.numRows,R.numCols);
 

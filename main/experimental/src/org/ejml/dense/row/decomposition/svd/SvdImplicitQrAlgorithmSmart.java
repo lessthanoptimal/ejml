@@ -18,27 +18,27 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
 
 
 /**
  * @author Peter Abeles
  */
-public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_R64 {
+public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_DDRM {
 
     SmartRotatorUpdate smartU = new SmartRotatorUpdate();
     SmartRotatorUpdate smartV = new SmartRotatorUpdate();
 
     @Override
-    public void setUt(DMatrixRow_F64 ut) {
+    public void setUt(DMatrixRMaj ut) {
         super.setUt(ut);
         if(Ut != null )
             smartU.init(Ut);
     }
 
     @Override
-    public void setVt(DMatrixRow_F64 vt) {
+    public void setVt(DMatrixRMaj vt) {
         super.setVt(vt);
         if(Vt != null )
             smartV.init(Vt);
@@ -46,7 +46,7 @@ public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_R64 {
 
 
     @Override
-    protected void updateRotator(DMatrixRow_F64 Q , int m, int n, double c, double s) {
+    protected void updateRotator(DMatrixRMaj Q , int m, int n, double c, double s) {
         if( Q == smartU.getR() ) {
             smartU.update(m,n,c,s);
         } else if( Q == smartV.getR() ) {

@@ -34,7 +34,7 @@ public class ConvertMatrixStruct_F32 {
      * @param input Input matrix.
      * @param output Output matrix.
      */
-    public static void convert(Matrix_F32 input , Matrix_F32 output ) {
+    public static void convert(FMatrix input , FMatrix output ) {
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
         if( input.getNumCols() != output.getNumCols() )
@@ -48,15 +48,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed2x2_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix2x2} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed2x2_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix2x2 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(2,2);
+            output = new FMatrixRMaj(2,2);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -72,15 +72,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed3x3_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix3x3} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed3x3_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix3x3 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(3,3);
+            output = new FMatrixRMaj(3,3);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -101,15 +101,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed4x4_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix4x4} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed4x4_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix4x4 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(4,4);
+            output = new FMatrixRMaj(4,4);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -137,15 +137,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed5x5_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix5x5} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed5x5_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix5x5 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(5,5);
+            output = new FMatrixRMaj(5,5);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -182,15 +182,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed6x6_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix6x6} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed6x6_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix6x6 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(6,6);
+            output = new FMatrixRMaj(6,6);
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -238,15 +238,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed2x2_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix2x2}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed2x2_F32 convert(DMatrixRow_F32 input , DMatrixFixed2x2_F32 output ) {
+    public static FMatrix2x2 convert(FMatrixRMaj input , FMatrix2x2 output ) {
         if( output == null)
-            output = new DMatrixFixed2x2_F32();
+            output = new FMatrix2x2();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -262,15 +262,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed3x3_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix3x3}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed3x3_F32 convert(DMatrixRow_F32 input , DMatrixFixed3x3_F32 output ) {
+    public static FMatrix3x3 convert(FMatrixRMaj input , FMatrix3x3 output ) {
         if( output == null)
-            output = new DMatrixFixed3x3_F32();
+            output = new FMatrix3x3();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -291,15 +291,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed4x4_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix4x4}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed4x4_F32 convert(DMatrixRow_F32 input , DMatrixFixed4x4_F32 output ) {
+    public static FMatrix4x4 convert(FMatrixRMaj input , FMatrix4x4 output ) {
         if( output == null)
-            output = new DMatrixFixed4x4_F32();
+            output = new FMatrix4x4();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -327,15 +327,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed5x5_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix5x5}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed5x5_F32 convert(DMatrixRow_F32 input , DMatrixFixed5x5_F32 output ) {
+    public static FMatrix5x5 convert(FMatrixRMaj input , FMatrix5x5 output ) {
         if( output == null)
-            output = new DMatrixFixed5x5_F32();
+            output = new FMatrix5x5();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -372,15 +372,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed6x6_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix6x6}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed6x6_F32 convert(DMatrixRow_F32 input , DMatrixFixed6x6_F32 output ) {
+    public static FMatrix6x6 convert(FMatrixRMaj input , FMatrix6x6 output ) {
         if( output == null)
-            output = new DMatrixFixed6x6_F32();
+            output = new FMatrix6x6();
 
         if( input.getNumRows() != output.getNumRows() )
             throw new IllegalArgumentException("Number of rows do not match");
@@ -428,15 +428,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed2_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix2} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed2_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix2 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(2,1);
+            output = new FMatrixRMaj(2,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -451,15 +451,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed3_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix3} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed3_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix3 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(3,1);
+            output = new FMatrixRMaj(3,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -475,15 +475,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed4_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix4} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed4_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix4 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(4,1);
+            output = new FMatrixRMaj(4,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -500,15 +500,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed5_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix5} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed5_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix5 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(5,1);
+            output = new FMatrixRMaj(5,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -526,15 +526,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixFixed6_F32} into {@link DMatrixRow_F32}.
+     * Converts {@link FMatrix6} into {@link FMatrixRMaj}.
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixFixed6_F32 input , DMatrixRow_F32 output ) {
+    public static FMatrixRMaj convert(FMatrix6 input , FMatrixRMaj output ) {
         if( output == null)
-            output = new DMatrixRow_F32(6,1);
+            output = new FMatrixRMaj(6,1);
 
         if( output.getNumRows() != 1 && output.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -553,15 +553,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed2_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix2}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed2_F32 convert(DMatrixRow_F32 input , DMatrixFixed2_F32 output ) {
+    public static FMatrix2 convert(FMatrixRMaj input , FMatrix2 output ) {
         if( output == null)
-            output = new DMatrixFixed2_F32();
+            output = new FMatrix2();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -576,15 +576,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed3_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix3}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed3_F32 convert(DMatrixRow_F32 input , DMatrixFixed3_F32 output ) {
+    public static FMatrix3 convert(FMatrixRMaj input , FMatrix3 output ) {
         if( output == null)
-            output = new DMatrixFixed3_F32();
+            output = new FMatrix3();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -600,15 +600,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed4_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix4}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed4_F32 convert(DMatrixRow_F32 input , DMatrixFixed4_F32 output ) {
+    public static FMatrix4 convert(FMatrixRMaj input , FMatrix4 output ) {
         if( output == null)
-            output = new DMatrixFixed4_F32();
+            output = new FMatrix4();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -625,15 +625,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed5_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix5}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed5_F32 convert(DMatrixRow_F32 input , DMatrixFixed5_F32 output ) {
+    public static FMatrix5 convert(FMatrixRMaj input , FMatrix5 output ) {
         if( output == null)
-            output = new DMatrixFixed5_F32();
+            output = new FMatrix5();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -651,15 +651,15 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixFixed6_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrix6}
      *
      * @param input Input matrix.
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixFixed6_F32 convert(DMatrixRow_F32 input , DMatrixFixed6_F32 output ) {
+    public static FMatrix6 convert(FMatrixRMaj input , FMatrix6 output ) {
         if( output == null)
-            output = new DMatrixFixed6_F32();
+            output = new FMatrix6();
 
         if( input.getNumRows() != 1 && input.getNumCols() != 1 )
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
@@ -678,14 +678,14 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixRow_F32} into {@link DMatrixBlock_F32}
+     * Converts {@link FMatrixRMaj} into {@link FMatrixRBlock}
      *
      * Can't handle null output matrix since block size needs to be specified.
      *
      * @param src Input matrix.
      * @param dst Output matrix.
      */
-    public static void convert(DMatrixRow_F32 src , DMatrixBlock_F32 dst ) {
+    public static void convert(FMatrixRMaj src , FMatrixRBlock dst ) {
         if( src.numRows != dst.numRows || src.numCols != dst.numCols )
             throw new IllegalArgumentException("Must be the same size.");
 
@@ -708,18 +708,18 @@ public class ConvertMatrixStruct_F32 {
     }
 
     /**
-     * Converts {@link DMatrixBlock_F32} into {@link DMatrixRow_F32}
+     * Converts {@link FMatrixRBlock} into {@link FMatrixRMaj}
      *
      * @param src Input matrix.
      * @param dst Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRow_F32 convert(DMatrixBlock_F32 src , DMatrixRow_F32 dst ) {
+    public static FMatrixRMaj convert(FMatrixRBlock src , FMatrixRMaj dst ) {
         if( dst != null ) {
             if( dst.numRows != src.numRows || dst.numCols != src.numCols )
                 throw new IllegalArgumentException("Must be the same size.");
         } else {
-            dst = new DMatrixRow_F32(src.numRows,src.numCols);
+            dst = new FMatrixRMaj(src.numRows,src.numCols);
         }
 
         for( int i = 0; i < src.numRows; i += src.blockLength ) {

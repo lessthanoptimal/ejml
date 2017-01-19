@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.misc;
 
-import org.ejml.data.DMatrixRow_F32;
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.FMatrixRMaj;
 
 
 /**
@@ -51,7 +51,7 @@ public class NaiveDeterminant {
      * @param mat The matrix whose determinant is computed.
      * @return The value of the determinant
      */
-    public static double leibniz( DMatrixRow_F64 mat )
+    public static double leibniz( DMatrixRMaj mat )
     {
         PermuteArray perm = new PermuteArray( mat.numCols );
 
@@ -77,26 +77,26 @@ public class NaiveDeterminant {
     /**
      * <p>
      * A simple and inefficient algorithm for computing the determinant. This should never be used.
-     * It is at least two orders of magnitude slower than {@link DeterminantFromMinor_R64}. This is included
+     * It is at least two orders of magnitude slower than {@link DeterminantFromMinor_DDRM}. This is included
      * to provide a point of comparison for other algorithms.
      * </p>
      * @param mat The matrix that the determinant is to be computed from
      * @return The determinant.
      */
-    public static double recursive( DMatrixRow_F64 mat )
+    public static double recursive( DMatrixRMaj mat )
     {
         if(mat.numRows == 1) {
             return mat.get(0);
         } else if(mat.numRows == 2) {
             return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
         } else if( mat.numRows == 3 ) {
-            return UnrolledDeterminantFromMinor_R64.det3(mat);
+            return UnrolledDeterminantFromMinor_DDRM.det3(mat);
         }
 
         double result = 0;
 
         for(int i = 0; i < mat.numRows; i++) {
-            DMatrixRow_F64 minorMat = new DMatrixRow_F64(mat.numRows-1,mat.numRows-1);
+            DMatrixRMaj minorMat = new DMatrixRMaj(mat.numRows-1,mat.numRows-1);
 
             for(int j = 1; j < mat.numRows; j++) {
                 for(int k = 0; k < mat.numRows; k++) {
@@ -119,20 +119,20 @@ public class NaiveDeterminant {
         return result;
     }
 
-    public static float recursive( DMatrixRow_F32 mat )
+    public static float recursive( FMatrixRMaj mat )
     {
         if(mat.numRows == 1) {
             return mat.get(0);
         } else if(mat.numRows == 2) {
             return mat.get(0) * mat.get(3) - mat.get(1) * mat.get(2);
         } else if( mat.numRows == 3 ) {
-            return UnrolledDeterminantFromMinor_R32.det3(mat);
+            return UnrolledDeterminantFromMinor_FDRM.det3(mat);
         }
 
         float result = 0;
 
         for(int i = 0; i < mat.numRows; i++) {
-            DMatrixRow_F32 minorMat = new DMatrixRow_F32(mat.numRows-1,mat.numRows-1);
+            FMatrixRMaj minorMat = new FMatrixRMaj(mat.numRows-1,mat.numRows-1);
 
             for(int j = 1; j < mat.numRows; j++) {
                 for(int k = 0; k < mat.numRows; k++) {

@@ -18,8 +18,8 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class MatrixConstructor {
                     }
 
                     if( v.matrix ) {
-                        CommonOps_R64.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
+                        CommonOps_DDRM.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
                     } else if( v.variable.getType() == VariableType.SCALAR ){
                         output.matrix.set(matrixRow,numCols,v.getValue());
                     } else if( v.variable.getType() == VariableType.INTEGER_SEQUENCE ) {
@@ -112,7 +112,7 @@ public class MatrixConstructor {
         return output;
     }
 
-    protected void setToRequiredSize( DMatrixRow_F64 matrix ) {
+    protected void setToRequiredSize( DMatrixRMaj matrix ) {
 
 
         int matrixRow = 0;
@@ -183,7 +183,7 @@ public class MatrixConstructor {
             }
         }
 
-        public DMatrixRow_F64 getMatrix() {
+        public DMatrixRMaj getMatrix() {
             return ((VariableMatrix)variable).matrix;
         }
 

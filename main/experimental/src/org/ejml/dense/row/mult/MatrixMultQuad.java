@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 /**
  * @author Peter Abeles
@@ -35,13 +35,13 @@ public class MatrixMultQuad {
      * @param B Middle square matrix.  Size = (A.numCols,A.numCols)
      * @param out Output matrix.  Size = (A.numRows,A.numRows);
      */
-    public static void multQuad1(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 out ) {
+    public static void multQuad1(DMatrixRMaj A , DMatrixRMaj B , DMatrixRMaj out ) {
 
         if( A.numCols != B.numCols || A.numCols != B.numRows
                 || A.numRows != out.numRows || A.numRows != out.numCols )
             throw new IllegalArgumentException("Incompatible matrix shapes");
 
-        CommonOps_R64.fill(out, 0);
+        CommonOps_DDRM.fill(out, 0);
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {

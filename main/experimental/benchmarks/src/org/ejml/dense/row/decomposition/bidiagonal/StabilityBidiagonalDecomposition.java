@@ -18,9 +18,9 @@
 
 package org.ejml.dense.row.decomposition.bidiagonal;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -35,7 +35,7 @@ import java.util.Random;
 public class StabilityBidiagonalDecomposition {
 
 
-    public static double evaluate(BidiagonalDecomposition_F64<DMatrixRow_F64> alg , DMatrixRow_F64 orig ) {
+    public static double evaluate(BidiagonalDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
         if( !alg.decompose(orig.copy())) {
             return Double.NaN;
@@ -54,10 +54,10 @@ public class StabilityBidiagonalDecomposition {
         return top/bottom;
     }
 
-    private static void runAlgorithms( DMatrixRow_F64 mat  )
+    private static void runAlgorithms( DMatrixRMaj mat  )
     {
-        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_R64(),mat));
-        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_R64(),mat));
+        System.out.println("row               = "+ evaluate(new BidiagonalDecompositionRow_DDRM(),mat));
+        System.out.println("tall              = "+ evaluate(new BidiagonalDecompositionTall_DDRM(),mat));
     }
 
     public static void main( String args [] ) {
@@ -71,8 +71,8 @@ public class StabilityBidiagonalDecomposition {
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
 
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(size,size,-1,1,rand);
-            CommonOps_R64.scale(scales[i],mat);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(size,size,-1,1,rand);
+            CommonOps_DDRM.scale(scales[i],mat);
             runAlgorithms(mat);
         }
 
@@ -88,8 +88,8 @@ public class StabilityBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %e singular\n",size,sv[0]);
 
 //            System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createSingularValues(size,size,rand,sv);
-            CommonOps_R64.scale(scales[i],mat);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createSingularValues(size,size,rand,sv);
+            CommonOps_DDRM.scale(scales[i],mat);
 //            System.out.println("  Done.");
             runAlgorithms(mat);
         }

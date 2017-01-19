@@ -20,9 +20,9 @@ package org.ejml.dense.blockd3;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.BlockD3Matrix64F;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkConvert_dense_to_block( int m , int n ) {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
         BlockD3Matrix64F B = new BlockD3Matrix64F(A.numRows,A.numCols,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(A,B);
@@ -73,7 +73,7 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkBlockToDense( int m , int n ) {
-        DMatrixRow_F64 A = new DMatrixRow_F64(m,n);
+        DMatrixRMaj A = new DMatrixRMaj(m,n);
         BlockD3Matrix64F B = BlockD3MatrixOps.random(m,n,-1,1,rand,BLOCK_LENGTH);
 
         BlockD3MatrixOps.convert(B,A);
@@ -108,15 +108,15 @@ public class TestBlockD3MatrixOps {
     }
 
     private void checkMult(int m, int n, int o) {
-        DMatrixRow_F64 A_d = RandomMatrices_R64.createRandom(m, n,rand);
-        DMatrixRow_F64 B_d = RandomMatrices_R64.createRandom(n, o,rand);
-        DMatrixRow_F64 C_d = new DMatrixRow_F64(m, o);
+        DMatrixRMaj A_d = RandomMatrices_DDRM.createRandom(m, n,rand);
+        DMatrixRMaj B_d = RandomMatrices_DDRM.createRandom(n, o,rand);
+        DMatrixRMaj C_d = new DMatrixRMaj(m, o);
 
         BlockD3Matrix64F A_b = BlockD3MatrixOps.convert(A_d,BLOCK_LENGTH);
         BlockD3Matrix64F B_b = BlockD3MatrixOps.convert(B_d,BLOCK_LENGTH);
         BlockD3Matrix64F C_b = BlockD3MatrixOps.random(m, o, -1 , 1 , rand , BLOCK_LENGTH);
 
-        CommonOps_R64.mult(A_d,B_d,C_d);
+        CommonOps_DDRM.mult(A_d,B_d,C_d);
         BlockD3MatrixOps.mult(A_b,B_b,C_b);
 
         assertTrue( GenericMatrixOps_F64.isEquivalent(C_d,C_b,UtilEjml.TEST_F64));

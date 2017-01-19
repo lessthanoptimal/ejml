@@ -39,15 +39,18 @@ public class GenerateCode32 {
 
     public GenerateCode32() {
 
-        suffices64.add("_B64_to_R64");
-        suffices64.add("_R64");
-        suffices64.add("_B64");
-        suffices64.add("_F64");
-        suffices64.add("_CR64");
-        suffices64.add("_C64");
+        String[] sufficeRoot = new String[]{"DRM","DRB","SCC","STL","DF3","DF4","DF5","DF6"};
 
-        for( String word : suffices64 ) {
-            suffices32.add( word.replace("64","32"));
+        suffices64.add("_DDRB_to_DDRM");
+        suffices64.add("_F64");
+        suffices32.add("_FDRB_to_FDRM");
+        suffices32.add("_F32");
+
+        for( String suffice : sufficeRoot ) {
+            suffices64.add("_D"+suffice);
+            suffices64.add("_Z"+suffice);
+            suffices32.add("_F"+suffice);
+            suffices32.add("_C"+suffice);
         }
 
         converter = new ConvertFile32From64(false);
@@ -56,12 +59,18 @@ public class GenerateCode32 {
         converter.replacePattern("DoubleStep", "FIXED_STEP");
         converter.replacePattern("double", "float");
         converter.replacePattern("Double", "Float");
-        converter.replacePattern("B64", "B32");
-        converter.replacePattern("R64", "R32");
+
+        for( String suffice : sufficeRoot) {
+            converter.replacePattern("_D"+suffice, "_F"+suffice);
+            converter.replacePattern("_Z"+suffice, "_C"+suffice);
+        }
+
+        converter.replacePattern("DMatrix", "FMatrix");
+        converter.replacePattern("DSubmatrix", "FSubmatrix");
+        converter.replacePattern("ZMatrix", "CMatrix");
+        converter.replacePattern("ZSubmatrix", "CSubmatrix");
+
         converter.replacePattern("F64", "F32");
-        converter.replacePattern("C64", "C32");
-        converter.replacePattern("CR64", "CR32");
-        converter.replacePattern("CB64", "CB32");
         converter.replacePattern("random64", "random32");
         converter.replacePattern("64-bit", "32-bit");
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");

@@ -19,8 +19,8 @@
 package org.ejml.example;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.factory.DecompositionFactory_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 /**
@@ -63,7 +63,7 @@ public class PolynomialRootFinder {
         int N = coefficients.length-1;
 
         // Construct the companion matrix
-        DMatrixRow_F64 c = new DMatrixRow_F64(N,N);
+        DMatrixRMaj c = new DMatrixRMaj(N,N);
 
         double a = coefficients[N];
         for( int i = 0; i < N; i++ ) {
@@ -74,7 +74,7 @@ public class PolynomialRootFinder {
         }
 
         // use generalized eigenvalue decomposition to find the roots
-        EigenDecomposition_F64<DMatrixRow_F64> evd =  DecompositionFactory_R64.eig(N,false);
+        EigenDecomposition_F64<DMatrixRMaj> evd =  DecompositionFactory_DDRM.eig(N,false);
 
         evd.decompose(c);
 

@@ -18,10 +18,10 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixFixed3_F64;
-import org.ejml.data.DMatrixFixed3x3_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.fixed.FixedOps3_F64;
+import org.ejml.data.DMatrix3;
+import org.ejml.data.DMatrix3x3;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.fixed.CommonOps_DDF3;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 import org.ejml.simple.SimpleMatrix;
 
@@ -36,8 +36,8 @@ public class ExampleFixedSizedMatrix {
 
     public static void main( String args[] ) {
         // declare the matrix
-        DMatrixFixed3x3_F64 a = new DMatrixFixed3x3_F64();
-        DMatrixFixed3x3_F64 b = new DMatrixFixed3x3_F64();
+        DMatrix3x3 a = new DMatrix3x3();
+        DMatrix3x3 b = new DMatrix3x3();
 
         // Can assign values the usual way
         for( int i = 0; i < 3; i++ ) {
@@ -54,20 +54,20 @@ public class ExampleFixedSizedMatrix {
         a.print();
 
         // most of the standard operations are support
-        FixedOps3_F64.transpose(a,b);
+        CommonOps_DDF3.transpose(a,b);
         b.print();
 
-        System.out.println("Determinant = "+ FixedOps3_F64.det(a));
+        System.out.println("Determinant = "+ CommonOps_DDF3.det(a));
 
         // matrix-vector operations are also supported
         // Constructors for vectors and matrices can be used to initialize its value
-        DMatrixFixed3_F64 v = new DMatrixFixed3_F64(1,2,3);
-        DMatrixFixed3_F64 result = new DMatrixFixed3_F64();
+        DMatrix3 v = new DMatrix3(1,2,3);
+        DMatrix3 result = new DMatrix3();
 
-        FixedOps3_F64.mult(a,v,result);
+        CommonOps_DDF3.mult(a,v,result);
 
-        // Conversion into DMatrixRow_F64 can also be done
-        DMatrixRow_F64 dm = ConvertMatrixStruct_F64.convert(a,null);
+        // Conversion into DMatrixRMaj can also be done
+        DMatrixRMaj dm = ConvertMatrixStruct_F64.convert(a,null);
 
         dm.print();
 
@@ -75,7 +75,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        DMatrixFixed3x3_F64 fv = ConvertMatrixStruct_F64.convert(sv.matrix_F64(),(DMatrixFixed3x3_F64)null);
+        DMatrix3x3 fv = ConvertMatrixStruct_F64.convert(sv.matrix_F64(),(DMatrix3x3)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

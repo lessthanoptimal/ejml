@@ -18,9 +18,9 @@
 
 package org.ejml.ops;
 
-import org.ejml.data.DMatrixRow_C64;
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.Matrix;
+import org.ejml.data.ZMatrixRMaj;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,8 +44,8 @@ public class ReadMatrixCsv extends ReadCsv {
     }
 
     /**
-     * Reads in a DMatrixRow_F64 from the IO stream.
-     * @return DMatrixRow_F64
+     * Reads in a DMatrixRMaj from the IO stream.
+     * @return DMatrixRMaj
      * @throws IOException If anything goes wrong.
      */
     public <M extends Matrix>M read() throws IOException {
@@ -67,16 +67,16 @@ public class ReadMatrixCsv extends ReadCsv {
     }
 
     /**
-     * Reads in a DMatrixRow_F64 from the IO stream where the user specifies the matrix dimensions.
+     * Reads in a DMatrixRMaj from the IO stream where the user specifies the matrix dimensions.
      *
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
-     * @return DMatrixRow_F64
+     * @return DMatrixRMaj
      * @throws IOException
      */
-    public DMatrixRow_F64 readReal(int numRows, int numCols) throws IOException {
+    public DMatrixRMaj readReal(int numRows, int numCols) throws IOException {
 
-        DMatrixRow_F64 A = new DMatrixRow_F64(numRows,numCols);
+        DMatrixRMaj A = new DMatrixRMaj(numRows,numCols);
 
         for( int i = 0; i < numRows; i++ ) {
             List<String> words = extractWords();
@@ -94,16 +94,16 @@ public class ReadMatrixCsv extends ReadCsv {
     }
 
     /**
-     * Reads in a DMatrixRow_C64 from the IO stream where the user specifies the matrix dimensions.
+     * Reads in a ZMatrixRMaj from the IO stream where the user specifies the matrix dimensions.
      *
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
-     * @return DMatrixRow_F64
+     * @return DMatrixRMaj
      * @throws IOException
      */
-    public DMatrixRow_C64 readComplex(int numRows, int numCols) throws IOException {
+    public ZMatrixRMaj readComplex(int numRows, int numCols) throws IOException {
 
-        DMatrixRow_C64 A = new DMatrixRow_C64(numRows,numCols);
+        ZMatrixRMaj A = new ZMatrixRMaj(numRows,numCols);
 
         int wordsCol = numCols*2;
 

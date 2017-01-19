@@ -18,11 +18,11 @@
 
 package org.ejml.dense.row.linsol;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_R64;
-import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_DDRM;
+import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Random;
@@ -34,16 +34,16 @@ import java.util.Random;
 public class BenchmarkRectSolve {
     private static final long SEED = 6;
     private static final Random rand = new Random();
-    private static DMatrixRow_F64 A;
-    private static DMatrixRow_F64 B;
+    private static DMatrixRMaj A;
+    private static DMatrixRMaj B;
 
     private static final boolean includeSet = true;
 
-    public static long solveBenchmark(LinearSolver<DMatrixRow_F64> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DMatrixRow_F64 X = new DMatrixRow_F64(A.numCols,B.numCols);
-        RandomMatrices_R64.setRandom(A,rand);
-        RandomMatrices_R64.setRandom(B,rand);
+        DMatrixRMaj X = new DMatrixRMaj(A.numCols,B.numCols);
+        RandomMatrices_DDRM.setRandom(A,rand);
+        RandomMatrices_DDRM.setRandom(B,rand);
 
         if( !includeSet ) solver.setA(A);
 
@@ -61,11 +61,11 @@ public class BenchmarkRectSolve {
     {
 
         System.out.println("Pseudo Inverse  = "+ solveBenchmark(
-                new SolvePseudoInverseSvd_R64(A.numRows,A.numCols),numTrials));
+                new SolvePseudoInverseSvd_DDRM(A.numRows,A.numCols),numTrials));
         System.out.println("QR house        = "+ solveBenchmark(
-                new LinearSolverQrHouse_R64(),numTrials));
+                new LinearSolverQrHouse_DDRM(),numTrials));
         System.out.println("QR house Col    = "+ solveBenchmark(
-                new LinearSolverQrHouseCol_R64(),numTrials));
+                new LinearSolverQrHouseCol_DDRM(),numTrials));
     }
 
     public static void main( String args [] ) {
@@ -78,8 +78,8 @@ public class BenchmarkRectSolve {
             int w = size[i];
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_R64.createRandom(w*2,w,rand);
-            B = new DMatrixRow_F64(w*2,2);
+            A = RandomMatrices_DDRM.createRandom(w*2,w,rand);
+            B = new DMatrixRMaj(w*2,2);
 
             runAlgorithms(trials[i]);
         }
@@ -89,8 +89,8 @@ public class BenchmarkRectSolve {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_R64.createRandom(200,100,rand);
-            B = new DMatrixRow_F64(200,w);
+            A = RandomMatrices_DDRM.createRandom(200,100,rand);
+            B = new DMatrixRMaj(200,w);
 
             runAlgorithms(trialsX[i]/80);
         }

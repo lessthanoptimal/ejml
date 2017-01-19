@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row;
 
-import org.ejml.data.D1Matrix_F64;
+import org.ejml.data.DMatrixD1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class MatrixVisualization_F64 {
      * @param A A matrix.
      * @param title Name of the window.
      */
-    public static void show(D1Matrix_F64 A , String title ) {
+    public static void show(DMatrixD1 A , String title ) {
         JFrame frame = new JFrame(title);
 
         int width = 300;

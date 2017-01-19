@@ -18,11 +18,11 @@
 
 package org.ejml.dense.row.decomposition.eig.symm;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.decomposition.eig.SymmetricQRAlgorithmDecomposition_R64;
-import org.ejml.dense.row.factory.DecompositionFactory_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.eig.SymmetricQRAlgorithmDecomposition_DDRM;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
@@ -37,19 +37,19 @@ import java.util.Random;
 public class StabilitySymmEigen {
 
 
-    public static double evaluate(EigenDecomposition_F64<DMatrixRow_F64> alg , DMatrixRow_F64 orig ) {
+    public static double evaluate(EigenDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
         if( !alg.decompose(orig)) {
             return Double.NaN;
         }
 
-        return DecompositionFactory_R64.quality(orig,alg);
+        return DecompositionFactory_DDRM.quality(orig,alg);
     }
 
-    private static void runAlgorithms( DMatrixRow_F64 mat  )
+    private static void runAlgorithms( DMatrixRMaj mat  )
     {
-        TridiagonalSimilarDecomposition_F64<DMatrixRow_F64> decomp = DecompositionFactory_R64.tridiagonal(0);
-        System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition_R64(decomp,true),mat));
+        TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.tridiagonal(0);
+        System.out.println("qr ult           = "+ evaluate(new SymmetricQRAlgorithmDecomposition_DDRM(decomp,true),mat));
     }
 
     public static void main( String args [] ) {
@@ -59,12 +59,12 @@ public class StabilitySymmEigen {
         double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
         System.out.println("Square matrix");
-        DMatrixRow_F64 orig = RandomMatrices_R64.createSymmetric(size,-1,1,rand);
-        DMatrixRow_F64 mat = orig.copy();
+        DMatrixRMaj orig = RandomMatrices_DDRM.createSymmetric(size,-1,1,rand);
+        DMatrixRMaj mat = orig.copy();
         // results vary significantly depending if it starts from a small or large matrix
         for( int i = 0; i < scales.length; i++ ) {
             System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-            CommonOps_R64.scale(scales[i],orig,mat);
+            CommonOps_DDRM.scale(scales[i],orig,mat);
             runAlgorithms(mat);
         }
 

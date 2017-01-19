@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -34,21 +34,21 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult1(DMatrixRow_F64 A , DMatrixRow_F64 B , DMatrixRow_F64 tmp,
-                             DMatrixRow_F64 expected , int numTrials) {
+    public static long mult1(DMatrixRMaj A , DMatrixRMaj B , DMatrixRMaj tmp,
+                             DMatrixRMaj expected , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_R64.mult_small(A,B,tmp);
-            MatrixMatrixMult_R64.multTransB(tmp, A, expected);
+            MatrixMatrixMult_DDRM.mult_small(A,B,tmp);
+            MatrixMatrixMult_DDRM.multTransB(tmp, A, expected);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long quad1(DMatrixRow_F64 A , DMatrixRow_F64 B ,
-                             DMatrixRow_F64 expected , int numTrials) {
+    public static long quad1(DMatrixRMaj A , DMatrixRMaj B ,
+                             DMatrixRMaj expected , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
@@ -61,10 +61,10 @@ public class BenchmarkMatrixMatrixMultQuad {
 
     public static void performTests( int numRows , int numCols ,
                                      int numTrials ) {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(numRows,numCols,rand);
-        DMatrixRow_F64 B = RandomMatrices_R64.createRandom(numCols,numCols,rand);
-        DMatrixRow_F64 out = RandomMatrices_R64.createRandom(numRows, numRows, rand);
-        DMatrixRow_F64 tmp = new DMatrixRow_F64(numRows,numCols);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.createRandom(numCols,numCols,rand);
+        DMatrixRMaj out = RandomMatrices_DDRM.createRandom(numRows, numRows, rand);
+        DMatrixRMaj tmp = new DMatrixRMaj(numRows,numCols);
 
         System.out.printf(numRows+"  "+numCols+"     Mult1: %7d  Quad1 %7d\n",
                 mult1(A,B,tmp,out,numTrials),

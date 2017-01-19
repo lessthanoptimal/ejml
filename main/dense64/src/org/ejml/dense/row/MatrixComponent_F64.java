@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row;
 
-import org.ejml.data.D1Matrix_F64;
+import org.ejml.data.DMatrixD1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,13 +39,13 @@ public class MatrixComponent_F64 extends JPanel {
         setMinimumSize(new Dimension(width,height));
     }
 
-    public synchronized void setMatrix( D1Matrix_F64 A ) {
-        double maxValue = CommonOps_R64.elementMaxAbs(A);
+    public synchronized void setMatrix( DMatrixD1 A ) {
+        double maxValue = CommonOps_DDRM.elementMaxAbs(A);
         renderMatrix(A,image,maxValue);
         repaint();
     }
 
-    public static void renderMatrix(D1Matrix_F64 M , BufferedImage image , double maxValue )
+    public static void renderMatrix(DMatrixD1 M , BufferedImage image , double maxValue )
     {
         int w = image.getWidth();
         int h = image.getHeight();

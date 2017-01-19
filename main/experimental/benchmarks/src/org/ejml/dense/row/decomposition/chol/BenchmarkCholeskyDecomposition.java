@@ -19,9 +19,9 @@
 package org.ejml.dense.row.decomposition.chol;
 
 import org.ejml.EjmlParameters;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.factory.DecompositionFactory_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 
 import java.util.Random;
 
@@ -34,14 +34,14 @@ import java.util.Random;
 public class BenchmarkCholeskyDecomposition {
 
 
-    public static long choleskyL(DMatrixRow_F64 orig , int numTrials ) {
+    public static long choleskyL(DMatrixRMaj orig , int numTrials ) {
 
-        CholeskyDecompositionInner_R64 alg = new CholeskyDecompositionInner_R64(true);
+        CholeskyDecompositionInner_DDRM alg = new CholeskyDecompositionInner_DDRM(true);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -49,14 +49,14 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyU(DMatrixRow_F64 orig , int numTrials ) {
+    public static long choleskyU(DMatrixRMaj orig , int numTrials ) {
 
-        CholeskyDecompositionInner_R64 alg = new CholeskyDecompositionInner_R64(false);
+        CholeskyDecompositionInner_DDRM alg = new CholeskyDecompositionInner_DDRM(false);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -64,15 +64,15 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyL_block(DMatrixRow_F64 orig , int numTrials ) {
+    public static long choleskyL_block(DMatrixRMaj orig , int numTrials ) {
 
-        CholeskyDecompositionBlock_R64 alg = new CholeskyDecompositionBlock_R64(
+        CholeskyDecompositionBlock_DDRM alg = new CholeskyDecompositionBlock_DDRM(
                 EjmlParameters.BLOCK_WIDTH_CHOL);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -81,14 +81,14 @@ public class BenchmarkCholeskyDecomposition {
     }
 
 
-    public static long choleskyBlockU(DMatrixRow_F64 orig , int numTrials ) {
+    public static long choleskyBlockU(DMatrixRMaj orig , int numTrials ) {
 
-        CholeskyDecomposition_B64_to_R64 alg = new CholeskyDecomposition_B64_to_R64(false);
+        CholeskyDecomposition_DDRB_to_DDRM alg = new CholeskyDecomposition_DDRB_to_DDRM(false);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -96,14 +96,14 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyBlockL(DMatrixRow_F64 orig , int numTrials ) {
+    public static long choleskyBlockL(DMatrixRMaj orig , int numTrials ) {
 
-        CholeskyDecomposition_B64_to_R64 alg = new CholeskyDecomposition_B64_to_R64(true);
+        CholeskyDecomposition_DDRB_to_DDRM alg = new CholeskyDecomposition_DDRB_to_DDRM(true);
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_R64.decomposeSafe(alg,orig)) {
+            if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig)) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -111,14 +111,14 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long choleskyLDL(DMatrixRow_F64 orig , int numTrials ) {
+    public static long choleskyLDL(DMatrixRMaj orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
-        CholeskyDecompositionLDL_R64 alg = new CholeskyDecompositionLDL_R64();
+        CholeskyDecompositionLDL_DDRM alg = new CholeskyDecompositionLDL_DDRM();
 
         for( long i = 0; i < numTrials; i++ ) {
-            if( !DecompositionFactory_R64.decomposeSafe(alg,orig) ) {
+            if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig) ) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -126,7 +126,7 @@ public class BenchmarkCholeskyDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
         System.out.println("Lower            = "+ choleskyL(mat,numTrials));
 //        System.out.println("Upper            = "+ choleskyU(mat,numTrials));
@@ -149,7 +149,7 @@ public class BenchmarkCholeskyDecomposition {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 symMat = RandomMatrices_R64.createSymmPosDef(w,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.createSymmPosDef(w,rand);
             System.out.println("  Done.");
             runAlgorithms(symMat,trials[i]);
         }

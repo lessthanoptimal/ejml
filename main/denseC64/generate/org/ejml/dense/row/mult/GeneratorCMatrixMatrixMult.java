@@ -37,8 +37,8 @@ public class GeneratorCMatrixMatrixMult {
         String preamble = CodeGeneratorMisc.COPYRIGHT +
                 "package org.ejml.dense.row.mult;\n" +
                 "\n" +
-                "import org.ejml.data.DMatrixRow_C64;\n" +
-                "import CommonOps_CR64;\n" +
+                "import org.ejml.data.ZMatrixRMaj;\n" +
+                "import CommonOps_ZDRM;\n" +
                 "import MatrixDimensionException;\n" +
                 "\n" +
                 "/**\n" +
@@ -51,7 +51,7 @@ public class GeneratorCMatrixMatrixMult {
                 " * @author Peter Abeles\n" +
                 " */\n" +
                 "@SuppressWarnings(\"Duplicates\")\n" +
-                "public class MatrixMatrixMult_CR64 {\n";
+                "public class MatrixMatrixMult_ZDRM {\n";
 
         stream.print(preamble);
 
@@ -476,7 +476,7 @@ public class GeneratorCMatrixMatrixMult {
 
     private String handleZeros( boolean add ) {
 
-        String fill = add ? "" : "            CommonOps_CR64.fill(c,0,0);\n";
+        String fill = add ? "" : "            CommonOps_ZDRM.fill(c,0,0);\n";
 
         String ret =
                 "        if( a.numCols == 0 || a.numRows == 0 ) {\n" +
@@ -509,9 +509,9 @@ public class GeneratorCMatrixMatrixMult {
         if( hasAlpha ) ret += "double realAlpha , double imagAlpha , ";
 
         if( hasAux ) {
-            ret += "DMatrixRow_C64 a , DMatrixRow_C64 b , DMatrixRow_C64 c , double []aux )\n";
+            ret += "ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c , double []aux )\n";
         } else {
-            ret += "DMatrixRow_C64 a , DMatrixRow_C64 b , DMatrixRow_C64 c )\n";
+            ret += "ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )\n";
         }
 
         ret += "    {\n";
@@ -520,7 +520,7 @@ public class GeneratorCMatrixMatrixMult {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        GeneratorCMatrixMatrixMult gen = new GeneratorCMatrixMatrixMult("MatrixMatrixMult_CR64.java");
+        GeneratorCMatrixMatrixMult gen = new GeneratorCMatrixMatrixMult("MatrixMatrixMult_ZDRM.java");
 
         gen.createClass();
     }

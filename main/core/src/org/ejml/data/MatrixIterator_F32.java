@@ -30,7 +30,7 @@ import java.util.Iterator;
  */
 public class MatrixIterator_F32 implements Iterator<Float> {
     // the matrix which is being iterated through
-    private D1Matrix_F32 a;
+    private FMatrixD1 a;
 
     // should it iterate through by row or by column
     private boolean rowMajor;
@@ -63,7 +63,7 @@ public class MatrixIterator_F32 implements Iterator<Float> {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public MatrixIterator_F32(D1Matrix_F32 a, boolean rowMajor,
+    public MatrixIterator_F32(FMatrixD1 a, boolean rowMajor,
                               int minRow, int minCol, int maxRow, int maxCol
     ) {
         if( maxCol < minCol )

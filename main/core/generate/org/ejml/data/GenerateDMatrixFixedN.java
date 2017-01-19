@@ -49,7 +49,7 @@ public class GenerateDMatrixFixedN extends CodeGeneratorBase{
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
-                "public class "+className+" implements DMatrixFixed_F64 {\n");
+                "public class "+className+" implements DMatrixFixed {\n");
         printClassParam(dimen);
         out.print("\n" +
                 "    public "+className+"() {\n" +
@@ -163,7 +163,7 @@ public class GenerateDMatrixFixedN extends CodeGeneratorBase{
     private void printSetMatrix(int dimen) {
         out.print("    @Override\n" +
                 "    public void set(Matrix original) {\n" +
-                "        RealMatrix_F64 m = (RealMatrix_F64)original;\n" +
+                "        RealDMatrix m = (RealDMatrix)original;\n" +
                 "\n" +
                 "        if( m.getNumCols() == 1 && m.getNumRows() == "+dimen+" ) {\n");
         for (int i = 0; i < dimen; i++) {

@@ -20,8 +20,8 @@ package org.ejml.example;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.Test;
 
 import java.util.Random;
@@ -43,16 +43,16 @@ public class TestLevenbergMarquardt {
     public void testNumericalJacobian() {
         JacobianTestFunction func = new JacobianTestFunction();
 
-        DMatrixRow_F64 param = new DMatrixRow_F64(3,1, true, 2, -1, 4);
+        DMatrixRMaj param = new DMatrixRMaj(3,1, true, 2, -1, 4);
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        DMatrixRow_F64 X = RandomMatrices_R64.createRandom(NUM_PTS,1,rand);
+        DMatrixRMaj X = RandomMatrices_DDRM.createRandom(NUM_PTS,1,rand);
 
-        DMatrixRow_F64 numJacobian = new DMatrixRow_F64(3,NUM_PTS);
-        DMatrixRow_F64 analyticalJacobian = new DMatrixRow_F64(3,NUM_PTS);
+        DMatrixRMaj numJacobian = new DMatrixRMaj(3,NUM_PTS);
+        DMatrixRMaj analyticalJacobian = new DMatrixRMaj(3,NUM_PTS);
 
-        alg.configure(param,X,new DMatrixRow_F64(NUM_PTS,1));
+        alg.configure(param,X,new DMatrixRMaj(NUM_PTS,1));
         alg.computeNumericalJacobian(param,X,numJacobian);
         func.deriv(X,analyticalJacobian);
 
@@ -78,18 +78,18 @@ public class TestLevenbergMarquardt {
     public void runTrivial( int numPoints ) {
         JacobianTestFunction func = new JacobianTestFunction();
 
-        DMatrixRow_F64 paramInit = new DMatrixRow_F64(3,1);
-        DMatrixRow_F64 param = new DMatrixRow_F64(3,1, true, 2, -1, 4);
+        DMatrixRMaj paramInit = new DMatrixRMaj(3,1);
+        DMatrixRMaj param = new DMatrixRMaj(3,1, true, 2, -1, 4);
 
         LevenbergMarquardt alg = new LevenbergMarquardt(func);
 
-        DMatrixRow_F64 X = RandomMatrices_R64.createRandom(numPoints,1,rand);
-        DMatrixRow_F64 Y = new DMatrixRow_F64(numPoints,1);
+        DMatrixRMaj X = RandomMatrices_DDRM.createRandom(numPoints,1,rand);
+        DMatrixRMaj Y = new DMatrixRMaj(numPoints,1);
         func.compute(param,X,Y);
 
         alg.optimize(paramInit,X,Y);
 
-        DMatrixRow_F64 foundParam = alg.getParameters();
+        DMatrixRMaj foundParam = alg.getParameters();
 
         assertEquals(0,alg.getFinalCost(), UtilEjml.TEST_F64);
         EjmlUnitTests.assertEquals(param,foundParam,1e-6);
@@ -101,7 +101,7 @@ public class TestLevenbergMarquardt {
     private static class JacobianTestFunction implements LevenbergMarquardt.Function
     {
 
-        public void deriv(DMatrixRow_F64 x, DMatrixRow_F64 deriv) {
+        public void deriv(DMatrixRMaj x, DMatrixRMaj deriv) {
             double dataX[] = x.data;
 
             int length = x.numRows;
@@ -121,7 +121,7 @@ public class TestLevenbergMarquardt {
         }
 
         @Override
-        public void compute(DMatrixRow_F64 param, DMatrixRow_F64 x, DMatrixRow_F64 y) {
+        public void compute(DMatrixRMaj param, DMatrixRMaj x, DMatrixRMaj y) {
             double a = param.data[0];
             double b = param.data[1];
             double c = param.data[2];

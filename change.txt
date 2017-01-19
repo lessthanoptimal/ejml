@@ -63,9 +63,9 @@ Matrix Name       Op-Suffice              Data Type
 DMatrixRMaj           _DDRM      Dense Row-Major real double
 ZMatrixRMaj           _ZDRM      Dense Row-Major complex double
 CMatrixRMaj           _CDRM      Dense Row-Major complex float
-DMatrixBlock          _DDBL      Dense Block Row-Major Real double
-ZMatrixBlock          _DDBL
-DMatrix3x3                       Dense Fixed Sized 3x3 real double
+DMatrixRBlock         _DDRB      Dense Block Row-Major Real double
+ZMatrixRBlock         _DDRB      Dense Block Row-Major complex double
+DMatrix3x3            _DDF3      Dense Fixed Sized 3x3 real double
 DMatrix3                         Dense Fixed Sized 3 real double
 DMatrixSparseCSC      _DSCC      Sparse Compressed Column real double
 ZMatrixSparseCSC      _ZSCC

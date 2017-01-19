@@ -18,10 +18,10 @@
 
 package org.ejml.dense.row.misc;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.data.Matrix_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrix;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -30,20 +30,20 @@ import java.util.Random;
  */
 public class BenchmarkImplCommonOps {
 
-    public static long extract_DMatrixRow_F64(DMatrixRow_F64 src , DMatrixRow_F64 dst ,
+    public static long extract_DMatrixRMaj(DMatrixRMaj src , DMatrixRMaj dst ,
                                               int numTrials) {
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            ImplCommonOps_R64.extract(src, 0, 0, dst, 0, 0, src.numRows, src.numCols);
+            ImplCommonOps_DDRM.extract(src, 0, 0, dst, 0, 0, src.numRows, src.numCols);
         }
         long curr = System.currentTimeMillis();
 
         return curr-prev;
     }
 
-    public static long extract_Matrix64F(Matrix_F64 src , Matrix_F64 dst , int numTrials) {
+    public static long extract_Matrix64F(DMatrix src , DMatrix dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
@@ -55,12 +55,12 @@ public class BenchmarkImplCommonOps {
         return curr-prev;
     }
 
-    public static long extract_Common(DMatrixRow_F64 src , DMatrixRow_F64 dst , int numTrials) {
+    public static long extract_Common(DMatrixRMaj src , DMatrixRMaj dst , int numTrials) {
 
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.extract(src, 0, src.numRows, 0 , src.numCols, dst, 0, 0 );
+            CommonOps_DDRM.extract(src, 0, src.numRows, 0 , src.numCols, dst, 0, 0 );
         }
         long curr = System.currentTimeMillis();
 
@@ -70,13 +70,13 @@ public class BenchmarkImplCommonOps {
     public static void benchmark( int N , int trials ) {
         Random rand = new Random(234);
 
-        DMatrixRow_F64 src = new DMatrixRow_F64(N,N);
-        DMatrixRow_F64 dst = new DMatrixRow_F64(N,N);
+        DMatrixRMaj src = new DMatrixRMaj(N,N);
+        DMatrixRMaj dst = new DMatrixRMaj(N,N);
 
-        RandomMatrices_R64.addRandom(src,0,100,rand);
+        RandomMatrices_DDRM.addRandom(src,0,100,rand);
 
         System.out.println("N = "+N);
-        System.out.println("extract DMatrixRow_F64 = "+extract_DMatrixRow_F64(src,dst,trials));
+        System.out.println("extract DMatrixRMaj = "+extract_DMatrixRMaj(src,dst,trials));
         System.out.println("extract Matrix64F      = "+extract_Matrix64F(src,dst,trials));
         System.out.println("extract Common         = "+extract_Common(src, dst, trials));
     }

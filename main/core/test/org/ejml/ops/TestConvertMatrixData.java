@@ -20,10 +20,10 @@ package org.ejml.ops;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
-import org.ejml.dense.fixed.FixedFeatures2_F64;
-import org.ejml.dense.fixed.FixedFeatures3_F64;
-import org.ejml.dense.fixed.FixedFeatures4_F64;
-import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.dense.fixed.MatrixFeatures_DDF2;
+import org.ejml.dense.fixed.MatrixFeatures_DDF3;
+import org.ejml.dense.fixed.MatrixFeatures_DDF4;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -34,50 +34,50 @@ import static org.junit.Assert.assertTrue;
 public class TestConvertMatrixData {
     @Test
     public void DenseMatrix() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(2,2,true,1,2,3,4);
-        DMatrixRow_F32 B = new DMatrixRow_F32(2,2);
-        DMatrixRow_F64 C = new DMatrixRow_F64(2,2);
+        DMatrixRMaj A = new DMatrixRMaj(2,2,true,1,2,3,4);
+        FMatrixRMaj B = new FMatrixRMaj(2,2);
+        DMatrixRMaj C = new DMatrixRMaj(2,2);
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(MatrixFeatures_R64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
     public void DMatrixFixed2x2() {
-        DMatrixFixed2x2_F64 A = new DMatrixFixed2x2_F64(1,2,3,4);
-        DMatrixFixed2x2_F32 B = new DMatrixFixed2x2_F32();
-        DMatrixFixed2x2_F64 C = new DMatrixFixed2x2_F64();
+        DMatrix2x2 A = new DMatrix2x2(1,2,3,4);
+        FMatrix2x2 B = new FMatrix2x2();
+        DMatrix2x2 C = new DMatrix2x2();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures2_F64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDF2.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
     public void DMatrixFixed3x3() {
-        DMatrixFixed3x3_F64 A = new DMatrixFixed3x3_F64(1,2,3,4,5,6,7,8,9);
-        DMatrixFixed3x3_F32 B = new DMatrixFixed3x3_F32();
-        DMatrixFixed3x3_F64 C = new DMatrixFixed3x3_F64();
+        DMatrix3x3 A = new DMatrix3x3(1,2,3,4,5,6,7,8,9);
+        FMatrix3x3 B = new FMatrix3x3();
+        DMatrix3x3 C = new DMatrix3x3();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures3_F64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDF3.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
     @Test
     public void DMatrixFixed4x4() {
-        DMatrixFixed4x4_F64 A = new DMatrixFixed4x4_F64(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6);
-        DMatrixFixed4x4_F32 B = new DMatrixFixed4x4_F32();
-        DMatrixFixed4x4_F64 C = new DMatrixFixed4x4_F64();
+        DMatrix4x4 A = new DMatrix4x4(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6);
+        FMatrix4x4 B = new FMatrix4x4();
+        DMatrix4x4 C = new DMatrix4x4();
 
         ConvertMatrixData.convert(A,B);
         ConvertMatrixData.convert(B,C);
 
-        assertTrue(FixedFeatures4_F64.isIdentical(A,C, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDF4.isIdentical(A,C, UtilEjml.TEST_F64));
     }
 
 }

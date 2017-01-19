@@ -19,8 +19,8 @@
 package org.ejml.dense.row.decomposition.eig.watched;
 
 import org.ejml.data.Complex_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -33,8 +33,8 @@ import java.util.Random;
  */
 public class WatchDoubleStepQR {
 
-    public static void watchFindEigen( DMatrixRow_F64 A ) {
-        WatchedDoubleStepQREigenvalue_R64 alg = new WatchedDoubleStepQREigenvalue_R64();
+    public static void watchFindEigen( DMatrixRMaj A ) {
+        WatchedDoubleStepQREigenvalue_DDRM alg = new WatchedDoubleStepQREigenvalue_DDRM();
 
 //        dense.implicitQR.printFound = true;
 //        dense.implicitQR.normalize = true;
@@ -54,13 +54,13 @@ public class WatchDoubleStepQR {
 
         // finding eigen vectors now
 
-        WatchedDoubleStepQREigenvector_R64 algVector = new WatchedDoubleStepQREigenvector_R64();
+        WatchedDoubleStepQREigenvector_DDRM algVector = new WatchedDoubleStepQREigenvector_DDRM();
 
         algVector.process(alg.implicitQR,A,null);
 
         System.out.println("Eigenvectors.");
         for( int i = 0; i < A.numRows; i++ ) {
-            DMatrixRow_F64 v = algVector.eigenvectors[i];
+            DMatrixRMaj v = algVector.eigenvectors[i];
 
             if( v != null )
                 v.print("%8.3e");
@@ -69,8 +69,8 @@ public class WatchDoubleStepQR {
         }
     }
 
-    public static void watchImplicitDouble( DMatrixRow_F64 A ) {
-        WatchedDoubleStepQREigen_R64 alg = new WatchedDoubleStepQREigen_R64();
+    public static void watchImplicitDouble( DMatrixRMaj A ) {
+        WatchedDoubleStepQREigen_DDRM alg = new WatchedDoubleStepQREigen_DDRM();
 
 //        dense.printHumps = true;
 
@@ -87,8 +87,8 @@ public class WatchDoubleStepQR {
         }
     }
 
-    public static void watchImplicitSingle( DMatrixRow_F64 A ) {
-        WatchedDoubleStepQREigen_R64 alg = new WatchedDoubleStepQREigen_R64();
+    public static void watchImplicitSingle( DMatrixRMaj A ) {
+        WatchedDoubleStepQREigen_DDRM alg = new WatchedDoubleStepQREigen_DDRM();
 
 //        dense.printHumps = true;
 
@@ -113,10 +113,10 @@ public class WatchDoubleStepQR {
         Random rand = new Random(23475);
 //        Random rand = new Random(235);
 
-        DMatrixRow_F64 A = RandomMatrices_R64.createUpperTriangle(5,1,2,3,rand);
-//        DMatrixRow_F64 A = RandomMatrices.createUpperTriangle(50,1,-2,2,rand);
-//        DMatrixRow_F64 A = new DMatrixRow_F64(5,5,new double[]{0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0},true);
-//        DMatrixRow_F64 A = UtilEjml.parseMatrix("-0.951  0.845 -0.171 \n" +
+        DMatrixRMaj A = RandomMatrices_DDRM.createUpperTriangle(5,1,2,3,rand);
+//        DMatrixRMaj A = RandomMatrices.createUpperTriangle(50,1,-2,2,rand);
+//        DMatrixRMaj A = new DMatrixRMaj(5,5,new double[]{0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0},true);
+//        DMatrixRMaj A = UtilEjml.parseMatrix("-0.951  0.845 -0.171 \n" +
 //                " 0.573 -0.720  0.264 \n" +
 //                " 0.000  0.552 -0.100",3);
 

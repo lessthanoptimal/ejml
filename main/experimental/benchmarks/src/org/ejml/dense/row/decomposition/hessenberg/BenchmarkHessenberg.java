@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.hessenberg;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -32,9 +32,9 @@ import java.util.Random;
 public class BenchmarkHessenberg {
 
 
-    public static long basic(DMatrixRow_F64 orig , int numTrials ) {
+    public static long basic(DMatrixRMaj orig , int numTrials ) {
 
-        HessenbergSimilarDecomposition_R64 alg = new HessenbergSimilarDecomposition_R64();
+        HessenbergSimilarDecomposition_DDRM alg = new HessenbergSimilarDecomposition_DDRM();
 
         long prev = System.currentTimeMillis();
 
@@ -47,7 +47,7 @@ public class BenchmarkHessenberg {
         return System.currentTimeMillis() - prev;
     }
 
-//    public static long alt( DMatrixRow_F64 orig , int numTrials ) {
+//    public static long alt( DMatrixRMaj orig , int numTrials ) {
 //
 //        HessenbergSimilarDecompositionAlt dense = new HessenbergSimilarDecompositionAlt();
 //
@@ -62,7 +62,7 @@ public class BenchmarkHessenberg {
 //        return System.currentTimeMillis() - prev;
 //    }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
         System.out.println("basic            = "+ basic(mat,numTrials));
 //        System.out.println("alt              = "+ alt(mat,numTrials));
@@ -81,7 +81,7 @@ public class BenchmarkHessenberg {
             System.out.printf("Decompositing size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

@@ -49,7 +49,7 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
                 " *\n" +
                 " * @author Peter Abeles\n" +
                 " */\n" +
-                "public class "+className+" implements DMatrixFixed_F64 {\n");
+                "public class "+className+" implements DMatrixFixed {\n");
         printClassParam(dimen);
                 out.print("\n" +
                 "    public "+className+"() {\n" +
@@ -200,7 +200,7 @@ public class GenerateDMatrixFixedNxN extends CodeGeneratorBase{
                 "    public void set(Matrix original) {\n" +
                 "        if( original.getNumCols() != "+dimen+" || original.getNumRows() != "+dimen+" )\n" +
                 "            throw new IllegalArgumentException(\"Rows and/or columns do not match\");\n" +
-                "        RealMatrix_F64 m = (RealMatrix_F64)original;\n" +
+                "        RealDMatrix m = (RealDMatrix)original;\n" +
                 "        \n");
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {

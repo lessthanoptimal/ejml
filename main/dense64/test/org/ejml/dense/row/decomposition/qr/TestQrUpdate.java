@@ -18,11 +18,11 @@
 
 package org.ejml.dense.row.decomposition.qr;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.MatrixFeatures_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.mult.SubmatrixOps_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.mult.SubmatrixOps_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.junit.Test;
 
@@ -66,16 +66,16 @@ public class TestQrUpdate {
     }
 
     private void checkRemove(int m, int n, int remove) {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        DMatrixRow_F64 Q = RandomMatrices_R64.createRandom(m,m,rand);
-        DMatrixRow_F64 R = new DMatrixRow_F64(m,n);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj Q = RandomMatrices_DDRM.createRandom(m,m,rand);
+        DMatrixRMaj R = new DMatrixRMaj(m,n);
 
         // compute what the A matrix would look like without the row
-        DMatrixRow_F64 A_e = RandomMatrices_R64.createRandom(m-1,n,rand);
-        SubmatrixOps_R64.setSubMatrix(A,A_e,0,0,0,0,remove,n);
-        SubmatrixOps_R64.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
+        DMatrixRMaj A_e = RandomMatrices_DDRM.createRandom(m-1,n,rand);
+        SubmatrixOps_DDRM.setSubMatrix(A,A_e,0,0,0,0,remove,n);
+        SubmatrixOps_DDRM.setSubMatrix(A,A_e,remove+1,0,remove,0,m-remove-1,n);
 
-        QRDecomposition decomp = new QRDecompositionHouseholderColumn_R64();
+        QRDecomposition decomp = new QRDecompositionHouseholderColumn_DDRM();
 
         // now compute the results by removing elements from A
         decomp.decompose(A);
@@ -83,35 +83,35 @@ public class TestQrUpdate {
         decomp.getQ(Q,false);
         decomp.getR(R,false);
 
-        QrUpdate_R64 update = new QrUpdate_R64(m,n);
+        QrUpdate_DDRM update = new QrUpdate_DDRM(m,n);
 
         update.deleteRow(Q,R,remove,true);
 
-        assertTrue(MatrixFeatures_R64.isOrthogonal(update.getU_tran(),1e-6));
+        assertTrue(MatrixFeatures_DDRM.isOrthogonal(update.getU_tran(),1e-6));
 
-        DMatrixRow_F64 A_r = RandomMatrices_R64.createRandom(m-1,n,rand);
-        CommonOps_R64.mult(Q,R,A_r);
+        DMatrixRMaj A_r = RandomMatrices_DDRM.createRandom(m-1,n,rand);
+        CommonOps_DDRM.mult(Q,R,A_r);
 
 
         // see if the augmented A matrix is correct extracted from the adjusted Q and R matrices
-        assertTrue(MatrixFeatures_R64.isIdentical(A_e,A_r,1e-6));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A_e,A_r,1e-6));
     }
 
     private void checkInsert(int m, int n, int insert) {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(m,n,rand);
-        DMatrixRow_F64 Q = RandomMatrices_R64.createRandom(m+1,m+1,rand);
-        DMatrixRow_F64 R = new DMatrixRow_F64(m+1,n);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(m,n,rand);
+        DMatrixRMaj Q = RandomMatrices_DDRM.createRandom(m+1,m+1,rand);
+        DMatrixRMaj R = new DMatrixRMaj(m+1,n);
 
         // the row that is to be inserted
         double row[] = new double[]{1,2,3};
 
         // create the modified A
-        DMatrixRow_F64 A_e = RandomMatrices_R64.createRandom(m+1,n,rand);
-        SubmatrixOps_R64.setSubMatrix(A,A_e,0,0,0,0,insert,n);
+        DMatrixRMaj A_e = RandomMatrices_DDRM.createRandom(m+1,n,rand);
+        SubmatrixOps_DDRM.setSubMatrix(A,A_e,0,0,0,0,insert,n);
         System.arraycopy(row, 0, A_e.data, insert * n, n);
-        SubmatrixOps_R64.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
+        SubmatrixOps_DDRM.setSubMatrix(A,A_e,insert,0,insert+1,0,m-insert,n);
 
-        QRDecomposition decomp = new QRDecompositionHouseholderColumn_R64();
+        QRDecomposition decomp = new QRDecompositionHouseholderColumn_DDRM();
 
         decomp.decompose(A);
         Q.reshape(m,m, false);
@@ -119,33 +119,33 @@ public class TestQrUpdate {
         R.reshape(m,n,false);
         decomp.getR(R,false);
 
-        DMatrixRow_F64 Qmod = createQMod(Q,insert);
+        DMatrixRMaj Qmod = createQMod(Q,insert);
 
-        QrUpdate_R64 update = new QrUpdate_R64(m+1,n);
+        QrUpdate_DDRM update = new QrUpdate_DDRM(m+1,n);
 
         update.addRow(Q,R,row,insert,true);
 
-        DMatrixRow_F64 Z = new DMatrixRow_F64(m+1,m+1);
-        CommonOps_R64.multTransB(Qmod,update.getU_tran(),Z);
+        DMatrixRMaj Z = new DMatrixRMaj(m+1,m+1);
+        CommonOps_DDRM.multTransB(Qmod,update.getU_tran(),Z);
         // see if the U matrix has the expected features
-        assertTrue(MatrixFeatures_R64.isOrthogonal(Z,1e-6));
+        assertTrue(MatrixFeatures_DDRM.isOrthogonal(Z,1e-6));
 
         // see if the process that updates Q from U is valid
-        assertTrue(MatrixFeatures_R64.isIdentical(Q,Z,1e-6));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(Q,Z,1e-6));
 
-        DMatrixRow_F64 A_r = RandomMatrices_R64.createRandom(m+1,n,rand);
-        CommonOps_R64.mult(Q,R,A_r);
+        DMatrixRMaj A_r = RandomMatrices_DDRM.createRandom(m+1,n,rand);
+        CommonOps_DDRM.mult(Q,R,A_r);
 
         // see if the augmented A matrix is correct extracted from the adjusted Q and R matrices
-        assertTrue(MatrixFeatures_R64.isIdentical(A_e,A_r,1e-6));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A_e,A_r,1e-6));
     }
 
-    public static DMatrixRow_F64 createQMod(DMatrixRow_F64 Q , int insertRow ) {
-        DMatrixRow_F64 Qmod = new DMatrixRow_F64(Q.numRows+1,Q.numCols+1);
+    public static DMatrixRMaj createQMod(DMatrixRMaj Q , int insertRow ) {
+        DMatrixRMaj Qmod = new DMatrixRMaj(Q.numRows+1,Q.numCols+1);
 
-        SubmatrixOps_R64.setSubMatrix(Q,Qmod,0,0,0,1,insertRow,Q.numCols);
+        SubmatrixOps_DDRM.setSubMatrix(Q,Qmod,0,0,0,1,insertRow,Q.numCols);
         Qmod.set(insertRow,0,1);
-        SubmatrixOps_R64.setSubMatrix(Q,Qmod,insertRow,0,insertRow+1,1,Q.numRows-insertRow,Q.numCols);
+        SubmatrixOps_DDRM.setSubMatrix(Q,Qmod,insertRow,0,insertRow+1,1,Q.numRows-insertRow,Q.numCols);
 
         return Qmod;
     }

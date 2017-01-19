@@ -18,9 +18,9 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -34,20 +34,20 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                            DMatrixRow_F64 matResult , int numTrials) {
+    public static long mult(DMatrixRMaj matA , DMatrixRMaj matB ,
+                            DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.mult(matA,matB,matResult);
+            CommonOps_DDRM.mult(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long multFixed12_2x6(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                                       DMatrixRow_F64 matResult , int numTrials) {
+    public static long multFixed12_2x6(DMatrixRMaj matA , DMatrixRMaj matB ,
+                                       DMatrixRMaj matResult , int numTrials) {
 
         MatrixMultFixedBlock ops = new MatrixMultFixedBlock();
 
@@ -61,8 +61,8 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
         return curr-prev;
     }
 
-    public static long multFixed12_4x3(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                                       DMatrixRow_F64 matResult , int numTrials) {
+    public static long multFixed12_4x3(DMatrixRMaj matA , DMatrixRMaj matB ,
+                                       DMatrixRMaj matResult , int numTrials) {
 
         MatrixMultFixedBlock ops = new MatrixMultFixedBlock();
 
@@ -79,9 +79,9 @@ public class BenchmarkMatrixMatrixMultFixedBlock {
 
     public static void performTests( int size , int numTrials )
     {
-        DMatrixRow_F64 matA = RandomMatrices_R64.createRandom(size,size,rand);
-        DMatrixRow_F64 matB = RandomMatrices_R64.createRandom(size,size,rand);
-        DMatrixRow_F64 matResult = RandomMatrices_R64.createRandom(size,size,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(size,size,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(size,size,rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(size,size,rand);
 
         System.out.printf("12x12 multiply  standard: %7d  fixed6 %7d fixed3 %7d\n",
                 mult(matA,matB,matResult,numTrials),

@@ -19,8 +19,8 @@
 package org.ejml.dense.row.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.Test;
 
 import java.util.Random;
@@ -36,9 +36,9 @@ public class TestImplCommonOps_F64 {
 
     @Test
     public void extract() {
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(5, 5, 0, 1, rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(5, 5, 0, 1, rand);
 
-        DMatrixRow_F64 B = new DMatrixRow_F64(3,3);
+        DMatrixRMaj B = new DMatrixRMaj(3,3);
 
         ImplCommonOps_F64.extract(A, 1, 2, B, 1, 0,2,3);
 

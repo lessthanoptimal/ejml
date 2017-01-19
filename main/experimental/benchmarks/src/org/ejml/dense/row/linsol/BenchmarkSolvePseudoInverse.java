@@ -19,12 +19,12 @@
 package org.ejml.dense.row.linsol;
 
 import org.ejml.LinearSolverSafe;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
-import org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_R64;
-import org.ejml.dense.row.factory.LinearSolverFactory_R64;
-import org.ejml.dense.row.linsol.qr.LinearSolverQrpHouseCol_R64;
-import org.ejml.dense.row.linsol.qr.SolvePseudoInverseQrp_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_DDRM;
+import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrpHouseCol_DDRM;
+import org.ejml.dense.row.linsol.qr.SolvePseudoInverseQrp_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 import java.util.Random;
@@ -36,16 +36,16 @@ import java.util.Random;
 public class BenchmarkSolvePseudoInverse {
     private static final long SEED = 6;
     private static final Random rand = new Random();
-    private static DMatrixRow_F64 A;
-    private static DMatrixRow_F64 B;
+    private static DMatrixRMaj A;
+    private static DMatrixRMaj B;
 
     private static boolean includeSet = true;
 
-    public static long solveBenchmark(LinearSolver<DMatrixRow_F64> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
-        DMatrixRow_F64 X = new DMatrixRow_F64(B.numRows,B.numCols);
+        DMatrixRMaj X = new DMatrixRMaj(B.numRows,B.numCols);
 
-        solver = new LinearSolverSafe<DMatrixRow_F64>(solver);
+        solver = new LinearSolverSafe<DMatrixRMaj>(solver);
 
         if( !includeSet ) solver.setA(A);
 
@@ -65,15 +65,15 @@ public class BenchmarkSolvePseudoInverse {
 //        System.out.println("solve SVD            = "+ solveBenchmark(
 //                new SolvePseudoInverseSvd(),numTrials));
         System.out.println("solve Gen QRP Basic  = "+ solveBenchmark(
-                new SolvePseudoInverseQrp_R64(new QRColPivDecompositionHouseholderColumn_R64(),false),numTrials));
+                new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),false),numTrials));
         System.out.println("solve Gen QRP        = "+ solveBenchmark(
-                new SolvePseudoInverseQrp_R64(new QRColPivDecompositionHouseholderColumn_R64(),true),numTrials));
+                new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),true),numTrials));
         System.out.println("solve QRP Col Basic  = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),false),numTrials));
+                new LinearSolverQrpHouseCol_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),false),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
-                new LinearSolverQrpHouseCol_R64(new QRColPivDecompositionHouseholderColumn_R64(),true),numTrials));
+                new LinearSolverQrpHouseCol_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),true),numTrials));
         System.out.println("solve QRP Col        = "+ solveBenchmark(
-                LinearSolverFactory_R64.leastSquaresQrPivot(true,false),numTrials));
+                LinearSolverFactory_DDRM.leastSquaresQrPivot(true,false),numTrials));
     }
 
     public static void main( String args [] ) {
@@ -91,8 +91,8 @@ public class BenchmarkSolvePseudoInverse {
                 singularValues[j] = 10+w-j;
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_R64.createSingularValues(w, w, rand, singularValues);
-            B = new DMatrixRow_F64(w,2);
+            A = RandomMatrices_DDRM.createSingularValues(w, w, rand, singularValues);
+            B = new DMatrixRMaj(w,2);
 
             runAlgorithms(trials[i]);
         }
@@ -102,8 +102,8 @@ public class BenchmarkSolvePseudoInverse {
             int w = size[i];
 
             System.out.printf("Solving B size %3d for %12d trials\n",w,trialsX[i]);
-            A = RandomMatrices_R64.createRandom(100,100,rand);
-            B = new DMatrixRow_F64(100,w);
+            A = RandomMatrices_DDRM.createRandom(100,100,rand);
+            B = new DMatrixRMaj(100,w);
 
             runAlgorithms(trialsX[i]/80);
         }

@@ -18,9 +18,9 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -32,36 +32,36 @@ public class BenchmarkMatrixMultProduct {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long multTransA(DMatrixRow_F64 matA ,
-                                  DMatrixRow_F64 matResult , int numTrials) {
+    public static long multTransA(DMatrixRMaj matA ,
+                                  DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.multTransA(matA, matA, matResult);
+            CommonOps_DDRM.multTransA(matA, matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long innerProd_small(DMatrixRow_F64 matA ,
-                                       DMatrixRow_F64 matResult , int numTrials) {
+    public static long innerProd_small(DMatrixRMaj matA ,
+                                       DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMultProduct_R64.inner_small(matA, matResult);
+            MatrixMultProduct_DDRM.inner_small(matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long innerProd_reorder(DMatrixRow_F64 matA ,
-                                         DMatrixRow_F64 matResult , int numTrials) {
+    public static long innerProd_reorder(DMatrixRMaj matA ,
+                                         DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMultProduct_R64.inner_reorder(matA, matResult);
+            MatrixMultProduct_DDRM.inner_reorder(matA, matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -72,8 +72,8 @@ public class BenchmarkMatrixMultProduct {
                                      int numTrials )
     {
         System.out.println("M = "+numRows+" N = "+numCols+" trials "+numTrials);
-        DMatrixRow_F64 matA = RandomMatrices_R64.createRandom(numRows, numCols, rand);
-        DMatrixRow_F64 matResult = RandomMatrices_R64.createRandom(numCols,numCols,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(numRows, numCols, rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(numCols,numCols,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Reord %7d\n",
                 0,//multTransA(matA,matResult,numTrials),

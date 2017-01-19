@@ -27,9 +27,9 @@ package org.ejml.data;
  */
 public class Eigenpair_F64 {
     public double value;
-    public DMatrixRow_F64 vector;
+    public DMatrixRMaj vector;
 
-    public Eigenpair_F64(double value, DMatrixRow_F64 vector) {
+    public Eigenpair_F64(double value, DMatrixRMaj vector) {
         this.value = value;
         this.vector = vector;
     }

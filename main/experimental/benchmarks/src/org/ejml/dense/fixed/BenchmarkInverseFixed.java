@@ -18,12 +18,12 @@
 
 package org.ejml.dense.fixed;
 
-import org.ejml.data.DMatrixFixed3x3_F64;
-import org.ejml.data.DMatrixFixed4x4_F64;
-import org.ejml.data.DMatrixFixed6x6_F64;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrix3x3;
+import org.ejml.data.DMatrix4x4;
+import org.ejml.data.DMatrix6x6;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertMatrixStruct_F64;
 
 import java.util.Random;
@@ -38,60 +38,60 @@ import java.util.Random;
 public class BenchmarkInverseFixed {
     private static Random rand = new Random(234);
 
-    private static DMatrixRow_F64 dm3x3_a = new DMatrixRow_F64(3,3);
-    private static DMatrixRow_F64 dm3x3_b = new DMatrixRow_F64(3,3);
+    private static DMatrixRMaj dm3x3_a = new DMatrixRMaj(3,3);
+    private static DMatrixRMaj dm3x3_b = new DMatrixRMaj(3,3);
 
-    private static DMatrixRow_F64 dm4x4_a = new DMatrixRow_F64(4,4);
-    private static DMatrixRow_F64 dm4x4_b = new DMatrixRow_F64(4,4);
+    private static DMatrixRMaj dm4x4_a = new DMatrixRMaj(4,4);
+    private static DMatrixRMaj dm4x4_b = new DMatrixRMaj(4,4);
 
-    private static DMatrixFixed3x3_F64 fixed3x3_a = new DMatrixFixed3x3_F64();
-    private static DMatrixFixed3x3_F64 fixed3x3_b = new DMatrixFixed3x3_F64();
+    private static DMatrix3x3 fixed3x3_a = new DMatrix3x3();
+    private static DMatrix3x3 fixed3x3_b = new DMatrix3x3();
 
-    private static DMatrixFixed4x4_F64 fixed4x4_a = new DMatrixFixed4x4_F64();
-    private static DMatrixFixed4x4_F64 fixed4x4_b = new DMatrixFixed4x4_F64();
+    private static DMatrix4x4 fixed4x4_a = new DMatrix4x4();
+    private static DMatrix4x4 fixed4x4_b = new DMatrix4x4();
 
-    private static DMatrixFixed6x6_F64 fixed6x6_a = new DMatrixFixed6x6_F64();
-    private static DMatrixFixed6x6_F64 fixed6x6_b = new DMatrixFixed6x6_F64();
+    private static DMatrix6x6 fixed6x6_a = new DMatrix6x6();
+    private static DMatrix6x6 fixed6x6_b = new DMatrix6x6();
 
-    public static long benchmark(DMatrixRow_F64 a, DMatrixRow_F64 b , int numTrials ) {
+    public static long benchmark(DMatrixRMaj a, DMatrixRMaj b , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.invert(a,b);
+            CommonOps_DDRM.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(DMatrixFixed3x3_F64 a, DMatrixFixed3x3_F64 b , int numTrials ) {
+    public static long benchmark(DMatrix3x3 a, DMatrix3x3 b , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps3_F64.invert(a,b);
+            CommonOps_DDF3.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
-    public static long benchmark(DMatrixFixed4x4_F64 a, DMatrixFixed4x4_F64 b , int numTrials ) {
+    public static long benchmark(DMatrix4x4 a, DMatrix4x4 b , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
         for( long i = 0; i < numTrials; i++ ) {
-            FixedOps4_F64.invert(a,b);
+            CommonOps_DDF4.invert(a,b);
         }
 
         return System.currentTimeMillis() - prev;
     }
 
     public static void main( String arg[] ) {
-        RandomMatrices_R64.setRandom(dm3x3_a,rand);
-        RandomMatrices_R64.setRandom(dm3x3_b,rand);
+        RandomMatrices_DDRM.setRandom(dm3x3_a,rand);
+        RandomMatrices_DDRM.setRandom(dm3x3_b,rand);
 
-        RandomMatrices_R64.setRandom(dm4x4_a,rand);
-        RandomMatrices_R64.setRandom(dm4x4_b,rand);
+        RandomMatrices_DDRM.setRandom(dm4x4_a,rand);
+        RandomMatrices_DDRM.setRandom(dm4x4_b,rand);
 
         ConvertMatrixStruct_F64.convert(dm3x3_a,fixed3x3_a);
         ConvertMatrixStruct_F64.convert(dm3x3_b,fixed3x3_b);

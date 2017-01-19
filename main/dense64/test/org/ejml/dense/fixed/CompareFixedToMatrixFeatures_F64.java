@@ -18,7 +18,7 @@
 
 package org.ejml.dense.fixed;
 
-import org.ejml.dense.row.MatrixFeatures_R64;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.junit.Test;
 
 /**
@@ -28,7 +28,7 @@ import org.junit.Test;
 public abstract class CompareFixedToMatrixFeatures_F64 extends CompareFixed_F64 {
 
     public CompareFixedToMatrixFeatures_F64(Class classFixed) {
-        super(classFixed, MatrixFeatures_R64.class);
+        super(classFixed, MatrixFeatures_DDRM.class);
     }
 
     /**

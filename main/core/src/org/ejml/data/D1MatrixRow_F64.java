@@ -23,6 +23,6 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
-public abstract class D1MatrixRow_F64 extends D1Matrix_F64 {
+public abstract class D1MatrixRow_F64 extends DMatrixD1 {
 
 }

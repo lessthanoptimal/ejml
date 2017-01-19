@@ -19,8 +19,8 @@
 package org.ejml.dense.row.misc;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,7 +38,7 @@ public class TestNaiveDeterminant {
     public void detRecursive() {
         double[] d = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
 
-        DMatrixRow_F64 mat = new DMatrixRow_F64(4,4, true, d);
+        DMatrixRMaj mat = new DMatrixRMaj(4,4, true, d);
 
         double val = NaiveDeterminant.recursive(mat);
 
@@ -53,7 +53,7 @@ public class TestNaiveDeterminant {
         Random rand = new Random(0xff);
 
         for( int i = 1; i <= 5; i++ ) {
-            DMatrixRow_F64 A = RandomMatrices_R64.createRandom(i,i,rand);
+            DMatrixRMaj A = RandomMatrices_DDRM.createRandom(i,i,rand);
 
             double expected = NaiveDeterminant.recursive(A);
             double found = NaiveDeterminant.leibniz(A);

@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 
 import java.util.Random;
@@ -33,7 +33,7 @@ import java.util.Random;
 public class BenchmarkSvd {
 
 
-    public static String evaluate(SingularValueDecomposition<DMatrixRow_F64> alg , DMatrixRow_F64 orig , int numTrials ) {
+    public static String evaluate(SingularValueDecomposition<DMatrixRMaj> alg , DMatrixRMaj orig , int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
@@ -47,11 +47,11 @@ public class BenchmarkSvd {
         return diff+" (ms)  "+(numTrials/(diff/1000.0))+" (ops/sec)";
     }
 
-    private static void runAlgorithms(DMatrixRow_F64 mat , int numTrials )
+    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
     {
 //        mat.print("%f");
         if( numTrials <= 0 ) return;
-        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_R64(true,true,true,true),mat,numTrials));
+        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose_DDRM(true,true,true,true),mat,numTrials));
 //        System.out.println("qr smart         = "+ evaluate(new SvdImplicitQrDecompose_UltimateS(true,true,true),mat,numTrials));
         System.out.println("qr separate      = "+ evaluate(new SvdImplicitQrDecompose_Ultimate(true,true,true),mat,numTrials));
 //        System.out.println("qr               = "+ evaluate(new SvdImplicitQrDecompose(true,true,true),mat,numTrials));
@@ -74,7 +74,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,trials[i]);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }
@@ -91,7 +91,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(2*w,w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(2*w,w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,t);
         }
@@ -108,7 +108,7 @@ public class BenchmarkSvd {
             System.out.printf("Decomposition size %3d for %12d trials\n",w,t);
 
             System.out.print("* Creating matrix ");
-            DMatrixRow_F64 mat = RandomMatrices_R64.createRandom(w,2*w,rand);
+            DMatrixRMaj mat = RandomMatrices_DDRM.createRandom(w,2*w,rand);
             System.out.println("  Done.");
             runAlgorithms(mat,trials[i]);
         }

@@ -18,9 +18,9 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -36,21 +36,21 @@ public class BenchmarkElement {
 
         double num = 2.5;
 
-        DMatrixRow_F64 A = RandomMatrices_R64.createRandom(10,10,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.createRandom(10,10,rand);
 
         long timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {
-            CommonOps_R64.divide(A,num);
+            CommonOps_DDRM.divide(A,num);
         }
         long timeAfter = System.currentTimeMillis();
 
         System.out.println("div = "+(timeAfter-timeBefore));
 
-        A = RandomMatrices_R64.createRandom(10,10,rand);
+        A = RandomMatrices_DDRM.createRandom(10,10,rand);
 
         timeBefore = System.currentTimeMillis();
         for( int i = 0; i < N; i++ ) {
-            CommonOps_R64.scale(num,A);
+            CommonOps_DDRM.scale(num,A);
         }
         timeAfter = System.currentTimeMillis();
 

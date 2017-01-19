@@ -18,9 +18,9 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
-import org.ejml.dense.row.RandomMatrices_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
@@ -41,48 +41,48 @@ public class BenchmarkMatrixMatrixMultAdd {
 
     static int TRIALS_MULT = 10000000;
 
-    public static long mult(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                            DMatrixRow_F64 matResult , int numTrials) {
+    public static long mult(DMatrixRMaj matA , DMatrixRMaj matB ,
+                            DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            CommonOps_R64.multAdd(matA,matB,matResult);
+            CommonOps_DDRM.multAdd(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long multSmall(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                                 DMatrixRow_F64 matResult , int numTrials) {
+    public static long multSmall(DMatrixRMaj matA , DMatrixRMaj matB ,
+                                 DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_R64.multAdd_small(matA,matB,matResult);
+            MatrixMatrixMult_DDRM.multAdd_small(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long multAux(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                               DMatrixRow_F64 matResult , int numTrials) {
+    public static long multAux(DMatrixRMaj matA , DMatrixRMaj matB ,
+                               DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_R64.multAdd_aux(matA,matB,matResult,null);
+            MatrixMatrixMult_DDRM.multAdd_aux(matA,matB,matResult,null);
         }
 
         long curr = System.currentTimeMillis();
         return curr-prev;
     }
 
-    public static long multReorder(DMatrixRow_F64 matA , DMatrixRow_F64 matB ,
-                                   DMatrixRow_F64 matResult , int numTrials) {
+    public static long multReorder(DMatrixRMaj matA , DMatrixRMaj matB ,
+                                   DMatrixRMaj matResult , int numTrials) {
         long prev = System.currentTimeMillis();
 
         for( int i = 0; i < numTrials; i++ ) {
-            MatrixMatrixMult_R64.multAdd_reorder(matA,matB,matResult);
+            MatrixMatrixMult_DDRM.multAdd_reorder(matA,matB,matResult);
         }
 
         long curr = System.currentTimeMillis();
@@ -93,9 +93,9 @@ public class BenchmarkMatrixMatrixMultAdd {
     public static void performTests( int numRows , int numCols , int numK,
                                      int numTrials )
     {
-        DMatrixRow_F64 matA = RandomMatrices_R64.createRandom(numRows,numCols,rand);
-        DMatrixRow_F64 matB = RandomMatrices_R64.createRandom(numCols,numK,rand);
-        DMatrixRow_F64 matResult = RandomMatrices_R64.createRandom(numRows,numK,rand);
+        DMatrixRMaj matA = RandomMatrices_DDRM.createRandom(numRows,numCols,rand);
+        DMatrixRMaj matB = RandomMatrices_DDRM.createRandom(numCols,numK,rand);
+        DMatrixRMaj matResult = RandomMatrices_DDRM.createRandom(numRows,numK,rand);
 
         System.out.printf("Mult: %7d  Small %7d  Aux %7d  Reord %7d\n",
                 mult(matA,matB,matResult,numTrials),
