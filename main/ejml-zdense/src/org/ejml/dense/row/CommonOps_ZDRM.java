@@ -883,7 +883,7 @@ public class CommonOps_ZDRM {
      * @param mat The matrix whose determinant is to be computed.  Not modified.
      * @return The determinant.
      */
-    public static ZComplex det(ZMatrixRMaj mat  )
+    public static Complex_F64 det(ZMatrixRMaj mat  )
     {
         LUDecompositionAlt_ZDRM alg = new LUDecompositionAlt_ZDRM();
 
@@ -892,7 +892,7 @@ public class CommonOps_ZDRM {
         }
 
         if( !alg.decompose(mat) )
-            return new ZComplex();
+            return new Complex_F64();
         return alg.computeDeterminant();
     }
 

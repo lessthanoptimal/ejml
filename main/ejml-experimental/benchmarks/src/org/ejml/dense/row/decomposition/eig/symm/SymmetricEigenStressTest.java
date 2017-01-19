@@ -19,13 +19,13 @@
 package org.ejml.dense.row.decomposition.eig.symm;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecompositionD;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 import java.util.Date;
 import java.util.Random;
@@ -47,7 +47,7 @@ public class SymmetricEigenStressTest {
         Random localRand = new Random(seed);
         RandomMatrices_DDRM.symmetric(A,-1,1,localRand);
 
-        EigenDecompositionD<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
 
         System.out.println("Decomposing...");
 
@@ -59,7 +59,7 @@ public class SymmetricEigenStressTest {
         DMatrixRMaj R = new DMatrixRMaj(N,1);
 
         for( int i = 0; i < N; i++ ) {
-            ZComplex value = decomp.getEigenvalue(i);
+            Complex_F64 value = decomp.getEigenvalue(i);
 
             DMatrixRMaj vector = decomp.getEigenVector(i);
 
@@ -79,7 +79,7 @@ public class SymmetricEigenStressTest {
 
     public void checkRandomMatrices( int N ) {
         System.out.println("N = "+N);
-        EigenDecompositionD decomp = DecompositionFactory_DDRM.eig(N,true);
+        EigenDecomposition_F64 decomp = DecompositionFactory_DDRM.eig(N,true);
 
         DMatrixRMaj A = new DMatrixRMaj(N,N);
 

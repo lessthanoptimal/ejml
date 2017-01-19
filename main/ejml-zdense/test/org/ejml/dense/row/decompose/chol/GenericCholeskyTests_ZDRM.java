@@ -19,15 +19,15 @@
 package org.ejml.dense.row.decompose.chol;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.dense.row.decompose.CheckDecompositionInterface_ZDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_ZDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
-import org.ejml.interfaces.decomposition.LUDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -45,7 +45,7 @@ public abstract class GenericCholeskyTests_ZDRM {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecompositionD<ZMatrixRMaj> create(boolean lower );
+    public abstract CholeskyDecomposition_F64<ZMatrixRMaj> create(boolean lower );
 
     @Test
     public void checkModifyInput() {
@@ -60,7 +60,7 @@ public abstract class GenericCholeskyTests_ZDRM {
     public void testNotPositiveDefinite() {
         ZMatrixRMaj A = new ZMatrixRMaj(2, 2, true, 1, 0, -1, 0, -1, 0, -2, 0);
 
-        CholeskyDecompositionD<ZMatrixRMaj> alg = create(true);
+        CholeskyDecomposition_F64<ZMatrixRMaj> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -86,7 +86,7 @@ public abstract class GenericCholeskyTests_ZDRM {
     private void checkWithDefinition(boolean lower, int size) {
         ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(size, rand);
 
-        CholeskyDecompositionD<ZMatrixRMaj> cholesky = create(lower);
+        CholeskyDecomposition_F64<ZMatrixRMaj> cholesky = create(lower);
         assertTrue(DecompositionFactory_ZDRM.decomposeSafe(cholesky, A));
 
         ZMatrixRMaj T = cholesky.getT(null);
@@ -120,16 +120,16 @@ public abstract class GenericCholeskyTests_ZDRM {
 
     public void checkDeterminant( boolean lower , int size ) {
 
-        LUDecompositionD<ZMatrixRMaj> lu = DecompositionFactory_ZDRM.lu(size,size);
-        CholeskyDecompositionD<ZMatrixRMaj> cholesky = create(lower);
+        LUDecomposition_F64<ZMatrixRMaj> lu = DecompositionFactory_ZDRM.lu(size,size);
+        CholeskyDecomposition_F64<ZMatrixRMaj> cholesky = create(lower);
 
         ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(size, rand);
 
         assertTrue(DecompositionFactory_ZDRM.decomposeSafe(lu,A));
         assertTrue(DecompositionFactory_ZDRM.decomposeSafe(cholesky,A));
 
-        ZComplex expected = lu.computeDeterminant();
-        ZComplex found = cholesky.computeDeterminant();
+        Complex_F64 expected = lu.computeDeterminant();
+        Complex_F64 found = cholesky.computeDeterminant();
 
         assertEquals(expected.real,found.real,UtilEjml.TEST_F64);
         assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);

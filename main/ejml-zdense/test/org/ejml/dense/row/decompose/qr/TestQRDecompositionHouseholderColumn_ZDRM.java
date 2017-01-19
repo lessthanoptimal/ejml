@@ -19,7 +19,7 @@
 package org.ejml.dense.row.decompose.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
@@ -85,7 +85,7 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
         ZMatrixRMaj Asub = CommonOps_ZDRM.extract(A, w, width, w, width);
         CommonOps_ZDRM.mult(Q, Asub, result);
 
-        ZComplex a = new ZComplex();
+        Complex_F64 a = new Complex_F64();
         result.get(0,0,a);
         assertEquals(-qr.tau.real, a.real, UtilEjml.TEST_F64);
         assertEquals(-qr.tau.imaginary,a.imaginary, UtilEjml.TEST_F64);
@@ -132,8 +132,8 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
 
         double[][] found = qr.getQR();
 
-        ZComplex a = new ZComplex();
-        ZComplex b = new ZComplex();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
 
         for( int i = w; i < width; i++ ) {
             A.get(i,w,a);

@@ -32,7 +32,7 @@ import org.ejml.dense.row.mult.MatrixMultProduct_DDRM;
 import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.interfaces.linsol.ReducedRowEchelonFormD;
+import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 import java.util.Arrays;
 
@@ -2164,7 +2164,7 @@ public class CommonOps_DDRM {
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);
 
-        ReducedRowEchelonFormD<DMatrixRMaj> alg = new RrefGaussJordanRowPivot_DDRM();
+        ReducedRowEchelonForm_F64<DMatrixRMaj> alg = new RrefGaussJordanRowPivot_DDRM();
         alg.setTolerance(elementMaxAbs(A)* UtilEjml.EPS*Math.max(A.numRows,A.numCols));
 
         reduced.set(A);

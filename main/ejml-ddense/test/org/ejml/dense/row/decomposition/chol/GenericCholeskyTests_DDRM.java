@@ -24,8 +24,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
-import org.ejml.interfaces.decomposition.LUDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public abstract class GenericCholeskyTests_DDRM {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecompositionD<DMatrixRMaj> create(boolean lower );
+    public abstract CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower );
 
     @Test
     public void testDecomposeL() {
@@ -53,7 +53,7 @@ public abstract class GenericCholeskyTests_DDRM {
 
         DMatrixRMaj L = new DMatrixRMaj(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
 
-        CholeskyDecompositionD<DMatrixRMaj> cholesky = create(true);
+        CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(true);
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj foundL = cholesky.getT(null);
@@ -69,7 +69,7 @@ public abstract class GenericCholeskyTests_DDRM {
 
         DMatrixRMaj R = new DMatrixRMaj(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
 
-        CholeskyDecompositionD<DMatrixRMaj> cholesky = create(false);
+        CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(false);
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj foundR = cholesky.getT(null);
@@ -84,7 +84,7 @@ public abstract class GenericCholeskyTests_DDRM {
     public void testNotPositiveDefinite() {
         DMatrixRMaj A = new DMatrixRMaj(2,2, true, 1, -1, -1, -2);
 
-        CholeskyDecompositionD<DMatrixRMaj> alg = create(true);
+        CholeskyDecomposition_F64<DMatrixRMaj> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -96,7 +96,7 @@ public abstract class GenericCholeskyTests_DDRM {
     public void getT() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        CholeskyDecompositionD<DMatrixRMaj> cholesky = create(true);
+        CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(true);
 
         assertTrue(cholesky.decompose(A));
 
@@ -129,7 +129,7 @@ public abstract class GenericCholeskyTests_DDRM {
     private void checkWithDefinition(boolean lower, int size) {
         SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices_DDRM.symmetricPosDef(size,rand));
 
-        CholeskyDecompositionD<DMatrixRMaj> cholesky = create(lower);
+        CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(lower);
         assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky,(DMatrixRMaj)A.getMatrix()));
 
         SimpleMatrix T = SimpleMatrix.wrap(cholesky.getT(null));
@@ -161,8 +161,8 @@ public abstract class GenericCholeskyTests_DDRM {
 
     public void checkDeterminant( boolean lower , int size ) {
 
-        LUDecompositionD<DMatrixRMaj> lu = DecompositionFactory_DDRM.lu(size,size);
-        CholeskyDecompositionD<DMatrixRMaj> cholesky = create(lower);
+        LUDecomposition_F64<DMatrixRMaj> lu = DecompositionFactory_DDRM.lu(size,size);
+        CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(lower);
 
         DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(size,rand);
 

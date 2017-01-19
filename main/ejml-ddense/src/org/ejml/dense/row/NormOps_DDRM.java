@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
 /**
@@ -136,7 +136,7 @@ public class NormOps_DDRM {
      */
     public static double conditionP2( DMatrixRMaj A )
     {
-        SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
 
         svd.decompose(A);
 
@@ -419,7 +419,7 @@ public class NormOps_DDRM {
      * @return The norm.
      */
     public static double inducedP2( DMatrixRMaj A ) {
-        SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
 
         if( !svd.decompose(A) )
             throw new RuntimeException("Decomposition failed");

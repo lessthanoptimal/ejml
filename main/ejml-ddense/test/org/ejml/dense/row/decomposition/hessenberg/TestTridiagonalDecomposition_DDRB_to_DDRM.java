@@ -19,7 +19,7 @@
 package org.ejml.dense.row.decomposition.hessenberg;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 
 /**
@@ -29,7 +29,7 @@ public class TestTridiagonalDecomposition_DDRB_to_DDRM extends StandardTridiagon
 
 
     @Override
-    protected TridiagonalSimilarDecompositionD<DMatrixRMaj> createDecomposition() {
+    protected TridiagonalSimilarDecomposition_F64<DMatrixRMaj> createDecomposition() {
         return new TridiagonalDecomposition_DDRB_to_DDRM(3);
     }
 }

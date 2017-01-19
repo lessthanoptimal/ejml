@@ -22,7 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_DDRM;
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
 /**
@@ -38,7 +38,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
  * @author Peter Abeles
  */
 public class SvdImplicitQrDecompose_Ultimate
-        implements SingularValueDecompositionD<DMatrixRMaj> {
+        implements SingularValueDecomposition_F64<DMatrixRMaj> {
 
     private int numRows;
     private int numCols;

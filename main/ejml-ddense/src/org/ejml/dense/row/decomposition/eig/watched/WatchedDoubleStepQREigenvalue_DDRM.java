@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.eig.watched;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.decomposition.eig.EigenvalueExtractor_DDRM;
 
 
@@ -127,7 +127,7 @@ public class WatchedDoubleStepQREigenvalue_DDRM implements EigenvalueExtractor_D
     }
 
     @Override
-    public ZComplex[] getEigenvalues() {
+    public Complex_F64[] getEigenvalues() {
         return implicitQR.getEigenvalues();
     }
 

@@ -19,13 +19,13 @@
 package org.ejml.dense.row.decomposition.chol;
 
 import org.ejml.EjmlParameters;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
@@ -35,7 +35,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
  * @author Peter Abeles
  */
 public class CholeskyDecomposition_DDRB_to_DDRM
-        extends BaseDecomposition_DDRB_to_DDRM implements CholeskyDecompositionD<DMatrixRMaj> {
+        extends BaseDecomposition_DDRB_to_DDRM implements CholeskyDecomposition_F64<DMatrixRMaj> {
 
     public CholeskyDecomposition_DDRB_to_DDRM(boolean lower) {
         super(new CholeskyOuterForm_DDRB(lower), EjmlParameters.BLOCK_WIDTH);
@@ -60,7 +60,7 @@ public class CholeskyDecomposition_DDRB_to_DDRM
     }
 
     @Override
-    public ZComplex computeDeterminant() {
+    public Complex_F64 computeDeterminant() {
         return ((CholeskyOuterForm_DDRB)alg).computeDeterminant();
     }
 }

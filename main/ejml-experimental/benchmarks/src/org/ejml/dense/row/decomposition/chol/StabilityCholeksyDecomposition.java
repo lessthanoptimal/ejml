@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
@@ -37,7 +37,7 @@ import java.util.Random;
 public class StabilityCholeksyDecomposition {
 
 
-    public static double evaluate(CholeskyDecompositionD<DMatrixRMaj> alg , DMatrixRMaj orig ) {
+    public static double evaluate(CholeskyDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
 
         if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig)) {
             return Double.NaN;

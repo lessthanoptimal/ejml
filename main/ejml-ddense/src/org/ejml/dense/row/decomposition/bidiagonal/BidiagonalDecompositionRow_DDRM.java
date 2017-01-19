@@ -21,18 +21,18 @@ package org.ejml.dense.row.decomposition.bidiagonal;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
 /**
  * <p>
- * Performs a {@link BidiagonalDecompositionD} using
+ * Performs a {@link BidiagonalDecomposition_F64} using
  * householder reflectors.  This is efficient on wide or square matrices.
  * </p>
  *
  * @author Peter Abeles
  */
 public class BidiagonalDecompositionRow_DDRM
-        implements BidiagonalDecompositionD<DMatrixRMaj>
+        implements BidiagonalDecomposition_F64<DMatrixRMaj>
 {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
     private DMatrixRMaj UBV;

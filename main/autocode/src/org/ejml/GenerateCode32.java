@@ -68,12 +68,9 @@ public class GenerateCode32 {
         converter.replacePattern("DMatrix", "FMatrix");
         converter.replacePattern("DSubmatrix", "FSubmatrix");
         converter.replacePattern("DEigen", "FEigen");
-        converter.replacePattern("EchelonFormD","EchelonFormF");
         converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
-        converter.replacePattern("DecompositionD", "DecompositionF");
-        converter.replacePattern("MathZ", "MathC");
 
         converter.replacePattern("F64", "F32");
         converter.replacePattern("random64", "random32");

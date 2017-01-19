@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 
 /**
@@ -44,10 +44,10 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static ZComplex innerProd(ZMatrixRMaj x, ZMatrixRMaj y , ZComplex output )
+    public static Complex_F64 innerProd(ZMatrixRMaj x, ZMatrixRMaj y , Complex_F64 output )
     {
         if( output == null )
-            output = new ZComplex();
+            output = new Complex_F64();
         else {
             output.real = output.imaginary = 0;
         }
@@ -86,10 +86,10 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static ZComplex innerProdH(ZMatrixRMaj x, ZMatrixRMaj y , ZComplex output )
+    public static Complex_F64 innerProdH(ZMatrixRMaj x, ZMatrixRMaj y , Complex_F64 output )
     {
         if( output == null )
-            output = new ZComplex();
+            output = new Complex_F64();
         else {
             output.real = output.imaginary = 0;
         }

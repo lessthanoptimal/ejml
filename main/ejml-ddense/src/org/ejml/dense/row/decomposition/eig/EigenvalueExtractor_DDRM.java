@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.eig;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 
 
 /**
@@ -31,5 +31,5 @@ public interface EigenvalueExtractor_DDRM {
 
     public int getNumberOfEigenvalues();
 
-    public ZComplex[] getEigenvalues();
+    public Complex_F64[] getEigenvalues();
 }

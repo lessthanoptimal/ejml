@@ -19,14 +19,14 @@
 package org.ejml.dense.row.misc;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.linsol.ReducedRowEchelonFormD;
+import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 /**
  * Reduction to RREF using Gauss-Jordan elimination with row (partial) pivots.
  *
  * @author Peter Abeles
  */
-public class RrefGaussJordanRowPivot_DDRM implements ReducedRowEchelonFormD<DMatrixRMaj> {
+public class RrefGaussJordanRowPivot_DDRM implements ReducedRowEchelonForm_F64<DMatrixRMaj> {
 
     // tolerance for singular matrix
     double tol;

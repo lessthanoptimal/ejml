@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol.qr;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
-import org.ejml.interfaces.decomposition.QRPDecompositionD;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ public class SolvePseudoInverseQrp_DDRM extends BaseLinearSolverQrp_DDRM {
      * @param decomposition Decomposition used.
      * @param norm2Solution If true the basic solution will be returned, false the minimal 2-norm solution.
      */
-    public SolvePseudoInverseQrp_DDRM(QRPDecompositionD<DMatrixRMaj> decomposition,
+    public SolvePseudoInverseQrp_DDRM(QRPDecomposition_F64<DMatrixRMaj> decomposition,
                                      boolean norm2Solution) {
         super(decomposition,norm2Solution);
     }

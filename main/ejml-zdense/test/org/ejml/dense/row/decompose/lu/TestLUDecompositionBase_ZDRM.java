@@ -19,11 +19,11 @@
 package org.ejml.dense.row.decompose.lu;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.ops.ComplexMathZ;
+import org.ejml.ops.ComplexMath_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -50,12 +50,12 @@ public class TestLUDecompositionBase_ZDRM {
 
         ZMatrixRMaj LU = RandomMatrices_ZDRM.rectangle(width,width,-1,1,rand);
 
-        ZComplex expected = new ZComplex(1,0);
-        ZComplex a = new ZComplex();
-        ZComplex tmp = new ZComplex();
+        Complex_F64 expected = new Complex_F64(1,0);
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 tmp = new Complex_F64();
         for (int i = 0; i < width; i++) {
             LU.get(i, i, a);
-            ComplexMathZ.multiply(expected,a,tmp);
+            ComplexMath_F64.multiply(expected,a,tmp);
             expected.set(tmp);
         }
 
@@ -64,7 +64,7 @@ public class TestLUDecompositionBase_ZDRM {
         for( int i = 0; i < width; i++ ) alg.getIndx()[i] = i;
         alg.setLU(LU);
 
-        ZComplex found = alg.computeDeterminant();
+        Complex_F64 found = alg.computeDeterminant();
 
         assertEquals(expected.real,found.real, UtilEjml.TEST_F64);
         assertEquals(expected.imaginary,found.imaginary,UtilEjml.TEST_F64);

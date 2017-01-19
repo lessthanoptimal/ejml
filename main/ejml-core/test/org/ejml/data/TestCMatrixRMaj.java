@@ -102,7 +102,7 @@ public class TestCMatrixRMaj {
         a.data[2*4*2 + 2] = 5;
         a.data[2*4*2 + 3] = 6;
 
-        CComplex c = new CComplex();
+        Complex_F32 c = new Complex_F32();
         a.get(2,1,c);
 
         assertEquals(c.real,5, UtilEjml.TEST_F32);
@@ -126,7 +126,7 @@ public class TestCMatrixRMaj {
         a.data[2*4*2 + 2] = 5;
         a.data[2*4*2 + 3] = 6;
 
-        CComplex c = new CComplex();
+        Complex_F32 c = new Complex_F32();
         a.get(2,1,c);
 
         assertEquals(a.getReal(2, 1), 5, UtilEjml.TEST_F32);
@@ -149,7 +149,7 @@ public class TestCMatrixRMaj {
         a.data[2*4*2 + 2] = 5;
         a.data[2*4*2 + 3] = 6;
 
-        CComplex c = new CComplex();
+        Complex_F32 c = new Complex_F32();
         a.get(2,1,c);
 
         assertEquals(a.getImag(2, 1), 6, UtilEjml.TEST_F32);

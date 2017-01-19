@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.decompose.qr;
 
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
@@ -57,7 +57,7 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
     protected double gammas[];
     // local variables
     protected double gamma;
-    protected ZComplex tau = new ZComplex();
+    protected Complex_F64 tau = new Complex_F64();
 
     // did it encounter an error?
     protected boolean error;

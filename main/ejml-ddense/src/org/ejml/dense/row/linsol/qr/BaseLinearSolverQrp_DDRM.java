@@ -25,7 +25,7 @@ import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
-import org.ejml.interfaces.decomposition.QRPDecompositionD;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 /**
@@ -67,7 +67,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  */
 public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM {
 
-    QRPDecompositionD<DMatrixRMaj> decomposition;
+    QRPDecomposition_F64<DMatrixRMaj> decomposition;
 
     // if true then only the basic solution will be found
     protected boolean norm2Solution;
@@ -95,7 +95,7 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
      * @param decomposition Used to solve the linear system.
      * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
      */
-    protected BaseLinearSolverQrp_DDRM(QRPDecompositionD<DMatrixRMaj> decomposition,
+    protected BaseLinearSolverQrp_DDRM(QRPDecomposition_F64<DMatrixRMaj> decomposition,
                                       boolean norm2Solution)
     {
         this.decomposition = decomposition;
@@ -190,7 +190,7 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
         solve(I, A_inv);
     }
 
-    public QRPDecompositionD<DMatrixRMaj> getDecomposition() {
+    public QRPDecomposition_F64<DMatrixRMaj> getDecomposition() {
         return decomposition;
     }
 }

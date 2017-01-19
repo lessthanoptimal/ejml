@@ -19,7 +19,7 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class TestNormOps_ZDRM {
     public void normF() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,7,rand);
 
-        ZComplex b = new ZComplex();
+        Complex_F64 b = new Complex_F64();
         double total = 0;
         for (int i = 0; i < a.numRows; i++) {
             for (int j = 0; j < a.numCols; j++) {

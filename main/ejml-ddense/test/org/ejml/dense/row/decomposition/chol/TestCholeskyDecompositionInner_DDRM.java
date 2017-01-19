@@ -19,7 +19,7 @@
 package org.ejml.dense.row.decomposition.chol;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.junit.Test;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.checkModifiedInput;
@@ -31,7 +31,7 @@ import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.
 public class TestCholeskyDecompositionInner_DDRM extends GenericCholeskyTests_DDRM {
 
     @Override
-    public CholeskyDecompositionD<DMatrixRMaj> create(boolean lower) {
+    public CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower) {
         return new CholeskyDecompositionInner_DDRM(lower);
     }
 

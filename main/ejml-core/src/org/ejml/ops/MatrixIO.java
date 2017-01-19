@@ -261,7 +261,7 @@ public class MatrixIO {
 
         format += " ";
 
-        ZComplex c = new ZComplex();
+        Complex_F64 c = new Complex_F64();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
                 mat.get(y,x,c);
@@ -282,7 +282,7 @@ public class MatrixIO {
 
         format += " ";
 
-        CComplex c = new CComplex();
+        Complex_F32 c = new Complex_F32();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
                 mat.get(y,x,c);

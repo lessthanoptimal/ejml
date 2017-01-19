@@ -18,8 +18,8 @@
 
 package org.ejml.dense.row.decomposition.eig.watched;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
@@ -45,7 +45,7 @@ public class WatchDoubleStepQR {
 
         System.out.println("Eigenvalues.");
         for( int i = 0; i < A.numRows; i++ ) {
-            ZComplex c = alg.implicitQR.eigenvalues[i];
+            Complex_F64 c = alg.implicitQR.eigenvalues[i];
 
             System.out.printf("(%8.5e  img = %8.5e ) in steps %3d \n",c.real,c.imaginary,alg.implicitQR.numStepsFind[i]);
         }

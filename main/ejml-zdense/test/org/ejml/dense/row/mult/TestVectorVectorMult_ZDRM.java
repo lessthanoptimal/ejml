@@ -20,7 +20,7 @@ package org.ejml.dense.row.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
@@ -45,9 +45,9 @@ public class TestVectorVectorMult_ZDRM {
 
         CommonOps_ZDRM.mult(a,b,c);
 
-        ZComplex expected = new ZComplex();
+        Complex_F64 expected = new Complex_F64();
         c.get(0,0,expected);
-        ZComplex found = VectorVectorMult_ZDRM.innerProd(a,b,null);
+        Complex_F64 found = VectorVectorMult_ZDRM.innerProd(a,b,null);
 
         EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_F64);
     }
@@ -58,14 +58,14 @@ public class TestVectorVectorMult_ZDRM {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,6,rand);
         ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6,1,rand);
 
-        ZComplex found = VectorVectorMult_ZDRM.innerProdH(a, b, null);
+        Complex_F64 found = VectorVectorMult_ZDRM.innerProdH(a, b, null);
 
         ZMatrixRMaj c = new ZMatrixRMaj(1,1);
 
         CommonOps_ZDRM.conjugate(b,b);
         CommonOps_ZDRM.mult(a,b,c);
 
-        ZComplex expected = new ZComplex();
+        Complex_F64 expected = new Complex_F64();
         c.get(0,0,expected);
 
         EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);

@@ -19,7 +19,7 @@
 package org.ejml.dense.row.decomposition.bidiagonal;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
 
 /**
@@ -27,7 +27,7 @@ import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
  */
 public class TestBidiagonalDecompositionTall_DDRM extends GenericBidiagonalCheck_DDRM {
     @Override
-    protected BidiagonalDecompositionD<DMatrixRMaj> createQRDecomposition() {
+    protected BidiagonalDecomposition_F64<DMatrixRMaj> createQRDecomposition() {
         return new BidiagonalDecompositionTall_DDRM();
     }
 }

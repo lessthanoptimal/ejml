@@ -25,7 +25,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -184,7 +184,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
     }
 
     @Override
-    protected BidiagonalDecompositionD<DMatrixRMaj> createQRDecomposition() {
+    protected BidiagonalDecomposition_F64<DMatrixRMaj> createQRDecomposition() {
         return new BidiagonalDecompositionRow_DDRM();
     }
 

@@ -18,9 +18,9 @@
 
 package org.ejml.example;
 
-import org.ejml.data.ZComplex;
-import org.ejml.data.ZComplexPolar;
-import org.ejml.ops.ComplexMathZ;
+import org.ejml.data.ComplexPolar_F64;
+import org.ejml.data.Complex_F64;
+import org.ejml.ops.ComplexMath_F64;
 
 /**
  * Demonstration of different operations that can be performed on complex numbers.
@@ -30,31 +30,31 @@ import org.ejml.ops.ComplexMathZ;
 public class ExampleComplexMath {
 
     public static void main( String []args ) {
-        ZComplex a = new ZComplex(1,2);
-        ZComplex b = new ZComplex(-1,-0.6);
-        ZComplex c = new ZComplex();
-        ZComplexPolar polarC = new ZComplexPolar();
+        Complex_F64 a = new Complex_F64(1,2);
+        Complex_F64 b = new Complex_F64(-1,-0.6);
+        Complex_F64 c = new Complex_F64();
+        ComplexPolar_F64 polarC = new ComplexPolar_F64();
 
         System.out.println("a = "+a);
         System.out.println("b = "+b);
         System.out.println("------------------");
 
-        ComplexMathZ.plus(a, b, c);
+        ComplexMath_F64.plus(a, b, c);
         System.out.println("a + b = "+c);
-        ComplexMathZ.minus(a, b, c);
+        ComplexMath_F64.minus(a, b, c);
         System.out.println("a - b = "+c);
-        ComplexMathZ.multiply(a, b, c);
+        ComplexMath_F64.multiply(a, b, c);
         System.out.println("a * b = "+c);
-        ComplexMathZ.divide(a, b, c);
+        ComplexMath_F64.divide(a, b, c);
         System.out.println("a / b = "+c);
 
         System.out.println("------------------");
-        ZComplexPolar polarA = new ZComplexPolar();
-        ComplexMathZ.convert(a, polarA);
+        ComplexPolar_F64 polarA = new ComplexPolar_F64();
+        ComplexMath_F64.convert(a, polarA);
         System.out.println("polar notation of a = "+polarA);
-        ComplexMathZ.pow(polarA, 3, polarC);
+        ComplexMath_F64.pow(polarA, 3, polarC);
         System.out.println("a ** 3 = "+polarC);
-        ComplexMathZ.convert(polarC, c);
+        ComplexMath_F64.convert(polarC, c);
         System.out.println("a ** 3 = "+c);
     }
 }

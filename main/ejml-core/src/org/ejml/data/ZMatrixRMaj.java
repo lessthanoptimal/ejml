@@ -107,7 +107,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
     }
 
     @Override
-    public void get(int row, int col, ZComplex output) {
+    public void get(int row, int col, Complex_F64 output) {
         int index = row*numCols*2 + col*2;
         output.real = data[index];
         output.imaginary = data[index+1];
@@ -165,7 +165,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
 
         ZMatrix n = (ZMatrix)original;
 
-        ZComplex c = new ZComplex();
+        Complex_F64 c = new Complex_F64();
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 n.get(i,j,c);

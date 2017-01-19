@@ -21,13 +21,13 @@ package org.ejml.dense.row.decomposition.bidiagonal;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
-import org.ejml.interfaces.decomposition.QRPDecompositionD;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 
 
 /**
  * <p>
- * {@link BidiagonalDecompositionD} specifically designed for tall matrices.
+ * {@link BidiagonalDecomposition_F64} specifically designed for tall matrices.
  * First step is to perform QR decomposition on the input matrix.  Then R is decomposed using
  * a bidiagonal decomposition.  By performing the bidiagonal decomposition on the smaller matrix
  * computations can be saved if m/n > 5/3 and if U is NOT needed.
@@ -56,10 +56,10 @@ import org.ejml.interfaces.decomposition.QRPDecompositionD;
  */
 // TODO optimize this code
 public class BidiagonalDecompositionTall_DDRM
-        implements BidiagonalDecompositionD<DMatrixRMaj>
+        implements BidiagonalDecomposition_F64<DMatrixRMaj>
 {
-    QRPDecompositionD<DMatrixRMaj> decompQRP = DecompositionFactory_DDRM.qrp(500, 100); // todo this should be passed in
-    BidiagonalDecompositionD<DMatrixRMaj> decompBi = new BidiagonalDecompositionRow_DDRM();
+    QRPDecomposition_F64<DMatrixRMaj> decompQRP = DecompositionFactory_DDRM.qrp(500, 100); // todo this should be passed in
+    BidiagonalDecomposition_F64<DMatrixRMaj> decompBi = new BidiagonalDecompositionRow_DDRM();
 
     DMatrixRMaj B = new DMatrixRMaj(1,1);
 

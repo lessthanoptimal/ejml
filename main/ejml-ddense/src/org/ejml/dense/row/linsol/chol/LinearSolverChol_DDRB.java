@@ -22,11 +22,11 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_DDRB;
 import org.ejml.dense.row.linsol.LinearSolver_DDRB_to_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
- * A wrapper around {@link CholeskyDecompositionD}(DMatrixRBlock) that allows
+ * A wrapper around {@link CholeskyDecomposition_F64}(DMatrixRBlock) that allows
  * it to be easily used with {@link DMatrixRMaj}.
  *
  * @author Peter Abeles

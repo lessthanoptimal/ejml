@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -39,7 +39,7 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
     boolean needV;
 
     @Override
-    public SingularValueDecompositionD createSvd() {
+    public SingularValueDecomposition_F64 createSvd() {
         return new SvdImplicitQrDecompose_DDRM(compact,needU,needV,false);
     }
 
@@ -83,7 +83,7 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
             for( int k = 0; k < 2; k++ ) {
                 compact = k == 0;
 
-                SingularValueDecompositionD<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact,true,true,false);
+                SingularValueDecomposition_F64<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact,true,true,false);
 
                 DMatrixRMaj A;
 
@@ -123,7 +123,7 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
                              DMatrixRMaj V ,
                              boolean checkU , boolean checkV )
     {
-        SingularValueDecompositionD<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact,checkU,checkV,false);
+        SingularValueDecomposition_F64<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact,checkU,checkV,false);
 
         assertTrue(alg.decompose(A.copy()));
 

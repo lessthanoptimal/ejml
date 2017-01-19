@@ -22,10 +22,10 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
-import org.ejml.sparse.ConvertDMatrixSparse;
-import org.ejml.sparse.cmpcol.CommonOps_DSCC;
-import org.ejml.sparse.cmpcol.NormOps_DSCC;
-import org.ejml.sparse.cmpcol.RandomMatrices_DSCC;
+import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.NormOps_DSCC;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 
 import java.util.Random;
 

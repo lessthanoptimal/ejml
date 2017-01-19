@@ -3,5 +3,6 @@ dependencies {
     testCompile project(':main:ejml-cdense')
     testCompile project(':main:ejml-ddense')
     testCompile project(':main:ejml-zdense')
+    testCompile project(':main:ejml-dsparse')
     testCompile project(':main:ejml-experimental')
 }

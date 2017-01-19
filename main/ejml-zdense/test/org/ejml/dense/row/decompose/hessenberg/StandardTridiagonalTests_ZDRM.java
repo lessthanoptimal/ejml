@@ -19,12 +19,12 @@
 package org.ejml.dense.row.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.junit.Test;
 
 import java.util.Random;
@@ -41,7 +41,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
 
     protected Random rand = new Random(2344);
 
-    protected abstract TridiagonalSimilarDecompositionD<ZMatrixRMaj> createDecomposition();
+    protected abstract TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> createDecomposition();
 
     @Test
     public void fullTest() {
@@ -50,7 +50,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
 
             ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(width,-1,1,rand);
 
-            TridiagonalSimilarDecompositionD<ZMatrixRMaj> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> alg = createDecomposition();
 
 
             assertTrue(safeDecomposition(alg,A));
@@ -75,7 +75,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
 
             ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(width,-1,1,rand);
 
-            TridiagonalSimilarDecompositionD<ZMatrixRMaj> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
@@ -102,14 +102,14 @@ public abstract class StandardTridiagonalTests_ZDRM {
 
             ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(width,-1,1,rand);
 
-            TridiagonalSimilarDecompositionD<ZMatrixRMaj> alg = createDecomposition();
+            TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> alg = createDecomposition();
 
             assertTrue(safeDecomposition(alg,A));
 
             ZMatrixRMaj Q = alg.getQ(null,false);
             ZMatrixRMaj Q_t = alg.getQ(null,true);
 
-            ZComplex q = new ZComplex();
+            Complex_F64 q = new Complex_F64();
             for( int i = 0; i < Q.numRows; i++ ) {
                 for( int j = 0; j < Q.numCols; j++ ) {
                     assertEquals(Q.getReal(i,j),Q_t.getReal(j,i),UtilEjml.TEST_F64);

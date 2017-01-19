@@ -20,13 +20,13 @@ package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.BMatrixRMaj;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.UtilTestMatrix;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecompositionD;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -162,7 +162,7 @@ public class TestRandomMatrices_DDRM {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
                 DMatrixRMaj A = RandomMatrices_DDRM.singleValues(numRows,numCols, rand, sv);
 
-                SingularValueDecompositionD<DMatrixRMaj> svd =
+                SingularValueDecomposition_F64<DMatrixRMaj> svd =
                         DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
                 assertTrue(svd.decompose(A));
 
@@ -175,7 +175,7 @@ public class TestRandomMatrices_DDRM {
         // see if it fills in zeros when it is smaller than the dimension
         DMatrixRMaj A = RandomMatrices_DDRM.singleValues(5,5, rand, sv);
 
-        SingularValueDecompositionD<DMatrixRMaj> svd =
+        SingularValueDecomposition_F64<DMatrixRMaj> svd =
                 DecompositionFactory_DDRM.svd(A.numRows, A.numCols, true, true, false);
         assertTrue(svd.decompose(A));
 
@@ -191,12 +191,12 @@ public class TestRandomMatrices_DDRM {
         assertTrue(MatrixFeatures_DDRM.isSymmetric(A,UtilEjml.TEST_F64));
 
         // decompose the matrix and extract its eigenvalues
-        EigenDecompositionD<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numRows, true);
+        EigenDecomposition_F64<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numRows, true);
         assertTrue(eig.decompose(A));
 
         double ev[] = new double[5];
         for( int i = 0; i < 5; i++ ) {
-            ZComplex e = eig.getEigenvalue(i);
+            Complex_F64 e = eig.getEigenvalue(i);
             assertTrue(e.isReal());
 
             ev[i] = e.real;

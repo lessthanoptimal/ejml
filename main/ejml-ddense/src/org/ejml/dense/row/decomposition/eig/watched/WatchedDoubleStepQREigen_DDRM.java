@@ -19,8 +19,8 @@
 package org.ejml.dense.row.decomposition.eig.watched;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.decomposition.eig.EigenvalueSmall_F64;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
@@ -56,7 +56,7 @@ public class WatchedDoubleStepQREigen_DDRM {
     // how many steps did it take to find the eigenvalue
     int numStepsFind[];
     int steps;
-    ZComplex eigenvalues[];
+    Complex_F64 eigenvalues[];
     int numEigen;
 
     // computes eigenvalues for 2 by 2 submatrices
@@ -149,9 +149,9 @@ public class WatchedDoubleStepQREigen_DDRM {
             }
         }
 
-        eigenvalues = new ZComplex[ A.numRows ];
+        eigenvalues = new Complex_F64[ A.numRows ];
         for( int i = 0; i < eigenvalues.length; i++ ) {
-            eigenvalues[i] = new ZComplex();
+            eigenvalues[i] = new Complex_F64();
         }
 
         numEigen = 0;
@@ -568,7 +568,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         return numEigen;
     }
 
-    public ZComplex[] getEigenvalues() {
+    public Complex_F64[] getEigenvalues() {
         return eigenvalues;
     }
 

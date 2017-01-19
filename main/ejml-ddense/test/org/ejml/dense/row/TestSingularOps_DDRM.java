@@ -21,7 +21,7 @@ package org.ejml.dense.row;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -288,7 +288,7 @@ public class TestSingularOps_DDRM {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(numRows,numCols,rand));
 
-                SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
+                SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.matrix_F64()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
@@ -333,7 +333,7 @@ public class TestSingularOps_DDRM {
                 // and setting one of its singular values to zero
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(numRows,numCols,rand));
 
-                SingularValueDecompositionD<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
+                SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
                 assertTrue(svd.decompose(A.matrix_F64()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
@@ -384,7 +384,7 @@ public class TestSingularOps_DDRM {
     }
 
     public void rank_and_nullity(DMatrixRMaj A , int rank , int nullity ) {
-        SingularValueDecompositionD<DMatrixRMaj> alg = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
+        SingularValueDecomposition_F64<DMatrixRMaj> alg = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
         assertTrue(alg.decompose(A));
 
         assertEquals(rank, SingularOps_DDRM.rank(alg, UtilEjml.EPS));
@@ -412,7 +412,7 @@ public class TestSingularOps_DDRM {
     }
 
     public void rank_and_nullity_noArgument(DMatrixRMaj A , int rank , int nullity ) {
-        SingularValueDecompositionD<DMatrixRMaj> alg = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
+        SingularValueDecomposition_F64<DMatrixRMaj> alg = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
         assertTrue(alg.decompose(A));
 
         assertEquals(rank, SingularOps_DDRM.rank(alg));

@@ -31,7 +31,7 @@ public interface ZMatrix extends Matrix {
      * @param col Matrix element's column index.
      * @param output Storage for the complex number
      */
-    public void get( int row , int col , ZComplex output );
+    public void get( int row , int col , Complex_F64 output );
 
     /**
      * Set's the complex value of the matrix's element

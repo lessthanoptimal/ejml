@@ -19,7 +19,7 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
 import org.junit.Test;
@@ -198,7 +198,7 @@ public class TestMatrixFeatures_ZDRM {
     public void isUnitary() {
         // create a reflector since it's unitary
         ZMatrixRMaj u = RandomMatrices_ZDRM.rectangle(5,1,rand);
-        ZComplex dot = new ZComplex();
+        Complex_F64 dot = new Complex_F64();
         VectorVectorMult_ZDRM.innerProdH(u, u,dot);
         double gamma = 2.0/dot.real;
         ZMatrixRMaj A = SpecializedOps_ZDRM.householder(u,gamma);

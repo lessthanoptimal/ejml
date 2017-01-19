@@ -20,7 +20,7 @@ package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
 /**
@@ -219,7 +219,7 @@ public class SingularOps_DDRM {
      * @param tol Threshold for selecting singular values.  Try UtilEjml.EPS.
      * @return The null space.
      */
-    public static DMatrixRMaj nullSpace(SingularValueDecompositionD<DMatrixRMaj> svd ,
+    public static DMatrixRMaj nullSpace(SingularValueDecomposition_F64<DMatrixRMaj> svd ,
                                           DMatrixRMaj nullSpace , double tol )
     {
         int N = svd.numberOfSingularValues();
@@ -275,7 +275,7 @@ public class SingularOps_DDRM {
      * @param nullVector Optional storage for a vector for the null space.  Modified.
      * @return Vector in V associated with smallest singular value..
      */
-    public static DMatrixRMaj nullVector(SingularValueDecompositionD<DMatrixRMaj> svd ,
+    public static DMatrixRMaj nullVector(SingularValueDecomposition_F64<DMatrixRMaj> svd ,
                                            boolean isRight ,
                                            DMatrixRMaj nullVector )
     {
@@ -337,7 +337,7 @@ public class SingularOps_DDRM {
      * @param svd A precomputed decomposition.  Not modified.
      * @return threshold for singular values
      */
-    public static double singularThreshold( SingularValueDecompositionD svd ) {
+    public static double singularThreshold( SingularValueDecomposition_F64 svd ) {
         double largest = 0;
         double w[]= svd.getSingularValues();
 
@@ -355,12 +355,12 @@ public class SingularOps_DDRM {
     /**
      * Extracts the rank of a matrix using a preexisting decomposition and default threshold.
      *
-     * @see #singularThreshold(SingularValueDecompositionD)
+     * @see #singularThreshold(SingularValueDecomposition_F64)
      *
      * @param svd A precomputed decomposition.  Not modified.
      * @return The rank of the decomposed matrix.
      */
-    public static int rank( SingularValueDecompositionD svd ) {
+    public static int rank( SingularValueDecomposition_F64 svd ) {
         double threshold = singularThreshold(svd);
         return rank(svd,threshold);
     }
@@ -368,13 +368,13 @@ public class SingularOps_DDRM {
     /**
      * Extracts the rank of a matrix using a preexisting decomposition.
      *
-     * @see #singularThreshold(SingularValueDecompositionD)
+     * @see #singularThreshold(SingularValueDecomposition_F64)
      *
      * @param svd A precomputed decomposition.  Not modified.
      * @param threshold Tolerance used to determine of a singular value is singular.
      * @return The rank of the decomposed matrix.
      */
-    public static int rank(SingularValueDecompositionD svd , double threshold ) {
+    public static int rank(SingularValueDecomposition_F64 svd , double threshold ) {
         int numRank=0;
 
         double w[]= svd.getSingularValues();
@@ -392,12 +392,12 @@ public class SingularOps_DDRM {
     /**
      * Extracts the nullity of a matrix using a preexisting decomposition and default threshold.
      *
-     * @see #singularThreshold(SingularValueDecompositionD)
+     * @see #singularThreshold(SingularValueDecomposition_F64)
      *
      * @param svd A precomputed decomposition.  Not modified.
      * @return The nullity of the decomposed matrix.
      */
-    public static int nullity( SingularValueDecompositionD svd  ) {
+    public static int nullity( SingularValueDecomposition_F64 svd  ) {
         double threshold = singularThreshold(svd);
         return nullity(svd, threshold);
     }
@@ -405,13 +405,13 @@ public class SingularOps_DDRM {
     /**
      * Extracts the nullity of a matrix using a preexisting decomposition.
      *
-     * @see #singularThreshold(SingularValueDecompositionD)
+     * @see #singularThreshold(SingularValueDecomposition_F64)
      *
      * @param svd A precomputed decomposition.  Not modified.
      * @param threshold Tolerance used to determine of a singular value is singular.
      * @return The nullity of the decomposed matrix.
      */
-    public static int nullity(SingularValueDecompositionD svd , double threshold ) {
+    public static int nullity(SingularValueDecomposition_F64 svd , double threshold ) {
         int ret = 0;
 
         double w[]= svd.getSingularValues();

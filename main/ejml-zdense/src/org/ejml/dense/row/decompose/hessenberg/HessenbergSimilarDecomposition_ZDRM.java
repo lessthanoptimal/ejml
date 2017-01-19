@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.decompose.hessenberg;
 
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.dense.row.decompose.qr.QrHelperFunctions_ZDRM;
@@ -60,7 +60,7 @@ public class HessenbergSimilarDecomposition_ZDRM
     // temporary storage
     private double b[];
     private double u[];
-    private ZComplex tau = new ZComplex();
+    private Complex_F64 tau = new Complex_F64();
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
      * the specified size.

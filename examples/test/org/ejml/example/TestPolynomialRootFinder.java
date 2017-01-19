@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -32,10 +32,10 @@ public class TestPolynomialRootFinder {
 
     @Test
     public void findRoots() {
-        ZComplex[] roots = PolynomialRootFinder.findRoots(4, 3, 2, 1);
+        Complex_F64[] roots = PolynomialRootFinder.findRoots(4, 3, 2, 1);
 
         int numReal = 0;
-        for( ZComplex c : roots ) {
+        for( Complex_F64 c : roots ) {
             if( c.isReal() ) {
                 checkRoot(c.real,4,3,2,1);
                 numReal++;

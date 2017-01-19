@@ -20,7 +20,7 @@ package org.ejml.dense.row.decomposition.chol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyLDLDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 
 
 /**
@@ -42,7 +42,7 @@ import org.ejml.interfaces.decomposition.CholeskyLDLDecompositionD;
  * @author Peter Abeles
  */
 public class CholeskyDecompositionLDL_DDRM
-        implements CholeskyLDLDecompositionD<DMatrixRMaj> {
+        implements CholeskyLDLDecomposition_F64<DMatrixRMaj> {
 
     // it can decompose a matrix up to this width
     private int maxWidth;

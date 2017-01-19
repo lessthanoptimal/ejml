@@ -231,7 +231,7 @@ public class MatrixFeatures_ZDRM {
      */
     public static boolean isIdentity(ZMatrix mat , double tol ) {
         // see if the result is an identity matrix
-        ZComplex c = new ZComplex();
+        Complex_F64 c = new Complex_F64();
         for (int i = 0; i < mat.getNumRows(); i++) {
             for (int j = 0; j < mat.getNumCols(); j++) {
                 mat.get(i, j, c);
@@ -265,8 +265,8 @@ public class MatrixFeatures_ZDRM {
         if( Q.numCols != Q.numRows )
             return false;
 
-        ZComplex a = new ZComplex();
-        ZComplex b = new ZComplex();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
 
         for( int i = 0; i < Q.numCols; i++ ) {
             for( int j = i; j < Q.numCols; j++ ) {
@@ -300,7 +300,7 @@ public class MatrixFeatures_ZDRM {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
-        ZComplex prod = new ZComplex();
+        Complex_F64 prod = new Complex_F64();
 
         ZMatrixRMaj u[] = CommonOps_ZDRM.columnsToVector(Q, null);
 

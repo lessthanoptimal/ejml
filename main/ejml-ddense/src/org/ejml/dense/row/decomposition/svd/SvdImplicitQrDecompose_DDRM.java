@@ -23,8 +23,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_DDRM;
 import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionTall_DDRM;
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
-import org.ejml.interfaces.decomposition.BidiagonalDecompositionD;
-import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
+import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
 /**
@@ -43,7 +43,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecompositionD;
  *
  * @author Peter Abeles
  */
-public class SvdImplicitQrDecompose_DDRM implements SingularValueDecompositionD<DMatrixRMaj> {
+public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F64<DMatrixRMaj> {
 
     private int numRows;
     private int numCols;
@@ -57,7 +57,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecompositionD<
 
     // If U is not being computed and the input matrix is 'tall' then a special bidiagonal decomposition
     // can be used which is faster.
-    private BidiagonalDecompositionD<DMatrixRMaj> bidiag;
+    private BidiagonalDecomposition_F64<DMatrixRMaj> bidiag;
     private SvdImplicitQrAlgorithm_DDRM qralg = new SvdImplicitQrAlgorithm_DDRM();
 
     double diag[];

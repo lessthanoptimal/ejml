@@ -19,13 +19,13 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DEigenpair;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.decomposition.eig.EigenPowerMethod_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecompositionD;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolver;
 
 
@@ -252,14 +252,14 @@ public class EigenOps_DDRM {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return A diagonal matrix containing the eigenvalues.
      */
-    public static DMatrixRMaj createMatrixD(EigenDecompositionD eig )
+    public static DMatrixRMaj createMatrixD(EigenDecomposition_F64 eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
         DMatrixRMaj D = new DMatrixRMaj( N , N );
 
         for( int i = 0; i < N; i++ ) {
-            ZComplex c = eig.getEigenvalue(i);
+            Complex_F64 c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
                 D.set(i,i,c.real);
@@ -278,14 +278,14 @@ public class EigenOps_DDRM {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return An m by m matrix containing eigenvectors in its columns.
      */
-    public static DMatrixRMaj createMatrixV(EigenDecompositionD<DMatrixRMaj> eig )
+    public static DMatrixRMaj createMatrixV(EigenDecomposition_F64<DMatrixRMaj> eig )
     {
         int N = eig.getNumberOfEigenvalues();
 
         DMatrixRMaj V = new DMatrixRMaj( N , N );
 
         for( int i = 0; i < N; i++ ) {
-            ZComplex c = eig.getEigenvalue(i);
+            Complex_F64 c = eig.getEigenvalue(i);
 
             if( c.isReal() ) {
                 DMatrixRMaj v = eig.getEigenVector(i);

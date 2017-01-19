@@ -23,7 +23,7 @@ import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionCommon_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecompositionD;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 
 /**
@@ -177,7 +177,7 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
     }
 
     @Override
-    public CholeskyDecompositionD<DMatrixRMaj> getDecomposition() {
+    public CholeskyDecomposition_F64<DMatrixRMaj> getDecomposition() {
         return decomposer;
     }
 }

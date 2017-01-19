@@ -18,12 +18,12 @@
 
 package org.ejml.dense.row.decomposition.eig;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.ZComplex;
 import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_DDRM;
 import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvector_DDRM;
 import org.ejml.dense.row.decomposition.hessenberg.HessenbergSimilarDecomposition_DDRM;
-import org.ejml.interfaces.decomposition.EigenDecompositionD;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 
 /**
@@ -42,7 +42,7 @@ import org.ejml.interfaces.decomposition.EigenDecompositionD;
  */
 //TODO looks like there might be some pointless copying of arrays going on
 public class WatchedDoubleStepQRDecomposition_DDRM
-        implements EigenDecompositionD<DMatrixRMaj> {
+        implements EigenDecomposition_F64<DMatrixRMaj> {
 
     HessenbergSimilarDecomposition_DDRM hessenberg;
     WatchedDoubleStepQREigenvalue_DDRM algValue;
@@ -98,7 +98,7 @@ public class WatchedDoubleStepQRDecomposition_DDRM
     }
 
     @Override
-    public ZComplex getEigenvalue(int index) {
+    public Complex_F64 getEigenvalue(int index) {
         return algValue.getEigenvalues()[index];
     }
 

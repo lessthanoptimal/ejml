@@ -18,17 +18,17 @@
 
 package org.ejml.dense.row.decompose.hessenberg;
 
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.dense.row.decompose.qr.QrHelperFunctions_ZDRM;
-import org.ejml.interfaces.decomposition.TridiagonalSimilarDecompositionD;
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
 import java.util.Arrays;
 
 /**
  * <p>
- * Performs a complex {@link TridiagonalSimilarDecompositionD similar tridiagonal decomposition} on a
+ * Performs a complex {@link TridiagonalSimilarDecomposition_F64 similar tridiagonal decomposition} on a
  * square Hermitian matrix.  Householder vectors perform the similar operation and the symmetry
  * is taken advantage of for good performance.
  * </p>
@@ -48,7 +48,7 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class TridiagonalDecompositionHouseholder_ZDRM
-        implements TridiagonalSimilarDecompositionD<ZMatrixRMaj> {
+        implements TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> {
 
     /**
      * Only the upper right triangle is used.  The Tridiagonal portion stores
@@ -66,7 +66,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
     // temporary storage
     private double b[];
 
-    private ZComplex tau = new ZComplex();
+    private Complex_F64 tau = new Complex_F64();
 
     public TridiagonalDecompositionHouseholder_ZDRM() {
         N = 1;

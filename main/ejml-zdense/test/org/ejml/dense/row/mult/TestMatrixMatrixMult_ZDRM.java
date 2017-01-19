@@ -19,12 +19,12 @@
 package org.ejml.dense.row.mult;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.ops.ComplexMathZ;
+import org.ejml.ops.ComplexMath_F64;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -146,19 +146,19 @@ public class TestMatrixMatrixMult_ZDRM {
         }
         ZMatrixRMaj C = new ZMatrixRMaj(A.numRows,B.numCols);
 
-        ZComplex a = new ZComplex();
-        ZComplex b = new ZComplex();
-        ZComplex m = new ZComplex();
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 b = new Complex_F64();
+        Complex_F64 m = new Complex_F64();
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < B.numCols; j++) {
-                ZComplex sum = new ZComplex();
+                Complex_F64 sum = new Complex_F64();
 
                 for (int k = 0; k < A.numCols; k++) {
                     A.get(i,k,a);
                     B.get(k,j,b);
 
-                    ComplexMathZ.multiply(a,b,m);
+                    ComplexMath_F64.multiply(a,b,m);
                     sum.real += m.real;
                     sum.imaginary += m.imaginary;
                 }

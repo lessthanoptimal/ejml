@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol;
 import org.ejml.EjmlUnitTests;
 import org.ejml.LinearSolverSafe;
 import org.ejml.UtilEjml;
-import org.ejml.data.ZComplex;
+import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
@@ -245,14 +245,14 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         }
 
         double vals[] = new double[t.length];
-        ZComplex a = new ZComplex(1,-1);
-        ZComplex b = new ZComplex(2,-0.4);
-        ZComplex c = new ZComplex(3,0.9);
+        Complex_F64 a = new Complex_F64(1,-1);
+        Complex_F64 b = new Complex_F64(2,-0.4);
+        Complex_F64 c = new Complex_F64(3,0.9);
 
         for( int i = 0; i < t.length; i+= 2 ) {
-            ZComplex T = new ZComplex(t[i],t[i+1]);
+            Complex_F64 T = new Complex_F64(t[i],t[i+1]);
 
-            ZComplex result = a.plus( b.times(T) ).plus( c.times(T.times(T)));
+            Complex_F64 result = a.plus( b.times(T) ).plus( c.times(T.times(T)));
 
             vals[i] = result.real;
             vals[i+1] = result.imaginary;
@@ -278,8 +278,8 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     private ZMatrixRMaj createPolyA(double t[] , int dof ) {
         ZMatrixRMaj A = new ZMatrixRMaj(t.length/2,dof);
 
-        ZComplex power = new ZComplex();
-        ZComplex T = new ZComplex();
+        Complex_F64 power = new Complex_F64();
+        Complex_F64 T = new Complex_F64();
 
         for( int j = 0; j < A.numRows; j++ ) {
             T.set(t[j*2],t[j*2+1]);
