@@ -125,8 +125,8 @@ public class CommonOps_DSCC {
      * @param work0 (Optional) Work space of length A.rows.  Null to declare internally
      * @param work1 (Optional) Work space of length A.rows.  Null to declare internally
      */
-    public static void add(double alpha , DMatrixSparseCSC A , double beta , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                           double work0[] , int work1[] )
+    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                           int work0[], double work1[])
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes");

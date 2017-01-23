@@ -81,11 +81,11 @@ public class ImplCommonOps_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param x (Optional) Work space of length A.rows.  Null to declare internally
      * @param w (Optional) Work space of length A.rows.  Null to declare internally
+     * @param x (Optional) Work space of length A.rows.  Null to declare internally
      */
-    public static void add(double alpha , DMatrixSparseCSC A , double beta , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                           double x[] , int w[] )
+    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                           int w[], double x[])
     {
         x = checkDeclare(A.numRows, x);
         w = checkDeclare(A.numRows, w, true);

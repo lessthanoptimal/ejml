@@ -209,7 +209,7 @@ public class TestCommonOps_DSCC {
         double alpha = 1.5;
         double beta = -0.6;
         try {
-            CommonOps_DSCC.add(alpha,A,beta,B,C,null, null);
+            CommonOps_DSCC.add(alpha,A,beta,B,C, null, null);
             assertTrue(CommonOps_DSCC.checkSortedFlag(C));
 
             if( exception )

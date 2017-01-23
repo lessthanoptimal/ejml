@@ -20,6 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
@@ -40,23 +41,35 @@ public class ExampleSparseMatrix {
     public static int ROWS = 100000;
     public static int COLS = 1000;
     public static int XCOLS = 1;
-    public static int N = ROWS*COLS;
 
     public static void main(String[] args) {
         Random rand = new Random(234);
 
-        DMatrixSparseCSC Z = RandomMatrices_DSCC.rectangle(20,5,20,rand);
-        Z.print();
-        Z.printNonZero();
+        // easy to work with sparse format, but hard to do computations with
+        DMatrixSparseTriplet work = new DMatrixSparseTriplet(5,4,5);
+        work.addItem(0,1,1.2);
+        work.addItem(3,0,3);
+        work.addItem(1,1,22.21234);
+        work.addItem(2,3,6);
 
-        // Create a 100000x1000 matrix that is 5% filled
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS,COLS,(int)(N*0.05),rand);
-        //          1000x1 matrix that is 70% filled
+        // convert into a format that's easier to perform math with
+        DMatrixSparseCSC Z = ConvertDMatrixSparse.convert(work,(DMatrixSparseCSC)null);
+
+        // print the matrix to standard out in two different formats
+        Z.print();
+        System.out.println();
+        Z.printNonZero();
+        System.out.println();
+
+        // Create a large matrix that is 5% filled
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(ROWS,COLS,(int)(ROWS*COLS*0.05),rand);
+        //          large vector that is 70% filled
         DMatrixSparseCSC x = RandomMatrices_DSCC.rectangle(COLS,XCOLS,(int)(XCOLS*COLS*0.7),rand);
 
         System.out.println("Done generating random matrices");
         // storage for the initial solution
         DMatrixSparseCSC y = new DMatrixSparseCSC(ROWS,XCOLS,0);
+        DMatrixSparseCSC z = new DMatrixSparseCSC(ROWS,XCOLS,0);
 
         // To demonstration how to perform sparse math let's multiply:
         //                  y=A*x
@@ -66,6 +79,7 @@ public class ExampleSparseMatrix {
         double []workB = new double[A.numRows];
         for (int i = 0; i < 100; i++) {
             CommonOps_DSCC.mult(A,x,y,workA,workB);
+//            CommonOps_DSCC.add(1.5,y,0.75,y,z,workB,workA);
         }
         long after = System.currentTimeMillis();
 
@@ -74,10 +88,12 @@ public class ExampleSparseMatrix {
         DMatrixRMaj Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj xd = ConvertDMatrixSparse.convert(x,(DMatrixRMaj)null);
         DMatrixRMaj yd = new DMatrixRMaj(y.numRows,y.numCols);
+        DMatrixRMaj zd = new DMatrixRMaj(y.numRows,y.numCols);
 
         before = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
             CommonOps_DDRM.mult(Ad, xd, yd);
+//            CommonOps_DDRM.add(1.5,yd,0.75, yd, zd);
         }
         after = System.currentTimeMillis();
         System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  time = "+(after-before)+" ms");
