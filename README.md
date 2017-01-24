@@ -11,7 +11,7 @@
 
 Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating real/complex/dense/sparse matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime, clean API, and multiple interfaces. EJML is free, written in 100% Java and has been released under an Apache v2.0 license.
 
-EJML has three distinct ways to interact with it: 1) operations, 2) SimpleMatrix, and 3) Equations. Operations provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms with a procedural API. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
+EJML has three distinct ways to interact with it: 1) Operations, 2) SimpleMatrix, and 3) Equations. Operations provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms with a procedural API. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
 The following functionality is provided:
 
 * Basic operators (addition, multiplication, ...)
@@ -37,26 +37,21 @@ The JavaDoc has also been posted online at:
 http://ejml.org/javadoc/
 
 ==========================================================================
-## Including in Gradle and Maven Projects
+## Maven Central
 
-EJML is on the Maven central repository and can easily be included in projects by adding the following code to the dependency section of your Maven or Gradle project.  This will include all the modules in EJML.
+EJML is in Maven central repository and can easily be added to Gradle, Maven, and similar project managers.
 
-Gradle:
-```
-compile group: 'org.ejml', name: 'all', version: '0.31'
-```
-
-Maven:
 ```
 <groupId>org.ejml</groupId>
-<artifactId>all</artifactId>
-<version>0.31</version>
+<artifactId>ejml-all</artifactId>
+<version>0.31-SNAPSHOT</version>
 ```
-Or you can include the required modules individually
+
+This will add the entire library.  Alternatively, you can include the required modules individually:
 
      Name        |                 Description
 -----------------|-------------------------------------------------------
-ejml-core        | Contains core data structures
+ejml-core        | Contains core data structures and common code
 ejml-fdense      | Algorithms for dense real 32-bit floats
 ejml-ddense      | Algorithms for dense real 64-bit floats
 ejml-cdense      | Algorithms for dense complex 32-bit floats
@@ -69,17 +64,17 @@ ejml-simple      | Object oriented SimpleMatrix and Equations interfaces
 
 Gradle is the official build environment for EJML.  Before the project can be fully compile you must auto generate
 the 32-bit code.
-```java
+```bash
 cd ejml
 gradle autogenerate
 ```
-After that has finished running all the standard commands will work as well as the commands listed below:
+After that has finished running all the standard commands (e.g. gradle install) will work as well as the custom commands listed below:
 
 * createLibraryDirectory : To build all the modules as jars and save them in ejml/libraries
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar
 
 ==========================================================================
-## Matrix and Class Names
+## Procedural API: Matrix and Class Names
 
 EJML supports a variety of different matrix types and uses the following pattern for matrix class names:
 
@@ -128,26 +123,10 @@ Algorithms which operate on a specific matrix type have a suffix that's 5 charac
          Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
 * **examples/** :
          Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
-* **main/ejml-core** :
-         Contains all essential data structures
-* **main/ejml-fdense** :
-         Algorithms for real dense 32-bit floating point matrices
-* **main/ejml-ddense** :
-         Algorithms for real dense 64-bit floating point matrices
-* **main/ejml-cdense** :
-         Algorithms for complex dense 32-bit floating point matrices
-* **main/ejml-zdense** :
-         Algorithms for complex dense 64-bit floating point matrices
-* **main/ejml-dsparse** :
-         Algorithms for real sparse 64-bit floating point matrices
-* **main/ejml-simple** :
-         Contains source code for SimpleMatrix and Equations
-* **main/ejml-experimental/** :
-         Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
+* **main/** :
+         Library source code
 * **change.txt** :
          History of what changed between each version.
-* **TODO_Algorithms.txt** :
-         Contains a list of what needs to be added to this library.
 
 ==========================================================================
 ## Questions and Comments
@@ -165,7 +144,7 @@ https://github.com/lessthanoptimal/ejml/issues
 
 I would like to thank all the people have made various comments, suggestions, and reported bugs.  Also David Watkins
 for writing "Fundamentals of Matrix Computations", which clearly explains algorithms and yet addresses important
-implementation issues.
+implementation issues.  Sparse matrix algorithms come from Timothy A. Davis "Direct Methods for Sparse Linear Systems".
 
 ==========================================================================
 ## License
