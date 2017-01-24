@@ -787,6 +787,11 @@ public class TestSimpleMatrix {
         A.equation("A = A + B",24.5,"B");
         assertEquals(orig.get(0,0)+24.5,A.get(0,0), UtilEjml.TEST_F64);
 
+        // test implicit A =
+        A.set(orig);
+        A.equation("A + B",24.5,"B");
+        assertEquals(orig.get(0,0)+24.5,A.get(0,0), UtilEjml.TEST_F64);
+
         A.equation("A(B,5) = 4",4,"B");
         assertEquals(4,A.get(4,5), UtilEjml.TEST_F64);
 
@@ -800,6 +805,11 @@ public class TestSimpleMatrix {
 
         A.set(orig);
         A.equation("B = B+B","B");
+        assertEquals(orig.get(0,0)*2,A.get(0,0), UtilEjml.TEST_F64);
+
+        // test implicit B
+        A.set(orig);
+        A.equation("B+B","B");
         assertEquals(orig.get(0,0)*2,A.get(0,0), UtilEjml.TEST_F64);
 
     }

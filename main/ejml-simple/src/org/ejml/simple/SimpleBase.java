@@ -1256,10 +1256,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * Examples:<br>
      * <pre>
-     * perform("A = A + B",matrix,"B");     // Simple matrix addition
+     * perform("A = A + B",matrix,"B");     // Matrix addition
+     * perform("A + B",matrix,"B");         // Matrix addition with implicit 'A = '
      * perform("A(5,:) = B",matrix,"B");    // Insert a row defined by B into A
-     * perform("A = [A;A]");                // stack A twice
+     * perform("[A;A]");                    // stack A twice with implicit 'A = '
      * perform("Q = B + 2","Q",matrix,"B"); // Specify the name of 'this' as Q
+     *
      * </pre>
      *
      * @param equation String representing the symbol equation
@@ -1306,6 +1308,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
                 String type = o == null ? "null" : o.getClass().getSimpleName();
                 throw new IllegalArgumentException("Variable type not supported by Equation! "+type);
             }
+        }
+
+        // see if the assignment is implicit
+        if( !equation.contains("=")) {
+            equation = nameThis+" = "+equation;
         }
 
         eq.process(equation);
