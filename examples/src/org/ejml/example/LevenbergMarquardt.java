@@ -18,10 +18,10 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 
-import static org.ejml.dense.row.CommonOps_R64.*;
-import static org.ejml.dense.row.SpecializedOps_R64.diffNormF;
+import static org.ejml.dense.row.CommonOps_DDRM.*;
+import static org.ejml.dense.row.SpecializedOps_DDRM.diffNormF;
 
 /**
  * <p>
@@ -57,25 +57,25 @@ public class LevenbergMarquardt {
     private Function func;
 
     // the optimized parameters and associated costs
-    private DMatrixRow_F64 param;
+    private DMatrixRMaj param;
     private double initialCost;
     private double finalCost;
 
     // used by matrix operations
-    private DMatrixRow_F64 d;
-    private DMatrixRow_F64 H;
-    private DMatrixRow_F64 negDelta;
-    private DMatrixRow_F64 tempParam;
-    private DMatrixRow_F64 A;
+    private DMatrixRMaj d;
+    private DMatrixRMaj H;
+    private DMatrixRMaj negDelta;
+    private DMatrixRMaj tempParam;
+    private DMatrixRMaj A;
 
     // variables used by the numerical jacobian algorithm
-    private DMatrixRow_F64 temp0;
-    private DMatrixRow_F64 temp1;
+    private DMatrixRMaj temp0;
+    private DMatrixRMaj temp1;
     // used when computing d and H variables
-    private DMatrixRow_F64 tempDH;
+    private DMatrixRMaj tempDH;
 
     // Where the numerical Jacobian is stored.
-    private DMatrixRow_F64 jacobian;
+    private DMatrixRMaj jacobian;
 
     /**
      * Creates a new instance that uses the provided cost function.
@@ -90,19 +90,19 @@ public class LevenbergMarquardt {
         int maxElements = 1;
         int numParam = 1;
 
-        this.temp0 = new DMatrixRow_F64(maxElements,1);
-        this.temp1 = new DMatrixRow_F64(maxElements,1);
-        this.tempDH = new DMatrixRow_F64(maxElements,1);
-        this.jacobian = new DMatrixRow_F64(numParam,maxElements);
+        this.temp0 = new DMatrixRMaj(maxElements,1);
+        this.temp1 = new DMatrixRMaj(maxElements,1);
+        this.tempDH = new DMatrixRMaj(maxElements,1);
+        this.jacobian = new DMatrixRMaj(numParam,maxElements);
 
         this.func = funcCost;
 
-        this.param = new DMatrixRow_F64(numParam,1);
-        this.d = new DMatrixRow_F64(numParam,1);
-        this.H = new DMatrixRow_F64(numParam,numParam);
-        this.negDelta = new DMatrixRow_F64(numParam,1);
-        this.tempParam = new DMatrixRow_F64(numParam,1);
-        this.A = new DMatrixRow_F64(numParam,numParam);
+        this.param = new DMatrixRMaj(numParam,1);
+        this.d = new DMatrixRMaj(numParam,1);
+        this.H = new DMatrixRMaj(numParam,numParam);
+        this.negDelta = new DMatrixRMaj(numParam,1);
+        this.tempParam = new DMatrixRMaj(numParam,1);
+        this.A = new DMatrixRMaj(numParam,numParam);
     }
 
 
@@ -114,7 +114,7 @@ public class LevenbergMarquardt {
         return finalCost;
     }
 
-    public DMatrixRow_F64 getParameters() {
+    public DMatrixRMaj getParameters() {
         return param;
     }
 
@@ -126,9 +126,9 @@ public class LevenbergMarquardt {
      * @param Y The "observed" output of the function
      * @return true if it succeeded and false if it did not.
      */
-    public boolean optimize( DMatrixRow_F64 initParam ,
-                             DMatrixRow_F64 X ,
-                             DMatrixRow_F64 Y )
+    public boolean optimize( DMatrixRMaj initParam ,
+                             DMatrixRMaj X ,
+                             DMatrixRMaj Y )
     {
         configure(initParam,X,Y);
 
@@ -149,7 +149,7 @@ public class LevenbergMarquardt {
      * Iterate until the difference between the costs is insignificant
      * or it iterates too many times
      */
-    private boolean adjustParam(DMatrixRow_F64 X, DMatrixRow_F64 Y,
+    private boolean adjustParam(DMatrixRMaj X, DMatrixRMaj Y,
                                 double prevCost) {
         // lambda adjusts how big of a step it takes
         double lambda = initialLambda;
@@ -197,7 +197,7 @@ public class LevenbergMarquardt {
      * Performs sanity checks on the input data and reshapes internal matrices.  By reshaping
      * a matrix it will only declare new memory when needed.
      */
-    protected void configure(DMatrixRow_F64 initParam , DMatrixRow_F64 X , DMatrixRow_F64 Y )
+    protected void configure(DMatrixRMaj initParam , DMatrixRMaj X , DMatrixRMaj Y )
     {
         if( Y.getNumRows() != X.getNumRows() ) {
             throw new IllegalArgumentException("Different vector lengths");
@@ -233,7 +233,7 @@ public class LevenbergMarquardt {
      * Computes the d and H parameters.  Where d is the average error gradient and
      * H is an approximation of the hessian.
      */
-    private void computeDandH(DMatrixRow_F64 param , DMatrixRow_F64 x , DMatrixRow_F64 y )
+    private void computeDandH(DMatrixRMaj param , DMatrixRMaj x , DMatrixRMaj y )
     {
         func.compute(param,x, tempDH);
         subtractEquals(tempDH, y);
@@ -262,7 +262,7 @@ public class LevenbergMarquardt {
      * <br>
      * where I is an identity matrix.
      */
-    private void computeA(DMatrixRow_F64 A , DMatrixRow_F64 H , double lambda )
+    private void computeA(DMatrixRMaj A , DMatrixRMaj H , double lambda )
     {
         final int numParam = param.getNumElements();
 
@@ -277,7 +277,7 @@ public class LevenbergMarquardt {
      *
      * cost = (1/N) Sum (f(x;p) - y)^2
      */
-    private double cost(DMatrixRow_F64 param , DMatrixRow_F64 X , DMatrixRow_F64 Y)
+    private double cost(DMatrixRMaj param , DMatrixRMaj X , DMatrixRMaj Y)
     {
         func.compute(param,X, temp0);
 
@@ -293,9 +293,9 @@ public class LevenbergMarquardt {
      * @param pt The point around which the Jacobian is to be computed.
      * @param deriv Where the jacobian will be stored
      */
-    protected void computeNumericalJacobian( DMatrixRow_F64 param ,
-                                             DMatrixRow_F64 pt ,
-                                             DMatrixRow_F64 deriv )
+    protected void computeNumericalJacobian( DMatrixRMaj param ,
+                                             DMatrixRMaj pt ,
+                                             DMatrixRMaj deriv )
     {
         double invDelta = 1.0/DELTA;
 
@@ -326,6 +326,6 @@ public class LevenbergMarquardt {
          * @param x the input points.
          * @param y the resulting output.
          */
-        public void compute(DMatrixRow_F64 param , DMatrixRow_F64 x , DMatrixRow_F64 y );
+        public void compute(DMatrixRMaj param , DMatrixRMaj x , DMatrixRMaj y );
     }
 }

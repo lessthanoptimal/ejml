@@ -33,21 +33,48 @@ public class GenerateCode32 {
 
     private ConvertFile32From64 converter;
 
-    List<String> suffices64 = new ArrayList<String>();
-    List<String> suffices32 = new ArrayList<String>();
+    // prefixes and suffices for files which are to be converted
+    List<String> suffices64 = new ArrayList<>();
+    List<String> suffices32 = new ArrayList<>();
+    List<String> prefix64 = new ArrayList<>();
+    List<String> prefix32 = new ArrayList<>();
 
+    // file name keyword black list - ignore files with these names
+    List<String> blacklist = new ArrayList<>();
 
     public GenerateCode32() {
 
-        suffices64.add("_B64_to_R64");
-        suffices64.add("_R64");
-        suffices64.add("_B64");
-        suffices64.add("_F64");
-        suffices64.add("_CR64");
-        suffices64.add("_C64");
+        blacklist.add("MatrixSparse");
 
-        for( String word : suffices64 ) {
-            suffices32.add( word.replace("64","32"));
+        String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF3","DF4","DF5","DF6"};
+
+        suffices64.add("_DDRB_to_DDRM");
+        suffices64.add("_F64");
+        suffices32.add("_FDRB_to_FDRM");
+        suffices32.add("_F32");
+
+        for( String suffice : sufficeRoot ) {
+            suffices64.add("_D"+suffice);
+            suffices32.add("_F"+suffice);
+            suffices64.add("_Z"+suffice);
+            suffices32.add("_C"+suffice);
+        }
+
+        prefix64.add("DMatrix");
+        prefix32.add("FMatrix");
+        prefix64.add("ZMatrix");
+        prefix32.add("CMatrix");
+        prefix64.add("DEigen");
+        prefix32.add("FEigen");
+        prefix64.add("DSubmatrix");
+        prefix32.add("FSubmatrix");
+        prefix64.add("ConvertDMatrix");
+        prefix32.add("ConvertFMatrix");
+
+        int N = prefix64.size();
+        for (int i = 0; i < N; i++) {
+            prefix64.add("Test"+prefix64.get(i));
+            prefix32.add("Test"+prefix32.get(i));
         }
 
         converter = new ConvertFile32From64(false);
@@ -56,12 +83,20 @@ public class GenerateCode32 {
         converter.replacePattern("DoubleStep", "FIXED_STEP");
         converter.replacePattern("double", "float");
         converter.replacePattern("Double", "Float");
-        converter.replacePattern("B64", "B32");
-        converter.replacePattern("R64", "R32");
+
+        for( String suffice : sufficeRoot) {
+            converter.replacePattern("_D"+suffice, "_F"+suffice);
+            converter.replacePattern("_Z"+suffice, "_C"+suffice);
+        }
+
+        converter.replacePattern("DMatrix", "FMatrix");
+        converter.replacePattern("DSubmatrix", "FSubmatrix");
+        converter.replacePattern("DEigen", "FEigen");
+        converter.replacePattern("ZComplex", "CComplex");
+        converter.replacePattern("ZMatrix", "CMatrix");
+        converter.replacePattern("ZSubmatrix", "CSubmatrix");
+
         converter.replacePattern("F64", "F32");
-        converter.replacePattern("C64", "C32");
-        converter.replacePattern("CR64", "CR32");
-        converter.replacePattern("CB64", "CB32");
         converter.replacePattern("random64", "random32");
         converter.replacePattern("64-bit", "32-bit");
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");
@@ -106,7 +141,20 @@ public class GenerateCode32 {
         for( File f : files ) {
             String n = f.getName();
 
+            boolean blacklisted = false;
+            for (int i = 0; i < blacklist.size(); i++) {
+                if( n.contains(blacklist.get(i))) {
+                    blacklisted = true;
+                    break;
+                }
+            }
+
+            if( blacklisted )
+                continue;
+
             int matchedIndex = -1;
+
+            boolean suffix = true;
 
             for (int i = 0; i < suffices64.size(); i++) {
                 String s = suffices64.get(i);
@@ -116,13 +164,32 @@ public class GenerateCode32 {
                 }
             }
 
+            if( matchedIndex == -1 ) {
+                for (int i = 0; i < prefix64.size(); i++) {
+                    String s = prefix64.get(i);
+                    if( n.startsWith( s ) && n.endsWith(".java") ) {
+                        matchedIndex = i;
+                        suffix = false;
+                        break;
+                    }
+                }
+            }
+
             if( matchedIndex == -1 )
                 continue;
 
-            String s64 = suffices64.get(matchedIndex);
-            String s32 = suffices32.get(matchedIndex);
+            if( suffix ) {
+                String s64 = suffices64.get(matchedIndex);
+                String s32 = suffices32.get(matchedIndex);
 
-            n = n.substring(0, n.length() - s64.length()-5) + s32+".java";
+                n = n.substring(0, n.length() - s64.length() - 5) + s32 + ".java";
+            } else {
+                String s64 = prefix64.get(matchedIndex);
+                String s32 = prefix32.get(matchedIndex);
+
+                n = s32 + n.substring(s64.length(),n.length());
+            }
+
             try {
                 System.out.println( "Generating " + n );
                 converter.process(f,new File(outputDirectory,n));
@@ -167,11 +234,11 @@ public class GenerateCode32 {
         System.out.println("Path to project root: "+path);
 
         String coreDir[] = new String[]{
-                "main/core/src/org/ejml/data",
-                "main/core/test/org/ejml/data",
-                "main/core/src/org/ejml/ops",
-                "main/core/test/org/ejml/ops",
-                "main/experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
+                "main/ejml-core/src/org/ejml/data",
+                "main/ejml-core/test/org/ejml/data",
+                "main/ejml-core/src/org/ejml/ops",
+                "main/ejml-core/test/org/ejml/ops",
+                "main/ejml-experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
         };
 
         GenerateCode32 app = new GenerateCode32();
@@ -180,12 +247,16 @@ public class GenerateCode32 {
         }
 
         // remove any previously generated code
-        for( String module : new String[]{"dense","denseC"}) {
-            recursiveDelete(new File(path,"main/"+module+"32/src"), true);
-            recursiveDelete(new File(path,"main/"+module+"32/test"), true);
+        for( String module : new String[]{"dense"}) {
+            recursiveDelete(new File(path,"main/ejml-f"+module+"/src"), true);
+            recursiveDelete(new File(path,"main/ejml-c"+module+"/src"), true);
+            recursiveDelete(new File(path,"main/ejml-f"+module+"/test"), true);
+            recursiveDelete(new File(path,"main/ejml-c"+module+"/test"), true);
 
-            app.process(new File(path,"main/"+module+"64/src"), new File(path,"main/"+module+"32/src") );
-            app.process(new File(path,"main/"+module+"64/test"), new File(path,"main/"+module+"32/test") );
+            app.process(new File(path,"main/ejml-d"+module+"/src"), new File(path,"main/ejml-f"+module+"/src") );
+            app.process(new File(path,"main/ejml-z"+module+"/src"), new File(path,"main/ejml-c"+module+"/src") );
+            app.process(new File(path,"main/ejml-d"+module+"/test"), new File(path,"main/ejml-f"+module+"/test") );
+            app.process(new File(path,"main/ejml-z"+module+"/test"), new File(path,"main/ejml-c"+module+"/test") );
         }
     }
 }

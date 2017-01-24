@@ -20,8 +20,8 @@ package org.ejml.example;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.CommonOps_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,12 +48,12 @@ public class TestCompareKalmanResults {
         all.add( new KalmanFilterEquation() );
         all.add( simple );
 
-        DMatrixRow_F64 priorX = new DMatrixRow_F64(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DMatrixRow_F64 priorP = CommonOps_R64.identity(9);
+        DMatrixRMaj priorX = new DMatrixRMaj(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
+        DMatrixRMaj priorP = CommonOps_DDRM.identity(9);
 
-        DMatrixRow_F64 F = BenchmarkKalmanPerformance.createF(T);
-        DMatrixRow_F64 Q = BenchmarkKalmanPerformance.createQ(T,0.1);
-        DMatrixRow_F64 H = BenchmarkKalmanPerformance.createH();
+        DMatrixRMaj F = BenchmarkKalmanPerformance.createF(T);
+        DMatrixRMaj Q = BenchmarkKalmanPerformance.createQ(T,0.1);
+        DMatrixRMaj H = BenchmarkKalmanPerformance.createH();
 
 
         for( KalmanFilter f : all ) {
@@ -66,8 +66,8 @@ public class TestCompareKalmanResults {
             compareFilters(simple,f);
         }
 
-        DMatrixRow_F64 z = new DMatrixRow_F64(H.numRows,1);
-        DMatrixRow_F64 R = CommonOps_R64.identity(H.numRows);
+        DMatrixRMaj z = new DMatrixRMaj(H.numRows,1);
+        DMatrixRMaj R = CommonOps_DDRM.identity(H.numRows);
 
         for( KalmanFilter f : all ) {
             f.update(z,R);
@@ -79,11 +79,11 @@ public class TestCompareKalmanResults {
     }
 
     private void compareFilters( KalmanFilter a, KalmanFilter b ) {
-            DMatrixRow_F64 testX = b.getState();
-            DMatrixRow_F64 testP = b.getCovariance();
+            DMatrixRMaj testX = b.getState();
+            DMatrixRMaj testP = b.getCovariance();
 
-            DMatrixRow_F64 X = a.getState();
-            DMatrixRow_F64 P = a.getCovariance();
+            DMatrixRMaj X = a.getState();
+            DMatrixRMaj P = a.getCovariance();
 
             EjmlUnitTests.assertEquals(testX,X,UtilEjml.TEST_F64);
             EjmlUnitTests.assertEquals(testP,P,UtilEjml.TEST_F64);

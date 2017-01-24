@@ -18,7 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
 
@@ -32,11 +32,11 @@ import java.io.IOException;
 public class ExampleMatrixIO {
 
     public static void csv() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(2,3,true,new double[]{1,2,3,4,5,6});
+        DMatrixRMaj A = new DMatrixRMaj(2,3,true,new double[]{1,2,3,4,5,6});
 
         try {
             MatrixIO.saveCSV(A, "matrix_file.csv");
-            DMatrixRow_F64 B = MatrixIO.loadCSV("matrix_file.csv");
+            DMatrixRMaj B = MatrixIO.loadCSV("matrix_file.csv");
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -56,11 +56,11 @@ public class ExampleMatrixIO {
     }
 
     public static void serializedBinary() {
-        DMatrixRow_F64 A = new DMatrixRow_F64(2,3,true,new double[]{1,2,3,4,5,6});
+        DMatrixRMaj A = new DMatrixRMaj(2,3,true,new double[]{1,2,3,4,5,6});
 
         try {
             MatrixIO.saveBin(A, "matrix_file.data");
-            DMatrixRow_F64 B = MatrixIO.loadBin("matrix_file.data");
+            DMatrixRMaj B = MatrixIO.loadBin("matrix_file.data");
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);

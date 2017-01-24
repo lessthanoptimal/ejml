@@ -18,9 +18,9 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRow_F64;
-import org.ejml.dense.row.factory.LinearSolverFactory_R64;
-import org.ejml.dense.row.linsol.AdjustableLinearSolver_R64;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
+import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
 
 /**
  * <p>
@@ -41,14 +41,14 @@ import org.ejml.dense.row.linsol.AdjustableLinearSolver_R64;
 public class PolynomialFit {
 
     // Vandermonde matrix
-    DMatrixRow_F64 A;
+    DMatrixRMaj A;
     // matrix containing computed polynomial coefficients
-    DMatrixRow_F64 coef;
+    DMatrixRMaj coef;
     // observation matrix
-    DMatrixRow_F64 y;
+    DMatrixRMaj y;
 
     // solver used to compute
-    AdjustableLinearSolver_R64 solver;
+    AdjustableLinearSolver_DDRM solver;
 
     /**
      * Constructor.
@@ -56,12 +56,12 @@ public class PolynomialFit {
      * @param degree The polynomial's degree which is to be fit to the observations.
      */
     public PolynomialFit( int degree ) {
-        coef = new DMatrixRow_F64(degree+1,1);
-        A = new DMatrixRow_F64(1,degree+1);
-        y = new DMatrixRow_F64(1,1);
+        coef = new DMatrixRMaj(degree+1,1);
+        A = new DMatrixRMaj(1,degree+1);
+        y = new DMatrixRMaj(1,1);
 
         // create a solver that allows elements to be added or removed efficiently
-        solver = LinearSolverFactory_R64.adjustable();
+        solver = LinearSolverFactory_DDRM.adjustable();
     }
 
     /**

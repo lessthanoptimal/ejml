@@ -41,39 +41,85 @@ def H(patA,patB):
     F(patA+"32F",patB+"_C32")
     F(patA+"64F",patB+"_C64")
 
-G("DenseMatrix","DMatrixRow")
-G("BlockMatrix","DMatrixBlock")
-G("EigenPair","EigenPair")
-G("Complex","Complex")
-G("ComplexPolar","ComplexPolar")
-G("ComplexMath","ComplexMath")
-H("CDenseMatrix","DMatrixRow")
-H("ComplexMatrix","Matrix")
+# G("DenseMatrix","DMatrixRow")
+# G("BlockMatrix","DMatrixBlock")
+# G("EigenPair","EigenPair")
+# G("Complex","Complex")
+# G("ComplexPolar","ComplexPolar")
+# G("ComplexMath","ComplexMath")
+# H("CDenseMatrix","DMatrixRow")
+# H("ComplexMatrix","Matrix")
+#
+# F("DenseMatrixBool","DMatrixRow_B")
+#
+# for n in range(2,7):
+#     suf1 = str(n)
+#     suf2 = str(n)+"x"+str(n)
+#
+#     F("FixedMatrix"+suf1+"_64F","DMatrixFixed"+suf1+"_F64")
+#     F("FixedMatrix"+suf2+"_64F","DMatrixFixed"+suf2+"_F64")
+#     F("FixedMatrix"+suf1+"_32F","DMatrixFixed"+suf1+"_F32")
+#     F("FixedMatrix"+suf2+"_32F","DMatrixFixed"+suf2+"_F32")
+#     F("FixedOps"+suf1+"\.","FixedOps"+suf1+"_F64\.")
+#
+# F("_D64","_R64")
+# F("_D32","_R32")
+# F("_CD64","_CR64")
+# F("_CD32","_CR32")
+#
+# F("CommonOps\.","CommonOps_R64\.")
+# F("CovarianceOps\.","CovarianceOps_R64\.")
+# F("EigenOps\.","EigenOps_R64\.")
+# F("MatrixFeatures\.","MatrixFeatures_R64\.")
+# F("NormOps\.","NormOps_R64\.")
+# F("RandomMatrices\.","RandomMatrices_R64\.")
+# F("SingularOps\.","SingularOps_R64\.")
+# F("SpecializedOps\.","SpecializedOps_R64\.")
 
-F("DenseMatrixBool","DMatrixRow_B")
+F("DMatrixRow_C32","CMatrixRMaj")
+F("DMatrixRow_C64","ZMatrixRMaj")
+F("DMatrixRow_F32","FMatrixRMaj")
+F("DMatrixRow_F64","DMatrixRMaj")
+
+F("DMatrixBlock_F32","FMatrixRBlock")
+F("DMatrixBlock_F64","DMatrixRBlock")
+
+F("D1Matrix_C32","CMatrixD1")
+F("D1Matrix_C64","ZMatrixD1")
+F("D1Matrix_F32","FMatrixD1")
+F("D1Matrix_F64","DMatrixD1")
+
+F("D1Submatrix_F32","FSubmatrixD1")
+F("D1Submatrix_F64","DSubmatrixD1")
+
+F("D1Martix_F32","FMatrixD1")
+F("D1Martix_F64","DMatrixD1")
+
+F("DMatrixFixed_F32","FMatrixFixed")
+F("DMatrixFixed_F64","DMatrixFixed")
+
+F("DMatrixRow_B","BMatrixRMaj")
+
+F("Matrix_C32","CMatrix")
+F("Matrix_C64","ZMatrix")
+F("Matrix_F32","FMatrix")
+F("Matrix_F64","DMatrix")
+
+F("_R32","_FDRM")
+F("_R64","_DDRM")
+F("_CR64","_ZDRM")
+F("_CR32","_FDRM")
+F("_O64","_DSCC")
+F("_B64","_DDRB")
 
 for n in range(2,7):
-    suf1 = str(n)
-    suf2 = str(n)+"x"+str(n)
+    F("FixedFeatures{:d}_F64".format(n),"MatrixFeatures_DDF{:d}".format(n))
+    F("FixedNormOps{:d}_F64".format(n),"NormOps_DDF{:d}".format(n))
+    F("FixedOps{:d}_F64".format(n),"CommonOps_DDF{:d}".format(n))
+    F("DMatrixFixed{:d}x{:d}_F32".format(n,n),"FMatrix{:d}x{:d}".format(n,n))
+    F("DMatrixFixed{:d}_F32".format(n,n),"FMatrix{:d}".format(n,n))
+    F("DMatrixFixed{:d}x{:d}_F64".format(n,n),"DMatrix{:d}x{:d}".format(n,n))
+    F("DMatrixFixed{:d}_F64".format(n,n),"DMatrix{:d}".format(n,n))
 
-    F("FixedMatrix"+suf1+"_64F","DMatrixFixed"+suf1+"_F64")
-    F("FixedMatrix"+suf2+"_64F","DMatrixFixed"+suf2+"_F64")
-    F("FixedMatrix"+suf1+"_32F","DMatrixFixed"+suf1+"_F32")
-    F("FixedMatrix"+suf2+"_32F","DMatrixFixed"+suf2+"_F32")
-    F("FixedOps"+suf1+"\.","FixedOps"+suf1+"_F64\.")
-
-F("_D64","_R64")
-F("_D32","_R32")
-F("_CD64","_CR64")
-F("_CD32","_CR32")
-
-F("CommonOps\.","CommonOps_R64\.")
-F("CovarianceOps\.","CovarianceOps_R64\.")
-F("EigenOps\.","EigenOps_R64\.")
-F("MatrixFeatures\.","MatrixFeatures_R64\.")
-F("NormOps\.","NormOps_R64\.")
-F("RandomMatrices\.","RandomMatrices_R64\.")
-F("SingularOps\.","SingularOps_R64\.")
-F("SpecializedOps\.","SpecializedOps_R64\.")
 
 print "Finished!"

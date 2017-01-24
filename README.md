@@ -9,9 +9,9 @@
 
 ## Introduction
 
-Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating dense matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime, clean API, and multiple interfaces. EJML is free, written in 100% Java and has been released under an Apache v2.0 license.
+Efficient Java Matrix Library (EJML) is a linear algebra library for manipulating real/complex/dense/sparse matrices. Its design goals are; 1) to be as computationally and memory efficient as possible for both small and large matrices, and 2) to be accessible to both novices and experts. These goals are accomplished by dynamically selecting the best algorithms to use at runtime, clean API, and multiple interfaces. EJML is free, written in 100% Java and has been released under an Apache v2.0 license.
 
-EJML has three distinct ways to interact with it: 1) procedural, 2) SimpleMatrix, and 3) Equations. Procedure provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
+EJML has three distinct ways to interact with it: 1) operations, 2) SimpleMatrix, and 3) Equations. Operations provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms with a procedural API. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
 The following functionality is provided:
 
 * Basic operators (addition, multiplication, ...)
@@ -20,7 +20,7 @@ The following functionality is provided:
 * Decompositions (LU, QR, Cholesky, SVD, Eigenvalue, ...)
 * Matrix Features (rank, symmetric, definitiveness, ...)
 * Random Matrices (covariance, orthogonal, symmetric, ...)
-* Different Internal Formats (row-major, block)
+* Different Internal Formats (row-major, block, sparse, ...)
 * Unit Testing
 
 Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
@@ -56,19 +56,19 @@ Or you can include the required modules individually
 
      Name        |                 Description
 -----------------|-------------------------------------------------------
-core             | Contains core data structures
-dense32          | Algorithms for dense real 32-bit floats
-dense64          | Algorithms for dense real 64-bit floats
-denseC32         | Algorithms for dense complex 32-bit floats
-denseC64         | Algorithms for dense complex 64-bit floats
-equation         | Equations interface
-simple           | Object oriented SimpleMatrix interface
+ejml-core        | Contains core data structures
+ejml-fdense      | Algorithms for dense real 32-bit floats
+ejml-ddense      | Algorithms for dense real 64-bit floats
+ejml-cdense      | Algorithms for dense complex 32-bit floats
+ejml-zdense      | Algorithms for dense complex 64-bit floats
+ejml-dsparse     | Algorithms for sparse real 64-bit floats
+ejml-simple      | Object oriented SimpleMatrix and Equations interfaces
 
 ==========================================================================
 ## Building
 
 Gradle is the official build environment for EJML.  Before the project can be fully compile you must auto generate
-the F32 code.
+the 32-bit code.
 ```java
 cd ejml
 gradle autogenerate
@@ -79,27 +79,70 @@ After that has finished running all the standard commands will work as well as t
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar
 
 ==========================================================================
+## Matrix and Class Names
+
+EJML supports a variety of different matrix types and uses the following pattern for matrix class names:
+
+```
+Patterns:
+
+<data type>Matrix<structure>
+<data type>MatrixSparse<structure>
+
+Description:
+
+<data type> is a single character
+  'D' for real double 
+  'F' for real float 
+  'Z' for complex double
+  'C' for complex float
+  'B' for binary
+<structure> is the name the internal data structure.
+
+Matrix Suffix   Abreviation   Description
+=========================================================================
+   RMaj            RM         dense row-major
+   RBlock          RB         dense block row-major
+   NxN             FN         dense fixed sized matrix of size N
+   N               FN         dense fixed sized vector of length N  
+   CSC             CC         compressed sparse column
+   Triplet         TR         triplet
+=========================================================================
+
+Examples:
+
+  DMatrixRMaj         double real dense row-major matrix
+  CMatrixRMaj         float complex dense row-major matrix
+  ZMatrixSparseCSC    double complex sparse CSC matrix
+  
+  CommonOps_DDRM      Operations on DMatrixRMaj
+  CommonOps_DSCC      Operations on DMatrixSparseCSC
+```
+   
+Algorithms which operate on a specific matrix type have a suffix that's 5 characters, e.g. _DDRM.  The first letter 'D' is the data type, the second letter 'D' is for dense (sparse is 'S'), and the last two letters are an abbreviation for the structure.
+      
+==========================================================================
 ## File System
 
 * **docs/** :
          Documentation for this library. This documentation is often out of date and online is the best place to get the latest.
 * **examples/** :
          Contains several examples of how EJML can be used to solve different problems or how EJML can be modified for different applications.
-* **main/core** :
+* **main/ejml-core** :
          Contains all essential data structures
-* **main/dense32** :
+* **main/ejml-fdense** :
          Algorithms for real dense 32-bit floating point matrices
-* **main/dense64** :
+* **main/ejml-ddense** :
          Algorithms for real dense 64-bit floating point matrices
-* **main/denseC32** :
+* **main/ejml-cdense** :
          Algorithms for complex dense 32-bit floating point matrices
-* **main/denseC64** :
+* **main/ejml-zdense** :
          Algorithms for complex dense 64-bit floating point matrices
-* **main/equation** :
-         Contains source code for Equations API
-* **main/simple** :
-         Contains source code for SimpleMatrix
-* **main/experimental/** :
+* **main/ejml-dsparse** :
+         Algorithms for real sparse 64-bit floating point matrices
+* **main/ejml-simple** :
+         Contains source code for SimpleMatrix and Equations
+* **main/ejml-experimental/** :
          Where experimental or alternative approaches and possibly buggy code goes that is not ready to be used by most users.
 * **change.txt** :
          History of what changed between each version.
