@@ -36,6 +36,10 @@ Date format: year/month/day
   * Added sum(), sum(A,0), sum(A,1)
 - Modules now have "ejml-" as a suffice to avoid collisions with other libraries
 
+SimpleMatrix
+- TODO make extract/insert more user friendly.
+-      take inspiration from other libraries
+
 ----- Version 0.30
 
 2016/11/09
