@@ -1030,6 +1030,26 @@ public abstract class Operation {
         return ret;
     }
 
+    public static Info normP( final Variable A , final Variable P , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( !(A instanceof VariableMatrix) || !(P instanceof VariableScalar) )
+            throw new RuntimeException("normP(A,p) A should be a matrix and p a scalar");
+
+        final double valueP = ((VariableScalar)P).getDouble();
+        final VariableMatrix varA = (VariableMatrix)A;
+
+        ret.op = new Operation("normP") {
+            @Override
+            public void process() {
+                output.value= NormOps_DDRM.normP(varA.matrix,valueP);
+            }
+        };
+
+        return ret;
+    }
 
     public static Info max( final Variable A , ManagerTempVariables manager) {
         Info ret = new Info();
@@ -1398,6 +1418,60 @@ public abstract class Operation {
                 }
             }
         };
+
+        return ret;
+    }
+
+    public static Info sum_one( final Variable A , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableDouble output = manager.createDouble();
+        ret.output = output;
+
+        if( !(A instanceof VariableMatrix)  )
+            throw new RuntimeException("sum(A) A = matrix");
+
+        final VariableMatrix varA = (VariableMatrix)A;
+
+        ret.op = new Operation("sum_all") {
+            @Override
+            public void process() {
+                output.value = CommonOps_DDRM.elementSum(varA.matrix);
+            }
+        };
+
+        return ret;
+    }
+
+    public static Info sum_two( final Variable A , final Variable P , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( !(A instanceof VariableMatrix) || !(P instanceof VariableScalar) )
+            throw new RuntimeException("sum(A,p) A = matrix and p = scalar");
+
+        final double valueP = ((VariableScalar)P).getDouble();
+        final VariableMatrix varA = (VariableMatrix)A;
+
+        if( valueP == 0 ) {
+            ret.op = new Operation("sum_rows") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(varA.matrix.numRows,1);
+                    CommonOps_DDRM.sumRows(varA.matrix, output.matrix);
+                }
+            };
+        } else if( valueP == 1 ){
+            ret.op = new Operation("sum_cols") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(1,varA.matrix.numCols);
+                    CommonOps_DDRM.sumCols(varA.matrix, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("sum(A,d) expected d to be 0 for rows or 1 for columns");
+        }
 
         return ret;
     }

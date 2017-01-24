@@ -1621,7 +1621,7 @@ public class CommonOps_DDRM {
      * b<sub>j</sub> = sum(i=1:m ; |a<sub>ij</sub>|)
      * </p>
      *
-     * @param input INput matrix whose rows are summed.
+     * @param input Input matrix whose rows are summed.
      * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
      * @return Vector containing the sum of each row in the input.
      */

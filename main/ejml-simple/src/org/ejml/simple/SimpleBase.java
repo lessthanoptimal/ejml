@@ -915,22 +915,35 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
     /**
      * <p>
-     * Extracts the diagonal from this matrix and returns them inside a column vector.
+     * If a vector then a square matrix is returned if a matrix then a vector of diagonal ements is returned
      * </p>
      *
      * @see CommonOps_DDRM#extractDiag(DMatrixRMaj, DMatrixRMaj)
-     * @return Diagonal elements inside a column vector.
+     * @return Diagonal elements inside a vector or a square matrix with the same diagonal elements.
      */
-    public T extractDiag()
+    public T diag()
     {
-        int N = Math.min(mat.getNumCols(),mat.getNumRows());
-
-        T diag = createMatrix(N,1);
-
+        T diag;
         if( bits() == 64 ) {
-            CommonOps_DDRM.extractDiag((DMatrixRMaj)mat, (DMatrixRMaj)diag.getMatrix());
+            if (MatrixFeatures_DDRM.isVector(mat)) {
+                int N = Math.max(mat.getNumCols(),mat.getNumRows());
+                diag = createMatrix(N,N);
+                CommonOps_DDRM.diag((DMatrixRMaj)diag.getMatrix(),N,((DMatrixRMaj)mat).data);
+            } else {
+                int N = Math.min(mat.getNumCols(),mat.getNumRows());
+                diag = createMatrix(N,1);
+                CommonOps_DDRM.extractDiag((DMatrixRMaj)mat, (DMatrixRMaj)diag.getMatrix());
+            }
         } else {
-            CommonOps_FDRM.extractDiag((FMatrixRMaj)mat, (FMatrixRMaj)diag.getMatrix());
+            if (MatrixFeatures_FDRM.isVector(mat)) {
+                int N = Math.max(mat.getNumCols(),mat.getNumRows());
+                diag = createMatrix(N,N);
+                CommonOps_FDRM.diag((FMatrixRMaj)diag.getMatrix(),N,((FMatrixRMaj)mat).data);
+            } else {
+                int N = Math.min(mat.getNumCols(),mat.getNumRows());
+                diag = createMatrix(N,1);
+                CommonOps_FDRM.extractDiag((FMatrixRMaj)mat, (FMatrixRMaj)diag.getMatrix());
+            }
         }
 
         return diag;

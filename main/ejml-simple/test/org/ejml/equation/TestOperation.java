@@ -22,6 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
 
@@ -1128,6 +1129,64 @@ public class TestOperation {
         eq.process("b=normF(5.6)");
 
         assertEquals(5.6, eq.lookupDouble("b"), UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void normP() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=normP(a,2)");
+
+        double expected = NormOps_DDRM.normP((DMatrixRMaj)a.getMatrix(),2);
+
+        assertEquals(expected, eq.lookupDouble("b"), UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void sum_one() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=sum(a)");
+
+        double expected = CommonOps_DDRM.elementSum((DMatrixRMaj)a.getMatrix());
+
+        assertEquals(expected, eq.lookupDouble("b"), UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void sum_rows() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=sum(a,0)");
+
+        DMatrixRMaj expected = new DMatrixRMaj(3,1);
+        CommonOps_DDRM.sumRows((DMatrixRMaj)a.getMatrix(),expected);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void sum_cols() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=sum(a,1)");
+
+        DMatrixRMaj expected = new DMatrixRMaj(1,4);
+        CommonOps_DDRM.sumCols((DMatrixRMaj)a.getMatrix(),expected);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
     }
 
     @Test

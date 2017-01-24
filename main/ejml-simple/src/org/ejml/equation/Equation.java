@@ -131,6 +131,9 @@ import static org.ejml.equation.TokenList.Type;
  * eye(N)       Create an identity matrix which is N by N.
  * eye(A)       Create an identity matrix which is A.numRows by A.numCols
  * normF(A)     Frobenius normal of the matrix.
+ * normP(A,p)   P-norm for a matrix or vector.  p=1 or p=2 is typical.
+ * sum(A)       Sum of every element in A
+ * sum(A,d)     Sum of rows for d = 0 and columns for d = 1
  * det(A)       Determinant of the matrix
  * inv(A)       Inverse of a matrix
  * pinv(A)      Pseudo-inverse of a matrix

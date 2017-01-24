@@ -203,6 +203,12 @@ public class ManagerFunctions {
                 return Operation.normF(A, manager);
             }
         });
+        input1.put("sum",new Input1() {
+            @Override
+            public Operation.Info create(Variable A, ManagerTempVariables manager) {
+                return Operation.sum_one(A, manager);
+            }
+        });
         input1.put("trace",new Input1() {
             @Override
             public Operation.Info create(Variable A, ManagerTempVariables manager) {
@@ -267,6 +273,22 @@ public class ManagerFunctions {
             @Override
             public Operation.Info create(Variable A, ManagerTempVariables manager) {
                 return Operation.sqrt(A, manager);
+            }
+        });
+
+        inputN.put("normP",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
+                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+                return Operation.normP(inputs.get(0), inputs.get(1), manager);
+            }
+        });
+
+        inputN.put("sum",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
+                if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
+                return Operation.sum_two(inputs.get(0), inputs.get(1), manager);
             }
         });
 

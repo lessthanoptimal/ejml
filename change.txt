@@ -13,6 +13,7 @@ Date format: year/month/day
 - Auto generated 32-bit support of all 64-bit code
 - SimpleMatrix
   * Added support for 32-bit matrices
+  * Replaced extractDiag() with diag() and changed behavior.
 - Fixed Sized Matrix
   * Added MatrixFeatures
   * Added NormOps
@@ -32,11 +33,8 @@ Date format: year/month/day
 - Equations
   * Assignment to a submatrix now works with variables
     A((2+i):10,1:20) = 5   <--- this works now
+  * Added sum(), sum(A,0), sum(A,1)
 - Modules now have "ejml-" as a suffice to avoid collisions with other libraries
-
-Equations
-- TODO Add support for matrix norms to Equations
-- TODO Add support for sum(A) sum(A,0) rows and sum(A,1) columns
 
 ----- Version 0.30
 

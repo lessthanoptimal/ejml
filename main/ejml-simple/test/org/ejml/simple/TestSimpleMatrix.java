@@ -707,15 +707,25 @@ public class TestSimpleMatrix {
     }
 
     @Test
-    public void extractDiag() {
+    public void diag_extract() {
         SimpleMatrix a = SimpleMatrix.random64(3,4, 0, 1, rand);
 
-        DMatrixRMaj found = a.extractDiag().getMatrix();
+        DMatrixRMaj found = a.diag().getMatrix();
         DMatrixRMaj expected = new DMatrixRMaj(3,1);
 
         CommonOps_DDRM.extractDiag((DMatrixRMaj)a.getMatrix(),expected);
 
         EjmlUnitTests.assertEquals(found,expected);
+    }
+
+    @Test
+    public void diag_vector() {
+        SimpleMatrix a = SimpleMatrix.random64(3,1, 0, 1, rand);
+
+        DMatrixRMaj found = a.diag().getMatrix();
+        SimpleMatrix expected = SimpleMatrix.diag(((DMatrixRMaj)a.getMatrix()).data);
+
+        EjmlUnitTests.assertEquals(found,expected.getMatrix());
     }
 
     @Test
