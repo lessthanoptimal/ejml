@@ -1203,6 +1203,48 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
+    public void minRows() {
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
+        DMatrixRMaj output = new DMatrixRMaj(4,1);
+
+        assertTrue( output == CommonOps_DDRM.minRows(input, output));
+
+        for( int i = 0; i < input.numRows; i++ ) {
+            double min = input.get(i,0);
+            for( int j = 0; j < input.numCols; j++ ) {
+                min = Math.min(min,input.get(i,j));
+            }
+            assertEquals( min, output.get(i),UtilEjml.TEST_F64);
+        }
+
+        // check with a null output
+        DMatrixRMaj output2 = CommonOps_DDRM.minRows(input, null);
+
+        EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void maxRows() {
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
+        DMatrixRMaj output = new DMatrixRMaj(4,1);
+
+        assertTrue( output == CommonOps_DDRM.maxRows(input, output));
+
+        for( int i = 0; i < input.numRows; i++ ) {
+            double max = input.get(i,0);
+            for( int j = 0; j < input.numCols; j++ ) {
+                max = Math.max(max,input.get(i,j));
+            }
+            assertEquals( max, output.get(i),UtilEjml.TEST_F64);
+        }
+
+        // check with a null output
+        DMatrixRMaj output2 = CommonOps_DDRM.maxRows(input, null);
+
+        EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
+    }
+
+    @Test
     public void sumCols() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
         DMatrixRMaj output = new DMatrixRMaj(1,5);
@@ -1219,6 +1261,48 @@ public class TestCommonOps_DDRM {
 
         // check with a null output
         DMatrixRMaj output2 = CommonOps_DDRM.sumCols(input, null);
+
+        EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void minCols() {
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
+        DMatrixRMaj output = new DMatrixRMaj(1,5);
+
+        assertTrue( output == CommonOps_DDRM.minCols(input, output));
+
+        for( int i = 0; i < input.numCols; i++ ) {
+            double min = input.get(0,i);
+            for( int j = 1; j < input.numRows; j++ ) {
+                min = Math.min(min,input.get(j,i));
+            }
+            assertEquals( min, output.get(i),UtilEjml.TEST_F64);
+        }
+
+        // check with a null output
+        DMatrixRMaj output2 = CommonOps_DDRM.minCols(input, null);
+
+        EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void maxCols() {
+        DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4,5,rand);
+        DMatrixRMaj output = new DMatrixRMaj(1,5);
+
+        assertTrue( output == CommonOps_DDRM.maxCols(input, output));
+
+        for( int i = 0; i < input.numCols; i++ ) {
+            double max = input.get(0,i);
+            for( int j = 1; j < input.numRows; j++ ) {
+                max = Math.max(max,input.get(j,i));
+            }
+            assertEquals( max, output.get(i),UtilEjml.TEST_F64);
+        }
+
+        // check with a null output
+        DMatrixRMaj output2 = CommonOps_DDRM.maxCols(input, null);
 
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }

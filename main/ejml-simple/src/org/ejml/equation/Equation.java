@@ -148,7 +148,9 @@ import static org.ejml.equation.TokenList.Type;
  * kron(A,B)    Kronecker product
  * abs(A)       Absolute value of A.
  * max(A)       Element with the largest value in A.
+ * max(A,d)     Vector containing largest element along the rows (d=0) or columns (d=1)
  * min(A)       Element with the smallest value in A.
+ * min(A,d)     Vector containing largest element along the rows (d=0) or columns (d=1)
  * pow(a,b)     Computes a to the power of b.  Can also be invoked with "a^b" scalars only.
  * sqrt(a)      Computes the square root of a.
  * sin(a)       Math.sin(a) for scalars only

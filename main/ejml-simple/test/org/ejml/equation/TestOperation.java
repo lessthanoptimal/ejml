@@ -1190,6 +1190,66 @@ public class TestOperation {
     }
 
     @Test
+    public void max_rows() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=max(a,0)");
+
+        DMatrixRMaj expected = new DMatrixRMaj(3,1);
+        CommonOps_DDRM.maxRows((DMatrixRMaj)a.getMatrix(),expected);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void max_cols() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=max(a,1)");
+
+        DMatrixRMaj expected = new DMatrixRMaj(1,4);
+        CommonOps_DDRM.maxCols((DMatrixRMaj)a.getMatrix(),expected);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void min_rows() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=min(a,0)");
+
+        DMatrixRMaj expected = new DMatrixRMaj(3,1);
+        CommonOps_DDRM.minRows((DMatrixRMaj)a.getMatrix(),expected);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void min_cols() {
+        Equation eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random64(3,4,-1,1,rand);
+
+        eq.alias(a,"a");
+        eq.process("b=min(a,1)");
+
+        DMatrixRMaj expected = new DMatrixRMaj(1,4);
+        CommonOps_DDRM.minCols((DMatrixRMaj)a.getMatrix(),expected);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+    }
+
+    @Test
     public void eye() {
         Equation eq = new Equation();
 

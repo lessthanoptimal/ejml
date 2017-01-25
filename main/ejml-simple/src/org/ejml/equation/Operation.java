@@ -1086,6 +1086,40 @@ public abstract class Operation {
         return ret;
     }
 
+    public static Info max_two( final Variable A , final Variable P , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( !(A instanceof VariableMatrix) || !(P instanceof VariableScalar) )
+            throw new RuntimeException("max(A,d) A = matrix and d = scalar");
+
+        final double valueP = ((VariableScalar)P).getDouble();
+        final VariableMatrix varA = (VariableMatrix)A;
+
+        if( valueP == 0 ) {
+            ret.op = new Operation("max_rows") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(varA.matrix.numRows,1);
+                    CommonOps_DDRM.maxRows(varA.matrix, output.matrix);
+                }
+            };
+        } else if( valueP == 1 ){
+            ret.op = new Operation("max_cols") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(1,varA.matrix.numCols);
+                    CommonOps_DDRM.maxCols(varA.matrix, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("max(A,d) expected d to be 0 for rows or 1 for columns");
+        }
+
+        return ret;
+    }
+
     public static Info min( final Variable A , ManagerTempVariables manager) {
         Info ret = new Info();
 
@@ -1116,6 +1150,40 @@ public abstract class Operation {
                     output.value = ((VariableDouble)A).getDouble();
                 }
             };
+        }
+
+        return ret;
+    }
+
+    public static Info min_two( final Variable A , final Variable P , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( !(A instanceof VariableMatrix) || !(P instanceof VariableScalar) )
+            throw new RuntimeException("min(A,d) A = matrix and d = scalar");
+
+        final double valueP = ((VariableScalar)P).getDouble();
+        final VariableMatrix varA = (VariableMatrix)A;
+
+        if( valueP == 0 ) {
+            ret.op = new Operation("min_rows") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(varA.matrix.numRows,1);
+                    CommonOps_DDRM.minRows(varA.matrix, output.matrix);
+                }
+            };
+        } else if( valueP == 1 ){
+            ret.op = new Operation("min_cols") {
+                @Override
+                public void process() {
+                    output.matrix.reshape(1,varA.matrix.numCols);
+                    CommonOps_DDRM.minCols(varA.matrix, output.matrix);
+                }
+            };
+        } else {
+            throw new RuntimeException("min(A,d) expected d to be 0 for rows or 1 for columns");
         }
 
         return ret;

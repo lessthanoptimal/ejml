@@ -1588,7 +1588,7 @@ public class CommonOps_DDRM {
      * <p>
      * Computes the sum of each row in the input matrix and returns the results in a vector:<br>
      * <br>
-     * b<sub>j</sub> = sum(i=1:n ; |a<sub>ji</sub>|)
+     * b<sub>j</sub> = sum(i=1:n ; a<sub>ji</sub>)
      * </p>
      *
      * @param input INput matrix whose rows are summed.
@@ -1616,12 +1616,76 @@ public class CommonOps_DDRM {
 
     /**
      * <p>
-     * Computes the sum of each column in the input matrix and returns the results in a vector:<br>
+     * Finds the element with the minimum value along each row in the input matrix and returns the results in a vector:<br>
      * <br>
-     * b<sub>j</sub> = sum(i=1:m ; |a<sub>ij</sub>|)
+     * b<sub>j</sub> = min(i=1:n ; a<sub>ji</sub>)
      * </p>
      *
-     * @param input Input matrix whose rows are summed.
+     * @param input Input matrix
+     * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
+     * @return Vector containing the sum of each row in the input.
+     */
+    public static DMatrixRMaj minRows(DMatrixRMaj input , DMatrixRMaj output ) {
+        if( output == null ) {
+            output = new DMatrixRMaj(input.numRows,1);
+        } else if( output.getNumElements() != input.numRows )
+            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+
+        for( int row = 0; row < input.numRows; row++ ) {
+            double min = Double.MAX_VALUE;
+
+            int end = (row+1)*input.numCols;
+            for( int index = row*input.numCols; index < end; index++ ) {
+                double v = input.data[index];
+                if( v < min )
+                    min = v;
+            }
+
+            output.set(row,min);
+        }
+        return output;
+    }
+
+    /**
+     * <p>
+     * Finds the element with the maximum value along each row in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = max(i=1:n ; a<sub>ji</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
+     * @return Vector containing the sum of each row in the input.
+     */
+    public static DMatrixRMaj maxRows(DMatrixRMaj input , DMatrixRMaj output ) {
+        if( output == null ) {
+            output = new DMatrixRMaj(input.numRows,1);
+        } else if( output.getNumElements() != input.numRows )
+            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+
+        for( int row = 0; row < input.numRows; row++ ) {
+            double max = -Double.MAX_VALUE;
+
+            int end = (row+1)*input.numCols;
+            for( int index = row*input.numCols; index < end; index++ ) {
+                double v = input.data[index];
+                if( v > max )
+                    max = v;
+            }
+
+            output.set(row,max);
+        }
+        return output;
+    }
+
+    /**
+     * <p>
+     * Computes the sum of each column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = min(i=1:m ; a<sub>ij</sub>)
+     * </p>
+     *
+     * @param input Input matrix
      * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
      * @return Vector containing the sum of each row in the input.
      */
@@ -1641,6 +1705,72 @@ public class CommonOps_DDRM {
             }
 
             output.set(cols, total);
+        }
+        return output;
+    }
+
+    /**
+     * <p>
+     * Finds the element with the minimum value along column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = min(i=1:m ; a<sub>ij</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
+     * @return Vector containing the sum of each row in the input.
+     */
+    public static DMatrixRMaj minCols(DMatrixRMaj input , DMatrixRMaj output ) {
+        if( output == null ) {
+            output = new DMatrixRMaj(1,input.numCols);
+        } else if( output.getNumElements() != input.numCols )
+            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+
+        for( int cols = 0; cols < input.numCols; cols++ ) {
+            double minimum = Double.MAX_VALUE;
+
+            int index = cols;
+            int end = index + input.numCols*input.numRows;
+            for( ; index < end; index += input.numCols ) {
+                double v = input.data[index];
+                if( v < minimum )
+                    minimum = v;
+            }
+
+            output.set(cols, minimum);
+        }
+        return output;
+    }
+
+    /**
+     * <p>
+     * Finds the element with the minimum value along column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = min(i=1:m ; a<sub>ij</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
+     * @return Vector containing the sum of each row in the input.
+     */
+    public static DMatrixRMaj maxCols(DMatrixRMaj input , DMatrixRMaj output ) {
+        if( output == null ) {
+            output = new DMatrixRMaj(1,input.numCols);
+        } else if( output.getNumElements() != input.numCols )
+            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+
+        for( int cols = 0; cols < input.numCols; cols++ ) {
+            double maximum = -Double.MAX_VALUE;
+
+            int index = cols;
+            int end = index + input.numCols*input.numRows;
+            for( ; index < end; index += input.numCols ) {
+                double v = input.data[index];
+                if( v > maximum )
+                    maximum = v;
+            }
+
+            output.set(cols, maximum);
         }
         return output;
     }

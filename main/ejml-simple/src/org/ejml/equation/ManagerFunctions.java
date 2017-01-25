@@ -284,6 +284,22 @@ public class ManagerFunctions {
             }
         });
 
+        inputN.put("max",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
+                if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
+                return Operation.max_two(inputs.get(0), inputs.get(1), manager);
+            }
+        });
+
+        inputN.put("min",new InputN() {
+            @Override
+            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
+                if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
+                return Operation.min_two(inputs.get(0), inputs.get(1), manager);
+            }
+        });
+
         inputN.put("sum",new InputN() {
             @Override
             public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {

@@ -23,6 +23,8 @@ Date format: year/month/day
     - Improved the speed of element-wise max and min operations
 - New naming for matrices (see readme)
 - New naming for operation classes (see readme)
+- Operations API
+  * added minCol(), maxCol(), minRow(), maxRow()
 - Sparse matrix support for real values
   * Compressed Sparse Column (CSC) a.k.a. Compressed Column
   * Triplet
@@ -34,11 +36,24 @@ Date format: year/month/day
   * Assignment to a submatrix now works with variables
     A((2+i):10,1:20) = 5   <--- this works now
   * Added sum(), sum(A,0), sum(A,1)
+  *       min(A,0), max(A,0), min(A,1), max(A,1),
 - Modules now have "ejml-" as a suffice to avoid collisions with other libraries
+
+Sparse Matrix
+- TODO Elimination Tree
+- TODO Solver with elimination tree
+- TODO Column counts
+- TODO Symbolic analysis
+- TODO Permute Matrix
+- TODO Cholesky
+- TODO QR
+- TODO LU
 
 SimpleMatrix
 - TODO make extract/insert more user friendly.
 -      take inspiration from other libraries
+-      rows(begin,end)     cols(begin,end)   <--- extract
+-      concatColumns(A,B)  concatRows(A,B)
 
 ----- Version 0.30
 
