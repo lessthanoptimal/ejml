@@ -101,7 +101,7 @@ Matrix Suffix   Abreviation   Description
    NxN             FN         dense fixed sized matrix of size N
    N               FN         dense fixed sized vector of length N  
    CSC             CC         compressed sparse column
-   Triplet         TR         triplet
+   Triplet         TR         sparse triplet
 =========================================================================
 
 Examples:
@@ -113,9 +113,9 @@ Examples:
   CommonOps_DDRM      Operations on DMatrixRMaj
   CommonOps_DSCC      Operations on DMatrixSparseCSC
 ```
-   
+
 Algorithms which operate on a specific matrix type have a suffix that's 5 characters, e.g. _DDRM.  The first letter 'D' is the data type, the second letter 'D' is for dense (sparse is 'S'), and the last two letters are an abbreviation for the structure.
-      
+
 ==========================================================================
 ## File System
 
