@@ -254,15 +254,19 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Computes the elimination tree for a sparse lower triangular square matrix.  All diagonal elements are
-     * assumed to be non-zero.
+     * <p>Computes the elimination tree for sparse lower triangular square matrix generated from cholesky (ata=false)
+     * and BLAh (ata=true) decompositions. In an elimination tree the parent of node 'i' is 'j', where the
+     * first off-diagonal non-zero in column 'i' has row index 'j'; j > i for which l[k,i] != 0.</p>
+     *
+     * <p>This tree encodes the non-zero elements in L given A, e.g. L*L' = A, and enables faster to compute solvers
+     * than the general purpose implementations.</p>
      *
      * <p>Functionally identical to cs_etree in csparse</p>
      *
-     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N
+     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M>N
      * @param ata If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
      *            tree for cholesky factorization
-     * @param parent (Output) Parent of each node in tree.  Size N.
+     * @param parent (Output) Parent of each node in tree.  -1 if no parent.  Size N.
      * @param work (Optional) Work space.  can be null.  size N+M if ata = true or N if false.
      */
     public static void eliminationTree( DMatrixSparseCSC A , boolean ata , int parent[] , int work[]) {
@@ -299,17 +303,67 @@ public class TriangularSolver_DSCC {
                 int i = ata ? work[previous+nz_row_p] : nz_row_p;
 
                 int inext;
-                for(; i != -1 && i < k; i = inext) {
+                while( i != -1 && i < k ) {
                     inext = work[ancestor+i];
                     work[ancestor+i] = k;
-                    if( inext == -1 )
+                    if( inext == -1 ) {
                         parent[i] = k;
+                        break;
+                    } else {
+                        i = inext;
+                    }
                 }
+
                 if( ata ) {
                     work[previous+nz_row_p] = k;
                 }
             }
         }
+    }
+
+    /**
+     * <p>Given an elimination tree compute the non-zero elements in the specified row of L given the
+     * symmetric A matrix.  This is in general much faster than general purpose algorithms</p>
+     *
+     * <p>Functionally equivalent to cs_ereach() in csparse</p>
+     *
+     * @param A Symmetric matrix.
+     * @param k Row in A being processed.
+     * @param parent elimination tree.
+     * @param s (Output) s[top:(n-1)] = pattern of L[k,:].  Must have length A.numCols
+     * @param w Work space array used internally.  All elements must be >= 0 on input. Must be of size A.numCols
+     * @return Returns the index of the first element in the xi list.  Also known as top.
+     */
+    public static int searchNzRowsElim( DMatrixSparseCSC A , int k , int parent[], int s[], int w[] ) {
+        int top = A.numCols;
+
+        // Traversing through the column in A is the same as the row in A since it's symmetric
+        int idx0 = A.col_idx[k], idx1 = A.col_idx[k+1];
+
+        w[k] = -w[k]-2;  // makr node k as visited
+        for (int p = idx0; p < idx1; p++) {
+            int i = A.nz_rows[p];   // A[k,i] is not zero
+
+            if( i > k ) // only consider upper triangular part of A
+                continue;
+
+            // move up the elimination tree
+            int len = 0;
+            for(;w[i]>=0; i = parent[i]) {
+                s[len++] = i; // L[k,i] is not zero
+                w[i] = -w[i]-2; // mark i as being visited
+            }
+            while( len > 0 ) {
+                s[--top] = s[--len];
+            }
+        }
+
+        // unmark all nodes
+        for( int p = top; p < A.numCols; p++ ) {
+            w[s[p]] = -w[s[p]]-2;
+        }
+        w[k] = -w[k]-2;
+        return top;
     }
 
 }

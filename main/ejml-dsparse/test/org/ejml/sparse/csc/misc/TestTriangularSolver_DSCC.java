@@ -380,8 +380,79 @@ public class TestTriangularSolver_DSCC {
      */
     @Ignore
     @Test
-    public  void eliminationTree_case0_tall() {
+    public void eliminationTree_case0_tall() {
         fail("implement");
     }
+
+    /**
+     * Hand constructed test case
+     */
+    @Test
+    public void searchNzRowsElim_case0() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 0 1 1 0 1 0 " +
+                        "0 1 0 1 0 0 0 " +
+                        "0 0 1 0 1 0 0 " +
+                        "0 0 0 1 0 0 0 " +
+                        "0 0 0 0 1 0 1 " +
+                        "0 0 0 0 0 1 1 " +
+                        "0 0 0 0 0 0 1 ",7);
+
+        int parent[] = new int[]{2,3,3,4,5,6,-1};
+
+        int top, s[] = new int[7], w[] = new int[7];
+
+        int expected[];
+
+        // check each row one at a time
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,0,parent,s,w);
+        assertEquals(top,A.numCols);
+
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,1,parent,s,w);
+        assertEquals(top,A.numCols);
+
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,2,parent,s,w);
+        assertEquals(top,A.numCols-1);
+        expected = new int[]{0,0,0,0,0,0,0};
+        assertSetEquals(expected,s,A.numCols-1,A.numCols);
+
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,3,parent,s,w);
+        assertEquals(top,A.numCols-3);
+        expected = new int[]{0,0,0,0,0,1,2};
+        assertSetEquals(expected,s,A.numCols-3,A.numCols);
+
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,4,parent,s,w);
+        assertEquals(top,A.numCols-2);
+        expected = new int[]{0,0,0,0,0,2,3};
+        assertSetEquals(expected,s,A.numCols-2,A.numCols);
+
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,5,parent,s,w);
+        assertEquals(top,A.numCols-4);
+        expected = new int[]{0,0,0,0,2,3,4};
+        assertSetEquals(expected,s,A.numCols-4,A.numCols);
+
+        top = TriangularSolver_DSCC.searchNzRowsElim(A,6,parent,s,w);
+        assertEquals(top,A.numCols-2);
+        expected = new int[]{0,0,0,0,0,4,5};
+        assertSetEquals(expected,s,A.numCols-2,A.numCols);
+    }
+
+    /**
+     * Makes sure the same elements are contained in the two list but order doesn't matter
+     */
+    private static void assertSetEquals( int expected[] , int found[], int start , int end ) {
+        boolean matched[] = new boolean[end];
+        for (int i = start; i < end; i++) {
+            if( matched[i] )
+                fail("matched twice");
+            matched[found[i]] = true;
+        }
+
+        for (int i = start; i < end; i++) {
+            assertTrue(matched[expected[i]]);
+        }
+    }
+
+
 
 }

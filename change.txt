@@ -10,9 +10,9 @@ Date format: year/month/day
 - Added SimpleEVD.getEigenvalues()
 - Added SimpleSVD.getSingularValues()
 - Fixed issue with generics and SimpleEVD and SimpleSVD
-- Auto generated 32-bit support of all 64-bit code
+- Auto generated float 32-bit support of all 64-bit code
 - SimpleMatrix
-  * Added support for 32-bit matrices
+  * Added support for float 32-bit matrices
   * Replaced extractDiag() with diag() and changed behavior.
 - Fixed Sized Matrix
   * Added MatrixFeatures
@@ -40,11 +40,10 @@ Date format: year/month/day
 - Modules now have "ejml-" as a suffice to avoid collisions with other libraries
 
 Sparse Matrix
-- TODO Elimination Tree
-- TODO Solver with elimination tree
+- TODO Permute Matrix/Vector
+- TODO Postordering a tree
 - TODO Column counts
 - TODO Symbolic analysis
-- TODO Permute Matrix
 - TODO Cholesky
 - TODO QR
 - TODO LU
