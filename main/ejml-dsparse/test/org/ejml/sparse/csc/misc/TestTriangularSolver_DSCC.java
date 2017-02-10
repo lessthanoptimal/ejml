@@ -27,12 +27,12 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -228,7 +228,7 @@ public class TestTriangularSolver_DSCC {
     @Test
     public void searchNzRowsInB_case0() {
         DMatrixRMaj D = UtilEjml.parse_DDRM(
-                "1 0 0 0 0 " +
+                     "1 0 0 0 0 " +
                         "1 1 0 0 0 "+
                         "0 1 1 0 0 " +
                         "1 0 0 1 0 " +
@@ -248,6 +248,140 @@ public class TestTriangularSolver_DSCC {
         assertEquals(1,xi[2]);
         assertEquals(4,xi[3]);
         assertEquals(2,xi[4]);
+    }
+
+    /**
+     * All elements in A are filled in.  ata = false
+     */
+    @Test
+    public void eliminationTree_full_square() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 1 1 1 1 " +
+                        "0 1 1 1 1 "+
+                        "0 0 1 1 1 " +
+                        "0 0 0 1 1 " +
+                        "0 0 0 0 1",5);
+
+        int parent[] = new int[A.numCols];
+
+        TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+
+        for (int i = 0; i < A.numCols-1; i++) {
+            assertEquals(i+1,parent[i]);
+        }
+        assertEquals(-1,parent[A.numCols-1]);
+    }
+
+    /**
+     * All elements in A are empty except the diagonal ones. ata = false
+     */
+    @Test
+    public void eliminationTree_diagonal_square() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 0 0 0 0 " +
+                        "0 1 0 0 0 "+
+                        "0 0 1 0 0 " +
+                        "0 0 0 1 0 " +
+                        "0 0 0 0 1",5);
+
+        int parent[] = new int[A.numCols];
+
+        TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(-1,parent[i]);
+        }
+    }
+
+    /**
+     * Hand constructed sparse test case with hand constructed solution. ata = false
+     */
+    @Test
+    public void eliminationTree_case0_square() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 0 0 0 0 " +
+                        "0 1 1 1 0 "+
+                        "0 0 1 0 1 " +
+                        "0 0 0 1 0 " +
+                        "0 0 0 0 1 ",5);
+
+        int parent[] = new int[A.numCols];
+
+        TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+
+        int expected[] = new int[]{-1,2,3,4,-1};
+
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(expected[i],parent[i]);
+        }
+    }
+
+    /**
+     * Hand constructed sparse test case with hand constructed solution. ata = false
+     */
+    @Test
+    public void eliminationTree_case1_square() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 0 1 1 0 1 0 " +
+                        "0 1 0 1 0 0 0 " +
+                        "0 0 1 0 1 0 0 " +
+                        "0 0 0 1 0 0 0 " +
+                        "0 0 0 0 1 0 1 " +
+                        "0 0 0 0 0 1 1 " +
+                        "0 0 0 0 0 0 1 ",7);
+
+        int parent[] = new int[A.numCols];
+
+        TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+
+        int expected[] = new int[]{2,3,3,4,5,6,-1};
+
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(expected[i],parent[i]);
+        }
+    }
+
+    /**
+     * Hand constructed sparse test case with hand constructed solution. ata = false
+     * This is designed to make sure I didn't cheat in the previous test
+     */
+    @Test
+    public void eliminationTree_case2_square() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 0 1 1 0 1 " +
+                        "0 1 0 1 0 0 " +
+                        "0 0 1 0 1 0 " +
+                        "0 0 0 1 0 0 " +
+                        "0 0 0 0 1 0 " +
+                        "0 0 0 0 0 1 " ,6);
+
+        int parent[] = new int[A.numCols];
+
+        TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+
+        int expected[] = new int[]{2,3,3,4,5,-1};
+
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(expected[i],parent[i]);
+        }
+    }
+
+    /**
+     * Test the elimination tree from its definition.  See if it
+     */
+    @Ignore
+    @Test
+    public void eliminationTree_random_square() {
+        fail("Implement");
+    }
+
+    /**
+     * Test case for tall input arrays. ata = true
+     */
+    @Ignore
+    @Test
+    public  void eliminationTree_case0_tall() {
+        fail("implement");
     }
 
 }

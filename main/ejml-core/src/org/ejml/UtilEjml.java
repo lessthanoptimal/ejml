@@ -19,7 +19,9 @@
 package org.ejml;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.FMatrixRMaj;
+import org.ejml.ops.ConvertDMatrixSparse;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -177,5 +179,11 @@ public class UtilEjml {
         });
 
         return idx;
+    }
+
+    public static DMatrixSparseCSC parse_DSCC(String s, int numColumns) {
+        DMatrixRMaj tmp = parse_DDRM(s,numColumns);
+
+        return ConvertDMatrixSparse.convert(tmp,(DMatrixSparseCSC)null);
     }
 }

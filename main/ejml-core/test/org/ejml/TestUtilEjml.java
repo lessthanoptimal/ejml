@@ -19,6 +19,7 @@
 package org.ejml;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparseCSC;
 import org.junit.Test;
 
 import java.util.Random;
@@ -48,7 +49,7 @@ public class TestUtilEjml {
      * the results against the expect answer
      */
     @Test
-    public void testParseMatrix() {
+    public void parse_DDRM() {
         String a = "-0.779094   1.682750\n" +
                  "   1.304014  -1.880739\n";
 
@@ -56,10 +57,10 @@ public class TestUtilEjml {
 
         assertEquals(2,m.numCols);
         assertEquals(2,m.numRows);
-        assertEquals(-0.779094 , m.get(0,0) , 1e-5);
-        assertEquals(1.682750  , m.get(0,1)  , 1e-5);
-        assertEquals(1.304014  , m.get(1,0)  , 1e-5);
-        assertEquals(-1.880739 , m.get(1,1) , 1e-5);
+        assertEquals(-0.779094 , m.get(0,0) , UtilEjml.TEST_F64);
+        assertEquals(1.682750  , m.get(0,1) , UtilEjml.TEST_F64);
+        assertEquals(1.304014  , m.get(1,0) , UtilEjml.TEST_F64);
+        assertEquals(-1.880739 , m.get(1,1) , UtilEjml.TEST_F64);
 
         // give it a matrix with a space in the first element, see if that screws it up
         a = " -0.779094   1.682750  5\n" +
@@ -68,6 +69,25 @@ public class TestUtilEjml {
         m = UtilEjml.parse_DDRM(a,3);
         assertEquals(3,m.numCols);
         assertEquals(2,m.numRows);
-        assertEquals(-0.779094 , m.get(0,0) , 1e-5);
+        assertEquals(-0.779094 , m.get(0,0) , UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void parse_DSCC() {
+        String a = "-0.779094   1.682750\n" +
+                "   0  -1.880739\n";
+
+        DMatrixSparseCSC m = UtilEjml.parse_DSCC(a, 2);
+
+        assertEquals(3,m.nz_length);
+
+        assertEquals(2,m.numCols);
+        assertEquals(2,m.numRows);
+        assertEquals(-0.779094 , m.get(0,0) , UtilEjml.TEST_F64);
+        assertEquals(1.682750  , m.get(0,1) , UtilEjml.TEST_F64);
+        assertEquals(0         , m.get(1,0) , UtilEjml.TEST_F64);
+        assertEquals(-1.880739 , m.get(1,1) , UtilEjml.TEST_F64);
+
+
     }
 }

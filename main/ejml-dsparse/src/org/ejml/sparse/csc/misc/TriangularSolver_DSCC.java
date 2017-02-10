@@ -253,5 +253,63 @@ public class TriangularSolver_DSCC {
         return top;
     }
 
+    /**
+     * Computes the elimination tree for a sparse lower triangular square matrix.  All diagonal elements are
+     * assumed to be non-zero.
+     *
+     * <p>Functionally identical to cs_etree in csparse</p>
+     *
+     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N
+     * @param ata If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
+     *            tree for cholesky factorization
+     * @param parent (Output) Parent of each node in tree.  Size N.
+     * @param work (Optional) Work space.  can be null.  size N+M if ata = true or N if false.
+     */
+    public static void eliminationTree( DMatrixSparseCSC A , boolean ata , int parent[] , int work[]) {
+        int m = A.numRows;
+        int n = A.numCols;
+
+        if( parent.length < n )
+            throw new IllegalArgumentException("parent must be of length N");
+
+        if( work == null )
+            work = new int[n + (ata ? m : 0)];
+
+        int ancestor = 0; // reference to index in work array
+        int previous = n; // reference to index in work array
+
+        if( ata ) {
+            for (int i = 0; i < m; i++) {
+                work[previous+i] = -1;
+            }
+        }
+
+        // step through each column
+        for (int k = 0; k < n; k++) {
+            parent[k] = -1;
+            work[ancestor+k] = -1;
+
+            int idx0 = A.col_idx[k];   // node k has no parent
+            int idx1 = A.col_idx[k+1]; // node k has no ancestor
+
+            for (int p = idx0; p < idx1; p++) {
+
+                int nz_row_p = A.nz_rows[p];
+
+                int i = ata ? work[previous+nz_row_p] : nz_row_p;
+
+                int inext;
+                for(; i != -1 && i < k; i = inext) {
+                    inext = work[ancestor+i];
+                    work[ancestor+i] = k;
+                    if( inext == -1 )
+                        parent[i] = k;
+                }
+                if( ata ) {
+                    work[previous+nz_row_p] = k;
+                }
+            }
+        }
+    }
 
 }
