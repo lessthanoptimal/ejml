@@ -168,4 +168,35 @@ public class MatrixFeatures_DSCC {
 
         return true;
     }
+
+    public static boolean isTranspose( DMatrixSparseCSC A , DMatrixSparseCSC B , double tol ) {
+        if( A.numCols != B.numRows || A.numRows != B.numCols )
+            return false;
+        if( A.nz_length != B.nz_length )
+            return false;
+        if( !A.indicesSorted )
+            throw new IllegalArgumentException("A must have sorted indicies");
+
+        DMatrixSparseCSC Btran = new DMatrixSparseCSC(B.numCols,B.numRows,B.nz_length);
+
+        CommonOps_DSCC.transpose(B,Btran,null);
+        Btran.sortIndices(null);
+
+        for (int i = 0; i < B.nz_length; i++) {
+            if( A.nz_rows[i] != Btran.nz_rows[i] )
+                return false;
+            if( Math.abs(A.nz_values[i] - Btran.nz_values[i]) > tol )
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if the input is a vector
+     * @param a A matrix or vector
+     * @return true if it's a vector.  Column or row.
+     */
+    public static boolean isVector(DMatrixSparseCSC a) {
+        return (a.numCols == 1 && a.numRows > 1) || (a.numRows == 1 && a.numCols>1);
+    }
 }

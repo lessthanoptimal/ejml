@@ -22,6 +22,8 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
 import org.junit.Test;
 
@@ -197,7 +199,35 @@ public class TestMatrixFeatures_DSCC {
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,2, UtilEjml.TEST_F64));
         L.set(0,1,1);
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+    }
 
+    @Test
+    public void isTranspose() {
+
+        // do it first in dense matrices
+        DMatrixRMaj Ad = RandomMatrices_DDRM.rectangle(5,4,-1,1,rand);
+        Ad.data[5] = 0; Ad.data[10] = 0; Ad.data[11] = 0;
+
+        DMatrixRMaj Ad_tran = new DMatrixRMaj(4,5);
+        CommonOps_DDRM.transpose(Ad,Ad_tran);
+
+        // convert to sparse
+        DMatrixSparseCSC A = ConvertDMatrixSparse.convert(Ad,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC At = ConvertDMatrixSparse.convert(Ad_tran,(DMatrixSparseCSC)null);
+
+        A.sortIndices(null);
+        assertTrue(MatrixFeatures_DSCC.isTranspose(A,At, UtilEjml.TEST_F64));
+        At.nz_values[4] += 0.01;
+        assertFalse(MatrixFeatures_DSCC.isTranspose(A,At, UtilEjml.TEST_F64));
+
+    }
+
+    @Test
+    public void isVector() {
+        assertTrue(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(10,1,5)));
+        assertTrue(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(1,10,5)));
+        assertFalse(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(10,10,5)));
+        assertFalse(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(1,1,5)));
     }
 
 }

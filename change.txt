@@ -40,7 +40,6 @@ Date format: year/month/day
 - Modules now have "ejml-" as a suffice to avoid collisions with other libraries
 
 Sparse Matrix
-- TODO Permute Matrix/Vector
 - TODO Postordering a tree
 - TODO Column counts
 - TODO Symbolic analysis

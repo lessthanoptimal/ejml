@@ -246,4 +246,162 @@ public class CommonOps_DSCC {
 
         return A;
     }
+
+    /**
+     * Converts the permutation vector into a matrix. B = P*A.  B[p[i],:] = A[i,:]
+     *
+     * @param p (Input) Permutation vector
+     * @param P (Output) Permutation matrix
+     */
+    public static DMatrixSparseCSC permutationMatrix( int p[] , DMatrixSparseCSC P) {
+
+        int N = p.length;
+
+        if( P == null )
+            P = new DMatrixSparseCSC(N,N,N);
+        else
+            P.reshape(N,N,N);
+        P.indicesSorted = true;
+
+        // each column should have one element inside of it
+        for (int i = 0; i < N; i++) {
+            P.col_idx[i+1] = i+1;
+            P.nz_rows[p[i]] = i;
+            P.nz_values[i] = 1;
+        }
+
+        return P;
+    }
+
+    /**
+     * Converts the permutation matrix into a vector
+     * @param P (Input) Permutation matrix
+     * @param vector (Output) Permutation vector
+     */
+    public static void permutationVector( DMatrixSparseCSC P , int[] vector) {
+        if( P.numCols != P.numRows ) {
+            throw new IllegalArgumentException("Expected a square matrix");
+        } else if( P.nz_length != P.numCols ) {
+            throw new IllegalArgumentException("Expected N non-zero elements in permutation matrix");
+        } else if( vector.length < P.numCols ) {
+            throw new IllegalArgumentException("vector is too short");
+        }
+
+        int M = P.numCols;
+
+        for (int i = 0; i < M; i++) {
+            if( P.col_idx[i+1] != i+1 )
+                throw new IllegalArgumentException("Unexpected number of elements in a column");
+
+            vector[P.nz_rows[i]] = i;
+        }
+    }
+
+    /**
+     * Computes the inverse permutation vector
+     * @param original Original permutation vector
+     * @param inverse It's inverse
+     */
+    public static void permutationInverse( int []original , int []inverse ) {
+        for (int i = 0; i < original.length; i++) {
+            inverse[original[i]] = i;
+        }
+    }
+
+    /**
+     * Applies the column permutation specified by the vector to the input matrix and save the results
+     * in the output matrix
+     * @param perm (Input) Permutation vector. Specifies new order of columns.
+     * @param input (Input) Matrix which is to be permuted
+     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     */
+    public static void permuteColumn( int perm[], DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( input.numCols != perm.length )
+            throw new IllegalArgumentException("Number of columns in input must match length of permutation vector");
+
+        output.reshape(input.numRows,input.numCols,input.nz_length);
+        output.indicesSorted = false;
+        output.col_idx[0] = 0;
+
+        int N = perm.length;
+        int outputNZ = 0;
+        for (int i = 0; i < N; i++) {
+            int inputCol = perm[i];
+            int inputNZ = input.col_idx[inputCol];
+            int total = input.col_idx[inputCol+1]- inputNZ;
+
+            output.col_idx[i+1] = output.col_idx[i] + total;
+
+            for (int j = 0; j < total; j++) {
+                output.nz_rows[outputNZ] = input.nz_rows[inputNZ];
+                output.nz_values[outputNZ++] = input.nz_values[inputNZ++];
+            }
+        }
+    }
+
+    /**
+     * Applies the row permutation specified by the vector to the input matrix and save the results
+     * in the output matrix.  output[perm[j],:] = input[j,:]
+     *  @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows.
+     * @param input (Input) Matrix which is to be permuted
+     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     */
+    public static void permuteRow(int permInv[], DMatrixSparseCSC input, DMatrixSparseCSC output) {
+        if( input.numRows != permInv.length )
+            throw new IllegalArgumentException("Number of rows in input must match length of permutation vector");
+
+        output.reshape(input.numRows,input.numCols,input.nz_length);
+        output.indicesSorted = false;
+
+        System.arraycopy(input.nz_values,0,output.nz_values,0,input.nz_length);
+        System.arraycopy(input.col_idx,0,output.col_idx,0,input.numCols+1);
+
+        int M = permInv.length;
+        int idx0 = 0;
+        for (int i = 0; i < M; i++) {
+            int idx1 = output.col_idx[i+1];
+
+            for (int j = idx0; j < idx1; j++) {
+                output.nz_rows[j] = permInv[input.nz_rows[j]];
+            }
+            idx0 = idx1;
+        }
+    }
+
+    /**
+     * Applies the forward column and inverse row permutation specified by the two vector to the input matrix
+     * and save the results in the output matrix. output[permRow[j],permCol[i]] = input[j,i]
+     * @param permRowInv (Input) Inverse row permutation vector
+     * @param input (Input) Matrix which is to be permuted
+     * @param permCol (Input) Column permutation vector
+     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     */
+    public static void permute(int permRowInv[], DMatrixSparseCSC input, int permCol[], DMatrixSparseCSC output) {
+        if( input.numRows != permRowInv.length )
+            throw new IllegalArgumentException("Number of column in input must match length of rowInv");
+        if( input.numCols != permCol.length )
+            throw new IllegalArgumentException("Number of rows in input must match length of colInv");
+
+        output.reshape(input.numRows,input.numCols,input.nz_length);
+        output.indicesSorted = false;
+        output.col_idx[0] = 0;
+
+        int N = input.numCols;
+
+        // traverse through in order for the output columns
+        int outputNZ = 0;
+        for (int i = 0; i < N; i++) {
+            int inputCol = permCol[i]; // column of input to source from
+            int inputNZ = input.col_idx[inputCol];
+            int total = input.col_idx[inputCol+1]- inputNZ; // total nz in this column
+
+            output.col_idx[i+1] = output.col_idx[i] + total;
+
+            for (int j = 0; j < total; j++) {
+                output.nz_rows[outputNZ] = permRowInv[input.nz_rows[inputNZ]];
+                output.nz_values[outputNZ++] = input.nz_values[inputNZ++];
+            }
+        }
+    }
+
 }

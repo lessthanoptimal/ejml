@@ -358,4 +358,90 @@ public class TestCommonOps_DSCC {
             }
         }
     }
+
+    @Test
+    public void permutationMatrix() {
+        int p[] = new int[]{2,0,1};
+
+        DMatrixSparseCSC P = new DMatrixSparseCSC(3,3,3);
+        CommonOps_DSCC.permutationMatrix(p,P);
+
+        DMatrixRMaj found = ConvertDMatrixSparse.convert(P,(DMatrixRMaj)null);
+        DMatrixRMaj expected = UtilEjml.parse_DDRM(
+                "0 0 1 " +
+                   "1 0 0 " +
+                   "0 1 0 ", 3);
+
+        assertTrue(CommonOps_DSCC.checkIndicesSorted(P));
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected,found));
+    }
+
+    @Test
+    public void permutationVector() {
+        DMatrixSparseCSC P = UtilEjml.parse_DSCC(
+                     "0 0 1 " +
+                        "1 0 0 " +
+                        "0 1 0 ", 3);
+
+        int found[] = new int[3];
+        CommonOps_DSCC.permutationVector(P,found);
+
+        int expected[] = new int[]{2,0,1};
+        for (int i = 0; i < 3; i++) {
+            assertEquals(expected[i],expected[i]);
+        }
+    }
+
+    @Test
+    public void permutationInverse() {
+        int p[] = new int[]{2,0,1,3};
+        int found[] = new int[4];
+
+        CommonOps_DSCC.permutationInverse(p,found);
+
+        DMatrixSparseCSC A = CommonOps_DSCC.permutationMatrix(p,null);
+        DMatrixSparseCSC B = CommonOps_DSCC.permutationMatrix(found,null);
+
+        assertTrue(MatrixFeatures_DSCC.isTranspose(A,B, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void permuteRow() {
+        int permRow[] = new int[]{2,0,3,1};
+        int permRowInv[] = new int[4];
+        CommonOps_DSCC.permutationInverse(permRow,permRowInv);
+
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
+        DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
+
+        CommonOps_DSCC.permuteRow(permRowInv, A, B);
+
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                assertEquals(A.get(permRow[row],col), B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+        assertFalse(B.indicesSorted);
+    }
+
+    @Test
+    public void permute() {
+        int permRow[] = new int[]{2,0,3,1};
+        int permCol[] = new int[]{1,2,0,3};
+
+        int permRowInv[] = new int[4];
+        CommonOps_DSCC.permutationInverse(permRow,permRowInv);
+
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
+        DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
+
+        CommonOps_DSCC.permute(permRowInv, A, permCol, B);
+
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                assertEquals(A.get(permRow[row],permCol[col]), B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+        assertFalse(B.indicesSorted);
+    }
 }
