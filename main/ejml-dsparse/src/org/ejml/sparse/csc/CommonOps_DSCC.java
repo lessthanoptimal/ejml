@@ -309,44 +309,13 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Applies the column permutation specified by the vector to the input matrix and save the results
-     * in the output matrix
-     * @param perm (Input) Permutation vector. Specifies new order of columns.
-     * @param input (Input) Matrix which is to be permuted
-     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
-     */
-    public static void permuteColumn( int perm[], DMatrixSparseCSC input , DMatrixSparseCSC output ) {
-        if( input.numCols != perm.length )
-            throw new IllegalArgumentException("Number of columns in input must match length of permutation vector");
-
-        output.reshape(input.numRows,input.numCols,input.nz_length);
-        output.indicesSorted = false;
-        output.col_idx[0] = 0;
-
-        int N = perm.length;
-        int outputNZ = 0;
-        for (int i = 0; i < N; i++) {
-            int inputCol = perm[i];
-            int inputNZ = input.col_idx[inputCol];
-            int total = input.col_idx[inputCol+1]- inputNZ;
-
-            output.col_idx[i+1] = output.col_idx[i] + total;
-
-            for (int j = 0; j < total; j++) {
-                output.nz_rows[outputNZ] = input.nz_rows[inputNZ];
-                output.nz_values[outputNZ++] = input.nz_values[inputNZ++];
-            }
-        }
-    }
-
-    /**
      * Applies the row permutation specified by the vector to the input matrix and save the results
      * in the output matrix.  output[perm[j],:] = input[j,:]
      *  @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows.
      * @param input (Input) Matrix which is to be permuted
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static void permuteRow(int permInv[], DMatrixSparseCSC input, DMatrixSparseCSC output) {
+    public static void permuteRowInv(int permInv[], DMatrixSparseCSC input, DMatrixSparseCSC output) {
         if( input.numRows != permInv.length )
             throw new IllegalArgumentException("Number of rows in input must match length of permutation vector");
 

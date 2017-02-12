@@ -406,7 +406,7 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void permuteRow() {
+    public void permuteRowInv() {
         int permRow[] = new int[]{2,0,3,1};
         int permRowInv[] = new int[4];
         CommonOps_DSCC.permutationInverse(permRow,permRowInv);
@@ -414,7 +414,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
         DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
 
-        CommonOps_DSCC.permuteRow(permRowInv, A, B);
+        CommonOps_DSCC.permuteRowInv(permRowInv, A, B);
 
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
