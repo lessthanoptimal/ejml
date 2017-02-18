@@ -198,6 +198,10 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
     from files(javadocProjects.collect { project(it).sourceSets.main.output })
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14.1'
+}
+
 // Disable the creation of jars for distribution.  If you don't do this it will crash
 [':main',':examples',':main:autocode'].each {String a ->
     project(a) {
