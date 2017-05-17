@@ -153,18 +153,13 @@ task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModule
         from ext.listJars
         from ext.listSource
         into 'libraries'
-
-        // append on BoofCV so it's clear which jars are part of BoofCV and which are not
-        rename { String fileName ->
-            "EJML-" + fileName
-        }
     }
 }
 
 idea {
     project {
-        jdkName = '1.6 (64bit)'
-        languageLevel = '1.6'
+        jdkName = '1.7 (64bit)'
+        languageLevel = '1.7'
     }
 }
 
