@@ -34,112 +34,70 @@ def F(find,replace):
     findReplace(location,find,replace,"*.java")
 
 def G(patA,patB):
-    F(patA+"32F",patB+"_F32")
     F(patA+"64F",patB+"_F64")
 
 def H(patA,patB):
-    F(patA+"32F",patB+"_C32")
     F(patA+"64F",patB+"_C64")
 
-# G("DenseMatrix","DMatrixRow")
-# G("BlockMatrix","DMatrixBlock")
-# G("EigenPair","EigenPair")
-# G("Complex","Complex")
-# G("ComplexPolar","ComplexPolar")
-# G("ComplexMath","ComplexMath")
-# H("CDenseMatrix","DMatrixRow")
-# H("ComplexMatrix","Matrix")
-#
-# F("DenseMatrixBool","DMatrixRow_B")
-#
-# for n in range(2,7):
-#     suf1 = str(n)
-#     suf2 = str(n)+"x"+str(n)
-#
-#     F("FixedMatrix"+suf1+"_64F","DMatrixFixed"+suf1+"_F64")
-#     F("FixedMatrix"+suf2+"_64F","DMatrixFixed"+suf2+"_F64")
-#     F("FixedMatrix"+suf1+"_32F","DMatrixFixed"+suf1+"_F32")
-#     F("FixedMatrix"+suf2+"_32F","DMatrixFixed"+suf2+"_F32")
-#     F("FixedOps"+suf1+"\.","FixedOps"+suf1+"_F64\.")
-#
-# F("_D64","_R64")
-# F("_D32","_R32")
-# F("_CD64","_CR64")
-# F("_CD32","_CR32")
-#
-# F("CommonOps\.","CommonOps_R64\.")
-# F("CovarianceOps\.","CovarianceOps_R64\.")
-# F("EigenOps\.","EigenOps_R64\.")
-# F("MatrixFeatures\.","MatrixFeatures_R64\.")
-# F("NormOps\.","NormOps_R64\.")
-# F("RandomMatrices\.","RandomMatrices_R64\.")
-# F("SingularOps\.","SingularOps_R64\.")
-# F("SpecializedOps\.","SpecializedOps_R64\.")
-
-F("org.ejml.ops.CommonOps_R64","org.ejml.dense.row.CommonOps_DDRM")
-F("org.ejml.ops.CommonOps_R32","org.ejml.dense.row.CommonOps_DFRM")
-F("org.ejml.ops.MatrixFeatures_R64","org.ejml.dense.row.MatrixFeatures_DDRM")
-F("org.ejml.ops.RandomMatrices_R64","org.ejml.dense.row.RandomMatrices_DDRM")
-F("org.ejml.alg.dense.mult.MatrixMultProduct_R64","org.ejml.dense.row.mult.MatrixMultProduct_DDRM")
-F("org.ejml.alg.dense.mult.VectorVectorMult_R64","org.ejml.dense.row.mult.VectorVectorMult_DDRM")
-F("org.ejml.factory.LinearSolverFactory_R64","org.ejml.dense.row.factory.LinearSolverFactory_DDRM")
+F("org.ejml.factory.DecompositionFactory","org.ejml.dense.row.factory.DecompositionFactory_DDRM")
+F("org.ejml.alg.dense.mult.VectorVectorMult","org.ejml.dense.row.mult.VectorVectorMult_DDRM")
+F("org.ejml.factory.LinearSolverFactory","org.ejml.dense.row.factory.LinearSolverFactory_DDRM")
+F("org.ejml.ops.CommonOps","org.ejml.dense.row.CommonOps_DDRM")
+F("org.ejml.ops.NormOps","org.ejml.dense.row.NormOps_DDRM")
+F("org.ejml.ops.SingularOps","org.ejml.dense.row.SingularOps_DDRM")
+F("org.ejml.ops.SpecializedOps","org.ejml.dense.row.SpecializedOps_DDRM")
+F("org.ejml.ops.MatrixFeatures","org.ejml.dense.row.MatrixFeatures_DDRM")
+F("org.ejml.ops.RandomMatrices","org.ejml.dense.row.RandomMatrices_DDRM")
 F("org.ejml.alg.dense.linsol.LinearSolverSafe","org.ejml.LinearSolverSafe")
-F("org.ejml.ops.NormOps_R64","org.ejml.dense.row.NormOps_DDRM")
-F("org.ejml.ops.SpecializedOps_R64","org.ejml.dense.row.SpecializedOps_DDRM")
-F("org.ejml.factory.DecompositionFactory_R64","org.ejml.dense.row.factory.DecompositionFactory_DDRM")
-F("org.ejml.alg.fixed","org.ejml.dense.fixed")
-F("org.ejml.ops.SingularOps_R64","org.ejml.dense.row.SingularOps_DDRM")
-F("org.ejml.alg.dense.decomposition.svd","org.ejml.dense.row.decomposition.svd")
-F("DMatrixRow_C32","CMatrixRMaj")
-F("DMatrixRow_C64","ZMatrixRMaj")
-F("RowMatrix_F32","FMatrixRMaj")
-F("RowMatrix_F64","DMatrixRMaj")
-F("ConvertMatrixStruct_F32","ConvertFMatrixStruct")
-F("ConvertMatrixStruct_F64","ConvertDMatrixStruct")
+F("org.ejml.alg.dense.mult.MatrixMultProduct","org.ejml.dense.row.mult.MatrixMultProduct_DDRM")
+F("org.ejml.interfaces.decomposition.EigenDecomposition","org.ejml.interfaces.decomposition.EigenDecomposition_F64")
+F("org.ejml.alg.fixed.FixedOps","org.ejml.dense.fixed.CommonOps_DDF")
+F("org.ejml.ops.ConvertMatrixType","org.ejml.ops.ConvertDMatrixStruct")
+# F("","")
 
-F("DMatrixBlock_F32","FMatrixRBlock")
-F("DMatrixBlock_F64","DMatrixRBlock")
+for n in ["CholeskyDecomposition","EigenDecomposition",
+          "CholeskyLDLDecomposition","BidiagonalDecomposition",
+          "LUDecomposition","QRPDecomposition",
+          "SingularValueDecomposition","TridiagonalSimilarDecomposition"]:
+    package_path = "org.ejml.interfaces.decomposition."
+    F(package_path+n+";",package_path+n+"_F64;")
+    F(n+"<DenseMatrix64F>",n+"_F64<DMatrixRMaj>")
 
-F("D1Matrix_C32","CMatrixD1")
-F("D1Matrix_C64","ZMatrixD1")
-F("D1Matrix_F32","FMatrixD1")
-F("D1Matrix_F64","DMatrixD1")
+F("CommonOps.","CommonOps_DDRM.")
+F("CovarianceOps.","CovarianceOps_DDRM.")
+F("EigenOps.","EigenOps_R64.")
+F("MatrixFeatures.","MatrixFeatures_DDRM.")
+F("NormOps.","NormOps_DDRM.")
+F("RandomMatrices.","RandomMatrices_DDRM.")
+F("SingularOps.","SingularOps_DDRM.")
+F("SpecializedOps.","SpecializedOps_DDRM.")
+F("DecompositionFactory.","DecompositionFactory_DDRM.")
+F("VectorVectorMult.","VectorVectorMult_DDRM.")
+F("LinearSolverFactory.","LinearSolverFactory_DDRM.")
+F("MatrixMultProduct.","MatrixMultProduct_DDRM.")
+F("MatrixFeatures.","MatrixFeatures_DDRM.")
+F("ConvertMatrixType.","ConvertDMatrixStruct.")
+F("UtilEjml.parseMatrix","UtilEjml.parse_DDRM")
 
-F("D1Submatrix_F32","FSubmatrixD1")
-F("D1Submatrix_F64","DSubmatrixD1")
 
-F("D1Martix_F32","FMatrixD1")
-F("D1Martix_F64","DMatrixD1")
+G("Complex","Complex")
+G("ComplexMath","ComplexMath")
 
-F("DMatrixFixed_F32","FMatrixFixed")
-F("DMatrixFixed_F64","DMatrixFixed")
+F("DenseMatrix64F","DMatrixRMaj")
+F("BlockMatrix64F","DMatrixRBlock")
 
-F("DMatrixRow_B","BMatrixRMaj")
-
-F("Matrix_C32","CMatrix")
-F("Matrix_C64","ZMatrix")
-F("Matrix_F32","FMatrix")
-F("Matrix_F64","DMatrix")
-
-F("_R32","_FDRM")
-F("_R64","_DDRM")
-F("_CR64","_ZDRM")
-F("_CR32","_FDRM")
-F("_O64","_DSCC")
-F("_B64","_DDRB")
-
-F("DDRM.createRandom","DDRM.rectangle")
+# Random matrix functions that got refactored
 F("DDRM.createSymmetric","DDRM.symmetric")
+F("DDRM.createRandom","DDRM.rectangle")
 F("DDRM.createOrthogonal","DDRM.orthogonal")
+F("DDRM.setRandom","DDRM.fillUniform")
 
 for n in range(2,7):
-    F("FixedFeatures{:d}_F64".format(n),"MatrixFeatures_DDF{:d}".format(n))
-    F("FixedNormOps{:d}_F64".format(n),"NormOps_DDF{:d}".format(n))
-    F("FixedOps{:d}_F64".format(n),"CommonOps_DDF{:d}".format(n))
-    F("FixedMatrix{:d}x{:d}_F32".format(n,n),"FMatrix{:d}x{:d}".format(n,n))
-    F("FixedMatrix{:d}_F32".format(n,n),"FMatrix{:d}".format(n,n))
-    F("FixedMatrix{:d}x{:d}_F64".format(n,n),"DMatrix{:d}x{:d}".format(n,n))
-    F("FixedMatrix{:d}_F64".format(n,n),"DMatrix{:d}".format(n,n))
+    F("FixedFeatures{:d}".format(n),"MatrixFeatures_DDF{:d}".format(n))
+    F("FixedNormOps{:d}".format(n),"NormOps_DDF{:d}".format(n))
+    F("FixedOps{:d}".format(n),"CommonOps_DDF{:d}".format(n))
+    F("FixedMatrix{:d}x{:d}_64F".format(n,n),"DMatrix{:d}x{:d}".format(n,n))
+    F("FixedMatrix{:d}_64F".format(n,n),"DMatrix{:d}".format(n,n))
 
 
 print "Finished!"
