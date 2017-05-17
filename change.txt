@@ -4,7 +4,7 @@ Date format: year/month/day
 
 ----- Version 0.31
 
-2017
+2017/05/18
 
 - Changed minimum Java version from 6 to 7
 - Added SimpleEVD.getEigenvalues()
@@ -38,20 +38,6 @@ Date format: year/month/day
   * Added sum(), sum(A,0), sum(A,1)
   *       min(A,0), max(A,0), min(A,1), max(A,1),
 - Modules now have "ejml-" as a suffice to avoid collisions with other libraries
-
-Sparse Matrix
-- TODO Postordering a tree
-- TODO Column counts
-- TODO Symbolic analysis
-- TODO Cholesky
-- TODO QR
-- TODO LU
-
-SimpleMatrix
-- TODO make extract/insert more user friendly.
--      take inspiration from other libraries
--      rows(begin,end)     cols(begin,end)   <--- extract
--      concatColumns(A,B)  concatRows(A,B)
 
 ----- Version 0.30
 
