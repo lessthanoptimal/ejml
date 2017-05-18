@@ -1,3 +1,21 @@
+<!--
+  ~ Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+  ~
+  ~ This file is part of Efficient Java Matrix Library (EJML).
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <project name="EJML" basedir="." default="main">
 
 
@@ -132,7 +150,7 @@
             </packageset>
 
             <doctitle><![CDATA[<h1>Efficient Java Matrix Library API Specification</h1>]]></doctitle>
-            <bottom><![CDATA[<i>Copyright &#169; 2009-2016 Peter Abeles All Rights Reserved.</i>]]></bottom>
+            <bottom><![CDATA[<i>Copyright &#169; 2009-2017 Peter Abeles All Rights Reserved.</i>]]></bottom>
             <!--<group title="Group 1 Packages" packages="com.dummy.test.a*"/>-->
             <!--<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>-->
             <!--<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>-->
@@ -147,24 +165,29 @@
                 author="true"
                 version="true"
                 use="true"
-                windowtitle="Efficient Java Matrix Library"
-                overview="src/overview.html">
+                windowtitle="Efficient Java Matrix Library">
 
             <link offline="false" href="http://docs.oracle.com/javase/7/docs/api/" packagelistloc="package-list" />
 
-            <packageset dir="main/core/src" defaultexcludes="yes">
+            <packageset dir="main/ejml-cdense/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
-            <packageset dir="main/dense64/src" defaultexcludes="yes">
+            <packageset dir="main/ejml-core/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
-            <packageset dir="main/denseC64/src" defaultexcludes="yes">
+            <packageset dir="main/ejml-ddense/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
-            <packageset dir="main/equation/src" defaultexcludes="yes">
+            <packageset dir="main/ejml-dsparse/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
-            <packageset dir="main/simple/src" defaultexcludes="yes">
+            <packageset dir="main/ejml-fdense/src" defaultexcludes="yes">
+                <include name="org/ejml/**"/>
+            </packageset>
+            <packageset dir="main/ejml-simple/src" defaultexcludes="yes">
+                <include name="org/ejml/**"/>
+            </packageset>
+            <packageset dir="main/ejml-zdense/src" defaultexcludes="yes">
                 <include name="org/ejml/**"/>
             </packageset>
 
@@ -180,7 +203,7 @@
 
 </script>
 <br>
-<b>Copyright &copy; 2009-2016 Peter Abeles</b>
+<b>Copyright &copy; 2009-2017 Peter Abeles</b>
 ]]>
             </bottom>
         </javadoc>
