@@ -19,6 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.Matrix;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.simple.SimpleBase;
 
@@ -101,6 +102,13 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
     @Override
     protected StatisticsMatrix createMatrix(int numRows, int numCols) {
         return new StatisticsMatrix(numRows,numCols);
+    }
+
+    @Override
+    protected StatisticsMatrix wrapMatrix(Matrix m) {
+        StatisticsMatrix r = new StatisticsMatrix();
+        r.mat = m;
+        return r;
     }
 
     public static void main( String args[] ) {

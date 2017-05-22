@@ -237,7 +237,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * </p>
      *
      * <p>
-     * To extract the diagonal elements from a matrix see {@link #extractDiag()}.
+     * To extract the diagonal elements from a matrix see {@link #diag()}.
      * </p>
      *
      * @see CommonOps_DDRM#diag(double...)
@@ -325,6 +325,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     @Override
     protected SimpleMatrix createMatrix( int numRows , int numCols ) {
         return new SimpleMatrix(numRows,numCols, mat.getClass());
+    }
+
+    @Override
+    protected SimpleMatrix wrapMatrix(Matrix m) {
+        return new SimpleMatrix(m);
     }
 
     // TODO should this function be added back?  It makes the code hard to read when its used

@@ -2498,4 +2498,60 @@ public class CommonOps_DDRM {
 
         return total;
     }
+
+    /**
+     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ m[0] , ... , m[n-1] ]
+     *
+     * @param m Set of matrices
+     * @return Resulting matrix
+     */
+    public static DMatrixRMaj concatColumns( DMatrixRMaj ...m ) {
+        int rows = 0;
+        int cols = 0;
+
+        for (int i = 0; i < m.length; i++) {
+            rows = Math.max(rows,m[i].numRows);
+            cols += m[i].numCols;
+        }
+        DMatrixRMaj R = new DMatrixRMaj(rows,cols);
+
+        int col = 0;
+        for (int i = 0; i < m.length; i++) {
+            insert(m[i],R,0,col);
+            col += m[i].numCols;
+        }
+
+        return R;
+    }
+
+    /**
+     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ m[0] ; ... ; m[n-1] ]
+     *
+     * @param m Set of matrices
+     * @return Resulting matrix
+     */
+    public static DMatrixRMaj concatRows( DMatrixRMaj ...m ) {
+        int rows = 0;
+        int cols = 0;
+
+        for (int i = 0; i < m.length; i++) {
+            rows += m[i].numRows;
+            cols = Math.max(cols,m[i].numCols);
+        }
+        DMatrixRMaj R = new DMatrixRMaj(rows,cols);
+
+        int row = 0;
+        for (int i = 0; i < m.length; i++) {
+            insert(m[i],R,row,0);
+            row += m[i].numRows;
+        }
+
+        return R;
+    }
 }

@@ -5,6 +5,12 @@ Date format: year/month/day
 ----- Version 0.32
 
 2017/
+- CommonOps - RMaj
+  * Added concatColumns(A,B)  concatRows(A,B)
+- Simple Matrix
+  * Added concatColumns(A,B)  concatRows(A,B)
+  * Added rows(begin,end) <-- extracts the specified rows
+  * Added cols(begin,end) <-- extracts the specified columns
 
 Sparse Matrix
 - TODO Postordering a tree
@@ -13,12 +19,6 @@ Sparse Matrix
 - TODO Cholesky
 - TODO QR
 - TODO LU
-
-SimpleMatrix
-- TODO make extract/insert more user friendly.
--      take inspiration from other libraries
--      rows(begin,end)     cols(begin,end)   <--- extract
--      concatColumns(A,B)  concatRows(A,B)
 
 ----- Version 0.31
 

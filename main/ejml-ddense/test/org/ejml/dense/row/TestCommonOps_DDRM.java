@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row;
 
+import org.ejml.EjmlParameters;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
@@ -1453,7 +1454,6 @@ public class TestCommonOps_DDRM {
     public void countTrue() {
         BMatrixRMaj B = RandomMatrices_DDRM.randomBinary(4, 5, rand);
 
-
         int index = 0;
 
         for (int i = 0; i < B.getNumElements(); i++) {
@@ -1464,5 +1464,44 @@ public class TestCommonOps_DDRM {
 
         assertTrue(index>5);
         assertEquals(index, CommonOps_DDRM.countTrue(B));
+    }
+
+    @Test
+    public void concatColumns() {
+        DMatrixRMaj a = CommonOps_DDRM.concatColumns();
+        assertEquals(0,a.numRows);
+        assertEquals(0,a.numCols);
+
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,6,rand);
+
+        a = CommonOps_DDRM.concatColumns(A,B);
+        assertEquals(5,a.numRows);
+        assertEquals(10,a.numCols);
+        checkEquals(a,0,0,A);
+        checkEquals(a,0,4,B);
+    }
+    private static void checkEquals( DMatrixRMaj expected , int row0, int col0 , DMatrixRMaj inside ) {
+        for (int i = 0; i < inside.numRows; i++) {
+            for (int j = 0; j < inside.numCols; j++) {
+                assertEquals(expected.get(i+row0,j+col0),inside.get(i,j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void concatRows() {
+        DMatrixRMaj a = CommonOps_DDRM.concatRows();
+        assertEquals(0,a.numRows);
+        assertEquals(0,a.numCols);
+
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,6,rand);
+
+        a = CommonOps_DDRM.concatRows(A,B);
+        assertEquals(8,a.numRows);
+        assertEquals(6,a.numCols);
+        checkEquals(a,0,0,A);
+        checkEquals(a,3,0,B);
     }
 }

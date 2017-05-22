@@ -67,6 +67,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     protected abstract T createMatrix( int numRows , int numCols );
 
+    protected abstract T wrapMatrix( Matrix m );
+
     /**
      * <p>
      * Returns a reference to the matrix that it uses internally.  This is useful
@@ -853,7 +855,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * </p>
      *
      * <p>
-     * If any of the inputs are set to T.END then it will be set to the last row
+     * If any of the inputs are set to SimpleMatrix.END then it will be set to the last row
      * or column in the matrix.
      * </p>
      *
@@ -1425,10 +1427,92 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public int bits() {
         if( mat.getClass() == DMatrixRMaj.class ) {
             return 64;
-        } if( mat.getClass() == FMatrixRMaj.class ) {
+        } else if( mat.getClass() == FMatrixRMaj.class ) {
             return 32;
         } else {
             throw new RuntimeException("Unknown matrix type");
         }
+    }
+
+    /**
+     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ m[0] , ... , m[n-1] ]
+     *
+     * @param A Set of matrices
+     * @return Resulting matrix
+     */
+    public T concatColumns( SimpleBase ...A ) {
+        Matrix combined;
+        if( mat.getClass() == DMatrixRMaj.class ) {
+            DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];
+            m[0] = (DMatrixRMaj)mat;
+            for (int i = 0; i < A.length; i++) {
+                m[1] = A[i].matrix_F64();
+            }
+            combined = CommonOps_DDRM.concatColumns(m);
+        } else if( mat.getClass() == FMatrixRMaj.class ) {
+            FMatrixRMaj m[] = new FMatrixRMaj[A.length+1];
+            m[0] = (FMatrixRMaj)mat;
+            for (int i = 0; i < A.length; i++) {
+                m[1] = A[i].matrix_F32();
+            }
+            combined = CommonOps_FDRM.concatColumns(m);
+        } else {
+            throw new RuntimeException("Unknown matrix type");
+        }
+        return wrapMatrix(combined);
+    }
+
+    /**
+     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ m[0] ; ... ; m[n-1] ]
+     *
+     * @param A Set of matrices
+     * @return Resulting matrix
+     */
+    public T concatRows( SimpleBase ...A ) {
+        Matrix combined;
+        if( mat.getClass() == DMatrixRMaj.class ) {
+            DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];
+            m[0] = (DMatrixRMaj)mat;
+            for (int i = 0; i < A.length; i++) {
+                m[1] = A[i].matrix_F64();
+            }
+            combined = CommonOps_DDRM.concatRows(m);
+        } else if( mat.getClass() == FMatrixRMaj.class ) {
+            FMatrixRMaj m[] = new FMatrixRMaj[A.length+1];
+            m[0] = (FMatrixRMaj)mat;
+            for (int i = 0; i < A.length; i++) {
+                m[1] = A[i].matrix_F32();
+            }
+            combined = CommonOps_FDRM.concatRows(m);
+        } else {
+            throw new RuntimeException("Unknown matrix type");
+        }
+        return wrapMatrix(combined);
+    }
+
+    /**
+     * Extracts the specified rows from the matrix.
+     * @param begin First row.  Inclusive.
+     * @param end Last row + 1.
+     * @return Submatrix that contains the specified rows.
+     */
+    public T rows( int begin , int end ) {
+        return extractMatrix(begin,end,0,SimpleMatrix.END);
+    }
+
+    /**
+     * Extracts the specified rows from the matrix.
+     * @param begin First row.  Inclusive.
+     * @param end Last row + 1.
+     * @return Submatrix that contains the specified rows.
+     */
+    public T cols( int begin , int end ) {
+        return extractMatrix(0,SimpleMatrix.END, begin, end);
     }
 }
