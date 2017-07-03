@@ -67,7 +67,7 @@ Gradle is the official build environment for EJML.  Before the project can be fu
 the 32-bit code.
 ```bash
 cd ejml
-gradle autogenerate
+./gradlew autogenerate
 ```
 After that has finished running all the standard commands (e.g. gradle install) will work as well as the custom commands listed below:
 
