@@ -254,9 +254,11 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * <p>Computes the elimination tree for sparse lower triangular square matrix generated from cholesky (ata=false)
-     * and BLAh (ata=true) decompositions. In an elimination tree the parent of node 'i' is 'j', where the
-     * first off-diagonal non-zero in column 'i' has row index 'j'; j > i for which l[k,i] != 0.</p>
+     * <p>If ata=false then it computes the elimination tree for sparse lower triangular square matrix
+     * generated from Cholesky decomposition. If ata=true then it computes the elimination tree of
+     * A<sup>T</sup>A without forming A<sup>T</sup>A explicitly. In an elimination tree the parent of
+     * node 'i' is 'j', where the first off-diagonal non-zero in column 'i' has row index 'j'; j > i
+     * for which l[k,i] != 0.</p>
      *
      * <p>This tree encodes the non-zero elements in L given A, e.g. L*L' = A, and enables faster to compute solvers
      * than the general purpose implementations.</p>
@@ -322,6 +324,83 @@ public class TriangularSolver_DSCC {
     }
 
     /**
+     * <p>Sorts an elimination tree {@link #eliminationTree} into postorder. In a postoredered tree, the d proper
+     * descendants of any node k are numbered k-d through k-1.  Non-recursive implementation for better performance.</p>
+     *
+     * <p>See page 44</p>
+     *
+     * @param parent The elimination tree.
+     * @param N Number of elements in parent
+     * @param post Postordering permutation. post[k] = i means node 'i' of the original tree is node 'k' in
+     *             the postordered tree.
+     * @param w (Optional) Internal work space. Must be of length 3*N or greater. Can be null
+     */
+    public static void postorder( int parent[] , int N , int post[], int w[] ) {
+        if( parent.length < N )
+            throw new IllegalArgumentException("parent must be at least of length N");
+        if( post.length < N )
+            throw new IllegalArgumentException("post must be at least of length N");
+        if( w == null )
+            w = new int[3*N];
+        else if( w.length < N )
+            throw new IllegalArgumentException("w must be at least of length 3*N");
+
+        // w[0] to w[N-1] is initialized to the youngest child of node 'j'
+        // w[N] to w[2N-1] is initialized to the second youngest child of node 'j'
+        // w[2N] to w[3N-1] is the stacked of nodes to be examined in the dfs
+        final int next = N;
+
+        // specify the linked list as being empty initially
+        for (int j = 0; j < N; j++) {
+            w[j] = -1;
+        }
+        // traverse nodes in reverse order
+        for (int j = N-1; j >= 0; j--) {
+            // skip if j has no parent, i.e. is a root node
+            if( parent[j] == -1 )
+                continue;
+            // add j to the list of parents
+            w[next+j] = w[parent[j]];
+            w[parent[j]] = j;
+        }
+
+        // perform the DFS on each root node
+        int k = 0;
+        for (int j = 0; j < N; j++) {
+            if( parent[j] != -1 )
+                continue;
+
+            k = postorder_dfs(j,k,w,post,N);
+        }
+    }
+
+    /**
+     * Depth First Search used inside of {@link #postorder}.
+     */
+    protected static int postorder_dfs( int j , int k , int []w, int[] post, int N ) {
+        final int next = N;
+        final int stack = 2*N;
+        int top = 0; // top of the stack
+        w[stack+top] = j;
+        while( top >= 0 ) {
+            int p = w[stack+top]; // next index in the stack to process
+            int i = w[p];         // yongest child of p
+
+            if( i == -1 ) {
+                // p has no more unordered children left to process
+                top--;
+                post[k++] = p;
+            } else {
+                w[p] = w[next+i];
+                top++;
+                w[stack + top] = i;
+            }
+        }
+        return k;
+    }
+
+
+    /**
      * <p>Given an elimination tree compute the non-zero elements in the specified row of L given the
      * symmetric A matrix.  This is in general much faster than general purpose algorithms</p>
      *
@@ -365,5 +444,4 @@ public class TriangularSolver_DSCC {
         w[k] = -w[k]-2;
         return top;
     }
-
 }

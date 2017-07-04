@@ -385,6 +385,95 @@ public class TestTriangularSolver_DSCC {
     }
 
     /**
+     * Test an example from the book
+     */
+    @Test
+    public void postorder_case0() {
+        int parent[] =   new int[]{5,2,7,5,7,6,8,9,9,10,-1};
+
+        int N = 11;
+
+        int found[] = new int[N];
+
+        TriangularSolver_DSCC.postorder(parent,N,found,null);
+
+        assertPostorder(parent,found,N);
+    }
+
+    /**
+     * Uses the definition to see if a list is post-ordered
+     */
+    private void assertPostorder( int parent[], int order[], int N ) {
+
+        int mod[] = new int[N];
+        int sanity[] = new int[N];
+
+        // reverse[ original index ] = postorder index
+        int reverse[] = new int[N];
+
+        // create a reverse lookup table
+        for (int i = 0; i < N; i++) {
+            sanity[order[i]]++;
+            reverse[order[i]] = i;
+        }
+
+        // its a permutation so all elements should be touched once
+        for (int i = 0; i < N; i++) {
+            assertEquals(1,sanity[i]);
+        }
+
+        // apply post ordering to the graph
+        for (int i = 0; i < N; i++) {
+            if( parent[i] == -1 )
+                mod[reverse[i]] = -1;
+            else
+                mod[reverse[i]] = reverse[parent[i]];
+        }
+
+        for (int i = 0; i < N; i++) {
+            int n = i;
+            while( mod[n] != -1 ) {
+                if( mod[n] <= i )
+                    fail("found a parent with a lower index. mod["+n+"] = "+mod[n]);
+                n = mod[n];
+            }
+        }
+
+
+    }
+
+    /**
+     * Everything is an island
+     */
+    @Test
+    public void postorder_case1() {
+        int parent[] =   new int[]{-1,-1,-1,-1,-1};
+        int N = 5;
+
+        int found[] = new int[N];
+
+        TriangularSolver_DSCC.postorder(parent,N,found,null);
+
+        assertPostorder(parent,found,N);
+    }
+
+    /**
+     * Multiple root nodes
+     */
+    @Test
+    public void postorder_case2() {
+        int parent[] =   new int[]{5,2,7,5,7,6,8,-1,-1};
+
+        int N = 9;
+
+        int found[] = new int[N];
+
+        TriangularSolver_DSCC.postorder(parent,N,found,null);
+
+        assertPostorder(parent,found,N);
+    }
+
+    /**
      * Hand constructed test case
      */
     @Test
