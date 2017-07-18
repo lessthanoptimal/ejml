@@ -170,6 +170,13 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         return 0;
     }
 
+    /**
+     * Returns the index in nz_rows for the element at (row,col) if it already exists in the matrix. If not then -1
+     * is returned.
+     * @param row row coordinate
+     * @param col column coordinate
+     * @return nz_row index or -1 if the element does not exist
+     */
     public int nz_index( int row , int col ) {
         int col0 = col_idx[col];
         int col1 = col_idx[col+1];
@@ -221,7 +228,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
                 nz_values[i] = nz_values[i-1];
             }
             nz_rows[index] = row;
-            nz_values[index] = col;
+            nz_values[index] = val;
             nz_length++;
         }
     }

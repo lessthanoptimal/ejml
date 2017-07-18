@@ -63,10 +63,9 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
         if( assignable ) {
             DMatrixSparse orig = m.copy();
 
+            // Test the situation where a new element is added to the sparse matrix
             m.set(1, 2, 10);
-            m.set(1, 2, 15);
-
-            assertEquals(15, m.get(1, 2), UtilEjml.TEST_F64);
+            assertEquals(10, m.get(1, 2), UtilEjml.TEST_F64);
 
             // make sure nothing else was modified
             for (int row = 0; row < m.getNumRows(); row++) {
@@ -75,7 +74,11 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
                         assertEquals(orig.get(row,col),m.get(row,col), UtilEjml.TEST_F64);
                 }
             }
+            assertTrue(isStructureValid(m));
 
+            // modify the same element again
+            m.set(1, 2, 20);
+            assertEquals(20, m.get(1, 2), UtilEjml.TEST_F64);
             assertTrue(isStructureValid(m));
 
             // another test case.  empty matrix
