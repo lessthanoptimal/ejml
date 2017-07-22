@@ -50,7 +50,7 @@ public class InnerTriangularSolver_DDRB {
      * </p>
      *
      * @param L Lower triangular matrix being inverted. Not modified.
-     * @oaran K_inv Where the inverse is stored.  Can be the same as L.  Modified.
+     * @param L_inv Where the inverse is stored.  Can be the same as L.  Modified.
      * @param m The number of rows and columns.
      * @param offsetL which index does the L matrix start at.
      * @param offsetL_inv which index does the L_inv matrix start at.
@@ -222,7 +222,7 @@ public class InnerTriangularSolver_DDRB {
      * @param U An m by m non-singular upper triangular matrix. Not modified.
      * @param b An m by n matrix. Modified.
      * @param m size of the L matrix
-     * @paramUn number of columns in the B matrix.
+     * @param n number of columns in the B matrix.
      * @param offsetU initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */

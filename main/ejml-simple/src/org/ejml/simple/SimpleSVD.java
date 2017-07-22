@@ -36,7 +36,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * Wrapper around SVD for simple matrix.  See {@link SingularValueDecomposition} for more details.
  * </p>
  * SVD is defined as the following decomposition:<br>
- * <div align=center> A = U * W * V <sup>T</sup> </div><br>
+ * <center> A = U * W * V <sup>T</sup> </center>
  * where A is m by n, and U and V are orthogonal matrices, and  W is a diagonal matrix
  *
  * <p>

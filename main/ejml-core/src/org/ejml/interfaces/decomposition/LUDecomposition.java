@@ -23,7 +23,7 @@ import org.ejml.data.Matrix;
 
 /**
  * LU Decomposition refactors the original matrix such that:<br>
- * <div align=center> P<sup>T</sup>*L*U = A</div>
+ * <center> P<sup>T</sup>*L*U = A</center>
  * where P is a pivot matrix, L is a lower triangular matrix, U is an upper triangular matrix and A is
  * the original matrix.
  *

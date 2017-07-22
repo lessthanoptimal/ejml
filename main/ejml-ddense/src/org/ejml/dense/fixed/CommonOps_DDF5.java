@@ -702,7 +702,7 @@ public class CommonOps_DDF5 {
      * <br>
      * c = a * b <br>
      * <br>
-     * c> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }
+     * c &ge; &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }
      * </p>
      *
      * @param a The left vector in the multiplication operation. Not modified.
@@ -825,8 +825,7 @@ public class CommonOps_DDF5 {
     }
 
     /**
-     * Computes the determinant using minor matrices.
-     * <p></p>
+     * Computes the determinant using minor matrices.<br>
      * WARNING: Potentially less stable than using LU decomposition.
      *
      * @param mat Input matrix.  Not modified.

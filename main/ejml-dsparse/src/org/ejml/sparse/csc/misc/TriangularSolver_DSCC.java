@@ -257,7 +257,7 @@ public class TriangularSolver_DSCC {
      * <p>If ata=false then it computes the elimination tree for sparse lower triangular square matrix
      * generated from Cholesky decomposition. If ata=true then it computes the elimination tree of
      * A<sup>T</sup>A without forming A<sup>T</sup>A explicitly. In an elimination tree the parent of
-     * node 'i' is 'j', where the first off-diagonal non-zero in column 'i' has row index 'j'; j > i
+     * node 'i' is 'j', where the first off-diagonal non-zero in column 'i' has row index 'j'; j &gt; i
      * for which l[k,i] != 0.</p>
      *
      * <p>This tree encodes the non-zero elements in L given A, e.g. L*L' = A, and enables faster to compute solvers

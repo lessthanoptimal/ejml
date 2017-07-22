@@ -42,7 +42,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  * <pre>
  * QR_Decomposition( A(:,i-r to i) )
  * W=computeW( A(:,i-r to i) )
- * A(:,i:n) = (I + W*Y<sup>T</sup>)<sup>T</sup>A(:,i:n)
+ * A(:,i:n) = (I + W*Y^T)^T*A(:,i:n)
  * </pre>
  * Where r is the block size, i is the submatrix being considered, A is the input matrix,
  * Y is a matrix containing the reflectors just computed,
