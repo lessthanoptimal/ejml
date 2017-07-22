@@ -493,7 +493,7 @@ public class RandomMatrices_DDRM {
      * is greater than zero then a hessenberg matrix of the specified degree is created instead.
      *
      * @param dimen Number of rows and columns in the matrix..
-     * @param hessenberg 0 for triangular matrix and > 0 for hessenberg matrix.
+     * @param hessenberg 0 for triangular matrix and &gt; 0 for hessenberg matrix.
      * @param min minimum value an element can be.
      * @param max maximum value an element can be.
      * @param rand random number generator used.

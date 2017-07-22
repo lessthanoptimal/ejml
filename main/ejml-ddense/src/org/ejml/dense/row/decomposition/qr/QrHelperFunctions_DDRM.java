@@ -160,7 +160,7 @@ public class QrHelperFunctions_DDRM {
      *   tau = tau + u[i]*u[i]
      * end
      * tau = sqrt(tau)
-     * if( u[j] < 0 )
+     * if( u[j] &lt; 0 )
      *    tau = -tau;
      * </pre>
      *

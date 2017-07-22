@@ -38,14 +38,12 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
  * B &isin; &real; <sup>m &times; p</sup>.  Different implementations can solve different
  * types and shapes in input matrices and have different memory and runtime performance.
  *</p>
-
- * <p>
+ *
  * To solve a system:<br>
  * <ol>
  * <li> Call {@link #setA(org.ejml.data.Matrix)}
  * <li> Call {@link #solve(org.ejml.data.Matrix, org.ejml.data.Matrix)}.
  * </ol>
- * </p>
  *
  * <p>To invert a matrix:</p>
  * <ol>

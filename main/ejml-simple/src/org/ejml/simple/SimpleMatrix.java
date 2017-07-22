@@ -319,9 +319,6 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return found;
     }
 
-    /**
-     * @inheritdoc
-     */
     @Override
     protected SimpleMatrix createMatrix( int numRows , int numCols ) {
         return new SimpleMatrix(numRows,numCols, mat.getClass());

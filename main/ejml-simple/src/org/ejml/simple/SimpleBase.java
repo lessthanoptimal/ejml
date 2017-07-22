@@ -582,7 +582,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     /**
      * <p>
      * Reshapes the matrix to the specified number of rows and columns.  If the total number of elements
-     * is <= number of elements it had before the data is saved.  Otherwise a new internal array is
+     * is &le; number of elements it had before the data is saved.  Otherwise a new internal array is
      * declared and the old data lost.
      * </p>
      *
@@ -812,7 +812,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
     /**
      * <p>
-     * Prints the matrix to standard out given a {@link java.io.PrintStream#printf) style floating point format,
+     * Prints the matrix to standard out given a {@link java.io.PrintStream#printf} style floating point format,
      * e.g. print("%f").
      * </p>
      */
@@ -848,7 +848,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Creates a new SimpleMatrix which is a submatrix of this matrix.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1<br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1<br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.

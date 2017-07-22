@@ -50,10 +50,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.
  * </p>
  * 
- * <p>
  * <center>******** IMPORTANT **********</center>
- * This class was auto generated using org.ejml.dense.row.mult.GeneratorMatrixMatrixMult
- * </p>
+ * <p>This class was auto generated using org.ejml.dense.row.mult.GeneratorMatrixMatrixMult</p>
  * 
  * @author Peter Abeles
  */

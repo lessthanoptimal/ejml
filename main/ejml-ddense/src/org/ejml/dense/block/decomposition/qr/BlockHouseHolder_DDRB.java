@@ -32,8 +32,8 @@ import org.ejml.dense.block.VectorOps_DDRB;
  * <p>
  * Assumptions:
  * <ul>
- *  <le> All submatrices are aligned along the inner blocks of the {@link DMatrixRBlock}.
- *  <le> Some times vectors are assumed to have leading zeros and a one.
+ *  <li> All submatrices are aligned along the inner blocks of the {@link DMatrixRBlock}.
+ *  <li> Some times vectors are assumed to have leading zeros and a one.
  * </ul>
  *
  * @author Peter Abeles
@@ -359,7 +359,7 @@ public class BlockHouseHolder_DDRB {
      * <p>
      * Computes the inner product of column vector 'colA' against column vector 'colB' while taking account leading zeros and one.<br>
      * <br>
-     * ret = a<sup>T*b
+     * ret = a<sup>T</sup>*b
      * </p>
      *
      * <p>
@@ -543,7 +543,7 @@ public class BlockHouseHolder_DDRB {
      *   tau = tau + u[i][col]*u[i][col]
      * end
      * tau = sqrt(tau)
-     * if( Y[col][col] < 0 )
+     * if( Y[col][col] &lt; 0 )
      *    tau = -tau;
      * </pre>
      *
@@ -602,7 +602,7 @@ public class BlockHouseHolder_DDRB {
      *   tau = tau + u[row][j]*u[row][j]
      * end
      * tau = sqrt(tau)
-     * if( Y[row][row] < 0 )
+     * if( Y[row][row] &lt; 0 )
      *    tau = -tau;
      * </pre>
      *

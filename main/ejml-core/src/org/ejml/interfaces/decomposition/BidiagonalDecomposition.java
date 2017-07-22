@@ -32,7 +32,7 @@ import org.ejml.data.Matrix;
  * <p>
  * A bidiagonal matrix has zeros in every element except for the two diagonals.<br>
  * <br>
- * b_ij = 0    if i > j or i < j-1<br>
+ * b_ij = 0    if i &gt; j or i &lt; j-1<br>
  * </p>
  *
  *

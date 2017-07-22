@@ -38,7 +38,7 @@ import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
  * <p>
  * Based off algorithm in section 2 of J. J. Dongarra, D. C. Sorensen, S. J. Hammarling,
  * "Block Reduction of Matrices to Condensed Forms for Eigenvalue Computations" Journal of
- * Computations and Applied Mathematics 27 (1989) 215-227<b>
+ * Computations and Applied Mathematics 27 (1989) 215-227<br>
  * <br>
  * Computations of Householder reflectors has been modified from what is presented in that paper to how 
  * it is performed in "Fundamentals of Matrix Computations" 2nd ed. by David S. Watkins.

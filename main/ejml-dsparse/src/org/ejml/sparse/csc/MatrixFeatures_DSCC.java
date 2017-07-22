@@ -129,7 +129,7 @@ public class MatrixFeatures_DSCC {
      * Checks to see if a matrix is lower triangular or Hessenberg. A Hessenberg matrix of degree N
      * has the following property:<br>
      * <br>
-     * a<sub>ij</sub> &le; 0 for all i < j+N<br>
+     * a<sub>ij</sub> &le; 0 for all i &lt; j+N<br>
      * <br>
      * A triangular matrix is a Hessenberg matrix of degree 0.  Only the upper most diagonal elements are
      * explicitly checked to see if they are non-zero

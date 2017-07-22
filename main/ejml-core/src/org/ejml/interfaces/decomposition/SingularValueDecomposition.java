@@ -22,12 +22,10 @@ import org.ejml.data.Matrix;
 
 
 /**
- * <p>
  * This is an abstract class for computing the singular value decomposition (SVD) of a matrix, which is defined
  * as:<br>
  * <div align=center> A = U * W * V <sup>T</sup> </div><br>
  * where A is m by n, and U and V are orthogonal matrices, and  W is a diagonal matrix.
- * </p>
  *
  * <p>
  * The dimension of U,W,V depends if it is a compact SVD or not.  If not compact then U  is m by m, W is  m by n, V is n by n.

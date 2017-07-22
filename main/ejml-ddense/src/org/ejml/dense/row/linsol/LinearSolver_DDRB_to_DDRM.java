@@ -27,7 +27,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 
 
 /**
- * Wrapper that allows {@link org.ejml.interfaces.linsol.LinearSolver <DMatrixRBlock>} to implements {@link org.ejml.interfaces.linsol.LinearSolver}.  It works
+ * Wrapper that allows {@link DMatrixRBlock} to implements {@link org.ejml.interfaces.linsol.LinearSolver}.  It works
  * by converting {@link DMatrixRMaj} into {@link DMatrixRBlock} and calling the equivalent
  * functions.  Since a local copy is made all input matrices are never modified.
  *

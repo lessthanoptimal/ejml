@@ -25,7 +25,6 @@ import org.ejml.data.DMatrixRBlock;
  * Contains triangular solvers for inner blocks of a {@link DMatrixRBlock}.
  * </p>
  *
- * <p>
  * Algorithm for lower triangular inverse:<br>
  *
  * <pre>
@@ -39,8 +38,7 @@ import org.ejml.data.DMatrixRBlock;
  *     end
  *     x(i,i) = 1 / L(i,i)
  * end
- * </pre> 
- * </p>
+ * </pre>
  *
  * @author Peter Abeles
  */
@@ -255,7 +253,7 @@ public class InnerTriangularSolver_DDRB {
      * @param U An m by m non-singular upper triangular matrix. Not modified.
      * @param b An m by n matrix. Modified.
      * @param m size of the L matrix
-     * @paramUn number of columns in the B matrix.
+     * @param n number of columns in the B matrix.
      * @param offsetU initial index in L where the matrix starts
      * @param offsetB initial index in B where the matrix starts
      */

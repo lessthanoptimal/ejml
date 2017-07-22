@@ -265,7 +265,7 @@ public class TriangularSolver_DSCC {
      *
      * <p>Functionally identical to cs_etree in csparse</p>
      *
-     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M>N
+     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &gt; N
      * @param ata If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
      *            tree for cholesky factorization
      * @param parent (Output) Parent of each node in tree.  -1 if no parent.  Size N.
@@ -414,7 +414,7 @@ public class TriangularSolver_DSCC {
      * @param k Row in A being processed.
      * @param parent elimination tree.
      * @param s (Output) s[top:(n-1)] = pattern of L[k,:].  Must have length A.numCols
-     * @param w Work space array used internally.  All elements must be >= 0 on input. Must be of size A.numCols
+     * @param w Work space array used internally.  All elements must be &ge; 0 on input. Must be of size A.numCols
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
     public static int searchNzRowsElim( DMatrixSparseCSC A , int k , int parent[], int s[], int w[] ) {

@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 /**
- * A function is an operator with the following syntax "<Name>( Input )"
+ * A function is an operator with the following syntax "&lt;Name&gt;( Input )"
  *
  * @author Peter Abeles
  */

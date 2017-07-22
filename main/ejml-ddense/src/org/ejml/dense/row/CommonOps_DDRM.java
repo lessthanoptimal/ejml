@@ -664,7 +664,7 @@ public class CommonOps_DDRM {
      * Performs a matrix inversion operation on the specified matrix and stores the results
      * in the same matrix.<br>
      * <br>
-     * a = a<sup>-1<sup>
+     * a = a<sup>-1</sup>
      * </p>
      *
      * <p>
@@ -2125,7 +2125,7 @@ public class CommonOps_DDRM {
      * <p>
      * Performs an in-place element by element scalar division with the scalar on top.<br>
      * <br>
-     * a<sub>ij</sub> = &alpha/a<sub>ij</sub>;
+     * a<sub>ij</sub> = &alpha;/a<sub>ij</sub>
      * </p>
      *
      * @param a The matrix whose elements are divide the scalar.  Modified.
@@ -2163,7 +2163,7 @@ public class CommonOps_DDRM {
      * <p>
      * Performs an element by element scalar division with the scalar on top.<br>
      * <br>
-     * b<sub>ij</sub> = &alpha/a<sub>ij</sub>;
+     * b<sub>ij</sub> = &alpha;/a<sub>ij</sub>
      * </p>
      *
      * @param alpha The numerator.
@@ -2352,7 +2352,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the > operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &gt; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
@@ -2402,7 +2402,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the < operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &lt; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param B Input matrix
