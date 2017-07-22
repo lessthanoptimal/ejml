@@ -23,8 +23,8 @@ import org.ejml.data.Matrix;
 
 /**
  * <p>
- * Cholesky LDL<sup>T<sup> decomposition.
- * <p>
+ * Cholesky LDL<sup>T</sup> decomposition.
+ * </p>
  * <p>
  * A Cholesky LDL decomposition decomposes positive-definite symmetric matrices into:<br>
  * <br>

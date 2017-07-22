@@ -47,12 +47,12 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
  * </ol>
  * </p>
  *
- * <p>
- * To invert a matrix:<br>
+ * <p>To invert a matrix:</p>
  * <ol>
  * <li> Call {@link #setA(org.ejml.data.Matrix)}
  * <li> Call {@link #invert(org.ejml.data.Matrix)}.
  * </ol>
+ * <p>
  * A matrix can also be inverted by passing in an identity matrix to solve, but this will be
  * slower and more memory intensive than the specialized invert() function.
  * </p>

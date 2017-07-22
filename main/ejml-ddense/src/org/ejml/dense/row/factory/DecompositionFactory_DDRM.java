@@ -98,7 +98,8 @@ public class DecompositionFactory_DDRM {
      * Returns a {@link org.ejml.interfaces.decomposition.LUDecomposition} that has been optimized for the specified matrix size.
      * </p>
      *
-     * @parm matrixWidth The matrix size that the decomposition should be optimized for.
+     * @param numRows Shape of the matrix that the code should be targeted towards. Does not need to be exact.
+     * @param numCol Shape of the matrix that the code should be targeted towards. Does not need to be exact.
      * @return LUDecomposition
      */
     public static LUDecomposition_F64<DMatrixRMaj> lu(int numRows , int numCol ) {

@@ -367,7 +367,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * <p>
      * Returns the inverse of this matrix.<br>
      * <br>
-     * b = a<sup>-1<sup><br>
+     * b = a<sup>-1</sup><br>
      * </p>
      *
      * <p>

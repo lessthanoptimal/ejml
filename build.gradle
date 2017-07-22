@@ -71,10 +71,6 @@ subprojects {
         from sourceSets.main.allSource
     }
 
-    artifacts {
-        archives javadocJar, sourcesJar
-    }
-
     // if Maven central isn't setup in gradle.properties skip all of this
     if( project.hasProperty('ossrhUsername') ) {
         signing {
@@ -140,25 +136,26 @@ def allModules = [
 ]
 
 // Creates a directory with all the comiled jars
-task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModules.collect{ it+":sourcesJar"}) << {
+task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModules.collect{ it+":sourcesJar"}) {
 
-    // Create lists of .class jars and source jars
-    ext.listJars = files(allModules.collect{ project(it).tasks.jar.archivePath })
-    ext.listSource = files(allModules.collect{ project(it).tasks.sourcesJar.archivePath })
+    doLast {
+        // Create lists of .class jars and source jars
+        ext.listJars = files(allModules.collect{ project(it).tasks.jar.archivePath })
+        ext.listSource = files(allModules.collect{ project(it).tasks.sourcesJar.archivePath })
 
-    file('libraries').deleteDir()
-    file('libraries').mkdir()
+        file('libraries').deleteDir()
+        file('libraries').mkdir()
 
-    copy {
-        from ext.listJars
-        from ext.listSource
-        into 'libraries'
+        copy {
+            from ext.listJars
+            from ext.listSource
+            into 'libraries'
+        }
     }
 }
 
 idea {
     project {
-        jdkName = '1.7 (64bit)'
         languageLevel = '1.7'
     }
 }
@@ -180,10 +177,11 @@ task alljavadoc(type: Javadoc) {
 
     destinationDir = file("${buildDir}/docs/javadoc")
     configure(options) {
+        failOnError = false
         docTitle = "Efficient Java Matrix Library (EJML) v$project.version"
         links = [ 'http://docs.oracle.com/javase/7/docs/api/' ]
-        header = file('docs/header.txt').text
-        bottom = file('docs/bottom.txt').text // the quotes messes up javadoc still create bug report
+//        header = file('docs/header.txt').text
+//        bottom = file('docs/bottom.txt').text // the quotes messes up javadoc still create bug report
     }
 }
 
@@ -194,7 +192,7 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+    gradleVersion = '4.0.1'
 }
 
 // Disable the creation of jars for distribution.  If you don't do this it will crash

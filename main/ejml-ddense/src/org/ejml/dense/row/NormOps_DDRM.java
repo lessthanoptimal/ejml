@@ -33,7 +33,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * <p>
  * Vector norms have the following properties:
  * <ol>
- * <li>||x|| > 0 if x &ne; 0 and ||0|| = 0</li>
+ * <li>||x|| &gt; 0 if x &ne; 0 and ||0|| = 0</li>
  * <li>||&alpha;x|| = |&alpha;| ||x||</li>
  * <li>||x+y|| &le; ||x|| + ||y||</li>
  * </ol>
@@ -42,7 +42,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * <p>
  * Matrix norms have the following properties:
  * <ol>
- * <li>||A|| > 0 if A &ne; 0 where A &isin; &real; <sup>m &times; n</sup></li>
+ * <li>||A|| &gt; 0 if A &ne; 0 where A &isin; &real; <sup>m &times; n</sup></li>
  * <li> || &alpha; A || = |&alpha;| ||A|| where A &isin; &real; <sup>m &times; n</sup></li>
  * <li>||A+B|| &le; ||A|| + ||B|| where A and B are &isin; &real; <sup>m &times; n</sup></li>
  * <li>||AB|| &le; ||A|| ||B|| where A and B are &isin; &real; <sup>m &times; m</sup></li>

@@ -198,10 +198,10 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      *
      * <p>
      * Examples:<br>
-     * [ 1 2 ; 3 4 ] -> reshape( 2 , 3 , true ) = [ 1 2 3 ; 4 0 0 ]<br>
-     * [ 1 2 ; 3 4 ] -> reshape( 1 , 2 , true ) = [ 1 2 ]<br>
-     * [ 1 2 ; 3 4 ] -> reshape( 1 , 2 , false ) = [ 1 2 ]<br>
-     * [ 1 2 ; 3 4 ] -> reshape( 2 , 3 , false ) = [ 0 0 0 ; 0 0 0 ]
+     * [ 1 2 ; 3 4 ] &rarr; reshape( 2 , 3 , true ) = [ 1 2 3 ; 4 0 0 ]<br>
+     * [ 1 2 ; 3 4 ] &rarr; reshape( 1 , 2 , true ) = [ 1 2 ]<br>
+     * [ 1 2 ; 3 4 ] &rarr; reshape( 1 , 2 , false ) = [ 1 2 ]<br>
+     * [ 1 2 ; 3 4 ] &rarr; reshape( 2 , 3 , false ) = [ 0 0 0 ; 0 0 0 ]
      * </p>
      *
      * @param numRows The new number of rows in the matrix.

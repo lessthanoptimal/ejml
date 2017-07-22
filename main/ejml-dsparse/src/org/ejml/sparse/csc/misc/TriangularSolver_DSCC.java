@@ -399,6 +399,10 @@ public class TriangularSolver_DSCC {
         return k;
     }
 
+    public static void columnCounts() {
+
+    }
+
 
     /**
      * <p>Given an elimination tree compute the non-zero elements in the specified row of L given the

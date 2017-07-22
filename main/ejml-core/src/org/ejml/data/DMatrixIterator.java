@@ -61,7 +61,6 @@ public class DMatrixIterator implements Iterator<Double> {
      * @param minCol first column it will start at.
      * @param maxRow last row it will stop at.
      * @param maxCol last column it will stop at.
-     * @return A new MatrixIterator
      */
     public DMatrixIterator(DMatrixD1 a, boolean rowMajor,
                            int minRow, int minCol, int maxRow, int maxCol
@@ -74,8 +73,6 @@ public class DMatrixIterator implements Iterator<Double> {
             throw new IllegalArgumentException("maxCol must be < numCols");
         if( maxRow >= a.numRows)
             throw new IllegalArgumentException("maxRow must be < numCRows");
-
-
 
         this.a = a;
         this.rowMajor = rowMajor;

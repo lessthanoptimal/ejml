@@ -767,7 +767,7 @@ public class CommonOps_ZDRM {
      * Performs a matrix inversion operation on the specified matrix and stores the results
      * in the same matrix.<br>
      * <br>
-     * a = a<sup>-1<sup>
+     * a = a<sup>-1</sup>
      * </p>
      *
      * <p>
@@ -797,7 +797,7 @@ public class CommonOps_ZDRM {
      * and stores the results in another matrix.  The two matrices must have the
      * same dimension.<br>
      * <br>
-     * b = a<sup>-1<sup>
+     * b = a<sup>-1</sup>
      * </p>
      *
      * <p>
@@ -1127,7 +1127,7 @@ public class CommonOps_ZDRM {
      * Creates a new matrix which is the specified submatrix of 'src'
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -1164,7 +1164,7 @@ public class CommonOps_ZDRM {
      * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.

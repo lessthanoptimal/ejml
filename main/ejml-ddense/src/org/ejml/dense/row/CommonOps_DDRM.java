@@ -247,7 +247,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * <p></p>
+     * <p>
      * Computes the dot product or inner product between two vectors.  If the two vectors are columns vectors
      * then it is defined as:<br>
      * {@code dot(a,b) = a<sup>T</sup> * b}<br>
@@ -705,7 +705,7 @@ public class CommonOps_DDRM {
      * and stores the results in another matrix.  The two matrices must have the
      * same dimension.<br>
      * <br>
-     * b = a<sup>-1<sup>
+     * b = a<sup>-1</sup>
      * </p>
      *
      * <p>
@@ -761,7 +761,6 @@ public class CommonOps_DDRM {
      * </p>
      * @param A  A m by n Matrix.  Not modified.
      * @param invA Where the computed pseudo inverse is stored. n by m.  Modified.
-     * @return
      */
     public static void pinv(DMatrixRMaj A , DMatrixRMaj invA )
     {
@@ -984,7 +983,6 @@ public class CommonOps_DDRM {
      * @param A The left matrix in the operation. Not modified.
      * @param B The right matrix in the operation. Not modified.
      * @param C Where the results of the operation are stored. Modified.
-     * @return The results of the operation.
      */
     public static void kron(DMatrixRMaj A , DMatrixRMaj B , DMatrixRMaj C )
     {
@@ -1017,7 +1015,7 @@ public class CommonOps_DDRM {
      * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -1064,7 +1062,7 @@ public class CommonOps_DDRM {
      * Creates a new matrix which is the specified submatrix of 'src'
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -2304,7 +2302,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the < operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &gt; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrx
      * @param value value each element is compared against
@@ -2329,7 +2327,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the <= operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &ge; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
@@ -2379,7 +2377,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the >= operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &ge; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
@@ -2429,7 +2427,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the A <= B operator to each element.  Results are stored in a boolean matrix.
+     * Applies the A &le; B operator to each element.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param B Input matrix

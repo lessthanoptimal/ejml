@@ -168,7 +168,7 @@ public class ComplexMath_F64
      *
      * @param a Complex number
      * @param N The root's magnitude
-     * @param k Specifies which root.  0 &le; k < N
+     * @param k Specifies which root.  0 &le; k &lt; N
      * @param result Computed root
      */
     public static void root(ComplexPolar_F64 a , int N , int k , ComplexPolar_F64 result )
@@ -183,7 +183,7 @@ public class ComplexMath_F64
      *
      * @param a Complex number
      * @param N The root's magnitude
-     * @param k Specifies which root.  0 &le; k < N
+     * @param k Specifies which root.  0 &le; k &lt; N
      * @param result Computed root
      */
     public static void root(Complex_F64 a , int N , int k , Complex_F64 result )

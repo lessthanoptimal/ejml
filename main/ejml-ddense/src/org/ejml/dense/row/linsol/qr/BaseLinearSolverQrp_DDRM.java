@@ -35,7 +35,6 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * 'x' whose 2-norm is the smallest making it unique, not some other error function.
  * </p>
  *
- * <p>
  * <pre>
  * R = [ R12  R12 ] r      P^T*x = [ y ] r       Q^T*b = [ c ] r
  *     [  0    0  ] m-r            [ z ] n -r            [ d ] m-r
@@ -43,16 +42,13 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * where r is the rank of the matrix and (m,n) is the dimension of the linear system.
  * </pre>
- * </p>
  *
- * <p>
  * <pre>
  * The solution 'x' is found by solving the system below.  The basic solution is found by setting z=0
  *
  *     [ R_11^-1*(c - R12*z) ]
  * x = [          z          ]
  * </pre>
- * </p>
  *
  * <p>
  * NOTE: The matrix rank is determined using the provided QR decomposition. [1] mentions that this will not always

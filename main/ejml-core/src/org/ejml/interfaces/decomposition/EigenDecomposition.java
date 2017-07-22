@@ -39,7 +39,7 @@ import org.ejml.data.Matrix;
  * </p>
  *
  * <p>
- * To create a new instance of {@link EigenDecomposition} use {@link org.ejml.dense.row.factory.DecompositionFactory}. If the matrix
+ * To create a new instance of {@link EigenDecomposition} use DecompositionFactory_XXXX. If the matrix
  * is known to be symmetric be sure to use the symmetric decomposition, which is much faster and more accurate
  * than the general purpose one.
  * </p>

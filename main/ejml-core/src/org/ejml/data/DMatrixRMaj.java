@@ -186,9 +186,6 @@ public class DMatrixRMaj extends DMatrix1Row {
         return s;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public void reshape(int numRows, int numCols, boolean saveValues) {
         if( data.length < numRows * numCols ) {
@@ -376,7 +373,7 @@ public class DMatrixRMaj extends DMatrix1Row {
 
     /**
      * <p>
-     * Prints the value of this matrix to the screen using the same format as {@link java.io.PrintStream#printf).
+     * Prints the value of this matrix to the screen using the same format as {@link java.io.PrintStream#printf}.
      * </p>
      *
      * @param format The format which each element is printed uses.
