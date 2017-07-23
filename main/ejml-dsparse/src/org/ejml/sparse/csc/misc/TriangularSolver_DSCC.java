@@ -327,12 +327,13 @@ public class TriangularSolver_DSCC {
      * <p>Sorts an elimination tree {@link #eliminationTree} into postorder. In a postoredered tree, the d proper
      * descendants of any node k are numbered k-d through k-1.  Non-recursive implementation for better performance.</p>
      *
+     * <p>post[k] = i means node 'i' of the original tree is node 'k' in the postordered tree.</p>
+     *
      * <p>See page 44</p>
      *
-     * @param parent The elimination tree.
+     * @param parent (Input) The elimination tree.
      * @param N Number of elements in parent
-     * @param post Postordering permutation. post[k] = i means node 'i' of the original tree is node 'k' in
-     *             the postordered tree.
+     * @param post (Output) Postordering permutation.
      * @param w (Optional) Internal work space. Must be of length 3*N or greater. Can be null
      */
     public static void postorder( int parent[] , int N , int post[], int w[] ) {

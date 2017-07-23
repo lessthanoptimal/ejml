@@ -57,6 +57,7 @@ public class TestColumnCounts_DSCC {
      */
     @Test
     public void findFirstDescendant_hand() {
+        // set up data structures
         int n = 6;
 
         int delta[] = new int[n];
@@ -64,23 +65,23 @@ public class TestColumnCounts_DSCC {
         int post[] = new int[parent.length];
         TriangularSolver_DSCC.postorder(parent,n,post,null);
 
+        // run the algorithm
         ColumnCounts_DSCC alg = new ColumnCounts_DSCC(false);
         alg.initialize(new DMatrixSparseCSC(n,n,0));
         alg.findFirstDescendant(parent,post,delta);
 
-        int expected[] = new int[]{0,1,0,0,0,0};
+        // check 'first'
+        int expected[] = new int[]{1,0,1,0,0,0};
         int w[] = alg.getW();
         for (int i = 0; i < n; i++) {
             assertEquals(expected[i],w[alg.first+i]);
         }
 
-        // todo check delta
-    }
-
-    @Test
-    public void findFirstDescendant_random() {
-
-        fail("Implement");
+        // check 'delta'
+        expected = new int[]{1,1,0,0,0,0};
+        for (int i = 0; i < n; i++) {
+            assertEquals(expected[i],delta[i]);
+        }
     }
 
     /**
@@ -88,15 +89,41 @@ public class TestColumnCounts_DSCC {
      */
     @Test
     public void isLeaf_hand() {
-        fail("Implement");
+        // set up data structures
+        int n = 6;
+
+        int delta[] = new int[n];
+        int parent[] = new int[]{2,3,3,4,5,-1};
+        int post[] = new int[parent.length];
+        TriangularSolver_DSCC.postorder(parent,n,post,null);
+
+        // run the algorithm
+        ColumnCounts_DSCC alg = new ColumnCounts_DSCC(false);
+        alg.initialize(new DMatrixSparseCSC(n,n,0));
+        alg.findFirstDescendant(parent,post,delta);
+
+        // test cases in which j is clearly not a leaf
+        assertEquals(-1,alg.isLeaf(3,3));
+        assertEquals(-1,alg.isLeaf(3,4));
+
+        // test a mixture of positive and negative cases. Note that the internal book keeping needs to be take in
+        // account so the order of these tests are very important
+        check(alg,1,0,1,1);
+        check(alg,2,0,1,2);
+        check(alg,2,1,-1,-1);
+        check(alg,3,1,1,3);
+
+        // there's some book keeping that isn't done inside of isLeaf() so do it manually
+        alg.w[alg.ancestor] = 3;
+        alg.w[alg.ancestor+1] = 2;
+        alg.w[alg.ancestor+2] = 3;
+        check(alg,3,0,2,3);
     }
 
-    /**
-     * Test against randomly generated matrices using brute force checks
-     */
-    @Test
-    public void isLeaf_random() {
-        fail("Implement");
+    private void check( ColumnCounts_DSCC alg , int i , int j, int jleaf , int returned ) {
+        assertEquals(returned,alg.isLeaf(i,j));
+        if( returned != -1 )
+            assertEquals(jleaf,alg.jleaf);
     }
 
     private void performRandomizedCheck( TestFunction checker ) {

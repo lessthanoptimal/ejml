@@ -40,21 +40,22 @@ public class ColumnCounts_DSCC {
     private DMatrixSparseCSC At = new DMatrixSparseCSC(1,1,1);
 
     // workspace array
-    private int w[] = new int[1];
+    int w[] = new int[1];
 
     // shape of input matrix
-    private int m,n; // (row,col)
+    int m,n; // (row,col)
 
     //--------------indices in workspace
     int ancestor;
     int maxfirst;  // maxfirst[i] is the largest first[j] seen so far for nonzero a[i,j]
     int prevleaf;  // prevleaf[i] the previously found leaf of subtree i
-    int first;     // first[j] is the first descendant of node j in elimination tree
-    //      used when ata is true
+    int first;     // first[j] is the first descendant of node j in elimination tree.
+                   //          j = ElimT index. first[j] = post-order index
+    //----- Used when ata is true
     int head,next;
 
     // output from isLeaf()
-    private int jleaf;
+    int jleaf;
 
     /**
      * Configures column count algorithm.
@@ -76,6 +77,12 @@ public class ColumnCounts_DSCC {
         // check and declare workspace
         if( w.length < s )
             w = new int[s];
+
+        // compute the transpose of A
+        At.reshape(A.numCols,A.numRows,A.nz_length);
+        CommonOps_DSCC.transpose(A,At,w);
+
+        // initialize w
         Arrays.fill(w,0,s,-1); // assign all values in workspace to -1
 
         ancestor = 0;
@@ -83,9 +90,8 @@ public class ColumnCounts_DSCC {
         prevleaf = 2*n;
         first    = 3*n;
 
-        // compute the transpose of A
-        At.reshape(A.numCols,A.numRows,A.nz_length);
-        CommonOps_DSCC.transpose(A,At,w);
+        for (int i = 0; i < n; i++)
+            w[ancestor+i] = i;
     }
 
     /**
@@ -93,7 +99,7 @@ public class ColumnCounts_DSCC {
      *
      * @param A (Input) Upper triangular matrix
      * @param parent (Input) Elimination tree.
-     * @param post (Input) Post ordering of elimination tree
+     * @param post (Input) Post order permutation of elimination tree. See {@link TriangularSolver_DSCC#postorder}
      * @param counts (Output) Storage for column counts.
      */
     public void process(DMatrixSparseCSC A , int parent[], int post[], int counts[] ) {
@@ -110,10 +116,6 @@ public class ColumnCounts_DSCC {
         }
 
         int[] ATp = At.col_idx; int []ATi = At.nz_rows;
-
-        for (int i = 0; i < n; i++) {
-            w[ancestor] = i;
-        }
 
         for (int k = 0; k < n; k++) {
             int j = post[k];
@@ -146,8 +148,10 @@ public class ColumnCounts_DSCC {
 
             // if j is a leaf, delta[j] = 1
             delta[j] = (w[first+j] == -1) ? 1 : 0;
+
+            // loop while not at the root and the first descendant for the node has not been set
             for(; j != -1 && w[first+j]==-1;j=parent[j]) {
-                w[first+j] = k;
+                w[first+j] = k; // remember k is index in post ordered tree
             }
         }
     }
@@ -185,15 +189,15 @@ public class ColumnCounts_DSCC {
      *
      * <ul>
      * <li>jleaf == 0 then j is not a leaf
-     * <li>jleaf == 1 then 1st leaf. q = root of ith subtree
-     * <li>jleaf == 2 then j is a subsequent leaf
+     * <li>jleaf == 1 then 1st leaf. returned value = root of ith subtree
+     * <li>jleaf == 2 then j is a subsequent leaf. returned value = (jprev,j)
      * </ul>
      *
      * <p>See cs_leaf on page 51</p>
      *
-     * @param i Specifies which row subtree in T
-     * @param j node in subtree
-     * @return The least common ancestor (jprev,j)
+     * @param i Specifies which row subtree in T.
+     * @param j node in subtree.
+     * @return Depends on jleaf. See above.
      */
     int isLeaf( int i , int j ) {
         jleaf = 0;
@@ -206,14 +210,19 @@ public class ColumnCounts_DSCC {
         int jprev = w[prevleaf+i];
         w[prevleaf+i]=j;
 
-        jleaf = (jprev == -1) ? 1 : 2;
-        if( jleaf == 1 )
+        if( jprev == -1 ) { // j is the first leaf
+            jleaf = 1;
             return i;
+        } else {           // j is a subsequent leaf
+            jleaf = 2;
+        }
 
-        int q,sparent;
+        // find the common ancestor with jprev
+        int q;
         for( q = jprev; q != w[ancestor+q]; q = w[ancestor+q]){
         }
-        for( int s = jprev; s != q; s = sparent ) {
+        // path compression
+        for( int s = jprev, sparent; s != q; s = sparent ) {
             sparent = w[ancestor+s];
             w[ancestor+s] = q;
         }
