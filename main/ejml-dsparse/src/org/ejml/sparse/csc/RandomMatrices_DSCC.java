@@ -182,4 +182,24 @@ public class RandomMatrices_DSCC {
         CommonOps_DSCC.transpose(L,U,null);
         return U;
     }
+
+    /**
+     * Creates a triangular matrix where the amount of fill is randomly selected too.
+     *
+     * @param upper true for upper triangular and false for lower
+     * @param N number of rows and columns
+er      * @param minFill minimum fill fraction
+     * @param maxFill maximum fill fraction
+     * @param rand random number generator
+     * @return Random matrix
+     */
+    public static DMatrixSparseCSC triangle( boolean upper , int N , double minFill , double maxFill , Random rand ) {
+        int nz = (int)(((N-1)*(N-1)/2)*(rand.nextDouble()*(maxFill-minFill)+minFill))+N;
+
+        if( upper ) {
+            return triangleUpper(N,0,nz,-1,1,rand);
+        } else {
+            return triangleLower(N,0,nz,-1,1,rand);
+        }
+    }
 }

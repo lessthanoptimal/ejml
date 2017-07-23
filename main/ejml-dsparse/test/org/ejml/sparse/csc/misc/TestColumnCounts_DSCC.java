@@ -18,8 +18,11 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -34,18 +37,102 @@ public class TestColumnCounts_DSCC {
     private Random rand = new Random(234);
 
     /**
-     * Make sure it has the expected results when called multiple times
+     * Hand constructed test case.
      */
     @Test
-    public void processRepeatCalls() {
-        fail("Implement");
+    public void process_ata_false() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                     "1 0 1 1 0 1 0 " +
+                        "0 1 0 1 0 0 0 " +
+                        "0 0 1 0 1 0 0 " +
+                        "0 0 0 1 0 0 0 " +
+                        "0 0 0 0 1 0 1 " +
+                        "0 0 0 0 0 1 1 " +
+                        "0 0 0 0 0 0 1 ",7);
+
+        int parent[] = new int[A.numCols];
+        int post[] = new int[A.numCols];
+        int counts[] = new int[A.numCols];
+        int n = A.numRows;
+
+        TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+        TriangularSolver_DSCC.postorder(parent,n,post,null);
+
+        ColumnCounts_DSCC alg = new ColumnCounts_DSCC(false);
+        alg.process(A,parent,post,counts);
+
+        // computed by inspection
+        int expected[] = new int[]{4,2,4,3,3,2,1};
+
+        for (int i = 0; i < n; i++) {
+            assertEquals(expected[i],counts[i]);
+        }
     }
 
+    /**
+     *
+     */
     @Test
-    public void process() {
-        fail("Implement");
+    public void process_monticarlo() {
+
+        ColumnCounts_DSCC alg = new ColumnCounts_DSCC(false);
+
+        for (int i = 0; i < 200; i++) {
+            int N = rand.nextInt(16)+1;
+            N = 7;
+            DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(false,N,0.2,0.5,rand);
+            DMatrixSparseCSC A_t = new DMatrixSparseCSC(N,N,A.nz_length);
+            CommonOps_DSCC.transpose(A,A_t,null);
+
+
+            int parent[] = new int[A.numCols];
+            int post[] = new int[A.numCols];
+            int counts[] = new int[A.numCols];
+
+            TriangularSolver_DSCC.eliminationTree(A_t,false,parent,null);
+            TriangularSolver_DSCC.postorder(parent,N,post,null);
+
+            alg.process(A_t,parent,post,counts);
+
+            // Find a solution the very slow way
+            bruteForceFill(A);
+            int expected[] = computeColumns(A);
+
+            for (int j = 0; j < N; j++) {
+                assertEquals(expected[j],counts[j]);
+            }
+        }
     }
 
+    private void bruteForceFill( DMatrixSparseCSC A ) {
+        for (int i = 0; i < A.numCols; i++) {
+            for (int j = 0; j < i; j++) {
+                if( A.get(i,j) != 0 ) {
+                    for (int k = 0; k < i; k++) {
+                        if( A.get(k,j) != 0 ) {
+                            A.set(i,k,1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private int[] computeColumns(DMatrixSparseCSC A ) {
+        int[] counts = new int[ A.numCols ];
+        for (int i = 0; i < A.numRows; i++) {
+            int c = 1;
+            for (int j = i+1; j < A.numRows; j++) {
+                if( A.get(j,i) != 0 ) {
+                    c++;
+                }
+            }
+            counts[i] = c;
+        }
+        return counts;
+    }
+
+    @Ignore
     @Test
     public void process_ata() {
         fail("Implement");
@@ -124,30 +211,5 @@ public class TestColumnCounts_DSCC {
         assertEquals(returned,alg.isLeaf(i,j));
         if( returned != -1 )
             assertEquals(jleaf,alg.jleaf);
-    }
-
-    private void performRandomizedCheck( TestFunction checker ) {
-        for (int i = 0; i < 200; i++) {
-            // select the matrix size
-            int N = rand.nextInt(16)+1;
-            // select number of non-zero elements in the matrix. diagonal elements are always filled
-            int nz = (int)(((N-1)*(N-1)/2)*(rand.nextDouble()*0.8+0.2))+N;
-            DMatrixSparseCSC A = RandomMatrices_DSCC.triangleUpper(N,0,nz,-1,1,rand);
-
-            // compute the elimination tree
-            int parent[] = new int[A.numCols];
-            TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
-
-            // compute the post ordering
-            int post[] = new int[A.numCols];
-            TriangularSolver_DSCC.postorder(parent,N,post,null);
-
-            // now perform the test
-            checker.performTest(A,parent,post);
-        }
-    }
-
-    private interface TestFunction {
-        void performTest( DMatrixSparseCSC A , int []parents, int []post );
     }
 }
