@@ -15,7 +15,15 @@ subprojects {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
 
-    javadoc.failOnError = false
+    // Enable incremental compile. Should make single file changes faster
+    tasks.withType(JavaCompile) {
+        options.incremental = true
+    }
+
+    test {
+        ignoreFailures true
+        reports.html.enabled = false
+    }
 
     repositories {
         mavenCentral()
@@ -176,12 +184,14 @@ task alljavadoc(type: Javadoc) {
     classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
 
     destinationDir = file("${buildDir}/docs/javadoc")
+
+    // Hack for Java 8u121 and beyond. Comment out if running an earlier version of Java
+    options.addBooleanOption("-allow-script-in-comments", true)
     configure(options) {
         failOnError = false
         docTitle = "Efficient Java Matrix Library (EJML) v$project.version"
         links = [ 'http://docs.oracle.com/javase/7/docs/api/' ]
-//        header = file('docs/header.txt').text
-//        bottom = file('docs/bottom.txt').text // the quotes messes up javadoc still create bug report
+        bottom = file('docs/bottom.txt').text
     }
 }
 
