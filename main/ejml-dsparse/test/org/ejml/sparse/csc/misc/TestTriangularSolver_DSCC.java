@@ -367,12 +367,41 @@ public class TestTriangularSolver_DSCC {
     }
 
     /**
-     * Test the elimination tree from its definition.  See if it
+     * Test the elimination tree from its definition.  Test it by seeing if for each off diagonal non-zero element
+     * A[i,j] there is a path from i to j. i < j.  Hmm that description is actually for the transpose of A
      */
-    @Ignore
     @Test
     public void eliminationTree_random_square() {
-        fail("Implement");
+        for (int i = 0; i < 200; i++) {
+            // select the matrix size
+            int N = rand.nextInt(16)+1;
+            // select number of non-zero elements in the matrix. diagonal elements are always filled
+            int nz = (int)(((N-1)*(N-1)/2)*(rand.nextDouble()*0.8+0.2))+N;
+            DMatrixSparseCSC A = RandomMatrices_DSCC.triangleUpper(N,0,nz,-1,1,rand);
+
+            int parent[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
+
+            for (int col = 0; col < A.numCols; col++) {
+                int idx0 = A.col_idx[col];
+                int idx1 = A.col_idx[col+1];
+
+                // skip over diagonal elements
+                for (int j = idx0; j < idx1-1; j++) {
+                    int row = A.nz_rows[j];
+
+                    checkPathEliminationTree(row,col,parent,N);
+                }
+            }
+        }
+    }
+
+    private void checkPathEliminationTree( int start , int end , int parent[], int N ) {
+        int i = start;
+        while( i < end ) {
+            i = parent[i];
+        }
+        assertTrue(i==end);
     }
 
     /**

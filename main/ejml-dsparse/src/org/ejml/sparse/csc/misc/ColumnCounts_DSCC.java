@@ -33,7 +33,7 @@ import java.util.Arrays;
  */
 public class ColumnCounts_DSCC {
 
-    // See contructor comments
+    // See constructor comments
     private boolean ata;
 
     // transpose of input matrix
@@ -46,11 +46,12 @@ public class ColumnCounts_DSCC {
     private int m,n; // (row,col)
 
     //--------------indices in workspace
-    private int ancestor;
-    private int maxfirst;
-    private int prevleaf;
-    private int first;
-    private int head,next;
+    int ancestor;
+    int maxfirst;  // maxfirst[i] is the largest first[j] seen so far for nonzero a[i,j]
+    int prevleaf;  // prevleaf[i] the previously found leaf of subtree i
+    int first;     // first[j] is the first descendant of node j in elimination tree
+    //      used when ata is true
+    int head,next;
 
     // output from isLeaf()
     private int jleaf;
@@ -67,10 +68,7 @@ public class ColumnCounts_DSCC {
     /**
      * Initializes class data structures and parameters
      */
-    void initialize(DMatrixSparseCSC A, int[] counts) {
-        if( counts.length < A.numCols )
-            throw new IllegalArgumentException("counts must be at least of length A.numCols");
-
+    void initialize(DMatrixSparseCSC A) {
         m = A.numRows;
         n = A.numCols;
         int s = 4*n + (ata ? (n+m+1) : 0);
@@ -78,7 +76,7 @@ public class ColumnCounts_DSCC {
         // check and declare workspace
         if( w.length < s )
             w = new int[s];
-        Arrays.fill(w,-1,0,s); // assign all values in workspace to -1
+        Arrays.fill(w,0,s,-1); // assign all values in workspace to -1
 
         ancestor = 0;
         maxfirst = n;
@@ -99,19 +97,13 @@ public class ColumnCounts_DSCC {
      * @param counts (Output) Storage for column counts.
      */
     public void process(DMatrixSparseCSC A , int parent[], int post[], int counts[] ) {
-        initialize(A, counts);
+        if( counts.length < A.numCols )
+            throw new IllegalArgumentException("counts must be at least of length A.numCols");
+
+        initialize(A);
 
         int delta[] = counts;
-
-        // find first 'j'
-        int j;
-        for (int k = 0; k < n; k++) {
-            j = post[k];
-            delta[j] = (w[first+j] == -1) ? 1 : 0;
-            for(; j != -1 && w[first+j]==-1;j=parent[j]) {
-                w[first+j] = k;
-            }
-        }
+        findFirstDescendant(parent, post, delta);
 
         if( ata ) {
             init_ata(post);
@@ -124,7 +116,7 @@ public class ColumnCounts_DSCC {
         }
 
         for (int k = 0; k < n; k++) {
-            j = post[k];
+            int j = post[k];
             if( parent[j] != -1 )
                 delta[parent[j]]--; // j is not a root
             for (int J = HEAD(k,j); J != -1; J = NEXT(J)) {
@@ -142,9 +134,21 @@ public class ColumnCounts_DSCC {
         }
 
         // sum up delta's of each child
-        for ( j = 0; j < n; j++) {
+        for ( int j = 0; j < n; j++) {
             if( parent[j] != -1)
                 counts[parent[j]] += counts[j];
+        }
+    }
+
+    void findFirstDescendant(int[] parent, int[] post, int[] delta) {
+        for (int k = 0; k < n; k++) {
+            int j = post[k];
+
+            // if j is a leaf, delta[j] = 1
+            delta[j] = (w[first+j] == -1) ? 1 : 0;
+            for(; j != -1 && w[first+j]==-1;j=parent[j]) {
+                w[first+j] = k;
+            }
         }
     }
 
@@ -175,7 +179,6 @@ public class ColumnCounts_DSCC {
         }
     }
 
-
     /**
      * <p>Determines if j is a leaf in the ith row subtree of T^t. If it is then it finds the least-common-ancestor
      * of the previously found leaf in T^i (jprev) and node j.</p>
@@ -192,7 +195,7 @@ public class ColumnCounts_DSCC {
      * @param j node in subtree
      * @return The least common ancestor (jprev,j)
      */
-    public int isLeaf( int i , int j ) {
+    int isLeaf( int i , int j ) {
         jleaf = 0;
 
         // see j is not a leaf
@@ -208,12 +211,16 @@ public class ColumnCounts_DSCC {
             return i;
 
         int q,sparent;
-        for( q = jprev; q != w[ancestor+q]; q = w[ancestor+q]){}
-        for( int s = jprev; s != q; s = sparent )
-        {
+        for( q = jprev; q != w[ancestor+q]; q = w[ancestor+q]){
+        }
+        for( int s = jprev; s != q; s = sparent ) {
             sparent = w[ancestor+s];
             w[ancestor+s] = q;
         }
         return q;
+    }
+
+    int[] getW() {
+        return w;
     }
 }
