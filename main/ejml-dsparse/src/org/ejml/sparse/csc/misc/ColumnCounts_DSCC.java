@@ -24,7 +24,8 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import java.util.Arrays;
 
 /**
- * Computes the column counts of the upper triangular portion of A.
+ * Computes the column counts of the upper triangular portion of L as in L*L<sup>T</sup>=A. Useful in Cholesky
+ * decomposition.
  *
  * <p>See cs_counts() on page 55</p>
  *
