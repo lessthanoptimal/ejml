@@ -16,12 +16,15 @@ Date format: year/month/day
     Thanks GeoffreyGuettier
 
 Sparse Matrix
-- TODO Postordering a tree
 - TODO Column counts
 - TODO Symbolic analysis
 - TODO Cholesky
 - TODO QR
 - TODO LU
+
+Sparse idea:
+* take in a single growable queue for workspace. All int values will be assigned an index inside of it
+* after solvers are done go back and see if a single data structure can be created for workspace storage for solving
 
 ----- Version 0.31
 

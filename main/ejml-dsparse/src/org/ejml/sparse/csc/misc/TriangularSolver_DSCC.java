@@ -268,7 +268,7 @@ public class TriangularSolver_DSCC {
      * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &gt; N
      * @param ata If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
      *            tree for cholesky factorization
-     * @param parent (Output) Parent of each node in tree.  -1 if no parent.  Size N.
+     * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
      * @param work (Optional) Work space.  can be null.  size N+M if ata = true or N if false.
      */
     public static void eliminationTree( DMatrixSparseCSC A , boolean ata , int parent[] , int work[]) {
@@ -397,10 +397,6 @@ public class TriangularSolver_DSCC {
             }
         }
         return k;
-    }
-
-    public static void columnCounts() {
-
     }
 
 
