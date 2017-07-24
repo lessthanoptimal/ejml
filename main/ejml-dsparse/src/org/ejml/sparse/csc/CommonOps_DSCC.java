@@ -18,8 +18,10 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
@@ -64,16 +66,16 @@ public class CommonOps_DSCC {
      *
      * @param a Input matrix.  Not modified
      * @param a_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
-     * @param work Optional work matrix.  null or of length a.numRows
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void transpose(DMatrixSparseCSC a , DMatrixSparseCSC a_t , int work[] ) {
+    public static void transpose(DMatrixSparseCSC a , DMatrixSparseCSC a_t , IGrowArray gw ) {
         if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
 
         a_t.growMaxLength(a.nz_length, false);
         a_t.nz_length = a.nz_length;
 
-        ImplCommonOps_DSCC.transpose(a, a_t, work);
+        ImplCommonOps_DSCC.transpose(a, a_t, gw);
     }
 
     public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
@@ -86,16 +88,16 @@ public class CommonOps_DSCC {
      * @param A Matrix
      * @param B Matrix
      * @param C Storage for results.  Data length is increased if increased if insufficient.
-     * @param workA (Optional) Storage for internal work.  null or array of length A.numRows
-     * @param workB (Optional) Storage for internal work.  null or array of length A.numRows
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                            int workA[], double workB[] )
+                            IGrowArray gw, DGrowArray gx )
     {
         if( A.numRows != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplSparseSparseMult_DSCC.mult(A,B,C, workA, workB);
+        ImplSparseSparseMult_DSCC.mult(A,B,C, gw, gx);
     }
 
     /**
@@ -122,16 +124,16 @@ public class CommonOps_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param work0 (Optional) Work space of length A.rows.  Null to declare internally
-     * @param work1 (Optional) Work space of length A.rows.  Null to declare internally
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           int work0[], double work1[])
+                           IGrowArray gw, DGrowArray gx)
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplCommonOps_DSCC.add(alpha,A,beta,B,C, work0, work1);
+        ImplCommonOps_DSCC.add(alpha,A,beta,B,C, gw, gx);
     }
 
     public static DMatrixSparseCSC identity(int length ) {
@@ -299,6 +301,7 @@ public class CommonOps_DSCC {
 
     /**
      * Computes the inverse permutation vector
+     *
      * @param original Original permutation vector
      * @param inverse It's inverse
      */
@@ -311,7 +314,8 @@ public class CommonOps_DSCC {
     /**
      * Applies the row permutation specified by the vector to the input matrix and save the results
      * in the output matrix.  output[perm[j],:] = input[j,:]
-     *  @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows.
+     *
+     * @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows.
      * @param input (Input) Matrix which is to be permuted
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
@@ -371,6 +375,10 @@ public class CommonOps_DSCC {
                 output.nz_values[outputNZ++] = input.nz_values[inputNZ++];
             }
         }
+    }
+
+    public static void permuteSymmetric() {
+
     }
 
 }

@@ -58,4 +58,9 @@ public class DGrowArray {
             throw new IllegalArgumentException("Out of bounds");
         data[index] = value;
     }
+
+    public void free() {
+        data = new double[0];
+        length = 0;
+    }
 }

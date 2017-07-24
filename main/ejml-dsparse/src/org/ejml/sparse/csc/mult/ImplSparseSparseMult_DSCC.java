@@ -18,10 +18,12 @@
 
 package org.ejml.sparse.csc.mult;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 
-import static org.ejml.sparse.csc.misc.ImplCommonOps_DSCC.checkDeclare;
+import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
 
 /**
  * @author Peter Abeles
@@ -34,14 +36,14 @@ public class ImplSparseSparseMult_DSCC {
      * @param A Matrix
      * @param B Matrix
      * @param C Storage for results.  Data length is increased if increased if insufficient.
-     * @param w (Optional) Storage for internal work.  null or array of length A.numRows
-     * @param x (Optional) Storage for internal work.  null or array of length A.numRows
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                            int w[], double x[] )
+                            IGrowArray gw, DGrowArray gx )
     {
-        x = checkDeclare(A.numRows, x);
-        w = checkDeclare(A.numRows, w, true);
+        double []x = adjust(gx, A.numRows);
+        int []w = adjust(gw, A.numRows, A.numRows);
 
         C.indicesSorted = false;
         C.nz_length = 0;

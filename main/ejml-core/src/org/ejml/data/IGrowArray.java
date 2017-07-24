@@ -58,4 +58,9 @@ public class IGrowArray {
             throw new IllegalArgumentException("Out of bounds");
         data[index] = value;
     }
+
+    public void free() {
+        data = new int[0];
+        length = 0;
+    }
 }

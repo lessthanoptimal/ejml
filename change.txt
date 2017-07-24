@@ -14,9 +14,9 @@ Date format: year/month/day
 - DMatrixSparseCSC
   * Fixed bug in set(row,col,val) where the first time a non-zero element was added it would assign the wrong value
     Thanks GeoffreyGuettier
+- Added *GrowArray to act as workspace in sparse algorithms
 
 Sparse Matrix
-- TODO Column counts
 - TODO Symbolic analysis
 - TODO Cholesky
 - TODO QR

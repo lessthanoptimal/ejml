@@ -18,11 +18,12 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
-import java.util.Arrays;
-
+import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
 import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;
 
 /**
@@ -38,10 +39,10 @@ public class ImplCommonOps_DSCC {
      *
      * @param A Original matrix.  Not modified.
      * @param C Storage for transposed 'a'.  Assumed to be of the correct shape and length.
-     * @param work Work space.  null or an array the size of the rows in 'a'
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , int work[] ) {
-        work = checkDeclare(A.numRows, work, true);
+    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , IGrowArray gw ) {
+        int []work = adjust(gw,A.numRows,A.numRows);
         C.nz_length = A.nz_length;
 
         // compute the histogram for each row in 'a'
@@ -81,14 +82,14 @@ public class ImplCommonOps_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param w (Optional) Work space of length A.rows.  Null to declare internally
-     * @param x (Optional) Work space of length A.rows.  Null to declare internally
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           int w[], double x[])
+                           IGrowArray gw, DGrowArray gx)
     {
-        x = checkDeclare(A.numRows, x);
-        w = checkDeclare(A.numRows, w, true);
+        double []x = adjust(gx,A.numRows);
+        int []w = adjust(gw,A.numRows,A.numRows);
 
         C.indicesSorted = false;
         C.nz_length = 0;
@@ -107,33 +108,5 @@ public class ImplCommonOps_DSCC {
                 C.nz_values[i] = x[C.nz_rows[i]];
             }
         }
-    }
-
-    public static int[] checkDeclare( int N, int[] w, boolean fillZeros) {
-        if( w == null )
-            w = new int[N];
-        else if( w.length < N )
-            throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
-        else if( fillZeros )
-            Arrays.fill(w,0,N,0);
-        return w;
-    }
-
-    public static int[] checkDeclare( int N, int[] w, int fillToM ) {
-        if( w == null )
-            w = new int[N];
-        else if( w.length < N )
-            throw new IllegalArgumentException("w needs to at least be as long as A.numRows");
-        else if( fillToM > 0 )
-            Arrays.fill(w,0,fillToM,0);
-        return w;
-    }
-
-    public static double[] checkDeclare( int N, double[] x) {
-        if( x == null )
-            x = new double[N];
-        else if( x.length < N )
-            throw new IllegalArgumentException("x needs to at least be as long as A.numRows");
-        return x;
     }
 }

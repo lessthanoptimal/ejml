@@ -19,6 +19,7 @@
 package org.ejml.sparse.csc.misc;
 
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
 import java.util.Arrays;
@@ -40,7 +41,8 @@ public class ColumnCounts_DSCC {
     private DMatrixSparseCSC At = new DMatrixSparseCSC(1,1,1);
 
     // workspace array
-    int w[] = new int[1];
+    IGrowArray gw = new IGrowArray();
+    int w[];
 
     // shape of input matrix
     int m,n; // (row,col)
@@ -74,13 +76,12 @@ public class ColumnCounts_DSCC {
         n = A.numCols;
         int s = 4*n + (ata ? (n+m+1) : 0);
 
-        // check and declare workspace
-        if( w.length < s )
-            w = new int[s];
+        gw.reshape(s);
+        w = gw.data;
 
         // compute the transpose of A
         At.reshape(A.numCols,A.numRows,A.nz_length);
-        CommonOps_DSCC.transpose(A,At,w);
+        CommonOps_DSCC.transpose(A,At,gw);
 
         // initialize w
         Arrays.fill(w,0,s,-1); // assign all values in workspace to -1

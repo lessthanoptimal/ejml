@@ -20,6 +20,7 @@ package org.ejml.sparse.csc.decomposition.chol;
 
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.DecompositionSparseInterface;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
@@ -35,10 +36,13 @@ public class CholeskyUpLooking_DSCC implements DecompositionSparseInterface<DMat
 {
     int N;
 
+    DMatrixSparseCSC C = new DMatrixSparseCSC(1,1,0);
+
     IGrowArray work = new IGrowArray(1);
     int []parent = new int[1];
     int []post = new int[1];
     int []counts = new int[1];
+    int []Pinv = new int[1]; // inverse permutation
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
 
     @Override
@@ -50,9 +54,19 @@ public class CholeskyUpLooking_DSCC implements DecompositionSparseInterface<DMat
     }
 
     public void performSymbolic(DMatrixSparseCSC A) {
+
+        // todo make permutation optional
+        // create a dummy permutation vector as a place holder
+        int []P = new int[A.numRows];
+        for (int i = 0; i < P.length; i++) {
+            P[i] = i;
+        }
+        CommonOps_DSCC.permutationInverse(P,Pinv);
+        // TODO symbolic permutation
         TriangularSolver_DSCC.eliminationTree(A,false,parent,work);
         TriangularSolver_DSCC.postorder(parent,N,post,work);
         columnCounter.process(A,parent,post,counts);
+        // TODO declare storage for matrix.
     }
 
     private void init( int N ) {
@@ -61,6 +75,7 @@ public class CholeskyUpLooking_DSCC implements DecompositionSparseInterface<DMat
             parent = new int[N];
             post = new int[N];
             counts = new int[N];
+            Pinv = new int[N];
             work.reshape(3*N);
         }
     }

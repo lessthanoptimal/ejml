@@ -94,4 +94,12 @@ public class TestIGrowArray {
         } catch( RuntimeException ignore ){}
     }
 
+    @Test
+    public void free() {
+        IGrowArray array = new IGrowArray(8);
+        array.free();
+        assertEquals(0,array.length());
+        assertEquals(0,array.data.length);
+    }
+
 }

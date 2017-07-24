@@ -18,9 +18,7 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
@@ -75,8 +73,8 @@ public class ExampleSparseMatrix {
         //                  y=A*x
         // Optional storage is set to null so that it will declare it internally
         long before = System.currentTimeMillis();
-        int []workA = new int[A.numRows];
-        double []workB = new double[A.numRows];
+        IGrowArray workA = new IGrowArray(A.numRows);
+        DGrowArray workB = new DGrowArray(A.numRows);
         for (int i = 0; i < 100; i++) {
             CommonOps_DSCC.mult(A,x,y,workA,workB);
 //            CommonOps_DSCC.add(1.5,y,0.75,y,z,workB,workA);
