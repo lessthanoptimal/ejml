@@ -18,11 +18,11 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 
 import java.util.Arrays;
-
-import static org.ejml.sparse.csc.misc.ImplCommonOps_DSCC.checkDeclare;
 
 /**
  * @author Peter Abeles
@@ -69,9 +69,9 @@ public class TriangularSolver_DSCC {
             int idx0 = U.col_idx[col];
             double x_j = x[col] /= U.nz_values[idx1-1];
 
-            for (int i = idx0; i < idx1-1; i++) {
+            for (int i = idx0; i < idx1 - 1; i++) {
                 int row = U.nz_rows[i];
-                x[row] -=  U.nz_values[i]*x_j;
+                x[row] -= U.nz_values[i] * x_j;
             }
 
             idx1 = idx0;
@@ -81,27 +81,28 @@ public class TriangularSolver_DSCC {
     /**
      * Computes the solution to the triangular system.  Inputs are both sparse but the output is dense.
      *
-     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
      * @param lower true for lower triangular and false for upper
-     * @param B (Input) Matrix.  Not modified.
-     * @param X (Output) Solution
-     * @param x (Optional) Storage for work space.  length = G.numRows
-     * @param xi (Optional) Storage for work space.  length = B.numRows
-     * @param w (Optional) Storage for work space.  length = B.numRows*2
+     * @param B     (Input) Matrix.  Not modified.
+     * @param X     (Output) Solution
+     * @param g_x   (Optional) Storage for workspace.
+     * @param g_xi  (Optional) Storage for workspace.
+     * @param g_w   (Optional) Storage for workspace.
      */
     public static void solve(DMatrixSparseCSC G, boolean lower,
-                             DMatrixSparseCSC B, DMatrixSparseCSC X, double x[], int xi[], int w[])
+                             DMatrixSparseCSC B, DMatrixSparseCSC X,
+                             DGrowArray g_x, IGrowArray g_xi, IGrowArray g_w)
     {
-        x = checkDeclare(G.numRows,x);
-        xi = checkDeclare(G.numRows,xi,false);
-        w = checkDeclare(B.numRows*2,w,B.numRows);
+        double[] x = adjust(g_x,G.numRows);
+        if( g_xi == null ) g_xi = new IGrowArray();
+        int[] xi = adjust(g_xi,G.numRows);
 
         X.nz_length = 0;
         X.col_idx[0] = 0;
         X.indicesSorted = false;
 
         for (int colB = 0; colB < B.numCols; colB++) {
-            int top = solve(G,lower,B,colB, x, xi, w);
+            int top = solve(G,lower,B,colB, x, g_xi, g_w);
 
             int nz_count = X.numRows-top;
             if( X.nz_values.length < X.nz_length + nz_count) {
@@ -119,22 +120,19 @@ public class TriangularSolver_DSCC {
     /**
      * Computes the solution to a triangular system.  Only a single column in B is solved for.
      *
-     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
      * @param lower true for lower triangular and false for upper
-     * @param B (Input) Matrix.  Not modified.
-     * @param colB The column in B which is solved for
-     * @param x (Output) Storage for dense solution.  length = G.numRows
-     * @param xi (Optional) Storage for work space.  length = B.numRows
-     * @param w (Optional) Storage for work space.  length = B.numRows(2
+     * @param B     (Input) Matrix.  Not modified.
+     * @param colB  The column in B which is solved for
+     * @param x     (Output) Storage for dense solution.  length = G.numRows
+     * @param g_xi  (Optional) Storage for workspace.
+     * @param g_w   (Optional) Storage for workspace.
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
     public static int solve(DMatrixSparseCSC G, boolean lower,
-                            DMatrixSparseCSC B, int colB, double x[], int xi[], int w[])
-    {
-        xi = checkDeclare(G.numRows,xi,false);
-        w = checkDeclare(B.numRows*2,w,B.numRows);
-
-        int top = searchNzRowsInB(G,B,colB,xi,w);
+                            DMatrixSparseCSC B, int colB, double x[], IGrowArray g_xi, IGrowArray g_w) {
+        int[] xi = adjust(g_xi,G.numRows);
+        int top = searchNzRowsInB(G, B, colB, xi, g_w);
 
         // sparse clear of x
         for( int p = top; p < G.numRows; p++ )
@@ -178,20 +176,18 @@ public class TriangularSolver_DSCC {
      * <p>See cs_reach in dsparse library to understand the algorithm.  This code follow the spirit but not
      * the details because of differences in the contract.</p>
      *
-     * @param G (Input) Lower triangular system matrix.  Diagonal elements are assumed to be not zero.  Not modified.
-     * @param B (Input) Matrix B. Not modified.
+     * @param G    (Input) Lower triangular system matrix.  Diagonal elements are assumed to be not zero.  Not modified.
+     * @param B    (Input) Matrix B. Not modified.
      * @param colB Column in B being solved for
-     * @param xi (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
-     * @param w Work space array used internally.  Must be of size B.numRows*2
+     * @param xi   (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
+     * @param gwork workspace array used internally. Can be null.
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
-    public static int searchNzRowsInB(DMatrixSparseCSC G , DMatrixSparseCSC B , int colB, int xi[] , int w[])
-    {
-        if( xi.length < B.numRows )
-            throw new IllegalArgumentException("xi must be at least this long: "+B.numRows);
-        if( w.length < B.numRows*2 )
-            throw new IllegalArgumentException("xi must be at least this long: "+B.numRows*2);
-        Arrays.fill(w,0,B.numRows,0);
+    public static int searchNzRowsInB(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int xi[], IGrowArray gwork) {
+        if (xi.length < B.numRows)
+            throw new IllegalArgumentException("xi must be at least this long: " + B.numRows);
+
+        int[] w = adjust(gwork,B.numRows * 2,B.numRows);
 
         // use 'w' as a marker to know which rows in B have been examined.  0 = unexamined and 1 = examined
         int idx0 = B.col_idx[colB];
@@ -265,21 +261,20 @@ public class TriangularSolver_DSCC {
      *
      * <p>Functionally identical to cs_etree in csparse</p>
      *
-     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &gt; N
-     * @param ata If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
-     *            tree for cholesky factorization
+     * @param A      (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &gt; N
+     * @param ata    If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
+     *               tree for cholesky factorization
      * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
-     * @param work (Optional) Work space.  can be null.  size N+M if ata = true or N if false.
+     * @param gwork  (Optional) Internal workspace.  Can be null.
      */
-    public static void eliminationTree( DMatrixSparseCSC A , boolean ata , int parent[] , int work[]) {
+    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int parent[], IGrowArray gwork) {
         int m = A.numRows;
         int n = A.numCols;
 
-        if( parent.length < n )
+        if (parent.length < n)
             throw new IllegalArgumentException("parent must be of length N");
 
-        if( work == null )
-            work = new int[n + (ata ? m : 0)];
+        int[] work = adjust(gwork, n + (ata ? m : 0));
 
         int ancestor = 0; // reference to index in work array
         int previous = n; // reference to index in work array
@@ -332,19 +327,17 @@ public class TriangularSolver_DSCC {
      * <p>See page 44</p>
      *
      * @param parent (Input) The elimination tree.
-     * @param N Number of elements in parent
-     * @param post (Output) Postordering permutation.
-     * @param w (Optional) Internal work space. Must be of length 3*N or greater. Can be null
+     * @param N      Number of elements in parent
+     * @param post   (Output) Postordering permutation.
+     * @param gwork  (Optional) Internal workspace. Can be null
      */
-    public static void postorder( int parent[] , int N , int post[], int w[] ) {
-        if( parent.length < N )
+    public static void postorder(int parent[], int N, int post[], IGrowArray gwork) {
+        if (parent.length < N)
             throw new IllegalArgumentException("parent must be at least of length N");
-        if( post.length < N )
+        if (post.length < N)
             throw new IllegalArgumentException("post must be at least of length N");
-        if( w == null )
-            w = new int[3*N];
-        else if( w.length < N )
-            throw new IllegalArgumentException("w must be at least of length 3*N");
+
+        int[] w = adjust(gwork, 3*N);
 
         // w[0] to w[N-1] is initialized to the youngest child of node 'j'
         // w[N] to w[2N-1] is initialized to the second youngest child of node 'j'
@@ -411,7 +404,7 @@ public class TriangularSolver_DSCC {
      * @param k Row in A being processed.
      * @param parent elimination tree.
      * @param s (Output) s[top:(n-1)] = pattern of L[k,:].  Must have length A.numCols
-     * @param w Work space array used internally.  All elements must be &ge; 0 on input. Must be of size A.numCols
+     * @param w workspace array used internally.  All elements must be &ge; 0 on input. Must be of size A.numCols
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
     public static int searchNzRowsElim( DMatrixSparseCSC A , int k , int parent[], int s[], int w[] ) {
@@ -445,4 +438,29 @@ public class TriangularSolver_DSCC {
         w[k] = -w[k]-2;
         return top;
     }
+
+    /**
+     * Resizes the array to ensure that it is at least of length desired and returns its internal array
+     */
+    public static int[] adjust(IGrowArray gwork, int desired) {
+        if (gwork == null) gwork = new IGrowArray();
+        gwork.reshape(desired);
+        return gwork.data;
+    }
+
+    public static int[] adjust(IGrowArray gwork, int desired, int zeroToM) {
+       int[] w = adjust(gwork,desired);
+       Arrays.fill(w,0,zeroToM,0);
+       return w;
+    }
+
+    /**
+     * Resizes the array to ensure that it is at least of length desired and returns its internal array
+     */
+    public static double[] adjust(DGrowArray gwork, int desired) {
+        if (gwork == null) gwork = new DGrowArray();
+        gwork.reshape(desired);
+        return gwork.data;
+    }
 }
+

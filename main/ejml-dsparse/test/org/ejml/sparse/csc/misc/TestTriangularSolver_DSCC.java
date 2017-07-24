@@ -22,6 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
@@ -148,7 +149,7 @@ public class TestTriangularSolver_DSCC {
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(3,1,3,-1,1,rand);
 
         int xi[] = new int[A.numCols];
-        int w[] = new int[B.numRows*2];
+        IGrowArray w = new IGrowArray(B.numRows*2);
 
         // A is diagonal and B is filled in
         int top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,xi,w);
@@ -196,7 +197,7 @@ public class TestTriangularSolver_DSCC {
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(4,1,4,-1,1,rand);
 
         int xi[] = new int[A.numCols];
-        int w[] = new int[B.numRows*2];
+        IGrowArray w = new IGrowArray( B.numRows*2 );
 
         int top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,xi,w);
         assertEquals(0,top);
@@ -239,7 +240,7 @@ public class TestTriangularSolver_DSCC {
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,1,4,-1,1,rand);
 
         int xi[] = new int[A.numCols];
-        int w[] = new int[B.numRows*2];
+        IGrowArray w = new IGrowArray(B.numRows*2);
 
         int top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,xi,w);
         assertEquals(0,top);
