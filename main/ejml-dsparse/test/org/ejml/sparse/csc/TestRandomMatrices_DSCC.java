@@ -36,6 +36,36 @@ public class TestRandomMatrices_DSCC {
     int numCols = 7;
 
     @Test
+    public void shuffle() {
+        int m[] = new int[200];
+        for (int i = 0; i < m.length; i++) {
+            m[i] = i;
+        }
+        int N = m.length-5;
+        RandomMatrices_DSCC.shuffle(m,N,40,rand);
+
+        // end should be untouched
+        for (int i = N; i < m.length; i++) {
+            assertEquals(i,m[i]);
+        }
+
+        // should be sorted
+        for (int i = 1; i < 40; i++) {
+            assertTrue(m[i-1] < m[i]);
+        }
+
+        // the order should be drastically changed
+        int numOrdered = 0;
+        for (int i = 0; i < 40; i++) {
+            if( m[i] == i ) {
+                numOrdered++;
+            }
+        }
+        assertTrue(numOrdered<10);
+
+    }
+
+    @Test
     public void uniform() {
 
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,10,-1,1,rand);
@@ -78,8 +108,27 @@ public class TestRandomMatrices_DSCC {
                 assertEquals(Math.max(5,length),L.nz_length);
                 assertTrue(CommonOps_DSCC.checkSortedFlag(L));
                 assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+
+                assertFalse(CommonOps_DSCC.checkDuplicateElements(L));
             }
 
+        }
+    }
+
+    @Test
+    public void symmetric() {
+        for (int N = 1; N <= 10; N++) {
+            for (int mc = 0; mc < 30; mc++) {
+                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N,  nz,-1,1, rand);
+
+                // Check to see if the matrix is setup correctly
+                assertTrue(CommonOps_DSCC.checkSortedFlag(A)); // doesn't matter if it's sorted or not..
+                assertFalse(CommonOps_DSCC.checkDuplicateElements(A));
+
+                // Check the matrix properties
+                assertTrue(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+            }
         }
     }
 }

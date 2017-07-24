@@ -15,9 +15,16 @@ Date format: year/month/day
   * Fixed bug in set(row,col,val) where the first time a non-zero element was added it would assign the wrong value
     Thanks GeoffreyGuettier
 - Added *GrowArray to act as workspace in sparse algorithms
+- MatrixFeatures_DSCC
+  * Added isSymmetric()
+- RandomMatrices_DSCC
+  * Added symmetric()
+- CommonOps_DSCC
+  * Added permuteSymmetric()
+  * Added checkDuplicates()
+  * Fixed bugs
 
 Sparse Matrix
-- TODO Symbolic analysis
 - TODO Cholesky
 - TODO QR
 - TODO LU

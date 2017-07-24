@@ -36,7 +36,10 @@ public class CholeskyUpLooking_DSCC implements DecompositionSparseInterface<DMat
 {
     int N;
 
-    DMatrixSparseCSC C = new DMatrixSparseCSC(1,1,0);
+    boolean permuated;
+
+    DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
+    DMatrixSparseCSC C;
 
     IGrowArray work = new IGrowArray(1);
     int []parent = new int[1];
@@ -53,20 +56,22 @@ public class CholeskyUpLooking_DSCC implements DecompositionSparseInterface<DMat
         return false;
     }
 
-    public void performSymbolic(DMatrixSparseCSC A) {
-
-        // todo make permutation optional
-        // create a dummy permutation vector as a place holder
-        int []P = new int[A.numRows];
-        for (int i = 0; i < P.length; i++) {
-            P[i] = i;
+    public void performSymbolic(DMatrixSparseCSC A ) {
+        if( permuated ) {
+            // create a dummy permutation vector as a place holder
+            int[] P = new int[A.numRows];
+            for (int i = 0; i < P.length; i++) {
+                P[i] = i;
+            }
+            CommonOps_DSCC.permutationInverse(P, Pinv);
+            CommonOps_DSCC.permuteSymmetric(A, Pinv, Aperm, work);
+            A = Aperm;
+        } else {
+            C = A;
         }
-        CommonOps_DSCC.permutationInverse(P,Pinv);
-        // TODO symbolic permutation
-        TriangularSolver_DSCC.eliminationTree(A,false,parent,work);
+        TriangularSolver_DSCC.eliminationTree(C,false,parent,work);
         TriangularSolver_DSCC.postorder(parent,N,post,work);
-        columnCounter.process(A,parent,post,counts);
-        // TODO declare storage for matrix.
+        columnCounter.process(C,parent,post,counts);
     }
 
     private void init( int N ) {

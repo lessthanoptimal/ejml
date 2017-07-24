@@ -19,6 +19,8 @@
 package org.ejml.sparse.csc;
 
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.ops.ConvertDMatrixSparse;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -44,7 +46,7 @@ public class RandomMatrices_DSCC {
                                              double min , double max , Random rand ) {
 
         nz_total = Math.min(numCols*numRows,nz_total);
-        int[] selected = selectElements(numRows*numCols, nz_total, rand);
+        int[] selected = shuffle(numRows*numCols, nz_total, rand);
 
         DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows,numCols,nz_total);
         ret.indicesSorted = true;
@@ -68,7 +70,7 @@ public class RandomMatrices_DSCC {
         return ret;
     }
 
-    private static int[] selectElements(int N, int nz_total, Random rand) {
+    private static int[] shuffle(int N, int nz_total, Random rand) {
         // Create a list of all the possible element values
         if( N < 0 )
             throw new IllegalArgumentException("matrix size is too large");
@@ -77,21 +79,76 @@ public class RandomMatrices_DSCC {
         for (int i = 0; i < N; i++) {
             selected[i] = i;
         }
+        shuffle(selected,N,nz_total,rand);
+
+        return selected;
+    }
+
+    static void shuffle(int []array, int N , int nz_total, Random rand) {
 
         for (int i = 0; i < nz_total; i++) {
-            int swapIdx = rand.nextInt(N);
-            int tmp = selected[swapIdx];
-            selected[swapIdx] = selected[i];
-            selected[i] = tmp;
+            int idx = rand.nextInt(N-i)+i;
+            int selected = array[idx];
+            array[idx] = array[i];
+            array[i] = selected;
         }
 
         // put the indexes in order
-        Arrays.sort(selected,0,nz_total);
-        return selected;
+        Arrays.sort(array,0,nz_total);
     }
 
     public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total , Random rand ) {
         return rectangle(numRows, numCols, nz_total, -1,1,rand);
+    }
+
+    /**
+     * Creates a random symmetric matrix. The entire matrix will be filled in, not just a triangular
+     * portion.
+     *
+     * @param N Number of rows and columns
+     * @param nz_total Number of nonzero elements in the triangular portion of the matrix
+     * @param min Minimum element value, inclusive
+     * @param max Maximum element value, inclusive
+     * @param rand Random number generator
+     * @return Randomly generated matrix
+     */
+    public static DMatrixSparseCSC symmetric( int N , int nz_total ,
+                                              double min , double max , Random rand) {
+
+        // compute the number of elements in the triangle, including diagonal
+        int Ntriagle = (N*N+N)/2;
+        // create a list of open elements
+        int open[] = new int[Ntriagle];
+        for (int row = 0, index = 0; row < N; row++) {
+            for (int col = row; col < N; col++, index++) {
+                open[index] = row*N+col;
+            }
+        }
+
+        // perform a random draw
+        shuffle(open,open.length,nz_total,rand);
+
+        // construct the matrix
+        DMatrixSparseTriplet A = new DMatrixSparseTriplet(N,N,nz_total*2);
+        for (int i = 0; i < nz_total; i++) {
+            int index = open[i];
+            int row = index/N;
+            int col = index%N;
+
+            double value = rand.nextDouble()*(max-min)+min;
+
+            if( row == col ) {
+                A.addItem(row,col,value);
+            } else {
+                A.addItem(row,col,value);
+                A.addItem(col,row,value);
+            }
+        }
+
+        DMatrixSparseCSC B = new DMatrixSparseCSC(N,N,A.nz_length);
+        ConvertDMatrixSparse.convert(A,B);
+
+        return B;
     }
 
     /**
@@ -131,7 +188,7 @@ public class RandomMatrices_DSCC {
         // number of elements which are not the diagonal elements
         int off_total = nz_total-diag_total;
 
-        int[] selected = selectElements(N-diag_total, off_total, rand);
+        int[] selected = shuffle(N-diag_total, off_total, rand);
 
         DMatrixSparseCSC L = new DMatrixSparseCSC(dimen,dimen,nz_total);
 

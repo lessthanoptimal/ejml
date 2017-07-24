@@ -136,6 +136,7 @@ public class MatrixFeatures_DSCC {
      * </p>
      * @param A Matrix being tested.  Not modified.
      * @param hessenberg The degree of being hessenberg.
+     * @param tol How not zero diagonal elements must be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
     public static boolean isLowerTriangle(DMatrixSparseCSC A , int hessenberg , double tol )
@@ -198,5 +199,35 @@ public class MatrixFeatures_DSCC {
      */
     public static boolean isVector(DMatrixSparseCSC a) {
         return (a.numCols == 1 && a.numRows > 1) || (a.numRows == 1 && a.numCols>1);
+    }
+
+    /**
+     * Checks to see if the matrix is symmetric to within tolerance.
+     *
+     * @param A Matrix being tested.  Not modified.
+     * @param tol Tolerance that defines how similar two values must be to be considered identical
+     * @return true if symmetric or false if not
+     */
+    public static boolean isSymmetric( DMatrixSparseCSC A , double tol ) {
+        if( A.numRows != A.numCols )
+            return false;
+
+        int N = A.numCols;
+
+        for (int i = 0; i < N; i++) {
+            int idx0 = A.col_idx[i];
+            int idx1 = A.col_idx[i+1];
+
+            for (int index = idx0; index < idx1; index++) {
+                int j = A.nz_rows[index];
+                double value_ji = A.nz_values[index];
+                double value_ij = A.get(i,j);
+
+                if( Math.abs(value_ij-value_ji) > tol )
+                    return false;
+            }
+        }
+
+        return true;
     }
 }

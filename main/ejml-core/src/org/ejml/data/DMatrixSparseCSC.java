@@ -315,7 +315,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     /**
      * Given the histogram of columns compute the col_idx for the matrix.  Then overwrite histogram with
      * those values.
-     * @param histogram histogram of column values in the sparse matrix
+     * @param histogram histogram of column values in the sparse matrix. modified, see above.
      */
     public void colsum(int histogram[] ) {
         col_idx[0] = 0;

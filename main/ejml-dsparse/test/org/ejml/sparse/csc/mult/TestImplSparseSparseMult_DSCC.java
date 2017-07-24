@@ -71,6 +71,32 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
+    /**
+     * Makes sure the size of the output matrix is adjusted as needed
+     */
+    @Test
+    public void mult_s_s_grow() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,17,-1,1,rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,5,15,-1,1,rand);
+        DMatrixSparseCSC c = new DMatrixSparseCSC(4,5,0);
+
+        ImplSparseSparseMult_DSCC.mult(a,b,c,null,null);
+
+        assertTrue(CommonOps_DSCC.checkSortedFlag(c));
+
+        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
+
+        CommonOps_DDRM.mult(dense_a, dense_b, dense_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
     @Test
     public void mult_s_d() {
         for (int i = 0; i < 10; i++) {

@@ -27,6 +27,8 @@ import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
 import java.util.Arrays;
 
+import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjustClear;
+
 /**
  * @author Peter Abeles
  */
@@ -59,6 +61,16 @@ public class CommonOps_DSCC {
         if( A.indicesSorted )
             return checkIndicesSorted(A);
         return true;
+    }
+
+    /**
+     * Checks for duplicate elements. A is sorted
+     * @param A Matrix to be tested. Modified
+     * @return true if duplicates or false if false duplicates
+     */
+    public static boolean checkDuplicateElements(DMatrixSparseCSC A ) {
+        A.sortIndices(null);
+        return !checkSortedFlag(A);
     }
 
     /**
@@ -377,8 +389,73 @@ public class CommonOps_DSCC {
         }
     }
 
-    public static void permuteSymmetric() {
+    /**
+     * Applies the permutation to upper triangular symmetric matrices. Typically a symmetric matrix only stores the
+     * upper triangular part, so normal permutation will have undesirable results, e.g. the zeros will get mixed
+     * in and will no longer be symmetric. This algorithm will handle the implicit lower triangular and construct
+     * new upper triangular matrix.
+     *
+     * <p>See page cs_symperm() on Page 22 of "Direct Methods for Sparse Linear Systems"</p>
+     *
+     * @param input (Input) Upper triangular symmetric matrix which is to be permuted.
+     *              Entries below the diagonal are ignored.
+     * @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows and columns.
+     * @param output (Output) Upper triangular symmetric matrix which has the permutation stored in it.  Reshaped.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void permuteSymmetric( DMatrixSparseCSC input, int permInv[], DMatrixSparseCSC output , IGrowArray gw ) {
+        if( input.numRows != input.numCols )
+            throw new IllegalArgumentException("Input must be a square matrix");
+        if( input.numRows != permInv.length )
+            throw new IllegalArgumentException("Number of column in input must match length of permInv");
+        if( input.numCols != permInv.length )
+            throw new IllegalArgumentException("Number of rows in input must match length of permInv");
 
+        int N = input.numCols;
+
+        int w[] = adjustClear(gw,N); // histogram with column counts
+
+        output.reshape(N,N,input.nz_length);
+        output.indicesSorted = false;
+        output.col_idx[0] = 0;
+
+        // determine column counts for output
+        for (int j = 0; j < N; j++) {
+            int j2 = permInv[j];
+            int idx0 = input.col_idx[j];
+            int idx1 = input.col_idx[j+1];
+
+            for (int p = idx0; p < idx1; p++) {
+                int i = input.nz_rows[p];
+                if( i > j ) // ignore the lower triangular portion
+                    continue;
+                int i2 = permInv[i];
+
+                w[i2>j2?i2:j2]++;
+            }
+        }
+
+        // update structure of output
+        output.colsum(w);
+
+        for (int j = 0; j < N; j++) {
+            // column j of Input is row j2 of Output
+            int j2 = permInv[j];
+            int idx0 = input.col_idx[j];
+            int idx1 = input.col_idx[j+1];
+
+            for (int p = idx0; p < idx1; p++) {
+                int i = input.nz_rows[p];
+                if( i > j ) // ignore the lower triangular portion
+                    continue;
+
+                int i2 = permInv[i];
+                // row i of Input is row i2 of Output
+                int q = w[i2>j2?i2:j2]++;
+                output.nz_rows[q] = i2<j2?i2:j2;
+                output.nz_values[q] = input.nz_values[p];
+            }
+        }
     }
 
 }

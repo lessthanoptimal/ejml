@@ -45,6 +45,7 @@ public class ImplSparseSparseMult_DSCC {
         double []x = adjust(gx, A.numRows);
         int []w = adjust(gw, A.numRows, A.numRows);
 
+        C.growMaxLength(A.nz_length+B.nz_length,false);
         C.indicesSorted = false;
         C.nz_length = 0;
 

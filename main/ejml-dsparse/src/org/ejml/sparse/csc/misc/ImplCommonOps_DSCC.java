@@ -38,12 +38,12 @@ public class ImplCommonOps_DSCC {
      * Performs a matrix transpose.
      *
      * @param A Original matrix.  Not modified.
-     * @param C Storage for transposed 'a'.  Assumed to be of the correct shape and length.
+     * @param C Storage for transposed 'a'.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
     public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , IGrowArray gw ) {
         int []work = adjust(gw,A.numRows,A.numRows);
-        C.nz_length = A.nz_length;
+        C.reshape(A.numCols,A.numRows,A.nz_length);
 
         // compute the histogram for each row in 'a'
         int idx0 = A.col_idx[0];

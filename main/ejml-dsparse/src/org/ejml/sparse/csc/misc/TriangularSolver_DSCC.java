@@ -454,6 +454,10 @@ public class TriangularSolver_DSCC {
        return w;
     }
 
+    public static int[] adjustClear(IGrowArray gwork, int desired) {
+        return adjust(gwork,desired,desired);
+    }
+
     /**
      * Resizes the array to ensure that it is at least of length desired and returns its internal array
      */

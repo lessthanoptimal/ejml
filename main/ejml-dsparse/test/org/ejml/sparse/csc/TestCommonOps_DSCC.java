@@ -60,6 +60,27 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
+    public void checkDuplicates() {
+        DMatrixSparseCSC orig = new DMatrixSparseCSC(3,2,6);
+
+        orig.col_idx[0] = 0;
+        orig.col_idx[1] = 3;
+        orig.col_idx[2] = 6;
+
+        orig.nz_rows[0] = 0;
+        orig.nz_rows[1] = 1;
+        orig.nz_rows[2] = 2;
+        orig.nz_rows[3] = 0;
+        orig.nz_rows[4] = 1;
+        orig.nz_rows[5] = 2;
+
+        assertFalse(CommonOps_DSCC.checkDuplicateElements(orig));
+        orig.nz_rows[1] = 2;
+        assertTrue(CommonOps_DSCC.checkDuplicateElements(orig));
+
+    }
+
+    @Test
     public void transpose_shapes() {
         CommonOps_DSCC.transpose(
                 RandomMatrices_DSCC.rectangle(5,5,5,rand),
@@ -444,4 +465,26 @@ public class TestCommonOps_DSCC {
         }
         assertFalse(B.indicesSorted);
     }
+
+    @Test
+    public void permuteSymmetric() {
+        int perm[] = new int[]{4,0,3,1,2};
+
+        DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(5,7,-1,1,rand);
+
+        int permInv[] = new int[perm.length];
+        CommonOps_DSCC.permutationInverse(perm,permInv);
+
+        DMatrixSparseCSC B = new DMatrixSparseCSC(5,5,0);
+
+        CommonOps_DSCC.permuteSymmetric(A, permInv, B, null);
+
+        for (int row = 0; row < 5; row++) {
+            for (int col = row; col < 5; col++) {
+                assertEquals(A.get(perm[row],perm[col]), B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+        assertFalse(B.indicesSorted);
+    }
+
 }

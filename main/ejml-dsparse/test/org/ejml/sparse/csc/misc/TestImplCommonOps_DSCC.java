@@ -36,26 +36,31 @@ public class TestImplCommonOps_DSCC {
 
     Random rand = new Random(324);
 
-    int numRows = 6;
-    int numCols = 7;
-    int length = 15;
-
     @Test
     public void transpose() {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,length, -1, 1, rand);
-        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numCols,numRows,length, -1, 1, rand);
+        for (int rows = 1; rows <= 10; rows++) {
+            for (int cols = 1; rows <= 10; rows++) {
+                for (int mc = 0; mc < 20; mc++) {
+                    int N =(int) Math.round(rows*cols*rand.nextDouble());
+                    DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(rows,cols,N, -1, 1, rand);
+                    DMatrixSparseCSC b = new DMatrixSparseCSC(0,0,0);
 
-        ImplCommonOps_DSCC.transpose(a,b,null);
+                    ImplCommonOps_DSCC.transpose(a,b,null);
+                    assertEquals(cols,b.numRows);
+                    assertEquals(rows,b.numCols);
 
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                double expected = a.get(row,col);
-                double found = b.get(col,row);
+                    for (int row = 0; row < rows; row++) {
+                        for (int col = 0; col < cols; col++) {
+                            double expected = a.get(row,col);
+                            double found = b.get(col,row);
 
-                assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
+                            assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
+                        }
+                    }
+                    assertTrue(CommonOps_DSCC.checkSortedFlag(b));
+                }
             }
         }
-        assertTrue(CommonOps_DSCC.checkSortedFlag(b));
     }
 
     @Test

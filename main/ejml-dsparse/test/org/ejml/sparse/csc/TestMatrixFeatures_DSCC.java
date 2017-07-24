@@ -230,4 +230,49 @@ public class TestMatrixFeatures_DSCC {
         assertFalse(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(1,1,5)));
     }
 
+    @Test
+    public void isSymmetric() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(5,4,2);
+
+        // not square
+        assertFalse(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+
+        // a matrix with all zeros is symmetric
+        A.reshape(5,5,2);
+        assertTrue(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+
+        // test with various random matrices
+        for (int N = 1; N < 10; N++) {
+            for (int mc = 0; mc < 30; mc++) {
+                int nz = (int)Math.ceil(N*N*(rand.nextDouble()*0.4+0.1));
+                A = RandomMatrices_DSCC.rectangle(N,N,nz,rand);
+
+                DMatrixSparseCSC At = new DMatrixSparseCSC(N,N,A.nz_length);
+                CommonOps_DSCC.transpose(A,At,null);
+                DMatrixSparseCSC C = new DMatrixSparseCSC(N,N,0);
+
+                // C must be symmetric
+                CommonOps_DSCC.mult(A,At,C);
+                assertTrue(MatrixFeatures_DSCC.isSymmetric(C,UtilEjml.TEST_F64));
+
+                // make it not symmetric
+                if( N > 1 ) {
+                    int index = rand.nextInt(C.nz_length);
+                    C.nz_values[index] += 0.1;
+
+                    // see if it modified a diagonal element. still will be diagonal if it did
+                    int row =  C.nz_rows[index];
+                    int col = 0;
+                    while( col < C.numCols ) {
+                        if( index < C.col_idx[col+1] )
+                            break;
+                        col++;
+                    }
+                    if( row != col )
+                        assertFalse(MatrixFeatures_DSCC.isSymmetric(C, UtilEjml.TEST_F64));
+                }
+            }
+        }
+    }
+
 }
