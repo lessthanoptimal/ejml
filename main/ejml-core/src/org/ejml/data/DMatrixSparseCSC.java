@@ -324,8 +324,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
             col_idx[i] = index += histogram[i-1];
         }
         System.arraycopy(col_idx,0,histogram,0,numCols); // TODO move this outside?
-        growMaxLength( nz_length , false);
         nz_length = index;
+        growMaxLength( nz_length , false);
     }
 
     /**
