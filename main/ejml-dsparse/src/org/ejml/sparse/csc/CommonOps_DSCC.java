@@ -415,7 +415,7 @@ public class CommonOps_DSCC {
 
         int w[] = adjustClear(gw,N); // histogram with column counts
 
-        output.reshape(N,N,input.nz_length);
+        output.reshape(N,N,0);
         output.indicesSorted = false;
         output.col_idx[0] = 0;
 

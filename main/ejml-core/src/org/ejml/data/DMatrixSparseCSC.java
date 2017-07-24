@@ -314,7 +314,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     /**
      * Given the histogram of columns compute the col_idx for the matrix.  Then overwrite histogram with
-     * those values.
+     * those values.  nz_length is automatically set and nz_values will grow if needed.
      * @param histogram histogram of column values in the sparse matrix. modified, see above.
      */
     public void colsum(int histogram[] ) {
@@ -323,7 +323,9 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         for (int i = 1; i <= numCols; i++) {
             col_idx[i] = index += histogram[i-1];
         }
-        System.arraycopy(col_idx,0,histogram,0,numCols);
+        System.arraycopy(col_idx,0,histogram,0,numCols); // TODO move this outside?
+        growMaxLength( nz_length , false);
+        nz_length = index;
     }
 
     /**

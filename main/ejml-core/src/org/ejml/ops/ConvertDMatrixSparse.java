@@ -181,7 +181,6 @@ public class ConvertDMatrixSparse {
             dst.nz_rows[index] = e.row;
             dst.nz_values[index] = e.value;
         }
-        dst.nz_length = src.nz_length;
         dst.indicesSorted = false;
 
         return dst;
