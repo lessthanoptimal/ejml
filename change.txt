@@ -27,6 +27,8 @@ Date format: year/month/day
   * Fixed bugs
 - Sparse Decompositions and Solvers
   * Cholesky - Up Looking
+- Sparse Triangular Solver
+  * Added solveTranL()
 
 Sparse Matrix
 - TODO QR - Decomposition

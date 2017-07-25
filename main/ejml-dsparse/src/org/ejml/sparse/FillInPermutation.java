@@ -16,11 +16,13 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.factory;
+package org.ejml.sparse;
 
 /**
+ * Different types of fill in reducing techniques that can be selected
+ *
  * @author Peter Abeles
  */
-public class DecompositionFactory_DSCC {
-
+public enum FillInPermutation {
+    NONE
 }

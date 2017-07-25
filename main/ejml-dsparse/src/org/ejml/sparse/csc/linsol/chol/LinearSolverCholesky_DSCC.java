@@ -18,8 +18,56 @@
 
 package org.ejml.sparse.csc.linsol.chol;
 
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.interfaces.decomposition.DecompositionInterface;
+import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
+
 /**
+ * Linear solver using a sparse Cholesky decomposition.
+ *
  * @author Peter Abeles
  */
-public class LinearSolverCholesky_DSCC {
+public class LinearSolverCholesky_DSCC implements LinearSolver<DMatrixSparseCSC> {
+
+    CholeskyUpLooking_DSCC cholesky;
+
+    public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky) {
+        this.cholesky = cholesky;
+    }
+
+    @Override
+    public boolean setA(DMatrixSparseCSC A) {
+        return cholesky.decompose(A);
+    }
+
+    @Override
+    public double quality() {
+        return 0;
+    }
+
+    @Override
+    public void solve(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+
+    }
+
+    @Override
+    public void invert(DMatrixSparseCSC A_inv) {
+
+    }
+
+    @Override
+    public boolean modifiesA() {
+        return cholesky.inputModified();
+    }
+
+    @Override
+    public boolean modifiesB() {
+        return false;
+    }
+
+    @Override
+    public <D extends DecompositionInterface> D getDecomposition() {
+        return (D)cholesky;
+    }
 }
