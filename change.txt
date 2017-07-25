@@ -36,6 +36,9 @@ Sparse Matrix
 - TODO Chol - Solver
 - TODO QR - Solver
 - TODO LU - Solver
+- TODO multTransA
+- TODO multTransB
+- TODO remove zeros
 
 Sparse idea:
 * take in a single growable queue for workspace. All int values will be assigned an index inside of it

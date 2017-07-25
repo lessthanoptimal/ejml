@@ -18,17 +18,21 @@
 
 package org.ejml.sparse.csc.linsol.chol;
 
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.LinearSolverSparse;
+import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
+import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 /**
  * Linear solver using a sparse Cholesky decomposition.
  *
  * @author Peter Abeles
  */
-public class LinearSolverCholesky_DSCC implements LinearSolver<DMatrixSparseCSC> {
+public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> {
 
     CholeskyUpLooking_DSCC cholesky;
 
@@ -47,14 +51,49 @@ public class LinearSolverCholesky_DSCC implements LinearSolver<DMatrixSparseCSC>
     }
 
     @Override
-    public void solve(DMatrixSparseCSC B, DMatrixSparseCSC X) {
-
+    public void lockStructure() {
+        throw new RuntimeException("Implement");
     }
 
     @Override
-    public void invert(DMatrixSparseCSC A_inv) {
-
+    public boolean isStructureLocked() {
+        return false;
     }
+
+    @Override
+    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+
+        DMatrixSparseCSC L = cholesky.getL();
+
+        int N = L.numRows;
+
+
+        double[] b = new double[N];
+        int[] Pinv = cholesky.getPermutation() != FillInPermutation.NONE
+                ? cholesky.getPinv() : null;
+
+        double[] x = new double[N];
+
+
+        for (int col = 0; col < B.numCols; col++) {
+            int index = col;
+            for( int i = 0; i < N; i++ , index += B.numCols ) b[i] = B.data[index];
+
+            if( Pinv != null ) {
+                CommonOps_DSCC.permuteInv(Pinv, b, x, N);
+                TriangularSolver_DSCC.solveL(L, x);
+                TriangularSolver_DSCC.solveTranL(L, x);
+                CommonOps_DSCC.permute(Pinv, x, b, N);
+            } else {
+                TriangularSolver_DSCC.solveL(L, b);
+                TriangularSolver_DSCC.solveTranL(L, b);
+            }
+
+            index = col;
+            for( int i = 0; i < N; i++ , index += X.numCols ) X.data[index] = b[i];
+        }
+    }
+
 
     @Override
     public boolean modifiesA() {

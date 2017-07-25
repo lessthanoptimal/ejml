@@ -400,6 +400,35 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * Permutes a vector.  output[i] = input[perm[i]]
+     *
+     * @param perm (Input) permutation vector
+     * @param input (Input) Vector which is to be permuted
+     * @param output (Output) Where the permuted vector is stored.
+     * @param N Number of elements in the vector.
+     */
+    public static void permute( int[] perm , double []input , double[]output , int N ) {
+        for (int k = 0; k < N; k++) {
+            output[k] = input[perm[k]];
+        }
+    }
+
+    /**
+     * Permutes a vector in the inverse.  output[perm[k]] = input[k]
+     *
+     * @param perm (Input) permutation vector
+     * @param input (Input) Vector which is to be permuted
+     * @param output (Output) Where the permuted vector is stored.
+     * @param N Number of elements in the vector.
+     */
+    public static void permuteInv( int[] perm , double []input , double[]output , int N ) {
+        for (int k = 0; k < N; k++) {
+            output[perm[k]] = input[k];
+        }
+    }
+
+
+    /**
      * Applies the permutation to upper triangular symmetric matrices. Typically a symmetric matrix only stores the
      * upper triangular part, so normal permutation will have undesirable results, e.g. the zeros will get mixed
      * in and will no longer be symmetric. This algorithm will handle the implicit lower triangular and construct

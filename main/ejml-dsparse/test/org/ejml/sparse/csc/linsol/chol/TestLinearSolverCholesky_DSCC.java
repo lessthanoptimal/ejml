@@ -16,23 +16,32 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.factory;
+package org.ejml.sparse.csc.linsol.chol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.FillInPermutation;
 import org.ejml.sparse.LinearSolverSparse;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
-import org.ejml.sparse.csc.linsol.chol.LinearSolverCholesky_DSCC;
+import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
 
 /**
- * Factory for sparse linear solvers
- *
  * @author Peter Abeles
  */
-public class LinearSolverFactory_DSCC {
-    public LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> cholesky(FillInPermutation permutation) {
-        CholeskyUpLooking_DSCC chol = new CholeskyUpLooking_DSCC(permutation);
-        return new LinearSolverCholesky_DSCC(chol);
+public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTests_DSCC {
+
+    @Override
+    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillInPermutation permutation) {
+        CholeskyUpLooking_DSCC cholesky = new CholeskyUpLooking_DSCC(permutation);
+        return new LinearSolverCholesky_DSCC(cholesky);
+    }
+
+    @Override
+    public DMatrixSparseCSC createA(int N) {
+
+        int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
+
+        return RandomMatrices_DSCC.symmetricPosDef(N,nz,rand);
     }
 }

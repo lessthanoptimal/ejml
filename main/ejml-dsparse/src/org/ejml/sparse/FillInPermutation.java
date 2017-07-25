@@ -24,5 +24,6 @@ package org.ejml.sparse;
  * @author Peter Abeles
  */
 public enum FillInPermutation {
-    NONE
+    NONE,
+    SOMETHING
 }
