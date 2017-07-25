@@ -18,8 +18,17 @@
 
 package org.ejml.sparse.csc.factory;
 
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
+
 /**
+ * Factory for sparse matrix decompositions
+ *
  * @author Peter Abeles
  */
 public class DecompositionFactory_DSCC {
+    public CholeskyDecomposition_F64 cholesky(FillInPermutation permutation) {
+        return new CholeskyUpLooking_DSCC(permutation);
+    }
 }

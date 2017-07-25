@@ -446,7 +446,7 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void permute() {
+    public void permute_matrix() {
         int permRow[] = new int[]{2,0,3,1};
         int permCol[] = new int[]{1,2,0,3};
 
@@ -464,6 +464,33 @@ public class TestCommonOps_DSCC {
             }
         }
         assertFalse(B.indicesSorted);
+    }
+
+    @Test
+    public void permute_vector() {
+        int perm[] = new int[]{2,0,3,1};
+        double x[] = new double[]{2,3,4,5};
+        double b[] = new double[4];
+
+        CommonOps_DSCC.permute(perm,x,b,4);
+
+        for (int i = 0; i < 4; i++) {
+            assertEquals(x[perm[i]], b[i], UtilEjml.TEST_F64);
+        }
+    }
+
+
+    @Test
+    public void permuteInv_vector() {
+        int perm[] = new int[]{2,0,3,1};
+        double x[] = new double[]{2,3,4,5};
+        double b[] = new double[4];
+
+        CommonOps_DSCC.permuteInv(perm,x,b,4);
+
+        for (int i = 0; i < 4; i++) {
+            assertEquals(x[i],b[perm[i]],UtilEjml.TEST_F64);
+        }
     }
 
     @Test

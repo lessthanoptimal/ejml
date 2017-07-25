@@ -122,6 +122,25 @@ public class CommonOps_DSCC {
         ImplSparseSparseMult_DSCC.mult(A,B,C, gw, gx);
     }
 
+    public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
+                            IGrowArray gw, DGrowArray gx )
+    {
+        if( A.numCols != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransA(A,B,C);
+    }
+
+    public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
+                                  IGrowArray gw, DGrowArray gx )
+    {
+        if( A.numRows != C.numRows || B.numRows != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransB(A,B,C);
+    }
+
+
     /**
      * Performs matrix multiplication.  C = A*B
      *
@@ -398,6 +417,35 @@ public class CommonOps_DSCC {
             }
         }
     }
+
+    /**
+     * Permutes a vector.  output[i] = input[perm[i]]
+     *
+     * @param perm (Input) permutation vector
+     * @param input (Input) Vector which is to be permuted
+     * @param output (Output) Where the permuted vector is stored.
+     * @param N Number of elements in the vector.
+     */
+    public static void permute( int[] perm , double []input , double[]output , int N ) {
+        for (int k = 0; k < N; k++) {
+            output[k] = input[perm[k]];
+        }
+    }
+
+    /**
+     * Permutes a vector in the inverse.  output[perm[k]] = input[k]
+     *
+     * @param perm (Input) permutation vector
+     * @param input (Input) Vector which is to be permuted
+     * @param output (Output) Where the permuted vector is stored.
+     * @param N Number of elements in the vector.
+     */
+    public static void permuteInv( int[] perm , double []input , double[]output , int N ) {
+        for (int k = 0; k < N; k++) {
+            output[perm[k]] = input[k];
+        }
+    }
+
 
     /**
      * Applies the permutation to upper triangular symmetric matrices. Typically a symmetric matrix only stores the

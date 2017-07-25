@@ -22,6 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.FillInPermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -41,7 +42,10 @@ public abstract class GenericCholeskyTests_DSCC {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower );
+    protected FillInPermutation permTests[] =
+            new FillInPermutation[]{FillInPermutation.NONE,FillInPermutation.SOMETHING};
+
+    public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower , FillInPermutation permutation );
 
     /**
      * Test case with a hand constructed matrix
@@ -49,13 +53,15 @@ public abstract class GenericCholeskyTests_DSCC {
     @Test
     public void checkHandConstructed() {
 
-        if( canL )
-            checkHandConstructed(true);
-        if( canR )
-            checkHandConstructed(false);
+        for( FillInPermutation p : permTests) {
+            if (canL)
+                checkHandConstructed(true,p);
+            if (canR)
+                checkHandConstructed(false,p);
+        }
     }
 
-    public void checkHandConstructed( boolean lower ) {
+    public void checkHandConstructed( boolean lower , FillInPermutation perm) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+
@@ -66,7 +72,7 @@ public abstract class GenericCholeskyTests_DSCC {
                         "2 3 0 "+
                         "4 5 7",3);;
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower,perm);
 
         assertTrue(cholesky.decompose(A));
         assertTrue(lower==cholesky.isLower());
@@ -87,15 +93,17 @@ public abstract class GenericCholeskyTests_DSCC {
      */
     @Test
     public void checkMontiCarlo() {
-        if( canL )
-            checkMontiCarlo(true);
-        if( canR )
-            checkMontiCarlo(false);
+        for( FillInPermutation p : permTests) {
+            if (canL)
+                checkMontiCarlo(true,p);
+            if (canR)
+                checkMontiCarlo(false,p);
+        }
     }
 
-    public void checkMontiCarlo( boolean lower ) {
+    public void checkMontiCarlo( boolean lower , FillInPermutation perm ) {
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower,perm);
 
         for (int width = 1; width <= 10; width++) {
             for (int mc = 0; mc < 30; mc++) {
@@ -138,7 +146,7 @@ public abstract class GenericCholeskyTests_DSCC {
                      "1 -1 " +
                         "-1 -2 ",2);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> alg = create(true);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> alg = create(true,permTests[0]);
         assertFalse(alg.decompose(A));
     }
 
@@ -148,37 +156,41 @@ public abstract class GenericCholeskyTests_DSCC {
      */
     @Test
     public void getT() {
-        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
-                "1 2  4 " +
-                        "2 13 23 "+
-                        "4 23 90",3);
+        for( FillInPermutation perm : permTests) {
+            DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                         "1 2  4 " +
+                            "2 13 23 " +
+                            "4 23 90", 3);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(true);
+            CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(true, perm);
 
-        assertTrue(cholesky.decompose(A));
+            assertTrue(cholesky.decompose(A));
 
-        DMatrixSparseCSC L_null = cholesky.getT(null);
-        DMatrixSparseCSC L_provided = RandomMatrices_DSCC.rectangle(3,3,7,rand);
-        assertTrue( L_provided == cholesky.getT(L_provided));
+            DMatrixSparseCSC L_null = cholesky.getT(null);
+            DMatrixSparseCSC L_provided = RandomMatrices_DSCC.rectangle(3, 3, 7, rand);
+            assertTrue(L_provided == cholesky.getT(L_provided));
 
-        EjmlUnitTests.assertEquals(L_null,L_provided, UtilEjml.TEST_F64);
+            EjmlUnitTests.assertEquals(L_null, L_provided, UtilEjml.TEST_F64);
+        }
     }
 
     @Test
     public void checkDeterminant() {
-        if( canL )
-            checkDeterminant(true);
-        if( canR )
-            checkDeterminant( false );
+        for( FillInPermutation p : permTests) {
+            if (canL)
+                checkDeterminant(true,p);
+            if (canR)
+                checkDeterminant(false,p);
+        }
     }
 
-    public void checkDeterminant( boolean lower ) {
+    public void checkDeterminant( boolean lower , FillInPermutation perm ) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+
                         "4 23 90",3);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower,perm);
 
         assertTrue(cholesky.decompose(A));
 

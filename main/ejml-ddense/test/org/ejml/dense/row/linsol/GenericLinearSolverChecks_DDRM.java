@@ -295,7 +295,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
     }
 
     protected LinearSolver<DMatrixRMaj>  createSafeSolver(DMatrixRMaj A ) {
-        return new LinearSolverSafe<DMatrixRMaj>( createSolver(A));
+        return new LinearSolverSafe<>( createSolver(A));
     }
 
     protected abstract LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A );

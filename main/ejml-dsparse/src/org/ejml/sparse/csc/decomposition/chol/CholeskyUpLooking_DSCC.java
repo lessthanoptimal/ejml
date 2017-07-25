@@ -23,8 +23,9 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.DecompositionSparseInterface;
+import org.ejml.sparse.FillInPermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.decomposition.DecompositionSparseInterface;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
@@ -43,7 +44,7 @@ public class CholeskyUpLooking_DSCC implements
 {
     private int N;
 
-    private boolean permuate;
+    private FillInPermutation permutation;
 
     // storage for permuted A matrix
     DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
@@ -63,8 +64,10 @@ public class CholeskyUpLooking_DSCC implements
     int []Pinv = new int[1]; // inverse permutation
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
 
-    public CholeskyUpLooking_DSCC( boolean reduceFillIn ) {
-        this.permuate = reduceFillIn;
+    // storage for determinant results
+
+    public CholeskyUpLooking_DSCC(FillInPermutation permutation ) {
+        this.permutation = permutation;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class CholeskyUpLooking_DSCC implements
     public void performSymbolic(DMatrixSparseCSC A ) {
         init(A.numCols);
 
-        if(permuate) {
+        if(permutation != FillInPermutation.NONE) {
             // create a dummy permutation vector as a place holder
             int[] P = new int[A.numRows];
             for (int i = 0; i < P.length; i++) {
@@ -189,5 +192,21 @@ public class CholeskyUpLooking_DSCC implements
             value *= L.nz_values[L.col_idx[i]];
         }
         return new Complex_F64(value*value,0);
+    }
+
+    public DGrowArray getGx() {
+        return gx;
+    }
+
+    public int[] getPinv() {
+        return Pinv;
+    }
+
+    public DMatrixSparseCSC getL() {
+        return L;
+    }
+
+    public FillInPermutation getPermutation() {
+        return permutation;
     }
 }

@@ -55,7 +55,28 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Solves for an upper triangular matrix against a dense vector. L*x = b
+     * Solves for the transpose of a lower triangular matrix against a dense matrix. L<sup>T</sup>*x = b
+     *
+     * @param L Lower triangular matrix.  Diagonal elements are assumed to be non-zero
+     * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
+     */
+    public static void solveTranL(DMatrixSparseCSC L , double []x )
+    {
+        final int N = L.numCols;
+
+        for (int j = N-1; j >= 0; j--) {
+            int idx0 = L.col_idx[j];
+            int idx1 = L.col_idx[j+1];
+
+            for (int p = idx0+1; p < idx1; p++) {
+                x[j] -= L.nz_values[p]*x[L.nz_rows[p]];
+            }
+            x[j] /= L.nz_values[idx0];
+        }
+    }
+
+    /**
+     * Solves for an upper triangular matrix against a dense vector. U*x = b
      *
      * @param U Upper triangular matrix.  Diagonal elements are assumed to be non-zero
      * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
@@ -79,7 +100,7 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Computes the solution to the triangular system.  Inputs are both sparse but the output is dense.
+     * Computes the solution to the triangular system.
      *
      * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
      * @param lower true for lower triangular and false for upper

@@ -16,12 +16,14 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.decomposition;
+package org.ejml.sparse;
 
-import org.ejml.data.Matrix;
-import org.ejml.interfaces.decomposition.DecompositionInterface;
-
-public interface DecompositionSparseInterface<T extends Matrix> extends
-        DecompositionInterface<T>
-{
+/**
+ * Different types of fill in reducing techniques that can be selected
+ *
+ * @author Peter Abeles
+ */
+public enum FillInPermutation {
+    NONE,
+    SOMETHING
 }

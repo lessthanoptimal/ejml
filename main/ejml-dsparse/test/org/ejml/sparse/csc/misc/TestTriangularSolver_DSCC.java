@@ -59,6 +59,24 @@ public class TestTriangularSolver_DSCC {
     }
 
     @Test
+    public void solveTranL_denseX() {
+        for (int nz_size : new int[]{5, 8, 10, 20}) {
+            DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 1, rand);
+            DMatrixRMaj x = b.copy();
+
+            TriangularSolver_DSCC.solveTranL(L, x.data);
+
+            DMatrixRMaj found = x.createLike();
+            DMatrixSparseCSC L_tran = new DMatrixSparseCSC(5,5,0);
+            CommonOps_DSCC.transpose(L,L_tran,null);
+            CommonOps_DSCC.mult(L_tran, x, found);
+
+            assertTrue(MatrixFeatures_DDRM.isIdentical(found, b, UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
     public void solveU_denseX() {
         for (int nz_size : new int[]{5, 8, 10, 20}) {
             DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);

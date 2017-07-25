@@ -22,6 +22,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.sparse.csc.CommonOps_DSCC;
 
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
 
@@ -110,6 +111,23 @@ public class ImplSparseSparseMult_DSCC {
                 x[row] += A.nz_values[j]*alpha;
             }
         }
+    }
+
+    // TODO replace with a version that doesn't transpose a matrx
+    public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
+        DMatrixSparseCSC A_tran = new DMatrixSparseCSC(A.numCols,A.numRows,A.nz_length);
+        IGrowArray gw = new IGrowArray();
+        CommonOps_DSCC.transpose(A,A_tran,gw);
+
+        mult(A_tran,B,C,gw,null);
+    }
+
+    public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
+        DMatrixSparseCSC B_tran = new DMatrixSparseCSC(B.numCols,B.numRows,B.nz_length);
+        IGrowArray gw = new IGrowArray();
+        CommonOps_DSCC.transpose(B,B_tran,gw);
+
+        mult(A,B_tran,C,gw,null);
     }
 
     public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
