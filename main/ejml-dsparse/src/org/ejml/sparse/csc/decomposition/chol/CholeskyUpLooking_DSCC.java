@@ -63,8 +63,6 @@ public class CholeskyUpLooking_DSCC implements
     int []Pinv = new int[1]; // inverse permutation
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
 
-    // storage for determinant results
-
     public CholeskyUpLooking_DSCC( boolean reduceFillIn ) {
         this.permuate = reduceFillIn;
     }

@@ -81,7 +81,7 @@ public class ExampleSparseMatrix {
         }
         long after = System.currentTimeMillis();
 
-        System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  time = "+(after-before)+" ms");
+        System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  sparse time = "+(after-before)+" ms");
 
         DMatrixRMaj Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj xd = ConvertDMatrixSparse.convert(x,(DMatrixRMaj)null);
@@ -94,7 +94,7 @@ public class ExampleSparseMatrix {
 //            CommonOps_DDRM.add(1.5,yd,0.75, yd, zd);
         }
         after = System.currentTimeMillis();
-        System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  time = "+(after-before)+" ms");
+        System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  dense time  = "+(after-before)+" ms");
 
     }
 }

@@ -1,6 +1,7 @@
 dependencies {
     compile project(':main:ejml-core')
     compile project(':main:ejml-ddense')
+    compile project(':main:ejml-dsparse')
     compile project(':main:ejml-zdense')
     compile project(':main:ejml-simple')
 
