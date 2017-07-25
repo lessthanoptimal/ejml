@@ -33,11 +33,10 @@ Date format: year/month/day
 Sparse Matrix
 - TODO QR - Decomposition
 - TODO LU - Decomposition
-- TODO Chol - Solver
 - TODO QR - Solver
 - TODO LU - Solver
-- TODO multTransA
-- TODO multTransB
+- TODO multTransA  <-- place holders are there right now
+- TODO multTransB  <-- place holders are there right now
 - TODO remove zeros
 
 Sparse idea:

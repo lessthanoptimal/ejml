@@ -23,9 +23,9 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.FillInPermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.decomposition.DecompositionSparseInterface;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 

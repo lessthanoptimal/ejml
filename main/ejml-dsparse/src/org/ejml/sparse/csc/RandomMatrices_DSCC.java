@@ -275,11 +275,8 @@ er      * @param minFill minimum fill fraction
             A.set(i,i,Math.max(0.01,rand.nextDouble()));
         }
 
-        DMatrixSparseCSC At = new DMatrixSparseCSC(width,width,A.nz_length);
-        CommonOps_DSCC.transpose(A,At,null);
-
         DMatrixSparseCSC spd = new DMatrixSparseCSC(width,width,0);
-        CommonOps_DSCC.mult(A,At,spd);
+        CommonOps_DSCC.multTransB(A,A,spd,null,null);
 
         return spd;
     }

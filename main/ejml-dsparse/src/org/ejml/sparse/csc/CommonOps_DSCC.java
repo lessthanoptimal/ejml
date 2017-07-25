@@ -122,6 +122,25 @@ public class CommonOps_DSCC {
         ImplSparseSparseMult_DSCC.mult(A,B,C, gw, gx);
     }
 
+    public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
+                            IGrowArray gw, DGrowArray gx )
+    {
+        if( A.numCols != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransA(A,B,C);
+    }
+
+    public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
+                                  IGrowArray gw, DGrowArray gx )
+    {
+        if( A.numRows != C.numRows || B.numRows != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransB(A,B,C);
+    }
+
+
     /**
      * Performs matrix multiplication.  C = A*B
      *

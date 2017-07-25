@@ -16,12 +16,15 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.decomposition;
+package org.ejml.sparse;
 
 import org.ejml.data.Matrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
+// todo generic test. check is A modified
 public interface DecompositionSparseInterface<T extends Matrix> extends
         DecompositionInterface<T>
 {
+    // todo add is permuted
+    // todo getter for permutation
 }

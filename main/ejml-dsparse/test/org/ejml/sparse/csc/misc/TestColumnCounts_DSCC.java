@@ -79,7 +79,6 @@ public class TestColumnCounts_DSCC {
 
         for (int i = 0; i < 200; i++) {
             int N = rand.nextInt(16)+1;
-            N = 7;
             DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(false,N,0.2,0.5,rand);
             DMatrixSparseCSC A_t = new DMatrixSparseCSC(N,N,A.nz_length);
             CommonOps_DSCC.transpose(A,A_t,null);

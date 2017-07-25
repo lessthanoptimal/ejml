@@ -98,6 +98,68 @@ public class TestImplSparseSparseMult_DSCC {
     }
 
     @Test
+    public void multTransA_s_s() {
+        for (int i = 0; i < 10; i++) {
+            mult_s_s(24,30,20);
+            mult_s_s(15,15,20);
+            mult_s_s(15,15,5);
+            mult_s_s(4,5,0);
+        }
+    }
+
+    private void multTransA_s_s(int elementsA , int elementsB , int elementsC ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6,4,elementsA,-1,1,rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,5,elementsB,-1,1,rand);
+        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
+
+        ImplSparseSparseMult_DSCC.multTransA(a,b,c);
+        assertTrue(CommonOps_DSCC.checkStructure(c));
+
+        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
+
+        CommonOps_DDRM.multTransA(dense_a, dense_b, dense_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void multTransB_s_s() {
+        for (int i = 0; i < 10; i++) {
+            mult_s_s(24,30,20);
+            mult_s_s(15,15,20);
+            mult_s_s(15,15,5);
+            mult_s_s(4,5,0);
+        }
+    }
+
+    private void multTransB_s_s(int elementsA , int elementsB , int elementsC ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5,6,elementsB,-1,1,rand);
+        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
+
+        ImplSparseSparseMult_DSCC.multTransB(a,b,c);
+        assertTrue(CommonOps_DSCC.checkStructure(c));
+
+        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
+
+        CommonOps_DDRM.multTransB(dense_a, dense_b, dense_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
     public void mult_s_d() {
         for (int i = 0; i < 10; i++) {
             mult_s_d(24);
