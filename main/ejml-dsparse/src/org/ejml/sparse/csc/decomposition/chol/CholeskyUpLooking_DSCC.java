@@ -18,10 +18,11 @@
 
 package org.ejml.sparse.csc.decomposition.chol;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.DecompositionSparseInterface;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
@@ -37,7 +38,7 @@ import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
  * @author Peter Abeles
  */
 public class CholeskyUpLooking_DSCC implements
-        CholeskyDecomposition<DMatrixSparseCSC>, // TODO create a sparse cholesky interface?
+        CholeskyDecomposition_F64<DMatrixSparseCSC>, // TODO create a sparse cholesky interface?
         DecompositionSparseInterface<DMatrixSparseCSC>
 {
     private int N;
@@ -61,6 +62,8 @@ public class CholeskyUpLooking_DSCC implements
     int []counts = new int[1];
     int []Pinv = new int[1]; // inverse permutation
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
+
+    // storage for determinant results
 
     public CholeskyUpLooking_DSCC( boolean reduceFillIn ) {
         this.permuate = reduceFillIn;
@@ -94,6 +97,7 @@ public class CholeskyUpLooking_DSCC implements
         TriangularSolver_DSCC.eliminationTree(C,false,parent, gw);
         TriangularSolver_DSCC.postorder(parent,N,post, gw);
         columnCounter.process(C,parent,post,counts);
+        L.reshape(A.numRows,A.numCols,0);
         L.colsum(counts);
     }
 
@@ -180,5 +184,14 @@ public class CholeskyUpLooking_DSCC implements
         }
         T.set(L);
         return T;
+    }
+
+    @Override
+    public Complex_F64 computeDeterminant() {
+        double value = 1;
+        for (int i = 0; i < N; i++) {
+            value *= L.nz_values[L.col_idx[i]];
+        }
+        return new Complex_F64(value*value,0);
     }
 }

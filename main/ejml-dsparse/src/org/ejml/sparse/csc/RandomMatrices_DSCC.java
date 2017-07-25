@@ -259,4 +259,28 @@ er      * @param minFill minimum fill fraction
             return triangleLower(N,0,nz,-1,1,rand);
         }
     }
+
+    /**
+     * Creates a random symmetric positive definite matrix.
+     * @param width number of columns and rows
+     * @param nz_total Used to adjust number of non-zero values. Exact amount in final matrix will be more than this.
+     * @param rand random number generator
+     * @return Random matrix
+     */
+    public static DMatrixSparseCSC symmetricPosDef( int width , int nz_total , Random rand ) {
+        DMatrixSparseCSC A = rectangle(width,width,nz_total,rand);
+
+        // to ensure it's SPD assign non-zero values to all the diagonal elements
+        for (int i = 0; i < width; i++) {
+            A.set(i,i,Math.max(0.01,rand.nextDouble()));
+        }
+
+        DMatrixSparseCSC At = new DMatrixSparseCSC(width,width,A.nz_length);
+        CommonOps_DSCC.transpose(A,At,null);
+
+        DMatrixSparseCSC spd = new DMatrixSparseCSC(width,width,0);
+        CommonOps_DSCC.mult(A,At,spd);
+
+        return spd;
+    }
 }

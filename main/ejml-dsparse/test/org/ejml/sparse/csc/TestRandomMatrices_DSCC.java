@@ -131,4 +131,9 @@ public class TestRandomMatrices_DSCC {
             }
         }
     }
+
+    @Test
+    public void symmetricPosDef() {
+        fail("Implement");
+    }
 }

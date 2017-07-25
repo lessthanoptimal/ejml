@@ -18,14 +18,17 @@
 
 package org.ejml.sparse.csc.decomposition.chol;
 
-import org.junit.Test;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
-import static org.junit.Assert.fail;
+public class TestCholeskyUpLooking_DSCC extends GenericCholeskyTests_DSCC {
 
-public class TestCholeskyUpLooking_DSCC {
-    @Test
-    public void studd() {
-        fail("Implement");
+    public TestCholeskyUpLooking_DSCC() {
+        canR = false;
     }
 
+    @Override
+    public CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower) {
+        return new CholeskyUpLooking_DSCC(false);
+    }
 }
