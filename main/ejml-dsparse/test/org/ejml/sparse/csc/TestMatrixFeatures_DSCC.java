@@ -275,4 +275,15 @@ public class TestMatrixFeatures_DSCC {
         }
     }
 
+    @Test
+    public void isPositiveDefinite() {
+        DMatrixSparseCSC a = UtilEjml.parse_DSCC("2 0 0 2",2);
+        DMatrixSparseCSC b = UtilEjml.parse_DSCC("0 1 1 0",2);
+        DMatrixSparseCSC c = UtilEjml.parse_DSCC("0 0 0 0",2);
+
+        assertTrue(MatrixFeatures_DSCC.isPositiveDefinite(a));
+        assertFalse(MatrixFeatures_DSCC.isPositiveDefinite(b));
+        assertFalse(MatrixFeatures_DSCC.isPositiveDefinite(c));
+    }
+
 }

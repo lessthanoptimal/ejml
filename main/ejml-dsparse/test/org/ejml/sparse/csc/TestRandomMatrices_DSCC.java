@@ -122,9 +122,7 @@ public class TestRandomMatrices_DSCC {
                 int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
                 DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N,  nz,-1,1, rand);
 
-                // Check to see if the matrix is setup correctly
-                assertTrue(CommonOps_DSCC.checkSortedFlag(A)); // doesn't matter if it's sorted or not..
-                assertFalse(CommonOps_DSCC.checkDuplicateElements(A));
+                assertTrue(CommonOps_DSCC.checkStructure(A));
 
                 // Check the matrix properties
                 assertTrue(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
@@ -134,6 +132,16 @@ public class TestRandomMatrices_DSCC {
 
     @Test
     public void symmetricPosDef() {
-        fail("Implement");
+
+        for (int N = 1; N <= 10; N++) {
+            for (int mc = 0; mc < 30; mc++) {
+                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N,  nz,rand);
+
+                assertTrue(CommonOps_DSCC.checkStructure(A));
+
+                assertTrue(MatrixFeatures_DSCC.isPositiveDefinite(A));
+            }
+        }
     }
 }

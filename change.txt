@@ -19,15 +19,21 @@ Date format: year/month/day
   * Added isSymmetric()
 - RandomMatrices_DSCC
   * Added symmetric()
+  * Added symmetricPosDef()
 - CommonOps_DSCC
   * Added permuteSymmetric()
   * Added checkDuplicates()
+  * Added isPositiveDefinite()
   * Fixed bugs
+- Sparse Decompositions and Solvers
+  * Cholesky - Up Looking
 
 Sparse Matrix
-- TODO Cholesky
-- TODO QR
-- TODO LU
+- TODO QR - Decomposition
+- TODO LU - Decomposition
+- TODO Chol - Solver
+- TODO QR - Solver
+- TODO LU - Solver
 
 Sparse idea:
 * take in a single growable queue for workspace. All int values will be assigned an index inside of it

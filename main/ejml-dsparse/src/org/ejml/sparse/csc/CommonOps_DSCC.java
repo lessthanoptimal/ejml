@@ -57,6 +57,16 @@ public class CommonOps_DSCC {
         return true;
     }
 
+    public static boolean checkStructure( DMatrixSparseCSC A ) {
+        if( !checkSortedFlag(A))
+            return false;
+        if( A.col_idx[A.numCols] != A.nz_length )
+            return false;
+        if( checkDuplicateElements(A))
+            return false;
+        return true;
+    }
+
     public static boolean checkSortedFlag( DMatrixSparseCSC A ) {
         if( A.indicesSorted )
             return checkIndicesSorted(A);

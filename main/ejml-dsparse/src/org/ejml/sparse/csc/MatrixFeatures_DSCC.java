@@ -20,6 +20,8 @@ package org.ejml.sparse.csc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
 /**
  * @author Peter Abeles
@@ -229,5 +231,26 @@ public class MatrixFeatures_DSCC {
         }
 
         return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if the matrix is positive definite.
+     * </p>
+     * <p>
+     * x<sup>T</sup> A x &gt; 0<br>
+     * for all x where x is a non-zero vector and A is a symmetric matrix.
+     * </p>
+     *
+     * @param A square symmetric matrix. Not modified.
+     *
+     * @return True if it is positive definite and false if it is not.
+     */
+    public static boolean isPositiveDefinite( DMatrixSparseCSC A ) {
+        if( A.numRows != A.numCols )
+            return false;
+
+        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC(false);
+        return chol.decompose(A);
     }
 }

@@ -326,6 +326,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         System.arraycopy(col_idx,0,histogram,0,numCols); // TODO move this outside?
         nz_length = index;
         growMaxLength( nz_length , false);
+        if( col_idx[numCols] != nz_length )
+            throw new RuntimeException("Egads");
     }
 
     /**

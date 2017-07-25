@@ -113,8 +113,6 @@ public class CholeskyUpLooking_DSCC implements
     }
 
     private boolean decompose() {
-        L.reshape(N,N,C.nz_length);
-
         int []c = adjust(gw,N);
         int []s = adjust(gs,N);
         double []x = adjust(gx,N);

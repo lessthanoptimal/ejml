@@ -50,6 +50,8 @@ public class ImplCommonOps_DSCC {
         for (int j = 1; j <= A.numCols; j++) {
             int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
+                if( A.nz_rows.length <= i)
+                    throw new RuntimeException("Egads");
                 work[A.nz_rows[i]]++;
             }
             idx0 = idx1;

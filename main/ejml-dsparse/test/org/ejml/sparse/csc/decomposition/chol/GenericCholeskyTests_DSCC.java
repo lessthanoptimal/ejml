@@ -106,6 +106,7 @@ public abstract class GenericCholeskyTests_DSCC {
 
                 cholesky.decompose(A);
                 DMatrixSparseCSC L = cholesky.getT(null);
+                assertTrue(CommonOps_DSCC.checkStructure(L));
 
                 // make sure the input was not modified
                 double after = NormOps_DSCC.fastNormF(A);
