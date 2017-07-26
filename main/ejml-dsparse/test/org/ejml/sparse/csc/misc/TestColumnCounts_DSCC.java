@@ -20,15 +20,14 @@ package org.ejml.sparse.csc.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -66,6 +65,47 @@ public class TestColumnCounts_DSCC {
 
         for (int i = 0; i < n; i++) {
             assertEquals(expected[i],counts[i]);
+        }
+    }
+
+    /**
+     * By explicitly computing ATA then compare against the implicit solution
+     */
+    @Test
+    public void process_ata_true() {
+        ColumnCounts_DSCC alg = new ColumnCounts_DSCC(false);
+        ColumnCounts_DSCC algATA = new ColumnCounts_DSCC(true);
+
+        // recycle the data to add a secondary test of it being cleared
+        IGrowArray parent = new IGrowArray();
+        IGrowArray post = new IGrowArray();
+
+        for (int mc = 0; mc < 200; mc++) {
+            int N = rand.nextInt(16) + 1;
+
+//            System.out.println("mc = "+mc+"  N = "+N);
+
+            parent.reshape(N);
+            post.reshape(N);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(true, N, 0.2, 0.5, rand);
+            DMatrixSparseCSC ATA = new DMatrixSparseCSC(N, N, 0);
+            CommonOps_DSCC.multTransA(A, A, ATA, null, null);
+
+            // compute expected results
+            int expected[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(ATA, false, parent.data, null);
+            TriangularSolver_DSCC.postorder(parent.data, N, post.data, null);
+            alg.process(ATA, parent.data, post.data, expected);
+
+            // Now compute it implicitly
+            int found[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(A, true, parent.data, null);
+            TriangularSolver_DSCC.postorder(parent.data, N, post.data, null);
+            algATA.process(A, parent.data, post.data, found);
+
+            for (int i = 0; i < N; i++) {
+                assertEquals(expected[i], found[i]);
+            }
         }
     }
 
@@ -131,13 +171,6 @@ public class TestColumnCounts_DSCC {
         return counts;
     }
 
-    @Ignore
-    @Test
-    public void process_ata() {
-        fail("Implement");
-    }
-
-
     /**
      * Hand constructed test case
      */
@@ -186,6 +219,8 @@ public class TestColumnCounts_DSCC {
         // run the algorithm
         ColumnCounts_DSCC alg = new ColumnCounts_DSCC(false);
         alg.initialize(new DMatrixSparseCSC(n,n,0));
+        for (int i = 0; i < n; i++)  // need to do this here since it isn't done in init
+            alg.w[alg.ancestor+i] = i;
         alg.findFirstDescendant(parent,post,delta);
 
         // test cases in which j is clearly not a leaf

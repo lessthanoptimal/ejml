@@ -90,9 +90,6 @@ public class ColumnCounts_DSCC {
         maxfirst = n;
         prevleaf = 2*n;
         first    = 3*n;
-
-        for (int i = 0; i < n; i++)
-            w[ancestor+i] = i;
     }
 
     /**
@@ -115,6 +112,8 @@ public class ColumnCounts_DSCC {
         if( ata ) {
             init_ata(post);
         }
+        for (int i = 0; i < n; i++)
+            w[ancestor+i] = i;
 
         int[] ATp = At.col_idx; int []ATi = At.nz_rows;
 
@@ -171,6 +170,7 @@ public class ColumnCounts_DSCC {
         head = 4*n;
         next = 5*n+1;
 
+        // invert post
         for (int k = 0; k < n; k++) {
             w[post[k]] = k;
         }

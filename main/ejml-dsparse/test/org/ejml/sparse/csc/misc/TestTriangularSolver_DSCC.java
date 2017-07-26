@@ -424,6 +424,31 @@ public class TestTriangularSolver_DSCC {
     }
 
     /**
+     * Test with ATA = true using square matrices. The test is done by explicitly computing
+     * ATA and seeing if it yields the same results
+     */
+    @Test
+    public void eliminationTree_ata_square() {
+        for (int mc = 0; mc < 200; mc++) {
+            int N = rand.nextInt(16)+1;
+//            System.out.println("mc = "+mc+"   N = "+N);
+
+            DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(true,N,0.1,0.5,rand);
+            DMatrixSparseCSC ATA = new DMatrixSparseCSC(N,N,0);
+            CommonOps_DSCC.multTransA(A,A,ATA,null,null);
+
+            int expected[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(ATA,false,expected,null);
+            int found[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(A,true,found,null);
+
+            for (int i = 0; i < A.numCols; i++) {
+                assertEquals(expected[i],found[i]);
+            }
+        }
+    }
+
+    /**
      * Test case for tall input arrays. ata = true
      */
     @Ignore
