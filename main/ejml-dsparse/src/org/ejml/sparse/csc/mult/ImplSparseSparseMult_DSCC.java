@@ -85,6 +85,8 @@ public class ImplSparseSparseMult_DSCC {
 
     /**
      * Performs the performing operation x = x + A(:,i)*alpha
+     *
+     * <p>NOTE: This is the same as cs_scatter() in csparse.</p>
      */
     public static void multAddColA(DMatrixSparseCSC A , int colA ,
                                    double alpha,

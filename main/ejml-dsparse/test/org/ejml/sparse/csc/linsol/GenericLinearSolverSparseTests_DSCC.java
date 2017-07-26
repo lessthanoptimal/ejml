@@ -23,7 +23,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.junit.Test;
@@ -42,10 +42,10 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 
     protected Random rand = new Random(234);
 
-    protected FillInPermutation permutationTests[] =
-            new FillInPermutation[]{FillInPermutation.NONE,FillInPermutation.SOMETHING};
+    protected FillReducing permutationTests[] =
+            new FillReducing[]{FillReducing.NONE, FillReducing.SOMETHING};
 
-    public abstract LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> createSolver(FillInPermutation permutation);
+    public abstract LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> createSolver(FillReducing permutation);
 
     /**
      * Create a random matrix. The exact shape is determined by the implementation but all allowable shapes for this
@@ -60,7 +60,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     @Test
     public void randomSolveable() {
 
-        for( FillInPermutation perm : permutationTests ) {
+        for( FillReducing perm : permutationTests ) {
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
 
             for (int N : new int[]{1, 2, 5, 10, 20}) {

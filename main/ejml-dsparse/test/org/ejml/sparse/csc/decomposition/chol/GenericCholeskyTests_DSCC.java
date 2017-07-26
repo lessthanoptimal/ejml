@@ -22,7 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -42,10 +42,10 @@ public abstract class GenericCholeskyTests_DSCC {
     boolean canL = true;
     boolean canR = true;
 
-    protected FillInPermutation permTests[] =
-            new FillInPermutation[]{FillInPermutation.NONE,FillInPermutation.SOMETHING};
+    protected FillReducing permTests[] =
+            new FillReducing[]{FillReducing.NONE, FillReducing.SOMETHING};
 
-    public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower , FillInPermutation permutation );
+    public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower , FillReducing permutation );
 
     /**
      * Test case with a hand constructed matrix
@@ -53,7 +53,7 @@ public abstract class GenericCholeskyTests_DSCC {
     @Test
     public void checkHandConstructed() {
 
-        for( FillInPermutation p : permTests) {
+        for( FillReducing p : permTests) {
             if (canL)
                 checkHandConstructed(true,p);
             if (canR)
@@ -61,7 +61,7 @@ public abstract class GenericCholeskyTests_DSCC {
         }
     }
 
-    public void checkHandConstructed( boolean lower , FillInPermutation perm) {
+    public void checkHandConstructed( boolean lower , FillReducing perm) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+
@@ -93,7 +93,7 @@ public abstract class GenericCholeskyTests_DSCC {
      */
     @Test
     public void checkMontiCarlo() {
-        for( FillInPermutation p : permTests) {
+        for( FillReducing p : permTests) {
             if (canL)
                 checkMontiCarlo(true,p);
             if (canR)
@@ -101,7 +101,7 @@ public abstract class GenericCholeskyTests_DSCC {
         }
     }
 
-    public void checkMontiCarlo( boolean lower , FillInPermutation perm ) {
+    public void checkMontiCarlo( boolean lower , FillReducing perm ) {
 
         CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower,perm);
 
@@ -156,7 +156,7 @@ public abstract class GenericCholeskyTests_DSCC {
      */
     @Test
     public void getT() {
-        for( FillInPermutation perm : permTests) {
+        for( FillReducing perm : permTests) {
             DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                          "1 2  4 " +
                             "2 13 23 " +
@@ -176,7 +176,7 @@ public abstract class GenericCholeskyTests_DSCC {
 
     @Test
     public void checkDeterminant() {
-        for( FillInPermutation p : permTests) {
+        for( FillReducing p : permTests) {
             if (canL)
                 checkDeterminant(true,p);
             if (canR)
@@ -184,7 +184,7 @@ public abstract class GenericCholeskyTests_DSCC {
         }
     }
 
-    public void checkDeterminant( boolean lower , FillInPermutation perm ) {
+    public void checkDeterminant( boolean lower , FillReducing perm ) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+

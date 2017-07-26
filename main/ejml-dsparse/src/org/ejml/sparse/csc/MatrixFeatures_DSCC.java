@@ -21,7 +21,7 @@ package org.ejml.sparse.csc;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
 /**
@@ -251,7 +251,7 @@ public class MatrixFeatures_DSCC {
         if( A.numRows != A.numCols )
             return false;
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC(FillInPermutation.NONE);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC(FillReducing.NONE);
         return chol.decompose(A);
     }
 }

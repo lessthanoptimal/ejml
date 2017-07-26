@@ -23,7 +23,7 @@ package org.ejml.sparse;
  *
  * @author Peter Abeles
  */
-public enum FillInPermutation {
+public enum FillReducing {
     NONE,
     SOMETHING
 }

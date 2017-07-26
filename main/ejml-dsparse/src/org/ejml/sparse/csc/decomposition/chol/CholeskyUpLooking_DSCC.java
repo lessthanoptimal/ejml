@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.sparse.DecompositionSparseInterface;
-import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
@@ -44,7 +44,7 @@ public class CholeskyUpLooking_DSCC implements
 {
     private int N;
 
-    private FillInPermutation permutation;
+    private FillReducing permutation;
 
     // storage for permuted A matrix
     DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
@@ -66,7 +66,7 @@ public class CholeskyUpLooking_DSCC implements
 
     // storage for determinant results
 
-    public CholeskyUpLooking_DSCC(FillInPermutation permutation ) {
+    public CholeskyUpLooking_DSCC(FillReducing permutation ) {
         this.permutation = permutation;
     }
 
@@ -83,7 +83,7 @@ public class CholeskyUpLooking_DSCC implements
     public void performSymbolic(DMatrixSparseCSC A ) {
         init(A.numCols);
 
-        if(permutation != FillInPermutation.NONE) {
+        if(permutation != FillReducing.NONE) {
             // create a dummy permutation vector as a place holder
             int[] P = new int[A.numRows];
             for (int i = 0; i < P.length; i++) {
@@ -206,7 +206,7 @@ public class CholeskyUpLooking_DSCC implements
         return L;
     }
 
-    public FillInPermutation getPermutation() {
+    public FillReducing getPermutation() {
         return permutation;
     }
 }

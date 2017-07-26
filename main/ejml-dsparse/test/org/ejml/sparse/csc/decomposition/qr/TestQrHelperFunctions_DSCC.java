@@ -16,23 +16,18 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.factory;
+package org.ejml.sparse.csc.decomposition.qr;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.FillReducing;
-import org.ejml.sparse.LinearSolverSparse;
-import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
-import org.ejml.sparse.csc.linsol.chol.LinearSolverCholesky_DSCC;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
- * Factory for sparse linear solvers
- *
  * @author Peter Abeles
  */
-public class LinearSolverFactory_DSCC {
-    public LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> cholesky(FillReducing permutation) {
-        CholeskyUpLooking_DSCC chol = new CholeskyUpLooking_DSCC(permutation);
-        return new LinearSolverCholesky_DSCC(chol);
+public class TestQrHelperFunctions_DSCC {
+    @Test
+    public void applyHouseholder() {
+        fail("Implement");
     }
 }

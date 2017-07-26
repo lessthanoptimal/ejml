@@ -20,7 +20,7 @@ package org.ejml.sparse.csc.linsol.chol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.FillInPermutation;
+import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
@@ -32,7 +32,7 @@ import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
 public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTests_DSCC {
 
     @Override
-    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillInPermutation permutation) {
+    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillReducing permutation) {
         CholeskyUpLooking_DSCC cholesky = new CholeskyUpLooking_DSCC(permutation);
         return new LinearSolverCholesky_DSCC(cholesky);
     }
