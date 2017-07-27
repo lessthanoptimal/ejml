@@ -99,8 +99,8 @@ public class ImplCommonOps_DSCC {
         for (int col = 0; col < A.numCols; col++) {
             C.col_idx[col] = C.nz_length;
 
-            multAddColA(A,col,alpha,C,col,x,w);
-            multAddColA(B,col,beta,C,col,x,w);
+            multAddColA(A,col,alpha,C,col+1,x,w);
+            multAddColA(B,col,beta,C,col+1,x,w);
 
             // take the values in the dense vector 'x' and put them into 'C'
             int idxC0 = C.col_idx[col];

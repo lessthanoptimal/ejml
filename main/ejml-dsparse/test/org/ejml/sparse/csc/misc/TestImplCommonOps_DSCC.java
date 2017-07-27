@@ -26,8 +26,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -90,5 +89,10 @@ public class TestImplCommonOps_DSCC {
                 assertTrue(CommonOps_DSCC.checkSortedFlag(c));
             }
         }
+    }
+
+    @Test
+    public void addRowsInAInToC() {
+        fail("implement");
     }
 }

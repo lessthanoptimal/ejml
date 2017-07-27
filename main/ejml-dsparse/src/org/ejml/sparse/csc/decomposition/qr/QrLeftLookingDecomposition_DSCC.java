@@ -24,6 +24,7 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
 import java.util.Arrays;
 
@@ -76,6 +77,7 @@ public class QrLeftLookingDecomposition_DSCC implements
         structure.process(A);
 
         initialize(A);
+
         int w[] = gwork.data;
         int perm[] = gperm.data;
         int parent[] = structure.getParent();
@@ -88,14 +90,14 @@ public class QrLeftLookingDecomposition_DSCC implements
 
         int pinv[] = new int[0]; // TODO something something
 
-        // the counts from structure are actually an upper limit
-        // the actual counts can be lower
-        int nz_in_V = 0, nz_in_R = 0;
+        // the counts from structure are actually an upper limit. the actual counts can be lower
+        R.nz_length = 0;
+        V.nz_length = 0;
 
         // compute V and R
         for (int k = 0; k < n; k++) {
-            R.col_idx[k] = nz_in_R;
-            int p1 = V.col_idx[k] = nz_in_V;
+            R.col_idx[k] = R.nz_length;
+            int p1 = V.col_idx[k] = V.nz_length;
             w[k] = k;
             int top = n;
             int col = permutation != null ? perm[k] : k;
@@ -116,26 +118,26 @@ public class QrLeftLookingDecomposition_DSCC implements
                 i = pinv[A.nz_rows[p]];
                 x[i] = A.nz_values[p];
                 if( i > k && w[i] < k) {
-                    V.nz_rows[nz_in_V++] = i;
+                    V.nz_rows[V.nz_length++] = i;
                     w[i] = k;
                 }
             }
             for (int p = top; p < n; p++) {
                 int i = w[s+p];
                 QrHelperFunctions_DSCC.applyHouseholder(V,i,beta[i],x);
-                R.nz_rows[nz_in_R] = i;
-                R.nz_values[nz_in_R++] = x[i];
+                R.nz_rows[R.nz_length] = i;
+                R.nz_values[R.nz_length++] = x[i];
                 x[i] = 0;
                 if( parent[i] == k ) {
-//                    nz_in_V = ImplSparseSparseMult_DSCC.multAddColA(V,i,null,V,w); // TODO hmm
+                    ImplSparseSparseMult_DSCC.addRowsInAInToC(V,i,V,k,w);
                 }
             }
-            for (int p = p1; p < nz_in_V; p++) {
+            for (int p = p1; p < V.nz_length; p++) {
                 V.nz_values[p] = k;
                 x[V.nz_rows[p]] = 0;
             }
-            R.col_idx[n] = nz_in_R;
-            V.col_idx[n] = nz_in_V;
+            R.col_idx[n] = R.nz_length;
+            V.col_idx[n] = V.nz_length;
         }
 
         return false;

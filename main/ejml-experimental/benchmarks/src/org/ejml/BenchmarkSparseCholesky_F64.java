@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.ConvertDMatrixSparse;
-import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
@@ -48,7 +47,7 @@ public class BenchmarkSparseCholesky_F64 {
 
     public static long sparse( DMatrixSparseCSC A , int numTrials) {
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = new CholeskyUpLooking_DSCC(FillReducing.NONE);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = new CholeskyUpLooking_DSCC(null);
 
         long prev = System.currentTimeMillis();
 

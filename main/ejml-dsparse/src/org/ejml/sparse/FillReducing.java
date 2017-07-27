@@ -25,5 +25,5 @@ package org.ejml.sparse;
  */
 public enum FillReducing {
     NONE,
-    SOMETHING
+    IDENTITY
 }

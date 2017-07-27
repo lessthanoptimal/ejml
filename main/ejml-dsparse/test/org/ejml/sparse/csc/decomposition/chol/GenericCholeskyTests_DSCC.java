@@ -43,7 +43,7 @@ public abstract class GenericCholeskyTests_DSCC {
     boolean canR = true;
 
     protected FillReducing permTests[] =
-            new FillReducing[]{FillReducing.NONE, FillReducing.SOMETHING};
+            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower , FillReducing permutation );
 

@@ -66,7 +66,7 @@ public class ImplSparseSparseMult_DSCC {
                 int rowB = B.nz_rows[bi];
                 double valB = B.nz_values[bi];  // B(k,j)  k=rowB j=colB
 
-                multAddColA(A,rowB,valB,C,colB,x,w);
+                multAddColA(A,rowB,valB,C,colB+1,x,w);
             }
 
             // take the values in the dense vector 'x' and put them into 'C'
@@ -90,10 +90,8 @@ public class ImplSparseSparseMult_DSCC {
      */
     public static void multAddColA(DMatrixSparseCSC A , int colA ,
                                    double alpha,
-                                   DMatrixSparseCSC C, int colC,
+                                   DMatrixSparseCSC C, int mark,
                                    double x[] , int w[] ) {
-        int mark = colC+1;
-
         int idxA0 = A.col_idx[colA];
         int idxA1 = A.col_idx[colA+1];
 
@@ -111,6 +109,39 @@ public class ImplSparseSparseMult_DSCC {
                 x[row] = A.nz_values[j]*alpha;
             } else {
                 x[row] += A.nz_values[j]*alpha;
+            }
+        }
+    }
+
+    /**
+     * Adds rows to C[*,colC] that are in A[*,colA] as long as they are marked in w. This is used to grow C
+     * and colC must be the last filled in column in C.
+     *
+     * <p>NOTE: This is the same as cs_scatter if x is null.</p>
+     * @param A Matrix
+     * @param colA The column in A that is being examined
+     * @param C Matrix
+     * @param colC Column in C that rows in A are being added to.
+     * @param w An array used to indicate if a row in A should be added to C. if w[i] < colC AND i is a row
+     *          in A[*,colA] then it will be added.
+     */
+    public static void addRowsInAInToC(DMatrixSparseCSC A , int colA ,
+                                       DMatrixSparseCSC C, int colC,
+                                       int w[] ) {
+        int idxA0 = A.col_idx[colA];
+        int idxA1 = A.col_idx[colA+1];
+
+        for (int j = idxA0; j < idxA1; j++) {
+            int row = A.nz_rows[j];
+
+            if( w[row] < colC ) {
+                if( C.nz_length >= C.nz_rows.length ) {
+                    C.growMaxLength(C.nz_length *2+1,true);
+                }
+
+                w[row] = colC;
+                C.nz_rows[C.nz_length] = row;
+                C.col_idx[colC] = ++C.nz_length;
             }
         }
     }

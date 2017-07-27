@@ -43,7 +43,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     protected Random rand = new Random(234);
 
     protected FillReducing permutationTests[] =
-            new FillReducing[]{FillReducing.NONE, FillReducing.SOMETHING};
+            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     public abstract LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> createSolver(FillReducing permutation);
 

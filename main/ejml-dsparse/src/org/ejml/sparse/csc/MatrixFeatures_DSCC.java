@@ -21,8 +21,10 @@ package org.ejml.sparse.csc;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
+import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 
 /**
  * @author Peter Abeles
@@ -251,7 +253,8 @@ public class MatrixFeatures_DSCC {
         if( A.numRows != A.numCols )
             return false;
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC(FillReducing.NONE);
+        ComputePermutation<DMatrixSparseCSC> perm = FillReductionFactory_DSCC.create(FillReducing.NONE);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC(perm);
         return chol.decompose(A);
     }
 }

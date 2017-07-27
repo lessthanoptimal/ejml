@@ -418,7 +418,7 @@ public class TestCommonOps_DSCC {
         int p[] = new int[]{2,0,1,3};
         int found[] = new int[4];
 
-        CommonOps_DSCC.permutationInverse(p,found);
+        CommonOps_DSCC.permutationInverse(p,found,p.length);
 
         DMatrixSparseCSC A = CommonOps_DSCC.permutationMatrix(p,null);
         DMatrixSparseCSC B = CommonOps_DSCC.permutationMatrix(found,null);
@@ -430,7 +430,7 @@ public class TestCommonOps_DSCC {
     public void permuteRowInv() {
         int permRow[] = new int[]{2,0,3,1};
         int permRowInv[] = new int[4];
-        CommonOps_DSCC.permutationInverse(permRow,permRowInv);
+        CommonOps_DSCC.permutationInverse(permRow,permRowInv,permRow.length);
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
         DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
@@ -451,7 +451,7 @@ public class TestCommonOps_DSCC {
         int permCol[] = new int[]{1,2,0,3};
 
         int permRowInv[] = new int[4];
-        CommonOps_DSCC.permutationInverse(permRow,permRowInv);
+        CommonOps_DSCC.permutationInverse(permRow,permRowInv,permRow.length);
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
         DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
@@ -500,7 +500,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(5,7,-1,1,rand);
 
         int permInv[] = new int[perm.length];
-        CommonOps_DSCC.permutationInverse(perm,permInv);
+        CommonOps_DSCC.permutationInverse(perm,permInv,perm.length);
 
         DMatrixSparseCSC B = new DMatrixSparseCSC(5,5,0);
 

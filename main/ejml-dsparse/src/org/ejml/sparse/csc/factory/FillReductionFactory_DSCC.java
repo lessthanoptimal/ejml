@@ -28,14 +28,20 @@ import org.ejml.sparse.FillReducing;
  */
 public class FillReductionFactory_DSCC {
     public static ComputePermutation<DMatrixSparseCSC> create(FillReducing type ) {
-        return new ComputePermutation<DMatrixSparseCSC>() {
-            @Override
-            public void process(DMatrixSparseCSC m, IGrowArray perm) {
-                perm.reshape(m.numRows);
-                for (int i = 0; i <m.numRows; i++) {
-                    perm.data[i] = i;
-                }
-            }
-        };
+        switch( type ) {
+            case NONE:
+                return null;
+
+            default:
+                return new ComputePermutation<DMatrixSparseCSC>() {
+                    @Override
+                    public void process(DMatrixSparseCSC m, IGrowArray perm) {
+                        perm.reshape(m.numRows);
+                        for (int i = 0; i <m.numRows; i++) {
+                            perm.data[i] = i;
+                        }
+                    }
+                };
+        }
     }
 }

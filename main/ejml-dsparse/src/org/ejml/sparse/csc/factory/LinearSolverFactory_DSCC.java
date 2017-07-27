@@ -32,7 +32,7 @@ import org.ejml.sparse.csc.linsol.chol.LinearSolverCholesky_DSCC;
  */
 public class LinearSolverFactory_DSCC {
     public LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> cholesky(FillReducing permutation) {
-        CholeskyUpLooking_DSCC chol = new CholeskyUpLooking_DSCC(permutation);
+        CholeskyUpLooking_DSCC chol = (CholeskyUpLooking_DSCC)DecompositionFactory_DSCC.cholesky(permutation);
         return new LinearSolverCholesky_DSCC(chol);
     }
 }
