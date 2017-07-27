@@ -28,19 +28,22 @@ import java.util.Arrays;
 /**
  * Determines the structure of the QR decomposition. Both R and V (householder vectors) component.
  *
+ * <p>Fictional Rows: When there are no non-zero values in a row a fictional row is added to the end. The fictional
+ * row will have an element in it that is not zero. It will then be permuted in. The QR decomposition algorithm
+ * requires that all rows have a structurally non-zero element in them.</p>
+ *
  * <p>NOTE: This class contains the all of or part of cs_sqrt() and cs_vcounts() in csparse</p>
  */
-// TODO understand what is up with the fictious row stuff
 public class QrStructuralCounts_DSCC {
 
     DMatrixSparseCSC A; // reference to input matrix
     int m,n; // short hand for number of rows and columns in A
-    int leftmost[] = new int[0];
+    int leftmost[] = new int[0]; // left most column in each row
     int m2; // number of rows for QR after adding fictitious rows
     int pinv[] = new int[0]; // inverse permutation to ensure diagonal elements are all structurally nonzero
-    int parent[] = new int[0];
-    int post[] = new int[0];
-    IGrowArray gwork = new IGrowArray();
+    int parent[] = new int[0]; // elimination tree
+    int post[] = new int[0]; // post ordered tree
+    IGrowArray gwork = new IGrowArray(); // generic work space
     int nz_in_V; // number of entries in V
     int nz_in_R; // number of entries in R
     int countsR[] = new int[0]; // column counts in R
@@ -79,11 +82,12 @@ public class QrStructuralCounts_DSCC {
         this.tail = m + n;
         this.nque = m + 2*n;
 
-        if( parent.length < n ) {
+        if( parent.length < n || leftmost.length < m) {
             parent = new int[n];
             post = new int[n];
             pinv = new int[m+n];
             countsR = new int[n];
+            leftmost = new int[m];
         }
         gwork.reshape(m+3*n);
     }
@@ -209,5 +213,9 @@ public class QrStructuralCounts_DSCC {
 
     public int[] getParent() {
         return parent;
+    }
+
+    public int[] getPinv() {
+        return pinv;
     }
 }

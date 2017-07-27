@@ -38,6 +38,7 @@ import static org.junit.Assert.fail;
  *
  * @author Peter Abeles
  */
+// TODO Add a test that makes sure identify permutation produces identical results to no permutation
 public abstract class GenericLinearSolverSparseTests_DSCC {
 
     protected Random rand = new Random(234);
@@ -61,10 +62,13 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     public void randomSolveable() {
 
         for( FillReducing perm : permutationTests ) {
+            System.out.println("perm = "+perm);
+
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
 
             for (int N : new int[]{1, 2, 5, 10, 20}) {
                 for (int mc = 0; mc < 30; mc++) {
+                    System.out.println(N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
                     DMatrixRMaj X = create(A.numCols, 3);
                     DMatrixRMaj foundX = create(A.numCols, 3);
@@ -73,11 +77,17 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     // compute the solution
                     CommonOps_DSCC.mult(A, X, B);
 
+                    System.out.println();
+                    A.print();
+                    X.print();
+                    B.print();
+
+
                     assertTrue(solver.setA(A));
                     solver.solve(B, foundX);
 
                     // TODO uneasy about needing the 10x when permutation is added. Should be literally identical
-                    EjmlUnitTests.assertEqualsR(X, foundX, 10*UtilEjml.TEST_F64);
+                    EjmlUnitTests.assertRelativeEquals(X, foundX, 10*UtilEjml.TEST_F64);
                 }
             }
         }

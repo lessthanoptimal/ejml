@@ -240,6 +240,11 @@ public class RandomMatrices_DSCC {
         return U;
     }
 
+    public static int nonzero( int numRows , int numCols , double minFill , double maxFill , Random rand  ) {
+        int N = numRows*numCols;
+        return (int)(N*(rand.nextDouble()*(maxFill-minFill)+minFill)+0.5);
+    }
+
     /**
      * Creates a triangular matrix where the amount of fill is randomly selected too.
      *
@@ -272,11 +277,12 @@ er      * @param minFill minimum fill fraction
 
         // to ensure it's SPD assign non-zero values to all the diagonal elements
         for (int i = 0; i < width; i++) {
-            A.set(i,i,Math.max(0.01,rand.nextDouble()));
+            A.set(i,i,Math.max(0.5,rand.nextDouble()));
         }
 
         DMatrixSparseCSC spd = new DMatrixSparseCSC(width,width,0);
         CommonOps_DSCC.multTransB(A,A,spd,null,null);
+
 
         return spd;
     }

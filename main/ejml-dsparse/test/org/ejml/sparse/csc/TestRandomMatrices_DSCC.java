@@ -73,6 +73,7 @@ public class TestRandomMatrices_DSCC {
         assertEquals(numRows,a.numRows);
         assertEquals(numCols,a.numCols);
         assertEquals(10,a.nz_length);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
 
         int count = 0;
         for (int row = 0; row < numRows; row++) {
@@ -98,15 +99,15 @@ public class TestRandomMatrices_DSCC {
         for (int trial = 0; trial < 20; trial++) {
             for( int length : new int[]{0,2,6,12,20} ) {
                 L = RandomMatrices_DSCC.triangleLower(6, 0, length,-1,1, rand);
-//            L.print();
+
                 assertEquals(Math.max(6,length),L.nz_length);
-                assertTrue(CommonOps_DSCC.checkSortedFlag(L));
+                assertTrue(CommonOps_DSCC.checkStructure(L));
                 assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
 
                 L = RandomMatrices_DSCC.triangleLower(6, 1, length,-1,1, rand);
 //                L.print();
                 assertEquals(Math.max(5,length),L.nz_length);
-                assertTrue(CommonOps_DSCC.checkSortedFlag(L));
+                assertTrue(CommonOps_DSCC.checkStructure(L));
                 assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
 
                 assertFalse(CommonOps_DSCC.checkDuplicateElements(L));

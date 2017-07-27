@@ -75,10 +75,11 @@ public class CommonOps_DSCC {
 
     /**
      * Checks for duplicate elements. A is sorted
-     * @param A Matrix to be tested. Modified
+     * @param A Matrix to be tested.
      * @return true if duplicates or false if false duplicates
      */
     public static boolean checkDuplicateElements(DMatrixSparseCSC A ) {
+        A = A.copy(); // create a copy so that it doesn't modify A
         A.sortIndices(null);
         return !checkSortedFlag(A);
     }
@@ -184,6 +185,7 @@ public class CommonOps_DSCC {
     public static DMatrixSparseCSC identity(int numRows , int numCols ) {
         int min = Math.min(numRows, numCols);
         DMatrixSparseCSC A = new DMatrixSparseCSC(numRows, numCols, min);
+        A.nz_length = min;
 
         Arrays.fill(A.nz_values,0,min,1);
         for (int i = 1; i <= min; i++) {
@@ -280,6 +282,7 @@ public class CommonOps_DSCC {
     public static DMatrixSparseCSC diag(double... values ) {
         int N = values.length;
         DMatrixSparseCSC A = new DMatrixSparseCSC(N,N,N);
+        A.nz_length = N;
 
         for (int i = 0; i < N; i++) {
             A.col_idx[i+1] = i+1;

@@ -189,7 +189,9 @@ public class TestTriangularSolver_DSCC {
         assertEquals(1,xi[2]);
 
         // A is diagonal with one missing and B is full
+        A.print();
         A.remove(1,1);
+        A.print();
         B = RandomMatrices_DSCC.rectangle(3,1,3,-1,1,rand);
         top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,xi,w);
         assertEquals(0,top);
@@ -199,11 +201,12 @@ public class TestTriangularSolver_DSCC {
 
         // A is diagonal with one missing and B is missing the same element
         B.remove(1,0);
+        A.print();
+        B.print();
         top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,xi,w);
         assertEquals(1,top);
         assertEquals(2,xi[1]);
         assertEquals(0,xi[2]);
-
     }
 
     /**
@@ -239,7 +242,6 @@ public class TestTriangularSolver_DSCC {
             assertEquals(i+2,xi[i]);
         }
     }
-
 
     /**
      * hand constructed system and verify that the results are as expected

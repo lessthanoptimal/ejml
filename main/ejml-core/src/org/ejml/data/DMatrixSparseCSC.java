@@ -20,6 +20,8 @@ package org.ejml.data;
 
 import org.ejml.ops.SortCoupledArray_F64;
 
+import java.util.Arrays;
+
 /**
  * <p>Compressed Column (CC) sparse matrix format.   Only non-zero elements are stored.</p>
  * <p>
@@ -69,16 +71,23 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      */
     public boolean indicesSorted=false;
 
-    public DMatrixSparseCSC(int numRows , int numCols , int nz_length) {
-        nz_length = Math.min(numCols*numRows, nz_length);
+    /**
+     * Specifies shape and number of non-zero elements that can be stored.
+     *
+     * @param numRows Number of rows
+     * @param numCols Number of columns
+     * @param arrayLength Initial maximum number of non-zero elements that can be in the matrix
+     */
+    public DMatrixSparseCSC(int numRows , int numCols , int arrayLength) {
+        arrayLength = Math.min(numCols*numRows, arrayLength);
 
         this.numRows = numRows;
         this.numCols = numCols;
-        this.nz_length = nz_length;
+        this.nz_length = 0;
 
-        nz_values = new double[nz_length];
+        nz_values = new double[ arrayLength ];
         col_idx = new int[ numCols+1 ];
-        nz_rows = new int[nz_length];
+        nz_rows = new int[ arrayLength ];
     }
 
     public DMatrixSparseCSC(DMatrixSparseCSC original ) {
@@ -155,6 +164,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
+    public boolean isAssigned(int row, int col) {
+        return nz_index(row,col) >= 0;
+    }
+
+    @Override
     public double get(int row, int col) {
         if( row < 0 || row >= numRows || col < 0 || col >= numCols )
             throw new IllegalArgumentException("Outside of matrix bounds");
@@ -182,8 +196,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         int col1 = col_idx[col+1];
 
         for (int i = col0; i < col1; i++) {
-            int ri = nz_rows[i];
-            if( ri == row ) {
+            if( nz_rows[i] == row ) {
                 return i;
             }
         }
@@ -208,6 +221,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
             int idx0 = col_idx[col];
             int idx1 = col_idx[col+1];
 
+            // determine the index the new element should be inserted at. This is done to keep it sorted if
+            // it was already sorted
             for( index = idx0; index < idx1; index++ ) {
                 if( nz_rows[index] < row) {
                     break;
@@ -219,11 +234,13 @@ public class DMatrixSparseCSC implements DMatrixSparse {
                 col_idx[i]++;
             }
 
-            // shift the two non-zero arrays
+
+            // if it's already at the maximum array length grow the arrays
             if( nz_length >= nz_values.length )
                 growMaxLength(nz_length*2+1, true);
 
-            for (int i = nz_length-1; i > index; i--) {
+            // shift everything by one
+            for (int i = nz_length; i > index; i--) {
                 nz_rows[i] = nz_rows[i-1];
                 nz_values[i] = nz_values[i-1];
             }
@@ -254,6 +271,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void zero() {
+        Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
     }
 
@@ -292,15 +310,15 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * Increases the maximum size of the data array so that it can store sparse data up to 'length'.  The class
      * parameter nz_length is not modified by this function call.
      *
-     * @param nz_length Desired maximum length of sparse data
+     * @param arrayLength Desired maximum length of sparse data
      * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
      */
-    public void growMaxLength( int nz_length , boolean preserveValue ) {
+    public void growMaxLength( int arrayLength , boolean preserveValue ) {
         // don't increase the size beyound the max possible matrix size
-        nz_length = Math.min(numRows*numCols, nz_length);
-        if( nz_length > this.nz_values.length ) {
-            double[] data = new double[ nz_length ];
-            int[] row_idx = new int[ nz_length ];
+        arrayLength = Math.min(numRows*numCols, arrayLength);
+        if( arrayLength > this.nz_values.length ) {
+            double[] data = new double[ arrayLength ];
+            int[] row_idx = new int[ arrayLength ];
 
             if( preserveValue ) {
                 System.arraycopy(this.nz_values, 0, data, 0, this.nz_length);

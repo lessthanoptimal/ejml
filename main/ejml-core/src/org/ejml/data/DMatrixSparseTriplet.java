@@ -198,6 +198,11 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     }
 
     @Override
+    public boolean isAssigned(int row, int col) {
+        return nz_index(row,col) >= 0;
+    }
+
+    @Override
     public void zero() {
         nz_length = 0;
     }

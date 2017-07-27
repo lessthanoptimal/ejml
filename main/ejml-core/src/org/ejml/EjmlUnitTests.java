@@ -152,7 +152,7 @@ public class EjmlUnitTests {
     /**
      * Assert equals with a relative error
      */
-    public static void assertEqualsR(DMatrix A , DMatrix B , double tol ) {
+    public static void assertRelativeEquals(DMatrix A , DMatrix B , double tol ) {
         assertShape(A,B);
 
         for( int i = 0; i < A.getNumRows(); i++ ){

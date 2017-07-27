@@ -35,20 +35,31 @@ import java.util.Arrays;
  *
  * @author Peter Abeles
  */
+// TODO if singular mark it as such
 public class QrLeftLookingDecomposition_DSCC implements
-        QRPDecomposition_F64<DMatrixSparseCSC>, // TODO create a sparse cholesky interface?
+        QRPDecomposition_F64<DMatrixSparseCSC>, // TODO create a sparse QR interface?
         DecompositionSparseInterface<DMatrixSparseCSC>
 {
+    // shape of matrix and m2 includes fictitious rows
     int m,n,m2;
     ComputePermutation<DMatrixSparseCSC> permutation;
+    // storage for permutation done to reduce the fill in
     IGrowArray gperm = new IGrowArray();
     IGrowArray ginvperm = new IGrowArray();
+    // A matrix which has been permuted by gperm
     DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
+
+    // if fill in permtuation it will be Aperm if not then it will be A
     DMatrixSparseCSC C;
 
+    // storage for Householder vectors
     DMatrixSparseCSC V = new DMatrixSparseCSC(1,1,0);
+    // Storage for R matrix in QR
     DMatrixSparseCSC R = new DMatrixSparseCSC(1,1,0);
+    // storage for beta in (I - beta*v*v')
     double beta[] = new double[0];
+
+    // local workspace
     double x[] = new double[0];
 
     QrStructuralCounts_DSCC structure = new QrStructuralCounts_DSCC();
@@ -63,6 +74,7 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     @Override
     public boolean decompose(DMatrixSparseCSC A) {
+        // If requested, apply fill in reducing permutation
         if( permutation != null ) {
             Aperm.reshape(A.numRows,Aperm.numCols,A.nz_length);
             permutation.process(A, gperm);
@@ -74,21 +86,29 @@ public class QrLeftLookingDecomposition_DSCC implements
             C = A;
         }
 
-        structure.process(A);
+        // compute the structure of V and R
+        structure.process(C);
 
-        initialize(A);
+        // Initialize data structured used in the decomposition
+        initializeDecomposition(C);
 
+        // perform the decomposution
+        performDecomposition(C);
+
+        return false;
+    }
+
+    private void performDecomposition(DMatrixSparseCSC A) {
         int w[] = gwork.data;
-        int perm[] = gperm.data;
+        int perm[] = gperm.data; // TODO check that this is the correct perm
         int parent[] = structure.getParent();
         int leftmost[] = structure.getLeftMost();
-
+        // permutation that was done to ensure all rows have non-zero elements
+        int pinvStr[] = structure.getPinv();
         int s = m2;
 
-        // clear mark nodes
+        // clear mark nodes. See addRowsInAInToC
         Arrays.fill(w,0,m2,-1);
-
-        int pinv[] = new int[0]; // TODO something something
 
         // the counts from structure are actually an upper limit. the actual counts can be lower
         R.nz_length = 0;
@@ -115,13 +135,14 @@ public class QrLeftLookingDecomposition_DSCC implements
                 while( len > 0) {
                     w[s + --top] = w[s + --len];
                 }
-                i = pinv[A.nz_rows[p]];
+                i = pinvStr[A.nz_rows[p]];
                 x[i] = A.nz_values[p];
                 if( i > k && w[i] < k) {
                     V.nz_rows[V.nz_length++] = i;
                     w[i] = k;
                 }
             }
+            // apply previously computed Householder vectors to the current columns
             for (int p = top; p < n; p++) {
                 int i = w[s+p];
                 QrHelperFunctions_DSCC.applyHouseholder(V,i,beta[i],x);
@@ -139,19 +160,20 @@ public class QrLeftLookingDecomposition_DSCC implements
             R.col_idx[n] = R.nz_length;
             V.col_idx[n] = V.nz_length;
         }
-
-        return false;
     }
 
-    private void initialize(DMatrixSparseCSC A ) {
+    private void initializeDecomposition(DMatrixSparseCSC A ) {
         this.m2 = structure.getFicticousRowCount();
         this.m = A.numRows;
         this.n = A.numCols;
 
+        // TODO double check these sizes
         if( beta.length < n ) {
             beta = new double[n];
         }
-
+        if( x.length < m ) {
+            x = new double[m];
+        }
 
         V.reshape(m2,n,structure.nz_in_V);
         R.reshape(m2,n,structure.nz_in_R);

@@ -100,10 +100,10 @@ public class TestImplSparseSparseMult_DSCC {
     @Test
     public void multTransA_s_s() {
         for (int i = 0; i < 10; i++) {
-            mult_s_s(24,30,20);
-            mult_s_s(15,15,20);
-            mult_s_s(15,15,5);
-            mult_s_s(4,5,0);
+            multTransA_s_s(24,30,20);
+            multTransA_s_s(15,15,20);
+            multTransA_s_s(15,15,5);
+            multTransA_s_s(4,5,0);
         }
     }
 
@@ -117,7 +117,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
-        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
+        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numCols, dense_b.numCols);
 
         CommonOps_DDRM.multTransA(dense_a, dense_b, dense_c);
 
@@ -131,10 +131,10 @@ public class TestImplSparseSparseMult_DSCC {
     @Test
     public void multTransB_s_s() {
         for (int i = 0; i < 10; i++) {
-            mult_s_s(24,30,20);
-            mult_s_s(15,15,20);
-            mult_s_s(15,15,5);
-            mult_s_s(4,5,0);
+            multTransB_s_s(24,30,20);
+            multTransB_s_s(15,15,20);
+            multTransB_s_s(15,15,5);
+            multTransB_s_s(4,5,0);
         }
     }
 
@@ -148,7 +148,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
-        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
+        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numRows);
 
         CommonOps_DDRM.multTransB(dense_a, dense_b, dense_c);
 
@@ -184,6 +184,34 @@ public class TestImplSparseSparseMult_DSCC {
             for (int col = 0; col < c.numCols; col++) {
                 assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
             }
+        }
+    }
+
+    @Test
+    public void addRowsInAInToC() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                      "1 0 1 0 0 " +
+                        "1 0 0 1 0 "+
+                        "0 0 1 0 0 " +
+                        "0 0 0 1 0 " +
+                        "1 1 0 0 1",5);
+
+        int w[] = new int[5];
+
+        DMatrixSparseCSC B = new DMatrixSparseCSC(5,5,25);
+        B.nz_length = 0;
+
+        // nothing should be added here since w is full of 0 and colC = 0
+        ImplSparseSparseMult_DSCC.addRowsInAInToC(A,0,B,0,w);
+        assertEquals(0,B.col_idx[1]);
+
+        // colA shoul dnow be added to colB
+        ImplSparseSparseMult_DSCC.addRowsInAInToC(A,0,B,1,w);
+        assertEquals(3,B.col_idx[1]);
+        int expected[] = new int[]{0,1,4};
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i],B.nz_rows[i]);
+            assertEquals(1,w[expected[i]]);
         }
     }
 }

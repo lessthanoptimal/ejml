@@ -18,9 +18,11 @@
 
 package org.ejml.sparse.csc.decomposition.qr;
 
+import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixSparseCSC;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Abeles
@@ -28,6 +30,20 @@ import static org.junit.Assert.fail;
 public class TestQrHelperFunctions_DSCC {
     @Test
     public void applyHouseholder() {
-        fail("Implement");
+        DMatrixSparseCSC V = UtilEjml.parse_DSCC(
+                      "1 0 0 0 0 " +
+                        "2 1 0 0 0 "+
+                        "0 3 1 0 0 " +
+                        "0 0 0 1 0 " +
+                        "4 1 4 5 1",5);
+
+        double []x = new double[]{1,2,3,4,5};
+        QrHelperFunctions_DSCC.applyHouseholder(V,1,2.1,x);
+
+        // hand computed solution
+        double []expected = new double[]{1,-31.6,-97.8,4,-28.6};
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i],x[i],UtilEjml.TEST_F64);
+        }
     }
 }

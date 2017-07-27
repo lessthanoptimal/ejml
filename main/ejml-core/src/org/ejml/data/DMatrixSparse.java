@@ -52,6 +52,14 @@ public interface DMatrixSparse extends DMatrix {
     void remove( int row , int col );
 
     /**
+     * Is the specified element explicitly assigned a value
+     * @param row the row
+     * @param col the column
+     * @return true if it has been assigned a value or false if not
+     */
+    boolean isAssigned( int row , int col );
+
+    /**
      * Sets all elements to zero by removing the sparse graph
      */
     void zero();

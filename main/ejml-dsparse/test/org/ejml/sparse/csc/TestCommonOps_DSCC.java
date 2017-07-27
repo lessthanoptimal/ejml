@@ -62,6 +62,7 @@ public class TestCommonOps_DSCC {
     @Test
     public void checkDuplicates() {
         DMatrixSparseCSC orig = new DMatrixSparseCSC(3,2,6);
+        orig.nz_length = 6;
 
         orig.col_idx[0] = 0;
         orig.col_idx[1] = 3;
@@ -129,8 +130,7 @@ public class TestCommonOps_DSCC {
     private void check_s_s_mult(DMatrixSparseCSC A , DMatrixSparseCSC B, DMatrixSparseCSC C, boolean exception ) {
         try {
             CommonOps_DSCC.mult(A,B,C,null,null);
-            assertTrue(CommonOps_DSCC.checkSortedFlag(C));
-
+            assertTrue(CommonOps_DSCC.checkStructure(C));
 
             if( exception )
                 fail("exception expected");
@@ -231,7 +231,7 @@ public class TestCommonOps_DSCC {
         double beta = -0.6;
         try {
             CommonOps_DSCC.add(alpha,A,beta,B,C, null, null);
-            assertTrue(CommonOps_DSCC.checkSortedFlag(C));
+            assertTrue(CommonOps_DSCC.checkStructure(C));
 
             if( exception )
                 fail("exception expected");
@@ -285,6 +285,7 @@ public class TestCommonOps_DSCC {
             CommonOps_DSCC.scale(scale, A, B);
             CommonOps_DDRM.scale(scale,Ad,expected);
 
+            assertTrue(CommonOps_DSCC.checkStructure(B));
             DMatrixRMaj found = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
@@ -305,6 +306,7 @@ public class TestCommonOps_DSCC {
             CommonOps_DSCC.divide(A,denominator, B);
             CommonOps_DDRM.divide(Ad,denominator, expected);
 
+            assertTrue(CommonOps_DSCC.checkStructure(B));
             DMatrixRMaj found = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
@@ -366,6 +368,7 @@ public class TestCommonOps_DSCC {
 
         DMatrixSparseCSC A = CommonOps_DSCC.diag(d);
 
+        assertTrue(CommonOps_DSCC.checkStructure(A));
         assertEquals(3,A.numRows);
         assertEquals(3,A.numCols);
 
@@ -393,7 +396,7 @@ public class TestCommonOps_DSCC {
                    "1 0 0 " +
                    "0 1 0 ", 3);
 
-        assertTrue(CommonOps_DSCC.checkIndicesSorted(P));
+        assertTrue(CommonOps_DSCC.checkStructure(P));
         assertTrue(MatrixFeatures_DDRM.isEquals(expected,found));
     }
 
@@ -436,13 +439,14 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
 
         CommonOps_DSCC.permuteRowInv(permRowInv, A, B);
+        assertFalse(B.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
 
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 assertEquals(A.get(permRow[row],col), B.get(row,col), UtilEjml.TEST_F64);
             }
         }
-        assertFalse(B.indicesSorted);
     }
 
     @Test
@@ -457,13 +461,14 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC B = new DMatrixSparseCSC(4,4,1);
 
         CommonOps_DSCC.permute(permRowInv, A, permCol, B);
+        assertFalse(B.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
 
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 assertEquals(A.get(permRow[row],permCol[col]), B.get(row,col), UtilEjml.TEST_F64);
             }
         }
-        assertFalse(B.indicesSorted);
     }
 
     @Test
@@ -505,13 +510,14 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC B = new DMatrixSparseCSC(5,5,0);
 
         CommonOps_DSCC.permuteSymmetric(A, permInv, B, null);
+        assertFalse(B.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
 
         for (int row = 0; row < 5; row++) {
             for (int col = row; col < 5; col++) {
                 assertEquals(A.get(perm[row],perm[col]), B.get(row,col), UtilEjml.TEST_F64);
             }
         }
-        assertFalse(B.indicesSorted);
     }
 
 }
