@@ -519,4 +519,85 @@ public class CommonOps_DSCC {
         }
     }
 
+    /**
+     * Concats two matrices along their columns (vertical).
+     *
+     * @param top Matrix on the top
+     * @param bottom Matrix on the bototm
+     * @param out (Output) (Optional) Storage for combined matrix. Resized.
+     * @return Combination of the two matrices
+     */
+    public static DMatrixSparseCSC concatColumns( DMatrixSparseCSC top , DMatrixSparseCSC bottom ,
+                                                  DMatrixSparseCSC out )
+    {
+        if( top.numCols != bottom.numCols )
+            throw new IllegalArgumentException("Number of columns must match");
+        if( out == null )
+            out = new DMatrixSparseCSC(0,0,0);
+
+        out.reshape(top.numRows+bottom.numRows,top.numCols,top.nz_length+bottom.nz_length);
+
+        int index = 0;
+        for (int i = 0; i < top.numCols; i++) {
+            int top0 = top.col_idx[i];
+            int top1 = top.col_idx[i+1];
+
+            int bot0 = bottom.col_idx[i];
+            int bot1 = bottom.col_idx[i+1];
+
+            int out0 = out.col_idx[i];
+            int out1 = out0 + top1-top0 + bot1-bot0;
+            out.col_idx[i+1] = out1;
+
+            for (int j = top0; j < top1; j++ , index++) {
+                out.nz_values[index] = top.nz_values[j];
+                out.nz_rows[index] = top.nz_rows[j];
+            }
+            for (int j = bot0; j < bot1; j++ , index++) {
+                out.nz_values[index] = bottom.nz_values[j];
+                out.nz_rows[index] = top.numRows + bottom.nz_rows[j];
+            }
+        }
+
+        return out;
+    }
+
+    /**
+     * Concats two matrices along their rows (horizontal).
+     *
+     * @param left Matrix on  the left
+     * @param right Matrix on the right
+     * @param out (Output) (Optional) Storage for combined matrix. Resized.
+     * @return Combination of the two matrices
+     */
+    public static DMatrixSparseCSC concatRows( DMatrixSparseCSC left , DMatrixSparseCSC right ,
+                                               DMatrixSparseCSC out )
+    {
+        if( left.numRows != right.numRows )
+            throw new IllegalArgumentException("Number of rows must match");
+        if( out == null )
+            out = new DMatrixSparseCSC(0,0,0);
+
+        out.reshape(left.numRows,left.numCols+right.numCols,left.nz_length+right.nz_length);
+
+        System.arraycopy(left.col_idx,0,out.col_idx,0,left.numCols+1);
+        System.arraycopy(left.nz_rows,0,out.nz_rows,0,left.nz_length);
+        System.arraycopy(left.nz_values,0,out.nz_values,0,left.nz_length);
+
+        int index = left.nz_length;
+        for (int i = 0; i < right.numCols; i++) {
+            int r0 = right.col_idx[i];
+            int r1 = right.col_idx[i+1];
+
+            out.col_idx[left.numCols+i] = index;
+            out.col_idx[left.numCols+i+1] = index + (r1 - r0);
+
+            for (int j = r0; j < r1; j++, index++) {
+                out.nz_rows[index] = right.nz_rows[j];
+                out.nz_values[index] = right.nz_values[j];
+            }
+        }
+
+        return out;
+    }
 }

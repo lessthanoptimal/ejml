@@ -520,4 +520,43 @@ public class TestCommonOps_DSCC {
         }
     }
 
+    @Test
+    public void concatColumns() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10,5,15,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(3,5,8,rand);
+
+        DMatrixSparseCSC C = CommonOps_DSCC.concatColumns(A,B,null);
+        assertTrue(CommonOps_DSCC.checkStructure(C));
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(C.get(row,col),A.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+        for (int row = 0; row < B.numRows; row++) {
+            for (int col = 0; col < B.numCols; col++) {
+                assertEquals(C.get(row+A.numRows,col),B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void concatRows() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,3,8,rand);
+
+        DMatrixSparseCSC C = CommonOps_DSCC.concatRows(A,B,null);
+        assertTrue(CommonOps_DSCC.checkStructure(C));
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(C.get(row,col),A.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+        for (int row = 0; row < B.numRows; row++) {
+            for (int col = 0; col < B.numCols; col++) {
+                assertEquals(C.get(row,col+A.numCols),B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
 }

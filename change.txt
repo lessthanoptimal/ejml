@@ -24,6 +24,8 @@ Date format: year/month/day
   * Added permuteSymmetric()
   * Added checkDuplicates()
   * Added isPositiveDefinite()
+  * Added concatColumns()
+  * Added concatRows()
   * Fixed bugs
 - Sparse Decompositions and Solvers
   * Cholesky - Up Looking
