@@ -16,18 +16,14 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.decomposition.qr;
+package org.ejml.sparse;
 
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
+import org.ejml.data.IGrowArray;
+import org.ejml.data.Matrix;
 
 /**
  * @author Peter Abeles
  */
-public class TestQrLeftDecomposition_DSCC {
-    @Test
-    public void stuff() {
-        fail("implement");
-    }
+public interface ComputePermutation<T extends Matrix> {
+    void process( T m , IGrowArray permutation );
 }

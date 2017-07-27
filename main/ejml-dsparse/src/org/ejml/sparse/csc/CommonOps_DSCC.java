@@ -346,8 +346,8 @@ public class CommonOps_DSCC {
      * @param original Original permutation vector
      * @param inverse It's inverse
      */
-    public static void permutationInverse( int []original , int []inverse ) {
-        for (int i = 0; i < original.length; i++) {
+    public static void permutationInverse( int []original , int []inverse , int length ) {
+        for (int i = 0; i < length; i++) {
             inverse[original[i]] = i;
         }
     }

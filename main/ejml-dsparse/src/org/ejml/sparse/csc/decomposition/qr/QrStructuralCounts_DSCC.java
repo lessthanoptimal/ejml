@@ -36,7 +36,7 @@ public class QrStructuralCounts_DSCC {
     DMatrixSparseCSC A; // reference to input matrix
     int m,n; // short hand for number of rows and columns in A
     int leftmost[] = new int[0];
-    int m2; // number of rows for QR after adding fictituous rows
+    int m2; // number of rows for QR after adding fictitious rows
     int pinv[] = new int[0]; // inverse permutation to ensure diagonal elements are all structurally nonzero
     int parent[] = new int[0];
     int post[] = new int[0];
@@ -197,5 +197,17 @@ public class QrStructuralCounts_DSCC {
 
     public void setGwork(IGrowArray gwork) {
         this.gwork = gwork;
+    }
+
+    public int getFicticousRowCount() {
+        return m2;
+    }
+
+    public int[] getLeftMost() {
+        return leftmost;
+    }
+
+    public int[] getParent() {
+        return parent;
     }
 }
