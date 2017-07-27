@@ -28,7 +28,6 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -453,10 +452,27 @@ public class TestTriangularSolver_DSCC {
     /**
      * Test case for tall input arrays. ata = true
      */
-    @Ignore
     @Test
     public void eliminationTree_ata_tall() {
-        fail("implement");
+        for (int mc = 0; mc < 200; mc++) {
+            int N = rand.nextInt(16)+1;
+
+            DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(true,N,0.1,0.5,rand);
+            DMatrixSparseCSC bottom = RandomMatrices_DSCC.rectangle(3,N,8,rand);
+            DMatrixSparseCSC tall = CommonOps_DSCC.concatRows(A,bottom,null);
+
+            DMatrixSparseCSC ATA = new DMatrixSparseCSC(N,N,0);
+            CommonOps_DSCC.multTransA(tall,tall,ATA,null,null);
+
+            int expected[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(ATA,false,expected,null);
+            int found[] = new int[A.numCols];
+            TriangularSolver_DSCC.eliminationTree(tall,true,found,null);
+
+            for (int i = 0; i < A.numCols; i++) {
+                assertEquals(expected[i],found[i]);
+            }
+        }
     }
 
     /**

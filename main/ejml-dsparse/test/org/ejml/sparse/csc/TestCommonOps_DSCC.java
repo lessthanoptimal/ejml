@@ -521,11 +521,11 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void concatColumns() {
+    public void concatRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10,5,15,rand);
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(3,5,8,rand);
 
-        DMatrixSparseCSC C = CommonOps_DSCC.concatColumns(A,B,null);
+        DMatrixSparseCSC C = CommonOps_DSCC.concatRows(A,B,null);
         assertTrue(CommonOps_DSCC.checkStructure(C));
 
         for (int row = 0; row < A.numRows; row++) {
@@ -541,11 +541,11 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void concatRows() {
+    public void concatColumns() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,3,8,rand);
 
-        DMatrixSparseCSC C = CommonOps_DSCC.concatRows(A,B,null);
+        DMatrixSparseCSC C = CommonOps_DSCC.concatColumns(A,B,null);
         assertTrue(CommonOps_DSCC.checkStructure(C));
 
         for (int row = 0; row < A.numRows; row++) {

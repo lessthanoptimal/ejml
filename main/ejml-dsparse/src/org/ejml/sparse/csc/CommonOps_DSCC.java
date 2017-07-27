@@ -520,15 +520,15 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Concats two matrices along their columns (vertical).
+     * Concats two matrices along their rows (vertical).
      *
      * @param top Matrix on the top
      * @param bottom Matrix on the bototm
      * @param out (Output) (Optional) Storage for combined matrix. Resized.
      * @return Combination of the two matrices
      */
-    public static DMatrixSparseCSC concatColumns( DMatrixSparseCSC top , DMatrixSparseCSC bottom ,
-                                                  DMatrixSparseCSC out )
+    public static DMatrixSparseCSC concatRows(DMatrixSparseCSC top , DMatrixSparseCSC bottom ,
+                                              DMatrixSparseCSC out )
     {
         if( top.numCols != bottom.numCols )
             throw new IllegalArgumentException("Number of columns must match");
@@ -563,15 +563,15 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Concats two matrices along their rows (horizontal).
+     * Concats two matrices along their columns (horizontal).
      *
      * @param left Matrix on  the left
      * @param right Matrix on the right
      * @param out (Output) (Optional) Storage for combined matrix. Resized.
      * @return Combination of the two matrices
      */
-    public static DMatrixSparseCSC concatRows( DMatrixSparseCSC left , DMatrixSparseCSC right ,
-                                               DMatrixSparseCSC out )
+    public static DMatrixSparseCSC concatColumns(DMatrixSparseCSC left , DMatrixSparseCSC right ,
+                                                 DMatrixSparseCSC out )
     {
         if( left.numRows != right.numRows )
             throw new IllegalArgumentException("Number of rows must match");

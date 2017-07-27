@@ -282,7 +282,7 @@ public class TriangularSolver_DSCC {
      *
      * <p>Functionally identical to cs_etree in csparse</p>
      *
-     * @param A      (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &gt; N
+     * @param A      (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &ge; N
      * @param ata    If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
      *               tree for cholesky factorization
      * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
