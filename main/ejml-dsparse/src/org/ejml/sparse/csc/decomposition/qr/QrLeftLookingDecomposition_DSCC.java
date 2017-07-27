@@ -31,6 +31,8 @@ import java.util.Arrays;
 /**
  * Left-looking QR decomposition algorithm for sparse matrices.
  *
+ * TODO Can only be applied to tall matrices right?!
+ *
  * <p>NOTE: See qr_left on page 71 and cs_qr() in csparse </p>
  *
  * @author Peter Abeles

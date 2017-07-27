@@ -455,7 +455,7 @@ public class TestTriangularSolver_DSCC {
      */
     @Ignore
     @Test
-    public void eliminationTree_case0_tall() {
+    public void eliminationTree_ata_tall() {
         fail("implement");
     }
 

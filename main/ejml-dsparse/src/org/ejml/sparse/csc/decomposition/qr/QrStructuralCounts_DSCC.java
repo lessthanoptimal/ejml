@@ -41,6 +41,7 @@ public class QrStructuralCounts_DSCC {
     int leftmost[] = new int[0]; // left most column in each row
     int m2; // number of rows for QR after adding fictitious rows
     int pinv[] = new int[0]; // inverse permutation to ensure diagonal elements are all structurally nonzero
+                             // this is a row pivot
     int parent[] = new int[0]; // elimination tree
     int post[] = new int[0]; // post ordered tree
     IGrowArray gwork = new IGrowArray(); // generic work space
@@ -49,10 +50,10 @@ public class QrStructuralCounts_DSCC {
     int countsR[] = new int[0]; // column counts in R
 
     // ----- start location of different sections in work array inside of V
-    int next;         // next element in the linked list
-    int head;         // head of each of the n linked lists
-    int tail;     // tail of each of the n linked lists
-    int nque;   // number  of elements in each linked list
+    int next;         // col=next[row] element in the linked list
+    int head;         // row=head[col] first row in which col is the first
+    int tail;         // row=tail[col] last row in which col is the first
+    int nque;         // nque[col] number of elements in column linked list
 
     ColumnCounts_DSCC columnCounts = new ColumnCounts_DSCC(true);
 
@@ -114,6 +115,30 @@ public class QrStructuralCounts_DSCC {
         int []w = gwork.data;
         findMinElementIndexInRows(leftmost);
         createRowElementLinkedLists(leftmost,w);
+
+        System.out.print("head[ ");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%2d ",w[head+i]);
+        }
+        System.out.println("]");
+        System.out.print("tail[ ");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%2d ",w[tail+i]);
+        }
+        System.out.println("]");
+
+        System.out.print(" cnt[ ");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%2d ",w[nque+i]);
+        }
+        System.out.println("]");
+
+        System.out.print("next[ ");
+        for (int i = 0; i < m; i++) {
+            System.out.printf("%2d ",w[next+i]);
+        }
+        System.out.println("]");
+
         countNonZeroUsingLinkedList(parent,w);
     }
 
@@ -169,8 +194,8 @@ public class QrStructuralCounts_DSCC {
 
         // scan rows in reverse order creating a linked list of nz element indexes in each row
         for (int i = m-1; i >= 0; i--) {
-            int k = leftmost[i];
-            if( k == -1 )
+            int k = leftmost[i];      // 'k' = left most column in row 'i'
+            if( k == -1 )             // row 'i' is empty
                 continue;
             if( w[nque+k]++ == 0 )
                 w[tail+k] = i;
