@@ -18,6 +18,7 @@ Date format: year/month/day
 - Added *GrowArray to act as workspace in sparse algorithms
 - MatrixFeatures_DSCC
   * Added isSymmetric()
+  * Added isOrthogonal()
 - RandomMatrices_DSCC
   * Added symmetric()
   * Added symmetricPosDef()

@@ -89,12 +89,21 @@ public class QrHelperFunctions_DSCC {
         C.numRows = V.numRows;
         C.numCols = 0;
 
+//        System.out.println("rank1UpdateMultR Column in V");
+//        for (int i = 0; i < V.numRows; i++) {
+//            System.out.println("[ "+V.get(i,colV)+" ]");
+//        }
+
         for (int i = 0; i < A.numCols; i++) {
+//            System.out.println("rank1UpdateMultR column "+i);
             // tau = v'*A(:,i)
             double tau = CommonOps_DSCC.dotInnerColumns(V,colV,A,i,gw,gx);
+//            System.out.println("tau "+tau);
             // C(:,i) = A(:,i) - gamma*tau*v
             ImplCommonOps_DSCC.addColAppend(1.0,A,i,-gamma*tau,V,colV,C,gw);
+//            C.print();
         }
+        System.out.println();
     }
 
     /**
@@ -104,28 +113,29 @@ public class QrHelperFunctions_DSCC {
      *
      * <p>NOTE: Same as cs_house in csparse</p>
      * @param x (Input) Vector x (Output) Vector v. Modified.
-     * @param N Length of x
+     * @param xStart First index in X that is to be processed
+     * @param xEnd Last + 1 index in x that is to be processed.
      * @param gamma (Output) Storage for computed beta
      * @return variable s
      */
-    public static double computeHouseholder(double []x , int offset , int N , DScalar gamma ) {
+    public static double computeHouseholder(double []x , int xStart , int xEnd , DScalar gamma ) {
         double s, tau = 0;
-        for (int i = offset+1; i < N ; i++) {
+        for (int i = xStart+1; i < xEnd ; i++) {
             double val = x[i];
             tau += val*val;
         }
         if( tau == 0) {
-            s = Math.abs(x[offset]);
-            gamma.value = x[offset] <= 0 ? 2 : 0;
-            x[offset] = 1;
+            s = Math.abs(x[xStart]);
+            gamma.value = x[xStart] <= 0 ? 2 : 0;
+            x[xStart] = 1;
         } else {
-            s = Math.sqrt(x[offset]*x[offset] + tau);
-            if( x[offset] <= 0) {
-                x[offset] = x[offset] - s;
+            s = Math.sqrt(x[xStart]*x[xStart] + tau);
+            if( x[xStart] <= 0) {
+                x[xStart] = x[xStart] - s;
             } else {
-                x[offset] = -tau/(x[offset] + s);
+                x[xStart] = -tau/(x[xStart] + s);
             }
-            gamma.value = -1.0 / (s * x[offset]);
+            gamma.value = -1.0 / (s * x[xStart]);
         }
         return s;
     }

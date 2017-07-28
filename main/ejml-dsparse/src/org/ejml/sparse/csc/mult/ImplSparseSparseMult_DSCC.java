@@ -142,8 +142,8 @@ public class ImplSparseSparseMult_DSCC {
                 }
 
                 w[row] = colC;
-                C.nz_rows[C.nz_length] = row;
-                C.col_idx[colC] = ++C.nz_length;
+                C.nz_rows[C.nz_length++] = row;
+//                C.col_idx[colC] = ++C.nz_length;
             }
         }
     }
@@ -216,7 +216,6 @@ public class ImplSparseSparseMult_DSCC {
         int idx0 = A.col_idx[colA];
         int idx1 = A.col_idx[colA+1];
         for (int i = idx0; i < idx1; i++) {
-            System.out.println("length "+length+" x.length "+x.length);
             if( length >= x.length ) {
                 System.out.println();
             }

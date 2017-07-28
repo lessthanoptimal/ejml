@@ -93,16 +93,16 @@ public class TestQrHelperFunctions_DSCC {
 
     @Test
     public void computeHouseholder() {
-        int N = 9;
+        int N = 10;
         int offset = 1;
-        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(N+offset,1,rand);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(N,1,rand);
         DMatrixRMaj v = x.copy();
 
         DScalar beta = new DScalar();
 
         double s = QrHelperFunctions_DSCC.computeHouseholder(v.data,offset,N,beta);
 
-        QrHelperFunctions_DDRM.rank1UpdateMultR(x,v.data,beta.value,0,offset,N,new double[N+offset]);
+        QrHelperFunctions_DDRM.rank1UpdateMultR(x,v.data,beta.value,0,offset,N,new double[N]);
 
         assertEquals(s,x.data[offset],UtilEjml.TEST_F64);
         for (int i = offset+1; i < N; i++) {

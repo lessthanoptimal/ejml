@@ -284,4 +284,26 @@ public class TestMatrixFeatures_DSCC {
         assertFalse(MatrixFeatures_DSCC.isPositiveDefinite(c));
     }
 
+    @Test
+    public void isOrthogonal() {
+        // rotation matrices are orthogonal
+        double c = Math.cos(0.1);
+        double s = Math.sin(0.1);
+
+        DMatrixSparseCSC A = new DMatrixSparseCSC(2,2,2);
+        A.set(0,0,c);A.set(0,1,s);
+        A.set(1,0,-s);A.set(1,1,c);
+
+        assertTrue(MatrixFeatures_DSCC.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
+
+        // try a negative case now
+        A.set(0,1,495);
+
+        assertFalse(MatrixFeatures_DSCC.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
+
+        A.set(0,1,Double.NaN);
+
+        assertFalse(MatrixFeatures_DSCC.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
+    }
+
 }

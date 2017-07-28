@@ -19,7 +19,9 @@
 package org.ejml.sparse.csc;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
@@ -256,5 +258,36 @@ public class MatrixFeatures_DSCC {
         ComputePermutation<DMatrixSparseCSC> perm = FillReductionFactory_DSCC.create(FillReducing.NONE);
         CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC(perm);
         return chol.decompose(A);
+    }
+
+    /**
+     * <p>
+     * Checks to see if a matrix is orthogonal or isometric.
+     * </p>
+     *
+     * @param Q The matrix being tested. Not modified.
+     * @param tol Tolerance.
+     * @return True if it passes the test.
+     */
+    public static boolean isOrthogonal(DMatrixSparseCSC Q , double tol )
+    {
+        if( Q.numRows < Q.numCols ) {
+            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
+        }
+
+        IGrowArray gw=new IGrowArray();
+        DGrowArray gx=new DGrowArray();
+
+        for( int i = 0; i < Q.numRows; i++ ) {
+
+            for( int j = i+1; j < Q.numCols; j++ ) {
+                double val = CommonOps_DSCC.dotInnerColumns(Q,i,Q,j,gw,gx);
+
+                if( !(Math.abs(val) <= tol))
+                    return false;
+            }
+        }
+
+        return true;
     }
 }

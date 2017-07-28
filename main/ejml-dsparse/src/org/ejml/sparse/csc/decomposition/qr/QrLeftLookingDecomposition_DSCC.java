@@ -26,6 +26,7 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
 import java.util.Arrays;
@@ -105,16 +106,21 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     private void performDecomposition(DMatrixSparseCSC A) {
+        if( !CommonOps_DSCC.checkStructure(A)) {
+            throw new RuntimeException("Egads");
+        }
+
         int w[] = gwork.data;
         int perm[] = gperm.data; // TODO check that this is the correct perm
         int parent[] = structure.getParent();
         int leftmost[] = structure.getLeftMost();
         // permutation that was done to ensure all rows have non-zero elements
-        int pinvStr[] = structure.getPinv();
+        int pinv_structure[] = structure.getPinv();
         int s = m2;
 
         // clear mark nodes. See addRowsInAInToC
         Arrays.fill(w,0,m2,-1);
+        Arrays.fill(x,0,m2,0);
 
         // the counts from structure are actually an upper limit. the actual counts can be lower
         R.nz_length = 0;
@@ -124,7 +130,11 @@ public class QrLeftLookingDecomposition_DSCC implements
         for (int k = 0; k < n; k++) {
             R.col_idx[k] = R.nz_length;
             int p1 = V.col_idx[k] = V.nz_length;
+            if( V.col_idx[1] > V.numRows ) {
+                throw new RuntimeException("Egads");
+            }
             w[k] = k;
+            V.nz_rows[V.nz_length++] = k;                       // Add V(k,k) to V's pattern
             int top = n;
             int col = permutation != null ? perm[k] : k;
 
@@ -141,7 +151,7 @@ public class QrLeftLookingDecomposition_DSCC implements
                 while( len > 0) {
                     w[s + --top] = w[s + --len];
                 }
-                i = pinvStr[A.nz_rows[p]];
+                i = pinv_structure[A.nz_rows[p]];
                 x[i] = A.nz_values[p];
                 if( i > k && w[i] < k) {
                     V.nz_rows[V.nz_length++] = i;
@@ -156,7 +166,10 @@ public class QrLeftLookingDecomposition_DSCC implements
                 R.nz_values[R.nz_length++] = x[i];
                 x[i] = 0;
                 if( parent[i] == k ) {
-                    ImplSparseSparseMult_DSCC.addRowsInAInToC(V,i,V,k,w);
+                    ImplSparseSparseMult_DSCC.addRowsInAInToC(V,i,V,k,w);// todo really same variable twice?
+                    if( V.col_idx[1] > V.numRows ) {
+                        throw new RuntimeException("Egads");
+                    }
                 }
             }
             for (int p = p1; p < V.nz_length; p++) {
@@ -164,7 +177,11 @@ public class QrLeftLookingDecomposition_DSCC implements
                 x[V.nz_rows[p]] = 0;
             }
             R.nz_rows[R.nz_length] = k;
-            R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values,p1,V.nz_length-p1,Beta);
+            R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values,p1,V.nz_length,Beta);
+            System.out.println("computed beta = "+Beta.value);
+            if( V.col_idx[1] > V.numRows ) {
+                throw new RuntimeException("Egads");
+            }
             beta[k] = Beta.value;
             R.nz_length++;
         }
@@ -213,7 +230,11 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     @Override
     public DMatrixSparseCSC getPivotMatrix(DMatrixSparseCSC P) {
-        return null;
+        if( P == null )
+            P = new DMatrixSparseCSC(1,1,0);
+        P.reshape(V.numRows,V.numRows,V.numRows);
+        CommonOps_DSCC.permutationMatrix(structure.pinv,P);
+        return P;
     }
 
     @Override
@@ -224,11 +245,19 @@ public class QrLeftLookingDecomposition_DSCC implements
             Q = new DMatrixSparseCSC(1,1,0);
         Q.reshape(V.numRows,V.numRows,0);
 
+//        V.print();
         for (int i = 0; i < V.numCols; i++) {
+            System.out.println("-------- column i = "+i);
             QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,beta[i],I,Q,gwork,gx);
+//            Q.print();
             if( !CommonOps_DSCC.checkStructure(Q)) {
                 throw new RuntimeException("Egads");
             }
+            I.set(Q);
+            if( !MatrixFeatures_DSCC.isOrthogonal(I,1e-4)) {
+                throw new RuntimeException("Crap");
+            }
+//            System.out.println();
         }
         return Q;
     }

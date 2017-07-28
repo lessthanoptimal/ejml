@@ -50,8 +50,16 @@ public class TestQrLeftLookingDecomposition_DSCC {
         DMatrixSparseCSC Q = alg.getQ(null,false);
         DMatrixSparseCSC R = alg.getR(null,false);
 
+        R.print();
+
+        DMatrixSparseCSC P = alg.getPivotMatrix(null);
+
         DMatrixSparseCSC found = new DMatrixSparseCSC(10,5,0);
         CommonOps_DSCC.mult(Q,R,found);
+
+        System.out.println("first number "+A.get(0,0)+" "+found.get(0,0));
+//        A.print();
+//        found.print();
 
         EjmlUnitTests.assertEquals(A,found, UtilEjml.TEST_F64);
     }
