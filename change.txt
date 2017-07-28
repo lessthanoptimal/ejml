@@ -26,11 +26,14 @@ Date format: year/month/day
   * Added isPositiveDefinite()
   * Added concatColumns()
   * Added concatRows()
+  * Added extractColumn()
   * Fixed bugs
 - Sparse Decompositions and Solvers
   * Cholesky - Up Looking
 - Sparse Triangular Solver
   * Added solveTranL()
+- Data Types
+  * Added DScalar and IScalar
 
 Sparse Matrix
 - TODO QR - Decomposition

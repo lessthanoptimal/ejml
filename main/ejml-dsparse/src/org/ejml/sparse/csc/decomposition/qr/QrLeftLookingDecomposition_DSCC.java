@@ -97,7 +97,7 @@ public class QrLeftLookingDecomposition_DSCC implements
         // perform the decomposution
         performDecomposition(C);
 
-        return false;
+        return true;
     }
 
     private void performDecomposition(DMatrixSparseCSC A) {
@@ -156,12 +156,15 @@ public class QrLeftLookingDecomposition_DSCC implements
                 }
             }
             for (int p = p1; p < V.nz_length; p++) {
-                V.nz_values[p] = k;
+                V.nz_values[p] = x[V.nz_rows[p]];
                 x[V.nz_rows[p]] = 0;
             }
-            R.col_idx[n] = R.nz_length;
-            V.col_idx[n] = V.nz_length;
+            R.nz_rows[R.nz_length] = k;
+//            R.nz_values[R.nz_length] = adsasd; TOODO CS_HOUSE
+            R.nz_length++;
         }
+        R.col_idx[n] = R.nz_length;
+        V.col_idx[n] = V.nz_length;
     }
 
     private void initializeDecomposition(DMatrixSparseCSC A ) {
@@ -203,12 +206,22 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     @Override
     public DMatrixSparseCSC getQ(DMatrixSparseCSC Q, boolean compact) {
+
+        V.print();
+        DMatrixSparseCSC v = new DMatrixSparseCSC(V.numRows,1,V.numRows);
+
+
         return null;
     }
 
     @Override
     public DMatrixSparseCSC getR(DMatrixSparseCSC R, boolean compact) {
-        return null;
+        if( R == null )
+            R = new DMatrixSparseCSC(0,0,0);
+
+        R.set(this.R);
+
+        return R;
     }
 
     @Override

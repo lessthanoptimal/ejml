@@ -559,4 +559,15 @@ public class TestCommonOps_DSCC {
             }
         }
     }
+
+    @Test
+    public void extractColumn() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.extractColumn(A,2,null);
+
+        for (int row = 0; row < A.numRows; row++) {
+            assertEquals( A.get(row,2), B.get(row,0), UtilEjml.TEST_F64);
+        }
+    }
 }

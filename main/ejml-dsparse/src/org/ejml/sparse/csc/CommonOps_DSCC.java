@@ -600,4 +600,33 @@ public class CommonOps_DSCC {
 
         return out;
     }
+
+    /**
+     * Extracts a column from A and stores it into out.
+     *
+     * @param A (Input) Source matrix. not modified.
+     * @param column The column in A
+     * @param out (Output, Optional) Storage for column vector
+     * @return The column of A.
+     */
+    public static DMatrixSparseCSC extractColumn(DMatrixSparseCSC A , int column , DMatrixSparseCSC out ) {
+
+        if( out == null )
+            out = new DMatrixSparseCSC(1,1,1);
+
+        int idx0 = A.col_idx[column];
+        int idx1 = A.col_idx[column+1];
+
+        out.reshape(A.numRows,1,idx1-idx0);
+
+
+        out.col_idx[0] = 0;
+        out.col_idx[1] = out.nz_length;
+
+        System.arraycopy(A.nz_values,idx0,out.nz_values,0,out.nz_length);
+        System.arraycopy(A.nz_rows,idx0,out.nz_rows,0,out.nz_length);
+
+        return out;
+    }
 }
+

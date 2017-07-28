@@ -18,16 +18,41 @@
 
 package org.ejml.sparse.csc.decomposition.qr;
 
+import org.ejml.EjmlUnitTests;
+import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import java.util.Random;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 public class TestQrLeftLookingDecomposition_DSCC {
+
+    Random rand = new Random(234);
+
     @Test
     public void stuff() {
-        fail("implement");
+
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10,5,48,rand);
+
+        A.print();
+
+        QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
+
+        assertTrue(alg.decompose(A));
+
+        DMatrixSparseCSC Q = alg.getQ(null,false);
+        DMatrixSparseCSC R = alg.getR(null,false);
+
+        DMatrixSparseCSC found = new DMatrixSparseCSC(10,5,0);
+        CommonOps_DSCC.mult(Q,R,found);
+
+        EjmlUnitTests.assertEquals(A,found, UtilEjml.TEST_F64);
     }
 }
