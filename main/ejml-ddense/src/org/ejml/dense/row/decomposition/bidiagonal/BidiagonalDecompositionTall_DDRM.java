@@ -141,7 +141,7 @@ public class BidiagonalDecompositionTall_DDRM
         // apply the column pivots.
         // TODO this is horribly inefficient
         DMatrixRMaj result = new DMatrixRMaj(min,n);
-        DMatrixRMaj P = decompQRP.getPivotMatrix(null);
+        DMatrixRMaj P = decompQRP.getColPivotMatrix(null);
         CommonOps_DDRM.multTransB(B, P, result);
         B.set(result);
 

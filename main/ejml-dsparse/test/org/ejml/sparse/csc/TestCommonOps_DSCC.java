@@ -407,7 +407,7 @@ public class TestCommonOps_DSCC {
         int p[] = new int[]{2,0,1};
 
         DMatrixSparseCSC P = new DMatrixSparseCSC(3,3,3);
-        CommonOps_DSCC.permutationMatrix(p,P);
+        CommonOps_DSCC.permutationMatrix(p,3,P);
 
         DMatrixRMaj found = ConvertDMatrixSparse.convert(P,(DMatrixRMaj)null);
         DMatrixRMaj expected = UtilEjml.parse_DDRM(
@@ -442,8 +442,8 @@ public class TestCommonOps_DSCC {
 
         CommonOps_DSCC.permutationInverse(p,found,p.length);
 
-        DMatrixSparseCSC A = CommonOps_DSCC.permutationMatrix(p,null);
-        DMatrixSparseCSC B = CommonOps_DSCC.permutationMatrix(found,null);
+        DMatrixSparseCSC A = CommonOps_DSCC.permutationMatrix(p,p.length,null);
+        DMatrixSparseCSC B = CommonOps_DSCC.permutationMatrix(found,p.length,null);
 
         assertTrue(MatrixFeatures_DSCC.isTranspose(A,B, UtilEjml.TEST_F64));
     }

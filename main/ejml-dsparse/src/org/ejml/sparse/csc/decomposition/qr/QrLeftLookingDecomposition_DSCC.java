@@ -22,17 +22,15 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DScalar;
 import org.ejml.data.IGrowArray;
-import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
 import java.util.Arrays;
 
 /**
- * Left-looking QR decomposition algorithm for sparse matrices.
+ * <p>Left-looking QRP decomposition algorithm for sparse matrices. A*P=Q*R</p>
  *
  * TODO Can only be applied to tall matrices right?!
  *
@@ -41,13 +39,14 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 // TODO if singular mark it as such
+    // TODO is this really QRP?
 public class QrLeftLookingDecomposition_DSCC implements
-        QRPDecomposition_F64<DMatrixSparseCSC>, // TODO create a sparse QR interface?
+        QrpSparseDecomposition<DMatrixSparseCSC>, // TODO create a sparse QR interface?
         DecompositionSparseInterface<DMatrixSparseCSC>
 {
     // shape of matrix and m2 includes fictitious rows
     int m,n,m2;
-    ComputePermutation<DMatrixSparseCSC> permutation;
+    ComputePermutation<DMatrixSparseCSC> p_reduceFill;
     // storage for permutation done to reduce the fill in
     IGrowArray gperm = new IGrowArray();
     IGrowArray ginvperm = new IGrowArray();
@@ -73,7 +72,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     DGrowArray gx = new DGrowArray();
 
     public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
-        this.permutation = permutation;
+        this.p_reduceFill = permutation;
 
         // use the same work space to reduce the overall memory foot print
         this.structure.setGwork(gwork);
@@ -82,9 +81,9 @@ public class QrLeftLookingDecomposition_DSCC implements
     @Override
     public boolean decompose(DMatrixSparseCSC A) {
         // If requested, apply fill in reducing permutation
-        if( permutation != null ) {
+        if( p_reduceFill != null ) {
             Aperm.reshape(A.numRows,Aperm.numCols,A.nz_length);
-            permutation.process(A, gperm);
+            p_reduceFill.process(A, gperm);
             ginvperm.reshape(gperm.length);
             CommonOps_DSCC.permutationInverse(gperm.data, ginvperm.data, gperm.length);
             CommonOps_DSCC.permuteSymmetric(A, ginvperm.data, Aperm, gwork);
@@ -106,12 +105,8 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     private void performDecomposition(DMatrixSparseCSC A) {
-        if( !CommonOps_DSCC.checkStructure(A)) {
-            throw new RuntimeException("Egads");
-        }
-
         int w[] = gwork.data;
-        int perm[] = gperm.data; // TODO check that this is the correct perm
+        int perm[] = gperm.data;
         int parent[] = structure.getParent();
         int leftmost[] = structure.getLeftMost();
         // permutation that was done to ensure all rows have non-zero elements
@@ -130,13 +125,10 @@ public class QrLeftLookingDecomposition_DSCC implements
         for (int k = 0; k < n; k++) {
             R.col_idx[k] = R.nz_length;
             int p1 = V.col_idx[k] = V.nz_length;
-            if( V.col_idx[1] > V.numRows ) {
-                throw new RuntimeException("Egads");
-            }
             w[k] = k;
             V.nz_rows[V.nz_length++] = k;                       // Add V(k,k) to V's pattern
             int top = n;
-            int col = permutation != null ? perm[k] : k;
+            int col = p_reduceFill != null ? perm[k] : k;
 
             int idx0 = A.col_idx[col];
             int idx1 = A.col_idx[col+1];
@@ -166,10 +158,7 @@ public class QrLeftLookingDecomposition_DSCC implements
                 R.nz_values[R.nz_length++] = x[i];
                 x[i] = 0;
                 if( parent[i] == k ) {
-                    ImplSparseSparseMult_DSCC.addRowsInAInToC(V,i,V,k,w);// todo really same variable twice?
-                    if( V.col_idx[1] > V.numRows ) {
-                        throw new RuntimeException("Egads");
-                    }
+                    ImplSparseSparseMult_DSCC.addRowsInAInToC(V, i, V, k, w);
                 }
             }
             for (int p = p1; p < V.nz_length; p++) {
@@ -178,22 +167,12 @@ public class QrLeftLookingDecomposition_DSCC implements
             }
             R.nz_rows[R.nz_length] = k;
             R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values,p1,V.nz_length,Beta);
-            System.out.println("computed beta = "+Beta.value);
-            if( V.col_idx[1] > V.numRows ) {
-                throw new RuntimeException("Egads");
-            }
+
             beta[k] = Beta.value;
             R.nz_length++;
         }
         R.col_idx[n] = R.nz_length;
         V.col_idx[n] = V.nz_length;
-
-        if( !CommonOps_DSCC.checkStructure(R)) {
-            throw new RuntimeException("Egads");
-        }
-        if( !CommonOps_DSCC.checkStructure(V)) {
-            throw new RuntimeException("Egads");
-        }
     }
 
     private void initializeDecomposition(DMatrixSparseCSC A ) {
@@ -201,7 +180,6 @@ public class QrLeftLookingDecomposition_DSCC implements
         this.m = A.numRows;
         this.n = A.numCols;
 
-        // TODO double check these sizes
         if( beta.length < n ) {
             beta = new double[n];
         }
@@ -214,27 +192,42 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     @Override
-    public void setSingularThreshold(double threshold) {
-
-    }
-
-    @Override
     public int getRank() {
         return 0;
     }
 
     @Override
-    public int[] getPivots() {
+    public int[] getColPivots() {
         return new int[0];
     }
 
     @Override
-    public DMatrixSparseCSC getPivotMatrix(DMatrixSparseCSC P) {
+    public DMatrixSparseCSC getColPivotMatrix(DMatrixSparseCSC P) {
+        return CommonOps_DSCC.identity(V.numCols,V.numCols);
+    }
+
+    @Override
+    public int[] getRowPivots() {
+        return structure.pinv;
+    }
+
+    @Override
+    public DMatrixSparseCSC getRowPivotMatrix(DMatrixSparseCSC P) {
         if( P == null )
             P = new DMatrixSparseCSC(1,1,0);
         P.reshape(V.numRows,V.numRows,V.numRows);
-        CommonOps_DSCC.permutationMatrix(structure.pinv,P);
+        CommonOps_DSCC.permutationMatrix(structure.pinv,P.numRows,P);
         return P;
+    }
+
+    @Override
+    public boolean isColumnPivot() {
+        return false;
+    }
+
+    @Override
+    public boolean isRowPivot() {
+        return true;
     }
 
     @Override
@@ -245,19 +238,9 @@ public class QrLeftLookingDecomposition_DSCC implements
             Q = new DMatrixSparseCSC(1,1,0);
         Q.reshape(V.numRows,V.numRows,0);
 
-//        V.print();
-        for (int i = 0; i < V.numCols; i++) {
-            System.out.println("-------- column i = "+i);
+        for (int i = V.numCols-1; i >= 0; i--) {
             QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,beta[i],I,Q,gwork,gx);
-//            Q.print();
-            if( !CommonOps_DSCC.checkStructure(Q)) {
-                throw new RuntimeException("Egads");
-            }
             I.set(Q);
-            if( !MatrixFeatures_DSCC.isOrthogonal(I,1e-4)) {
-                throw new RuntimeException("Crap");
-            }
-//            System.out.println();
         }
         return Q;
     }

@@ -115,30 +115,6 @@ public class QrStructuralCounts_DSCC {
         int []w = gwork.data;
         findMinElementIndexInRows(leftmost);
         createRowElementLinkedLists(leftmost,w);
-
-        System.out.print("head[ ");
-        for (int i = 0; i < n; i++) {
-            System.out.printf("%2d ",w[head+i]);
-        }
-        System.out.println("]");
-        System.out.print("tail[ ");
-        for (int i = 0; i < n; i++) {
-            System.out.printf("%2d ",w[tail+i]);
-        }
-        System.out.println("]");
-
-        System.out.print(" cnt[ ");
-        for (int i = 0; i < n; i++) {
-            System.out.printf("%2d ",w[nque+i]);
-        }
-        System.out.println("]");
-
-        System.out.print("next[ ");
-        for (int i = 0; i < m; i++) {
-            System.out.printf("%2d ",w[next+i]);
-        }
-        System.out.println("]");
-
         countNonZeroUsingLinkedList(parent,w);
     }
 

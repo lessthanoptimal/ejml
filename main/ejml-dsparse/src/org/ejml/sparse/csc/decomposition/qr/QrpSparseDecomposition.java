@@ -16,23 +16,24 @@
  * limitations under the License.
  */
 
-package org.ejml.interfaces.decomposition;
+package org.ejml.sparse.csc.decomposition.qr;
 
 import org.ejml.data.Matrix;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 
 /**
  * <p>
  * Similar to {@link QRDecomposition} but it can handle the rank deficient case by
  * performing column pivots during the decomposition. The final decomposition has the
  * following structure:<br>
- * A*P=Q*R<br>
+ * P_r*A*P_c=Q*R<br>
  * where A is the original matrix, P is a pivot matrix, Q is an orthogonal matrix, and R is
  * upper triangular.
  * </p>
  *
  * @author Peter Abeles
  */
-public interface QRPDecomposition<T extends Matrix>
+public interface QrpSparseDecomposition<T extends Matrix>
         extends QRDecomposition<T>
 {
     /**
@@ -57,4 +58,23 @@ public interface QRPDecomposition<T extends Matrix>
      * @return The pivot matrix.
      */
     T getColPivotMatrix(T P);
+
+    /**
+     * Ordering of each row after pivoting.   The current row i was original at row pivot[i].
+     *
+     * @return Order of rows.
+     */
+    int[] getRowPivots();
+
+    /**
+     * Creates the row pivot matrix.
+     *
+     * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
+     * @return The pivot matrix.
+     */
+    T getRowPivotMatrix(T P);
+
+    boolean isColumnPivot();
+
+    boolean isRowPivot();
 }

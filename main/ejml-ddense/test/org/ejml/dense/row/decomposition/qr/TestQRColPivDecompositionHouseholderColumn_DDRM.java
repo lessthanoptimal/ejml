@@ -69,12 +69,12 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM {
         assertTrue(MatrixFeatures_DDRM.isIdentical(A,found, UtilEjml.TEST_F64));
 
         // check the pivots
-        int pivots[] = alg.getPivots();
+        int pivots[] = alg.getColPivots();
         for( int i = 0; i < A.numCols; i++ ) {
             assertEquals(i,pivots[i]);
         }
 
-        DMatrixRMaj P = alg.getPivotMatrix(null);
+        DMatrixRMaj P = alg.getColPivotMatrix(null);
         assertTrue(MatrixFeatures_DDRM.isIdentity(P, UtilEjml.TEST_F64));
     }
 
@@ -149,7 +149,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM {
                                     QRColPivDecompositionHouseholderColumn_DDRM alg) {
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null, compact));
         SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null, compact));
-        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivotMatrix(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getColPivotMatrix(null));
 
         SimpleMatrix AA = SimpleMatrix.wrap(a);
 

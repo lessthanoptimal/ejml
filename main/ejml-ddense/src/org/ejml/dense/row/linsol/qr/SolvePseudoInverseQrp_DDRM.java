@@ -72,7 +72,7 @@ public class SolvePseudoInverseQrp_DDRM extends BaseLinearSolverQrp_DDRM {
         int BnumCols = B.numCols;
 
         // get the pivots and transpose them
-        int pivots[] = decomposition.getPivots();
+        int pivots[] = decomposition.getColPivots();
         
         // solve each column one by one
         for( int colB = 0; colB < BnumCols; colB++ ) {

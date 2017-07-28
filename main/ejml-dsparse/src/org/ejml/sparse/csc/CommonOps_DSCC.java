@@ -307,9 +307,7 @@ public class CommonOps_DSCC {
      * @param p (Input) Permutation vector
      * @param P (Output) Permutation matrix
      */
-    public static DMatrixSparseCSC permutationMatrix( int p[] , DMatrixSparseCSC P) {
-
-        int N = p.length;
+    public static DMatrixSparseCSC permutationMatrix( int p[] , int N, DMatrixSparseCSC P) {
 
         if( P == null )
             P = new DMatrixSparseCSC(N,N,N);

@@ -32,6 +32,10 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
+// TODO test with and without permutation
+    // TODO test with singular systems
+    // TODO test with square, tall, and wide systems
+    // TODO Test compact solution
 public class TestQrLeftLookingDecomposition_DSCC {
 
     Random rand = new Random(234);
@@ -41,8 +45,6 @@ public class TestQrLeftLookingDecomposition_DSCC {
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10,5,48,rand);
 
-        A.print();
-
         QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
 
         assertTrue(alg.decompose(A));
@@ -50,17 +52,25 @@ public class TestQrLeftLookingDecomposition_DSCC {
         DMatrixSparseCSC Q = alg.getQ(null,false);
         DMatrixSparseCSC R = alg.getR(null,false);
 
-        R.print();
-
-        DMatrixSparseCSC P = alg.getPivotMatrix(null);
-
+        // reconstruct the input matrix, not taking in account pivots
         DMatrixSparseCSC found = new DMatrixSparseCSC(10,5,0);
-        CommonOps_DSCC.mult(Q,R,found);
+        CommonOps_DSCC.mult(Q,R,found,null,null);
 
-        System.out.println("first number "+A.get(0,0)+" "+found.get(0,0));
-//        A.print();
-//        found.print();
+        // apply pivots
+        DMatrixSparseCSC expected;
 
-        EjmlUnitTests.assertEquals(A,found, UtilEjml.TEST_F64);
+        if( alg.isRowPivot() ) {
+            expected = A.createLike();
+            DMatrixSparseCSC P_r = alg.getRowPivotMatrix(null);
+            CommonOps_DSCC.mult(P_r,A,expected);
+        } else {
+            expected = A;
+        }
+        if( alg.isColumnPivot() ) {
+            DMatrixSparseCSC P_c = alg.getRowPivotMatrix(null);
+            CommonOps_DSCC.mult((DMatrixSparseCSC)expected.copy(),P_c,expected);
+        }
+
+        EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_F64);
     }
 }
