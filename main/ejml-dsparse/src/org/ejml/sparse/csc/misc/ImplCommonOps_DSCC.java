@@ -23,6 +23,8 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
+import java.util.Arrays;
+
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
 import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;
 
@@ -88,7 +90,7 @@ public class ImplCommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           IGrowArray gw, DGrowArray gx)
+                                IGrowArray gw, DGrowArray gx)
     {
         double []x = adjust(gx,A.numRows);
         int []w = adjust(gw,A.numRows,A.numRows);
@@ -110,5 +112,54 @@ public class ImplCommonOps_DSCC {
                 C.nz_values[i] = x[C.nz_rows[i]];
             }
         }
+    }
+
+    /**
+     * Adds the results of adding a column in A and B as a new column in C.<br>
+     * C(:,end+1) = &alpha;*A(:,colA) + &beta;*B(:,colB)
+     *
+     * @param alpha scalar
+     * @param A matrix
+     * @param colA column in A
+     * @param beta scalar
+     * @param B matrix
+     * @param colB column in B
+     * @param C Column in C
+     * @param gw workspace
+     */
+    public static void addColAppend(double alpha, DMatrixSparseCSC A, int colA, double beta, DMatrixSparseCSC B, int colB,
+                                    DMatrixSparseCSC C, IGrowArray gw)
+    {
+        if( A.numRows != B.numRows || A.numRows != C.numRows)
+            throw new IllegalArgumentException("Number of rows in A, B, and C do not match");
+
+        int idxA0 = A.col_idx[colA];
+        int idxA1 = A.col_idx[colA+1];
+        int idxB0 = B.col_idx[colB];
+        int idxB1 = B.col_idx[colB+1];
+
+        C.growMaxColumns(++C.numCols,true);
+        C.growMaxLength(C.nz_length+idxA1-idxA0+idxB1-idxB0,true);
+
+        int []w = adjust(gw,A.numRows);
+        Arrays.fill(w,0,A.numRows,-1);
+
+        for (int i = idxA0; i < idxA1; i++) {
+            int row = A.nz_rows[i];
+            C.nz_rows[C.nz_length] = row;
+            C.nz_values[C.nz_length] = alpha*A.nz_values[i];
+            w[row] = C.nz_length++;
+        }
+
+        for (int i = idxB0; i < idxB1; i++) {
+            int row = B.nz_rows[i];
+            if( w[row] != -1 ) {
+                C.nz_values[w[row]] += beta*B.nz_values[i];
+            } else {
+                C.nz_values[C.nz_length] = beta*B.nz_values[i];
+                C.nz_rows[C.nz_length++] = row;
+            }
+        }
+        C.col_idx[C.numCols] = C.nz_length;
     }
 }

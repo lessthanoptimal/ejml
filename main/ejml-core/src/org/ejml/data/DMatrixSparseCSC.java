@@ -331,6 +331,20 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     /**
+     * Increases the maximum number of columns in the matrix.
+     * @param desiredColumns Desired number of columns.
+     * @param preserveValue If the array needs to be expanded should it copy the previous values?
+     */
+    public void growMaxColumns( int desiredColumns , boolean preserveValue ) {
+        if( col_idx.length < desiredColumns+1 ) {
+            int[] c = new int[ desiredColumns+1 ];
+            if( preserveValue )
+                System.arraycopy(col_idx,0,c,0,col_idx.length);
+            col_idx = c;
+        }
+    }
+
+    /**
      * Given the histogram of columns compute the col_idx for the matrix.  Then overwrite histogram with
      * those values.  nz_length is automatically set and nz_values will grow if needed.
      * @param histogram histogram of column values in the sparse matrix. modified, see above.

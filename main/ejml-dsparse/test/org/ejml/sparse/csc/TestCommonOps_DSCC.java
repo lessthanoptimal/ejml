@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
@@ -26,6 +27,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.junit.Test;
 
 import java.util.Random;
@@ -289,6 +291,23 @@ public class TestCommonOps_DSCC {
             DMatrixRMaj found = ConvertDMatrixSparse.convert(B,(DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
+    public void scale_sameInstance() {
+
+        double scale = 2.1;
+
+        for( int length : new int[]{0,2,6,15,30} ) {
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
+            DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows,A.numCols,0);
+
+            CommonOps_DSCC.scale(scale, A, B);
+            CommonOps_DSCC.scale(scale, A, A);
+            assertTrue(CommonOps_DSCC.checkStructure(A));
+
+            EjmlUnitTests.assertEquals(A,B, UtilEjml.TEST_F64);
         }
     }
 
@@ -569,5 +588,19 @@ public class TestCommonOps_DSCC {
         for (int row = 0; row < A.numRows; row++) {
             assertEquals( A.get(row,2), B.get(row,0), UtilEjml.TEST_F64);
         }
+    }
+
+    /**
+     * Just does a comparison to the impl version
+     */
+    @Test
+    public void dotInnerColumns() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(8,4,20,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(8,6,30,rand);
+
+        double found = CommonOps_DSCC.dotInnerColumns(A,1,B,3,null,null);
+        double expected = ImplSparseSparseMult_DSCC.dotInnerColumns(A,1,B,3,null,null);
+
+        assertEquals(expected,found,UtilEjml.TEST_F64);
     }
 }

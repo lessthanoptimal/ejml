@@ -19,8 +19,10 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
@@ -212,6 +214,32 @@ public class TestImplSparseSparseMult_DSCC {
         for (int i = 0; i < expected.length; i++) {
             assertEquals(expected[i],B.nz_rows[i]);
             assertEquals(1,w[expected[i]]);
+        }
+    }
+
+    @Test
+    public void dotInnerColumns() {
+        IGrowArray gw = new IGrowArray();
+        DGrowArray gx = new DGrowArray();
+
+        for (int mc = 0; mc < 50; mc++) {
+            int A_nz = RandomMatrices_DSCC.nonzero(8,4,0.1,1.0,rand);
+            int B_nz = RandomMatrices_DSCC.nonzero(8,6,0.1,1.0,rand);
+
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(8,4,A_nz,rand);
+            DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(8,6,B_nz,rand);
+
+            int colA = rand.nextInt(4);
+            int colB = rand.nextInt(6);
+
+            double found = ImplSparseSparseMult_DSCC.dotInnerColumns(A,colA,B,colB,gw,gx);
+
+            double expected = 0;
+            for (int i = 0; i < 8; i++) {
+                expected += A.get(i,colA)*B.get(i,colB);
+            }
+
+            assertEquals(expected,found,UtilEjml.TEST_F64);
         }
     }
 }

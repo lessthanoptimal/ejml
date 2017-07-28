@@ -78,4 +78,30 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         assertTrue(CommonOps_DSCC.checkIndicesSorted(a));
         assertTrue(a.indicesSorted);
     }
+
+    @Test
+    public void growMaxColumns() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
+        a.col_idx[0] = 5;
+        a.col_idx[1] = 15;
+
+        // grow when resize isn't needed
+        a.growMaxColumns(3,false);
+        assertEquals(5,a.col_idx[0]);
+        assertEquals(15,a.col_idx[1]);
+
+        // shouldn't declare a new array
+        a.growMaxColumns(4,false);
+        assertEquals(5,a.col_idx[0]);
+        assertEquals(15,a.col_idx[1]);
+
+        // resize is needed now
+        a.growMaxColumns(5,true);
+        assertEquals(5,a.col_idx[0]);
+        assertEquals(15,a.col_idx[1]);
+
+        a.growMaxColumns(6,false);
+        assertEquals(0,a.col_idx[0]);
+        assertEquals(0,a.col_idx[1]);
+    }
 }

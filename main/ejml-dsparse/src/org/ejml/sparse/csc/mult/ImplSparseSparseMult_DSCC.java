@@ -24,6 +24,8 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
+import java.util.Arrays;
+
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
 
 /**
@@ -186,5 +188,54 @@ public class ImplSparseSparseMult_DSCC {
                 }
             }
         }
+    }
+
+    /**
+     * Computes the inner product of two column vectors taken from the input matrices.
+     *
+     * <p>dot = A(:,colA)'*B(:,colB)</p>
+     *
+     * @param A Matrix
+     * @param colA Column in A
+     * @param B Matrix
+     * @param colB Column in B
+     * @return Dot product
+     */
+    public static double dotInnerColumns( DMatrixSparseCSC A , int colA , DMatrixSparseCSC B , int colB ,
+                                          IGrowArray gw , DGrowArray gx)
+    {
+        if( A.numRows != B.numRows )
+            throw new IllegalArgumentException("Number of rows must match.");
+
+        int w[] = adjust(gw,A.numRows);
+        Arrays.fill(w,0,A.numRows,-1);
+        double x[] = adjust(gx,A.numRows);
+
+        int length = 0;
+
+        int idx0 = A.col_idx[colA];
+        int idx1 = A.col_idx[colA+1];
+        for (int i = idx0; i < idx1; i++) {
+            System.out.println("length "+length+" x.length "+x.length);
+            if( length >= x.length ) {
+                System.out.println();
+            }
+            int row = A.nz_rows[i];
+            x[length] = A.nz_values[i];
+            w[row] = length++;
+        }
+
+        double dot = 0;
+
+        idx0 = B.col_idx[colB];
+        idx1 = B.col_idx[colB+1];
+        for (int i = idx0; i < idx1; i++) {
+            int row = B.nz_rows[i];
+            if( w[row] != -1 ) {
+                dot += x[w[row]]*B.nz_values[i];
+            }
+        }
+
+        return dot;
     }
 }

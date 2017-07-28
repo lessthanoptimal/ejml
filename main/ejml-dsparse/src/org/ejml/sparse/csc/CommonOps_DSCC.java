@@ -200,13 +200,21 @@ public class CommonOps_DSCC {
     }
 
     public static void scale(double scalar, DMatrixSparseCSC A, DMatrixSparseCSC B) {
-        if( A.numRows != B.numRows || A.numCols != B.numCols )
-            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
-        B.copyStructure(A);
+        if( A != B ) {
+            if (A.numRows != B.numRows || A.numCols != B.numCols)
+                throw new IllegalArgumentException("A and B must have the same shape");
+            B.copyStructure(A);
 
-        for(int i = 0; i < A.nz_length; i++ ) {
-            B.nz_values[i] = A.nz_values[i]*scalar;
+            for(int i = 0; i < A.nz_length; i++ ) {
+                B.nz_values[i] = A.nz_values[i]*scalar;
+            }
+        } else {
+            for(int i = 0; i < A.nz_length; i++ ) {
+                B.nz_values[i] *= scalar;
+            }
         }
+
+
     }
 
     public static void divide(DMatrixSparseCSC A , double scalar , DMatrixSparseCSC B ) {
@@ -627,6 +635,23 @@ public class CommonOps_DSCC {
         System.arraycopy(A.nz_rows,idx0,out.nz_rows,0,out.nz_length);
 
         return out;
+    }
+
+    /**
+     * Computes the inner product of two column vectors taken from the input matrices.
+     *
+     * <p>dot = A(:,colA)'*B(:,colB)</p>
+     *
+     * @param A Matrix
+     * @param colA Column in A
+     * @param B Matrix
+     * @param colB Column in B
+     * @return Dot product
+     */
+    public static double dotInnerColumns( DMatrixSparseCSC A , int colA , DMatrixSparseCSC B , int colB,
+                                          IGrowArray gw , DGrowArray gx)
+    {
+        return ImplSparseSparseMult_DSCC.dotInnerColumns(A,colA,B,colB,gw,gx);
     }
 }
 

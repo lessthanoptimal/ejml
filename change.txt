@@ -14,6 +14,7 @@ Date format: year/month/day
 - DMatrixSparseCSC
   * Fixed bug in set(row,col,val) where the first time a non-zero element was added it would assign the wrong value
     Thanks GeoffreyGuettier
+  * Added growMaxColumns()
 - Added *GrowArray to act as workspace in sparse algorithms
 - MatrixFeatures_DSCC
   * Added isSymmetric()
@@ -27,6 +28,7 @@ Date format: year/month/day
   * Added concatColumns()
   * Added concatRows()
   * Added extractColumn()
+  * Added dotInnerColumns()
   * Fixed bugs
 - Sparse Decompositions and Solvers
   * Cholesky - Up Looking
@@ -43,10 +45,8 @@ Sparse Matrix
 - TODO multTransA  <-- place holders are there right now
 - TODO multTransB  <-- place holders are there right now
 - TODO remove zeros
-
-Sparse idea:
-* take in a single growable queue for workspace. All int values will be assigned an index inside of it
-* after solvers are done go back and see if a single data structure can be created for workspace storage for solving
+- TODO Compare QR code dense and sparse. See sparse notes
+- TODO Create overflow / underflow tests
 
 ----- Version 0.31
 

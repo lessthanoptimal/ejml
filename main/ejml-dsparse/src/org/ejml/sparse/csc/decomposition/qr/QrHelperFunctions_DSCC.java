@@ -18,7 +18,12 @@
 
 package org.ejml.sparse.csc.decomposition.qr;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DScalar;
+import org.ejml.data.IGrowArray;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 
 /**
  * Functions used with a sparse QR decomposition
@@ -55,5 +60,73 @@ public class QrHelperFunctions_DSCC {
         for (int p = idx0; p < idx1; p++) {
             x[V.nz_rows[p]] -= V.nz_values[p]*tau;
         }
+    }
+
+    /**
+     * <p>
+     * Performs a rank-1 update operation on the submatrix specified by V with the multiply on the right.<br>
+     * <br>
+     * C = (I - &gamma;*v*v<sup>T</sup>)*A<br>
+     * </p>
+     * <p>
+     * The order that matrix multiplies are performed has been carefully selected
+     * to minimize the number of operations.
+     * </p>
+     *
+     * <p>
+     * Before this can become a truly generic operation the submatrix specification needs
+     * to be made more generic.
+     * </p>
+     */
+    public static void rank1UpdateMultR(DMatrixSparseCSC V , int colV, double gamma ,
+                                        DMatrixSparseCSC A , DMatrixSparseCSC C,
+                                        IGrowArray gw , DGrowArray gx )
+    {
+        if( V.numRows != A.numRows )
+            throw new IllegalArgumentException("Number of rows in V and A must match");
+
+        C.nz_length = 0;
+        C.numRows = V.numRows;
+        C.numCols = 0;
+
+        for (int i = 0; i < A.numCols; i++) {
+            // tau = v'*A(:,i)
+            double tau = CommonOps_DSCC.dotInnerColumns(V,colV,A,i,gw,gx);
+            // C(:,i) = A(:,i) - gamma*tau*v
+            ImplCommonOps_DSCC.addColAppend(1.0,A,i,-gamma*tau,V,colV,C,gw);
+        }
+    }
+
+    /**
+     * Creates a householder reflection.
+     *
+     * (I-gamma*v*v')*x = s*e1
+     *
+     * <p>NOTE: Same as cs_house in csparse</p>
+     * @param x (Input) Vector x (Output) Vector v. Modified.
+     * @param N Length of x
+     * @param gamma (Output) Storage for computed beta
+     * @return variable s
+     */
+    public static double computeHouseholder(double []x , int offset , int N , DScalar gamma ) {
+        double s, tau = 0;
+        for (int i = offset+1; i < N ; i++) {
+            double val = x[i];
+            tau += val*val;
+        }
+        if( tau == 0) {
+            s = Math.abs(x[offset]);
+            gamma.value = x[offset] <= 0 ? 2 : 0;
+            x[offset] = 1;
+        } else {
+            s = Math.sqrt(x[offset]*x[offset] + tau);
+            if( x[offset] <= 0) {
+                x[offset] = x[offset] - s;
+            } else {
+                x[offset] = -tau/(x[offset] + s);
+            }
+            gamma.value = -1.0 / (s * x[offset]);
+        }
+        return s;
     }
 }

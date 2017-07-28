@@ -18,7 +18,9 @@
 
 package org.ejml.sparse.csc.decomposition.qr;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DScalar;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
@@ -60,12 +62,14 @@ public class QrLeftLookingDecomposition_DSCC implements
     DMatrixSparseCSC R = new DMatrixSparseCSC(1,1,0);
     // storage for beta in (I - beta*v*v')
     double beta[] = new double[0];
+    DScalar Beta = new DScalar(); // used to get return value from a function
 
     // local workspace
     double x[] = new double[0];
 
     QrStructuralCounts_DSCC structure = new QrStructuralCounts_DSCC();
     IGrowArray gwork = new IGrowArray();
+    DGrowArray gx = new DGrowArray();
 
     public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
         this.permutation = permutation;
@@ -160,11 +164,19 @@ public class QrLeftLookingDecomposition_DSCC implements
                 x[V.nz_rows[p]] = 0;
             }
             R.nz_rows[R.nz_length] = k;
-//            R.nz_values[R.nz_length] = adsasd; TOODO CS_HOUSE
+            R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values,p1,V.nz_length-p1,Beta);
+            beta[k] = Beta.value;
             R.nz_length++;
         }
         R.col_idx[n] = R.nz_length;
         V.col_idx[n] = V.nz_length;
+
+        if( !CommonOps_DSCC.checkStructure(R)) {
+            throw new RuntimeException("Egads");
+        }
+        if( !CommonOps_DSCC.checkStructure(V)) {
+            throw new RuntimeException("Egads");
+        }
     }
 
     private void initializeDecomposition(DMatrixSparseCSC A ) {
@@ -207,11 +219,18 @@ public class QrLeftLookingDecomposition_DSCC implements
     @Override
     public DMatrixSparseCSC getQ(DMatrixSparseCSC Q, boolean compact) {
 
-        V.print();
-        DMatrixSparseCSC v = new DMatrixSparseCSC(V.numRows,1,V.numRows);
+        DMatrixSparseCSC I = CommonOps_DSCC.identity(V.numRows,V.numRows);
+        if( Q == null )
+            Q = new DMatrixSparseCSC(1,1,0);
+        Q.reshape(V.numRows,V.numRows,0);
 
-
-        return null;
+        for (int i = 0; i < V.numCols; i++) {
+            QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,beta[i],I,Q,gwork,gx);
+            if( !CommonOps_DSCC.checkStructure(Q)) {
+                throw new RuntimeException("Egads");
+            }
+        }
+        return Q;
     }
 
     @Override

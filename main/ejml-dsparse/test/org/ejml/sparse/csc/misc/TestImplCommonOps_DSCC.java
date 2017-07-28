@@ -87,7 +87,46 @@ public class TestImplCommonOps_DSCC {
                         assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
                     }
                 }
-                assertTrue(CommonOps_DSCC.checkSortedFlag(c));
+                assertTrue(CommonOps_DSCC.checkStructure(c));
+            }
+        }
+    }
+
+    @Test
+    public void addColAppend() {
+        double alpha = 1.5;
+        double beta = 2.3;
+
+        for( int numRows : new int[]{2,4,6,10}) {
+            DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,3,15, -1, 1, rand);
+            DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numRows,4,15, -1, 1, rand);
+            DMatrixSparseCSC c = new DMatrixSparseCSC(numRows,0,0);
+
+
+            ImplCommonOps_DSCC.addColAppend(alpha,a,1,beta,b,0,c, null);
+            assertTrue(CommonOps_DSCC.checkStructure(c));
+            assertEquals(1,c.numCols);
+
+            for (int row = 0; row < numRows; row++) {
+                double valA = a.get(row,1);
+                double valB = b.get(row,0);
+                double found = alpha*valA + beta*valB;
+
+                double expected = c.get(row,0);
+                assertEquals(expected, found, UtilEjml.TEST_F64);
+            }
+
+            ImplCommonOps_DSCC.addColAppend(alpha,a,2,beta,b,1,c, null);
+            assertTrue(CommonOps_DSCC.checkStructure(c));
+            assertEquals(2,c.numCols);
+
+            for (int row = 0; row < numRows; row++) {
+                double valA = a.get(row,2);
+                double valB = b.get(row,1);
+                double found = alpha*valA + beta*valB;
+
+                double expected = c.get(row,1);
+                assertEquals(expected, found, UtilEjml.TEST_F64);
             }
         }
     }
