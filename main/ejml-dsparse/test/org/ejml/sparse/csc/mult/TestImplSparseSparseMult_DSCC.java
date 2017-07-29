@@ -213,7 +213,9 @@ public class TestImplSparseSparseMult_DSCC {
 
         // colA shoul dnow be added to colB
         ImplSparseSparseMult_DSCC.addRowsInAInToC(A,0,B,1,w);
-        assertEquals(3,B.col_idx[1]);
+        B.numCols = 2;// needed to be set correctly for structure unit test
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(3,B.col_idx[2]);
         int expected[] = new int[]{0,1,4};
         for (int i = 0; i < expected.length; i++) {
             assertEquals(expected[i],B.nz_rows[i]);

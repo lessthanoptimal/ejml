@@ -143,9 +143,9 @@ public class ImplSparseSparseMult_DSCC {
 
                 w[row] = colC;
                 C.nz_rows[C.nz_length++] = row;
-//                C.col_idx[colC] = ++C.nz_length;
             }
         }
+        C.col_idx[colC+1] = C.nz_length;
     }
 
     // TODO replace with a version that doesn't transpose a matrx
