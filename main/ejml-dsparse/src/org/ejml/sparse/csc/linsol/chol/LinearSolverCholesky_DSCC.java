@@ -52,7 +52,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public double quality() {
-        return 0;
+        return TriangularSolver_DSCC.qualityTriangular(cholesky.getL());
     }
 
     @Override

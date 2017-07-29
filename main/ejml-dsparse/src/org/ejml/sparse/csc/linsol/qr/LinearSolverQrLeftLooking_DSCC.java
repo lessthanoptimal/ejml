@@ -50,14 +50,16 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
 
     @Override
     public boolean setA(DMatrixSparseCSC A) {
+        if( A.numCols > A.numRows )
+            throw new IllegalArgumentException("Can't handle wide matrices");
         this.m = A.numRows;
         this.n = A.numCols;
-        return qr.decompose(A);
+        return qr.decompose(A) && !qr.isSingular();
     }
 
     @Override
     public double quality() {
-        return 0; // TODO implement
+        return TriangularSolver_DSCC.qualityTriangular(qr.getR());
     }
 
     @Override
@@ -76,32 +78,34 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         double[] bp = adjust(gbp,B.numRows);
         double[] x = adjust(gx,X.numRows);
 
-        if( m >= n ) {
-            int pinv[] = qr.getStructure().getPinv();
+        int pinv[] = qr.getStructure().getPinv();
 
-            // process each column in X and B individually
-            for (int colX = 0; colX < X.numCols; colX++) {
-                int index = colX;
-                for( int i = 0; i < B.numRows; i++ , index += X.numCols ) b[i] = B.data[index];
+        // process each column in X and B individually
+        for (int colX = 0; colX < X.numCols; colX++) {
+            int index = colX;
+            for( int i = 0; i < B.numRows; i++ , index += X.numCols ) b[i] = B.data[index];
 
-                // apply row pivots
-                CommonOps_DSCC.permuteInv(pinv, b, bp, m);
+            // apply row pivots
+            CommonOps_DSCC.permuteInv(pinv, b, bp, m);
 
-                // apply Householder reflectors
-                for (int j = 0; j < n; j++) {
-                    QrHelperFunctions_DSCC.applyHouseholder(qr.getV(),j,qr.getBeta(j),bp);
-                }
-                // Solve for R*x = b
-                TriangularSolver_DSCC.solveU(qr.getR(),bp);
-
-                // undo the permutation
-//                CommonOps_DSCC.permute(pinv, b, x, X.numRows);
-
-                index = colX;
-                for( int i = 0; i < X.numRows; i++ , index += X.numCols ) X.data[index] = bp[i];
+            // apply Householder reflectors
+            for (int j = 0; j < n; j++) {
+                QrHelperFunctions_DSCC.applyHouseholder(qr.getV(),j,qr.getBeta(j),bp);
             }
-        } else {
-            throw new RuntimeException("Shouldn't be called yet");
+            // Solve for R*x = b
+            TriangularSolver_DSCC.solveU(qr.getR(),bp);
+
+            // undo the permutation
+            double out[];
+            if( qr.isFillPermutated()) {
+                CommonOps_DSCC.permute(qr.getFillPermutation(), bp, x, X.numRows);
+                out = x;
+            } else {
+                out = bp;
+            }
+
+            index = colX;
+            for( int i = 0; i < X.numRows; i++ , index += X.numCols ) X.data[index] = out[i];
         }
     }
 

@@ -403,7 +403,7 @@ public class SpecializedOps_DDRM {
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.
      *
-     * @param T A matrix.  @return product of the diagonal elements.
+     * @param T A matrix.
      * @return the quality of the system.
      */
     public static double qualityTriangular(DMatrixD1 T)

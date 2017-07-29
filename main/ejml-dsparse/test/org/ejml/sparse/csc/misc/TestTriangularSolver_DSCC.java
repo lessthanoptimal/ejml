@@ -633,6 +633,23 @@ public class TestTriangularSolver_DSCC {
         }
     }
 
+    @Test
+    public void qualityTriangular() {
+        DMatrixSparseCSC T = RandomMatrices_DSCC.triangleUpper(10,0,20,-1,1,rand);
 
+        double found0 = TriangularSolver_DSCC.qualityTriangular(T);
+
+        // see if it's scale invariant
+        CommonOps_DSCC.scale(2.0,T,T);
+        double found1 = TriangularSolver_DSCC.qualityTriangular(T);
+
+        assertEquals(found0,found1,UtilEjml.TEST_F64);
+
+        // now reduce the matrice's quality
+        T.set(3,3,T.get(3,3)*UtilEjml.TEST_F64);
+        double found2 = TriangularSolver_DSCC.qualityTriangular(T);
+
+        assertTrue(found2 < found0*UtilEjml.TEST_F64_SQ);
+    }
 
 }

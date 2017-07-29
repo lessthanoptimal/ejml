@@ -28,17 +28,15 @@ import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
 public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSparseTests_DSCC {
-    @Test
-    public void checkUnderDetermined() {
-        fail("implement");
+
+    public TestLinearSolverQrLeftLooking_DSCC() {
+        canHandleWide = false;
+        canDecomposeZeros = false;
     }
 
     @Override

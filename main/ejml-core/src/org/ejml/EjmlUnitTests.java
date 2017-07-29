@@ -162,7 +162,7 @@ public class EjmlUnitTests {
 
                 if( (Double.isNaN(valA) != Double.isNaN(valB)) ||
                         (Double.isInfinite(valA) != Double.isInfinite(valB))) {
-                    throw new TestException("At ("+i+","+j+") A = "+valA+" B = "+valB);
+                    throw new AssertionError("At ("+i+","+j+") A = "+valA+" B = "+valB);
                 }
                 double max = Math.max(Math.abs(valA), Math.abs(valB));
                 double error = Math.abs(valA - valB) / max;
@@ -171,7 +171,7 @@ public class EjmlUnitTests {
                     A.print();
                     System.out.println("\n------------  B  -----------");
                     B.print();
-                    throw new TestException("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
+                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
                 }
             }
         }
@@ -310,12 +310,6 @@ public class EjmlUnitTests {
         // if turned on use asserts
         assert result : message;
         // otherwise throw an exception
-        if( !result ) throw new TestException(message);
-    }
-
-    public static class TestException extends RuntimeException {
-        public TestException(String message) {
-            super(message);
-        }
+        if( !result ) throw new AssertionError(message);
     }
 }

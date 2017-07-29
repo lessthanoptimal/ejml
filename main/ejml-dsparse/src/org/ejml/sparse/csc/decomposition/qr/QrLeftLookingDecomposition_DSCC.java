@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.decomposition.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DScalar;
@@ -69,6 +70,10 @@ public class QrLeftLookingDecomposition_DSCC implements
     IGrowArray gwork = new IGrowArray();
     DGrowArray gx = new DGrowArray();
 
+    // if true that means a singular matrix was detected
+    boolean singular;
+    double singularTol = UtilEjml.EPS;
+
     public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
         this.p_reduceFill = permutation;
 
@@ -84,7 +89,7 @@ public class QrLeftLookingDecomposition_DSCC implements
             p_reduceFill.process(A, gperm);
             ginvperm.reshape(gperm.length);
             CommonOps_DSCC.permutationInverse(gperm.data, ginvperm.data, gperm.length);
-            CommonOps_DSCC.permuteSymmetric(A, ginvperm.data, Aperm, gwork);
+            CommonOps_DSCC.permuteRowInv(ginvperm.data, A,Aperm);
             C = Aperm;
         } else {
             C = A;
@@ -166,6 +171,9 @@ public class QrLeftLookingDecomposition_DSCC implements
             }
             R.nz_rows[R.nz_length] = k;
             R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values,p1,V.nz_length,Beta);
+            if( R.nz_values[R.nz_length] <= singularTol ) {
+                singular = true;
+            }
 
             beta[k] = Beta.value;
             R.nz_length++;
@@ -175,6 +183,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     private void initializeDecomposition(DMatrixSparseCSC A ) {
+        this.singular = false;
         this.m2 = structure.getFicticousRowCount();
         this.m = A.numRows;
         this.n = A.numCols;
@@ -262,5 +271,17 @@ public class QrLeftLookingDecomposition_DSCC implements
         if( index >= n )
             throw new IllegalArgumentException("index is out of bounds");
         return beta[index];
+    }
+
+    public int[] getFillPermutation() {
+        return gperm.data;
+    }
+
+    public boolean isFillPermutated() {
+        return p_reduceFill != null;
+    }
+
+    public boolean isSingular() {
+        return singular;
     }
 }

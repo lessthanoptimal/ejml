@@ -487,5 +487,35 @@ public class TriangularSolver_DSCC {
         gwork.reshape(desired);
         return gwork.data;
     }
+
+    /**
+     * Computes the quality of a triangular matrix, where the quality of a matrix
+     * is defined in {@link org.ejml.interfaces.linsol.LinearSolver#quality()}.  In
+     * this situation the quality os the absolute value of the product of
+     * each diagonal element divided by the magnitude of the largest diagonal element.
+     * If all diagonal elements are zero then zero is returned.
+     *
+     * @param T A matrix.
+     * @return the quality of the system.
+     */
+    public static double qualityTriangular(DMatrixSparseCSC T)
+    {
+        int N = Math.min(T.numRows,T.numCols);
+
+        double max = T.unsafe_get(0,0);
+        for( int i = 1; i < N; i++ ) {
+            max = Math.max(max,T.unsafe_get(i,i));
+        }
+
+        if( max == 0.0 )
+            return 0.0;
+
+        double quality = 1.0;
+        for( int i = 0; i < N; i++ ) {
+            quality *= T.unsafe_get(i,i)/max;
+        }
+
+        return Math.abs(quality);
+    }
 }
 

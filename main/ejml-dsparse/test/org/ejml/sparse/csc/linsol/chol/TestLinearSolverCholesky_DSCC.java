@@ -33,6 +33,12 @@ import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
  */
 public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTests_DSCC {
 
+    public TestLinearSolverCholesky_DSCC() {
+        canHandleWide = false;
+        canHandleTall = false;
+        canDecomposeZeros = false;
+    }
+
     @Override
     public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
