@@ -62,7 +62,7 @@ public class TestCholeskyDecompositionLDL_DDRM {
     }
 
     /**
-     * If it is not positive definate it should fail
+     * If it is not positive definite it should fail
      */
     @Test
     public void testNotPositiveDefinate() {

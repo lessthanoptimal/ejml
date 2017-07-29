@@ -33,7 +33,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Generic tests for linear solvers
@@ -47,6 +48,9 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 
     protected FillReducing permutationTests[] =
             new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
+
+    // used to adjust tolerance threshold
+    protected double equalityTolerance = UtilEjml.TEST_F64;
 
     protected boolean canHandleTall = true;
     protected boolean canHandleWide = true;
@@ -80,23 +84,23 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     DMatrixRMaj X = create(A.numCols, 3);
                     DMatrixRMaj foundX = create(A.numCols, 3);
                     DMatrixRMaj B = new DMatrixRMaj(A.numRows, 3);
-                    DMatrixRMaj B_cpy = B.copy();
 
                     // compute the solution
                     CommonOps_DSCC.mult(A, X, B);
+                    DMatrixRMaj B_cpy = B.copy();
 
                     assertTrue(solver.setA(A));
                     solver.solve(B, foundX);
 
-                    EjmlUnitTests.assertRelativeEquals(X, foundX, UtilEjml.TEST_F64);
+                    EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
 
                     if( !solver.modifiesA() ) {
                         A.sortIndices(null);
                         A_cpy.sortIndices(null);
-                        assertTrue(MatrixFeatures_DSCC.isEquals(A, A_cpy, UtilEjml.TEST_F64));
+                        assertTrue(MatrixFeatures_DSCC.isEquals(A, A_cpy, equalityTolerance));
                     }
                     if( !solver.modifiesB() ) {
-                        assertTrue(MatrixFeatures_DDRM.isEquals(B, B_cpy, UtilEjml.TEST_F64));
+                        assertTrue(MatrixFeatures_DDRM.isEquals(B, B_cpy, equalityTolerance));
                     }
                 }
             }
@@ -164,7 +168,5 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         double q_bad = (double)solver.quality();
 
         assertTrue(q_bad < q_good);
-
-        assertEquals(q_bad*10.0,q_good, UtilEjml.TEST_F64);
     }
 }

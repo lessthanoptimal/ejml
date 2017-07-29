@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.linsol.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.ComputePermutation;
@@ -34,6 +35,7 @@ import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
 public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTests_DSCC {
 
     public TestLinearSolverCholesky_DSCC() {
+        equalityTolerance = UtilEjml.TEST_F64*10;
         canHandleWide = false;
         canHandleTall = false;
         canDecomposeZeros = false;

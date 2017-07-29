@@ -21,14 +21,17 @@ package org.ejml.sparse.csc.decomposition.qr;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.sparse.ComputePermutation;
+import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 import org.junit.Test;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -36,6 +39,8 @@ import static org.junit.Assert.fail;
 public class TestQrLeftLookingDecomposition_DSCC {
 
     Random rand = new Random(234);
+    protected FillReducing permutationTests[] =
+            new FillReducing[]{FillReducing.NONE};//, FillReducing.IDENTITY};
 
     @Test
     public void process_tall() {
@@ -50,35 +55,48 @@ public class TestQrLeftLookingDecomposition_DSCC {
     }
 
     private void proces_random(int numRows, int numCols , boolean canBeSingular, boolean alwaysHasSolution ) {
-        for (int mc = 0; mc < 100; mc++) {
+
+        for( FillReducing reduce : permutationTests ) {
+            for (int mc = 0; mc < 100; mc++) {
 //            System.out.println("MC == "+mc);
-
-            int nz = RandomMatrices_DSCC.nonzero(numRows,numCols,0.05,0.8,rand);
-            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz,rand);
-
-            if( !canBeSingular ) {
-                int M = Math.min(numCols,numRows);
-                for (int i = 0; i < M; i++) {
-                    A.set(i,i,1.2);
-                }
+                performTest(numRows, numCols, canBeSingular, alwaysHasSolution, reduce);
             }
-
-            QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
-
-            if( alwaysHasSolution )
-                assertTrue(alg.decompose(A));
-            else if( !alg.decompose(A))
-                continue;
-
-            DMatrixSparseCSC Q = alg.getQ(null,false);
-            DMatrixSparseCSC R = alg.getR(null,false);
-
-            // reconstruct the input matrix, not taking in account pivots
-            DMatrixSparseCSC found = new DMatrixSparseCSC(Q.numRows,R.numCols,0);
-            CommonOps_DSCC.mult(Q,R,found,null,null);
-
-            EjmlUnitTests.assertEquals(A,found, UtilEjml.TEST_F64);
         }
+    }
+
+    private void performTest(int numRows, int numCols, boolean canBeSingular,
+                             boolean alwaysHasSolution, FillReducing reduce) {
+        int nz = RandomMatrices_DSCC.nonzero(numRows, numCols, 0.05, 0.8, rand);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows, numCols, nz, rand);
+
+        if (!canBeSingular) {
+            int M = Math.min(numCols, numRows);
+            for (int i = 0; i < M; i++) {
+                A.set(i, i, 1.2);
+            }
+        }
+        DMatrixSparseCSC A_cpy = A.copy();
+
+        ComputePermutation<DMatrixSparseCSC> reducePerm = FillReductionFactory_DSCC.create(reduce);
+        QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(reducePerm);
+
+        if (alwaysHasSolution)
+            assertTrue(alg.decompose(A));
+        else if (!alg.decompose(A))
+            return;
+
+        if (!alg.inputModified()) {
+            EjmlUnitTests.assertEquals(A, A_cpy, UtilEjml.TEST_F64);
+        }
+
+        DMatrixSparseCSC Q = alg.getQ(null, false);
+        DMatrixSparseCSC R = alg.getR(null, false);
+
+        // reconstruct the input matrix, not taking in account pivots
+        DMatrixSparseCSC found = new DMatrixSparseCSC(Q.numRows, R.numCols, 0);
+        CommonOps_DSCC.mult(Q, R, found, null, null);
+
+        EjmlUnitTests.assertEquals(A_cpy, found, UtilEjml.TEST_F64);
     }
 
     /**
@@ -86,16 +104,25 @@ public class TestQrLeftLookingDecomposition_DSCC {
      */
     @Test
     public void checkCompact() {
-        fail("Implement");
-    }
+        int n = 10, m = 5;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(n,m,n*m*6/9,rand);
+        DMatrixSparseCSC A_cpy = A.copy();
 
-    @Test
-    public void checkRowReductionPermutation() {
-        fail("Implement");
-    }
+        QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
 
-    @Test
-    public void checkInputModified() {
-        fail("Implement");
+        assertTrue(alg.decompose(A));
+
+        DMatrixSparseCSC Q = alg.getQ(null,true);
+        DMatrixSparseCSC R = alg.getR(null,true);
+
+        assertEquals(Q.numRows,A.numRows);
+        assertEquals(Q.numCols,A.numCols);
+        assertEquals(R.numRows,A.numCols);
+        assertEquals(R.numCols,A.numCols);
+
+        DMatrixSparseCSC found = new DMatrixSparseCSC(A.numRows,A.numCols,0);
+        CommonOps_DSCC.mult(Q,R,found);
+
+        EjmlUnitTests.assertEquals(A_cpy, found, UtilEjml.TEST_F64);
     }
 }
