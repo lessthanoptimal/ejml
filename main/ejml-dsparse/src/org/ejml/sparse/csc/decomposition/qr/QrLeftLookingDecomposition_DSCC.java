@@ -22,6 +22,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DScalar;
 import org.ejml.data.IGrowArray;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
@@ -30,18 +31,14 @@ import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import java.util.Arrays;
 
 /**
- * <p>Left-looking QRP decomposition algorithm for sparse matrices. A*P=Q*R</p>
- *
- * TODO Can only be applied to tall matrices right?!
+ * <p>Left-looking QR decomposition algorithm for sparse matrices. A=Q*R</p>
  *
  * <p>NOTE: See qr_left on page 71 and cs_qr() in csparse </p>
  *
  * @author Peter Abeles
  */
-// TODO if singular mark it as such
-    // TODO is this really QRP?
 public class QrLeftLookingDecomposition_DSCC implements
-        QrpSparseDecomposition<DMatrixSparseCSC>, // TODO create a sparse QR interface?
+        QRDecomposition<DMatrixSparseCSC>,
         DecompositionSparseInterface<DMatrixSparseCSC>
 {
     // shape of matrix and m2 includes fictitious rows
@@ -94,7 +91,8 @@ public class QrLeftLookingDecomposition_DSCC implements
         }
 
         // compute the structure of V and R
-        structure.process(C);
+        if( !structure.process(C) )
+            return false;
 
         // Initialize data structured used in the decomposition
         initializeDecomposition(C);
@@ -194,64 +192,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     @Override
-    public int getRank() {
-        return 0;
-    }
-
-    @Override
-    public int[] getColPivots() {
-        return new int[0];
-    }
-
-    @Override
-    public DMatrixSparseCSC getColPivotMatrix(DMatrixSparseCSC P) {
-        return CommonOps_DSCC.identity(V.numCols,V.numCols);
-    }
-
-    @Override
-    public int[] getRowPivots() {
-        return structure.pinv;
-    }
-
-    @Override
-    public DMatrixSparseCSC getRowPivotMatrix(DMatrixSparseCSC P) {
-        if( P == null )
-            P = new DMatrixSparseCSC(1,1,0);
-        P.reshape(V.numRows,V.numRows,V.numRows);
-        int p[] = new int[V.numRows];
-        CommonOps_DSCC.permutationInverse(structure.pinv,p,V.numRows);
-        V.print();
-        for (int i = 0; i < p.length; i++) {
-            System.out.println(" [ "+p[i]+" ]");
-        }
-        CommonOps_DSCC.permutationMatrix(p,P.numRows,P);
-        return P;
-    }
-
-    @Override
-    public boolean isColumnPivot() {
-        return false;
-    }
-
-    @Override
-    public boolean isRowPivot() {
-        return true;
-    }
-
-    @Override
     public DMatrixSparseCSC getQ(DMatrixSparseCSC Q, boolean compact) {
-
-//        DMatrixSparseCSC I = CommonOps_DSCC.identity(V.numRows,V.numRows);
-//        if( Q == null )
-//            Q = new DMatrixSparseCSC(1,1,0);
-//        Q.reshape(V.numRows,V.numRows,0);
-//
-//        for (int i = V.numCols-1; i >= 0; i--) {
-//            QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,beta[i],I,Q,gwork,gx);
-//            I.set(Q);
-//        }
-//        return Q;
-
         DMatrixSparseCSC I = CommonOps_DSCC.identity(V.numRows,m);
         if( Q == null )
             Q = new DMatrixSparseCSC(1,1,0);
@@ -262,7 +203,6 @@ public class QrLeftLookingDecomposition_DSCC implements
             I.set(Q);
         }
 
-
         // Apply P transpose to Q
         CommonOps_DSCC.permutationInverse(structure.pinv,structureP,V.numRows);
         CommonOps_DSCC.permuteRowInv(structureP,Q,I);
@@ -272,7 +212,7 @@ public class QrLeftLookingDecomposition_DSCC implements
 //        }
 
         // Remove fictitious rows
-        if( m2 > m )
+        if( V.numRows > m )
             CommonOps_DSCC.extractRows(I,0,m-1,Q);
         else
             Q.set(I);
@@ -289,7 +229,7 @@ public class QrLeftLookingDecomposition_DSCC implements
         if( m > n ) {
             // there should only be zeros past row m
             R.numRows = m;
-        } else if( n > m && m2 != m ) {
+        } else if( n > m && V.numRows != m ) {
             DMatrixSparseCSC tmp = new DMatrixSparseCSC(m,n,0);
             CommonOps_DSCC.extractRows(R,0,m-1,tmp);
             R.set(tmp);

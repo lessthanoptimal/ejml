@@ -59,7 +59,7 @@ public class TestQrStructuralCountsDSCC {
 
         QrStructuralCounts_DSCC alg = new QrStructuralCounts_DSCC();
 
-        alg.process(A);
+        assertTrue(alg.process(A));
 
         assertEquals(16,alg.nz_in_V); // includes diagonal
         assertEquals(24,alg.nz_in_R); // includes diagonal

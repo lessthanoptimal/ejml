@@ -39,18 +39,20 @@ public class TestQrLeftLookingDecomposition_DSCC {
 
     @Test
     public void process_tall() {
-        proces_random(10, 5,false);
-        proces_random(10, 5,true);
+        proces_random(10, 5,false,true);
+        proces_random(10, 5,true,true);
     }
 
     @Test
     public void process_wide() {
-        proces_random(5, 10,false);
-        proces_random(5, 10,true);
+        proces_random(5, 10,false, true);
+        proces_random(5, 10,true,false);
     }
 
-    private void proces_random(int numRows, int numCols , boolean canBeSingular) {
+    private void proces_random(int numRows, int numCols , boolean canBeSingular, boolean alwaysHasSolution ) {
         for (int mc = 0; mc < 100; mc++) {
+//            System.out.println("MC == "+mc);
+
             int nz = RandomMatrices_DSCC.nonzero(numRows,numCols,0.05,0.8,rand);
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz,rand);
 
@@ -63,7 +65,10 @@ public class TestQrLeftLookingDecomposition_DSCC {
 
             QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
 
-            assertTrue(alg.decompose(A));
+            if( alwaysHasSolution )
+                assertTrue(alg.decompose(A));
+            else if( !alg.decompose(A))
+                continue;
 
             DMatrixSparseCSC Q = alg.getQ(null,false);
             DMatrixSparseCSC R = alg.getR(null,false);
@@ -81,6 +86,16 @@ public class TestQrLeftLookingDecomposition_DSCC {
      */
     @Test
     public void checkCompact() {
+        fail("Implement");
+    }
+
+    @Test
+    public void checkRowReductionpermutation() {
+        fail("Implement");
+    }
+
+    @Test
+    public void checkInputModified() {
         fail("Implement");
     }
 }

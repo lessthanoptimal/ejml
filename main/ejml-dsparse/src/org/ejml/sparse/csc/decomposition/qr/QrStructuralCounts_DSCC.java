@@ -60,14 +60,27 @@ public class QrStructuralCounts_DSCC {
     /**
      * Examins the structure of A for QR decomposition
      * @param A matrix which is to be decomposed
+     * @return true if the solution is valid or false if the decomposition can't be performed (i.e. requires column pivots)
      */
-    public void process( DMatrixSparseCSC A ) {
+    public boolean process( DMatrixSparseCSC A ) {
         init(A);
 
         TriangularSolver_DSCC.eliminationTree(A,true,parent,gwork);
 
         countNonZeroInR(parent);
         countNonZeroInV(parent);
+
+        // if more columns than rows it's possible that Q*R != A. That's because a householder
+        // would need to be created that's outside the  m by m Q matrix. In reality it has
+        // a partial solution. Column pivot are needed.
+        if( m < n ) {
+            for (int row = 0; row <m; row++) {
+                if( gwork.data[head+row] < 0 ) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -179,6 +192,29 @@ public class QrStructuralCounts_DSCC {
             w[head+k] = i;
         }
     }
+
+//    private void printLinkedList(int w[]) {
+//        System.out.print("head [");
+//        for (int k = 0; k < n; k++) {
+//            System.out.printf(" %2d",w[head+k]);
+//        }
+//        System.out.println(" ]");
+//        System.out.print("tail [");
+//        for (int k = 0; k < n; k++) {
+//            System.out.printf(" %2d",w[tail+k]);
+//        }
+//        System.out.println(" ]");
+//        System.out.print("nque [");
+//        for (int k = 0; k < n; k++) {
+//            System.out.printf(" %2d",w[nque+k]);
+//        }
+//        System.out.println(" ]");
+//        System.out.print("next [");
+//        for (int k = 0; k < m; k++) {
+//            System.out.printf(" %2d",w[next+k]);
+//        }
+//        System.out.println(" ]");
+//    }
 
     /**
      * Computes leftmost[i] =  min(find(A[i,:))

@@ -33,6 +33,9 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+// TODO make left looking just regular QR
+    // TODO move row pivot matrix into generic header
+    // TODO update unit tests
 public interface QrpSparseDecomposition<T extends Matrix>
         extends QRDecomposition<T>
 {
