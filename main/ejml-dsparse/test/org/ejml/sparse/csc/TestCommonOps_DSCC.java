@@ -590,6 +590,22 @@ public class TestCommonOps_DSCC {
         }
     }
 
+    @Test
+    public void extractRows() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.extractRows(A,2,3,null);
+
+        assertEquals(2,B.numRows);
+        assertEquals(10,B.numCols);
+
+        for (int row = 0; row < 2; row++) {
+            for (int col = 0; col < B.numRows; col++) {
+                assertEquals( A.get(row+2,col), B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
     /**
      * Just does a comparison to the impl version
      */

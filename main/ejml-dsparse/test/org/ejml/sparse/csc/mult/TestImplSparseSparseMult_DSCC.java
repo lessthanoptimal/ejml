@@ -44,18 +44,22 @@ public class TestImplSparseSparseMult_DSCC {
 
     @Test
     public void mult_s_s() {
-        for (int i = 0; i < 10; i++) {
-            mult_s_s(24,30,20);
-            mult_s_s(15,15,20);
-            mult_s_s(15,15,5);
-            mult_s_s(4,5,0);
+        for (int i = 0; i < 50; i++) {
+            mult_s_s(5,5,5);
+            mult_s_s(10,5,5);
+            mult_s_s(5,10,5);
+            mult_s_s(5,5,10);
         }
     }
 
-    private void mult_s_s(int elementsA , int elementsB , int elementsC ) {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
-        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,5,elementsB,-1,1,rand);
-        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
+    private void mult_s_s( int rowsA , int colsA , int colsB ) {
+        int nz_a = RandomMatrices_DSCC.nonzero(rowsA,colsA,0.05,0.7,rand);
+        int nz_b = RandomMatrices_DSCC.nonzero(colsA,colsB,0.05,0.7,rand);
+        int nz_c = RandomMatrices_DSCC.nonzero(rowsA,colsB,0.05,0.7,rand);
+
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(rowsA,colsA,nz_a,-1,1,rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(colsA,colsB,nz_b,-1,1,rand);
+        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(rowsA,colsB,nz_c,-1,1,rand);
 
         ImplSparseSparseMult_DSCC.mult(a,b,c, null, null);
         assertTrue(CommonOps_DSCC.checkSortedFlag(c));

@@ -28,49 +28,59 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
-// TODO test with and without permutation
-    // TODO test with singular systems
-    // TODO test with square, tall, and wide systems
-    // TODO Test compact solution
 public class TestQrLeftLookingDecomposition_DSCC {
 
     Random rand = new Random(234);
 
     @Test
-    public void stuff() {
+    public void process_tall() {
+        proces_random(10, 5,false);
+        proces_random(10, 5,true);
+    }
 
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10,5,48,rand);
+    @Test
+    public void process_wide() {
+        proces_random(5, 10,false);
+        proces_random(5, 10,true);
+    }
 
-        QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
+    private void proces_random(int numRows, int numCols , boolean canBeSingular) {
+        for (int mc = 0; mc < 100; mc++) {
+            int nz = RandomMatrices_DSCC.nonzero(numRows,numCols,0.05,0.8,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz,rand);
 
-        assertTrue(alg.decompose(A));
+            if( !canBeSingular ) {
+                int M = Math.min(numCols,numRows);
+                for (int i = 0; i < M; i++) {
+                    A.set(i,i,1.2);
+                }
+            }
 
-        DMatrixSparseCSC Q = alg.getQ(null,false);
-        DMatrixSparseCSC R = alg.getR(null,false);
+            QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(null);
 
-        // reconstruct the input matrix, not taking in account pivots
-        DMatrixSparseCSC found = new DMatrixSparseCSC(10,5,0);
-        CommonOps_DSCC.mult(Q,R,found,null,null);
+            assertTrue(alg.decompose(A));
 
-        // apply pivots
-        DMatrixSparseCSC expected;
+            DMatrixSparseCSC Q = alg.getQ(null,false);
+            DMatrixSparseCSC R = alg.getR(null,false);
 
-        if( alg.isRowPivot() ) {
-            expected = A.createLike();
-            DMatrixSparseCSC P_r = alg.getRowPivotMatrix(null);
-            CommonOps_DSCC.mult(P_r,A,expected);
-        } else {
-            expected = A;
+            // reconstruct the input matrix, not taking in account pivots
+            DMatrixSparseCSC found = new DMatrixSparseCSC(Q.numRows,R.numCols,0);
+            CommonOps_DSCC.mult(Q,R,found,null,null);
+
+            EjmlUnitTests.assertEquals(A,found, UtilEjml.TEST_F64);
         }
-        if( alg.isColumnPivot() ) {
-            DMatrixSparseCSC P_c = alg.getRowPivotMatrix(null);
-            CommonOps_DSCC.mult((DMatrixSparseCSC)expected.copy(),P_c,expected);
-        }
+    }
 
-        EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_F64);
+    /**
+     * See if the compact flag is honored
+     */
+    @Test
+    public void checkCompact() {
+        fail("Implement");
     }
 }

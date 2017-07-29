@@ -282,6 +282,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void reshape( int numRows , int numCols , int nz_length ) {
+        this.indicesSorted = false;
         this.numRows = numRows;
         this.numCols = numCols;
         growMaxLength( nz_length , false);
@@ -289,6 +290,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
+        } else {
+            Arrays.fill(col_idx,0,numCols+1,0);
         }
     }
 

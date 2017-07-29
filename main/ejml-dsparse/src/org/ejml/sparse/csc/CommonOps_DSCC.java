@@ -58,9 +58,24 @@ public class CommonOps_DSCC {
     }
 
     public static boolean checkStructure( DMatrixSparseCSC A ) {
-        if( !checkSortedFlag(A))
+        if( A.col_idx.length < A.numCols+1)
             return false;
         if( A.col_idx[A.numCols] != A.nz_length )
+            return false;
+        if( A.nz_rows.length < A.nz_length)
+            return false;
+        if( A.nz_values.length < A.nz_length)
+            return false;
+        if( A.col_idx[0] != 0 )
+            return false;
+        for (int i = 0; i < A.numCols; i++) {
+            if( A.col_idx[i] > A.col_idx[i+1] ) {
+                return false;
+            }
+            if( A.col_idx[i+1]-A.col_idx[i] > A.numRows)
+                return false;
+        }
+        if( !checkSortedFlag(A))
             return false;
         if( checkDuplicateElements(A))
             return false;
@@ -370,8 +385,8 @@ public class CommonOps_DSCC {
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
     public static void permuteRowInv(int permInv[], DMatrixSparseCSC input, DMatrixSparseCSC output) {
-        if( input.numRows != permInv.length )
-            throw new IllegalArgumentException("Number of rows in input must match length of permutation vector");
+        if( input.numRows > permInv.length )
+            throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
 
         output.reshape(input.numRows,input.numCols,input.nz_length);
         output.indicesSorted = false;
@@ -379,9 +394,8 @@ public class CommonOps_DSCC {
         System.arraycopy(input.nz_values,0,output.nz_values,0,input.nz_length);
         System.arraycopy(input.col_idx,0,output.col_idx,0,input.numCols+1);
 
-        int M = permInv.length;
         int idx0 = 0;
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < input.numCols; i++) {
             int idx1 = output.col_idx[i+1];
 
             for (int j = idx0; j < idx1; j++) {
@@ -631,6 +645,40 @@ public class CommonOps_DSCC {
 
         System.arraycopy(A.nz_values,idx0,out.nz_values,0,out.nz_length);
         System.arraycopy(A.nz_rows,idx0,out.nz_rows,0,out.nz_length);
+
+        return out;
+    }
+
+    /**
+     * Creates a submatrix by extracting the specified rows from A. rows = {row0 %le; i %le; row1}.
+     * @param A (Input) matrix
+     * @param row0 First row. Inclusive
+     * @param row1 Last row. Inclusive
+     * @param out (Output, Option) Storage for output matrix
+     * @return The submatrix
+     */
+    public static DMatrixSparseCSC extractRows(DMatrixSparseCSC A , int row0 , int row1 , DMatrixSparseCSC out ) {
+
+        if( out == null )
+            out = new DMatrixSparseCSC(1,1,1);
+
+        out.reshape(row1-row0+1,A.numCols,A.nz_length);
+        out.col_idx[0] = 0;
+        out.nz_length = 0;
+
+        for (int col = 0; col < A.numCols; col++) {
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col+1];
+
+            for (int i = idx0; i < idx1; i++) {
+                int row = A.nz_rows[i];
+                if( row >= row0 && row <= row1 ) {
+                    out.nz_values[out.nz_length] = A.nz_values[i];
+                    out.nz_rows[out.nz_length++] = row-row0;
+                }
+            }
+            out.col_idx[col+1] = out.nz_length;
+        }
 
         return out;
     }

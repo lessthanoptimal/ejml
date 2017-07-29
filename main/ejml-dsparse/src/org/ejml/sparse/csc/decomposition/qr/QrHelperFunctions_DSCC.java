@@ -79,8 +79,8 @@ public class QrHelperFunctions_DSCC {
      * </p>
      */
     public static void rank1UpdateMultR(DMatrixSparseCSC V , int colV, double gamma ,
-                                        DMatrixSparseCSC A , DMatrixSparseCSC C,
-                                        IGrowArray gw , DGrowArray gx )
+                                         DMatrixSparseCSC A , DMatrixSparseCSC C,
+                                         IGrowArray gw , DGrowArray gx )
     {
         if( V.numRows != A.numRows )
             throw new IllegalArgumentException("Number of rows in V and A must match");
@@ -89,21 +89,10 @@ public class QrHelperFunctions_DSCC {
         C.numRows = V.numRows;
         C.numCols = 0;
 
-//        System.out.println("rank1UpdateMultR Column in V");
-//        for (int i = 0; i < V.numRows; i++) {
-//            System.out.println("[ "+V.get(i,colV)+" ]");
-//        }
-
         for (int i = 0; i < A.numCols; i++) {
-//            System.out.println("rank1UpdateMultR column "+i);
-            // tau = v'*A(:,i)
             double tau = CommonOps_DSCC.dotInnerColumns(V,colV,A,i,gw,gx);
-//            System.out.println("tau "+tau);
-            // C(:,i) = A(:,i) - gamma*tau*v
             ImplCommonOps_DSCC.addColAppend(1.0,A,i,-gamma*tau,V,colV,C,gw);
-//            C.print();
         }
-        System.out.println();
     }
 
     /**

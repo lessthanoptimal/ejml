@@ -68,6 +68,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     double x[] = new double[0];
 
     QrStructuralCounts_DSCC structure = new QrStructuralCounts_DSCC();
+    int structureP[] = new int[0];
     IGrowArray gwork = new IGrowArray();
     DGrowArray gx = new DGrowArray();
 
@@ -183,8 +184,9 @@ public class QrLeftLookingDecomposition_DSCC implements
         if( beta.length < n ) {
             beta = new double[n];
         }
-        if( x.length < m ) {
-            x = new double[m];
+        if( x.length < m2 ) {
+            x = new double[m2];
+            structureP = new int[m2];
         }
 
         V.reshape(m2,n,structure.nz_in_V);
@@ -216,7 +218,13 @@ public class QrLeftLookingDecomposition_DSCC implements
         if( P == null )
             P = new DMatrixSparseCSC(1,1,0);
         P.reshape(V.numRows,V.numRows,V.numRows);
-        CommonOps_DSCC.permutationMatrix(structure.pinv,P.numRows,P);
+        int p[] = new int[V.numRows];
+        CommonOps_DSCC.permutationInverse(structure.pinv,p,V.numRows);
+        V.print();
+        for (int i = 0; i < p.length; i++) {
+            System.out.println(" [ "+p[i]+" ]");
+        }
+        CommonOps_DSCC.permutationMatrix(p,P.numRows,P);
         return P;
     }
 
@@ -233,15 +241,42 @@ public class QrLeftLookingDecomposition_DSCC implements
     @Override
     public DMatrixSparseCSC getQ(DMatrixSparseCSC Q, boolean compact) {
 
-        DMatrixSparseCSC I = CommonOps_DSCC.identity(V.numRows,V.numRows);
+//        DMatrixSparseCSC I = CommonOps_DSCC.identity(V.numRows,V.numRows);
+//        if( Q == null )
+//            Q = new DMatrixSparseCSC(1,1,0);
+//        Q.reshape(V.numRows,V.numRows,0);
+//
+//        for (int i = V.numCols-1; i >= 0; i--) {
+//            QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,beta[i],I,Q,gwork,gx);
+//            I.set(Q);
+//        }
+//        return Q;
+
+        DMatrixSparseCSC I = CommonOps_DSCC.identity(V.numRows,m);
         if( Q == null )
             Q = new DMatrixSparseCSC(1,1,0);
-        Q.reshape(V.numRows,V.numRows,0);
+        Q.reshape(V.numRows,m,0);
 
         for (int i = V.numCols-1; i >= 0; i--) {
             QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,beta[i],I,Q,gwork,gx);
             I.set(Q);
         }
+
+
+        // Apply P transpose to Q
+        CommonOps_DSCC.permutationInverse(structure.pinv,structureP,V.numRows);
+        CommonOps_DSCC.permuteRowInv(structureP,Q,I);
+
+//        for (int i = 0; i < V.numRows; i++) {
+//            System.out.println(" p["+i+"] = "+structureP[i]+"   pinv["+i+"] = "+structure.pinv[i]);
+//        }
+
+        // Remove fictitious rows
+        if( m2 > m )
+            CommonOps_DSCC.extractRows(I,0,m-1,Q);
+        else
+            Q.set(I);
+
         return Q;
     }
 
@@ -251,7 +286,14 @@ public class QrLeftLookingDecomposition_DSCC implements
             R = new DMatrixSparseCSC(0,0,0);
 
         R.set(this.R);
-
+        if( m > n ) {
+            // there should only be zeros past row m
+            R.numRows = m;
+        } else if( n > m && m2 != m ) {
+            DMatrixSparseCSC tmp = new DMatrixSparseCSC(m,n,0);
+            CommonOps_DSCC.extractRows(R,0,m-1,tmp);
+            R.set(tmp);
+        }
         return R;
     }
 

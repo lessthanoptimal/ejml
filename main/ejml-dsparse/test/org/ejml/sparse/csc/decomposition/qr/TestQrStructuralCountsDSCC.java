@@ -71,9 +71,7 @@ public class TestQrStructuralCountsDSCC {
 
         // fill in the matrix using a naive algorithm
         DMatrixSparseCSC filled = fillInV(A);
-        filled.print();
         for (int i = 0; i < 8; i++) {
-            System.out.println("i = "+i);
             assertTrue( filled.isAssigned(p[i],i));
         }
     }
@@ -89,8 +87,8 @@ public class TestQrStructuralCountsDSCC {
             // list of non zero rows in this column
             nz[0] = -1;
             int nz_c = 0;
-            for (int i = col+1; i < B.numRows; i++) {
-                if( A.isAssigned(i,col) ) {
+            for (int i = col; i < B.numRows; i++) {
+                if( B.isAssigned(i,col) ) {
                     nz[nz_c++] = i;
                 }
             }
@@ -100,15 +98,14 @@ public class TestQrStructuralCountsDSCC {
                 for (int j = 0; j < nz_c; j++) {
                     if( B.get(nz[j],i) != 0 ) {
                         for (int k = 0; k < nz_c; k++) {
-                            if (nz[k] > i) {
+//                            if (nz[k] <= i) {
                                 B.set(nz[k], i, 1);
-                            }
+//                            }
                         }
                         break;
                     }
                 }
             }
-//            B.print();
         }
         return B;
     }
@@ -119,29 +116,63 @@ public class TestQrStructuralCountsDSCC {
         randomChecks(new Check() {
             @Override
             public void check(DMatrixSparseCSC A) {
+                ensureNotSingular(A);
 
                 alg.process(A);
+
+                // there shouldn't be any factious rows added since it's not singular
+                assertEquals(alg.m2,alg.m);
+
                 A.print();
 
-                System.out.println("rows = "+A.numRows);
+                int []pinv = alg.getPinv();
+                int []p = new int[A.numRows];
+                CommonOps_DSCC.permutationInverse(pinv,p,A.numRows);
+
+                DMatrixSparseCSC filled = fillInV(A);
+                filled.print();
+                for (int i = 0; i < A.numRows; i++) {
+                    System.out.println("p["+i+"] = "+p[i]);
+                    assertTrue( filled.isAssigned(p[i],i));
+                }
 
                 compareToFilledV(fillInV(A),alg.nz_in_V);
 
-                int m2 = alg.m2;
-                int []pinv = alg.getPinv();
-                int []p = new int[m2];
-                CommonOps_DSCC.permutationInverse(pinv,p,m2);
-
-//                // fill in the matrix using a naive algorithm
-//                DMatrixSparseCSC filled = fillInV(A);
-//                filled.print();
-//                for (int i = 0; i < A.numCols; i++) {
-//                    System.out.println("p["+i+"] = "+p[i]);
-//                    if( p[i] < A.numRows )  // ignore fictitious rows
-//                        assertTrue( filled.isAssigned(p[i],i));
-//                }
             }
         });
+    }
+
+    /**
+     * If a row is empty randomly assign a value
+     */
+    private void ensureNotSingular( DMatrixSparseCSC A ) {
+        for (int row = 0; row < A.numRows; row++) {
+            boolean empty = true;
+            for (int col = 0; col < A.numCols; col++) {
+                if( A.isAssigned(row,col) ) {
+                    empty = false;
+                    break;
+                }
+            }
+
+            if( empty ) {
+                A.set(row,rand.nextInt(A.numCols),2.0);
+            }
+        }
+
+        for (int col = 0; col < A.numCols; col++) {
+            boolean empty = true;
+            for (int row = 0; row < A.numRows; row++) {
+                if( A.isAssigned(row,col) ) {
+                    empty = false;
+                    break;
+                }
+            }
+
+            if( empty ) {
+                A.set(rand.nextInt(A.numRows),col,2.0);
+            }
+        }
     }
 
     private void compareToFilledV(DMatrixSparseCSC A , int foundV ) {
@@ -155,7 +186,6 @@ public class TestQrStructuralCountsDSCC {
                 }
             }
         }
-        A.print();
         System.out.println("estimated "+foundV+"   actual "+countV);
         assertTrue(countV <= foundV);
     }
