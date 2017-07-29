@@ -32,7 +32,7 @@ public class FillReductionFactory_DSCC {
             case NONE:
                 return null;
 
-            default:
+            case IDENTITY:
                 return new ComputePermutation<DMatrixSparseCSC>() {
                     @Override
                     public void process(DMatrixSparseCSC m, IGrowArray perm) {
@@ -42,6 +42,9 @@ public class FillReductionFactory_DSCC {
                         }
                     }
                 };
+
+            default:
+                throw new RuntimeException("Unknown "+type);
         }
     }
 }

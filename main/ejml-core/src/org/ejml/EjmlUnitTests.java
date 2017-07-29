@@ -167,6 +167,10 @@ public class EjmlUnitTests {
                 double max = Math.max(Math.abs(valA), Math.abs(valB));
                 double error = Math.abs(valA - valB) / max;
                 if( error > tol ) {
+                    System.out.println("------------  A  -----------");
+                    A.print();
+                    System.out.println("\n------------  B  -----------");
+                    B.print();
                     throw new TestException("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
                 }
             }

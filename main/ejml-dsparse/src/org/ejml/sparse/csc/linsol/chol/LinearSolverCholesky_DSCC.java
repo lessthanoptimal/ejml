@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.linsol.chol;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
@@ -25,6 +26,8 @@ import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
+
+import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
 
 /**
  * Linear solver using a sparse Cholesky decomposition.
@@ -34,6 +37,9 @@ import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> {
 
     CholeskyUpLooking_DSCC cholesky;
+
+    DGrowArray gb = new DGrowArray();
+    DGrowArray gx = new DGrowArray();
 
     public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky) {
         this.cholesky = cholesky;
@@ -66,12 +72,10 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
         int N = L.numRows;
 
+        double[] b = adjust(gb,N);
+        double[] x = adjust(gx,N);
 
-        double[] b = new double[N];
         int[] Pinv = cholesky.getPinv();
-
-        double[] x = new double[N];
-
 
         for (int col = 0; col < B.numCols; col++) {
             int index = col;

@@ -31,6 +31,8 @@ Date format: year/month/day
   * Added extractColumn()
   * Added dotInnerColumns()
   * Fixed bugs
+- CommonOps_DDRM
+  * Added permuteRowInv()
 - Sparse Decompositions and Solvers
   * Cholesky - Up Looking
 - Sparse Triangular Solver

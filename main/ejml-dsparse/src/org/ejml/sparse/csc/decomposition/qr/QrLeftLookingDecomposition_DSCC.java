@@ -241,4 +241,26 @@ public class QrLeftLookingDecomposition_DSCC implements
     public boolean inputModified() {
         return false;
     }
+
+    public QrStructuralCounts_DSCC getStructure() {
+        return structure;
+    }
+
+    public DMatrixSparseCSC getV() {
+        return V;
+    }
+
+    public DMatrixSparseCSC getR() {
+        return R;
+    }
+
+    public double[] getBeta() {
+        return beta;
+    }
+
+    public double getBeta( int index ) {
+        if( index >= n )
+            throw new IllegalArgumentException("index is out of bounds");
+        return beta[index];
+    }
 }

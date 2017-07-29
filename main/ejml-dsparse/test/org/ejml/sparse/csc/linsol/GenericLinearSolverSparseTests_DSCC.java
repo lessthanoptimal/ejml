@@ -22,10 +22,12 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.junit.Test;
 
 import java.util.Random;
@@ -68,26 +70,26 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 
             for (int N : new int[]{1, 2, 5, 10, 20}) {
                 for (int mc = 0; mc < 30; mc++) {
-                    System.out.println(N+" mc "+mc);
+                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
+                    DMatrixSparseCSC A_cpy = A.copy();
                     DMatrixRMaj X = create(A.numCols, 3);
                     DMatrixRMaj foundX = create(A.numCols, 3);
                     DMatrixRMaj B = new DMatrixRMaj(A.numRows, 3);
+                    DMatrixRMaj B_cpy = B.copy();
 
                     // compute the solution
                     CommonOps_DSCC.mult(A, X, B);
 
-                    System.out.println();
-                    A.print();
-                    X.print();
-                    B.print();
-
-
                     assertTrue(solver.setA(A));
                     solver.solve(B, foundX);
 
-                    // TODO uneasy about needing the 10x when permutation is added. Should be literally identical
-                    EjmlUnitTests.assertRelativeEquals(X, foundX, 10*UtilEjml.TEST_F64);
+                    if( !solver.modifiesA() )
+                        MatrixFeatures_DSCC.isEquals(A,A_cpy,UtilEjml.TEST_F64);
+                    if( !solver.modifiesB() )
+                        MatrixFeatures_DDRM.isEquals(B,B_cpy,UtilEjml.TEST_F64);
+
+                    EjmlUnitTests.assertRelativeEquals(X, foundX, UtilEjml.TEST_F64);
                 }
             }
         }

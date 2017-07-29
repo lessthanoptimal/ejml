@@ -255,4 +255,8 @@ public class QrStructuralCounts_DSCC {
     public int[] getPinv() {
         return pinv;
     }
+
+    public int getM2() {
+        return m2;
+    }
 }

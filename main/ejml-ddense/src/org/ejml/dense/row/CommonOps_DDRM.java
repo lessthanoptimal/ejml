@@ -2552,4 +2552,27 @@ public class CommonOps_DDRM {
 
         return R;
     }
+
+    /**
+     * Applies the row permutation specified by the vector to the input matrix and save the results
+     * in the output matrix.  output[perm[j],:] = input[j,:]
+     *
+     * @param pinv (Input) Inverse permutation vector.  Specifies new order of the rows.
+     * @param input (Input) Matrix which is to be permuted
+     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     */
+    public static DMatrixRMaj permuteRowInv( int pinv[] , DMatrixRMaj input , DMatrixRMaj output ) {
+        if( input.numRows > pinv.length )
+            throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
+
+        if( output == null )
+            output = new DMatrixRMaj(1,1);
+        output.reshape(input.numRows,input.numCols);
+
+        int m = input.numCols;
+        for (int row = 0; row < input.numRows; row++) {
+            System.arraycopy(input.data,row*m,output.data,pinv[row]*m,m);
+        }
+        return output;
+    }
 }

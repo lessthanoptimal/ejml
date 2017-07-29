@@ -414,9 +414,9 @@ public class CommonOps_DSCC {
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
     public static void permute(int permRowInv[], DMatrixSparseCSC input, int permCol[], DMatrixSparseCSC output) {
-        if( input.numRows != permRowInv.length )
+        if( permRowInv!= null && input.numRows != permRowInv.length )
             throw new IllegalArgumentException("Number of column in input must match length of rowInv");
-        if( input.numCols != permCol.length )
+        if( permCol != null && input.numCols != permCol.length )
             throw new IllegalArgumentException("Number of rows in input must match length of colInv");
 
         output.reshape(input.numRows,input.numCols,input.nz_length);
@@ -428,14 +428,15 @@ public class CommonOps_DSCC {
         // traverse through in order for the output columns
         int outputNZ = 0;
         for (int i = 0; i < N; i++) {
-            int inputCol = permCol[i]; // column of input to source from
+            int inputCol = permCol!=null?permCol[i]:i; // column of input to source from
             int inputNZ = input.col_idx[inputCol];
             int total = input.col_idx[inputCol+1]- inputNZ; // total nz in this column
 
             output.col_idx[i+1] = output.col_idx[i] + total;
 
             for (int j = 0; j < total; j++) {
-                output.nz_rows[outputNZ] = permRowInv[input.nz_rows[inputNZ]];
+                int row = input.nz_rows[inputNZ];
+                output.nz_rows[outputNZ] = permRowInv!=null?permRowInv[row]:row;
                 output.nz_values[outputNZ++] = input.nz_values[inputNZ++];
             }
         }

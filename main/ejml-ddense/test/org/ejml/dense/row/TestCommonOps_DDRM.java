@@ -18,7 +18,6 @@
 
 package org.ejml.dense.row;
 
-import org.ejml.EjmlParameters;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
@@ -1503,5 +1502,21 @@ public class TestCommonOps_DDRM {
         assertEquals(6,a.numCols);
         checkEquals(a,0,0,A);
         checkEquals(a,3,0,B);
+    }
+
+    @Test
+    public void permuteRowInv() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj B = new DMatrixRMaj(5,4);
+        int pinv[] = new int[]{2,1,3,4,0};
+
+        CommonOps_DDRM.permuteRowInv(pinv,A,B);
+
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(A.get(i,j),B.get(pinv[i],j),UtilEjml.TEST_F64);
+            }
+        }
+
     }
 }
