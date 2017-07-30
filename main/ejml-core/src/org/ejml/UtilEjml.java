@@ -189,11 +189,15 @@ public class UtilEjml {
     }
 
     public static int[] shuffled( int N , Random rand ) {
+        return shuffled(N,N,rand);
+    }
+
+    public static int[] shuffled( int N , int shuffleUpTo , Random rand ) {
         int l[] = new int[N];
         for (int i = 0; i < N; i++) {
             l[i] = i;
         }
-        shuffle(l,0,N,rand);
+        shuffle(l,0,shuffleUpTo,rand);
         return l;
     }
 

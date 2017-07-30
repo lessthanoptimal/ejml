@@ -149,7 +149,8 @@ public class TriangularSolver_DSCC {
      * @param colB  The column in B which is solved for
      * @param x     (Output) Storage for dense solution.  length = G.numRows
      * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
-     * @param g_xi  (Optional) Storage for workspace.
+     * @param g_xi  (Optional) Storage for workspace. Will contain nonzero pattern.
+     *              See {@link #searchNzRowsInB(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], IGrowArray)}
      * @param g_w   (Optional) Storage for workspace.
      * @return Return number of zeros in 'x', ignoring cancellations.
      */

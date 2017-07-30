@@ -200,6 +200,13 @@ public class CommonOps_DSCC {
     public static DMatrixSparseCSC identity(int numRows , int numCols ) {
         int min = Math.min(numRows, numCols);
         DMatrixSparseCSC A = new DMatrixSparseCSC(numRows, numCols, min);
+        setToIdentity(A);
+        return A;
+    }
+
+    public static void setToIdentity(DMatrixSparseCSC A ) {
+        int min = Math.min(A.numRows, A.numCols);
+        A.growMaxLength(min,false);
         A.nz_length = min;
 
         Arrays.fill(A.nz_values,0,min,1);
@@ -207,12 +214,11 @@ public class CommonOps_DSCC {
             A.col_idx[i] = i;
             A.nz_rows[i-1] = i-1;
         }
-        for (int i = min+1; i <= numCols; i++) {
+        for (int i = min+1; i <= A.numCols; i++) {
             A.col_idx[i] = min;
         }
-
-        return A;
     }
+
 
     public static void scale(double scalar, DMatrixSparseCSC A, DMatrixSparseCSC B) {
         if( A != B ) {

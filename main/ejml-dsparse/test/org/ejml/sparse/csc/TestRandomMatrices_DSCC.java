@@ -42,7 +42,7 @@ public class TestRandomMatrices_DSCC {
             m[i] = i;
         }
         int N = m.length-5;
-        RandomMatrices_DSCC.shuffle(m,N,40,rand);
+        UtilEjml.shuffle(m,N,40,rand);
 
         // end should be untouched
         for (int i = N; i < m.length; i++) {

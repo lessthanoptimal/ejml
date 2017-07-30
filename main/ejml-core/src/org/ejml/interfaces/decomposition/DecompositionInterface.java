@@ -51,7 +51,7 @@ public interface DecompositionInterface <T extends Matrix> {
      * @param orig The matrix which is being decomposed.  Modification is implementation dependent.
      * @return Returns if it was able to decompose the matrix.
      */
-    public boolean decompose( T orig );
+    boolean decompose( T orig );
 
     /**
      * Is the input matrix to {@link #decompose(org.ejml.data.Matrix)} is modified during
@@ -59,5 +59,5 @@ public interface DecompositionInterface <T extends Matrix> {
      *
      * @return true if the input matrix to decompose() is modified.
      */
-    public boolean inputModified();
+    boolean inputModified();
 }

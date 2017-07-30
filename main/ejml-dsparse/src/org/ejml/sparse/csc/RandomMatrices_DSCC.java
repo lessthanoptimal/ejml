@@ -18,11 +18,11 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.ops.ConvertDMatrixSparse;
 
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -46,7 +46,7 @@ public class RandomMatrices_DSCC {
                                              double min , double max , Random rand ) {
 
         nz_total = Math.min(numCols*numRows,nz_total);
-        int[] selected = shuffle(numRows*numCols, nz_total, rand);
+        int[] selected = UtilEjml.shuffled(numRows*numCols, nz_total, rand);
 
         DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows,numCols,nz_total);
         ret.indicesSorted = true;
@@ -70,32 +70,6 @@ public class RandomMatrices_DSCC {
         return ret;
     }
 
-    private static int[] shuffle(int N, int nz_total, Random rand) {
-        // Create a list of all the possible element values
-        if( N < 0 )
-            throw new IllegalArgumentException("matrix size is too large");
-
-        int selected[] = new int[N];
-        for (int i = 0; i < N; i++) {
-            selected[i] = i;
-        }
-        shuffle(selected,N,nz_total,rand);
-
-        return selected;
-    }
-
-    static void shuffle(int []array, int N , int nz_total, Random rand) {
-
-        for (int i = 0; i < nz_total; i++) {
-            int idx = rand.nextInt(N-i)+i;
-            int selected = array[idx];
-            array[idx] = array[i];
-            array[i] = selected;
-        }
-
-        // put the indexes in order
-        Arrays.sort(array,0,nz_total);
-    }
 
     public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total , Random rand ) {
         return rectangle(numRows, numCols, nz_total, -1,1,rand);
@@ -126,7 +100,7 @@ public class RandomMatrices_DSCC {
         }
 
         // perform a random draw
-        shuffle(open,open.length,nz_total,rand);
+        UtilEjml.shuffle(open,open.length,nz_total,rand);
 
         // construct the matrix
         DMatrixSparseTriplet A = new DMatrixSparseTriplet(N,N,nz_total*2);
@@ -188,7 +162,7 @@ public class RandomMatrices_DSCC {
         // number of elements which are not the diagonal elements
         int off_total = nz_total-diag_total;
 
-        int[] selected = shuffle(N-diag_total, off_total, rand);
+        int[] selected = UtilEjml.shuffled(N-diag_total, off_total, rand);
 
         DMatrixSparseCSC L = new DMatrixSparseCSC(dimen,dimen,nz_total);
 
@@ -285,5 +259,20 @@ er      * @param minFill minimum fill fraction
 
 
         return spd;
+    }
+
+    /**
+     * Modies the matrix to make sure that at least one element in each column has a value
+     */
+    public static void ensureNotSingular( DMatrixSparseCSC A , Random rand ) {
+        if( A.numRows < A.numCols ) {
+            throw new IllegalArgumentException("Fewer equations than variables");
+        }
+
+        int []s = UtilEjml.shuffled(A.numRows,rand);
+
+        for (int col = 0; col < A.numCols; col++) {
+            A.set(s[col],col,rand.nextDouble()+0.5);
+        }
     }
 }

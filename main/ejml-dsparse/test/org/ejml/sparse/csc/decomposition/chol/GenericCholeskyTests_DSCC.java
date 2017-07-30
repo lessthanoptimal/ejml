@@ -196,6 +196,5 @@ public abstract class GenericCholeskyTests_DSCC {
 
         // computed using Cctave
         assertEquals(441,cholesky.computeDeterminant().real, UtilEjml.TEST_F64);
-
     }
 }
