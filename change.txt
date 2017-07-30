@@ -42,15 +42,23 @@ Date format: year/month/day
   * Added DScalar and IScalar
 
 Sparse Matrix
-- TODO LU - Decomposition
-- TODO LU - Solver
+- TODO Add sparse linear solvers to CommonOps
+- TODO change identity fill reduction to test. swap every other row. More rigorous of a test
+  * Should should break some stuff. LU for sure
+- TODO remove zeros from matrices
 - TODO multTransA  <-- place holders are there right now
 - TODO multTransB  <-- place holders are there right now
-- TODO remove zeros
 - TODO Compare QR code dense and sparse. See sparse notes
-- TODO Create overflow / underflow tests
-- TODO implement and add tests for fix structure to decompositions
+- TODO Stability Tests for Sparse Solvers
+  * Overflow / Underflow
+  * Nearly degenerate
+- TODO implement and add tests for fix structure in Solvers
 - TODO clean up new interfaces
+- TODO Modify decomposition interfaces.
+  * Add getPivotVectors()
+  * Specify row and column pivots.
+  * hasRowPivots() ...
+- TODO Unify linear solver interface?
 
 ----- Version 0.31
 

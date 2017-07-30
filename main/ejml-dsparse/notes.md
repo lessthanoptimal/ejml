@@ -5,3 +5,6 @@
 * Compare QR algorithm with each other.
   * Synchronize documentation and use same variable names
   * createHouseholder in sparse code doesn't appear to be the same
+* LU can only handle square matrices. 
+  * Make it able to handle wide and tall.
+  * Update unit test

@@ -237,7 +237,23 @@ public class LuUpLooking_DSCC
         this.tol = tol;
     }
 
+    public int[] getPinv() {
+        return pinv;
+    }
+
+    public DMatrixSparseCSC getL() {
+        return L;
+    }
+
+    public DMatrixSparseCSC getU() {
+        return U;
+    }
+
     public ComputePermutation<DMatrixSparseCSC> getReduceFill() {
         return reduceFill;
+    }
+
+    public int[] getReducePermutation() {
+        return gq.data;
     }
 }

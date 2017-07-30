@@ -20,9 +20,13 @@ package org.ejml.sparse.csc.factory;
 
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
+import org.ejml.sparse.csc.decomposition.lu.LuUpLooking_DSCC;
+import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
 
 /**
  * Factory for sparse matrix decompositions
@@ -33,5 +37,15 @@ public class DecompositionFactory_DSCC {
     public static CholeskyDecomposition_F64 cholesky(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         return new CholeskyUpLooking_DSCC(cp);
+    }
+
+    public static QRDecomposition<DMatrixSparseCSC> qr(FillReducing permutation) {
+        ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
+        return new QrLeftLookingDecomposition_DSCC(cp);
+    }
+
+    public static LUDecomposition_F64 lu(FillReducing permutation) {
+        ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
+        return new LuUpLooking_DSCC(cp);
     }
 }
