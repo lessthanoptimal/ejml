@@ -175,19 +175,23 @@ public class LuUpLooking_DSCC
             L.nz_rows[p] = pinv[ L.nz_rows[p]];
         }
 
-        System.out.println("  reduce "+(reduceFill!=null));
-        System.out.print("  pinv[ ");
-        for (int i = 0; i < A.numCols; i++) {
-            System.out.printf("%2d ",pinv[i]);
-        }
-        System.out.println(" ]");
+//        System.out.println("  reduce "+(reduceFill!=null));
+//        System.out.print("  pinv[ ");
+//        for (int i = 0; i < A.numCols; i++) {
+//            System.out.printf("%2d ",pinv[i]);
+//        }
+//        System.out.println(" ]");
 
         return true;
     }
 
     @Override
     public Complex_F64 computeDeterminant() {
-        return null;
+        double value = 1;
+        for (int i = 0; i < U.numCols; i++) {
+            value *= U.nz_values[U.col_idx[i+1]-1];
+        }
+        return new Complex_F64(value,0);
     }
 
     @Override

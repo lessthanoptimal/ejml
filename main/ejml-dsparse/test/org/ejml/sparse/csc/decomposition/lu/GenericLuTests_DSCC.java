@@ -55,14 +55,12 @@ public abstract class GenericLuTests_DSCC {
                         "2 13 23 "+
                         "4 23 90",3);
 
-
         LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
 
         checkSolution(A, lu);
     }
 
     private void checkSolution(DMatrixSparseCSC A, LUDecomposition_F64<DMatrixSparseCSC> lu) {
-        System.out.println("00000000000000=-------------------------------------------");
 
         DMatrixSparseCSC Acpy = A.copy();
         assertTrue(lu.decompose(A));
@@ -81,11 +79,6 @@ public abstract class GenericLuTests_DSCC {
         DMatrixSparseCSC found = new DMatrixSparseCSC(PL.numCols,U.numCols,0);
         CommonOps_DSCC.mult(PL,U,found);
 
-        P.print();
-//        L.print();
-//        U.print();
-//        Acpy.print();
-//        found.print();
         EjmlUnitTests.assertEquals(Acpy,found,UtilEjml.TEST_F64);
     }
 
@@ -110,20 +103,72 @@ public abstract class GenericLuTests_DSCC {
         }
     }
 
-
     @Test
     public void testSingular() {
-        fail("implement");
+        for( FillReducing p : permTests) {
+            testSingular(p);
+        }
     }
 
+    public void testSingular(FillReducing perm) {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                "1 4  3 " +
+                        "5 0 9 " +
+                        "5 0 9", 3);
+
+        LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+
+        if(lu.decompose(A)) {
+            assertTrue(lu.isSingular());
+        }
+    }
+
+
     @Test
-    public void getL_U_P() {
-        fail("implement");
+    public void getL_U_P_withMatrix() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,6,30,rand);
+        DMatrixSparseCSC L = RandomMatrices_DSCC.rectangle(4,3,30,rand);
+        DMatrixSparseCSC U = RandomMatrices_DSCC.rectangle(8,2,30,rand);
+        DMatrixSparseCSC P = RandomMatrices_DSCC.rectangle(8,9,30,rand);
+
+        for( FillReducing perm : permTests) {
+            LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+
+            assertTrue(lu.decompose(A));
+
+            lu.getLower(L);
+            lu.getUpper(U);
+            lu.getPivot(P);
+
+            assertTrue(CommonOps_DSCC.checkStructure(L));
+            assertTrue(CommonOps_DSCC.checkStructure(U));
+            assertTrue(CommonOps_DSCC.checkStructure(P));
+
+            assertTrue(L.numCols==6 && L.numRows == 6);
+            assertTrue(U.numCols==6 && U.numRows == 6);
+            assertTrue(P.numCols==6 && P.numRows == 6 && P.nz_length == 6);
+        }
     }
 
     @Test
     public void checkDeterminant() {
-        fail("implement");
+        for( FillReducing p : permTests) {
+            checkDeterminant(p);
+        }
+    }
+
+    public void checkDeterminant(FillReducing perm ) {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC(
+                "1 4  3 " +
+                        "5 0 9 "+
+                        "2 2 2",3);
+
+        LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+
+        assertTrue(lu.decompose(A));
+
+        // computed using Cctave
+        assertEquals(44,lu.computeDeterminant().real, UtilEjml.TEST_F64);
     }
 
 

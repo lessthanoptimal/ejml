@@ -353,8 +353,6 @@ public class TestCommonOps_DSCC {
             double found = CommonOps_DSCC.elementMaxAbs(A);
             double expected = CommonOps_DDRM.elementMaxAbs(ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null));
 
-            ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null).print();
-
             assertEquals(expected,found, UtilEjml.TEST_F64);
         }
     }
