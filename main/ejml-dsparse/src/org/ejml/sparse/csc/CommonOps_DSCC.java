@@ -324,11 +324,11 @@ public class CommonOps_DSCC {
 
     /**
      * Converts the permutation vector into a matrix. B = P*A.  B[p[i],:] = A[i,:]
-     *
      * @param p (Input) Permutation vector
+     * @param inverse (Input) If it is the inverse. B[i,:] = A[p[i],:)
      * @param P (Output) Permutation matrix
      */
-    public static DMatrixSparseCSC permutationMatrix( int p[] , int N, DMatrixSparseCSC P) {
+    public static DMatrixSparseCSC permutationMatrix(int[] p, boolean inverse, int N, DMatrixSparseCSC P) {
 
         if( P == null )
             P = new DMatrixSparseCSC(N,N,N);
@@ -337,10 +337,18 @@ public class CommonOps_DSCC {
         P.indicesSorted = true;
 
         // each column should have one element inside of it
-        for (int i = 0; i < N; i++) {
-            P.col_idx[i+1] = i+1;
-            P.nz_rows[p[i]] = i;
-            P.nz_values[i] = 1;
+        if( !inverse ) {
+            for (int i = 0; i < N; i++) {
+                P.col_idx[i + 1] = i + 1;
+                P.nz_rows[p[i]] = i;
+                P.nz_values[i] = 1;
+            }
+        } else {
+            for (int i = 0; i < N; i++) {
+                P.col_idx[i + 1] = i + 1;
+                P.nz_rows[i] = p[i];
+                P.nz_values[i] = 1;
+            }
         }
 
         return P;

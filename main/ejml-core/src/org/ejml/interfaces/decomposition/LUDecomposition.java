@@ -41,6 +41,8 @@ import org.ejml.data.Matrix;
  *
  * @author Peter Abeles
  */
+// TODO add pivot vectors
+    // TODO specify is row or column pivots
 public interface LUDecomposition <T extends Matrix>
         extends DecompositionInterface<T> {
 

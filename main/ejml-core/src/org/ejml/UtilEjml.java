@@ -197,14 +197,24 @@ public class UtilEjml {
         for (int i = 0; i < N; i++) {
             l[i] = i;
         }
-        shuffle(l,0,shuffleUpTo,rand);
+        shuffle(l,N,0,shuffleUpTo,rand);
         return l;
     }
 
-    public static void shuffle( int list[] , int start , int end , Random rand ) {
-        int N = end - start;
+    public static int[] shuffledSorted( int N , int shuffleUpTo , Random rand ) {
+        int l[] = new int[N];
         for (int i = 0; i < N; i++) {
-            int selected = rand.nextInt(N-i)+i;
+            l[i] = i;
+        }
+        shuffle(l,N,0,shuffleUpTo,rand);
+        Arrays.sort(l,0,shuffleUpTo);
+        return l;
+    }
+
+    public static void shuffle( int list[] , int N ,int start , int end , Random rand ) {
+        int range = end - start;
+        for (int i = 0; i < range; i++) {
+            int selected = rand.nextInt(N-i)+i+start;
             int v = list[i];
             list[i] = list[selected];
             list[selected] = v;

@@ -23,6 +23,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.ops.ConvertDMatrixSparse;
 
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -47,6 +48,7 @@ public class RandomMatrices_DSCC {
 
         nz_total = Math.min(numCols*numRows,nz_total);
         int[] selected = UtilEjml.shuffled(numRows*numCols, nz_total, rand);
+        Arrays.sort(selected,0,nz_total);
 
         DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows,numCols,nz_total);
         ret.indicesSorted = true;
@@ -100,7 +102,8 @@ public class RandomMatrices_DSCC {
         }
 
         // perform a random draw
-        UtilEjml.shuffle(open,open.length,nz_total,rand);
+        UtilEjml.shuffle(open,open.length,0,nz_total,rand);
+        Arrays.sort(open,0,nz_total);
 
         // construct the matrix
         DMatrixSparseTriplet A = new DMatrixSparseTriplet(N,N,nz_total*2);
@@ -163,6 +166,7 @@ public class RandomMatrices_DSCC {
         int off_total = nz_total-diag_total;
 
         int[] selected = UtilEjml.shuffled(N-diag_total, off_total, rand);
+        Arrays.sort(selected,0,off_total);
 
         DMatrixSparseCSC L = new DMatrixSparseCSC(dimen,dimen,nz_total);
 
@@ -270,6 +274,7 @@ er      * @param minFill minimum fill fraction
         }
 
         int []s = UtilEjml.shuffled(A.numRows,rand);
+        Arrays.sort(s);
 
         for (int col = 0; col < A.numCols; col++) {
             A.set(s[col],col,rand.nextDouble()+0.5);

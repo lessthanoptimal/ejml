@@ -36,36 +36,6 @@ public class TestRandomMatrices_DSCC {
     int numCols = 7;
 
     @Test
-    public void shuffle() {
-        int m[] = new int[200];
-        for (int i = 0; i < m.length; i++) {
-            m[i] = i;
-        }
-        int N = m.length-5;
-        UtilEjml.shuffle(m,N,40,rand);
-
-        // end should be untouched
-        for (int i = N; i < m.length; i++) {
-            assertEquals(i,m[i]);
-        }
-
-        // should be sorted
-        for (int i = 1; i < 40; i++) {
-            assertTrue(m[i-1] < m[i]);
-        }
-
-        // the order should be drastically changed
-        int numOrdered = 0;
-        for (int i = 0; i < 40; i++) {
-            if( m[i] == i ) {
-                numOrdered++;
-            }
-        }
-        assertTrue(numOrdered<10);
-
-    }
-
-    @Test
     public void uniform() {
 
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,10,-1,1,rand);

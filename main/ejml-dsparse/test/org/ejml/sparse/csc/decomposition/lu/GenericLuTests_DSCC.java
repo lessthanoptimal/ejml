@@ -62,6 +62,8 @@ public abstract class GenericLuTests_DSCC {
     }
 
     private void checkSolution(DMatrixSparseCSC A, LUDecomposition_F64<DMatrixSparseCSC> lu) {
+        System.out.println("00000000000000=-------------------------------------------");
+
         DMatrixSparseCSC Acpy = A.copy();
         assertTrue(lu.decompose(A));
         assertFalse(lu.isSingular());
@@ -79,9 +81,11 @@ public abstract class GenericLuTests_DSCC {
         DMatrixSparseCSC found = new DMatrixSparseCSC(PL.numCols,U.numCols,0);
         CommonOps_DSCC.mult(PL,U,found);
 
-        System.out.println("00000000000000=-------------------------------------------");
-        Acpy.print();
-        found.print();
+        P.print();
+//        L.print();
+//        U.print();
+//        Acpy.print();
+//        found.print();
         EjmlUnitTests.assertEquals(Acpy,found,UtilEjml.TEST_F64);
     }
 

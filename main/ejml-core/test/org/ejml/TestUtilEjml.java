@@ -87,7 +87,29 @@ public class TestUtilEjml {
         assertEquals(1.682750  , m.get(0,1) , UtilEjml.TEST_F64);
         assertEquals(0         , m.get(1,0) , UtilEjml.TEST_F64);
         assertEquals(-1.880739 , m.get(1,1) , UtilEjml.TEST_F64);
+    }
 
+    @Test
+    public void shuffle() {
+        int m[] = new int[200];
+        for (int i = 0; i < m.length; i++) {
+            m[i] = i;
+        }
+        int N = m.length-5;
+        UtilEjml.shuffle(m,N,0,40,rand);
 
+        // end should be untouched
+        for (int i = N; i < m.length; i++) {
+            assertEquals(i,m[i]);
+        }
+
+        // the order should be drastically changed
+        int numOrdered = 0;
+        for (int i = 0; i < 40; i++) {
+            if( m[i] == i ) {
+                numOrdered++;
+            }
+        }
+        assertTrue(numOrdered<10);
     }
 }

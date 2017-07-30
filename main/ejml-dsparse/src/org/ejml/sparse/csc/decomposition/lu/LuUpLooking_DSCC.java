@@ -175,6 +175,13 @@ public class LuUpLooking_DSCC
             L.nz_rows[p] = pinv[ L.nz_rows[p]];
         }
 
+        System.out.println("  reduce "+(reduceFill!=null));
+        System.out.print("  pinv[ ");
+        for (int i = 0; i < A.numCols; i++) {
+            System.out.printf("%2d ",pinv[i]);
+        }
+        System.out.println(" ]");
+
         return true;
     }
 
@@ -203,8 +210,8 @@ public class LuUpLooking_DSCC
     public DMatrixSparseCSC getPivot(DMatrixSparseCSC pivot) { // todo rename to pivot column?
         if( pivot == null )
             pivot = new DMatrixSparseCSC(L.numCols,L.numCols,0);
-        CommonOps_DSCC.permutationMatrix(pinv,L.numCols,pivot);
-
+        pivot.reshape(L.numCols,L.numCols,L.numCols);
+        CommonOps_DSCC.permutationMatrix(pinv, false, L.numCols,pivot);
         return pivot;
     }
 
