@@ -123,7 +123,7 @@ public class TriangularSolver_DSCC {
         X.indicesSorted = false;
 
         for (int colB = 0; colB < B.numCols; colB++) {
-            int top = solve(G,lower,B,colB, x, g_xi, g_w);
+            int top = solve(G,lower,B,colB, x, null,g_xi, g_w);
 
             int nz_count = X.numRows-top;
             if( X.nz_values.length < X.nz_length + nz_count) {
@@ -139,21 +139,24 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Computes the solution to a triangular system.  Only a single column in B is solved for.
+     * Computes the solution to a triangular system with (optional) pivots.  Only a single column in B is solved for. Diagonals
+     * in G are assumed to filled in and either the first or last entry for lower or upper triangle, respectively.
      *
-     * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero and last
+     *              or first entry in a column.  Not modified.
      * @param lower true for lower triangular and false for upper
      * @param B     (Input) Matrix.  Not modified.
      * @param colB  The column in B which is solved for
      * @param x     (Output) Storage for dense solution.  length = G.numRows
+     * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_xi  (Optional) Storage for workspace.
      * @param g_w   (Optional) Storage for workspace.
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
     public static int solve(DMatrixSparseCSC G, boolean lower,
-                            DMatrixSparseCSC B, int colB, double x[], IGrowArray g_xi, IGrowArray g_w) {
+                            DMatrixSparseCSC B, int colB, double x[], int pinv[], IGrowArray g_xi, IGrowArray g_w) {
         int[] xi = adjust(g_xi,G.numRows);
-        int top = searchNzRowsInB(G, B, colB, xi, g_w);
+        int top = searchNzRowsInB(G, B, colB, pinv, xi, g_w);
 
         // sparse clear of x
         for( int p = top; p < G.numRows; p++ )
@@ -167,17 +170,18 @@ public class TriangularSolver_DSCC {
 
         for (int px = top; px < G.numRows; px++) {
             int j = xi[px];
-            if( j < 0 )
+            int J = pinv != null ? pinv[j] : j;
+            if( J < 0 )
                 continue;
             int p,q;
             if( lower ) {
-                x[j] /= G.nz_values[G.col_idx[j]];
-                p = G.col_idx[j]+1;
-                q = G.col_idx[j+1];
+                x[j] /= G.nz_values[G.col_idx[J]];
+                p = G.col_idx[J]+1;
+                q = G.col_idx[J+1];
             } else {
-                x[j] /= G.nz_values[G.col_idx[j+1]-1];
-                p = G.col_idx[j];
-                q = G.col_idx[j+1]-1;
+                x[j] /= G.nz_values[G.col_idx[J+1]-1];
+                p = G.col_idx[J];
+                q = G.col_idx[J+1]-1;
             }
             for(;p<q;p++) {
                 x[G.nz_rows[p]] -= G.nz_values[p]*x[j];
@@ -200,14 +204,18 @@ public class TriangularSolver_DSCC {
      * @param G    (Input) Lower triangular system matrix.  Diagonal elements are assumed to be not zero.  Not modified.
      * @param B    (Input) Matrix B. Not modified.
      * @param colB Column in B being solved for
+     * @param pinv (Input, Optional) Column pivots in G. Null if no pivots.
      * @param xi   (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
      * @param gwork workspace array used internally. Can be null.
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
-    public static int searchNzRowsInB(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int xi[], IGrowArray gwork) {
+    public static int searchNzRowsInB(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int pinv[],
+                                      int xi[], IGrowArray gwork) {
         if (xi.length < B.numRows)
             throw new IllegalArgumentException("xi must be at least this long: " + B.numRows);
 
+        // this is a change from csparse. CSparse marks an entry by modifying G then reverting it. This can cause
+        // weird unexplained behavior when people start using threads...
         int[] w = adjust(gwork,B.numRows * 2,B.numRows);
 
         // use 'w' as a marker to know which rows in B have been examined.  0 = unexamined and 1 = examined
@@ -219,7 +227,7 @@ public class TriangularSolver_DSCC {
             int rowB = B.nz_rows[i];
 
             if( w[rowB] == 0 ) {
-                top = searchNzRowsInB_DFS(rowB,G,top,xi,w);
+                top = searchNzRowsInB_DFS(rowB,G,top,pinv,xi,w);
             }
         }
 
@@ -230,7 +238,7 @@ public class TriangularSolver_DSCC {
      * Given the first row in B it performs a DFS seeing which elements in 'B' will be not zero.  A row=i in 'B' will
      * be not zero if any element in row=(j < i) in G is not zero
      */
-    private static int searchNzRowsInB_DFS(int rowB , DMatrixSparseCSC G , int top , int xi[], int w[] )
+    private static int searchNzRowsInB_DFS(int rowB , DMatrixSparseCSC G , int top , int pinv[], int xi[], int w[] )
     {
         int N = G.numRows;
         int head = 0; // put the selected row into the FILO stack
@@ -239,17 +247,18 @@ public class TriangularSolver_DSCC {
         while( head >= 0 ) {
             // the column in G being examined
             int G_col = xi[head];
-
+            int G_col_new = pinv != null ? pinv[G_col] : G_col;
             if( w[G_col] == 0) {
                 w[G_col] = 1;
-                w[N+head] = G.col_idx[G_col]; // mark which child in the loop below it's examining
+                // mark which child in the loop below it's examining
+                w[N+head] = G_col_new < 0 ? 0 : G.col_idx[G_col_new];
             }
 
             // See if there are any children which have yet to be examined
             boolean done = true;
 
             int idx0 = w[N+head];
-            int idx1 = G.col_idx[G_col+1];
+            int idx1 = G_col_new < 0 ? 0 : G.col_idx[G_col_new+1];
 
             for (int j = idx0; j < idx1; j++) {
                 int jrow = G.nz_rows[j];
@@ -265,7 +274,6 @@ public class TriangularSolver_DSCC {
                 head--;
                 xi[--top] = G_col;
             }
-
         }
         return top;
     }

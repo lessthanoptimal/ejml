@@ -64,8 +64,6 @@ public class CholeskyUpLooking_DSCC implements
     int []Pinv = new int[1]; // inverse permutation
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
 
-    // storage for determinant results
-
     public CholeskyUpLooking_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
         this.permutation = permutation;
     }
@@ -115,9 +113,8 @@ public class CholeskyUpLooking_DSCC implements
         int []s = adjust(gs,N);
         double []x = adjust(gx,N);
 
-        for (int k = 0; k < N; k++) {
-            c[k] = L.col_idx[k];
-        }
+        System.arraycopy(L.col_idx, 0, c, 0, N);
+
         for (int k = 0; k < N; k++) {
             //----  Nonzero pattern of L(k,:)
             int top = TriangularSolver_DSCC.searchNzRowsElim(C,k,parent,s,c);
@@ -197,7 +194,6 @@ public class CholeskyUpLooking_DSCC implements
 
     /**
      * Returns the inverse permutation unless none was created then null is returned
-     * @return
      */
     public int[] getPinv() {
         return permutation == null ? null : Pinv;

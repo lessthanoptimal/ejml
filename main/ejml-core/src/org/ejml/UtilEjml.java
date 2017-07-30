@@ -25,6 +25,7 @@ import org.ejml.ops.ConvertDMatrixSparse;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
 
 
 /**
@@ -185,5 +186,24 @@ public class UtilEjml {
         DMatrixRMaj tmp = parse_DDRM(s,numColumns);
 
         return ConvertDMatrixSparse.convert(tmp,(DMatrixSparseCSC)null);
+    }
+
+    public static int[] shuffled( int N , Random rand ) {
+        int l[] = new int[N];
+        for (int i = 0; i < N; i++) {
+            l[i] = i;
+        }
+        shuffle(l,0,N,rand);
+        return l;
+    }
+
+    public static void shuffle( int list[] , int start , int end , Random rand ) {
+        int N = end - start;
+        for (int i = 0; i < N; i++) {
+            int selected = rand.nextInt(N-i)+i;
+            int v = list[i];
+            list[i] = list[selected];
+            list[selected] = v;
+        }
     }
 }

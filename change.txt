@@ -37,6 +37,7 @@ Date format: year/month/day
   * Cholesky - Up Looking
 - Sparse Triangular Solver
   * Added solveTranL()
+  * Added column pivots to one of the solvers
 - Data Types
   * Added DScalar and IScalar
 

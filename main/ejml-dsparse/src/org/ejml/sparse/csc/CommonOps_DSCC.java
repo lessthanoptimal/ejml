@@ -375,6 +375,11 @@ public class CommonOps_DSCC {
             inverse[original[i]] = i;
         }
     }
+    public static int[] permutationInverse( int []original , int length ) {
+        int inverse[] = new int[length];
+        permutationInverse(original,inverse,length);
+        return inverse;
+    }
 
     /**
      * Applies the row permutation specified by the vector to the input matrix and save the results
