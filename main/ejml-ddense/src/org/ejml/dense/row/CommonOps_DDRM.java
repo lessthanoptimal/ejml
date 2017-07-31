@@ -537,7 +537,7 @@ public class CommonOps_DDRM {
         LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(a.numRows,a.numCols);
 
         // make sure the inputs 'a' and 'b' are not modified
-        solver = new LinearSolverSafe<DMatrixRMaj>(solver);
+        solver = new LinearSolverSafe<>(solver);
 
         if( !solver.setA(a) )
             return false;
@@ -623,7 +623,7 @@ public class CommonOps_DDRM {
 
     /**
      * Returns the determinant of the matrix.  If the inverse of the matrix is also
-     * needed, then using {@link org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM} directly (or any
+     * needed, then using {@link org.ejml.interfaces.decomposition.LUDecomposition_F64} directly (or any
      * similar algorithm) can be more efficient.
      *
      * @param mat The matrix whose determinant is to be computed.  Not modified.
@@ -631,7 +631,6 @@ public class CommonOps_DDRM {
      */
     public static double det( DMatrixRMaj mat )
     {
-
         int numCol = mat.getNumCols();
         int numRow = mat.getNumRows();
 

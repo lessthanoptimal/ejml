@@ -22,12 +22,10 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
 
@@ -95,12 +93,10 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
 
                     if( !solver.modifiesA() ) {
-                        A.sortIndices(null);
-                        A_cpy.sortIndices(null);
-                        assertTrue(MatrixFeatures_DSCC.isEquals(A, A_cpy, equalityTolerance));
+                        EjmlUnitTests.assertEquals(A, A_cpy, equalityTolerance);
                     }
                     if( !solver.modifiesB() ) {
-                        assertTrue(MatrixFeatures_DDRM.isEquals(B, B_cpy, equalityTolerance));
+                        EjmlUnitTests.assertEquals(B, B_cpy, equalityTolerance);
                     }
                 }
             }

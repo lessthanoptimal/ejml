@@ -30,6 +30,8 @@ Date format: year/month/day
   * Added concatRows()
   * Added extractColumn()
   * Added dotInnerColumns()
+  * Added solve()
+  * Added det()
   * Fixed bugs
 - CommonOps_DDRM
   * Added permuteRowInv()
@@ -59,6 +61,8 @@ Sparse Matrix
   * Specify row and column pivots.
   * hasRowPivots() ...
 - TODO Unify linear solver interface?
+- TODO Add fill reduce algorithms
+  * Update CommonOps.solve() to specify a reasonable general purpose algorithm
 
 ----- Version 0.31
 

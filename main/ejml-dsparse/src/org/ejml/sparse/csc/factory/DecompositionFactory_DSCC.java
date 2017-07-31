@@ -44,7 +44,7 @@ public class DecompositionFactory_DSCC {
         return new QrLeftLookingDecomposition_DSCC(cp);
     }
 
-    public static LUDecomposition_F64 lu(FillReducing permutation) {
+    public static LUDecomposition_F64<DMatrixSparseCSC> lu(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         return new LuUpLooking_DSCC(cp);
     }

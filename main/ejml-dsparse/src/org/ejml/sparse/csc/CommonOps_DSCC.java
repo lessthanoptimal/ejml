@@ -22,6 +22,11 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.sparse.FillReducing;
+import org.ejml.sparse.LinearSolverSparse;
+import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
+import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
@@ -718,6 +723,80 @@ public class CommonOps_DSCC {
                                           IGrowArray gw , DGrowArray gx)
     {
         return ImplSparseSparseMult_DSCC.dotInnerColumns(A,colA,B,colB,gw,gx);
+    }
+
+    /**
+     * <p>
+     * Solves for x in the following equation:<br>
+     * <br>
+     * A*x = b
+     * </p>
+     *
+     * <p>
+     * If the system could not be solved then false is returned.  If it returns true
+     * that just means the algorithm finished operating, but the results could still be bad
+     * because 'A' is singular or nearly singular.
+     * </p>
+     *
+     * <p>
+     * If repeat calls to solve are being made then one should consider using {@link LinearSolverFactory_DSCC}
+     * instead.
+     * </p>
+     *
+     * <p>
+     * It is ok for 'b' and 'x' to be the same matrix.
+     * </p>
+     *
+     * @param a (Input) A matrix that is m by n. Not modified.
+     * @param b (Input) A matrix that is n by k. Not modified.
+     * @param x (Output) A matrix that is m by k. Modified.
+     *
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean solve(DMatrixSparseCSC a ,
+                                DMatrixRMaj b ,
+                                DMatrixRMaj x )
+    {
+        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
+        if( a.numRows > a.numCols ) {
+            solver = LinearSolverFactory_DSCC.qr(FillReducing.NONE);// todo specify a filling that makes sense
+        } else {
+            solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
+        }
+
+        // Ensure that the input isn't modified
+        if( solver.modifiesA() )
+            a = a.copy();
+
+        if( solver.modifiesB() )
+            b = b.copy();
+
+        // decompose then solve the matrix
+        if( !solver.setA(a) )
+            return false;
+
+        solver.solve(b, x);
+        return true;
+    }
+
+    /**
+     * Returns the determinant of the matrix.  If the inverse of the matrix is also
+     * needed, then using {@link org.ejml.interfaces.decomposition.LUDecomposition_F64} directly (or any
+     * similar algorithm) can be more efficient.
+     *
+     * @param A The matrix whose determinant is to be computed.  Not modified.
+     * @return The determinant.
+     */
+    public static double det( DMatrixSparseCSC A ) {
+        LUDecomposition_F64<DMatrixSparseCSC> alg = DecompositionFactory_DSCC.lu(FillReducing.NONE);
+
+        if( alg.inputModified() ) {
+            A = A.copy();
+        }
+
+        if( !alg.decompose(A) )
+            return 0.0;
+        return alg.computeDeterminant().real;
     }
 }
 

@@ -1517,6 +1517,5 @@ public class TestCommonOps_DDRM {
                 assertEquals(A.get(i,j),B.get(pinv[i],j),UtilEjml.TEST_F64);
             }
         }
-
     }
 }

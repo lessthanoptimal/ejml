@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
-import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
@@ -56,27 +55,8 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz,rand);
 
-        // make sure this isn't a pathological case
-        for (int i = 0; i < cols; i++) {
-            A.set(i,i,1.2);
-        }
+        RandomMatrices_DSCC.ensureNotSingular(A,rand);
 
-        // permute the columns to make it not trivial
-        int permCol[] = new int[cols];
-        for (int i = 0; i < cols; i++) {
-            permCol[i] = i;
-        }
-        // shuffle the order to make it not trivial to solve
-        for (int i = 0; i < cols; i++) {
-            int selected = rand.nextInt(cols-i)+i;
-            int v = permCol[i];
-            permCol[i] = permCol[selected];
-            permCol[selected] = v;
-        }
-
-        DMatrixSparseCSC A_perm = new DMatrixSparseCSC(rows,cols,nz);
-        CommonOps_DSCC.permute(null,A,permCol,A_perm);
-
-        return A_perm;
+        return A;
     }
 }

@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
  */
 public class TestCommonOps_DSCC {
 
-    Random rand = new Random(234);
+    private Random rand = new Random(234);
 
     @Test
     public void isRowOrderValid() {
@@ -259,7 +259,7 @@ public class TestCommonOps_DSCC {
         identity_r_c(CommonOps_DSCC.identity(10,10));
     }
 
-    public void identity_r_c( DMatrixSparseCSC A) {
+    private void identity_r_c( DMatrixSparseCSC A) {
         assertTrue(CommonOps_DSCC.checkSortedFlag(A));
         for (int row = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++) {
@@ -629,5 +629,30 @@ public class TestCommonOps_DSCC {
         double expected = ImplSparseSparseMult_DSCC.dotInnerColumns(A,1,B,3,null,null);
 
         assertEquals(expected,found,UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void solve() {
+//        solve(5,5);
+        solve(10,5);
+    }
+    private void solve( int m , int n ) {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m,n,m*n/2,rand);
+        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+        DMatrixRMaj X = RandomMatrices_DDRM.rectangle(n,5,rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(n,5,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m,5,rand);
+
+        CommonOps_DSCC.mult(A,expected,B);
+        assertTrue(CommonOps_DSCC.solve(A,B,X));
+
+        EjmlUnitTests.assertEquals(expected, X, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void det() {
+        DMatrixSparseCSC A = UtilEjml.parse_DSCC("7 2 3 0 2 0 6 3 9",3);
+
+        assertEquals(90, CommonOps_DSCC.det(A), UtilEjml.TEST_F64);
     }
 }
