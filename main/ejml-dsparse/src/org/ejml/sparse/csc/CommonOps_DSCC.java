@@ -798,5 +798,26 @@ public class CommonOps_DSCC {
             return 0.0;
         return alg.computeDeterminant().real;
     }
+
+    /**
+     * Copies all elements from input into output which are &gt; tol.
+     * @param input (Input) input matrix. Not modified.
+     * @param output (Output) Output matrix. Modified and shaped to match input.
+     * @param tol Tolerance for defining zero
+     */
+    public static void removeZeros( DMatrixSparseCSC input , DMatrixSparseCSC  output , double tol ) {
+        ImplCommonOps_DSCC.removeZeros(input,output,tol);
+    }
+
+    /**
+     * Removes all elements from the matrix that are &gt; tol. The modification is done in place and no temporary
+     * storage is declared.
+     *
+     * @param A (Input) input matrix. Not modified.
+     * @param tol Tolerance for defining zero
+     */
+    public static void removeZeros( DMatrixSparseCSC A , double tol ) {
+        ImplCommonOps_DSCC.removeZeros(A, tol);
+    }
 }
 

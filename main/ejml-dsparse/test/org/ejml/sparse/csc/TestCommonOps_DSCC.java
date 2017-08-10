@@ -655,4 +655,42 @@ public class TestCommonOps_DSCC {
 
         assertEquals(90, CommonOps_DSCC.det(A), UtilEjml.TEST_F64);
     }
+
+    /**
+     * A more rigorous test is done in the Impl class
+     */
+    @Test
+    public void removeZeros_two() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
+        DMatrixSparseCSC B = new DMatrixSparseCSC(1,1,1);
+
+        CommonOps_DSCC.removeZeros(A,B,0.01);
+
+        assertEquals(A.numRows,B.numRows);
+        assertEquals(A.numCols,B.numCols);
+        for (int j = 0; j < A.numRows; j++) {
+            for (int k = 0; k < A.numRows; k++) {
+                double val = B.get(j,k);
+                assertTrue("val = "+val,Math.abs(val) > 0.01 || val == 0);
+            }
+        }
+    }
+
+    /**
+     * A more rigorous test is done in the Impl class
+     */
+    @Test
+    public void removeZeros_one() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
+
+        CommonOps_DSCC.removeZeros(A,0.01);
+
+        for (int j = 0; j < A.numRows; j++) {
+            for (int k = 0; k < A.numRows; k++) {
+                double val = A.get(j,k);
+                assertTrue("val = "+val,Math.abs(val) > 0.01 || val == 0);
+            }
+        }
+    }
+
 }

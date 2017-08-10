@@ -162,4 +162,46 @@ public class ImplCommonOps_DSCC {
         }
         C.col_idx[C.numCols] = C.nz_length;
     }
+
+    public static void removeZeros( DMatrixSparseCSC input , DMatrixSparseCSC  output , double tol ) {
+        output.reshape(input.numRows, input.numCols, input.nz_length);
+        output.nz_length = 0;
+
+        for (int i = 0; i < input.numCols; i++) {
+            output.col_idx[i] = output.nz_length;
+
+            int idx0 = input.col_idx[i];
+            int idx1 = input.col_idx[i+1];
+
+            for (int j = idx0; j < idx1; j++) {
+                double val = input.nz_values[j];
+                if( Math.abs(val) > tol ) {
+                    output.nz_rows[output.nz_length] = input.nz_rows[j];
+                    output.nz_values[output.nz_length++] = val;
+                }
+            }
+        }
+        output.col_idx[output.numCols] = output.nz_length;
+    }
+
+    public static void removeZeros( DMatrixSparseCSC A , double tol ) {
+
+        int offset = 0;
+        for (int i = 0; i < A.numCols; i++) {
+            int idx0 = A.col_idx[i]+offset;
+            int idx1 = A.col_idx[i+1];
+
+            for (int j = idx0; j < idx1; j++) {
+                double val = A.nz_values[j];
+                if( Math.abs(val) > tol ) {
+                    A.nz_rows[j-offset] = A.nz_rows[j];
+                    A.nz_values[j-offset] = val;
+                } else {
+                    offset++;
+                }
+            }
+            A.col_idx[i+1] -= offset;
+        }
+        A.nz_length -= offset;
+    }
 }
