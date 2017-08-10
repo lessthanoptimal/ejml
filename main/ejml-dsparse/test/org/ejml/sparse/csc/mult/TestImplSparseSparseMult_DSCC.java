@@ -118,7 +118,12 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,5,elementsB,-1,1,rand);
         DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
 
-        ImplSparseSparseMult_DSCC.multTransA(a,b,c);
+        System.out.println("------------------");
+        a.print();
+        b.print();
+
+
+        ImplSparseSparseMult_DSCC.multTransA(a,b,c,null,null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
@@ -126,6 +131,9 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numCols, dense_b.numCols);
 
         CommonOps_DDRM.multTransA(dense_a, dense_b, dense_c);
+
+        c.print();
+        dense_c.print();
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {

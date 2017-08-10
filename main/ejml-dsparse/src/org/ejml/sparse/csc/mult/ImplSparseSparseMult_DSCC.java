@@ -84,6 +84,79 @@ public class ImplSparseSparseMult_DSCC {
 
     }
 
+    /**
+     * Performs matrix multiplication.  C = A<sup>T</sup></sup>*B
+     *
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                                  IGrowArray gw, DGrowArray gx )
+    {
+        double []x = adjust(gx, A.numRows);
+        int []w = adjust(gw, A.numRows, A.numRows);
+
+        C.growMaxLength(A.nz_length+B.nz_length,false);
+        C.indicesSorted = false;
+        C.nz_length = 0;
+        C.col_idx[0] = 0;
+
+        int idxB0 = B.col_idx[0];
+        for (int bj = 1; bj <= B.numCols; bj++) {
+            int idxB1 = B.col_idx[bj];
+            C.col_idx[bj] = C.nz_length;
+
+            if (idxB0 == idxB1) {
+                continue;
+            }
+
+            // convert the column of B into a dense format and mark which rows are used
+            for (int bi = idxB0; bi < idxB1; bi++) {
+                int rowB = B.nz_rows[bi];
+                x[rowB] = B.nz_values[bi];
+                w[rowB] = bj;
+            }
+
+            // C(colA,colB) = A(:,colA)*B(:,colB)
+            for (int colA = 0; colA < A.numCols; colA++) {
+                int idxA0 = A.col_idx[colA];
+                int idxA1 = A.col_idx[colA + 1];
+
+                double sum = 0;
+                for (int ai = idxA0; ai < idxA1; ai++) {
+                    int rowA = A.nz_rows[ai];
+                    if (w[rowA] == bj) {
+                        sum += x[rowA] * A.nz_values[ai];
+                    }
+                }
+
+                if (sum != 0) {
+                    C.nz_values[C.nz_length] = sum;
+                    C.nz_rows[C.nz_length++] = colA;
+                }
+            }
+            C.col_idx[bj] = C.nz_length;
+            idxB0 = idxB1;
+        }
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A*B<sup>T</sup></sup>
+     *
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                                  IGrowArray gw, DGrowArray gx ) {
+
+    }
+
 
     /**
      * Performs the performing operation x = x + A(:,i)*alpha
@@ -149,14 +222,6 @@ public class ImplSparseSparseMult_DSCC {
     }
 
     // TODO replace with a version that doesn't transpose a matrx
-    public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
-        DMatrixSparseCSC A_tran = new DMatrixSparseCSC(A.numCols,A.numRows,A.nz_length);
-        IGrowArray gw = new IGrowArray();
-        CommonOps_DSCC.transpose(A,A_tran,gw);
-
-        mult(A_tran,B,C,gw,null);
-    }
-
     public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
         DMatrixSparseCSC B_tran = new DMatrixSparseCSC(B.numCols,B.numRows,B.nz_length);
         IGrowArray gw = new IGrowArray();

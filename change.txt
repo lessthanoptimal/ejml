@@ -45,7 +45,6 @@ Date format: year/month/day
   * Added DScalar and IScalar
 
 Sparse Matrix
-- TODO multTransA  <-- place holders are there right now
 - TODO multTransB  <-- place holders are there right now
 - TODO Compare QR code dense and sparse. See sparse notes
 - TODO Stability Tests for Sparse Solvers

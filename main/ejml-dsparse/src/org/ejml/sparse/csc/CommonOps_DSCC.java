@@ -149,7 +149,7 @@ public class CommonOps_DSCC {
         if( A.numCols != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplSparseSparseMult_DSCC.multTransA(A,B,C);
+        ImplSparseSparseMult_DSCC.multTransA(A,B,C,gw,gx);
     }
 
     public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
