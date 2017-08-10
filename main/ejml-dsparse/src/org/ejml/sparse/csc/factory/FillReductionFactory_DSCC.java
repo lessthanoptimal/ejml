@@ -18,28 +18,39 @@
 
 package org.ejml.sparse.csc.factory;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 
+import java.util.Random;
+
 /**
  * @author Peter Abeles
  */
 public class FillReductionFactory_DSCC {
+    public static Random rand = new Random(234234);
+
     public static ComputePermutation<DMatrixSparseCSC> create(FillReducing type ) {
         switch( type ) {
             case NONE:
                 return null;
 
-            case IDENTITY:
+            case RANDOM:
                 return new ComputePermutation<DMatrixSparseCSC>() {
                     @Override
                     public void process(DMatrixSparseCSC m, IGrowArray perm) {
+                        Random _rand;
+
+                        synchronized (rand) {
+                            _rand = new Random(rand.nextInt());
+                        }
                         perm.reshape(m.numRows);
                         for (int i = 0; i <m.numRows; i++) {
                             perm.data[i] = i;
                         }
+                        UtilEjml.shuffle(perm.data,perm.length,0,perm.length,_rand);
                     }
                 };
 

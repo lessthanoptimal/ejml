@@ -45,9 +45,6 @@ Date format: year/month/day
   * Added DScalar and IScalar
 
 Sparse Matrix
-- TODO Add sparse linear solvers to CommonOps
-- TODO change identity fill reduction to test. swap every other row. More rigorous of a test
-  * Should should break some stuff. LU for sure
 - TODO multTransA  <-- place holders are there right now
 - TODO multTransB  <-- place holders are there right now
 - TODO Compare QR code dense and sparse. See sparse notes
@@ -60,7 +57,7 @@ Sparse Matrix
   * Add getPivotVectors()
   * Specify row and column pivots.
   * hasRowPivots() ...
-- TODO Unify linear solver interface?
+- TODO Unify sparse and dense linear solver interface?
 - TODO Add fill reduce algorithms
   * Update CommonOps.solve() to specify a reasonable general purpose algorithm
 

@@ -44,8 +44,8 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
     @Override
     public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
-        CholeskyUpLooking_DSCC cholesky = new CholeskyUpLooking_DSCC(cp);
-        return new LinearSolverCholesky_DSCC(cholesky);
+        CholeskyUpLooking_DSCC cholesky = new CholeskyUpLooking_DSCC();
+        return new LinearSolverCholesky_DSCC(cholesky,cp);
     }
 
     @Override

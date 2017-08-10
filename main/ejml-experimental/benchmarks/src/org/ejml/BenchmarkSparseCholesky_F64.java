@@ -47,7 +47,7 @@ public class BenchmarkSparseCholesky_F64 {
 
     public static long sparse( DMatrixSparseCSC A , int numTrials) {
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = new CholeskyUpLooking_DSCC(null);
+        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = new CholeskyUpLooking_DSCC();
 
         long prev = System.currentTimeMillis();
 

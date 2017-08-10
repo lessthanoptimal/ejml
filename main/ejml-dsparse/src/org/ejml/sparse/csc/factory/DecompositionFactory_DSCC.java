@@ -34,9 +34,8 @@ import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
  * @author Peter Abeles
  */
 public class DecompositionFactory_DSCC {
-    public static CholeskyDecomposition_F64 cholesky(FillReducing permutation) {
-        ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
-        return new CholeskyUpLooking_DSCC(cp);
+    public static CholeskyDecomposition_F64 cholesky() {
+        return new CholeskyUpLooking_DSCC();
     }
 
     public static QRDecomposition<DMatrixSparseCSC> qr(FillReducing permutation) {

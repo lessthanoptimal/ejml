@@ -22,9 +22,11 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
+import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
@@ -38,16 +40,20 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     CholeskyUpLooking_DSCC cholesky;
 
+    ApplyFillReductionPermutation reduce;
+
     DGrowArray gb = new DGrowArray();
     DGrowArray gx = new DGrowArray();
 
-    public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky) {
+    public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , ComputePermutation<DMatrixSparseCSC> fillReduce) {
         this.cholesky = cholesky;
+        this.reduce = new ApplyFillReductionPermutation(fillReduce);
     }
 
     @Override
     public boolean setA(DMatrixSparseCSC A) {
-        return cholesky.decompose(A);
+        DMatrixSparseCSC C = reduce.apply(A);
+        return cholesky.decompose(C);
     }
 
     @Override
@@ -75,7 +81,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
         double[] b = adjust(gb,N);
         double[] x = adjust(gx,N);
 
-        int[] Pinv = cholesky.getPinv();
+        int[] Pinv = reduce.getPinv();
 
         for (int col = 0; col < B.numCols; col++) {
             int index = col;
@@ -95,7 +101,6 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
             for( int i = 0; i < N; i++ , index += X.numCols ) X.data[index] = b[i];
         }
     }
-
 
     @Override
     public boolean modifiesA() {

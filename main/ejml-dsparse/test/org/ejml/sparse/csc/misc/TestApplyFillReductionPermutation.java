@@ -16,20 +16,18 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse;
+package org.ejml.sparse.csc.misc;
+
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
- * Different types of fill in reducing techniques that can be selected
- *
  * @author Peter Abeles
  */
-public enum FillReducing {
-    /**
-     * No fill reduction permutation will be applied
-     */
-    NONE,
-    /**
-     * A random permutation is applied. Only use for testing purposes.
-     */
-    RANDOM
+public class TestApplyFillReductionPermutation {
+    @Test
+    public void stuff() {
+        fail("implement");
+    }
 }

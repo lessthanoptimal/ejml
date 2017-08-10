@@ -37,8 +37,9 @@ import org.ejml.sparse.csc.linsol.qr.LinearSolverQrLeftLooking_DSCC;
  */
 public class LinearSolverFactory_DSCC {
     public LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> cholesky(FillReducing permutation) {
-        CholeskyUpLooking_DSCC chol = (CholeskyUpLooking_DSCC)DecompositionFactory_DSCC.cholesky(permutation);
-        return new LinearSolverCholesky_DSCC(chol);
+        ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
+        CholeskyUpLooking_DSCC chol = (CholeskyUpLooking_DSCC)DecompositionFactory_DSCC.cholesky();
+        return new LinearSolverCholesky_DSCC(chol,cp);
     }
 
     public static LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> qr(FillReducing permutation) {

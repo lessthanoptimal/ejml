@@ -23,9 +23,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.DecompositionSparseInterface;
-import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
@@ -44,13 +42,6 @@ public class CholeskyUpLooking_DSCC implements
 {
     private int N;
 
-    private ComputePermutation<DMatrixSparseCSC> permutation;
-
-    // storage for permuted A matrix
-    DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
-    // reference to Aperm or A
-    DMatrixSparseCSC C;
-
     // storage for decomposition
     DMatrixSparseCSC L = new DMatrixSparseCSC(1,1,0);
 
@@ -61,12 +52,7 @@ public class CholeskyUpLooking_DSCC implements
     int []parent = new int[1];
     int []post = new int[1];
     int []counts = new int[1];
-    int []Pinv = new int[1]; // inverse permutation
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
-
-    public CholeskyUpLooking_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
-        this.permutation = permutation;
-    }
 
     @Override
     public boolean decompose(DMatrixSparseCSC orig) {
@@ -75,24 +61,15 @@ public class CholeskyUpLooking_DSCC implements
 
         performSymbolic(orig);
 
-        return decompose();
+        return performDecomposition(orig);
     }
 
-    public void performSymbolic(DMatrixSparseCSC A ) {
+    public void performSymbolic(DMatrixSparseCSC A) {
         init(A.numCols);
 
-        if(permutation != null) {
-            IGrowArray P = new IGrowArray();
-            permutation.process(A,P);
-            CommonOps_DSCC.permutationInverse(P.data, Pinv,A.numRows);
-            CommonOps_DSCC.permuteSymmetric(A, Pinv, Aperm, gw);
-            C = Aperm;
-        } else {
-            C = A;
-        }
-        TriangularSolver_DSCC.eliminationTree(C,false,parent, gw);
+        TriangularSolver_DSCC.eliminationTree(A,false,parent, gw);
         TriangularSolver_DSCC.postorder(parent,N,post, gw);
-        columnCounter.process(C,parent,post,counts);
+        columnCounter.process(A,parent,post,counts);
         L.reshape(A.numRows,A.numCols,0);
         L.colsum(counts);
     }
@@ -103,12 +80,11 @@ public class CholeskyUpLooking_DSCC implements
             parent = new int[N];
             post = new int[N];
             counts = new int[N];
-            Pinv = new int[N];
             gw.reshape(3*N);
         }
     }
 
-    private boolean decompose() {
+    private boolean performDecomposition(DMatrixSparseCSC A) {
         int []c = adjust(gw,N);
         int []s = adjust(gs,N);
         double []x = adjust(gx,N);
@@ -117,17 +93,17 @@ public class CholeskyUpLooking_DSCC implements
 
         for (int k = 0; k < N; k++) {
             //----  Nonzero pattern of L(k,:)
-            int top = TriangularSolver_DSCC.searchNzRowsElim(C,k,parent,s,c);
+            int top = TriangularSolver_DSCC.searchNzRowsElim(A,k,parent,s,c);
 
             // x(0:k) is now zero
             x[k] = 0;
-            int idx0 = C.col_idx[k];
-            int idx1 = C.col_idx[k+1];
+            int idx0 = A.col_idx[k];
+            int idx1 = A.col_idx[k+1];
 
             // x = full(triu(C(:,k)))
             for (int p = idx0; p < idx1; p++) {
-                if( C.nz_rows[p] <= k) {
-                    x[C.nz_rows[p]] = C.nz_values[p];
+                if( A.nz_rows[p] <= k) {
+                    x[A.nz_rows[p]] = A.nz_values[p];
                 }
             }
             double d = x[k]; // d = C(k,k)
@@ -192,18 +168,12 @@ public class CholeskyUpLooking_DSCC implements
         return gx;
     }
 
-    /**
-     * Returns the inverse permutation unless none was created then null is returned
-     */
-    public int[] getPinv() {
-        return permutation == null ? null : Pinv;
-    }
 
     public DMatrixSparseCSC getL() {
         return L;
     }
 
-    public ComputePermutation<DMatrixSparseCSC> getPermutation() {
-        return permutation;
+    public IGrowArray getGw() {
+        return gw;
     }
 }

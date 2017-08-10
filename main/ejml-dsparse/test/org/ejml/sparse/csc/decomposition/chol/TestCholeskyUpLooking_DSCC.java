@@ -20,9 +20,6 @@ package org.ejml.sparse.csc.decomposition.chol;
 
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.sparse.ComputePermutation;
-import org.ejml.sparse.FillReducing;
-import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 
 public class TestCholeskyUpLooking_DSCC extends GenericCholeskyTests_DSCC {
 
@@ -31,8 +28,7 @@ public class TestCholeskyUpLooking_DSCC extends GenericCholeskyTests_DSCC {
     }
 
     @Override
-    public CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower, FillReducing permutation) {
-        ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
-        return new CholeskyUpLooking_DSCC(cp);
+    public CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower) {
+        return new CholeskyUpLooking_DSCC();
     }
 }

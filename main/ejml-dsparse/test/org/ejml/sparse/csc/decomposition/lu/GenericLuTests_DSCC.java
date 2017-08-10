@@ -38,7 +38,7 @@ public abstract class GenericLuTests_DSCC {
     Random rand = new Random(0x45478);
 
     protected FillReducing permTests[] =
-            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
+            new FillReducing[]{FillReducing.NONE, FillReducing.RANDOM};
 
     public abstract LUDecomposition_F64<DMatrixSparseCSC> create( FillReducing permutation );
 
