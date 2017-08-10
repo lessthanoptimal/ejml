@@ -39,6 +39,9 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
         canHandleWide = false;
         canHandleTall = false;
         canDecomposeZeros = false;
+
+        permutationTests =
+                new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY}; // todo add a cholesky specific
     }
 
     @Override

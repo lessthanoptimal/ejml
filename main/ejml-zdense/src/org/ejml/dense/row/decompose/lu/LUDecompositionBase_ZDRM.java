@@ -159,7 +159,7 @@ public abstract class LUDecompositionBase_ZDRM
         return upper;
     }
 
-    public ZMatrixRMaj getPivot(ZMatrixRMaj pivot ) {
+    public ZMatrixRMaj getRowPivot(ZMatrixRMaj pivot ) {
         return SpecializedOps_ZDRM.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 

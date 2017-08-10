@@ -24,6 +24,39 @@ import org.ejml.data.Matrix;
 /**
  * @author Peter Abeles
  */
-public interface ComputePermutation<T extends Matrix> {
-    void process( T m , IGrowArray permutation );
+public abstract class ComputePermutation<T extends Matrix> {
+
+    protected IGrowArray prow;
+    protected IGrowArray pcol;
+
+    public ComputePermutation( boolean hasRow , boolean hasCol ) {
+        if( hasRow )
+            prow = new IGrowArray();
+        if( hasCol )
+            pcol = new IGrowArray();
+    }
+
+    public abstract void process(T m );
+
+    /**
+     * Returns row permutation
+     */
+    public IGrowArray getRow() {
+        return prow;
+    }
+
+    /**
+     * Returns column permutation
+     */
+    public IGrowArray getColumn() {
+        return pcol;
+    }
+
+    public boolean hasRowPermutation() {
+        return prow != null;
+    }
+
+    public  boolean hasColumnPermutation() {
+        return pcol != null;
+    }
 }

@@ -93,7 +93,7 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     private void performDecomposition(DMatrixSparseCSC A) {
         int w[] = gwork.data;
-        int perm[] = applyReduce.getArrayP();
+        int permCol[] = applyReduce.getArrayQ();
         int parent[] = structure.getParent();
         int leftmost[] = structure.getLeftMost();
         // permutation that was done to ensure all rows have non-zero elements
@@ -115,7 +115,7 @@ public class QrLeftLookingDecomposition_DSCC implements
             w[k] = k;
             V.nz_rows[V.nz_length++] = k;                       // Add V(k,k) to V's pattern
             int top = n;
-            int col = perm != null ? perm[k] : k;
+            int col = permCol != null ? permCol[k] : k;
 
             int idx0 = A.col_idx[col];
             int idx1 = A.col_idx[col+1];
@@ -261,7 +261,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     public boolean isFillPermutated() {
-        return applyReduce.getFillReduce() != null;
+        return applyReduce.isApplied();
     }
 
     public boolean isSingular() {

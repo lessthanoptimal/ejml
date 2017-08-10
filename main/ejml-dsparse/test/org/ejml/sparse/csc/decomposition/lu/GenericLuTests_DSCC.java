@@ -38,7 +38,7 @@ public abstract class GenericLuTests_DSCC {
     Random rand = new Random(0x45478);
 
     protected FillReducing permTests[] =
-            new FillReducing[]{FillReducing.NONE, FillReducing.RANDOM};
+            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     public abstract LUDecomposition_F64<DMatrixSparseCSC> create( FillReducing permutation );
 
@@ -72,7 +72,7 @@ public abstract class GenericLuTests_DSCC {
 
         DMatrixSparseCSC L = lu.getLower(null);
         DMatrixSparseCSC U = lu.getUpper(null);
-        DMatrixSparseCSC P = lu.getPivot(null);
+        DMatrixSparseCSC P = lu.getRowPivot(null);
 
         DMatrixSparseCSC PL = new DMatrixSparseCSC(P.numRows,L.numCols,0);
         CommonOps_DSCC.multTransA(P,L,PL,null,null);
@@ -138,7 +138,7 @@ public abstract class GenericLuTests_DSCC {
 
             lu.getLower(L);
             lu.getUpper(U);
-            lu.getPivot(P);
+            lu.getRowPivot(P);
 
             assertTrue(CommonOps_DSCC.checkStructure(L));
             assertTrue(CommonOps_DSCC.checkStructure(U));

@@ -67,7 +67,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
 
         SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
-        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getRowPivot(null));
 
         EjmlUnitTests.assertEquals(octLower,L.matrix_F64(),UtilEjml.TEST_F64_SQ);
         EjmlUnitTests.assertEquals(octUpper,U.matrix_F64(),UtilEjml.TEST_F64_SQ);
@@ -89,7 +89,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
 
             SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
             SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
-            SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+            SimpleMatrix P = SimpleMatrix.wrap(alg.getRowPivot(null));
 
             DMatrixRMaj A_found = P.transpose().mult(L).mult(U).getMatrix();
             assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
@@ -169,7 +169,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
 
         SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
-        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getRowPivot(null));
 
         DMatrixRMaj A_found = P.mult(L).mult(U).getMatrix();
 
@@ -187,7 +187,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
 
         SimpleMatrix L = SimpleMatrix.wrap(alg.getLower(null));
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
-        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivot(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getRowPivot(null));
 
         DMatrixRMaj A_found = P.transpose().mult(L).mult(U).getMatrix();
 

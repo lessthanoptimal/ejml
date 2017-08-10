@@ -65,7 +65,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
 
         ZMatrixRMaj L = alg.getLower(null);
         ZMatrixRMaj U = alg.getUpper(null);
-        ZMatrixRMaj P = alg.getPivot(null);
+        ZMatrixRMaj P = alg.getRowPivot(null);
 
         ZMatrixRMaj P_tran = new ZMatrixRMaj(P.numCols,P.numRows);
         ZMatrixRMaj PL = new ZMatrixRMaj(P.numRows,P.numCols);
@@ -201,7 +201,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
 
         ZMatrixRMaj L = alg.getLower(null);
         ZMatrixRMaj U = alg.getUpper(null);
-        ZMatrixRMaj P = alg.getPivot(null);
+        ZMatrixRMaj P = alg.getRowPivot(null);
 
         ZMatrixRMaj P_tran  = new ZMatrixRMaj(P.numCols,P.numRows);
         ZMatrixRMaj PL      = new ZMatrixRMaj(P_tran.numRows,L.numCols);

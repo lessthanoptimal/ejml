@@ -89,7 +89,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param pivot Storage for the pivot matrix. If null then a new matrix is returned. Modified.
      * @return The pivot matrix.
      */
-    T getPivot( T pivot );
+    T getRowPivot(T pivot );
 
     /**
      * Returns true if the decomposition detected a singular matrix.  This check

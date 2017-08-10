@@ -40,7 +40,7 @@ public class TestQrLeftLookingDecomposition_DSCC {
 
     Random rand = new Random(234);
     protected FillReducing permutationTests[] =
-            new FillReducing[]{FillReducing.NONE, FillReducing.RANDOM};
+            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     @Test
     public void process_tall() {

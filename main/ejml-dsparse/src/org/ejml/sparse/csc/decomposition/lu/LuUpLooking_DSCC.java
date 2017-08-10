@@ -38,7 +38,7 @@ import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 public class LuUpLooking_DSCC
     implements LUDecomposition_F64<DMatrixSparseCSC>
 {
-    ApplyFillReductionPermutation applyReduce;
+    private ApplyFillReductionPermutation applyReduce;
 
     // storage for LU decomposition
     private DMatrixSparseCSC L = new DMatrixSparseCSC(0,0,0);
@@ -59,7 +59,7 @@ public class LuUpLooking_DSCC
     private boolean singular;
 
     public LuUpLooking_DSCC(ComputePermutation<DMatrixSparseCSC> reduceFill) {
-        this.applyReduce = new ApplyFillReductionPermutation(reduceFill,true);
+        this.applyReduce = new ApplyFillReductionPermutation(reduceFill,false);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public DMatrixSparseCSC getPivot(DMatrixSparseCSC pivot) { // todo rename to pivot column?
+    public DMatrixSparseCSC getRowPivot(DMatrixSparseCSC pivot) { // todo rename to pivot column?
         if( pivot == null )
             pivot = new DMatrixSparseCSC(L.numCols,L.numCols,0);
         pivot.reshape(L.numCols,L.numCols,L.numCols);

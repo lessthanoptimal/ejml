@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -26,8 +27,16 @@ import static org.junit.Assert.fail;
  * @author Peter Abeles
  */
 public class TestApplyFillReductionPermutation {
+    @Ignore
     @Test
-    public void stuff() {
+    public void symmetric() {
         fail("implement");
     }
+
+    @Ignore
+    @Test
+    public void non_symmetric() {
+        fail("implement");
+    }
+
 }

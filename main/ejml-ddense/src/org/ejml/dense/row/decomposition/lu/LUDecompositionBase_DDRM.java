@@ -139,7 +139,7 @@ public abstract class LUDecompositionBase_DDRM
         return upper;
     }
 
-    public DMatrixRMaj getPivot(DMatrixRMaj pivot ) {
+    public DMatrixRMaj getRowPivot(DMatrixRMaj pivot ) {
         return SpecializedOps_DDRM.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 

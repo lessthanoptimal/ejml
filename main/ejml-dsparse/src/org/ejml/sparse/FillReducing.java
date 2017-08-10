@@ -29,7 +29,11 @@ public enum FillReducing {
      */
     NONE,
     /**
-     * A random permutation is applied. Only use for testing purposes.
+     * TESTING ONLY. Completely random permutation
      */
-    RANDOM
+    RANDOM,
+    /**
+     * TESTING ONLY. Doesn't change the input.
+     */
+    IDENTITY
 }
