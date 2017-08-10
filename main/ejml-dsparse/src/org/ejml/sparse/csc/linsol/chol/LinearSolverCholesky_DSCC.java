@@ -47,7 +47,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , ComputePermutation<DMatrixSparseCSC> fillReduce) {
         this.cholesky = cholesky;
-        this.reduce = new ApplyFillReductionPermutation(fillReduce);
+        this.reduce = new ApplyFillReductionPermutation(fillReduce,true);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
         double[] b = adjust(gb,N);
         double[] x = adjust(gx,N);
 
-        int[] Pinv = reduce.getPinv();
+        int[] Pinv = reduce.getArrayPinv();
 
         for (int col = 0; col < B.numCols; col++) {
             int index = col;

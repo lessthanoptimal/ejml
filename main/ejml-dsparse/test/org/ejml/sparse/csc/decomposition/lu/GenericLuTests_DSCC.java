@@ -71,7 +71,7 @@ public abstract class GenericLuTests_DSCC {
         }
 
         DMatrixSparseCSC L = lu.getLower(null);
-        DMatrixSparseCSC U= lu.getUpper(null);
+        DMatrixSparseCSC U = lu.getUpper(null);
         DMatrixSparseCSC P = lu.getPivot(null);
 
         DMatrixSparseCSC PL = new DMatrixSparseCSC(P.numRows,L.numCols,0);

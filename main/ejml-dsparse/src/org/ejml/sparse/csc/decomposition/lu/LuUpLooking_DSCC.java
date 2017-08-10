@@ -25,6 +25,7 @@ import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 /**
@@ -37,11 +38,7 @@ import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 public class LuUpLooking_DSCC
     implements LUDecomposition_F64<DMatrixSparseCSC>
 {
-    // algorithm which computes the fill reduction permutation
-    private ComputePermutation<DMatrixSparseCSC> reduceFill;
-    private IGrowArray gq = new IGrowArray(); // storage for reduce fill's permutation
-    private IGrowArray gqinv = new IGrowArray();
-    private DMatrixSparseCSC Ap = new DMatrixSparseCSC(1,1,0); // permuated A matrix
+    ApplyFillReductionPermutation applyReduce;
 
     // storage for LU decomposition
     private DMatrixSparseCSC L = new DMatrixSparseCSC(0,0,0);
@@ -62,26 +59,13 @@ public class LuUpLooking_DSCC
     private boolean singular;
 
     public LuUpLooking_DSCC(ComputePermutation<DMatrixSparseCSC> reduceFill) {
-        this.reduceFill = reduceFill;
+        this.applyReduce = new ApplyFillReductionPermutation(reduceFill,true);
     }
 
     @Override
     public boolean decompose(DMatrixSparseCSC A) {
         initialize(A);
-
-        // Apply optional fill reduction permutation
-        DMatrixSparseCSC C;
-        if( reduceFill != null ) {
-            reduceFill.process(A,gq);
-            gqinv.reshape(gq.length);
-            CommonOps_DSCC.permutationInverse(gq.data, gqinv.data, gq.length);
-            CommonOps_DSCC.permuteRowInv(gqinv.data, A,Ap);
-            C = Ap;
-        } else {
-            C = A;
-        }
-
-        return performLU(C);
+        return performLU(applyReduce.apply(A));
     }
 
     private void initialize(DMatrixSparseCSC A) {
@@ -109,7 +93,7 @@ public class LuUpLooking_DSCC
 
     private boolean performLU(DMatrixSparseCSC A ) {
         int n = A.numRows;
-        int q[] = reduceFill != null ? gq.data : null;
+        int q[] = applyReduce.getArrayP();
 
         // main loop for computing L and U
         for (int k = 0; k < n; k++) {
@@ -123,7 +107,7 @@ public class LuUpLooking_DSCC
             if( U.nz_length+n > U.nz_values.length )
                 U.growMaxLength(2*U.nz_values.length+n, true);
 
-            int col = reduceFill != null ? q[k] : k;
+            int col = q != null ? q[k] : k;
             int top = TriangularSolver_DSCC.solve(L,true,A,col,x,pinv,gxi,gw);
             int []xi = gxi.data;
 
@@ -250,10 +234,10 @@ public class LuUpLooking_DSCC
     }
 
     public ComputePermutation<DMatrixSparseCSC> getReduceFill() {
-        return reduceFill;
+        return applyReduce.getFillReduce();
     }
 
     public int[] getReducePermutation() {
-        return gq.data;
+        return applyReduce.getArrayP();
     }
 }
