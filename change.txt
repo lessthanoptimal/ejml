@@ -29,7 +29,8 @@ Date format: year/month/day
   * Added concatRows()
   * Added extractColumn()
   * Added dotInnerColumns()
-  * Added solve()
+  * Added solve() dense
+  * Added invert() dense
   * Added det()
   * Added removeZeros()
   * Fixed bugs

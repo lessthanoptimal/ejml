@@ -27,6 +27,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.junit.Test;
 
@@ -633,7 +634,7 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void solve() {
-//        solve(5,5);
+        solve(5,5);
         solve(10,5);
     }
     private void solve( int m , int n ) {
@@ -647,6 +648,26 @@ public class TestCommonOps_DSCC {
         assertTrue(CommonOps_DSCC.solve(A,B,X));
 
         EjmlUnitTests.assertEquals(expected, X, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void invert() {
+        for( int m : new int[]{1,2,5,15,40}) {
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m, m, m * m / 4 + 1, rand);
+            RandomMatrices_DSCC.ensureNotSingular(A, rand);
+
+            DMatrixRMaj Ad = new DMatrixRMaj(m, m);
+            ConvertDMatrixStruct.convert(A, Ad);
+
+            DMatrixRMaj Ainv = new DMatrixRMaj(m, m);
+
+            assertTrue(CommonOps_DSCC.invert(A, Ainv));
+
+
+            DMatrixRMaj found = new DMatrixRMaj(m, m);
+            CommonOps_DDRM.mult(Ad, Ainv, found);
+            assertTrue(MatrixFeatures_DDRM.isIdentity(found, UtilEjml.TEST_F64));
+        }
     }
 
     @Test
