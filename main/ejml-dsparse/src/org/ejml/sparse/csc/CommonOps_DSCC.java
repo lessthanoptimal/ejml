@@ -128,9 +128,9 @@ public class CommonOps_DSCC {
     /**
      * Performs matrix multiplication.  C = A*B
      *
-     * @param A Matrix
-     * @param B Matrix
-     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param A (Input) Matrix. Not modified.
+     * @param B (Input) Matrix. Not modified.
+     * @param C (Output) Storage for results.  Data length is increased if increased if insufficient.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
@@ -152,13 +152,26 @@ public class CommonOps_DSCC {
         ImplSparseSparseMult_DSCC.multTransA(A,B,C,gw,gx);
     }
 
+    /**
+     * Performs matrix multiplication.  C = A*B<sup>T</sup>. B needs to be sorted and will be sorted if it
+     * has not already been sorted.
+     *
+     * @param A (Input) Matrix. Not modified.
+     * @param B (Input) Matrix. Value not modified but indicies will be sorted if not sorted already.
+     * @param C (Output) Storage for results.  Data length is increased if increased if insufficient.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     */
     public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                                   IGrowArray gw, DGrowArray gx )
     {
         if( A.numRows != C.numRows || B.numRows != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplSparseSparseMult_DSCC.multTransB(A,B,C);
+        if( !B.isIndicesSorted() )
+            B.sortIndices(null);
+
+        ImplSparseSparseMult_DSCC.multTransB(A,B,C,gw,gx);
     }
 
 

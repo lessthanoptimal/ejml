@@ -42,7 +42,7 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
 
     @Override
     public boolean isStructureValid(DMatrixSparse m) {
-        return true;
+        return CommonOps_DSCC.checkStructure((DMatrixSparseCSC)m);
     }
 
     @Test
@@ -103,5 +103,30 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         a.growMaxColumns(6,false);
         assertEquals(0,a.col_idx[0]);
         assertEquals(0,a.col_idx[1]);
+    }
+
+    /**
+     * The matrix is already sorted.  See if it is still sorted after set has been called.
+     */
+    @Test
+    public void set_sorted() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(4,5,0);
+        a.indicesSorted = true;
+
+        a.set(1,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+
+        a.set(0,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+
+        a.set(3,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+
+        a.set(2,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
     }
 }

@@ -150,7 +150,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(colsB, rowsB, b_nz, -1, 1, rand);
         DMatrixSparseCSC c = new DMatrixSparseCSC(rowsA, colsB, 0);
 
-        ImplSparseSparseMult_DSCC.multTransB(a, b, c);
+        ImplSparseSparseMult_DSCC.multTransB(a, b, c, null, null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a, (DMatrixRMaj) null);

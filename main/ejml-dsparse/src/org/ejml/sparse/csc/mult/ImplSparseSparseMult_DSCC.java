@@ -147,6 +147,61 @@ public class ImplSparseSparseMult_DSCC {
     }
 
     /**
+     * Performs matrix multiplication.  C = A*B<sup>T</sup></sup>
+     *
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                                  IGrowArray gw, DGrowArray gx ) {
+        if( !B.isIndicesSorted() )
+            throw new IllegalArgumentException("B must have its indices sorted.");
+        else if( !CommonOps_DSCC.checkIndicesSorted(B)) {
+            throw new IllegalArgumentException("Crap. Not really sorted");
+        }
+
+        double []x = adjust(gx, A.numRows);
+        int []w = adjust(gw, A.numRows+B.numCols, A.numRows);
+
+        C.growMaxLength(A.nz_length+B.nz_length,false);
+        C.indicesSorted = false;
+        C.nz_length = 0;
+        C.col_idx[0] = 0;
+
+        // initialize w is the first index in each column of B
+        int locationB = A.numRows;
+        System.arraycopy(B.col_idx,0,w,locationB,B.numCols);
+
+        for (int colC = 0; colC < B.numRows; colC++) {
+            C.col_idx[colC+1] = C.nz_length; // needs a value of B has nothing in the row
+
+            // find the column in the transposed B
+            int mark = colC+1;
+            for (int colB = 0; colB < B.numCols; colB++) {
+                int bi = w[locationB+colB];
+                if( bi < B.col_idx[colB+1]) {
+                    int row = B.nz_rows[bi];
+                    if( row == colC ) {
+                        multAddColA(A,colB,B.nz_values[bi],C,mark,x,w);
+                        w[locationB+colB]++;
+                    }
+                }
+            }
+
+            // take the values in the dense vector 'x' and put them into 'C'
+            int idxC0 = C.col_idx[colC];
+            int idxC1 = C.col_idx[colC+1];
+
+            for (int i = idxC0; i < idxC1; i++) {
+                C.nz_values[i] = x[C.nz_rows[i]];
+            }
+        }
+    }
+
+    /**
      * Performs the performing operation x = x + A(:,i)*alpha
      *
      * <p>NOTE: This is the same as cs_scatter() in csparse.</p>
@@ -207,15 +262,6 @@ public class ImplSparseSparseMult_DSCC {
             }
         }
         C.col_idx[colC+1] = C.nz_length;
-    }
-
-    // TODO replace with a version that doesn't transpose a matrx
-    public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
-        DMatrixSparseCSC B_tran = new DMatrixSparseCSC(B.numCols,B.numRows,B.nz_length);
-        IGrowArray gw = new IGrowArray();
-        CommonOps_DSCC.transpose(B,B_tran,gw);
-
-        mult(A,B_tran,C,gw,null);
     }
 
     public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {

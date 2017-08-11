@@ -224,7 +224,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
             // determine the index the new element should be inserted at. This is done to keep it sorted if
             // it was already sorted
             for( index = idx0; index < idx1; index++ ) {
-                if( nz_rows[index] < row) {
+                if( row < nz_rows[index] ) {
                     break;
                 }
             }
