@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.32
 
 2017/
+- Examples
+  * Added new example showing how to use results from an LU decomposition to solve
 - CommonOps - RMaj
   * Added concatColumns(A,B)  concatRows(A,B)
 - Simple Matrix
@@ -18,6 +20,9 @@ Date format: year/month/day
 - MatrixFeatures_DSCC
   * Added isSymmetric()
   * Added isOrthogonal()
+- ConvertDMatrixStruct
+  * Moved functions from ConvertDMatrixSparse into this class
+  * Added tolerance for zero when converting from dense to sparse
 - RandomMatrices_DSCC
   * Added symmetric()
   * Added symmetricPosDef()
@@ -29,7 +34,8 @@ Date format: year/month/day
   * Added concatRows()
   * Added extractColumn()
   * Added dotInnerColumns()
-  * Added solve()
+  * Added solve() dense
+  * Added invert() dense
   * Added det()
   * Added removeZeros()
   * Fixed bugs
@@ -61,7 +67,7 @@ Sparse Matrix
 - TODO Add fill reduce algorithms
   * Update CommonOps.solve() to specify a reasonable general purpose algorithm
 - TODO After fill reducing algorithms have been implemented revisit all unit tests which touch them and update
-
+- TODO autogenerate float sparse code
 
 ----- Version 0.31
 

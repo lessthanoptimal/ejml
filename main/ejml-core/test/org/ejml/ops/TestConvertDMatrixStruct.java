@@ -18,14 +18,17 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrix;
-import org.ejml.data.DMatrixFixed;
-import org.ejml.data.DMatrixRBlock;
-import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.*;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.MatrixFeatures_DSCC;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
+import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -187,9 +190,179 @@ public class TestConvertDMatrixStruct {
 
             assertEquals(valueA,valueB,UtilEjml.TEST_F64);
         }
+    }
 
+    @Test
+    public void DMatrixRow_SMatrixTriplet() {
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
 
+        a.set(4,3, 0);
+        a.set(1,3, 0);
+        a.set(2,3, 0);
+        a.set(2,0, 0);
 
+        DMatrixRow_SMatrixTriplet(a,null);
+        DMatrixRow_SMatrixTriplet(a, new DMatrixSparseTriplet(1,1,2));
+    }
+
+    public void DMatrixRow_SMatrixTriplet(DMatrixRMaj a , DMatrixSparseTriplet b ) {
+        b = ConvertDMatrixStruct.convert(a,b, UtilEjml.EPS);
+
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+        assertEquals(5*6-4, b.nz_length);
+        for (int row = 0; row < a.numRows; row++) {
+            for (int col = 0; col < a.numCols; col++) {
+                int index = b.nz_index(row,col);
+
+                if( a.get(row,col) == 0.0 ) {
+                    assertTrue( -1 == index );
+                } else {
+                    assertEquals( a.get(row,col), b.nz_data[index].value, UtilEjml.TEST_F64);
+                }
+            }
+        }
+
+        // now try it the other direction
+        DMatrixRMaj c = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+        assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
+
+        c = ConvertDMatrixStruct.convert(b,new DMatrixRMaj(1,1));
+        assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void DMatrix_SMatrixTriplet() {
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
+
+        a.set(4,3, 0);
+        a.set(1,3, 0);
+        a.set(2,3, 0);
+        a.set(2,0, 0);
+
+        DMatrix_SMatrixTriplet(a,null);
+        DMatrix_SMatrixTriplet(a, new DMatrixSparseTriplet(1,1,2));
+    }
+
+    public void DMatrix_SMatrixTriplet(DMatrix a , DMatrixSparseTriplet b ) {
+        b = ConvertDMatrixStruct.convert(a,b, UtilEjml.EPS);
+
+        assertEquals(a.getNumRows(), b.numRows);
+        assertEquals(a.getNumCols(), b.numCols);
+        assertEquals(5*6-4, b.nz_length);
+        for (int row = 0; row < a.getNumRows(); row++) {
+            for (int col = 0; col < a.getNumCols(); col++) {
+                int index = b.nz_index(row,col);
+
+                if( a.get(row,col) == 0.0 ) {
+                    assertTrue( -1 == index );
+                } else {
+                    assertEquals( a.get(row,col), b.nz_data[index].value, UtilEjml.TEST_F64);
+                }
+            }
+        }
+
+        // now try it the other direction
+        DMatrixRMaj c = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+        EjmlUnitTests.assertEquals(a,c, UtilEjml.TEST_F64);
+
+        c = ConvertDMatrixStruct.convert(b,new DMatrixRMaj(1,1));
+        EjmlUnitTests.assertEquals(a,c, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void DMatrixRow_SparseCSC() {
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
+
+        a.set(4,3, 0);
+        a.set(1,3, 0);
+        a.set(2,3, 0);
+        a.set(2,0, 0);
+
+        DMatrixRow_SparseCSC(a,null);
+        DMatrixRow_SparseCSC(a, new DMatrixSparseCSC(1,1,2));
+    }
+
+    public void DMatrixRow_SparseCSC(DMatrixRMaj a , DMatrixSparseCSC b ) {
+        b = ConvertDMatrixStruct.convert(a,b, UtilEjml.EPS);
+
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+        assertEquals(5*6-4, b.nz_length);
+        for (int row = 0; row < a.numRows; row++) {
+            for (int col = 0; col < a.numCols; col++) {
+                int index = b.nz_index(row,col);
+
+                if( a.get(row,col) == 0.0 ) {
+                    assertTrue( -1 == index );
+                } else {
+                    assertEquals( a.get(row,col), b.nz_values[index], UtilEjml.TEST_F64);
+                }
+            }
+        }
+
+        // now try it the other direction
+        DMatrixRMaj c = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+        assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
+
+        c = ConvertDMatrixStruct.convert(b,new DMatrixRMaj(1,1));
+        assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void SMatrixCC_DMatrixRow() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,6,10,-1,1,rand);
+
+        SMatrixCC_DMatrixRow(a,null);
+        SMatrixCC_DMatrixRow(a,new DMatrixRMaj(1,1));
+    }
+
+    public void SMatrixCC_DMatrixRow(DMatrixSparseCSC a , DMatrixRMaj b ) {
+        b = ConvertDMatrixStruct.convert(a,b);
+
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+
+        int found = MatrixFeatures_DDRM.countNonZero(b);
+        assertEquals(a.nz_length, found);
+        EjmlUnitTests.assertEquals(a, b);
+
+        // now try it the other direction
+        DMatrixSparseCSC c = ConvertDMatrixStruct.convert(b,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,c, UtilEjml.TEST_F64));
+        assertTrue(CommonOps_DSCC.checkIndicesSorted(c));
+
+        c = ConvertDMatrixStruct.convert(b,new DMatrixSparseCSC(1,1,1), UtilEjml.EPS);
+        assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,c, UtilEjml.TEST_F64));
+        assertTrue(CommonOps_DSCC.checkIndicesSorted(c));
+    }
+
+    @Test
+    public void SMatrixTriplet_SMatrixCC() {
+        DMatrixSparseTriplet a = RandomMatrices_DSTL.uniform(5,6,10,-1,1,rand);
+
+        SMatrixTriplet_SMatrixCC(a,(DMatrixSparseCSC)null);
+        SMatrixTriplet_SMatrixCC(a,new DMatrixSparseCSC(1,1,2));
+    }
+
+    public void SMatrixTriplet_SMatrixCC(DMatrixSparseTriplet a , DMatrixSparseCSC b ) {
+        b = ConvertDMatrixStruct.convert(a,b);
+
+        assertEquals(a.numRows, b.numRows);
+        assertEquals(a.numCols, b.numCols);
+        assertEquals(a.nz_length, b.nz_length);
+        for (int i = 0; i < a.nz_length; i++) {
+            DMatrixSparseTriplet.Element e = a.nz_data[i];
+            assertEquals(e.value, b.get(e.row, e.col), UtilEjml.TEST_F64);
+        }
+        assertTrue(CommonOps_DSCC.checkSortedFlag(b));
+
+        // now try it the other direction
+        DMatrixSparseTriplet c = ConvertDMatrixStruct.convert(b,(DMatrixSparseTriplet)null);
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,c, UtilEjml.TEST_F64));
+
+        c = ConvertDMatrixStruct.convert(b,new DMatrixSparseTriplet(1,1,1));
+        assertTrue(MatrixFeatures_DSTL.isEquals(a,c, UtilEjml.TEST_F64));
     }
 
 }

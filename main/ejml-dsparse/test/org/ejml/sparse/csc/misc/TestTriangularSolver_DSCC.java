@@ -25,7 +25,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -119,7 +119,7 @@ public class TestTriangularSolver_DSCC {
                 DMatrixRMaj found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
 
-                DMatrixRMaj expected = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+                DMatrixRMaj expected = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
                 assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64));
             }
         }
@@ -188,7 +188,7 @@ public class TestTriangularSolver_DSCC {
                 DMatrixRMaj found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
 
-                DMatrixRMaj expected = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+                DMatrixRMaj expected = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
                 assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64));
             }
         }
@@ -288,7 +288,7 @@ public class TestTriangularSolver_DSCC {
                         "1 0 0 1 0 " +
                         "0 1 0 0 1",5);
 
-        DMatrixSparseCSC A = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,1,4,-1,1,rand);
 

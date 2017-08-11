@@ -26,7 +26,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -65,8 +65,8 @@ public class TestImplSparseSparseMult_DSCC {
         ImplSparseSparseMult_DSCC.mult(a,b,c, null, null);
         assertTrue(CommonOps_DSCC.checkSortedFlag(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
         DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
 
         CommonOps_DDRM.mult(dense_a, dense_b, dense_c);
@@ -91,8 +91,8 @@ public class TestImplSparseSparseMult_DSCC {
 
         assertTrue(CommonOps_DSCC.checkSortedFlag(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
         DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
 
         CommonOps_DDRM.mult(dense_a, dense_b, dense_c);
@@ -124,8 +124,8 @@ public class TestImplSparseSparseMult_DSCC {
         ImplSparseSparseMult_DSCC.multTransA(a,b,c,null,null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
         DMatrixRMaj dense_c = new DMatrixRMaj(rowsA, colsB);
 
         CommonOps_DDRM.multTransA(dense_a, dense_b, dense_c);
@@ -153,8 +153,8 @@ public class TestImplSparseSparseMult_DSCC {
         ImplSparseSparseMult_DSCC.multTransB(a, b, c, null, null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a, (DMatrixRMaj) null);
-        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b, (DMatrixRMaj) null);
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj) null);
+        DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b, (DMatrixRMaj) null);
         DMatrixRMaj dense_c = new DMatrixRMaj(rowsA, colsB);
 
         CommonOps_DDRM.multTransB(dense_a, dense_b, dense_c);
@@ -178,7 +178,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         ImplSparseSparseMult_DSCC.mult(a,b,c);
 
-        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
         CommonOps_DDRM.mult(dense_a, b, expected_c);

@@ -22,7 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
@@ -65,7 +65,7 @@ public class BenchmarkSparseCholesky_F64 {
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(1000,200,rand);
         DMatrixRMaj A_dense = new DMatrixRMaj(A.numRows,A.numCols);
-        ConvertDMatrixSparse.convert(A,A_dense);
+        ConvertDMatrixStruct.convert(A,A_dense);
 
         System.out.printf("total non-zero elements %d, fill in %08.4f%%\n",A.nz_length,100.0*A.nz_length/(double)(A.numCols*A.numRows));
         System.out.println();

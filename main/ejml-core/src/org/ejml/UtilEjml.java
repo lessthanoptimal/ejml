@@ -21,7 +21,7 @@ package org.ejml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.FMatrixRMaj;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -185,7 +185,7 @@ public class UtilEjml {
     public static DMatrixSparseCSC parse_DSCC(String s, int numColumns) {
         DMatrixRMaj tmp = parse_DDRM(s,numColumns);
 
-        return ConvertDMatrixSparse.convert(tmp,(DMatrixSparseCSC)null);
+        return ConvertDMatrixStruct.convert(tmp,(DMatrixSparseCSC)null, 0);
     }
 
     public static int[] shuffled( int N , Random rand ) {

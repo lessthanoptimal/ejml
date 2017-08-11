@@ -22,6 +22,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
@@ -789,6 +790,53 @@ public class CommonOps_DSCC {
             return false;
 
         solver.solve(b, x);
+        return true;
+    }
+
+    /**
+     * <p>
+     * Performs a matrix inversion operation that does not modify the original
+     * and stores the results in another matrix.  The two matrices must have the
+     * same dimension.<br>
+     * <br>
+     * B = A<sup>-1</sup>
+     * </p>
+     *
+     * <p>
+     * If the algorithm could not invert the matrix then false is returned.  If it returns true
+     * that just means the algorithm finished.  The results could still be bad
+     * because the matrix is singular or nearly singular.
+     * </p>
+     *
+     * <p>
+     * For medium to large matrices there might be a slight performance boost to using
+     * {@link LinearSolverFactory_DSCC} instead.
+     * </p>
+     *
+     * @param A (Input) The matrix that is to be inverted. Not modified.
+     * @param inverse (Output) Where the inverse matrix is stored.  Modified.
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean invert(DMatrixSparseCSC A, DMatrixRMaj inverse ) {
+        if( A.numRows != A.numCols )
+            throw new IllegalArgumentException("A must be a square matrix");
+        if( A.numRows != inverse.numRows || A.numCols != inverse.numCols )
+            throw new IllegalArgumentException("A and inverse must have the same shape.");
+
+        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
+        solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
+
+        // Ensure that the input isn't modified
+        if( solver.modifiesA() )
+            A = A.copy();
+
+        DMatrixRMaj I = CommonOps_DDRM.identity(A.numRows);
+
+        // decompose then solve the matrix
+        if( !solver.setA(A) )
+            return false;
+
+        solver.solve(I, inverse);
         return true;
     }
 
