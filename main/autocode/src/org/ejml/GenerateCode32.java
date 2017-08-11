@@ -44,7 +44,11 @@ public class GenerateCode32 {
 
     public GenerateCode32() {
 
-        blacklist.add("MatrixSparse");
+        // TODO remove once F32 sparse code is generated
+        blacklist.add("TestDMatrixSparseCSC");
+        blacklist.add("TestConvertDMatrixStruct");
+        blacklist.add("TestDEigenSparseCSC");
+        blacklist.add("TestConvertDMatrixStruct");
 
         String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6"};
 
@@ -70,6 +74,8 @@ public class GenerateCode32 {
         prefix32.add("FSubmatrix");
         prefix64.add("ConvertDMatrix");
         prefix32.add("ConvertFMatrix");
+        prefix64.add("GenericTestsDMatrix");
+        prefix32.add("GenericTestsFMatrix");
 
         int N = prefix64.size();
         for (int i = 0; i < N; i++) {

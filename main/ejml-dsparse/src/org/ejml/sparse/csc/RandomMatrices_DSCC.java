@@ -21,7 +21,7 @@ package org.ejml.sparse.csc;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -123,7 +123,7 @@ public class RandomMatrices_DSCC {
         }
 
         DMatrixSparseCSC B = new DMatrixSparseCSC(N,N,A.nz_length);
-        ConvertDMatrixSparse.convert(A,B);
+        ConvertDMatrixStruct.convert(A,B);
 
         return B;
     }

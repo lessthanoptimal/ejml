@@ -21,7 +21,7 @@ package org.ejml.example;
 import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -51,7 +51,7 @@ public class ExampleSparseMatrix {
         work.addItem(2,3,6);
 
         // convert into a format that's easier to perform math with
-        DMatrixSparseCSC Z = ConvertDMatrixSparse.convert(work,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC Z = ConvertDMatrixStruct.convert(work,(DMatrixSparseCSC)null);
 
         // print the matrix to standard out in two different formats
         Z.print();
@@ -83,8 +83,8 @@ public class ExampleSparseMatrix {
 
         System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  sparse time = "+(after-before)+" ms");
 
-        DMatrixRMaj Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
-        DMatrixRMaj xd = ConvertDMatrixSparse.convert(x,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj xd = ConvertDMatrixStruct.convert(x,(DMatrixRMaj)null);
         DMatrixRMaj yd = new DMatrixRMaj(y.numRows,y.numCols);
         DMatrixRMaj zd = new DMatrixRMaj(y.numRows,y.numCols);
 
