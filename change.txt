@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.32
 
 2017/
+- Thanks to HEBI Robotics for sponsoring the addition of sparse solvers!
+  * http://hebirobotics.com/
 - Examples
   * Added new example showing how to use results from an LU decomposition to solve
 - CommonOps - RMaj
@@ -38,7 +40,7 @@ Date format: year/month/day
   * Added invert() dense
   * Added det()
   * Added removeZeros()
-  * Fixed bugs
+  * Fixed various bugs
 - CommonOps_DDRM
   * Added permuteRowInv()
 - Sparse Decompositions and Solvers
@@ -54,9 +56,7 @@ Date format: year/month/day
 
 Sparse Matrix
 - TODO Compare QR code dense and sparse. See sparse notes
-- TODO Stability Tests for Sparse Solvers
-  * Overflow / Underflow
-  * Nearly degenerate
+- TODO Fix QR underflow and overflow issues
 - TODO implement and add tests for fix structure in Solvers. Don't recompute the structure
 - TODO clean up new interfaces
 - TODO Modify decomposition interfaces.
