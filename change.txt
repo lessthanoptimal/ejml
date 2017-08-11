@@ -15,7 +15,6 @@ Date format: year/month/day
   * Fixed bug in set(row,col,val) where the first time a non-zero element was added it would assign the wrong value
     Thanks GeoffreyGuettier
   * Added growMaxColumns()
-- Added *GrowArray to act as workspace in sparse algorithms
 - MatrixFeatures_DSCC
   * Added isSymmetric()
   * Added isOrthogonal()
@@ -38,11 +37,14 @@ Date format: year/month/day
   * Added permuteRowInv()
 - Sparse Decompositions and Solvers
   * Cholesky - Up Looking
+  * LU
+  * QR
 - Sparse Triangular Solver
   * Added solveTranL()
   * Added column pivots to one of the solvers
 - Data Types
   * Added DScalar and IScalar
+  * Added *GrowArray to act as workspace in sparse algorithms
 
 Sparse Matrix
 - TODO Compare QR code dense and sparse. See sparse notes
