@@ -63,13 +63,14 @@ This will add the entire library.  Alternatively, you can include the required m
 
 ## Building
 
-Gradle is the official build environment for EJML.  Before the project can be fully compile you must auto generate
-the 32-bit code.
+Gradle is the official build environment for EJML. Before the project can build you must run autogenerate
+to create the 32-bit code.
 ```bash
 cd ejml
 ./gradlew autogenerate
+./gradlew install
 ```
-After that has finished running all the standard commands (e.g. gradle install) will work as well as the custom commands listed below:
+After invoking those commands EJML will build and be in your local maven repo and can be included by other applications. Below is a list of custom Gradle commands that might be of use to you.
 
 * createLibraryDirectory : To build all the modules as jars and save them in ejml/libraries
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar
