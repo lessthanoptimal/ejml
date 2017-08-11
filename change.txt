@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.32
 
 2017/
+- Examples
+  * Added new example showing how to use results from an LU decomposition to solve
 - CommonOps - RMaj
   * Added concatColumns(A,B)  concatRows(A,B)
 - Simple Matrix
