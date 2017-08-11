@@ -100,7 +100,7 @@ public class ImplSparseSparseMult_DSCC {
         int []w = adjust(gw, A.numRows, A.numRows);
 
         C.growMaxLength(A.nz_length+B.nz_length,false);
-        C.indicesSorted = false;
+        C.indicesSorted = true;
         C.nz_length = 0;
         C.col_idx[0] = 0;
 
@@ -134,6 +134,9 @@ public class ImplSparseSparseMult_DSCC {
                 }
 
                 if (sum != 0) {
+                    if( C.nz_length == C.nz_values.length ) {
+                        C.growMaxLength(C.nz_length*2+1,true);
+                    }
                     C.nz_values[C.nz_length] = sum;
                     C.nz_rows[C.nz_length++] = colA;
                 }
@@ -142,21 +145,6 @@ public class ImplSparseSparseMult_DSCC {
             idxB0 = idxB1;
         }
     }
-
-    /**
-     * Performs matrix multiplication.  C = A*B<sup>T</sup></sup>
-     *
-     * @param A Matrix
-     * @param B Matrix
-     * @param C Storage for results.  Data length is increased if increased if insufficient.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
-     */
-    public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                  IGrowArray gw, DGrowArray gx ) {
-
-    }
-
 
     /**
      * Performs the performing operation x = x + A(:,i)*alpha
@@ -281,9 +269,6 @@ public class ImplSparseSparseMult_DSCC {
         int idx0 = A.col_idx[colA];
         int idx1 = A.col_idx[colA+1];
         for (int i = idx0; i < idx1; i++) {
-            if( length >= x.length ) {
-                System.out.println();
-            }
             int row = A.nz_rows[i];
             x[length] = A.nz_values[i];
             w[row] = length++;

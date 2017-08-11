@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.mult;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
@@ -105,72 +106,60 @@ public class TestImplSparseSparseMult_DSCC {
 
     @Test
     public void multTransA_s_s() {
-        for (int i = 0; i < 10; i++) {
-            multTransA_s_s(24,30,20);
-            multTransA_s_s(15,15,20);
-            multTransA_s_s(15,15,5);
-            multTransA_s_s(4,5,0);
+        for (int i = 0; i < 30; i++) {
+            multTransA_s_s(5,6,4);
+            multTransA_s_s(6,1,7);
+            multTransA_s_s(1,8,1);
         }
     }
 
-    private void multTransA_s_s(int elementsA , int elementsB , int elementsC ) {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6,4,elementsA,-1,1,rand);
-        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,5,elementsB,-1,1,rand);
-        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
+    private void multTransA_s_s(int rowsA , int rowsB , int colsB ) {
+        int a_nz = RandomMatrices_DSCC.nonzero(rowsB,rowsA,0.05,0.8,rand);
+        int b_nz = RandomMatrices_DSCC.nonzero(rowsB,colsB,0.05,0.8,rand);
 
-        System.out.println("------------------");
-        a.print();
-        b.print();
-
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(rowsB,rowsA,a_nz,-1,1,rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(rowsB,colsB,b_nz,-1,1,rand);
+        DMatrixSparseCSC c = new DMatrixSparseCSC(rowsA,colsB,0);
 
         ImplSparseSparseMult_DSCC.multTransA(a,b,c,null,null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
-        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numCols, dense_b.numCols);
+        DMatrixRMaj dense_c = new DMatrixRMaj(rowsA, colsB);
 
         CommonOps_DDRM.multTransA(dense_a, dense_b, dense_c);
 
-        c.print();
-        dense_c.print();
-
-        for (int row = 0; row < c.numRows; row++) {
-            for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
-            }
-        }
+        EjmlUnitTests.assertEquals(dense_c,c,UtilEjml.TEST_F64);
     }
 
     @Test
     public void multTransB_s_s() {
-        for (int i = 0; i < 10; i++) {
-            multTransB_s_s(24,30,20);
-            multTransB_s_s(15,15,20);
-            multTransB_s_s(15,15,5);
-            multTransB_s_s(4,5,0);
+        for (int i = 0; i < 30; i++) {
+            multTransB_s_s(5,6,4);
+            multTransB_s_s(6,1,7);
+            multTransB_s_s(1,8,1);
         }
     }
 
-    private void multTransB_s_s(int elementsA , int elementsB , int elementsC ) {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
-        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5,6,elementsB,-1,1,rand);
-        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(4,5,elementsC,-1,1,rand);
+    private void multTransB_s_s(int rowsA , int rowsB , int colsB) {
+        int a_nz = RandomMatrices_DSCC.nonzero(rowsA, rowsB, 0.05, 0.8, rand);
+        int b_nz = RandomMatrices_DSCC.nonzero(colsB, rowsB, 0.05, 0.8, rand);
 
-        ImplSparseSparseMult_DSCC.multTransB(a,b,c);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(rowsA, rowsB, a_nz, -1, 1, rand);
+        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(colsB, rowsB, b_nz, -1, 1, rand);
+        DMatrixSparseCSC c = new DMatrixSparseCSC(rowsA, colsB, 0);
+
+        ImplSparseSparseMult_DSCC.multTransB(a, b, c);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b,(DMatrixRMaj)null);
-        DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numRows);
+        DMatrixRMaj dense_a = ConvertDMatrixSparse.convert(a, (DMatrixRMaj) null);
+        DMatrixRMaj dense_b = ConvertDMatrixSparse.convert(b, (DMatrixRMaj) null);
+        DMatrixRMaj dense_c = new DMatrixRMaj(rowsA, colsB);
 
         CommonOps_DDRM.multTransB(dense_a, dense_b, dense_c);
 
-        for (int row = 0; row < c.numRows; row++) {
-            for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
-            }
-        }
+        EjmlUnitTests.assertEquals(dense_c,c,UtilEjml.TEST_F64);
     }
 
     @Test
