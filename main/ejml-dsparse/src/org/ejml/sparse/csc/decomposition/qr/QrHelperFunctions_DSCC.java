@@ -135,6 +135,6 @@ public class QrHelperFunctions_DSCC {
             x[i] /= u_0;
         }
 
-        return tau*max;
+        return -tau*max;
     }
 }

@@ -165,7 +165,7 @@ public class QrLeftLookingDecomposition_DSCC implements
                 R.nz_values[R.nz_length] = 0;
                 beta[k] = 0;
             } else {
-                R.nz_values[R.nz_length] = -QrHelperFunctions_DSCC.computeHouseholder(V.nz_values, p1, V.nz_length, max, Beta);
+                R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values, p1, V.nz_length, max, Beta);
                 beta[k] = Beta.value;
             }
             R.nz_length++;

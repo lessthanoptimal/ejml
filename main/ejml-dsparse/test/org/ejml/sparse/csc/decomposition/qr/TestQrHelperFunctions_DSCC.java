@@ -105,8 +105,7 @@ public class TestQrHelperFunctions_DSCC {
 
         QrHelperFunctions_DDRM.rank1UpdateMultR(x,v.data,beta.value,0,offset,N,new double[N]);
 
-        // there's a sign ambiguity
-        assertEquals(tau,Math.abs(x.data[offset]),UtilEjml.TEST_F64);
+        assertEquals(tau,x.data[offset],UtilEjml.TEST_F64);
         for (int i = offset+1; i < N; i++) {
             assertEquals(0,x.data[i], UtilEjml.TEST_F64);
         }
