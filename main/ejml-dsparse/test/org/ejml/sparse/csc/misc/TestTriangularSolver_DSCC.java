@@ -127,8 +127,11 @@ public class TestTriangularSolver_DSCC {
 
     @Test
     public void solve_sparseX_matrix() {
+        // test square matrix
         solve_sparseX_matrix(true);
         solve_sparseX_matrix(false);
+        fail("Add tall matrix test");
+        fail("Add wide matrix test");
     }
 
     public void solve_sparseX_matrix( boolean lower ) {

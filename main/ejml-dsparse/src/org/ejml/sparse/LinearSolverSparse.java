@@ -36,7 +36,7 @@ public interface LinearSolverSparse<S extends Matrix, D extends Matrix> {
     double quality();
 
     /**
-     * <p>Save results from structural analysis step. This can reduce computations if a matrix with the exactly same
+     * <p>Save results from structural analysis step. This can reduce computations of a matrix with the exactly same
      * non-zero pattern is decomposed in the future.  If a matrix has yet to be processed then the structure of
      * the next matrix is saved. If a matrix has already been processed then the structure of the most recently
      * processed matrix will be saved.</p>

@@ -20,6 +20,7 @@ package org.ejml.dense.row.decompose.lu;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
+import org.ejml.data.IGrowArray;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.SpecializedOps_ZDRM;
 import org.ejml.dense.row.decompose.TriangularSolver_ZDRM;
@@ -159,8 +160,14 @@ public abstract class LUDecompositionBase_ZDRM
         return upper;
     }
 
+    @Override
     public ZMatrixRMaj getRowPivot(ZMatrixRMaj pivot ) {
         return SpecializedOps_ZDRM.pivotMatrix(pivot, this.pivot, LU.numRows, false);
+    }
+
+    @Override
+    public int[] getRowPivotV(IGrowArray pivot) {
+        return UtilEjml.pivotVector(this.pivot,LU.numRows,pivot);
     }
 
     protected void decomposeCommonInit(ZMatrixRMaj a) {

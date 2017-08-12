@@ -18,6 +18,7 @@
 
 package org.ejml.interfaces.decomposition;
 
+import org.ejml.data.IGrowArray;
 import org.ejml.data.Matrix;
 
 
@@ -90,6 +91,14 @@ public interface LUDecomposition <T extends Matrix>
      * @return The pivot matrix.
      */
     T getRowPivot(T pivot );
+
+    /**
+     * Returns the row pivot vector
+     *
+     * @param pivot (Optional) Storage for pivot vector
+     * @return The pivot vector
+     */
+    int[] getRowPivotV( IGrowArray pivot );
 
     /**
      * Returns true if the decomposition detected a singular matrix.  This check

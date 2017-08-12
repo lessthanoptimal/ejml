@@ -196,5 +196,40 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         assertEquals(44,lu.computeDeterminant().real, UtilEjml.TEST_F64);
     }
 
+    @Test
+    public void testTall() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,4,10,rand);
+        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+
+        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
+
+        checkSolution(A,alg);
+    }
+
+    @Test
+    public void testFat() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);
+        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+
+        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
+
+        checkSolution(A,alg);
+    }
+
+    @Test
+    public void testRowPivotVector() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);
+        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
+
+        assertTrue(alg.decompose(A));
+
+        int []pivot = alg.getRowPivotV(null);
+        DMatrixSparseCSC P = alg.getRowPivot(null);
+
+        for (int i = 0; i < A.numRows; i++) {
+            assertEquals(1,(int)P.get(i,pivot[i]));
+        }
+    }
 
 }

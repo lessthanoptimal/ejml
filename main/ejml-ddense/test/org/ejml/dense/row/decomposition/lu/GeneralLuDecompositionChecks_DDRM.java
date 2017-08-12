@@ -31,8 +31,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -171,7 +170,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
         SimpleMatrix P = SimpleMatrix.wrap(alg.getRowPivot(null));
 
-        DMatrixRMaj A_found = P.mult(L).mult(U).getMatrix();
+        DMatrixRMaj A_found = P.transpose().mult(L).mult(U).getMatrix();
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
     }
@@ -192,5 +191,20 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
         DMatrixRMaj A_found = P.transpose().mult(L).mult(U).getMatrix();
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void testRowPivotVector() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
+        LUDecomposition<DMatrixRMaj> alg = create(A.numRows,A.numCols);
+
+        assertTrue(alg.decompose(A));
+
+        int []pivot = alg.getRowPivotV(null);
+        DMatrixRMaj P = alg.getRowPivot(null);
+
+        for (int i = 0; i < A.numRows; i++) {
+            assertEquals(1,(int)P.get(i,pivot[i]));
+        }
     }
 }

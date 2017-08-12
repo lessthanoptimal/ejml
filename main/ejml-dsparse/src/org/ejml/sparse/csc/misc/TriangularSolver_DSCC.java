@@ -156,11 +156,11 @@ public class TriangularSolver_DSCC {
      */
     public static int solve(DMatrixSparseCSC G, boolean lower,
                             DMatrixSparseCSC B, int colB, double x[], int pinv[], IGrowArray g_xi, IGrowArray g_w) {
-        int[] xi = adjust(g_xi,G.numRows);
+        int[] xi = adjust(g_xi,G.numCols);
         int top = searchNzRowsInB(G, B, colB, pinv, xi, g_w);
 
         // sparse clear of x
-        for( int p = top; p < G.numRows; p++ )
+        for( int p = top; p < G.numCols; p++ )
             x[xi[p]] = 0;
 
         // copy B into X

@@ -65,7 +65,7 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
 
         ZMatrixRMaj L = alg.getLower(null);
         ZMatrixRMaj U = alg.getUpper(null);
-        ZMatrixRMaj P = alg.getRowPivot(null);
+        ZMatrixRMaj P = alg.getRowPivot((ZMatrixRMaj)null);
 
         ZMatrixRMaj P_tran = new ZMatrixRMaj(P.numCols,P.numRows);
         ZMatrixRMaj PL = new ZMatrixRMaj(P.numRows,P.numCols);
@@ -212,5 +212,20 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
         CommonOps_ZDRM.mult(PL, U, A_found);
 
         assertTrue(MatrixFeatures_ZDRM.isIdentical(A_found, a, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void testRowPivotVector() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,5,rand);
+        LUDecomposition<ZMatrixRMaj> alg = create(A.numRows,A.numCols);
+
+        assertTrue(alg.decompose(A));
+
+        int []pivot = alg.getRowPivotV(null);
+        ZMatrixRMaj P = alg.getRowPivot(null);
+
+        for (int i = 0; i < A.numRows; i++) {
+            assertEquals(1,(int)P.getReal(i,pivot[i]));
+        }
     }
 }

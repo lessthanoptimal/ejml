@@ -269,14 +269,15 @@ er      * @param minFill minimum fill fraction
      * Modies the matrix to make sure that at least one element in each column has a value
      */
     public static void ensureNotSingular( DMatrixSparseCSC A , Random rand ) {
-        if( A.numRows < A.numCols ) {
-            throw new IllegalArgumentException("Fewer equations than variables");
-        }
+//        if( A.numRows < A.numCols ) {
+//            throw new IllegalArgumentException("Fewer equations than variables");
+//        }
 
         int []s = UtilEjml.shuffled(A.numRows,rand);
         Arrays.sort(s);
 
-        for (int col = 0; col < A.numCols; col++) {
+        int N = Math.min(A.numCols,A.numRows);
+        for (int col = 0; col < N; col++) {
             A.set(s[col],col,rand.nextDouble()+0.5);
         }
     }

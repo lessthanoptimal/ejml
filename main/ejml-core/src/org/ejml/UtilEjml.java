@@ -21,6 +21,7 @@ package org.ejml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.FMatrixRMaj;
+import org.ejml.data.IGrowArray;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
@@ -219,5 +220,12 @@ public class UtilEjml {
             list[i] = list[selected];
             list[selected] = v;
         }
+    }
+
+    public static int[] pivotVector(int pivots[] , int length , IGrowArray storage ) {
+        if( storage == null ) storage = new IGrowArray();
+        storage.reshape(length);
+        System.arraycopy(pivots,0,storage.data,0,length);
+        return storage.data;
     }
 }

@@ -69,30 +69,30 @@ public class LuUpLooking_DSCC
     }
 
     private void initialize(DMatrixSparseCSC A) {
-        if( A.numRows != A.numCols )
-            throw new IllegalArgumentException("Expected square matrix");
-
-        int n = A.numRows;
+        int m = A.numRows;
+        int n = A.numCols;
+        int o = Math.min(m,n);
         // number of non-zero elements can only be easily estimated because of pivots
-        L.reshape(n,n,4*A.nz_length+n);
+        L.reshape(m,m,4*A.nz_length+o);
         L.nz_length = 0;
-        U.reshape(n,n,4*A.nz_length+n);
+        U.reshape(m,n,4*A.nz_length+o);
         U.nz_length = 0;
 
         singular = false;
-        if( pinv.length != n ) {
-            pinv = new int[n];
-            x = new double[n];
+        if( pinv.length != m ) {
+            pinv = new int[m];
+            x = new double[m];
         }
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < m; i++) {
             pinv[i] = -1;
             L.col_idx[i] = 0;
         }
     }
 
     private boolean performLU(DMatrixSparseCSC A ) {
-        int n = A.numRows;
+        int m = A.numRows;
+        int n = A.numCols;
         int q[] = applyReduce.getArrayP();
 
         // main loop for computing L and U
@@ -197,10 +197,15 @@ public class LuUpLooking_DSCC
     @Override
     public DMatrixSparseCSC getRowPivot(DMatrixSparseCSC pivot) { // todo rename to pivot column?
         if( pivot == null )
-            pivot = new DMatrixSparseCSC(L.numCols,L.numCols,0);
-        pivot.reshape(L.numCols,L.numCols,L.numCols);
-        CommonOps_DSCC.permutationMatrix(pinv, false, L.numCols,pivot);
+            pivot = new DMatrixSparseCSC(L.numRows,L.numRows,0);
+        pivot.reshape(L.numRows,L.numRows,L.numRows);
+        CommonOps_DSCC.permutationMatrix(pinv, false, L.numRows,pivot);
         return pivot;
+    }
+
+    @Override
+    public int[] getRowPivotV(IGrowArray pivot) {
+        return UtilEjml.pivotVector(pinv,L.numRows,pivot);
     }
 
     @Override
