@@ -117,13 +117,13 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
-    public <T extends Matrix> T copy() {
-        return (T)new DMatrixSparseCSC(this);
+    public DMatrixSparseCSC copy() {
+        return new DMatrixSparseCSC(this);
     }
 
     @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new DMatrixSparseCSC(numRows,numCols);
+    public DMatrixSparseCSC createLike() {
+        return new DMatrixSparseCSC(numRows,numCols);
     }
 
     @Override
