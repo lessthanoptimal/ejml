@@ -67,6 +67,10 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
     @Override
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+//        if( B.numCols != X.numCols || B.numRows != numRows || X.numRows != numCols) {
+//            throw new IllegalArgumentException("Unexpected matrix size");
+//        }
+
         int pinv[] = decomposition.getPinv();
         int q[] = decomposition.getReducePermutation();
         double[] x = adjust(gx,X.numRows);

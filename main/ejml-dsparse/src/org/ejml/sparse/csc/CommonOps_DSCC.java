@@ -239,6 +239,13 @@ public class CommonOps_DSCC {
     }
 
 
+    /**
+     * B = scalar*A.   A and B can be the same instance.
+     *
+     * @param scalar (Input) Scalar value
+     * @param A (Input) Matrix. Not modified.
+     * @param B (Output) Matrix. Modified.
+     */
     public static void scale(double scalar, DMatrixSparseCSC A, DMatrixSparseCSC B) {
         if( A != B ) {
             if (A.numRows != B.numRows || A.numCols != B.numCols)
@@ -253,17 +260,28 @@ public class CommonOps_DSCC {
                 B.nz_values[i] *= scalar;
             }
         }
-
-
     }
 
+    /**
+     * B = A/scalar.   A and B can be the same instance.
+     *
+     * @param scalar (Input) Scalar value
+     * @param A (Input) Matrix. Not modified.
+     * @param B (Output) Matrix. Modified.
+     */
     public static void divide(DMatrixSparseCSC A , double scalar , DMatrixSparseCSC B ) {
         if( A.numRows != B.numRows || A.numCols != B.numCols )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
-        B.copyStructure(A);
+        if( A != B ) {
+            B.copyStructure(A);
 
-        for(int i = 0; i < A.nz_length; i++ ) {
-            B.nz_values[i] = A.nz_values[i]/scalar;
+            for (int i = 0; i < A.nz_length; i++) {
+                B.nz_values[i] = A.nz_values[i] / scalar;
+            }
+        } else {
+            for (int i = 0; i < A.nz_length; i++) {
+                A.nz_values[i] /= scalar;
+            }
         }
     }
 

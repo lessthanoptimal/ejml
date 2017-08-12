@@ -387,16 +387,28 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         indicesSorted = true;
     }
 
+    /**
+     * Copies the non-zero structure of orig into "this"
+     * @param orig Matrix who's structure is to be copied
+     */
     public void copyStructure( DMatrixSparseCSC orig ) {
         reshape(orig.numRows, orig.numCols, orig.nz_length);
         System.arraycopy(orig.col_idx,0,col_idx,0,orig.numCols+1);
         System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.nz_length);
     }
 
+    /**
+     * If the indices has been sorted or not
+     * @return true if sorted or false if not sorted
+     */
     public boolean isIndicesSorted() {
         return indicesSorted;
     }
 
+    /**
+     * Returns true if number of non-zero elements is the maximum size
+     * @return true if no more non-zero elements can be added
+     */
     public boolean isFull() {
         return nz_length == numRows*numCols;
     }
