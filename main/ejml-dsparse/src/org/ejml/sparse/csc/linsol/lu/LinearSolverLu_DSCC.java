@@ -91,7 +91,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
             TriangularSolver_DSCC.solveU(U,x);
             double d[];
             if( reduceFill ) {
-                CommonOps_DSCC.permuteInv(q, x, b, X.numRows);
+                CommonOps_DSCC.permute(q, x, b, X.numRows);
                 d = b;
             } else {
                 d = x;

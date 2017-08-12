@@ -28,11 +28,13 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
+import static org.ejml.UtilEjml.permutationSign;
+
 /**
  * LU Decomposition using a left looking algorithm for {@link DMatrixSparseCSC}.
  *
  * <p>NOTE: Based mostly on the algorithm described on page 86 in csparse. cs_lu</p>
- *
+ * <p>NOTE: See in code comment for a modification from csparse.</p>
  * @author Peter Abeles
  */
 public class LuUpLooking_DSCC
@@ -113,10 +115,6 @@ public class LuUpLooking_DSCC
 
             //--------- Find the Next Pivot. That will be the row with the largest value
             //
-            // NOTE: A critical difference from the dense algorithm is here. A row is only selected as a pivot
-            //       if it has not already been selected as a pivot before. This means it's possible to have
-            //       a large number be divided by a much smaller number, making it less numerically stable.
-            //
             int ipiv = -1;
             double a = -Double.MAX_VALUE;
             for (int p = top; p < n; p++) {
@@ -136,15 +134,19 @@ public class LuUpLooking_DSCC
                 singular = true;
                 return false;
             }
-            if( pinv[col] < 0 && Math.abs(x[col]) >= a*tol ) {
-                ipiv = col;
-            }
+
+            // NOTE: The line is commented out below. It can cause a poor pivot to be selected. Instead of the largest
+            //       row it will pick whatever is in this column. it does try to make sure it's not zero, but I'm not
+            //       sure what it's purpose is.
+//            if( pinv[col] < 0 && Math.abs(x[col]) >= a*tol ) {
+//                ipiv = col;
+//            }
 
             //---------- Divide by the pivot
             double pivot = x[ipiv];
             U.nz_rows[U.nz_length] = k;
             U.nz_values[U.nz_length++] = pivot;      // last entry in U(:k) us U(k,k)
-            pinv[ipiv] = k;                          // ipiv is the kth pivot row
+            pinv[ipiv] = k;
             L.nz_rows[L.nz_length] = ipiv;           // First entry L(:,k) is L(k,k) = 1
             L.nz_values[L.nz_length++] = 1;
 
@@ -176,7 +178,9 @@ public class LuUpLooking_DSCC
 
     @Override
     public Complex_F64 computeDeterminant() {
-        double value = 1;
+        // see dense algorithm. There is probably a faster way to compute the sign while decomposing
+        // the matrix.
+        double value = permutationSign(pinv,U.numCols,gw.data);
         for (int i = 0; i < U.numCols; i++) {
             value *= U.nz_values[U.col_idx[i+1]-1];
         }
@@ -200,11 +204,11 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public DMatrixSparseCSC getRowPivot(DMatrixSparseCSC pivot) { // todo rename to pivot column?
+    public DMatrixSparseCSC getRowPivot(DMatrixSparseCSC pivot) {
         if( pivot == null )
             pivot = new DMatrixSparseCSC(L.numRows,L.numRows,0);
         pivot.reshape(L.numRows,L.numRows,L.numRows);
-        CommonOps_DSCC.permutationMatrix(pinv, false, L.numRows,pivot);
+        CommonOps_DSCC.permutationMatrix(pinv, true, L.numRows,pivot);
         return pivot;
     }
 

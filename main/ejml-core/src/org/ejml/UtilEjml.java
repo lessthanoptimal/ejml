@@ -228,4 +228,19 @@ public class UtilEjml {
         System.arraycopy(pivots,0,storage.data,0,length);
         return storage.data;
     }
+
+    public static int permutationSign( int[] p , int N , int work[] ) {
+        System.arraycopy(p,0,work,0,N);
+        p = work;
+        int cnt = 0;
+        for (int i = 0; i < N; ++i) {
+            while (i != p[i]) {
+                ++cnt;
+                int tmp = p[i];
+                p[i] = p[p[i]];
+                p[tmp] = tmp;
+            }
+        }
+        return cnt%2==0?1:-1;
+    }
 }

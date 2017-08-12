@@ -20,9 +20,13 @@ package org.ejml.sparse.csc.decomposition.lu;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.DecompositionSparseInterface;
 import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -104,6 +108,8 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         DMatrixSparseCSC found = new DMatrixSparseCSC(PL.numCols,U.numCols,0);
         CommonOps_DSCC.mult(PL,U,found);
 
+//        Acpy.print();
+//        found.print();
         EjmlUnitTests.assertEquals(Acpy,found,UtilEjml.TEST_F64);
     }
 
@@ -179,6 +185,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
     public void checkDeterminant() {
         for( FillReducing p : permTests) {
             checkDeterminant(p);
+            checkDeterminantToDense(p);
         }
     }
 
@@ -192,8 +199,27 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
 
         assertTrue(lu.decompose(A));
 
-        // computed using Cctave
+        // computed using Octave
         assertEquals(44,lu.computeDeterminant().real, UtilEjml.TEST_F64);
+    }
+
+    private void checkDeterminantToDense(FillReducing perm ) {
+        for (int trial = 0; trial < 60; trial++) {
+            int N = rand.nextInt(10)+1;
+
+            DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
+            DMatrixSparseCSC A_sp = ConvertDMatrixStruct.convert(A,(DMatrixSparseCSC)null,UtilEjml.EPS);
+
+            LUSparseDecomposition_F64<DMatrixSparseCSC> lu_sparse = create(perm);
+
+            assertTrue(lu_sparse.decompose(A_sp));
+
+            double expected = CommonOps_DDRM.det(A);
+            double found = lu_sparse.computeDeterminant().real;
+
+            assertEquals(expected,found,UtilEjml.TEST_F64);
+
+        }
     }
 
     @Test
@@ -231,5 +257,4 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
             assertEquals(1,(int)P.get(i,pivot[i]));
         }
     }
-
 }
