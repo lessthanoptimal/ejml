@@ -63,12 +63,12 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public void lockStructure() {
-        throw new RuntimeException("Implement");
+        cholesky.lockStructure();
     }
 
     @Override
     public boolean isStructureLocked() {
-        return false;
+        return cholesky.isStructureLocked();
     }
 
     @Override

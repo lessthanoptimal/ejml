@@ -31,8 +31,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Generic tests for linear solvers
@@ -53,6 +52,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     protected boolean canHandleTall = true;
     protected boolean canHandleWide = true;
     protected boolean canDecomposeZeros = true;
+    protected boolean canLockStructure = true;
 
     public abstract LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> createSolver(FillReducing permutation);
 
@@ -164,5 +164,44 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         double q_bad = (double)solver.quality();
 
         assertTrue(q_bad < q_good);
+    }
+
+    @Test
+    public void ifCanNotLockThrowException() {
+        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> d = createSolver(FillReducing.NONE);
+        if( canLockStructure ) {
+            d.lockStructure();
+        } else {
+            try {
+                d.lockStructure();
+                fail("RuntimeException should have been thrown");
+            } catch (RuntimeException ignore) {
+            }
+        }
+    }
+
+    @Test
+    public void lockingDoesNotChangeSolution() {
+        if( !canLockStructure )
+            return;
+
+        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> d = createSolver(FillReducing.NONE);
+
+        DMatrixSparseCSC A = createA(10);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(A.numRows,5,rand);
+        DMatrixRMaj X0 = new DMatrixRMaj(A.numCols,5);
+        DMatrixRMaj X1 = new DMatrixRMaj(A.numCols,5);
+
+        assertTrue(d.setA((DMatrixSparseCSC)A.copy()));
+        d.solve(B.copy(),X0);
+
+        assertFalse(d.isStructureLocked());
+        d.lockStructure();
+        assertTrue(d.isStructureLocked());
+
+        assertTrue(d.setA(A));
+        d.solve(B,X1);
+
+        EjmlUnitTests.assertEquals(X0,X1,UtilEjml.TEST_F64);
     }
 }

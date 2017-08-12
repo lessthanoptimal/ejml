@@ -22,12 +22,16 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.ComputePermutation;
+import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.decomposition.GenericDecompositionTests_DSCC;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -36,11 +40,36 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestQrLeftLookingDecomposition_DSCC {
+public class TestQrLeftLookingDecomposition_DSCC extends GenericDecompositionTests_DSCC {
 
     Random rand = new Random(234);
     protected FillReducing permutationTests[] =
             new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
+
+    @Override
+    public DMatrixSparseCSC createMatrix(int N) {
+        return RandomMatrices_DSCC.rectangle(N*10/7,N,N/2+1,rand);
+    }
+
+    @Override
+    public DecompositionSparseInterface<DMatrixSparseCSC> createDecomposition() {
+        return new QrLeftLookingDecomposition_DSCC(null);
+    }
+
+    @Override
+    public List<DMatrixSparseCSC> decompose(DecompositionSparseInterface<DMatrixSparseCSC> d, DMatrixSparseCSC A) {
+        QrLeftLookingDecomposition_DSCC qr = (QrLeftLookingDecomposition_DSCC)d;
+
+        assertTrue(qr.decompose(A));
+
+        List<DMatrixSparseCSC> list = new ArrayList<>();
+        list.add( qr.getQ(null, false));
+        list.add( qr.getR(null, false));
+
+
+        return list;
+    }
+
 
     @Test
     public void process_tall() {

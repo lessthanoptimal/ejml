@@ -56,7 +56,6 @@ Date format: year/month/day
   * Added *GrowArray to act as workspace in sparse algorithms
 
 Sparse Matrix
-- TODO implement and add tests for fix structure in Solvers. Don't recompute the structure
 - TODO clean up new interfaces
 - TODO Modify decomposition interfaces.
   * Add getPivotVectors()

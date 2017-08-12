@@ -35,8 +35,18 @@ public interface LinearSolverSparse<S extends Matrix, D extends Matrix> {
 
     double quality();
 
+    /**
+     * <p>Save results from structural analysis step. This can reduce computations if a matrix with the exactly same
+     * non-zero pattern is decomposed in the future.  If a matrix has yet to be processed then the structure of
+     * the next matrix is saved. If a matrix has already been processed then the structure of the most recently
+     * processed matrix will be saved.</p>
+     */
     void lockStructure();
 
+    /**
+     * Checks to see if the structure is locked.
+     * @return true if locked or false if not locked.
+     */
     boolean isStructureLocked();
 
     /**
@@ -52,8 +62,6 @@ public interface LinearSolverSparse<S extends Matrix, D extends Matrix> {
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
     void solve(D B, D X);
-
-    // TODO add a solve for sparse matrices?
 
     /**
      * Returns true if the passed in matrix to {@link #setA(Matrix)}

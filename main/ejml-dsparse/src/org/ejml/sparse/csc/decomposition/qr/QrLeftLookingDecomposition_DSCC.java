@@ -65,6 +65,11 @@ public class QrLeftLookingDecomposition_DSCC implements
     // if true that means a singular matrix was detected
     boolean singular;
 
+    // true if it has successfully decomposed a matrix
+    private boolean decomposed = false;
+    // if true then the structure is locked and won't be computed again
+    private boolean locked = false;
+
     public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
         this.applyReduce = new ApplyFillReductionPermutation(permutation,false);
 
@@ -76,16 +81,19 @@ public class QrLeftLookingDecomposition_DSCC implements
     public boolean decompose(DMatrixSparseCSC A) {
         DMatrixSparseCSC C = applyReduce.apply(A);
 
-        // compute the structure of V and R
-        if( !structure.process(C) )
-            return false;
+        if( !decomposed || !locked ) {
+            // compute the structure of V and R
+            if (!structure.process(C))
+                return false;
 
-        // Initialize data structured used in the decomposition
-        initializeDecomposition(C);
+            // Initialize data structured used in the decomposition
+            initializeDecomposition(C);
+        }
 
-        // perform the decomposution
+        // perform the decomposition
         performDecomposition(C);
 
+        decomposed = true;
         return true;
     }
 
@@ -267,5 +275,17 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     public boolean isSingular() {
         return singular;
+    }
+
+    @Override
+    public void lockStructure() {
+        if( locked )
+            return;
+        this.locked = true;
+    }
+
+    @Override
+    public boolean isStructureLocked() {
+        return locked;
     }
 }

@@ -22,11 +22,15 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.decomposition.GenericDecompositionTests_DSCC;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -34,13 +38,36 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericLuTests_DSCC {
+public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC {
     Random rand = new Random(0x45478);
 
     protected FillReducing permTests[] =
             new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     public abstract LUDecomposition_F64<DMatrixSparseCSC> create( FillReducing permutation );
+
+    @Override
+    public DMatrixSparseCSC createMatrix(int N) {
+        return RandomMatrices_DSCC.symmetricPosDef(N,N/3+1,rand);
+    }
+
+    @Override
+    public DecompositionSparseInterface<DMatrixSparseCSC> createDecomposition() {
+        return (DecompositionSparseInterface)create(FillReducing.NONE);
+    }
+
+    @Override
+    public List<DMatrixSparseCSC> decompose(DecompositionSparseInterface<DMatrixSparseCSC> d, DMatrixSparseCSC A) {
+        LUDecomposition_F64<DMatrixSparseCSC> lu = (LUDecomposition_F64<DMatrixSparseCSC>)d;
+
+        assertTrue(lu.decompose(A));
+
+        List<DMatrixSparseCSC> list = new ArrayList<>();
+        list.add( lu.getLower(null));
+        list.add( lu.getUpper(null));
+
+        return list;
+    }
 
     @Test
     public void checkHandConstructed() {

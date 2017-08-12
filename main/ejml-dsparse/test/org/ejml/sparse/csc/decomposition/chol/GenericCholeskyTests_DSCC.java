@@ -22,11 +22,15 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.decomposition.GenericDecompositionTests_DSCC;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -35,13 +39,35 @@ import static org.junit.Assert.*;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericCholeskyTests_DSCC {
+public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTests_DSCC {
     Random rand = new Random(0x45478);
 
     boolean canL = true;
     boolean canR = true;
 
     public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower);
+
+    @Override
+    public DMatrixSparseCSC createMatrix(int N) {
+        return RandomMatrices_DSCC.symmetricPosDef(N,N/3+1,rand);
+    }
+
+    @Override
+    public DecompositionSparseInterface<DMatrixSparseCSC> createDecomposition() {
+        return (DecompositionSparseInterface)create(true);
+    }
+
+    @Override
+    public List<DMatrixSparseCSC> decompose(DecompositionSparseInterface<DMatrixSparseCSC> d, DMatrixSparseCSC A) {
+        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = (CholeskyDecomposition_F64<DMatrixSparseCSC>)d;
+
+        assertTrue(chol.decompose(A));
+
+        List<DMatrixSparseCSC> list = new ArrayList<>();
+        list.add( chol.getT(null));
+
+        return list;
+    }
 
     /**
      * Test case with a hand constructed matrix

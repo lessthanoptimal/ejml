@@ -64,12 +64,12 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
 
     @Override
     public void lockStructure() {
-        throw new RuntimeException("Implement");
+        qr.lockStructure();
     }
 
     @Override
     public boolean isStructureLocked() {
-        return false;
+        return qr.isStructureLocked();
     }
 
     @Override

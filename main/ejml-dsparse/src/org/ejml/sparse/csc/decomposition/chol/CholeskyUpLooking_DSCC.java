@@ -37,7 +37,7 @@ import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
  * @author Peter Abeles
  */
 public class CholeskyUpLooking_DSCC implements
-        CholeskyDecomposition_F64<DMatrixSparseCSC>, // TODO create a sparse cholesky interface?
+        CholeskyDecomposition_F64<DMatrixSparseCSC>,
         DecompositionSparseInterface<DMatrixSparseCSC>
 {
     private int N;
@@ -54,14 +54,25 @@ public class CholeskyUpLooking_DSCC implements
     int []counts = new int[1];
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
 
+    // true if it has successfully decomposed a matrix
+    private boolean decomposed = false;
+    // if true then the structure is locked and won't be computed again
+    private boolean locked = false;
+
     @Override
     public boolean decompose(DMatrixSparseCSC orig) {
         if( orig.numCols != orig.numRows )
             throw new IllegalArgumentException("Must be a square matrix");
 
-        performSymbolic(orig);
+        if( !locked || !decomposed)
+            performSymbolic(orig);
 
-        return performDecomposition(orig);
+        if( performDecomposition(orig) ) {
+            decomposed = true;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void performSymbolic(DMatrixSparseCSC A) {
@@ -175,5 +186,17 @@ public class CholeskyUpLooking_DSCC implements
 
     public IGrowArray getGw() {
         return gw;
+    }
+
+    @Override
+    public void lockStructure() {
+        if( locked )
+            return;
+        this.locked = true;
+    }
+
+    @Override
+    public boolean isStructureLocked() {
+        return locked;
     }
 }

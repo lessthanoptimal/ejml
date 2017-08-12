@@ -28,6 +28,10 @@ import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
  * @author Peter Abeles
  */
 public class TestLuUpLooking_DSCC extends GenericLuTests_DSCC {
+    public TestLuUpLooking_DSCC() {
+        this.canLockStructure = false;
+    }
+
     @Override
     public LUDecomposition_F64<DMatrixSparseCSC> create(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);

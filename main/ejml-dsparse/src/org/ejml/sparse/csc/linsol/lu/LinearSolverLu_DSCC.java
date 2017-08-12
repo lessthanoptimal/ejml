@@ -57,12 +57,12 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
     @Override
     public void lockStructure() {
-        throw new RuntimeException("Implement");
+        decomposition.lockStructure();
     }
 
     @Override
     public boolean isStructureLocked() {
-        return false;
+        return decomposition.isStructureLocked();
     }
 
     @Override

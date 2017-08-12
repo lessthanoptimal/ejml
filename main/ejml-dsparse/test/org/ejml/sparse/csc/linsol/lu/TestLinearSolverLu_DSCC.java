@@ -35,6 +35,7 @@ public class TestLinearSolverLu_DSCC extends GenericLinearSolverSparseTests_DSCC
 
     public TestLinearSolverLu_DSCC() {
         canDecomposeZeros = false;
+        canLockStructure = false;
     }
 
     @Override
