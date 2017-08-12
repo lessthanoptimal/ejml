@@ -1425,9 +1425,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Size of internal array elements.  32 or 64 bits
      */
     public int bits() {
-        if( mat.getClass() == DMatrixRMaj.class ) {
+        if( mat instanceof DMatrixRMaj) {
             return 64;
-        } else if( mat.getClass() == FMatrixRMaj.class ) {
+        } else if( mat instanceof FMatrixRMaj ) {
             return 32;
         } else {
             throw new RuntimeException("Unknown matrix type");
