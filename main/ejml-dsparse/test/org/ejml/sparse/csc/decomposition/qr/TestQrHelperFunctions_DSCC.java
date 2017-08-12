@@ -100,11 +100,13 @@ public class TestQrHelperFunctions_DSCC {
 
         DScalar beta = new DScalar();
 
-        double s = QrHelperFunctions_DSCC.computeHouseholder(v.data,offset,N,beta);
+        double max = QrHelperFunctions_DSCC.findMax(v.data,offset,N);
+        double tau = QrHelperFunctions_DSCC.computeHouseholder(v.data,offset,N,max,beta);
 
         QrHelperFunctions_DDRM.rank1UpdateMultR(x,v.data,beta.value,0,offset,N,new double[N]);
 
-        assertEquals(s,x.data[offset],UtilEjml.TEST_F64);
+        // there's a sign ambiguity
+        assertEquals(tau,Math.abs(x.data[offset]),UtilEjml.TEST_F64);
         for (int i = offset+1; i < N; i++) {
             assertEquals(0,x.data[i], UtilEjml.TEST_F64);
         }

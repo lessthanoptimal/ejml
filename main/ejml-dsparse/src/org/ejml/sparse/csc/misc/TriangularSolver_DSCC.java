@@ -513,7 +513,7 @@ public class TriangularSolver_DSCC {
 
         double max = T.unsafe_get(0,0);
         for( int i = 1; i < N; i++ ) {
-            max = Math.max(max,T.unsafe_get(i,i));
+            max = Math.max(max,Math.abs(T.unsafe_get(i,i)));
         }
 
         if( max == 0.0 )

@@ -95,37 +95,46 @@ public class QrHelperFunctions_DSCC {
         }
     }
 
+    public static double findMax(double []x , int xStart , int xEnd ) {
+        double max = 0;
+        for (int i = xStart; i < xEnd ; i++) {
+            double val = Math.abs(x[i]);
+            if( val > max )
+                max = val;
+        }
+
+        return max;
+    }
+
     /**
      * Creates a householder reflection.
      *
-     * (I-gamma*v*v')*x = s*e1
+     * (I-gamma*v*v')*x = tau*e1
      *
      * <p>NOTE: Same as cs_house in csparse</p>
      * @param x (Input) Vector x (Output) Vector v. Modified.
      * @param xStart First index in X that is to be processed
      * @param xEnd Last + 1 index in x that is to be processed.
      * @param gamma (Output) Storage for computed beta
-     * @return variable s
+     * @return variable tau
      */
-    public static double computeHouseholder(double []x , int xStart , int xEnd , DScalar gamma ) {
-        double s, tau = 0;
-        for (int i = xStart+1; i < xEnd ; i++) {
-            double val = x[i];
+    public static double computeHouseholder(double []x , int xStart , int xEnd , double max , DScalar gamma ) {
+        double tau = 0;
+        for (int i = xStart; i < xEnd ; i++) {
+            double val = x[i] /= max;
             tau += val*val;
         }
-        if( tau == 0) {
-            s = Math.abs(x[xStart]);
-            gamma.value = x[xStart] <= 0 ? 2 : 0;
-            x[xStart] = 1;
-        } else {
-            s = Math.sqrt(x[xStart]*x[xStart] + tau);
-            if( x[xStart] <= 0) {
-                x[xStart] = x[xStart] - s;
-            } else {
-                x[xStart] = -tau/(x[xStart] + s);
-            }
-            gamma.value = -1.0 / (s * x[xStart]);
+        tau = Math.sqrt(tau);
+        if( x[xStart] < 0 ) {
+            tau = -tau;
         }
-        return s;
+        double u_0 = x[xStart] + tau;
+        gamma.value = u_0/tau;
+        x[xStart] = 1;
+        for (int i = xStart+1; i < xEnd ; i++) {
+            x[i] /= u_0;
+        }
+
+        return tau*max;
     }
 }

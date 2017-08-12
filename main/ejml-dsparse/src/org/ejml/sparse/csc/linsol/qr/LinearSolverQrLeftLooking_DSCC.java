@@ -58,7 +58,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         return TriangularSolver_DSCC.qualityTriangular(qr.getR());
     }
 

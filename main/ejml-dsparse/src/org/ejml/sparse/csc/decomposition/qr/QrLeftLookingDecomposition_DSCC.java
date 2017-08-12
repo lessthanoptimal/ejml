@@ -18,7 +18,6 @@
 
 package org.ejml.sparse.csc.decomposition.qr;
 
-import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DScalar;
@@ -65,7 +64,6 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     // if true that means a singular matrix was detected
     boolean singular;
-    double singularTol = UtilEjml.EPS;
 
     public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
         this.applyReduce = new ApplyFillReductionPermutation(permutation,false);
@@ -153,12 +151,15 @@ public class QrLeftLookingDecomposition_DSCC implements
                 x[V.nz_rows[p]] = 0;
             }
             R.nz_rows[R.nz_length] = k;
-            R.nz_values[R.nz_length] = QrHelperFunctions_DSCC.computeHouseholder(V.nz_values,p1,V.nz_length,Beta);
-            if( R.nz_values[R.nz_length] <= singularTol ) {
+            double max = QrHelperFunctions_DSCC.findMax(V.nz_values,p1,V.nz_length);
+            if( max == 0.0) {
                 singular = true;
+                R.nz_values[R.nz_length] = 0;
+                beta[k] = 0;
+            } else {
+                R.nz_values[R.nz_length] = -QrHelperFunctions_DSCC.computeHouseholder(V.nz_values, p1, V.nz_length, max, Beta);
+                beta[k] = Beta.value;
             }
-
-            beta[k] = Beta.value;
             R.nz_length++;
         }
         R.col_idx[n] = R.nz_length;
