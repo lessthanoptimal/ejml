@@ -64,7 +64,7 @@ public class BenchmarkInverseStabilitySparse {
 
     public void evaluateAll()
     {
-        System.out.println("PDF nearly singular might not be a good test");
+        System.out.println("Cholesky nearly singular results might not be accurate");
 
         List<CandidateInfo> candidates = new ArrayList<>();
 
