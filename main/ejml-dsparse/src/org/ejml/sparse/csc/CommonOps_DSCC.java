@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
@@ -849,7 +849,7 @@ public class CommonOps_DSCC {
      * @return The determinant.
      */
     public static double det( DMatrixSparseCSC A ) {
-        LUDecomposition_F64<DMatrixSparseCSC> alg = DecompositionFactory_DSCC.lu(FillReducing.NONE);
+        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = DecompositionFactory_DSCC.lu(FillReducing.NONE);
 
         if( alg.inputModified() ) {
             A = A.copy();

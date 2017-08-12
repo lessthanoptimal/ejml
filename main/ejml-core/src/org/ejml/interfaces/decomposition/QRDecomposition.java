@@ -41,9 +41,6 @@ import org.ejml.data.Matrix;
  * <li>QQ<sup>T</sup>=I</li>
  * <li>Q<sup>T</sup>=Q<sup>-1</sup></li>
  * </ul>
-
- * @see org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholder_DDRM
- * @see org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_DDRM
  *
  * @author Peter Abeles
  */

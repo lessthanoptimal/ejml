@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.CholeskySparseDecomposition;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
 /**
@@ -252,7 +252,7 @@ public class MatrixFeatures_DSCC {
         if( A.numRows != A.numCols )
             return false;
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC();
+        CholeskySparseDecomposition<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC();
         return chol.decompose(A);
     }
 

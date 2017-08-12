@@ -100,7 +100,7 @@ public class TestQrHelperFunctions_DSCC {
 
         DScalar beta = new DScalar();
 
-        double max = QrHelperFunctions_DSCC.findMax(v.data,offset,N);
+        double max = QrHelperFunctions_DDRM.findMax(v.data,offset,N-offset);
         double tau = QrHelperFunctions_DSCC.computeHouseholder(v.data,offset,N,max,beta);
 
         QrHelperFunctions_DDRM.rank1UpdateMultR(x,v.data,beta.value,0,offset,N,new double[N]);

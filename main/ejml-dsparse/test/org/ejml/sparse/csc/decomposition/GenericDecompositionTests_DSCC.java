@@ -21,10 +21,11 @@ package org.ejml.sparse.csc.decomposition;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.DecompositionSparseInterface;
+import org.ejml.interfaces.decomposition.DecompositionSparseInterface;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -34,7 +35,9 @@ import static org.junit.Assert.*;
  * @author Peter Abeles
  */
 public abstract class GenericDecompositionTests_DSCC {
-    public boolean canLockStructure = true;
+    protected Random rand = new Random(0x45478);
+
+    protected boolean canLockStructure = true;
 
     /**
      * Create a matrix which can be decomposed.

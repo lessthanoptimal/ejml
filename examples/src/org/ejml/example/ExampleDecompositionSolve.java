@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -49,7 +49,7 @@ public class ExampleDecompositionSolve {
         RandomMatrices_DSCC.ensureNotSingular(A,rand);
 
         // Create the LU decomposition
-        LUDecomposition_F64<DMatrixSparseCSC> decompose =
+        LUSparseDecomposition_F64<DMatrixSparseCSC> decompose =
                 DecompositionFactory_DSCC.lu(FillReducing.NONE);
 
         // Decompose the matrix.

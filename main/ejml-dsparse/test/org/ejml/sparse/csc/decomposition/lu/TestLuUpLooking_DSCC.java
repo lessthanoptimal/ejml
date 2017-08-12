@@ -19,7 +19,7 @@
 package org.ejml.sparse.csc.decomposition.lu;
 
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.LUDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
@@ -33,7 +33,7 @@ public class TestLuUpLooking_DSCC extends GenericLuTests_DSCC {
     }
 
     @Override
-    public LUDecomposition_F64<DMatrixSparseCSC> create(FillReducing permutation) {
+    public LUSparseDecomposition_F64<DMatrixSparseCSC> create(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         return new LuUpLooking_DSCC(cp);
     }

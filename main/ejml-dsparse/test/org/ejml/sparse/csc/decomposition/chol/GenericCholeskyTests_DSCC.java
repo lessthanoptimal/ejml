@@ -21,8 +21,8 @@ package org.ejml.sparse.csc.decomposition.chol;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.sparse.DecompositionSparseInterface;
+import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
+import org.ejml.interfaces.decomposition.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -40,12 +39,10 @@ import static org.junit.Assert.*;
  * @author Peter Abeles
  */
 public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTests_DSCC {
-    Random rand = new Random(0x45478);
-
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition_F64<DMatrixSparseCSC> create(boolean lower);
+    public abstract CholeskySparseDecomposition_F64<DMatrixSparseCSC> create(boolean lower);
 
     @Override
     public DMatrixSparseCSC createMatrix(int N) {
@@ -54,12 +51,13 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
 
     @Override
     public DecompositionSparseInterface<DMatrixSparseCSC> createDecomposition() {
-        return (DecompositionSparseInterface)create(true);
+        return create(true);
     }
 
     @Override
     public List<DMatrixSparseCSC> decompose(DecompositionSparseInterface<DMatrixSparseCSC> d, DMatrixSparseCSC A) {
-        CholeskyDecomposition_F64<DMatrixSparseCSC> chol = (CholeskyDecomposition_F64<DMatrixSparseCSC>)d;
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> chol =
+                (CholeskySparseDecomposition_F64<DMatrixSparseCSC>)d;
 
         assertTrue(chol.decompose(A));
 
@@ -80,7 +78,7 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
             checkHandConstructed(false);
     }
 
-    public void checkHandConstructed( boolean lower ) {
+    private void checkHandConstructed( boolean lower ) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+
@@ -89,9 +87,9 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
         DMatrixSparseCSC T = UtilEjml.parse_DSCC(
                      "1 0 0 " +
                         "2 3 0 "+
-                        "4 5 7",3);;
+                        "4 5 7",3);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
 
         assertTrue(cholesky.decompose(A));
         assertTrue(lower==cholesky.isLower());
@@ -118,9 +116,9 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
             checkMontiCarlo(false);
     }
 
-    public void checkMontiCarlo( boolean lower ) {
+    private void checkMontiCarlo( boolean lower ) {
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
 
         for (int width = 1; width <= 10; width++) {
             for (int mc = 0; mc < 30; mc++) {
@@ -163,7 +161,7 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
                      "1 -1 " +
                         "-1 -2 ",2);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> alg = create(true);
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> alg = create(true);
         assertFalse(alg.decompose(A));
     }
 
@@ -178,7 +176,7 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
                         "2 13 23 " +
                         "4 23 90", 3);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(true);
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> cholesky = create(true);
 
         assertTrue(cholesky.decompose(A));
 
@@ -197,13 +195,13 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
                 checkDeterminant(false);
     }
 
-    public void checkDeterminant( boolean lower) {
+    private void checkDeterminant( boolean lower) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+
                         "4 23 90",3);
 
-        CholeskyDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> cholesky = create(lower);
 
         assertTrue(cholesky.decompose(A));
 

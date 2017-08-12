@@ -22,9 +22,9 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DScalar;
 import org.ejml.data.IGrowArray;
-import org.ejml.interfaces.decomposition.QRDecomposition;
+import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
+import org.ejml.interfaces.decomposition.QRSparseDecomposition;
 import org.ejml.sparse.ComputePermutation;
-import org.ejml.sparse.DecompositionSparseInterface;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
@@ -39,8 +39,7 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class QrLeftLookingDecomposition_DSCC implements
-        QRDecomposition<DMatrixSparseCSC>,
-        DecompositionSparseInterface<DMatrixSparseCSC>
+        QRSparseDecomposition<DMatrixSparseCSC>
 {
     // shape of matrix and m2 includes fictitious rows
     int m,n,m2;
@@ -159,7 +158,7 @@ public class QrLeftLookingDecomposition_DSCC implements
                 x[V.nz_rows[p]] = 0;
             }
             R.nz_rows[R.nz_length] = k;
-            double max = QrHelperFunctions_DSCC.findMax(V.nz_values,p1,V.nz_length);
+            double max = QrHelperFunctions_DDRM.findMax(V.nz_values,p1,V.nz_length-p1);
             if( max == 0.0) {
                 singular = true;
                 R.nz_values[R.nz_length] = 0;

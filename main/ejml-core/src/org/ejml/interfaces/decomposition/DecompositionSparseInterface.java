@@ -16,11 +16,16 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse;
+package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
-import org.ejml.interfaces.decomposition.DecompositionInterface;
 
+/**
+ * Decomposition for sparse matrices. For direct solvers the structure often needs to be determined first. This
+ * interface provides the capability to lock that structure in place and speed up future calculations.
+ *
+ * @param <T>
+ */
 public interface DecompositionSparseInterface<T extends Matrix> extends
         DecompositionInterface<T>
 {

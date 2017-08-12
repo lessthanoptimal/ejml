@@ -16,19 +16,25 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.decomposition.chol;
+package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
+import org.ejml.data.Complex_F64;
+import org.ejml.data.Matrix;
 
-public class TestCholeskyUpLooking_DSCC extends GenericCholeskyTests_DSCC {
-
-    public TestCholeskyUpLooking_DSCC() {
-        canR = false;
-    }
-
-    @Override
-    public CholeskySparseDecomposition_F64<DMatrixSparseCSC> create(boolean lower) {
-        return new CholeskyUpLooking_DSCC();
-    }
+/**
+ * <p>
+ * Implementation of {@link CholeskySparseDecomposition} for 64-bit floats.
+ * </p>
+ *
+ * @author Peter Abeles
+ */
+public interface CholeskySparseDecomposition_F64<MatrixType extends Matrix>
+        extends CholeskySparseDecomposition<MatrixType>
+{
+    /**
+     * Computes the matrix's determinant using the decomposition.
+     *
+     * @return The determinant.
+     */
+    Complex_F64 computeDeterminant();
 }

@@ -19,9 +19,9 @@
 package org.ejml.sparse.csc.factory;
 
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.interfaces.decomposition.LUDecomposition_F64;
-import org.ejml.interfaces.decomposition.QRDecomposition;
+import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
+import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
+import org.ejml.interfaces.decomposition.QRSparseDecomposition;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
@@ -34,16 +34,16 @@ import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
  * @author Peter Abeles
  */
 public class DecompositionFactory_DSCC {
-    public static CholeskyDecomposition_F64 cholesky() {
+    public static CholeskySparseDecomposition_F64 cholesky() {
         return new CholeskyUpLooking_DSCC();
     }
 
-    public static QRDecomposition<DMatrixSparseCSC> qr(FillReducing permutation) {
+    public static QRSparseDecomposition<DMatrixSparseCSC> qr(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         return new QrLeftLookingDecomposition_DSCC(cp);
     }
 
-    public static LUDecomposition_F64<DMatrixSparseCSC> lu(FillReducing permutation) {
+    public static LUSparseDecomposition_F64<DMatrixSparseCSC> lu(FillReducing permutation) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         return new LuUpLooking_DSCC(cp);
     }

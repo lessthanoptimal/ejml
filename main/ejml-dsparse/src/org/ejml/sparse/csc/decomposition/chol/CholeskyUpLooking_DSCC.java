@@ -22,8 +22,7 @@ import org.ejml.data.Complex_F64;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.sparse.DecompositionSparseInterface;
+import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
@@ -37,8 +36,7 @@ import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
  * @author Peter Abeles
  */
 public class CholeskyUpLooking_DSCC implements
-        CholeskyDecomposition_F64<DMatrixSparseCSC>,
-        DecompositionSparseInterface<DMatrixSparseCSC>
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC>
 {
     private int N;
 

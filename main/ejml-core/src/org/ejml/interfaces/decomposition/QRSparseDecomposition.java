@@ -16,19 +16,16 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.decomposition.chol;
+package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
+import org.ejml.data.Matrix;
 
-public class TestCholeskyUpLooking_DSCC extends GenericCholeskyTests_DSCC {
 
-    public TestCholeskyUpLooking_DSCC() {
-        canR = false;
-    }
-
-    @Override
-    public CholeskySparseDecomposition_F64<DMatrixSparseCSC> create(boolean lower) {
-        return new CholeskyUpLooking_DSCC();
-    }
+/**
+ * <p>Sparse {@link QRDecomposition}</p>
+ *
+ * @author Peter Abeles
+ */
+public interface QRSparseDecomposition<T extends Matrix>
+        extends QRDecomposition<T>, DecompositionSparseInterface<T> {
 }

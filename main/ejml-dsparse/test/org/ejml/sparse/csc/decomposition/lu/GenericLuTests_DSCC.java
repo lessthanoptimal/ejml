@@ -21,8 +21,8 @@ package org.ejml.sparse.csc.decomposition.lu;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.interfaces.decomposition.LUDecomposition_F64;
-import org.ejml.sparse.DecompositionSparseInterface;
+import org.ejml.interfaces.decomposition.DecompositionSparseInterface;
+import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -39,12 +38,11 @@ import static org.junit.Assert.*;
  * @author Peter Abeles
  */
 public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC {
-    Random rand = new Random(0x45478);
 
-    protected FillReducing permTests[] =
+    private FillReducing permTests[] =
             new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
-    public abstract LUDecomposition_F64<DMatrixSparseCSC> create( FillReducing permutation );
+    public abstract LUSparseDecomposition_F64<DMatrixSparseCSC> create(FillReducing permutation );
 
     @Override
     public DMatrixSparseCSC createMatrix(int N) {
@@ -53,12 +51,12 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
 
     @Override
     public DecompositionSparseInterface<DMatrixSparseCSC> createDecomposition() {
-        return (DecompositionSparseInterface)create(FillReducing.NONE);
+        return create(FillReducing.NONE);
     }
 
     @Override
     public List<DMatrixSparseCSC> decompose(DecompositionSparseInterface<DMatrixSparseCSC> d, DMatrixSparseCSC A) {
-        LUDecomposition_F64<DMatrixSparseCSC> lu = (LUDecomposition_F64<DMatrixSparseCSC>)d;
+        LUSparseDecomposition_F64<DMatrixSparseCSC> lu = (LUSparseDecomposition_F64<DMatrixSparseCSC>)d;
 
         assertTrue(lu.decompose(A));
 
@@ -76,18 +74,18 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
-    public void checkHandConstructed(FillReducing perm) {
+    private void checkHandConstructed(FillReducing perm) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                      "1 2  4 " +
                         "2 13 23 "+
                         "4 23 90",3);
 
-        LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+        LUSparseDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
 
         checkSolution(A, lu);
     }
 
-    private void checkSolution(DMatrixSparseCSC A, LUDecomposition_F64<DMatrixSparseCSC> lu) {
+    private void checkSolution(DMatrixSparseCSC A, LUSparseDecomposition_F64<DMatrixSparseCSC> lu) {
 
         DMatrixSparseCSC Acpy = A.copy();
         assertTrue(lu.decompose(A));
@@ -116,9 +114,9 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
-    public void checkMontiCarlo( FillReducing perm ) {
+    private void checkMontiCarlo( FillReducing perm ) {
 
-        LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+        LUSparseDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
 
         for (int width = 1; width <= 10; width++) {
             for (int mc = 0; mc < 30; mc++) {
@@ -137,13 +135,13 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
-    public void testSingular(FillReducing perm) {
+    private void testSingular(FillReducing perm) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                 "1 4  3 " +
                         "5 0 9 " +
                         "5 0 9", 3);
 
-        LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+        LUSparseDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
 
         if(lu.decompose(A)) {
             assertTrue(lu.isSingular());
@@ -159,7 +157,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         DMatrixSparseCSC P = RandomMatrices_DSCC.rectangle(8,9,30,rand);
 
         for( FillReducing perm : permTests) {
-            LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+            LUSparseDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
 
             assertTrue(lu.decompose(A));
 
@@ -184,13 +182,13 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
-    public void checkDeterminant(FillReducing perm ) {
+    private void checkDeterminant(FillReducing perm ) {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
                 "1 4  3 " +
                         "5 0 9 "+
                         "2 2 2",3);
 
-        LUDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
+        LUSparseDecomposition_F64<DMatrixSparseCSC> lu = create(perm);
 
         assertTrue(lu.decompose(A));
 
