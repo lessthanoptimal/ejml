@@ -111,14 +111,16 @@ public class LuUpLooking_DSCC
             int top = TriangularSolver_DSCC.solve(L,true,A,col,x,pinv,gxi,gw);
             int []xi = gxi.data;
 
-            //--------- Find the Next Pivot. That will be the column with the largest value
+            //--------- Find the Next Pivot. That will be the row with the largest value
+            //
+            // NOTE: A critical difference from the dense algorithm is here. A row is only selected as a pivot
+            //       if it has not already been selected as a pivot before. This means it's possible to have
+            //       a large number be divided by a much smaller number, making it less numerically stable.
+            //
             int ipiv = -1;
             double a = -Double.MAX_VALUE;
             for (int p = top; p < n; p++) {
                 int i = xi[p];                  // x(i) is nonzero
-                // NOTE: A critical difference from the dense algorithm is here. A row is only selected as a pivot
-                //       if it has not already been selected as a pivot before. This means it's possible to have
-                //       a large number be divided by a much smaller number, making it less numerically stable.
                 if( pinv[i]< 0 ) {
                     double t;
                     if( (t = Math.abs(x[i])) > a ) {
