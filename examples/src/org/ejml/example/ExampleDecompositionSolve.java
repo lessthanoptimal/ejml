@@ -63,18 +63,17 @@ public class ExampleDecompositionSolve {
         DMatrixSparseCSC P = decompose.getRowPivot(null);
 
         // Storage for an intermediate step
-        DMatrixSparseCSC tmp = new DMatrixSparseCSC(N,N,0);
+        DMatrixSparseCSC tmp = A.createLike();
 
         // Storage for the inverse matrix
-        DMatrixSparseCSC Ainv = new DMatrixSparseCSC(N,N,0);
+        DMatrixSparseCSC Ainv = A.createLike();
 
         // Solve for the inverse: P*I = L*U*inv(A)
         TriangularSolver_DSCC.solve(L,true,P,tmp,null,null,null);
         TriangularSolver_DSCC.solve(U,false,tmp,Ainv,null,null,null);
 
-
         // Make sure the inverse has been found. A*inv(A) = identity should be an identity matrix
-        DMatrixSparseCSC found = new DMatrixSparseCSC(N,N,0);
+        DMatrixSparseCSC found = A.createLike();
 
         CommonOps_DSCC.mult(A,Ainv,found);
         found.print();

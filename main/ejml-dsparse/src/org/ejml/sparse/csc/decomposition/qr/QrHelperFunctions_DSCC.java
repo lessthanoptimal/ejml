@@ -115,7 +115,7 @@ public class QrHelperFunctions_DSCC {
      * @param x (Input) Vector x (Output) Vector v. Modified.
      * @param xStart First index in X that is to be processed
      * @param xEnd Last + 1 index in x that is to be processed.
-     * @param gamma (Output) Storage for computed beta
+     * @param gamma (Output) Storage for computed gamma
      * @return variable tau
      */
     public static double computeHouseholder(double []x , int xStart , int xEnd , double max , DScalar gamma ) {

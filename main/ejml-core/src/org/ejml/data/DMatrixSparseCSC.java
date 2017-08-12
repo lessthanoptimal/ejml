@@ -72,6 +72,16 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     public boolean indicesSorted=false;
 
     /**
+     * Constructor with a default arrayLength of zero.
+     *
+     * @param numRows Number of rows
+     * @param numCols Number of columns
+     */
+    public DMatrixSparseCSC(int numRows , int numCols ) {
+        this(numRows,numCols,0);
+    }
+
+    /**
      * Specifies shape and number of non-zero elements that can be stored.
      *
      * @param numRows Number of rows
@@ -113,7 +123,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public <T extends Matrix> T createLike() {
-        return (T)new DMatrixSparseCSC(numRows,numCols, nz_length);
+        return (T)new DMatrixSparseCSC(numRows,numCols);
     }
 
     @Override
