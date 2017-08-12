@@ -60,9 +60,7 @@ public class ExampleDecompositionSolve {
         // Extract new copies of the L and U matrices
         DMatrixSparseCSC L = decompose.getLower(null);
         DMatrixSparseCSC U = decompose.getUpper(null);
-
-        // Let's compute the inverse of A. This is done by using an identity matrix
-        DMatrixSparseCSC I = CommonOps_DSCC.identity(N);
+        DMatrixSparseCSC P = decompose.getRowPivot(null);
 
         // Storage for an intermediate step
         DMatrixSparseCSC tmp = new DMatrixSparseCSC(N,N,0);
@@ -70,8 +68,8 @@ public class ExampleDecompositionSolve {
         // Storage for the inverse matrix
         DMatrixSparseCSC Ainv = new DMatrixSparseCSC(N,N,0);
 
-        // Solve for the inverse
-        TriangularSolver_DSCC.solve(L,true,I,tmp,null,null,null);
+        // Solve for the inverse: P*I = L*U*inv(A)
+        TriangularSolver_DSCC.solve(L,true,P,tmp,null,null,null);
         TriangularSolver_DSCC.solve(U,false,tmp,Ainv,null,null,null);
 
 
