@@ -713,4 +713,29 @@ public class TestCommonOps_DSCC {
         }
     }
 
+    @Test
+    public void changeSign() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
+        DMatrixSparseCSC B = A.copy();
+
+        CommonOps_DSCC.changeSign(A,A);
+
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(-B.get(i,i),A.get(i,i), UtilEjml.TEST_F64);
+            }
+        }
+
+        A = B.copy();
+        DMatrixSparseCSC C = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
+
+        CommonOps_DSCC.changeSign(A,C);
+
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(B.get(i,i),A.get(i,i), UtilEjml.TEST_F64);
+                assertEquals(-B.get(i,i),C.get(i,i), UtilEjml.TEST_F64);
+            }
+        }
+    }
 }

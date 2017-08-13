@@ -57,14 +57,12 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void minus(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.subtract(A,B,output);
-        throw new RuntimeException("Unsupported");
+        CommonOps_DSCC.add(1,A,-1,B,output, null, null);
     }
 
     @Override
     public void minus(DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.subtract(A, (double)b, output);
-        throw new RuntimeException("Unsupported");
+        throw new ConvertToDenseException();
     }
 
     @Override
@@ -165,8 +163,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void changeSign(DMatrixSparseCSC a) {
-//        CommonOps_DSCC.changeSign(a);
-        throw new RuntimeException("Unsupported");
+        CommonOps_DSCC.changeSign(a,a);
     }
 
     @Override

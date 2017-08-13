@@ -285,6 +285,29 @@ public class CommonOps_DSCC {
         }
     }
 
+    /**
+     * B = -A.   Changes the sign of elements in A and stores it in B. A and B can be the same instance.
+     *
+     * @param A (Input) Matrix. Not modified.
+     * @param B (Output) Matrix. Modified.
+     */
+    public static void changeSign(DMatrixSparseCSC A , DMatrixSparseCSC B ) {
+        if( A.numRows != B.numRows || A.numCols != B.numCols )
+            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
+        if( A != B ) {
+            B.copyStructure(A);
+        }
+
+        for (int i = 0; i < A.nz_length; i++) {
+            B.nz_values[i] = -A.nz_values[i];
+        }
+    }
+
+    /**
+     * Returns the value of the element with the largest abs()
+     * @param A (Input) Matrix. Not modified.
+     * @return scalar
+     */
     public static double elementMinAbs( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;

@@ -42,6 +42,7 @@ Date format: year/month/day
   * Added invert() dense
   * Added det()
   * Added removeZeros()
+  * Added changeSign()
   * Fixed various bugs
 - CommonOps_DDRM
   * Added permuteRowInv()
@@ -58,8 +59,7 @@ Date format: year/month/day
 
 Sparse Matrix
 - TODO Sparse Functions
-  * subtract
-  * changeSign
+  * extract
   * trace
   * elementSum
   * elementDiv

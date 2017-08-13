@@ -158,6 +158,19 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
             setMatrix(new FMatrixRMaj(numRows, numCols));
     }
 
+    public SimpleMatrix(int numRows, int numCols, MatrixType type) {
+        switch( type ) {
+            case DDRM:setMatrix(new DMatrixRMaj(numRows, numCols));break;
+            case FDRM:setMatrix(new FMatrixRMaj(numRows, numCols));break;
+            case ZDRM:setMatrix(new ZMatrixRMaj(numRows, numCols));break;
+            case CDRM:setMatrix(new CMatrixRMaj(numRows, numCols));break;
+            case DSCC:setMatrix(new DMatrixSparseCSC(numRows, numCols));break;
+            case FSCC:setMatrix(new FMatrixSparseCSC(numRows, numCols));break;
+            default:
+                throw new RuntimeException("Unknown matrix type");
+        }
+    }
+
     /**
      * Creats a new SimpleMatrix which is identical to the original.
      *
@@ -322,8 +335,8 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     @Override
-    protected SimpleMatrix createMatrix( int numRows , int numCols ) {
-        return new SimpleMatrix(numRows,numCols, mat.getClass());
+    protected SimpleMatrix createMatrix(int numRows, int numCols, MatrixType type) {
+        return new SimpleMatrix(numRows,numCols, type);
     }
 
     @Override

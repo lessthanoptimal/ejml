@@ -20,6 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.Matrix;
+import org.ejml.data.MatrixType;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.simple.SimpleBase;
 
@@ -100,7 +101,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
      * of the correct type.
      */
     @Override
-    protected StatisticsMatrix createMatrix(int numRows, int numCols) {
+    protected StatisticsMatrix createMatrix(int numRows, int numCols, MatrixType type) {
         return new StatisticsMatrix(numRows,numCols);
     }
 

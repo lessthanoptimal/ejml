@@ -65,9 +65,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @param numRows number of rows in the new matrix.
      * @param numCols number of columns in the new matrix.
+     * @param type Type of matrix it should create
      * @return A new matrix.
      */
-    protected abstract T createMatrix( int numRows , int numCols );
+    protected abstract T createMatrix(int numRows, int numCols, MatrixType type);
 
     protected abstract T wrapMatrix( Matrix m );
 
@@ -130,7 +131,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A matrix that is n by m.
      */
     public T transpose() {
-        T ret = createMatrix(mat.getNumCols(),mat.getNumRows());
+        T ret = createMatrix(mat.getNumCols(),mat.getNumRows(), mat.getType());
 
         ops.transpose(mat,ret.mat);
 
@@ -153,7 +154,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The results of this operation.
      */
     public T mult( T b ) {
-        T ret = createMatrix(mat.getNumRows(),b.getMatrix().getNumCols());
+        T ret = createMatrix(mat.getNumRows(),b.getMatrix().getNumCols(), mat.getType());
 
         ops.mult(mat,b.mat,ret.mat);
 
@@ -173,7 +174,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Kronecker product between this matrix and B.
      */
     public T kron( T B ) {
-        T ret = createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols());
+        T ret = createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols(), mat.getType());
 
         ops.kron(mat,B.mat,ret.mat);
 
@@ -196,7 +197,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The results of this operation.
      */
     public T plus( T b ) {
-        T ret = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T ret = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.plus(mat,b.mat,ret.mat);
 
@@ -219,7 +220,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The results of this operation.
      */
     public T minus( T b ) {
-        T ret = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T ret = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.minus(mat,b.mat,ret.mat);
 
@@ -268,7 +269,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A matrix that contains the results.
      */
     public T plus( double b ) {
-        T ret = createMatrix(numRows(),numCols());
+        T ret = createMatrix(numRows(),numCols(), mat.getType());
 
         if( bits() == 64 )
             CommonOps_DDRM.add((DMatrixRMaj)getMatrix(), b, (DMatrixRMaj)ret.getMatrix());
@@ -396,7 +397,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The inverse of this matrix.
      */
     public T invert() {
-        T ret = createMatrix(mat.getNumRows(), mat.getNumCols());
+        T ret = createMatrix(mat.getNumRows(), mat.getNumCols(), mat.getType());
 
         if( !ops.invert(mat,ret.mat))
             throw new SingularMatrixException();
@@ -414,7 +415,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return inverse computed using the pseudo inverse.
      */
     public T pseudoInverse() {
-        T ret = createMatrix(mat.getNumCols(),mat.getNumRows());
+        T ret = createMatrix(mat.getNumCols(),mat.getNumRows(), mat.getType());
         if (bits() == 64) {
             CommonOps_DDRM.pinv((DMatrixRMaj)mat, (DMatrixRMaj)ret.getMatrix());
         } else {
@@ -446,7 +447,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T solve( T b )
     {
-        T x = createMatrix(mat.getNumCols(),b.getMatrix().getNumCols());
+        T x = createMatrix(mat.getNumCols(),b.getMatrix().getNumCols(), mat.getType());
 
         if( !ops.solve(mat,x.mat,b.mat))
             throw new SingularMatrixException();
@@ -708,7 +709,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A new identical matrix.
      */
     public T copy() {
-        T ret = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T ret = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
         ret.getMatrix().set(this.getMatrix());
         return ret;
     }
@@ -824,7 +825,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         if( x0 == SimpleMatrix.END ) x0 = mat.getNumCols();
         if( x1 == SimpleMatrix.END ) x1 = mat.getNumCols();
 
-        T ret = createMatrix(y1-y0,x1-x0);
+        T ret = createMatrix(y1-y0,x1-x0, mat.getType());
 
         ops.extract(mat, y0, y1, x0, x1, ret.mat, 0, 0);
 
@@ -845,7 +846,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     {
         int length = extractRow ? mat.getNumCols() : mat.getNumRows();
 
-        T ret = extractRow ? createMatrix(1,length) : createMatrix(length,1);
+        T ret = extractRow ? createMatrix(1,length, mat.getType()) : createMatrix(length,1, mat.getType());
 
         if( bits() == 64 ) {
             if (extractRow) {
@@ -878,21 +879,21 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         if( bits() == 64 ) {
             if (MatrixFeatures_DDRM.isVector(mat)) {
                 int N = Math.max(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,N);
+                diag = createMatrix(N,N, mat.getType());
                 CommonOps_DDRM.diag((DMatrixRMaj)diag.getMatrix(),N,((DMatrixRMaj)mat).data);
             } else {
                 int N = Math.min(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,1);
+                diag = createMatrix(N,1, mat.getType());
                 CommonOps_DDRM.extractDiag((DMatrixRMaj)mat, (DMatrixRMaj)diag.getMatrix());
             }
         } else {
             if (MatrixFeatures_FDRM.isVector(mat)) {
                 int N = Math.max(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,N);
+                diag = createMatrix(N,N, mat.getType());
                 CommonOps_FDRM.diag((FMatrixRMaj)diag.getMatrix(),N,((FMatrixRMaj)mat).data);
             } else {
                 int N = Math.min(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,1);
+                diag = createMatrix(N,1, mat.getType());
                 CommonOps_FDRM.extractDiag((FMatrixRMaj)mat, (FMatrixRMaj)diag.getMatrix());
             }
         }
@@ -1007,7 +1008,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             int M = Math.max(maxRow,mat.getNumRows());
             int N = Math.max(maxCol,mat.getNumCols());
 
-            ret = createMatrix(M,N);
+            ret = createMatrix(M,N, mat.getType());
             ret.insertIntoThis(0,0,this);
         } else {
             ret = copy();
@@ -1048,7 +1049,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementMult( T b )
     {
-        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.elementMult(mat,b.mat,c.mat);
 
@@ -1066,7 +1067,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementDiv( T b )
     {
-        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.elementDiv(mat,b.mat,c.mat);
         return c;
@@ -1083,7 +1084,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementPower( T b )
     {
-        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.elementPower(mat,b.mat,c.mat);
 
@@ -1101,7 +1102,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementPower( double b )
     {
-        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.elementPower(mat,b,c.mat);
         return c;
@@ -1117,7 +1118,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementExp()
     {
-        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.elementExp(mat,c.mat);
 
@@ -1134,7 +1135,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementLog()
     {
-        T c = createMatrix(mat.getNumRows(),mat.getNumCols());
+        T c = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
 
         ops.elementLog(mat,c.mat);
 
@@ -1298,7 +1299,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             throws IOException {
         DMatrix mat = MatrixIO.loadCSV(fileName);
 
-        T ret = createMatrix(1,1);
+        T ret = createMatrix(1,1, mat.getType());
 
         ret.setMatrix(mat);
 
