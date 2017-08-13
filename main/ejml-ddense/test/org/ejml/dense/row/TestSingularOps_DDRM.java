@@ -89,12 +89,12 @@ public class TestSingularOps_DDRM {
         
         // put into descending order
         if( testArray ) {
-            SingularOps_DDRM.descendingOrder(U.matrix_F64(),false,singularValues,minLength,V.matrix_F64(),false);
+            SingularOps_DDRM.descendingOrder(U.ddrm(),false,singularValues,minLength,V.ddrm(),false);
             // put back into W
             for( int i = 0; i < singularValues.length; i++ )
                 W.set(i,i,singularValues[i]);
         } else {
-            SingularOps_DDRM.descendingOrder(U.matrix_F64(),false,W.matrix_F64(),V.matrix_F64(),false);
+            SingularOps_DDRM.descendingOrder(U.ddrm(),false,W.ddrm(),V.ddrm(),false);
         }
 
         // see if it changed the results
@@ -141,12 +141,12 @@ public class TestSingularOps_DDRM {
 
         // put into descending order
         if( testArray ) {
-            SingularOps_DDRM.descendingOrder(U.matrix_F64(),tranU,singularValues,minLength,V.matrix_F64(),tranV);
+            SingularOps_DDRM.descendingOrder(U.ddrm(),tranU,singularValues,minLength,V.ddrm(),tranV);
             // put back into S
             for( int i = 0; i < singularValues.length; i++ )
                 S.set(i,i,singularValues[i]);
         } else {
-            SingularOps_DDRM.descendingOrder(U.matrix_F64(),tranU,S.matrix_F64(),V.matrix_F64(),tranV);
+            SingularOps_DDRM.descendingOrder(U.ddrm(),tranU,S.ddrm(),V.ddrm(),tranV);
         }
 
         // see if it changed the results
@@ -186,14 +186,14 @@ public class TestSingularOps_DDRM {
         // put in a NaN
         S.set(2,2,Double.NaN);
 
-        SingularOps_DDRM.descendingOrder(U.matrix_F64(),false,S.matrix_F64(),V.matrix_F64(),false);
+        SingularOps_DDRM.descendingOrder(U.ddrm(),false,S.ddrm(),V.ddrm(),false);
 
         assertTrue( Double.isNaN((double)S.get(minLength-1,minLength-1)));
 
         // put in an Inf
         S.set(2,2,Double.POSITIVE_INFINITY);
 
-        SingularOps_DDRM.descendingOrder(U.matrix_F64(),false,S.matrix_F64(),V.matrix_F64(),false);
+        SingularOps_DDRM.descendingOrder(U.ddrm(),false,S.ddrm(),V.ddrm(),false);
 
         assertTrue( Double.isInfinite((double)S.get(0,0)));
     }
@@ -289,7 +289,7 @@ public class TestSingularOps_DDRM {
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(numRows,numCols,rand));
 
                 SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
-                assertTrue(svd.decompose(A.matrix_F64()));
+                assertTrue(svd.decompose(A.ddrm()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
@@ -334,7 +334,7 @@ public class TestSingularOps_DDRM {
                 SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(numRows,numCols,rand));
 
                 SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows(), A.numCols(),true,true,false);
-                assertTrue(svd.decompose(A.matrix_F64()));
+                assertTrue(svd.decompose(A.ddrm()));
 
                 SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null,false));
                 SimpleMatrix S = SimpleMatrix.wrap(svd.getW(null));
@@ -350,7 +350,7 @@ public class TestSingularOps_DDRM {
                 SimpleMatrix ns = SimpleMatrix.wrap(SingularOps_DDRM.nullSpace(svd,null,UtilEjml.EPS));
 
                 // make sure the null space is not all zero
-                assertTrue( Math.abs(CommonOps_DDRM.elementMaxAbs(ns.matrix_F64())) > 0 );
+                assertTrue( Math.abs(CommonOps_DDRM.elementMaxAbs(ns.ddrm())) > 0 );
 
                 // check the null space's size
                 assertEquals(ns.numRows(),A.numCols());
@@ -358,7 +358,7 @@ public class TestSingularOps_DDRM {
 
                 // see if the results are null
                 SimpleMatrix found = A.mult(ns);
-                assertTrue( Math.abs(CommonOps_DDRM.elementMaxAbs(found.matrix_F64())) <= 10*UtilEjml.EPS );
+                assertTrue( Math.abs(CommonOps_DDRM.elementMaxAbs(found.ddrm())) <= 10*UtilEjml.EPS );
             }
         }
     }

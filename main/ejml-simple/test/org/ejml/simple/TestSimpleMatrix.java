@@ -800,7 +800,7 @@ public class TestSimpleMatrix {
         assertEquals(orig.get(0,0)+B.get(0,0),A.get(0,0), UtilEjml.TEST_F64);
 
         A.set(orig);
-        A.equation("A = A+B",B.matrix_F64(),"B");
+        A.equation("A = A+B",B.ddrm(),"B");
         assertEquals(orig.get(0,0)+B.get(0,0),A.get(0,0), UtilEjml.TEST_F64);
 
         A.set(orig);

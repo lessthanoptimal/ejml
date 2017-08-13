@@ -457,7 +457,7 @@ public class TestBlockHouseHolder_DDRB {
 
         BlockHouseHolder_DDRB.computeZ(r,new DSubmatrixD1(Ab,0, A.numRows(), 0, r),
                 new DSubmatrixD1(Aw,0, A.numRows(), 0, r),
-                M,T.matrix_F64().data,beta);
+                M,T.ddrm().data,beta);
 
         for( int i = 0; i < A.numRows(); i++ ) {
             assertEquals(expected.get(i),Aw.get(i,M),UtilEjml.TEST_F64);
@@ -472,7 +472,7 @@ public class TestBlockHouseHolder_DDRB {
         // Y'*V
         SimpleMatrix expected = Y.transpose().mult(V);
 
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
+        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
         double found[] = new double[ M ];
 
         BlockHouseHolder_DDRB.computeY_t_V(r,new DSubmatrixD1(Ab,0, A.numRows(), 0, r),M,found);

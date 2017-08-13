@@ -61,7 +61,7 @@ public class TestTridiagonalHelper_DDRB {
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetric(width,-1,1,rand));
 
             TridiagonalDecompositionHouseholderOrig_DDRM decomp = new TridiagonalDecompositionHouseholderOrig_DDRM();
-            decomp.decompose(A.matrix_F64());
+            decomp.decompose(A.ddrm());
 
             DSubmatrixD1 Ab = insertIntoBlock(offX,offY,A,r);
             DSubmatrixD1 V = new DSubmatrixD1(new DMatrixRBlock(r,offX+A.numCols(),r));
@@ -119,7 +119,7 @@ public class TestTridiagonalHelper_DDRB {
             }
 
             // now compute it using the block matrix stuff
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
             DMatrixRBlock Wb = new DMatrixRBlock(Ab.numRows,Ab.numCols,r);
 
             DSubmatrixD1 Ab_sub = new DSubmatrixD1(Ab);
@@ -128,7 +128,7 @@ public class TestTridiagonalHelper_DDRB {
             TridiagonalHelper_DDRB.computeW_row(r, Ab_sub, Wb_sub, betas, 0);
 
             // see if the result is the same
-            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.matrix_F64(),UtilEjml.TEST_F64));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.ddrm(),UtilEjml.TEST_F64));
         }
     }
 
@@ -174,7 +174,7 @@ public class TestTridiagonalHelper_DDRB {
     private static DSubmatrixD1 insertIntoBlock(int offRow , int offCol , SimpleMatrix A , int r )
     {
         DMatrixRMaj B = new DMatrixRMaj(offRow+A.numRows(),offCol+A.numCols());
-        CommonOps_DDRM.insert(A.matrix_F64(),B,offRow,offCol);
+        CommonOps_DDRM.insert(A.ddrm(),B,offRow,offCol);
 
         DMatrixRBlock C = MatrixOps_DDRB.convert(B,r);
         return new DSubmatrixD1(C,offRow,C.numRows,offCol,C.numCols);
@@ -186,7 +186,7 @@ public class TestTridiagonalHelper_DDRB {
         // make a symmetric so that this mult will work
         A = A.transpose().mult(A);
 
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
+        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
         DMatrixRBlock V = new DMatrixRBlock(r,Ab.numCols,r);
 
         int row = 1;
@@ -252,8 +252,8 @@ public class TestTridiagonalHelper_DDRB {
 
             y = y.scale(-gamma);
 
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
-            DMatrixRBlock Vb = MatrixOps_DDRB.convert(Vo.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
+            DMatrixRBlock Vb = MatrixOps_DDRB.convert(Vo.ddrm(),r);
 
             TridiagonalHelper_DDRB.computeY(r, new DSubmatrixD1(Ab), new DSubmatrixD1(Vb), row, gamma);
 
@@ -281,8 +281,8 @@ public class TestTridiagonalHelper_DDRB {
 
             SimpleMatrix v = y.plus(u.scale(-(gamma/2.0)*u.dot(y)));
 
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
-            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
+            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.ddrm(),r);
 
             TridiagonalHelper_DDRB.computeRowOfV(r, new DSubmatrixD1(Ab), new DSubmatrixD1(Vb),
                     row, gamma);

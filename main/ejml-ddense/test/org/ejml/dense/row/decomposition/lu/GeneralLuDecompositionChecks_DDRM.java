@@ -68,8 +68,8 @@ public abstract class GeneralLuDecompositionChecks_DDRM {
         SimpleMatrix U = SimpleMatrix.wrap(alg.getUpper(null));
         SimpleMatrix P = SimpleMatrix.wrap(alg.getRowPivot(null));
 
-        EjmlUnitTests.assertEquals(octLower,L.matrix_F64(),UtilEjml.TEST_F64_SQ);
-        EjmlUnitTests.assertEquals(octUpper,U.matrix_F64(),UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(octLower,L.ddrm(),UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(octUpper,U.ddrm(),UtilEjml.TEST_F64_SQ);
 
         DMatrixRMaj A_found = P.mult(L).mult(U).getMatrix();
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));

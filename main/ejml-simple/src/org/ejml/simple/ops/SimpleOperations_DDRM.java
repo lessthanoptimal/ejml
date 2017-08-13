@@ -85,7 +85,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
 
     @Override
     public void divide(DMatrixRMaj A, /**/double val, DMatrixRMaj output) {
-        CommonOps_DDRM.divide( (double)val, A,output);
+        CommonOps_DDRM.divide( A, (double)val,output);
     }
 
     @Override
