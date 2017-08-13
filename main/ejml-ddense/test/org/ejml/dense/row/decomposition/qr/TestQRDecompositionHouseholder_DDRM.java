@@ -62,9 +62,9 @@ public class TestQRDecompositionHouseholder_DDRM extends GenericQrCheck_DDRM {
         DebugQR qr = new DebugQR(width,width);
 
         SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class );
-        RandomMatrices_DDRM.fillUniform(A.ddrm(),rand);
+        RandomMatrices_DDRM.fillUniform(A.getDDRM(),rand);
 
-        qr.householder(w,A.ddrm());
+        qr.householder(w,A.getDDRM());
 
         SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU()).extractMatrix(w,width,0,1);
 
@@ -105,10 +105,10 @@ public class TestQRDecompositionHouseholder_DDRM extends GenericQrCheck_DDRM {
         SimpleMatrix U = new SimpleMatrix(width,1, DMatrixRMaj.class);
         SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
 
-        RandomMatrices_DDRM.fillUniform(U.ddrm(),rand);
-        RandomMatrices_DDRM.fillUniform(A.ddrm(),rand);
+        RandomMatrices_DDRM.fillUniform(U.getDDRM(),rand);
+        RandomMatrices_DDRM.fillUniform(A.getDDRM(),rand);
 
-        qr.getQR().set(A.ddrm());
+        qr.getQR().set(A.getDDRM());
 
         // compute the results using standard matrix operations
         SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRMaj.class);
@@ -117,7 +117,7 @@ public class TestQRDecompositionHouseholder_DDRM extends GenericQrCheck_DDRM {
         SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,U.ddrm().getData(),gamma,tau);
+        qr.updateA(w,U.getDDRM().getData(),gamma,tau);
 
         DMatrixRMaj found = qr.getQR();
 

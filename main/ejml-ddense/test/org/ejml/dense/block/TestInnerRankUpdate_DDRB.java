@@ -61,8 +61,8 @@ public class TestInnerRankUpdate_DDRB {
         SimpleMatrix origA = SimpleMatrix.random64(lengthA,lengthA,-1.0 , 1.0 ,rand);
         SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA,-1.0 , 1.0 ,rand);
 
-        DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.ddrm(),N);
-        DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.ddrm(),N);
+        DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.getDDRM(),N);
+        DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.getDDRM(),N);
 
         DSubmatrixD1 subA = new DSubmatrixD1(blockA,0, origA.numRows(), 0, origA.numCols());
         DSubmatrixD1 subB = new DSubmatrixD1(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -70,7 +70,7 @@ public class TestInnerRankUpdate_DDRB {
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
         InnerRankUpdate_DDRB.rankNUpdate(N,alpha,subA,subB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(expected.ddrm(),blockA, UtilEjml.TEST_F64));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(expected.getDDRM(),blockA, UtilEjml.TEST_F64));
     }
 
     /**
@@ -92,8 +92,8 @@ public class TestInnerRankUpdate_DDRB {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA, -1.0 , 1.0 ,rand);
 
-        DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.ddrm(),N);
-        DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.ddrm(),N);
+        DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.getDDRM(),N);
+        DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.getDDRM(),N);
 
         DSubmatrixD1 subA = new DSubmatrixD1(blockA,0, origA.numRows(), 0, origA.numCols());
         DSubmatrixD1 subB = new DSubmatrixD1(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -101,7 +101,7 @@ public class TestInnerRankUpdate_DDRB {
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
         InnerRankUpdate_DDRB.symmRankNMinus_U(N,subA,subB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true,expected.ddrm(),blockA,UtilEjml.TEST_F64));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true,expected.getDDRM(),blockA,UtilEjml.TEST_F64));
     }
 
     @Test
@@ -120,8 +120,8 @@ public class TestInnerRankUpdate_DDRB {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(lengthA,rand));
         SimpleMatrix origB = SimpleMatrix.random64(lengthA,widthB, -1.0 , 1.0 ,rand);
 
-        DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.ddrm(),N);
-        DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.ddrm(),N);
+        DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.getDDRM(),N);
+        DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.getDDRM(),N);
 
         DSubmatrixD1 subA = new DSubmatrixD1(blockA,0, origA.numRows(), 0, origA.numCols());
         DSubmatrixD1 subB = new DSubmatrixD1(blockB,0, origB.numRows(), 0, origB.numCols());
@@ -132,6 +132,6 @@ public class TestInnerRankUpdate_DDRB {
 //        expected.print();
 //        blockA.print();
 
-        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false,expected.ddrm(),blockA,UtilEjml.TEST_F64));
+        assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false,expected.getDDRM(),blockA,UtilEjml.TEST_F64));
     }
 }

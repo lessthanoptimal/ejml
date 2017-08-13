@@ -86,7 +86,7 @@ public class TestTridiagonalDecompositionHouseholder_DDRB {
     public void fullTest() {
         for( int width = 1; width <= r*3; width++ ) {
             SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetric(width,-1,1,rand));
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
 
             TridiagonalDecompositionHouseholder_DDRB alg = new TridiagonalDecompositionHouseholder_DDRB();
 
@@ -101,7 +101,7 @@ public class TestTridiagonalDecompositionHouseholder_DDRB {
             // reconstruct the original matrix
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
-            assertTrue(MatrixFeatures_DDRM.isIdentical(A.ddrm(),A_found.ddrm(),UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(A.getDDRM(),A_found.getDDRM(),UtilEjml.TEST_F64));
         }
     }
 
@@ -112,9 +112,9 @@ public class TestTridiagonalDecompositionHouseholder_DDRB {
             SimpleMatrix U = SimpleMatrix.random64(r,width, -1.0, 1.0 ,rand);
             SimpleMatrix V = SimpleMatrix.random64(r,width, -1.0, 1.0 ,rand);
 
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.ddrm(),r);
-            DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.ddrm(),r);
-            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.ddrm(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
+            DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.getDDRM(),r);
+            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.getDDRM(),r);
 
             SimpleMatrix expected = A.plus(U.transpose().mult(V));
 

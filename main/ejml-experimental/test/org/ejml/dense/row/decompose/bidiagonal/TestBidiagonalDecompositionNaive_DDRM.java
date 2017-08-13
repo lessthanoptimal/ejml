@@ -51,7 +51,7 @@ public class TestBidiagonalDecompositionNaive_DDRM {
 
         BidiagonalDecompositionNaive_DDRM decomp = new BidiagonalDecompositionNaive_DDRM();
 
-        assertTrue(decomp.decompose(A.ddrm()));
+        assertTrue(decomp.decompose(A.getDDRM()));
 
         SimpleMatrix U = decomp.getU();
         SimpleMatrix B = decomp.getB();
@@ -64,12 +64,12 @@ public class TestBidiagonalDecompositionNaive_DDRM {
 //        U.mult(A).mult(V).print();
 
         // check the decomposition
-        DMatrixRMaj foundA = U.mult(B).mult(V.transpose()).ddrm();
+        DMatrixRMaj foundA = U.mult(B).mult(V.transpose()).getDDRM();
 
 //        A.print();
 //        foundA.print();
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(A.ddrm(), foundA, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A.getDDRM(), foundA, UtilEjml.TEST_F64));
     }
 
 }

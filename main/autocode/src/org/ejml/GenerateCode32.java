@@ -95,6 +95,8 @@ public class GenerateCode32 {
             converter.replacePattern("_Z"+suffice, "_C"+suffice);
             converter.replacePattern("MatrixType.D"+suffice, "MatrixType.F"+suffice);
             converter.replacePattern("MatrixType.Z"+suffice, "MatrixType.C"+suffice);
+            converter.replacePattern(".getD"+suffice, ".getF"+suffice);
+            converter.replacePattern(".getZ"+suffice, ".getC"+suffice);
         }
 
         converter.replacePattern("DMatrix", "FMatrix");

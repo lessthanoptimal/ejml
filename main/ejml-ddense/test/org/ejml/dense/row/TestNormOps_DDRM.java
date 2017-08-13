@@ -224,7 +224,7 @@ public class TestNormOps_DDRM {
             SimpleMatrix A = SimpleMatrix.random64(5,5,-10,10,rand);
             double largest = (double)A.svd().getW().get(0);
 
-            assertEquals(largest, NormOps_DDRM.inducedP2(A.ddrm()), UtilEjml.TEST_F64);
+            assertEquals(largest, NormOps_DDRM.inducedP2(A.getDDRM()), UtilEjml.TEST_F64);
         }
     }
 
