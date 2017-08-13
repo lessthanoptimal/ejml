@@ -181,4 +181,10 @@ public class DMatrixRBlock extends DMatrixD1 {
         A.set(this);
         return A;
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }
+
 }

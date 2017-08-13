@@ -93,6 +93,8 @@ public class GenerateCode32 {
         for( String suffice : sufficeRoot) {
             converter.replacePattern("_D"+suffice, "_F"+suffice);
             converter.replacePattern("_Z"+suffice, "_C"+suffice);
+            converter.replacePattern("MatrixType.D"+suffice, "MatrixType.F"+suffice);
+            converter.replacePattern("MatrixType.Z"+suffice, "MatrixType.C"+suffice);
         }
 
         converter.replacePattern("DMatrix", "FMatrix");
@@ -240,6 +242,7 @@ public class GenerateCode32 {
         System.out.println("Path to project root: "+path);
 
         String coreDir[] = new String[]{
+                "main/ejml-simple/src/org/ejml/simple/ops",
                 "main/ejml-core/src/org/ejml/data",
                 "main/ejml-core/test/org/ejml/data",
                 "main/ejml-core/src/org/ejml/ops",

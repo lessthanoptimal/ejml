@@ -120,4 +120,9 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
     public void set(Matrix original) {
         throw new RuntimeException("Not yet supported");
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }
 }

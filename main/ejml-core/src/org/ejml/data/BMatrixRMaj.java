@@ -130,4 +130,9 @@ public class BMatrixRMaj implements ReshapeMatrix {
     public <T extends Matrix> T createLike() {
         return (T)new BMatrixRMaj(numRows,numCols);
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }
 }

@@ -167,5 +167,9 @@ public class DMatrix3x3 implements DMatrixFixed {
     public <T extends Matrix> T createLike() {
         return (T)new DMatrix3x3();
     }
-}
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }}
 

@@ -153,4 +153,9 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
     public void set(Matrix original) {
         throw new RuntimeException("Not supported yet");
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }
 }

@@ -48,7 +48,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
      */
     public static StatisticsMatrix wrap( DMatrixRMaj m ) {
         StatisticsMatrix ret = new StatisticsMatrix();
-        ret.mat = m;
+        ret.setMatrix( m );
 
         return ret;
     }
@@ -107,7 +107,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
     @Override
     protected StatisticsMatrix wrapMatrix(Matrix m) {
         StatisticsMatrix r = new StatisticsMatrix();
-        r.mat = m;
+        r.setMatrix( m );
         return r;
     }
 

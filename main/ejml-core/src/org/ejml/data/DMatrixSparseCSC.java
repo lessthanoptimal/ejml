@@ -412,4 +412,9 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     public boolean isFull() {
         return nz_length == numRows*numCols;
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.DSCC;
+    }
 }

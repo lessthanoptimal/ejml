@@ -402,4 +402,9 @@ public class DMatrixRMaj extends DMatrix1Row {
     public <T extends Matrix> T createLike() {
         return (T)new DMatrixRMaj(numRows,numCols);
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.DDRM;
+    }
 }

@@ -16,6 +16,7 @@ Date format: year/month/day
   * Added rows(begin,end) <-- extracts the specified rows
   * Added cols(begin,end) <-- extracts the specified columns
   * Fixed issue with bits() and derived classes. Thanks Florian Enner
+  * Redesigned internals to make it more module and easier to add support for different types of matrices
 - DMatrixSparseCSC
   * Fixed bug in set(row,col,val) where the first time a non-zero element was added it would assign the wrong value
     Thanks GeoffreyGuettier

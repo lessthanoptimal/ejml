@@ -117,6 +117,11 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
                 "    public <T extends Matrix> T createLike() {\n" +
                 "        return (T)new "+className+"();\n" +
                 "    }\n" +
+                "\n" +
+                "    @Override\n" +
+                "    public MatrixType getType() {\n" +
+                "        return MatrixType.UNSPECIFIED;\n" +
+                "    }" +
                 "}\n\n");
     }
 

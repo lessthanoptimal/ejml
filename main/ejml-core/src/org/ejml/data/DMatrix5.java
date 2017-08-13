@@ -153,5 +153,9 @@ public class DMatrix5 implements DMatrixFixed {
     public <T extends Matrix> T createLike() {
         return (T)new DMatrix5();
     }
-}
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }}
 

@@ -45,8 +45,8 @@ import org.ejml.data.Matrix;
  * </p>
  * @author Peter Abeles
  */
-public interface EigenDecomposition<MatrixType extends Matrix>
-        extends DecompositionInterface<MatrixType> {
+public interface EigenDecomposition<T extends Matrix>
+        extends DecompositionInterface<T> {
 
     /**
      * Returns the number of eigenvalues/eigenvectors.  This is the matrix's dimension.
@@ -65,5 +65,5 @@ public interface EigenDecomposition<MatrixType extends Matrix>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
-    MatrixType getEigenVector( int index );
+    T getEigenVector(int index );
 }

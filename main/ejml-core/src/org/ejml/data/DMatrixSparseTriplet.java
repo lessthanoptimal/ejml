@@ -252,4 +252,9 @@ public class DMatrixSparseTriplet implements DMatrixSparse
             value = e.value;
         }
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }
 }
