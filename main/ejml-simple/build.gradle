@@ -2,6 +2,8 @@ dependencies {
     compile project(':main:ejml-core')
     compile project(':main:ejml-fdense')
     compile project(':main:ejml-ddense')
+    compile project(':main:ejml-cdense')
+    compile project(':main:ejml-zdense')
     compile project(':main:ejml-dsparse')
     testCompile project(':main:ejml-experimental')
     testCompile project(':main:ejml-core').sourceSets.test.output

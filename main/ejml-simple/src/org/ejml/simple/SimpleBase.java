@@ -25,9 +25,7 @@ import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_FDRM;
 import org.ejml.equation.Equation;
 import org.ejml.ops.MatrixIO;
-import org.ejml.simple.ops.SimpleOperations_DDRM;
-import org.ejml.simple.ops.SimpleOperations_FDRM;
-import org.ejml.simple.ops.SimpleOperations_SPARSE;
+import org.ejml.simple.ops.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -101,6 +99,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
         switch( type ) {
             case DDRM: return new SimpleOperations_DDRM();
             case FDRM: return new SimpleOperations_FDRM();
+            case ZDRM: return new SimpleOperations_ZDRM();
+            case CDRM: return new SimpleOperations_CDRM();
             case DSCC: return new SimpleOperations_SPARSE();
         }
         throw new RuntimeException("Unknown Matrix Type");
