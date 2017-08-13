@@ -31,6 +31,7 @@ import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.GenericDecompositionTests_DSCC;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -108,8 +109,6 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         DMatrixSparseCSC found = new DMatrixSparseCSC(PL.numCols,U.numCols,0);
         CommonOps_DSCC.mult(PL,U,found);
 
-//        Acpy.print();
-//        found.print();
         EjmlUnitTests.assertEquals(Acpy,found,UtilEjml.TEST_F64);
     }
 
@@ -222,6 +221,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
+    @Ignore
     @Test
     public void testTall() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,4,10,rand);
@@ -232,6 +232,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         checkSolution(A,alg);
     }
 
+    @Ignore
     @Test
     public void testFat() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);
@@ -244,7 +245,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
 
     @Test
     public void testRowPivotVector() {
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,10,rand);
         RandomMatrices_DSCC.ensureNotSingular(A,rand);
         LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
 

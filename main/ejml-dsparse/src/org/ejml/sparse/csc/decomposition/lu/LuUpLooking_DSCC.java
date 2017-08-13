@@ -49,9 +49,6 @@ public class LuUpLooking_DSCC
     // row pivot matrix, for numerical stability
     private int pinv[] = new int[0];
 
-    // tolerance deciding if a number is zero
-    private double tol = UtilEjml.EPS;
-
     // work space variables
     private double x[] = new double[0];
     private IGrowArray gxi = new IGrowArray(); // storage for non-zero pattern
@@ -225,14 +222,6 @@ public class LuUpLooking_DSCC
     @Override
     public boolean inputModified() {
         return false;
-    }
-
-    public double getTol() {
-        return tol;
-    }
-
-    public void setTol(double tol) {
-        this.tol = tol;
     }
 
     public int[] getPinv() {

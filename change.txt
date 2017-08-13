@@ -56,7 +56,6 @@ Date format: year/month/day
   * Added *GrowArray to act as workspace in sparse algorithms
 
 Sparse Matrix
-- TODO Sparse LU Fat and Wide matrices
 - TODO Unify sparse and dense linear solver interface?
 - TODO Add fill reduce algorithms
   * Update CommonOps.solve() to specify a reasonable general purpose algorithm

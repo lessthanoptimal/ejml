@@ -1,10 +1,7 @@
-* cs_sparse algorithms do not appear to be scale invariant.
-  * Create a numerical stability test
-  * Might need to explain to people what's going on too
-  * Benchmark to see how much scale invariance hurts performance
-* Compare QR algorithm with each other.
-  * Synchronize documentation and use same variable names
-  * createHouseholder in sparse code doesn't appear to be the same
-* LU can only handle square matrices. 
-  * Make it able to handle wide and tall.
-  * Update unit test
+* LU Determinant
+  * Figure out how to compute the determinant's sign on the fly. Got close. Did 10 mc trials before failing
+* LU for wide/tall matrices
+  * Attempted to add this capability. 
+  * Appears to be non-trivial. Will need to go through all the helper algorithms
+    and make sure they can handle tall/wide matrices. Unit tests are for now commented out
+  * Start by updating triangular solvers
