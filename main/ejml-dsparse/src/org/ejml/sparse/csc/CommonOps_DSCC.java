@@ -892,7 +892,7 @@ public class CommonOps_DSCC {
      * Removes all elements from the matrix that are &gt; tol. The modification is done in place and no temporary
      * storage is declared.
      *
-     * @param A (Input) input matrix. Not modified.
+     * @param A (Input/Output) input matrix. Modified.
      * @param tol Tolerance for defining zero
      */
     public static void removeZeros( DMatrixSparseCSC A , double tol ) {
