@@ -213,7 +213,7 @@ public class QrLeftLookingDecomposition_DSCC implements
 
         // Remove fictitious rows
         if( V.numRows > m )
-            CommonOps_DSCC.extractRows(I,0,m-1,Q);
+            CommonOps_DSCC.extractRows(I,0,m,Q);
         else
             Q.set(I);
 
@@ -231,7 +231,7 @@ public class QrLeftLookingDecomposition_DSCC implements
             R.numRows = compact ? n : m;
         } else if( n > m && V.numRows != m ) {
             DMatrixSparseCSC tmp = new DMatrixSparseCSC(m,n,0);
-            CommonOps_DSCC.extractRows(R,0,m-1,tmp);
+            CommonOps_DSCC.extractRows(R,0,m,tmp);
             R.set(tmp);
         }
         return R;

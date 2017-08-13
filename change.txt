@@ -59,7 +59,6 @@ Date format: year/month/day
 
 Sparse Matrix
 - TODO Sparse Functions
-  * extract
   * trace
   * elementSum
   * elementDiv

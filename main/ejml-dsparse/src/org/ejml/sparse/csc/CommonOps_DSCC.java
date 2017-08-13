@@ -733,7 +733,7 @@ public class CommonOps_DSCC {
      * Creates a submatrix by extracting the specified rows from A. rows = {row0 %le; i %le; row1}.
      * @param A (Input) matrix
      * @param row0 First row. Inclusive
-     * @param row1 Last row. Inclusive
+     * @param row1 Last row+1.
      * @param out (Output, Option) Storage for output matrix
      * @return The submatrix
      */
@@ -742,7 +742,7 @@ public class CommonOps_DSCC {
         if( out == null )
             out = new DMatrixSparseCSC(1,1,1);
 
-        out.reshape(row1-row0+1,A.numCols,A.nz_length);
+        out.reshape(row1-row0,A.numCols,A.nz_length);
         out.col_idx[0] = 0;
         out.nz_length = 0;
 
@@ -752,7 +752,7 @@ public class CommonOps_DSCC {
 
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
-                if( row >= row0 && row <= row1 ) {
+                if( row >= row0 && row < row1 ) {
                     out.nz_values[out.nz_length] = A.nz_values[i];
                     out.nz_rows[out.nz_length++] = row-row0;
                 }
@@ -761,6 +761,62 @@ public class CommonOps_DSCC {
         }
 
         return out;
+    }
+
+    /**
+     * <p>
+     * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'.
+     * </p>
+     * <p>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
+     * <br>
+     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
+     * original matrix.
+     * </p>
+     *
+     * <p>WARNING: This is a very slow operation for sparse matrices. The current implementation is simple but
+     * involves excessive memory copying.</p>
+     *
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param srcX0 Start column.
+     * @param srcX1 Stop column+1.
+     * @param srcY0 Start row.
+     * @param srcY1 Stop row+1.
+     * @param dst Where the submatrix are stored.  Modified.
+     * @param dstY0 Start row in dst.
+     * @param dstX0 start column in dst.
+     */
+    public static void extract(DMatrixSparseCSC src, int srcY0, int srcY1, int srcX0, int srcX1,
+                               DMatrixSparseCSC dst, int dstY0, int dstX0)
+    {
+        if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
+            throw new IllegalArgumentException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+        if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols() )
+            throw new IllegalArgumentException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+
+        int w = srcX1-srcX0;
+        int h = srcY1-srcY0;
+
+        if( dstY0+h > dst.getNumRows() )
+            throw new IllegalArgumentException("dst is too small in rows");
+        if( dstX0+w > dst.getNumCols() )
+            throw new IllegalArgumentException("dst is too small in columns");
+
+        // NOTE: One possible optimization would be to determine the non-zero pattern in dst after the change is
+        //       applied, modify it's structure, then copy the values in. That way you aren't shifting memory constantly.
+        //
+        // NOTE: Another optimization would be to sort the src so that it doesn't need to go through every row
+        for (int colSrc = srcX0; colSrc < srcX1; colSrc++) {
+            int idxS0 = src.col_idx[colSrc];
+            int idxS1 = src.col_idx[colSrc+1];
+
+            for (int i = idxS0; i < idxS1; i++) {
+                int row = src.nz_rows[i];
+                if( row >= srcY0 && row < srcY1 ) {
+                    dst.set(row-srcY0+dstY0,colSrc-srcX0+dstX0, src.nz_values[i]);
+                }
+            }
+        }
     }
 
     /**

@@ -605,7 +605,7 @@ public class TestCommonOps_DSCC {
     public void extractRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
 
-        DMatrixSparseCSC B = CommonOps_DSCC.extractRows(A,2,3,null);
+        DMatrixSparseCSC B = CommonOps_DSCC.extractRows(A,2,2,null);
 
         assertEquals(2,B.numRows);
         assertEquals(10,B.numCols);
@@ -613,6 +613,29 @@ public class TestCommonOps_DSCC {
         for (int row = 0; row < 2; row++) {
             for (int col = 0; col < B.numRows; col++) {
                 assertEquals( A.get(row+2,col), B.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void extract() {
+        for (int trial = 0; trial < 20; trial++) {
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,6, 15, rand);
+
+            DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(2,3, 4, rand);
+            DMatrixSparseCSC B_orig = B.copy();
+
+            CommonOps_DSCC.extract(A, 1, 3, 2, 5, B, 0, 0);
+            assertTrue(CommonOps_DSCC.checkStructure(B));
+
+            for( int i = 1; i < 3; i++ ) {
+                for( int j = 2; j < 5; j++ ) {
+                    if( A.isAssigned(i,j)) {
+                        assertEquals(A.get(i, j), B.get(i - 1, j - 2), UtilEjml.TEST_F64);
+                    } else {
+                        assertEquals(B_orig.get(i - 1, j - 2), B.get(i - 1, j - 2), UtilEjml.TEST_F64);
+                    }
+                }
             }
         }
     }

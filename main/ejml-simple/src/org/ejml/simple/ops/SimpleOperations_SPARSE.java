@@ -152,8 +152,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void extract(DMatrixSparseCSC src, int srcY0, int srcY1, int srcX0, int srcX1, DMatrixSparseCSC dst, int dstY0, int dstX0) {
-//        CommonOps_DSCC.extract(src,srcY0,srcY1,srcX0,srcX1,dst,dstY0,dstX0);
-        throw new RuntimeException("Unsupported");
+        CommonOps_DSCC.extract(src,srcY0,srcY1,srcX0,srcX1,dst,dstY0,dstX0);
     }
 
     @Override
