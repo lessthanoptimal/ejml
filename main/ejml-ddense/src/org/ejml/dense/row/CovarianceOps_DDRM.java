@@ -23,7 +23,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.misc.UnrolledInverseFromMinor_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -98,7 +98,7 @@ public class CovarianceOps_DDRM {
                 cov_inv.data[0] = 1.0/cov_inv.data[0];
 
         } else {
-            LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(cov.numRows);
+            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(cov.numRows);
             // wrap it to make sure the covariance is not modified.
             solver = new LinearSolverSafe<DMatrixRMaj>(solver);
             if( !solver.setA(cov) )

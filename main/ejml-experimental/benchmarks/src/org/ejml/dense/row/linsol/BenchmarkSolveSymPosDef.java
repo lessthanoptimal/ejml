@@ -25,7 +25,7 @@ import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
 import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionLDL_DDRM;
 import org.ejml.dense.row.linsol.chol.LinearSolverCholLDL_DDRM;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -38,7 +38,7 @@ import java.util.Random;
 public class BenchmarkSolveSymPosDef {
 
 
-    public static long solve(LinearSolver solver , DMatrixRMaj A, DMatrixRMaj b , int numTrials ) {
+    public static long solve(LinearSolverDense solver , DMatrixRMaj A, DMatrixRMaj b , int numTrials ) {
 
         DMatrixRMaj x = new DMatrixRMaj(A.numCols,b.numCols);
 

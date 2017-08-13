@@ -24,7 +24,7 @@ import org.ejml.dense.row.decompose.lu.LUDecompositionAlt_ZDRM;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_ZDRM;
 import org.ejml.dense.row.linsol.lu.LinearSolverLu_ZDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * Factory for creating linear solvers of complex matrices
@@ -39,7 +39,7 @@ public class LinearSolverFactory_ZDRM {
      * @param matrixSize Approximate of rows and columns
      * @return Linear solver
      */
-    public static LinearSolver<ZMatrixRMaj> lu(int matrixSize ) {
+    public static LinearSolverDense<ZMatrixRMaj> lu(int matrixSize ) {
         return new LinearSolverLu_ZDRM(new LUDecompositionAlt_ZDRM());
     }
 
@@ -49,7 +49,7 @@ public class LinearSolverFactory_ZDRM {
      * @param matrixSize Approximate of rows and columns
      * @return Linear solver
      */
-    public static LinearSolver<ZMatrixRMaj> chol(int matrixSize ) {
+    public static LinearSolverDense<ZMatrixRMaj> chol(int matrixSize ) {
         return new LinearSolverChol_ZDRM(new CholeskyDecompositionInner_ZDRM());
     }
 
@@ -60,7 +60,7 @@ public class LinearSolverFactory_ZDRM {
      * @param numCols Approximate of columns
      * @return Linear solver
      */
-    public static LinearSolver<ZMatrixRMaj> qr(int numRows , int numCols ) {
+    public static LinearSolverDense<ZMatrixRMaj> qr(int numRows , int numCols ) {
         return new LinearSolverQrHouseCol_ZDRM();
     }
 }

@@ -25,7 +25,7 @@ import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.dense.row.decompose.lu.LUDecompositionAlt_ZDRM;
 import org.ejml.dense.row.linsol.lu.LinearSolverLu_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -50,7 +50,7 @@ public class TestInvertUsingSolve_ZDRM {
         ZMatrixRMaj A_inv = RandomMatrices_ZDRM.rectangle(3, 3, rand);
 
         LUDecompositionAlt_ZDRM decomp = new LUDecompositionAlt_ZDRM();
-        LinearSolver<ZMatrixRMaj> solver = new LinearSolverLu_ZDRM(decomp);
+        LinearSolverDense<ZMatrixRMaj> solver = new LinearSolverLu_ZDRM(decomp);
 
         solver.setA(A);
         InvertUsingSolve_ZDRM.invert(solver,A,A_inv);

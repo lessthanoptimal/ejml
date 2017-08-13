@@ -24,7 +24,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -42,7 +42,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class SolvePseudoInverseSvd_DDRM implements LinearSolver<DMatrixRMaj> {
+public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj> {
 
     // Used to compute pseudo inverse
     private SingularValueDecomposition_F64<DMatrixRMaj> svd;

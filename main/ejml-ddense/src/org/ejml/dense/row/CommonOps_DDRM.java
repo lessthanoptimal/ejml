@@ -31,7 +31,7 @@ import org.ejml.dense.row.mult.MatrixMatrixMult_DDRM;
 import org.ejml.dense.row.mult.MatrixMultProduct_DDRM;
 import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 import java.util.Arrays;
@@ -534,7 +534,7 @@ public class CommonOps_DDRM {
      */
     public static boolean solve(DMatrixRMaj a , DMatrixRMaj b , DMatrixRMaj x )
     {
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(a.numRows,a.numCols);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(a.numRows,a.numCols);
 
         // make sure the inputs 'a' and 'b' are not modified
         solver = new LinearSolverSafe<>(solver);
@@ -763,7 +763,7 @@ public class CommonOps_DDRM {
      */
     public static void pinv(DMatrixRMaj A , DMatrixRMaj invA )
     {
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.pseudoInverse(true);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.pseudoInverse(true);
         if( solver.modifiesA())
             A = A.copy();
 

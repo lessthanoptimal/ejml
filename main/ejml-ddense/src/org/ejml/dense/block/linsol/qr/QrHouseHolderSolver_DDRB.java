@@ -25,7 +25,7 @@ import org.ejml.dense.block.TriangularSolver_DDRB;
 import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -46,7 +46,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class QrHouseHolderSolver_DDRB implements LinearSolver<DMatrixRBlock> {
+public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock> {
 
     // QR decomposition algorithm
     protected QRDecompositionHouseholder_DDRB decomposer = new QRDecompositionHouseholder_DDRB();

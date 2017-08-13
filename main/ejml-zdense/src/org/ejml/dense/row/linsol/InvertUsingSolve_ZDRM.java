@@ -20,7 +20,7 @@ package org.ejml.dense.row.linsol;
 
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -32,7 +32,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  */
 public class InvertUsingSolve_ZDRM {
 
-    public static void invert(LinearSolver<ZMatrixRMaj> solver , ZMatrixRMaj A , ZMatrixRMaj A_inv , ZMatrixRMaj storage) {
+    public static void invert(LinearSolverDense<ZMatrixRMaj> solver , ZMatrixRMaj A , ZMatrixRMaj A_inv , ZMatrixRMaj storage) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
@@ -43,7 +43,7 @@ public class InvertUsingSolve_ZDRM {
         solver.solve(storage,A_inv);
     }
 
-    public static void invert(LinearSolver<ZMatrixRMaj> solver , ZMatrixRMaj A , ZMatrixRMaj A_inv ) {
+    public static void invert(LinearSolverDense<ZMatrixRMaj> solver , ZMatrixRMaj A , ZMatrixRMaj A_inv ) {
 
         if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");

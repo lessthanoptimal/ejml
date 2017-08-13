@@ -20,9 +20,9 @@ package org.ejml.sparse.csc.factory;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
-import org.ejml.sparse.LinearSolverSparse;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 import org.ejml.sparse.csc.decomposition.lu.LuUpLooking_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;

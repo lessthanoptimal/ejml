@@ -24,7 +24,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 import org.ejml.dense.row.linsol.lu.LinearSolverLu_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -49,7 +49,7 @@ public class TestInvertUsingSolve_DDRM {
         DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3,3,rand);
 
         LUDecompositionAlt_DDRM decomp = new LUDecompositionAlt_DDRM();
-        LinearSolver solver = new LinearSolverLu_DDRM(decomp);
+        LinearSolverDense solver = new LinearSolverLu_DDRM(decomp);
 
         solver.setA(A);
         InvertUsingSolve_DDRM.invert(solver,A,A_inv);

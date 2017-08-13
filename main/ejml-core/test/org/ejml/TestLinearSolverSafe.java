@@ -20,7 +20,7 @@ package org.ejml;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -46,7 +46,7 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(true,false);
         dummy.expectedA = 5;
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         Ainput.set(0,5);
         s.setA(Ainput);
@@ -65,7 +65,7 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(false,true);
         dummy.expectedB = 5;
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         Binput.set(0,5);
         s.solve(Binput,new DMatrixRMaj(1,1));
@@ -80,7 +80,7 @@ public class TestLinearSolverSafe {
     public void testSetA_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         s.setA(Ainput);
 
@@ -91,7 +91,7 @@ public class TestLinearSolverSafe {
     public void testSetA_mod() {
         DummySolver dummy = new DummySolver(true,false);
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         s.setA(Ainput);
 
@@ -102,7 +102,7 @@ public class TestLinearSolverSafe {
     public void testSolver_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         s.solve(Binput,new DMatrixRMaj(1,1));
 
@@ -113,7 +113,7 @@ public class TestLinearSolverSafe {
     public void testSolver_mod() {
         DummySolver dummy = new DummySolver(false,true);
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         s.solve(Binput,new DMatrixRMaj(1,1));
 
@@ -124,21 +124,21 @@ public class TestLinearSolverSafe {
     public void quality() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
 
         assertTrue(s.quality()==dummy.quality());
     }
 
     @Test
     public void modifies() {
-        LinearSolver<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(null);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(null);
 
         assertFalse(s.modifiesA());
         assertFalse(s.modifiesB());
 
     }
 
-    private class DummySolver implements LinearSolver<DMatrixRMaj>
+    private class DummySolver implements LinearSolverDense<DMatrixRMaj>
     {
         boolean modifiesA;
         boolean modifiesB;

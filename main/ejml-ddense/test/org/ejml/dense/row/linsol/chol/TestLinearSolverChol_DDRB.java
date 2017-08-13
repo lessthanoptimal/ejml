@@ -19,7 +19,7 @@
 package org.ejml.dense.row.linsol.chol;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolverChol_DDRB extends BaseCholeskySolveTests_DDRM {
 
     @Override
-    public LinearSolver<DMatrixRMaj> createSolver() {
+    public LinearSolverDense<DMatrixRMaj> createSolver() {
         return new LinearSolverChol_DDRB();
     }
 }

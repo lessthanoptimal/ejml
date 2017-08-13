@@ -24,7 +24,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -48,17 +48,17 @@ public abstract class BaseCholeskySolveTests_DDRM {
         testQuality_scale();
     }
 
-    public abstract LinearSolver<DMatrixRMaj> createSolver();
+    public abstract LinearSolverDense<DMatrixRMaj> createSolver();
 
-    public LinearSolver<DMatrixRMaj> createSafeSolver() {
-        LinearSolver<DMatrixRMaj> solver = createSolver();
+    public LinearSolverDense<DMatrixRMaj> createSafeSolver() {
+        LinearSolverDense<DMatrixRMaj> solver = createSolver();
         return new LinearSolverSafe<DMatrixRMaj>(solver);
     }
 
     @Test
     public void setA_dimensionCheck() {
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         try {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
@@ -70,7 +70,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
     @Test
     public void solve_dimensionCheck() {
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(4, rand);
         assertTrue(solver.setA(A));
@@ -100,7 +100,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
     @Test
     public void testSolve() {
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 17, 97, 320);
@@ -123,7 +123,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
     @Test
     public void testInvert() {
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DMatrixRMaj found = new DMatrixRMaj(A.numRows,A.numCols);
@@ -139,7 +139,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
     @Test
     public void testQuality() {
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = CommonOps_DDRM.diag(3,2,1);
         DMatrixRMaj B = CommonOps_DDRM.diag(3,2,0.001);
@@ -156,7 +156,7 @@ public abstract class BaseCholeskySolveTests_DDRM {
     @Test
     public void testQuality_scale() {
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = CommonOps_DDRM.diag(3,2,1);
         DMatrixRMaj B = A.copy();

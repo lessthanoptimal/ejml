@@ -24,7 +24,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Arrays;
 import java.util.List;
@@ -1406,7 +1406,7 @@ public abstract class Operation {
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
             ret.op = new Operation("solve-mm") {
-                LinearSolver<DMatrixRMaj> solver;
+                LinearSolverDense<DMatrixRMaj> solver;
                 @Override
                 public void process() {
 

@@ -25,7 +25,7 @@ import org.ejml.dense.row.linsol.qr.LinearSolverQrBlock64_DDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_DDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseTran_DDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrHouse_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -41,7 +41,7 @@ public class BenchmarkSolveOver {
 
     private static boolean includeSet = false;
 
-    public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolverDense<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
         DMatrixRMaj X = new DMatrixRMaj(A.numCols,B.numCols);
         RandomMatrices_DDRM.fillUniform(A,rand);

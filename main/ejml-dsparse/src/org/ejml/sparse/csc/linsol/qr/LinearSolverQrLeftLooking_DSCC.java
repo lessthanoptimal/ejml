@@ -22,7 +22,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.sparse.LinearSolverSparse;
+import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrHelperFunctions_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;

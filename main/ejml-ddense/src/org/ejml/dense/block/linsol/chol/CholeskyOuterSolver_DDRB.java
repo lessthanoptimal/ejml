@@ -25,7 +25,7 @@ import org.ejml.dense.block.TriangularSolver_DDRB;
 import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -47,7 +47,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class CholeskyOuterSolver_DDRB implements LinearSolver<DMatrixRBlock> {
+public class CholeskyOuterSolver_DDRB implements LinearSolverDense<DMatrixRBlock> {
 
     // cholesky decomposition
     private CholeskyOuterForm_DDRB decomposer = new CholeskyOuterForm_DDRB(true);

@@ -24,7 +24,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -195,7 +195,7 @@ public class EigenPowerMethod_DDRM {
     public boolean computeShiftInvert(DMatrixRMaj A , double alpha ) {
         initPower(A);
 
-        LinearSolver solver = LinearSolverFactory_DDRM.linear(A.numCols);
+        LinearSolverDense solver = LinearSolverFactory_DDRM.linear(A.numCols);
 
         SpecializedOps_DDRM.addIdentity(A,B,-alpha);
         solver.setA(B);

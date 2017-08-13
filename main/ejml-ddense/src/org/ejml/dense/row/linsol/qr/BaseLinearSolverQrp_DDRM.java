@@ -26,7 +26,7 @@ import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * <p>
@@ -80,7 +80,7 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
     // rank of the system matrix
     protected int rank;
 
-    protected LinearSolver<DMatrixRMaj> internalSolver = LinearSolverFactory_DDRM.leastSquares(1, 1);
+    protected LinearSolverDense<DMatrixRMaj> internalSolver = LinearSolverFactory_DDRM.leastSquares(1, 1);
 
     // used to compute optimal 2-norm solution
     private DMatrixRMaj W = new DMatrixRMaj(1,1);

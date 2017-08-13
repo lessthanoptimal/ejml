@@ -28,7 +28,6 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -158,27 +157,27 @@ public class TestTriangularSolver_DSCC {
     }
 
     // add back in if tall/wide support is required
-    @Ignore
-    @Test
-    public void solve_sparseX_matrix_tall() {
-        DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(3, 0, 6, -1, 1, rand);
-        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(1,3,3,rand);
-
-        DMatrixSparseCSC G = new DMatrixSparseCSC(4,3);
-        CommonOps_DSCC.concatRows(L,B,G);
-
-        DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(3,2,8,rand);
-        B = RandomMatrices_DSCC.rectangle(4,2,8,rand);
-
-        CommonOps_DSCC.mult(G,expected,B);
-
-        DMatrixSparseCSC found = expected.createLike();
-
-        TriangularSolver_DSCC.solve(G,true,B,found, null, null, null);
-
-        expected.print();
-        found.print();
-    }
+//    @Ignore
+//    @Test
+//    public void solve_sparseX_matrix_tall() {
+//        DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(3, 0, 6, -1, 1, rand);
+//        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(1,3,3,rand);
+//
+//        DMatrixSparseCSC G = new DMatrixSparseCSC(4,3);
+//        CommonOps_DSCC.concatRows(L,B,G);
+//
+//        DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(3,2,8,rand);
+//        B = RandomMatrices_DSCC.rectangle(4,2,8,rand);
+//
+//        CommonOps_DSCC.mult(G,expected,B);
+//
+//        DMatrixSparseCSC found = expected.createLike();
+//
+//        TriangularSolver_DSCC.solve(G,true,B,found, null, null, null);
+//
+//        expected.print();
+//        found.print();
+//    }
 
     @Test
     public void solve_pivots_sparseX_vector() {

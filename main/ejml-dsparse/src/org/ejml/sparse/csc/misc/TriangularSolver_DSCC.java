@@ -21,6 +21,7 @@ package org.ejml.sparse.csc.misc;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Arrays;
 
@@ -499,7 +500,7 @@ public class TriangularSolver_DSCC {
 
     /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
-     * is defined in {@link org.ejml.interfaces.linsol.LinearSolver#quality()}.  In
+     * is defined in {@link LinearSolverDense#quality()}.  In
      * this situation the quality os the absolute value of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.

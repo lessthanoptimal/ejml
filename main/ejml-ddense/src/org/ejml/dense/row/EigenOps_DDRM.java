@@ -26,7 +26,7 @@ import org.ejml.dense.row.decomposition.eig.EigenPowerMethod_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -99,7 +99,7 @@ public class EigenOps_DDRM {
         double prevError = Double.MAX_VALUE;
         boolean hasWorked = false;
 
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.linear(M.numRows);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.linear(M.numRows);
 
         double perp = 0.0001;
 

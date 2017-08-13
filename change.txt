@@ -56,7 +56,6 @@ Date format: year/month/day
   * Added *GrowArray to act as workspace in sparse algorithms
 
 Sparse Matrix
-- TODO Unify sparse and dense linear solver interface?
 - TODO Add fill reduce algorithms
   * Update CommonOps.solve() to specify a reasonable general purpose algorithm
 - TODO After fill reducing algorithms have been implemented revisit all unit tests which touch them and update

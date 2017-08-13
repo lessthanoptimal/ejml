@@ -26,7 +26,7 @@ import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Arrays;
 
@@ -46,7 +46,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
 
     DMatrixRMaj eigenvectorTemp;
 
-    LinearSolver solver;
+    LinearSolverDense solver;
 
     Complex_F64 origEigenvalues[];
     int N;

@@ -25,7 +25,7 @@ import org.ejml.dense.row.decompose.lu.LUDecompositionAlt_ZDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_ZDRM;
 import org.ejml.dense.row.misc.TransposeAlgs_ZDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Arrays;
 
@@ -781,7 +781,7 @@ public class CommonOps_ZDRM {
      */
     public static boolean invert( ZMatrixRMaj A )
     {
-        LinearSolver<ZMatrixRMaj> solver = LinearSolverFactory_ZDRM.lu(A.numRows);
+        LinearSolverDense<ZMatrixRMaj> solver = LinearSolverFactory_ZDRM.lu(A.numRows);
 
         if( solver.setA(A) ) {
             solver.invert(A);
@@ -817,7 +817,7 @@ public class CommonOps_ZDRM {
      */
     public static boolean invert(ZMatrixRMaj input , ZMatrixRMaj output )
     {
-        LinearSolver<ZMatrixRMaj> solver = LinearSolverFactory_ZDRM.lu(input.numRows);
+        LinearSolverDense<ZMatrixRMaj> solver = LinearSolverFactory_ZDRM.lu(input.numRows);
 
         if( solver.modifiesA() )
             input = input.copy();
@@ -858,7 +858,7 @@ public class CommonOps_ZDRM {
      */
     public static boolean solve(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj x )
     {
-        LinearSolver<ZMatrixRMaj> solver;
+        LinearSolverDense<ZMatrixRMaj> solver;
         if( a.numCols == a.numRows ) {
             solver = LinearSolverFactory_ZDRM.lu(a.numRows);
         } else {

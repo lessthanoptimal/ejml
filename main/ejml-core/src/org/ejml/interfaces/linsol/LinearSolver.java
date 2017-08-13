@@ -18,55 +18,18 @@
 
 package org.ejml.interfaces.linsol;
 
-import org.ejml.LinearSolverSafe;
 import org.ejml.data.Matrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 
 /**
- * <p>
- * An implementation of LinearSolver solves a linear system or inverts a matrix.  It masks more complex
- * implementation details, while giving the programmer control over memory management and performance.
- * To quickly detect nearly singular matrices without computing the SVD the {@link #quality()}
- * function is provided.
- * </p>
+ * <p>Base class for Linear Solvers.</p>
  *
- * <p>
- * A linear system is defined as:
- * A*X = B.<br>
- * where A &isin; &real; <sup>m &times; n</sup>, X &isin; &real; <sup>n &times; p</sup>,
- * B &isin; &real; <sup>m &times; p</sup>.  Different implementations can solve different
- * types and shapes in input matrices and have different memory and runtime performance.
- *</p>
- *
- * To solve a system:<br>
- * <ol>
- * <li> Call {@link #setA(org.ejml.data.Matrix)}
- * <li> Call {@link #solve(org.ejml.data.Matrix, org.ejml.data.Matrix)}.
- * </ol>
- *
- * <p>To invert a matrix:</p>
- * <ol>
- * <li> Call {@link #setA(org.ejml.data.Matrix)}
- * <li> Call {@link #invert(org.ejml.data.Matrix)}.
- * </ol>
- * <p>
- * A matrix can also be inverted by passing in an identity matrix to solve, but this will be
- * slower and more memory intensive than the specialized invert() function.
- * </p>
- *
- * <p>
- * <b>IMPORTANT:</b> Depending upon the implementation, input matrices might be overwritten by
- * the solver.  This
- * reduces memory and computational requirements and give more control to the programmer.  If
- * the input matrices need to be not modified then {@link LinearSolverSafe} can be used.  The
- * functions {@link #modifiesA()} and {@link #modifiesB()} specify which input matrices are being
- * modified.
- * </p>
+ * @see LinearSolverDense
  *
  * @author Peter Abeles
  */
-public interface LinearSolver< T extends Matrix> {
+public interface LinearSolver<S extends Matrix, D extends Matrix> {
 
     /**
      * <p>
@@ -83,7 +46,7 @@ public interface LinearSolver< T extends Matrix> {
      * @param A The 'A' matrix in the linear equation. Might be modified or save the reference.
      * @return true if it can be processed.
      */
-    boolean setA( T A );
+    boolean setA(S A);
 
     /**
      * <p>
@@ -116,20 +79,10 @@ public interface LinearSolver< T extends Matrix> {
      * @param B A matrix &real; <sup>m &times; p</sup>.  Might be modified.
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
-    void solve( T B , T X );
-
-
-    /**
-     * Computes the inverse of of the 'A' matrix passed into {@link #setA(org.ejml.data.Matrix)}
-     * and writes the results to the provided matrix.  If 'A_inv' needs to be different from 'A'
-     * is implementation dependent.
-     *
-     * @param A_inv Where the inverted matrix saved. Modified.
-     */
-    void invert( T A_inv );
+    void solve(D B, D X);
 
     /**
-     * Returns true if the passed in matrix to {@link #setA(org.ejml.data.Matrix)}
+     * Returns true if the passed in matrix to {@link #setA(Matrix)}
      * is modified.
      *
      * @return true if A is modified in setA().
@@ -137,7 +90,7 @@ public interface LinearSolver< T extends Matrix> {
     boolean modifiesA();
 
     /**
-     * Returns true if the passed in 'B' matrix to {@link #solve(org.ejml.data.Matrix, org.ejml.data.Matrix)}
+     * Returns true if the passed in 'B' matrix to {@link #solve(Matrix, Matrix)}
      * is modified.
      *
      * @return true if B is modified in solve(B,X).

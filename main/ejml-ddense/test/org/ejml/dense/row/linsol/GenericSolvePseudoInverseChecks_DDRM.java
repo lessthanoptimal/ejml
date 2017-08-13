@@ -23,7 +23,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -39,9 +39,9 @@ public class GenericSolvePseudoInverseChecks_DDRM {
 
     Random rand = new Random(234);
 
-    LinearSolver<DMatrixRMaj> solver;
+    LinearSolverDense<DMatrixRMaj> solver;
 
-    public GenericSolvePseudoInverseChecks_DDRM(LinearSolver<DMatrixRMaj> solver) {
+    public GenericSolvePseudoInverseChecks_DDRM(LinearSolverDense<DMatrixRMaj> solver) {
         this.solver = new LinearSolverSafe<DMatrixRMaj>( solver );
     }
 

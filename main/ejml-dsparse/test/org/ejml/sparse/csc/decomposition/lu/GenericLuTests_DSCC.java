@@ -31,7 +31,6 @@ import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.GenericDecompositionTests_DSCC;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -221,27 +220,27 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
-    @Ignore
-    @Test
-    public void testTall() {
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,4,10,rand);
-        RandomMatrices_DSCC.ensureNotSingular(A,rand);
-
-        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
-
-        checkSolution(A,alg);
-    }
-
-    @Ignore
-    @Test
-    public void testFat() {
-        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);
-        RandomMatrices_DSCC.ensureNotSingular(A,rand);
-
-        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
-
-        checkSolution(A,alg);
-    }
+//    @Ignore
+//    @Test
+//    public void testTall() {
+//        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,4,10,rand);
+//        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+//
+//        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
+//
+//        checkSolution(A,alg);
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void testFat() {
+//        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);
+//        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+//
+//        LUSparseDecomposition_F64<DMatrixSparseCSC> alg = create(FillReducing.NONE);
+//
+//        checkSolution(A,alg);
+//    }
 
     @Test
     public void testRowPivotVector() {
