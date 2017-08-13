@@ -605,7 +605,7 @@ public class TestCommonOps_DSCC {
     public void extractRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
 
-        DMatrixSparseCSC B = CommonOps_DSCC.extractRows(A,2,2,null);
+        DMatrixSparseCSC B = CommonOps_DSCC.extractRows(A,2,4,null);
 
         assertEquals(2,B.numRows);
         assertEquals(10,B.numCols);
