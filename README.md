@@ -175,7 +175,8 @@ https://github.com/lessthanoptimal/ejml/issues
 
 I would like to thank all the people have made various comments, suggestions, and reported bugs.  Also David Watkins
 for writing "Fundamentals of Matrix Computations", which clearly explains algorithms and yet addresses important
-implementation issues.  Sparse matrix algorithms come from Timothy A. Davis "Direct Methods for Sparse Linear Systems".
+implementation issues.  Timothy A. Davis for his book "Direct Methods for Sparse Linear Systems" and for CSparse
+which provided the initial seed for the sparse algorithms.
 
 ---------------------------------------------------------------------------
 ## License
