@@ -132,8 +132,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public /**/double trace(DMatrixSparseCSC A) {
-//        return CommonOps_DSCC.trace(A);
-        throw new RuntimeException("Unsupported");
+        return CommonOps_DSCC.trace(A);
     }
 
     @Override

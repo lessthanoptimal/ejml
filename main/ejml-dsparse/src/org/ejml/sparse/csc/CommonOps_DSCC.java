@@ -1017,5 +1017,34 @@ public class CommonOps_DSCC {
     public static void removeZeros( DMatrixSparseCSC A , double tol ) {
         ImplCommonOps_DSCC.removeZeros(A, tol);
     }
+
+    /**
+     * <p>
+     * This computes the trace of the matrix:<br>
+     * <br>
+     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }<br>
+     * where n = min(numRows,numCols)
+     * </p>
+     *
+     * @param A (Input) Matrix.  Not modified.
+     */
+    public static double trace( DMatrixSparseCSC A ) {
+        double output = 0;
+
+        int o = Math.min(A.numCols,A.numRows);
+        for (int col = 0; col < o; col++) {
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col+1];
+
+            for (int i = idx0; i < idx1; i++) {
+                if( A.nz_rows[i] == col ) {
+                    output += A.nz_values[i];
+                    break;
+                }
+            }
+        }
+
+        return output;
+    }
 }
 

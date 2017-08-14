@@ -815,4 +815,17 @@ public class TestCommonOps_DSCC {
             }
         }
     }
+
+    @Test
+    public void trace() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,14,-1,1,rand);
+
+        double expected = 0;
+        for (int i = 0; i < 4; i++) {
+            expected += A.get(i,i);
+        }
+
+        double found = CommonOps_DSCC.trace(A);
+        assertEquals(expected,found,UtilEjml.TEST_F64);
+    }
 }
