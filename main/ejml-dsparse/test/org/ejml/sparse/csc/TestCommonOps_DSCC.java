@@ -382,6 +382,60 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
+    public void elementSum() {
+        for (int trial = 0; trial < 50; trial++) {
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz,rand);
+
+            double expected = 0;
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    expected += A.get(i,j);
+                }
+            }
+
+            double found = CommonOps_DSCC.elementSum(A);
+
+            assertEquals(expected,found, UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
+    public void elementMult() {
+        for (int trial = 0; trial < 50; trial++) {
+//            System.out.println("------------------- Trial "+trial);
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz_a = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+            int nz_b = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
+            DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(rows,cols,nz_b,rand);
+            DMatrixSparseCSC C = RandomMatrices_DSCC.rectangle(rows,cols,rows*cols/5,rand);
+
+            CommonOps_DSCC.elementMult(A,B,C,null,null);
+            assertTrue(CommonOps_DSCC.checkStructure(C));
+
+            int nz_c = 0;
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    double expected = A.get(i,j)*B.get(i,j);
+                    assertEquals(expected,C.get(i,j), UtilEjml.TEST_F64);
+                    if( expected != 0 )
+                        nz_c++;
+                }
+            }
+
+            assertEquals(nz_c,C.nz_length);
+        }
+    }
+
+
+    @Test
     public void diag() {
         double d[] = new double[]{1.2,2.2,3.3};
 

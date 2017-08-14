@@ -138,13 +138,25 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void setRow(DMatrixSparseCSC A, int row, int startColumn, /**/double... values) {
+        // TODO Update with a more efficient algorithm
         for (int i = 0; i < values.length; i++) {
             A.set(row, startColumn + i, (double)values[i]);
         }
+        // check to see if value are zero, if so ignore them
+
+        // Do a pass through the matrix and see how many elements need to be added
+
+        // see if the existing storage is enough
+
+        // If it is enough ...
+        // starting from the tail, move a chunk, insert, move the next chunk, ...etc
+
+        // If not enough, create new arrays and construct it
     }
 
     @Override
     public void setColumn(DMatrixSparseCSC A, int column, int startRow,  /**/double... values) {
+        // TODO Update with a more efficient algorithm
         for (int i = 0; i < values.length; i++) {
             A.set(startRow + i, column, (double)values[i]);
         }
@@ -172,45 +184,37 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public /**/double elementSum(DMatrixSparseCSC A) {
-//        return CommonOps_DSCC.elementSum(A);
-        throw new RuntimeException("Unsupported");
+        return CommonOps_DSCC.elementSum(A);
     }
 
     @Override
     public void elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.elementMult(A,B,output);
-        throw new RuntimeException("Unsupported");
+        CommonOps_DSCC.elementMult(A,B,output,null,null);
     }
 
     @Override
     public void elementDiv(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.elementDiv(A,B,output);
-        throw new RuntimeException("Unsupported");
+        throw new ConvertToDenseException();
     }
 
     @Override
     public void elementPower(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.elementPower(A,B,output);
-        throw new RuntimeException("Unsupported");
-
+        throw new ConvertToDenseException();
     }
 
     @Override
     public void elementPower(DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.elementPower(A, (double)b, output);
-        throw new RuntimeException("Unsupported");
+        throw new ConvertToDenseException();
     }
 
     @Override
     public void elementExp(DMatrixSparseCSC A, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.elementExp(A,output);
-        throw new RuntimeException("Unsupported");
+        throw new ConvertToDenseException();
     }
 
     @Override
     public void elementLog(DMatrixSparseCSC A, DMatrixSparseCSC output) {
-//        CommonOps_DSCC.elementLog(A,output);
-        throw new RuntimeException("Unsupported");
+        throw new ConvertToDenseException();
     }
 
     @Override

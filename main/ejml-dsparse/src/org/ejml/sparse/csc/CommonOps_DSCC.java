@@ -342,6 +342,8 @@ public class CommonOps_DSCC {
         if( A.nz_length == 0)
             return 0;
 
+        // if every element is assigned a value then the first element can be a minimum.
+        // Otherwise zero needs to be considered
         double min = A.isFull() ? A.nz_values[0] : 0;
         for(int i = 0; i < A.nz_length; i++ ) {
             double val = A.nz_values[i];
@@ -357,6 +359,8 @@ public class CommonOps_DSCC {
         if( A.nz_length == 0)
             return 0;
 
+        // if every element is assigned a value then the first element can be a max.
+        // Otherwise zero needs to be considered
         double max = A.isFull() ? A.nz_values[0] : 0;
         for(int i = 0; i < A.nz_length; i++ ) {
             double val = A.nz_values[i];
@@ -368,6 +372,42 @@ public class CommonOps_DSCC {
         return max;
     }
 
+    public static double elementSum( DMatrixSparseCSC A ) {
+        if( A.nz_length == 0)
+            return 0;
+
+        double sum = 0;
+        for(int i = 0; i < A.nz_length; i++ ) {
+            sum += A.nz_values[i];
+        }
+
+        return sum;
+    }
+
+    /**
+     * Performs an element-wise multiplication.<br>
+     * C[i,j] = A[i,j]*B[i,j]<br>
+     * All matrices must have the same shape.
+     *
+     * @param A (Input) Matrix.
+     * @param B (Input) Matrix
+     * @param C (Ouptut) Matrix.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C ,
+                                    IGrowArray gw, DGrowArray gx) {
+        if( A.numCols != B.numCols || A.numRows != B.numRows || A.numCols != C.numCols || A.numRows != C.numRows )
+            throw new IllegalArgumentException("All inputs must have the same number of rows and columns");
+
+        ImplCommonOps_DSCC.elementMult(A,B,C,gw,gx);
+    }
+
+    /**
+     * Returns a diagonal matrix with the specified diagonal elements.
+     * @param values values of diagonal elements
+     * @return A diagonal matrix
+     */
     public static DMatrixSparseCSC diag(double... values ) {
         int N = values.length;
         DMatrixSparseCSC A = new DMatrixSparseCSC(N,N,N);

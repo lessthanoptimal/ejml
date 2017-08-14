@@ -163,6 +163,61 @@ public class ImplCommonOps_DSCC {
         C.col_idx[C.numCols] = C.nz_length;
     }
 
+    /**
+     * Performs element-wise multiplication:<br>
+     * C_ij = A_ij * B_ij
+     *
+     * @param A (Input) Matrix
+     * @param B (Input) Matrix
+     * @param C (Output) matrix.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                                    IGrowArray gw, DGrowArray gx)
+    {
+        double []x = adjust(gx,A.numRows);
+        int []w = adjust(gw,A.numRows);
+        Arrays.fill(w,0,A.numRows,-1); // fill with -1. This will be a value less than column
+
+        C.indicesSorted = false; // Hmm I think if B is storted then C will be sorted...
+        C.nz_length = 0;
+
+        for (int col = 0; col < A.numCols; col++) {
+            int idxA0 = A.col_idx[col];
+            int idxA1 = A.col_idx[col+1];
+            int idxB0 = B.col_idx[col];
+            int idxB1 = B.col_idx[col+1];
+
+            // compute the maximum number of elements that there can be in this row
+            int maxInRow = Math.min(idxA1-idxA0,idxB1-idxB0);
+
+            // make sure there are enough non-zero elements in C
+            if( C.nz_length+maxInRow > C.nz_values.length )
+                C.growMaxLength(C.nz_values.length+maxInRow,true);
+
+            // update the structure of C
+            C.col_idx[col] = C.nz_length;
+
+            // mark the rows that appear in A and save their value
+            for (int i = idxA0; i < idxA1; i++) {
+                int row = A.nz_rows[i];
+                w[row] = col;
+                x[row] = A.nz_values[i];
+            }
+
+            // If a row appears in A and B, multiply and set as an element in C
+            for (int i = idxB0; i < idxB1; i++) {
+                int row = B.nz_rows[i];
+                if( w[row] == col ) {
+                    C.nz_values[C.nz_length] = x[row]*B.nz_values[i];
+                    C.nz_rows[C.nz_length++] = row;
+                }
+            }
+        }
+        C.col_idx[C.numCols] = C.nz_length;
+    }
+
     public static void removeZeros( DMatrixSparseCSC input , DMatrixSparseCSC  output , double tol ) {
         output.reshape(input.numRows, input.numCols, input.nz_length);
         output.nz_length = 0;
