@@ -529,9 +529,9 @@ public class CommonOps_DSCC {
     /**
      * Applies the forward column and inverse row permutation specified by the two vector to the input matrix
      * and save the results in the output matrix. output[permRow[j],permCol[i]] = input[j,i]
-     * @param permRowInv (Input) Inverse row permutation vector
+     * @param permRowInv (Input) Inverse row permutation vector. Null is the same as passing in identity.
      * @param input (Input) Matrix which is to be permuted
-     * @param permCol (Input) Column permutation vector
+     * @param permCol (Input) Column permutation vector. Null is the same as passing in identity.
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
     public static void permute(int permRowInv[], DMatrixSparseCSC input, int permCol[], DMatrixSparseCSC output) {

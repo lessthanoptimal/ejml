@@ -60,8 +60,6 @@ Date format: year/month/day
   * Added DScalar and IScalar
   * Added *GrowArray to act as workspace in sparse algorithms
 
-TODO better documentation for sparse permute() it can be null. visualize example in matrix format
-
 ----- Version 0.31
 
 2017/05/18

@@ -50,16 +50,18 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         DMatrixSparseCSC a = new DMatrixSparseCSC(2,3,4);
 
         a.reshape(1,2,3);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
         assertEquals(1,a.numRows);
         assertEquals(2,a.numCols);
         assertEquals(4,a.nz_values.length);
-        assertEquals(3,a.nz_length);
+        assertEquals(0,a.nz_length);
 
         a.reshape(4,1,10);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
         assertEquals(4,a.numRows);
         assertEquals(1,a.numCols);
         assertEquals(4,a.nz_values.length);
-        assertEquals(4,a.nz_length);
+        assertEquals(0,a.nz_length);
     }
 
     @Test
