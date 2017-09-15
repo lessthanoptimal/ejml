@@ -435,6 +435,7 @@ public class CommonOps_DSCC {
         else
             P.reshape(N,N,N);
         P.indicesSorted = true;
+        P.nz_length = N;
 
         // each column should have one element inside of it
         if( !inverse ) {
@@ -508,6 +509,7 @@ public class CommonOps_DSCC {
             throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
 
         output.reshape(input.numRows,input.numCols,input.nz_length);
+        output.nz_length = input.nz_length;
         output.indicesSorted = false;
 
         System.arraycopy(input.nz_values,0,output.nz_values,0,input.nz_length);
@@ -540,7 +542,7 @@ public class CommonOps_DSCC {
 
         output.reshape(input.numRows,input.numCols,input.nz_length);
         output.indicesSorted = false;
-        output.col_idx[0] = 0;
+        output.nz_length = input.nz_length;
 
         int N = input.numCols;
 
@@ -676,6 +678,7 @@ public class CommonOps_DSCC {
             out = new DMatrixSparseCSC(0,0,0);
 
         out.reshape(top.numRows+bottom.numRows,top.numCols,top.nz_length+bottom.nz_length);
+        out.nz_length = top.nz_length+bottom.nz_length;
 
         int index = 0;
         for (int i = 0; i < top.numCols; i++) {
@@ -698,6 +701,7 @@ public class CommonOps_DSCC {
                 out.nz_rows[index] = top.numRows + bottom.nz_rows[j];
             }
         }
+        out.indicesSorted = false;
 
         return out;
     }
@@ -719,6 +723,7 @@ public class CommonOps_DSCC {
             out = new DMatrixSparseCSC(0,0,0);
 
         out.reshape(left.numRows,left.numCols+right.numCols,left.nz_length+right.nz_length);
+        out.nz_length = left.nz_length+right.nz_length;
 
         System.arraycopy(left.col_idx,0,out.col_idx,0,left.numCols+1);
         System.arraycopy(left.nz_rows,0,out.nz_rows,0,left.nz_length);
@@ -737,6 +742,7 @@ public class CommonOps_DSCC {
                 out.nz_values[index] = right.nz_values[j];
             }
         }
+        out.indicesSorted = left.indicesSorted && right.indicesSorted;
 
         return out;
     }
@@ -758,7 +764,7 @@ public class CommonOps_DSCC {
         int idx1 = A.col_idx[column+1];
 
         out.reshape(A.numRows,1,idx1-idx0);
-
+        out.nz_length = idx1-idx0;
 
         out.col_idx[0] = 0;
         out.col_idx[1] = out.nz_length;
@@ -783,8 +789,8 @@ public class CommonOps_DSCC {
             out = new DMatrixSparseCSC(1,1,1);
 
         out.reshape(row1-row0,A.numCols,A.nz_length);
-        out.col_idx[0] = 0;
-        out.nz_length = 0;
+//        out.col_idx[0] = 0;
+//        out.nz_length = 0;
 
         for (int col = 0; col < A.numCols; col++) {
             int idx0 = A.col_idx[col];
@@ -842,18 +848,64 @@ public class CommonOps_DSCC {
         if( dstX0+w > dst.getNumCols() )
             throw new IllegalArgumentException("dst is too small in columns");
 
+        zero(dst,dstY0,dstY0+h,dstX0,dstX0+w);
+
         // NOTE: One possible optimization would be to determine the non-zero pattern in dst after the change is
         //       applied, modify it's structure, then copy the values in. That way you aren't shifting memory constantly.
         //
         // NOTE: Another optimization would be to sort the src so that it doesn't need to go through every row
         for (int colSrc = srcX0; colSrc < srcX1; colSrc++) {
             int idxS0 = src.col_idx[colSrc];
-            int idxS1 = src.col_idx[colSrc+1];
+            int idxS1 = src.col_idx[colSrc + 1];
 
             for (int i = idxS0; i < idxS1; i++) {
                 int row = src.nz_rows[i];
-                if( row >= srcY0 && row < srcY1 ) {
-                    dst.set(row-srcY0+dstY0,colSrc-srcX0+dstX0, src.nz_values[i]);
+                if (row >= srcY0 && row < srcY1) {
+                    dst.set(row - srcY0 + dstY0, colSrc - srcX0 + dstX0, src.nz_values[i]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Zeros an inner rectangle inside the matrix.
+     *
+     * @param A Matrix that is to be modified.
+     * @param row0 Start row.
+     * @param row1 Stop row+1.
+     * @param col0 Start column.
+     * @param col1 Stop column+1.
+     */
+    public static void zero( DMatrixSparseCSC A , int row0, int row1, int col0, int col1 ) {
+        for (int col = col1-1; col >= col0; col--) {
+            int numRemoved = 0;
+
+            int idx0 = A.col_idx[col], idx1 = A.col_idx[col+1];
+            for (int i = idx0; i < idx1; i++) {
+                int row = A.nz_rows[i];
+
+                // if sorted a faster technique could be used
+                if( row >= row0 && row < row1 ) {
+                    numRemoved++;
+                } else if( numRemoved > 0 ){
+                    A.nz_rows[i-numRemoved]=row;
+                    A.nz_values[i-numRemoved]=A.nz_values[i];
+                }
+            }
+
+            if( numRemoved > 0 ) {
+                // this could be done more intelligently. Each time a column is adjusted all the columns are adjusted
+                // after it. Maybe accumulate the changes in each column and do it in one pass? Need an array to store
+                // those results though
+
+                for (int i = idx1; i < A.nz_length; i++) {
+                    A.nz_rows[i - numRemoved] = A.nz_rows[i];
+                    A.nz_values[i - numRemoved] = A.nz_values[i];
+                }
+                A.nz_length -= numRemoved;
+
+                for (int i = col+1; i <= A.numCols; i++) {
+                    A.col_idx[i] -= numRemoved;
                 }
             }
         }

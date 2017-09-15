@@ -170,4 +170,13 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
         }
     }
 
+    @Test
+    public void reshape() {
+        DMatrixSparse m = (DMatrixSparse)createMatrix(3,4);
+        m.reshape(2,4,8);
+        assertEquals(0,m.getNumElements());
+        assertEquals(2,m.getNumRows());
+        assertEquals(4,m.getNumCols());
+    }
+
 }

@@ -130,6 +130,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     public void set(Matrix original) {
         DMatrixSparseCSC o = (DMatrixSparseCSC)original;
         reshape(o.numRows, o.numCols, o.nz_length);
+        this.nz_length = o.nz_length;
 
         System.arraycopy(o.nz_values, 0, nz_values, 0, nz_length);
         System.arraycopy(o.nz_rows, 0, nz_rows, 0, nz_length);
@@ -244,7 +245,6 @@ public class DMatrixSparseCSC implements DMatrixSparse {
                 col_idx[i]++;
             }
 
-
             // if it's already at the maximum array length grow the arrays
             if( nz_length >= nz_values.length )
                 growMaxLength(nz_length*2+1, true);
@@ -283,6 +283,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     public void zero() {
         Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
+        indicesSorted = false; // see justification in reshape
     }
 
     @Override
@@ -291,12 +292,14 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
-    public void reshape( int numRows , int numCols , int nz_length ) {
+    public void reshape( int numRows , int numCols , int arrayLength ) {
+        // OK so technically it is sorted, but forgetting to correctly set this flag is a common mistake so
+        // decided to be conservative and mark it as unsorted so that stuff doesn't blow up
         this.indicesSorted = false;
         this.numRows = numRows;
         this.numCols = numCols;
-        growMaxLength( nz_length , false);
-        this.nz_length = Math.min(nz_values.length,nz_length);
+        growMaxLength( arrayLength , false);
+        this.nz_length = 0;
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
@@ -393,6 +396,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      */
     public void copyStructure( DMatrixSparseCSC orig ) {
         reshape(orig.numRows, orig.numCols, orig.nz_length);
+        this.nz_length = orig.nz_length;
         System.arraycopy(orig.col_idx,0,col_idx,0,orig.numCols+1);
         System.arraycopy(orig.nz_rows,0,nz_rows,0,orig.nz_length);
     }

@@ -32,12 +32,13 @@ public interface DMatrixSparse extends DMatrix {
 
     /**
      * Reshapes the matrix so that it can store a matrix with the specified dimensions and the number of
-     * non-zero elements
+     * non-zero elements.  The reshaped matrix will be empty.
+     *
      * @param numRows number of rows
      * @param numCols number of columns
-     * @param nz_length Number of non-zero elements
+     * @param arrayLength Array length for storing non-zero elements.
      */
-    void reshape( int numRows , int numCols , int nz_length );
+    void reshape( int numRows , int numCols , int arrayLength );
 
     /**
      * Reduces the size of internal data structures to their minimal size.  No information is lost bu

@@ -62,9 +62,9 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     }
 
     @Override
-    public void reshape(int numRows, int numCols, int nz_length) {
+    public void reshape(int numRows, int numCols, int arrayLength) {
         reshape(numRows, numCols);
-        growData(nz_length);
+        growData(arrayLength);
     }
 
     public void addItem(int row , int col , double value ) {
