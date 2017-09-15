@@ -53,6 +53,9 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
     // relative threshold used to select singular values
     private double threshold = UtilEjml.EPS;
 
+    // Internal workspace
+    private DMatrixRMaj U_t=new DMatrixRMaj(1,1),V=new DMatrixRMaj(1,1);
+
     /**
      * Creates a new solver targeted at the specified matrix size.
      *
@@ -78,8 +81,8 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
         if( !svd.decompose(A) )
             return false;
 
-        DMatrixRMaj U_t = svd.getU(null,true);
-        DMatrixRMaj V = svd.getV(null,false);
+        svd.getU(U_t,true);
+        svd.getV(V,false);
         double []S = svd.getSingularValues();
         int N = Math.min(A.numRows,A.numCols);
 

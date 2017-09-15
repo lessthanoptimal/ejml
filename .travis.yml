@@ -1,8 +1,8 @@
 language: java
 jdk:
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
+#  - openjdk7
+#  - oraclejdk7
+  - openjdk8
 install:
   - gradle autogenerate
   - gradle assemble

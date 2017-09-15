@@ -59,6 +59,9 @@ Date format: year/month/day
 - Data Types
   * Added DScalar and IScalar
   * Added *GrowArray to act as workspace in sparse algorithms
+- SolvePseudoInverseSvd_DDRM
+  * Recycles memory for U and V internally
+  * Thanks Florian Enner for pointing this out
 
 ----- Version 0.31
 

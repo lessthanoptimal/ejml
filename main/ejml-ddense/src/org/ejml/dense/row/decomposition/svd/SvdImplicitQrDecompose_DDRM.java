@@ -125,15 +125,12 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         if( transpose ) {
             if( U == null )
                 return Ut;
-            else if( U.numRows != Ut.numRows || U.numCols != Ut.numCols )
-                throw new IllegalArgumentException("Unexpected shape of U");
-
             U.set(Ut);
         } else {
             if( U == null )
                 U = new DMatrixRMaj(Ut.numCols,Ut.numRows);
-            else if( U.numRows != Ut.numCols || U.numCols != Ut.numRows )
-                throw new IllegalArgumentException("Unexpected shape of U");
+            else
+                U.reshape(Ut.numCols,Ut.numRows);
 
             CommonOps_DDRM.transpose(Ut,U);
         }
@@ -148,15 +145,14 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         if( transpose ) {
             if( V == null )
                 return Vt;
-            else if( V.numRows != Vt.numRows || V.numCols != Vt.numCols )
-                throw new IllegalArgumentException("Unexpected shape of V");
 
             V.set(Vt);
         } else {
             if( V == null )
                 V = new DMatrixRMaj(Vt.numCols,Vt.numRows);
-            else if( V.numRows != Vt.numCols || V.numCols != Vt.numRows )
-                throw new IllegalArgumentException("Unexpected shape of V");
+            else
+                V.reshape(Vt.numCols,Vt.numRows);
+
             CommonOps_DDRM.transpose(Vt,V);
         }
 
