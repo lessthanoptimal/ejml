@@ -122,7 +122,10 @@ public class SimpleEVD <T extends SimpleBase>
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
     public T getEigenVector( int index ) {
-        return (T)SimpleMatrix.wrap(eig.getEigenVector(index));
+        Matrix v = eig.getEigenVector(index);
+        if( v == null )
+            return null;
+        return (T)SimpleMatrix.wrap(v);
     }
 
     /**

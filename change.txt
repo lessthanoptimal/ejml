@@ -2,6 +2,67 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.32
+
+2017/09/18
+- Thanks to HEBI Robotics for sponsoring the addition of sparse solvers!
+  * http://hebirobotics.com/
+- Examples
+  * Added new example showing how to use results from an LU decomposition to solve
+- CommonOps - RMaj
+  * Added concatColumns(A,B)  concatRows(A,B)
+- Simple Matrix
+  * Added concatColumns(A,B)  concatRows(A,B)
+  * Added rows(begin,end) <-- extracts the specified rows
+  * Added cols(begin,end) <-- extracts the specified columns
+  * Fixed issue with bits() and derived classes. Thanks Florian Enner
+  * Redesigned internals to make it more module and easier to add support for different types of matrices
+- DMatrixSparseCSC
+  * Fixed bug in set(row,col,val) where the first time a non-zero element was added it would assign the wrong value
+    Thanks GeoffreyGuettier
+  * Added growMaxColumns()
+- MatrixFeatures_DSCC
+  * Added isSymmetric()
+  * Added isOrthogonal()
+- ConvertDMatrixStruct
+  * Moved functions from ConvertDMatrixSparse into this class
+  * Added tolerance for zero when converting from dense to sparse
+- RandomMatrices_DSCC
+  * Added symmetric()
+  * Added symmetricPosDef()
+- CommonOps_DSCC
+  * Added permuteSymmetric()
+  * Added checkDuplicates()
+  * Added isPositiveDefinite()
+  * Added concatColumns()
+  * Added concatRows()
+  * Added extractColumn()
+  * Added dotInnerColumns()
+  * Added solve() dense
+  * Added invert() dense
+  * Added det()
+  * Added removeZeros()
+  * Added changeSign()
+  * Added elementSum()
+  * Added elementMult()
+  * Added trace()
+  * Fixed various bugs
+- CommonOps_DDRM
+  * Added permuteRowInv()
+- Sparse Decompositions and Solvers
+  * Cholesky - Up Looking
+  * LU
+  * QR
+- Sparse Triangular Solver
+  * Added solveTranL()
+  * Added column pivots to one of the solvers
+- Data Types
+  * Added DScalar and IScalar
+  * Added *GrowArray to act as workspace in sparse algorithms
+- SolvePseudoInverseSvd_DDRM
+  * Recycles memory for U and V internally
+  * Thanks Florian Enner for pointing this out
+
 ----- Version 0.31
 
 2017/05/18

@@ -21,10 +21,12 @@ package org.ejml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.FMatrixRMaj;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.data.IGrowArray;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
 
 
 /**
@@ -37,7 +39,7 @@ public class UtilEjml {
     /**
      * Version string used to indicate which version of EJML is being used.
      */
-    public static String VERSION = "0.31";
+    public static String VERSION = "0.32";
 
     public static double EPS = Math.pow(2,-52);
     public static float F_EPS = (float)Math.pow(2,-21);
@@ -184,6 +186,61 @@ public class UtilEjml {
     public static DMatrixSparseCSC parse_DSCC(String s, int numColumns) {
         DMatrixRMaj tmp = parse_DDRM(s,numColumns);
 
-        return ConvertDMatrixSparse.convert(tmp,(DMatrixSparseCSC)null);
+        return ConvertDMatrixStruct.convert(tmp,(DMatrixSparseCSC)null, 0);
+    }
+
+    public static int[] shuffled( int N , Random rand ) {
+        return shuffled(N,N,rand);
+    }
+
+    public static int[] shuffled( int N , int shuffleUpTo , Random rand ) {
+        int l[] = new int[N];
+        for (int i = 0; i < N; i++) {
+            l[i] = i;
+        }
+        shuffle(l,N,0,shuffleUpTo,rand);
+        return l;
+    }
+
+    public static int[] shuffledSorted( int N , int shuffleUpTo , Random rand ) {
+        int l[] = new int[N];
+        for (int i = 0; i < N; i++) {
+            l[i] = i;
+        }
+        shuffle(l,N,0,shuffleUpTo,rand);
+        Arrays.sort(l,0,shuffleUpTo);
+        return l;
+    }
+
+    public static void shuffle( int list[] , int N ,int start , int end , Random rand ) {
+        int range = end - start;
+        for (int i = 0; i < range; i++) {
+            int selected = rand.nextInt(N-i)+i+start;
+            int v = list[i];
+            list[i] = list[selected];
+            list[selected] = v;
+        }
+    }
+
+    public static int[] pivotVector(int pivots[] , int length , IGrowArray storage ) {
+        if( storage == null ) storage = new IGrowArray();
+        storage.reshape(length);
+        System.arraycopy(pivots,0,storage.data,0,length);
+        return storage.data;
+    }
+
+    public static int permutationSign( int[] p , int N , int work[] ) {
+        System.arraycopy(p,0,work,0,N);
+        p = work;
+        int cnt = 0;
+        for (int i = 0; i < N; ++i) {
+            while (i != p[i]) {
+                ++cnt;
+                int tmp = p[i];
+                p[i] = p[p[i]];
+                p[tmp] = tmp;
+            }
+        }
+        return cnt%2==0?1:-1;
     }
 }

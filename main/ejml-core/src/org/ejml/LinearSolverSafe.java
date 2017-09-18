@@ -20,7 +20,7 @@ package org.ejml;
 
 import org.ejml.data.ReshapeMatrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -30,10 +30,10 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolver<T> {
+public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDense<T> {
 
     // the solver it is wrapped around
-    private LinearSolver<T> alg;
+    private LinearSolverDense<T> alg;
 
     // local copies of input matrices that can be modified.
     private T A;
@@ -43,7 +43,7 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolver<T
      *
      * @param alg The solver it is wrapped around.
      */
-    public LinearSolverSafe(LinearSolver<T> alg) {
+    public LinearSolverSafe(LinearSolverDense<T> alg) {
         this.alg = alg;
     }
 

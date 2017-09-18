@@ -22,7 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_DDRM;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_DDRM;
 import org.ejml.dense.row.linsol.GenericSolvePseudoInverseChecks_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 /**
@@ -34,13 +34,13 @@ public class TestSolvePseudoInverseQrp_DDRM extends GenericLinearSolverChecks_DD
     }
 
     @Override
-    protected LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
         return new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),true);
     }
 
     @Test
     public void checkSingularBasic() {
-        LinearSolver<DMatrixRMaj> solver =
+        LinearSolverDense<DMatrixRMaj> solver =
                 new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),true);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);
 
@@ -49,7 +49,7 @@ public class TestSolvePseudoInverseQrp_DDRM extends GenericLinearSolverChecks_DD
 
     @Test
     public void checkSingularFull() {
-        LinearSolver<DMatrixRMaj> solver =
+        LinearSolverDense<DMatrixRMaj> solver =
                 new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),false);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);
 

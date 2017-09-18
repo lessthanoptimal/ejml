@@ -62,9 +62,9 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     }
 
     @Override
-    public void reshape(int numRows, int numCols, int nz_length) {
+    public void reshape(int numRows, int numCols, int arrayLength) {
         reshape(numRows, numCols);
-        growData(nz_length);
+        growData(arrayLength);
     }
 
     public void addItem(int row , int col , double value ) {
@@ -198,6 +198,11 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     }
 
     @Override
+    public boolean isAssigned(int row, int col) {
+        return nz_index(row,col) >= 0;
+    }
+
+    @Override
     public void zero() {
         nz_length = 0;
     }
@@ -246,5 +251,10 @@ public class DMatrixSparseTriplet implements DMatrixSparse
             col = e.col;
             value = e.value;
         }
+    }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
     }
 }

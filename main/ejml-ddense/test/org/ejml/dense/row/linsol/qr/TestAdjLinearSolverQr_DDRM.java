@@ -26,7 +26,7 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_DDRM;
 import org.ejml.dense.row.mult.SubmatrixOps_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -108,7 +108,7 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
     }
 
     @Override
-    protected LinearSolver createSolver( DMatrixRMaj A ) {
+    protected LinearSolverDense createSolver(DMatrixRMaj A ) {
         return new AdjLinearSolverQr_DDRM();
     }
 }

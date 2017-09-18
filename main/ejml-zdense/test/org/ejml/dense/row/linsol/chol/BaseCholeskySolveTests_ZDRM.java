@@ -24,7 +24,7 @@ import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -48,17 +48,17 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         testQuality_scale();
     }
 
-    public abstract LinearSolver<ZMatrixRMaj> createSolver();
+    public abstract LinearSolverDense<ZMatrixRMaj> createSolver();
 
-    public LinearSolver<ZMatrixRMaj> createSafeSolver() {
-        LinearSolver<ZMatrixRMaj> solver = createSolver();
+    public LinearSolverDense<ZMatrixRMaj> createSafeSolver() {
+        LinearSolverDense<ZMatrixRMaj> solver = createSolver();
         return new LinearSolverSafe<ZMatrixRMaj>(solver);
     }
 
     @Test
     public void setA_dimensionCheck() {
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver();
 
         try {
             ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4, 5, rand);
@@ -70,7 +70,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
     @Test
     public void solve_dimensionCheck() {
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver();
 
         ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(4, rand);
         assertTrue(solver.setA(A));
@@ -100,7 +100,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
     @Test
     public void testSolve() {
 
-        LinearSolver<ZMatrixRMaj> solver = createSolver();
+        LinearSolverDense<ZMatrixRMaj> solver = createSolver();
 
         for (int N = 1; N <= 4; N++) {
             ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N,rand);
@@ -127,7 +127,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
     @Test
     public void testInvert() {
 
-        LinearSolver<ZMatrixRMaj> solver = createSolver();
+        LinearSolverDense<ZMatrixRMaj> solver = createSolver();
 
         for (int N = 1; N <= 5; N++) {
             ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N,rand);
@@ -149,7 +149,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
     @Test
     public void testQuality() {
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver();
 
         ZMatrixRMaj A = CommonOps_ZDRM.diag(3,0, 2,0, 1,0    );
         ZMatrixRMaj B = CommonOps_ZDRM.diag(3,0, 2,0, 0.001,0);
@@ -166,7 +166,7 @@ public abstract class BaseCholeskySolveTests_ZDRM {
     @Test
     public void testQuality_scale() {
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver();
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver();
 
         ZMatrixRMaj A = CommonOps_ZDRM.diag(3,0 ,2,0 ,1,0);
         ZMatrixRMaj B = A.copy();

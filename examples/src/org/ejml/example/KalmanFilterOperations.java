@@ -20,7 +20,7 @@ package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import static org.ejml.dense.row.CommonOps_DDRM.*;
 
@@ -44,7 +44,7 @@ public class KalmanFilterOperations implements KalmanFilter{
     private DMatrixRMaj y,S,S_inv,c,d;
     private DMatrixRMaj K;
 
-    private LinearSolver<DMatrixRMaj> solver;
+    private LinearSolverDense<DMatrixRMaj> solver;
 
     @Override
     public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {

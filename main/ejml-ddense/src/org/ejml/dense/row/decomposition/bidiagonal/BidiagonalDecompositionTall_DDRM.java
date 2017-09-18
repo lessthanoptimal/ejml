@@ -30,7 +30,7 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
  * {@link BidiagonalDecomposition_F64} specifically designed for tall matrices.
  * First step is to perform QR decomposition on the input matrix.  Then R is decomposed using
  * a bidiagonal decomposition.  By performing the bidiagonal decomposition on the smaller matrix
- * computations can be saved if m/n > 5/3 and if U is NOT needed.
+ * computations can be saved if m/n &gt; 5/3 and if U is NOT needed.
  * </p>
  *
  * <p>
@@ -141,7 +141,7 @@ public class BidiagonalDecompositionTall_DDRM
         // apply the column pivots.
         // TODO this is horribly inefficient
         DMatrixRMaj result = new DMatrixRMaj(min,n);
-        DMatrixRMaj P = decompQRP.getPivotMatrix(null);
+        DMatrixRMaj P = decompQRP.getColPivotMatrix(null);
         CommonOps_DDRM.multTransB(B, P, result);
         B.set(result);
 

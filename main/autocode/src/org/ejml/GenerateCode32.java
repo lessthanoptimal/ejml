@@ -44,7 +44,11 @@ public class GenerateCode32 {
 
     public GenerateCode32() {
 
-        blacklist.add("MatrixSparse");
+        // TODO remove once F32 sparse code is generated
+        blacklist.add("TestDMatrixSparseCSC");
+        blacklist.add("TestConvertDMatrixStruct");
+        blacklist.add("TestDEigenSparseCSC");
+        blacklist.add("TestConvertDMatrixStruct");
 
         String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6"};
 
@@ -70,6 +74,8 @@ public class GenerateCode32 {
         prefix32.add("FSubmatrix");
         prefix64.add("ConvertDMatrix");
         prefix32.add("ConvertFMatrix");
+        prefix64.add("GenericTestsDMatrix");
+        prefix32.add("GenericTestsFMatrix");
 
         int N = prefix64.size();
         for (int i = 0; i < N; i++) {
@@ -87,6 +93,10 @@ public class GenerateCode32 {
         for( String suffice : sufficeRoot) {
             converter.replacePattern("_D"+suffice, "_F"+suffice);
             converter.replacePattern("_Z"+suffice, "_C"+suffice);
+            converter.replacePattern("MatrixType.D"+suffice, "MatrixType.F"+suffice);
+            converter.replacePattern("MatrixType.Z"+suffice, "MatrixType.C"+suffice);
+            converter.replacePattern(".getD"+suffice, ".getF"+suffice);
+            converter.replacePattern(".getZ"+suffice, ".getC"+suffice);
         }
 
         converter.replacePattern("DMatrix", "FMatrix");
@@ -234,6 +244,7 @@ public class GenerateCode32 {
         System.out.println("Path to project root: "+path);
 
         String coreDir[] = new String[]{
+                "main/ejml-simple/src/org/ejml/simple/ops",
                 "main/ejml-core/src/org/ejml/data",
                 "main/ejml-core/test/org/ejml/data",
                 "main/ejml-core/src/org/ejml/ops",

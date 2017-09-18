@@ -30,25 +30,21 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * <p>
  * Norms are a measure of the size of a vector or a matrix.  One typical application is in error analysis.
  * </p>
- * <p>
  * Vector norms have the following properties:
  * <ol>
- * <li>||x|| > 0 if x &ne; 0 and ||0|| = 0</li>
+ * <li>||x|| &gt; 0 if x &ne; 0 and ||0|| = 0</li>
  * <li>||&alpha;x|| = |&alpha;| ||x||</li>
  * <li>||x+y|| &le; ||x|| + ||y||</li>
  * </ol>
- * </p>
  *
- * <p>
  * Matrix norms have the following properties:
  * <ol>
- * <li>||A|| > 0 if A &ne; 0 where A &isin; &real; <sup>m &times; n</sup></li>
+ * <li>||A|| &gt; 0 if A &ne; 0 where A &isin; &real; <sup>m &times; n</sup></li>
  * <li> || &alpha; A || = |&alpha;| ||A|| where A &isin; &real; <sup>m &times; n</sup></li>
  * <li>||A+B|| &le; ||A|| + ||B|| where A and B are &isin; &real; <sup>m &times; n</sup></li>
  * <li>||AB|| &le; ||A|| ||B|| where A and B are &isin; &real; <sup>m &times; m</sup></li>
  * </ol>
  * Note that the last item in the list only applies to square matrices.
- * </p>
  *
  * <p>
  * Matrix norms can be induced from vector norms as is shown below:<br>

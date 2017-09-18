@@ -20,7 +20,7 @@ package org.ejml.dense.row.linsol.qr;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -28,7 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  */
 public class TestLinearSolverQrBlock64_DDRM extends GenericLinearSolverChecks_DDRM {
     @Override
-    protected LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
         return new LinearSolverQrBlock64_DDRM();
     }
 }

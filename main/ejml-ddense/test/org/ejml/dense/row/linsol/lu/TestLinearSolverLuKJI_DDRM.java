@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol.lu;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -35,7 +35,7 @@ public class TestLinearSolverLuKJI_DDRM extends GenericLinearSolverChecks_DDRM {
     }
 
     @Override
-    protected LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
         LUDecompositionAlt_DDRM decomp = new LUDecompositionAlt_DDRM();
 
         return new LinearSolverLuKJI_DDRM(decomp);

@@ -25,7 +25,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -52,7 +52,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
     public void solve_dimensionCheck() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,4,rand);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         try {
@@ -93,7 +93,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj A_orig = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj A = A_orig.copy();
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -109,7 +109,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
     public void modifiesB() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 4, rand);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -132,7 +132,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj A_good = CommonOps_DDRM.diag(4,3,2,1);
         DMatrixRMaj A_bad = CommonOps_DDRM.diag(4, 3, 2, 0.1);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A_good);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A_good);
 
         assertTrue(solver.setA(A_good));
         double q_good;
@@ -160,7 +160,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj Asmall = A.copy();
         CommonOps_DDRM.scale(0.01,Asmall);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         double q;
@@ -186,7 +186,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 18, 21.5, 4.9000);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -207,7 +207,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 8, 33, 15.5);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -221,7 +221,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
     public void square_singular() {
         DMatrixRMaj A = new DMatrixRMaj(3,3);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
     }
 
@@ -246,7 +246,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj A = createPolyA(t,3);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         solver.solve(B,x);
@@ -275,7 +275,7 @@ public abstract class GenericLinearSolverChecks_DDRM {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3, 3, rand);
 
-        LinearSolver<DMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
@@ -294,9 +294,9 @@ public abstract class GenericLinearSolverChecks_DDRM {
         }
     }
 
-    protected LinearSolver<DMatrixRMaj>  createSafeSolver(DMatrixRMaj A ) {
-        return new LinearSolverSafe<DMatrixRMaj>( createSolver(A));
+    protected LinearSolverDense<DMatrixRMaj> createSafeSolver(DMatrixRMaj A ) {
+        return new LinearSolverSafe<>( createSolver(A));
     }
 
-    protected abstract LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A );
+    protected abstract LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A );
 }

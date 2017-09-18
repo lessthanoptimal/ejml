@@ -97,7 +97,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
      * false since it can't complete its computations.  Not all errors will be
      * found.  This is an efficient way to check for positive definiteness.
      * </p>
-     * @param mat A symmetric positive definite matrix with n <= widthMax.
+     * @param mat A symmetric positive definite matrix with n &le; widthMax.
      * @return True if it was able to finish the decomposition.
      */
     @Override

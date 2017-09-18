@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.misc.UnrolledInverseFromMinor_DDRM;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -30,7 +30,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class LinearSolverUnrolled_DDRM implements LinearSolver<DMatrixRMaj> {
+public class LinearSolverUnrolled_DDRM implements LinearSolverDense<DMatrixRMaj> {
     DMatrixRMaj A;
 
     @Override

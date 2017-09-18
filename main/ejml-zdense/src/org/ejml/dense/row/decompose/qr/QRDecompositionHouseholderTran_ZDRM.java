@@ -93,7 +93,7 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
 
     /**
      * Computes the Q matrix from the information stored in the QR matrix.  This
-     * operation requires about 4(m<sup2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
+     * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
      */

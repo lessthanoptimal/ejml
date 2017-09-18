@@ -297,12 +297,12 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     }
 
     @Override
-    public int[] getPivots() {
+    public int[] getColPivots() {
         return pivots;
     }
 
     @Override
-    public DMatrixRMaj getPivotMatrix(DMatrixRMaj P) {
+    public DMatrixRMaj getColPivotMatrix(DMatrixRMaj P) {
         if( P == null )
             P = new DMatrixRMaj(numCols,numCols);
         else if( P.numRows != numCols )

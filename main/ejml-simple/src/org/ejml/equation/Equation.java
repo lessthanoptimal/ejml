@@ -47,7 +47,6 @@ import static org.ejml.equation.TokenList.Type;
  * will recognize such short cuts.
  * </p>
  *
- * <p>
  * Usage example:
  * <pre>
  * Equation eq = new Equation();
@@ -65,9 +64,7 @@ import static org.ejml.equation.TokenList.Type;
  * eq.process("x( 4 3 ) = a");                // fill only the specified number sequences with 'a'
  * eq.process("x = [2:3:25 1 4]");            // create a row matrix from the number sequence
  * </pre>
- * </p>
  *
- * <p>
  * To pre-compile one of the above lines, do the following instead:
  * <pre>
  * Sequence predictX = eq.compile("x = F*x");
@@ -76,9 +73,7 @@ import static org.ejml.equation.TokenList.Type;
  * Then you can invoke it as much as you want without the "expensive" compilation step.  If you are dealing with
  * larger matrices (e.g. 100 by 100) then it is likely that the compilation step has an insignificant runtime
  * cost.
- * </p>
  *
- * <p>
  * Variables can also be lazily declared and their type inferred under certain conditions.  For example:
  * <pre>
  * eq.alias(A,"A", B,"B");
@@ -87,9 +82,7 @@ import static org.ejml.equation.TokenList.Type;
  * </pre>
  * In this case 'C' was lazily declared.  To access the variable, or any others, you can use one of the lookup*()
  * functions.
- * </p>
  *
- * <p>
  * Sometimes you don't get the results you expect and it can be helpful to print out the tokens and which operations
  * the compiler selected.  To do this set the second parameter to eq.compile() or eq.process() to true:
  * <pre>
@@ -115,17 +108,13 @@ import static org.ejml.equation.TokenList.Type;
  * multiply-mm
  * copy-mm
  * </pre>
- * </p>
  *
- * <p>
  * <h2>Built in Constants</h2>
  * <pre>
  * pi = Math.PI
  * e  = Math.E
  * </pre>
- * </p>
  *
- * <p>
  * <h2>Supported functions</h2>
  * <pre>
  * eye(N)       Create an identity matrix which is N by N.
@@ -160,9 +149,7 @@ import static org.ejml.equation.TokenList.Type;
  * exp(a)       Math.exp(a) for scalars is also an element-wise matrix operator
  * log(a)       Math.log(a) for scalars is also an element-wise matrix operator
  * </pre>
- * </p>
  *
- * <p>
  * <h2>Supported operations</h2>
  * <pre>
  * '*'        multiplication (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
@@ -179,9 +166,7 @@ import static org.ejml.equation.TokenList.Type;
  * '='        assignment by value (Matrix-Matrix, Scalar-Scalar)
  * </pre>
  * Order of operations:  [ ' ] precedes [ ^ .^ ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
- * </p>
  *
- * <p>
  * <h2>Specialized submatrix and matrix construction syntax</h2>
  * <pre>
  * Extracts a sub-matrix from A with rows 1 to 10 (inclusive) and column 3.
@@ -197,7 +182,6 @@ import static org.ejml.equation.TokenList.Type;
  * Will assign B to the sub-matrix in A.
  *             A(1:3,4:8) = B
  * </pre>
- * </p>
  *
  * <h2>Integer Number Sequences</h2>
  * Previous example code has made much use of integer number sequences. There are three different types of integer number

@@ -20,7 +20,7 @@ package org.ejml.dense.row.linsol.qr;
 
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -33,7 +33,7 @@ public class TestLinearSolverQrHouseCol_ZDRM extends GenericLinearSolverChecks_Z
     }
 
     @Override
-    protected LinearSolver<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
+    protected LinearSolverDense<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
         return new LinearSolverQrHouseCol_ZDRM();
     }
 }

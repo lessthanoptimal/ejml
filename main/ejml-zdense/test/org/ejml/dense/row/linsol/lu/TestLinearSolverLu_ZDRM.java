@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol.lu;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.lu.LUDecompositionAlt_ZDRM;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -35,7 +35,7 @@ public class TestLinearSolverLu_ZDRM extends GenericLinearSolverChecks_ZDRM {
     }
 
     @Override
-    protected LinearSolver<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
+    protected LinearSolverDense<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
         LUDecompositionAlt_ZDRM decomp = new LUDecompositionAlt_ZDRM();
 
         return new LinearSolverLu_ZDRM(decomp);

@@ -38,17 +38,15 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  * columns.  The first element of the reflector is implicitly assumed to be one.
  * </p>
  *
- * <p>
  * Each iteration can be sketched as follows:
  * <pre>
  * QR_Decomposition( A(:,i-r to i) )
  * W=computeW( A(:,i-r to i) )
- * A(:,i:n) = (I + W*Y<sup>T</sup>)<sup>T</sup>A(:,i:n)
+ * A(:,i:n) = (I + W*Y^T)^T*A(:,i:n)
  * </pre>
  * Where r is the block size, i is the submatrix being considered, A is the input matrix,
  * Y is a matrix containing the reflectors just computed,
  * and W is computed using {@link BlockHouseHolder_DDRB#computeW_Column}.
- * </p>
  *
  * <p>
  * Based upon "Block Householder QR Factorization" pg 255 in "Matrix Computations"
@@ -111,9 +109,6 @@ public class QRDecompositionHouseholder_DDRB
         this.saveW = saveW;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public DMatrixRBlock getQ(DMatrixRBlock Q, boolean compact) {
         Q = initializeQ(Q, dataA.numRows , dataA.numCols  , blockLength , compact);
@@ -227,7 +222,7 @@ public class QRDecompositionHouseholder_DDRB
      *
      * <p>
      * Q = Q*(I - &gamma; W*Y^T)<br>
-     * QR = A => R = Q^T*A  = (Q3^T * (Q2^T * (Q1^t * A)))
+     * QR = A &ge; R = Q^T*A  = (Q3^T * (Q2^T * (Q1^t * A)))
      * </p>
      *
      * @param B Matrix which Q is applied to.  Modified.
@@ -271,9 +266,6 @@ public class QRDecompositionHouseholder_DDRB
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public DMatrixRBlock getR(DMatrixRBlock R, boolean compact) {
         int min = Math.min(dataA.numRows,dataA.numCols);
@@ -300,9 +292,6 @@ public class QRDecompositionHouseholder_DDRB
         return R;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public boolean decompose(DMatrixRBlock orig) {
         setup(orig);

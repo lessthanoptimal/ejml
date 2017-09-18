@@ -149,6 +149,34 @@ public class EjmlUnitTests {
         }
     }
 
+    /**
+     * Assert equals with a relative error
+     */
+    public static void assertRelativeEquals(DMatrix A , DMatrix B , double tol ) {
+        assertShape(A,B);
+
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
+                double valA = A.get(i,j);
+                double valB = B.get(i,j);
+
+                if( (Double.isNaN(valA) != Double.isNaN(valB)) ||
+                        (Double.isInfinite(valA) != Double.isInfinite(valB))) {
+                    throw new AssertionError("At ("+i+","+j+") A = "+valA+" B = "+valB);
+                }
+                double max = Math.max(Math.abs(valA), Math.abs(valB));
+                double error = Math.abs(valA - valB) / max;
+                if( error > tol ) {
+                    System.out.println("------------  A  -----------");
+                    A.print();
+                    System.out.println("\n------------  B  -----------");
+                    B.print();
+                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
+                }
+            }
+        }
+    }
+
     public static void assertEquals(FMatrix A , FMatrix B , float tol ) {
         assertShape(A,B);
 
@@ -282,12 +310,6 @@ public class EjmlUnitTests {
         // if turned on use asserts
         assert result : message;
         // otherwise throw an exception
-        if( !result ) throw new TestException(message);
-    }
-
-    public static class TestException extends RuntimeException {
-        public TestException(String message) {
-            super(message);
-        }
+        if( !result ) throw new AssertionError(message);
     }
 }

@@ -26,7 +26,7 @@ import org.ejml.ops.MatrixIO;
  * </p>
  *
  * <p>
- * Rows are row0 <= i < row1 and Columns are col0 <= j < col1
+ * Rows are row0 &le; i &lt; row1 and Columns are col0 &le; j &lt; col1
  * </p>
  * 
  * @author Peter Abeles

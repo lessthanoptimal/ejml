@@ -535,7 +535,7 @@ public class GenerateFixedOps extends GenerateFixed {
                 "     * <br>\n" +
                 "     * c = a * b <br>\n" +
                 "     * <br>\n" +
-                "     * c> = &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }\n" +
+                "     * c &ge; &sum;<sub>k=1:n</sub> { b<sub>k</sub> * a<sub>k</sub> }\n" +
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param a The left vector in the multiplication operation. Not modified.\n" +
@@ -651,8 +651,7 @@ public class GenerateFixedOps extends GenerateFixed {
 
     private void det( int dimen ){
         out.print("    /**\n" +
-                "     * Computes the determinant using minor matrices.\n" +
-                "     * <p></p>\n" +
+                "     * Computes the determinant using minor matrices.<br>\n" +
                 "     * WARNING: Potentially less stable than using LU decomposition.\n" +
                 "     *\n" +
                 "     * @param mat Input matrix.  Not modified.\n" +

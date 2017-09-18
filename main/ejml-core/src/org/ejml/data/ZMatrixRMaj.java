@@ -227,4 +227,9 @@ public class ZMatrixRMaj extends ZMatrixD1 {
     public <T extends Matrix> T createLike() {
         return (T)new ZMatrixRMaj(numRows,numCols);
     }
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.ZDRM;
+    }
 }

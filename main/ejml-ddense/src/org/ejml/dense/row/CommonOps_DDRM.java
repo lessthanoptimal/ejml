@@ -31,7 +31,7 @@ import org.ejml.dense.row.mult.MatrixMatrixMult_DDRM;
 import org.ejml.dense.row.mult.MatrixMultProduct_DDRM;
 import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 import java.util.Arrays;
@@ -247,7 +247,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * <p></p>
+     * <p>
      * Computes the dot product or inner product between two vectors.  If the two vectors are columns vectors
      * then it is defined as:<br>
      * {@code dot(a,b) = a<sup>T</sup> * b}<br>
@@ -534,10 +534,10 @@ public class CommonOps_DDRM {
      */
     public static boolean solve(DMatrixRMaj a , DMatrixRMaj b , DMatrixRMaj x )
     {
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(a.numRows,a.numCols);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(a.numRows,a.numCols);
 
         // make sure the inputs 'a' and 'b' are not modified
-        solver = new LinearSolverSafe<DMatrixRMaj>(solver);
+        solver = new LinearSolverSafe<>(solver);
 
         if( !solver.setA(a) )
             return false;
@@ -623,7 +623,7 @@ public class CommonOps_DDRM {
 
     /**
      * Returns the determinant of the matrix.  If the inverse of the matrix is also
-     * needed, then using {@link org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM} directly (or any
+     * needed, then using {@link org.ejml.interfaces.decomposition.LUDecomposition_F64} directly (or any
      * similar algorithm) can be more efficient.
      *
      * @param mat The matrix whose determinant is to be computed.  Not modified.
@@ -631,7 +631,6 @@ public class CommonOps_DDRM {
      */
     public static double det( DMatrixRMaj mat )
     {
-
         int numCol = mat.getNumCols();
         int numRow = mat.getNumRows();
 
@@ -664,7 +663,7 @@ public class CommonOps_DDRM {
      * Performs a matrix inversion operation on the specified matrix and stores the results
      * in the same matrix.<br>
      * <br>
-     * a = a<sup>-1<sup>
+     * a = a<sup>-1</sup>
      * </p>
      *
      * <p>
@@ -705,7 +704,7 @@ public class CommonOps_DDRM {
      * and stores the results in another matrix.  The two matrices must have the
      * same dimension.<br>
      * <br>
-     * b = a<sup>-1<sup>
+     * b = a<sup>-1</sup>
      * </p>
      *
      * <p>
@@ -761,11 +760,10 @@ public class CommonOps_DDRM {
      * </p>
      * @param A  A m by n Matrix.  Not modified.
      * @param invA Where the computed pseudo inverse is stored. n by m.  Modified.
-     * @return
      */
     public static void pinv(DMatrixRMaj A , DMatrixRMaj invA )
     {
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.pseudoInverse(true);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.pseudoInverse(true);
         if( solver.modifiesA())
             A = A.copy();
 
@@ -984,7 +982,6 @@ public class CommonOps_DDRM {
      * @param A The left matrix in the operation. Not modified.
      * @param B The right matrix in the operation. Not modified.
      * @param C Where the results of the operation are stored. Modified.
-     * @return The results of the operation.
      */
     public static void kron(DMatrixRMaj A , DMatrixRMaj B , DMatrixRMaj C )
     {
@@ -1017,7 +1014,7 @@ public class CommonOps_DDRM {
      * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -1064,7 +1061,7 @@ public class CommonOps_DDRM {
      * Creates a new matrix which is the specified submatrix of 'src'
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i < y1 and x0 &le; j < x1 <br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1 <br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -2127,7 +2124,7 @@ public class CommonOps_DDRM {
      * <p>
      * Performs an in-place element by element scalar division with the scalar on top.<br>
      * <br>
-     * a<sub>ij</sub> = &alpha/a<sub>ij</sub>;
+     * a<sub>ij</sub> = &alpha;/a<sub>ij</sub>
      * </p>
      *
      * @param a The matrix whose elements are divide the scalar.  Modified.
@@ -2165,7 +2162,7 @@ public class CommonOps_DDRM {
      * <p>
      * Performs an element by element scalar division with the scalar on top.<br>
      * <br>
-     * b<sub>ij</sub> = &alpha/a<sub>ij</sub>;
+     * b<sub>ij</sub> = &alpha;/a<sub>ij</sub>
      * </p>
      *
      * @param alpha The numerator.
@@ -2304,7 +2301,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the < operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &gt; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrx
      * @param value value each element is compared against
@@ -2329,7 +2326,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the <= operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &ge; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
@@ -2354,7 +2351,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the > operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &gt; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
@@ -2379,7 +2376,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the >= operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &ge; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
@@ -2404,7 +2401,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the < operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &lt; operator to each element in A.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param B Input matrix
@@ -2429,7 +2426,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the A <= B operator to each element.  Results are stored in a boolean matrix.
+     * Applies the A &le; B operator to each element.  Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param B Input matrix
@@ -2497,5 +2494,84 @@ public class CommonOps_DDRM {
         }
 
         return total;
+    }
+
+    /**
+     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ m[0] , ... , m[n-1] ]
+     *
+     * @param m Set of matrices
+     * @return Resulting matrix
+     */
+    public static DMatrixRMaj concatColumns( DMatrixRMaj ...m ) {
+        int rows = 0;
+        int cols = 0;
+
+        for (int i = 0; i < m.length; i++) {
+            rows = Math.max(rows,m[i].numRows);
+            cols += m[i].numCols;
+        }
+        DMatrixRMaj R = new DMatrixRMaj(rows,cols);
+
+        int col = 0;
+        for (int i = 0; i < m.length; i++) {
+            insert(m[i],R,0,col);
+            col += m[i].numCols;
+        }
+
+        return R;
+    }
+
+    /**
+     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ m[0] ; ... ; m[n-1] ]
+     *
+     * @param m Set of matrices
+     * @return Resulting matrix
+     */
+    public static DMatrixRMaj concatRows( DMatrixRMaj ...m ) {
+        int rows = 0;
+        int cols = 0;
+
+        for (int i = 0; i < m.length; i++) {
+            rows += m[i].numRows;
+            cols = Math.max(cols,m[i].numCols);
+        }
+        DMatrixRMaj R = new DMatrixRMaj(rows,cols);
+
+        int row = 0;
+        for (int i = 0; i < m.length; i++) {
+            insert(m[i],R,row,0);
+            row += m[i].numRows;
+        }
+
+        return R;
+    }
+
+    /**
+     * Applies the row permutation specified by the vector to the input matrix and save the results
+     * in the output matrix.  output[perm[j],:] = input[j,:]
+     *
+     * @param pinv (Input) Inverse permutation vector.  Specifies new order of the rows.
+     * @param input (Input) Matrix which is to be permuted
+     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     */
+    public static DMatrixRMaj permuteRowInv( int pinv[] , DMatrixRMaj input , DMatrixRMaj output ) {
+        if( input.numRows > pinv.length )
+            throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
+
+        if( output == null )
+            output = new DMatrixRMaj(1,1);
+        output.reshape(input.numRows,input.numCols);
+
+        int m = input.numCols;
+        for (int row = 0; row < input.numRows; row++) {
+            System.arraycopy(input.data,row*m,output.data,pinv[row]*m,m);
+        }
+        return output;
     }
 }

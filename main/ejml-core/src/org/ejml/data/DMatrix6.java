@@ -161,5 +161,9 @@ public class DMatrix6 implements DMatrixFixed {
     public <T extends Matrix> T createLike() {
         return (T)new DMatrix6();
     }
-}
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }}
 

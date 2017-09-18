@@ -167,7 +167,7 @@ public class TestVectorVectorMult_DDRM {
 
         VectorVectorMult_DDRM.rank1Update(gamma,A,u,w,found);
 
-        EjmlUnitTests.assertEquals(expected.matrix_F64(),found,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(expected.getDDRM(),found,UtilEjml.TEST_F64);
     }
 
     @Test
@@ -186,6 +186,6 @@ public class TestVectorVectorMult_DDRM {
 
         VectorVectorMult_DDRM.rank1Update(gamma,found,u,w);
 
-        EjmlUnitTests.assertEquals(expected.matrix_F64(),found,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(expected.getDDRM(),found,UtilEjml.TEST_F64);
     }
 }

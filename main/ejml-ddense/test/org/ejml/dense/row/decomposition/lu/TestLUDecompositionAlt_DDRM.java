@@ -18,15 +18,10 @@
 
 package org.ejml.dense.row.decomposition.lu;
 
-import java.util.Random;
-
-
 /**
  * @author Peter Abeles
  */
 public class TestLUDecompositionAlt_DDRM extends GeneralLuDecompositionChecks_DDRM {
-    Random rand = new Random(0x3344);
-
     @Override
     public LUDecompositionBase_DDRM create(int numRows, int numCols) {
         return new LUDecompositionAlt_DDRM();

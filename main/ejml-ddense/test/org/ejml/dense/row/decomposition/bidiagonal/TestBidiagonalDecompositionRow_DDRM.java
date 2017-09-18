@@ -57,8 +57,8 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         BidiagonalDecompositionRow_DDRM decomp = new BidiagonalDecompositionRow_DDRM();
         BidiagonalDecompositionNaive_DDRM naive = new BidiagonalDecompositionNaive_DDRM();
 
-        assertTrue(decomp.decompose(A.matrix_F64().copy()));
-        assertTrue(naive.decompose(A.matrix_F64()));
+        assertTrue(decomp.decompose(A.getDDRM().copy()));
+        assertTrue(naive.decompose(A.getDDRM()));
 
         SimpleMatrix U = SimpleMatrix.wrap(decomp.getU(null,false,false));
         SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));
@@ -77,12 +77,12 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         assertTrue(naive.getV().isIdentical(V,UtilEjml.TEST_F64));
 
         // check the decomposition
-        DMatrixRMaj foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        DMatrixRMaj foundA = U.mult(B).mult(V.transpose()).getDDRM();
 
 //        A.print();
 //        foundA.print();
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(A.matrix_F64(),foundA, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A.getDDRM(),foundA, UtilEjml.TEST_F64));
     }
 
     @Test

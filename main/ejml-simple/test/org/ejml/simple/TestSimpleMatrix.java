@@ -800,7 +800,7 @@ public class TestSimpleMatrix {
         assertEquals(orig.get(0,0)+B.get(0,0),A.get(0,0), UtilEjml.TEST_F64);
 
         A.set(orig);
-        A.equation("A = A+B",B.matrix_F64(),"B");
+        A.equation("A = A+B",B.getDDRM(),"B");
         assertEquals(orig.get(0,0)+B.get(0,0),A.get(0,0), UtilEjml.TEST_F64);
 
         A.set(orig);
@@ -811,6 +811,59 @@ public class TestSimpleMatrix {
         A.set(orig);
         A.equation("B+B","B");
         assertEquals(orig.get(0,0)*2,A.get(0,0), UtilEjml.TEST_F64);
-
     }
+
+    /**
+     * More detailed test is done in the CommonOps functin
+     */
+    @Test
+    public void concatColumns() {
+        SimpleMatrix A = SimpleMatrix.random64(5,7,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random64(4,3,-1,1,rand);
+
+        SimpleMatrix C = A.concatColumns(B);
+        SimpleMatrix D = new SimpleMatrix(5,10);
+        D.insertIntoThis(0,0,A);
+        D.insertIntoThis(0,7,B);
+
+        assertTrue( C.isIdentical(D,UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void concatRows() {
+        SimpleMatrix A = SimpleMatrix.random64(5,7,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random64(4,3,-1,1,rand);
+
+        SimpleMatrix C = A.concatRows(B);
+        SimpleMatrix D = new SimpleMatrix(9,7);
+        D.insertIntoThis(0,0,A);
+        D.insertIntoThis(5,0,B);
+
+        assertTrue( C.isIdentical(D,UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void rows() {
+        SimpleMatrix A = SimpleMatrix.random64(5, 7, -1, 1, rand);
+        SimpleMatrix B = A.rows(1,3);
+
+        for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < 7; j++) {
+                assertEquals(A.get(i,j),B.get(i-1,j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void cols() {
+        SimpleMatrix A = SimpleMatrix.random64(5, 7, -1, 1, rand);
+        SimpleMatrix B = A.rows(1,3);
+
+        for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < 7; j++) {
+                assertEquals(A.get(i,j),B.get(i-1,j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
 }

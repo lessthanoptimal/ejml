@@ -56,7 +56,7 @@ public class LinearSolverQrpHouseCol_DDRM extends BaseLinearSolverQrp_DDRM {
         int BnumCols = B.numCols;
 
         // get the pivots and transpose them
-        int pivots[] = decomposition.getPivots();
+        int pivots[] = decomposition.getColPivots();
         
         double qr[][] = decomposition.getQR();
         double gammas[] = decomposition.getGammas();

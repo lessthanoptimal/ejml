@@ -18,16 +18,15 @@
 
 package org.ejml.interfaces.decomposition;
 
+import org.ejml.data.IGrowArray;
 import org.ejml.data.Matrix;
 
 
 /**
- * <p>
  * LU Decomposition refactors the original matrix such that:<br>
- * <div align=center> P<sup>T</sup>*L*U = A</div>
+ * <center> P<sup>T</sup>*L*U = A</center>
  * where P is a pivot matrix, L is a lower triangular matrix, U is an upper triangular matrix and A is
  * the original matrix.
- * </p>
  *
  * <p>
  * LU Decomposition is useful since once the decomposition has been performed linear
@@ -43,6 +42,8 @@ import org.ejml.data.Matrix;
  *
  * @author Peter Abeles
  */
+// TODO add pivot vectors
+    // TODO specify is row or column pivots
 public interface LUDecomposition <T extends Matrix>
         extends DecompositionInterface<T> {
 
@@ -89,7 +90,15 @@ public interface LUDecomposition <T extends Matrix>
      * @param pivot Storage for the pivot matrix. If null then a new matrix is returned. Modified.
      * @return The pivot matrix.
      */
-    T getPivot( T pivot );
+    T getRowPivot(T pivot );
+
+    /**
+     * Returns the row pivot vector
+     *
+     * @param pivot (Optional) Storage for pivot vector
+     * @return The pivot vector
+     */
+    int[] getRowPivotV( IGrowArray pivot );
 
     /**
      * Returns true if the decomposition detected a singular matrix.  This check

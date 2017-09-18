@@ -24,7 +24,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.checkModifiedInput;
@@ -97,7 +97,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
         DMatrixRMaj A_inv_block = new DMatrixRMaj(w, w);
 
         CholeskyDecompositionBlock_DDRM algBlock = new CholeskyDecompositionBlock_DDRM(b);
-        LinearSolver<DMatrixRMaj> solver = new LinearSolverChol_DDRM(algBlock);
+        LinearSolverDense<DMatrixRMaj> solver = new LinearSolverChol_DDRM(algBlock);
         solver = new LinearSolverSafe<DMatrixRMaj>(solver);
         assertTrue(solver.setA(A));
         solver.invert(A_inv_block);

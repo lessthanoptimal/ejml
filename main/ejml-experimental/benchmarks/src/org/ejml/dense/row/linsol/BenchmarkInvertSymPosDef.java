@@ -27,7 +27,7 @@ import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionBlock_DDRM;
 import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRB;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -52,7 +52,7 @@ public class BenchmarkInvertSymPosDef {
         return System.currentTimeMillis() - prev;
     }
 
-    public static long invertCholesky(LinearSolver<DMatrixRMaj> alg , DMatrixRMaj orig , int numTrials ) {
+    public static long invertCholesky(LinearSolverDense<DMatrixRMaj> alg , DMatrixRMaj orig , int numTrials ) {
 
         alg = new LinearSolverSafe<DMatrixRMaj>(alg);
         DMatrixRMaj A = new DMatrixRMaj(orig.numRows,orig.numCols);

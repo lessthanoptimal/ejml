@@ -116,11 +116,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data The formatted 1D array. Not modified.
      */
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double ...data) {
-        mat = new DMatrixRMaj(numRows,numCols, rowMajor, data);
+        setMatrix( new DMatrixRMaj(numRows,numCols, rowMajor, data) );
     }
 
     public SimpleMatrix(int numRows, int numCols, boolean rowMajor, float ...data) {
-        mat = new FMatrixRMaj(numRows,numCols, rowMajor, data);
+        setMatrix( new FMatrixRMaj(numRows,numCols, rowMajor, data) );
     }
 
     /**
@@ -136,7 +136,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data 2D array representation of the matrix. Not modified.
      */
     public SimpleMatrix(double data[][]) {
-        mat = new DMatrixRMaj(data);
+         setMatrix( new DMatrixRMaj(data) );
     }
 
     /**
@@ -148,14 +148,27 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param numCols The number of columns in the matrix.
      */
     public SimpleMatrix(int numRows, int numCols) {
-        mat = new DMatrixRMaj(numRows, numCols);
+        setMatrix(new DMatrixRMaj(numRows, numCols));
     }
 
     public SimpleMatrix(int numRows, int numCols, Class type) {
         if( type == DMatrixRMaj.class )
-            mat = new DMatrixRMaj(numRows, numCols);
+            setMatrix(new DMatrixRMaj(numRows, numCols));
         else
-            mat = new FMatrixRMaj(numRows, numCols);
+            setMatrix(new FMatrixRMaj(numRows, numCols));
+    }
+
+    public SimpleMatrix(int numRows, int numCols, MatrixType type) {
+        switch( type ) {
+            case DDRM:setMatrix(new DMatrixRMaj(numRows, numCols));break;
+            case FDRM:setMatrix(new FMatrixRMaj(numRows, numCols));break;
+            case ZDRM:setMatrix(new ZMatrixRMaj(numRows, numCols));break;
+            case CDRM:setMatrix(new CMatrixRMaj(numRows, numCols));break;
+            case DSCC:setMatrix(new DMatrixSparseCSC(numRows, numCols));break;
+            case FSCC:setMatrix(new FMatrixSparseCSC(numRows, numCols));break;
+            default:
+                throw new RuntimeException("Unknown matrix type");
+        }
     }
 
     /**
@@ -164,7 +177,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param orig The matrix which is to be copied. Not modified.
      */
     public SimpleMatrix( SimpleMatrix orig ) {
-        this.mat = orig.mat.copy();
+        setMatrix(orig.mat.copy());
     }
 
     /**
@@ -173,17 +186,19 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param orig The original matrix whose value is copied.  Not modified.
      */
     public SimpleMatrix( Matrix orig ) {
+        Matrix mat;
         if( orig instanceof DMatrixRBlock) {
             DMatrixRMaj a = new DMatrixRMaj(orig.getNumRows(), orig.getNumCols());
             ConvertDMatrixStruct.convert((DMatrixRBlock) orig, a);
-            this.mat = a;
+            mat = a;
         } else if( orig instanceof FMatrixRBlock) {
             FMatrixRMaj a = new FMatrixRMaj(orig.getNumRows(),orig.getNumCols());
             ConvertFMatrixStruct.convert((FMatrixRBlock)orig, a);
-            this.mat = a;
+            mat = a;
         } else {
-            this.mat = orig.copy();
+            mat = orig.copy();
         }
+        setMatrix(mat);
     }
 
     /**
@@ -199,7 +214,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix wrap( Matrix internalMat ) {
         SimpleMatrix ret = new SimpleMatrix();
-        ret.mat = internalMat;
+        ret.setMatrix(internalMat);
         return ret;
     }
 
@@ -237,7 +252,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * </p>
      *
      * <p>
-     * To extract the diagonal elements from a matrix see {@link #extractDiag()}.
+     * To extract the diagonal elements from a matrix see {@link #diag()}.
      * </p>
      *
      * @see CommonOps_DDRM#diag(double...)
@@ -319,12 +334,14 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return found;
     }
 
-    /**
-     * @inheritdoc
-     */
     @Override
-    protected SimpleMatrix createMatrix( int numRows , int numCols ) {
-        return new SimpleMatrix(numRows,numCols, mat.getClass());
+    protected SimpleMatrix createMatrix(int numRows, int numCols, MatrixType type) {
+        return new SimpleMatrix(numRows,numCols, type);
+    }
+
+    @Override
+    protected SimpleMatrix wrapMatrix(Matrix m) {
+        return new SimpleMatrix(m);
     }
 
     // TODO should this function be added back?  It makes the code hard to read when its used

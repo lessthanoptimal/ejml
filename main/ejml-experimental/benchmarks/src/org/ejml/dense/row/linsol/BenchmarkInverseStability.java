@@ -25,7 +25,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class BenchmarkInverseStability {
 
     public void evaluateAll()
     {
-        List<LinearSolver<DMatrixRMaj>> solvers = new ArrayList<LinearSolver<DMatrixRMaj>>();
+        List<LinearSolverDense<DMatrixRMaj>> solvers = new ArrayList<LinearSolverDense<DMatrixRMaj>>();
         List<String> names = new ArrayList<String>();
 
 //        solvers.add(new GaussJordanNoPivot());
@@ -95,7 +95,7 @@ public class BenchmarkInverseStability {
         allTheBreaks(solvers,names);
     }
 
-    private void allTheBreaks(List<LinearSolver<DMatrixRMaj>> solvers , List<String> names )
+    private void allTheBreaks(List<LinearSolverDense<DMatrixRMaj>> solvers , List<String> names )
     {
         System.out.println("Testing singular:");
         for( int i = 0; i < solvers.size(); i++ ) {
@@ -113,7 +113,7 @@ public class BenchmarkInverseStability {
         }
     }
 
-    private void breakNearlySingluar( String name , LinearSolver<DMatrixRMaj> alg ) {
+    private void breakNearlySingluar( String name , LinearSolverDense<DMatrixRMaj> alg ) {
         double breakDelta = -1;
         int breakW = -1;
 
@@ -153,7 +153,7 @@ public class BenchmarkInverseStability {
 //        System.out.println(dense.getClass().getSimpleName()+" broke at "+breakDelta+" w = "+breakW);
     }
 
-    private void breakOverUnderFlow(String name , LinearSolver<DMatrixRMaj> alg , boolean overflow ) {
+    private void breakOverUnderFlow(String name , LinearSolverDense<DMatrixRMaj> alg , boolean overflow ) {
         boolean madeBad= false;
 
         DMatrixRMaj A_orig = RandomMatrices_DDRM.rectangle(3,3,new Random(0x14));

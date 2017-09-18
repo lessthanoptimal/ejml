@@ -111,7 +111,7 @@ public class MatrixFeatures_DDRM {
      * Checks to see if the matrix is positive definite.
      * </p>
      * <p>
-     * x<sup>T</sup> A x > 0<br>
+     * x<sup>T</sup> A x &gt; 0<br>
      * for all x where x is a non-zero vector and A is a symmetric matrix.
      * </p>
      *
@@ -135,7 +135,7 @@ public class MatrixFeatures_DDRM {
      * Checks to see if the matrix is positive semidefinite:
      * </p>
      * <p>
-     * x<sup>T</sup> A x >= 0<br>
+     * x<sup>T</sup> A x &ge; 0<br>
      * for all x where x is a non-zero vector and A is a symmetric matrix.
      * </p>
      *
@@ -630,7 +630,7 @@ public class MatrixFeatures_DDRM {
      * Checks to see if a matrix is upper triangular or Hessenberg. A Hessenberg matrix of degree N
      * has the following property:<br>
      * <br>
-     * a<sub>ij</sub> &le; 0 for all i < j+N<br>
+     * a<sub>ij</sub> &le; 0 for all i &lt; j+N<br>
      * <br>
      * A triangular matrix is a Hessenberg matrix of degree 0.
      * </p>
@@ -656,7 +656,7 @@ public class MatrixFeatures_DDRM {
      * Checks to see if a matrix is lower triangular or Hessenberg. A Hessenberg matrix of degree N
      * has the following property:<br>
      * <br>
-     * a<sub>ij</sub> &le; 0 for all i < j+N<br>
+     * a<sub>ij</sub> &le; 0 for all i &lt; j+N<br>
      * <br>
      * A triangular matrix is a Hessenberg matrix of degree 0.
      * </p>

@@ -18,9 +18,11 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
 
@@ -36,26 +38,31 @@ public class TestImplCommonOps_DSCC {
 
     Random rand = new Random(324);
 
-    int numRows = 6;
-    int numCols = 7;
-    int length = 15;
-
     @Test
     public void transpose() {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,length, -1, 1, rand);
-        DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numCols,numRows,length, -1, 1, rand);
+        for (int rows = 1; rows <= 10; rows++) {
+            for (int cols = 1; rows <= 10; rows++) {
+                for (int mc = 0; mc < 20; mc++) {
+                    int N =(int) Math.round(rows*cols*rand.nextDouble());
+                    DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(rows,cols,N, -1, 1, rand);
+                    DMatrixSparseCSC b = new DMatrixSparseCSC(0,0,0);
 
-        ImplCommonOps_DSCC.transpose(a,b,null);
+                    ImplCommonOps_DSCC.transpose(a,b,null);
+                    assertEquals(cols,b.numRows);
+                    assertEquals(rows,b.numCols);
 
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                double expected = a.get(row,col);
-                double found = b.get(col,row);
+                    for (int row = 0; row < rows; row++) {
+                        for (int col = 0; col < cols; col++) {
+                            double expected = a.get(row,col);
+                            double found = b.get(col,row);
 
-                assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
+                            assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
+                        }
+                    }
+                    assertTrue(CommonOps_DSCC.checkSortedFlag(b));
+                }
             }
         }
-        assertTrue(CommonOps_DSCC.checkSortedFlag(b));
     }
 
     @Test
@@ -82,7 +89,117 @@ public class TestImplCommonOps_DSCC {
                         assertEquals(row+" "+col,expected, found, UtilEjml.TEST_F64);
                     }
                 }
-                assertTrue(CommonOps_DSCC.checkSortedFlag(c));
+                assertTrue(CommonOps_DSCC.checkStructure(c));
+            }
+        }
+    }
+
+    @Test
+    public void addColAppend() {
+        double alpha = 1.5;
+        double beta = 2.3;
+
+        for( int numRows : new int[]{2,4,6,10}) {
+            DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,3,15, -1, 1, rand);
+            DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numRows,4,15, -1, 1, rand);
+            DMatrixSparseCSC c = new DMatrixSparseCSC(numRows,0,0);
+
+
+            ImplCommonOps_DSCC.addColAppend(alpha,a,1,beta,b,0,c, null);
+            assertTrue(CommonOps_DSCC.checkStructure(c));
+            assertEquals(1,c.numCols);
+
+            for (int row = 0; row < numRows; row++) {
+                double valA = a.get(row,1);
+                double valB = b.get(row,0);
+                double found = alpha*valA + beta*valB;
+
+                double expected = c.get(row,0);
+                assertEquals(expected, found, UtilEjml.TEST_F64);
+            }
+
+            ImplCommonOps_DSCC.addColAppend(alpha,a,2,beta,b,1,c, null);
+            assertTrue(CommonOps_DSCC.checkStructure(c));
+            assertEquals(2,c.numCols);
+
+            for (int row = 0; row < numRows; row++) {
+                double valA = a.get(row,2);
+                double valB = b.get(row,1);
+                double found = alpha*valA + beta*valB;
+
+                double expected = c.get(row,1);
+                assertEquals(expected, found, UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void removeZeros_two() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(2,3,2);
+        A.indicesSorted = true;
+        A.set(0,1,0.1);
+        A.set(1,1,0.0);
+        A.set(1,2,0.3);
+        DMatrixSparseCSC A_orig = A.copy();
+
+        DMatrixSparseCSC B = new DMatrixSparseCSC(1,1,1);
+
+        ImplCommonOps_DSCC.removeZeros(A,B,0);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(A.numRows,B.numRows);
+        assertEquals(A.numCols,B.numCols);
+        assertEquals(2,B.nz_length);
+        EjmlUnitTests.assertEquals(A,B,UtilEjml.TEST_F64);
+        assertTrue(MatrixFeatures_DSCC.isEquals(A,A_orig,UtilEjml.TEST_F64));
+
+        ImplCommonOps_DSCC.removeZeros(A,B,0.1);
+        assertEquals(1,B.nz_length);
+        assertEquals(0,B.get(0,1), UtilEjml.TEST_F64);
+        assertEquals(A.get(1,1),B.get(1,1),UtilEjml.TEST_F64);
+        assertTrue(MatrixFeatures_DSCC.isEquals(A,A_orig,UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void removeZeros_one() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(2,3,2);
+        A.set(0,1,0.1);
+        A.set(1,1,0.0);
+        A.set(1,2,0.3);
+
+        ImplCommonOps_DSCC.removeZeros(A,0);
+        assertTrue(CommonOps_DSCC.checkStructure(A));
+        assertEquals(A.numRows,2);
+        assertEquals(A.numCols,3);
+        assertEquals(2,A.nz_length);
+        assertEquals(0.1,A.get(0,1),UtilEjml.TEST_F64);
+        assertEquals(0.3,A.get(1,2),UtilEjml.TEST_F64);
+
+        ImplCommonOps_DSCC.removeZeros(A,0.1);
+        assertTrue(CommonOps_DSCC.checkStructure(A));
+        assertEquals(A.numRows,2);
+        assertEquals(A.numCols,3);
+        assertEquals(1,A.nz_length);
+        assertEquals(0.3,A.get(1,2),UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void removeZeros_one_random() {
+        for (int i = 0; i < 40; i++) {
+            int rows = rand.nextInt(10)+1;
+            int cols = rand.nextInt(10)+1;
+
+            int nz = RandomMatrices_DSCC.nonzero(rows,cols,0.02,0.5,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz,-1,1,rand);
+
+            ImplCommonOps_DSCC.removeZeros(A,0.2);
+            assertTrue(CommonOps_DSCC.checkStructure(A));
+            assertEquals(A.numRows,rows);
+            assertEquals(A.numCols,cols);
+            for (int j = 0; j < rows; j++) {
+                for (int k = 0; k < cols; k++) {
+                    double val = A.get(j,k);
+                    assertTrue("val = "+val,Math.abs(val) > 0.2 || val == 0);
+                }
             }
         }
     }

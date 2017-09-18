@@ -18,7 +18,7 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
@@ -37,12 +37,12 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
 
     @Override
     public DMatrixSparse createSparse(DMatrixSparseTriplet orig) {
-        return ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        return ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
     }
 
     @Override
     public boolean isStructureValid(DMatrixSparse m) {
-        return true;
+        return CommonOps_DSCC.checkStructure((DMatrixSparseCSC)m);
     }
 
     @Test
@@ -50,16 +50,18 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         DMatrixSparseCSC a = new DMatrixSparseCSC(2,3,4);
 
         a.reshape(1,2,3);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
         assertEquals(1,a.numRows);
         assertEquals(2,a.numCols);
         assertEquals(4,a.nz_values.length);
-        assertEquals(3,a.nz_length);
+        assertEquals(0,a.nz_length);
 
         a.reshape(4,1,10);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
         assertEquals(4,a.numRows);
         assertEquals(1,a.numCols);
         assertEquals(4,a.nz_values.length);
-        assertEquals(4,a.nz_length);
+        assertEquals(0,a.nz_length);
     }
 
     @Test
@@ -77,5 +79,56 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
 
         assertTrue(CommonOps_DSCC.checkIndicesSorted(a));
         assertTrue(a.indicesSorted);
+    }
+
+    @Test
+    public void growMaxColumns() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
+        a.col_idx[0] = 5;
+        a.col_idx[1] = 15;
+
+        // grow when resize isn't needed
+        a.growMaxColumns(3,false);
+        assertEquals(5,a.col_idx[0]);
+        assertEquals(15,a.col_idx[1]);
+
+        // shouldn't declare a new array
+        a.growMaxColumns(4,false);
+        assertEquals(5,a.col_idx[0]);
+        assertEquals(15,a.col_idx[1]);
+
+        // resize is needed now
+        a.growMaxColumns(5,true);
+        assertEquals(5,a.col_idx[0]);
+        assertEquals(15,a.col_idx[1]);
+
+        a.growMaxColumns(6,false);
+        assertEquals(0,a.col_idx[0]);
+        assertEquals(0,a.col_idx[1]);
+    }
+
+    /**
+     * The matrix is already sorted.  See if it is still sorted after set has been called.
+     */
+    @Test
+    public void set_sorted() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(4,5,0);
+        a.indicesSorted = true;
+
+        a.set(1,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+
+        a.set(0,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+
+        a.set(3,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+
+        a.set(2,2, 1);
+        assertTrue(a.indicesSorted);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
     }
 }

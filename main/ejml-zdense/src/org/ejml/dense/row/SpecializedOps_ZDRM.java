@@ -21,6 +21,7 @@ package org.ejml.dense.row;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * @author Peter Abeles
@@ -145,7 +146,7 @@ public class SpecializedOps_ZDRM {
 
     /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
-     * is defined in {@link org.ejml.interfaces.linsol.LinearSolver#quality()}.  In
+     * is defined in {@link LinearSolverDense#quality()}.  In
      * this situation the quality is the magnitude of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.

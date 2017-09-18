@@ -19,18 +19,18 @@
 package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * In many situations solutions to linear systems that share many of the same data points are needed.
  * This can happen when solving using the most recent data or when rejecting outliers.  In these situations
  * it is possible to solve these related systems much faster than solving the entire data set again.
  *
- * @see org.ejml.interfaces.linsol.LinearSolver
+ * @see LinearSolverDense
  *
  * @author Peter Abeles
  */
-public interface AdjustableLinearSolver_DDRM extends LinearSolver<DMatrixRMaj> {
+public interface AdjustableLinearSolver_DDRM extends LinearSolverDense<DMatrixRMaj> {
 
 
     /**

@@ -51,7 +51,6 @@ public class CholeskyDecompositionLDL_DDRM
 
     // the decomposed matrix
     private DMatrixRMaj L;
-    private double[] el;
 
     // the D vector
     private double[] d;
@@ -67,7 +66,6 @@ public class CholeskyDecompositionLDL_DDRM
         this.maxWidth = numRows;
 
         this.L = new DMatrixRMaj(maxWidth,maxWidth);
-        this.el = L.data;
 
         this.vv = new double[maxWidth];
         this.d = new double[maxWidth];
@@ -95,6 +93,7 @@ public class CholeskyDecompositionLDL_DDRM
         n = mat.numRows;
 
         L.set(mat);
+        double []el = L.data;
 
         double d_inv=0;
         for( int i = 0; i < n; i++ ) {
@@ -106,7 +105,7 @@ public class CholeskyDecompositionLDL_DDRM
                 }
 
                 if( i == j ) {
-                    // is it positive-definate?
+                    // is it positive-definite?
                     if( sum <= 0.0 )
                         return false;
 

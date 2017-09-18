@@ -18,7 +18,10 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -44,7 +47,8 @@ public class RandomMatrices_DSCC {
                                              double min , double max , Random rand ) {
 
         nz_total = Math.min(numCols*numRows,nz_total);
-        int[] selected = selectElements(numRows*numCols, nz_total, rand);
+        int[] selected = UtilEjml.shuffled(numRows*numCols, nz_total, rand);
+        Arrays.sort(selected,0,nz_total);
 
         DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows,numCols,nz_total);
         ret.indicesSorted = true;
@@ -68,30 +72,60 @@ public class RandomMatrices_DSCC {
         return ret;
     }
 
-    private static int[] selectElements(int N, int nz_total, Random rand) {
-        // Create a list of all the possible element values
-        if( N < 0 )
-            throw new IllegalArgumentException("matrix size is too large");
-
-        int selected[] = new int[N];
-        for (int i = 0; i < N; i++) {
-            selected[i] = i;
-        }
-
-        for (int i = 0; i < nz_total; i++) {
-            int swapIdx = rand.nextInt(N);
-            int tmp = selected[swapIdx];
-            selected[swapIdx] = selected[i];
-            selected[i] = tmp;
-        }
-
-        // put the indexes in order
-        Arrays.sort(selected,0,nz_total);
-        return selected;
-    }
 
     public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total , Random rand ) {
         return rectangle(numRows, numCols, nz_total, -1,1,rand);
+    }
+
+    /**
+     * Creates a random symmetric matrix. The entire matrix will be filled in, not just a triangular
+     * portion.
+     *
+     * @param N Number of rows and columns
+     * @param nz_total Number of nonzero elements in the triangular portion of the matrix
+     * @param min Minimum element value, inclusive
+     * @param max Maximum element value, inclusive
+     * @param rand Random number generator
+     * @return Randomly generated matrix
+     */
+    public static DMatrixSparseCSC symmetric( int N , int nz_total ,
+                                              double min , double max , Random rand) {
+
+        // compute the number of elements in the triangle, including diagonal
+        int Ntriagle = (N*N+N)/2;
+        // create a list of open elements
+        int open[] = new int[Ntriagle];
+        for (int row = 0, index = 0; row < N; row++) {
+            for (int col = row; col < N; col++, index++) {
+                open[index] = row*N+col;
+            }
+        }
+
+        // perform a random draw
+        UtilEjml.shuffle(open,open.length,0,nz_total,rand);
+        Arrays.sort(open,0,nz_total);
+
+        // construct the matrix
+        DMatrixSparseTriplet A = new DMatrixSparseTriplet(N,N,nz_total*2);
+        for (int i = 0; i < nz_total; i++) {
+            int index = open[i];
+            int row = index/N;
+            int col = index%N;
+
+            double value = rand.nextDouble()*(max-min)+min;
+
+            if( row == col ) {
+                A.addItem(row,col,value);
+            } else {
+                A.addItem(row,col,value);
+                A.addItem(col,row,value);
+            }
+        }
+
+        DMatrixSparseCSC B = new DMatrixSparseCSC(N,N,A.nz_length);
+        ConvertDMatrixStruct.convert(A,B);
+
+        return B;
     }
 
     /**
@@ -131,7 +165,8 @@ public class RandomMatrices_DSCC {
         // number of elements which are not the diagonal elements
         int off_total = nz_total-diag_total;
 
-        int[] selected = selectElements(N-diag_total, off_total, rand);
+        int[] selected = UtilEjml.shuffled(N-diag_total, off_total, rand);
+        Arrays.sort(selected,0,off_total);
 
         DMatrixSparseCSC L = new DMatrixSparseCSC(dimen,dimen,nz_total);
 
@@ -181,5 +216,69 @@ public class RandomMatrices_DSCC {
 
         CommonOps_DSCC.transpose(L,U,null);
         return U;
+    }
+
+    public static int nonzero( int numRows , int numCols , double minFill , double maxFill , Random rand  ) {
+        int N = numRows*numCols;
+        return (int)(N*(rand.nextDouble()*(maxFill-minFill)+minFill)+0.5);
+    }
+
+    /**
+     * Creates a triangular matrix where the amount of fill is randomly selected too.
+     *
+     * @param upper true for upper triangular and false for lower
+     * @param N number of rows and columns
+er      * @param minFill minimum fill fraction
+     * @param maxFill maximum fill fraction
+     * @param rand random number generator
+     * @return Random matrix
+     */
+    public static DMatrixSparseCSC triangle( boolean upper , int N , double minFill , double maxFill , Random rand ) {
+        int nz = (int)(((N-1)*(N-1)/2)*(rand.nextDouble()*(maxFill-minFill)+minFill))+N;
+
+        if( upper ) {
+            return triangleUpper(N,0,nz,-1,1,rand);
+        } else {
+            return triangleLower(N,0,nz,-1,1,rand);
+        }
+    }
+
+    /**
+     * Creates a random symmetric positive definite matrix.
+     * @param width number of columns and rows
+     * @param nz_total Used to adjust number of non-zero values. Exact amount in final matrix will be more than this.
+     * @param rand random number generator
+     * @return Random matrix
+     */
+    public static DMatrixSparseCSC symmetricPosDef( int width , int nz_total , Random rand ) {
+        DMatrixSparseCSC A = rectangle(width,width,nz_total,rand);
+
+        // to ensure it's SPD assign non-zero values to all the diagonal elements
+        for (int i = 0; i < width; i++) {
+            A.set(i,i,Math.max(0.5,rand.nextDouble()));
+        }
+
+        DMatrixSparseCSC spd = new DMatrixSparseCSC(width,width,0);
+        CommonOps_DSCC.multTransB(A,A,spd,null,null);
+
+
+        return spd;
+    }
+
+    /**
+     * Modies the matrix to make sure that at least one element in each column has a value
+     */
+    public static void ensureNotSingular( DMatrixSparseCSC A , Random rand ) {
+//        if( A.numRows < A.numCols ) {
+//            throw new IllegalArgumentException("Fewer equations than variables");
+//        }
+
+        int []s = UtilEjml.shuffled(A.numRows,rand);
+        Arrays.sort(s);
+
+        int N = Math.min(A.numCols,A.numRows);
+        for (int col = 0; col < N; col++) {
+            A.set(s[col],col,rand.nextDouble()+0.5);
+        }
     }
 }

@@ -134,5 +134,9 @@ public class DMatrix2x2 implements DMatrixFixed {
     public <T extends Matrix> T createLike() {
         return (T)new DMatrix2x2();
     }
-}
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }}
 

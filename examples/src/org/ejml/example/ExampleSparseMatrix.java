@@ -18,12 +18,10 @@
 
 package org.ejml.example;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -53,7 +51,7 @@ public class ExampleSparseMatrix {
         work.addItem(2,3,6);
 
         // convert into a format that's easier to perform math with
-        DMatrixSparseCSC Z = ConvertDMatrixSparse.convert(work,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC Z = ConvertDMatrixStruct.convert(work,(DMatrixSparseCSC)null);
 
         // print the matrix to standard out in two different formats
         Z.print();
@@ -75,28 +73,28 @@ public class ExampleSparseMatrix {
         //                  y=A*x
         // Optional storage is set to null so that it will declare it internally
         long before = System.currentTimeMillis();
-        int []workA = new int[A.numRows];
-        double []workB = new double[A.numRows];
+        IGrowArray workA = new IGrowArray(A.numRows);
+        DGrowArray workB = new DGrowArray(A.numRows);
         for (int i = 0; i < 100; i++) {
             CommonOps_DSCC.mult(A,x,y,workA,workB);
-//            CommonOps_DSCC.add(1.5,y,0.75,y,z,workB,workA);
+            CommonOps_DSCC.add(1.5,y,0.75,y,z,workA,workB);
         }
         long after = System.currentTimeMillis();
 
-        System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  time = "+(after-before)+" ms");
+        System.out.println("norm = "+ NormOps_DSCC.fastNormF(y)+"  sparse time = "+(after-before)+" ms");
 
-        DMatrixRMaj Ad = ConvertDMatrixSparse.convert(A,(DMatrixRMaj)null);
-        DMatrixRMaj xd = ConvertDMatrixSparse.convert(x,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj xd = ConvertDMatrixStruct.convert(x,(DMatrixRMaj)null);
         DMatrixRMaj yd = new DMatrixRMaj(y.numRows,y.numCols);
         DMatrixRMaj zd = new DMatrixRMaj(y.numRows,y.numCols);
 
         before = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
             CommonOps_DDRM.mult(Ad, xd, yd);
-//            CommonOps_DDRM.add(1.5,yd,0.75, yd, zd);
+            CommonOps_DDRM.add(1.5,yd,0.75, yd, zd);
         }
         after = System.currentTimeMillis();
-        System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  time = "+(after-before)+" ms");
+        System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  dense time  = "+(after-before)+" ms");
 
     }
 }

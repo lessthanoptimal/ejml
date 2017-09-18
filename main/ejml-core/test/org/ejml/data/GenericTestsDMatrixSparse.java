@@ -49,7 +49,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                t.addItem(row,col, rand.nextGaussian());
+                t.addItem(row,col, (double)rand.nextGaussian());
             }
         }
 
@@ -63,10 +63,9 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
         if( assignable ) {
             DMatrixSparse orig = m.copy();
 
+            // Test the situation where a new element is added to the sparse matrix
             m.set(1, 2, 10);
-            m.set(1, 2, 15);
-
-            assertEquals(15, m.get(1, 2), UtilEjml.TEST_F64);
+            assertEquals(10, m.get(1, 2), UtilEjml.TEST_F64);
 
             // make sure nothing else was modified
             for (int row = 0; row < m.getNumRows(); row++) {
@@ -75,7 +74,11 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
                         assertEquals(orig.get(row,col),m.get(row,col), UtilEjml.TEST_F64);
                 }
             }
+            assertTrue(isStructureValid(m));
 
+            // modify the same element again
+            m.set(1, 2, 20);
+            assertEquals(20, m.get(1, 2), UtilEjml.TEST_F64);
             assertTrue(isStructureValid(m));
 
             // another test case.  empty matrix
@@ -118,15 +121,62 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
     }
 
     @Test
-    public void remove() {
+    public void remove_case0() {
         DMatrixSparse m = (DMatrixSparse)createMatrix(3,4);
+        DMatrixSparse c = m.copy();
 
-        assertTrue( m.get(1,2) != 0 );
+        assertTrue( m.isAssigned(1,2) );
         m.remove(1,2);
-        assertTrue( m.get(1,2) == 0 );
+        assertFalse( m.isAssigned(1,2) );
         m.remove(1,2); // see if it blows up if it removes nothing
-        assertTrue( m.get(1,2) == 0 );
+        assertFalse( m.isAssigned(1,2) );
 
         assertTrue(isStructureValid(m));
+
+        // rest of the matrix should be the same
+        for (int row = 0; row < m.getNumRows(); row++) {
+            for (int col = 0; col < m.getNumCols(); col++) {
+                if( row != 1 && col != 2 ) {
+                    assertEquals(c.get(row,col),m.get(row,col), UtilEjml.TEST_F64);
+                }
+            }
+        }
     }
+
+    @Test
+    public void remove_case1() {
+        DMatrixSparse m = (DMatrixSparse)createMatrix(3,3);
+        // create an identify matrix
+        m.zero();
+        for (int i = 0; i < 3; i++) {
+            m.set(i,i,i+1);
+        }
+
+        // remove the middle element
+        m.remove(1,1);
+        assertFalse( m.isAssigned(1,1) );
+
+        // make sure it's the expected length
+        for (int row = 0; row < m.getNumRows(); row++) {
+            for (int col = 0; col < m.getNumCols(); col++) {
+                if( row != col ) {
+                    assertEquals(0,m.get(row,col),UtilEjml.TEST_F64);
+                } else if( row != 1 ){
+                    assertEquals(row+1,m.get(row,col),UtilEjml.TEST_F64);
+                } else {
+                    assertEquals(0,m.get(row,col),UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void reshape() {
+        DMatrixSparse m = (DMatrixSparse)createMatrix(3,4);
+        m.reshape(2,4,8);
+        assertEquals(0,m.getNumElements());
+        assertEquals(2,m.getNumRows());
+        assertEquals(4,m.getNumCols());
+    }
+
 }

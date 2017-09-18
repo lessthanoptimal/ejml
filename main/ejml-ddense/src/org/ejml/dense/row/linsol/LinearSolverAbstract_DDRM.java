@@ -19,7 +19,7 @@
 package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -35,7 +35,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract_DDRM implements LinearSolver<DMatrixRMaj> {
+public abstract class LinearSolverAbstract_DDRM implements LinearSolverDense<DMatrixRMaj> {
 
     protected DMatrixRMaj A;
     protected int numRows;

@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.linsol.qr.QrHouseHolderSolver_DDRB;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * Test the wrapper by running it through the usual linear solver checks
@@ -31,9 +31,9 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolver_DDRB_to_DDRM extends GenericLinearSolverChecks_DDRM {
 
     @Override
-    protected LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A) {
 
-        LinearSolver<DMatrixRBlock> solver = new QrHouseHolderSolver_DDRB();
+        LinearSolverDense<DMatrixRBlock> solver = new QrHouseHolderSolver_DDRB();
 
         return new LinearSolver_DDRB_to_DDRM(solver);
     }

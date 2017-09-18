@@ -20,7 +20,7 @@ package org.ejml.dense.row.linsol.chol;
 
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.chol.CholeskyDecompositionInner_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * @author Peter Abeles
@@ -28,7 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolverChol_ZDRM extends BaseCholeskySolveTests_ZDRM {
 
     @Override
-    public LinearSolver<ZMatrixRMaj> createSolver() {
+    public LinearSolverDense<ZMatrixRMaj> createSolver() {
         CholeskyDecompositionInner_ZDRM alg = new CholeskyDecompositionInner_ZDRM(true);
         return new LinearSolverChol_ZDRM(alg);
     }

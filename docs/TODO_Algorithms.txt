@@ -1,18 +1,3 @@
-Sparse Matrix
-- TODO Postordering a tree
-- TODO Column counts
-- TODO Symbolic analysis
-- TODO Cholesky
-- TODO QR
-- TODO LU
-
-SimpleMatrix
-- TODO make extract/insert more user friendly.
--      take inspiration from other libraries
--      rows(begin,end)     cols(begin,end)   <--- extract
--      concatColumns(A,B)  concatRows(A,B)
-
-
 
 - Block bidiagonal
 - Explore having the various implementations of MatrixMult_* internally invoke an interface that can be swapped

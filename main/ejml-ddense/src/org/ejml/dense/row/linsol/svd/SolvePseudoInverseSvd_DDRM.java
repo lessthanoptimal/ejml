@@ -24,7 +24,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -42,7 +42,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  *
  * @author Peter Abeles
  */
-public class SolvePseudoInverseSvd_DDRM implements LinearSolver<DMatrixRMaj> {
+public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj> {
 
     // Used to compute pseudo inverse
     private SingularValueDecomposition_F64<DMatrixRMaj> svd;
@@ -52,6 +52,9 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolver<DMatrixRMaj> {
 
     // relative threshold used to select singular values
     private double threshold = UtilEjml.EPS;
+
+    // Internal workspace
+    private DMatrixRMaj U_t=new DMatrixRMaj(1,1),V=new DMatrixRMaj(1,1);
 
     /**
      * Creates a new solver targeted at the specified matrix size.
@@ -78,8 +81,8 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolver<DMatrixRMaj> {
         if( !svd.decompose(A) )
             return false;
 
-        DMatrixRMaj U_t = svd.getU(null,true);
-        DMatrixRMaj V = svd.getV(null,false);
+        svd.getU(U_t,true);
+        svd.getV(V,false);
         double []S = svd.getSingularValues();
         int N = Math.min(A.numRows,A.numCols);
 

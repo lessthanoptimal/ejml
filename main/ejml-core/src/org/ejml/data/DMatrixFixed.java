@@ -24,4 +24,5 @@ package org.ejml.data;
  * @author Peter Abeles
  */
 public interface DMatrixFixed extends DMatrix {
+
 }

@@ -23,18 +23,18 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_DDRB;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
- * Wrapper that allows {@link org.ejml.interfaces.linsol.LinearSolver <DMatrixRBlock>} to implements {@link org.ejml.interfaces.linsol.LinearSolver}.  It works
+ * Wrapper that allows {@link DMatrixRBlock} to implements {@link LinearSolverDense}.  It works
  * by converting {@link DMatrixRMaj} into {@link DMatrixRBlock} and calling the equivalent
  * functions.  Since a local copy is made all input matrices are never modified.
  *
  * @author Peter Abeles
  */
-public class LinearSolver_DDRB_to_DDRM implements LinearSolver<DMatrixRMaj> {
-    protected LinearSolver<DMatrixRBlock> alg = new CholeskyOuterSolver_DDRB();
+public class LinearSolver_DDRB_to_DDRM implements LinearSolverDense<DMatrixRMaj> {
+    protected LinearSolverDense<DMatrixRBlock> alg = new CholeskyOuterSolver_DDRB();
 
     // block matrix copy of the system A matrix.
     protected DMatrixRBlock blockA = new DMatrixRBlock(1,1);
@@ -43,7 +43,7 @@ public class LinearSolver_DDRB_to_DDRM implements LinearSolver<DMatrixRMaj> {
     // block matrix copy of X matrix passed into solve
     protected DMatrixRBlock blockX = new DMatrixRBlock(1,1);
 
-    public LinearSolver_DDRB_to_DDRM(LinearSolver<DMatrixRBlock> alg) {
+    public LinearSolver_DDRB_to_DDRM(LinearSolverDense<DMatrixRBlock> alg) {
         this.alg = alg;
     }
 

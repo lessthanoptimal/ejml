@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol.svd;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_DDRM;
 import org.ejml.dense.row.linsol.GenericSolvePseudoInverseChecks_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 /**
@@ -34,13 +34,13 @@ public class TestSolvePseudoInverseSvd_DDRM extends GenericLinearSolverChecks_DD
     }
 
     @Override
-    protected LinearSolver<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
         return new SolvePseudoInverseSvd_DDRM(A.numRows,A.numCols);
     }
 
     @Test
     public void checkSingularBasic() {
-        LinearSolver<DMatrixRMaj> solver = new SolvePseudoInverseSvd_DDRM(10,10);
+        LinearSolverDense<DMatrixRMaj> solver = new SolvePseudoInverseSvd_DDRM(10,10);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);
 
         checks.all();

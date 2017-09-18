@@ -21,7 +21,7 @@ package org.ejml.dense.row.linsol.qr;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.qr.QRDecompositionHouseholderColumn_ZDRM;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -34,7 +34,7 @@ public class TestLinearSolverQr_ZDRM extends GenericLinearSolverChecks_ZDRM {
     }
 
     @Override
-    protected LinearSolver<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
+    protected LinearSolverDense<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
         return new LinearSolverQr_ZDRM(new QRDecompositionHouseholderColumn_ZDRM());
     }
 }

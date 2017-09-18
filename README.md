@@ -44,7 +44,7 @@ EJML is in Maven central repository and can easily be added to Gradle, Maven, an
 ```
 <groupId>org.ejml</groupId>
 <artifactId>ejml-all</artifactId>
-<version>0.31</version>
+<version>0.32</version>
 ```
 
 This will add the entire library.  Alternatively, you can include the required modules individually:
@@ -63,13 +63,14 @@ This will add the entire library.  Alternatively, you can include the required m
 
 ## Building
 
-Gradle is the official build environment for EJML.  Before the project can be fully compile you must auto generate
-the 32-bit code.
+Gradle is the official build environment for EJML. Before the project can build you must run autogenerate
+to create the 32-bit code.
 ```bash
 cd ejml
-gradle autogenerate
+./gradlew autogenerate
+./gradlew install
 ```
-After that has finished running all the standard commands (e.g. gradle install) will work as well as the custom commands listed below:
+After invoking those commands EJML will build and be in your local maven repo and can be included by other applications. Below is a list of custom Gradle commands that might be of use to you.
 
 * createLibraryDirectory : To build all the modules as jars and save them in ejml/libraries
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar
@@ -174,7 +175,8 @@ https://github.com/lessthanoptimal/ejml/issues
 
 I would like to thank all the people have made various comments, suggestions, and reported bugs.  Also David Watkins
 for writing "Fundamentals of Matrix Computations", which clearly explains algorithms and yet addresses important
-implementation issues.  Sparse matrix algorithms come from Timothy A. Davis "Direct Methods for Sparse Linear Systems".
+implementation issues.  Timothy A. Davis for his book "Direct Methods for Sparse Linear Systems" and for CSparse
+which provided the initial seed for the sparse algorithms.
 
 ---------------------------------------------------------------------------
 ## License

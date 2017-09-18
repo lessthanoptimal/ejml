@@ -22,7 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.misc.UnrolledInverseFromMinor_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -36,7 +36,7 @@ import java.util.Random;
 public class BenchmarkInvertSquare {
 
 
-    public static long invertBenchmark(LinearSolver solver , DMatrixRMaj orig , int numTrials ) {
+    public static long invertBenchmark(LinearSolverDense solver , DMatrixRMaj orig , int numTrials ) {
         DMatrixRMaj A = new DMatrixRMaj(orig.numRows,orig.numCols);
 
         long prev = System.currentTimeMillis();

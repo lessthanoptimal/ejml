@@ -48,13 +48,13 @@ public interface QRPDecomposition<T extends Matrix>
      *
      * @return Order of columns.
      */
-    int[] getPivots();
+    int[] getColPivots();
 
     /**
-     * Creates the pivot matrix.
+     * Creates the column pivot matrix.
      *
      * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
      * @return The pivot matrix.
      */
-    T getPivotMatrix(T P);
+    T getColPivotMatrix(T P);
 }

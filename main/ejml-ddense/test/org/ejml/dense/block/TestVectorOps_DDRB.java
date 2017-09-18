@@ -50,7 +50,7 @@ public class TestVectorOps_DDRB {
             int offset = width > 1 ? 1 : 0;
 
             SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0 , 1.0 ,rand);
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
             DMatrixRBlock Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).scale(alpha);
@@ -74,7 +74,7 @@ public class TestVectorOps_DDRB {
             int offset = width > 1 ? 1 : 0;
 
             SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0 , 1.0 ,rand);
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
             DMatrixRBlock Bb = Ab.copy();
 
             SimpleMatrix b = A.extractVector(true,rowA).divide(alpha);
@@ -101,8 +101,8 @@ public class TestVectorOps_DDRB {
 
             SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0, 1.0,rand);
             SimpleMatrix B = SimpleMatrix.random64(r,width, -1.0, 1.0,rand);
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
-            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
+            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.getDDRM(),r);
             DMatrixRBlock Cb = Ab.copy();
 
             SimpleMatrix a = A.extractVector(true,rowA).scale(alpha);
@@ -134,8 +134,8 @@ public class TestVectorOps_DDRB {
             SimpleMatrix B = SimpleMatrix.random64(r,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(rowB,rowB+1,offset,SimpleMatrix.END);
 
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
-            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
+            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.getDDRM(),r);
 
             double expected = (double)a.dot(b);
 
@@ -162,8 +162,8 @@ public class TestVectorOps_DDRB {
             SimpleMatrix B = SimpleMatrix.random64(width,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(offset,SimpleMatrix.END,colB,colB+1);
 
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.matrix_F64(),r);
-            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.matrix_F64(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
+            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.getDDRM(),r);
 
             double expected = (double)a.dot(b);
 

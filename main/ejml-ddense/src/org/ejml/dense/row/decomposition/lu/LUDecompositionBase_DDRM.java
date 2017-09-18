@@ -21,6 +21,7 @@ package org.ejml.dense.row.decomposition.lu;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
@@ -139,8 +140,14 @@ public abstract class LUDecompositionBase_DDRM
         return upper;
     }
 
-    public DMatrixRMaj getPivot(DMatrixRMaj pivot ) {
+    @Override
+    public DMatrixRMaj getRowPivot(DMatrixRMaj pivot ) {
         return SpecializedOps_DDRM.pivotMatrix(pivot, this.pivot, LU.numRows, false);
+    }
+
+    @Override
+    public int[] getRowPivotV(IGrowArray pivot) {
+        return UtilEjml.pivotVector(this.pivot,LU.numRows,pivot);
     }
 
     protected void decomposeCommonInit(DMatrixRMaj a) {

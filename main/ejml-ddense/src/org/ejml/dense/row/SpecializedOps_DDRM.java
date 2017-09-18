@@ -22,6 +22,7 @@ import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -398,12 +399,12 @@ public class SpecializedOps_DDRM {
 
     /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
-     * is defined in {@link org.ejml.interfaces.linsol.LinearSolver#quality()}.  In
+     * is defined in {@link LinearSolverDense#quality()}.  In
      * this situation the quality os the absolute value of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.
      *
-     * @param T A matrix.  @return product of the diagonal elements.
+     * @param T A matrix.
      * @return the quality of the system.
      */
     public static double qualityTriangular(DMatrixD1 T)

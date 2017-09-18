@@ -12,6 +12,8 @@
 -----
 Push to central:
 
+- Edit gradle.properties and turn off parallel build
+- Edit build.gradle and uncomment archives javadocJar
 - gradle uploadArchives
 - Then go to the website  https://oss.sonatype.org/
   * click close button

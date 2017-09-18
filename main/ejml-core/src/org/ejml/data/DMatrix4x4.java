@@ -210,5 +210,9 @@ public class DMatrix4x4 implements DMatrixFixed {
     public <T extends Matrix> T createLike() {
         return (T)new DMatrix4x4();
     }
-}
+
+    @Override
+    public MatrixType getType() {
+        return MatrixType.UNSPECIFIED;
+    }}
 

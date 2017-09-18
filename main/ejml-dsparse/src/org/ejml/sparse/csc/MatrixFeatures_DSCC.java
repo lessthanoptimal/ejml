@@ -19,7 +19,11 @@
 package org.ejml.sparse.csc;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
+import org.ejml.interfaces.decomposition.CholeskySparseDecomposition;
+import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
 /**
  * @author Peter Abeles
@@ -129,13 +133,14 @@ public class MatrixFeatures_DSCC {
      * Checks to see if a matrix is lower triangular or Hessenberg. A Hessenberg matrix of degree N
      * has the following property:<br>
      * <br>
-     * a<sub>ij</sub> &le; 0 for all i < j+N<br>
+     * a<sub>ij</sub> &le; 0 for all i &lt; j+N<br>
      * <br>
      * A triangular matrix is a Hessenberg matrix of degree 0.  Only the upper most diagonal elements are
      * explicitly checked to see if they are non-zero
      * </p>
      * @param A Matrix being tested.  Not modified.
      * @param hessenberg The degree of being hessenberg.
+     * @param tol How not zero diagonal elements must be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
     public static boolean isLowerTriangle(DMatrixSparseCSC A , int hessenberg , double tol )
@@ -198,5 +203,87 @@ public class MatrixFeatures_DSCC {
      */
     public static boolean isVector(DMatrixSparseCSC a) {
         return (a.numCols == 1 && a.numRows > 1) || (a.numRows == 1 && a.numCols>1);
+    }
+
+    /**
+     * Checks to see if the matrix is symmetric to within tolerance.
+     *
+     * @param A Matrix being tested.  Not modified.
+     * @param tol Tolerance that defines how similar two values must be to be considered identical
+     * @return true if symmetric or false if not
+     */
+    public static boolean isSymmetric( DMatrixSparseCSC A , double tol ) {
+        if( A.numRows != A.numCols )
+            return false;
+
+        int N = A.numCols;
+
+        for (int i = 0; i < N; i++) {
+            int idx0 = A.col_idx[i];
+            int idx1 = A.col_idx[i+1];
+
+            for (int index = idx0; index < idx1; index++) {
+                int j = A.nz_rows[index];
+                double value_ji = A.nz_values[index];
+                double value_ij = A.get(i,j);
+
+                if( Math.abs(value_ij-value_ji) > tol )
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * <p>
+     * Checks to see if the matrix is positive definite.
+     * </p>
+     * <p>
+     * x<sup>T</sup> A x &gt; 0<br>
+     * for all x where x is a non-zero vector and A is a symmetric matrix.
+     * </p>
+     *
+     * @param A square symmetric matrix. Not modified.
+     *
+     * @return True if it is positive definite and false if it is not.
+     */
+    public static boolean isPositiveDefinite( DMatrixSparseCSC A ) {
+        if( A.numRows != A.numCols )
+            return false;
+
+        CholeskySparseDecomposition<DMatrixSparseCSC> chol = new CholeskyUpLooking_DSCC();
+        return chol.decompose(A);
+    }
+
+    /**
+     * <p>
+     * Checks to see if a matrix is orthogonal or isometric.
+     * </p>
+     *
+     * @param Q The matrix being tested. Not modified.
+     * @param tol Tolerance.
+     * @return True if it passes the test.
+     */
+    public static boolean isOrthogonal(DMatrixSparseCSC Q , double tol )
+    {
+        if( Q.numRows < Q.numCols ) {
+            throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
+        }
+
+        IGrowArray gw=new IGrowArray();
+        DGrowArray gx=new DGrowArray();
+
+        for( int i = 0; i < Q.numRows; i++ ) {
+
+            for( int j = i+1; j < Q.numCols; j++ ) {
+                double val = CommonOps_DSCC.dotInnerColumns(Q,i,Q,j,gw,gx);
+
+                if( !(Math.abs(val) <= tol))
+                    return false;
+            }
+        }
+
+        return true;
     }
 }

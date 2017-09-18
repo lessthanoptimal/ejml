@@ -62,7 +62,7 @@ public class StabilityQRDecomposition {
 
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null,true));
         SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null,true));
-        SimpleMatrix P = SimpleMatrix.wrap(alg.getPivotMatrix(null));
+        SimpleMatrix P = SimpleMatrix.wrap(alg.getColPivotMatrix(null));
 
         SimpleMatrix A_found = Q.mult(R);
         SimpleMatrix A = SimpleMatrix.wrap(orig);

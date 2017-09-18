@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixSparse;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.junit.Test;
 
 import java.util.Random;
@@ -46,8 +46,8 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
-        DMatrixSparseCSC b = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         a.sortIndices(null); b.sortIndices(null);
         assertTrue(MatrixFeatures_DSCC.isEquals(a,b));
@@ -74,13 +74,13 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,2,1.5);
         orig.addItem(2,4,2.7);
-        DMatrixSparseCSC b = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         // these require sorting and this will fail if not
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b, UtilEjml.TEST_F64));
@@ -93,8 +93,8 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
-        DMatrixSparseCSC b = ConvertDMatrixSparse.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b,UtilEjml.TEST_F64));
 
@@ -171,7 +171,7 @@ public class TestMatrixFeatures_DSCC {
         // normal triangular matrix
         DMatrixRMaj D = new DMatrixRMaj(4,4,true,
                 1,0,0,0, 1,1,0,0, 0,0,1,0 , 1,0,1,1 );
-        DMatrixSparseCSC L = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC L = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -181,7 +181,7 @@ public class TestMatrixFeatures_DSCC {
         // Hessenberg matrix of degree 1
         D = new DMatrixRMaj(4,4,true,
                 1,1,0,0, 1,1,1,0, 0,0,0,1 , 1,0,1,1 );
-        L = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
+        L = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -192,7 +192,7 @@ public class TestMatrixFeatures_DSCC {
         // testing a case which failed.  first column was all zeros for hessenberg of 1
         D = new DMatrixRMaj(4,4,true,
                 0,1,0,0, 0,0,1,0, 0,0,0,1 , 0,0,0,1 );
-        L = ConvertDMatrixSparse.convert(D,(DMatrixSparseCSC)null);
+        L = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -212,8 +212,8 @@ public class TestMatrixFeatures_DSCC {
         CommonOps_DDRM.transpose(Ad,Ad_tran);
 
         // convert to sparse
-        DMatrixSparseCSC A = ConvertDMatrixSparse.convert(Ad,(DMatrixSparseCSC)null);
-        DMatrixSparseCSC At = ConvertDMatrixSparse.convert(Ad_tran,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(Ad,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        DMatrixSparseCSC At = ConvertDMatrixStruct.convert(Ad_tran,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         A.sortIndices(null);
         assertTrue(MatrixFeatures_DSCC.isTranspose(A,At, UtilEjml.TEST_F64));
@@ -228,6 +228,82 @@ public class TestMatrixFeatures_DSCC {
         assertTrue(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(1,10,5)));
         assertFalse(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(10,10,5)));
         assertFalse(MatrixFeatures_DSCC.isVector(new DMatrixSparseCSC(1,1,5)));
+    }
+
+    @Test
+    public void isSymmetric() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(5,4,2);
+
+        // not square
+        assertFalse(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+
+        // a matrix with all zeros is symmetric
+        A.reshape(5,5,2);
+        assertTrue(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+
+        // test with various random matrices
+        for (int N = 1; N < 10; N++) {
+            for (int mc = 0; mc < 30; mc++) {
+                int nz = (int)Math.ceil(N*N*(rand.nextDouble()*0.4+0.1));
+                A = RandomMatrices_DSCC.rectangle(N,N,nz,rand);
+
+                DMatrixSparseCSC C = new DMatrixSparseCSC(N,N,0);
+
+                // C must be symmetric
+                CommonOps_DSCC.multTransB(A,A,C,null,null);
+                assertTrue(MatrixFeatures_DSCC.isSymmetric(C,UtilEjml.TEST_F64));
+
+                // make it not symmetric
+                if( N > 1 ) {
+                    int index = rand.nextInt(C.nz_length);
+                    C.nz_values[index] += 0.1;
+
+                    // see if it modified a diagonal element. still will be diagonal if it did
+                    int row =  C.nz_rows[index];
+                    int col = 0;
+                    while( col < C.numCols ) {
+                        if( index < C.col_idx[col+1] )
+                            break;
+                        col++;
+                    }
+                    if( row != col )
+                        assertFalse(MatrixFeatures_DSCC.isSymmetric(C, UtilEjml.TEST_F64));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void isPositiveDefinite() {
+        DMatrixSparseCSC a = UtilEjml.parse_DSCC("2 0 0 2",2);
+        DMatrixSparseCSC b = UtilEjml.parse_DSCC("0 1 1 0",2);
+        DMatrixSparseCSC c = UtilEjml.parse_DSCC("0 0 0 0",2);
+
+        assertTrue(MatrixFeatures_DSCC.isPositiveDefinite(a));
+        assertFalse(MatrixFeatures_DSCC.isPositiveDefinite(b));
+        assertFalse(MatrixFeatures_DSCC.isPositiveDefinite(c));
+    }
+
+    @Test
+    public void isOrthogonal() {
+        // rotation matrices are orthogonal
+        double c = Math.cos(0.1);
+        double s = Math.sin(0.1);
+
+        DMatrixSparseCSC A = new DMatrixSparseCSC(2,2,2);
+        A.set(0,0,c);A.set(0,1,s);
+        A.set(1,0,-s);A.set(1,1,c);
+
+        assertTrue(MatrixFeatures_DSCC.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
+
+        // try a negative case now
+        A.set(0,1,495);
+
+        assertFalse(MatrixFeatures_DSCC.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
+
+        A.set(0,1,Double.NaN);
+
+        assertFalse(MatrixFeatures_DSCC.isOrthogonal(A,UtilEjml.TEST_F64_SQ));
     }
 
 }

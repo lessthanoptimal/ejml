@@ -31,12 +31,12 @@ public interface IntegerSequence {
     int length();
 
     /**
-     * Specifies the maximum index of the array.  If the maximum index is not known then a value < 0 is passed
+     * Specifies the maximum index of the array.  If the maximum index is not known then a value &lt; 0 is passed
      * in and an exception should be thrown if this information is required
      *
      * NOTE: This is length - 1
      *
-     * @param maxIndex Largest possible value in the sequence. or < 0 if unknown
+     * @param maxIndex Largest possible value in the sequence. or &lt; 0 if unknown
      */
     void initialize(int maxIndex);
 

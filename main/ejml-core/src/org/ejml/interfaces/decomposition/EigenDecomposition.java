@@ -39,14 +39,14 @@ import org.ejml.data.Matrix;
  * </p>
  *
  * <p>
- * To create a new instance of {@link EigenDecomposition} use {@link org.ejml.dense.row.factory.DecompositionFactory}. If the matrix
+ * To create a new instance of {@link EigenDecomposition} use DecompositionFactory_XXXX. If the matrix
  * is known to be symmetric be sure to use the symmetric decomposition, which is much faster and more accurate
  * than the general purpose one.
  * </p>
  * @author Peter Abeles
  */
-public interface EigenDecomposition<MatrixType extends Matrix>
-        extends DecompositionInterface<MatrixType> {
+public interface EigenDecomposition<T extends Matrix>
+        extends DecompositionInterface<T> {
 
     /**
      * Returns the number of eigenvalues/eigenvectors.  This is the matrix's dimension.
@@ -65,5 +65,5 @@ public interface EigenDecomposition<MatrixType extends Matrix>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
-    MatrixType getEigenVector( int index );
+    T getEigenVector(int index );
 }

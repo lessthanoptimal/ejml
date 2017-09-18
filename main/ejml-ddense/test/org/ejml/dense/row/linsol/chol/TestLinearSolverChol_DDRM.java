@@ -20,7 +20,7 @@ package org.ejml.dense.row.linsol.chol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -29,7 +29,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 public class TestLinearSolverChol_DDRM extends BaseCholeskySolveTests_DDRM {
 
     @Override
-    public LinearSolver<DMatrixRMaj> createSolver() {
+    public LinearSolverDense<DMatrixRMaj> createSolver() {
         CholeskyDecompositionInner_DDRM alg = new CholeskyDecompositionInner_DDRM(true);
         return new LinearSolverChol_DDRM(alg);
     }

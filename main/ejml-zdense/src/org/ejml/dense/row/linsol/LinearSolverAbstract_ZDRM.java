@@ -19,7 +19,7 @@
 package org.ejml.dense.row.linsol;
 
 import org.ejml.data.ZMatrixRMaj;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -35,7 +35,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
  * 
  * @author Peter Abeles
  */
-public abstract class LinearSolverAbstract_ZDRM implements LinearSolver<ZMatrixRMaj> {
+public abstract class LinearSolverAbstract_ZDRM implements LinearSolverDense<ZMatrixRMaj> {
 
     protected ZMatrixRMaj A;
     protected int numRows;

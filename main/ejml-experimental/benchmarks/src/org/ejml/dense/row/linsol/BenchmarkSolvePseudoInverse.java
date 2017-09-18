@@ -25,7 +25,7 @@ import org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColum
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrpHouseCol_DDRM;
 import org.ejml.dense.row.linsol.qr.SolvePseudoInverseQrp_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
@@ -41,7 +41,7 @@ public class BenchmarkSolvePseudoInverse {
 
     private static boolean includeSet = true;
 
-    public static long solveBenchmark(LinearSolver<DMatrixRMaj> solver , int numTrials ) {
+    public static long solveBenchmark(LinearSolverDense<DMatrixRMaj> solver , int numTrials ) {
         rand.setSeed(SEED);
         DMatrixRMaj X = new DMatrixRMaj(B.numRows,B.numCols);
 

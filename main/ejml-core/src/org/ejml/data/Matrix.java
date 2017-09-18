@@ -59,4 +59,9 @@ public interface Matrix extends Serializable {
      * Prints the matrix to standard out.
      */
     void print();
+
+    /**
+     * Returns the type of matrix
+     */
+    MatrixType getType();
 }

@@ -25,7 +25,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -46,7 +46,7 @@ public class TestLinearSolverFactory_DDRM {
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(A.numRows, A.numCols);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(A.numRows, A.numCols);
 
         standardTest(A, x, y, solver);
     }
@@ -57,7 +57,7 @@ public class TestLinearSolverFactory_DDRM {
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(4,1);
 
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.linear(A.numRows);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.linear(A.numRows);
 
         standardTest(A, x, y, solver);
     }
@@ -68,7 +68,7 @@ public class TestLinearSolverFactory_DDRM {
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.leastSquares(A.numRows,A.numCols);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.leastSquares(A.numRows,A.numCols);
 
         standardTest(A, x, y, solver);
     }
@@ -79,7 +79,7 @@ public class TestLinearSolverFactory_DDRM {
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
 
-        LinearSolver<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(A.numCols);
+        LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(A.numCols);
 
         standardTest(A, x, y, solver);
     }
@@ -111,7 +111,7 @@ public class TestLinearSolverFactory_DDRM {
      * x should be.
      */
     private void standardTest(DMatrixRMaj a, DMatrixRMaj x, DMatrixRMaj y,
-                              LinearSolver<DMatrixRMaj> solver) {
+                              LinearSolverDense<DMatrixRMaj> solver) {
         solver = new LinearSolverSafe<DMatrixRMaj>(solver);
 
         CommonOps_DDRM.mult(a,x,y);

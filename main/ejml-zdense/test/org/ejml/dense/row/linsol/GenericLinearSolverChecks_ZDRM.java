@@ -26,7 +26,7 @@ import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
-import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.Test;
 
 import java.util.Random;
@@ -53,7 +53,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     public void solve_dimensionCheck() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(10, 4, rand);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         try {
@@ -94,7 +94,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         ZMatrixRMaj A_orig = RandomMatrices_ZDRM.rectangle(4,4,rand);
         ZMatrixRMaj A = A_orig.copy();
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -110,7 +110,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     public void modifiesB() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,4,rand);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
 
@@ -133,7 +133,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         ZMatrixRMaj A_good = CommonOps_ZDRM.diag(4,0,3,0,2,0,1,0);
         ZMatrixRMaj A_bad = CommonOps_ZDRM.diag(4,0,3,0,2,0,0.1,0);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A_good);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A_good);
 
         assertTrue(solver.setA(A_good));
         double q_good;
@@ -161,7 +161,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         ZMatrixRMaj Asmall = A.copy();
         CommonOps_ZDRM.elementMultiply(Asmall, 0.01, 0, Asmall);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
 
         assertTrue(solver.setA(A));
         double q;
@@ -187,7 +187,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         ZMatrixRMaj b = new ZMatrixRMaj(3,1, true, 18,0, 21.5,0, 4.9000,0);
         ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(3,1,rand);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -213,7 +213,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
 
         CommonOps_ZDRM.mult(A,x_expected,b);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
         solver.solve(b,x);
 
@@ -224,7 +224,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
     public void square_singular() {
         ZMatrixRMaj A = new ZMatrixRMaj(3,3);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(shouldFailSingular == !solver.setA(A));
     }
 
@@ -262,7 +262,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         ZMatrixRMaj A = createPolyA(t,3);
         ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(3,1,rand);
 
-        LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+        LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
         assertTrue(solver.setA(A));
 
         solver.solve(B,x);
@@ -300,7 +300,7 @@ public abstract class GenericLinearSolverChecks_ZDRM {
             ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,rand);
             ZMatrixRMaj A_inv = RandomMatrices_ZDRM.rectangle(i,i,rand);
 
-            LinearSolver<ZMatrixRMaj> solver = createSafeSolver(A);
+            LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver(A);
 
             assertTrue(solver.setA(A));
             solver.invert(A_inv);
@@ -313,9 +313,9 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         }
     }
 
-    protected LinearSolver<ZMatrixRMaj>  createSafeSolver(ZMatrixRMaj A ) {
+    protected LinearSolverDense<ZMatrixRMaj> createSafeSolver(ZMatrixRMaj A ) {
         return new LinearSolverSafe<ZMatrixRMaj>( createSolver(A));
     }
 
-    protected abstract LinearSolver<ZMatrixRMaj> createSolver(ZMatrixRMaj A );
+    protected abstract LinearSolverDense<ZMatrixRMaj> createSolver(ZMatrixRMaj A );
 }

@@ -75,9 +75,9 @@ public abstract class GenericBidiagonalCheck_DDRM {
 
         BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
 
-        assertTrue(decomp.decompose(A.matrix_F64().copy()));
+        assertTrue(decomp.decompose(A.getDDRM().copy()));
 
-        checkGeneric(A.matrix_F64(), decomp);
+        checkGeneric(A.getDDRM(), decomp);
     }
 
     @Test
@@ -86,9 +86,9 @@ public abstract class GenericBidiagonalCheck_DDRM {
 
         BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
 
-        assertTrue(decomp.decompose(A.matrix_F64().copy()));
+        assertTrue(decomp.decompose(A.getDDRM().copy()));
 
-        checkGeneric(A.matrix_F64(), decomp);
+        checkGeneric(A.getDDRM(), decomp);
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class GenericBidiagonalCheck_DDRM {
         SimpleMatrix B = SimpleMatrix.wrap(decomp.getB(null,false));
         SimpleMatrix V = SimpleMatrix.wrap(decomp.getV(null,false,false));
 
-        DMatrixRMaj foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        DMatrixRMaj foundA = U.mult(B).mult(V.transpose()).getDDRM();
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(a,foundA,UtilEjml.TEST_F64));
 
@@ -128,7 +128,7 @@ public abstract class GenericBidiagonalCheck_DDRM {
 //        V.print();
 //        B.print();
 
-        foundA = U.mult(B).mult(V.transpose()).matrix_F64();
+        foundA = U.mult(B).mult(V.transpose()).getDDRM();
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(a,foundA,UtilEjml.TEST_F64));
 
