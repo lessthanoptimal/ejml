@@ -69,6 +69,7 @@ subprojects {
         }
     }
 
+    javadoc.failOnError = false
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
         from javadoc
@@ -77,6 +78,11 @@ subprojects {
     task sourcesJar(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives sourcesJar
+//        archives javadocJar
     }
 
     // if Maven central isn't setup in gradle.properties skip all of this
