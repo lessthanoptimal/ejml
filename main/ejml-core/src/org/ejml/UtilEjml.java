@@ -39,7 +39,7 @@ public class UtilEjml {
     /**
      * Version string used to indicate which version of EJML is being used.
      */
-    public static String VERSION = "0.31";
+    public static String VERSION = "0.32";
 
     public static double EPS = Math.pow(2,-52);
     public static float F_EPS = (float)Math.pow(2,-21);
