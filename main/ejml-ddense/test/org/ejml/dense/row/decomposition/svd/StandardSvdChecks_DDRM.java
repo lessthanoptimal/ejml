@@ -206,27 +206,17 @@ public abstract class StandardSvdChecks_DDRM {
 
         // test positive cases
         DMatrixRMaj U = alg.getU(null,false);
-        DMatrixRMaj storage = new DMatrixRMaj(U.numRows,U.numCols);
 
-        alg.getU(storage,false);
-
+        DMatrixRMaj storage = alg.getU(new DMatrixRMaj(U.numRows,U.numCols),false);
+        assertTrue( MatrixFeatures_DDRM.isEquals(U,storage));
+        storage = alg.getU(new DMatrixRMaj(10,20),false);
         assertTrue( MatrixFeatures_DDRM.isEquals(U,storage));
 
         U = alg.getU(null,true);
-        storage = new DMatrixRMaj(U.numRows,U.numCols);
-
-        alg.getU(storage,true);
+        storage = alg.getU(new DMatrixRMaj(U.numRows,U.numCols),true);
         assertTrue( MatrixFeatures_DDRM.isEquals(U,storage));
-
-        // give it an incorrect sign
-        try {
-            alg.getU(new DMatrixRMaj(10,20),true);
-            fail("Exception should have been thrown");
-        } catch( RuntimeException e ){}
-        try {
-            alg.getU(new DMatrixRMaj(10,20),false);
-            fail("Exception should have been thrown");
-        } catch( RuntimeException e ){}
+        storage = alg.getU(new DMatrixRMaj(10,20),true);
+        assertTrue( MatrixFeatures_DDRM.isEquals(U,storage));
     }
 
     /**
@@ -259,27 +249,16 @@ public abstract class StandardSvdChecks_DDRM {
 
         // test positive cases
         DMatrixRMaj V = alg.getV(null, false);
-        DMatrixRMaj storage = new DMatrixRMaj(V.numRows,V.numCols);
-
-        alg.getV(storage, false);
-
+        DMatrixRMaj storage = alg.getV(new DMatrixRMaj(V.numRows,V.numCols), false);
+        assertTrue(MatrixFeatures_DDRM.isEquals(V, storage));
+        storage = alg.getV(new DMatrixRMaj(10,20), false);
         assertTrue(MatrixFeatures_DDRM.isEquals(V, storage));
 
         V = alg.getV(null, true);
-        storage = new DMatrixRMaj(V.numRows,V.numCols);
-
-        alg.getV(storage, true);
-        assertTrue( MatrixFeatures_DDRM.isEquals(V,storage));
-
-        // give it an incorrect sign
-        try {
-            alg.getV(new DMatrixRMaj(10, 20), true);
-            fail("Exception should have been thrown");
-        } catch( RuntimeException e ){}
-        try {
-            alg.getV(new DMatrixRMaj(10, 20), false);
-            fail("Exception should have been thrown");
-        } catch( RuntimeException e ){}
+        storage = alg.getV(new DMatrixRMaj(V.numRows,V.numCols), true);
+        assertTrue(MatrixFeatures_DDRM.isEquals(V, storage));
+        storage = alg.getV(new DMatrixRMaj(10,20), true);
+        assertTrue(MatrixFeatures_DDRM.isEquals(V, storage));
     }
 
     /**
