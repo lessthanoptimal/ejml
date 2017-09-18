@@ -77,7 +77,7 @@ public class ExampleSparseMatrix {
         DGrowArray workB = new DGrowArray(A.numRows);
         for (int i = 0; i < 100; i++) {
             CommonOps_DSCC.mult(A,x,y,workA,workB);
-//            CommonOps_DSCC.add(1.5,y,0.75,y,z,workB,workA);
+            CommonOps_DSCC.add(1.5,y,0.75,y,z,workA,workB);
         }
         long after = System.currentTimeMillis();
 
@@ -91,7 +91,7 @@ public class ExampleSparseMatrix {
         before = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
             CommonOps_DDRM.mult(Ad, xd, yd);
-//            CommonOps_DDRM.add(1.5,yd,0.75, yd, zd);
+            CommonOps_DDRM.add(1.5,yd,0.75, yd, zd);
         }
         after = System.currentTimeMillis();
         System.out.println("norm = "+ NormOps_DDRM.fastNormF(yd)+"  dense time  = "+(after-before)+" ms");
