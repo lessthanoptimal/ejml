@@ -535,10 +535,10 @@ public class CommonOps_DSCC {
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
     public static void permute(int permRowInv[], DMatrixSparseCSC input, int permCol[], DMatrixSparseCSC output) {
-        if( permRowInv!= null && input.numRows != permRowInv.length )
-            throw new IllegalArgumentException("Number of column in input must match length of rowInv");
-        if( permCol != null && input.numCols != permCol.length )
-            throw new IllegalArgumentException("Number of rows in input must match length of colInv");
+        if( permRowInv!= null && input.numRows > permRowInv.length )
+            throw new IllegalArgumentException("rowInv permutation vector must have at least as many elements as input has columns");
+        if( permCol != null && input.numCols > permCol.length )
+            throw new IllegalArgumentException("permCol permutation vector must have at least as many elements as input has rows");
 
         output.reshape(input.numRows,input.numCols,input.nz_length);
         output.indicesSorted = false;
