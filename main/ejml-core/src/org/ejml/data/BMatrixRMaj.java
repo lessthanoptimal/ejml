@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import java.util.Arrays;
+
 /**
  * Dense matrix composed of boolean values
  *
@@ -49,6 +51,14 @@ public class BMatrixRMaj implements ReshapeMatrix {
 
     public int getIndex( int row , int col ) {
         return row * numCols + col;
+    }
+
+    /**
+     * Sets every element in the matrix to the specified value
+     * @param value new value of every element
+     */
+    public void fill( boolean value ) {
+        Arrays.fill(data,0,getNumElements(),value);
     }
 
     public boolean get( int index ) {

@@ -2,9 +2,17 @@ Change log for EJML
 
 Date format: year/month/day
 
------ Version 0.32
+----- Version 0.33
+2018
 
+- BMatrixRMaj
+  * Added fill()
+- Relaxed length requirements on permutation vector
+  * Thanks Florian Enner for the pull request
+
+----- Version 0.32
 2017/09/18
+
 - Thanks to HEBI Robotics for sponsoring the addition of sparse solvers!
   * http://hebirobotics.com/
 - Examples
