@@ -21,7 +21,6 @@ package org.ejml.dense.fixed;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix5;
 import org.ejml.data.DMatrix5x5;
-import org.ejml.dense.row.MatrixFeatures_DDRM;
 
 /**
  * <p>Matrix features for fixed sized matrices which are 5 x 5 or 5 element vectors.</p>
@@ -31,69 +30,69 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
  */
 public class MatrixFeatures_DDF5 {
     public static boolean isIdentical(DMatrix5x5 a , DMatrix5x5 b , double tol ) {
-        if( !MatrixFeatures_DDRM.isIdentical(a.a11,b.a11,tol))
+        if( !UtilEjml.isIdentical(a.a11,b.a11,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a12,b.a12,tol))
+        if( !UtilEjml.isIdentical(a.a12,b.a12,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a13,b.a13,tol))
+        if( !UtilEjml.isIdentical(a.a13,b.a13,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a14,b.a14,tol))
+        if( !UtilEjml.isIdentical(a.a14,b.a14,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a15,b.a15,tol))
+        if( !UtilEjml.isIdentical(a.a15,b.a15,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a21,b.a21,tol))
+        if( !UtilEjml.isIdentical(a.a21,b.a21,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a22,b.a22,tol))
+        if( !UtilEjml.isIdentical(a.a22,b.a22,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a23,b.a23,tol))
+        if( !UtilEjml.isIdentical(a.a23,b.a23,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a24,b.a24,tol))
+        if( !UtilEjml.isIdentical(a.a24,b.a24,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a25,b.a25,tol))
+        if( !UtilEjml.isIdentical(a.a25,b.a25,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a31,b.a31,tol))
+        if( !UtilEjml.isIdentical(a.a31,b.a31,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a32,b.a32,tol))
+        if( !UtilEjml.isIdentical(a.a32,b.a32,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a33,b.a33,tol))
+        if( !UtilEjml.isIdentical(a.a33,b.a33,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a34,b.a34,tol))
+        if( !UtilEjml.isIdentical(a.a34,b.a34,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a35,b.a35,tol))
+        if( !UtilEjml.isIdentical(a.a35,b.a35,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a41,b.a41,tol))
+        if( !UtilEjml.isIdentical(a.a41,b.a41,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a42,b.a42,tol))
+        if( !UtilEjml.isIdentical(a.a42,b.a42,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a43,b.a43,tol))
+        if( !UtilEjml.isIdentical(a.a43,b.a43,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a44,b.a44,tol))
+        if( !UtilEjml.isIdentical(a.a44,b.a44,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a45,b.a45,tol))
+        if( !UtilEjml.isIdentical(a.a45,b.a45,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a51,b.a51,tol))
+        if( !UtilEjml.isIdentical(a.a51,b.a51,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a52,b.a52,tol))
+        if( !UtilEjml.isIdentical(a.a52,b.a52,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a53,b.a53,tol))
+        if( !UtilEjml.isIdentical(a.a53,b.a53,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a54,b.a54,tol))
+        if( !UtilEjml.isIdentical(a.a54,b.a54,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a55,b.a55,tol))
+        if( !UtilEjml.isIdentical(a.a55,b.a55,tol))
             return false;
         return true;
     }
 
     public static boolean isIdentical(DMatrix5 a , DMatrix5 b , double tol ) {
-        if( !MatrixFeatures_DDRM.isIdentical(a.a1,b.a1,tol))
+        if( !UtilEjml.isIdentical(a.a1,b.a1,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a2,b.a2,tol))
+        if( !UtilEjml.isIdentical(a.a2,b.a2,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a3,b.a3,tol))
+        if( !UtilEjml.isIdentical(a.a3,b.a3,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a4,b.a4,tol))
+        if( !UtilEjml.isIdentical(a.a4,b.a4,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a5,b.a5,tol))
+        if( !UtilEjml.isIdentical(a.a5,b.a5,tol))
             return false;
         return true;
     }

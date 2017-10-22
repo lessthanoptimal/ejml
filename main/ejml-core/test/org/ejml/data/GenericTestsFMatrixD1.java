@@ -38,11 +38,11 @@ public abstract class GenericTestsFMatrixD1 extends GenericTestsFMatrix {
     public void testReshape() {
         FMatrixD1 mat = createMatrix(3,2);
 
-        float []origData = mat.getData();
+        float []origData = mat.getFata();
 
         mat.reshape(6,1, false);
 
-        assertTrue(origData == mat.getData());
+        assertTrue(origData == mat.getFata());
         assertEquals(1,mat.getNumCols());
         assertEquals(6,mat.getNumRows());
     }

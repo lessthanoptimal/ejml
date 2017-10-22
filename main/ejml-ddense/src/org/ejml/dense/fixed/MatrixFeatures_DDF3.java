@@ -21,7 +21,6 @@ package org.ejml.dense.fixed;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
-import org.ejml.dense.row.MatrixFeatures_DDRM;
 
 /**
  * <p>Matrix features for fixed sized matrices which are 3 x 3 or 3 element vectors.</p>
@@ -31,33 +30,33 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
  */
 public class MatrixFeatures_DDF3 {
     public static boolean isIdentical(DMatrix3x3 a , DMatrix3x3 b , double tol ) {
-        if( !MatrixFeatures_DDRM.isIdentical(a.a11,b.a11,tol))
+        if( !UtilEjml.isIdentical(a.a11,b.a11,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a12,b.a12,tol))
+        if( !UtilEjml.isIdentical(a.a12,b.a12,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a13,b.a13,tol))
+        if( !UtilEjml.isIdentical(a.a13,b.a13,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a21,b.a21,tol))
+        if( !UtilEjml.isIdentical(a.a21,b.a21,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a22,b.a22,tol))
+        if( !UtilEjml.isIdentical(a.a22,b.a22,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a23,b.a23,tol))
+        if( !UtilEjml.isIdentical(a.a23,b.a23,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a31,b.a31,tol))
+        if( !UtilEjml.isIdentical(a.a31,b.a31,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a32,b.a32,tol))
+        if( !UtilEjml.isIdentical(a.a32,b.a32,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a33,b.a33,tol))
+        if( !UtilEjml.isIdentical(a.a33,b.a33,tol))
             return false;
         return true;
     }
 
     public static boolean isIdentical(DMatrix3 a , DMatrix3 b , double tol ) {
-        if( !MatrixFeatures_DDRM.isIdentical(a.a1,b.a1,tol))
+        if( !UtilEjml.isIdentical(a.a1,b.a1,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a2,b.a2,tol))
+        if( !UtilEjml.isIdentical(a.a2,b.a2,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a3,b.a3,tol))
+        if( !UtilEjml.isIdentical(a.a3,b.a3,tol))
             return false;
         return true;
     }

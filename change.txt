@@ -9,6 +9,9 @@ Date format: year/month/day
   * Added fill()
 - Relaxed length requirements on permutation vector
   * Thanks Florian Enner for the pull request
+- Added MatrixFeatures_D which work on all double real matrices
+  * isEquals()
+  * isIdentical()
 
 ----- Version 0.32
 2017/09/18

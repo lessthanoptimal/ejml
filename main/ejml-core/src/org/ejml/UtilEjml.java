@@ -72,6 +72,38 @@ public class UtilEjml {
         return Float.isNaN(val) || Float.isInfinite(val);
     }
 
+    public static boolean isIdentical( double a , double b , double tol ) {
+        // if either is negative or positive infinity the result will be positive infinity
+        // if either is NaN the result will be NaN
+        double diff = Math.abs(a-b);
+
+        // diff = NaN == false
+        // diff = infinity == false
+        if( tol >= diff )
+            return true;
+
+        if (Double.isNaN(a)) {
+            return Double.isNaN(b);
+        } else
+            return Double.isInfinite(a) && a == b;
+    }
+
+    public static boolean isIdentical( float a , float b , float tol ) {
+        // if either is negative or positive infinity the result will be positive infinity
+        // if either is NaN the result will be NaN
+        double diff = Math.abs(a-b);
+
+        // diff = NaN == false
+        // diff = infinity == false
+        if( tol >= diff )
+            return true;
+
+        if (Float.isNaN(a)) {
+            return Float.isNaN(b);
+        } else
+            return Float.isInfinite(a) && a == b;
+    }
+
     public static void memset( double[] data , double val , int length ) {
         for( int i = 0; i < length; i++ ) {
             data[i] = val;

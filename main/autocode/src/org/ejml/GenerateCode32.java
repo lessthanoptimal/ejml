@@ -50,7 +50,7 @@ public class GenerateCode32 {
         blacklist.add("TestDEigenSparseCSC");
         blacklist.add("TestConvertDMatrixStruct");
 
-        String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6"};
+        String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6",""};
 
         suffices64.add("_DDRB_to_DDRM");
         suffices64.add("_F64");
@@ -105,6 +105,7 @@ public class GenerateCode32 {
         converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
+        converter.replacePattern("_D.", "_F.");
 
         converter.replacePattern("F64", "F32");
         converter.replacePattern("random64", "random32");
