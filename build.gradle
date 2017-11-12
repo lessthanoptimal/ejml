@@ -208,7 +208,7 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.1'
+    gradleVersion = '4.3'
 }
 
 // Disable the creation of jars for distribution.  If you don't do this it will crash
