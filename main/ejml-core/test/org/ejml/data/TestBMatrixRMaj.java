@@ -144,4 +144,17 @@ public class TestBMatrixRMaj {
         }
     }
 
+    @Test
+    public void sum() {
+        BMatrixRMaj M = new BMatrixRMaj(4,5);
+
+        assertEquals(0,M.sum());
+
+        M.set(0,1,true);
+        M.set(3,1,true);
+
+        assertEquals(2,M.sum());
+
+    }
+
 }

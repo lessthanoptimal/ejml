@@ -96,6 +96,20 @@ public class BMatrixRMaj implements ReshapeMatrix {
         return( col >= 0 && col < numCols && row >= 0 && row < numRows );
     }
 
+    /**
+     * Returns the total number of elements which are true.
+     * @return number of elements which are set to true
+     */
+    public int sum() {
+        int total = 0;
+        int N = getNumElements();
+        for (int i = 0; i < N; i++) {
+            if( data[i] )
+                total += 1;
+        }
+        return total;
+    }
+
     @Override
     public void reshape(int numRows, int numCols) {
         int N = numRows*numCols;
