@@ -15,6 +15,10 @@ Date format: year/month/day
   * isIdentical()
 - Added CommonOps_BDRM
   * transposeSquare()
+- CSV Parsing support
+  * Supports all dense types now
+  * Refactored to reflect new matrix names
+  * Added support for writing and reading sparse matrix in CSV
 
 ----- Version 0.32
 2017/09/18

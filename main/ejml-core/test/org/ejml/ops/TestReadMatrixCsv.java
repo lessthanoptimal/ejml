@@ -19,8 +19,10 @@
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
+import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +45,7 @@ public class TestReadMatrixCsv {
 
         ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
 
-        alg.read();
+        alg.read64();
         fail("Should have had an exception");
     }
 
@@ -53,18 +55,33 @@ public class TestReadMatrixCsv {
 
         ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
 
-        alg.read();
+        alg.read64();
         fail("Should have had an exception");
     }
 
-    public void complex() throws IOException {
+    public void dense_complex() throws IOException {
         String s = "3 2 complex\n0 2 0 -1\n1 2 -1 -1\n0 2 3 10";
 
         ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
 
         ZMatrixRMaj expected = new ZMatrixRMaj(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
-        ZMatrixRMaj m = alg.read();
+        ZMatrixRMaj m = alg.read64();
 
         assertTrue(MatrixFeatures_ZDRM.isIdentical(expected,m, UtilEjml.TEST_F64));
+    }
+
+    public void real_sparse() throws IOException {
+        String s = "3 2 3 real\n0 2 0.1\n0 0 -0.1\n2 1 12";
+
+        ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
+
+        DMatrixSparseTriplet expected = new DMatrixSparseTriplet(3,2,3);
+        expected.addItem(0,2,0.1);
+        expected.addItem(0,0,-0.1);
+        expected.addItem(2,1,12);
+
+        DMatrixSparseTriplet m = alg.read64();
+
+        assertTrue(MatrixFeatures_DSTL.isEquals(expected,m, UtilEjml.TEST_F64));
     }
 }
