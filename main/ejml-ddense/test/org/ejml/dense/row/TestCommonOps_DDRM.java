@@ -1156,6 +1156,20 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
+    public void elementAdd() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
+        double b = 1.1;
+        DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
+
+        CommonOps_DDRM.elementAdd(A, b, C);
+
+        for (int i = 0; i < A.getNumElements(); i++) {
+            double expected = A.get(i) + b;
+            assertEquals(expected,C.get(i),UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
     public void elementLog() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);

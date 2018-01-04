@@ -1541,6 +1541,28 @@ public class CommonOps_DDRM {
 
     /**
      * <p>
+     * Element-wise addition operation  <br>
+     * c<sub>ij</sub> = a<sub>ij</sub> + b
+     * <p>
+     *
+     * @param A left side
+     * @param b right scalar
+     * @param C output (modified)
+     */
+    public static void elementAdd(DMatrixD1 A , double b, DMatrixD1 C ) {
+
+        if( A.numRows != C.numRows || A.numCols != C.numCols ) {
+            throw new IllegalArgumentException("All matrices must be the same shape");
+        }
+
+        int size = A.getNumElements();
+        for( int i = 0; i < size; i++ ) {
+            C.data[i] = A.data[i] + b;
+        }
+    }
+
+    /**
+     * <p>
      * Element-wise log operation  <br>
      * c<sub>ij</sub> = Math.log(a<sub>ij</sub>)
      * <p>

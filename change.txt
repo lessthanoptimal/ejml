@@ -13,6 +13,8 @@ Date format: year/month/day
 - Added MatrixFeatures_D which work on all double real matrices
   * isEquals()
   * isIdentical()
+- CommonOps_*DRM
+  * Added elementAdd() for adding a scalar value to every element in a matrix.
 - Added CommonOps_BDRM
   * transposeSquare()
 - CSV Parsing support
