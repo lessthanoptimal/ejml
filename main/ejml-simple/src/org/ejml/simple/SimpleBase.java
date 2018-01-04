@@ -1281,7 +1281,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public void saveToFileCSV( String fileName )
             throws IOException
     {
-        MatrixIO.saveCSV((DMatrixRMaj)mat, fileName);
+        MatrixIO.saveDenseCSV((DMatrixRMaj)mat, fileName);
     }
 
     /**

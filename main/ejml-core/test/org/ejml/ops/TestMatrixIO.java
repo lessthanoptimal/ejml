@@ -61,7 +61,7 @@ public class TestMatrixIO {
     public void load_save_dense_csv() throws IOException {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,3,rand);
 
-        MatrixIO.saveCSV(A,"temp.csv");
+        MatrixIO.saveDenseCSV(A,"temp.csv");
 
         DMatrixRMaj A_copy = MatrixIO.loadCSV("temp.csv",true);
 
@@ -78,7 +78,7 @@ public class TestMatrixIO {
     public void load_save_float_csv() throws IOException {
         DMatrixSparseTriplet A = RandomMatrices_DSTL.uniform(10,8,15,-1,1,rand);
 
-        MatrixIO.saveCSV(A,"temp.csv");
+        MatrixIO.saveSparseCSV(A,"temp.csv");
 
         DMatrixSparseTriplet A_copy = MatrixIO.loadCSV("temp.csv",true);
 

@@ -93,7 +93,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveCSV(DMatrix A , String fileName )
+    public static void saveDenseCSV(DMatrix A , String fileName )
         throws IOException
     {
         PrintStream fileStream = new PrintStream(fileName);
@@ -116,7 +116,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveCSV(DMatrixSparseTriplet A , String fileName )
+    public static void saveSparseCSV(DMatrixSparseTriplet A , String fileName )
             throws IOException
     {
         PrintStream fileStream = new PrintStream(fileName);
@@ -137,7 +137,7 @@ public class MatrixIO {
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveCSV(FMatrixSparseTriplet A , String fileName )
+    public static void saveSparseCSV(FMatrixSparseTriplet A , String fileName )
             throws IOException
     {
         PrintStream fileStream = new PrintStream(fileName);
@@ -154,6 +154,8 @@ public class MatrixIO {
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
      * file format. The number of rows and columns are read in on the first line. Then
      * each row is read in the subsequent lines.
+     *
+     * Works with dense and sparse matrices.
      *
      * @param fileName The file being loaded.
      * @return DMatrix

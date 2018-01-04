@@ -19,6 +19,9 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
 
@@ -35,8 +38,26 @@ public class ExampleMatrixIO {
         DMatrixRMaj A = new DMatrixRMaj(2,3,true,new double[]{1,2,3,4,5,6});
 
         try {
-            MatrixIO.saveCSV(A, "matrix_file.csv");
-            DMatrixRMaj B = MatrixIO.loadCSV("matrix_file.csv");
+            MatrixIO.saveDenseCSV(A, "matrix_file.csv");
+            DMatrixRMaj B = MatrixIO.loadCSV("matrix_file.csv",true);
+            B.print();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void csv_sparse() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(5,4);
+        A.set(1,2,4.5);
+
+        try {
+            // Use triplet as an intermediate step when working with sparse matrices
+            DMatrixSparseTriplet A_triple = ConvertDMatrixStruct.convert(A,(DMatrixSparseTriplet)null);
+
+            MatrixIO.saveSparseCSV(A_triple, "matrix_file.csv");
+            DMatrixSparseTriplet B_triple = MatrixIO.loadCSV("matrix_file.csv",true);
+
+            DMatrixSparseCSC B = ConvertDMatrixStruct.convert(B_triple,(DMatrixSparseCSC)null);
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -81,6 +102,7 @@ public class ExampleMatrixIO {
     
     public static void main( String args[] ) {
         csv();
+        csv_sparse();
         serializedBinary();
     }
 }
