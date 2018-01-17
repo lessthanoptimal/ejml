@@ -82,7 +82,7 @@ subprojects {
 
     artifacts {
         archives sourcesJar
-//        archives javadocJar
+//        archives javadocJar // uncomment for release
     }
 
     // if Maven central isn't setup in gradle.properties skip all of this

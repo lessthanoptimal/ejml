@@ -3,18 +3,22 @@
 - Update version in build.gradle
 - Update version in readme.md (maven central)
 - Commit and tag release
+- Create zip of source and library directory
+  * From a fresh checkout
+  cd ejml;git checkout SNAPSHOT;rm -rf .git;./gradlew autogenerate;cd ..;zip -r ejml.zip ejml
+  cd ejml;./gradlew createLibraryDirectory;mv libraries ..;cd ..;mv libraries ejml-v0.XX-libs;zip -r ejml-v0.XX-libs.zip ejml-v0.XX-libs
 - Create zip of source code
-- Create jar file "gradle createLibraryDirectory"
+- Create jar file "./gradlew createLibraryDirectory"
 - Update documentation on website
 - Update javadoc on website
-  * ant javadocWeb;cd docs;zip -r api.zip api/
+  * ./gradlew alljavadoc;cd docs/;zip -r javadoc.zip javadoc
 
 -----
 Push to central:
 
 - Edit gradle.properties and turn off parallel build
 - Edit build.gradle and uncomment archives javadocJar
-- gradle uploadArchives
+- ./gradlew clean;./gradlew autogenerate;./gradlew uploadArchives
 - Then go to the website  https://oss.sonatype.org/
   * click close button
   * double check the files
@@ -25,5 +29,4 @@ Not working?  Is ~/.gradle/gradle.properties been setup?
 ---------
 Once a year:
 - Update copyright
-- Update year in ant script
 - update year on docs/bottom.txt
