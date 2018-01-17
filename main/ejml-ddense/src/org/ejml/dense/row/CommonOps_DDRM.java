@@ -20,6 +20,7 @@ package org.ejml.dense.row;
 
 import org.ejml.EjmlParameters;
 import org.ejml.LinearSolverSafe;
+import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
@@ -283,7 +284,7 @@ public class CommonOps_DDRM {
     public static void multInner(DMatrix1Row a , DMatrix1Row c )
     {
         if( a.numCols != c.numCols || a.numCols != c.numRows )
-            throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the columns in 'a'");
+            throw new MatrixDimensionException("Rows and columns of 'c' must be the same as the columns in 'a'");
         
         if( a.numCols >= EjmlParameters.MULT_INNER_SWITCH ) {
             MatrixMultProduct_DDRM.inner_small(a, c);
@@ -310,7 +311,7 @@ public class CommonOps_DDRM {
     public static void multOuter(DMatrix1Row a , DMatrix1Row c )
     {
         if( a.numRows != c.numCols || a.numRows != c.numRows )
-            throw new IllegalArgumentException("Rows and columns of 'c' must be the same as the rows in 'a'");
+            throw new MatrixDimensionException("Rows and columns of 'c' must be the same as the rows in 'a'");
 
         MatrixMultProduct_DDRM.outer(a, c);
     }
@@ -585,7 +586,7 @@ public class CommonOps_DDRM {
             A_tran = new DMatrixRMaj(A.numCols,A.numRows);
         } else {
             if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
-                throw new IllegalArgumentException("Incompatible matrix dimensions");
+                throw new MatrixDimensionException("Incompatible matrix dimensions");
             }
         }
 
@@ -635,7 +636,7 @@ public class CommonOps_DDRM {
         int numRow = mat.getNumRows();
 
         if( numCol != numRow ) {
-            throw new IllegalArgumentException("Must be a square matrix.");
+            throw new MatrixDimensionException("Must be a square matrix.");
         } else if( numCol <= UnrolledDeterminantFromMinor_DDRM.MAX ) {
             // slight performance boost overall by doing it this way
             // when it was the case statement the VM did some strange optimization
@@ -678,7 +679,7 @@ public class CommonOps_DDRM {
     public static boolean invert( DMatrixRMaj mat) {
         if( mat.numCols <= UnrolledInverseFromMinor_DDRM.MAX ) {
             if( mat.numCols != mat.numRows ) {
-                throw new IllegalArgumentException("Must be a square matrix.");
+                throw new MatrixDimensionException("Must be a square matrix.");
             }
 
             if( mat.numCols >= 2 ) {
@@ -725,7 +726,7 @@ public class CommonOps_DDRM {
     public static boolean invert(DMatrixRMaj mat, DMatrixRMaj result ) {
         if( mat.numCols <= UnrolledInverseFromMinor_DDRM.MAX ) {
             if( mat.numCols != mat.numRows ) {
-                throw new IllegalArgumentException("Must be a square matrix.");
+                throw new MatrixDimensionException("Must be a square matrix.");
             }
             if( result.numCols >= 2 ) {
                 UnrolledInverseFromMinor_DDRM.inv(mat,result);
@@ -989,7 +990,7 @@ public class CommonOps_DDRM {
         int numRowsC = A.numRows*B.numRows;
 
         if( C.numCols != numColsC || C.numRows != numRowsC) {
-            throw new IllegalArgumentException("C does not have the expected dimensions");
+            throw new MatrixDimensionException("C does not have the expected dimensions");
         }
 
         // TODO see comment below
@@ -1036,17 +1037,17 @@ public class CommonOps_DDRM {
                                 int dstY0, int dstX0 )
     {
         if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
-            throw new IllegalArgumentException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+            throw new MatrixDimensionException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
         if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols() )
-            throw new IllegalArgumentException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+            throw new MatrixDimensionException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
 
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
 
         if( dstY0+h > dst.getNumRows() )
-            throw new IllegalArgumentException("dst is too small in rows");
+            throw new MatrixDimensionException("dst is too small in rows");
         if( dstX0+w > dst.getNumCols() )
-            throw new IllegalArgumentException("dst is too small in columns");
+            throw new MatrixDimensionException("dst is too small in columns");
 
         // interestingly, the performance is only different for small matrices but identical for larger ones
         if( src instanceof DMatrixRMaj && dst instanceof DMatrixRMaj) {
@@ -1079,9 +1080,9 @@ public class CommonOps_DDRM {
                                         int srcX0, int srcX1 )
     {
         if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
-            throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+            throw new MatrixDimensionException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
         if( srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols )
-            throw new IllegalArgumentException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+            throw new MatrixDimensionException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
 
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
@@ -1108,7 +1109,7 @@ public class CommonOps_DDRM {
                                 int rows[] , int rowsSize ,
                                 int cols[] , int colsSize , DMatrixRMaj dst ) {
         if( rowsSize != dst.numRows || colsSize != dst.numCols )
-            throw new IllegalArgumentException("Unexpected number of rows and/or columns in dst matrix");
+            throw new MatrixDimensionException("Unexpected number of rows and/or columns in dst matrix");
 
         int indexDst = 0;
         for (int i = 0; i < rowsSize; i++) {
@@ -1129,9 +1130,9 @@ public class CommonOps_DDRM {
      */
     public static void extract(DMatrixRMaj src, int indexes[] , int length , DMatrixRMaj dst ) {
         if( !MatrixFeatures_DDRM.isVector(dst))
-            throw new IllegalArgumentException("Dst must be a vector");
+            throw new MatrixDimensionException("Dst must be a vector");
         if( length != dst.getNumElements())
-            throw new IllegalArgumentException("Unexpected number of elements in dst vector");
+            throw new MatrixDimensionException("Unexpected number of elements in dst vector");
 
         for (int i = 0; i < length; i++) {
             dst.data[i] = src.data[indexes[i]];
@@ -1158,7 +1159,7 @@ public class CommonOps_DDRM {
                                 int rows[] , int rowsSize ,
                                 int cols[] , int colsSize ) {
         if( rowsSize != src.numRows || colsSize != src.numCols )
-            throw new IllegalArgumentException("Unexpected number of rows and/or columns in dst matrix");
+            throw new MatrixDimensionException("Unexpected number of rows and/or columns in dst matrix");
 
         int indexSrc = 0;
         for (int i = 0; i < rowsSize; i++) {
@@ -1183,9 +1184,9 @@ public class CommonOps_DDRM {
         int N = Math.min(src.numRows, src.numCols);
 
         if( !MatrixFeatures_DDRM.isVector(dst) ) {
-            throw new IllegalArgumentException("Expected a vector for dst.");
+            throw new MatrixDimensionException("Expected a vector for dst.");
         } else if( dst.getNumElements() != N ) {
-            throw new IllegalArgumentException("Expected "+N+" elements in dst.");
+            throw new MatrixDimensionException("Expected "+N+" elements in dst.");
         }
 
         for( int i = 0; i < N; i++ ) {
@@ -1204,7 +1205,7 @@ public class CommonOps_DDRM {
         if( out == null)
             out = new DMatrixRMaj(1,a.numCols);
         else if( !MatrixFeatures_DDRM.isVector(out) || out.getNumElements() != a.numCols )
-            throw new IllegalArgumentException("Output must be a vector of length "+a.numCols);
+            throw new MatrixDimensionException("Output must be a vector of length "+a.numCols);
 
         System.arraycopy(a.data,a.getIndex(row,0),out.data,0,a.numCols);
 
@@ -1222,7 +1223,7 @@ public class CommonOps_DDRM {
         if( out == null)
             out = new DMatrixRMaj(a.numRows,1);
         else if( !MatrixFeatures_DDRM.isVector(out) || out.getNumElements() != a.numRows )
-            throw new IllegalArgumentException("Output must be a vector of length "+a.numRows);
+            throw new MatrixDimensionException("Output must be a vector of length "+a.numRows);
 
         int index = column;
         for (int i = 0; i < a.numRows; i++, index += a.numCols ) {
@@ -1351,7 +1352,7 @@ public class CommonOps_DDRM {
     public static void elementMult(DMatrixD1 a , DMatrixD1 b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1374,7 +1375,7 @@ public class CommonOps_DDRM {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1395,7 +1396,7 @@ public class CommonOps_DDRM {
     public static void elementDiv(DMatrixD1 a , DMatrixD1 b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1418,7 +1419,7 @@ public class CommonOps_DDRM {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         int length = a.getNumElements();
@@ -1486,7 +1487,7 @@ public class CommonOps_DDRM {
 
         if( A.numRows != B.numRows || A.numRows != C.numRows ||
                 A.numCols != B.numCols || A.numCols != C.numCols ) {
-            throw new IllegalArgumentException("All matrices must be the same shape");
+            throw new MatrixDimensionException("All matrices must be the same shape");
         }
 
         int size = A.getNumElements();
@@ -1508,7 +1509,7 @@ public class CommonOps_DDRM {
     public static void elementPower(double a , DMatrixD1 B , DMatrixD1 C ) {
 
         if( B.numRows != C.numRows || B.numCols != C.numCols ) {
-            throw new IllegalArgumentException("All matrices must be the same shape");
+            throw new MatrixDimensionException("All matrices must be the same shape");
         }
 
         int size = B.getNumElements();
@@ -1530,34 +1531,12 @@ public class CommonOps_DDRM {
     public static void elementPower(DMatrixD1 A , double b, DMatrixD1 C ) {
 
         if( A.numRows != C.numRows || A.numCols != C.numCols ) {
-            throw new IllegalArgumentException("All matrices must be the same shape");
+            throw new MatrixDimensionException("All matrices must be the same shape");
         }
 
         int size = A.getNumElements();
         for( int i = 0; i < size; i++ ) {
             C.data[i] = Math.pow(A.data[i], b);
-        }
-    }
-
-    /**
-     * <p>
-     * Element-wise addition operation  <br>
-     * c<sub>ij</sub> = a<sub>ij</sub> + b
-     * <p>
-     *
-     * @param A left side
-     * @param b right scalar
-     * @param C output (modified)
-     */
-    public static void elementAdd(DMatrixD1 A , double b, DMatrixD1 C ) {
-
-        if( A.numRows != C.numRows || A.numCols != C.numCols ) {
-            throw new IllegalArgumentException("All matrices must be the same shape");
-        }
-
-        int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
-            C.data[i] = A.data[i] + b;
         }
     }
 
@@ -1573,7 +1552,7 @@ public class CommonOps_DDRM {
     public static void elementLog(DMatrixD1 A , DMatrixD1 C ) {
 
         if( A.numCols != C.numCols || A.numRows != C.numRows ) {
-            throw new IllegalArgumentException("All matrices must be the same shape");
+            throw new MatrixDimensionException("All matrices must be the same shape");
         }
 
         int size = A.getNumElements();
@@ -1594,7 +1573,7 @@ public class CommonOps_DDRM {
     public static void elementExp(DMatrixD1 A , DMatrixD1 C ) {
 
         if( A.numCols != C.numCols || A.numRows != C.numRows ) {
-            throw new IllegalArgumentException("All matrices must be the same shape");
+            throw new MatrixDimensionException("All matrices must be the same shape");
         }
 
         int size = A.getNumElements();
@@ -1617,8 +1596,9 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj sumRows(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
             output = new DMatrixRMaj(input.numRows,1);
-        } else if( output.getNumElements() != input.numRows )
-            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+        } else {
+            output.reshape(input.numRows,1);
+        }
 
         for( int row = 0; row < input.numRows; row++ ) {
             double total = 0;
@@ -1647,8 +1627,9 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj minRows(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
             output = new DMatrixRMaj(input.numRows,1);
-        } else if( output.getNumElements() != input.numRows )
-            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+        } else {
+            output.reshape(input.numRows,1);
+        }
 
         for( int row = 0; row < input.numRows; row++ ) {
             double min = Double.MAX_VALUE;
@@ -1679,8 +1660,9 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj maxRows(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
             output = new DMatrixRMaj(input.numRows,1);
-        } else if( output.getNumElements() != input.numRows )
-            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+        } else {
+            output.reshape(input.numRows,1);
+        }
 
         for( int row = 0; row < input.numRows; row++ ) {
             double max = -Double.MAX_VALUE;
@@ -1711,8 +1693,9 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj sumCols(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
             output = new DMatrixRMaj(1,input.numCols);
-        } else if( output.getNumElements() != input.numCols )
-            throw new IllegalArgumentException("Output does not have enough elements to store the results");
+        } else {
+            output.reshape(1,input.numCols);
+        }
 
         for( int cols = 0; cols < input.numCols; cols++ ) {
             double total = 0;
@@ -1742,9 +1725,9 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj minCols(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
             output = new DMatrixRMaj(1,input.numCols);
-        } else if( output.getNumElements() != input.numCols )
-            throw new IllegalArgumentException("Output does not have enough elements to store the results");
-
+        } else {
+            output.reshape(1,input.numCols);
+        }
         for( int cols = 0; cols < input.numCols; cols++ ) {
             double minimum = Double.MAX_VALUE;
 
@@ -1775,9 +1758,9 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj maxCols(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
             output = new DMatrixRMaj(1,input.numCols);
-        } else if( output.getNumElements() != input.numCols )
-            throw new IllegalArgumentException("Output does not have enough elements to store the results");
-
+        } else {
+            output.reshape(1,input.numCols);
+        }
         for( int cols = 0; cols < input.numCols; cols++ ) {
             double maximum = -Double.MAX_VALUE;
 
@@ -1807,7 +1790,7 @@ public class CommonOps_DDRM {
     public static void addEquals(DMatrixD1 a , DMatrixD1 b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -1831,7 +1814,7 @@ public class CommonOps_DDRM {
     public static void addEquals(DMatrixD1 a , double beta, DMatrixD1 b )
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -1860,7 +1843,7 @@ public class CommonOps_DDRM {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+            throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1890,7 +1873,7 @@ public class CommonOps_DDRM {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+            throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1921,7 +1904,7 @@ public class CommonOps_DDRM {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+            throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1951,7 +1934,7 @@ public class CommonOps_DDRM {
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows
                 || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
+            throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
 
         final int length = a.getNumElements();
@@ -1992,7 +1975,7 @@ public class CommonOps_DDRM {
      */
     public static void add(DMatrixD1 a , double val , DMatrixD1 c ) {
         if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new IllegalArgumentException("Dimensions of a and c do not match.");
+            throw new MatrixDimensionException("Dimensions of a and c do not match.");
         }
 
         final int length = a.getNumElements();
@@ -2015,7 +1998,7 @@ public class CommonOps_DDRM {
      */
     public static void subtract(DMatrixD1 a , double val , DMatrixD1 c ) {
         if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new IllegalArgumentException("Dimensions of a and c do not match.");
+            throw new MatrixDimensionException("Dimensions of a and c do not match.");
         }
 
         final int length = a.getNumElements();
@@ -2038,7 +2021,7 @@ public class CommonOps_DDRM {
      */
     public static void subtract(double val , DMatrixD1 a , DMatrixD1 c ) {
         if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new IllegalArgumentException("Dimensions of a and c do not match.");
+            throw new MatrixDimensionException("Dimensions of a and c do not match.");
         }
 
         final int length = a.getNumElements();
@@ -2061,7 +2044,7 @@ public class CommonOps_DDRM {
     public static void subtractEquals(DMatrixD1 a, DMatrixD1 b)
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -2088,7 +2071,7 @@ public class CommonOps_DDRM {
     public static void subtract(DMatrixD1 a, DMatrixD1 b, DMatrixD1 c)
     {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new IllegalArgumentException("The 'a' and 'b' matrices do not have compatible dimensions");
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
 
         final int length = a.getNumElements();
@@ -2133,7 +2116,7 @@ public class CommonOps_DDRM {
     public static void scale(double alpha , DMatrixD1 a , DMatrixD1 b)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new IllegalArgumentException("Matrices must have the same shape");
+            throw new MatrixDimensionException("Matrices must have the same shape");
 
         final int size = a.getNumElements();
 
@@ -2194,7 +2177,7 @@ public class CommonOps_DDRM {
     public static void divide(double alpha , DMatrixD1 a , DMatrixD1 b)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new IllegalArgumentException("Matrices must have the same shape");
+            throw new MatrixDimensionException("Matrices must have the same shape");
 
         final int size = a.getNumElements();
 
@@ -2217,7 +2200,7 @@ public class CommonOps_DDRM {
     public static void divide(DMatrixD1 a , double alpha  , DMatrixD1 b)
     {
         if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new IllegalArgumentException("Matrices must have the same shape");
+            throw new MatrixDimensionException("Matrices must have the same shape");
 
         final int size = a.getNumElements();
 
@@ -2256,7 +2239,7 @@ public class CommonOps_DDRM {
     public static void changeSign(DMatrixD1 input , DMatrixD1 output)
     {
         if( input.numRows != output.numRows || input.numCols != output.numCols )
-            throw new IllegalArgumentException("Matrices must have the same shape");
+            throw new MatrixDimensionException("Matrices must have the same shape");
 
         final int size = input.getNumElements();
 
@@ -2308,7 +2291,7 @@ public class CommonOps_DDRM {
         if( reduced == null ) {
             reduced = new DMatrixRMaj(A.numRows,A.numCols);
         } else if( reduced.numCols != A.numCols || reduced.numRows != A.numRows )
-            throw new IllegalArgumentException("'re' must have the same shape as the original input matrix");
+            throw new MatrixDimensionException("'re' must have the same shape as the original input matrix");
 
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);
@@ -2482,7 +2465,7 @@ public class CommonOps_DDRM {
      */
     public static DMatrixRMaj elements(DMatrixRMaj A , BMatrixRMaj marked , DMatrixRMaj output ) {
         if( A.numRows != marked.numRows || A.numCols != marked.numCols )
-            throw new IllegalArgumentException("Input matrices must have the same shape");
+            throw new MatrixDimensionException("Input matrices must have the same shape");
         if( output == null )
             output = new DMatrixRMaj(1,1);
 
@@ -2584,7 +2567,7 @@ public class CommonOps_DDRM {
      */
     public static DMatrixRMaj permuteRowInv( int pinv[] , DMatrixRMaj input , DMatrixRMaj output ) {
         if( input.numRows > pinv.length )
-            throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
+            throw new MatrixDimensionException("permutation vector must have at least as many elements as input has rows");
 
         if( output == null )
             output = new DMatrixRMaj(1,1);

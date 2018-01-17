@@ -18,7 +18,9 @@
 
 package org.ejml.equation;
 
+import org.ejml.MatrixDimensionException;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.Matrix;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
@@ -75,7 +77,11 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output,mA.matrix.numRows,mB.matrix.numCols);
-                    CommonOps_DDRM.mult(mA.matrix,mB.matrix,output.matrix);
+                    try {
+                        CommonOps_DDRM.mult(mA.matrix, mB.matrix, output.matrix);
+                    } catch( MatrixDimensionException e ) {
+                        checkThrow1x1AgainstNxM(mA.matrix,mB.matrix,"multiply");
+                    }
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -433,7 +439,11 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output, mA.matrix.numRows, mA.matrix.numCols);
-                    CommonOps_DDRM.add(mA.matrix, mB.matrix, output.matrix);
+                    try {
+                        CommonOps_DDRM.add(mA.matrix, mB.matrix, output.matrix);
+                    } catch( MatrixDimensionException e ) {
+                        checkThrow1x1AgainstNxM(mA.matrix,mB.matrix,"add");
+                    }
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {
@@ -486,6 +496,14 @@ public abstract class Operation {
         return ret;
     }
 
+    private static void checkThrow1x1AgainstNxM( Matrix A , Matrix B , String operation ) {
+        if((A.getNumCols() == 1&&A.getNumRows()==1) || (B.getNumCols() == 1&&B.getNumRows() == 1)) {
+            throw new MatrixDimensionException("Trying to "+operation+" a 1x1 matrix to every element in a " +
+                    "MxN matrix? Turn the 1x1 matrix into a scalar by accessing its element. This is " +
+                    "stricter than matlab to catch more accidental math errors.");
+        }
+    }
+
     public static Info subtract(final Variable A, final Variable B, ManagerTempVariables manager) {
         Info ret = new Info();
 
@@ -499,7 +517,11 @@ public abstract class Operation {
                     VariableMatrix mB = (VariableMatrix)B;
 
                     resize(output, mA.matrix.numRows, mA.matrix.numCols);
-                    CommonOps_DDRM.subtract(mA.matrix, mB.matrix, output.matrix);
+                    try {
+                        CommonOps_DDRM.subtract(mA.matrix, mB.matrix, output.matrix);
+                    } catch( MatrixDimensionException e ) {
+                        checkThrow1x1AgainstNxM(mA.matrix,mB.matrix,"subtract");
+                    }
                 }
             };
         } else if( A instanceof VariableInteger && B instanceof VariableInteger ) {

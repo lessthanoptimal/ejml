@@ -14,7 +14,10 @@ Date format: year/month/day
   * isEquals()
   * isIdentical()
 - CommonOps_*DRM
-  * Added elementAdd() for adding a scalar value to every element in a matrix.
+  * More functions throw MatrixDimensionException
+  * Some functions will resize input when there's a miss match now
+- Operations
+  * Prints a useful error message when you try to add,subtract,multiply a 1x1 matrix against a NxM matrix
 - Added CommonOps_BDRM
   * transposeSquare()
 - CSV Parsing support
