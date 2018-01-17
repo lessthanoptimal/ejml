@@ -3,7 +3,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.ejml'
-    version = '0.33'
+    version = '0.34-SNAPSHOT'
 }
 
 subprojects {
