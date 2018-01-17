@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,7 +39,7 @@ public class UtilEjml {
     /**
      * Version string used to indicate which version of EJML is being used.
      */
-    public static String VERSION = "0.32";
+    public static String VERSION = "0.33";
 
     public static double EPS = Math.pow(2,-52);
     public static float F_EPS = (float)Math.pow(2,-21);
