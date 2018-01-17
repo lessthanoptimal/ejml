@@ -11,7 +11,7 @@
 - Create jar file "./gradlew createLibraryDirectory"
 - Update documentation on website
 - Update javadoc on website
-  * ./gradlew alljavadoc;cd docs/;zip -r javadoc.zip javadoc
+  rm -rf build/docs/javadoc;./gradlew alljavadoc;cd build/docs/;zip -r javadoc.zip javadoc
 
 -----
 Push to central:
