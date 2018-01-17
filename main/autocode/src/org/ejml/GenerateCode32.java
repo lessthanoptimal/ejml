@@ -64,6 +64,9 @@ public class GenerateCode32 {
             suffices32.add("_C"+suffice);
         }
 
+        suffices64.add("Features_D");
+        suffices32.add("Features_F");
+
         prefix64.add("DMatrix");
         prefix32.add("FMatrix");
         prefix64.add("ZMatrix");
@@ -105,6 +108,7 @@ public class GenerateCode32 {
         converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
+        converter.replacePattern("Features_D.", "Features_F.");
 
         converter.replacePattern("F64", "F32");
         converter.replacePattern("random64", "random32");

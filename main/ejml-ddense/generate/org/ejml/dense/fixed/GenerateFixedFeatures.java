@@ -68,7 +68,7 @@ public class GenerateFixedFeatures extends GenerateFixed {
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
                 String n = y+""+x;
-                out.print("        if( !MatrixFeatures_DDRM.isIdentical(a.a"+n+",b.a"+n+",tol))\n"+
+                out.print("        if( !UtilEjml.isIdentical(a.a"+n+",b.a"+n+",tol))\n"+
                         "            return false;\n");
             }
         }
@@ -82,7 +82,7 @@ public class GenerateFixedFeatures extends GenerateFixed {
 
         for( int y = 1; y <= dimen; y++ ) {
             String n = y+"";
-            out.print("        if( !MatrixFeatures_DDRM.isIdentical(a.a"+n+",b.a"+n+",tol))\n"+
+            out.print("        if( !UtilEjml.isIdentical(a.a"+n+",b.a"+n+",tol))\n"+
                     "            return false;\n");
         }
         out.print(

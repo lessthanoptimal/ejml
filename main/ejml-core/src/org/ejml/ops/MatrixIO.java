@@ -58,7 +58,7 @@ public class MatrixIO {
     }
 
     /**
-     * Loads a DeneMatrix64F which has been saved to file using Java binary
+     * Loads a {@link DMatrix} which has been saved to file using Java binary
      * serialization.
      *
      * @param fileName The file being loaded.
@@ -87,13 +87,13 @@ public class MatrixIO {
 
     /**
      * Saves a matrix to disk using in a Column Space Value (CSV) format. For a 
-     * description of the format see {@link MatrixIO#loadCSV(String)}.
+     * description of the format see {@link MatrixIO#loadCSV(String,boolean)}.
      *
      * @param A The matrix being saved.
      * @param fileName Name of the file its being saved at.
      * @throws java.io.IOException
      */
-    public static void saveCSV(DMatrix A , String fileName )
+    public static void saveDenseCSV(DMatrix A , String fileName )
         throws IOException
     {
         PrintStream fileStream = new PrintStream(fileName);
@@ -109,21 +109,69 @@ public class MatrixIO {
     }
 
     /**
+     * Saves a matrix to disk using in a Column Space Value (CSV) format. For a
+     * description of the format see {@link MatrixIO#loadCSV(String,boolean)}.
+     *
+     * @param A The matrix being saved.
+     * @param fileName Name of the file its being saved at.
+     * @throws java.io.IOException
+     */
+    public static void saveSparseCSV(DMatrixSparseTriplet A , String fileName )
+            throws IOException
+    {
+        PrintStream fileStream = new PrintStream(fileName);
+
+        fileStream.println(A.getNumRows() + " " + A.getNumCols() +" "+A.nz_length+ " real");
+        for (int i = 0; i < A.nz_length; i++) {
+            DMatrixSparseTriplet.Element e = A.nz_data[i];
+            fileStream.println(e.row+" "+e.col+" "+e.value);
+        }
+        fileStream.close();
+    }
+
+    /**
+     * Saves a matrix to disk using in a Column Space Value (CSV) format. For a
+     * description of the format see {@link MatrixIO#loadCSV(String,boolean)}.
+     *
+     * @param A The matrix being saved.
+     * @param fileName Name of the file its being saved at.
+     * @throws java.io.IOException
+     */
+    public static void saveSparseCSV(FMatrixSparseTriplet A , String fileName )
+            throws IOException
+    {
+        PrintStream fileStream = new PrintStream(fileName);
+
+        fileStream.println(A.getNumRows() + " " + A.getNumCols() +" "+A.nz_length+ " real");
+        for (int i = 0; i < A.nz_length; i++) {
+            FMatrixSparseTriplet.Element e = A.nz_data[i];
+            fileStream.println(e.row+" "+e.col+" "+e.value);
+        }
+        fileStream.close();
+    }
+
+    /**
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
      * file format. The number of rows and columns are read in on the first line. Then
      * each row is read in the subsequent lines.
      *
+     * Works with dense and sparse matrices.
+     *
      * @param fileName The file being loaded.
-     * @return DMatrixRMaj
+     * @return DMatrix
      * @throws IOException
      */
-    public static DMatrixRMaj loadCSV(String fileName )
+    public static <T extends DMatrix>T loadCSV(String fileName , boolean doublePrecision )
         throws IOException
     {
         FileInputStream fileStream = new FileInputStream(fileName);
         ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
 
-        DMatrixRMaj ret = csv.read();
+        T ret;
+        if( doublePrecision )
+            ret = csv.read64();
+        else
+            ret = csv.read32();
 
         fileStream.close();
 
@@ -132,7 +180,7 @@ public class MatrixIO {
 
     /**
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
-     * file format.  For a description of the format see {@link MatrixIO#loadCSV(String)}.
+     * file format.  For a description of the format see {@link MatrixIO#loadCSV(String,boolean)}.
      *
      * @param fileName The file being loaded.
      * @param numRows number of rows in the matrix.
@@ -146,7 +194,7 @@ public class MatrixIO {
         FileInputStream fileStream = new FileInputStream(fileName);
         ReadMatrixCsv csv = new ReadMatrixCsv(fileStream);
 
-        DMatrixRMaj ret = csv.readReal(numRows, numCols);
+        DMatrixRMaj ret = csv.readDDRM(numRows, numCols);
 
         fileStream.close();
 

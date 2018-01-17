@@ -457,27 +457,11 @@ public class MatrixFeatures_DDRM {
 
         final int length = a.getNumElements();
         for( int i = 0; i < length; i++ ) {
-            if( !isIdentical(a.get(i),b.get(i), tol))
+            if( !UtilEjml.isIdentical(a.get(i),b.get(i), tol))
                 return false;
         }
 
         return true;
-    }
-
-    public static boolean isIdentical( double a , double b , double tol ) {
-        // if either is negative or positive infinity the result will be positive infinity
-        // if either is NaN the result will be NaN
-        double diff = Math.abs(a-b);
-
-        // diff = NaN == false
-        // diff = infinity == false
-        if( tol >= diff )
-            return true;
-
-        if (Double.isNaN(a)) {
-            return Double.isNaN(b);
-        } else
-            return Double.isInfinite(a) && a == b;
     }
 
     /**

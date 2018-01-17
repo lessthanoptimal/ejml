@@ -18,6 +18,7 @@
 
 package org.ejml.equation;
 
+import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -198,6 +199,33 @@ public class TestOperation {
         eq.process("b=A*x");
 
         assertTrue(A.mult(x).isIdentical(b, UtilEjml.TEST_F64));
+    }
+
+    /**
+     * See if it throws an informative error message
+     */
+    @Test
+    public void multiply_matrix1x1_matrixNxM() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random64(1, 1, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random64(6, 5, -1, 1, rand);
+
+        eq.alias(A,"A",B,"B",C,"C");
+
+        try {
+            eq.process("C=A*B");
+            fail("Should have thrown exception");
+        } catch( MatrixDimensionException e ) {
+            assertTrue( e.getMessage().startsWith("Trying to multiply a 1x1"));
+        }
+        try {
+            eq.process("C=B*A");
+            fail("Should have thrown exception");
+        } catch( MatrixDimensionException e ) {
+            assertTrue( e.getMessage().startsWith("Trying to multiply a 1x1"));
+        }
     }
 
     @Test
@@ -526,6 +554,33 @@ public class TestOperation {
         assertTrue(b.plus(2.2).isIdentical(a, UtilEjml.TEST_F64));
     }
 
+    /**
+     * See if it throws an informative error message
+     */
+    @Test
+    public void add_matrix1x1_matrixNxM() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random64(1, 1, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random64(6, 5, -1, 1, rand);
+
+        eq.alias(A,"A",B,"B",C,"C");
+
+        try {
+            eq.process("C=A+B");
+            fail("Should have thrown exception");
+        } catch( MatrixDimensionException e ) {
+            assertTrue( e.getMessage().startsWith("Trying to add a 1x1"));
+        }
+        try {
+            eq.process("C=B+A");
+            fail("Should have thrown exception");
+        } catch( MatrixDimensionException e ) {
+            assertTrue( e.getMessage().startsWith("Trying to add a 1x1"));
+        }
+    }
+
     @Test
     public void subtract_int_int() {
         Equation eq = new Equation();
@@ -577,6 +632,33 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(3,4);
         CommonOps_DDRM.subtract(2.2, (DMatrixRMaj)b.getMatrix(), expected);
         assertTrue(SimpleMatrix.wrap(expected).isIdentical(a, UtilEjml.TEST_F64));
+    }
+
+    /**
+     * See if it throws an informative error message
+     */
+    @Test
+    public void subtract_matrix1x1_matrixNxM() {
+        Equation eq = new Equation();
+
+        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random64(1, 1, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random64(6, 5, -1, 1, rand);
+
+        eq.alias(A,"A",B,"B",C,"C");
+
+        try {
+            eq.process("C=A-B");
+            fail("Should have thrown exception");
+        } catch( MatrixDimensionException e ) {
+            assertTrue( e.getMessage().startsWith("Trying to subtract a 1x1"));
+        }
+        try {
+            eq.process("C=B-A");
+            fail("Should have thrown exception");
+        } catch( MatrixDimensionException e ) {
+            assertTrue( e.getMessage().startsWith("Trying to subtract a 1x1"));
+        }
     }
 
     @Test

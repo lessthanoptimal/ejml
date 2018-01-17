@@ -21,7 +21,6 @@ package org.ejml.dense.fixed;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix2;
 import org.ejml.data.DMatrix2x2;
-import org.ejml.dense.row.MatrixFeatures_DDRM;
 
 /**
  * <p>Matrix features for fixed sized matrices which are 2 x 2 or 2 element vectors.</p>
@@ -31,21 +30,21 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
  */
 public class MatrixFeatures_DDF2 {
     public static boolean isIdentical(DMatrix2x2 a , DMatrix2x2 b , double tol ) {
-        if( !MatrixFeatures_DDRM.isIdentical(a.a11,b.a11,tol))
+        if( !UtilEjml.isIdentical(a.a11,b.a11,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a12,b.a12,tol))
+        if( !UtilEjml.isIdentical(a.a12,b.a12,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a21,b.a21,tol))
+        if( !UtilEjml.isIdentical(a.a21,b.a21,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a22,b.a22,tol))
+        if( !UtilEjml.isIdentical(a.a22,b.a22,tol))
             return false;
         return true;
     }
 
     public static boolean isIdentical(DMatrix2 a , DMatrix2 b , double tol ) {
-        if( !MatrixFeatures_DDRM.isIdentical(a.a1,b.a1,tol))
+        if( !UtilEjml.isIdentical(a.a1,b.a1,tol))
             return false;
-        if( !MatrixFeatures_DDRM.isIdentical(a.a2,b.a2,tol))
+        if( !UtilEjml.isIdentical(a.a2,b.a2,tol))
             return false;
         return true;
     }

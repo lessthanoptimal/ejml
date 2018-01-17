@@ -1281,7 +1281,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
     public void saveToFileCSV( String fileName )
             throws IOException
     {
-        MatrixIO.saveCSV((DMatrixRMaj)mat, fileName);
+        MatrixIO.saveDenseCSV((DMatrixRMaj)mat, fileName);
     }
 
     /**
@@ -1289,7 +1289,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * Loads a new matrix from a CSV file.  For the file format see {@link MatrixIO}.
      * </p>
      *
-     * @see MatrixIO#loadCSV(String)
+     * @see MatrixIO#loadCSV(String,boolean)
      *
      * @param fileName File which is to be loaded.
      * @return The matrix.
@@ -1297,7 +1297,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T loadCSV( String fileName )
             throws IOException {
-        DMatrix mat = MatrixIO.loadCSV(fileName);
+        DMatrix mat = MatrixIO.loadCSV(fileName,true);
 
         T ret = createMatrix(1,1, mat.getType());
 

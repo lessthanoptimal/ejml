@@ -128,4 +128,33 @@ public class TestBMatrixRMaj {
         assertEquals(true, M.get(2, 3));
     }
 
+    @Test
+    public void fill() {
+        BMatrixRMaj M = new BMatrixRMaj(4,5);
+        M.set(0,1,true);
+        M.set(3,1,true);
+
+        M.fill(false);
+        for (int i = 0; i < M.getNumElements(); i++) {
+            assertFalse(M.get(i));
+        }
+        M.fill(true);
+        for (int i = 0; i < M.getNumElements(); i++) {
+            assertTrue(M.get(i));
+        }
+    }
+
+    @Test
+    public void sum() {
+        BMatrixRMaj M = new BMatrixRMaj(4,5);
+
+        assertEquals(0,M.sum());
+
+        M.set(0,1,true);
+        M.set(3,1,true);
+
+        assertEquals(2,M.sum());
+
+    }
+
 }

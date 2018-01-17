@@ -2,9 +2,32 @@ Change log for EJML
 
 Date format: year/month/day
 
------ Version 0.32
+----- Version 0.33
+2018/01/17
 
+- BMatrixRMaj
+  * Added fill()
+  * Added sum()
+- Relaxed length requirements on permutation vector
+  * Thanks Florian Enner for the pull request
+- Added MatrixFeatures_D which work on all double real matrices
+  * isEquals()
+  * isIdentical()
+- CommonOps_*DRM
+  * More functions throw MatrixDimensionException
+  * Some functions will resize input when there's a miss match now
+- Operations
+  * Prints a useful error message when you try to add,subtract,multiply a 1x1 matrix against a NxM matrix
+- Added CommonOps_BDRM
+  * transposeSquare()
+- CSV Parsing support
+  * Supports all dense types now
+  * Refactored to reflect new matrix names
+  * Added support for writing and reading sparse matrix in CSV
+
+----- Version 0.32
 2017/09/18
+
 - Thanks to HEBI Robotics for sponsoring the addition of sparse solvers!
   * http://hebirobotics.com/
 - Examples

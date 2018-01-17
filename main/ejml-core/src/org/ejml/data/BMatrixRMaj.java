@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import java.util.Arrays;
+
 /**
  * Dense matrix composed of boolean values
  *
@@ -49,6 +51,14 @@ public class BMatrixRMaj implements ReshapeMatrix {
 
     public int getIndex( int row , int col ) {
         return row * numCols + col;
+    }
+
+    /**
+     * Sets every element in the matrix to the specified value
+     * @param value new value of every element
+     */
+    public void fill( boolean value ) {
+        Arrays.fill(data,0,getNumElements(),value);
     }
 
     public boolean get( int index ) {
@@ -84,6 +94,20 @@ public class BMatrixRMaj implements ReshapeMatrix {
      */
     public boolean isInBounds( int row  , int col ) {
         return( col >= 0 && col < numCols && row >= 0 && row < numRows );
+    }
+
+    /**
+     * Returns the total number of elements which are true.
+     * @return number of elements which are set to true
+     */
+    public int sum() {
+        int total = 0;
+        int N = getNumElements();
+        for (int i = 0; i < N; i++) {
+            if( data[i] )
+                total += 1;
+        }
+        return total;
     }
 
     @Override
@@ -123,7 +147,17 @@ public class BMatrixRMaj implements ReshapeMatrix {
 
     @Override
     public void print() {
-        System.out.println("Implement this");
+       System.out.println("Type = binary , numRows = "+numRows+" , numCols = "+numCols);
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                if ( get(row, col)) {
+                    System.out.print("+");
+                } else {
+                    System.out.print("-");
+                }
+            }
+            System.out.println();
+        }
     }
 
     @Override

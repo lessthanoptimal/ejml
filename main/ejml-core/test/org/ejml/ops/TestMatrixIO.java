@@ -19,8 +19,11 @@
 package org.ejml.ops;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
+import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.Test;
 
 import java.io.File;
@@ -55,12 +58,12 @@ public class TestMatrixIO {
     }
 
     @Test
-    public void load_save_csv() throws IOException {
+    public void load_save_dense_csv() throws IOException {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,3,rand);
 
-        MatrixIO.saveCSV(A,"temp.csv");
+        MatrixIO.saveDenseCSV(A,"temp.csv");
 
-        DMatrixRMaj A_copy = MatrixIO.loadCSV("temp.csv");
+        DMatrixRMaj A_copy = MatrixIO.loadCSV("temp.csv",true);
 
         assertTrue(A != A_copy);
         assertTrue(MatrixFeatures_DDRM.isEquals(A,A_copy));
@@ -70,4 +73,22 @@ public class TestMatrixIO {
         assertTrue(f.exists());
         assertTrue(f.delete());
     }
+
+    @Test
+    public void load_save_float_csv() throws IOException {
+        DMatrixSparseTriplet A = RandomMatrices_DSTL.uniform(10,8,15,-1,1,rand);
+
+        MatrixIO.saveSparseCSV(A,"temp.csv");
+
+        DMatrixSparseTriplet A_copy = MatrixIO.loadCSV("temp.csv",true);
+
+        assertTrue(A != A_copy);
+        assertTrue(MatrixFeatures_DSTL.isEquals(A,A_copy));
+
+        // clean up
+        File f = new File("temp.csv");
+        assertTrue(f.exists());
+        assertTrue(f.delete());
+    }
+
 }
