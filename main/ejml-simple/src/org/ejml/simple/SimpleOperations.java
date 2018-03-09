@@ -53,7 +53,7 @@ public interface SimpleOperations<T extends Matrix> {
 
     boolean invert( T A , T output );
 
-    void identify( T A );
+    void setIdentity(T A );
 
     void pseudoInverse( T A , T output );
 

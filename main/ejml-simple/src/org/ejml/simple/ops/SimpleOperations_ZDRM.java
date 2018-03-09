@@ -100,7 +100,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
-    public void identify(ZMatrixRMaj A) {
+    public void setIdentity(ZMatrixRMaj A) {
         CommonOps_ZDRM.setIdentity(A);
     }
 

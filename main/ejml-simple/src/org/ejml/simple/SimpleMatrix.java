@@ -115,11 +115,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param rowMajor If the array is encoded in a row-major or a column-major format.
      * @param data The formatted 1D array. Not modified.
      */
-    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double ...data) {
+    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, double []data) {
         setMatrix( new DMatrixRMaj(numRows,numCols, rowMajor, data) );
     }
 
-    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, float ...data) {
+    public SimpleMatrix(int numRows, int numCols, boolean rowMajor, float []data) {
         setMatrix( new FMatrixRMaj(numRows,numCols, rowMajor, data) );
     }
 
@@ -233,16 +233,12 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @return An identity matrix.
      */
     public static SimpleMatrix identity( int width ) {
-        SimpleMatrix ret = new SimpleMatrix(width,width);
-
-        CommonOps_DDRM.setIdentity((DMatrixRMaj)ret.mat);
-
-        return ret;
+        return identity(width,DMatrixRMaj.class);
     }
 
     public static SimpleMatrix identity( int width , Class type) {
         SimpleMatrix ret = new SimpleMatrix(width,width, type);
-        ret.ops.identify(ret.mat);
+        ret.ops.setIdentity(ret.mat);
         return ret;
     }
 
@@ -316,16 +312,23 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix randomNormal( SimpleMatrix covariance , Random random ) {
 
-        SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1);
+        SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1,covariance.getType());
 
-        if( covariance.bits() == 64) {
-            CovarianceRandomDraw_DDRM draw = new CovarianceRandomDraw_DDRM(random, (DMatrixRMaj)covariance.getMatrix());
+        switch( found.getType() ) {
+            case DDRM:{
+                CovarianceRandomDraw_DDRM draw = new CovarianceRandomDraw_DDRM(random, (DMatrixRMaj)covariance.getMatrix());
 
-            draw.next((DMatrixRMaj)found.getMatrix());
-        } else {
-            CovarianceRandomDraw_FDRM draw = new CovarianceRandomDraw_FDRM(random, (FMatrixRMaj)covariance.getMatrix());
+                draw.next((DMatrixRMaj)found.getMatrix());
+            }break;
 
-            draw.next((FMatrixRMaj)found.getMatrix());
+            case FDRM:{
+                CovarianceRandomDraw_FDRM draw = new CovarianceRandomDraw_FDRM(random, (FMatrixRMaj)covariance.getMatrix());
+
+                draw.next((FMatrixRMaj)found.getMatrix());
+            }break;
+
+            default:
+                throw new IllegalArgumentException("Matrix type is currently not supported");
         }
 
         return found;

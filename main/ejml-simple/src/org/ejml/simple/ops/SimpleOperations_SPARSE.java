@@ -96,7 +96,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
     }
 
     @Override
-    public void identify(DMatrixSparseCSC A) {
+    public void setIdentity(DMatrixSparseCSC A) {
         CommonOps_DSCC.setIdentity(A);
     }
 

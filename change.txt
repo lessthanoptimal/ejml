@@ -7,8 +7,8 @@ Date format: year/month/day
 
 - SimpleMatrix
   * Added createLike()
-
-- TODO change simple matrix's header to take in an array to remove confusion over float and double
+  * Removed most hard coded matrix types internally
+  * Change simple matrix's constructor to take in an array to remove confusion over float and double
 
 - SImpleMatrix
  * TODO rename set to fill and make generic

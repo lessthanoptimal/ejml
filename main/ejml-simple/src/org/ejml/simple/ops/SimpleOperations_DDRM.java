@@ -94,7 +94,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
-    public void identify(DMatrixRMaj A) {
+    public void setIdentity(DMatrixRMaj A) {
         CommonOps_DDRM.setIdentity(A);
     }
 
