@@ -9,6 +9,7 @@ Date format: year/month/day
   * Added createLike()
   * Removed most hard coded matrix types internally
   * Change simple matrix's constructor to take in an array to remove confusion over float and double
+  * Fixed bug in concatRows and concatColumns
 
 - SImpleMatrix
  * TODO rename set to fill and make generic

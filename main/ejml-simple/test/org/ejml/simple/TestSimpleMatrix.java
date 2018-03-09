@@ -819,12 +819,14 @@ public class TestSimpleMatrix {
     @Test
     public void concatColumns() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
+        SimpleMatrix B0 = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
+        SimpleMatrix B1 = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
 
-        SimpleMatrix C = A.concatColumns(B);
-        SimpleMatrix D = new SimpleMatrix(5,10);
+        SimpleMatrix C = A.concatColumns(B0,B1);
+        SimpleMatrix D = new SimpleMatrix(5,13);
         D.insertIntoThis(0,0,A);
-        D.insertIntoThis(0,7,B);
+        D.insertIntoThis(0,7,B0);
+        D.insertIntoThis(0,10,B1);
 
         assertTrue( C.isIdentical(D,UtilEjml.TEST_F64));
     }
@@ -832,12 +834,14 @@ public class TestSimpleMatrix {
     @Test
     public void concatRows() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
+        SimpleMatrix B0 = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
+        SimpleMatrix B1 = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
 
-        SimpleMatrix C = A.concatRows(B);
-        SimpleMatrix D = new SimpleMatrix(9,7);
+        SimpleMatrix C = A.concatRows(B0,B1);
+        SimpleMatrix D = new SimpleMatrix(13,7);
         D.insertIntoThis(0,0,A);
-        D.insertIntoThis(5,0,B);
+        D.insertIntoThis(5,0,B0);
+        D.insertIntoThis(9,0,B1);
 
         assertTrue( C.isIdentical(D,UtilEjml.TEST_F64));
     }

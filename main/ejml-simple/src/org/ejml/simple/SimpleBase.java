@@ -1337,14 +1337,14 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];
             m[0] = (DMatrixRMaj)mat;
             for (int i = 0; i < A.length; i++) {
-                m[1] = A[i].getDDRM();
+                m[i+1] = A[i].getDDRM();
             }
             combined = CommonOps_DDRM.concatColumns(m);
         } else if( mat.getClass() == FMatrixRMaj.class ) {
             FMatrixRMaj m[] = new FMatrixRMaj[A.length+1];
             m[0] = (FMatrixRMaj)mat;
             for (int i = 0; i < A.length; i++) {
-                m[1] = A[i].getFDRM();
+                m[i+1] = A[i].getFDRM();
             }
             combined = CommonOps_FDRM.concatColumns(m);
         } else {
@@ -1368,14 +1368,14 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];
             m[0] = (DMatrixRMaj)mat;
             for (int i = 0; i < A.length; i++) {
-                m[1] = A[i].getDDRM();
+                m[i+1] = A[i].getDDRM();
             }
             combined = CommonOps_DDRM.concatRows(m);
         } else if( mat.getClass() == FMatrixRMaj.class ) {
             FMatrixRMaj m[] = new FMatrixRMaj[A.length+1];
             m[0] = (FMatrixRMaj)mat;
             for (int i = 0; i < A.length; i++) {
-                m[1] = A[i].getFDRM();
+                m[i+1] = A[i].getFDRM();
             }
             combined = CommonOps_FDRM.concatRows(m);
         } else {
