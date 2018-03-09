@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -219,11 +219,11 @@ public class CommonOps_DSCC {
     public static DMatrixSparseCSC identity(int numRows , int numCols ) {
         int min = Math.min(numRows, numCols);
         DMatrixSparseCSC A = new DMatrixSparseCSC(numRows, numCols, min);
-        setToIdentity(A);
+        setIdentity(A);
         return A;
     }
 
-    public static void setToIdentity(DMatrixSparseCSC A ) {
+    public static void setIdentity(DMatrixSparseCSC A ) {
         int min = Math.min(A.numRows, A.numCols);
         A.growMaxLength(min,false);
         A.nz_length = min;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,8 +41,8 @@ public class EquationCustomFunction {
         eq.getFunctions().add("multTransA",createMultTransA());
 
         SimpleMatrix A = new SimpleMatrix(1,1); // will be resized
-        SimpleMatrix B = SimpleMatrix.random64(3,4,-1,1,rand);
-        SimpleMatrix C = SimpleMatrix.random64(3,4,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(3,4,-1,1,rand);
+        SimpleMatrix C = SimpleMatrix.random_DDRM(3,4,-1,1,rand);
 
         eq.alias(A,"A",B,"B",C,"C");
 

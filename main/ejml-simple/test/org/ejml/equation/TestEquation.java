@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,9 +44,9 @@ public class TestEquation {
         Equation eq = new Equation();
 
         SimpleMatrix A = new SimpleMatrix(5, 6);
-        SimpleMatrix B = SimpleMatrix.random64(5, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random64(5, 4, -1, 1, rand);
-        SimpleMatrix D = SimpleMatrix.random64(4, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(5, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random_DDRM(5, 4, -1, 1, rand);
+        SimpleMatrix D = SimpleMatrix.random_DDRM(4, 6, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -66,8 +66,8 @@ public class TestEquation {
     public void compile_output() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -85,8 +85,8 @@ public class TestEquation {
     public void compile_assign_submatrix() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(2, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(2, 5, -1, 1, rand);
 
         SimpleMatrix A_orig = A.copy();
 
@@ -111,8 +111,8 @@ public class TestEquation {
     public void compile_assign_submatrix_special() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(4, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
 
         SimpleMatrix A_orig = A.copy();
 
@@ -136,7 +136,7 @@ public class TestEquation {
     public void compile_assign_submatrix_scalar() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
 
@@ -158,7 +158,7 @@ public class TestEquation {
     public void compile_assign_submatrix_IndexMath() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
 
@@ -185,7 +185,7 @@ public class TestEquation {
     public void assign_lazy() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
         eq.alias(A, "A");
         eq.process("B=A");
 
@@ -209,8 +209,8 @@ public class TestEquation {
     public void assign_resize_lazy() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 5, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(2, 3, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(2, 3, -1, 1, rand);
         eq.alias(A, "A");
         eq.alias(B, "B");
         eq.process("B=A");
@@ -222,9 +222,9 @@ public class TestEquation {
     public void compile_parentheses() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
@@ -245,8 +245,8 @@ public class TestEquation {
     public void compile_parentheses_extract() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(8, 8, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -256,14 +256,14 @@ public class TestEquation {
         assertTrue(A.isIdentical(B.extractMatrix(2,8,1,7), 1e-15));
 
         // get single values now
-        A = SimpleMatrix.random64(6, 1, -1, 1, rand);
+        A = SimpleMatrix.random_DDRM(6, 1, -1, 1, rand);
         eq.alias(A, "A");
         sequence = eq.compile("A=B(2:7,3)");
         sequence.perform();
         assertTrue(A.isIdentical(B.extractMatrix(2, 8, 3, 4), 1e-15));
 
         // multiple in a row
-        A = SimpleMatrix.random64(1, 2, -1, 1, rand);
+        A = SimpleMatrix.random_DDRM(1, 2, -1, 1, rand);
         eq.alias(A, "A");
         sequence = eq.compile("A=(B(2:7,3:6))(0:0,1:2)");
         sequence.perform();
@@ -274,8 +274,8 @@ public class TestEquation {
     public void compile_parentheses_extractSpecial() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 8, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(8, 8, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 8, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -283,7 +283,7 @@ public class TestEquation {
         eq.process("A=B(2:,:)");
         assertTrue(A.isIdentical(B.extractMatrix(2,8,0,8), 1e-15));
 
-        B = SimpleMatrix.random64(6, 10, -1, 1, rand);
+        B = SimpleMatrix.random_DDRM(6, 10, -1, 1, rand);
         eq.alias(B, "B");
         eq.process("A=B(:,2:)");
         assertTrue(A.isIdentical(B.extractMatrix(0,6,2,10), 1e-15));
@@ -293,7 +293,7 @@ public class TestEquation {
     public void compile_parentheses_extractScalar() {
         Equation eq = new Equation();
 
-        SimpleMatrix B = SimpleMatrix.random64(8, 8, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(B, "B");
 
@@ -307,8 +307,8 @@ public class TestEquation {
     public void compile_parentheses_extract_IndexMath() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(8, 8, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -606,9 +606,9 @@ public class TestEquation {
     public void compile_transpose() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
@@ -626,9 +626,9 @@ public class TestEquation {
     public void compile_elementWise() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
@@ -646,8 +646,8 @@ public class TestEquation {
     public void compile_double() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
         double C = 2.5;
         double D = 1.7;
 
@@ -684,9 +684,9 @@ public class TestEquation {
     public void compile_function_one() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random64(6, 6, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
@@ -720,8 +720,8 @@ public class TestEquation {
     public void compile_function_N() {
         Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random64(3, 4, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random64(4, 5, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(3, 4, -1, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
         SimpleMatrix R = new SimpleMatrix(12, 20);
 
         eq.alias(A, "A");

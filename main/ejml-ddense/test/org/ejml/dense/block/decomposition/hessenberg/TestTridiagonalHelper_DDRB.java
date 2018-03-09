@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -95,7 +95,7 @@ public class TestTridiagonalHelper_DDRB {
             for( int i = 0; i < r; i++ )
                 betas[i] = i + 0.5;
 
-            SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0 , 1.0 ,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0 , 1.0 ,rand);
 
             // Compute W directly using SimpleMatrix
             SimpleMatrix v = A.extractVector(true,0);
@@ -138,10 +138,10 @@ public class TestTridiagonalHelper_DDRB {
         // try different offsets to make sure there are no implicit assumptions
         for( int offX = 0; offX <= r; offX += r) {
             for( int offY = 0; offY <= r; offY += r) {
-                SimpleMatrix A = SimpleMatrix.random64(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
+                SimpleMatrix A = SimpleMatrix.random_DDRM(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
                 A = A.mult(A.transpose());
                 SimpleMatrix A_orig = A.copy();
-                SimpleMatrix V = SimpleMatrix.random64(r,A.numCols(), -1.0 , 1.0 ,rand);
+                SimpleMatrix V = SimpleMatrix.random_DDRM(r,A.numCols(), -1.0 , 1.0 ,rand);
 
                 DSubmatrixD1 Ab = insertIntoBlock(offY,offX,A,r);
                 DSubmatrixD1 Vb = insertIntoBlock(0,offX,V,r);
@@ -182,7 +182,7 @@ public class TestTridiagonalHelper_DDRB {
 
     @Test
     public void multA_u() {
-        SimpleMatrix A = SimpleMatrix.random64(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
         // make a symmetric so that this mult will work
         A = A.transpose().mult(A);
 
@@ -212,9 +212,9 @@ public class TestTridiagonalHelper_DDRB {
      */
     @Test
     public void computeY() {
-        SimpleMatrix A = SimpleMatrix.random64(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(2*r+2,2*r+2, -1.0 , 1.0 ,rand);
         A = A.transpose().mult(A); // needs to be symmetric to pass
-        SimpleMatrix Vo = SimpleMatrix.random64(r,A.numCols(), -1.0 , 1.0 ,rand);
+        SimpleMatrix Vo = SimpleMatrix.random_DDRM(r,A.numCols(), -1.0 , 1.0 ,rand);
 
         for( int row = 0; row < r; row++ ) {
             SimpleMatrix AA = A.copy();
@@ -265,8 +265,8 @@ public class TestTridiagonalHelper_DDRB {
 
     @Test
     public void computeRowOfV() {
-        SimpleMatrix A = SimpleMatrix.random64(2*r+2,2*r+2, -1.0 , 1.0 , rand);
-        SimpleMatrix V = SimpleMatrix.random64(r,A.numCols(), -1.0 , 1.0 , rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(2*r+2,2*r+2, -1.0 , 1.0 , rand);
+        SimpleMatrix V = SimpleMatrix.random_DDRM(r,A.numCols(), -1.0 , 1.0 , rand);
 
         double gamma = 2.3;
 

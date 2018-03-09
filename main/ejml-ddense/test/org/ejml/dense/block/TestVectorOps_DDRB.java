@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,7 +49,7 @@ public class TestVectorOps_DDRB {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0 , 1.0 ,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0 , 1.0 ,rand);
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
             DMatrixRBlock Bb = Ab.copy();
 
@@ -73,7 +73,7 @@ public class TestVectorOps_DDRB {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0 , 1.0 ,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0 , 1.0 ,rand);
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
             DMatrixRBlock Bb = Ab.copy();
 
@@ -99,8 +99,8 @@ public class TestVectorOps_DDRB {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0, 1.0,rand);
-            SimpleMatrix B = SimpleMatrix.random64(r,width, -1.0, 1.0,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0,rand);
+            SimpleMatrix B = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0,rand);
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
             DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.getDDRM(),r);
             DMatrixRBlock Cb = Ab.copy();
@@ -129,9 +129,9 @@ public class TestVectorOps_DDRB {
             int end = width;
             int offset = width > 1 ? 1 : 0;
 
-            SimpleMatrix A = SimpleMatrix.random64(r,width, -1.0, 1.0, rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0, rand);
             SimpleMatrix a = A.extractMatrix(rowA,rowA+1,offset,SimpleMatrix.END);
-            SimpleMatrix B = SimpleMatrix.random64(r,width, -1.0, 1.0, rand);
+            SimpleMatrix B = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(rowB,rowB+1,offset,SimpleMatrix.END);
 
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
@@ -157,9 +157,9 @@ public class TestVectorOps_DDRB {
             int offset = width > 1 ? 1 : 0;
             if( colB >= width) colB = 0;
 
-            SimpleMatrix A = SimpleMatrix.random64(width,width, -1.0, 1.0, rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(width,width, -1.0, 1.0, rand);
             SimpleMatrix a = A.extractMatrix(rowA,rowA+1,offset,SimpleMatrix.END);
-            SimpleMatrix B = SimpleMatrix.random64(width,width, -1.0, 1.0, rand);
+            SimpleMatrix B = SimpleMatrix.random_DDRM(width,width, -1.0, 1.0, rand);
             SimpleMatrix b = B.extractMatrix(offset,SimpleMatrix.END,colB,colB+1);
 
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);

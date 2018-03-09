@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -136,13 +136,16 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data 2D array representation of the matrix. Not modified.
      */
     public SimpleMatrix(double data[][]) {
-         setMatrix( new DMatrixRMaj(data) );
+        setMatrix( new DMatrixRMaj(data) );
+    }
+
+    public SimpleMatrix(float data[][]) {
+        setMatrix( new FMatrixRMaj(data) );
     }
 
     /**
-     * Creates a new matrix that is initially set to zero with the specified dimensions.
-     *
-     * @see DMatrixRMaj#DMatrixRMaj(int, int)
+     * Creates a new matrix that is initially set to zero with the specified dimensions. This will wrap a
+     * {@link DMatrixRMaj}.
      *
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
@@ -152,12 +155,15 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     public SimpleMatrix(int numRows, int numCols, Class type) {
-        if( type == DMatrixRMaj.class )
-            setMatrix(new DMatrixRMaj(numRows, numCols));
-        else
-            setMatrix(new FMatrixRMaj(numRows, numCols));
+        this(numRows,numCols,MatrixType.lookup(type));
     }
 
+    /**
+     * Create a simple matrix of the specified type
+     * @param numRows The number of rows in the matrix.
+     * @param numCols The number of columns in the matrix.
+     * @param type The matrix type
+     */
     public SimpleMatrix(int numRows, int numCols, MatrixType type) {
         switch( type ) {
             case DDRM:setMatrix(new DMatrixRMaj(numRows, numCols));break;
@@ -204,7 +210,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * Constructor for internal library use only.  Nothing is configured and is intended for serialization.
      */
-    public SimpleMatrix(){}
+    protected SimpleMatrix(){}
 
     /**
      * Creates a new SimpleMatrix with the specified DMatrixRMaj used as its internal matrix.  This means
@@ -236,12 +242,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 
     public static SimpleMatrix identity( int width , Class type) {
         SimpleMatrix ret = new SimpleMatrix(width,width, type);
-
-        if( type == DMatrixRMaj.class )
-            CommonOps_DDRM.setIdentity((DMatrixRMaj)ret.mat);
-        else
-            CommonOps_FDRM.setIdentity((FMatrixRMaj)ret.mat);
-
+        ret.ops.identify(ret.mat);
         return ret;
     }
 
@@ -266,19 +267,15 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return ret;
     }
 
+    /**
+     * Creates a real valued diagonal matrix of the specified type
+     */
     public static SimpleMatrix diag( Class type, double ...vals ) {
-        Matrix m;
-        if( type == DMatrixRMaj.class )
-            m = CommonOps_DDRM.diag(vals);
-        else {
-            float f[] = new float[ vals.length ];
-            for (int i = 0; i < f.length; i++) {
-                f[i] = (float)vals[i];
-            }
-            m = CommonOps_FDRM.diag(f);
+        SimpleMatrix M = new SimpleMatrix(vals.length,vals.length,type);
+        for (int i = 0; i < vals.length; i++) {
+            M.set(i,i,vals[i]);
         }
-        SimpleMatrix ret = wrap(m);
-        return ret;
+       return M;
     }
 
     /**
@@ -294,13 +291,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param maxValue Upper bound
      * @param rand The random number generator that's used to fill the matrix.  @return The new random matrix.
      */
-    public static SimpleMatrix random64(int numRows, int numCols, double minValue, double maxValue, Random rand) {
+    public static SimpleMatrix random_DDRM(int numRows, int numCols, double minValue, double maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols);
         RandomMatrices_DDRM.fillUniform((DMatrixRMaj)ret.mat,minValue,maxValue,rand);
         return ret;
     }
 
-    public static SimpleMatrix random32(int numRows, int numCols, float minValue, float maxValue, Random rand) {
+    public static SimpleMatrix random_FDRM(int numRows, int numCols, float minValue, float maxValue, Random rand) {
         SimpleMatrix ret = new SimpleMatrix(numRows,numCols, FMatrixRMaj.class);
         RandomMatrices_FDRM.fillUniform((FMatrixRMaj)ret.mat,minValue,maxValue,rand);
         return ret;

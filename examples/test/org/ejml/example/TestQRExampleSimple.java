@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,7 +42,7 @@ public class TestQRExampleSimple {
     }
 
     private void checkMatrix( int numRows , int numCols ) {
-        SimpleMatrix A = SimpleMatrix.random64(numRows,numCols,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(numRows,numCols,-1,1,rand);
 
         QRExampleSimple alg = new QRExampleSimple();
 

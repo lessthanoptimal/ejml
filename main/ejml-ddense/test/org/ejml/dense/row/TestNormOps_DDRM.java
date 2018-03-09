@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -221,7 +221,7 @@ public class TestNormOps_DDRM {
 
         // make sure the largest singular value is being returned not just the first
         for( int i = 0; i < 20; i++ ) {
-            SimpleMatrix A = SimpleMatrix.random64(5,5,-10,10,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(5,5,-10,10,rand);
             double largest = (double)A.svd().getW().get(0);
 
             assertEquals(largest, NormOps_DDRM.inducedP2(A.getDDRM()), UtilEjml.TEST_F64);

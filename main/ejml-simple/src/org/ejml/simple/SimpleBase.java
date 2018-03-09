@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,8 +21,6 @@ package org.ejml.simple;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
 import org.ejml.dense.row.*;
-import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.dense.row.mult.VectorVectorMult_FDRM;
 import org.ejml.equation.Equation;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ops.*;
@@ -243,12 +241,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The results of this operation.
      */
     public T minus( double b ) {
-        T ret = copy();
+        T ret = createLike();
 
-        if( bits() == 64 )
-            CommonOps_DDRM.subtract((DMatrixRMaj)getMatrix(), b, (DMatrixRMaj)ret.getMatrix());
-        else
-            CommonOps_FDRM.subtract((FMatrixRMaj)getMatrix(), (float)b, (FMatrixRMaj)ret.getMatrix());
+        ops.minus(mat,b,ret.mat);
 
         return ret;
     }
@@ -269,13 +264,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A matrix that contains the results.
      */
     public T plus( double b ) {
-        T ret = createMatrix(numRows(),numCols(), mat.getType());
-
-        if( bits() == 64 )
-            CommonOps_DDRM.add((DMatrixRMaj)getMatrix(), b, (DMatrixRMaj)ret.getMatrix());
-        else
-            CommonOps_FDRM.add((FMatrixRMaj)getMatrix(), (float)b, (FMatrixRMaj)ret.getMatrix());
-
+        T ret = createLike();
+        ops.plus(mat,b,ret.mat);
         return ret;
     }
 
@@ -295,12 +285,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A matrix that contains the results.
      */
     public T plus( double beta , T b ) {
-        T ret = copy();
+        T ret = createLike();
 
-        if( bits() == 64 )
-            CommonOps_DDRM.addEquals((DMatrixRMaj)ret.getMatrix(),beta,(DMatrixRMaj)b.getMatrix());
-        else
-            CommonOps_FDRM.addEquals((FMatrixRMaj)ret.getMatrix(),(float)beta,(FMatrixRMaj)b.getMatrix());
+        ops.plus(mat,beta,b.mat,ret.mat);
 
         return ret;
     }
@@ -318,10 +305,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             throw new IllegalArgumentException("'v' matrix is not a vector.");
         }
 
-        if( bits() == 64 )
-            return VectorVectorMult_DDRM.innerProd((DMatrixRMaj)mat,(DMatrixRMaj)v.getMatrix());
-        else
-            return VectorVectorMult_FDRM.innerProd((FMatrixRMaj)mat,(FMatrixRMaj)v.getMatrix());
+        return ops.dot(mat,v.getMatrix());
     }
 
     /**
@@ -346,12 +330,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The scaled matrix.
      */
     public T scale( double val ) {
-        T ret = copy();
+        T ret = createLike();
 
-        if( bits() == 64 )
-            CommonOps_DDRM.scale(val,(DMatrixRMaj)ret.getMatrix());
-        else
-            CommonOps_FDRM.scale((float)val,(FMatrixRMaj)ret.getMatrix());
+        ops.scale(mat,val,ret.getMatrix());
 
         return ret;
     }
@@ -368,12 +349,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Matrix with its elements divided by the specified value.
      */
     public T divide( double val ) {
-        T ret = copy();
+        T ret = createLike();
 
-        if( bits() == 64 )
-            CommonOps_DDRM.divide((DMatrixRMaj)ret.getMatrix(),val);
-        else
-            CommonOps_FDRM.divide((FMatrixRMaj)ret.getMatrix(),(float)val);
+        ops.divide(mat,val,ret.getMatrix());
 
         return ret;
     }
@@ -397,7 +375,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The inverse of this matrix.
      */
     public T invert() {
-        T ret = createMatrix(mat.getNumRows(), mat.getNumCols(), mat.getType());
+        T ret = createLike();
 
         if( !ops.invert(mat,ret.mat))
             throw new SingularMatrixException();
@@ -415,12 +393,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return inverse computed using the pseudo inverse.
      */
     public T pseudoInverse() {
-        T ret = createMatrix(mat.getNumCols(),mat.getNumRows(), mat.getType());
-        if (bits() == 64) {
-            CommonOps_DDRM.pinv((DMatrixRMaj)mat, (DMatrixRMaj)ret.getMatrix());
-        } else {
-            CommonOps_FDRM.pinv((FMatrixRMaj)mat, (FMatrixRMaj)ret.getMatrix());
-        }
+        T ret = createLike();
+
+        ops.pseudoInverse(mat,ret.mat);
+
         return ret;
     }
 
@@ -481,6 +457,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param val The value each element is set to.
      */
     public void set( double val ) {
+        // TODO make this generic
         if (bits() == 64) {
             CommonOps_DDRM.fill((DMatrixRMaj)mat, val);
         } else {
@@ -709,7 +686,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A new identical matrix.
      */
     public T copy() {
-        T ret = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
+        T ret = createLike();
         ret.getMatrix().set(this.getMatrix());
         return ret;
     }
@@ -771,6 +748,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * </p>
      */
     public void print( String format ) {
+
         if( bits() == 64 ) {
             MatrixIO.print(System.out, (DMatrixRMaj)mat, format);
         } else {
@@ -848,6 +826,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
 
         T ret = extractRow ? createMatrix(1,length, mat.getType()) : createMatrix(length,1, mat.getType());
 
+        // TODO make generic
         if( bits() == 64 ) {
             if (extractRow) {
                 SpecializedOps_DDRM.subvector((DMatrixRMaj)mat, element, 0, length, true, 0, (DMatrixRMaj)ret.getMatrix());
@@ -910,10 +889,22 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return If they are equal within tolerance of each other.
      */
     public boolean isIdentical(T a, double tol) {
-        if( bits() == 64 ) {
-            return MatrixFeatures_DDRM.isIdentical((DMatrixRMaj)mat, (DMatrixRMaj)a.getMatrix(), tol);
-        } else {
-            return MatrixFeatures_FDRM.isIdentical((FMatrixRMaj)mat, (FMatrixRMaj)a.getMatrix(), (float)tol);
+        // TODO move into ops
+        switch( getType() ) {
+            case DDRM:
+                return MatrixFeatures_DDRM.isIdentical((DMatrixRMaj)mat, (DMatrixRMaj)a.getMatrix(), tol);
+
+            case FDRM:
+                return MatrixFeatures_FDRM.isIdentical((FMatrixRMaj)mat, (FMatrixRMaj)a.getMatrix(), (float)tol);
+
+            case ZDRM:
+                return MatrixFeatures_ZDRM.isIdentical((ZMatrixRMaj)mat, (ZMatrixRMaj)a.getMatrix(), tol);
+
+            case CDRM:
+                return MatrixFeatures_CDRM.isIdentical((CMatrixRMaj)mat, (CMatrixRMaj)a.getMatrix(), (float)tol);
+
+            default:
+                throw new IllegalArgumentException("Matrix type isn't supported yet by this function");
         }
     }
 
@@ -960,11 +951,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param B The matrix that is being inserted.
      */
     public void insertIntoThis(int insertRow, int insertCol, T B) {
-        if( bits() == 64 ) {
-            CommonOps_DDRM.insert((DMatrixRMaj)B.getMatrix(), (DMatrixRMaj)mat, insertRow, insertCol);
-        } else {
-            CommonOps_FDRM.insert((FMatrixRMaj)B.getMatrix(),(FMatrixRMaj) mat, insertRow, insertCol);
-        }
+        insert(B.mat,mat,insertRow,insertCol);
+    }
+
+    private void insert( Matrix src , Matrix dst , int destY0 , int destX0 ) {
+        ops.extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dst, destY0, destX0);
     }
 
     /**
@@ -1418,6 +1409,14 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public MatrixType getType() {
         return mat.getType();
+    }
+
+    /**
+     * Creates a matrix that is the same type and shape
+     * @return New matrix
+     */
+    public T createLike() {
+        return createMatrix(numRows(),numCols(),getType());
     }
 
     protected void setMatrix( Matrix mat ) {

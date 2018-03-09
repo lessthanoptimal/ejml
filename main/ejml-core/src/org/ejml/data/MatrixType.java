@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -47,6 +47,23 @@ public enum MatrixType {
         this.fixed = fixed;
         this.dense = dense;
         this.bits = bits;
+    }
+
+    public static MatrixType lookup( Class type ) {
+        if( type == DMatrixRMaj.class )
+            return MatrixType.DDRM;
+        else if( type == FMatrixRMaj.class )
+            return MatrixType.FDRM;
+        else if( type == ZMatrixRMaj.class )
+            return MatrixType.ZDRM;
+        else if( type == CMatrixRMaj.class )
+            return MatrixType.CDRM;
+        else if( type == DMatrixSparseCSC.class )
+            return MatrixType.DSCC;
+        else if( type == FMatrixSparseCSC.class )
+            return MatrixType.FSCC;
+        else
+            throw new IllegalArgumentException("Unknown class");
     }
 
     public boolean isFixed() {

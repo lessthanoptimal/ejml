@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -91,6 +91,11 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     @Override
     public boolean invert(DMatrixRMaj A, DMatrixRMaj output) {
         return CommonOps_DDRM.invert(A,output);
+    }
+
+    @Override
+    public void identify(DMatrixRMaj A) {
+        CommonOps_DDRM.setIdentity(A);
     }
 
     @Override

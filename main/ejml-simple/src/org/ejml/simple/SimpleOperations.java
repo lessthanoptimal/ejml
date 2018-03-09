@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -52,6 +52,8 @@ public interface SimpleOperations<T extends Matrix> {
     void divide( T A , double val , T output );
 
     boolean invert( T A , T output );
+
+    void identify( T A );
 
     void pseudoInverse( T A , T output );
 

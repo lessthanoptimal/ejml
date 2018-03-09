@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -108,9 +108,9 @@ public class TestTridiagonalDecompositionHouseholder_DDRB {
     @Test
     public void multPlusTransA() {
         for( int width = r+1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.random64(width,width, -1.0, 1.0,rand);
-            SimpleMatrix U = SimpleMatrix.random64(r,width, -1.0, 1.0 ,rand);
-            SimpleMatrix V = SimpleMatrix.random64(r,width, -1.0, 1.0 ,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(width,width, -1.0, 1.0,rand);
+            SimpleMatrix U = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
+            SimpleMatrix V = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
 
             DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
             DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.getDDRM(),r);

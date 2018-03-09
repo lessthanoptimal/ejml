@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -91,7 +91,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void constructor_simple() {
-        SimpleMatrix orig = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix orig = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix copy = new SimpleMatrix(orig);
 
         assertTrue(orig.mat != copy.mat);
@@ -126,7 +126,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void transpose() {
-        SimpleMatrix orig = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix orig = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix tran = orig.transpose();
 
         DMatrixRMaj dTran = new DMatrixRMaj(2,3);
@@ -137,8 +137,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void mult() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(2,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(2,3, 0, 1, rand);
         SimpleMatrix c = a.mult(b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(3,3);
@@ -149,8 +149,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void kron() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(2,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(2,3, 0, 1, rand);
         SimpleMatrix c = a.kron(b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(6,6);
@@ -180,8 +180,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void plus() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix c = a.plus(b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(3,2);
@@ -192,7 +192,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void plus_scalar() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         double b = 2.5;
         SimpleMatrix c = a.plus(b);
 
@@ -204,8 +204,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void dot() {
-        SimpleMatrix a = SimpleMatrix.random64(10,1,-1,1,rand);
-        SimpleMatrix b = SimpleMatrix.random64(10,1,-1,1,rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(10,1,-1,1,rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(10,1,-1,1,rand);
 
         double expected = 0;
         for( int i = 0; i < 10; i++ )
@@ -226,8 +226,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void minus_matrix_matrix() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix c = a.minus(b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(3,2);
@@ -238,7 +238,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void minus_matrix_scalar() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         double b = 0.14;
         SimpleMatrix c = a.minus(b);
 
@@ -250,8 +250,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void plus_beta() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix c = a.plus(2.5, b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(3,2);
@@ -262,7 +262,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void invert() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         SimpleMatrix inv = a.invert();
 
         DMatrixRMaj d_inv = new DMatrixRMaj(3,3);
@@ -294,7 +294,7 @@ public class TestSimpleMatrix {
         assertEquals(0,inv.normF(),UtilEjml.TEST_F64);
 
         // now try it against a more standard matrix
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         inv = a.pseudoInverse();
 
         DMatrixRMaj d_inv = new DMatrixRMaj(3,3);
@@ -305,8 +305,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void solve() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix c = a.solve(b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(3,2);
@@ -318,7 +318,7 @@ public class TestSimpleMatrix {
     @Test
     public void solve_NaN_INFINITY() {
         SimpleMatrix a = new SimpleMatrix(3,3);
-        SimpleMatrix b = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         try {
             a.set(Double.NaN);
             a.solve(b);
@@ -337,8 +337,8 @@ public class TestSimpleMatrix {
      */
     @Test
     public void solve_notsquare() {
-        SimpleMatrix a = SimpleMatrix.random64(6,3, 0, 1, rand);
-        SimpleMatrix b = SimpleMatrix.random64(6,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(6,3, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(6,2, 0, 1, rand);
         SimpleMatrix c = a.solve(b);
 
         DMatrixRMaj c_dense = new DMatrixRMaj(3,2);
@@ -360,7 +360,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void zero() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         a.zero();
 
         DMatrixRMaj d = new DMatrixRMaj(3,3);
@@ -370,7 +370,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void normF() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         double norm = a.normF();
         double dnorm = NormOps_DDRM.fastNormF((DMatrixRMaj)a.mat);
@@ -380,7 +380,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void conditionP2() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         double cond = NormOps_DDRM.conditionP2((DMatrixRMaj)a.getMatrix());
         double found = a.conditionP2();
@@ -390,7 +390,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void determinant() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         double det = a.determinant();
         double ddet = CommonOps_DDRM.det((DMatrixRMaj)a.mat);
@@ -400,7 +400,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void trace() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         double trace = a.trace();
         double dtrace = CommonOps_DDRM.trace((DMatrixRMaj)a.mat);
@@ -410,7 +410,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void reshape() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         DMatrixRMaj b = a.mat.copy();
 
         a.reshape(2,3);
@@ -421,7 +421,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void set_element() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         a.set(0,1,10.3);
 
         assertEquals(10.3,a.get(0,1),1e-6);
@@ -429,7 +429,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void setRow() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         a.setRow(2,1,2,3);
 
         assertEquals(2,a.get(2,1),1e-6);
@@ -438,7 +438,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void setColumn() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         a.setColumn(2,1,2,3);
 
         assertEquals(2,a.get(1,2),1e-6);
@@ -447,28 +447,28 @@ public class TestSimpleMatrix {
 
     @Test
     public void get_2d() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         assertEquals(((DMatrixRMaj)a.mat).get(0,1),a.get(0,1),1e-6);
     }
 
     @Test
     public void get_1d() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         assertEquals(((DMatrixRMaj)a.mat).get(3),a.get(3),1e-6);
     }
 
     @Test
     public void getIndex() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
 
         assertEquals(((DMatrixRMaj)a.mat).getIndex(0,2),a.getIndex(0,2),1e-6);
     }
 
     @Test
     public void copy() {
-        SimpleMatrix a = SimpleMatrix.random64(3,3, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3, 0, 1, rand);
         SimpleMatrix b = a.copy();
 
         assertTrue(a.mat!=b.mat);
@@ -477,7 +477,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void svd() {
-        SimpleMatrix a = SimpleMatrix.random64(3,4, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,4, 0, 1, rand);
 
         SimpleSVD<SimpleMatrix> svd = a.svd();
 
@@ -492,7 +492,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void eig() {
-        SimpleMatrix a = SimpleMatrix.random64(4,4, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(4,4, 0, 1, rand);
 
         SimpleEVD evd = a.eig();
 
@@ -508,7 +508,7 @@ public class TestSimpleMatrix {
     @Test
     public void insertIntoThis() {
         SimpleMatrix A = new SimpleMatrix(6,4);
-        SimpleMatrix B = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
 
         DMatrixRMaj A_ = A.getMatrix().copy();
 
@@ -522,7 +522,7 @@ public class TestSimpleMatrix {
     @Test
     public void combine() {
         SimpleMatrix A = new SimpleMatrix(6,4);
-        SimpleMatrix B = SimpleMatrix.random64(3,4, 0, 1, rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(3,4, 0, 1, rand);
 
         SimpleMatrix C = A.combine(2,2,B);
 
@@ -547,7 +547,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void scale() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix b = a.scale(1.5);
 
         for( int i = 0; i < a.numRows(); i++ ) {
@@ -559,7 +559,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void div_scalar() {
-        SimpleMatrix a = SimpleMatrix.random64(3,2, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         SimpleMatrix b = a.divide(1.5);
 
         for( int i = 0; i < a.numRows(); i++ ) {
@@ -588,7 +588,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementMaxAbs() {
-        SimpleMatrix a = SimpleMatrix.random64(7,5, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(7,5, 0, 1, rand);
 
         a.set(3,4,-5);
         a.set(4,4,4);
@@ -598,8 +598,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementMult() {
-        SimpleMatrix A = SimpleMatrix.random64(4,5,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random64(4,5,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4,5,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4,5,-1,1,rand);
 
         SimpleMatrix C = A.elementMult(B);
 
@@ -614,8 +614,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementDiv() {
-        SimpleMatrix A = SimpleMatrix.random64(4,5,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random64(4,5,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4,5,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4,5,-1,1,rand);
 
         SimpleMatrix C = A.elementDiv(B);
 
@@ -630,8 +630,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementPower_m() {
-        SimpleMatrix A = SimpleMatrix.random64(4,5,0,1,rand);
-        SimpleMatrix B = SimpleMatrix.random64(4,5,0,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4,5,0,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4,5,0,1,rand);
 
         SimpleMatrix C = A.elementPower(B);
 
@@ -646,7 +646,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementPower_s() {
-        SimpleMatrix A = SimpleMatrix.random64(4,5,0,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4,5,0,1,rand);
         double b = 1.1;
 
         SimpleMatrix C = A.elementPower(b);
@@ -662,7 +662,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementLog() {
-        SimpleMatrix A = SimpleMatrix.random64(4,5,0,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4,5,0,1,rand);
 
         SimpleMatrix C = A.elementLog();
 
@@ -677,7 +677,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void elementExp() {
-        SimpleMatrix A = SimpleMatrix.random64(4,5,0,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4,5,0,1,rand);
 
         SimpleMatrix C = A.elementExp();
 
@@ -692,7 +692,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void extractMatrix() {
-        SimpleMatrix a = SimpleMatrix.random64(7,5, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(7,5, 0, 1, rand);
 
         SimpleMatrix b = a.extractMatrix(2,5,3,5);
 
@@ -708,7 +708,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void diag_extract() {
-        SimpleMatrix a = SimpleMatrix.random64(3,4, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,4, 0, 1, rand);
 
         DMatrixRMaj found = a.diag().getMatrix();
         DMatrixRMaj expected = new DMatrixRMaj(3,1);
@@ -720,7 +720,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void diag_vector() {
-        SimpleMatrix a = SimpleMatrix.random64(3,1, 0, 1, rand);
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,1, 0, 1, rand);
 
         DMatrixRMaj found = a.diag().getMatrix();
         SimpleMatrix expected = SimpleMatrix.diag(((DMatrixRMaj)a.getMatrix()).data);
@@ -730,7 +730,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void extractVector() {
-        SimpleMatrix A = SimpleMatrix.random64(10,7, 0, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(10,7, 0, 1, rand);
 
         SimpleMatrix c = A.extractVector(false,2);
         SimpleMatrix r = A.extractVector(true,2);
@@ -751,7 +751,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void negative() {
-        SimpleMatrix A = SimpleMatrix.random64(5,7,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
 
         SimpleMatrix A_neg = A.negative();
 
@@ -778,8 +778,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void equation() {
-        SimpleMatrix A = SimpleMatrix.random64(5,7,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random64(5,7,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
 
         SimpleMatrix orig = A.copy();
 
@@ -818,8 +818,8 @@ public class TestSimpleMatrix {
      */
     @Test
     public void concatColumns() {
-        SimpleMatrix A = SimpleMatrix.random64(5,7,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random64(4,3,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
 
         SimpleMatrix C = A.concatColumns(B);
         SimpleMatrix D = new SimpleMatrix(5,10);
@@ -831,8 +831,8 @@ public class TestSimpleMatrix {
 
     @Test
     public void concatRows() {
-        SimpleMatrix A = SimpleMatrix.random64(5,7,-1,1,rand);
-        SimpleMatrix B = SimpleMatrix.random64(4,3,-1,1,rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5,7,-1,1,rand);
+        SimpleMatrix B = SimpleMatrix.random_DDRM(4,3,-1,1,rand);
 
         SimpleMatrix C = A.concatRows(B);
         SimpleMatrix D = new SimpleMatrix(9,7);
@@ -844,7 +844,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void rows() {
-        SimpleMatrix A = SimpleMatrix.random64(5, 7, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B = A.rows(1,3);
 
         for (int i = 1; i < 3; i++) {
@@ -856,7 +856,7 @@ public class TestSimpleMatrix {
 
     @Test
     public void cols() {
-        SimpleMatrix A = SimpleMatrix.random64(5, 7, -1, 1, rand);
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B = A.rows(1,3);
 
         for (int i = 1; i < 3; i++) {

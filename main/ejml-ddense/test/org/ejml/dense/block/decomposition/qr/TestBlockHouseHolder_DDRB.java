@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -70,7 +70,7 @@ public class TestBlockHouseHolder_DDRB {
 
         // check various sized matrices
         double gamma = 2.5;
-        A = SimpleMatrix.random64(r*2+r-1,r*2-1,-1,1,rand);
+        A = SimpleMatrix.random_DDRM(r*2+r-1,r*2-1,-1,1,rand);
 
         SimpleMatrix U = A.extractMatrix(0,A.numRows(),1,2);
         U.set(0,0,0);
@@ -91,7 +91,7 @@ public class TestBlockHouseHolder_DDRB {
     @Test
     public void rank1UpdateMultR_TopRow() {
         double gamma = 2.5;
-        A = SimpleMatrix.random64(r*2+r-1,r*2-1, -1.0 , 1.0 ,rand);
+        A = SimpleMatrix.random_DDRM(r*2+r-1,r*2-1, -1.0 , 1.0 ,rand);
 
         SimpleMatrix U = A.extractMatrix(0,A.numRows(),1,2);
         U.set(0,0,0);
@@ -115,7 +115,7 @@ public class TestBlockHouseHolder_DDRB {
     @Test
     public void rank1UpdateMultL_Row() {
         double gamma = 2.5;
-        A = SimpleMatrix.random64(r*2+r-1,r*2+r-1, -1.0 , 1.0 ,rand);
+        A = SimpleMatrix.random_DDRM(r*2+r-1,r*2+r-1, -1.0 , 1.0 ,rand);
 
         SimpleMatrix U = A.extractMatrix(1,2,0,A.numCols()).transpose();
         U.set(0,0);
@@ -135,7 +135,7 @@ public class TestBlockHouseHolder_DDRB {
     @Test
     public void rank1UpdateMultL_LeftCol() {
         double gamma = 2.5;
-        A = SimpleMatrix.random64(r*2+r-1,r*2+r-1, -1.0 , 1.0 ,rand);
+        A = SimpleMatrix.random_DDRM(r*2+r-1,r*2+r-1, -1.0 , 1.0 ,rand);
 
         int row = 0;
         int zeroOffset = 1;
@@ -264,8 +264,8 @@ public class TestBlockHouseHolder_DDRB {
 //            System.out.println("width "+width);
             int end = width;
 
-            SimpleMatrix A = SimpleMatrix.random64(r,width,-1.0,1.0,rand);
-            SimpleMatrix B = SimpleMatrix.random64(r,width,-1.0,1.0,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width,-1.0,1.0,rand);
+            SimpleMatrix B = SimpleMatrix.random_DDRM(r,width,-1.0,1.0,rand);
             DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(),r);
             DMatrixRBlock Bb = MatrixOps_DDRB.convert((DMatrixRMaj)B.getMatrix(),r);
             DMatrixRBlock Cb = Ab.copy();
@@ -381,7 +381,7 @@ public class TestBlockHouseHolder_DDRB {
     public void computeW_Column() {
         double betas[] = new double[]{1.2,2,3};
 
-        A = SimpleMatrix.random64(r*2+r-1,r, -1.0 , 1.0 ,rand);
+        A = SimpleMatrix.random_DDRM(r*2+r-1,r, -1.0 , 1.0 ,rand);
 
         // Compute W directly using SimpleMatrix
         SimpleMatrix V = A.extractMatrix(0,A.numRows(),0,1);
@@ -450,7 +450,7 @@ public class TestBlockHouseHolder_DDRB {
         // need to extract only the elements in W that are currently being used when
         // computing the expected Z
         W = W.extractMatrix(0,W.numRows(),0,M);
-        SimpleMatrix T = SimpleMatrix.random64(M,1,-1,1,rand);
+        SimpleMatrix T = SimpleMatrix.random_DDRM(M,1,-1,1,rand);
 
         // -beta * (V + W*T)
         SimpleMatrix expected = V.plus(W.mult(T)).scale(-beta);
@@ -483,7 +483,7 @@ public class TestBlockHouseHolder_DDRB {
     }
 
     private void initMatrices( int M ) {
-        A = SimpleMatrix.random64(r*2+r-1,r, -1.0 , 1.0 ,rand);
+        A = SimpleMatrix.random_DDRM(r*2+r-1,r, -1.0 , 1.0 ,rand);
 
         // create matrices that are used to test
         Y = A.extractMatrix(0,A.numRows(),0,M);
@@ -496,7 +496,7 @@ public class TestBlockHouseHolder_DDRB {
         }
         V.set(M,1);
 
-        W = SimpleMatrix.random64(r*2+r-1,r, -1.0 , 1.0 ,rand);
+        W = SimpleMatrix.random_DDRM(r*2+r-1,r, -1.0 , 1.0 ,rand);
     }
 
     private void setZerosY() {

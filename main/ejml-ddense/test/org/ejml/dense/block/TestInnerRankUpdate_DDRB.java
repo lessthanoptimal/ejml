@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -58,8 +58,8 @@ public class TestInnerRankUpdate_DDRB {
 
     private void checkRankNUpdate(int lengthA, int heightB) {
         double alpha = -2.0;
-        SimpleMatrix origA = SimpleMatrix.random64(lengthA,lengthA,-1.0 , 1.0 ,rand);
-        SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA,-1.0 , 1.0 ,rand);
+        SimpleMatrix origA = SimpleMatrix.random_DDRM(lengthA,lengthA,-1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random_DDRM(heightB,lengthA,-1.0 , 1.0 ,rand);
 
         DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.getDDRM(),N);
         DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.getDDRM(),N);
@@ -90,7 +90,7 @@ public class TestInnerRankUpdate_DDRB {
 
     private void checkSymmRankNMinus_U(int lengthA, int heightB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(lengthA,rand));
-        SimpleMatrix origB = SimpleMatrix.random64(heightB,lengthA, -1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random_DDRM(heightB,lengthA, -1.0 , 1.0 ,rand);
 
         DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.getDDRM(),N);
         DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.getDDRM(),N);
@@ -118,7 +118,7 @@ public class TestInnerRankUpdate_DDRB {
 
     private void checkSymmRankNMinus_L(int lengthA, int widthB) {
         SimpleMatrix origA = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(lengthA,rand));
-        SimpleMatrix origB = SimpleMatrix.random64(lengthA,widthB, -1.0 , 1.0 ,rand);
+        SimpleMatrix origB = SimpleMatrix.random_DDRM(lengthA,widthB, -1.0 , 1.0 ,rand);
 
         DMatrixRBlock blockA = MatrixOps_DDRB.convert(origA.getDDRM(),N);
         DMatrixRBlock blockB = MatrixOps_DDRB.convert(origB.getDDRM(),N);

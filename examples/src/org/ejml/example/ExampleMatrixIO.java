@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.example;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.data.MatrixType;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
@@ -69,7 +70,7 @@ public class ExampleMatrixIO {
 
         try {
             A.saveToFileCSV("matrix_file.csv");
-            SimpleMatrix B = new SimpleMatrix().loadCSV("matrix_file.csv");
+            SimpleMatrix B = new SimpleMatrix(1,1, MatrixType.DDRM).loadCSV("matrix_file.csv");
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);

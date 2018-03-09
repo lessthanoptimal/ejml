@@ -2,6 +2,20 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.34
+2018/
+
+- SimpleMatrix
+  * Added createLike()
+
+- TODO change simple matrix's header to take in an array to remove confusion over float and double
+
+- SImpleMatrix
+ * TODO rename set to fill and make generic
+ * TODO extractVector make generic
+ * TODO diag make generic
+ * TODO isIdentical move into ops
+
 ----- Version 0.33
 2018/01/17
 
