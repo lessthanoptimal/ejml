@@ -66,6 +66,10 @@ public enum MatrixType {
             throw new IllegalArgumentException("Unknown class");
     }
 
+    public boolean isReal() {
+        return real;
+    }
+
     public boolean isFixed() {
         return fixed;
     }
