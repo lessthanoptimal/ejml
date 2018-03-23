@@ -18,6 +18,7 @@
 
 package org.ejml.simple.ops;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.Matrix;
 import org.ejml.ops.MatrixIO;
@@ -42,6 +43,17 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
     @Override
     public void set(DMatrixSparseCSC A, int row, int column, /**/double real, /**/double imaginary) {
         throw new IllegalArgumentException("Does not support imaginary values");
+    }
+
+    @Override
+    public double get(DMatrixSparseCSC A, int row, int column) {
+        return A.get(row,column);
+    }
+
+    @Override
+    public void get(DMatrixSparseCSC A, int row, int column, Complex_F64 value) {
+        value.real = A.get(row,column);
+        value.imaginary = 0;
     }
 
     @Override

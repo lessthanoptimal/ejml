@@ -18,6 +18,7 @@
 
 package org.ejml.simple.ops;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.Matrix;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -34,7 +35,6 @@ import java.io.PrintStream;
  */
 public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
 
-
     @Override
     public void set(DMatrixRMaj A, int row, int column, /**/double value) {
         A.set(row,column, (double)value);
@@ -43,6 +43,17 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     @Override
     public void set(DMatrixRMaj A, int row, int column, /**/double real, /**/double imaginary) {
         throw new IllegalArgumentException("Does not support imaginary values");
+    }
+
+    @Override
+    public /**/double get(DMatrixRMaj A, int row, int column) {
+        return (double)A.get(row,column);
+    }
+
+    @Override
+    public void get(DMatrixRMaj A, int row, int column, /**/Complex_F64 value) {
+        value.real = (double)A.get(row,column);
+        value.imaginary = 0;
     }
 
     @Override

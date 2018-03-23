@@ -18,6 +18,7 @@
 
 package org.ejml.simple.ops;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.Matrix;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
@@ -40,6 +41,18 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void set(ZMatrixRMaj A, int row, int column, /**/double real, /**/double imaginary) {
         A.set(row,column, (double)real, (double)imaginary);
+    }
+
+    @Override
+    public /**/double get(ZMatrixRMaj A, int row, int column) {
+        return (double)A.getReal(row,column);
+    }
+
+    @Override
+    public void get(ZMatrixRMaj A, int row, int column, /**/Complex_F64 value) {
+        int index = A.getIndex(row,column);
+        value.real = (double)A.data[index];
+        value.imaginary = (double)A.data[index+1];
     }
 
     @Override

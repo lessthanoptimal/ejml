@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -89,6 +89,7 @@ public class GenerateCode32 {
         converter = new ConvertFile32From64(false);
 
         converter.replacePattern("/\\*\\*/double", "FIXED_DOUBLE");
+        converter.replacePattern("/\\*\\*/Complex_F64", "FIXED_COMPLEX");
         converter.replacePattern("DoubleStep", "FIXED_STEP");
         converter.replacePattern("double", "float");
         converter.replacePattern("Double", "Float");
@@ -125,6 +126,7 @@ public class GenerateCode32 {
         converter.replaceStartsWith("Math.log", "(float)Math.log");
         converter.replaceStartsWith("Math.exp", "(float)Math.exp");
 
+        converter.replacePatternAfter("FIXED_COMPLEX", "/\\*\\*/Complex_F64");
         converter.replacePatternAfter("FIXED_DOUBLE", "/\\*\\*/double");
         converter.replacePatternAfter("FIXED_STEP", "DoubleStep");
     }

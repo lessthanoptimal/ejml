@@ -18,6 +18,7 @@
 
 package org.ejml.simple;
 
+import org.ejml.data.Complex_F64;
 import org.ejml.data.Matrix;
 
 import java.io.PrintStream;
@@ -32,6 +33,10 @@ public interface SimpleOperations<T extends Matrix> {
     void set( T A , int row , int column , double value );
 
     void set( T A , int row , int column , double real, double imaginary );
+
+    double get( T A , int row , int column );
+
+    void get(T A , int row , int column , Complex_F64 value );
 
     void fill( T A , double value );
 

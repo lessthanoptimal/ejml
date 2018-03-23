@@ -621,17 +621,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return The value of the element.
      */
     public double get( int row , int col ) {
-        MatrixType type = mat.getType();
-
-        if( type.isReal()) {
-            if (type.getBits() == 64) {
-                return ((DMatrix)mat).get(row, col);
-            } else {
-                return ((FMatrix)mat).get(row, col);
-            }
-        } else {
-            throw new IllegalArgumentException("Complex matrix. Call get(int,int,Complex64F) instead");
-        }
+        return ops.get(mat,row,col);
     }
 
     /**
@@ -663,19 +653,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param output Storage for the value
      */
     public void get( int row , int col , Complex_F64 output ) {
-        MatrixType type = mat.getType();
-
-        if( type.isReal() ) {
-            output.real = get(row,col);
-            output.imaginary = 0;
-        } else {
-            if (type.getBits() == 64) {
-                ((ZMatrix)mat).get(row, col,output);
-            } else {
-                output.real = ((CMatrix)mat).getReal(row,col);
-                output.imaginary = ((CMatrix)mat).getImag(row,col);
-            }
-        }
+        ops.get(mat,row,col,output);
     }
 
     /**
@@ -900,6 +878,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T diag()
     {
+        // TODO move into ops
         T diag;
         if( bits() == 64 ) {
             if (MatrixFeatures_DDRM.isVector(mat)) {
