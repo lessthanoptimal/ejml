@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -206,11 +206,20 @@ public class RandomMatrices_DDRM {
      * @return A new matrix with the specified singular values.
      */
     public static DMatrixRMaj singleValues(int numRows, int numCols,
-                                           Random rand, double ...sv) {
-        DMatrixRMaj U = RandomMatrices_DDRM.orthogonal(numRows,numRows,rand);
-        DMatrixRMaj V = RandomMatrices_DDRM.orthogonal(numCols,numCols,rand);
+                                           Random rand, double ...sv)
+    {
+        DMatrixRMaj U,V,S;
 
-        DMatrixRMaj S = new DMatrixRMaj(numRows,numCols);
+        // speed it up in compact format
+        if( numRows > numCols ) {
+            U = RandomMatrices_DDRM.orthogonal(numRows, numCols, rand);
+            V = RandomMatrices_DDRM.orthogonal(numCols, numCols, rand);
+            S = new DMatrixRMaj(numCols, numCols);
+        } else {
+            U = RandomMatrices_DDRM.orthogonal(numRows, numRows, rand);
+            V = RandomMatrices_DDRM.orthogonal(numCols, numCols, rand);
+            S = new DMatrixRMaj(numRows, numCols);
+        }
 
         int min = Math.min(numRows,numCols);
         min = Math.min(min,sv.length);
@@ -221,6 +230,7 @@ public class RandomMatrices_DDRM {
 
         DMatrixRMaj tmp = new DMatrixRMaj(numRows,numCols);
         CommonOps_DDRM.mult(U,S,tmp);
+        S.reshape(numRows,numCols);
         CommonOps_DDRM.multTransB(tmp,V,S);
 
         return S;

@@ -29,6 +29,9 @@ import org.ejml.simple.SimpleOperations;
 
 import java.io.PrintStream;
 
+//CUSTOM ignore Complex_F64
+//CUSTOM ignore org.ejml.data.Complex_F64;
+
 /**
  * @author Peter Abeles
  */
@@ -49,10 +52,10 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
-    public void get(ZMatrixRMaj A, int row, int column, /**/Complex_F64 value) {
+    public void get(ZMatrixRMaj A, int row, int column, Complex_F64 value) {
         int index = A.getIndex(row,column);
-        value.real = (double)A.data[index];
-        value.imaginary = (double)A.data[index+1];
+        value.real = A.data[index];
+        value.imaginary = A.data[index+1];
     }
 
     @Override

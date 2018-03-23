@@ -30,6 +30,9 @@ import org.ejml.simple.SimpleOperations;
 
 import java.io.PrintStream;
 
+//CUSTOM ignore Complex_F64
+//CUSTOM ignore org.ejml.data.Complex_F64;
+
 /**
  * @author Peter Abeles
  */
@@ -51,8 +54,8 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
-    public void get(DMatrixRMaj A, int row, int column, /**/Complex_F64 value) {
-        value.real = (double)A.get(row,column);
+    public void get(DMatrixRMaj A, int row, int column, Complex_F64 value) {
+        value.real = A.get(row,column);
         value.imaginary = 0;
     }
 

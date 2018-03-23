@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.linsol.qr.SolveNullSpaceQR_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
@@ -261,6 +262,23 @@ public class SingularOps_DDRM {
         CommonOps_DDRM.transpose(nullSpace);
 
         return nullSpace;
+    }
+
+    /**
+     * Computes the null space using QR decomposition. This is much faster than using SVD
+     * @param A (Input) Matrix
+     * @param totalSingular Number of singular values
+     * @return Null space
+     */
+    public static DMatrixRMaj nullspaceQR( DMatrixRMaj A , int totalSingular ) {
+        SolveNullSpaceQR_DDRM solver = new SolveNullSpaceQR_DDRM();
+
+        DMatrixRMaj nullspace = new DMatrixRMaj(1,1);
+
+        if( !solver.process(A,totalSingular,nullspace))
+            throw new RuntimeException("Solver failed. try SVD based method instead?");
+
+        return nullspace;
     }
 
     /**
